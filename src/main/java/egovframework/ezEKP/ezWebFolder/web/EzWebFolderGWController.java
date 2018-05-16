@@ -12,9 +12,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -38,6 +41,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -69,6 +73,9 @@ public class EzWebFolderGWController {
 	
 	@Resource(name = "EzWebFolderService")
 	private EzWebFolderService ezWebFolderService;
+	
+	@Resource(name = "EzWebFolderService_y")
+	private EzWebFolderService_y ezWebFolderService_y;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -488,6 +495,14 @@ public class EzWebFolderGWController {
 			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			String primary    = userInfo.getPrimary();
 			
+			if (!isWebfolderAdmin(userInfo)){
+				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, null, userInfo.getTenantId());
+				
+				if ("error".equals(permissionResult.get("status"))) {
+					return permissionResult;
+				}
+			}
+			
 			//Check upload conditions
 			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
 			
@@ -507,8 +522,7 @@ public class EzWebFolderGWController {
 					result.put("code", 1);
 					result.put("data", "");
 					return result;
-				}
-				else {
+				} else {
 					UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
 					
 					long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
@@ -539,8 +553,7 @@ public class EzWebFolderGWController {
 				result.put("data", list);
 			}
 			
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
@@ -600,12 +613,20 @@ public class EzWebFolderGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			if (!isWebfolderAdmin(userInfo)){
+				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), null, listFileId, userInfo.getTenantId());
+				
+				if ("error".equals(permissionResult.get("status"))) {
+					return permissionResult;
+				}
+			}
+			
 			ezWebFolderService.deleteSelectedFiles(fileIDList, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 			result.put("status", "error");
@@ -638,6 +659,14 @@ public class EzWebFolderGWController {
 			String companyId = userInfo.getCompanyID();
 			int tenantId     = userInfo.getTenantId();
 			
+			if (!isWebfolderAdmin(userInfo)){
+				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), null, fileId, userInfo.getTenantId());
+				
+				if ("error".equals(permissionResult.get("status"))) {
+					return permissionResult;
+				}
+			}
+			
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date                  = new Date();
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
@@ -649,8 +678,7 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
@@ -679,8 +707,16 @@ public class EzWebFolderGWController {
 		}
 		
 		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
-		result           = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, userInfo);
 		
+		if (!isWebfolderAdmin(userInfo)){
+			JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, fileList, userInfo.getTenantId());
+			
+			if ("error".equals(permissionResult.get("status"))) {
+				return permissionResult;
+			}
+		}
+		
+		result = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, userInfo);
 		return result;
 	}
 
@@ -1008,7 +1044,7 @@ public class EzWebFolderGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			int tenantId     = userInfo.getTenantId();
 			
-			if (checkWfAdmin(userInfo) == false) {
+			if (!isWebfolderAdmin(userInfo)) {
 				logger.debug("Privileges!");
 				result.put("status", "error");
 				result.put("code", "1");
@@ -1967,7 +2003,7 @@ public class EzWebFolderGWController {
 				case "comp":
 					//Get company folder tree
 					FolderSimpleVO company = new FolderSimpleVO();
-					if (checkWfAdmin(userInfo) == true && mode.equalsIgnoreCase("admin")) {
+					if (isWebfolderAdmin(userInfo) && mode.equalsIgnoreCase("admin")) {
 						company = ezWebFolderService.getCompanySimpleFolder(companyId, userInfo);
 						ezWebFolderService.getAllSubDepts(company, tenantId, 2);
 					}
@@ -1988,7 +2024,7 @@ public class EzWebFolderGWController {
 				case "dept":
 					//Get department folder tree
 					List<FolderSimpleVO> listFolders = new ArrayList<FolderSimpleVO>();
-					if (checkWfAdmin(userInfo) == true && mode.equalsIgnoreCase("admin")) {
+					if (isWebfolderAdmin(userInfo) && mode.equalsIgnoreCase("admin")) {
 						listFolders = ezWebFolderService.getAllSimpleDeptFolder(companyId, userInfo);
 					}
 					else {
@@ -2358,7 +2394,7 @@ public class EzWebFolderGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, "", "");
-			boolean check = checkWfAdmin(userInfo);
+			boolean check = isWebfolderAdmin(userInfo);
 			
 			if (check == true) {
 				result.put("data", "1");
@@ -2382,12 +2418,11 @@ public class EzWebFolderGWController {
 		return result;
 	}
 	
-	private boolean checkWfAdmin(LoginVO user) {
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1 && user.getRollInfo().indexOf("wf=1") == -1){
-			return false;
-		}
-		else {
-			return true;
-		}
+	private boolean isWebfolderAdmin(LoginVO user) {
+		return isWebfolderAdmin(user.getRollInfo());
+	}
+	
+	private boolean isWebfolderAdmin(String rollInfo) {
+		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wf=1");
 	}
 }

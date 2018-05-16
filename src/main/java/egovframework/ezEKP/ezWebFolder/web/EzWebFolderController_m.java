@@ -139,20 +139,7 @@ public class EzWebFolderController_m {
 		String folderFileId = request.getParameter("folderFileId");
 		String folderFileType = request.getParameter("folderFileType");
 		
-		Map<String, Object> checkPermission = new HashMap<>();
-		List<Map<String, Object>> checkList = new ArrayList<>();
-		Map<String, Object> map = new HashMap<>();
-		map.put("checkId", folderFileId);
-		map.put("checkType", folderFileType);
-		checkList.add(map);
-		checkPermission.put("checkList"	, checkList);
-		
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
-		
-		if (((String) resultBody.get("status")).equals("ok")) {
-			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
-		}
-		
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
 		String result = "";
 		
 		if (((String) resultBody.get("status")).equals("ok")) {
@@ -242,11 +229,8 @@ public class EzWebFolderController_m {
 		checkList.add(map);
 		checkPermission.put("checkList"	, checkList);
 		
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
-		
-		if (((String) resultBody.get("status")).equals("ok")) {
-			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
-		}
+
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
 		
 		if (((String) resultBody.get("status")).equals("ok")) {
 			JSONObject shareInfo = (JSONObject) resultBody.get("data");
@@ -279,11 +263,7 @@ public class EzWebFolderController_m {
 		param.put("fileList", fileList);
 		param.put("folderList", folderList);
 		
-		JSONObject resultBody = checkPermission(request, userInfo.getId(), fileList, folderList);
-		
-		if (((String) resultBody.get("status")).equals("ok")) {
-			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", param, request, "delete", null);
-		}
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", param, request, "delete", null);
 		
 		logger.debug("deleteShare ended.");
 		return  resultBody.toString();
@@ -302,11 +282,7 @@ public class EzWebFolderController_m {
 		param.put("fileList", fileList);
 		param.put("folderList", folderList);
 		
-		JSONObject resultBody = checkPermission(request, userInfo.getId(), fileList, folderList);
-		
-		if (((String) resultBody.get("status")).equals("ok")) {
-			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "post", null);
-		}
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "post", null);
 		
 		logger.debug("hideShare ended.");
 		return  resultBody.toString();
@@ -325,11 +301,7 @@ public class EzWebFolderController_m {
 		param.put("fileList", fileList);
 		param.put("folderList", folderList);
 		
-		JSONObject resultBody = checkPermission(request, userInfo.getId(), fileList, folderList);
-		
-		if (((String) resultBody.get("status")).equals("ok")) {
-			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "delete", null);
-		}
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "delete", null);
 		
 		logger.debug("showShare ended.");
 		return  resultBody.toString();
@@ -479,17 +451,6 @@ public class EzWebFolderController_m {
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
-		
-		if (!adminCheckResult.get("status").toString().equals("ok")) {
-			
-			JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-			
-			if ("error".equals(permissionResult.get("status"))) {
-				return permissionResult.toString();
-			}
-		}
-		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("tenantId", user.getTenantId());
@@ -538,17 +499,6 @@ public class EzWebFolderController_m {
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);
 		
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
-		
-		if (!adminCheckResult.get("status").toString().equals("ok")) {
-			
-			JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-			
-			if ("error".equals(permissionResult.get("status"))) {
-				return permissionResult.toString();
-			}
-		}
-		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/restore-trashCan", param, request, "post", null);
 
 		String status = resultBody.get("status").toString();
@@ -576,8 +526,8 @@ public class EzWebFolderController_m {
 	}
 
 	@RequestMapping(value = "/ezWebFolder/getFavorites.do", method = RequestMethod.POST)
-	public @ResponseBody String getUserFavorites(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("getUserFavorites started.");
+	public @ResponseBody JSONObject getFavorites(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFavorites started.");
 		
 		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
 
@@ -595,13 +545,13 @@ public class EzWebFolderController_m {
 		
 		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorites", param, request, "get", null);
 		
-		logger.debug("getUserFavorites ended.");
-		return result.toString();
+		logger.debug("getFavorites ended.");
+		return result;
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/addFavorite.do", method = RequestMethod.POST)
-	public @ResponseBody String addUserFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("getFavorites started.");
+	public @ResponseBody JSONObject addFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("addFavorite started.");
 		
 		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
 		String fileList = orElse(request.getParameter("fileList"), "");
@@ -612,32 +562,26 @@ public class EzWebFolderController_m {
 		param.put("fileList", fileList);
 		param.put("folderList", folderList);
 		
-		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-		
-		if ("error".equals(permissionResult.get("status"))) {
-			return permissionResult.toString();
-		}
-		
 		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorite", param, request, "post", null);
 		
-		logger.debug("getFavorites ended.");
-		return result.toString();
+		logger.debug("addFavorite ended.");
+		return result;
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/deleteFavorite.do", method = RequestMethod.POST)
-	public @ResponseBody String deleteUserFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("deleteUserFavorite started.");
+	public @ResponseBody JSONObject deleteFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("deleteFavorite started.");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
-		Map<String, Object> jsonParam = new HashMap<>();
-		jsonParam.put("fileList", orElse(request.getParameter("fileList"), ""));
-		jsonParam.put("folderList", orElse(request.getParameter("folderList"), ""));
+		Map<String, Object> param = new HashMap<>();
+		param.put("fileList", orElse(request.getParameter("fileList"), ""));
+		param.put("folderList", orElse(request.getParameter("folderList"), ""));
 		
-		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorite", null, request, "delete", new JSONObject(jsonParam));
+		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorite", param, request, "delete", null);
 		
-		logger.debug("deleteUserFavorite ended.");
-		return result.toString();
+		logger.debug("deleteFavorite ended.");
+		return result;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/moveTrashCanManage.do")
@@ -667,17 +611,6 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 	
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
-		
-		if (!adminCheckResult.get("status").toString().equals("ok")) {
-			
-			JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-			
-			if ("error".equals(permissionResult.get("status"))) {
-				return permissionResult.toString();
-			}
-		}
-		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("tenantId", user.getTenantId());
@@ -709,42 +642,42 @@ public class EzWebFolderController_m {
 		return "json";		
 	}
 	
-	private JSONObject checkPermission(HttpServletRequest request, String userId, String fileList, String folderList) {
-		Map<String, Object> checkPermission = new HashMap<>();
-		List<Map<String, Object>> checkList = new ArrayList<>();
-		Map<String, Object> map;
-		
-		String[] fileArray = fileList.split(",");
-		String[] folderArray = folderList.split(",");
-		
-		for (String fileId : fileArray) {
-			if (fileId.isEmpty()) {
-				continue;
-			}
-			
-			map = new HashMap<>();
-			map.put("checkId", fileId);
-			map.put("checkType", "F");
-			
-			checkList.add(map);
-		}
-		
-		for (String folderId : folderArray) {
-			if (folderId.isEmpty()) {
-				continue;
-			}
-			
-			map = new HashMap<>();
-			map.put("checkId", folderId);
-			map.put("checkType", "D");
-			
-			checkList.add(map);
-		}
-		
-		checkPermission.put("checkList"	, checkList);
-		
-		return commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userId + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
-	}
+//	private JSONObject checkPermission(HttpServletRequest request, String userId, String fileList, String folderList) {
+//		Map<String, Object> checkPermission = new HashMap<>();
+//		List<Map<String, Object>> checkList = new ArrayList<>();
+//		Map<String, Object> map;
+//		
+//		String[] fileArray = fileList.split(",");
+//		String[] folderArray = folderList.split(",");
+//		
+//		for (String fileId : fileArray) {
+//			if (fileId.isEmpty()) {
+//				continue;
+//			}
+//			
+//			map = new HashMap<>();
+//			map.put("checkId", fileId);
+//			map.put("checkType", "F");
+//			
+//			checkList.add(map);
+//		}
+//		
+//		for (String folderId : folderArray) {
+//			if (folderId.isEmpty()) {
+//				continue;
+//			}
+//			
+//			map = new HashMap<>();
+//			map.put("checkId", folderId);
+//			map.put("checkType", "D");
+//			
+//			checkList.add(map);
+//		}
+//		
+//		checkPermission.put("checkList"	, checkList);
+//		
+//		return commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userId + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
+//	}
 	
 	private <T> T orElse(T value, T other) {
 		if (other == null) {

@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -163,9 +164,9 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		String parentId = "";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("folderId",folderId);
-		map.put("tenantId",tenantId);
-		map.put("comId",comId);
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		map.put("comId", comId);
 		FolderVO detailFld = ezWebFolderDAO_y.getFolderDetail(map);
 		parentId = detailFld.getFolderUpper();
 		String folderType = detailFld.getFolderType();
@@ -176,7 +177,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("userId", userId);
 		map.put("folderPath", folderPath);
 		map.put("parentId", parentId);
-		map.put("folderType",folderType);
+		map.put("folderType", folderType);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
 		map.put("searchStartDate", searchStartDate);
@@ -803,6 +804,59 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		LOGGER.debug("checkPermission ended. status=" + status);
 		return status;
+	}
+
+	@Override
+	public JSONObject checkPermissions(String userId, String deptId, String comId, String folders, String files, int tenantId) throws Exception {
+		LOGGER.debug("checkPermissions started.");
+		LOGGER.debug(String.format("userId: %s, deptId: %s, comId: %s, folder: %s, files: %s, tenantId: %d", userId, deptId, comId, folders, files, tenantId));
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		// TODO refactoring (아래는 권장하지 않는 코드입니다, 좋은 방법이 있으면 수정해주세요)
+		class PermissionChecker {
+			boolean accept(String checkList, String checkType) throws Exception {
+				if (checkList == null) {
+					return true;
+				}
+				
+				String[] checkArray = checkList.split(",");
+				
+				if (checkArray.length == 1 && checkArray[0].isEmpty()) {
+					return true;
+				}
+				
+				for (String checkId : checkArray) {
+					if ("fail".equals(checkPermission(userId, deptId, comId, checkId, checkType, tenantId))) {
+						return false;
+					}
+				}
+				
+				return true;
+			}
+		}
+		
+		PermissionChecker permissionChecker = new PermissionChecker();
+		
+		try {
+			if (permissionChecker.accept(folders, "D") && permissionChecker.accept(files, "F")) {
+				LOGGER.debug("permission allowed.");
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				LOGGER.debug("permission denied.");
+				result.put("status", "error");
+				result.put("code", 3);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		LOGGER.debug(String.format("result: %s", result.toString()));
+		LOGGER.debug("checkPermissions ended.");
+		return new JSONObject(result);
 	}
 	
 }

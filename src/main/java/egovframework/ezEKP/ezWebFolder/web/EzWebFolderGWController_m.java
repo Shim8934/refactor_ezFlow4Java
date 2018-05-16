@@ -126,9 +126,9 @@ public class EzWebFolderGWController_m {
 				list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
 				countInfo = ezWebFolderService_m.getSharingCount(subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			} else {
-				String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
+				String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
 				
-				if (!PermissionResult.equals("ok")) {
+				if (!permissionResult.equals("ok")) {
 					result.put("status", "error");
 					result.put("code", 3);
 					
@@ -154,8 +154,7 @@ public class EzWebFolderGWController_m {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -197,9 +196,9 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
+			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
 			
-			if (!PermissionResult.equals("ok")) {
+			if (!permissionResult.equals("ok")) {
 				result.put("status", "error");
 				result.put("code", 3);
 				
@@ -213,8 +212,7 @@ public class EzWebFolderGWController_m {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", list);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -256,9 +254,9 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
+			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
 			
-			if (!PermissionResult.equals("ok")) {
+			if (permissionResult.equals("fail")) {
 				result.put("status", "error");
 				result.put("code", 3);
 				
@@ -278,8 +276,7 @@ public class EzWebFolderGWController_m {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", shareInfo);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -358,9 +355,9 @@ public class EzWebFolderGWController_m {
 				list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
 				countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			} else {
-				String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
+				String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
 				
-				if (!PermissionResult.equals("ok")) {
+				if (!permissionResult.equals("ok")) {
 					result.put("status", "error");
 					result.put("code", 3);
 					
@@ -386,8 +383,7 @@ public class EzWebFolderGWController_m {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -433,9 +429,9 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
+			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
 			
-			if (!PermissionResult.equals("ok")) {
+			if (!permissionResult.equals("ok")) {
 				result.put("status", "error");
 				result.put("code", 3);
 				
@@ -448,8 +444,7 @@ public class EzWebFolderGWController_m {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -495,9 +490,9 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
+			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
 			
-			if (!PermissionResult.equals("ok")) {
+			if (!permissionResult.equals("ok")) {
 				result.put("status", "error");
 				result.put("code", 3);
 				
@@ -510,8 +505,7 @@ public class EzWebFolderGWController_m {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -551,6 +545,13 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			
+			JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, common.getDeptId(), common.getCompanyId(), folderListStr, fileListStr, tenantId);
+			
+			if ("error".equals(permissionResult.get("status"))) {
+				logger.debug("deleteShare ended.");
+				return permissionResult;
+			}
+			
 			String[] fileList = fileListStr.split(",");
 			String[] folderList = folderListStr.split(",");
 			
@@ -572,8 +573,7 @@ public class EzWebFolderGWController_m {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -640,8 +640,7 @@ public class EzWebFolderGWController_m {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -685,6 +684,13 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
+			JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderListStr, fileListStr, userInfo.getTenantId());
+			
+			if ("error".equals(permissionCheckResult.get("status"))) {
+				logger.debug("hideShare ended.");
+				return permissionCheckResult;
+			}
+			
 			String[] fileList = fileListStr.split(",");
 			String[] folderList = folderListStr.split(",");
 			
@@ -706,8 +712,7 @@ public class EzWebFolderGWController_m {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -751,6 +756,13 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
+			JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderListStr, fileListStr, userInfo.getTenantId());
+			
+			if ("error".equals(permissionCheckResult.get("status"))) {
+				logger.debug("showShare ended.");
+				return permissionCheckResult;
+			}
+			
 			String[] fileList = fileListStr.split(",");
 			String[] folderList = folderListStr.split(",");
 			
@@ -772,8 +784,7 @@ public class EzWebFolderGWController_m {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
@@ -877,7 +888,7 @@ public class EzWebFolderGWController_m {
 		logger.debug("G/W WEBFOLDER [GET /rest/ezwebfolder/users/{userId}/favorites] ended.");
 		return result;
 	}
-	
+
 	/**
 	 * 즐겨찾기 대상 추가
 	 * 
@@ -916,6 +927,12 @@ public class EzWebFolderGWController_m {
 			MCommonVO userInfo = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = userInfo.getTenantId();
 			String offset = userInfo.getOffSet();
+			
+			JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptId(), userInfo.getCompanyId(), folderListStr, fileListStr, tenantId);
+			
+			if ("error".equals(permissionCheckResult.get("status"))) {
+				return permissionCheckResult;
+			}
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String createDate = commonUtil.getDateStringInUTC(format.format(new Date()), offset, true);
@@ -963,12 +980,12 @@ public class EzWebFolderGWController_m {
 	 * @return JSONObject
 	 */
 	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorite", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deleteFavorite(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) {
+	public JSONObject deleteFavorite(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W WEBFOLDER [DELETE /rest/ezwebfolder/users/{userId}/favorite] started.");
 
 		String serverName = request.getHeader("x-user-host");
-		String fileListStr = orElse((String) jsonObject.get("fileList"), "");
-		String folderListStr = orElse((String) jsonObject.get("folderList"), "");
+		String fileListStr = orElse(request.getParameter("fileList"), "");
+		String folderListStr = orElse(request.getParameter("folderList"), "");
 		JSONObject result = new JSONObject();
 
 		if (containsNull(serverName, userId) || (containsNull(fileListStr) && containsNull(folderListStr))) {
@@ -1157,6 +1174,15 @@ public class EzWebFolderGWController_m {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			if (!isWebfolderAdmin(userInfo)) {
+				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderList, fileList, userInfo.getTenantId());
+				
+				if ("error".equals(permissionCheckResult.get("status"))) {
+					return permissionCheckResult;
+				}
+			}
+			
 			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath);
 			
 			result.put("status", "ok");
@@ -1194,8 +1220,6 @@ public class EzWebFolderGWController_m {
 		Date date                  = new Date();
 		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		
-			
-		
 		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
@@ -1208,6 +1232,13 @@ public class EzWebFolderGWController_m {
 			String lang   = common.getLang();
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
+			if (!isWebfolderAdmin(userInfo)) {
+				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderList, fileList, userInfo.getTenantId());
+				
+				if ("error".equals(permissionCheckResult.get("status"))) {
+					return permissionCheckResult;
+				}
+			}
 			
 			int failCount = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
 					userId, offset, companyId, timeUTC, userInfo.getDisplayName1(), userInfo.getDisplayName2());
@@ -1264,7 +1295,16 @@ public class EzWebFolderGWController_m {
 		
 		try {
 			MCommonVO user = mOptionService.commonInfoWeb(serverName, userId);
-			ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId ,tenantId, userId, offset, user.getCompanyId(), user.getUserName(), user.getUserName2(), timeUTC);
+			
+			if (!isWebfolderAdmin(user.getRollInfo())) {
+				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, user.getDeptId(), user.getCompanyId(), folderList, fileList, tenantId);
+				
+				if ("error".equals(permissionCheckResult.get("status"))) {
+					return permissionCheckResult;
+				}
+			}
+			
+			ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId, tenantId, userId, offset, user.getCompanyId(), user.getUserName(), user.getUserName2(), timeUTC);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1303,48 +1343,6 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezwebfolder/trashcan-check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
-		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
-		JSONObject result = new JSONObject();
-		
-		logger.debug("ServerName: " + serverName + " || userId: " + userId);
-		
-		if (serverName.equals("") || userId.equals("")) {
-			logger.debug("Parameter error!");
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			return result;
-		}
-		
-		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, "", "");
-			boolean check = checkWfAdmin(userInfo);
-			
-			if (check == true) {
-				result.put("data", "1");
-			}
-			else {
-				result.put("data", "0");
-				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t28", locale));
-			}
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-		}
-		
-		return result;
-	}
-	
 	private <T> T orElse(T value, T other) {
 		if (other == null) {
 			throw new IllegalArgumentException("other is null!");
@@ -1366,10 +1364,13 @@ public class EzWebFolderGWController_m {
 		}
 		
 		return false;
+	}	
+	
+	private boolean isWebfolderAdmin(LoginVO user) {
+		return isWebfolderAdmin(user.getRollInfo());
 	}
 	
-	private boolean checkWfAdmin(LoginVO user) {
-		String rollInfo = user.getRollInfo();
+	private boolean isWebfolderAdmin(String rollInfo) {
 		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wf=1");
 	}
 }
