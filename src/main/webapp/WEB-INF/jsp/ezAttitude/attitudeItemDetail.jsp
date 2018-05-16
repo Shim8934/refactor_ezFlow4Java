@@ -91,9 +91,10 @@
 					$.ajax({
 						type : "POST",
 						async : true,
-						url : "/ezAttitude/attitudeDeleteItem.do",
+						url : "/ezAttitude/adminAttiDelItem.do",
 						data : {
-							attitudeId : attitudeId
+							attitudeId : attitudeId,
+							mode : "admin"
 						},
 						success : function(result) {
 							alert("<spring:message code='ezAttitude.bbhs27'/>");
@@ -116,7 +117,6 @@
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
                 	 try { openWin.focus(); } catch (e) { }
 	            }
-				openWin.opener = window.opener;
 				window.close();
 			}
 			

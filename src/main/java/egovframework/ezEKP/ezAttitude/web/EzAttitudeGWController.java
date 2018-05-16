@@ -301,15 +301,23 @@ public class EzAttitudeGWController {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String mode = request.getParameter("mode");
 			
+			if (mode == null) {
+				mode = "";
+			}
+			LOGGER.debug("!(%(!#$%!#*%*!$#%(!#$(%!(#$% mode : " + mode);
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId());
+			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
+			
+			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, userId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
