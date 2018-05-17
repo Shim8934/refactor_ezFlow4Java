@@ -1063,8 +1063,8 @@
 	<!-- 환경설정 저장하기 -->
 	<insert id="insertUpdateJournalEnv" parameterClass="map">
 		MERGE INTO tbl_journal_env   
-		USING DUAL
-		ON (user_id = #userId#)
+			USING DUAL
+			ON (user_id = #userId#)
 		WHEN MATCHED THEN
 			UPDATE SET
 				tenant_id = #tenantId#
@@ -1170,10 +1170,17 @@
 				user_id = #userId#
 		</selectKey>
 		<isEmpty property="isUser">
-			insert into tbl_journal_view 
-				(user_id,		tenant_id,		journal_id,		view_date)
-			values
-				(#userId#,		#tenantId#,		#journalId#,	TO_DATE(#viewDate#, 'YYYY-MM-DD HH24:MI:SS'))
+			merge into tbl_journal_view
+				using dual
+				on (user_id = #userId# and journal_id = #journalId#)
+			when matched then
+				update set
+				tenant_id = #tenantId#
+			when not matched then
+				insert into tbl_journal_view 
+					(user_id,		tenant_id,		journal_id,		view_date)
+				values
+					(#userId#,		#tenantId#,		#journalId#,	TO_DATE(#viewDate#, 'YYYY-MM-DD HH24:MI:SS'))
 		</isEmpty>
 		<isNotEmpty property="isUser">
 			update 
@@ -1186,6 +1193,8 @@
 				tenant_id = #tenantId#
 			and 
 				user_id = #userId#
+			and
+				recieve_date is null
 		</isNotEmpty>
 	</insert>
 
