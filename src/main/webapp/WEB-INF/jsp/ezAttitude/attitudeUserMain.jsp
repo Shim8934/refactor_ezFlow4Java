@@ -412,11 +412,10 @@
 							for (var j = 0; j<= subDate; j++) {
 								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
 								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-								var resultRegion = result[i].region.length >= 32 ? result[i].region.substring(0,32) + ".." : result[i].region;
 								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append($("<tr></tr>").append($("<td></td>")
 																															.attr("attitudeId", result[i].attitudeId)
 																															.attr("typeId", result[i].typeId)
-																															.html(result[i].typeName + (resultRegion != "" ? " : " + resultRegion : ""))));
+																															.html(result[i].typeName + (result[i].region.trim() != "" ? " : " + result[i].region.trim() : ""))));
 							}
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
@@ -686,7 +685,9 @@
 					    		if (json[i].region != "" && json[i].content != "") {
 					    			gubunBar = " / ";
 					    		}
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (json[i].content == "" ? "" : gubunBar + json[i].content)).text();
+					    		
+					    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 	
 					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
 				    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + json[i].writerName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerName)));	
@@ -739,7 +740,9 @@
 					    		if (json[i].region != "" && json[i].content != "") {
 					    			gubunBar = " / ";
 					    		}
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (json[i].content == "" ? "" : gubunBar + json[i].content)).text();
+					    		
+					    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 					    		
 					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
 					    		
@@ -818,7 +821,9 @@
 				    		if (json[i].region != "" && json[i].content != "") {
 				    			gubunBar = " / ";
 				    		}
-				    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (json[i].content == "" ? "" : gubunBar + json[i].content)).text();
+				    		
+				    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
+				    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 				    		
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:37px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i-j+1))));
 				    		objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(json[i].typeName)));

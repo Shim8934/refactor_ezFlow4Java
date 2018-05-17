@@ -192,6 +192,7 @@
 				$.ajax({
 					type : 'get',
 				    url : '/ezAttitude/attModAppDet.do',
+				    async : false,
 				    data : obj,
 				    dataType : "json",
 				    error: function(xhr, status, error){
