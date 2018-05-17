@@ -506,11 +506,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		String[] typeList = typeConfigList.split(";");
-		
-		for (int i = 0; i < typeList.length; i++) {
-			
-			String[] typeInfo = typeList[i].split(",");
+		for (String typeInfoList : typeConfigList.split(";")) {
+			String[] typeInfo = typeInfoList.split(",");
 			
 			LOGGER.debug("typeId = " + typeInfo[0]);
 			
@@ -529,14 +526,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("insertAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("typeId", typeId);
 		map.put("typeName", typeName);
 		map.put("typeName2", typeName2);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		ezAttitudeDAO.insertAttitudeType(map);
+		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "", "", tenantId);
+		
+		if (list.size() < 15) {
+			ezAttitudeDAO.insertAttitudeType(map);
+		}
 		
 		LOGGER.debug("insertAttitudeType ended");
 	}

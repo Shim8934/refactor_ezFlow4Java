@@ -205,7 +205,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 유형관리  화면 호출 함수
+	 * 관리자 휴가유형 화면 호출 함수
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfig.do")
@@ -259,7 +259,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 유형관리 설정 정보 호출 함수
+	 * 관리자 휴가유형 설정 정보 호출 함수
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfigInfo.do")
@@ -340,7 +340,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 유형관리 유형추가 팝업창 호출 함수
+	 * 관리자 휴가유형 유형추가 팝업창 호출 함수
 	 * @return
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/addAttitudeType.do")
@@ -389,7 +389,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 유형관리 유형수정 팝업창 호출 함수
+	 * 관리자 휴가유형 유형수정 팝업창 호출 함수
 	 * @return
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/showAttitudeType.do")
@@ -486,10 +486,6 @@ public class EzAttitudeAdminBOMController {
 		} else {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
 		}
-		
-//		JSONObject resultBody = (JSONObject) result.getBody();
-		
-//		String status = resultBody.get("status").toString();
 		
 		LOGGER.debug("saveAttutideType ended.");
 		
