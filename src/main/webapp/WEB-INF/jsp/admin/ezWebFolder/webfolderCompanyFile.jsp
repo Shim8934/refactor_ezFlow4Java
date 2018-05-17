@@ -193,6 +193,10 @@
 		<div class="wfFogPanel" style="display: none;" id="mailPanel" tabindex="0">&nbsp;</div>
 		<div class="layerpopup wfPopup" style="display: none;" id="iFramePanel"><iframe src="" style="border:none;" id="iFrameLayer"></iframe></div>
 		
+		<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+			<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+		</div>
+		
 		<div id="tblPageRayer"></div>
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>

@@ -133,10 +133,11 @@
 		function renderFileList() {
 			var orderInf = tableView.getOrderInfo();
 			var listCnt  = document.getElementById("listCount").value;
+			showProgress();
 			
 			$.ajax ({
 				type: "POST",
-				async: false,
+				async: true,
 				url : "/ezWebFolder/getTrashCanList.do",
 				dataType: "json",
 				data : {
@@ -156,6 +157,7 @@
 					"mode"             : "admin"
 				},
 				success : function (data) {
+					hideProgress();
 					result = data.data;
 					
 					trashCanList = result.trashCanList;
@@ -180,7 +182,8 @@
 					+ folderCnt +" </span>"+ strLang42 +" / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>" + strLang42 + "]";
 				},
 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					hideProgress();
+// 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			})
 			
@@ -547,6 +550,11 @@
 		</div>
 		<span class="wfCloseBttn" onClick="doLayerPopup();"></span>
 	</div>	
+	
+	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+		<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+	</div>
+	
 	<div id="tblPageRayer"></div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
