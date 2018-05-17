@@ -1261,7 +1261,7 @@
 			AND
 				TENANT_ID  = #tenantId#
 			AND 
-				USE_STATUS = 'T'
+				USE_STATUS != 'Y'
 		]]>
 	</delete>
 	
@@ -1271,13 +1271,27 @@
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
-				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-			AND
 				TENANT_ID = #tenantId# 
 			AND
-				COMPANY_ID = #companyId#
+				FOLDER_ID = #folderId#
 			AND
 				USE_STATUS = 'T'
+		]]>
+	</delete>
+	
+	<delete id="EzWebFolderDAO_m.deleteSubFolder" parameterClass="Map" >
+	<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				TENANT_ID = #tenantId# 
+			AND
+				FOLDER_ID != #folderId#
+			AND
+				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+			AND
+				USE_STATUS = 'N'
 		]]>
 	</delete>
 	
@@ -1378,8 +1392,6 @@
 			FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
  		AND
 			DELETER_ID = #userId#
-		AND
-			UPDATE_DATE = #updateDate#
 	</update>
 	
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteVO">

@@ -63,6 +63,8 @@ public interface EzWebFolderService_m {
 	int deleteFile(String fileId, int tenantId) throws Exception;
 
 	int deleteFolder(FolderVO folderVO) throws Exception;
+	
+	int deleteSubFolder(FolderVO folderVO) throws Exception;
 
 	void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception;
 
@@ -110,5 +112,6 @@ public interface EzWebFolderService_m {
 	void movSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId, int levelDistance, int tenantId, String folderId, String updateDate) throws Exception;
 
 	void moveFile(String fileId, String folderId, int tenantId, String timeUTC) throws Exception;
+
 
 }
