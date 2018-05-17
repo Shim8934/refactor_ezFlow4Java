@@ -7,6 +7,12 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
+		<style>
+		.listview, .popuplist .listview table, .popuplist .listview th, .popuplist .listview td, .content .listview table, .content .listview th, .content .listview td {
+			border: 0px;
+        	border-bottom: 1px solid #ddd;
+		}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>
@@ -695,14 +701,14 @@
 	            <th style="text-align:center">PopUp Size</th>
 	            <td colspan="2" style="padding-top:5px;">
 	                <input type="radio" id="chk_Full" name="radio" style="margin-top:-5px;" onclick="rad_Select(this)" checked/>FULL
-	                <input type="radio" id="chk_Size" name="radio" style="margin-top:-5px;" onclick="rad_Select(this)" />SIZE<br />
-	                <div id="div_Size" style="display:none">Width : <input type="text" id="txt_Width" style="width:30px;" />&nbsp; Height : <input type="text" id="txt_Height" style="width:30px;" /></div>
+	                <input type="radio" id="chk_Size" name="radio" style="margin-top:-5px;" onclick="rad_Select(this)" />SIZE &nbsp;&nbsp;&nbsp;&nbsp; 
+	                <span id="div_Size" style="display:none">Width : <input type="text" id="txt_Width" style="width:30px;" />&nbsp; Height : <input type="text" id="txt_Height" style="width:30px;" /></span>
 	            </td>
 	        </tr>
 	        <tr>
 	            <th><a class="imgbtn"><span onclick="regit()"><spring:message code = 'ezPersonal.t1029' /></span></a></th>
-	            <td colspan="2">
-	                <div class="listview" style="height:150px;overflow-y:auto;overflow-x:hidden;" id="AccessList">
+	            <td colspan="2" style="padding:0px;">
+	                <div class="listview" style="height:150px;overflow-y:auto;overflow-x:hidden;border-bottom:0px;" id="AccessList">
 	                </div>
 	            </td>
 	        </tr>

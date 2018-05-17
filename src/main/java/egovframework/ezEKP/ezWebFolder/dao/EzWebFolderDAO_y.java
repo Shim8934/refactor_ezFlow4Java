@@ -155,7 +155,7 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	}
 	
 	public void deleteSubFolder(Map<String, Object> map) {
-		update("EzWebFolderDAO_y.deleteFolder", map );
+		update("EzWebFolderDAO_y.deleteSubFolder", map );
 	}
 	
 	public void deleteFile(Map<String, Object> map) {

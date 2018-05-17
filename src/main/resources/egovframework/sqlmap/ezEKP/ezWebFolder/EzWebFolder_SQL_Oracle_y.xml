@@ -1285,7 +1285,7 @@
 			and
 		    	TENANT_ID = #tenantId#
 		    and
-		    	FODLER_ID != #folderId#
+		    	FOLDER_ID != #folderId#
 		    and 
 		    	FOLDER_PATH like (			
 					select path 

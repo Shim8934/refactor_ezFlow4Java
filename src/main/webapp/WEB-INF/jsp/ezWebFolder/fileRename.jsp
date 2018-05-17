@@ -57,7 +57,7 @@
 		}
 	</script>
 </head>
-<body class="popup"> 
+<body class="popup" style="overflow: hidden;"> 
 	<h1 id ="topMenu" style="margin:2px;"><spring:message code='ezWebFolder.t118'/></h1>
 	<div style="margin: 0px; height:112px; border:1px solid #ddd; padding:15px; margin-bottom:10px">
 		<div style="text-align:left; font-size:12px"><spring:message code='ezWebFolder.t119'/></div>

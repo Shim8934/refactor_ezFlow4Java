@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzLadderService")
 public class EzLadderServiceImpl implements EzLadderService {
@@ -133,6 +134,18 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
+		// 생성된 지 24시간 여부
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),vo.getOffset(), false);
+		nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+		
+		for(LadderVO userVO:list) {
+			if(userVO.getWriteDate().toString().compareTo(nowDate) > 0) {
+				userVO.setNewFlag(1);
+			} else {
+				userVO.setNewFlag(0);
+			}
+		}
+
 		if(lang.equals("2")) {
 			for(LadderVO userVO : list) {
 				userVO.setWriterName(userVO.getWriterName2());
@@ -158,6 +171,19 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("sort", sort);
 		map.put("sortFlag", sortFlag);
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
+		
+		// 생성된 지 24시간 여부
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),vo.getOffset(), false);
+		nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+		
+		for(LadderVO userVO:list) {
+			if(userVO.getWriteDate().toString().compareTo(nowDate) > 0) {
+				userVO.setNewFlag(1);
+			} else {
+				userVO.setNewFlag(0);
+			}
+		}
+		
 		if(lang.equals("2")) {
 			for(LadderVO userVO : list) {
 				userVO.setWriterName(userVO.getWriterName2());
@@ -201,6 +227,18 @@ public class EzLadderServiceImpl implements EzLadderService {
 		}
 		else {						// 전체버튼 검색
 			list = ezLadderDAO.searchAllLadderList(map);
+		}
+		
+		// 생성된 지 24시간 여부
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),vo.getOffset(), false);
+		nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+		
+		for(LadderVO userVO:list) {
+			if(userVO.getWriteDate().toString().compareTo(nowDate) > 0) {
+				userVO.setNewFlag(1);
+			} else {
+				userVO.setNewFlag(0);
+			}
 		}
 		
 		if(lang.equals("2")) {
