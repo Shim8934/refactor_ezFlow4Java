@@ -28,7 +28,7 @@
 		            //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
-		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(448, 200));	
+		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(460, 200));	
 		            } else {
 		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(400, 200));
 		            }
@@ -88,8 +88,11 @@
 		            <li><span onClick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
 				</ul>
 		    </div>
-		    <div>
-		        <table class="mainlist" style="width:100%"> 
+		    <script type="text/javascript">
+				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			</script>
+		    <div style="width:100%;border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;">
+		        <table class="mainlist" style="width:100%;"> 
 					<tr> 
 						<th style="width:10%; text-align:center"><spring:message code = 'ezPersonal.t290' />/<spring:message code = 'ezPersonal.t291' /></th> 
 						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t304' /></th> 
@@ -98,7 +101,13 @@
 						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t67' /></th> 
 				        <th style="width:10%; text-align:center"></th> 
 					</tr> 
-					
+					<c:if test="${list == '[]'}">
+						<tr>
+							<td colspan="6" style="text-align: center; color:#5b5a5a;">
+		  						<spring:message code='main.t00026'/>
+							</td>
+						</tr>
+					</c:if>
 					<c:forEach var="item" items="${list }">
 						<tr> 
 							<td style="text-align:center">

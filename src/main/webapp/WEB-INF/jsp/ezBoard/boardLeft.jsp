@@ -58,12 +58,15 @@
 		        else if (Func == "3") {
 		        	WebPartToggle(level1El.item(level1El.length - 1));
 		        	Poll_Open(1);
+				} else if (Func == "4") {
+					WebPartToggle(level1El.item(level1El.length - 1));
+					ladder_Func(1);
 				}
 		        else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
 		            ShowMyBoardItem();
 		        }
 		
-		        if (Func != "1" && Func != "3") {
+		        if (Func != "1" && Func != "3" && Func != "4") {
 		            if (subFunc == "1") {
 		                MyBoard();
 		            }
@@ -550,6 +553,19 @@
 		        }	    
 		    }
 			
+			function ladder_Func(idx) {
+				$(".on").attr("class", "off");
+				$(".ladder h2").attr("class", "on");
+				$(".ladder").next().attr("class", "on");
+				
+				if (CrossYN()) {
+					window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
+		        } else {
+		        	window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
+		        }
+	            SetTreeviewUnSelect("");
+			}
+
 		    function toggleQuestionList() {
 		    	if( prevSelMenu != null )
 		    		prevSelMenu.className = "off";
@@ -724,6 +740,10 @@
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
 	        </ul>
+			<div class="ladder" onclick="ladder_Func(1)">
+				<h2><span><spring:message code="ezBoard.l001" /></span></h2>
+			</div>
+			<ul></ul>
 	        <h3>
 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 		    </h3>
