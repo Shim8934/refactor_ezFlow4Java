@@ -20,7 +20,6 @@
 	<resultMap class="journalAuthCheckVO" id="journalAuthCheckMap">
 		<result property="isLive" 			column="is_live" />
 		<result property="checkSusin" 		column="check_susin" />
-		<result property="count" 			column="count" />
 	</resultMap>
 	
 	<resultMap class="journalReplyVO" id="journalReplyMap">
@@ -1521,7 +1520,6 @@
 	<!-- 일지 조회가능 유무 체크 -->
 	<select id="checkJournalAuth" parameterClass="map" resultMap="journalAuthCheckMap">
 		select 
-			count(r.user_id) as count,
 			case 
 				when j.journal_id = #journalId# then 'Y'
 				else 'N'
@@ -1534,7 +1532,8 @@
 			tbl_journal j
 		left join 
 			tbl_journal_recv r on (j.journal_id = r.journal_id and j.tenant_id = r.tenant_id)
-		where
+		right outer join dual 
+		on
 			j.journal_id = #journalId#
 		and 
 			j.tenant_id = #tenantId#
