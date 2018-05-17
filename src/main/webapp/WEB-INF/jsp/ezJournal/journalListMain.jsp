@@ -852,7 +852,7 @@
 				}
 				
 				for (var i = 0; i < journalIdList.length; i++) {
-					if ($("#" + journalIdList[i]).attr("mine") == "N") {
+					if ($("#" + journalIdList[i]).attr("mine") == "N" && listType != "recv") {
 						alert("<spring:message code='ezBoard.t265'/>");
 						return;
 					}
