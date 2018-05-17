@@ -49,6 +49,7 @@
 			var holidayFlag = false;
 			var closedDay = "";
 			var holidayAttReg = true;
+			var listRefresh;
 			
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -61,7 +62,7 @@
 				select_memorialDays(uselang);
 				setHoliday();
 				checkOutCom();
-				
+				setTypeName();
 			}
 			
 			window.onresize = function () {   	
@@ -306,8 +307,7 @@
 		        	},
 		        	success : function (result) {
 		        		alert("<spring:message code='ezAttitude.bbhs19'/>");
-		        		window.opener.getAttitudeCheckList();
-// 		        		window.opener.parent.frames["left"].getAttitudeList();
+		        		listRefresh();
 		        		window.close();
 		        	}
 		        });
@@ -478,6 +478,14 @@
 				}
 				editHeight += "PX";
 				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
+			}
+			
+			function setTypeName() {
+				$('#subSelectAtti option').each(function(){
+					var typeName = $(this).text();
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+					$(this).text(typeName);
+				})
 			}
 		</script>
 	</head>

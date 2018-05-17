@@ -33,7 +33,7 @@
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var font = "<c:out value='${font}'/>";
 			var authFlag = "<c:out value='${authFlag}'/>";
-			
+
 			window.onload = function () {
 				setHtml();
 			}
@@ -42,6 +42,9 @@
 				$("#attiInfoView").append(formHtml);
 				
 				$("#attiInfoView tr td *").remove();
+				
+				//유형명
+            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 				
 				$("#typeName").text(" " + typeName);
 				$("#writerName").text(" " + writerName);
@@ -108,6 +111,7 @@
 			
 			function modifyAttitude() {
 				var openWin = null;
+				
 				if (CrossYN()) {
                     openWin = window.open("/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
@@ -117,6 +121,7 @@
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
                 	 try { openWin.focus(); } catch (e) { }
 	            }
+				openWin.listRefresh = window.opener.getAttitudeCheckList;
 				window.close();
 			}
 			
@@ -147,7 +152,6 @@
 									<c:if test="${authFlag == 'M' }">
 										<li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
 		                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
-		                            	<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 									</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.bbhs21'/></span></li>
 	                            </ul>
