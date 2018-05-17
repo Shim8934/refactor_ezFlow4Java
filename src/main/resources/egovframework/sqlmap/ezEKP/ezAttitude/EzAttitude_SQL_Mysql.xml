@@ -295,7 +295,8 @@
 			CHANGE_TYPE_NAME2,
 			APPR_USER_ID,
 			APPR_USER_NAME,
-			APPR_USER_NAME2
+			APPR_USER_NAME2,
+			APPR_DATE
 			)
 			SELECT
 				#companyId#,
@@ -321,7 +322,8 @@
 				a.type_name2,
 				#adminId#,
 				c.displayname,
-				c.displayname2
+				c.displayname2,
+				#apprDate#
 			FROM
 				(select 
 					*
@@ -1436,7 +1438,8 @@
 			ORIGIN_TYPE_ID,
 			ORIGIN_TYPE_NAME,
 			ORIGIN_TYPE_NAME2,
-			ORIGIN_DATE_TYPE
+			ORIGIN_DATE_TYPE,
+			APPR_DATE
 			)
 			SELECT
 				#attVO.companyId#,
@@ -1463,7 +1466,8 @@
 				#attVO.typeId#,
 				#attVO.typeName#,
 				#attVO.typeName2#,
-				#attVO.dateType#
+				#attVO.dateType#,
+				#apprDate#
 			FROM
 				(select 
 					*
