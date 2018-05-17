@@ -563,7 +563,7 @@
 		                    }
 		                    
 		                    break;
-		                case "btn_Manager": open_admin_home(code,"2");
+		                case "btn_Manager": open_admin(code);
 		                    break;
 		                case "btn_Manager_home1": open_admin_home(code,"2");
 		                    break;
@@ -689,7 +689,7 @@
 		    
 		    function open_admin(code) {
 		        var wWeight = "860";
-		        var wHeight = "530";
+		        var wHeight = "510";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = (width - wWeight) / 2;

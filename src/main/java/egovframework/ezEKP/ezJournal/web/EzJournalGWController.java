@@ -380,7 +380,10 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
+			if (companyId == null || companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
 			
 			LOGGER.debug("companyId : " + companyId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
@@ -692,12 +695,8 @@ public class EzJournalGWController {
 				viewDate = request.getParameter("viewDate");
 			}
 			*/
-			String isRead = "";
-			if (request.getParameter("isRead") != null) {
-				isRead = request.getParameter("isRead");
-			}
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			JournalVO journal = ezJournalService.getJournal(journalId, userId, isRead, info.getTenantId(), lang, info.getOffSet());
+			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId(), lang, info.getOffSet());
 			
 			if (journal.getFileList().size() > 0) {
 				List<JournalFileVO> fileList = journal.getFileList();
@@ -834,14 +833,14 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String journalIdArray = request.getParameter("journalIdList").toString();
-			String viewDate = request.getParameter("viewDate");
+//			String viewDate = request.getParameter("viewDate");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			List<String> journalIdList = gson.fromJson(journalIdArray, new TypeToken<List<String>>(){}.getType());
 			
 			LOGGER.debug("journalIdList : " + journalIdList);
 			
-			ezJournalService.saveJournalViewInfo(journalIdList, viewDate,info.getUserId(), info.getTenantId());
+			ezJournalService.saveJournalViewInfo(journalIdList, info.getUserId(), info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
