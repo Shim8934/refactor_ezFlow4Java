@@ -62,12 +62,12 @@
 	            szInput2 = ReplaceText(szInput2, " ", "");
 	
 	            if (szInput1 == "") {
-	                alert("<spring:message code='ezEmail.t349'/>");
+	                alert('<spring:message code='ezWebFolder.t314'/>');
 	                return;
 	            }
 	            
 	            if (szInput2 == "") {
-	                alert("<spring:message code='ezEmail.t349'/>");
+	                alert('<spring:message code='ezWebFolder.t315'/>');
 	                return;
 	            }
 	            
