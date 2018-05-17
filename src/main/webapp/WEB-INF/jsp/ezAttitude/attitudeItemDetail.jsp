@@ -152,7 +152,6 @@
 									<c:if test="${authFlag == 'M' }">
 										<li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
 		                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
-		                            	<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 									</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.bbhs21'/></span></li>
 	                            </ul>
