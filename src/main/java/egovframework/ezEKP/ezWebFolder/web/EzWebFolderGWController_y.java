@@ -469,7 +469,7 @@ public class EzWebFolderGWController_y {
 			if ( Integer.parseInt(request.getParameter("listCount")) == 0 ) {
 				listCount = usrListCnt ;
 			}
-			int pStart  =request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
 			int pEnd = listCount;
 			
 			if (usrListCnt != listCount) {
@@ -491,12 +491,13 @@ public class EzWebFolderGWController_y {
 			int fldCnt  = cnt.get("fldTotalCnt");
 			totalCount  = cnt.get("totalCount");
 			
-			if (totalCount%listCount == 0) {
-				totalpages = (totalCount/listCount);
+			if (totalCount % listCount == 0) {
+				totalpages = (totalCount / listCount);
 			} else {
-				totalpages = (totalCount/listCount)+1;
+				totalpages = (totalCount / listCount) + 1;
 			}
-			if ( currPage > totalpages & totalCount != 0) {
+			
+			if (currPage > totalpages & totalCount != 0) {
 				currPage = totalpages;
 			}
 			pStart = (listCount*currPage )-listCount;
