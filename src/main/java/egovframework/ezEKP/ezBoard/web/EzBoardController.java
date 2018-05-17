@@ -2583,13 +2583,28 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA20>" + "true" + "</DATA20>");
 					} else{ 
 						logger.debug("FG3");
-						resultXML.append("<DATA14>" + boardSearchList.get(j).get("BOARDADMIN_FG") + "</DATA14>");
+						/*resultXML.append("<DATA14>" + boardSearchList.get(j).get("BOARDADMIN_FG") + "</DATA14>");
 						resultXML.append("<DATA15>" + boardSearchList.get(j).get("READ_FG") + "</DATA15>");
 						resultXML.append("<DATA16>" + boardSearchList.get(j).get("WRITE_FG") + "</DATA16>");
 						resultXML.append("<DATA17>" + boardSearchList.get(j).get("REPLY_FG") + "</DATA17>");
 						resultXML.append("<DATA18>" + boardSearchList.get(j).get("DELETE_FG") + "</DATA18>");
 						resultXML.append("<DATA19>" + "NO" + "</DATA19>");
-						resultXML.append("<DATA20>" + boardSearchList.get(j).get("LISTVIEW_FG") + "</DATA20>");
+						resultXML.append("<DATA20>" + boardSearchList.get(j).get("LISTVIEW_FG") + "</DATA20>");*/
+						
+						List<HashMap<String, Object>> boardManageList = 
+								ezBoardService.CheckBoardManage(userInfo, boardSearchList.get(j).get("BOARDID").toString());
+						
+						for(int k = 0 ; k < boardManageList.size() ; k++) {
+							resultXML.append("<DATA14>" + boardManageList.get(k).get("BOARDADMIN_FG") + "</DATA14>");
+							resultXML.append("<DATA15>" + boardManageList.get(k).get("READ_FG") + "</DATA15>");
+							resultXML.append("<DATA16>" + boardManageList.get(k).get("WRITE_FG") + "</DATA16>");
+							resultXML.append("<DATA17>" + boardManageList.get(k).get("REPLY_FG") + "</DATA17>");
+							resultXML.append("<DATA18>" + boardManageList.get(k).get("DELETE_FG") + "</DATA18>");
+							resultXML.append("<DATA19>" + "NO" + "</DATA19>");
+							resultXML.append("<DATA20>" + boardManageList.get(k).get("LISTVIEW_FG") + "</DATA20>");
+						}
+						
+						boardManageList = null;
 					}	
 				}
 				resultXML.append("</CELL>");

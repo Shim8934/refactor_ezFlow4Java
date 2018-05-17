@@ -2013,13 +2013,7 @@
        				A.EXTENSIONATTRIBUTE10, 
   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
   			    	I.GUBUN,
-  			    	I.ATTRIBUTEYN,
-  			    	M.BOARDADMIN_FG,
-  			    	M.READ_FG,
-                    M.WRITE_FG,
-                    M.REPLY_FG,
-                    M.DELETE_FG,
-                    M.LISTVIEW_FG
+  			    	I.ATTRIBUTEYN
 				  FROM 
 				  	TBL_BOARD_ITEM A 
 				  LEFT OUTER JOIN 
@@ -2045,13 +2039,7 @@
 				  ON 
 				  	A.TENANT_ID = I.TENANT_ID
 				  AND
-				  	A.BOARDID = I.BOARDID
-				  INNER JOIN
-				    TBL_BOARD_BOARDMANAGE M	    
-				  ON 
-					A.TENANT_ID = M.TENANT_ID
-				  AND
-					A.BOARDID = M.BOARDID					
+				  	A.BOARDID = I.BOARDID					
 				  WHERE 
 				  	$v_PWHEREBOARD$
 				  AND
@@ -2074,11 +2062,17 @@
 				  	FROM
 				  		TBL_BOARD_BOARDMANAGE
 				  	WHERE
-				  		( BOARDADMIN_FG = 'true' OR ACCESS_ = '1')
+				  		( BOARDADMIN_FG = 'true'
 				  	AND
 				  		( ACCESSID = #v_pCompanyID#
 				  	     OR ACCESSID = #v_pDeptID#
-				  	     OR ACCESSID = #v_PUSERID#))	
+				  	     OR ACCESSID = #v_PUSERID#))
+				  	OR
+				  	   	 ( ACCESS_ = '1'
+				  	AND
+				  		( ACCESSID = #v_pCompanyID#
+				  	     OR ACCESSID = #v_pDeptID#
+				  	     OR ACCESSID = #v_PUSERID#)))
 				  $v_PSUBQUERY$ 
  				  ORDER BY 
  				  	$iv_PORDERBYSUB$
@@ -4715,5 +4709,26 @@
 	        	ITEMID = #orgItemID#
 		]]>
   </update>
+  
+  <select id="EzBoardDAO.CheckBoardManage" parameterClass="Map" resultClass="HashMap">
+  		<![CDATA[
+  			SELECT 
+  				LISTVIEW_FG,
+				READ_FG,
+				WRITE_FG,
+				REPLY_FG,
+				DELETE_FG
+			FROM 
+				TBL_BOARD_BOARDMANAGE
+			WHERE  
+				TENANT_ID = #v_tenantID#
+			AND
+				BOARDID = #v_pBoardID#
+			AND
+				( ACCESSID = #v_pCompanyID#
+				 OR ACCESSID = #v_pDeptID#
+				 OR ACCESSID = #v_userID#)	 	
+  		]]>
+  </select>
   	
 </sqlMap>

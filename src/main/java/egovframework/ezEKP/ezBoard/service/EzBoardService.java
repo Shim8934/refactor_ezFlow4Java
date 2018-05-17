@@ -275,4 +275,7 @@ public interface EzBoardService {
 	
 	//2018-05-09 강민수92
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
+
+	//2018-05-17 김혜정
+	public List<HashMap<String, Object>> CheckBoardManage(LoginVO userInfo, String boardID) throws Exception;
 }

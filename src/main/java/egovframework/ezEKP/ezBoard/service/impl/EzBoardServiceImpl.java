@@ -3905,6 +3905,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("moveOneLineReply ended");
 	}
 
+	//2018.05.17 김혜정
+	@Override
+	public List<HashMap<String, Object>> CheckBoardManage(LoginVO userInfo, String boardID) throws Exception {
+		logger.debug("CheckBoardManage started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_userID", userInfo.getId());
+		map.put("v_pDeptID", userInfo.getDeptID());
+		map.put("v_pCompanyID", userInfo.getCompanyID());
+		map.put("v_tenantID", userInfo.getTenantId());
+		map.put("v_pBoardID", boardID);
+		
+		logger.debug("CheckBoardManage started");
+		return ezBoardDAO.CheckBoardManage(map);
+	}
+
 
 
 }
