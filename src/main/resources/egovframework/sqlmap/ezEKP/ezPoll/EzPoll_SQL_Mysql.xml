@@ -10,6 +10,7 @@
     <typeAlias  alias="PollQuestionStatusVO"           type="egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO"/>
     <typeAlias  alias="PollUserVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUserVO"/>
     <typeAlias  alias="PollUsersVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUsersVO"/>
+    <typeAlias  alias="loginVO"                 	   type="egovframework.let.user.login.vo.LoginVO"/>
 
     <!-- question resultMap -->
     <resultMap id="pollQuestion" class="PollQuestionVO">
@@ -95,6 +96,32 @@
         <result property="deptName"         	column="DEPT_NAME"                	columnIndex="5"/>
         <result property="deptName2"         	column="DEPT_NAME2"                	columnIndex="6"/>
         <result property="userStatus"         	column="USER_STATUS"                columnIndex="7"/>
+    </resultMap>
+    
+    <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
+        <result property="id"                   column="cn"                         columnIndex="1"/>
+        <result property="password"             column="password"                   columnIndex="2"/>
+        <result property="displayName1"         column="displayname"                columnIndex="3"/>
+        <result property="displayName2"         column="displayname2"               columnIndex="4"      nullValue=""/>
+        <result property="deptID"               column="department"                 columnIndex="5"/>
+        <result property="deptName1"            column="description"                columnIndex="6"/>
+        <result property="deptName2"            column="description2"               columnIndex="7"      nullValue=""/>
+        <result property="title1"               column="title"                      columnIndex="8"/>
+        <result property="title2"               column="title2"                     columnIndex="9"      nullValue=""/>
+        <result property="companyID"            column="companyid"                  columnIndex="10"/>
+        <result property="companyName1"         column="company"                    columnIndex="11"/>
+        <result property="companyName2"         column="company2"                   columnIndex="12"     nullValue=""/>      
+        <result property="updateDT"             column="updatedt"                   columnIndex="13"/>
+        <result property="rollInfo"             column="rollinfo"                   columnIndex="14"/>
+        <result property="phone"                column="telephonenumber"            columnIndex="15"/>
+        <result property="email"                column="mail"                       columnIndex="16"/>
+        <result property="jikChek"              column="jikchek"                    columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
+        <result property="primary"              column="primaryLang"                columnIndex="20"/>
+        <result property="gyumJik"              column="gyumJik"                	columnIndex="21"/>
+        <result property="userFileUrl"          column="userFileUrl"                columnIndex="22"/>
+        <result property="sabun"              	column="sabun"                		columnIndex="23"/>
     </resultMap>
     
     <insert id="EzPollDAO.insertQuestion" parameterClass="Map">      	
@@ -1150,6 +1177,118 @@
        	</isNotEmpty>
     </select>
     
+    <select id="EzPollDAO.getQstAllUsers" resultMap="login">
+		<![CDATA[
+			SELECT
+				a.user_id AS CN,
+				b.password,
+				a.user_name AS displayname,
+				a.user_name2 AS displayname2,
+				a.dept_id AS department,              
+				a.dept_name AS description,
+				a.dept_name2 AS description2,
+				b.title,
+				b.title2,
+				b.companyid,
+				b.company,
+				b.company2,
+				b.updatedt,
+				b.rollinfo,
+				b.telephonenumber,
+				b.mail,
+				b.jikchek,
+				a.tenant_id,
+				b.deptPathCode,
+				b.primaryLang,
+				b.gyumJik,
+				b.userFileUrl,
+				b.sabun
+			FROM
+				(
+					SELECT 
+						 TENANT_ID,
+						 USER_ID,
+						 USER_NAME,
+						 USER_NAME2,
+						 DEPT_ID,
+						 DEPT_NAME,
+						 DEPT_NAME2,
+						 USER_STATUS
+					FROM 
+						TBL_VOTE_USERS
+					WHERE  
+						TENANT_ID = #tenant_id#
+					AND
+						QST_ID = #qst_id#
+				) a
+			LEFT JOIN
+				(
+					SELECT 
+						cn,  
+						password,
+						displayname,
+						displayname2,
+						department,              
+						description,
+						description2,
+						title,
+						title2,
+						physicaldeliveryofficename as companyid,
+						company,
+						company2,
+						updatedt,
+						extensionattribute1 as rollinfo,
+						telephonenumber,
+						mail,
+						extensionattribute10 as jikchek,
+						tenant_id,
+						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						extensionattribute4 as gyumJik,
+						extensionattribute2 as userFileUrl,
+						extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER a
+					WHERE 
+						tenant_id = #tenant_id#
+					AND 
+               			cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+					union all
+					SELECT 
+						cn,  
+						password,
+						displayname,
+						displayname2,
+						department,              
+						description,
+						description2,
+						title,
+						title2,
+						physicaldeliveryofficename as companyid,
+						company,
+						company2,
+						updatedt,
+						extensionattribute1 as rollinfo,
+						telephonenumber,
+						mail,
+						extensionattribute10 as jikchek,
+						tenant_id,
+						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						extensionattribute4 as gyumJik,
+						extensionattribute2 as userFileUrl,
+						extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_RETIRE a
+					WHERE 
+						tenant_id = #tenant_id#
+					
+				) b
+			ON
+			a.USER_ID = b.cn
+		]]>				
+    </select>
+    
     <insert id="EzPollDAO.insertQstUsers" parameterClass="Map">
        	<![CDATA[
             INSERT INTO TBL_VOTE_USERS(
@@ -1213,4 +1352,118 @@
               	USER_ID = #user_id#
 	]]>
    </update>
+   
+   <select id="EzPollDAO.getInfoOfSeenUsers" resultMap="login">
+		<![CDATA[
+			SELECT
+				a.user_id AS CN,
+				b.password,
+				IFNULL(b.displayname, a.user_id) AS DISPLAYNAME,
+				IFNULL(b.displayname2, a.user_id) AS DISPLAYNAME2,
+				b.department,              
+				b.description,
+				b.description2,
+				b.title,
+				b.title2,
+				b.companyid,
+				b.company,
+				b.company2,
+				b.updatedt,
+				b.rollinfo,
+				b.telephonenumber,
+				b.mail,
+				b.jikchek,
+				a.tenant_id,
+				b.deptPathCode,
+				b.primaryLang,
+				b.gyumJik,
+				b.userFileUrl,
+				b.sabun
+			FROM
+				(
+					SELECT 
+						QST_ID,
+						USER_ID,
+						TENANT_ID,
+						SEEN,
+						COMMENT,
+						HIDE,
+						MODIFYING
+					FROM 
+						TBL_VOTE_QUESTION_RELATED
+					WHERE  
+						TENANT_ID = #tenant_id#
+					AND
+						QST_ID = #qst_id#
+					AND
+						SEEN = 1
+				) a
+			LEFT JOIN
+				(
+					SELECT 
+						cn,  
+			            password,
+						displayname,
+						displayname2,
+						department,              
+						description,
+						description2,
+						title,
+						title2,
+						physicaldeliveryofficename as companyid,
+						company,
+						company2,
+						updatedt,
+						extensionattribute1 as rollinfo,
+						telephonenumber,
+						mail,
+						extensionattribute10 as jikchek,
+						tenant_id,
+						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						extensionattribute4 as gyumJik,
+						extensionattribute2 as userFileUrl,
+						extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER a
+					WHERE 
+						tenant_id = #tenant_id#
+					AND 
+                		cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+				UNION ALL
+					SELECT 
+						cn,  
+			            password,
+						displayname,
+						displayname2,
+						department,              
+						description,
+						description2,
+						title,
+						title2,
+						physicaldeliveryofficename as companyid,
+						company,
+						company2,
+						updatedt,
+						extensionattribute1 as rollinfo,
+						telephonenumber,
+						mail,
+						extensionattribute10 as jikchek,
+						tenant_id,
+						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						extensionattribute4 as gyumJik,
+						extensionattribute2 as userFileUrl,
+						extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_RETIRE a
+					WHERE 
+						tenant_id = #tenant_id#
+					
+				) b
+				ON
+				a.USER_ID = b.cn
+
+		]]>			
+    </select> 
 </sqlMap>
