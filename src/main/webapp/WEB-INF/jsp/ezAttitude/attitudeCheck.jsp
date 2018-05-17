@@ -241,16 +241,16 @@
 	    			   			+ "<td>" + result[i].deptName + "</td>";
 	    						
 	    			if (result[i].endDate == null || result[i].endDate == "") {
-	    				resultHtml += "<td>" + result[i].startDate + "</td>";
+	    				resultHtml += "<td>" + result[i].startDate.substring(0,16) + "</td>";
 	    			} else {
-	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
+	    				resultHtml += "<td>" + result[i].startDate.substring(0,16) + " ~ " + result[i].endDate.substring(0,16) + "</td>";
 	    			}
 	    			
-	    			if (result[i].endTime == null || result[i].endTime == "") {
-	    				resultHtml += "<td>" + result[i].startTime + "</td>";
-	    			} else {
-	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td>";
-	    			}
+// 	    			if (result[i].endTime == null || result[i].endTime == "") {
+// 	    				resultHtml += "<td>" + result[i].startTime + "</td>";
+// 	    			} else {
+// 	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td>";
+// 	    			}
 	    			
 	    			resultHtml += "<td>" + result[i].typeName + "</td></tr>";
 	    		}
@@ -426,7 +426,7 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime"><spring:message code='ezAttitude.lhj19' /></th>
+<%-- 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime"><spring:message code='ezAttitude.lhj19' /></th> --%>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th>
 					</tr>
 				</thead>

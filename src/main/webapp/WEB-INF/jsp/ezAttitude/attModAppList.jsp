@@ -1336,7 +1336,7 @@
 						<td>${list.writerName}</td>
 						<td>${list.writerDeptName}</td>
 					</c:if>
-					<td>${fn:substring(originDate,11,19) } -> ${fn:substring(changeDate,11,19) }</td>
+					<td>${fn:substring(originDate,11,16) } -> ${fn:substring(changeDate,11,16) }</td>
 					<c:if test="${list.apprStatus == 0}">
 						<td id="attStauts">신청</td>
 					</c:if>
