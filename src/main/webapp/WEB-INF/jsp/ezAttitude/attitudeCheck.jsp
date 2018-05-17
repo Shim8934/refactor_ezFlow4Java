@@ -243,7 +243,11 @@
 	    			if (result[i].endDate == null || result[i].endDate == "") {
 	    				resultHtml += "<td>" + result[i].startDate.substring(0,16) + "</td>";
 	    			} else {
-	    				resultHtml += "<td>" + result[i].startDate.substring(0,16) + " ~ " + result[i].endDate.substring(0,16) + "</td>";
+	    				if (result[i].dateType == 4) {
+	    					resultHtml += "<td>" + result[i].startDate.substring(0,11) + " ~ " + result[i].endDate.substring(0,11) + "</td>";
+	    				} else {
+		    				resultHtml += "<td>" + result[i].startDate.substring(0,16) + " ~ " + result[i].endDate.substring(0,16) + "</td>";
+	    				}
 	    			}
 	    			
 // 	    			if (result[i].endTime == null || result[i].endTime == "") {
