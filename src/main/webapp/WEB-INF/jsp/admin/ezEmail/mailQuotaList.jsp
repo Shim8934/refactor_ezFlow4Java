@@ -356,7 +356,7 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
-		<div style="width:1200px; padding-bottom:5px;">
+		<div style="width:100%; padding-bottom:5px;">
 		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
@@ -386,7 +386,7 @@
 			</tr>
 		</table>
 		</div>
-		<div style="width:1200px; border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+		<div style="width:100%; border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
 		<table class="mainlist" style="width:100%;">
 			<thead style="">
 				<tr>
