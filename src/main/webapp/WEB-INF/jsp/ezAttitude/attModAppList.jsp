@@ -165,11 +165,9 @@
 	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	    });
 
-	    $(function() {
-	    	makePageSelPage();
-	    });
-	    
 		window.onload = function() {
+			get_att_list(currentPage);
+			
 // 			if (checkAdmin == 'true') {
 // 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
 		    	

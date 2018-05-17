@@ -371,6 +371,39 @@
 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 				}
 		    }
+			
+			function addAtt() {
+				today = new Date();
+		    	dd = today.getDate();
+		    	mm = today.getMonth()+1; //January is 0!
+		    	yyyy = today.getFullYear();
+
+		    	if(dd<10) {
+		    	    dd='0'+dd
+		    	} 
+
+		    	if(mm<10) {
+		    	    mm='0'+mm
+		    	} 
+
+		    	today = yyyy + '-' + mm + '-' + dd;
+				
+				var userid = "";
+				var date = today;
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + userid, "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+			}
 	    </script>
 	</head>
 	<body>
@@ -417,6 +450,7 @@
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="addAtt();">근태작성</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
