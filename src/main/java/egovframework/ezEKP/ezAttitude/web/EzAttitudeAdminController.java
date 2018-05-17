@@ -105,7 +105,7 @@ public class EzAttitudeAdminController {
 		int startPoint = 0;
 		int endPoint = 15;
 		String adminFlag = "true";
-		String type = "0";
+		String type = "all";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
