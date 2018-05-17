@@ -521,8 +521,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void insertAttitudeType(String typeId, String typeName, String typeName2,
-			int tenantId, String companyId) throws Exception {
+	public boolean insertAttitudeType(String typeId, String typeName, String typeName2, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("insertAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -534,11 +533,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "", "", tenantId);
 		
+		boolean result = false;
+		
 		if (list.size() < 15) {
 			ezAttitudeDAO.insertAttitudeType(map);
+			
+			result = true;
 		}
 		
 		LOGGER.debug("insertAttitudeType ended");
+		
+		return result;
 	}
 
 	@Override

@@ -446,7 +446,6 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do")
 	public void saveAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		
 		LOGGER.debug("saveAttutideType started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -486,6 +485,9 @@ public class EzAttitudeAdminBOMController {
 		} else {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
 		}
+		
+		//등록, 수정시 오류처리 alert로 구분해야함 지금 등록안해도 무조건 등록됫다고 alert 뜨는중임
+		//insert시  count15개 넘으면 status failed로 리턴하게 해놓음
 		
 		LOGGER.debug("saveAttutideType ended.");
 		
