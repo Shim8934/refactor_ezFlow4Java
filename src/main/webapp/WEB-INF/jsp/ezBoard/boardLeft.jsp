@@ -58,12 +58,15 @@
 		        else if (Func == "3") {
 		        	WebPartToggle(level1El.item(level1El.length - 1));
 		        	Poll_Open(1);
+				} else if (Func == "4") {
+					WebPartToggle(level1El.item(level1El.length - 1));
+					ladder_Func(1);
 				}
 		        else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
 		            ShowMyBoardItem();
 		        }
 		
-		        if (Func != "1" && Func != "3") {
+		        if (Func != "1" && Func != "3" && Func != "4") {
 		            if (subFunc == "1") {
 		                MyBoard();
 		            }
@@ -501,6 +504,10 @@
 		    }
 			
 			function ladder_Func(idx) {
+				$(".on").attr("class", "off");
+				$(".ladder h2").attr("class", "on");
+				$(".ladder").next().attr("class", "on");
+				
 				if (CrossYN()) {
 					window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
 		        } else {

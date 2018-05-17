@@ -455,11 +455,11 @@
 			WHERE
 				c_clubname$v_USERINFO_LANG$ = #v_CLUBNAME#
 			AND
-				c_cate_a = #v_C_CATE_A#
+				RTRIM(c_cate_a) = #v_C_CATE_A#
 			AND
-				c_cate_b = #v_C_CATE_B#
+				RTRIM(c_cate_b) = #v_C_CATE_B#
 			AND
-				c_cate_c = #v_C_CATE_C#
+				RTRIM(c_cate_c) = #v_C_CATE_C#
 			AND
 				tenant_id = #tenantID#
 		]]>
