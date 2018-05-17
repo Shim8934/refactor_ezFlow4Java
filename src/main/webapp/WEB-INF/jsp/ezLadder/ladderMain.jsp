@@ -134,13 +134,9 @@
 		 		<c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
 						<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>
-						<jsp:useBean id="toDay" class="java.util.Date" />
-						<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
-						<fmt:parseDate value="${vo.writeDate}" pattern="yyyy-MM-dd" var="localeDay"/>
-						<fmt:formatDate value="${localeDay}" pattern="yyyy-MM-dd" var="localeDay"/>
-						
+					
 						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-							<c:if test="${nowDay <= localeDay }"><img src="/images/i_new.gif">&nbsp;</c:if>
+							<c:if test="${vo.newFlag == 1 }"><img src="/images/i_new.gif">&nbsp;</c:if>
 							<c:out value ="${vo.title }" />
 							<c:if test="${vo.cmt>0 }"><span id="cmt">[${vo.cmt}]</span></c:if>
 						</td>

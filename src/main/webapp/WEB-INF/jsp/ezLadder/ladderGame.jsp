@@ -249,7 +249,7 @@
 				ladder_window_resize();
 				canvasSetting();
 			} else {
-				alert("<spring:message code='ezLadder.t010' />");
+				alert("<spring:message code='ezLadder.hyh01' />");
 				window.close();
 			}
 		}

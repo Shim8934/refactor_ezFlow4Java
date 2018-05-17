@@ -9,6 +9,15 @@
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	    
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <style>
+	    .mainlist_free tr td:first-child {
+	    		padding-left:10px;
+	    		height:25px;
+	    }
+	    .mainlist_free tr th:first-child {
+	    		padding-left:10px;
+	    }
+	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
@@ -413,31 +422,38 @@
 		    	<HEADERS>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
-		        		<WIDTH>10%</WIDTH>
+		        		<WIDTH>15%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t67' /></NAME>
-		        		<WIDTH>20%</WIDTH>
+		        		<WIDTH>15%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t69' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t68' /></NAME>
-		        		<WIDTH>20%</WIDTH>
+		        		<WIDTH>15%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t91' /></NAME>
-		        		<WIDTH>20%</WIDTH>
+		        		<WIDTH>25%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t95' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t123' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
@@ -454,15 +470,17 @@
 	            </select>
 		        <ul style="margin-top:15px">
 		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
+		            <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
 		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
+		            <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 		    </script>
-		    <div class="portlet_tabpart01" style="padding-bottom:3px">
+		    <div class="portlet_tabpart01" style="padding-bottom:3px; width:100%;">
 		        <div class="portlet_tabpart01_top" id="tab1">
 	                <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
 	                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
@@ -480,10 +498,10 @@
 		        </div>
 		    </div>
 		
-		    <div class="listview" style="Width:100%; border-top:0px; margin-top:7px">
-		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:445PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		    <div class="listview" style="Width:100%;">
+		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
 		    </div>
-		    <div id="tblPageRayer" style="text-align:center;margin-top:10px"></div>
+		    <div id="tblPageRayer" style="Width:100%;text-align:center;margin-top:10px"></div>
 		</form>         
 	</body>
 	<script type="text/javascript">
