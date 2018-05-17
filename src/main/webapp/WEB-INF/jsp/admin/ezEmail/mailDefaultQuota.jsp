@@ -129,11 +129,11 @@
                 return isNum;
             }
             function valuePlus(target){
-            	var num = parseFloat(target.value) + parseFloat('0.1');
+            	var num = parseFloat(target.value) + parseFloat('1');
             	target.value = num.toFixed(1);
             }
 			function valueMinuse(target){
-				var num = parseFloat(target.value) - parseFloat('0.1');
+				var num = parseFloat(target.value) - parseFloat('1');
 				if (num >= 0) {
 	            	target.value = num.toFixed(1);
 				}
@@ -148,20 +148,20 @@
 		    <table class="mainlist" id="SaveTBL" style="width:100%">
 		        <tr>
 		            <th style="width:100px; text-align:center; border-top:0px; border-right:1px solid #dbdbda;"><spring:message code='ezEmail.t78' /></th>
-		            <td style="width:100px; border-right:1px solid #dbdbda;">
+		            <td style="width:115px; border-right:1px solid #dbdbda;">
 		                <input id="defaultWarn" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultWarn}" style="width:83%; text-align:right"> GB
 		            </td>
-		        	<td style="width:15px; /* background-color: #f8f8fa; */ padding-left:6px;">
+		        	<td style="width:40px; /* background-color: #f8f8fa; */">
 		        		<img src="/images/plusicon.png" width="20" height="20"style="cursor:pointer" onClick="valuePlus(defaultWarn);">
 		        		<img src="/images/minusicon.png" width="20" height="20"style="cursor:pointer" onClick="valueMinuse(defaultWarn)">
 		        	</td>
 		        </tr>     
 		        <tr>
 		            <th style="width:100px; text-align:center; border-bottom:0px; border-right:1px solid #dbdbda;"><spring:message code='ezEmail.t80' /></th>
-		            <td style="width:100px; border-bottom:0px; border-right:1px solid #dbdbda;">
+		            <td style="width:115px; border-bottom:0px; border-right:1px solid #dbdbda;">
 		                <input id="defaultMax" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultMax}" style="width:83%; text-align:right"> GB
 		            </td>
-		        	<td style="width:15px; /* background-color: #f8f8fa; */ padding-left:6px;">
+		        	<td style="width:40px; /* background-color: #f8f8fa; */">
 		        		<img src="/images/plusicon.png" width="20" height="20" style="cursor:pointer" onClick="valuePlus(defaultMax)">
 		        		<img src="/images/minusicon.png" width="20" height="20" style="cursor:pointer" onClick="valueMinuse(defaultMax)">
 		        	</td>
