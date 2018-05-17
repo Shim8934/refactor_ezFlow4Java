@@ -5,14 +5,14 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
+		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />"   type="text/css" />
+		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" />
+		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 		<!-- module -->
 		<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
