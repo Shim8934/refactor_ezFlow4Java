@@ -10,8 +10,9 @@ var m_strColorOver = "#f4f5f5"; //리스트 마우스오버 시 색상
 $(document).on('click', '#HeaderAllCheckBox', function() {
 	$("input[type='checkbox']:not(#HeaderAllCheckBox)").each(function() {
 		$(this).prop("checked", $("#HeaderAllCheckBox").is(":checked"));
-		if($("#HeaderAllCheckBox").is(":checked") == true) {
+		if ($("#HeaderAllCheckBox").is(":checked") == true) {
 			$(this).closest('tr').css("background-color", m_strColorSelect);
+			$(this).closest('tr').attr("class","selectTR");
 		} else {
 			$(this).closest('tr').css("background-color", m_strColorDefault);
 		}
@@ -20,19 +21,34 @@ $(document).on('click', '#HeaderAllCheckBox', function() {
 
 //tr클릭 시 - 휴가유형관리, 근태권한 관리
 $(document).on('click', '#contentlist tr', function(e) {
-	if(e.type == "click") {
-		$('#contentlist tr').not(this).attr("class","");
-		$('#contentlist tr').not(this).css("background-color", m_strColorDefault);
-		$(this).css("background-color", m_strColorSelect);
-		$(this).attr("class","selectTR");
+	//근무시간관리일때
+	if ($(this).find("input[type='checkbox']").length != 0) {
+		if (e.type == "click") {
+			if (!$(this).find("input[type='checkbox']:not(#HeaderAllCheckBox)").is(":checked")) {
+				$(this).css("background-color", m_strColorSelect);
+				$(this).attr("class","selectTR");
+    			$(this).find("input[type='checkbox']:not(#HeaderAllCheckBox)").prop("checked", true);
+			} else {
+				$(this).css("background-color", m_strColorDefault);
+				$(this).attr("class","");
+    			$(this).find("input[type='checkbox']:not(#HeaderAllCheckBox)").prop("checked", false);
+			}
+		}
 	} else {
-		$(this).css("background-color", m_strColorDefault);
+		if (e.type == "click") {
+			$('#contentlist tr').not(this).attr("class","");
+			$('#contentlist tr').not(this).css("background-color", m_strColorDefault);
+			$(this).css("background-color", m_strColorSelect);
+			$(this).attr("class","selectTR");
+		} else {
+			$(this).css("background-color", m_strColorDefault);
+		}
 	}
 })
 
 //tr hover시 배경색 변경 - 휴가유형관리, 근태권한 관리
 $(document).on('mouseover mouseleave', '#contentlist tr', function(e) {
-	if($(this).attr("class") == "selectTR") {
+	if ($(this).attr("class") == "selectTR") {
 		return;
 	}
 	if (e.type == "mouseover") {
@@ -40,6 +56,17 @@ $(document).on('mouseover mouseleave', '#contentlist tr', function(e) {
 	} else {
 		$(this).css("background-color", m_strColorDefault);
 	}
+})
+
+//td클릭 시 체크박스 선택/해제
+$(document).on('click', "#contentlist tr input[type='checkbox']:not(#HeaderAllCheckBox)", function() {
+	var checkValue = "";
+	if ($(this).is(":checked") == true) {
+		checkValue = false;
+	} else {
+		checkValue = true;
+	}
+	$(this).prop("checked", checkValue);
 })
 
 /** jQuery 옵션 끝*/

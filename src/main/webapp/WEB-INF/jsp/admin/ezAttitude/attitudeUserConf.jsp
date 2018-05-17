@@ -15,7 +15,7 @@
 	    <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    
-	    <style>
+ 	    <style> 
 	    	#contentlist table.mainlist td {
 	    		overflow : hidden;
 	    		white-space : nowrap;
@@ -32,7 +32,7 @@
 			}
 			#searchTable td {padding: 8px 5px;}
 	    </style>
-	    
+
 	    <script type="text/javascript">
 	    	var pCompanyId = ""; //현재 선택된 회사의 아이디
 	    	var searchUserName = ""; // 검색조건 (사원명)
@@ -271,6 +271,7 @@
 		            	searchUserConfList('search');
 		        }
 		    }
+	    	
 	    </script>
 	</head>
 	
