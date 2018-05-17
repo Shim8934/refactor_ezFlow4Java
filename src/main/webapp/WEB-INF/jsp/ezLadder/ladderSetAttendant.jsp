@@ -351,16 +351,8 @@
 								strSearch = "";
 							}
 							
-							/** boh add : 부서 클릭하면 부서 전체 list 추가하기*/
-							deptClickFlag = true;
-							listContentArry = new Array();
+							selectDeptAllUser();
 							
-							var tempListContent = $("#txtlist_table tr[id^='MailUserlist_']");
-							var tempListLen = tempListContent.length;
-							for(var i = 0; i < tempListLen; i++) {
-								listContentArry[i] = tempListContent[i].getAttribute("id");
-							}
-							/** boh end */
 						},
 						error : function(jqXHR, textStatus, errorThrown) {
 							alert(error);
@@ -368,6 +360,21 @@
 	  			});   
 	        	 
 	    	}
+	        function selectDeptAllUser() {
+	        	/** boh add : 부서 클릭하면 부서 전체 list 추가하기*/
+				deptClickFlag = true;
+				listContentArry = new Array();
+				
+				var tempListContent = $("#txtlist_table tr[id^='MailUserlist_']");
+				var tempListLen = tempListContent.length;
+				for(var i = 0; i < tempListLen; i++) {
+					listContentArry[i] = tempListContent[i].getAttribute("id");
+					if(i == tempListLen - 1) {
+						p_ListOrderObject = document.getElementById("MailUserlist_" + (tempListLen - 1));
+					}
+				}
+				/** boh end */
+	        }
 	        function event_displayUserList(xml) {
 		        if (xml != null) {
 		            pListXML_Info = xml;
@@ -457,6 +464,9 @@
 	        var listSubEventCheckbox = false;
 	        function event_listclick(obj) {
 				deptClickFlag = false;
+				PressShiftKey = event.shiftKey;
+				PressCtrlKey = event.ctrlKey
+            	
 	            if (!listEventCheckbox) {
 	                if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
 	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
@@ -497,7 +507,7 @@
 	                    var CurlistContent = obj.getAttribute("id");
 	                    var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
 	                    var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
-	                    if (PrePoint < CurPoint) {
+	                    if (PrePoint <= CurPoint) {
 	
 	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
 	                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
@@ -533,7 +543,8 @@
 	                                    p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
 	                                }
 	                                if (listContentArry.length == 0)
-	                                    p_ListOrderObject = "";
+	                                	selectDeptAllUser();
+	                                	break;
 	                            }
 	                        }
 	                    }
@@ -575,7 +586,7 @@
 	            var alluser = {"userId": [], "userName": [], "userName2": [], "pic": [], "temporder": [], "userdata": []};
 				var overlapuser = {"userId": [], "userName": [], "userName2": [], "pic": [], "temporder": [], "userdata": []};
             	var trData;
-	            
+            	
 	            if (_RowObjectID != null) { 
 	            	if (_RowObjectName.trim() == "deptList") {
 		            	// 즐겨찾기에서 그룹으로 추가
@@ -1556,6 +1567,7 @@
 		                    $("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
 		                    $("div[id^='editBmGroup_']").hide();
 		                    _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
+		                    selectDeptAllUser();
 		                }
 		                break;
 		            case "circularDept":
