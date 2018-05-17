@@ -975,7 +975,7 @@
 		select
 			favorite_id,
 			favorite_name,
-			TO_CHAR(favorite_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')  AS favorite_date
+			TO_CHAR(favorite_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as favorite_date
 		from
 			tbl_journal_recv_favorite
 		where
@@ -1177,7 +1177,7 @@
 				update set
 				tenant_id = #tenantId#
 			when not matched then
-				insert into tbl_journal_view 
+				insert
 					(user_id,		tenant_id,		journal_id,		view_date)
 				values
 					(#userId#,		#tenantId#,		#journalId#,	TO_DATE(#viewDate#, 'YYYY-MM-DD HH24:MI:SS'))
