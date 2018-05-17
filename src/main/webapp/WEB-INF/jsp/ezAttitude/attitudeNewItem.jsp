@@ -168,6 +168,8 @@
 					$("#Etimepicker").css("display", "none");
 					$(alldaycheck).prop("checked",true);
 		        }
+		        
+		        $("#periodblock").attr("datetype", dateType);
 			}
 			
 			function Editor_Complete() {
@@ -230,6 +232,7 @@
 						$("#writerName").closest("tr").remove();
 						setDatePicker($("#periodblock").attr("datetype"));
 					    
+						
 						checkHoliday($("#Sdatepicker").val());
 						if ($("input[name=region]").length != 0) {
 							$("input[name=region]").val(region);

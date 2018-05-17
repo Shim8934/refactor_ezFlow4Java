@@ -31,6 +31,7 @@
 	        });
 	        
 	        function company_change() {
+	            selectTypeId = "";
 	            $.ajax({
 	            	type : "GET",
 	            	url : "/admin/ezAttitude/attitudeTypeConfigInfo.do",
@@ -107,7 +108,8 @@
 	            	error : function() {
 	            		alert("<spring:message code='ezAttitude.kbm3' />");
 	            	}
-	            });        	
+	            });
+	            
 	        }
 	        
 	        var saveType_dialogArguments = new Array();

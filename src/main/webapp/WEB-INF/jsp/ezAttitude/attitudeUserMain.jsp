@@ -181,8 +181,9 @@
 				});
 				
 				$(window).on("resize", function(){
-					var popupX = parent.document.body.clientWidth/2 - (800/2) - 220;
+					var popupX = parent.document.body.clientWidth/2 - (883/2) - 220;
 					var popupDayX = parent.document.body.clientWidth/2 - (883/2) - 220;
+					
 		        	$("#popup").css("left", popupX);
 		        	$("#popupDay").css("left", popupDayX);
 		        });
@@ -665,8 +666,9 @@
 					    	if (json.length == 0) {
 					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
 					    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:20%; height:0px; border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:30%; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:35%; height:0px; border:none;'></td>"));
 					    		$("#addpopup_list tbody").append(uvobjTr);
 					    		
 					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
@@ -679,27 +681,37 @@
 					    		} else {
 					    			json[i].apprStatus = "반려";
 					    		}
-	
-					    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
-	
-					    		if (json[i].writerName.length > 3) {
-					    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerName + "'></td>").text(json[i].writerName.substring(0,2) + "..."));	
-					    		} else {
-					    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(json[i].writerName));
-					    		}
-					    		if (json[i].writerDeptName.length > 6) {
-					    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
-					    		} else {
-					    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
-					    		}
-					    		if (json[i].endDate == null) {
-					    			objTr.append($("<td style='width:35%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
-					    		} else {
-						    		objTr.append($("<td style='width:35%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));				    			
-					    		}
 					    		
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,20);
-					    		objTr.append($("<td style='width:35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
+					    		var gubunBar = "";
+					    		if (json[i].region != "" && json[i].content != "") {
+					    			gubunBar = " / ";
+					    		}
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (json[i].content == "" ? "" : gubunBar + json[i].content)).text();
+	
+					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
+				    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + json[i].writerName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerName)));	
+				    			objTr.append($("<td style='width:10%;' title='" + json[i].writerDeptName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerDeptName)));
+
+				    			if (json[i].dateType == 1) {
+					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
+						    		objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:381px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (json[i].dateType == 2) {
+					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
+						    		objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:381px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (json[i].dateType == 3) {
+					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
+						    		objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:337px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
+					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
+						    		objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:337px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (json[i].typeId == 'A04') {
+					    			if (json[i].dateType == 4) {
+					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
+					    			} else if (json[i].dateType == 5) {
+					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
+					    			}
+						    		objTr.append($("<td style='width:40%;'></td>").append($("<div style='width:273px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		}
 	
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
@@ -708,8 +720,8 @@
 					    	
 					    	if (json.length == 0) {
 					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:35%; height:0px; border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:60%; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:25%; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
 					    		$("#addpopup_list tbody").append(uvobjTr);
 					    		
 					    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
@@ -722,23 +734,36 @@
 					    		} else {
 					    			json[i].apprStatus = "반려";
 					    		}
-	
-					    		var objTr = $("<tr></tr>").append($("<td style='width:5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + (i+1)));
 								
-					    		if (json[i].endDate == null) {
-					    			objTr.append($("<td style='width:35%; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
-					    		} else {
-					    			if (json[i].dateType == 3) {
-					    				objTr.append($("<td style='width:35%; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(11,16)));
-					    			} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
-					    				objTr.append($("<td style='width:35%; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,11)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,11)));
-					    			} else {
-						    			objTr.append($("<td style='width:35%; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));
+					    		var gubunBar = "";
+					    		if (json[i].region != "" && json[i].content != "") {
+					    			gubunBar = " / ";
+					    		}
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (json[i].content == "" ? "" : gubunBar + json[i].content)).text();
+					    		
+					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
+					    		
+					    		if (json[i].dateType == 1) {
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:545px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (json[i].dateType == 2) {
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:545px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (json[i].dateType == 3) {
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:501px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:501px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (json[i].typeId == 'A04') {
+					    			if (json[i].dateType == 4) {
+					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
+					    			} else if (json[i].dateType == 5) {
+					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
 					    			}
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:441px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		}
 					    		
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,45);
-					    		objTr.append($("<td style='width:60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 						}
@@ -783,50 +808,50 @@
 				    	var j = 0;
 				    	
 				    	for(var i = 0; i < json.length; i++) {
-// 				    		if (json[i].typeId == "A01" || json[i].typeId == "A03") {
-// 								console.log(j);
-// 								j++;
-// 								continue;
-// 							}
-				    		
 				    		if (json[i].apprStatus == 1) {
 				    			json[i].apprStatus = "승인";
 				    		} else {
 				    			json[i].apprStatus = "반려";
 				    		}
 
-				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i-j+1)));
-				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").html("\u00a0" + json[i].typeName));
-				    		if (json[i].writerName.length > 3) {
-				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title ='" + json[i].writerName + "'></td>").text(json[i].writerName.substring(0,2) + "..."));	
-				    		} else {
-				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(json[i].writerName));
+				    		var gubunBar = "";
+				    		if (json[i].region != "" && json[i].content != "") {
+				    			gubunBar = " / ";
 				    		}
+				    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (json[i].content == "" ? "" : gubunBar + json[i].content)).text();
 				    		
-				    		if (json[i].writerDeptName.length > 6) {
-				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
-				    		} else {
-				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
+				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:37px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i-j+1))));
+				    		objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(json[i].typeName)));
+			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + json[i].writerName + "'></td>").append($("<div style='width:72px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerName)));	
+			    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + json[i].writerDeptName + "'></td>").append($("<div style='width:72px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerDeptName)));
+			    			
+			    			if (json[i].dateType == 1) {
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
+				    		} else if (json[i].dateType == 2) {
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
+				    		} else if (json[i].dateType == 3) {
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
+				    		} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
+				    		} else if (json[i].typeId == 'A04') {
+				    			if (json[i].dateType == 4) {
+				    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
+				    			} else if (json[i].dateType == 5) {
+				    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
+				    			}
 				    		}
-				    		if (json[i].endDate == null) {
-				    			objTr.append($("<td style='width:35%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
-				    		} else {
-					    		objTr.append($("<td style='width:35%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));				    			
-				    		}
+				    		objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:240px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 				    		
-				    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,20);
-				    		objTr.append($("<td style='width:30%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	}
 				    	
-// 				    	if (json.length == j) {
 						if (i == 0) {
 				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; height:0px; border:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:8%; height:0px; border:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:8%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
 				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
 				    		uvobjTr.append($("<td style='width:35%; height:0px; border:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:44%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:30%; height:0px; border:none;'></td>"));
 				    		$("#addpopupDay_list tbody").append(uvobjTr);
 				    		
 				    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:900px; border-top:none;'></td>").text("내역이 없습니다."));
@@ -964,11 +989,11 @@
 						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
 					</select>
 				</c:if>
-				<li style="background:none;margin-left:7px;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
-	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
-	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
-                <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
-                <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;근태수정신청</li>
+				<li style="background:none;margin-left:7px;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
+	            <li style="background:none;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
+	            <li style="background:none;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
+                <li style="background:none;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
+                <li style="background:none;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;근태수정신청</li>
 			</ul>
 		</div>
 		
@@ -1013,13 +1038,13 @@
 				    <thead>
 				    	<tr>
 					    	<c:if test="${deptFlag == 'true'}">
-								<th class="layerHeader" colspan="5" style="width:738px;">
+								<th class="layerHeader" colspan="5" style="width:716px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 								</th>
 							</c:if>
 							<c:if test="${deptFlag != 'true'}">
-								<th class="layerHeader" colspan="3" style="width:738px;">
+								<th class="layerHeader" colspan="3" style="width:716px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 								</th>
@@ -1030,15 +1055,15 @@
 				    	<tr>
 				    		<c:if test="${deptFlag == 'true'}">
 				    			<th style="height:30px">No.</th>
-					    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
-					    		<th style="height:30px"><spring:message code='ezAttitude.t9'/></th>
+					    		<th style="height:30px;"><spring:message code='ezAttitude.t10'/></th>
+					    		<th style="height:30px;"><spring:message code='ezAttitude.t9'/></th>
 					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-					    		<th style="height:30px; text-align:center">내용 및 사유</th>
+					    		<th style="height:30px; text-align:center">근무지 및 내용</th>
 				    		</c:if>
 				    		<c:if test="${deptFlag != 'true'}">
 				    			<th style="height:30px;">No.</th>
 				    			<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-				    			<th style="height:30px; text-align:center">내용 및 사유</th>
+				    			<th style="height:30px; text-align:center">근무지 및 내용</th>
 				    		</c:if>
 						</tr>
 				    </tbody>
@@ -1055,7 +1080,7 @@
 			    <table class="popuplist" id="addpopupDay_list" style="table-layout:fixed; display:block; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
-						<th class="layerHeader" colspan="6" style="width:840px;">
+						<th class="layerHeader" colspan="6" style="width:798px;">
 							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 							<span id="popupDay_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 						</th>
@@ -1068,7 +1093,7 @@
 				    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.t9'/></th>
 				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-				    		<th style="height:30px; text-align:center">내용 및 사유</th>
+				    		<th style="height:30px; text-align:center">근무지 및 내용</th>
 						</tr>
 				    </tbody>
 				</table>
