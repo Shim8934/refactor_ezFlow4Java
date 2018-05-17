@@ -165,15 +165,13 @@
 	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	    });
 
-	    $(function() {
-	    	makePageSelPage();
-	    });
-	    
 		window.onload = function() {
-			if (checkAdmin == 'true') {
-				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
+			get_att_list(currentPage);
+			
+// 			if (checkAdmin == 'true') {
+// 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
 		    	
-	    		infoStr += '</span> 개] ';
+// 	    		infoStr += '</span> 개] ';
 // 	    		infoStr += startDate.substring(0,4) + '년' + 
 // 	    		startDate.substring(5,7) + '월' + 
 // 	    		startDate.substring(8,10) + '일~';
@@ -181,8 +179,8 @@
 // 		    	endDate.substring(5,7) + '월' + 
 // 		    	endDate.substring(8,10) + '일]</span>';
 		    	
-		    	$("#mailBoxInfo").html(infoStr);
-			}
+// 		    	$("#mailBoxInfo").html(infoStr);
+// 			}
 			
 			var obj = $("#search").offset();
 			
