@@ -170,10 +170,10 @@
 	    });
 	    
 		window.onload = function() {
-			if (checkAdmin == 'true') {
-				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
+// 			if (checkAdmin == 'true') {
+// 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
 		    	
-	    		infoStr += '</span> 개] ';
+// 	    		infoStr += '</span> 개] ';
 // 	    		infoStr += startDate.substring(0,4) + '년' + 
 // 	    		startDate.substring(5,7) + '월' + 
 // 	    		startDate.substring(8,10) + '일~';
@@ -181,8 +181,8 @@
 // 		    	endDate.substring(5,7) + '월' + 
 // 		    	endDate.substring(8,10) + '일]</span>';
 		    	
-		    	$("#mailBoxInfo").html(infoStr);
-			}
+// 		    	$("#mailBoxInfo").html(infoStr);
+// 			}
 			
 			var obj = $("#search").offset();
 			
@@ -306,7 +306,11 @@
 	    function att_search(r) {
 			if (r == "refresh") {
 				$("#writer_search").val("");
-    			$("#writerDept_search").val("");
+				if (checkAdmin != 'true' && adminFlag == true) {
+										
+				} else if (checkAdmin == 'true') {
+	    			$("#writerDept_search").val("");
+				}
     			$("#appr_search").val("");
     			if (usepostDate) {
     				date_reset();
@@ -315,6 +319,11 @@
     			type_set();
 			}
 			
+			//정렬 초기화
+			orderCell = "";
+	    	orderOption = "";
+	    	$("#AttList th").find("img").remove();
+	    	
  	    	searchAppr = $("#appr_search").val();
  	    	searchWriter = $('#writer_search').val();
  	    	if (checkAdmin != 'true') {
@@ -343,6 +352,7 @@
 	                return;
 	            }
  	    	}
+ 	    	
  	    	
 			popup_close();
 			goToPageByNum("1");
@@ -474,9 +484,9 @@
 		    	infoStr += ' [총 <span style="color:#017BEC;">' + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
-		    		infoStr += '</span> 개 ';
+		    		infoStr += '</span> 개';
 		    		if (checkAdmin != 'true') {
-		    			infoStr += '- ' + data.startDate.substring(0,4) + '년' + 
+		    			infoStr += ' - ' + data.startDate.substring(0,4) + '년' + 
 				    	data.startDate.substring(5,7) + '월' + 
 				    	data.startDate.substring(8,10) + '일~';
 				    	infoStr += data.endDate.substring(0,4) + '년' + 
@@ -1206,6 +1216,7 @@
 		</c:if>
 	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
         <c:if test="${checkAdmin != 'true'}">
+        	<li><span onClick="att_search('refresh')">새로고침</span></li>
         	<li id="search"><span onClick="search_popup()">검색</span></li>
 		</c:if>
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
