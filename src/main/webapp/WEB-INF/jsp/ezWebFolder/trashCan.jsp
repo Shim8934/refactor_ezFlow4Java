@@ -9,7 +9,6 @@
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	<!-- date Picker -->
@@ -354,7 +353,7 @@
 					filesList.push(fileFolderId);
 				}
 			}
-    	   
+			
 			showPanel(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
 			refreshView();
 		}
@@ -368,9 +367,10 @@
 		function showPanel(popUpW, popUpH, URL) {
 			try {
 				var Position = DivPopUpPosition(popUpW, popUpH);
+				
 				document.getElementById("iFrameLayer").src = URL;
 				document.getElementById("iFramePanel").style.top = Position[0] + "px";
-				document.getElementById("iFramePanel").style.left = Position[1] + "px";
+				document.getElementById("iFramePanel").style.right = Position[1] + "px";
 				document.getElementById("iFramePanel").style.height = popUpH + "px";
 				document.getElementById("iFrameLayer").style.width = popUpW + "px";
 				document.getElementById("iFrameLayer").style.height = popUpH + "px";
