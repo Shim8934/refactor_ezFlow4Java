@@ -29,7 +29,7 @@
 	        var g_ReadyState = "";
 	        var first = 1;
 	        var items = "${resultCount}";	        
-	
+	        
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
 		        var height = parseInt(document.documentElement.clientHeight - menuSize);
@@ -96,6 +96,7 @@
 		                favoriteList();
 		            }
 		        }
+
 		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
@@ -196,7 +197,7 @@
 		
 		    function GetBoardTreeByPath(pBoardID, pBoardGroupID) {
 		    }
-		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
+		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {		// 일반 게시판 하위 게시판 확장
 		        var xmlRtn = createXmlDom();
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
@@ -212,6 +213,20 @@
 		        var treeView = new TreeView();
 		        treeView.LoadFromID(pTreeID);
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+		        
+		        /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
+		        var node = document.getElementById(TreeIdx);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        if(nodeLevel > 6)
+		        	nodeLevel = 6;
+		        for(var i=0; i<title2.length; i++) {
+		        	title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
+		        	title3[0].style.width = 140 - 20*nodeLevel +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }
 		    }
 		    function TreeCtrl_onNodeClickNew(pNodeID, pTreeID) {
 		        try {
@@ -262,7 +277,7 @@
 		        }
 		        xmlhttp_boardinfo = null;
 		    }
-		    function TreeCtrl_onNodeExpandedNew(pNodeID, pTreeID) {
+		    function TreeCtrl_onNodeExpandedNew(pNodeID, pTreeID) {		// 마이 게시판 하위 게시판 확장
 		        var xmlRtn = createXmlDom();
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
@@ -293,6 +308,21 @@
 		        var treeView = new TreeView();
 		        treeView.LoadFromID(pTreeID);
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+
+		        /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
+		        var node = document.getElementById(TreeIdx);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        if(nodeLevel > 6)
+		        	nodeLevel = 6;
+		        for(var i=0; i<title2.length; i++) {
+		        	title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
+		        	title3[0].style.width = 140 - 20*nodeLevel +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }
+		        
 		    }
 		
 		    function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -330,7 +360,7 @@
 		        xmlhttp = null;
 		    }
 		
-		    function ShowMyBoardItem(val01) {
+		    function ShowMyBoardItem(val01) {		// 마이 게시판 선택
 		    	$(".on").attr("class", "off");
 		    	$(".myb h2").attr("class", "on");
 		    	$(".myb").next().attr("class", "on");
@@ -345,9 +375,19 @@
 		        treeView.DataSource(GetMyBoardItem("0"));
 		        treeView.DataBind("TreeCtrl_MyBoardTree");
 		        first++;
+		        
+		        /* 18-05-16 김민성 - tootip 추가 및 글자수 관련 style 수정 */
+				var node = $(".node_normal");
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
+					node[i].style.width = '140px';
+					node[i].style.textOverflow = 'ellipsis';
+					node[i].style.overflow = 'hidden';
+				} 
 		    }
 		    function GetMyBoardItem(pRootTreeID) {
 		    	var returnXML = "";
+		    	
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -359,6 +399,7 @@
 						returnXML = xml;
 					}        			
 				});	
+		    	
 //FreeT 요구사항 마이게시판 트리 없을때 안보여주기~
 //다시 메뉴 스펙이 바껴서 트리 안보여주기 없어도 안보여줄수있어서 재수정
 // 		    	if (returnXML == "<TREEVIEWDATA></TREEVIEWDATA>") {
@@ -372,7 +413,7 @@
 		    var tempID;
 		    var clickFlag = false;
 		    
-		    function TopBoard_onclick(obj, ID) {
+		    function TopBoard_onclick(obj, ID) {		// 일반 게시판 선택
 		    	//leftcount refresh 때문에 주석중 사이드 이펙트 검사필수
 // 		        if (tempID == ID)
 // 		            clickFlag = true;
@@ -402,6 +443,15 @@
 		            treeView.DataBind(obj + "obj");
 		            tempID = ID;		            
 // 		        }
+
+		            /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
+					var node = $(".node_normal");
+					for(var i=0; i<node.length; i++) {
+						node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
+						node[i].style.width = '140px';
+						node[i].style.textOverflow = 'ellipsis';
+						node[i].style.overflow = 'hidden';
+					} 
 		    }
 		    
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
@@ -616,7 +666,7 @@
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
        			        document.write("<h2>");
-           				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>");
+           				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
            				document.write("<ul>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 200px; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
