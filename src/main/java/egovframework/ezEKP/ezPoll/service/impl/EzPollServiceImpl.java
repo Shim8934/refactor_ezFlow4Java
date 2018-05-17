@@ -884,4 +884,24 @@ public class EzPollServiceImpl implements EzPollService{
 		return ezPollDAO.getAllUsersForQst(map);
 	}
 
+	@Override
+	public List<LoginVO> getQstAllUsers(int tenantId, int qstId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		
+		return ezPollDAO.getQstAllUsers(map);
+	}
+
+	@Override
+	public List<LoginVO> getInfoOfSeenUsers(int tenantId, int qstId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		
+		return ezPollDAO.getInfoOfSeenUsers(map);
+	}
+
 }
