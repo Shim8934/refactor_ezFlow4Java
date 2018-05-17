@@ -150,7 +150,7 @@
 						attitudeNewItem(this);
 					});
 				} else { // 부서근태현황에서는 당일의 근태를 조회.
-					$(document).on('dblclick', '.td_day td', function(){
+					$(document).on('click', '.td_day td', function(){
 						pMode = "new";
 						searchByDay(this);
 					});
@@ -558,7 +558,7 @@
 			}
 			
 			//수정신청 레이어 팝업띄우깅
-			function showDialog(obj) {
+			/* function showDialog(obj) {
 				if (attitudeModAppl) {
 					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	
@@ -586,7 +586,7 @@
 				} else {
 					 alert("<spring:message code='ezAttitude.bbhs39'/>");
 				}
-			}
+			} */
 			
 			function layerHidden() {
 		        $.modal.close();
