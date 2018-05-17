@@ -804,7 +804,7 @@
 			UPDATE
 				TBL_ATTITUDE A
 			SET
-				A.MODAPPL = "0"
+				A.MODAPPL = #modappl#
           	WHERE
           		A.TENANT_ID = #tenantId#
           	AND

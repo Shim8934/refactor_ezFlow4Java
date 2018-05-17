@@ -51,7 +51,7 @@
 		var g_userLang 		  = "${userLang}";
 		var g_timezone 		  = "${userTimeSet}";
 		var offsetMin 		  = "${offsetMin}";
-		var type 			  = "0";
+		var type 			  = "all";
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
@@ -170,7 +170,7 @@
 	    });
 	    
 		window.onload = function() {
-			if (checkAdmin == "true") {
+			if (checkAdmin == 'true') {
 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
 		    	
 	    		infoStr += '</span> 개] ';
@@ -186,7 +186,7 @@
 			
 			var obj = $("#search").offset();
 			
-			if (checkAdmin != "true") {
+			if (checkAdmin != 'true') {
 				$("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');	
 			}
@@ -311,13 +311,13 @@
     			if (usepostDate) {
     				date_reset();
     			}
-    			$(Radio2).prop("checked", true);
+    			$(Radio1).prop("checked", true);
     			type_set();
 			}
 			
  	    	searchAppr = $("#appr_search").val();
  	    	searchWriter = $('#writer_search').val();
- 	    	if (!checkAdmin) {
+ 	    	if (checkAdmin != 'true') {
  	    		$("#appr_search").val("");
 	 	    	if (adminFlag == 'true'){
 		 	    	$("#writer_search").val("");
@@ -518,7 +518,11 @@
 	    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(1)-1) * 15) + '</td>';
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';
 	    		} else {
-	    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
+	    			if (checkAdmin == 'true') {
+		    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
+	    			} else {
+	    				htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 19) + '</td>';
+	    			}
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';	
 	    		}
     			
@@ -527,7 +531,7 @@
     				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
     			}
     			
-    			htmlStr += '<td>' + attList[i].originDate.substring(11,19) + ' -> ' + attList[i].changeDate.substring(11,19) + '</td>';
+    			htmlStr += '<td>' + attList[i].originDate.substring(11,16) + ' -> ' + attList[i].changeDate.substring(11,16) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
     				htmlStr += '<td id="attStauts">신청</td>';	
@@ -579,16 +583,16 @@
 	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        
-	        if (!checkAdmin) {
-		        $(usepostdate).prop('checked', false);
+	        if (checkAdmin == 'true') {
+	        	$("#Sdatepicker").val("${startDate}");
+	    		$("#Edatepicker").val("${endDate}");
+	        } else {
+	        	$(usepostdate).prop('checked', false);
 		        usepostDate = false;
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
 		        $("#Edatepicker").datepicker('setDate', NowDate);
 	            $("#Sdatepicker").datepicker('disable');
 	            $("#Edatepicker").datepicker('disable');
-	        } else {
-	        	$("#Sdatepicker").val("${startDate}");
-	    		$("#Edatepicker").val("${endDate}");
 	        }
 	    }
 	    
@@ -1153,10 +1157,10 @@
 	<c:if test="${adminFlag == 'true' && checkAdmin == 'true'}">
 		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
 	</c:if>
-	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
+	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
 		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs32' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
-	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
+	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
 		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs33' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">

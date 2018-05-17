@@ -853,13 +853,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("ids", ids);
-		map.put("modappl", "0");
 		
+		int modAppl = 0;
 		int data = 1;
-		int modCnt = 0;
 		
 		for (int i = 0; i < ids.length; i++) {
+			map.put("attitudeId", ids[i]);
 			map.put("attModId", ids[i]);
+			modAppl = ezAttitudeDAO.getAttModApp(map);
+			if (modAppl == 1) {
+				map.put("modappl", "0");
+			} else if (modAppl == 2) {
+				map.put("modappl", "3");
+			}
 			AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
 			if (!aav.getApprStatus().equals("0")) {
 				data = 0;
@@ -868,11 +874,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				/*근태 수정신청 삭제.*/
 				ezAttitudeDAO.delUsersModifyAtt(map);
 				/*근태 수정신청이 삭제되고 원본 근태에 대해 수정신청 개수가 0개 일 때 원본 근태를 수정 가능한 상태로 변경.*/
-				modCnt = ezAttitudeDAO.getAttsModAttCount(map);
-				map.put("modCnt", modCnt);
-				if (modCnt == 0) {
-					ezAttitudeDAO.resetAttModApp(map);
-				}
+				ezAttitudeDAO.resetAttModApp(map);
 			}
 		}
 

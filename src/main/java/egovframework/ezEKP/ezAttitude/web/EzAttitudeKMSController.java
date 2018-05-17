@@ -272,7 +272,7 @@ public class EzAttitudeKMSController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String isGAdmin = "";
 		String authFlag = "";
-		String type = "1";
+		String type = "all";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -559,7 +559,13 @@ public class EzAttitudeKMSController {
 		if (checkAdmin == null || checkAdmin.trim().equals("")) {
 			checkAdmin = "false";
 		}
-
+		
+		if (checkAdmin.equals("true")) {
+			totalPages = 0;
+			pageSize = 15;
+			startPoint = 0;
+			endPoint = 15;
+		}
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
