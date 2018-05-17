@@ -61,7 +61,7 @@
 		        }
 				select_memorialDays(uselang);
 				setHoliday();
-				checkOutCom();
+				//checkOutCom();
 				
 			}
 			
@@ -483,9 +483,11 @@
 				$.ajax({
 		    		type : "POST",
 		    		dataType : "json",
-		    		async : true,
+		    		async : false,
 		    		url : "/ezAttitude/getAttitudeList.do",
-		    		data : {},
+		    		data : {
+		    			startDate : startDate.substring(0,10)
+		    		},
 		    		success : function(result) {
 		    			outComFlag = false;
 		    			for (var i = 0; i < result.length; i++) {

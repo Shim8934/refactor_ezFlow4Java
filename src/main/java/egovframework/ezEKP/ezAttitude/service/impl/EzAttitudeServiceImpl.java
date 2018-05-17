@@ -175,8 +175,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			startDate = localDate + " 00:00:00";
 			endDate = localDate + " 23:59:59";
 		} else if (!startDate.equals("") && endDate.equals("")) {
-			startDate = startDate + " 00:00:00";
 			endDate = startDate + " 23:59:59"; 
+			startDate = startDate + " 00:00:00";
 		} else {
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
