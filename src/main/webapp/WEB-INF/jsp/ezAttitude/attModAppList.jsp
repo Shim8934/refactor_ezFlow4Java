@@ -1211,6 +1211,7 @@
 					<c:if test="${selectedDeptID  == null}">
 						<option value=null selected></option>
 					</c:if>
+					<option value="all">전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
 							<c:if test="${selectedDeptID == dept.deptId}">

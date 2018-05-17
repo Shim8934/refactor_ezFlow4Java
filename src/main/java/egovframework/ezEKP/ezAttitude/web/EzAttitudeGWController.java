@@ -1205,7 +1205,7 @@ public class EzAttitudeGWController {
 				deptIdList[i] = authDeptlist.get(i).getDeptId();
 			}
 			
-			if (deptid != null) {
+			if (deptid != null && !deptid.equals("all")) {
 				deptIdList = new String[1];
 				deptIdList[0] = deptid;
 			}
@@ -1282,7 +1282,7 @@ public class EzAttitudeGWController {
 				deptIdList[i] = authDeptlist.get(i).getDeptId();
 			}
 			
-			if (deptid != null) {
+			if (deptid != null && !deptid.equals("all")) {
 				deptIdList = new String[1];
 				deptIdList[0] = deptid;
 			}
