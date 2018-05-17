@@ -1058,12 +1058,12 @@
 					    		<th style="height:30px;"><spring:message code='ezAttitude.t10'/></th>
 					    		<th style="height:30px;"><spring:message code='ezAttitude.t9'/></th>
 					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-					    		<th style="height:30px; text-align:center">내용 및 사유</th>
+					    		<th style="height:30px; text-align:center">근무지 및 내용</th>
 				    		</c:if>
 				    		<c:if test="${deptFlag != 'true'}">
 				    			<th style="height:30px;">No.</th>
 				    			<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-				    			<th style="height:30px; text-align:center">내용 및 사유</th>
+				    			<th style="height:30px; text-align:center">근무지 및 내용</th>
 				    		</c:if>
 						</tr>
 				    </tbody>
@@ -1093,7 +1093,7 @@
 				    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.t9'/></th>
 				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-				    		<th style="height:30px; text-align:center">내용 및 사유</th>
+				    		<th style="height:30px; text-align:center">근무지 및 내용</th>
 						</tr>
 				    </tbody>
 				</table>
