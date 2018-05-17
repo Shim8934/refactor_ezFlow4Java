@@ -86,7 +86,7 @@
 					var firstNode = "#" + folderId;
 					
 					$('#folderTree').jstree({
-						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
+						'plugins': [ "core", "types", "json_data", "themes", "ui","sort" ],
 						'core': {
 							"animation": 0,
 							'data': data.data,
