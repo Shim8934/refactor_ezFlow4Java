@@ -51,7 +51,7 @@
 		var g_userLang 		  = "${userLang}";
 		var g_timezone 		  = "${userTimeSet}";
 		var offsetMin 		  = "${offsetMin}";
-		var type 			  = "0";
+		var type 			  = "all";
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
@@ -165,15 +165,13 @@
 	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	    });
 
-	    $(function() {
-	    	makePageSelPage();
-	    });
-	    
 		window.onload = function() {
-			if (checkAdmin == "true") {
-				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
+			get_att_list(currentPage);
+			
+// 			if (checkAdmin == 'true') {
+// 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
 		    	
-	    		infoStr += '</span> 개] ';
+// 	    		infoStr += '</span> 개] ';
 // 	    		infoStr += startDate.substring(0,4) + '년' + 
 // 	    		startDate.substring(5,7) + '월' + 
 // 	    		startDate.substring(8,10) + '일~';
@@ -181,12 +179,12 @@
 // 		    	endDate.substring(5,7) + '월' + 
 // 		    	endDate.substring(8,10) + '일]</span>';
 		    	
-		    	$("#mailBoxInfo").html(infoStr);
-			}
+// 		    	$("#mailBoxInfo").html(infoStr);
+// 			}
 			
 			var obj = $("#search").offset();
 			
-			if (checkAdmin != "true") {
+			if (checkAdmin != 'true') {
 				$("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');	
 			}
@@ -306,18 +304,27 @@
 	    function att_search(r) {
 			if (r == "refresh") {
 				$("#writer_search").val("");
-    			$("#writerDept_search").val("");
+				if (checkAdmin != 'true' && adminFlag == true) {
+										
+				} else if (checkAdmin == 'true') {
+	    			$("#writerDept_search").val("");
+				}
     			$("#appr_search").val("");
     			if (usepostDate) {
     				date_reset();
     			}
-    			$(Radio2).prop("checked", true);
+    			$(Radio1).prop("checked", true);
     			type_set();
 			}
 			
+			//정렬 초기화
+			orderCell = "";
+	    	orderOption = "";
+	    	$("#AttList th").find("img").remove();
+	    	
  	    	searchAppr = $("#appr_search").val();
  	    	searchWriter = $('#writer_search').val();
- 	    	if (!checkAdmin) {
+ 	    	if (checkAdmin != 'true') {
  	    		$("#appr_search").val("");
 	 	    	if (adminFlag == 'true'){
 		 	    	$("#writer_search").val("");
@@ -343,6 +350,7 @@
 	                return;
 	            }
  	    	}
+ 	    	
  	    	
 			popup_close();
 			goToPageByNum("1");
@@ -474,9 +482,9 @@
 		    	infoStr += ' [총 <span style="color:#017BEC;">' + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
-		    		infoStr += '</span> 개 ';
+		    		infoStr += '</span> 개';
 		    		if (checkAdmin != 'true') {
-		    			infoStr += '- ' + data.startDate.substring(0,4) + '년' + 
+		    			infoStr += ' - ' + data.startDate.substring(0,4) + '년' + 
 				    	data.startDate.substring(5,7) + '월' + 
 				    	data.startDate.substring(8,10) + '일~';
 				    	infoStr += data.endDate.substring(0,4) + '년' + 
@@ -518,7 +526,11 @@
 	    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(1)-1) * 15) + '</td>';
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';
 	    		} else {
-	    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
+	    			if (checkAdmin == 'true') {
+		    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
+	    			} else {
+	    				htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 19) + '</td>';
+	    			}
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';	
 	    		}
     			
@@ -527,7 +539,7 @@
     				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
     			}
     			
-    			htmlStr += '<td>' + attList[i].originDate.substring(11,19) + ' -> ' + attList[i].changeDate.substring(11,19) + '</td>';
+    			htmlStr += '<td>' + attList[i].originDate.substring(11,16) + ' -> ' + attList[i].changeDate.substring(11,16) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
     				htmlStr += '<td id="attStauts">신청</td>';	
@@ -579,16 +591,16 @@
 	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        
-	        if (!checkAdmin) {
-		        $(usepostdate).prop('checked', false);
+	        if (checkAdmin == 'true') {
+	        	$("#Sdatepicker").val("${startDate}");
+	    		$("#Edatepicker").val("${endDate}");
+	        } else {
+	        	$(usepostdate).prop('checked', false);
 		        usepostDate = false;
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
 		        $("#Edatepicker").datepicker('setDate', NowDate);
 	            $("#Sdatepicker").datepicker('disable');
 	            $("#Edatepicker").datepicker('disable');
-	        } else {
-	        	$("#Sdatepicker").val("${startDate}");
-	    		$("#Edatepicker").val("${endDate}");
 	        }
 	    }
 	    
@@ -668,6 +680,11 @@
 	    
 	    function type_set(){
 	    	type = $("input:radio[name=searchCheck]:checked").val();
+	    }
+	    
+	    function dept_change() {
+	    	type = $("input:radio[name=searchCheck]:checked").val();
+	    	att_search('refresh');
 	    }
 	    
 	    var PressShiftKey = false;
@@ -851,7 +868,7 @@
 				    	if (json == "error") {
 				    		alert("이미 처리된 항목입니다.");			    			
 				    	} else {
-				    		alert("삭제되었습니다.");	
+				    	
 				    	}
 				    },
 					complete : function() {
@@ -1153,10 +1170,10 @@
 	<c:if test="${adminFlag == 'true' && checkAdmin == 'true'}">
 		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
 	</c:if>
-	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
+	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
 		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs32' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
-	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
+	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
 		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs33' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
@@ -1202,15 +1219,17 @@
 		</c:if>
 	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
         <c:if test="${checkAdmin != 'true'}">
+        	<li><span onClick="att_search('refresh')">새로고침</span></li>
         	<li id="search"><span onClick="search_popup()">검색</span></li>
 		</c:if>
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
 			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 			<li>
-				<select id="writerDept_search" onchange="type_change()" style="margin-top:5px;">
+				<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
 					<c:if test="${selectedDeptID  == null}">
 						<option value=null selected></option>
 					</c:if>
+					<option value="all">전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
 							<c:if test="${selectedDeptID == dept.deptId}">

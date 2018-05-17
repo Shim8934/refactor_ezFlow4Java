@@ -931,7 +931,7 @@
 			AND 
 				USEFLAG IS NOT NULL 
 			AND 
-				EXTENSIONATTRIBUTE1 = #companyId#
+				EXTENSIONATTRIBUTE2 = #companyId#
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">

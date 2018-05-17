@@ -166,7 +166,6 @@
 		   					authTypes : authlist
 		   				},
 		   				success: function(){
-		   					alert("<spring:message code='ezAttitude.kbm26' />");
 	   						opener.company_change();
 	   						window.close();
 		   				},

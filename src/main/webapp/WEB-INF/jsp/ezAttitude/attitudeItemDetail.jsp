@@ -100,11 +100,13 @@
 							mode : "admin"
 						},
 						success : function(result) {
-							alert("<spring:message code='ezAttitude.bbhs27'/>");
 							window.opener.getAttitudeCheckList();
 // 							window.opener.parent.frames["left"].getAttitudeList();
 							window.close();
-						}
+						},
+						error: function(xhr, status, error){
+					    	alert("삭제 중 오류 발생")
+					    }
 					})
 				}
 			}
