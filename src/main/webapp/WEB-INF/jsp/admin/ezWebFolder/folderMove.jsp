@@ -306,13 +306,13 @@
 				</c:forEach>
 		</select>
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="change();"> <span><spring:message code="ezWebFolder.t233"/></span>
-			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="change();"> <span><spring:message code="ezWebFolder.t234"/></span>
+			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onclick="change();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
+			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onclick="change();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
 		</div>
 	</div>
-	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto; padding: 5px 0px 0px 5px;" id="folderTree"></div>
+	<div style="margin: 5px 10px 10px 10px; border: 1px solid #ddd; min-height: 350px; height: 350px; overflow: auto; padding: 5px 0px 0px 5px;" id="folderTree"></div>
 	
-	<div style="margin: 8px 0px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
+	<div style="margin: 6px 0px 0px; bottom: 0px; text-align: center">
 		<a id="btnSave"  class="webfolderBttn" onClick="folderMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
 		<a id="btnCancel"class="webfolderBttn" onClick="folderCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
 	</div>

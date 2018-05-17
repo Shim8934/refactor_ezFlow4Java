@@ -463,7 +463,7 @@
 				}
 				
 				leftPanelProcess();
-				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
+				DivPopUpShow(450, 500, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function leftPanelProcess() {
@@ -483,7 +483,7 @@
 				}
 				
 				leftPanelProcess();
-				DivPopUpShow(450, 130, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
+				DivPopUpShow(450, 250, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function change() {
