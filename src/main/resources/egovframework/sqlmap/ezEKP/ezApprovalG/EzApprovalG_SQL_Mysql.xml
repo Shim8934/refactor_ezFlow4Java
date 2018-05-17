@@ -113,7 +113,11 @@
 					      				  AND 
 					      					 tenant_id = #v_TENANTID#
 					      				  AND
-					      					 COMPANYID = #companyID# 	
+					      				  	(
+											COMPANYID = #companyID#
+												OR
+											COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+											)
 					      				]]>
 					      				  <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		  AND 
@@ -133,7 +137,11 @@
 					      				  AND 
 					      					tenant_id = #v_TENANTID#
 					      				  AND
-					      					COMPANYID = #companyID# 
+						      				  (
+												COMPANYID = #companyID#
+													OR
+												COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+												)
 					      					]]>
 					      				<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		  AND 
@@ -1511,7 +1519,11 @@
 				AND 
 					TBL_APRLINEINFO.TENANT_ID = #v_TENANTID#
 				AND 
+					(
 					TBL_APRLINEINFO.COMPANYID = #companyID#
+						OR
+					TBL_APRLINEINFO.COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+					)
 				ORDER BY 
 					TBL_APRLINEINFO.AprMemberSN DESC 
 			]]>
@@ -1564,7 +1576,11 @@
 				AND 
 					TBL_ENDAPRLINEINFO.TENANT_ID = #v_TENANTID#
 				AND 
+					(
 					TBL_ENDAPRLINEINFO.COMPANYID = #companyID#
+						OR
+					TBL_ENDAPRLINEINFO.COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+					)
 				ORDER BY 
 					TBL_ENDAPRLINEINFO.AprMemberSN DESC 
 			]]>
@@ -1583,7 +1599,11 @@
 	            AND 
 	            	TENANT_ID = #v_TENANTID#
 	            AND
-	            	COMPANYID = #companyID#
+	            	(
+					COMPANYID = #companyID#
+						OR
+					COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+					)
 	            ORDER BY 
 	            	APRMEMBERSN DESC 
             ]]>
@@ -1620,7 +1640,11 @@
            	AND
            		TENANT_ID = #v_TENANTID#
 	        AND
-	           	COMPANYID = #companyID#
+	           	(
+				COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+				)
 	        ORDER BY 
 	            APRMEMBERSN DESC 
 		</isEqual>
@@ -2222,7 +2246,12 @@
             AND
 				TENANT_ID = #v_TENANTID#     
 			AND
-				COMPANYID = #companyID#       	
+				(
+				COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+				)
+				       	
 				]]>
 		</isEqual>
 		<isEqual property="v_PMODE" compareValue="VIE">
@@ -2241,7 +2270,10 @@
             AND
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#   
+				(COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+				)
 				]]>
 		</isGreaterEqual>
 		<isGreaterEqual property="v_temp2" compareValue="1">
@@ -2259,7 +2291,11 @@
             AND
 				TENANT_ID = #v_TENANTID# 
 			AND
-				COMPANYID = #companyID#  	
+				(
+				COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+				) 	
 				]]>
 		</isGreaterEqual>
 		<isLessThan property="v_temp2" compareValue="1">
@@ -2277,7 +2313,11 @@
             AND
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#  
+				(
+				COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+				) 
 				]]>
 		</isLessThan>
 		</isEqual>
@@ -2300,7 +2340,11 @@
                 AND
 						TENANT_ID = #v_TENANTID#
 				AND
-						COMPANYID = #companyID#   
+						(
+						COMPANYID = #companyID#
+							OR
+						COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+						) 
 			</isGreaterEqual>
 			<isLessThan property="v_temp2" compareValue="1">
 			<![CDATA[
@@ -2317,7 +2361,11 @@
 	             AND
 						TENANT_ID = #v_TENANTID#
 				 AND
-						COMPANYID = #companyID#   	
+						(
+						COMPANYID = #companyID#
+							OR
+						COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+						)  	
 						]]>	
 			</isLessThan>
 		    </isGreaterEqual>
@@ -2347,7 +2395,11 @@
                  AND
 						TENANT_ID = #v_TENANTID#
 				 AND
-						COMPANYID = #companyID# 	
+						(
+						COMPANYID = #companyID#
+							OR
+						COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+						) 	
 						]]>	
 				</isGreaterThan>
 				<isLessEqual property="v_temp4" compareValue="0">
@@ -2365,7 +2417,11 @@
                       AND
 							TENANT_ID = #v_TENANTID#
 					  AND
-							COMPANYID = #companyID# 	
+							(
+							COMPANYID = #companyID#
+								OR
+							COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+							) 	
 							]]>	
 				</isLessEqual>
 				</isNotEmpty>
@@ -2389,7 +2445,11 @@
             AND
 					TENANT_ID = #v_TENANTID#
 			AND
-					COMPANYID = #companyID# 
+					(
+					COMPANYID = #companyID#
+						OR
+					COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_PAPRUSERID# AND TENANT_ID = #v_TENANTID#)
+					)
 					]]>
 		</isEqual>
 		
@@ -4755,8 +4815,8 @@
       				TBL_APRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
-      		AND
-      				TBL_APRDOCINFO.COMPANYID = #companyID#
+<!--       		AND -->
+<!--       				TBL_APRDOCINFO.COMPANYID = #companyID# -->
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="CHAMJOAPR">
 			SELECT 
@@ -4775,8 +4835,8 @@
       				TBL_APRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
-      		AND
-      				TBL_APRDOCINFO.COMPANYID = #companyID#
+<!--       		AND -->
+<!--       				TBL_APRDOCINFO.COMPANYID = #companyID# -->
 		</isEqual>
 		
 		<isNotEqual  property="v_MODE" compareValue="APR">
@@ -4797,8 +4857,8 @@
       				TBL_ENDAPRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-      	 	AND		
-      	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+<!--       	 	AND		 -->
+<!--       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID# -->
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -4820,8 +4880,8 @@
       				TBL_ENDAPRDOCINFO.DOCID = #beforeDocID#
       		AND
       				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-      	 	AND		
-      	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+<!--       	 	AND		 -->
+<!--       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID# -->
 		</isEqual>
 	</select>
 	
@@ -5976,7 +6036,11 @@
           AND
           		TENANT_ID = #v_TENANTID#
           AND
-              	COMPANYID = #companyID#
+              	(
+				COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+				)
           		
           UNION ALL
           		
@@ -5992,7 +6056,11 @@
           AND
           		TENANT_ID = #v_TENANTID#
           AND
-              	COMPANYID = #companyID#
+              	(
+				COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+				)
           ) AS B
      ]]>
           WHERE
@@ -9765,7 +9833,11 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
+				(
 				COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+				)
 				
 			UNION ALL
 			
@@ -9780,7 +9852,12 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#) AS B
+				(
+				COMPANYID = #companyID#
+					OR
+				COMPANYID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #v_USERID# AND TENANT_ID = #v_TENANTID#)
+				)
+			) AS B
 			WHERE 
 				1 = 1
 		]]>
