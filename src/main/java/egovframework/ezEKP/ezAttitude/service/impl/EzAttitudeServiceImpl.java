@@ -271,7 +271,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void updateAttitude(String attitudeId, String startDate,
 			String endDate, String region, String mobile, String bizSub, String content, 
-			String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, int tenantId) throws Exception {
+			String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("updateAttitude started");
 		
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
@@ -289,6 +289,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("typeId", typeId);
 		map.put("dateType", dateType);
 		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		if (mode.equals("admin")) {
+			map.put("modappl", "3");
+		}
 		
 		ezAttitudeDAO.updateAttitude(map);
 		
@@ -297,6 +302,35 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("adminId", adminId);
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
 			ezAttitudeDAO.insertAdminAttHistory2(map);
+			
+			
+			/**관리자가 수정한 것 중에 기존 타입이 A02인 경우
+			 * 지각 수정신청까지 신경써줘야한다.
+			 * 신청 상태의 신청내역은 반려로 바꾸고 지금 반영된 부분은
+			 * 신청내역에 승인으로 기록한다.
+			 */
+			
+			if (attVO.getTypeId().equals("A02")) {
+				//kms-todo
+				map.put("attModId", attitudeId);
+				map.put("offset", commonUtil.getMinuteUTC(offset));
+				
+				AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+				//가장 마지막에 신청한 근태수정신청내역이 신청 상태가 아닐 경우
+				if (!aav.getApprStatus().equals("0")) {
+					
+				} else {
+					//마지막에 신청한 근태수정신청이 신청상태인 경우
+					map.put("ids", attitudeId);
+					map.put("changeStatus", "ret");
+					map.put("apprDate", commonUtil.getTodayUTCTime(""));
+					ezAttitudeDAO.adminChangeUsersModAtt(map);
+				}
+				
+				map.put("originDate", attVO.getStartDate());
+				map.put("changeDate", startDate);
+				ezAttitudeDAO.adminAttSaveAppMod(map);
+			}
 		}
 		LOGGER.debug("updateAttitude ended");
 	}
@@ -521,8 +555,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void insertAttitudeType(String typeId, String typeName, String typeName2,
-			int tenantId, String companyId) throws Exception {
+	public boolean insertAttitudeType(String typeId, String typeName, String typeName2, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("insertAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -534,11 +567,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "", "", tenantId);
 		
+		boolean result = false;
+		
 		if (list.size() < 15) {
 			ezAttitudeDAO.insertAttitudeType(map);
+			
+			result = true;
 		}
 		
 		LOGGER.debug("insertAttitudeType ended");
+		
+		return result;
 	}
 
 	@Override
