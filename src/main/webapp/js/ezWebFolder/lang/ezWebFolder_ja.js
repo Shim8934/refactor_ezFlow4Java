@@ -23,5 +23,9 @@ var messages = {
 	strLang22 : "검색기간의 시작일을 지정해 주세요.", 			//ezWebFolder.t309
 	strLang23 : "하나만 선택하세요.",
 	strLang24 : "파라메터가 부족합니다.",
-	strLang25 : "접근 권한이 없습니다."
+	strLang25 : "접근 권한이 없습니다.",
+	strLang26 : "외",
+	strLang27 : "명(팀)",
+	strLang28 : "공유를 추가헸습니다.",
+	strLang29 : "공유를 수정헸습니다."
 }

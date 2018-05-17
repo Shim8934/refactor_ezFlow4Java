@@ -4,8 +4,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<c:if test="${type eq 'NEW'}"><title>공유 추가</title></c:if>
-		<c:if test="${type ne 'NEW'}"><title>공유 수정</title></c:if>
+		<c:if test="${type eq 'NEW'}"><title><spring:message code='ezWebFolder.t323' /></title></c:if>
+		<c:if test="${type ne 'NEW'}"><title><spring:message code='ezWebFolder.t217' /></title></c:if>
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
@@ -25,8 +25,8 @@
 			var arrSubFolder = [];
 			var selectedDept = "";
 			var selectedUser = "";
-			var strErrMsg = "<spring:message code='ezWebFolder.t134'/>";
-			var strDataNotFound = "<spring:message code='ezWebFolder.t144'/>";
+			var strErrMsg = messages.strLang7;
+			var strDataNotFound = messages.strLang12;
 			var strAlreadyAdd = "<spring:message code='ezWebFolder.t169'/>";
 			var strAlertMsg = "<spring:message code='ezWebFolder.t171'/>";
 			var strSearchError = "<spring:message code='ezWebFolder.t232'/>";
@@ -59,11 +59,11 @@
 							if (data.status == "ok") {
 								initRangeData(data.data.userList);
 							} else {
-								alert(strErrMsg + " code: " + data.code);
+								alert(messages.strLang7 + " code: " + data.code);
 							}
 						},
 						error: function(error) {
-							alert(strErrMsg);
+							alert(messages.strLang7);
 						}
 					});
 				}
@@ -97,9 +97,9 @@
 			
 			function addShareSuccess() {
 				if (type == "NEW") {
-					alert("공유를 추가헸습니다.");
+					alert(messages.strLang28);
 				} else {
-					alert("공유를 수정헸습니다.");
+					alert(messages.strLang29);
 				}
 				
 				try {
@@ -114,8 +114,8 @@
 		</style>
 	</head>
 	<body class="popup">
-		<c:if test="${type eq 'NEW'}"><h1>공유 추가</h1></c:if>
-		<c:if test="${type ne 'NEW'}"><h1>공유 수정</h1></c:if>
+		<c:if test="${type eq 'NEW'}"><h1><spring:message code='ezWebFolder.t323' /></h1></c:if>
+		<c:if test="${type ne 'NEW'}"><h1><spring:message code='ezWebFolder.t217' /></h1></c:if>
 		<table>
 			<tr>
 				<td width="195" valign="top">

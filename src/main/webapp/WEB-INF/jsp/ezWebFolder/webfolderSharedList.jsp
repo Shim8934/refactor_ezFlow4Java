@@ -909,7 +909,7 @@
 			<!-- pagenation이 namePath로 움직이지 않도록 설정 -->
 			<div id="originalPathWrapper" style="height: 40px;">
 				<span style="font-size: 24px; font-weight: bold; font-weight: bold; display: block; float: left;" id="originalPath">
-					<span class="aName" style="font-size:15px;" onClick="getFileList();">공유받은목록</span>
+					<span class="aName" style="font-size:15px;" onClick="getFileList();"><spring:message code='ezWebFolder.t214' /></span>
 				</span>
 			</div>
 			
@@ -920,11 +920,11 @@
 					<li id="fileDeleteBtn" style="display:none;"><a onclick="buttons.fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
 					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
-					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span>파일복사</span></a></li>
+					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t316'/></span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
-					<li><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
-					<li id="hideShareBtn"><a onclick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
-					<li id="hiddenShareListBtn"><a onclick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
+					<li><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>
+					<li id="hideShareBtn"><a onclick="shareContext.hideShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t317'/></span></a></li>
+					<li id="hiddenShareListBtn"><a onclick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t318'/></span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
@@ -997,11 +997,11 @@
 						<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 						<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
 						<th style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-						<th id="updateDateHeader" style="display:none;width: 9%;">갱신일</th><!-- 갱신일 -->
-						<th id="sharerHeader" style="width: 7%;">공유자</th><!-- 공유자 -->
-						<th id="shareDateHeader" style="width: 9%;">공유받은날짜</th><!-- 공유받은날짜 -->
+						<th id="updateDateHeader" style="display:none;width: 9%;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+						<th id="sharerHeader" style="width: 7%;"><spring:message code='ezWebFolder.t319'/></th><!-- 공유자 -->
+						<th id="shareDateHeader" style="width: 9%;"><spring:message code='ezWebFolder.t322'/></th><!-- 공유받은날짜 -->
 						<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-						<th style="width: 35px; text-align: center;">공유</th><!-- 공유 -->
+						<th style="width: 35px; text-align: center;"><spring:message code='ezWebFolder.t254'/></th><!-- 공유 -->
 					</tr>
 				</table>
 			</div>

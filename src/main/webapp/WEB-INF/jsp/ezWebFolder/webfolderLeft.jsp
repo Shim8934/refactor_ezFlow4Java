@@ -250,8 +250,8 @@
 				<span style="display:inline-block;width:100%;" onclick="getSharedList();"><spring:message code='ezWebFolder.t266' /></span>
 			</h2>
 			<ul>
-				<li><span style="width: 100%; display: inline-block;" onclick="getSharedList();">공유받은목록</span></li>
-				<li><span style="width: 100%; display: inline-block;" onclick="getSharingList();">공유한목록</span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span></li>
 			</ul>
 		    
 		    <h2>

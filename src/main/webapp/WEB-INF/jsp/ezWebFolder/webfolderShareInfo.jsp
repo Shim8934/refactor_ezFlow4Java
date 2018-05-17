@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		<title>공유 정보</title>
+		<title><spring:message code='ezWebFolder.t324' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
@@ -36,11 +36,11 @@
 							renderData(result.data);
 							changeShareInfo(0);
 						} else {
-							alert(strErrMsg + " code: " + result.code);
+							alert(messages.strLang7 + " code: " + result.code);
 						}
 					},
 					error : function(error) {
-						alert(strErrMsg);
+						alert(messages.strLang7);
 					}
 				});
 			}
@@ -90,9 +90,9 @@
 					tdElmt1.setAttribute("style", "width:85%; text-align:center;");
 					
 					if (userList[i]["userType"] == "U") {
-						tdElmt2.textContent = "사원";
+						tdElmt2.textContent = "<spring:message code='main.t10100' />";
 					} else {
-						tdElmt2.textContent = "부서";
+						tdElmt2.textContent = "<spring:message code='main.t75' />";
 					}
 					
 					tdElmt2.setAttribute("style", "width:15%; text-align:center;");
@@ -110,17 +110,17 @@
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1>공유 정보</h1>
+		<h1><spring:message code='ezWebFolder.t324' /></h1>
 		
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close();">닫기</span></li>
+		    <li><span onClick="window.close();"><spring:message code='main.t3' /></span></li>
 		  </ul>
 		</div>
 		
 		<table style="width:100%;" class="popuplist">
 			<tr>
-				<th style="width:20%; text-align:center;">공유한 사람</th>
+				<th style="width:20%; text-align:center;"><spring:message code='ezWebFolder.t319' /></th>
 				<td style="text-align:center;">
 					<select id="sharingUser" onchange="changeShareInfo(this.value)">
 					</select>
@@ -128,19 +128,19 @@
 				</td>
 			</tr>
 			<tr>
-				<th style="width:20%; text-align:center;">공유한 날짜</th>
+				<th style="width:20%; text-align:center;"><spring:message code='ezWebFolder.t321' /></th>
 				<td style="text-align:center;"><span id="shareDate"></span></td>
 			</tr>
 		</table>
 		
 		<br/>
 		
-		<h2>공유 대상자</h2>
+		<h2><spring:message code='ezWebFolder.t320' /></h2>
 		<div style="height:280px; overflow-y:auto;">
 			<table style="width:100%;" class="popuplist" id="sharedUserTable">
 				<tr>
-					<th style="width:85%; text-align:center;">이름</th>
-					<th style="width:15%; text-align:center;">유형</th>
+					<th style="width:85%; text-align:center;"><spring:message code='ezOrgan.t67' /></th>
+					<th style="width:15%; text-align:center;"><spring:message code='ezWebFolder.t188' /></th>
 				</tr>
 			</table>
 		</div>
