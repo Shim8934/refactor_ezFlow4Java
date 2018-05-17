@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -488,12 +489,12 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 	
 	@Override
-	public void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, LoginVO userInfo) throws Exception {
+	public void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, String realPath, LoginVO userInfo) throws Exception {
 		if (mode.equals("move")) {
 			moveFolder(folder, destFolder, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
 		}
 		else {
-			copyFolder(folder, destFolder, userInfo);
+			copyFolder(folder, destFolder, realPath, userInfo);
 		}
 	}
 	
@@ -574,7 +575,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		ezWebFolderAdminDAO.moveListSubFolders(map);
 	}
 
-	private void copyFolder(FolderVO folder, FolderVO parentFolder, LoginVO userInfo) throws Exception {
+	private void copyFolder(FolderVO folder, FolderVO parentFolder, String realPath, LoginVO userInfo) throws Exception {
 		String userId                = userInfo.getId();
 		String offset                = userInfo.getOffset();
 		int tenantId                 = userInfo.getTenantId();
@@ -614,14 +615,14 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//Create new folder
 		insertFolder(folder);
-		copyFile(folderId, newId, timeUTC, userInfo);
+		copyFile(folderId, newId, timeUTC, realPath, userInfo);
 		
 		//copy all sub folders
-		copySubFolders(folderId, parentFolder.getFolderType(), newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, userInfo);
+		copySubFolders(folderId, parentFolder.getFolderType(), newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, realPath, userInfo);
 	}
 
 
-	private void copySubFolders(String folderId, String folderType, String newPath, String timeUTC, String ownerId, int levelDistance, LoginVO userInfo) throws Exception {
+	private void copySubFolders(String folderId, String folderType, String newPath, String timeUTC, String ownerId, int levelDistance, String realPath, LoginVO userInfo) throws Exception {
 		List<FolderVO> listSubFolder = ezWebFolderService.getAllSubFolders(folderId, userInfo.getOffset(), userInfo.getTenantId());
 		
 		if (listSubFolder != null && listSubFolder.size() > 0) {
@@ -650,15 +651,15 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				
 				//Create new folder
 				insertFolder(subFld);
-				copyFile(oldId, newSubId, timeUTC, userInfo);
+				copyFile(oldId, newSubId, timeUTC, realPath, userInfo);
 				
 				//copy all sub folders
-				copySubFolders(oldId, folderType, subFld.getFolderPath(), timeUTC, ownerId, levelDistance, userInfo);
+				copySubFolders(oldId, folderType, subFld.getFolderPath(), timeUTC, ownerId, levelDistance, realPath, userInfo);
 			}
 		}
 	}
 
-	private void copyFile(String folderId, String newId, String timeUTC, LoginVO userInfo) throws Exception {
+	private void copyFile(String folderId, String newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
 		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
 		
 		if (fileList != null && fileList.size() > 0) {
@@ -671,6 +672,25 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				file.setCreateName1(userInfo.getDisplayName1());
 				file.setCreateName2(userInfo.getDisplayName2());
 				file.setFileId(ezWebFolderService.getMaxFileID(userInfo.getTenantId()));
+				
+				String fileName = file.getFileName();
+				int dotPos      = fileName.lastIndexOf(".");
+				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+				String newName  = UUID.randomUUID().toString() + "." + extend;
+				String newPath  = ezWebFolderService.getWebFolderDirPath(userInfo.getTenantId()) + newName;
+				File srcFile    = new File(realPath + file.getFilePath());
+				File destFile   = new File(realPath  + newPath);
+				destFile.getParentFile().mkdirs(); 
+				destFile.createNewFile();
+				
+				try {
+					FileUtils.copyFile(srcFile, destFile);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				file.setFilePath(newPath);
 				ezWebFolderService.insertFile(file);
 				ezWebFolderService.saveLog("C", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), file.getFileName(), file.getFileSize(), file.getFileExt(), file.getFileTypeName(), userInfo.getTenantId());
 			}

@@ -2,9 +2,7 @@ package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
 import java.util.Locale;
-
 import javax.servlet.http.HttpServletResponse;
-
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
@@ -32,7 +30,7 @@ public interface EzWebFolderAdminService {
 	void addDeptFolders(String companyId, LoginVO userInfo) throws Exception;
 	String getMaxFolderUserSeq(int tenantId) throws Exception;
 	void updateSelectedDeptsForChief(List<String> deptsList, LoginVO userInfo) throws Exception;
-	void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, LoginVO userInfo) throws Exception;
+	void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, String realPath, LoginVO userInfo) throws Exception;
 	void addPersonalFolder(LoginVO userInfo) throws Exception;
 	UserCapacityVO getUserCapacity(String userId, String lang, int tenantId) throws Exception;
 	String createExcelFileLogs(String realPath, String pDirPath, List<FileLogVO> listFileLogs, String primary, Locale locale) throws Exception;

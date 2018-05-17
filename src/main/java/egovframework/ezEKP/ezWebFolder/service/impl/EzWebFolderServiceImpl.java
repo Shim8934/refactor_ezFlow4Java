@@ -17,10 +17,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.zip.ZipEntry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -1080,7 +1085,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, String realPath, LoginVO userInfo) throws Exception {
 		String[] fileArr  = fileList.split(",");
 		String userName1  = userInfo.getDisplayName1();
 		String userName2  = userInfo.getDisplayName2();
@@ -1148,11 +1153,31 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					fileVO.setCreateName2(userName2);
 					fileVO.setUpdateId(userId);
 					fileVO.setUpdateDate(timeUTC);
+					
+					String fileName = fileVO.getFileName();
+					int dotPos      = fileName.lastIndexOf(".");
+					String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+					String newName  = UUID.randomUUID().toString() + "." + extend;
+					String newPath  = getWebFolderDirPath(userInfo.getTenantId()) + newName;
+					File srcFile    = new File(realPath + fileVO.getFilePath());
+					File destFile   = new File(realPath  + newPath);
+					destFile.getParentFile().mkdirs(); 
+					destFile.createNewFile();
+					
+					try {
+						FileUtils.copyFile(srcFile, destFile);
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					fileVO.setFilePath(newPath);
 					insertFile(fileVO);
 					
 					saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 				}
 			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

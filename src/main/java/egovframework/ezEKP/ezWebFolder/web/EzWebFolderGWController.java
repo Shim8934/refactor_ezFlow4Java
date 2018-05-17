@@ -796,7 +796,8 @@ public class EzWebFolderGWController {
 			}
 		}
 		
-		result = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, userInfo);
+		String realPath = request.getServletContext().getRealPath("");
+		result          = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, realPath, userInfo);
 		return result;
 	}
 
@@ -1588,7 +1589,8 @@ public class EzWebFolderGWController {
 				return result;
 			}
 			
-			ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, userInfo);
+			String realPath = request.getServletContext().getRealPath("");
+			ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
