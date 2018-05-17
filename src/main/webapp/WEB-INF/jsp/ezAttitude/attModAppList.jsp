@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
-		<title>근태신청현황</title>
+		<title><spring:message code='ezAttitude.bbhs31' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
@@ -1171,10 +1171,10 @@
 		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
-		<h1><spring:message code = 'ezAttitude.t7' /> - 신청관리현황<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs32' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
-		<h1><spring:message code = 'ezAttitude.t7' /> - 신청현황<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs33' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
         <c:if test="${checkAdmin == 'true'}">
