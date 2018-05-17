@@ -353,8 +353,6 @@
 	    }
 	    
 	    function get_att_list(pageNum) {
-	    	ShowAttProgress();
-	    	
 	    	$("#HeaderAllCheckBox").prop("checked",false);
 	    	
 	    	var obj = new Object();
@@ -398,8 +396,6 @@
 	    }
 	    
 	    function get_excelAtt_list() {
-	    	ShowAttProgress();
-	    	
 	    	if (usepostDate) {
 	            if (searchStartDate > searchEndDate) {
 	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
@@ -608,13 +604,6 @@
 	        	att_search();
 	        }
 		}
-	    
-	    function ShowAttProgress() {
-	        document.getElementById("attPanel").style.display = "";
-	        document.getElementById("AttProgress").style.top = "300px";
-	        document.getElementById("AttProgress").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
-	        document.getElementById("AttProgress").style.display = "";
-	    }
 	    
 	    function HiddenAttProgress() {
 	        document.getElementById("attPanel").style.display = "none";
@@ -835,8 +824,6 @@
 	    }
 	    
 	    function attList_del() {
-	    	ShowAttProgress();
-	    	
 	    	var attList = $(".checkAtt:checked");
 	    	var idList = "";
 	    	
@@ -886,8 +873,6 @@
 				alert("권한이 없습니다. 관리자에게 문의하세요");
 				return;
 			}
-	    	ShowAttProgress();
-	    	
 	    	var attList = $(".checkAtt:checked");
 	    	var idList = "";
 	    	
@@ -940,8 +925,6 @@
 				return;
 			}
 	  		
-	    	ShowAttProgress();
-	    	
 	    	var attList = $(".checkAtt:checked");
 	    	var idList = "";
 	    	
@@ -1232,6 +1215,7 @@
 					<c:if test="${selectedDeptID  == null}">
 						<option value=null selected></option>
 					</c:if>
+					<option value="all">전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
 							<c:if test="${selectedDeptID == dept.deptId}">

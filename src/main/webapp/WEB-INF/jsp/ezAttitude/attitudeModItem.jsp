@@ -237,7 +237,7 @@
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
-	                                        <th>변경시각</th>
+	                                        <th>신청시각</th>
 	                                        <td colspan="2">
 	                                        	<span id="periodblock">
 	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center"><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />

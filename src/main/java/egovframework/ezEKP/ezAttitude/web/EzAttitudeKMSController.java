@@ -1502,7 +1502,7 @@ public class EzAttitudeKMSController {
 	}
 	
 	/**
-	 * 부서근태현황 main
+	 * 근태수정관리 화면 조회
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeAdminMod.do")
 	public String attitudeAdminMod(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,

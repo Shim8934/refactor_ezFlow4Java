@@ -209,6 +209,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		update("ezAttitudeDAO.changeUsersModifyAtt", map);
 	}
 	
+	public void adminChangeUsersModAtt(Map<String, Object> map) {		
+		update("ezAttitudeDAO.adminChangeUsersModAtt", map);
+	}
+	
 	public AttitudeApplicationVO attDetail(Map<String, Object> map) {		
 		return (AttitudeApplicationVO) select("ezAttitudeDAO.attDetail", map);
 	}
@@ -286,6 +290,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	public void	insertAdminAttHistory3(Map<String, Object> map) throws Exception {
 		insert("ezAttitude.insertAdminAttHistory3", map);//TODO  ezAttitude -> ezAttitudeDAO 
+	}
+	
+	public void	adminAttSaveAppMod(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeDAO.adminAttSaveAppMod", map);//TODO  ezAttitude -> ezAttitudeDAO 
 	}
 	
 	public List<ModApplHistoryVO> getAttitudeHistoryList(Map<String, Object> map) {

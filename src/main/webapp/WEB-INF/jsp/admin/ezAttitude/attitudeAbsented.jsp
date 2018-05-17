@@ -326,7 +326,7 @@
 				var pwidth = window.screen.availwidth;
 				var pTop = (pheight - conHeight) / 2;
 				var pLeft = (pwidth - 890) / 2;
-				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchDeptName + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&pageNum=&listSize=&orderCell=&orderOption=";
+				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&pageNum=&listSize=&orderCell=&orderOption=";
 					
 				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
 			}

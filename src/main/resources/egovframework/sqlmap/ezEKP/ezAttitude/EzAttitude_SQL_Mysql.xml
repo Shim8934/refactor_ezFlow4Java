@@ -431,11 +431,13 @@
 		</isNotEmpty>
 		<isNotEmpty property="writerDeptName" prepend="and">
 			<isNotEmpty property="writerDeptName" >
+				<isNotEqual property="writerDeptName" compareValue="전체">
 				<isEqual property="sysLang" compareValue="primary" >
 						A.WRITER_DEPT_NAME LIKE CONCAT('%', #writerDeptName#,'%')
 				</isEqual>
 				<isNotEqual property="sysLang" compareValue="primary">
 						A.WRITER_DEPT_NAME2 LIKE CONCAT('%', #writerDeptName#,'%')
+				</isNotEqual>
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -667,6 +669,10 @@
 				join tbl_attitude b 
 			on 
 				a.ATTITUDE_ID = b.ATTITUDE_ID
+			and
+				a.COMPANY_ID = b.COMPANY_ID
+			and 
+				a.TENANT_ID = b.TENANT_ID
 			where 
 				a.COMPANY_ID = #companyId#
 			and 
@@ -918,6 +924,78 @@
 		]]>
 	</insert>
 	
+	<insert id="ezAttitudeDAO.adminAttSaveAppMod" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_ATTITUDE_MODAPPL(
+					ATTITUDE_ID,
+					APPL_CNT, 
+					COMPANY_ID, 
+					TENANT_ID, 
+					WRITER_ID, 
+					WRITER_NAME, 
+					WRITER_NAME2, 
+					WRITER_TITLE, 
+					WRITER_TITLE2, 
+					WRITER_DEPT_ID, 
+					WRITER_DEPT_NAME,
+					WRITER_DEPT_NAME2,
+					APPR_USER_ID,
+					APPR_USER_NAME,
+					APPR_USER_NAME2,
+					APPR_DATE,
+					CHANGE_DATE,
+					ORIGIN_DATE,
+					APPR_STATUS,
+					CONTENT
+				)
+				SELECT
+					#attitudeId#,
+					(
+					SELECT 
+						IFNULL(MAX(a.APPL_CNT) + 1, 0)
+					FROM
+						TBL_ATTITUDE_MODAPPL a
+					WHERE
+						TENANT_ID = #tenantId#
+		        	AND
+		        		COMPANY_ID = #companyId#
+		        	AND
+		        		ATTITUDE_ID = #attitudeId#
+					),
+					#companyId#, 
+					#tenantId#, 
+					#adminId#, 
+					b.DISPLAYNAME, 
+					b.DISPLAYNAME2, 
+					b.TITLE, 
+					b.TITLE2, 
+					b.DEPARTMENT, 
+					b.DESCRIPTION,
+					b.DESCRIPTION2,
+					#adminId#,
+					b.DISPLAYNAME, 
+					b.DISPLAYNAME2,
+					#apprDate#,
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#originDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					"1",
+					#content#
+				FROM
+					(select 
+					*
+					from 
+						tbl_usermaster
+					where
+						cn = #adminId#
+					and
+						PHYSICALDELIVERYOFFICENAME = #companyId#
+					and
+						tenant_id = #tenantId#					
+					) b
+		]]>
+	</insert>
+	
 	<update id="ezAttitudeDAO.attModAppModify" parameterClass="map">
 		<![CDATA[
 			UPDATE 
@@ -1010,6 +1088,51 @@
 			,APPR_USER_ID = #userId#
 			,APPR_USER_NAME = #displayName#
 			,APPR_USER_NAME2 = #displayName2#
+	        WHERE
+	        	TENANT_ID = #tenantId#
+			AND	        	
+				ATTITUDE_ID = #ids#
+			AND
+	        	COMPANY_ID = #companyId#
+		]]>
+		<isNotEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = #applCnt#
+	    </isNotEmpty>
+	    <isEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_MODAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #ids#
+								  AND
+						        	COMPANY_ID = #companyId#)a)
+	    </isEmpty>
+	</update>
+	
+	<update id="ezAttitudeDAO.adminChangeUsersModAtt" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE_MODAPPL , (SELECT displayname,displayname2 from tbl_usermaster where cn=#adminId# and tenant_id=#tenantId#) a
+			SET 
+				APPR_STATUS =
+		]]> 
+			<isEqual property="changeStatus" compareValue="appr">
+				1
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				2
+			</isEqual>
+		<![CDATA[
+			,APPR_DATE = DATE_FORMAT(#apprDate#, '%Y-%m-%d %H:%i:%S')
+			,APPR_USER_ID = #adminId#
+			,APPR_USER_NAME = a.displayname
+			,APPR_USER_NAME2 = a.displayname2
 	        WHERE
 	        	TENANT_ID = #tenantId#
 			AND	        	
@@ -1247,20 +1370,27 @@
 	</delete>
 	
 	<insert id="ezAttitude.updateAttitude" parameterClass="Map">
-		UPDATE 
-			tbl_attitude
-		SET
-			TYPE_ID = #typeId#,
-		    REGION = #region#,
-		    MOBILE = #mobile#,
-		    BIZSUB = #bizSub#,
-		    CONTENT = #content#,
-		    DATE_TYPE = #dateType#,
-		    IP = #ipAddress#,
-		    START_DATE = date_add(#startDate#, INTERVAL -#offsetMin# minute),
-		    END_DATE = IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute))
-		WHERE
-			ATTITUDE_ID = #attitudeId#
+		<![CDATA[
+			UPDATE 
+				tbl_attitude
+			SET
+				TYPE_ID = #typeId#,
+			    REGION = #region#,
+			    MOBILE = #mobile#,
+			    BIZSUB = #bizSub#,
+			    CONTENT = #content#,
+			    DATE_TYPE = #dateType#,
+			    IP = #ipAddress#,
+			    START_DATE = date_add(#startDate#, INTERVAL -#offsetMin# minute),
+			    END_DATE = IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute))
+		]]>
+		<isNotEmpty property="modappl">
+				,MODAPPL = #modappl#
+		</isNotEmpty>
+		<![CDATA[
+			WHERE
+				ATTITUDE_ID = #attitudeId#
+		]]>
 	</insert>
 	
 	<select id="ezAttitudeDAO.attModGetHistory" parameterClass="Map" resultMap="attitudeApplicationHistoryVO">
@@ -1292,7 +1422,7 @@
 			AND
 				A.ATTITUDE_ID = #attModId#
 			ORDER BY
-				A.APPR_DATE DESC
+				A.APPR_DATE DESC, A.APPL_CNT DESC
 		]]>
 	</select>
 	
