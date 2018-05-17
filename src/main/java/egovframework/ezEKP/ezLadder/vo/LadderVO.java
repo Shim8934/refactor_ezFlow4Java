@@ -42,7 +42,10 @@ public class LadderVO {
 	/** 사용자 아이디*/
 	private String userId;
 	private String pic;
+	/** 댓글 갯수 */
 	private int cmt;
+	/** 생성 24시간 여부*/
+	private int newFlag;
 	
 	
 	public int getTenant_id() {
@@ -190,5 +193,10 @@ public class LadderVO {
 	public void setCmt(int cmt) {
 		this.cmt = cmt;
 	}
-
+	public int getNewFlag() {
+		return newFlag;
+	}
+	public void setNewFlag(int newFlag) {
+		this.newFlag = newFlag;
+	}
 }
