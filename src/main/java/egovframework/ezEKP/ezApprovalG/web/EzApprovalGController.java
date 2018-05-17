@@ -3485,6 +3485,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		String docState = request.getParameter("docState");
 		String mode = request.getParameter("mode");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (mailChk == null) {
 			mailChk = "";
@@ -3616,6 +3622,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String chamState = request.getParameter("chamState");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String result = ezApprovalGService.getApproveDocInfo(userInfo, docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), mode, chamState);
 
