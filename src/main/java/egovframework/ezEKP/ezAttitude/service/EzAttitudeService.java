@@ -71,7 +71,7 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception;
 	
-	public void insertAttitudeType(String typeId, String typeName, String typeName2, int tenantId, String companyId) throws Exception;
+	public boolean insertAttitudeType(String typeId, String typeName, String typeName2, int tenantId, String companyId) throws Exception;
 	
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception;
 	
