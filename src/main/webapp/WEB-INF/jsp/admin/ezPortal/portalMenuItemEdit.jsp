@@ -745,7 +745,7 @@
 						</c:otherwise>
 					</c:choose>
 				</table>
-				<table id="toggle_tbl2_1" width="500" class="popuplist" style="display: none;">
+				<table id="toggle_tbl2_1" width="100%" class="popuplist" style="display: none;">
 					<tr>
 						<th width="85">
 							<spring:message code='ezPortal.t115'/>
@@ -756,10 +756,17 @@
 						<th width="70">
 						</th>
 					</tr>
+					<c:if test="${paramHtml == ''}">
+	  					<tr>
+	  						<td colspan="3" style="text-align: center; color:#5b5a5a;">
+			    				<spring:message code='main.t00026'/>
+	  						</td>
+	  					</tr>
+	  				</c:if>
 					${paramHtml}
 				</table>
     			<br id ="idbr" />
-				<table id="toggle_tbl2_2" width="500" class="popuplist" style="display: none;">
+				<table id="toggle_tbl2_2" width="100%" class="popuplist" style="display: none;">
 					<tr>
 						<th>
 							<spring:message code='ezPortal.t117'/>
@@ -788,7 +795,7 @@
 						</td>
 					</tr>
 				</table>
-				<table id="toggle_tbl2_3" style="display: none; margin-top: 10px;" width="510" border="0" cellspacing="0" cellpadding="0">
+				<table id="toggle_tbl2_3" style="display: none; margin-top: 10px;" width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td align="center">
                 			<a class="imgbtn">
@@ -799,7 +806,7 @@
 						</td>
 					</tr>
 				</table>
-				<table id="toggle_tbl3_1" width="500" class="popuplist" style="display: none">
+				<table id="toggle_tbl3_1" width="100%" class="popuplist" style="display: none">
 					<tr>
 						<th width="80">
 							<spring:message code='ezPortal.t91'/>
@@ -815,7 +822,13 @@
 						</th>
 						<th>&nbsp;</th>
 					</tr>
-	
+					<c:if test="${aclList == '[]'}">
+						<tr>
+							<td colspan="5" style="text-align: center; color:#5b5a5a;">
+	  							<spring:message code='main.t00026'/>
+							</td>
+						</tr>
+					</c:if>
 					<c:forEach items="${aclList}" var="item">
   	  					<tr>
     						<td>${item.accessID}</td>
@@ -851,7 +864,7 @@
   					</c:forEach>
 				</table>
 				<br id ="idbr2">
-				<table id="toggle_tbl3_2" width="500" class="popuplist" style="display: none">
+				<table id="toggle_tbl3_2" width="100%" class="popuplist" style="display: none">
 					<tr>
 						<th width="70">
 							<spring:message code='ezPortal.t91'/>

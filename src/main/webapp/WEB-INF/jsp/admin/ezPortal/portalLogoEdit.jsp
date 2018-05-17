@@ -429,7 +429,14 @@
 				<th width="80"><spring:message code='ezPortal.t93'/></th>
 				<th width="80"><spring:message code='ezPortal.t94'/></th>
 				<th>&nbsp;</th>
-			</tr>		
+			</tr>
+			<c:if test="${aclList == '[]'}">
+				<tr>
+					<td colspan="5" style="text-align: center; color:#5b5a5a;">
+  					<spring:message code='main.t00026'/>
+					</td>
+				</tr>
+			</c:if>
 			<c:forEach items="${aclList}" var="item">
 	  	  	<tr>
 		    	<td>${item.accessID}</td>
