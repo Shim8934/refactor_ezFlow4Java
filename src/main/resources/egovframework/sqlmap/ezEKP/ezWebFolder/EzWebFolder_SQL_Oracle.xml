@@ -76,7 +76,7 @@
 			
 			<isNotEqual property="startDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(f.CREATE_DATE >= #startDate# AND f.CREATE_DATE <= #endDate#)
+					(f.CREATE_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND f.CREATE_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				]]>
 			</isNotEqual>
 		</isEqual>
