@@ -135,18 +135,14 @@
 		
 		<br/>
 		
-		<h2>공유받은 사람 목록</h2>
-		<div style="height:230px; overflow-y:auto;">
+		<h2>공유 대상자</h2>
+		<div style="height:280px; overflow-y:auto;">
 			<table style="width:100%;" class="popuplist" id="sharedUserTable">
 				<tr>
 					<th style="width:85%; text-align:center;">이름</th>
 					<th style="width:15%; text-align:center;">유형</th>
 				</tr>
 			</table>
-		</div>
-		
-		<div class="btnpositionNew">
-			<a class="imgbtn"><span onClick="window.close();">확인</span></a>
 		</div>
 		
 	</body>
