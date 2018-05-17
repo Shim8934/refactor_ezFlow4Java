@@ -101,140 +101,140 @@ public class EzAttitudeKMSController {
 		
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
-									
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("apprUserName", apprUserName)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
-				.queryParam("sysLang", sysLang)
-				.queryParam("offset", offsetMin)
-				.queryParam("pageNum", pageNum)
-				.queryParam("type", type);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		
-		JSONObject data = new JSONObject();
-		JSONArray list = new JSONArray();
-		
-		if(status.equals("ok")){
-			totalAtt = Integer.parseInt(resultBody.get("data").toString());
-		}
-		
-		totalPages = (totalAtt + pageSize - 1)/pageSize;
-		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
-		
-		builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("apprUserName", apprUserName)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
-				.queryParam("sysLang", sysLang)
-				.queryParam("offset", offsetMin)
-				.queryParam("pageNum", pageNum)
-				.queryParam("type", type);
-		
-		if (totalPages == 0 || totalPages == 1) {
-			totalPages = 1;
-			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-			
-			jp = new JSONParser();
-			
-			resultBody = (JSONObject) jp.parse(result.getBody());
-			
-			status = resultBody.get("status").toString();
-			
-			data = new JSONObject();
-			list = new JSONArray();
-			
-			if(status.equals("ok")){
-				data = (JSONObject) resultBody.get("data");
-				list = (JSONArray) data.get("list");
-				model.addAttribute("list", list);
-			}
-		}
-		else {
-			if (currentPage < totalPages) {
-				startPoint = (currentPage - 1)*pageSize;
-				endPoint = currentPage*pageSize;
-				
-			}
-			else {
-				if (currentPage > totalPages) {
-					currentPage = totalPages;
-				}
-				startPoint = (currentPage - 1) * pageSize;
-				endPoint = totalAtt;
-			}
-			
-			builder = UriComponentsBuilder.fromHttpUrl(url)
-					.queryParam("companyId", userInfo.getCompanyID())
-					.queryParam("tenantId", userInfo.getTenantId())
-					.queryParam("apprUserName", apprUserName)
-					.queryParam("startDate", startDate)
-					.queryParam("endDate", endDate)
-					.queryParam("sysLang", sysLang)
-					.queryParam("offset", offsetMin)
-					.queryParam("pageNum", pageNum)
-					.queryParam("startPoint", startPoint)
-					.queryParam("endPoint", endPoint)
-					.queryParam("type", type);
-			
-			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-			
-			jp = new JSONParser();
-			
-			resultBody = (JSONObject) jp.parse(result.getBody());
-			
-			status = resultBody.get("status").toString();
-			
-			data = new JSONObject();
-			list = new JSONArray();
-			
-			if(status.equals("ok")){
-				data = (JSONObject) resultBody.get("data");
-				list = (JSONArray) data.get("list");
-				model.addAttribute("list", list);
-			}
-		}
-		
-		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
-		
-		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		jp = new JSONParser();
-		
-		resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		status = resultBody.get("status").toString();
-		
-		data = new JSONObject();
-		list = new JSONArray();
-		
-		if(status.equals("ok")){
-			data = (JSONObject) resultBody.get("data");
-			list = (JSONArray) data.get("list");
-			model.addAttribute("list", list);
-		}
+//		
+//		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+//		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+//									
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+//		headers.set("x-user-host", request.getServerName());
+//		
+//		HttpEntity<?> entity = new HttpEntity<>(headers);
+//		
+//		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("companyId", userInfo.getCompanyID())
+//				.queryParam("tenantId", userInfo.getTenantId())
+//				.queryParam("apprUserName", apprUserName)
+//				.queryParam("startDate", startDate)
+//				.queryParam("endDate", endDate)
+//				.queryParam("sysLang", sysLang)
+//				.queryParam("offset", offsetMin)
+//				.queryParam("pageNum", pageNum)
+//				.queryParam("type", type);
+//		
+//		RestTemplate rest = new RestTemplate();
+//		
+//		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
+//		JSONParser jp = new JSONParser();
+//		
+//		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+//		
+//		String status = resultBody.get("status").toString();
+//		
+//		JSONObject data = new JSONObject();
+//		JSONArray list = new JSONArray();
+//		
+//		if(status.equals("ok")){
+//			totalAtt = Integer.parseInt(resultBody.get("data").toString());
+//		}
+//		
+//		totalPages = (totalAtt + pageSize - 1)/pageSize;
+//		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+//		
+//		builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("companyId", userInfo.getCompanyID())
+//				.queryParam("tenantId", userInfo.getTenantId())
+//				.queryParam("apprUserName", apprUserName)
+//				.queryParam("startDate", startDate)
+//				.queryParam("endDate", endDate)
+//				.queryParam("sysLang", sysLang)
+//				.queryParam("offset", offsetMin)
+//				.queryParam("pageNum", pageNum)
+//				.queryParam("type", type);
+//		
+//		if (totalPages == 0 || totalPages == 1) {
+//			totalPages = 1;
+//			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//			
+//			jp = new JSONParser();
+//			
+//			resultBody = (JSONObject) jp.parse(result.getBody());
+//			
+//			status = resultBody.get("status").toString();
+//			
+//			data = new JSONObject();
+//			list = new JSONArray();
+//			
+//			if(status.equals("ok")){
+//				data = (JSONObject) resultBody.get("data");
+//				list = (JSONArray) data.get("list");
+//				model.addAttribute("list", list);
+//			}
+//		}
+//		else {
+//			if (currentPage < totalPages) {
+//				startPoint = (currentPage - 1)*pageSize;
+//				endPoint = currentPage*pageSize;
+//				
+//			}
+//			else {
+//				if (currentPage > totalPages) {
+//					currentPage = totalPages;
+//				}
+//				startPoint = (currentPage - 1) * pageSize;
+//				endPoint = totalAtt;
+//			}
+//			
+//			builder = UriComponentsBuilder.fromHttpUrl(url)
+//					.queryParam("companyId", userInfo.getCompanyID())
+//					.queryParam("tenantId", userInfo.getTenantId())
+//					.queryParam("apprUserName", apprUserName)
+//					.queryParam("startDate", startDate)
+//					.queryParam("endDate", endDate)
+//					.queryParam("sysLang", sysLang)
+//					.queryParam("offset", offsetMin)
+//					.queryParam("pageNum", pageNum)
+//					.queryParam("startPoint", startPoint)
+//					.queryParam("endPoint", endPoint)
+//					.queryParam("type", type);
+//			
+//			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//			
+//			jp = new JSONParser();
+//			
+//			resultBody = (JSONObject) jp.parse(result.getBody());
+//			
+//			status = resultBody.get("status").toString();
+//			
+//			data = new JSONObject();
+//			list = new JSONArray();
+//			
+//			if(status.equals("ok")){
+//				data = (JSONObject) resultBody.get("data");
+//				list = (JSONArray) data.get("list");
+//				model.addAttribute("list", list);
+//			}
+//		}
+//		
+//		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+//		
+//		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
+//		jp = new JSONParser();
+//		
+//		resultBody = (JSONObject) jp.parse(result.getBody());
+//		
+//		status = resultBody.get("status").toString();
+//		
+//		data = new JSONObject();
+//		list = new JSONArray();
+//		
+//		if(status.equals("ok")){
+//			data = (JSONObject) resultBody.get("data");
+//			list = (JSONArray) data.get("list");
+//			model.addAttribute("list", list);
+//		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
@@ -293,144 +293,144 @@ public class EzAttitudeKMSController {
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
-									
+//		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+//									
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
+//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+//		headers.set("x-user-host", request.getServerName());
+//		
 		HttpEntity entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("apprUserName", apprUserName)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
-				.queryParam("sysLang", sysLang)
-				.queryParam("offset", offsetMin)
-				.queryParam("pageNum", pageNum)
-				.queryParam("adminFlag", adminFlag)
-				.queryParam("deptid", deptid)
-				.queryParam("type", type);
-		
+//		
+//		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("companyId", userInfo.getCompanyID())
+//				.queryParam("tenantId", userInfo.getTenantId())
+//				.queryParam("apprUserName", apprUserName)
+//				.queryParam("startDate", startDate)
+//				.queryParam("endDate", endDate)
+//				.queryParam("sysLang", sysLang)
+//				.queryParam("offset", offsetMin)
+//				.queryParam("pageNum", pageNum)
+//				.queryParam("adminFlag", adminFlag)
+//				.queryParam("deptid", deptid)
+//				.queryParam("type", type);
+//		
 		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
+//		
+//		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
 		JSONParser jp = new JSONParser();
-		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		
-		JSONObject data = new JSONObject();
-		JSONArray list = new JSONArray();
+//		
+//		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+//		
+//		String status = resultBody.get("status").toString();
+//		
+//		JSONObject data = new JSONObject();
+//		JSONArray list = new JSONArray();
 		String isAllDept = "";
-		if(status.equals("ok")){
-			totalAtt = Integer.parseInt(resultBody.get("data").toString());
-		}
-		
-		totalPages = (totalAtt + pageSize - 1)/pageSize;
-		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
-		
-		builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("apprUserName", apprUserName)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
-				.queryParam("sysLang", sysLang)
-				.queryParam("offset", offsetMin)
-				.queryParam("pageNum", pageNum)
-				.queryParam("adminFlag", adminFlag)
-				.queryParam("deptid", deptid)
-				.queryParam("type", type);
-		
-		if (totalPages == 0 || totalPages == 1) {
-			totalPages = 1;
-			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-			
-			jp = new JSONParser();
-			
-			resultBody = (JSONObject) jp.parse(result.getBody());
-			
-			status = resultBody.get("status").toString();
-			
-			data = new JSONObject();
-			list = new JSONArray();
-			
-			if(status.equals("ok")){
-				data = (JSONObject) resultBody.get("data");
-				list = (JSONArray) data.get("list");
-				model.addAttribute("list", list);
-			}
-		}
-		else {
-			if (currentPage < totalPages) {
-				startPoint = (currentPage - 1)*pageSize;
-				endPoint = currentPage*pageSize;
-				
-			}
-			else {
-				if (currentPage > totalPages) {
-					currentPage = totalPages;
-				}
-				startPoint = (currentPage - 1) * pageSize;
-				endPoint = totalAtt;
-			}
-			
-			builder = UriComponentsBuilder.fromHttpUrl(url)
-					.queryParam("companyId", userInfo.getCompanyID())
-					.queryParam("tenantId", userInfo.getTenantId())
-					.queryParam("apprUserName", apprUserName)
-					.queryParam("startDate", startDate)
-					.queryParam("endDate", endDate)
-					.queryParam("sysLang", sysLang)
-					.queryParam("offset", offsetMin)
-					.queryParam("pageNum", pageNum)
-					.queryParam("startPoint", startPoint)
-					.queryParam("endPoint", endPoint)
-					.queryParam("adminFlag", adminFlag)
-					.queryParam("deptid", deptid)
-					.queryParam("type", type);
-			
-			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-			
-			jp = new JSONParser();
-			
-			resultBody = (JSONObject) jp.parse(result.getBody());
-			
-			status = resultBody.get("status").toString();
-			
-			data = new JSONObject();
-			list = new JSONArray();
-			
-			if(status.equals("ok")){
-				data = (JSONObject) resultBody.get("data");
-				list = (JSONArray) data.get("list");
-				model.addAttribute("list", list);
-			}
-		}
-		
-		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
-		
-		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		jp = new JSONParser();
-		
-		resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		status = resultBody.get("status").toString();
-		
-		data = new JSONObject();
-		list = new JSONArray();
-		
-		if(status.equals("ok")){
-			data = (JSONObject) resultBody.get("data");
-			list = (JSONArray) data.get("list");
-			model.addAttribute("list", list);
-		}
+//		if(status.equals("ok")){
+//			totalAtt = Integer.parseInt(resultBody.get("data").toString());
+//		}
+//		
+//		totalPages = (totalAtt + pageSize - 1)/pageSize;
+//		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+//		
+//		builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("companyId", userInfo.getCompanyID())
+//				.queryParam("tenantId", userInfo.getTenantId())
+//				.queryParam("apprUserName", apprUserName)
+//				.queryParam("startDate", startDate)
+//				.queryParam("endDate", endDate)
+//				.queryParam("sysLang", sysLang)
+//				.queryParam("offset", offsetMin)
+//				.queryParam("pageNum", pageNum)
+//				.queryParam("adminFlag", adminFlag)
+//				.queryParam("deptid", deptid)
+//				.queryParam("type", type);
+//		
+//		if (totalPages == 0 || totalPages == 1) {
+//			totalPages = 1;
+//			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//			
+//			jp = new JSONParser();
+//			
+//			resultBody = (JSONObject) jp.parse(result.getBody());
+//			
+//			status = resultBody.get("status").toString();
+//			
+//			data = new JSONObject();
+//			list = new JSONArray();
+//			
+//			if(status.equals("ok")){
+//				data = (JSONObject) resultBody.get("data");
+//				list = (JSONArray) data.get("list");
+//				model.addAttribute("list", list);
+//			}
+//		}
+//		else {
+//			if (currentPage < totalPages) {
+//				startPoint = (currentPage - 1)*pageSize;
+//				endPoint = currentPage*pageSize;
+//				
+//			}
+//			else {
+//				if (currentPage > totalPages) {
+//					currentPage = totalPages;
+//				}
+//				startPoint = (currentPage - 1) * pageSize;
+//				endPoint = totalAtt;
+//			}
+//			
+//			builder = UriComponentsBuilder.fromHttpUrl(url)
+//					.queryParam("companyId", userInfo.getCompanyID())
+//					.queryParam("tenantId", userInfo.getTenantId())
+//					.queryParam("apprUserName", apprUserName)
+//					.queryParam("startDate", startDate)
+//					.queryParam("endDate", endDate)
+//					.queryParam("sysLang", sysLang)
+//					.queryParam("offset", offsetMin)
+//					.queryParam("pageNum", pageNum)
+//					.queryParam("startPoint", startPoint)
+//					.queryParam("endPoint", endPoint)
+//					.queryParam("adminFlag", adminFlag)
+//					.queryParam("deptid", deptid)
+//					.queryParam("type", type);
+//			
+//			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//			
+//			jp = new JSONParser();
+//			
+//			resultBody = (JSONObject) jp.parse(result.getBody());
+//			
+//			status = resultBody.get("status").toString();
+//			
+//			data = new JSONObject();
+//			list = new JSONArray();
+//			
+//			if(status.equals("ok")){
+//				data = (JSONObject) resultBody.get("data");
+//				list = (JSONArray) data.get("list");
+//				model.addAttribute("list", list);
+//			}
+//		}
+//		
+//		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+//		
+//		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
+//		jp = new JSONParser();
+//		
+//		resultBody = (JSONObject) jp.parse(result.getBody());
+//		
+//		status = resultBody.get("status").toString();
+//		
+//		data = new JSONObject();
+//		list = new JSONArray();
+//		
+//		if(status.equals("ok")){
+//			data = (JSONObject) resultBody.get("data");
+//			list = (JSONArray) data.get("list");
+//			model.addAttribute("list", list);
+//		}
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
@@ -450,20 +450,20 @@ public class EzAttitudeKMSController {
 		
 		entity = new HttpEntity<>(headers);
 		
-		builder = UriComponentsBuilder.fromHttpUrl(url)
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", userInfo.getCompanyID())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("isAllDept", isAllDept);
 		
 		rest = new RestTemplate();
 		
-		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
 		jp = new JSONParser();
 		
-		resultBody = (JSONObject) jp.parse(result.getBody());
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
-		status = resultBody.get("status").toString();
+		String status = resultBody.get("status").toString();
 		
 		JSONArray deptList = new JSONArray();
 		
