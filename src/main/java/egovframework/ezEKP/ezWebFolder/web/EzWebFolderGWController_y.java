@@ -523,7 +523,7 @@ public class EzWebFolderGWController_y {
 				String [] rootPath  = folderPath.split("\\|");
 				Set<String> testbnk = new HashSet<String>();
 				
-				for (FileVO file : fileList) {
+				for (FileVO file : fileList ) {
 					String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 					String[] fldPathArr = fldPath.split("\\|");
 					testbnk.addAll(Arrays.asList(fldPathArr));
@@ -539,7 +539,7 @@ public class EzWebFolderGWController_y {
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 						String[] fldPathArr = fldPath.split("\\|");
 						
-						for (int i = rootPath.length; i < fldPathArr.length; i++) {
+						for (int i = rootPath.length; i < fldPathArr.length -1; i++) {
 							file_path += filePathMap.get(fldPathArr[i]) + "/";
 						}
 						file_path = file_path.substring(0, file_path.length() - 1);
