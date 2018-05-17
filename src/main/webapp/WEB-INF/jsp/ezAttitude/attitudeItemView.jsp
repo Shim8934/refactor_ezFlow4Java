@@ -147,7 +147,6 @@
 	                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.bbhs28'/></span></li>
 	                                <li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
 	                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
-	                            	<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.bbhs21'/></span></li>
 	                            </ul>
 	                        </div>

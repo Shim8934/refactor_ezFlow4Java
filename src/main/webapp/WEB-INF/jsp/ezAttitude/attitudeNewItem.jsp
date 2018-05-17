@@ -59,7 +59,8 @@
 		        }
 				select_memorialDays(uselang);
 				setHoliday();
-				setTypeName();
+				checkOutCom();
+				
 			}
 			
 			window.onresize = function () {   	
@@ -164,6 +165,14 @@
 		        })
 		        
 		        if (typeId == 'A04' && dateType == 4) {
+		        	$('#Stimepicker').timepicker();
+			        $('#Stimepicker').timepicker('setTime', SDate);
+			        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+			        $('#Etimepicker').timepicker();
+			        $('#Etimepicker').timepicker('setTime', EDate);
+			        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+			        
+			        $("#periodblock").attr("datetype", dateType);
 		        	$("#Stimepicker").css("display", "none");
 					$("#Etimepicker").css("display", "none");
 					$(alldaycheck).prop("checked",true);
@@ -517,14 +526,6 @@
 				} else {
 					inputCheckFlag = false;
 				}
-			}
-			
-			function setTypeName() {
-				$('#subSelectAtti option').each(function(){
-					var typeName = $(this).text();
-					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
-					$(this).text(typeName);
-				})
 			}
 		</script>
 	</head>

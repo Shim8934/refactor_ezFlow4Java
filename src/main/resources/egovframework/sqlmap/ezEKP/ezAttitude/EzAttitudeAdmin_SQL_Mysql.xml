@@ -388,15 +388,15 @@
 			INSERT INTO TBL_ATTITUDE_TYPE
 				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, ISADD, FORM_ID)
 			VALUES
-				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '1', (SELECT 
+				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '0', (SELECT
 																							  A.FORM_ID
-																						  FROM 
+																						  FROM
 																							  TBL_ATTITUDE_TYPE A
-																						  WHERE 
+																						  WHERE
 																							  A.TENANT_ID = #tenantId#
-																						  AND 
+																						  AND
 																							  A.COMPANY_ID = #companyId#
-																						  AND 
+																						  AND
 																							  A.TYPE_ID = 'A11'))
 		]]>
 	</insert>
@@ -580,9 +580,9 @@
 				A.tenant_id AS tenantid,
 				A.writer_id AS writerid,
 				A.dept_id AS deptid,
-				SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 1, 10) AS startdate,
+				DATE_ADD(A.start_date, INTERVAL #offsetMin# minute) AS startdate,
                 SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 12) AS starttime,
-                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 1, 10),'') AS enddate,
+                IFNULL(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute),'') AS enddate,
                 IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 12),'') AS endtime,
 				A.modappl,
 				A.ip,

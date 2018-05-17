@@ -462,7 +462,7 @@
 				ORDER BY $order$, A.APPL_CNT DESC
 		</isNotEmpty>
 		<isEmpty prepend="" property="order">
-				ORDER BY B.START_DATE DESC, A.APPL_CNT DESC
+				ORDER BY A.APPR_STATUS, B.START_DATE DESC, A.APPL_CNT DESC
 		</isEmpty>
 		<isNotEmpty property="startPoint" prepend="limit">
 			<isNotEmpty property="endPoint">

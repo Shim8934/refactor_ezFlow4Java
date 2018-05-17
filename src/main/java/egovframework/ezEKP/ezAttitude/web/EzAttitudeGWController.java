@@ -821,9 +821,12 @@ public class EzAttitudeGWController {
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
 			
-			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, info.getTenantId(), companyId);
+			if (ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, info.getTenantId(), companyId)) {
+				result.put("status", "ok");
+			} else {
+				result.put("status", "failed");
+			}
 			
-			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {

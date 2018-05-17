@@ -227,9 +227,6 @@
 		                            	<li><span onclick="modApprove()">승인</span></li>
 		                                <li><span onclick="modReturn()">반려</span></li>
 	                            	</c:if>
-	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && userId == data.writerId && data.apprStatus == 0 && deptFlag == 'true'}">
-	                            		<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
-	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && attitudeConfigVO.attitudeModAppl == 1}">
 	                            		<li><span onclick="modify()">수정</span></li>
@@ -239,9 +236,6 @@
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0}">
 	                            		<li><span onclick="del()">삭제</span></li>
-	                            	</c:if>
-	                            	<c:if test="${(userId == data.writerId || adminFlag == 'true') && attitudeConfigVO.attitudeModAppl == 1  || data.apprStatus == 0}">
-	                            		<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                            	</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
@@ -269,13 +263,13 @@
 	                                    <tr>
 	                                        <th>기존시각</th>
 	                                        <td colspan="2">
-	                                        	<c:out value='${data.originDate}' />
+	                                        	<c:out value='${data.originDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th>변경시각</th>
 	                                        <td colspan="2">
-                                           		<c:out value='${data.changeDate}' />
+                                           		<c:out value='${data.changeDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
