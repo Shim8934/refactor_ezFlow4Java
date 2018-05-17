@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -116,10 +115,14 @@
 	        var saveType_dialogArguments = new Array();
 	        //유형 추가
 	        function add_type() {
-	        	var url = "/admin/ezAttitude/addAttitudeType.do";
-				var companyId = $("#ListCompany").val();
-				url+="?companyId="+companyId;
-				window.open(url, "saveAttitudeType", GetOpenWindowfeature(525, 170));
+	        	if ($("#contentlist .mainlist tbody tr").length < 15) {
+	        		var url = "/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val();
+					
+					window.open(url, "saveAttitudeType", GetOpenWindowfeature(525, 170));
+	        	} else {
+	        		alert("휴가유형은 최대 15개까지 등록할 수 있습니다.");
+	        	}
+	        	
 // 	            if (CrossYN()) {
 // 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
 //                     var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
@@ -226,7 +229,6 @@
 	      		</li>
 	      	</ul>
 	      	<ul>
-<%-- 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t33' /></span></li> --%>
 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.kbm4' /></span></li>
 	      		<li><span onclick="mod_type()"><spring:message code='ezAttitude.kbm5' /></span></li>
 	      		<li><span onclick="del_type()"><spring:message code='ezAttitude.kbm6' /></span></li>
@@ -235,7 +237,7 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-<!-- 	  	<table style="width: 450px; height: 380px;" > -->
+	  	
 	  	<table style="width: 450px; height: 435px;" >
             <tr>
                 <td>
@@ -248,7 +250,6 @@
                                 <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
-<!--                         <div id="contentlist" name="contentlist" style="height: 343px; overflow-y: auto;"> -->
                         <div id="contentlist" name="contentlist" style="height: 403px; overflow-y: auto;">
                         	<table class="mainlist" style="width: 100%;">
                                 <tr>
