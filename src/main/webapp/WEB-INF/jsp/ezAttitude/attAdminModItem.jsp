@@ -165,6 +165,24 @@
 		        $("#Sdatepicker").change(function(){
 		        	checkHoliday($(this).val());
 		        })
+		        
+		        if (typeId == 'A01' || typeId == 'A02') {
+					$("#Sdatepicker").datepicker('disable');
+			        $("#Edatepicker").datepicker('disable');
+					$("#selectAtti option").not("#A01,#A02").each(function(i){
+						this.remove();
+					});
+				} else if (typeId == 'A03') {
+					$("#Sdatepicker").datepicker('disable');
+			        $("#Edatepicker").datepicker('disable');
+					$("#selectAtti option").not("#A03").each(function(i){
+						this.remove();
+					})
+				} else {
+					$("#selectAtti option#A01").remove();
+					$("#selectAtti option#A02").remove();
+					$("#selectAtti option#A03").remove();
+				}
 			}
 			
 			function Editor_Complete() {
@@ -515,7 +533,7 @@
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
 												<c:if test="${item.parentId ne 'A05'}">
-													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+													<option id="<c:out value='${item.typeId }'/>" value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
 												</c:if>
 											</c:forEach>
 										</select>
