@@ -6,16 +6,18 @@
 	<head>
 		<title>관리내역</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
+		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    <!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<!-- modal -->
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	    <style>
 	    	#contentlist table.mainlist td {
 	    		overflow : hidden;
@@ -358,6 +360,22 @@
 // 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 // 				}
 // 		    }
+
+
+			//레이어팝업
+			
+	        function ShowQuickAddres() {
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.parent.frames["left"].document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#addpopup").css("left", popupX);
+	        	
+	        	$("#addpopup").modal();
+	        }
+	        function SearchOptionHidden() {
+	        	$.modal.close();
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -374,33 +392,34 @@
 						</c:forEach>
 		      		</select>
 	      		</li>
+	      		<li><span onclick="ShowQuickAddres();">검색</span></li>
 	      	</ul>
 	  	</div> 	
-	  	<table id="searchTable" style="width:100%;">
-			<tbody>
-				<tr>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
-					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
-					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td>
-					<td style="width: 20%;">
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td>
-					<td style="width: *;"  colspan=3>
-						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select>
-					</td>
-					<td colspan=2>
-						<a class="imgbtn"><span onclick="searchAttitudeHistoryList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeHistoryList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
-					</td>
-				</tr>
-			</tbody>
-		</table>
+<!-- 	  	<table id="searchTable" style="width:100%;"> -->
+<!-- 			<tbody> -->
+<!-- 				<tr> -->
+<%-- 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td> --%>
+<!-- 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td> -->
+<%-- 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td> --%>
+<!-- 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td> -->
+<%-- 					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td> --%>
+<!-- 					<td style="width: 20%;"> -->
+<!-- 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~ -->
+<!-- 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/> -->
+<!-- 					</td> -->
+<!-- 				</tr> -->
+<!-- 				<tr> -->
+<%-- 					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td> --%>
+<!-- 					<td style="width: *;"  colspan=3> -->
+<!-- 						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select> -->
+<!-- 					</td> -->
+<!-- 					<td colspan=2> -->
+<%-- 						<a class="imgbtn"><span onclick="searchAttitudeHistoryList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp; --%>
+<%-- 						<a class="imgbtn"><span onclick="searchAttitudeHistoryList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp; --%>
+<!-- 					</td> -->
+<!-- 				</tr> -->
+<!-- 			</tbody> -->
+<!-- 		</table> -->
 		
 	  	<div id="contentlist" style="width:100%; height:620px;">
 			<table class="mainlist" style="width:100%;">
@@ -424,5 +443,46 @@
 	  	
 	  	<div style="color: #666; padding-top: 10px"></div>
 		<div id="tblPageRayer"></div>
+		<!-- 검색 레이어 -->
+		<div style="width:100%;height:100%;position:absolute;top:0px;left:0px;display:none;z-index:5000;" id="mailPanel" onclick="ShowQuickAddres();" >&nbsp;</div>
+		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+		</div>		
+		<div id="addpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+			<div class="popupwrap3">
+				<!-- 내용 -->
+			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
+			    	<tr>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;간단주소록 추가</th>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">이름</th>
+						<td><input type="text" id="qname" name="qname" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">회사</th>
+						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">전화번호</th>
+						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="20"></td>
+					</tr>
+					<tr>
+						<th style="width:90px;height:30px">휴대폰</th>
+						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="20"></td>
+					</tr>
+					<tr>
+						<th style="height:30px">이메일</th>
+						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td>
+					</tr>
+				</table>
+				<!-- /내용 -->
+				<br />
+				<div style="text-align:center;">
+					<a class="imgbtn"><span onclick="quick_add()" >추가</span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();">취소</span></a>
+			    </div>
+			</div>
+		</div>
 	</body>
 </html>
