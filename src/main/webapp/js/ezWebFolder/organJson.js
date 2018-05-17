@@ -555,7 +555,7 @@ function cnsearch_click() {
 }
 
 function cnsearch_click_Complete(RetValue) {
-	if (RetValue["userid"] != "") {
+	if (RetValue["userid"] && RetValue["userid"] != "") {
 		var userId = RetValue["userid"];
 		var userName = RetValue["username"];
 		
