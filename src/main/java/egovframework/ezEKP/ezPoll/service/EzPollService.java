@@ -129,4 +129,8 @@ public interface EzPollService {
 	public void deleteUsersForQst(int tenantId, int qstId) throws Exception;
 	
 	public List<PollUsersVO> getAllUsersForQst(int tenantId, int qstId) throws Exception;
+	
+	public List<LoginVO> getQstAllUsers(int tenantId, int qstId) throws Exception;
+	
+	public List<LoginVO> getInfoOfSeenUsers(int tenantId, int qstId) throws Exception;
 }
