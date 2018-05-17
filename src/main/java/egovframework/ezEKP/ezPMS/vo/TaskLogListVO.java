@@ -44,6 +44,9 @@ public class TaskLogListVO {
     //작업이름
     private String taskName;
     
+    //그룹이름
+    private String groupName;
+    
     public Long getLogId() {
         return logId;
     }
@@ -154,5 +157,13 @@ public class TaskLogListVO {
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 }

@@ -24,11 +24,24 @@ function getProjectTaskTree(containerId, data, location) {
 		$(this).jstree("open_all");
 		var firstNode = $(this).find(".jstree-anchor");
 		$("#" + firstNode[0].id).addClass("jstree-clicked");
+		var firstNodeId = firstNode[0].id;
+		
+		firstNodeId = firstNodeId.substring(0, firstNodeId.indexOf("_"));
 		
 		if (location == "taskLog") {
+			groupId = firstNodeId;
 			setContentList();
 		}
-	});
+	})
+	.on("select_node.jstree", function(e, data) {
+		alert(data.node.id.indexOf("t"));
+		if (data.node.id.indexOf("t") != -1) {
+			taskId = data.node.id.subString(1);
+			alert(data.node.id.subString(2));
+		} else {
+			groupId = data.node.id;
+		}
+	})
 }
 
 

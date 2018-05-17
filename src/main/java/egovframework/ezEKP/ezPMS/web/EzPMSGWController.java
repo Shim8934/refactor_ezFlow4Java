@@ -846,7 +846,7 @@ public class EzPMSGWController {
 			}
 			
 			if (!request.getParameter("taskId").equals("") && request.getParameter("taskId") != null) {
-				taskLog.setGroupId(Long.parseLong(request.getParameter("taskId")));
+				taskLog.setTaskId(Long.parseLong(request.getParameter("taskId")));
 			}
 			
 			int taskLogListCount = ezPMSService.getTaskLogListCount(taskLog, info.getTenantId());

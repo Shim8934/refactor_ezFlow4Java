@@ -72,8 +72,16 @@ $(function() {
 										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 20%"><c:out
 											value="${log.logContent }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40px; text-align:center;"><c:out
-											value="${log.taskName }" /></td>
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40px; text-align:center;">
+										<c:choose>
+											<c:when test="${empty log.taskName }">
+												<c:out value="${log.groupName }" />
+											</c:when>
+											<c:otherwise>
+													<c:out value="${log.taskName }" />
+											</c:otherwise>
+										</c:choose>
+									</td>
 									<td onclick="selectedTR(this);"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
 											value="${log.userName }" /></td>
