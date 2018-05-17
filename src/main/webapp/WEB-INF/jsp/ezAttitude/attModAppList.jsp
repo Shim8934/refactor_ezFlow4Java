@@ -304,7 +304,11 @@
 	    function att_search(r) {
 			if (r == "refresh") {
 				$("#writer_search").val("");
-    			$("#writerDept_search").val("");
+				if (checkAdmin != 'true' && adminFlag == true) {
+										
+				} else if (checkAdmin == 'true') {
+	    			$("#writerDept_search").val("");
+				}
     			$("#appr_search").val("");
     			if (usepostDate) {
     				date_reset();
@@ -313,6 +317,11 @@
     			type_set();
 			}
 			
+			//정렬 초기화
+			orderCell = "";
+	    	orderOption = "";
+	    	$("#AttList th").find("img").remove();
+	    	
  	    	searchAppr = $("#appr_search").val();
  	    	searchWriter = $('#writer_search').val();
  	    	if (checkAdmin != 'true') {
@@ -341,6 +350,7 @@
 	                return;
 	            }
  	    	}
+ 	    	
  	    	
 			popup_close();
 			goToPageByNum("1");
@@ -472,9 +482,9 @@
 		    	infoStr += ' [총 <span style="color:#017BEC;">' + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
-		    		infoStr += '</span> 개 ';
+		    		infoStr += '</span> 개';
 		    		if (checkAdmin != 'true') {
-		    			infoStr += '- ' + data.startDate.substring(0,4) + '년' + 
+		    			infoStr += ' - ' + data.startDate.substring(0,4) + '년' + 
 				    	data.startDate.substring(5,7) + '월' + 
 				    	data.startDate.substring(8,10) + '일~';
 				    	infoStr += data.endDate.substring(0,4) + '년' + 
@@ -670,6 +680,11 @@
 	    
 	    function type_set(){
 	    	type = $("input:radio[name=searchCheck]:checked").val();
+	    }
+	    
+	    function dept_change() {
+	    	type = $("input:radio[name=searchCheck]:checked").val();
+	    	att_search('refresh');
 	    }
 	    
 	    var PressShiftKey = false;
@@ -1204,12 +1219,13 @@
 		</c:if>
 	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
         <c:if test="${checkAdmin != 'true'}">
+        	<li><span onClick="att_search('refresh')">새로고침</span></li>
         	<li id="search"><span onClick="search_popup()">검색</span></li>
 		</c:if>
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
 			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 			<li>
-				<select id="writerDept_search" onchange="type_change()" style="margin-top:5px;">
+				<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
 					<c:if test="${selectedDeptID  == null}">
 						<option value=null selected></option>
 					</c:if>
