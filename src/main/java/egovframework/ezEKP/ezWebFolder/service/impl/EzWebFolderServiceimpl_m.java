@@ -1186,13 +1186,20 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		if (hasSearchKeyword) {
 			parameterMap.put("isContainsSubList", "test");
 		}
-		
+		 
 		List<FavoriteVO> result = ezWebFolderDAO.getFavorites(parameterMap);
 		String targetPath;
 		
 		for (FavoriteVO favoriteVO : result) {
-			targetPath = ezWebFolderService.getFolderPath(favoriteVO.getTargetPath().split("\\|"), primary, tenantId);
-			favoriteVO.setTargetPath(targetPath.substring(0, targetPath.length() - 1));
+			targetPath = favoriteVO.getTargetPath();
+			
+			if (favoriteVO.getTargetType().startsWith("D_")) {
+				targetPath = targetPath.substring(0, targetPath.indexOf(favoriteVO.getTargetId()));
+			}
+			
+			targetPath = ezWebFolderService.getFolderPath(targetPath.split("\\|"), primary, tenantId);
+			targetPath = targetPath.substring(0, targetPath.length() - 1);
+			favoriteVO.setTargetPath(targetPath);
 		}
 		
 		return result;

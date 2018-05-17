@@ -469,7 +469,7 @@ public class EzWebFolderGWController_y {
 			if ( Integer.parseInt(request.getParameter("listCount")) == 0 ) {
 				listCount = usrListCnt ;
 			}
-			int pStart  =request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
 			int pEnd = listCount;
 			
 			if (usrListCnt != listCount) {
@@ -491,12 +491,13 @@ public class EzWebFolderGWController_y {
 			int fldCnt  = cnt.get("fldTotalCnt");
 			totalCount  = cnt.get("totalCount");
 			
-			if (totalCount%listCount == 0) {
-				totalpages = (totalCount/listCount);
+			if (totalCount % listCount == 0) {
+				totalpages = (totalCount / listCount);
 			} else {
-				totalpages = (totalCount/listCount)+1;
+				totalpages = (totalCount / listCount) + 1;
 			}
-			if ( currPage > totalpages & totalCount != 0) {
+			
+			if (currPage > totalpages & totalCount != 0) {
 				currPage = totalpages;
 			}
 			pStart = (listCount*currPage )-listCount;
@@ -523,7 +524,7 @@ public class EzWebFolderGWController_y {
 				String [] rootPath  = folderPath.split("\\|");
 				Set<String> testbnk = new HashSet<String>();
 				
-				for (FileVO file : fileList) {
+				for (FileVO file : fileList ) {
 					String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 					String[] fldPathArr = fldPath.split("\\|");
 					testbnk.addAll(Arrays.asList(fldPathArr));
@@ -539,7 +540,7 @@ public class EzWebFolderGWController_y {
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 						String[] fldPathArr = fldPath.split("\\|");
 						
-						for (int i = rootPath.length; i < fldPathArr.length; i++) {
+						for (int i = rootPath.length; i < fldPathArr.length -1; i++) {
 							file_path += filePathMap.get(fldPathArr[i]) + "/";
 						}
 						file_path = file_path.substring(0, file_path.length() - 1);

@@ -1,8 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -130,6 +128,7 @@ public class EzWebFolderController_m {
 		return resultBody.toString();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezWebFolder/getShareUserList.do", method=RequestMethod.POST)
 	public @ResponseBody String getShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getShareUserList started.");
@@ -155,21 +154,21 @@ public class EzWebFolderController_m {
 					JSONObject orgObj = (JSONObject) userListJson.get(i);
 					JSONObject obj = new JSONObject();
 					if (((String) orgObj.get("userType")).equals("U")) {
-						obj.put("userId", (String) orgObj.get("userId")); 
-						obj.put("userName", (String) orgObj.get("userName")); 
+						obj.put("userId", (String) orgObj.get("userId"));
+						obj.put("userName", (String) orgObj.get("userName"));
 						userList.add(obj);
 					} else {
-						obj.put("deptId", (String) orgObj.get("userId")); 
-						obj.put("deptName", (String) orgObj.get("userName")); 
+						obj.put("deptId", (String) orgObj.get("userId"));
+						obj.put("deptName", (String) orgObj.get("userName"));
 						deptList.add(obj);
 					}
 				}
-				
+
 				userAndDeptList.put("user", userList);
 				userAndDeptList.put("dept", deptList);
-				
+
 				shareInfo.put("userList", userAndDeptList);
-				
+
 				result = resultBody.toString();
 			}
 		} else {
@@ -221,15 +220,6 @@ public class EzWebFolderController_m {
 		String deptList = request.getParameter("deptList");
 		String userList = request.getParameter("userList");
 		
-		Map<String, Object> checkPermission = new HashMap<>();
-		List<Map<String, Object>> checkList = new ArrayList<>();
-		Map<String, Object> map = new HashMap<>();
-		map.put("checkId", folderFileId);
-		map.put("checkType", folderFileType);
-		checkList.add(map);
-		checkPermission.put("checkList"	, checkList);
-		
-
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
 		
 		if (((String) resultBody.get("status")).equals("ok")) {
@@ -468,7 +458,7 @@ public class EzWebFolderController_m {
 		if (status.equals("ok")) {
 			model.addAttribute("status","ok");
 			model.addAttribute("code", code);
-		}else {
+		} else {
 			model.addAttribute("reason", resultBody.get("reason").toString());
 			model.addAttribute("status","error");
 			model.addAttribute("code", code);
@@ -641,43 +631,6 @@ public class EzWebFolderController_m {
 		logger.debug("moveTrashCan ended");
 		return "json";		
 	}
-	
-//	private JSONObject checkPermission(HttpServletRequest request, String userId, String fileList, String folderList) {
-//		Map<String, Object> checkPermission = new HashMap<>();
-//		List<Map<String, Object>> checkList = new ArrayList<>();
-//		Map<String, Object> map;
-//		
-//		String[] fileArray = fileList.split(",");
-//		String[] folderArray = folderList.split(",");
-//		
-//		for (String fileId : fileArray) {
-//			if (fileId.isEmpty()) {
-//				continue;
-//			}
-//			
-//			map = new HashMap<>();
-//			map.put("checkId", fileId);
-//			map.put("checkType", "F");
-//			
-//			checkList.add(map);
-//		}
-//		
-//		for (String folderId : folderArray) {
-//			if (folderId.isEmpty()) {
-//				continue;
-//			}
-//			
-//			map = new HashMap<>();
-//			map.put("checkId", folderId);
-//			map.put("checkType", "D");
-//			
-//			checkList.add(map);
-//		}
-//		
-//		checkPermission.put("checkList"	, checkList);
-//		
-//		return commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userId + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
-//	}
 	
 	private <T> T orElse(T value, T other) {
 		if (other == null) {
