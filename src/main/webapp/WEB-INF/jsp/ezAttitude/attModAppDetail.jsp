@@ -93,7 +93,6 @@
 					    	alert("삭제 중 오류 발생")
 					    },
 					    success : function(json){
-							alert("삭제되었습니다.");
 				            try {
 				                window.opener.att_refresh();
 				            } catch (e) { 

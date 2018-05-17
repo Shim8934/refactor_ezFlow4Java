@@ -113,7 +113,6 @@
 							companyId : encodeURI($("#ListCompany").val())
 						},
 						success : function() {
-							alert("<spring:message code = 'ezAttitude.bbhs27' />");
 							company_change();
 						},
 						error : function() {

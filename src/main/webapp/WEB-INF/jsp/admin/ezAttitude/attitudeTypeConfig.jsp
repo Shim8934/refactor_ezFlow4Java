@@ -162,7 +162,6 @@
 							if (result == "false") {
 								alert("<spring:message code='ezAttitude.kbm12' />");
 							} else {
-								alert("<spring:message code='ezAttitude.bbhs27' />");
 								company_change();
 							}
 						},
