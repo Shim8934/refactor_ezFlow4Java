@@ -97,7 +97,6 @@
 							attitudeId : attitudeId
 						},
 						success : function(result) {
-							alert("<spring:message code='ezAttitude.bbhs27'/>");
 							window.opener.getAttitudeMainList();
 							window.opener.parent.frames["left"].getAttitudeList();
 							window.close();

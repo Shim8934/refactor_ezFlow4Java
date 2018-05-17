@@ -851,7 +851,7 @@
 				    	if (json == "error") {
 				    		alert("이미 처리된 항목입니다.");			    			
 				    	} else {
-				    		alert("삭제되었습니다.");	
+				    	
 				    	}
 				    },
 					complete : function() {
