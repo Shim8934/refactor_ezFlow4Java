@@ -480,7 +480,7 @@
 		    <script type="text/javascript">
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 		    </script>
-		    <div class="portlet_tabpart01" style="padding-bottom:3px; width:1091px;">
+		    <div class="portlet_tabpart01" style="padding-bottom:3px; width:100%;">
 		        <div class="portlet_tabpart01_top" id="tab1">
 	                <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
 	                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
@@ -497,10 +497,10 @@
 		        </div>
 		    </div>
 		
-		    <div class="listview" style="Width:1089px;">
+		    <div class="listview" style="Width:100%;">
 		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
 		    </div>
-		    <div id="tblPageRayer" style="Width:1092px;text-align:center;margin-top:10px"></div>
+		    <div id="tblPageRayer" style="Width:100%;text-align:center;margin-top:10px"></div>
 		</form>         
 	</body>
 	<script type="text/javascript">

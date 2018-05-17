@@ -275,7 +275,7 @@
 		  	<input name="txt_PageInputNum" type="text" value="<c:out value='${pPage}'/>" onKeyDown="moveToPage()"/>
 		  	<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1" style="cursor:pointer;" onClick="nextPage_onclick()"/>
 		</div>
-		<div style="width:590px; border-right:1px solid #eaeaea;border-left:1px solid #eaeaea;">
+		<div style="width:100%; border-right:1px solid #eaeaea;border-left:1px solid #eaeaea;">
 		<table class="mainlist" style="width:100%"> 
 			<!-- <form name="frmOutbox" action="BoardItemList.aspx" method="post"></form> -->
 		    	<tr>
