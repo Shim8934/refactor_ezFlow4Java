@@ -181,10 +181,10 @@
 				});
 				
 				$(window).on("resize", function(){
-					var popupX = parent.document.body.clientWidth/2 - (883/2) - 220;
-					var popupDayX = parent.document.body.clientWidth/2 - (500/2) - 220;
+					var popupX = parent.document.body.clientWidth/2 - (800/2) - 220;
+					var popupDayX = parent.document.body.clientWidth/2 - (883/2) - 220;
 		        	$("#popup").css("left", popupX);
-		        	$("#popupDay").css("left", popupX);	        	
+		        	$("#popupDay").css("left", popupDayX);
 		        });
 			});
 			
@@ -750,7 +750,7 @@
 				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
 				    	}
 			        	
-			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			        	var popupX = parent.document.body.clientWidth/2 - (800/2) - 220;
 			        	
 			        	$("#popup").css("left", popupX);
 			        	
@@ -840,15 +840,11 @@
 				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
 				    	}
 			        	
-			        	var popupX = parent.document.body.clientWidth/2 - (883/2) - 220;
+			        	var popupDayX = parent.document.body.clientWidth/2 - (883/2) - 220;
 			        	
-			        	$("#popupDay").css("left", popupX);
+			        	$("#popupDay").css("left", popupDayX);
 			        	
-						$("#popupDay").modal({
-// 							  escapeClose: false,
-// 							  clickClose: false,
-// 							  showClose: false
-						});
+						$("#popupDay").modal();
 				    }
 			    });
 			}
