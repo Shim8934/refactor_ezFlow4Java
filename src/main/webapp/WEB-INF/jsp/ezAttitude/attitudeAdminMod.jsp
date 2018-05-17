@@ -104,10 +104,10 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-		<h1><p style="padding-left:5px">근태관리</p></h1>
+		<h1><p style="padding-left:5px">전체근태관리</p></h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="modify" style="width:100px; text-align: center;">근태수정</span></p>
+	            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="modify" style="width:100px; text-align: center;">근태관리</span></p>
 	            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="absent" style="width:100px; text-align: center;">근태입력</span></p>
 	            <p id="BoardEnv_sub3"><span divname="BoardEnv_div3" id="history" style="width:100px; text-align: center;">관리내역</span></p>
 	        </div>

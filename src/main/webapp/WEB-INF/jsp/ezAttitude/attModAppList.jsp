@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
-		<title>근태신청현황</title>
+		<title><spring:message code='ezAttitude.bbhs31' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
@@ -353,8 +353,6 @@
 	    }
 	    
 	    function get_att_list(pageNum) {
-	    	ShowAttProgress();
-	    	
 	    	$("#HeaderAllCheckBox").prop("checked",false);
 	    	
 	    	var obj = new Object();
@@ -398,8 +396,6 @@
 	    }
 	    
 	    function get_excelAtt_list() {
-	    	ShowAttProgress();
-	    	
 	    	if (usepostDate) {
 	            if (searchStartDate > searchEndDate) {
 	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
@@ -604,13 +600,6 @@
 	        	att_search();
 	        }
 		}
-	    
-	    function ShowAttProgress() {
-	        document.getElementById("attPanel").style.display = "";
-	        document.getElementById("AttProgress").style.top = "300px";
-	        document.getElementById("AttProgress").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
-	        document.getElementById("AttProgress").style.display = "";
-	    }
 	    
 	    function HiddenAttProgress() {
 	        document.getElementById("attPanel").style.display = "none";
@@ -831,8 +820,6 @@
 	    }
 	    
 	    function attList_del() {
-	    	ShowAttProgress();
-	    	
 	    	var attList = $(".checkAtt:checked");
 	    	var idList = "";
 	    	
@@ -882,8 +869,6 @@
 				alert("권한이 없습니다. 관리자에게 문의하세요");
 				return;
 			}
-	    	ShowAttProgress();
-	    	
 	    	var attList = $(".checkAtt:checked");
 	    	var idList = "";
 	    	
@@ -936,8 +921,6 @@
 				return;
 			}
 	  		
-	    	ShowAttProgress();
-	    	
 	    	var attList = $(".checkAtt:checked");
 	    	var idList = "";
 	    	
@@ -1171,10 +1154,10 @@
 		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
-		<h1><spring:message code = 'ezAttitude.t7' /> - 신청관리현황<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs32' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
-		<h1><spring:message code = 'ezAttitude.t7' /> - 신청현황<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs33' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
         <c:if test="${checkAdmin == 'true'}">
@@ -1187,8 +1170,8 @@
 						<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
 						<td style="width: 3%;">구분</td>
 						<td style="width: 11%;">
-							<input name="searchCheck" id="Radio1" type="radio" value="all" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;전체</label>
-							<input name="searchCheck" id="Radio2" type="radio" value="0" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;신청</label>
+							<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;전체</label>
+							<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;신청</label>
 							<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio3">&nbsp;승인</label>
 							<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio4">&nbsp;반려</label>
 						</td>
@@ -1228,6 +1211,7 @@
 					<c:if test="${selectedDeptID  == null}">
 						<option value=null selected></option>
 					</c:if>
+					<option value="all">전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
 							<c:if test="${selectedDeptID == dept.deptId}">
@@ -1246,8 +1230,8 @@
 		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}"> 
 			<li id="right">
 				<span style="float:right;font-weight:normal;color:black;border: none;">
-					<input name="searchCheck" id="Radio1" type="radio" value="all" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
-					<input name="searchCheck" id="Radio2" type="radio" value="0" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
+					<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
+					<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
 					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
 					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
 				</span>
@@ -1336,7 +1320,7 @@
 						<td>${list.writerName}</td>
 						<td>${list.writerDeptName}</td>
 					</c:if>
-					<td>${fn:substring(originDate,11,19) } -> ${fn:substring(changeDate,11,19) }</td>
+					<td>${fn:substring(originDate,11,16) } -> ${fn:substring(changeDate,11,16) }</td>
 					<c:if test="${list.apprStatus == 0}">
 						<td id="attStauts">신청</td>
 					</c:if>

@@ -268,12 +268,11 @@ public class EzAttitudeGWController {
 //			String originContent = attitudeVO.getContent();
 //			String originDateType = attitudeVO.getDateType();
 			
-			ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId());
+			ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId(), info.getCompanyId());
 			
 			//관리자에서 수정 했을 경우 테이블에 기록을 남긴다.
 			if (mode.equals("admin")) {
 				//userId 수정한 사람 아이디
-				LOGGER.debug(userId + "관리자에서 수정 했을 경우 테이블에 기록을 남긴다$%*!#$%*!#$*%!*&#@%*!#$%*!#@$%*!*$%!*%*!*%*!@#%*");
 			}
 			
 			result.put("status", "ok");
@@ -1206,7 +1205,7 @@ public class EzAttitudeGWController {
 				deptIdList[i] = authDeptlist.get(i).getDeptId();
 			}
 			
-			if (deptid != null) {
+			if (deptid != null && !deptid.equals("all")) {
 				deptIdList = new String[1];
 				deptIdList[0] = deptid;
 			}
@@ -1283,7 +1282,7 @@ public class EzAttitudeGWController {
 				deptIdList[i] = authDeptlist.get(i).getDeptId();
 			}
 			
-			if (deptid != null) {
+			if (deptid != null && !deptid.equals("all")) {
 				deptIdList = new String[1];
 				deptIdList[0] = deptid;
 			}
