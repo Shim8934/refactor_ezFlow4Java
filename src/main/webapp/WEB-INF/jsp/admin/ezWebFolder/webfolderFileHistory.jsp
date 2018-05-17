@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"                  ></script>
+		<script type="text/javascript" src="/js/ezWebFolder/popup.js"                       ></script>
 		<script type="text/javascript" >
 			var blockSize    = 10;
 			var currentPage  = null;
@@ -153,6 +154,7 @@
 			function search_Set(pPage) {
 				var orderInf = tableView.getOrderInfo();
 				var listCnt  = document.getElementById("listCount").value;
+				showProgress();
 				
 				$.ajax({
 					type: "POST",
@@ -174,6 +176,7 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
+						hideProgress();
 						var reason = data.reason;
 						if (reason) {
 							alert(reason);
@@ -189,6 +192,7 @@
 						renderData(result);
 					},
 					error : function(error) {
+						hideProgress();
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
 				});
@@ -439,6 +443,10 @@
 					<th headers="ad" style="text-align: center; width: 24%;"><spring:message code='ezWebFolder.t159'/></th>
 				</tr>
 			</table>
+		</div>
+		
+		<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+			<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
 		</div>
 		
 		<div id="tblPageRayer"></div>

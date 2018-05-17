@@ -860,6 +860,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			
 			if (folderVO != null) {
 				int isFolderDeleted = deleteFolder(folderVO);
+				deleteSubFolder(folderVO);
 				deleteFavoritesInFolder(folderVO.getFolderId(), tenantId);
 				deleteShareWithSub(folderVO.getFolderId(), "D", tenantId);
 				
@@ -919,11 +920,29 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public int deleteFolder (FolderVO folderVO) throws Exception {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderPath", folderVO.getFolderPath());
+		map.put("folderId", folderVO.getFolderId());
 		map.put("tenantId", folderVO.getTenantId());
-		map.put("companyId", folderVO.getCompanyId());
 		
 		int result = ezWebFolderDAO.deleteFolder(map);
+		
+		if (result > 0) {
+			LOGGER.debug("deleteFolder is success");
+		} else {
+			LOGGER.debug("deleteFolder is fail");
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public int deleteSubFolder (FolderVO folderVO) throws Exception {
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderPath", folderVO.getFolderPath());
+		map.put("folderId",   folderVO.getFolderId());
+		map.put("tenantId",   folderVO.getTenantId());
+		
+		int result = ezWebFolderDAO.deleteSubFolder(map);
 		
 		if (result > 0) {
 			LOGGER.debug("deleteFolder is success");
@@ -940,7 +959,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderVO.getFolderPath());
 		map.put("tenantId", folderVO.getTenantId());
-		map.put("companyId", folderVO.getCompanyId());
 		
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
 		

@@ -138,7 +138,7 @@ function openSearchPanel() {
 function search_Set(pPage) {
 	var orderInf = tableView.getOrderInfo();
 	var listCnt  = document.getElementById("listCount").value;
-	
+	showProgress();
 	$.ajax({
 		type: "POST",
 		url: "/admin/ezWebFolder/getFileList.do",
@@ -158,6 +158,7 @@ function search_Set(pPage) {
 		dataType: "JSON",
 		async: true,
 		success : function(data) {
+			hideProgress();
 			var reason = data.reason;
 			if (reason) {
 				alert(reason);
@@ -173,6 +174,7 @@ function search_Set(pPage) {
 			renderData(result);
 		},
 		error : function(error) {
+			hideProgress();
 			alert(strError + error);
 		}
 	});

@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"                  ></script>
 		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"       ></script>
+		<script type="text/javascript" src="/js/ezWebFolder/popup.js"                       ></script>
 		<script type="text/javascript" >
 			var blockSize   = 10;
 			var searchStr   = "";
@@ -76,6 +77,7 @@
 			
 			function search_Set(pPage) {
 				var orderInf = tableView.getOrderInfo();
+				showProgress();
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getCapacities.do",
@@ -90,8 +92,8 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
+						hideProgress();
 						var reason  = data.reason;
-						
 						if (reason) {
 							alert(reason);
 							return;
@@ -105,8 +107,10 @@
 						
 						makePageSelPage();
 						renderData(result);
+						
 					},
 					error : function(error) {
+						hideProgress();
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
 				});
@@ -405,6 +409,11 @@
 					</tr>
 				</table>
 			</div>
+			
+			<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+				<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+			</div>
+			
 			<div id="tblPageRayer"></div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
 			<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>

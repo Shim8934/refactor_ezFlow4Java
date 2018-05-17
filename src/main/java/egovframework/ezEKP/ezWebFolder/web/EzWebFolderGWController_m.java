@@ -1052,7 +1052,7 @@ public class EzWebFolderGWController_m {
 		String column           = orElse(request.getParameter("column"), "");
 		String order            = orElse(request.getParameter("order"), "");
 		String mode 		    = orElse(request.getParameter("mode"), "");
-		String realColmn        = "";
+		String realColumn        = "";
 		
 		// TODO primary 수정
 		String primary;
@@ -1082,21 +1082,21 @@ public class EzWebFolderGWController_m {
 		
 		if (!column.equals("") && !order.equals("")) {
 			switch(column) {
-				case "ft": realColmn = "TRASHCAN_EXT"                                         ; break;
-				case "fn": realColmn = "TRASHCAN_NAME"                                        ; break;
-				case "fs": realColmn = "TRASHCAN_SIZE"                                        ; break;
-				case "un": realColmn = primary.equals("1") ? "CREATE_NAME1" : "CREATE_NAME2"  ; break;
-				case "cd": realColmn = "CREATE_DATE"                                          ; break;
-				case "dd": realColmn = "UPDATE_DATE"                                          ; break;
-				default  : realColmn = "TRASHCAN_NAME"                                        ; break;
+				case "ft": realColumn = "TRASHCAN_EXT"                                         ; break;
+				case "fn": realColumn = "TRASHCAN_NAME"                                        ; break;
+				case "fs": realColumn = "TRASHCAN_SIZE"                                        ; break;
+				case "un": realColumn = primary.equals("1") ? "CREATE_NAME1" : "CREATE_NAME2"  ; break;
+				case "cd": realColumn = "CREATE_DATE"                                          ; break;
+				case "dd": realColumn = "UPDATE_DATE"                                          ; break;
+				default  : realColumn = "TRASHCAN_NAME"                                        ; break;
 			}
 		}
 		
-		logger.debug("Column: " + realColmn + " || order: " + order);
+		logger.debug("Column: " + realColumn + " || order: " + order);
 		
 		try {
 			List<TrashCanVO> trashCanList = null;
-			JSONObject resultList = ezWebFolderService_m.getTrashCanList(realColmn, order.toUpperCase(), userId, offset, tenantId, currPage, listCount,
+			JSONObject resultList = ezWebFolderService_m.getTrashCanList(realColumn, order.toUpperCase(), userId, offset, tenantId, currPage, listCount,
 										searchExt, searchFileName, searchCreateName, searchFileType, enrollStartDate, enrollEndDate, delStartDate, delEndDate, mode);
 			int fileCnt = 0;
 			int folderCnt = 0;
@@ -1117,10 +1117,14 @@ public class EzWebFolderGWController_m {
 			
 			if (trashCanList != null) {
 				for (TrashCanVO trashCan : trashCanList) {
-					trashCanPath = trashCan.getTrashCanPath().substring(1);
-					trashCanPath = ezWebFolderService.getFolderPath(trashCanPath.split("\\|"), primary, tenantId);
-					trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
-					trashCan.setTrashCanPath(trashCanPath);
+					if(trashCan.getTrashCanPath() != null) {
+						trashCanPath = trashCan.getTrashCanPath().substring(1);
+						trashCanPath = ezWebFolderService.getFolderPath(trashCanPath.split("\\|"), primary, tenantId);
+						trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
+						trashCan.setTrashCanPath(trashCanPath);
+					} else {
+						trashCan.setTrashCanPath("");
+					}
 				}
 			}
 
