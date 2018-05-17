@@ -1099,19 +1099,21 @@
 				(user_id,	tenant_id,	journal_id, 	view_date)
 			values
 				(#userId#,	#tenantId#,	#journalId#,	#viewDate#)
-			<!-- on duplicate key update tenant_id = #tenantId# -->
+			on duplicate key update tenant_id = #tenantId# 
 		</isEmpty>
 		<isNotEmpty property="isUser">
-			update 
-				jmocha.tbl_journal_recv
-			set
-				recieve_date = #viewDate#
-			where 
-				journal_id = #journalId#
-			and
-				tenant_id = #tenantId#
-			and 
-				user_id = #userId#
+				update 
+					jmocha.tbl_journal_recv
+				set
+					recieve_date = #viewDate#
+				where 
+					journal_id = #journalId#
+				and
+					tenant_id = #tenantId#
+				and 
+					user_id = #userId#
+				and 
+					recieve_date is null
 		</isNotEmpty>
 	</insert>
 
