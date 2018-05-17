@@ -59,6 +59,7 @@
 		        }
 				select_memorialDays(uselang);
 				setHoliday();
+				checkOutCom();
 				
 			}
 			

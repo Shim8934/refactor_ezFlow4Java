@@ -165,6 +165,20 @@
 		        $("#Sdatepicker").change(function(){
 		        	checkHoliday($(this).val());
 		        })
+		        
+		        if (typeId == 'A04' && dateType == 4) {
+		        	$('#Stimepicker').timepicker();
+			        $('#Stimepicker').timepicker('setTime', SDate);
+			        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+			        $('#Etimepicker').timepicker();
+			        $('#Etimepicker').timepicker('setTime', EDate);
+			        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+			        
+			        $("#periodblock").attr("datetype", dateType);
+		        	$("#Stimepicker").css("display", "none");
+					$("#Etimepicker").css("display", "none");
+					$(alldaycheck).prop("checked",true);
+		        }
 			}
 			
 			function Editor_Complete() {
@@ -262,8 +276,8 @@
 						endDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 						break;
 					case "4":
-						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + nowTime[0] + ":" + nowTime[1] + ":00";
-						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + nowTime[0] + ":" + nowTime[1] + ":00";
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00:00";
+						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "23:59:59";
 						break;
 					case "5":
 						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
@@ -276,6 +290,8 @@
 			function save_attitude() {
 				dateTypeCheck();
 				attRegCheck();
+				inputCheck();
+				checkOutCom();
 				if (attRegHolidayFlag && holidayAttReg == "0") {
 					alert("<spring:message code='ezAttitude.bbhs18'/>");
 					attRegHolidayFlag = false;
@@ -295,6 +311,11 @@
 					alert("<spring:message code='ezAttitude.bbhs40'/>");
 					return;
 				}
+				if (inputCheckFlag) {
+					alert("정보를 입력해주세요.");
+					return;
+				}
+				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attAdminSave.do",
@@ -487,6 +508,33 @@
 				}
 				editHeight += "PX";
 				$("#EdtorSize").css("height", editHeight);
+			}
+			
+			function allday_change() {
+				if ($("#alldaycheck").prop("checked") == true) {
+					$("#Stimepicker").css("display", "none");
+					$("#Etimepicker").css("display", "none");
+					$("#periodblock").attr("datetype", 4);
+					
+				} else {
+					$("#Stimepicker").css("display", "");
+					$("#Etimepicker").css("display", "");
+					$("#periodblock").attr("datetype", 5);
+				}
+			}
+			
+			var inputCheckFlag = false;
+			function inputCheck() {
+				inputCheckFlag = true;
+				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
+					$("input[name=region]").focus();
+				} else if ($.trim($("input[name=mobile]").val()) == "") {
+					$("input[name=mobile]").focus();
+				} else if ($.trim($("input[name=bizsub]").val()) == "") {
+					$("input[name=bizsub]").focus();
+				} else {
+					inputCheckFlag = false;
+				}
 			}
 		</script>
 	</head>

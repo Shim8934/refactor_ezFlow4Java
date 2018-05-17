@@ -263,13 +263,13 @@
 	                                    <tr>
 	                                        <th>기존시각</th>
 	                                        <td colspan="2">
-	                                        	<c:out value='${data.originDate}' />
+	                                        	<c:out value='${data.originDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th>변경시각</th>
 	                                        <td colspan="2">
-                                           		<c:out value='${data.changeDate}' />
+                                           		<c:out value='${data.changeDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
