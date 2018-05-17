@@ -2216,6 +2216,62 @@ public class EzAttitudeKMSController {
 	}
 	
 	/**
+	 *  관리자 작성화면2
+	 */
+	@RequestMapping(value = "/ezAttitude/attAdminNewItem2.do")
+	public String attAdminNewItem2(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attAdminNewItem started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String date = request.getParameter("date");
+		String mode = request.getParameter("mode");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String userOffset = userInfo.getOffset().split("\\|")[1];
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() +"/attitudetypes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("isuse", 1);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray attitudeTypeList = new JSONArray();
+		if (status.equals("ok")) {
+			attitudeTypeList = (JSONArray) resultBody.get("data");
+		}
+		
+		//현재시간
+		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];
+		
+		model.addAttribute("userOffset", userOffset);
+		//관리자 정보
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("attitudeTypeList", attitudeTypeList);
+		model.addAttribute("date", date);
+		model.addAttribute("time", time);
+		model.addAttribute("mode", mode);
+		
+		LOGGER.debug("/ezAttitude/attAdminNewItem ended");
+		return "ezAttitude/attAdminNewItem2";
+	}
+	
+	/**
 	 * 사용자 근태 추가 및 수정
 	 */
 	@RequestMapping(value = "/ezAttitude/attAdminSave.do")
@@ -2322,5 +2378,99 @@ public class EzAttitudeKMSController {
 		}
 		
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem ended");
+	}
+	
+	/**
+	 * 근태작성 - 조직도(받는사람,참조,숨은참조) 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezAttitude/attNewReceiverChoose.do")
+	public String attNewReceiverChoose(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		LOGGER.debug("attNewReceiverChoose started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String adminFlag = "";
+		String isAllDept = "";
+		String defaultWin = request.getParameter("defaultwin") == null ? "To" : request.getParameter("defaultwin").trim();
+		String type = request.getParameter("type") == null ? "" : request.getParameter("type").trim();
+		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
+		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
+		
+		
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			adminFlag = "true";
+			isAllDept = "Y";
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+		}
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("isAllDept", isAllDept)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		
+		if (deptList.size() > 1) {
+			adminFlag = "true";
+		}
+		
+		int myDeptCount = 0;
+		JSONObject dept = new JSONObject();
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+				}
+			}
+		}
+		
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("selectedDeptID", userInfo.getDeptID());
+		model.addAttribute("defaultWin", defaultWin);
+		model.addAttribute("type", type);
+		model.addAttribute("ruleKind", ruleKind);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("userInfo", userInfo);
+		
+		LOGGER.debug("attNewReceiverChoose ended.");
+		return "ezAttitude/attNewReceiverChoose";
 	}
 }
