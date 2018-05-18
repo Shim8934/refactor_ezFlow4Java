@@ -1109,16 +1109,19 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
 				
 				if (upperFolderVO != null && upperFolderVO.getUseStatus().equals("Y")) {
-					int isRestored = restoreFolder(folderVO.getFolderId(), tenantId, userId, timeUTC);
 					
-					if (isRestored > 0) {
+					List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
+					
+					for (String lowerFolder : lowerFolders) {
+						int isRestored = restoreFolder(lowerFolder, tenantId, userId, timeUTC);
 						
-						if (isFail != 1) {
-							isFail  = restoreSubFolder(folderVO.getFolderPath(), folderVO.getFolderId(), tenantId, userId, timeUTC, folderVO.getUpdateDate());
-							isFail  = restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
+						if (isRestored > 0) {
 							
-						} else {
-							failType = 2;
+							isFail  = restoreFileInFolder(lowerFolder, tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
+							
+							if (isFail == 1) {
+								failType =2 ;
+							}
 						}
 					}
 				} else {
@@ -1131,10 +1134,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public int restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
+	public int restoreFileInFolder(String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("folderPath", folderPath);
+		map.put("folderId",   folderId);
 		map.put("tenantId",   tenantId);
 		map.put("userId",     userId);
 		map.put("timeUTC",    timeUTC);
@@ -1388,6 +1391,15 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("timeUTC",    timeUTC);
 		
 		ezWebFolderDAO.moveFile(map);
+	}
+	
+	@Override
+	public List<String> getAllFolderIdNotInFolder (String folderPath, String folderId) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderPath", folderPath);
+		map.put("folderId", folderId);
+		
+		return ezWebFolderDAO.getAllFolderIdNotInFolder(map);
 	}
 	
 	private SearchVO createSearchDateInfo(SearchVO searchInfo, String offset) {

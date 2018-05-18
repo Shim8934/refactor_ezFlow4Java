@@ -1202,7 +1202,7 @@
 		</isNotEqual>
 		<isEqual property="realColmn" compareValue="">
 			<![CDATA[
-				ORDER BY SLEVEL, UPDATE_DATE,TRASHCAN_EXT DESC
+				ORDER BY SLEVEL, UPDATE_DATE
 			]]>
 		</isEqual>
 		
@@ -1297,21 +1297,21 @@
 	
 	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterClass="Map" resultClass="String">
 		SELECT
-				f.FILE_ID
+			f.FILE_ID
     	 FROM
-				TBL_WEBFOLDER_FILE f JOIN
-					(
-					SELECT
-					  *
-					FROM
-						TBL_WEBFOLDER_FOLDER
-								WHERE
-									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-								AND
-									TENANT_ID = #tenantId#
-					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+			TBL_WEBFOLDER_FILE f JOIN
+			(
+				SELECT
+				  		*
+				FROM
+					TBL_WEBFOLDER_FOLDER
+				WHERE
+					FOLDER_ID = #folderId#
+				AND
+					TENANT_ID = #tenantId#
+			) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 		WHERE
-				f.USE_STATUS = 'N';
+			f.USE_STATUS = 'N';
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
@@ -1814,4 +1814,23 @@
 			AND
 				TENANT_ID = #tenantId#
 	</update>
+	
+	<select id="EzWebFolderDAO_m.getAllFolderIdNotInFolder" resultClass="String">
+		<![CDATA[
+			SELECT F1.FOLDER_ID
+			FROM TBL_WEBFOLDER_FOLDER F1
+			WHERE F1.FOLDER_PATH LIKE CONCAT(#folderPath# ,'%')
+			AND F1.FOLDER_ID NOT IN (
+			   SELECT FOLDER_ID
+			   FROM TBL_WEBFOLDER_FOLDER F2
+			   JOIN (
+				      SELECT FOLDER_PATH
+				      FROM TBL_WEBFOLDER_FOLDER
+				      WHERE USE_STATUS = 'T'
+				      AND FOLDER_PATH LIKE CONCAT(#folderPath# ,'%')
+				      AND FOLDER_ID <> #folderId# 
+			      ) FP
+			   ON F2.FOLDER_PATH LIKE CONCAT(FP.FOLDER_PATH ,'%'))
+		    ]]>
+	</select>
 </sqlMap>
