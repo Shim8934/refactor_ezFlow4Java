@@ -826,6 +826,7 @@ public class EzAttitudeGWController {
 			} else {
 				result.put("status", "failed");
 			}
+			LOGGER.debug(result.get("status")+"***************************************************************************************************************");
 			
 			result.put("code", 0);
 			result.put("data", "");
