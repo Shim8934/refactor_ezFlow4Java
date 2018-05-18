@@ -84,7 +84,9 @@
 		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
 			<ul>
 				<li id=""><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-				<li id="uploadBttn" style="display: none;"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+				<c:if test="${level != '0'}">
+					<li id="uploadBttn"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+				</c:if>
 				<li id=""><a><span><spring:message code='ezWebFolder.t117'/></span></a></li>
 				<li id=""><a><span><spring:message code='ezWebFolder.t118'/></span></a></li>
 				<li id=""><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>
@@ -116,7 +118,7 @@
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
-			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "company", "<c:out value='${rootFolder}'/>");
+			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "company", "<c:out value='${rootFolder}'/>", "<c:out value='${level}'/>");
 		</script>
 		
 		<div id="searchPanel" class="wfSearchPanel" style="display:none;">
