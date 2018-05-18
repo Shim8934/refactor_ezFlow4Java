@@ -213,8 +213,6 @@ public class MLoginGWController {
     			    		mOs = ClientUtil.getClientInfo(request, "os");
     			    	}
     			    	
-    			    	System.out.println("뽝 gw :" + mOs);
-    			    	
     					loginVO.setIp(mIp);
     					
     					//IP Address,  마지막 login시간 저장
