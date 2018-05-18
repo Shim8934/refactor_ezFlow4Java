@@ -43,6 +43,7 @@
 	        var adminFlag = "<c:out value='${adminFlag}'/>";
 		    var timeCheck = false;
 		    var font = "<c:out value='${font}'/>";
+		    var pageInfo = "<c:out value='${pageInfo}'/>";
 		    
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -64,6 +65,8 @@
 					$(this).css({"font-size":fontSize, "font-family":fontFamily});	
 				});
 				
+				console.log('${attitudeConfigVO.attitudeModAppl}');
+		        console.log(pageInfo);
 				console.log(writerid);
 				console.log(userId);
 				console.log(adminFlag);
@@ -228,13 +231,13 @@
 		                                <li><span onclick="modReturn()">반려</span></li>
 	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
-	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && attitudeConfigVO.attitudeModAppl == 1}">
+	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && attitudeConfigVO.attitudeModAppl == 1 && (deptFlag != 'true')}">
 	                            		<li><span onclick="modify()">수정</span></li>
 	                            	</c:if>
-	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1}">
+	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
 	                            		<li><span onclick="reMod()">재신청</span></li>
 	                            	</c:if>
-	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0}">
+	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
 	                            		<li><span onclick="del()">삭제</span></li>
 	                            	</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>

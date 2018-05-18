@@ -63,10 +63,11 @@
 		var searchWriter = ""; //#writer_search
 		var searchStartDate = ""; //
 		var searchEndDate = ""; //
+		var pageInfo = "modList";
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
-				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") && $(this).attr("ORIGIN_TIME") ) { // checkbox는 sort에서 제외
+				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") && $(this).attr("colname") != "ORIGIN_TIME") { // checkbox는 sort에서 제외
 					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 						src = "";
 						orderOption = "";
@@ -166,7 +167,7 @@
 	    });
 
 		window.onload = function() {
-			get_att_list(currentPage);
+			att_search();
 			
 // 			if (checkAdmin == 'true') {
 // 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
@@ -193,7 +194,7 @@
 	        var strtext;
 	        var PagingHTML = "";
 	        document.getElementById("tblPageRayer").innerHTML = "";
-	        document.getElementById("mailBoxInfo").innerHTML = " [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개]";
+	        //document.getElementById("mailBoxInfo").innerHTML = " [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개]";
 	        strtext = "<div class='pagenavi'>";
 	        PagingHTML += strtext;
 	        var pageNum = currentPage;
@@ -1062,10 +1063,10 @@
 			modAttId = modAttId.split("\_")[0];
 			
 			if (adminFlag == "true") {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag, "",
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo, "",
 			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			} else {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt, "",
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt + "&pageInfo=" + pageInfo, "",
 			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 			}
 	    }
@@ -1337,7 +1338,8 @@
 				<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
 				<th width="150px" style="cursor:pointer" colname="NO">내역확인</th>
 			</tr>
-		    	
+		    
+		    <!-- 	
 			<c:forEach var="list" items="${list}" varStatus="i"> 
 				<tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
 					<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>_<c:out value ="${list.applCnt}"/>" value="<c:out value="${list.attitudeId}" />_<c:out value ="${list.applCnt}"/>" status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
@@ -1364,7 +1366,7 @@
 					<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>
 				</tr>
 			</c:forEach>
-	        
+	        -->
 		    <c:if test="${list.size() == 0}"> 
 		        <tr>
 		        	<c:if test="${adminFlag == 'true'}"><td colspan="10" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
