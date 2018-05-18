@@ -101,11 +101,10 @@ public class EzAttitudeAdminController {
 		int totalAtt = 0;
 		int currentPage = 1;
 		int totalPages = 0;
-		int pageSize = 15;
-		int startPoint = 0;
-		int endPoint = 15;
+//		int pageSize = 15;
+//		int startPoint = 0;
+//		int endPoint = 15;
 		String adminFlag = "true";
-		String type = "all";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -124,6 +123,7 @@ public class EzAttitudeAdminController {
 		
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
 		
 		if (startDate == null || endDate == null) {
 
@@ -146,7 +146,7 @@ public class EzAttitudeAdminController {
 			startDate = searchStartDate.substring(0, 10);
 			endDate = searchEndDate.substring(0, 10);
 		}
-		
+		/*
 //		Date startDate = sdf.parse(searchStartDate);
 		
 //		cal = Calendar.getInstance();
@@ -295,7 +295,7 @@ public class EzAttitudeAdminController {
 			list = (JSONArray) data.get("list");
 			model.addAttribute("list", list);
 		}
-		
+		*/
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);

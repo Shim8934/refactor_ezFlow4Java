@@ -73,6 +73,8 @@
 		            		alert("<spring:message code='ezAttitude.bbhs19' />");
 		            		window.opener.company_change();
 							window.close();
+	            		} else if (resultStatus == "failed") {
+	            			alert("15개 이상은 추가할 수 없습니다.");
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.kbm3' />");
 	            		}

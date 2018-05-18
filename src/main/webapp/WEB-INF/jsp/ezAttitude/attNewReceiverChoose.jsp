@@ -1842,7 +1842,7 @@
 	            $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
-		        	url : "/ezOrgan/getSearchList.do",
+		        	url : "/ezAttitude/getSearchList.do",
 		        	async : true,
 		        	data : {
 		        			search : document.getElementById("search_type").value + "::" + keyword.value, 
