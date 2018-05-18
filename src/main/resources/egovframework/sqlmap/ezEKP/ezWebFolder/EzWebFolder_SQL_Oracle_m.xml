@@ -1619,7 +1619,7 @@
 				</isNotEqual>
 				<isEqual property="realColmn" compareValue="">
 					<![CDATA[
-						ORDER BY SLEVEL, UPDATE_DATE,TRASHCAN_EXT DESC
+						ORDER BY SLEVEL, UPDATE_DATE
 					]]>
 				</isEqual>
 				
