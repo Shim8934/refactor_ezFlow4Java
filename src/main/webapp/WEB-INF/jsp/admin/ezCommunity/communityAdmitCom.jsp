@@ -7,6 +7,14 @@
 		<title>admit_com</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<style>
+		.mainlist tr th:first-child{
+			padding-left: 10px;
+		}
+		.mainlist tr td:first-child{
+			padding-left: 10px;
+		}
+		</style>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
@@ -209,21 +217,21 @@
         <table class="content" >
 			<form name="comm_search" method="post">
 			<tr>
-				<th><spring:message code = 'ezCommunity.t28' /></th>
+				<th><spring:message code = 'ezCommunity.t31' /></th>
 			  	<td>
-			  		<select name="s_radio" style="WIDTH:115px; HEIGHT:19px;vertical-align:middle" class="text">
+			  		<select name="s_radio" style="vertical-align:middle; height: 22px; margin-left:2px;width:100px;" class="text">
 						<option value="1"><spring:message code = 'ezCommunity.t33' /></option>
 						<option value="2" selected><spring:message code = 'ezCommunity.t9991' /></option>
 					</select>
-					<input name="keyword" onkeydown="return keyword_onkeydown()" style="vertical-align:middle">
-					<a class="imgbtn" style="vertical-align:middle"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
+					<input name="keyword" onkeydown="return keyword_onkeydown()" style="width:200px;vertical-align:middle; height: 22px;">
+					<a class="imgbtn" style="vertical-align:middle; margin-bottom:0px;"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
 				</td>
 			</tr>
 			</form>
 		</table>
 
         <br />
-        
+        <div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
         <table class="mainlist" style="width:100%">
 			<tr>
 				<th style="width:70px;"><spring:message code = 'ezCommunity.t32' /></th>
@@ -233,6 +241,7 @@
 			</tr>
 			<span id="idSpan">${idSpanValue }</span>
 		</table>
+		</div>
 		<br/>
 		
 	    <div id="tblPageRayer"></div>
