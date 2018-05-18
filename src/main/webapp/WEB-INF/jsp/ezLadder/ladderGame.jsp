@@ -855,7 +855,7 @@
 				<tr id="ladderContents" onmousedown="scrollMouseDownEvent(this, event);" onmousemove="scrollMouseDragEvent(this, event);" onmouseup="scrollMouseUpEvent(this, event);" onselectstart="return false;">
 					<td>
 						<c:if test="${vo.status eq 0}">
-							<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0;">
+							<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0; margin-top:-10px">
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
@@ -863,7 +863,7 @@
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 150px; background: white; text-align: center;">
+										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #f2f2f2">
 											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
@@ -898,7 +898,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 380px;background: #f5faff; position: absolute;left: -50px;right: 0;border-top:1px solid #dde4ed;border-bottom:1px solid #dde4ed">
+									<div id="blackBox" style="height: 398px;background: #f8f8fa; position: absolute;left: -50px;right: 0;border-top:1px solid #f2f2f2;border-bottom:1px solid #f2f2f2">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>

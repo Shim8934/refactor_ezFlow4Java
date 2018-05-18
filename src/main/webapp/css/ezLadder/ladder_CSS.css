@@ -124,7 +124,7 @@
 	padding: 0px 20px;	
 }
 
-.ladderBtn, #backToList {
+.ladderBtn {
 	cursor: pointer;
 	background: #0470e4;
 	color: white;
@@ -133,8 +133,19 @@
 	height: 45px;
 	line-height: 45px;
 	padding: 0 20px;
-	border: 1px solid #ccc;
+	border: 1px solid #0470e4;
 }
+
+#backToList {
+	cursor: pointer;	
+	border-radius: 5px;
+	display: inline-block;
+	height: 45px;
+	line-height: 45px;
+	padding: 0 20px;
+	border: 1px solid #ddd;
+}
+
 
 .attendant > div {
     text-align: center;
