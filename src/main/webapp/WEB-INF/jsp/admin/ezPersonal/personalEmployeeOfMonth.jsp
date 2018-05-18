@@ -91,7 +91,7 @@
 		    <script type="text/javascript">
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
-		    <div style="width:1200px;border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;">
+		    <div style="width:100%;border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;">
 		        <table class="mainlist" style="width:100%;"> 
 					<tr> 
 						<th style="width:10%; text-align:center"><spring:message code = 'ezPersonal.t290' />/<spring:message code = 'ezPersonal.t291' /></th> 

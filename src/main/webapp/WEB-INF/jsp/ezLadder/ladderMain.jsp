@@ -81,7 +81,7 @@
 			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
 			#mainmenu .participantBtn{cursor: pointer;}
-			#cmt {color:red;}
+			#cmt {color:#c64200;}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">
@@ -163,7 +163,7 @@
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t077'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t053'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
 							</c:when>
 							<c:otherwise>
 								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t078'/>" src ='/images/ezLadder/icon_imposDelete_thirty.png' /></td>
