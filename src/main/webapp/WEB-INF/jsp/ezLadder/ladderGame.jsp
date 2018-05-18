@@ -859,7 +859,7 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId}); return false;"><i class="far fa-play-circle" style="font-size: 90px; color: #0470e4;"></i><!-- <img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 10px;"/> --></a>
+											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:12px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>
