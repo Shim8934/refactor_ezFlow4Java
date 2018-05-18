@@ -64,8 +64,6 @@ public interface EzWebFolderService_m {
 
 	int deleteFolder(FolderVO folderVO) throws Exception;
 	
-	int deleteSubFolder(FolderVO folderVO) throws Exception;
-
 	void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception;
 
 	List<TrashCanVO> getFileByFolderId(String folderId, int tenantId, String userId) throws Exception;

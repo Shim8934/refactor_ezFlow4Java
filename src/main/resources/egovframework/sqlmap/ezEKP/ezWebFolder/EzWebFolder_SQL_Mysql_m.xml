@@ -1279,22 +1279,6 @@
 		]]>
 	</delete>
 	
-	<delete id="EzWebFolderDAO_m.deleteSubFolder" parameterClass="Map" >
-	<![CDATA[
-			DELETE
-			FROM
-				TBL_WEBFOLDER_FOLDER
-			WHERE
-				TENANT_ID = #tenantId# 
-			AND
-				FOLDER_ID != #folderId#
-			AND
-				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-			AND
-				USE_STATUS = 'N'
-		]]>
-	</delete>
-	
 	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterClass="Map" resultClass="String">
 		SELECT
 			f.FILE_ID
