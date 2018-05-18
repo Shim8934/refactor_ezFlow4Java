@@ -66,7 +66,7 @@
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
-				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") ) { // checkbox는 sort에서 제외
+				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") && $(this).attr("ORIGIN_TIME") ) { // checkbox는 sort에서 제외
 					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 						src = "";
 						orderOption = "";
@@ -504,9 +504,9 @@
 	    	if (excel != true) {
 		    	if (attList.length == 0) {
 		    		if (adminFlag != "true") {
-		    			$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+		    			$('#AttList tbody').append('<tr><td colspan="8" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
 		    		} else {
-		    			$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');	
+		    			$('#AttList tbody').append('<tr><td colspan="10" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');	
 		    		}
 		    	}
 	    	}
@@ -539,7 +539,8 @@
     				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
     			}
     			
-    			htmlStr += '<td>' + attList[i].originDate.substring(11,16) + ' -> ' + attList[i].changeDate.substring(11,16) + '</td>';
+    			htmlStr += '<td>' + attList[i].originDate.substring(11,16) + '</td>';
+    			htmlStr += '<td>' + attList[i].changeDate.substring(11,16) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
     				htmlStr += '<td id="attStauts">신청</td>';	
@@ -1087,14 +1088,14 @@
 			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 			    	
 			    	if (json.length == 0) {
-			    		var objTr = $("<tr></tr>").append($("<td colspan='4' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
+			    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
 			    	
 			    	for(var i = 0; i < json.length; i++) {
 						if (json.length == 1 && json[i].apprStatus == 0) {
-							var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
+							var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
 				    		
 				    		$("#addpopup_list tbody").append(objTr);
 			    		} else {
@@ -1129,12 +1130,22 @@
 			    				name = "";
 			    			}
 			    			
-				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").text("\u00a0" + json[i].apprDate));
-				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").text("\u00a0" + name));
-				    		objTr.append($("<td style='width:55%'></td>").text("\u00a0" + json[i].originDate.substring(0,16) + " -> " + json[i].changeDate.substring(11,16)));
-				    		objTr.append($("<td style='width:5%'></td>").text("\u00a0" + json[i].apprStatus));
+			    			//"\u00a0"
+				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").append($("<div style='width:89px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(0,11))));
+				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(11,16))));
+				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].changeDate.substring(11,16))));
+				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='width:52px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
+				    		objTr.append($("<td style='width:45%'></td>").append($("<div style='width:118px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprDate)));
+				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprStatus)));
 				    		
-				    		$("#addpopup_list tbody").append(objTr);	
+				    		$("#addpopup_list tbody").append(objTr);
+				    		
+				  			//<th style="width:120px;height:30px">수정신청일시</th>
+				    		//<th style="width:30px; height:30px">기존시간</th>
+				    		//<th style="width:30px; height:30px">신청시간</th>
+				    		//<th style="width:120px;height:30px">승인일시</th>
+				  			//<th style="height:30px">승인자</th>
+				  			//<th style="height:30px">승인상태</th>
 			    		}
 			    	}
 			    },
@@ -1320,8 +1331,8 @@
 					<th style="cursor:pointer" colname="WRITER_NAME">신청자</th>
 					<th style="cursor:pointer" colname="WRITER_DEPT_NAME">신청부서</th>
 				</c:if>
-				
-				<th width="250px" style="cursor:pointer" colname="NO">신청시각</th>
+				<th width="125px" style="cursor:pointer" colname="ORIGIN_TIME">기존시각</th>
+				<th width="125px" style="cursor:pointer" colname="NO">신청시각</th>
 				<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
 				<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
 				<th width="150px" style="cursor:pointer" colname="NO">내역확인</th>
@@ -1338,7 +1349,8 @@
 						<td>${list.writerName}</td>
 						<td>${list.writerDeptName}</td>
 					</c:if>
-					<td>${fn:substring(originDate,11,16) } -> ${fn:substring(changeDate,11,16) }</td>
+					<td>${fn:substring(originDate,11,16) }</td>
+					<td>${fn:substring(changeDate,11,16) }</td>
 					<c:if test="${list.apprStatus == 0}">
 						<td id="attStauts">신청</td>
 					</c:if>
@@ -1355,8 +1367,8 @@
 	        
 		    <c:if test="${list.size() == 0}"> 
 		        <tr>
-		        	<c:if test="${adminFlag == 'true'}"><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
-					<c:if test="${adminFlag != 'true'}"><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
+		        	<c:if test="${adminFlag == 'true'}"><td colspan="10" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
+					<c:if test="${adminFlag != 'true'}"><td colspan="8" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
 	       		</tr>
 	        </c:if>
 		</table>
@@ -1383,23 +1395,29 @@
 			</tr>
 		</table>
 <!-- 		팝업 -->
-		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:550px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="display:block; width:440px; margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="display:block; width:490px; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
-							<th class="layerHeader" colspan="4" style="width:440px;">
+							<th class="layerHeader" colspan="4" style="width:490px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 								&nbsp;근태내역확인
 							</th>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:500px; width:440px; display:block; overflow-y:auto;">
+				    <tbody style="max-height:500px; width:490px; display:block; overflow-y:auto;">
 				    	<tr>
-				    		<th style="width:120px;height:30px">승인일시</th>
+<!-- 				    		<th style="width:120px;height:30px">승인일시</th> -->
+<!-- 				  			<th style="height:30px">승인자</th> -->
+<!-- 				  			<th style="width:120px;height:30px">수정신청일시</th> -->
+<!-- 				  			<th style="height:30px">승인상태</th> -->
+							<th style="width:120px;height:30px">일자</th>
+				    		<th style="width:30px; height:30px">기존시각</th>
+				    		<th style="width:30px; height:30px">신청시긱</th>
 				  			<th style="height:30px">승인자</th>
-				  			<th style="width:120px;height:30px">수정신청일시</th>
+				  			<th style="width:120px;height:30px">승인일시</th>
 				  			<th style="height:30px">승인상태</th>
 						</tr>
 				    </tbody>
