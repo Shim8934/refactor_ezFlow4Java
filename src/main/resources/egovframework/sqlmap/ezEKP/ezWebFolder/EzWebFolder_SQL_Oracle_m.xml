@@ -1795,25 +1795,6 @@
 			DELETER_ID = #userId#
 	</update>
 	
-	<update id="EzWebFolderDAO_m.restoreSubFolder" parameterClass="Map">
-		UPDATE
-			TBL_WEBFOLDER_FOLDER
-		SET
-			USE_STATUS = 'Y',
-			UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS'),
-			DELETER_ID = null
-		WHERE
-		    USE_STATUS = 'N'
-		AND
-			TENANT_ID = #tenantId#
-		AND
-			FOLDER_ID != #folderId#
-		AND
-		    FOLDER_PATH LIKE #folderPath# || '%'
-		AND
-			DELETER_ID = #userId#
-	</update>
-	
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteVO">
 		<![CDATA[
 			SELECT
@@ -2208,30 +2189,6 @@
 			FOLDER.DELETER_ID = #userId#
 		<include refid="searchTrashCanFolder"/>
 	</select>
-	
-	<update id="EzWebFolderDAO_m.moveSubFolders" parameterClass="Map">
-			UPDATE
-				tbl_webfolder_folder
-			SET
-				FOLDER_TYPE  = #folderType#,
-				UPDATE_DATE  = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS'), 
-				UPDATE_ID    = #userId#,
-				OWNER_ID     = #ownerId#,
-				FOLDER_PATH  = replace(FOLDER_PATH, #oldPath#, #newPath#),
-				FOLDER_LEVEL = FOLDER_LEVEL + #levelDistance#,
-				USE_STATUS = 'Y',
-				DELETER_ID = null
-			WHERE
-				USE_STATUS = 'N'
-			AND
-				FOLDER_ID != #folderId#
-			AND
-				FOLDER_PATH like #oldPath# || '_' ||  '%'
-			AND
-				TENANT_ID    = #tenantId#
-			AND 
-				UPDATE_DATE  = TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS')
-	</update>
 	
 	<update id="EzWebFolderDAO_m.moveFile" parameterClass="Map">
 			UPDATE
