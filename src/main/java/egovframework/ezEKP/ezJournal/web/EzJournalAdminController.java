@@ -624,17 +624,16 @@ public class EzJournalAdminController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String key = request.getParameter("key");
-		param.put("key",key );
+		param.put("key", key);
 		param.put("value", request.getParameter("value"));
 		param.put("userId", userInfo.getId());
 		param.put("companyId", request.getParameter("companyId"));
-		logger.debug(request.getParameter("key"));
-		logger.debug(request.getParameter("value"));
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", param, request,"get",null);
+		logger.debug("key : " + request.getParameter("key"));
+		logger.debug("value : " + request.getParameter("value"));
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
 			JSONArray userList = (JSONArray) resultBody.get("data");
-			
 			model.addAttribute("userList", userList);
 			
 			String keyword = "";
@@ -652,6 +651,7 @@ public class EzJournalAdminController {
 			}
 			model.addAttribute("keyword",keyword);
 			model.addAttribute("userCount",userCount);
+			model.addAttribute("key", key);
 		}
 		
 		logger.debug("userList ended");

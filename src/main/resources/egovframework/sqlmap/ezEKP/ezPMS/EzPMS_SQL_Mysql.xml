@@ -179,7 +179,8 @@
     	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="11"/>
     	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="12"/>
    		<result property="logContent" 						column="LOG_CONTENT"				columnIndex="13"/>
-   		<result property="taskName" 						column="TASK_NAME"				columnIndex="14"/>
+   		<result property="taskName" 						column="TASK_NAME"					columnIndex="14"/>
+   		<result property="groupName" 						column="GROUP_NAME"					columnIndex="15"/>
     </resultMap>
     
     <resultMap id="projectTaskTreeVO" class="ProjectTaskTreeVO">
@@ -1641,45 +1642,80 @@
 	
 	<select id="EzPMSDAO.getTaskLogListCount" parameterClass="map" resultClass="Integer">
 		SELECT	
-			COUNT(LOG_ID)
+			COUNT(L.LOG_ID)
 		FROM
-			TBL_PMS_LOG
-		WHERE
-			PROJECT_ID = #projectId#
+			TBL_PMS_LOG L
+		JOIN 
+			TBL_PMS_GROUP G
+		ON 
+			L.GROUP_ID = G.GROUP_ID
+		LEFT JOIN
+			TBL_PMS_TASK T
+		ON 
+			L.TASK_ID = T.TASK_ID
+		<isEqual property="taskId" compareValue="0">
+		WHERE 
+			(L.GROUP_ID = #groupId# 
+				OR G.UPPER_GROUP_ID = #groupId#
+				OR G.UPPER_GROUP_ID = (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
+		</isEqual>
+		<isNotEqual property="taskId" compareValue="0">
+		WHERE 
+			L.task_id = #taskId#
+		</isNotEqual>
 		AND
-			TENANT_ID = #tenantId#
+			L.PROJECT_ID = #projectId#
+		AND
+			L.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzPMSDAO.getTaskLogList" parameterClass="map" resultMap="ProjectTaskLogListVO">
 		SELECT 
-			A.LOG_ID AS LOG_ID,
-			A.TENANT_ID AS TENANT_ID,
-			A.PROJECT_ID AS PROJECT_ID,
-			B.PROJECT_NAME AS TASK_NAME,
-			A.GROUP_ID AS GROUP_ID,
-			A.TASK_ID AS TASK_ID,
+			L.LOG_ID AS LOG_ID,
+			L.TENANT_ID AS TENANT_ID,
+			L.PROJECT_ID AS PROJECT_ID,
+			L.GROUP_ID AS GROUP_ID,
+			L.TASK_ID AS TASK_ID,
 			DATE_ADD(DATE_FORMAT(LOG_DATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as LOG_DATE,
-			A.LOG_STATUS AS LOG_STATUS,
-			A.USER_ID AS USER_ID,
-			A.USER_NAME AS USER_NAME,
-			A.USER_NAME2 AS USER_NAME2,
-			A.USER_DEPTNAME AS USER_DEPTNAME,
-			A.USER_DEPTNAME2 AS USER_DEPTNAME2,
-			A.LOG_CONTENT AS LOG_CONTENT
+			L.LOG_STATUS AS LOG_STATUS,
+			L.USER_ID AS USER_ID,
+			L.USER_NAME AS USER_NAME,
+			L.USER_NAME2 AS USER_NAME2,
+			L.USER_DEPTNAME AS USER_DEPTNAME,
+			L.USER_DEPTNAME2 AS USER_DEPTNAME2,
+			L.LOG_CONTENT AS LOG_CONTENT,
+			G.GROUP_NAME AS GROUP_NAME,
+			T.TASK_NAME AS TASK_NAME
 		FROM
-			TBL_PMS_LOG A
-		<isEqual property="groupId" compareValue="0">
-			<isEqual property="taskId" compareValue="0">
-				JOIN	
-					TBL_PMS_PROJECT B
-				ON
-					A.PROJECT_ID = B.PROJECT_ID
-			</isEqual>
+			TBL_PMS_LOG L
+		JOIN 
+			TBL_PMS_GROUP G
+		ON 
+			L.GROUP_ID = G.GROUP_ID
+		LEFT JOIN
+			TBL_PMS_TASK T
+		ON 
+			L.TASK_ID = T.TASK_ID
+		<isEqual property="taskId" compareValue="0">
+		WHERE 
+			(L.GROUP_ID = #groupId# 
+				OR G.UPPER_GROUP_ID = #groupId#
+				OR G.UPPER_GROUP_ID = (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
 		</isEqual>
-		WHERE
-			A.PROJECT_ID = #projectId#
+		<isNotEqual property="taskId" compareValue="0">
+		WHERE 
+			L.task_id = #taskId#
+		</isNotEqual>
 		AND
-			A.TENANT_ID = #tenantId#
+			L.PROJECT_ID = #projectId#
+		AND
+			L.TENANT_ID = #tenantId#
 		<isNotEqual property="orderWhat" compareValue="init">
 		ORDER BY	
 			$orderWhat$ $orderHow$

@@ -94,7 +94,7 @@ function setContentList() {
 		url : "/ezPMS/getTaskLogList.do",
 		success : function(contentList) {
 			$("#contentList").html(contentList);
-			//setInitOrder();
+			setInitOrder();
 		}	
 	});
 }

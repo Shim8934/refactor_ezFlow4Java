@@ -39,7 +39,7 @@ function getLadderGame(ladderId) {
 		return allData;
 	}
 	window.location.href = '/ezLadder/getLadderGame.do?ladderId=' + ladderId + '&searchSelect=' + searchSelect +
-	'&searchInput=' + searchInput + '&mode=' + mode + '&currPage=' + currPage;
+	'&searchInput=' + searchInput + '&mode=' + mode + '&currPage=' + currPage + '&sort=' + sort + '&sortFlag=' + sortFlag;
 }
 
 // 참여자 버튼
@@ -120,7 +120,7 @@ function searchLadder() {
 		searchOption ='off';
 	}
 	if(searchInput==="") {
-		alert(strLang39);
+		alert(strLang14);
 		searchSelect = '';
 		return;
 	}
@@ -133,7 +133,7 @@ function searchLadder() {
 
 //삭제 불가
 function imposDelete(){
-	alert(strLang42);
+	alert(strLang15);
 	return;
 }
 
@@ -232,12 +232,9 @@ function view() {
 		sort ='date';
 		sortFlag = 'desc';
 	}
-	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=";
-	if(searchInput.indexOf('%') >= 0 || searchInput.indexOf('&') >= 0 || searchInput.indexOf('#') >= 0 || searchInput.indexOf('*') >= 0) {
-		szUrl = szUrl + escape(searchInput) + "&sort=" + sort + "&sortFlag=" + sortFlag;
-	} else {
-		szUrl = szUrl + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
-	}
+	searchInput = encodeURIComponent(searchInput).replace(/%20/g,'+');
+	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
+
 	document.location.href = szUrl;
 }
 
@@ -278,9 +275,9 @@ function makePageSelPage() {
 
 	document.getElementById("tblPageRayer").innerHTML = "";
 	if(document.getElementById("mailBoxInfo") !== null) {
-		document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang16
+		document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang8
 		+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
-		+ strLang17 + "]";
+		+ strLang9 + "]";
 	}
 
 	if (totalPage > 1 && pageNum != 1) {
@@ -294,16 +291,16 @@ function makePageSelPage() {
 	if (totalPage > blockSize) {
 		if (pageNum > blockSize) {
 			strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>"
-					+ strLang14 + "</span>";
+					+ strLang6 + "</span>";
 			PagingHTML += strtext;
 		} else {
 			strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>"
-					+ strLang14 + "</span>";
+					+ strLang6 + "</span>";
 			PagingHTML += strtext;
 		}
 	} else {
 		strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>"
-				+ strLang14 + "</span>";
+				+ strLang6 + "</span>";
 		PagingHTML += strtext;
 	}
 
@@ -331,20 +328,20 @@ function makePageSelPage() {
 	if (totalPage > blockSize) {
 		if (totalPage >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
 			strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>"
-					+ strLang15 + "</span>";
+					+ strLang7 + "</span>";
 			strtext = strtext
 					+ "<span class='btnimg' onClick='return selafterBlock()' ><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 			PagingHTML += strtext;
 		} else {
 			strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-					+ strLang15 + "</span>";
+					+ strLang7 + "</span>";
 			strtext = strtext
 					+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 			PagingHTML += strtext;
 		}
 	} else {
 		strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>"
-				+ strLang15 + "</span>"; 
+				+ strLang7 + "</span>"; 
 		strtext = strtext
 				+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		PagingHTML += strtext;
@@ -409,3 +406,10 @@ function goToPageByNum(page) {
 	}
 	makePageSelPage();
 }
+
+// 작성자 정보 보기
+function menuQst_DetailUserInfo(pUserID, event) {
+	event.stopPropagation();
+	var feature = GetOpenPosition(420, 438);
+    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+}	

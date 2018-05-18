@@ -177,15 +177,13 @@
 		            });
 		        }
 			</c:if>
-	        
-	        
+	                
 		</script>
 	</head>
 	<body class="popup">
 	    <div id="menu" style="margin-bottom:10px">
 	        <ul>
 	            <li><span id="btnDraft" onclick="check()"><spring:message code='ezCommunity.t1011' /></span></li>
-	            <li><span id="btnDraft" onclick="window.location.reload(true)"><spring:message code='ezCommunity.t109' /></span></li>
 	        </ul>
 	    </div>
 	    <div id="close">
@@ -193,7 +191,9 @@
 	    		<li><span onclick="window.close()"><spring:message code='ezCommunity.t21' /></span></li>
 	    	</ul>
 	    </div>
-		<form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data">
+	    <%-- 2018-05-16 홍승비 - 경고메세지 처리를 jsp 내부에서 보이도록 하기 위해 수정 --%>
+	    <iframe name="ifrm" src="about:blank" style="display:none;"></iframe>
+		<form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data" target="ifrm">
 			<input type="hidden" name="makeID" value="<c:out value='${userInfo.id }' />">
             <input type="hidden" name="hiddenClubName">
             <input type="hidden" name="hiddenClubName2">

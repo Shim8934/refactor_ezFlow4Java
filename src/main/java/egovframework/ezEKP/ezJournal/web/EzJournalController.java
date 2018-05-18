@@ -1227,7 +1227,6 @@ public class EzJournalController extends EgovFileMngUtil {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 //		param.put("viewDate", viewDate);
-		param.put("isRead", request.getParameter("isRead"));
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1263,7 +1262,6 @@ public class EzJournalController extends EgovFileMngUtil {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userInfo.getId());
-			param.put("isRead", request.getParameter("isRead"));
 			/*
 			try {
 				param.put("viewDate",commonUtil.getTodayUTCTime(""));
@@ -1699,7 +1697,6 @@ public class EzJournalController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("isRead", request.getParameter("isRead"));
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1731,20 +1728,21 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("journalViewCheck started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		/*
 		String viewDate ="";
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		*/
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		String journalIdList = request.getParameter("journalIdList");
 		String userId = userInfo.getId();
 				
 		param.put("userId", userId);
-		param.put("viewDate", viewDate);
+//		param.put("viewDate", viewDate);
 		param.put("journalIdList", journalIdList);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/viewers/" + userId, param, request, "put", null);
