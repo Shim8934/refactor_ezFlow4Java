@@ -43,6 +43,8 @@ public class CommunityMyCommunityVO {
 	String c_ClubConfirmType;
 	/** 댓글갯수  //2018-05-07 홍승비 댓글갯수 표출 */
 	int oneLineCnt;
+	/** 조회수  //2018-05-18 홍승비 조회수 표출 */
+	int readCount;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -169,5 +171,11 @@ public class CommunityMyCommunityVO {
 	}
 	public void setOneLineCnt(int oneLineCnt) {
 		this.oneLineCnt = oneLineCnt;
+	}
+	public int getReadCount() {
+		return readCount;
+	}
+	public void setReadCount(int readCount) {
+		this.readCount = readCount;
 	}
 }

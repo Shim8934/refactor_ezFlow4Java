@@ -40,13 +40,18 @@
 					ladder_window_resize();
 				});
 				
+				var handle = $("#custom-handle");
 				$("#slider-range-min").slider({ 
 					range: "min",
 					value: 0,
 					min: 0,
 					max: 0,
+					create: function() {
+						handle.text($(this).slider("value"));
+					},
 					slide: function( event, ui ) {
-						$("#amount").text(ui.value);
+						/* $("#amount").text(ui.value); */
+						handle.text(ui.value);
 					},
 					stop: function(event, ui) {
 						lineCnt = ui.value;
@@ -104,7 +109,7 @@
 						imgs = $(this).find("img");
 						
 						imgs.removeClass("active");
-						imgs.eq(2).addClass("active").css("border", "2px solid #0470e4");
+						imgs.eq(2).addClass("active").css("border", "1px solid #888");
 						
 						setLadderTypeDiv();
 					})
@@ -114,9 +119,9 @@
 						imgs.removeClass("active");
 						imgs.eq(2).addClass("active");
 						if($(this).attr("_num") != ladderType) {
-							imgs.eq(2).css("border", "2px solid #dddddd");
+							imgs.eq(2).css("border", "1px solid #dddddd");
 						} else {
-							imgs.eq(2).css("border", "2px solid #0470e4");
+							imgs.eq(2).css("border", "1px solid #888");
 						}
 					})
 					.on("mouseleave", function() {
@@ -243,9 +248,9 @@
 						bombnum = len;
 					}
 					
-					html += "<div style='float: right; padding-top: 7px;'><div id='addBomb' class='typeOpbtn' style='margin-right: 10px;' onselectstart='return false'>" + strLang21 + "</div>";	
-					html += "<div id='cutBomb' class='typeOpbtn' style='margin-right: 30px;' onselectstart='return false'>" + strLang22 + "</div>";
-					html += "<div id='bombnum' style='display: inline-block;'>" + strLang23 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang9 + "</div></div>";
+					html += "<div><div style='float:right;' id='cutBomb' class='typeOpbtn' onselectstart='return false'><img src='/images/minus_ladder.png' width='35px' /></div>";
+					html += "<div style='float:right;' id='addBomb' class='typeOpbtn' onselectstart='return false'><img src='/images/plus_ladder.png' width='35px' /></div>";
+					html += "<div id='bombnum' style='float:right;border:1px solid #ddd;border-radius:10px;padding:0px 15px;height:45px;line-height:45px;margin:1px;margin-right:5px;background:white'>" + strLang23 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang9 + "</div></div>";
 				} else if(ladderType == "2") {
 					$itemList.css("display", "none");
 					$tempItemList.css("display", "block");
@@ -258,7 +263,7 @@
 						totalmoney = 0;
 						getMoney($("#itemList").find("input"));
 						
-						html += "<div id='totalmoney' style='float: right; line-height: 50px;'><spring:message code='ezLadder.t107' /><span style='margin: 0px 5px 0px 15px;'>" + totalmoneyStr + "</span>" + strLang24 + "</div>";
+						html += "<div id='totalmoney' style='float: right; line-height: 45px;border:1px solid #ddd;padding:0px 15px;margin:1px;border-radius:10px;background:white'><spring:message code='ezLadder.t107' /><span style='margin: 0px 5px 0px 15px;'>" + totalmoneyStr + "</span>" + strLang24 + "</div>";
 					}
 				}
 				$("#ladderTypeOption").html(html);
@@ -471,11 +476,13 @@
 					} else {
 						$("#slider-range-min").slider("option", "value", lineCnt);
 					}
-					$("#amount").text($("#slider-range-min").slider("value"));
+					$("#custom-handle").text($("#slider-range-min").slider("value"));
+					//$("#amount").text($("#slider-range-min").slider("value"));
 				} else {
 					$("#slider-range-min").slider("option", "max", 0);
 					$("#slider-range-min").slider("option", "value", 0);
-					$("#amount").text(0);
+					$("#custom-handle").text(0);
+					//$("#amount").text(0);
 				}
 			}
 
@@ -789,7 +796,7 @@
 							html += '<input type="text" class="input" readonly="readonly" name="userNames" style="line-height: 30px; background: rgb(244, 245, 245)" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
 							html += '<input type="text" name="userIds" style="display: none;" />';
-							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 22px; right: 10px; cursor: pointer;"></span></div></li>';
+							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 21px; right: 10px; cursor: pointer;"></span></div></li>';
 						}
 						
 						$("#attendantList").append(html);
@@ -851,7 +858,8 @@
 				
 				$("input[name='secretFlag']").val($("#ladderSecret .active").attr("_flag"));
 				$("input[name='type']").val(ladderType);
-				$("input[name='lineCnt']").val($("#amount").text());
+				$("input[name='lineCnt']").val($("#custom-handle").text());
+				//$("input[name='lineCnt']").val($("#amount").text());
 				
 				if($("#tempItemList").css("display") == "block") {
 					var $items = $("input[name='items']");
@@ -907,28 +915,41 @@
 				display: none;
 			}
 			.default {
-				border: 2px solid #dddddd; 
+				border: 1px solid #dddddd; 
 			}
 			.typehover {
 				background: #ddeeff;
 			}
 			.select {
-				border: 2px solid #0470e4; 
+				border: 1px solid #888; 
 			}
 			.typeOpbtn {
 				display: inline-block;
-				border: 1px solid #dddddd;
+				/* border: 1px solid #dddddd;
 				padding: 10px 15px;
-				border-radius: 5px;
+				border-radius: 5px; */
+				padding-top:7px;
+				margin-left:3px;
 				cursor: pointer;
 				user-select: none;
 			}
 			.active {
 				display: inline;
+			}	
+			#custom-handle {
+				width: 3em;
+				height: 1.6em;
+				top: 50%;
+				margin-top: -.8em;
+				text-align: center;
+				line-height: 1.6em;
+			}	
+			.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+				color: #000000;
+				border: 1px solid #d8dcdf;
 			}
-			#addBomb:hover, #cutBomb:hover {
-				border: 1px solid #0470e4;
-				color: #0470e4;
+			.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+				font-weight: normal;
 			}
 		</style>
 	</head>
@@ -939,13 +960,9 @@
 				<tr>
 					<td>
 						<div style="height: 50px; line-height: 50px; margin-bottom: 10px; position: relative;">
-							<div style="height: 40px; position: absolute; left: 0; right: 65px;">
-								<input type="text" class="input" name="title" id="title" style="height: 100%; width: 100%;" placeholder="<spring:message code="ezLadder.t019"/>" maxlength="166"/>
+							<div style="height: 50px;">
+								<input type="text" class="input" name="title" id="title" style="height: 100%; width: 100%; padding-left:11px" placeholder="<spring:message code="ezLadder.t019"/>" maxlength="166"/>
 								<div id="ladderPreList" style="top: 7px; right: 11px;"><img  title="<spring:message code='ezLadder.t079'/>" src="/images/ezLadder/icon_preLadder.png"/></div>
-							</div>
-							<div id="ladderSecret" style="position: absolute; right: 0;">
-								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t007'/>" class="default icon" _flag="0"/>
-								<img src="/images/ezLadder/icon_private.png" title="<spring:message code='ezLadder.t076'/>" class="select icon" _flag="1"/>
 							</div>
 							<input name="secretFlag" style="display: none;" />
 						</div>
@@ -953,29 +970,39 @@
 				</tr>
 				<tr>
 					<td>
-						<div style="height: 50px; margin-bottom: 10px;">
-							<div style="float: left; height: 50px; line-height: 50px; width: 260px; position: relative;">
-								<input type="text" class="input" id="inputAttendant" style="height: 40px; width: 200px;" placeholder="<spring:message code='ezLadder.t071' />"/>
-								<div id="addAttendant" class="icondiv">
-									<img src="/images/ezLadder/icon_addAttendant.png" style="display: block" title="<spring:message code='ezLadder.t080'/>"/>
-									<img src="/images/ezLadder/icon_addAttendant_hover.png" style="display: none" title="<spring:message code='ezLadder.t080'/>"/>
-								</div>
-							</div>
-							<div style="float: right;">
-									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
-									<c:forEach begin="0" end="3" var="typenum">
-										<div class="ladderType" _num="${typenum}">
-											<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}_no.png" class="default icon"/>
-											<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}.png" class="select icon"/>
-											<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}_hover.png" class="typehover icon"/>
-										</div>
-									</c:forEach>
+						<div style="height: 50px; margin-bottom: 10px;padding:5px;background-color: #f8f8fa;border:1px solid #e8e8ea;">
+							<div style="float: left;">
+								<c:forEach begin="0" end="3" var="typenum">
+									<div class="ladderType" _num="${typenum}">
+										<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}_no.png" class="default icon"/>
+										<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}.png" class="select icon"/>
+										<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}_hover.png" class="typehover icon"/>
+									</div>
+								</c:forEach>
+								<div id="ladderTypeOption" style='float:right; margin-left: 30px; height: 50px;'></div>
 								<input name="type" style="display: none;" />
+							</div>														
+							<div style="float: right;height:40px; line-height: 40px;margin-left:20px;margin-top:5px;">
+								<img src="/images/line.png" style="vertical-align: middle;float: left;padding-top:6px" title="<spring:message code='ezLadder.t081'/>"/>								
+								<!-- <div style="height: 40px; width: 40px; line-height:40px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 3px; margin-right:15px; background-color: white">
+									<span id="amount">0</span>
+								</div> -->
+								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:90px; margin-left: 15px;">
+									<div id="custom-handle" class="ui-slider-handle"></div>
+								</div>
+								<input name="lineCnt" style="display: none;" />
 							</div>
+							<div style="float: right; height: 45px; line-height: 45px;margin-top:2px">
+								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" /><input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px" placeholder="<spring:message code='ezLadder.t071' />"/>
+							</div>
+							<div id="ladderSecret" style="position: absolute; right: 15px;">
+								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t007'/>" class="default icon" _flag="0"/>
+								<img src="/images/ezLadder/icon_private.png" title="<spring:message code='ezLadder.t076'/>" class="select icon" _flag="1"/>
+							</div>							
 						</div>
 					</td>
 				</tr>
-				<tr>
+				<%-- <tr>
 					<td>
 						<div style="height:50px; margin-bottom: 25px; line-height: 50px;">
 							<div style="height: 50px; width: 50px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 5px;" title="<spring:message code='ezLadder.t081'/>">
@@ -985,13 +1012,13 @@
 							<input name="lineCnt" style="display: none;" />
 						</div>
 					</td>
-				</tr>
+				</tr> --%>
 				<tr>
 					<td style="position: relative; margin-top: 20px;">
-						<%-- <div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 2px solid #0470e4; border-radius: 15px; cursor: pointer;">
-							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 2px; padding-top: 2px; display: block" title="<spring:message code='ezLadder.t080'/>"/>
-							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 2px; padding-top: 2px; display: none" title="<spring:message code='ezLadder.t080'/>"/>
-						</div> --%>
+						<div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 1px solid #0470e4; border-radius: 15px; cursor: pointer;">
+							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 1px; padding-top: 1px; display: block" title="<spring:message code='ezLadder.t080'/>"/>
+							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 1px; padding-top: 1px; display: none" title="<spring:message code='ezLadder.t080'/>"/>
+						</div>
 						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 750px;">
 							<div style="height: 140px;">
 								<ul id="attendantList"></ul>

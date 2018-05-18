@@ -606,7 +606,7 @@
 				
 				html += '<div style="display: inline-block; width: 100%; margin-top: 5px;">';
 				html += '<div style="display: block; float:left; border:1px solid #ddd;padding: 0 5px;;margin-left: 20px; border-radius: 3px; width: 95%; height: 30px; overflow: hidden;">';
-				html += '<input id="editCmtArea' + editComtFlag + '" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
+				html += '<input id="editCmtArea' + editComtFlag + '" type="text" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
 				html += '</input></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
 				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="margin-right: 4px;"><spring:message code="ezLadder.t072" /></button>';
@@ -677,6 +677,9 @@
 		}
 	</script>
 	<style type="text/css">
+		input[type=text]::-ms-clear {
+			display:none;
+		}
 		ul {
 		    list-style:none;
 		    margin:0;
@@ -859,7 +862,7 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId}); return false;"><i class="far fa-play-circle" style="font-size: 90px; color: #0470e4;"></i><!-- <img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 10px;"/> --></a>
+											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:12px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>
@@ -898,7 +901,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 398px;background: #f8f8fa; position: absolute;left: -50px;right: 0;border-top:1px solid #f2f2f2;border-bottom:1px solid #f2f2f2">
+									<div id="blackBox" style="height: 398px;background: #fafafa; position: absolute;left: -50px;right: 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
@@ -970,7 +973,7 @@
 				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px 0px 0px 0px;">
 					<div class="sendComment_layout">
 						<div class="comment_input_layout" style="border: none; width: 86%;">
-							<input id="comment_input" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
+							<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
 						</div>
 						<div class="commentBtn">
 							<button id="sendBttn" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;"><spring:message code="ezLadder.t054" /></button>						
