@@ -1085,7 +1085,7 @@
 
 		    	function format(type){
 			        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-			        console.log(nowAttiTime);
+			        
 			        var s =
 			        	leadingZeros(nowAttiTime.getHours(), 2)+
 			            leadingZeros(nowAttiTime.getMinutes(), 2)+
