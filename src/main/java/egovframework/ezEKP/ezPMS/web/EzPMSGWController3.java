@@ -246,16 +246,11 @@ public class EzPMSGWController3 {
 	        }
 	        
 	        File file = new File(pDirPath + "uploadFile");
-	        File tempFile = new File(pDirPath + "tempUploadFile");
 
 	        if (!file.exists()) {
 	        	file.mkdirs();
 	        }
 	        
-	        if (!tempFile.exists()) {
-	        	tempFile.mkdir();
-	        }
-			
 	        for (int i = 0; i < cnt; i++) {
 	        	fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
 	        	String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
@@ -269,35 +264,17 @@ public class EzPMSGWController3 {
                     if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {
                         resultUpload[i] = "denied";
                     } else {
-                        String pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator;
-//                        
-                        // 업로드된 파일 데이터를 파일로 저장한다.
-                        journalWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), newFileName, pAttachPath);
+                        String pAttachPath = pDirPath + "uploadFile" + commonUtil.separator;
                         
-                        fileLocation[i] = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId()) + commonUtil.separator + "tempUploadFile" + commonUtil.separator + pUploadSN[i];
+                        // 업로드된 파일 데이터를 파일로 저장한다.
+                        uploadFile((String)((JSONObject)fileArray.get(i)).get("bytes"), newFileName, pAttachPath);
+                        
+                        fileLocation[i] = commonUtil.getUploadPath("upload_project.ROOT", info.getTenantId()) + commonUtil.separator + "uploadFile" + commonUtil.separator + pUploadSN[i];
                         resultUpload[i] = "true";
                     }
 	            }
 	        }
-			/*
-	        StringBuffer strXML = new StringBuffer();
 
-	        strXML.append("<ROOT><NODES>");
-	        
-	        for (int i = 0; i < cnt; i++) {
-	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
-	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
-	            strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
-	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
-	            strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
-	            strXML.append("</NODE>");
-	        }
-	        
-	        strXML.append("</NODES></ROOT>");
-	        
-	        result.put("data", strXML);
-	        */
-	        
 	        ArrayList<JSONObject> filelist = new ArrayList<JSONObject>();
 	        
 	        for (int i = 0; i < cnt; i++) {

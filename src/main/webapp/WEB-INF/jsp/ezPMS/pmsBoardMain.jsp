@@ -55,8 +55,8 @@
 	    var top = (height - 820) / 2;
 	    var left = (width - 790) / 2;
 		
-		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId 
-										  + "&groupId=" + groupId + "&taskName=" + taskName  + "&taskId=" + taskId, 
+		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&groupId=" + groupId 
+										 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=new", 
 					"", "width=790, height=820, resizable=no, scrollbars=no, status=no, top=" + top + ", left=" + left + ";");
 	}
 	

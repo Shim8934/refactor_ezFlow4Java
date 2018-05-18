@@ -23,6 +23,9 @@
 	var groupId = "${groupId}";
 	var taskId = "${taskId}";
 	
+	// 첨부파일 최대용량
+	var AttachLimit = 10;
+	
 	function addBoard() {
 	
 		var title = $("#title").val().trim();
