@@ -76,6 +76,9 @@
 			} else if (code == 6) {
 				alert("<spring:message code='ezWebFolder.t313'/>");
 				window.close();
+			} else if (code == 7) {
+				alert("<spring:message code='ezWebFolder.t250'/>");
+				window.close();
 			} else {
 				alert("<spring:message code='ezWebFolder.t305'/>");
 				window.close();

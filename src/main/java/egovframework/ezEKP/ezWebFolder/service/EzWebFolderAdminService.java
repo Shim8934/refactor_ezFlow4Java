@@ -35,4 +35,5 @@ public interface EzWebFolderAdminService {
 	UserCapacityVO getUserCapacity(String userId, String lang, int tenantId) throws Exception;
 	String createExcelFileLogs(String realPath, String pDirPath, List<FileLogVO> listFileLogs, String primary, Locale locale) throws Exception;
 	void getExcelFile(String fileName, String realPath, String userAgent, HttpServletResponse response, int tenantId) throws Exception;
+	double getFolderSize(String folderPath, int tenantId) throws Exception;
 }

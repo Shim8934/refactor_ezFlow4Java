@@ -1432,6 +1432,17 @@
 			TENANT_ID = #tenantId#
 	</select>
 	
+	<select id="EzWebFolderDAO.getTotalFilesSize" resultClass="Double">
+		SELECT
+			IFNULL(SUM(CAST(FILE_SIZE AS INT)), 0)
+		FROM
+			TBL_WEBFOLDER_FILE
+		WHERE
+			FILE_ID IN ($fileList$)
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
 	<select id="EzWebFolderDAO.getFolderNameList" resultClass="String">
 		SELECT
 			CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME

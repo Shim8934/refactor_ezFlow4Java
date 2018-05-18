@@ -256,13 +256,20 @@
 					"folderId" : selectedFolder,
 					"mode"     : "copy"
 				},
-				dataType: "text",
+				dataType: "JSON",
 				async: true,
-				success : function(data, textStatus, jqXHR) {
-					alert("<spring:message code='ezWebFolder.t248'/>");
-					afterSuccess();
+				success : function(data) {
+					var reason = data.reason;
+					
+					if (reason) {
+						alert(reason);
+					}
+					else {
+						alert("<spring:message code='ezWebFolder.t248'/>");
+						afterSuccess();
+					}
 				},
-				error : function(jqXHR, textStatus, errorThrown) {
+				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
 				}
 			});

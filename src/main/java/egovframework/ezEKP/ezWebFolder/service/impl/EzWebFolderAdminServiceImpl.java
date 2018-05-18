@@ -928,4 +928,12 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 	}
 
+	@Override
+	public double getFolderSize(String folderPath, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderPath",  folderPath);
+		map.put("tenantId", tenantId);
+		return ezWebFolderAdminDAO.getFolderSize(map);
+	}
+
 }

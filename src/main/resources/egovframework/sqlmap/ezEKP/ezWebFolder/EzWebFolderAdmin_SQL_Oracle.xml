@@ -727,4 +727,15 @@
 				TENANT_ID    = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzWebFolderAdminDAO.getFolderSize" resultClass="Double">
+		SELECT
+			NVL(SUM(TO_NUMBER(f.FILE_SIZE)), 0)
+		FROM
+			TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FOLDER u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
+		WHERE
+			u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+		AND
+			f.TENANT_ID = #tenantId#
+	</select>
 </sqlMap>
