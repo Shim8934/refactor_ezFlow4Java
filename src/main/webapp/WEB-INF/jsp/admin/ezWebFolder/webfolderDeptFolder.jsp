@@ -378,6 +378,11 @@
 					return;
 				}
 				
+				if (isValidName(folderName) || isValidName(folderName2)) {
+					alert('<spring:message code="ezWebFolder.t211"/>');
+					return;
+				}
+				
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/changeDepartFolder.do",
@@ -402,6 +407,11 @@
 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
+			}
+			
+			function isValidName(str){
+				var regex = /[*:"\\|<>\/?]/g;
+				return regex.test(str);
 			}
 			
 			function checkValidDept() {

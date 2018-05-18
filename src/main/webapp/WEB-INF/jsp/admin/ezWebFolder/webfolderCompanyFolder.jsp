@@ -336,6 +336,11 @@
 					return;
 				}
 				
+				if (isValidName(folderName) || isValidName(folderName2)) {
+					alert('<spring:message code="ezWebFolder.t211"/>');
+					return;
+				}
+				
 				if (compFolderId == selectedFolder && !target.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t202'/>");
 					return;
@@ -365,6 +370,11 @@
 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
+			}
+			
+			function isValidName(str) {
+				var regex = /[*:"\\|<>\/?]/g;
+				return regex.test(str);
 			}
 			
 			function refreshView() {
