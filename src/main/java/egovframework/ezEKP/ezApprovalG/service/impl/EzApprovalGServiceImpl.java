@@ -9095,6 +9095,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			isUsed = strXML.getElementsByTagName("isUsed").item(0).getTextContent();
 		}
 		
+		if (strXML.getElementsByTagName("ORGCOMPANYID") != null && !strXML.getElementsByTagName("ORGCOMPANYID").equals(companyID) ) {
+			companyID = strXML.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent();
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
@@ -12047,6 +12051,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID.trim());
+		
+		if (!userInfo.getCompanyID().equals(companyID)) {
+			userInfo.setCompanyID(companyID);
+		} 
+
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());

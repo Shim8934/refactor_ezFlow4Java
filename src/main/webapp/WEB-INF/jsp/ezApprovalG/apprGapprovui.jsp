@@ -151,6 +151,7 @@
 			var draftDeptID = "${draftDeptID}";
 			
 			var docState = "${docState}";
+			var orgCompanyID = "${orgCompanyID}";
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;

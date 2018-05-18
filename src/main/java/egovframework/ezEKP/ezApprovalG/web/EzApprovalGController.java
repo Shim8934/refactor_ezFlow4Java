@@ -3605,6 +3605,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("agreeReturnType", agreeReturnType);
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("docState", docState);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("approvui ended");
 		
