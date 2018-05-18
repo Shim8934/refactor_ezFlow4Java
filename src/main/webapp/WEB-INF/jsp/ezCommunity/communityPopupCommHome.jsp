@@ -161,7 +161,7 @@
                    		 						}
 		                                        span2.innerHTML += itemVO.title;
 		                                        
-		                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 댓글수 표출 */
+		                                        /* 2018-05-04 홍승비 - 댓글수 표출 */
 		                                        if (itemVO.oneLineCnt > 0) {
 		                                        	span2.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
 		                                        }
@@ -188,19 +188,19 @@
 			                                        var img = document.createElement("IMG");
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
-			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈화면 사진경로 수정 */
+			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 사진경로 수정 */
 			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
 			                                        span2.appendChild(img);
 			                                        span3.className = "ptxt";
-			                                        /* 2018-05-18 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 new 표시 */
+			                                        /* 2018-05-18 홍승비 - new 표시 */
 			                                        if (pastDate <= itemVO.writeDate ) {
 			                                    		span3.innerHTML = "<img src='/images/new_icon.gif'>&nbsp;";
 	                   		 						}
 			                                        span3.innerHTML += itemVO.title;
-			                                        /* 2018-05-07 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 댓글수 표출 */
+			                                        /* 2018-05-07 홍승비 - 댓글수 표출 */
 			                                        if (itemVO.oneLineCnt > 0) {
 			                                        	span3.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
 			                                        }
