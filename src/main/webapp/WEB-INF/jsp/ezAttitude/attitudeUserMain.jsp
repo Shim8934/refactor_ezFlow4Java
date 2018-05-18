@@ -141,7 +141,8 @@
 			var modAttitudeId = "";         // 수정신청 근태ID
 			var modChangeDate = "";         // 수정신청 변경일자
 			var modContent = "";            // 수정신청 내용
-						
+			var pageInfo = "viewCalendar";
+			
 			$(function(){
 				//개인근태현황에서만 근태 등록 가능
 				if (deptFlag != "true") {
@@ -887,10 +888,10 @@
 				var feature = GetOpenPosition(790, 760);
 				
 				if (adminFlag == "true") {
-					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
+					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo, "",
 				 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				} else {
-					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
+					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&pageInfo=" + pageInfo, "",
 				 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 				}
 		    }

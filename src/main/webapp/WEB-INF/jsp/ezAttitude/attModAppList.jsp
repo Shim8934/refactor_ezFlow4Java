@@ -63,6 +63,7 @@
 		var searchWriter = ""; //#writer_search
 		var searchStartDate = ""; //
 		var searchEndDate = ""; //
+		var pageInfo = "modList";
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
@@ -1062,10 +1063,10 @@
 			modAttId = modAttId.split("\_")[0];
 			
 			if (adminFlag == "true") {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag, "",
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo, "",
 			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			} else {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt, "",
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt + "&pageInfo=" + pageInfo, "",
 			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 			}
 	    }
