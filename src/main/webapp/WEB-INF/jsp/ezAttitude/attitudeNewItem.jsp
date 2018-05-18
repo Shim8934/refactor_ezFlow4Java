@@ -60,7 +60,7 @@
 				select_memorialDays(uselang);
 				setHoliday();
 				//checkOutCom();
-				
+				setTypeName();
 			}
 			
 			window.onresize = function () {   	
@@ -531,6 +531,15 @@
 				} else {
 					inputCheckFlag = false;
 				}
+			}
+			
+			//특수문자
+			function setTypeName() {
+				$('#subSelectAtti option').each(function(){
+					var typeName = $(this).text();
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+					$(this).text(typeName);
+				})
 			}
 		</script>
 	</head>
