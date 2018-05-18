@@ -8657,7 +8657,7 @@
 	<!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<![CDATA[
 	   		SELECT 
-	   			COUNT(DISTINCT DOCID) AS COUNT 
+	   			COUNT(DOCID) AS COUNT 
 	   		FROM 
 	   			VAPRWILLDOCLIST 
 	   		WHERE 
@@ -9906,7 +9906,7 @@
 		<isEqual property="v_LISTTYPE" compareValue="3">
 		<![CDATA[
 			SELECT 
-				COUNT(DISTINCT DOCID) 
+				COUNT(DOCID) 
            	FROM 
            		VAPRWILLDOCLIST 
            	WHERE 

@@ -1020,6 +1020,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String beforeDocID = request.getParameter("beforeDocID");
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		if (isUsed == null) {
 			isUsed = "";
 		}
@@ -1091,6 +1098,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isUsed = request.getParameter("isUsed");
 		String beforeDocID = request.getParameter("beforeDocID");
 		String mode = request.getParameter("mode");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (isUsed == null) {
 			isUsed = "";

@@ -4,8 +4,8 @@ function Lineinfo_ini() {
     	if (approvalFlag == "S") {
             Tree_setconfig();
             Lineinfoini = true;
-            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
             InitListView();
+            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
             displayUserList(DeptID);
             ChangeLineTab("Organ");
             initJunGyul();
@@ -373,7 +373,8 @@ function InitListView() {
     				deptID 	 : arr_userinfo[4],
     				reDraft  : pReDraftFlag,
     				isUsed   : "",
-    				mode     : ""
+    				mode     : "",
+    				orgCompanyID : companyID
     				},
     		success: function(xml){
     			result = xml;
