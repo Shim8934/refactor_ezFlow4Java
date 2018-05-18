@@ -3842,6 +3842,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
+		}
+		
 		String result = ezApprovalGService.doProcess("004", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
@@ -3866,6 +3870,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
+		}
 		
 		String result = ezApprovalGService.doProcess("005", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 

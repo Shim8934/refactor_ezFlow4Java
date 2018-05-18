@@ -9906,7 +9906,7 @@
 		<isEqual property="v_LISTTYPE" compareValue="3">
 		<![CDATA[
 			SELECT 
-				COUNT(DOCID) 
+				COUNT(DISTINCT DOCID, COMPANYID) 
            	FROM 
            		VAPRWILLDOCLIST 
            	WHERE 
