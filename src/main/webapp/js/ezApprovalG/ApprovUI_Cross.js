@@ -1559,6 +1559,7 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
     createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", DocNumCode);
     createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
+    createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
 
     var g_SepAttachLVXml = "";
     g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
