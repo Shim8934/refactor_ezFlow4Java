@@ -103,15 +103,15 @@ public interface EzWebFolderService_m {
 	
 	int restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception;
 	
-	int restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
+	int restoreFileInFolder (String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
 
-	void moveTrashCan(String[] fileIDList, String[] folderIDList,String folderId, int tenantId, String userId, String offset, String companyId, String userName1, String userName2, String timeUTC) throws Exception;
+	void moveTrashCan (String[] fileIDList, String[] folderIDList,String folderId, int tenantId, String userId, String offset, String companyId, String userName1, String userName2, String timeUTC) throws Exception;
 
-	void moveFolder(FolderVO folderVO, FolderVO destFoldeVO, String userId, String offset, int tenantId, String timeUTC) throws Exception;
+	void moveFolder (FolderVO folderVO, FolderVO destFoldeVO, String userId, String offset, int tenantId, String timeUTC) throws Exception;
 
-	void movSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId, int levelDistance, int tenantId, String folderId, String updateDate) throws Exception;
+	void movSubFolders (String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId, int levelDistance, int tenantId, String folderId, String updateDate) throws Exception;
 
-	void moveFile(String fileId, String folderId, int tenantId, String timeUTC) throws Exception;
+	void moveFile (String fileId, String folderId, int tenantId, String timeUTC) throws Exception;
 
-
+	List<String> getAllFolderIdNotInFolder(String folderPath, String folderId) throws Exception;
 }

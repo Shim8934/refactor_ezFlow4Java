@@ -204,5 +204,8 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO_m.moveFile", map);
 	}
-
+	
+	public List<String> getAllFolderIdNotInFolder (Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO_m.getAllFolderIdNotInFolder", map);
+	}
 }
