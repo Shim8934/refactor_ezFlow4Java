@@ -108,13 +108,18 @@
 					$.ajax({
 						type : "POST",
 						url : "/admin/ezAttitude/deleteAttitudeAuth.do",
+						dataType : "text",
 						data : {
 							selectUserId : selectedUserId,
 							companyId : encodeURI($("#ListCompany").val())
 						},
-						success : function() {
-							company_change();
-						},
+		            	success : function(resultStatus) {
+		            		if (resultStatus == "success") {
+			            		company_change();
+		            		} else {
+		            			alert("<spring:message code='ezAttitude.kbm3' />");
+		            		}
+		            	},
 						error : function() {
 							alert("<spring:message code = 'ezAttitude.kbm3' />");
 						}

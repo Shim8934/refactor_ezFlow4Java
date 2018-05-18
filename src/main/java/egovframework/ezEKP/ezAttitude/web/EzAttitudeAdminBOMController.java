@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,8 +35,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -173,7 +170,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/updateAttitudeConfInfo.do")
 	@ResponseBody
-	public void updateAttitudeConfInfo(AttitudeConfigVO attitudeConfigVO, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String updateAttitudeConfInfo(AttitudeConfigVO attitudeConfigVO, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("updateAttitudeConfInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -201,7 +198,16 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		
+		String resultStatus = "";
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
+		}
+		
 		LOGGER.debug("updateAttitudeConfInfo ended.");
+		
+		return resultStatus;
 	}
 	
 	/**
@@ -307,7 +313,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeTypeConfig.do")
 	@ResponseBody
-	public void saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("saveAttitudeTypeConfig started.");
 		
 		String typeConfigList = request.getParameter("typelist");
@@ -335,8 +341,17 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		
+		String resultStatus = "";
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
+		}
+		
 		LOGGER.debug("status :" + status);
 		LOGGER.debug("saveAttitudeTypeConfig ended.");
+		
+		return resultStatus;
 	}
 	
 	/**
@@ -445,7 +460,7 @@ public class EzAttitudeAdminBOMController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do")
-	public void saveAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String saveAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("saveAttutideType started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -489,8 +504,20 @@ public class EzAttitudeAdminBOMController {
 		//등록, 수정시 오류처리 alert로 구분해야함 지금 등록안해도 무조건 등록됫다고 alert 뜨는중임
 		//insert시  count15개 넘으면 status failed로 리턴하게 해놓음
 		
+		JSONObject resultBody = (JSONObject) result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		String resultStatus = "";
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
+		}
+		
 		LOGGER.debug("saveAttutideType ended.");
 		
+		return resultStatus;
 	}
 	/**
 	 * 근태유형 삭제
@@ -1533,7 +1560,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeAuth.do")
 	@ResponseBody
-	public void deleteAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String deleteAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -1562,9 +1589,18 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		
+		String resultStatus = "";
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
+		}	
+		
 		LOGGER.debug("status : " + status);
 		
-		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth ended");	
+		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth ended");
+		
+		return resultStatus;
 	}
 	
 	/**
@@ -1825,7 +1861,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuthor.do")
 	@ResponseBody
-	public void saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception{
+	public String saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception{
 		LOGGER.debug("saveAttitudeAuthor started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -1858,9 +1894,18 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		
+		String resultStatus = "";
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
+		}
+		
 		LOGGER.debug("status : " + status);
 		
 		LOGGER.debug("saveAttitudeAuthor ended");
+		
+		return resultStatus;
 	}
 	
 	/**

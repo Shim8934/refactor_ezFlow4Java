@@ -60,7 +60,7 @@
 				select_memorialDays(uselang);
 				setHoliday();
 				//checkOutCom();
-				
+				setTypeName();
 			}
 			
 			window.onresize = function () {   	
@@ -311,6 +311,7 @@
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",
 		        	async : false,
+		        	dataType : "text",
 		        	data : {
 		        		attitudeId : attitudeId,
 		        		typeId : selectType,
@@ -323,12 +324,16 @@
 		        		endDate : endDate,
 		        		mode : mode
 		        	},
-		        	success : function (result) {
-		        		alert("<spring:message code='ezAttitude.bbhs19'/>");
-		        		window.opener.getAttitudeMainList();
-		        		window.opener.parent.frames["left"].getAttitudeList();
-		        		window.close();
-		        	}
+					success : function(resultStatus) {
+	            		if (resultStatus == "success") {
+	            			alert("<spring:message code='ezAttitude.bbhs19'/>");
+			        		window.opener.getAttitudeMainList();
+			        		window.opener.parent.frames["left"].getAttitudeList();
+			        		window.close();
+	            		} else {
+	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            		}
+	            	}
 		        });
 			}
 			
@@ -526,6 +531,15 @@
 				} else {
 					inputCheckFlag = false;
 				}
+			}
+			
+			//특수문자
+			function setTypeName() {
+				$('#subSelectAtti option').each(function(){
+					var typeName = $(this).text();
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+					$(this).text(typeName);
+				})
 			}
 		</script>
 	</head>

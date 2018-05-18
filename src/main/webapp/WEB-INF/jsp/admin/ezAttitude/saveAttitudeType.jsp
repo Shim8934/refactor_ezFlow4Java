@@ -60,6 +60,7 @@
 		        	type : "POST",
 		        	url : "/admin/ezAttitude/saveAttitudeType.do",
 		        	async : false,
+		        	dataType : "text",
 		        	data : {
 		        		companyId : companyId,
 		        		typeId : typeId,
@@ -67,11 +68,15 @@
 		        		typeName : typeName,
 		        		typeName2 : typeName2
 		        	},
-		        	success : function(result) {
-		        			alert("<spring:message code='ezAttitude.bbhs19' />");
-		        			window.opener.company_change();
+	            	success : function(resultStatus) {
+	            		if (resultStatus == "success") {
+		            		alert("<spring:message code='ezAttitude.bbhs19' />");
+		            		window.opener.company_change();
 							window.close();
-		        	},
+	            		} else {
+	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            		}
+	            	},
 		        	error : function() {
 		        		alert("<spring:message code='ezAttitude.kbm3' />");
 		        	}

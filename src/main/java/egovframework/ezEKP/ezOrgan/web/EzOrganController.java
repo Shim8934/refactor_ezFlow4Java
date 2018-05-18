@@ -229,7 +229,7 @@ public class EzOrganController {
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
-		
+
 		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
             String[] arryCell = celllist.toUpperCase().split(";");
             String tooltip = "";

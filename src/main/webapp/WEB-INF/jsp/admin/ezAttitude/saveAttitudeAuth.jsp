@@ -159,16 +159,21 @@
 					$.ajax({
 		   				type:"post",
 		   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
+		   				dataType : "text",
 		   				data:{
 		   					selectedUser : selectedUser,
 		   					companyId : companyId,
 		   					deptIds : deptIdStr,
 		   					authTypes : authlist
 		   				},
-		   				success: function(){
-	   						opener.company_change();
-	   						window.close();
-		   				},
+						success : function(resultStatus) {
+		            		if (resultStatus == "success") {
+		   						opener.company_change();
+		   						window.close();
+		            		} else {
+		            			alert("<spring:message code='ezAttitude.kbm3' />");
+		            		}
+		            	},
 		   				error : function() {
 		   					alert("<spring:message code='ezAttitude.kbm3' />");
 		   				}
