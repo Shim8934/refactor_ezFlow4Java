@@ -954,8 +954,12 @@
 				<tr>
 					<td>
 						<div style="height: 50px; margin-bottom: 10px;">
-							<div style="float: left; height: 40px; line-height: 50px;">
-								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="<spring:message code='ezLadder.t071' />"/>
+							<div style="float: left; height: 50px; line-height: 50px; width: 260px; position: relative;">
+								<input type="text" class="input" id="inputAttendant" style="height: 40px; width: 200px;" placeholder="<spring:message code='ezLadder.t071' />"/>
+								<div id="addAttendant" class="icondiv">
+									<img src="/images/ezLadder/icon_addAttendant.png" style="display: block" title="<spring:message code='ezLadder.t080'/>"/>
+									<img src="/images/ezLadder/icon_addAttendant_hover.png" style="display: none" title="<spring:message code='ezLadder.t080'/>"/>
+								</div>
 							</div>
 							<div style="float: right;">
 									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
@@ -984,10 +988,10 @@
 				</tr>
 				<tr>
 					<td style="position: relative; margin-top: 20px;">
-						<div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 2px solid #0470e4; border-radius: 15px; cursor: pointer;">
+						<%-- <div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 2px solid #0470e4; border-radius: 15px; cursor: pointer;">
 							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 2px; padding-top: 2px; display: block" title="<spring:message code='ezLadder.t080'/>"/>
 							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 2px; padding-top: 2px; display: none" title="<spring:message code='ezLadder.t080'/>"/>
-						</div>
+						</div> --%>
 						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 750px;">
 							<div style="height: 140px;">
 								<ul id="attendantList"></ul>
