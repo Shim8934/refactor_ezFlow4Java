@@ -8656,9 +8656,7 @@
    		UNION ALL 
 	<!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<![CDATA[
-	   		SELECT COUNT(AL.DOCID) FROM 
-			(SELECT distinct    
-			DOCID,COMPANYID
+	   		SELECT COUNT (DISTINCT DOCID,COMPANYID)
 	   		FROM 
 	   			VAPRWILLDOCLIST 
 	   		WHERE 
@@ -8685,7 +8683,6 @@
 					OR
 				COMPANYID IN (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER INNER JOIN TBL_ADDJOBMASTER ON(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID AND TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) WHERE TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# AND TBL_ADDJOBMASTER.CN = #v_USERID#)
 				)
-				 ) AS AL 
    		]]>
 	<!--기안한 문서-->
    		UNION ALL
@@ -9907,9 +9904,8 @@
 		<!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<isEqual property="v_LISTTYPE" compareValue="3">
 		<![CDATA[
-			SELECT COUNT(AL.DOCID) FROM 
-			(SELECT distinct    
-			DOCID,COMPANYID
+			SELECT 
+				COUNT(DISTINCT DOCID, COMPANYID) 
            	FROM 
            		VAPRWILLDOCLIST 
            	WHERE 
@@ -10082,9 +10078,6 @@
 		<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0">
 			AND $v_SPSUBQUERY$
 		</isGreaterThan>
-		<isEqual property="v_LISTTYPE" compareValue="3">
-			 ) AS AL 
-		</isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getCountChildFormCont" parameterClass="Map" resultClass="int"> -->
