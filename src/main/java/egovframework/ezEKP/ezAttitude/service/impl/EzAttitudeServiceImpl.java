@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
 import org.json.simple.JSONObject;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
 import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -40,6 +42,8 @@ import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
@@ -55,7 +59,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Autowired
 	private EzAttitudeDAO ezAttitudeDAO;
-
+	
+	@Resource(name = "EzOrganDAO")
+	private EzOrganDAO ezOrganDAO;
+	
 	@Override
 	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
@@ -1824,4 +1831,472 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("dateType", dateType);
 	}
+	
+	@Override
+	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception {
+		LOGGER.debug("getSearchList started");
+		
+        String[] searchParemeta = null;
+        String[] searchList;
+        String[] searchInfo;
+        String listInfo = "";
+        String strSize = "";
+        String strSizeForMySQL = "";
+        String strSQL = "";        
+        String type = "";        
+        int i = 0;
+        
+        if (pLimit != 0) {
+            strSize = " AND ROWNUM <= " + pLimit;
+            strSizeForMySQL = " LIMIT " + pLimit;
+        }
+        
+        if (!pSearchList.equals("")){
+            pSearchList = pSearchList.replace(";;", "##");
+            pSearchList = pSearchList.replace("::", "@@");
+            searchList = pSearchList.split("##");
+            searchParemeta = new String[searchList.length];
+            
+            LOGGER.debug("searchList.length=" + searchList.length);
+            
+            for (i = 0; i < searchList.length; i++){      	
+                searchInfo = searchList[i].split("@@");
+
+                if (i == 0){
+                    // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+                    //searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+                	
+                	//수정(2017-01-23)
+                	// 검색 시 _가 들어간 문자가 검색이 안되어, [_]로 replace하는부분 제거
+                	searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
+                	
+                    if (checkSearchField(searchInfo[0])){
+                        if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParemeta[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParemeta[i] + "')";
+                            searchParemeta[0] = searchParemeta[0].substring(0, searchParemeta[0].length() - 1);
+                        }else{
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')";
+                        }
+                    }else{
+                        if (searchInfo[0].indexOf("EXACT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParemeta[i] + "' ";
+                        }else if (searchInfo[0].indexOf("LEFT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + searchParemeta[i] + "%' ";
+                        }else if (searchInfo[0].indexOf("RIGHT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                    	}else{
+                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                    	}
+                    }
+                }else{
+                    // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+                    searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
+                    
+                    if (checkSearchField(searchInfo[0])){
+                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')";
+                    }else{
+                        if (searchInfo[0].indexOf("EXACT_") == 0){
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParemeta[i] + "' ";
+                        }else if (searchInfo[0].indexOf("LEFT_") == 0){
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + searchParemeta[i] + " %' ";
+                        }else if (searchInfo[0].indexOf("RIGHT_") == 0){
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                        }else{
+                            strSQL = strSQL + " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                        }
+                    }
+                }
+            }
+        }        
+        
+        if (pClass.equals("user") || pClass.equals("all")){
+            strSQL = strSQL.replace("cn", "a.cn");
+            strSQL = strSQL.replace("title", "a.title");
+                        
+            type = "U";
+        }else{
+        	type = "G";
+        }
+
+        Map<String, Object> map = new HashMap<String, Object>();
+                
+        map.put("strSQL", strSQL + strSize);
+        map.put("strSQLForMySQL", strSQL);
+        map.put("strSizeForMySQL", strSizeForMySQL);
+        map.put("type", type);
+        map.put("class", pClass);
+        map.put("v_TENANT_ID", tenantID);
+        
+        LOGGER.debug("strSQL=" + strSQL);
+        
+        List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
+        
+        StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
+        
+		for(int j=0; j < list.size(); j++){
+			Map<String, Object> map1 = new HashMap<String, Object>();			
+			OrganDeptVO organVO = list.get(j);
+			Object result = null;			
+			
+			if(!organVO.getCn().equals("") && organVO.getCn() != null){
+				StringBuilder sb = new StringBuilder();
+				sb.append("<DATA>");
+				
+				if(organVO.getType().equals("user")){
+					map1.put("v_CN", organVO.getCn());
+	        		map1.put("v_DEPTCD", organVO.getDisplayName());
+	        		map1.put("v_LANGDATA", primary);
+	        		map1.put("v_TENANT_ID", tenantID);
+	        		
+	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
+	        	}else{
+	        		map1.put("v_CN", organVO.getCn());
+					map1.put("v_LANGDATA", primary);
+					map1.put("v_TENANT_ID", tenantID);
+					
+					result = ezOrganDAO.getTBLDeptMaster(map1);	        		
+				}
+				
+				sb.append(commonUtil.getQueryResult(result));
+				sb.append("</DATA>");
+				
+				listInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
+				memberlist2.append(listInfo);
+			}			
+		}
+		memberlist2.append("</ROWS></LISTVIEWDATA>");
+
+		LOGGER.debug("getSearchList ended");
+		
+		return memberlist2.toString();
+	}
+	
+    @Override
+    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID) throws Exception {
+    	LOGGER.debug("getSearchListPagination started");
+    	
+        String strSQL="";
+        int i=0;
+        String[] SearchList;
+        String[] SearchInfo;
+        String ListInfo="";
+        String[] SearchParemeta=null;
+        String type = "";
+        StringBuilder memberlist2 = null;
+        try {
+	        if (!pSearchList.equals("")){
+	               pSearchList = pSearchList.replace(";;", "##");
+	               pSearchList = pSearchList.replace("::", "@@");
+	               SearchList  = pSearchList.split("##");
+	               
+	               SearchParemeta = new String[SearchList.length];
+	               
+	               LOGGER.debug("searchList.length=" + SearchList.length);
+	               
+	               for(i = 0; i < SearchList.length; i++){
+	                   SearchInfo = SearchList[i].split("@@");
+	                   
+	                   if(i == 0){
+	                       // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+	                       SearchParemeta[i] = SearchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").toLowerCase();
+	                       if (checkSearchField(SearchInfo[0])){
+	                           if (SearchInfo[0].toUpperCase().equals("DISPLAYNAME") && SearchParemeta[0].toString().equals(":")){
+	                               strSQL = strSQL + " WHERE (" + SearchInfo[0].toLowerCase() + " = UPPER('" + SearchParemeta[i] + "') OR " + SearchInfo[0].toLowerCase() + "2 = UPPER('" + SearchParemeta[i] + "'))";
+	                               SearchParemeta[0] = SearchParemeta[0].substring(0, SearchParemeta[0].length() - 1);
+	                           }
+	                           else{
+	                               strSQL = strSQL + " WHERE (" + SearchInfo[0].toLowerCase() + " LIKE  '%" + SearchParemeta[i] + "%' OR " + SearchInfo[0].toLowerCase() + "2 LIKE '%" + SearchParemeta[i] + "%')";
+	                       }
+	                   }
+	                   else{
+	                       if (SearchInfo[0].indexOf("EXACT_") == 0)
+	                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(6).toLowerCase() + "=UPPER('" + SearchParemeta[i] + "') ";
+	                       else if (SearchInfo[0].indexOf("LEFT_") == 0)
+	                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '" + SearchParemeta[i] + "%' ";
+	                       else if (SearchInfo[0].indexOf("RIGHT_") == 0)
+	                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
+	                       else
+	                           strSQL = strSQL + " WHERE " + SearchInfo[0].toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
+	                   }
+	               }
+	                   else{
+	                       // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+	                       SearchParemeta[i] = SearchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").toLowerCase();
+	                       if (checkSearchField(SearchInfo[0]))
+	                       {
+	                           strSQL = strSQL + " AND (" + SearchInfo[0].toLowerCase() + " LIKE  '%" + SearchParemeta[i] + "%' OR " + SearchInfo[0].toLowerCase() + "2 LIKE '%" + SearchParemeta[i] + "%')";
+	                       }
+	                       else
+	                       {
+	                           if (SearchInfo[0].indexOf("EXACT_") == 0)
+	                               strSQL = strSQL + " AND " + SearchInfo[0].substring(6).toLowerCase() + "=UPPER('" + SearchParemeta[i] + "') ";
+	                           else if (SearchInfo[0].indexOf("LEFT_") == 0)
+	                               strSQL = strSQL + " AND " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '" + SearchParemeta[i] + "%' ";
+	                           else if (SearchInfo[0].indexOf("RIGHT_") == 0)
+	                               strSQL = strSQL + " AND " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
+	                           else
+	                               strSQL = strSQL + " AND " + SearchInfo[0].toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
+	                       }
+	                   }
+	               }
+	            }
+	        
+	        if (pClass.equals("user") || pClass.equals("all")){
+	             strSQL = strSQL.replace("cn", "a.cn");
+	             strSQL = strSQL.replace("title", "a.title");
+	                          
+	             type = "U";
+	        }
+	        else{
+	            type = "G";
+	        }
+	
+	        if(page.equals(null) || page.equals("")){
+	            page = "1";
+	        }
+	        
+	         int startRow = (Integer.parseInt(page) - 1) * 50 + 1;
+	         int endRow = Integer.parseInt(page) * 50 + 1;
+	         
+	         Map<String , Object> map = new HashMap<String , Object>();
+	                  
+	         map.put("strSQL" , strSQL);
+	         map.put("type", type);
+	         map.put("class", pClass);
+	         map.put("startRow", startRow);
+	         map.put("endRow", endRow);
+	         map.put("v_TENANT_ID", tenantID);
+	         map.put("startRowForMySQL", startRow - 1);
+	         map.put("count", 50);              
+	         
+	         LOGGER.debug("strSQL=" + strSQL);
+	         
+	         List<OrganDeptVO> list = ezOrganDAO.attOrganSearchList(map);
+	         
+	         if(pClass.equals("user")){
+	        	 int totalcount = ezOrganDAO.getSearchListCount(map);
+	             memberlist2 = new StringBuilder("<LISTVIEWDATA>");
+	             memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
+	         }else{
+	             memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
+	         }
+	       
+	
+	        for(int j=0; j < list.size(); j++){
+	            Map<String, Object> map1 = new HashMap<String, Object>();           
+	            OrganDeptVO organVO = list.get(j);
+	            Object result = null;           
+	            
+	            if(!organVO.getCn().equals("") && organVO.getCn() != null){
+	                StringBuilder sb = new StringBuilder();
+	                sb.append("<DATA>");
+	                
+	                if(organVO.getType().equals("user")){
+	                    map1.put("v_CN", organVO.getCn());
+	                    map1.put("v_DEPTCD", organVO.getDisplayName());
+	                    map1.put("v_LANGDATA", pLangCode);
+	                    map1.put("v_TENANT_ID", tenantID);
+	                    
+	                    result = ezOrganDAO.getTBLUserMaster(map1);                 
+	                }else{
+	                    map1.put("v_CN", organVO.getCn());
+	                    map1.put("v_LANGDATA", pLangCode);
+	                    map1.put("v_TENANT_ID", tenantID);
+	                    
+	                    result = ezOrganDAO.getTBLDeptMaster(map1);                 
+	                }
+	                
+	                sb.append(commonUtil.getQueryResult(result));
+	                sb.append("</DATA>");
+
+	                ListInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
+	                memberlist2.append(ListInfo);
+	            }           
+	        }
+	        memberlist2.append("</ROWS></LISTVIEWDATA>");
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	memberlist2 = new StringBuilder("<LISTVIEWDATA>");
+            memberlist2.append("<TOTALCOUNT>" + "0" + "</TOTALCOUNT><ROWS>");
+            memberlist2.append("</ROWS></LISTVIEWDATA>");
+        }
+        LOGGER.debug("getSearchListPagination ended");
+        
+        return memberlist2.toString();
+    }
+    
+    public boolean checkSearchField(String pFieldName){
+		boolean bRet = false;
+		
+        try{
+            switch (pFieldName.toUpperCase()){
+                case "DISPLAYNAME":
+                    bRet = true;
+                    break;
+                case "DESCRIPTION":
+                    bRet = true;
+                    break;
+                case "TITLE":
+                    bRet = true;
+                    break;
+            }
+        }catch (Exception Ex){ }
+        return bRet;
+    }
+    
+    private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pMemberID, String pCategory) {		
+        LOGGER.debug("getMemberInfo started");
+        LOGGER.debug("pCellList=" + pCellList + ",pPropList=" + pPropList + ",pMemberID=" + pMemberID 
+                + ",pCategory=" + pCategory);
+
+	    Document doc = commonUtil.convertStringToDocument(pXMLString);
+        StringBuilder nodeInfo = new StringBuilder("<ROW>");
+        String[] celllist = pCellList.split(";");
+        String cellvalue = "";
+        pPropList = convertAddandConvert(pCategory, pPropList);
+
+        for (int i = 0; i < celllist.length; i++) {
+        	cellvalue = "";
+
+            if (!pMemberID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pMemberID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))) {
+            	switch (celllist[i].toLowerCase()) {
+                case "department":
+                    cellvalue = pMemberID;
+                    break;
+                case "description":
+                    cellvalue = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+                    break;
+                case "title":
+                    if (doc.getElementsByTagName("TITLE") != null && !doc.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
+                        cellvalue = doc.getElementsByTagName("TITLE").item(0).getTextContent();
+                        String[] sublist = cellvalue.split(";");
+                        cellvalue = "";
+
+                        for (String subinfo : sublist) {
+                            String[] subinfolist = subinfo.split(":");
+                            if (subinfolist[0].equals(pMemberID) && subinfolist.length > 1) {                                
+                                cellvalue = subinfolist[1];
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            
+            LOGGER.debug("cellList["+i+"]=" + celllist[i]);
+            
+              if (cellvalue == null || cellvalue.equals("")) { 
+                if (celllist[i] != null && !celllist[i].equals("")) {
+                    if (doc.getElementsByTagName(celllist[i].toUpperCase()).item(0) != null) {
+                    	if (!doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent().equals("")) {
+                    		cellvalue = doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent();
+                    	}
+                    } else {
+                         cellvalue = "";
+                    }
+                } else {
+                    cellvalue = "";
+                }
+            }
+
+            nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
+
+            if (i == 0) {
+                String strNode = "";
+                
+                if (doc.getElementsByTagName("CN").item(0) != null) {
+                    strNode = doc.getElementsByTagName("CN").item(0).getTextContent();
+                }
+                
+                nodeInfo.append("<DATA1>" + pCategory + "</DATA1><DATA2>" + strNode + "</DATA2>");
+
+                if (!pPropList.equals("")) {
+                    String[] proplist = pPropList.split(";");
+                    String propvalue;
+                    
+                    for (int j = 0; j < proplist.length; j++) {
+                        if (doc.getElementsByTagName(proplist[j].toUpperCase()) != null && doc.getElementsByTagName(proplist[j].toUpperCase()).item(0) != null) {
+                            propvalue = doc.getElementsByTagName(proplist[j].toUpperCase()).item(0).getTextContent();
+                        } else {
+                            propvalue = "";
+                        }
+                        
+                        nodeInfo.append("<DATA" + (j + 3) + ">" + commonUtil.cleanValue(propvalue) + "</DATA" + (j + 3) + ">");
+                    }
+                }
+            }
+            
+            nodeInfo.append("</CELL>");
+        }
+        
+        nodeInfo.append("</ROW>");
+
+        LOGGER.debug("nodeInfo=" + nodeInfo);
+        LOGGER.debug("getMemberInfo ended");
+        
+        return nodeInfo.toString();        
+    }
+    
+    public String convertAddandConvert(String pClass, String pProvValue) {
+	    LOGGER.debug("convertAddandConvert started");
+	    LOGGER.debug("pClass=" + pClass + ",pProvValue=" + pProvValue);
+	    
+        String[] arryProvValue = pProvValue.split(";");
+        String returnValue = "";
+        String addPopList = pProvValue;
+        
+        for (int i = 0; i < arryProvValue.length; i++) {
+            returnValue = "";
+            returnValue = addPropList(pClass, arryProvValue[i]);
+            
+            if (!returnValue.equals("")) {
+            	addPopList = addPopList + ";" + returnValue;
+            }
+        }
+        
+        LOGGER.debug("addPopList=" + addPopList);
+        LOGGER.debug("convertAddandConvert ended");
+        
+        return addPopList;              
+    }
+    
+    private String addPropList(String pType, String pAttribute) {
+    	String strRet = "";
+
+        if (!pType.equals("user")) {
+            // 부서
+            switch (pAttribute.toUpperCase()) {
+                case "DISPLAYNAME": strRet = "displayName1;displayName2";
+                    break;
+                case "DESCRIPTION": strRet = "description1;description2";
+                    break;
+                case "COMPANY": strRet = "company1;company2";
+                    break;
+                default: strRet = "";
+                    break;
+            }
+        } else {
+        	//사용자
+            switch (pAttribute.toUpperCase()) {
+                case "DISPLAYNAME": strRet = "displayName1;displayName2";
+                    break;
+                case "DESCRIPTION": strRet = "description1;description2";
+                    break;
+                case "COMPANY": strRet = "company1;company2";
+                    break;
+                case "TITLE": strRet = "title1;title2";
+                    break;
+                case "EXTENSIONATTRIBUTE10": strRet = "extensionAttribute101;extensionAttribute102";
+                    break;
+                case "UPNNAME":
+                    strRet = "upnName";
+                    break;
+                default: strRet = "";
+                    break;
+            }
+        }
+        
+        return strRet;
+    }
 }
