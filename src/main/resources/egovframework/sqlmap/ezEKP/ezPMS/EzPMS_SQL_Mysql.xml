@@ -1608,12 +1608,10 @@
 				tbl_pms_taskmember E
 			ON
 				A.TASK_ID = E.TASK_ID
-			AND
-				C.USER_ID = E.USER_ID
 			WHERE 
 		]]>
 		<isEqual property="isMyTask" compareValue="M">
-			E.USER_ID = #userId#
+				E.USER_ID = #userId#
 			AND  
 		</isEqual>
 				A.PROJECT_ID = #projectId#
@@ -1699,6 +1697,10 @@
 			TBL_PMS_TASK T
 		ON 
 			L.TASK_ID = T.TASK_ID
+		<isEmpty property="groupId">
+		WHERE
+			L.PROJECT_ID = #projectId#
+		</isEmpty>
 		<isEqual property="taskId" compareValue="0">
 		WHERE 
 			(L.GROUP_ID = #groupId# 
@@ -1712,6 +1714,16 @@
 		WHERE 
 			L.task_id = #taskId#
 		</isNotEqual>
+		<isNotEmpty property="searchByContent">
+		AND
+			L.LOG_CONTENT LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStatus">
+			<isNotEqual property="searchByStatus" compareValue="0">
+			AND
+				L.LOG_STATUS = #searchByStatus#
+			</isNotEqual>
+		</isNotEmpty>
 		AND
 			L.PROJECT_ID = #projectId#
 		AND

@@ -125,7 +125,7 @@ function updateKanbanStatus() {
 		success : function(result) {
 			alert("프로젝트 개요 화면 설정을 완료하였습니다.");
 			parent.kanbanOrder = kanbanOrder;
-			parent.setKanbanList();
+			parent.initKanbanList();
 			popupClose(); 
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

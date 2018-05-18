@@ -38,9 +38,9 @@ $(document).ready(function(){
 		CurrentHeight = $(window).height()-100;
 		$("#taskTree").css("height", CurrentHeight + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 72) + "px");
-		$("#divList").css("height", (CurrentHeight - 120) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 150) + "px");
+		$("#contentList").css("height", (CurrentHeight - 50) + "px");
+		$("#divList").css("height", (CurrentHeight - 100) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 120) + "px");
 	});
 	
 });
@@ -52,18 +52,20 @@ $(function(){
 	$("MailListRayer").css("height", CurrentHeight + "px");
 	$("#taskTree").css("height", CurrentHeight + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
-	$("#contentList").css("height", (CurrentHeight - 72) + "px");
+	$("#contentList").css("height", (CurrentHeight - 50) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 120) + "px");
+	$("#divList").css("height", (CurrentHeight - 100) + "px");
 	
 	$("#searchStatus").css("display", "none");
 	
 	$("#searchId").change(function(){
 		if($("#searchId option:selected").val() == "2") {
-			$("#searchContent").css("display", "none");
-			$("#search").css("display", "none");
+			$("#searchByContent").css("display", "none");
+			$("#searchButton").css("display", "none");
 			$("#searchStatus").css("display", "");
 		} else {
-			$("#searchContent").css("display", "");
-			$("#search").css("display", "");
+			$("#searchByContent").css("display", "");
+			$("#searchButton").css("display", "");
 			$("#searchStatus").css("display", "none");
 		}
 	});
@@ -94,9 +96,46 @@ function setContentList() {
 		url : "/ezPMS/getTaskLogList.do",
 		success : function(contentList) {
 			$("#contentList").html(contentList);
+			//찾아 준 후 초기화
+			searchContent = "";
+			$("#searchByContent").val("");
+			searchStatus = "";
 			setInitOrder();
 		}	
 	});
+}
+
+function searchLogContent() {
+	searchContent = $("#searchByContent").val();
+	setContentList();
+}
+
+function searchLogStatus(status) {
+	searchStatus = status;
+	setContentList();
+}
+
+//페이지 번호에 의한 셋팅
+function goToPageByNum(page){
+	currentPage = page;
+	setContentList();
+}
+
+//헤더 리스트 셋팅
+function setListOrder(elem){
+	
+	orderWhat = $(elem).attr("order");
+	orderHow = $(elem).attr("sort");
+	
+	if(orderHow == null){
+		orderHow='asc';
+	} else if(orderHow == 'asc'){
+		orderHow='desc';
+	} else if(orderHow == 'desc'){
+		orderHow='asc';
+	}
+	
+	setContentList();
 }
 
 function setInitOrder(){	
@@ -135,12 +174,9 @@ function setContentTitle(taskName, totalCount) {
 }
 
 function selectedTR(elem){
-//	onPreview = false;
-var parentElem = $(elem).parent();
-$("#projectList tr").removeClass("selectTR");
-$("#projectList tr").find("input[type='checkbox']").removeProp("checked");
-$(parentElem).addClass("selectTR");
-$(parentElem).find("input[type='checkbox']").prop("checked","true");
+	var parentElem = $(elem).parent();
+	$("#projectList tr").removeClass("selectTR");
+	$(parentElem).addClass("selectTR");
 }
 
 </script>
@@ -220,13 +256,13 @@ $(parentElem).find("input[type='checkbox']").prop("checked","true");
 				<option value="1" selected>작업 내용</option>
 				<option value="2">작업 상태</option>
 			</select>
-			<input type="text" id="searchContent">
-			<span id="search" style="border : 1px solid blue; display:inline-box;">찾기</span>
-			<select id="searchStatus">
-				<option value="A">전체</option>
-				<option value="0">등록</option>
-				<option value="1">수정</option>
-				<option value="2">삭제</option>
+			<input type="text" id="searchByContent">
+			<a class="imgbtn" id="searchButton" onclick="searchLogContent()" style="margin-left:1px; margin-top:1px;"><span>검색</span></a>
+			<select id="searchStatus" onchange="searchLogStatus(this.value)">
+				<option value="0">전체</option>
+				<option value="1">등록</option>
+				<option value="2">수정</option>
+				<option value="3">삭제</option>
 			</select>
 		</div>
 	</div>

@@ -463,7 +463,6 @@ function updateOrderStatus() {
 	var orderStatus = "";
 	
 	for (var i = 0; i < kanban.length; i++) {
-		console.log(kanban.eq(i).attr("name"));
 		orderStatus += kanban.eq(i).attr("name") + ",";
 	}
 	
@@ -590,11 +589,11 @@ function updateOrderStatus() {
 	</table>
 	<br>
 	<div id="commentDiv">
-		의견<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
+		의견<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('comment')">+</span>
 		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
 	</div>
 	<div id="logDiv">
-		작업이력<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('comment')">+</span>
+		작업이력<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
 		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
 	</div>
 </div>

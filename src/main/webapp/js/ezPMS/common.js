@@ -34,12 +34,13 @@ function getProjectTaskTree(containerId, data, location) {
 		}
 	})
 	.on("select_node.jstree", function(e, data) {
-		alert(data.node.id.indexOf("t"));
 		if (data.node.id.indexOf("t") != -1) {
-			taskId = data.node.id.subString(1);
-			alert(data.node.id.subString(2));
+			taskId = data.node.id.substring(1);
+			setContentList();
 		} else {
+			taskId = 0;
 			groupId = data.node.id;
+			setContentList();
 		}
 	})
 }
