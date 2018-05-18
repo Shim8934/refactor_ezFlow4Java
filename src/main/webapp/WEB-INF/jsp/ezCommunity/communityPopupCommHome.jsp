@@ -156,7 +156,7 @@
 		                                    if (itemVO.gubun != "3") {
 		                                    	span2.className = "txt";
 		                                    	/* 2018-05-18 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 new 표시 */
-		                                    	if (pastDate <= itemVO.writeDate ) {
+		                                    	if (pastDate <= itemVO.writeDate) {
 		                                    		span2.innerHTML = "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
                    		 						}
 		                                        span2.innerHTML += itemVO.title;
