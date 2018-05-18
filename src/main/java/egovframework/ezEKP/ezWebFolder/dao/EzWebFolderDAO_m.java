@@ -161,10 +161,6 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return delete("EzWebFolderDAO_m.deleteFolder", map);
 	}
 	
-	public int deleteSubFolder (Map<String, Object> map) {
-		return delete("EzWebFolderDAO_m.deleteSubFolder", map);
-	}
-	
 	public List <String> selectAllFilesInFolder (Map<String, Object> map) {
 		return (List<String>) list("EzWebFolderDAO_m.selectAllFilesInFolder", map);
 	}
@@ -175,10 +171,6 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	
 	public int restoreFolder(Map<String, Object> map) {
 		return update ("EzWebFolderDAO_m.restoreFolder", map);
-	}
-	
-	public int restoreSubFolder(Map<String, Object> map) {
-		return update ("EzWebFolderDAO_m.restoreSubFolder", map);
 	}
 	
 	public List<TrashCanVO> getFileListByFolderId (Map<String, Object> map) {
@@ -197,10 +189,6 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (Integer) select("EzWebFolderDAO_m.getTrashFolderCount", map);
 	}
 	
-	public void moveSubFolders(Map<String, Object> map) {
-		update("EzWebFolderDAO_m.moveSubFolders", map);
-	}
-
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO_m.moveFile", map);
 	}
