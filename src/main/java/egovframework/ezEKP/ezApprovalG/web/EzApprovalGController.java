@@ -3813,6 +3813,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
+		}
+		
 		String result = ezApprovalGService.doProcess("003", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, xmlDom.getDocumentElement().getChildNodes().item(26).getTextContent(), userInfo.getCompanyID(), userInfo.getLang(),userInfo);
