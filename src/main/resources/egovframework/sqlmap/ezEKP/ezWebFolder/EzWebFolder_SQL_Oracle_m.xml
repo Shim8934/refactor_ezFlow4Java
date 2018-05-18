@@ -1615,11 +1615,11 @@
 						<isNotEqual property="realColmn" compareValue="TRASHCAN_SIZE">
 							$realColmn$ $order$,
 						</isNotEqual>
-						SLEVEL, TRASHCAN_EXT, UPDATE_DATE DESC
+						SLEVEL, UPDATE_DATE DESC, TRASHCAN_EXT DESC
 				</isNotEqual>
 				<isEqual property="realColmn" compareValue="">
 					<![CDATA[
-						ORDER BY SLEVEL, UPDATE_DATE
+						ORDER BY SLEVEL, UPDATE_DATE DESC, TRASHCAN_EXT DESC
 					]]>
 				</isEqual>
 				
