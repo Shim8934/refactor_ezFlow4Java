@@ -629,14 +629,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<CELL>");
 				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE>");
 				result.append("</CELL>");
-				// 18-05-10 김민성 - URL 탭 추가
+				// 18-05-18 김민성 - URL 탭 null일때 처리
 				result.append("<CELL>");
-				if(vo.getUrl().isEmpty()) {
-					result.append("<VALUE></VALUE>");
-				}
-				else {
-					result.append("<VALUE>" + vo.getUrl() + "</VALUE>");
-				}
+				result.append("<VALUE>" + commonUtil.cleanValue(vo.getUrl()) + "</VALUE>");
 				result.append("</CELL>");
 				result.append("</ROW>");
 			}

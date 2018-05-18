@@ -494,9 +494,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
 		
+		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
+		String pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
+		
 		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID, userInfo.getTenantId());
 		
 		model.addAttribute("boardItemList", list);
+		model.addAttribute("pastDate", pastDate);
 		
 		return "json";
 	}
@@ -3453,13 +3460,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String mainPage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("mainPage started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		int totalPage = ezCommunityService.mainPage(userInfo);
+		
+		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
+		String pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		// addYMDtoDayTime 메서드는 시:분 까지만 다룰 수 있다. offset으로 분을 더한 뒤, 잘려나간 초 단위는 붙인다.
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("primary", userInfo.getPrimary());
+		model.addAttribute("pastDate", pastDate);
 		
 		logger.debug("mainPage ended.");
 		
