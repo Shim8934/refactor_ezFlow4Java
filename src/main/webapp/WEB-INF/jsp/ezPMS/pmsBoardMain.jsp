@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -40,13 +40,16 @@
 		
 		// 여기 다른 방법으로 할 순 없을지 고민해봐야함. 근데 아무리 해도 모르겠음
 		setTimeout(function() {
-			projectName = $("li[role='treeitem'][aria-level='1']").children("a").text();
+			var project = $("li[role='treeitem'][aria-level='1']");
+			groupId = project.attr("id");
+			projectName = project.children("a").text();
 			taskName = projectName;
 		}, 100);
 	});
 	
 	function goAddBoard() {
 	
+		// 중앙에 뜨게 하고 싶은데 잘 안됨
 		var height = window.screen.availHeight;
 	    var width = window.screen.availWidth;
 	    var top = (height - 820) / 2;

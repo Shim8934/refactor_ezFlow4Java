@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12,27 +12,20 @@
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
-	var projectId = ${projectId};
-	var containerId = "test";
+	var treeData = JSON.parse('${data}');
 	$(document).ready(function() {
-		getProjectTaskTree(containerId, projectId, false);
+		getProjectTaskTree("taskTree", treeData, false);
 	});
 	
 	function register() {
 		var chosenTask = $("a.jstree-clicked");	
-		if(!chosenTask.length) {
-			popupClose();
-			return;
+		parent.document.getElementById("taskName").innerHTML = chosenTask.text();
+		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
+			parent.groupId = chosenTask.parents("li").eq(1).attr("id");
+			parent.taskId = chosenTask.parent().attr("id").substr(1);		
 		} else {
-			parent.document.getElementById("taskName").innerHTML = chosenTask.text();
-			if(chosenTask.parent().attr("id").charAt(0) == 't') { 
-				parent.groupId = chosenTask.parents("li").eq(1).attr("id");
-				parent.taskId = chosenTask.parent().attr("id").substr(1);
-				
-			} else {
-				parent.groupId = chosenTask.parent().attr("id");
-			}
-		}
+			parent.groupId = chosenTask.parent().attr("id");
+		}	
 		popupClose();
 	}
 	
@@ -53,6 +46,6 @@
 			<li><span onclick="popupClose()">닫기</span></li>
 		</ul>
 	</div>
-	<div id="test" class="tree"></div>
+	<div id="taskTree" class="tree"></div>
 </body>
 </html>
