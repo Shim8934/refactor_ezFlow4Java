@@ -249,7 +249,7 @@
 				ladder_window_resize();
 				canvasSetting();
 			} else {
-				alert("<spring:message code='ezLadder.t010' />");
+				alert("<spring:message code='ezLadder.hyh01' />");
 				window.close();
 			}
 		}
@@ -603,8 +603,8 @@
 				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
 				html += editTemp + '</textarea></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
-				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '" style="width: 46px;"><spring:message code="ezLadder.t087" /></button>';
-				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t072" /></button></div>';
+				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="margin-right: 4px;"><spring:message code="ezLadder.t072" /></button>';
+				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '" style="width: 46px;"><spring:message code="ezLadder.t087" /></button></div>';
 			} 
 			
 			$("#div2Cmt" + comtIndex).toggle();

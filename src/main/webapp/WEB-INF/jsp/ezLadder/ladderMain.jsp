@@ -81,7 +81,7 @@
 			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
 			#mainmenu .participantBtn{cursor: pointer;}
-			#cmt {color:red;}
+			#cmt {color:#c64200;}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">

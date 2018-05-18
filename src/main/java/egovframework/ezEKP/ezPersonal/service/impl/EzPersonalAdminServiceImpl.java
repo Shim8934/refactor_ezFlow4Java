@@ -631,7 +631,12 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("</CELL>");
 				// 18-05-10 김민성 - URL 탭 추가
 				result.append("<CELL>");
-				result.append("<VALUE>" + vo.getUrl() + "</VALUE>");
+				if(vo.getUrl().isEmpty()) {
+					result.append("<VALUE></VALUE>");
+				}
+				else {
+					result.append("<VALUE>" + vo.getUrl() + "</VALUE>");
+				}
 				result.append("</CELL>");
 				result.append("</ROW>");
 			}
