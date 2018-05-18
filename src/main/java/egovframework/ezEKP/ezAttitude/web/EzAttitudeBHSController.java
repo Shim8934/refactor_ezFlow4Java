@@ -166,7 +166,7 @@ public class EzAttitudeBHSController {
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeSave.do")
 	@ResponseBody
-	public void attitudeSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String attitudeSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeSave started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -223,11 +223,16 @@ public class EzAttitudeBHSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
+		String resultStatus = "";
 		if (status.equals("ok")) {
-			
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
 		}
 		
 		LOGGER.debug("/ezAttitude/attitudeSave ended");
+		
+		return resultStatus;
 	}
 	
 	/**
@@ -759,7 +764,7 @@ public class EzAttitudeBHSController {
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeDeleteItem.do")
 	@ResponseBody
-	public void attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -789,11 +794,16 @@ public class EzAttitudeBHSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
+		String resultStatus = "";
 		if (status.equals("ok")) {
-			
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
 		}
 		
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem ended");
+		
+		return resultStatus;
 	}
 	
 	/**
@@ -842,7 +852,7 @@ public class EzAttitudeBHSController {
 	 */
 	@RequestMapping(value = "/ezAttitude/saveAttModApp.do")
 	@ResponseBody
-	public void modApplicationSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String modApplicationSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/modApplicationSave started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -875,11 +885,16 @@ public class EzAttitudeBHSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
+		String resultStatus = "";
 		if (status.equals("ok")) {
-			
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
 		}
 		
 		LOGGER.debug("/ezAttitude/modApplicationSave ended");
+		
+		return resultStatus;
 	}
 	
 	/**
@@ -896,7 +911,7 @@ public class EzAttitudeBHSController {
 		String attitudeId = request.getParameter("attitudeId");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/"  + attitudeId;; //근태상세보기 가져오기
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/"  + attitudeId; //근태상세보기 가져오기
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -922,7 +937,7 @@ public class EzAttitudeBHSController {
 		if (status.equals("ok")) {
 			attitudeVO = (JSONObject) resultBody.get("data");
 			returnValue.put("attitudeVO", attitudeVO);
-			LOGGER.debug("vovovovovovovovovovovovovo : " + attitudeVO.get("typeId"));
+			
 			url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + attitudeVO.get("typeId") + "/forms/form"; // form 가져와야됨
 			
 			builder = UriComponentsBuilder.fromHttpUrl(url)
