@@ -95,7 +95,7 @@
 	</head>
 	<body class="mainbody">	
 		<h1><spring:message code="ezResource.t24" /></h1>
-		<div style="max-width:477px;">
+		<div style="max-width:800px;">
 		<table class="content">
   			<tr>
     			<th> <spring:message code="ezResource.t44" /></th>
@@ -113,11 +113,19 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		<div class="txt"><spring:message code="ezResource.t113" /></div>
-		<div style="max-width:400px;">
+		<div>
 			<table class="box" style="width:100%">
 				<tr>
-     				<th style="font-weight: normal;"><spring:message code="ezResource.t111" /></th>
-					<td style="border-bottom: 1px solid #d2d2d2;">
+					<th style="font-weight: normal;"><spring:message code="ezBoard.t606" /></th>
+					<td style="height:300px;">
+						<select id="acllist" name="acllist" style="width: 99%; height: 99%; background:none; margin-left:3px; overflow-y: auto; overflow-x: auto;" size="10" onChange="selAclList_Change(this);">
+							${strOptions}
+						</select>
+					</td>
+				</tr>
+				<tr>
+     				<th style="font-weight: normal; width: 30px;"><spring:message code="ezResource.t111" /></th>
+					<td style="border-bottom: 1px solid #d2d2d2;border-top: 1px solid #d2d2d2;">
    						<table class="popuplist" style="width:100%">
         				<tr>
           					<td style="border:0px;">
@@ -127,14 +135,6 @@
         				</tr>
       					</table>
        				</td>
-				</tr>
-				<tr>
-					<th style="font-weight: normal;"><spring:message code="ezBoard.t606" /></th>
-					<td>
-						<select id="acllist" name="acllist" style="width: 400px; height: 120px; background:none; margin:1px 1px 0px 1px;" size="10" onChange="selAclList_Change(this);">
-							${strOptions}
-						</select>
-					</td>
 				</tr>
 			</table>
 		</div>
