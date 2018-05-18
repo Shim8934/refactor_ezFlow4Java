@@ -98,12 +98,17 @@
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezAttitude/saveAttitudeTypeConfig.do",
+	            	dataType : "text",
 	            	data : {
 	            		"typelist" : typestr,
 	            		"companyId" : encodeURI($("#ListCompany").val())
 	            	},
-	            	success : function() {
-	            		alert("<spring:message code='ezAttitude.bbhs19' />");
+	            	success : function(resultStatus) {
+	            		if (resultStatus == "success") {
+		            		alert("<spring:message code='ezAttitude.bbhs19' />");
+	            		} else {
+	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            		}
 	            	},
 	            	error : function() {
 	            		alert("<spring:message code='ezAttitude.kbm3' />");

@@ -161,12 +161,12 @@
 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 
 			    if ("${data.startDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
-			    	alert("날짜는 수정하실 수 없습니다.");
+			    	alert("<spring:message code='ezAttitude.kbm35'/>");
 			    	return;
 			    }
 			    
 			    if (!timeValid.test(ctime) || !timeValid.test(otime)) {
-			    	alert("올바른 시간을 지정해야 합니다.");
+			    	alert("<spring:message code='ezAttitude.kbm36'/>");
 			    	return;
 			    }
 			    
@@ -181,13 +181,13 @@
 				    data : obj,
 				    dataType : "text",
 				    error: function(xhr, status, error){
-				    	alert("저장 중 오류 발생")
+				    	alert("<spring:message code='ezAttitude.kbm3'/>")
 				    },
 				    success : function(json){
 				    	if(json == "success") {
 				    		alert("<spring:message code='ezAttitude.kbm1'/>");	
 				    	} else {
-				    		alert("저장 중 오류 발생");
+				    		alert("<spring:message code='ezAttitude.kbm3'/>");
 				    	}
 			            try {
 			            	window.opener.getAttitudeMainList();
@@ -212,7 +212,7 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                                <li><span onclick="save()">수정신청</span></li>
+	                                <li><span onclick="save()"><spring:message code='ezAttitude.kbm45'/></span></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>
@@ -224,20 +224,20 @@
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
-                                            <th>구분</th>
+                                            <th><spring:message code='ezAttitude.bbhs22'/></th>
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
 <!--                                             	다국어 작업 -->
                                             </td>
                                         </tr>
 	                                    <tr>
-	                                        <th>기존시각</th>
+	                                        <th><spring:message code='ezAttitude.kbm37'/></th>
 	                                        <td colspan="2">
 	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center"><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
-	                                        <th>신청시각</th>
+	                                        <th><spring:message code='ezAttitude.kbm38'/></th>
 	                                        <td colspan="2">
 	                                        	<span id="periodblock">
 	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center"><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />

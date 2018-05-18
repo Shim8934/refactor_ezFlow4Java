@@ -909,8 +909,10 @@ public class EzAttitudeKMSController {
 	 */
 	@RequestMapping(value="/ezAttitude/attModAppDetail.do")
 	public String attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
-			@RequestParam(required=true)String attModId,@RequestParam(required=false)String applCnt,
-			@RequestParam(required=false)String adminFlag) throws Exception {
+			@RequestParam(required=true)String attModId,
+			@RequestParam(required=false)String applCnt,
+			@RequestParam(required=false)String adminFlag,
+			@RequestParam(required=false)String pageInfo) throws Exception {
 		LOGGER.debug("attModAppDetail started");
 		
 		String isAllDept = "";
@@ -1043,6 +1045,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("font", font);
 		model.addAttribute("authFlag", authFlag);
 		model.addAttribute("deptFlag", deptFlag);
+		model.addAttribute("pageInfo", pageInfo);
 		
 		LOGGER.debug("attModAppDetail ended");
 		
