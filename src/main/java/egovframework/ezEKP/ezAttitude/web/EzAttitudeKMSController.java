@@ -166,6 +166,7 @@ public class EzAttitudeKMSController {
 		////
 		
 		model.addAttribute("deptList", deptList);
+		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDept", userInfo.getDeptID());
 		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
 		model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));

@@ -26,8 +26,7 @@
 	    
 		<script type="text/javascript" language="javascript">
 			var Tab1_SelectID = "modify";
-			var pCompanyId = "${adminCompany}";
-	    	var pDeptId = ""; //현재 선택된 부서의 아이디
+			var companyId = "${companyId}";
 	    	//검색조건 저장 변수
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
@@ -200,7 +199,7 @@
 	        function getList() {
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
-	    			//근태관리//list가져와서 tbodyhtml();
+	    			getAttitudeCheckList();
 	    			break;
 	    		case "absent":
 	    			//근태입력//list가져와서 tbodyhtml();
@@ -212,6 +211,91 @@
 	    		}
 	        }
 	        
+	        ///////
+	        function getAttitudeCheckList(){
+	    		typeId = searchAttitudeType;
+	    		
+	    		if (typeId == "total") {
+	    			typeId = "";
+	    		}
+	    		
+    			/* searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val(); */
+    			searchStartDate = "2018-05-11";
+    			searchEndDate = "2018-05-18";
+	    		
+	    		if (searchStartDate > searchEndDate) {
+					alert("<spring:message code='ezAttitude.lhj15' />");
+		            return;
+				}
+	    		
+	    		$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			async : false,
+	    			url : "/ezAttitude/attitudeCheckList.do",
+	    			data : {
+	    				companyId : companyId,
+	    				deptId : $('#ListDept').val(),
+	   					userName : searchUserName,
+	   					deptName : searchDeptName,
+	   					title : searchTitle,
+	   					startDate : searchStartDate,
+	   					endDate : searchEndDate,
+	   					attitudeType : searchAttitudeType,
+	   					pageNum : pageNum,
+	   					listSize : listSize,
+	   					orderCell : orderCell,
+	   					orderOption : orderOption
+    				},
+	    			success : function(result){
+	    				totalCount = result.totalCount;
+	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
+	    				getAttitudeCheckList_after(result.list);
+	    				//근태유형 리스트
+	    				getAttitudeTypeList(result.typeList, result.typeId);
+	    			},
+	    			error : function() {
+	    				alert('리스트를 가져오는중 오류 발생');
+	    			}
+	    		});
+	    	}
+	        
+	        function getAttitudeCheckList_after(result){
+	    		var resultHtml = "";
+	    		$("#contentlist .mainlist tbody").html("");
+	    		
+	    		result.forEach(function(vo, index) {
+					if ($('#ListDept option:selected').attr('authtype') == 'M') {
+		    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
+					} else {
+		    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "'>";
+					}
+	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<td>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td>" + vo.deptName + "</td>";
+	    						
+	    			if (vo.endDate == null || vo.endDate == "") {
+	    				resultHtml += "<td>" + vo.startDate.substring(0,16) + "</td>";
+	    			} else {
+	    				if (vo.dateType == 4) {
+	    					resultHtml += "<td>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";
+	    				} else {
+		    				resultHtml += "<td>" + vo.startDate.substring(0,16) + " ~ " + vo.endDate.substring(0,16) + "</td>";
+	    				}
+	    			}
+	    			
+	    			resultHtml += "<td>" + vo.typeName + "</td></tr>";
+	    		});
+	    		
+	    		if (resultHtml == "") {
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    		}
+	    		
+	    		$("#contentlist table.mainlist tbody").append(resultHtml);
+	    		makePageSelPageAtti();
+	    	}
+	        
 	        function goToPageByNum(pCurPage){
 	    		if (pCurPage == 0 || totalPage < pCurPage) {
 	    			return;
@@ -220,6 +304,21 @@
 	    		}
 	    		
 	    		getList();
+	    	}
+	        
+	        //검색창 내부 근태유형 리스트 조회
+	        function getAttitudeTypeList(typeList, typeId) {
+	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
+	    		
+	    		for (var i = 0; i < typeList.length; i ++) {
+	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
+	    		}
+	    		
+	    		$('#searchAttitudeType').html(html);
+	    		
+	    		if (typeId != "") {
+	    			$('#searchAttitudeType').val(typeId);
+	    		}
 	    	}
 	        
 	        function searchPopup() {
@@ -256,7 +355,7 @@
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" auth="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
 								</c:if>
 							</c:forEach>
 			      		</select>
