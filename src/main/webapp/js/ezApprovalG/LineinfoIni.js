@@ -439,6 +439,9 @@ function InitListView() {
         	        var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
         	        var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
         	        var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
+        	        if(IniListData6!=null && IniListData6 != "" && IniListData6 != arr_userinfo[4]) {
+            	    	arr_userinfo[4] = IniListData6;
+            	    }
         	        var curaprline = "";
         	        for (var i = 0; i < NodeList.length; i++) {
         	            if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
