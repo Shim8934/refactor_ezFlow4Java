@@ -825,9 +825,7 @@
 					<ul class="edit">
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_list.png" width="45px;" height="45px;" id="toList" onmouseover="this.src='/images/ezLadder/icon_list_hover.png'" onmouseout="this.src='/images/ezLadder/icon_list.png'" title="<spring:message code='ezLadder.t083'/>"></li>
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" onmouseover="this.src='/images/ezLadder/icon_reuse_hover.png'" onmouseout="this.src='/images/ezLadder/icon_reuse.png'" title="<spring:message code='ezLadder.t082'/>"></li>
-						<c:choose>
-							<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" onmouseover="this.src='/images/ezLadder/icon_posDelete_hover.png'" onmouseout="this.src='/images/ezLadder/icon_posDelete.png'" title="<spring:message code='ezLadder.t053'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
-						</c:choose>
+						<c:if test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" onmouseover="this.src='/images/ezLadder/icon_posDelete_hover.png'" onmouseout="this.src='/images/ezLadder/icon_posDelete.png'" title="<spring:message code='ezLadder.t053'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:if>
 					</ul>
 				</div>
 			</div>
