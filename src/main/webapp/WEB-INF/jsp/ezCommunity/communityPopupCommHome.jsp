@@ -196,7 +196,7 @@
 			                                        span2.appendChild(img);
 			                                        span3.className = "ptxt";
 			                                        /* 2018-05-18 홍승비 - new 표시 */
-			                                        if (pastDate <= itemVO.writeDate ) {
+			                                        if (pastDate <= itemVO.writeDate) {
 			                                    		span3.innerHTML = "<img src='/images/new_icon.gif'>&nbsp;";
 	                   		 						}
 			                                        span3.innerHTML += itemVO.title;
