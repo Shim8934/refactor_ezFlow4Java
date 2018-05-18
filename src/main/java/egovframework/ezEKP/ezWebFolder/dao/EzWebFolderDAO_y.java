@@ -80,18 +80,6 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_ad", map);
 	}
 	
-	public List<Map<String, Object>> getFolderListUser(Map<String, Object> map) {
-		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_U", map);
-	}
-	
-	public List<Map<String, Object>> getFolderListDept(Map<String, Object> map) {
-		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_D", map);
-	}
-	
-	public List<Map<String, Object>> getFolderListAll(Map<String, Object> map) {
-		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_all", map);
-	}
-
 	public String getparentId(Map<String, Object> map) {
 		return (String) select ("EzWebFolderDAO_y.getParentId", map);
 	}

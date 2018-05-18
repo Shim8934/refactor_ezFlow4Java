@@ -443,7 +443,6 @@ public class EzWebFolderGWController_y {
 			if (currPage > totalpages & totalCount != 0) {
 				currPage = totalpages;
 			}
-			pStart = (listCount*currPage )-listCount;
 			pEnd = listCount;
 			
 			
@@ -541,7 +540,6 @@ public class EzWebFolderGWController_y {
 		
 		List<Map<String, Object>> checkList = (List<Map<String, Object>>) jsonObject.get("checkList");
 		
-		LOGGER.debug("=================================" + checkList);
 		LOGGER.debug("userId: " + userId + " || serverName: " + serverName);
 		
 		JSONObject jsonObj = new JSONObject();

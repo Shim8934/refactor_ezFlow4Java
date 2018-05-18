@@ -510,7 +510,7 @@
 				</isNotEqual>
 				
 			<![CDATA[
-				ORDER BY FOLDER_SORT, CREATE_DATE DESC
+				ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
                 ) pchk 
 			where ROWNUM <= #pEnd# + #pStart#
             )
@@ -581,7 +581,7 @@
        		]]> 
 		</isNotEqual>
 		<![CDATA[
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
 	            ) pchk
 	                
 	           where ROWNUM <= #pEnd# + #pStart#
@@ -641,7 +641,7 @@
 					<include refid="searchAll"/>
 					<![CDATA[
 						
-					ORDER BY FOLDER_SORT, CREATE_DATE DESC
+					ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
 	                ) pchk 
 				where ROWNUM <= #pEnd# + #pStart#
 	              
@@ -712,7 +712,7 @@
 			<include refid="searchAll"/>
 			<![CDATA[
 				
-				ORDER BY FOLDER_SORT,CREATE_DATE desc 
+				ORDER BY FOLDER_SORT,CREATE_DATE desc, FILE_ID
 				 ) pchk 
 				where ROWNUM <= #pEnd# + #pStart#
 	            )
@@ -971,87 +971,6 @@
 		</isNotEqual>	
 		<![CDATA[
 			)totalCount 
-		]]>
-	</select>
-	
-	<select id ="EzWebFolderDAO_y.getFolderList_all" resultClass="HashMap" parameterClass="Map">
-		<![CDATA[
-		 SELECT distinct
-				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, folder.folder_name1 as text,folder.create_id as createId
-			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = users.folder_id
-			where  SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in(
-				select  distinct folder.folder_id
-				FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = users.folder_id
-				where   folder.TENANT_ID = #tenantId# 
-					and user.TENANT_ID = #tenantId# 
-					and folder.company_id = #comId# 
-			    	and (user.USER_ID IN (select dept.cn 
-										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-										where addj.cn = #userId# or dept.cn = #deptId#) 
-				or user.USER_ID = #userId# or user.USER_ID = #comId#)
-				)
-			and folder.tenant_id = #tenantId#
-			or (folder.FOLDER_UPPER = 'root' AND folder.TENANT_ID = #tenantId# and folder.company_id =#comId# 
-				and folder.use_status = 'Y' and folder.OWNER_ID = #comId#) 
-			or (folder.use_status = 'Y'	AND folder.TENANT_ID = #tenantId# and folder.COMPANY_ID = #comId# 
-					and (folder.OWNER_ID = #userId# or  folder.OWNER_ID = #deptId# or  folder.OWNER_ID = #comId# or folder.OWNER_ID IN (
-										select dept.cn 
-										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-										where addj.cn = #userId# or dept.cn = #deptId#)  ))
-	        order by folder.FOLDER_TYPE, folder.CREATE_DATE
-										
-	    ]]>
-	        
-	</select>
-	
-	<select id="EzWebFolderDAO_y.getFolderList_U" resultClass="HashMap" parameterClass="Map" >
-		<![CDATA[
-			select distinct
-				folder.FOLDER_ID as id ,decode( folder.folder_upper , 'root', '##', folder.FOLDER_UPPER )as parent,
-				folder.create_id as createId, 
-				decode ( #primary# , '1' , folder.FOLDER_NAME1, folder.FOLDER_NAME2) as text,
-				decode ( folder.FOLDER_UPPER , 'root', 1, 0) as selected
-			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.FOLDER_ID  = users.FOLDER_ID
-			where 		folder.folder_type = #folderType# 
-					AND folder.use_status = 'Y'
-					AND folder.TENANT_ID = #tenantId# 
-					AND folder.COMPANY_ID = #comId# 
-					AND folder.OWNER_ID = #userId#
-			order by selected desc
-		]]>
-	</select>
-	
-	<select id="EzWebFolderDAO_y.getFolderList_D" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
-			SELECT distinct
-				folder.folder_id as id ,decode( folder.folder_upper , 'root', '##', folder.folder_upper )  as parent, 
-				folder.owner_id as owner, folder.FOLDER_PATH,folder.CREATE_ID as createId,
-				decode ( #primary# , '1' , folder.FOLDER_NAME1, folder.FOLDER_NAME2) as text,
-				decode ( folder.owner_id , #deptId# ,decode(folder.folder_upper , 'root', 1, 0),0) as selected
-			from TBL_WEBFOLDER_FOLDER folder 
-			where  
-							folder.TENANT_ID = #tenantId# 
-						and folder.folder_type = #folderType# 
-						and folder.company_id = #comId# 
-			            and folder.owner_id in (select dept.cn 
-								from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-								where addj.cn = #userId# or folder.owner_id = #deptId#)
-						and folder.use_status = 'Y'
-	        union all 
-	        select 
-	        	f.folder_id as id ,decode( f.folder_upper , 'root', '##', f.folder_upper )  as parent,
-				f.owner_id as owner, f.FOLDER_PATH, f.CREATE_ID as createId,
-	        	decode ( #primary# , '1' , f.FOLDER_NAME1, f.FOLDER_NAME2) as text,
-                decode ( f.owner_id , #deptId# ,decode(f.folder_upper , 'root',1, 0),0)as selected
-
-			from 
-                (tbl_deptmaster dept inner join tbl_webfolder_folder f on  dept.cn = f.owner_id
-                inner join tbl_webfolder_folderuser usr on f.folder_id = usr.FOLDER_ID and f.tenant_id = usr.tenant_id  ) 
-			
-			where usr.user_id = #userId# and f.tenant_id = #tenantId# and usr.USER_TYPE = 'chief' and f.use_status = 'Y'
-            
-			order by selected desc
-			
 		]]>
 	</select>
 	

@@ -14,19 +14,16 @@ public interface EzWebFolderService_y {
 	
 	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception;
 	
-	// 파일 list
+	// 파일리스트
 	List<FileVO> getFileList(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
 			String searchStartDate, String searchEndDate, String searchCreateName, String searchFileType, String searchPageCount, 
 			int pStart, int pEnd, String offset, String primary) throws Exception;
-
+	
+	// 파일리스트의 총 개수 가져오는 메서드
 	Map<String, Integer> getFileToTalCount(String folderId, String userId, String deptId, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate, String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary) throws Exception;
 
-	// 폴더 전체 리스트 
-	List<Map<String, Object>> getFolderList( String admin , String userId,String deptId, String comId, String folderId,
-			String folderType, int tenantId, String primary) throws Exception;
-	
 	// folder insert위한 폴서 세부 정보 folderDetail
 	FolderVO getFolderDetail(String folderUppId, String userId, int tenantId ,String comId) throws Exception;
 	
@@ -43,15 +40,9 @@ public interface EzWebFolderService_y {
 	// 겸직자인지 판단하는 메서드 
 	List<String> getAddJobList(int tenantId, String userId) throws Exception;
 	
-	// 부서장인지 판단하는 메서드 
-	List<Map<String, Object>> getDeptHeader(int tenantId, String userId ,String deptId , String comId) throws Exception;
-
 	// 첫 로그인 후 폴더가 존재하는지 판단하는 메서드 
 	int existFolderChk(String userId, String deptId, String comId, String folderType, int tenantId, String primary);
 
-	// 부서 폴더가 존재하는지 판단하는 메서드 
-	String existFolderChk_D(String userId, String deptId, String comId,	String folderType, int tenantId,String timeUTC, String primary) throws Exception;
-	
 	// 폴더 수정
 	void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2 , String timeUTC);
 	
