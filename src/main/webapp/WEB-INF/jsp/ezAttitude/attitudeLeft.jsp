@@ -118,7 +118,8 @@
 		var closedDay = "";
 		var checkClosedToday = false;
 		var leaveEarlyFlag = false; // 조퇴가 등록되어있는지 체크
-		
+		var serverTime = "${serverTime}";
+		var nowAttiTime = "";
 		window.onload = function(){
 			setAttiBtnHover();
 			getAttitudeList();
@@ -270,6 +271,8 @@
 	    }
 	    
 	    $(function(){
+	    	nowAttiTime = new Date(serverTime);
+	    	
 	    	var clock = $('#clock');
 	    	
 	    	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
@@ -326,13 +329,12 @@
 	    	})();
 	    	
 	    	function format(type){
-	 	        var now = new Date();
-		        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(userOffset.split(':')[0]) * 3600000) + (parseInt(userOffset.split(':')[1]) * 60000);
-		        now.setTime(tz);
+		        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
+		        console.log(nowAttiTime);
 		        var s =
-		          leadingZeros(now.getHours(), 2)+
-		          leadingZeros(now.getMinutes(), 2)+
-		          leadingZeros(now.getSeconds(), 2);
+		        	leadingZeros(nowAttiTime.getHours(), 2)+
+		            leadingZeros(nowAttiTime.getMinutes(), 2)+
+		            leadingZeros(nowAttiTime.getSeconds(), 2);
 		        return s;
 	    	}
 	    });

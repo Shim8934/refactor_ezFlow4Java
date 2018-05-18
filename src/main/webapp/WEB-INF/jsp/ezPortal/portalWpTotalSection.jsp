@@ -247,6 +247,9 @@
 		    var year = sDate.getFullYear();
 		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);
 		 	var day = sDate.getDate();		 	
+		 	/*근태관리 추가*/
+		 	var serverTime = "${serverTime}";
+		 	var nowAttiTime = "";
 		 	
 		 	$("#todayTime").html(year + "년 " + mon + "월 " + day + "일");
 
@@ -1025,6 +1028,8 @@
 		    }
 		    
 		    $(function(){
+		    	nowAttiTime = new Date(serverTime);
+		    	
 		    	var clock = $('#clock');
 		    	
 		    	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
@@ -1079,15 +1084,14 @@
 		    	})();
 
 		    	function format(type){
-		 	        var now = new Date();
-			        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000) + (parseInt(UserOffset.split(':')[1]) * 60000);
-			        now.setTime(tz);
+			        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
+			        console.log(nowAttiTime);
 			        var s =
-			          leadingZeros(now.getHours(), 2)+
-			          leadingZeros(now.getMinutes(), 2)+
-			          leadingZeros(now.getSeconds(), 2);
+			        	leadingZeros(nowAttiTime.getHours(), 2)+
+			            leadingZeros(nowAttiTime.getMinutes(), 2)+
+			            leadingZeros(nowAttiTime.getSeconds(), 2);
 			        return s;
-		    	}	    	
+		    	}    	
 		    	
 		    });
 		    
