@@ -74,6 +74,107 @@ public class EzAttitudeKMSController {
 	private MOptionService mOptionService;
 	
 	/**
+	 * 근태수정관리 전체근태관리 화면조회
+	 */
+	@RequestMapping(value="/ezAttitude/attitudeManage.do")
+	public String attitudeManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("attitudeManage started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		
+		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		
+		String searchStartDate = localDate + " 00:00:00";
+		String searchEndDate = localDate + " 23:59:59";
+		
+		Date startDate = sdf.parse(searchStartDate);
+		
+		cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		cal.add(Calendar.DAY_OF_MONTH, -7);
+		
+		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+		
+		//부서셀렉트박스
+		String adminFlag = "false";
+		String isAllDept = "";
+
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			adminFlag = "true";
+			isAllDept = "Y";
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+		}
+		
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("isAllDept", isAllDept)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		
+		if (deptList.size() <= 1 || adminFlag.equals("false")) {
+			return "cmm/error/accessDenied";
+		}
+		
+		int myDeptCount = 0;
+		JSONObject dept = new JSONObject();
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+				}
+			}
+		}
+		////
+		
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("selectedDept", userInfo.getDeptID());
+		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
+		model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
+		
+		LOGGER.debug("attitudeManage ended.");
+		
+		return "/ezAttitude/attitudeManage";
+	}
+	
+	/**
 	 * 근태 수정 신청 현황
 	 */
 	@RequestMapping(value="/ezAttitude/attModAppList.do")
