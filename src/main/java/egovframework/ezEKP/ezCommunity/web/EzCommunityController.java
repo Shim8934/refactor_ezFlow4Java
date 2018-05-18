@@ -372,8 +372,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean joinFlag = false, checkSysop = false;
 		int newMemberConfirmType = 0;
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+		String pastDate = "";
 		
 		String code = request.getParameter("code");
 		String userLevel = request.getParameter("userLevel");
@@ -394,14 +393,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (copType == null) {
 			copType = "type5";
 		}
-		
-		//사용하는곳이 없다
-//		int memberCount = commHomeGet2(code);
-		
+
 		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		int mode = 0;
 		
-//		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
 		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			mode = 0;
 		} else {
@@ -438,6 +433,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			checkSysop = true;
 		}
 		
+		/* 2018-05-18 홍승비 - 새 글에 new 표시 추가 */
+		pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));	
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("primary", primary);
 		model.addAttribute("code", code);
@@ -447,7 +448,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("newMemberConfirmType", newMemberConfirmType);
 		model.addAttribute("checkSysop", checkSysop);
 		model.addAttribute("retXML", retXML);
-		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("pastDate", pastDate);
 		
 		logger.debug("popupCommHome ended.");
 		
@@ -493,17 +494,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String commHomeBoardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
-		
-		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
-		String pastDate = commonUtil.getTodayUTCTime("");
-		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
-		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
-		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
-		
-		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID, userInfo.getTenantId());
+
+		/* 2018-05-18 홍승비 - UTC시간에 offset을 적용한 writeDate를 가져오기 위해 offset 추가*/
+		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID, userInfo.getTenantId(), commonUtil.getMinuteUTC(userInfo.getOffset()));
 		
 		model.addAttribute("boardItemList", list);
-		model.addAttribute("pastDate", pastDate);
 		
 		return "json";
 	}
@@ -517,6 +512,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String boardName = request.getParameter("boardName");
 		String userLevel = "";
+		String pastDate = "";
 		
 		logger.debug("boarditemList started.");
 		logger.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
@@ -543,11 +539,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
+		pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
+		
 		model.addAttribute("code", code);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pBoardName", boardName);
 		model.addAttribute("userLevel", userLevel);
+		model.addAttribute("pastDate", pastDate);
 		
 		logger.debug("boarditemList ended.");
 		
