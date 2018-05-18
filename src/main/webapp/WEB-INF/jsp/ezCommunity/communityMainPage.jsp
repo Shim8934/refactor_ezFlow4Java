@@ -44,19 +44,17 @@
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
 	        
 			document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
-		        else
+		        } else {
 		            return true;
-				};
+		        }
+			};
 			window.onload = function () {
-		            get_todaycop();
-		            get_bestCommunity();
-		            get_myCommunity();
-		            makePageSelPage();
-		            
-		            console.log("pastDate  ::  "+pastDate);
-		            
+		    	get_todaycop();
+		        get_bestCommunity();
+		        get_myCommunity();
+		        makePageSelPage();   
 		    }
 	        function change_tab(val) {
 	            if (val == "best") {
@@ -379,8 +377,6 @@
                     /* 2018-05-17 홍승비 - 새 게시물의 제목 앞에 new 표시 추가 */
                     if (pastDate <= writeDate ) {
                     	td.innerHTML = "<img src='/images/i_new.gif'>&nbsp;";
-                    } else {
-                    	td.innerHTML = "";
                     }
                     
                     if (primary == "1") {
