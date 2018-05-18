@@ -11,13 +11,15 @@ var fileExtStr   = "";
 var fileNameStr  = "";
 var userNameStr  = "";
 var rootFolder   = "";
+var folderLevel  = "";
 var tableView    = new TableView();
 
-function setParameter(fldId, lang, fldType, rootFld) {
-	folderId   = fldId;
-	primary    = lang;
-	folderType = fldType;
-	rootFolder = rootFld;
+function setParameter(fldId, lang, fldType, rootFld, level) {
+	folderId    = fldId;
+	primary     = lang;
+	folderType  = fldType;
+	rootFolder  = rootFld;
+	folderLevel = level;
 }
 
 function init(mode) {
@@ -86,6 +88,8 @@ function setButtons(mode) {
 	
 	var mailPanelElmt       = document.getElementById("mailPanel");
 	mailPanelElmt.onclick   = function() {closeAllPopups();};
+	
+	toggleUploadBttn(folderLevel);
 }
 
 function keyPressPanel(e) {
@@ -156,7 +160,7 @@ function search_Set(pPage) {
 			"folderId"    : folderId
 		},
 		dataType: "JSON",
-		async: true,
+		async: false,
 		success : function(data) {
 			hideProgress();
 			var reason = data.reason;
@@ -321,8 +325,7 @@ function refreshView() {
 }
 
 function toggleUploadBttn(levelValue) {
-	document.getElementById("uploadBttn").style.display = levelValue == '0' ? 'none' : "";
-	var dragDropAreaElmt                                = document.getElementById("dragDropArea");
+	var dragDropAreaElmt = document.getElementById("dragDropArea");
 	
 	if (levelValue == '0') {
 		dragDropAreaElmt.ondragenter = null;

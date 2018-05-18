@@ -29,15 +29,15 @@ function renderData(result, mode, rootDiv) {
 	compFolderId  = result["folderId"];
 	
 	if (mode == "") {
-		selectedFolder          = compFolderId;
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId, "right");
+		selectedFolder = compFolderId;
+		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=0", "right");
 	}
 	
 	while (divTree.hasChildNodes()) {
 		divTree.removeChild(divTree.lastChild);
 	}
 	
-	displaySubFolder(divTree, divComp, result);
+	displaySubFolder(divTree, divComp, result, "comp");
 	
 	var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;
 	
@@ -48,13 +48,13 @@ function renderData(result, mode, rootDiv) {
 	}
 	else {
 		selectedFolder = "";
-		getSelected(spanCompany);
+		getSelected(spanCompany, "comp");
 	}
 	
 	divTree.style.display = "";
 }
 
-function displaySubFolder(divTree, divElmt, list) {
+function displaySubFolder(divTree, divElmt, list, folderType) {
 	var level = list["folderLevel"];
 	
 	if (level > 0) {
@@ -78,7 +78,7 @@ function displaySubFolder(divTree, divElmt, list) {
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);
-	spanFolderName.onclick = function() {getSelected(this);};
+	spanFolderName.onclick = function() {getSelected(this, folderType);};
 	
 	divElmt.appendChild(imgElmt);
 	divElmt.appendChild(imgElmt2);
@@ -90,7 +90,7 @@ function displaySubFolder(divTree, divElmt, list) {
 		imgElmt.setAttribute("class", "webfolderImg");
 	}
 	else {
-		imgElmt.onclick = function() {getDetailTree(this);};
+		imgElmt.onclick = function() {getDetailTree(this, folderType);};
 		
 		if (list["listSubFolders"] == null) {
 			imgElmt.src = "/images/OrganTree_cross/plus.gif";
@@ -109,12 +109,12 @@ function displaySubFolder(divTree, divElmt, list) {
 		
 		for (var i = 0; i < len; i++) {
 			var subDivElmt = document.createElement("div");
-			displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i]);
+			displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i], folderType);
 		}
 	}
 }
 
-function getSelected(obj) {
+function getSelected(obj, mode) {
 	var previousElmt = document.getElementsByName(selectedFolder)[0];
 	
 	if (previousElmt != null) {
@@ -127,14 +127,22 @@ function getSelected(obj) {
 	selectedFolder       = obj.getAttribute("name");
 	obj.style.color      = "#004a87";
 	obj.style.fontWeight = "bold";
+	var level            = obj.getAttribute("level");
 	
-	window.parent.frames["right"].folderId = selectedFolder;
-	window.parent.frames["right"].toggleUploadBttn(obj.getAttribute("level"));
-	window.parent.frames["right"].reloadSelectBox();
-	window.parent.frames["right"].refresh();
+	if (mode == "comp") {
+		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=" + level, "right");
+	}
+	else {
+		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=" + level, "right");
+	}
+	
+	//window.parent.frames["right"].folderId = selectedFolder;
+	//window.parent.frames["right"].toggleUploadBttn(obj.getAttribute("level"));
+	//window.parent.frames["right"].reloadSelectBox();
+	//window.parent.frames["right"].refresh();
 }
 
-function getDetailTree(obj) {
+function getDetailTree(obj, folderType) {
 	//Check if already in arrSubFolder
 	var uniqueId = obj.getAttribute("id");
 	
@@ -166,7 +174,7 @@ function getDetailTree(obj) {
 			async: false,
 			success: function(data) {
 				var result = data.subTree;
-				displaySubTree(result, obj.parentElement);
+				displaySubTree(result, obj.parentElement, folderType);
 				arrSubFolder.push(uniqueId);
 			},
 			error: function (xhr, status, e){
@@ -176,7 +184,7 @@ function getDetailTree(obj) {
 	}
 }
 
-function displaySubTree(result, divElmt) {
+function displaySubTree(result, divElmt, folderType) {
 	if (result["listSubFolders"] == null) {
 		alert(strMessage);
 		return;
@@ -188,7 +196,7 @@ function displaySubTree(result, divElmt) {
 	
 	for (var i = 0; i < len; i++) {
 		var subDiv = document.createElement("div");
-		displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i]);
+		displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i], folderType);
 	}
 }
 
@@ -222,7 +230,7 @@ function renderData2(result, mode, rootDiv) {
 	selectedFolder = result[0]["folderId"];
 	
 	if (mode == "") {
-		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder, "right");
+		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=0", "right");
 	}
 		
 	while (divTree.hasChildNodes()) {
@@ -231,7 +239,7 @@ function renderData2(result, mode, rootDiv) {
 	
 	for (var i = 0; i < result.length; i++) {
 		var divDept  = document.createElement("div");
-		displaySubFolder(divTree, divDept, result[i]);
+		displaySubFolder(divTree, divDept, result[i], "dept");
 	}
 	
 	var spanFirstDept = document.getElementById(selectedFolder).nextSibling.nextSibling;
@@ -243,7 +251,7 @@ function renderData2(result, mode, rootDiv) {
 	}
 	else {
 		selectedFolder = "";
-		getSelected(spanFirstDept);
+		getSelected(spanFirstDept, "dept");
 	}
 	
 	divTree.style.display = "";
