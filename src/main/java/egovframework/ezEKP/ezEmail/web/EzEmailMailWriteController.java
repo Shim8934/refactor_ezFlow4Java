@@ -284,9 +284,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
-		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
-		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
+		logger.debug("stateName=" + stateName);
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
@@ -1094,7 +1093,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("newWindowId", newWindowId);
 		model.addAttribute("individualMailUser", individualMailUser); //int형
 		model.addAttribute("pSecurity", pSecurity);
-		model.addAttribute("folderDate", folderDate);
 		model.addAttribute("stateName", stateName);
 		model.addAttribute("pBigAttachDownloadDay", pBigAttachDownloadDay);
 		model.addAttribute("pBigAttachDownloadPeriod", pBigAttachDownloadPeriod);
