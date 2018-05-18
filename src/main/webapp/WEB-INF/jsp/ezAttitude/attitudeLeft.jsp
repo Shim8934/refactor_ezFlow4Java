@@ -108,6 +108,7 @@
 			</c:if>
 			<c:if test="${authFlag == 'M'}">
 				<li><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;전체근태관리</span></li>
+				<li><span id="" onclick="functionFlag(6)" style="width:100%;display:inline-block">&nbsp;전체근태관리</span></li>
 			</c:if>
 		</ul>
 	</div>
@@ -261,6 +262,9 @@
 	    			break;
 	    		case 5:	// 근태관리
 	    			window.open("/ezAttitude/attitudeAdminMod.do", "right");
+	    			break;
+	    		case 6:	// 내꺼
+	    			window.open("/ezAttitude/attitudeManage.do", "right");
 	    			break;
 	    	}
 	    }
