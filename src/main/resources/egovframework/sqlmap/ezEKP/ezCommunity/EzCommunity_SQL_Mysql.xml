@@ -2596,6 +2596,7 @@
                 c_clubname,
                 c_clubname2,
                 a.boardid,
+                readcount,
                 (SELECT 
                 	COUNT(*)  
 				FROM 

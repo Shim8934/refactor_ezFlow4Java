@@ -691,7 +691,7 @@
 		    
 		    function open_admin(code) {
 		        var wWeight = "860";
-		        var wHeight = "510";
+		        var wHeight = "567";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = (width - wWeight) / 2;

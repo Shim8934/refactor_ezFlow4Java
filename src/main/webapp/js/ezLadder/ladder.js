@@ -353,7 +353,7 @@ function drawPathLine(user, moveX, moveY, type) {
 		var cv = canvas.getContext('2d');
 		
 		cv.strokeStyle = pathUser['color'];
-		cv.lineWidth = 3;
+		cv.lineWidth = 1;
 		
 		if(moveY == startYPoint) {
 			if(type == 'one' || user == 0) {
