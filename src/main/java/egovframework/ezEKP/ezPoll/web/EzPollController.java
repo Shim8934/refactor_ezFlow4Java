@@ -3001,7 +3001,7 @@ public class EzPollController extends EgovFileMngUtil {
 				ezPollService.deleteCommentOfQst(qstId, loginVO.getTenantId());
 				
 				//Delete in table users
-				ezPollService.deleteUsersForQst(qstId, loginVO.getTenantId());
+				ezPollService.deleteUsersForQst(loginVO.getTenantId(), qstId);
 				
 				//Inform waiting users
 				String result = "{\"result\":\"DELETED\", \"userId\":\"" + loginVO.getId() + "\"}";
