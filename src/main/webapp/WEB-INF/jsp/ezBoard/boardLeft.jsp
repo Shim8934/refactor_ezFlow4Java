@@ -32,7 +32,8 @@
 	        
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
-		        var height = parseInt(document.documentElement.clientHeight - menuSize);
+		        /* 18-05-18 김민성 - 게시판 maxHeight 제거 */
+		        /* var height = parseInt(document.documentElement.clientHeight - menuSize);
 		        for (var i = 0; i < items; i++) {
 		            if (document.documentElement.clientHeight > 740) {
 		            	document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = "200px";
@@ -40,7 +41,7 @@
 		            else {
 		                document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = (height * 0.38) + "px";
 		            }
-		        }
+		        } */
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -84,7 +85,8 @@
 		                }
 		
 		                var menuSize = (parseInt(items) + 2) * 30;
-		                var height = parseInt(document.documentElement.clientHeight - menuSize);
+		                /* 18-05-18 김민성 - 게시판 maxHeight 제거 */
+		                /* var height = parseInt(document.documentElement.clientHeight - menuSize);
 		
 		                for (var i = 0; i < items; i++) {
 		                    if (document.documentElement.clientHeight > 740) {
@@ -93,7 +95,7 @@
 		                    else {
 		                    	document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = (height * 0.38) + "px";
 		                    }
-		                }
+		                } */
 		                document.getElementById('TreeCtrl_MyBoardTree').scrollTop = 0;
 
 		                favoriteList();
@@ -221,12 +223,12 @@
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		        if(nodeLevel > 6)
-		        	nodeLevel = 6;
+		        if(nodeLevel > 9)
+		        	nodeLevel = 9;
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 140 - 20*nodeLevel +'px';
+		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -316,12 +318,12 @@
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		        if(nodeLevel > 6)
-		        	nodeLevel = 6;
+		        if(nodeLevel > 9)
+		        	nodeLevel = 9;
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 140 - 20*nodeLevel +'px';
+		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -383,7 +385,7 @@
 				var node = $(".node_normal");
 				for(var i=0; i<node.length; i++) {
 					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-					node[i].style.width = '140px';
+					node[i].style.width = '156px';
 					node[i].style.textOverflow = 'ellipsis';
 					node[i].style.overflow = 'hidden';
 				} 
@@ -451,7 +453,7 @@
 					var node = $(".node_normal");
 					for(var i=0; i<node.length; i++) {
 						node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-						node[i].style.width = '140px';
+						node[i].style.width = '156px';
 						node[i].style.textOverflow = 'ellipsis';
 						node[i].style.overflow = 'hidden';
 					} 
@@ -478,7 +480,7 @@
 
 		            strHTML += "<h2><span id='TreeCtrl" + i.toString() + "' value='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ")'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2>";
 		            strHTML += "  <ul>";
-		            strHTML += "	  <div  class='tree' id='TreeCtrl" + i.toString() + "obj" + "' style='display:none;height:auto;width:auto;overflow-x:auto;overflow-y:auto;padding-left:10px' ></div>";
+		            strHTML += "	  <div  class='tree' id='TreeCtrl" + i.toString() + "obj" + "' style='display:none;height:100%;width:auto;overflow-x:auto;overflow-y:auto;padding-left:10px' ></div>";
 		            strHTML += "  </ul>";
 		        }
 		        xmldomNodes = null;
@@ -668,7 +670,7 @@
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
-		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
+		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%;' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
@@ -685,7 +687,7 @@
            				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
            				document.write("<ul>\n");
-           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 200px; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
+           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
            				document.write("</ul>\n");
            				i++;
         			});
@@ -706,7 +708,7 @@
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
-		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
+		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%;' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
