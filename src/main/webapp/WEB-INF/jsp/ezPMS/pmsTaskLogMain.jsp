@@ -185,7 +185,7 @@ function selectedTR(elem){
 	margin-right : 5px;
 	width : 16%;
 	overflow : auto;
-	border : 1px solid black;
+	border : 1px solid #d1d1d1;
 	float : left;
 	display : inline-block
 }
@@ -193,7 +193,7 @@ function selectedTR(elem){
 #projectContent {
 	width : 83%;
 	overflow : auto;
-	border : 1px solid black;
+	border : 1px solid #d1d1d1;
 }
 
 #searchArea {
@@ -253,8 +253,8 @@ function selectedTR(elem){
 		<div id="taskName"></div>
 		<div id="searchArea">
 			<select id="searchId">
-				<option value="1" selected>작업 내용</option>
-				<option value="2">작업 상태</option>
+				<option value="1" selected>이력 내용</option>
+				<option value="2">이력 상태</option>
 			</select>
 			<input type="text" id="searchByContent">
 			<a class="imgbtn" id="searchButton" onclick="searchLogContent()" style="margin-left:1px; margin-top:1px;"><span>검색</span></a>
