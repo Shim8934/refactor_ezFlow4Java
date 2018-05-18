@@ -5,11 +5,17 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+		<title>전체근태관리</title>
+		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
+	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 	    <link rel="stylesheet" href='/css/Tab.css' type="text/css" />
 	    <link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
+	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	    
 	    <style>
@@ -17,8 +23,9 @@
 	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: initial;}
 			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: initial;}
 	    </style>
-		<script type="text/javascript" language="javascript">			
-			var TabId = "modify";
+	    
+		<script type="text/javascript" language="javascript">
+			var Tab1_SelectID = "modify";
 			var pCompanyId = "${adminCompany}";
 	    	var pDeptId = ""; //현재 선택된 부서의 아이디
 	    	//검색조건 저장 변수
@@ -37,20 +44,13 @@
 	    	var selectedDept = "${selectedDept}";
 	    	var listSize = 19;
 	    	
-	    	
 	        document.onselectstart = function () { return false; };
 	        
-	        $(document).ready(function(){
-	        	if (navigator.userAgent.indexOf('Firefox') != -1) {
-	                document.body.style.MozUserSelect = 'none';
-	                document.body.style.WebkitUserSelect = 'none';
-	                document.body.style.khtmlUserSelect = 'none';
-	                document.body.style.oUserSelect = 'none';
-	                document.body.style.UserSelect = 'none';
-	            }
+	        $(function() {
+	        	$("#Sdatepicker").val("${searchStartDate}");
+	    		$("#Edatepicker").val("${searchEndDate}");
 	        	
-	            document.getElementById(TabId).setAttribute("class", "tabon");
-	            Tab1_SelectID = TabId;
+	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
 	            
 	            if (document.getElementById("ListDept").length == 0) {
 		            alert("부서 정보가 없습니다.");
@@ -60,48 +60,69 @@
 		    		} else {
 			            document.getElementById("ListDept").selectedIndex = 0;
 		    		}
-		    		
-		    		dept_change();
 		        }
 
-	            ChangeTab(document.getElementById(TabId));
+	            ChangeTab(document.getElementById(Tab1_SelectID));
 	        });
 	        
+	        $(function () {
+			    $("#Sdatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			    $("#Edatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			});
+			    
+	    	var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
+	        
 	        function ChangeTab(obj) {
-	            var pSelectTab = obj.getAttribute("id");
+	        	pSelectTab = obj.getAttribute("id");
 
-	            switch (pSelectTab) {
-	          //아래쪽 div잡고 html()로 새로 그려
-	                case "modify":
-//                         document.getElementById("BoardEnv_ifrm").src = "/ezAttitude/attitudeCheck.do";
-	                    break;
-	                case "absent":
-// 	                    document.getElementById("BoardEnv_ifrm").src = "/ezAttitude/attitudeAbsented.do";
-	                    break;
-	                case "history":
-// 	                    document.getElementById("BoardEnv_ifrm").src = "/ezAttitude/attitudeHistory.do";
-	                    break;
-	            }
+	            getFullList();
 	        }
 	        
 	        function dept_change() {
 	    		$('#receiverlist').empty();
 	    		
-	    		switch (TabId) {
-	    		case "modify":
-	    			//근태관리
-	    			break;
-	    		case "absent":
-	    			//근태입력
-	    			break;
-	    		case "history":
-	    			//관리내역
-	    			getAttitudeHistoryList();
-	    			break;
-	    		}
+	    		getList();
 	    	}
 	        
-	        var Tab1_SelectID = "";
 	        function Tab1_MouserOver(obj) {
 	            obj.className = "tabover";
 	        }
@@ -143,7 +164,66 @@
 	            }
 	        }
 	        
+	        function getFullList() {
+	        	var resultHtml = "";
+	        	switch (Tab1_SelectID) {
+	    		case "modify":
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.lhj18' /></th>";
+	    			break;
+	    		case "absent":
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
+	    			break;
+	    		case "history":
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
+	    			resultHtml += "<th style='width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
+	    			resultHtml += "<th style='width:18%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'></th>";
+	    			resultHtml += "<th style='width:6%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.lhj18' /></th>";
+	    			resultHtml += "<th style='width:8%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_User_Name'>수정자</th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'>수정일시</th>";
+	    			break;
+	    		}
+	        	
+	        	$("#contentlist .mainlist thead tr").html(resultHtml);
+	        	getList();
+	        }
+	        
+	        function getList() {
+	        	switch (Tab1_SelectID) {
+	    		case "modify":
+	    			//근태관리//list가져와서 tbodyhtml();
+	    			break;
+	    		case "absent":
+	    			//근태입력//list가져와서 tbodyhtml();
+	    			break;
+	    		case "history":
+	    			//관리내역//list가져와서 tbodyhtml();
+// 	    			getAttitudeHistoryList();
+	    			break;
+	    		}
+	        }
+	        
+	        function goToPageByNum(pCurPage){
+	    		if (pCurPage == 0 || totalPage < pCurPage) {
+	    			return;
+	    		} else {
+		    		pageNum = pCurPage;
+	    		}
+	    		
+	    		getList();
+	    	}
+	        
 	        function searchPopup() {
+	        	//searchPopup 안에 OK넣고 온클릭에  전역변수:Tab1_SelectID로 구분해서 list가져오는거 분기
 	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 	        	
 	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
@@ -185,9 +265,48 @@
 		  	</div>
 	    </div>
 	    
+	    <div id="contentlist" style="width:100%; height:620px;">
+			<table class="mainlist" style="width:100%;">
+				<thead>
+					<tr>
+<!-- 					근태관리 -->
+						<%-- <th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th> --%>
+						
+<!-- 						근태입력 -->
+						<%-- <th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th> --%>
+						
+<!-- 						근태내역 -->
+						<%-- <th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
+						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
+						<th style="width:18%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate"></th>
+						<th style="width:6%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
+						<th style="width:8%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name">수정자</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date">수정일시</th> --%>
+						
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+	  	</div>
+	    
+	    <div style="color: #666; padding-top: 10px"></div>
+		<div id="tblPageRayer"></div>
+	    
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
 	    <div id="searchPopup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
