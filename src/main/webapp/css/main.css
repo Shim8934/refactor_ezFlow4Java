@@ -174,7 +174,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .calendar_mini_title .btn_prev{width:21px;  padding:0px 1px;}
 .calendar_mini_title .calendar_mini_day{width:100%; text-align:center; font-size:13px; font-weight:bold;}
 .calendar_mini_title .btn_next{width:21px; padding:0px 1px;}
-.calendar_mini{table-layout:fixed; font-size:11px; font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; border-collapse: collapse;}
+.calendar_mini{table-layout:fixed; font-size:11px; font-family:Meiryo UI, Dotum, Arial, Helvetica, sans-serif; border-collapse: collapse;}
 .calendar_mini th{color:#000; width:14.2%; height:18px; margin:0; padding:0px 0px 3px 0px; border-top:0 none; border-left:0 none; font-size:12px; font-weight:normal; }
 .calendar_mini th.sun{color:#fc4a4a;}
 .calendar_mini th.sat{color:#46abfc;}

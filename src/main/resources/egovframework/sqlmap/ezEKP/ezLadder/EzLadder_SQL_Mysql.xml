@@ -974,13 +974,32 @@
 				DEPTNAME$lang$,
 				LINECNT,
 				LINEARRAY,
-				TENANT_ID
+				L.TENANT_ID,
+				EXTENSIONATTRIBUTE2 AS PIC
 			FROM
-				TBL_LADDER 
+				TBL_LADDER L
+			LEFT JOIN(
+				SELECT
+					CN, TENANT_ID, EXTENSIONATTRIBUTE2
+				FROM
+					TBL_USERMASTER
+				WHERE
+					CN
+				NOT IN(
+					SELECT
+						CN
+					FROM
+						TBL_USERMASTER_RETIRE
+					)
+				) U
+			ON
+				L.TENANT_ID = U.TENANT_ID
+			AND 
+				L.WRITERID = U.CN
 			WHERE
 				LADDERID = #ladderId#
 			AND
-				TENANT_ID = #tenantId#
+				L.TENANT_ID = #tenantId#
 		]]>
 	</select> 
 	
