@@ -500,9 +500,9 @@
 	                    var CurlistContent = obj.getAttribute("id");
 	                    var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
 	                    var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
-	                    if (PrePoint < CurPoint) {
+	                    if (PrePoint <= CurPoint) { //2018-05-18 문성업 (수정)
 	
-	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
+	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) { 
 	                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
 	                            for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
 	                                p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
@@ -512,7 +512,7 @@
 	
 	                    }
 	                    else if (PrePoint > CurPoint) {
-	                        for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) {
+	                        for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) { 
 	                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
 	                            for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
 	                                p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
@@ -774,8 +774,7 @@
 	 		                         }
 								}
 							}
-						} else { // 회람자 ->조직도-> 조직원의  직원이 한 명도 없을 때
-							alert("<spring:message code='ezCircular.t152' />");
+						} else { // 2018.05.18 문성업 (수정) - 메시지 삭제
 							return;
 						}    
 					} else { //끝 **
@@ -920,7 +919,7 @@
 
 							var getlistview = new ListView();
 							getlistview.LoadFromID(listid);
-                            var bFlag = getlistview.ExistRow("DATA2", strName); //2018.05.16 (문성업) 수정  - 시작 
+							var bFlag = getlistview.ExistRow("DATA2", strName); //2018.05.16 (문성업) 수정  - 시작 
 							
 							if (strId == "<c:out value='${userID}' />") {
 								alert("<spring:message code='ezCircular.t149' />");
@@ -930,7 +929,7 @@
 							if (bFlag) {
 								pAddFlag = true;
 							} else {
-								pparsingXML2 = "";
+								/* pparsingXML2 = ""; 2018.05.18 (문성업) -사용하지 않음 
 								pparsingXML = "";
 								pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 								pparsingXML = pparsingXML
@@ -958,7 +957,7 @@
 
 								var listview = new ListView();
 								listview.LoadFromID(listid);
-
+								
 								var MaxID = 0;
 								var InitTr = listview.GetDataRows();
 								var MaxCntNum = 0;
@@ -998,7 +997,7 @@
 											.getElementsByTagName("TD")[y].style.textOverflow = "";
 									document.getElementById(listid)
 											.getElementsByTagName("TD")[y].style.overflow = "";
-								}
+								} */
 							}
 						}
 					}
