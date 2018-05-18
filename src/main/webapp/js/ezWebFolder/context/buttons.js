@@ -75,7 +75,6 @@ var buttons = (function() {
 						DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
 					}
 					
-					refreshView();
 				},
 				error : function(error) {
 					alert(messages.strLang7 + error);
