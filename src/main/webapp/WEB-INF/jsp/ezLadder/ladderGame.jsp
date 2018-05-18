@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
+	<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css" type="text/css">
 	<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -855,7 +856,7 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 10px;"/></a>
+											<a href="#" onclick="start(${vo.ladderId}); return false;"><i class="far fa-play-circle" style="font-size: 90px; color: #0470e4;"></i><!-- <img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 10px;"/> --></a>
 										</div>
 									</c:when>
 									<c:otherwise>
