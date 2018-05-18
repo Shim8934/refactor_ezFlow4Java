@@ -8,7 +8,7 @@ var wInfo = 0; // 멤버 수
 var hSize = 15; // 세로 간격
 var wSize; // 가로 간격
 var ladLeftPadding;
-var moveSpeed = 6/*hSize / 10*/; // 애니메이션 속도
+var moveSpeed = 4/*hSize / 10*/; // 애니메이션 속도
 var lad = ""; // 사다리 정보
 var ladArr = []; // 사다리 정보를 배열로 저장
 var printLadInfo = []; // 사다리 방향 정보
@@ -353,7 +353,7 @@ function drawPathLine(user, moveX, moveY, type) {
 		var cv = canvas.getContext('2d');
 		
 		cv.strokeStyle = pathUser['color'];
-		cv.lineWidth = 2;
+		cv.lineWidth = 1;
 		
 		if(moveY == startYPoint) {
 			if(type == 'one' || user == 0) {

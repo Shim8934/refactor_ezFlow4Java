@@ -168,6 +168,7 @@
 		<h1>
 		<spring:message code="ezResource.t23" />
 		</h1>
+		<div style="max-width:800px;">
 		<table class="content">
 			<tr>
 				<th>
@@ -190,23 +191,23 @@
 						<tr class="primary">
 							<th>${langPrimary}</th>
 							<td>
-								<input type="text" id="Brd_NM" name="Brd_NM" style="width: 99%" maxlength="30"></td>
+								<input type="text" id="Brd_NM" name="Brd_NM" style="width: 100%" maxlength="30"></td>
 						</tr>
 						<tr class="secondary">
 							<th>${langSecondary}</th>
 							<td>
-								<input type="text" id="Brd_NM2" name="Brd_NM2" style="width: 99%" maxlength="30">
+								<input type="text" id="Brd_NM2" name="Brd_NM2" style="width: 100%" maxlength="30">
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 			<tr>
-				<th>
+				<th style="text-aline:center;">
 					<spring:message code="ezResource.t47" />
 				</th>
-				<td>
-					<textarea id="Brd_Explain" style="width: 98%" rows="3"><c:out value="${upExp}" /></textarea>
+				<td style="height: 300px;">
+					<textarea id="Brd_Explain" style="font-size:9pt ; width:98%; height:98%; margin-left:1px; margin-top: 1px;" rows="3"><c:out value="${upExp}" /></textarea>
 				</td>
 			</tr>
 			<tr style="display:none">
@@ -224,5 +225,6 @@
 			<input type="hidden" id="proc" name="proc" value="NEW">
 			<input type="hidden" id="test" value="">
 		</form>
+		</div>
 	</body>
 </html>

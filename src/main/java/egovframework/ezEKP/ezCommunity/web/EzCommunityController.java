@@ -495,7 +495,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
 
-		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID, userInfo.getTenantId());
+		/* 2018-05-18 홍승비 - UTC시간에 offset을 적용한 writeDate를 가져오기 위해 offset 추가*/
+		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID, userInfo.getTenantId(), commonUtil.getMinuteUTC(userInfo.getOffset()));
 		
 		model.addAttribute("boardItemList", list);
 		
@@ -511,6 +512,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String boardName = request.getParameter("boardName");
 		String userLevel = "";
+		String pastDate = "";
 		
 		logger.debug("boarditemList started.");
 		logger.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
@@ -537,11 +539,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
+		pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
+		
 		model.addAttribute("code", code);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pBoardName", boardName);
 		model.addAttribute("userLevel", userLevel);
+		model.addAttribute("pastDate", pastDate);
 		
 		logger.debug("boarditemList ended.");
 		
@@ -4004,6 +4013,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String userLevel = "0", pSortBy = "", showAdjacent = "", strXML = "";
 		int pPage = 1, totalPage = 1, totalCount = 0;
+		String pastDate = "";
 		
 		if (request.getParameter("sortBy") != null) {
 			pSortBy = request.getParameter("sortBy");
@@ -4064,6 +4074,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		} else {
 			totalPage = 1;
 		}
+	    
+	    /* 2018-05-18 홍승비 - 새 글에 new 표시 추가 */
+		pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -4076,6 +4092,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("page", pPage);
+		model.addAttribute("pastDate", pastDate);
 		
 		return "ezCommunity/communityBoardItemListPhoto";
 	}
