@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>지각신청 수정</title>
+		<title><spring:message code='ezAttitude.kbm2' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -54,7 +54,7 @@
 		    }
 		    
 		    window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 185 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 180 + "PX";
 		    }
 
 		    $(function () {
@@ -155,12 +155,12 @@
 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 
 			    if ("${data.changeDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
-			    	alert("날짜는 수정하실 수 없습니다.");
+			    	alert("<spring:message code='ezAttitude.kbm35'/>");
 			    	return;
 			    }
 			    
 			    if (!timeValid.test(ctime)) {
-			    	alert("올바른 시간을 지정해야 합니다.");
+			    	alert("<spring:message code='ezAttitude.kbm36'/>");
 			    	return;
 			    }
 			    
@@ -174,14 +174,15 @@
 				    data : obj,
 				    dataType : "text",
 				    error: function(xhr, status, error){
-				    	alert("수정 중 오류 발생")
+				    	alert("<spring:message code='ezAttitude.kbm3'/>")
 				    },
 				    success : function(json){
 				    	console.log(json);
-						if(json == 1)
-							alert("수정되었습니다.");
-						else 
-							alert("이미 승인 혹은 반려된 항목입니다.");
+						if (json == 1) {
+							alert("<spring:message code='ezAttitude.kbm43'/>");
+						} else {
+							alert("<spring:message code='ezAttitude.kbm44'/>");
+						}
 						window.close();
 			            try {
 			                window.opener.att_refresh();
@@ -191,27 +192,26 @@
 		    }
 		    
 		    function del() {
-		    	
 		    	var obj = new Object();
 		    	
 		    	obj.idList = attid; 
-				
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/delAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	alert("삭제 중 오류 발생")
-				    },
-				    success : function(json){
-						alert("삭제되었습니다.");
-						window.close();
-			            try {
-			                window.opener.att_refresh();
-			            } catch (e) { }
-				    }
-			    });
+				if(confirm("<spring:message code='ezAttitude.bbhs26'/>")){
+				    $.ajax({
+						type : 'post',
+					    url : '/ezAttitude/delAttModApp.do',
+					    data : obj,
+					    dataType : "text",
+					    error: function(xhr, status, error){
+					    	alert("<spring:message code='ezAttitude.kbm3'/>");
+					    },
+					    success : function(json){
+							window.close();
+				            try {
+				                window.opener.att_refresh();
+				            } catch (e) { }
+					    }
+				    });
+				}
 		    }
 	    </script>
 	</head>
@@ -223,13 +223,12 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <h1 style="padding:0px; margin-top:-5px;">지각신청수정하기</h1>
+	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.kbm2' /></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                                <li><span onclick="modify()">수정</span></li>
-	                                <li><span onclick="del()" style="display:none;">삭제</span></li>
-	                                <li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+	                                <li><span onclick="modify()"><spring:message code='ezAttitude.bbhs29'/></span></li>
+	                                <li><span onclick="del()" style="display:none;"><spring:message code='ezAttitude.bbhs30'/></span></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>
@@ -241,20 +240,20 @@
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
-                                            <th>구분</th>
+                                            <th><spring:message code='ezAttitude.bbhs22'/></th>
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
 <!--                                             	다국어 작업 -->
                                             </td>
                                         </tr>
 	                                    <tr>
-	                                        <th>기존시각</th>
+	                                        <th><spring:message code='ezAttitude.kbm37'/></th>
 	                                        <td colspan="2">
 	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center" disabled><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
-	                                        <th>변경시각</th>
+	                                        <th><spring:message code='ezAttitude.kbm38'/></th>
 	                                        <td colspan="2">
 	                                        	<span id="periodblock">
 	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center" disabled><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
@@ -262,15 +261,15 @@
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
-	                                        <th>승인상태</th>
+	                                        <th><spring:message code='ezAttitude.kbm39'/></th>
                                         	<c:if test="${data.apprStatus == 0}">
-								          		<td colspan="2">진행</td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.kbm40'/></td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 1}">
-								          		<td colspan="2">승인</td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.kbm41'/></td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 2}">
-								          		<td colspan="2">반려</td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.kbm42'/></td>	
 								          	</c:if>
 	                                    </tr>
 	                                </table>
@@ -286,7 +285,7 @@
 	            </table>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 180 + "PX";
 		    </script>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
