@@ -93,16 +93,21 @@
 						type : "POST",
 						async : true,
 						url : "/ezAttitude/attitudeDeleteItem.do",
+						dataType : "text",
 						data : {
 							attitudeId : attitudeId
 						},
-						success : function(result) {
-							window.opener.getAttitudeMainList();
-							window.opener.parent.frames["left"].getAttitudeList();
-							window.close();
+						success : function(resultStatus) {
+		            		if (resultStatus == "success") {
+								window.opener.getAttitudeMainList();
+								window.opener.parent.frames["left"].getAttitudeList();
+								window.close();
+		            		} else {
+		            			alert("<spring:message code='ezAttitude.kbm3' />");
+		            		}
 						},
 						error: function(xhr, status, error){
-					    	alert("삭제 중 오류 발생")
+					    	alert("<spring:message code='ezAttitude.kbm3' />");
 					    }
 					})
 				}
