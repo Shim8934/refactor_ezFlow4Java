@@ -28,6 +28,7 @@
 	        var xmlhttp5 = null;
 	        var str = "<c:out value = '${strXML}' />";
 	        var primary = "<c:out value = '${primary}' />";
+	        var pastDate = "<c:out value = '${pastDate}' />";
 	        var totalPage = "<c:out value = '${totalPage}' />";
 	        var temptotalPage = totalPage;
 	        var CurPage = "1";
@@ -43,16 +44,17 @@
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
 	        
 			document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
-		        else
+		        } else {
 		            return true;
-				};
+		        }
+			};
 			window.onload = function () {
-		            get_todaycop();
-		            get_bestCommunity();
-		            get_myCommunity();
-		            makePageSelPage();
+		    	get_todaycop();
+		        get_bestCommunity();
+		        get_myCommunity();
+		        makePageSelPage();   
 		    }
 	        function change_tab(val) {
 	            if (val == "best") {
@@ -364,6 +366,7 @@
                     var itemid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMID");
                     var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                     var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
+                    var writeDate = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE");
                     td.style.cursor = "pointer";
                     td.setAttribute("boardid", boardid);
                     td.setAttribute("itemid", itemid);
@@ -371,8 +374,13 @@
                     td.setAttribute("code", copno);
                     td.onclick = function () { ItemRead_onclick(this); };
                     
+                    /* 2018-05-17 홍승비 - 새 게시물의 제목 앞에 new 표시 추가 */
+                    if (pastDate <= writeDate ) {
+                    	td.innerHTML = "<img src='/images/i_new.gif'>&nbsp;";
+                    }
+                    
                     if (primary == "1") {
-                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        td.innerHTML += "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
                         	td.innerHTML += " <SPAN style='color:#c64200'> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN>";
@@ -382,7 +390,7 @@
                         td3.className = "name";
                         td3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERNAME");
                     } else {
-                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        td.innerHTML += "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
 							td.innerHTML += " <SPAN style='color:#c64200'> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN>";
@@ -394,7 +402,7 @@
                     }
                     
                     td4.className = "day";
-                    td4.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE").substring(0, 10);
+                    td4.innerHTML = writeDate.substring(0, 10);
 
                     tr.appendChild(td);
                     tr.appendChild(td2);
