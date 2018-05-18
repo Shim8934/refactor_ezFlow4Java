@@ -582,6 +582,11 @@
 				setComment("add", 0, comment);
 			}
 		}
+		function cmtKeyEvent() {
+			if(event.keyCode == 13) {
+				addComt($("#comment_input").val());
+			}
+		}
 		/** 댓글 수정 */
 		function modifyComt(comtIndex, submitFlag) {
 			if(submitFlag) {
@@ -601,8 +606,8 @@
 				
 				html += '<div style="display: inline-block; width: 100%; margin-top: 5px;">';
 				html += '<div style="display: block; float:left; border:1px solid #ddd;padding: 0 5px;;margin-left: 20px; border-radius: 3px; width: 95%; height: 30px; overflow: hidden;">';
-				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
-				html += editTemp + '</textarea></div></div>';
+				html += '<input id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
+				html += editTemp + '</input></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
 				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="margin-right: 4px;"><spring:message code="ezLadder.t072" /></button>';
 				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '" style="width: 46px;"><spring:message code="ezLadder.t087" /></button></div>';
@@ -967,7 +972,7 @@
 				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px 0px 0px 0px;">
 					<div class="sendComment_layout">
 						<div class="comment_input_layout" style="border: none; width: 86%;">
-							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
+							<input id="comment_input" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
 						</div>
 						<div class="commentBtn">
 							<button id="sendBttn" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;"><spring:message code="ezLadder.t054" /></button>						
