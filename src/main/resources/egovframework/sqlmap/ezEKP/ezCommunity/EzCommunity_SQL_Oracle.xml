@@ -2126,7 +2126,7 @@
 					A.writerdeptname$v_USERINFO_LANG$,
 					A.writercompanyname$v_USERINFO_LANG$,
 					A.startdate,
-					A.writedate,
+					TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
 					A.parentwritedate,
 					A.importance,
 					A.title,
@@ -2684,6 +2684,7 @@
                     c_clubname,
                     c_clubname2,
                     a.boardid,
+                    readcount,
                     (SELECT 
                 		COUNT(*)  
 					FROM 

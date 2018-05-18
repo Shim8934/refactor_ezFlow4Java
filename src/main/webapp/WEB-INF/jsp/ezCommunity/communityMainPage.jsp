@@ -16,6 +16,14 @@
 			.category_select {
 				font-Weight : bold;
 			}
+			.tabpartMycommunityList table td.read {
+				text-align: center;
+				white-space: nowrap;
+    			text-overflow: ellipsis;
+    			overflow: hidden;
+   				width: 60px;
+   				padding-right:5px;
+			}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -360,6 +368,7 @@
                     var td2 = document.createElement("TD");
                     var td3 = document.createElement("TD");
                     var td4 = document.createElement("TD");
+                    var td5 = document.createElement("TD");
                     
                     td.className = "text";
                     var boardid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDID");
@@ -403,11 +412,16 @@
                     
                     td4.className = "day";
                     td4.innerHTML = writeDate.substring(0, 10);
+                    
+                    /* 2018-05-18 홍승비 - 커뮤니티 메인 페이지에서 게시물 조회수 표시 */
+                    td5.className = "read";
+                    td5.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "READCOUNT");
 
                     tr.appendChild(td);
                     tr.appendChild(td2);
                     tr.appendChild(td3);
                     tr.appendChild(td4);
+                    tr.appendChild(td5);
                     table.appendChild(tr);
                     
                     j++;

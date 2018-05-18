@@ -4013,6 +4013,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String userLevel = "0", pSortBy = "", showAdjacent = "", strXML = "";
 		int pPage = 1, totalPage = 1, totalCount = 0;
+		String pastDate = "";
 		
 		if (request.getParameter("sortBy") != null) {
 			pSortBy = request.getParameter("sortBy");
@@ -4073,6 +4074,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		} else {
 			totalPage = 1;
 		}
+	    
+	    /* 2018-05-18 홍승비 - 새 글에 new 표시 추가 */
+		pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -4085,6 +4092,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("page", pPage);
+		model.addAttribute("pastDate", pastDate);
 		
 		return "ezCommunity/communityBoardItemListPhoto";
 	}

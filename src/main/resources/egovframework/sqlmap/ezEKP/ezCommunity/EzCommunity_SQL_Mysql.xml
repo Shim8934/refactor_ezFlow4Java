@@ -2054,7 +2054,7 @@
 				A.writerdeptname$v_USERINFO_LANG$,
 				A.writercompanyname$v_USERINFO_LANG$,
 				A.startdate,
-				A.writedate,
+				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
 				A.parentwritedate,
 				A.importance,
 				A.title,
@@ -2596,6 +2596,7 @@
                 c_clubname,
                 c_clubname2,
                 a.boardid,
+                readcount,
                 (SELECT 
                 	COUNT(*)  
 				FROM 
