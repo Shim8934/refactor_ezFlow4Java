@@ -3,11 +3,14 @@ package egovframework.ezEKP.ezWebFolder.service;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -72,4 +75,5 @@ public interface EzWebFolderService {
 	Map<String, String> getAllFolderNameMap(List<String> testbnk, String primary, int tenantId);
 	List<String> getFolderListFromFileId(List<String> fileIds, int tenantId) throws Exception;
 	String getWebFolderDirPath(int tenantId);
+	double getTotalFilesSize(String fileList, int tenantId) throws Exception;
 }

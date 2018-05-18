@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
@@ -29,6 +30,7 @@ import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
+import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -54,6 +56,9 @@ public class EzWebFolderGWController_m {
 	
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
+	
+	@Autowired
+	private EzWebFolderAdminService ezWebFolderAdminService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -1306,6 +1311,38 @@ public class EzWebFolderGWController_m {
 				
 				if ("error".equals(permissionCheckResult.get("status"))) {
 					return permissionCheckResult;
+				}
+			}
+			
+			//Check upload conditions
+			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, user.getTenantId());
+			
+			if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userId)) {
+					double totalSize = 0;
+				if (fileIDList.length > 0) {
+					totalSize = ezWebFolderService.getTotalFilesSize(fileList, tenantId);
+				}
+
+				for (String _folderId : folderIDList) {
+					if (!_folderId.equals("")) {
+						FolderVO folderVO  = ezWebFolderService.getFolderByFolderId(_folderId, offset, tenantId);
+						double folderSize  = ezWebFolderAdminService.getFolderSize(folderVO.getFolderPath(), tenantId);
+						totalSize         += folderSize;
+					}
+				}
+				
+				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, user.getPrimary(), user.getTenantId());
+				
+				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
+				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+				
+				if (totalSize > (totalCapa - totalUsed)) {
+					logger.debug("Not enough storage to move/copy these files!");
+					result.put("status", "error");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
+					result.put("code", 1);
+					result.put("data", "");
+					return result;
 				}
 			}
 			

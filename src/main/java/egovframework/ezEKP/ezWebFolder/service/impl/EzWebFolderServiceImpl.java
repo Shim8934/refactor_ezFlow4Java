@@ -1115,10 +1115,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
 				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
 				
-				logger.debug("TotalUsed    : " + totalUsed);
-				logger.debug("TotalCapacity: " + totalCapa);
-				logger.debug("totalFileSize: " + totalUploadSize);
-				
 				if (totalUploadSize > (totalCapa - totalUsed)) {
 					logger.debug("Not enough storage to move/copy these files!");
 					result.put("status", "error");
@@ -1213,7 +1209,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		return result;
 	}
 
-	private double getTotalFilesSize(String fileList, int tenantId) {
+	@Override
+	public double getTotalFilesSize(String fileList, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileList",  fileList);
 		map.put("tenantId", tenantId);

@@ -119,6 +119,8 @@
             	success : function (data) {
             		if (data.code == 0) {
 	            		alert("<spring:message code='ezWebFolder.t284'/>");
+            		} else if (data.code == 1) {
+            			alert(data.reason);
             		} else if (data.code == 2) {
 	            		alert("<spring:message code='ezWebFolder.t285'/>");
 					}else if (data.code == 3) {
