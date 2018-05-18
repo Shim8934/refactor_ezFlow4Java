@@ -1697,10 +1697,7 @@
 			TBL_PMS_TASK T
 		ON 
 			L.TASK_ID = T.TASK_ID
-		<isEmpty property="groupId">
-		WHERE
-			L.PROJECT_ID = #projectId#
-		</isEmpty>
+		<isNotEmpty property="groupId">
 		<isEqual property="taskId" compareValue="0">
 		WHERE 
 			(L.GROUP_ID = #groupId# 
@@ -1724,6 +1721,7 @@
 				L.LOG_STATUS = #searchByStatus#
 			</isNotEqual>
 		</isNotEmpty>
+		</isNotEmpty>
 		AND
 			L.PROJECT_ID = #projectId#
 		AND
@@ -1736,7 +1734,9 @@
 		ORDER BY 
 			LOG_ID DESC
 		</isEqual>
-		limit 
-			#startCount#, #listNumber# 
+		<![CDATA[
+			limit 
+				#startCount#, #listNumber# 
+		]]>
 	</select>
 </sqlMap>

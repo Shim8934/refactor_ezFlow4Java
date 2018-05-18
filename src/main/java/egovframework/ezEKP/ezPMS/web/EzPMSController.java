@@ -1181,4 +1181,36 @@ public class EzPMSController {
 		LOGGER.debug("getDeptUserList ended");
 		return userList;
 	}
+	
+	//Overview에서 의견과 작업이력 불러오기
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/getOverviewContent.do")
+	@ResponseBody
+	public JSONObject getOverviewContent(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		LOGGER.debug("getOverviewContent started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		long projectId = Long.parseLong(param.get("projectId").toString());
+		
+		JSONObject overviewContent = new JSONObject();
+		
+		//작업이력 불러오기
+		String logUrl = "/rest/ezPMS/projects/" + projectId + "/logs";
+		param.put("userId", userId);
+		
+		JSONObject logResult = commonUtil.getJsonFromRestApi(logUrl, param, request, "get", null);
+		String logStatus = logResult.get("status").toString();
+		
+		if (logStatus.equals("ok")) {
+			JSONArray data = (JSONArray) logResult.get("data");
+			overviewContent.put("logList", data);
+		}
+		
+		
+		//의견 불러오기
+		
+		LOGGER.debug("getOverviewContent ended");
+		return overviewContent;
+		
+	}
 }

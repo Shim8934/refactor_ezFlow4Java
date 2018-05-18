@@ -156,12 +156,12 @@ function deleteFavorite(projectId) {
 	</h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
-	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">overview</span></p>
-	  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab">Gantt</span></p>
-	  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab">Task List</span></p>
-	 	  	<p id="FBoard_sub3"><span id="1tab3" divname="FBoard_div0" class="tab">Board</span></p>
-	 	  	<p id="FBoard_sub4"><span id="1tab4" divname="FBoard_div0" class="tab">Task Log</span></p>
-	   		<p id="FBoard_sub5"><span id="1tab5" divname="FBoard_div0" class="tab">Comment</span></p>
+	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">개요</span></p>
+	  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab">간트 차트</span></p>
+	  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab">업무 리스트</span></p>
+	 	  	<p id="FBoard_sub3"><span id="1tab3" divname="FBoard_div0" class="tab">게시판</span></p>
+	 	  	<p id="FBoard_sub4"><span id="1tab4" divname="FBoard_div0" class="tab">작업 이력</span></p>
+	   		<p id="FBoard_sub5"><span id="1tab5" divname="FBoard_div0" class="tab">의견</span></p>
 	   </div>
 	</div>
 	<iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>

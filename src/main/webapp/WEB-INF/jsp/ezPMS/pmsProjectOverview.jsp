@@ -32,12 +32,15 @@ var progressColor = "${mainSetting.progressColor}";
 var completeColor = "${mainSetting.completeColor}";
 var overdueColor = "${mainSetting.overdueColor}";
 var holdColor = "${mainSetting.holdColor}";
+var startCount = 0;
+var listNumber = 5;
 
 $(document).ready(function(){
 	$(window).resize(function() {
 		CurrentHeight = $(window).height()-100;
-		$(".overview").css("height", CurrentHeight + "px");
+		$("#overviewArea").css("height", CurrentHeight - 34 + "px");
 		$(".kanban").css("height", CurrentHeight - 14 + "px");
+		$("#kanbanArea").css("height", CurrentHeight + "px");
 	});
 });
 
@@ -45,11 +48,12 @@ $(function() {
 	initKanbanList();
 	ableToChangeStatus();
 	initProgressBar();
+	setOverviewContent();
 	
 	CurrentHeight = $(window).height()-100;
-	$(".overview").css("height", CurrentHeight + "px");
+	$("#overviewArea").css("height", CurrentHeight - 34 + "px");
 	$(".kanban").css("height", CurrentHeight - 14 + "px");
-	
+	$("#kanbanArea").css("height", CurrentHeight + "px");
 	
 	$("#kanbanArea").sortable({
 		update : function(event, ui) {
@@ -243,7 +247,7 @@ function moveToPage(target) {
 		var nowTabAttr = "1tab0";
 		changeTab(clickTabId, nowTabAttr);
 		
-		$("#FBoard_ifrm", parent.document).attr("src", "/ezPMS/getTaskLogList.do");
+		$("#FBoard_ifrm", parent.document).attr("src", "/ezPMS/getTaskLogMain.do?projectId=" + projectId + "&onlyGroup=false");
 	}
 }
 
@@ -477,23 +481,71 @@ function updateOrderStatus() {
 		type : "POST",
 		url : "/ezPMS/changeKanbanOrder.do",
 		contentType: "application/json; charset=UTF-8",
-		data :JSON.stringify(data),
+		data : JSON.stringify(data),
 		success : function(result) {},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("error : " + textStatus);
 		}
 	});  
 }
+
+function setOverviewContent() {
+	var data = {
+		projectId : projectId,
+		startCount : startCount,
+		listNumber : listNumber,
+		orderWhat : "init"
+	}
+	
+	$.ajax({
+		type : "POST",
+		url : "/ezPMS/getOverviewContent.do",
+		dataType : "json",
+		contentType : "application/json; charset=UTF-8",
+		data : JSON.stringify(data),
+		success : function(overviewList) {
+			 var logList = overviewList.logList;
+			 var logHTML = "";
+			 logHTML += "<div id='mainLog'>";
+			 
+			 for (var i = 0; i < logList.length; i++) {
+				 
+				 switch (logList[i].logStatus) {
+				 case 1 : 
+					 logList[i].logStatus = "<span style='background-color:#8DFF1B; font-size:13px;'>등록</span>";
+					 break;
+					 
+				 case 2 : 
+					 logList[i].logStatus = "<span style='background-color:#ffff66; font-size:13px;'>수정</span>";
+					 break;
+					 
+				 case 3 : 
+					 logList[i].logStatus = "<span style='background-color:#FF7A1B; font-size:13px;'>삭제</span>";
+					 break;
+				 }
+				 
+				 logHTML += "<div style='clear:both; margin-bottom:1px; border-bottom:1px;'>";
+				 logHTML += "<div style='width:16%; float:left; font-weight:bold;'>" + logList[i].logStatus + "</div>";
+				 logHTML += "<div style='font-size:13px;'>" + logList[i].logContent + "</div>";
+				 logHTML += "</div>";
+			 }
+			 
+			 logHTML += "</div>";
+			 
+			 $("#logContentArea").html(logHTML);
+		}
+	})
+}
 </script>
 <style type="text/css">
 #kanbanArea {
 	float : left;
-	width : 80%;
+	width : 78%;
 	padding : 5px;
 	border-right : 1px solid gray;
 }
 #overviewArea {
-	width : 18%;
+	width : 20%;
 	overflow : auto;
 }
 
@@ -595,6 +647,7 @@ function updateOrderStatus() {
 	<div id="logDiv">
 		작업이력<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
 		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
+		<div id="logContentArea"></div>
 	</div>
 </div>
 <div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
