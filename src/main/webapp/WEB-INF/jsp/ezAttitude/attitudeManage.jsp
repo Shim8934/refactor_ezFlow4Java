@@ -5,6 +5,7 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>전체근태관리</title>
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
@@ -45,14 +46,9 @@
 	    	
 	        document.onselectstart = function () { return false; };
 	        
-	        $(document).ready(function(){
-	        	if (navigator.userAgent.indexOf('Firefox') != -1) {
-	                document.body.style.MozUserSelect = 'none';
-	                document.body.style.WebkitUserSelect = 'none';
-	                document.body.style.khtmlUserSelect = 'none';
-	                document.body.style.oUserSelect = 'none';
-	                document.body.style.UserSelect = 'none';
-	            }
+	        $(function() {
+	        	$("#Sdatepicker").val("${searchStartDate}");
+	    		$("#Edatepicker").val("${searchEndDate}");
 	        	
 	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
 	            
@@ -68,6 +64,52 @@
 
 	            ChangeTab(document.getElementById(Tab1_SelectID));
 	        });
+	        
+	        $(function () {
+			    $("#Sdatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			    $("#Edatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			});
+			    
+	    	var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
 	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
