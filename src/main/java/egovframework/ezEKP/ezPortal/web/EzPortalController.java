@@ -1056,8 +1056,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pollNum = "";
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
-		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
-		
+		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		/*근태관리 추가*/
+		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		mailAddress = userInfo.getEmail();
 		
 		if (userInfo.getPrimary().equals("1")) {
@@ -1116,6 +1117,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+		//근태관리 추가
+		model.addAttribute("serverTime", serverTime);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";

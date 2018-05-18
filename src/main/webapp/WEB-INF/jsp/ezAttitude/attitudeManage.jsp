@@ -5,13 +5,17 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+		<title>전체근태관리</title>
+		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
+	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 	    <link rel="stylesheet" href='/css/Tab.css' type="text/css" />
 	    <link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	    <link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
+	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
@@ -52,7 +56,9 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	        	
+	        });
+
+	        $(function() {
 	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
 	            
 	            if (document.getElementById("ListDept").length == 0) {
@@ -89,10 +95,10 @@
 				});
 
 				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-				$("#Sdatepicker").datepicker('setDate', "");
+				$("#Sdatepicker").datepicker('setDate', "${searchStartDate}");
 
 				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-				$("#Edatepicker").datepicker('setDate', "");
+				$("#Edatepicker").datepicker('setDate', "${searchEndDate}");
 	        });
 	        
 			var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
@@ -121,6 +127,27 @@
 		        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	        });
+	        
+	        $(function () {
+			    $("#Sdatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			    $("#Edatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			});
+			    
+
 	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
