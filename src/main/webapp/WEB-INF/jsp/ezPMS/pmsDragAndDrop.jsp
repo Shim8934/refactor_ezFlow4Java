@@ -58,8 +58,8 @@
 	        var filecnt = file.length;
 	        
 	        for (var i = 0; i < filelist.length; i++) {
-	            if (filelist[i].size / 1024 / 1024 > 5) {
-	                alert("<spring:message code='ezJournal.t162'/>");
+	            if (filelist[i].size / 1024 / 1024 > window.parent.AttachLimit) {
+	                alert("첨부파일은 크기가" + window.parent.AttachLimit + "MB를 넘을 수 없습니다.");
 	                return;
 	            }
 	            else {
@@ -70,6 +70,98 @@
 	        filesize += tempfilesize;
 	
 		    fileupload();
+	    }
+	    
+	    function fileupload() {
+	        var fd = new FormData();
+	        var url = "";
+
+	        for (var i = 0; i < file.length; i++) {
+				var fnl = file[i].name.length;
+	        	
+	        	if (fnl > attachFileNameMaxLength) {
+	        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+	        		isfileup = false;		        			
+	        		return;
+	        	} else {
+	        		fd.append("fileToUpload", file[i]);
+	        	}		            
+	        }
+	        fd.append("maxSize", window.parent.AttachLimit * 1024 * 1024);
+
+	        isfileup = true;
+	        xhr.upload.addEventListener("progress", uploadProgress, false);
+	        xhr.addEventListener("load", uploadComplete, false);
+	        xhr.addEventListener("error", uploadFailed, false);
+	        xhr.addEventListener("abort", uploadCanceled, false);
+	        
+	        url = "/ezPMS/uploadProjectAttach.do?mode=" + mode + "&projectId=" + projectId;
+	        
+	        xhr.open("POST", url);
+	        xhr.send(fd);
+	        document.getElementById('progdiv').style.display = "inline-block";
+	    }	
+	    
+	    function btnfileup() {
+	        document.getElementById("file").click();
+	    }
+
+	    function filechange(e) {
+	        onDrop();
+	    }
+	    
+	    function btnfiledel() {
+	        var filecnt = document.getElementById("filelist").childNodes.length;
+	        var strRet = "";
+	        var fileList = "";
+
+	        var isFileDelete = false;
+	        for (var i = 1; i < filecnt; i++) {
+	            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
+	                var pAttachDelSN;
+	                var pAttachDelFileName;
+	                var is_newfile;
+	                var pNewNodeName = "";
+	                var Rtnval;
+
+	                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("fileInfo");
+	                
+	                if (fileList == "") {
+						fileList = pAttachDelFileName;
+					} else {
+						fileList += "/" + pAttachDelFileName;
+					}
+	                
+	                var delfilesize;
+	                delfilesize = getNodeText(document.getElementById("filelist").childNodes[i].lastChild);
+	                filesize -= delfilesize;
+	                file.splice(i - 1, 1);
+	                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
+	                i--;
+	                filecnt--;
+
+	                isFileDelete = true;
+	            }
+	        }
+
+	        if (!isFileDelete) {
+	            alert("삭제할 첨부파일을 선택하세요.");
+	        }
+	        
+	        $.ajax({
+				async : false,
+				url : "/ezJournal/tempUploadFileDelete.do",
+                type : 'POST',
+                dataType : 'text',
+                data : {
+                	fileList : fileList
+                },
+                success: function() {
+                },
+                error: function() {
+                	alert("<spring:message code='ezCircular.t102'/>");	
+                }
+			});
 	    }
 	    
 	    function uploadProgress(evt) {
@@ -202,68 +294,6 @@
 	        catch (e) { alert("returnvalue :: " + e.description); }
 	    }
 		    
-	    function btnfileup() {
-	        document.getElementById("file").click();
-	    }
-
-	    function filechange(e) {
-	        onDrop();
-	    }
-	
-	    function btnfiledel() {
-	        var filecnt = document.getElementById("filelist").childNodes.length;
-	        var strRet = "";
-	        var fileList = "";
-
-	        var isFileDelete = false;
-	        for (var i = 1; i < filecnt; i++) {
-	            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
-	                var pAttachDelSN;
-	                var pAttachDelFileName;
-	                var is_newfile;
-	                var pNewNodeName = "";
-	                var Rtnval;
-
-	                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("fileInfo");
-	                
-	                if (fileList == "") {
-						fileList = pAttachDelFileName;
-					} else {
-						fileList += "/" + pAttachDelFileName;
-					}
-	                
-	                var delfilesize;
-	                delfilesize = getNodeText(document.getElementById("filelist").childNodes[i].lastChild);
-	                filesize -= delfilesize;
-	                file.splice(i - 1, 1);
-	                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
-	                i--;
-	                filecnt--;
-
-	                isFileDelete = true;
-	            }
-	        }
-
-	        if (!isFileDelete) {
-	            alert("<spring:message code='ezJournal.t163'/>");
-	        }
-	        
-	        $.ajax({
-				async : false,
-				url : "/ezJournal/tempUploadFileDelete.do",
-                type : 'POST',
-                dataType : 'text',
-                data : {
-                	fileList : fileList
-                },
-                success: function() {
-                },
-                error: function() {
-                	alert("<spring:message code='ezCircular.t102'/>");	
-                }
-			});
-	    }
-	
 	    function checkall() {
 	        var filecnt = document.getElementById("filelist").childNodes.length;
 
@@ -276,42 +306,10 @@
 	            }
 	        }
 	    }
-	
-	    function fileupload() {
-	        var fd = new FormData();
-	        var url = "";
-
-	        for (var i = 0; i < file.length; i++) {
-				var fnl = file[i].name.length;
-	        	
-	        	if (fnl > attachFileNameMaxLength) {
-	        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
-	        		isfileup = false;		        		
-	        		
-	        		return;
-	        	} else {
-	        		fd.append("fileToUpload", file[i]);
-	        	}		            
-	        }
-	        fd.append("typeId", window.parent.typeId);
-	        fd.append("maxSize", window.parent.AttachLimit * 1024 * 1024);
-
-	        isfileup = true;
-	        xhr.upload.addEventListener("progress", uploadProgress, false);
-	        xhr.addEventListener("load", uploadComplete, false);
-	        xhr.addEventListener("error", uploadFailed, false);
-	        xhr.addEventListener("abort", uploadCanceled, false);
-	        
-	        url = "/ezPMS/uploadProjectAttach.do?mode=" + mode + "&projectId=" + projectId;
-	        
-	        xhr.open("POST", url);
-	        xhr.send(fd);
-	        document.getElementById('progdiv').style.display = "inline-block";
-	    }	
 	</script>
 </head>
-<body style ="width:100%;height:100%;overflow:hidden">
-	<div style="width:100%;white-space:nowrap;display:inline-block;height:22px">
+<body style ="width:100%; height:100%; overflow:hidden;">
+	<div style="width:100%; white-space:nowrap; display:inline-block; height:22px">
 	    <div style="float:left">
 	        <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezSchedule.t370'/></span></a>
 	        <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezSchedule.t371'/></span></a>
