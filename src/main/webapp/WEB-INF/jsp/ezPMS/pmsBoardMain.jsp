@@ -17,12 +17,12 @@
 	var groupId = null;
 	var taskId = null;
 	var taskName = null;
-	var containerId = "test";
-	
 	var currentPage = 1;
+	var treeData = JSON.parse('${data}');
 	
 	$(document).ready(function() {
-		getProjectTaskTree(containerId, projectId, false);
+		
+		getProjectTaskTree("taskTree", treeData, false);
 		getBoardList();
 		
 		$(".tree").on("click", ".jstree-anchor", function() {
@@ -34,21 +34,19 @@
 				groupId = $(this).parent().attr("id");
 				taskId = null;
 			}
-
+			currentPage = 1;
 			getBoardList();
-		})
+		});
+		
+		// 여기 다른 방법으로 할 순 없을지 고민해봐야함. 근데 아무리 해도 모르겠음
+		setTimeout(function() {
+			projectName = $("li[role='treeitem'][aria-level='1']").children("a").text();
+			taskName = projectName;
+		}, 100);
 	});
 	
 	function goAddBoard() {
-		var chosenTask = $("a.jstree-clicked");
-		var project = $("li[role='treeitem'][aria-level='1']");
-		projectName = project.children("a").text();
-		
-		if(!chosenTask.length) {
-			taskName = projectName;
-			groupId = project.attr("id");
-		}
-		
+	
 		var height = window.screen.availHeight;
 	    var width = window.screen.availWidth;
 	    var top = (height - 820) / 2;
@@ -84,7 +82,7 @@
 </head>
 <body style="overflow: hidden;">
 	
-	<div id="test" class="tree" style="float: left;"></div>
+	<div id="taskTree" class="tree" style="float: left;"></div>
 	<div style="float: left; border: 1px solid silver; margin-left: 10px;">
 		<div id="mainmenu">
 			<ul class="on">

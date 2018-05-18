@@ -53,7 +53,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//게시판으로 가는 부분 url 수정하기
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectBoard.do?projectId=" + projectId);
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
 	});
 	
 	$("#1tab4").click(function(){

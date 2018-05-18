@@ -37,22 +37,35 @@ public class EzPMSController3 {
 	@Autowired
 	private Properties config;
 	
-	@RequestMapping(value="/ezPMS/getProjectBoard.do")
-	public String getProjectBoard(HttpServletRequest request, Model model) {
-		
+	@RequestMapping(value="/ezPMS/getBoardMain.do")
+	public String getProjectBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("ezPMS getProjectBoard started");		
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
+		String onlyGroup = request.getParameter("onlyGroup");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("onlyGroup", onlyGroup);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray treeData = (JSONArray) resultBody.get("data");
+			model.addAttribute("data", treeData);
+		}
 		
 		model.addAttribute("projectId", projectId);
 		
 		LOGGER.debug("ezPMS getProjectBoard ended");
 		
-		return "/ezPMS/pmsBoard";
+		return "/ezPMS/pmsBoardMain";
 	}
 	
 	@RequestMapping(value="/ezPMS/goAddBoard.do")
-	public String goAddBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
-		
+	public String goAddBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {		
 		LOGGER.debug("ezPMS goAddBoard started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
