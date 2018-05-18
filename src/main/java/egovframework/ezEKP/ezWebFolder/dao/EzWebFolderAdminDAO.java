@@ -72,4 +72,8 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 	public UserCapacityVO getUserCapacity(Map<String, Object> map) {
 		return (UserCapacityVO)select("EzWebFolderAdminDAO.getUserCapacity", map);
 	}
+
+	public double getFolderSize(Map<String, Object> map) {
+		return (double)select("EzWebFolderAdminDAO.getFolderSize", map);
+	}
 }

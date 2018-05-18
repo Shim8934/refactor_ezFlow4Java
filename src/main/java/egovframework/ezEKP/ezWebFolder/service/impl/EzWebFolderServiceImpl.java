@@ -17,13 +17,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.zip.ZipEntry;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ import org.json.simple.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -52,6 +48,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
+import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1092,8 +1089,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		String companyId  = userInfo.getCompanyID();
 		String userId     = userInfo.getId();
 		String offset     = userInfo.getOffset();
+		String primary    = userInfo.getPrimary();
 		int tenantId      = userInfo.getTenantId();
 		JSONObject result = new JSONObject();
+		int totalFiles    = fileArr.length;
+		fileList          = "'" + fileList + "'";
+		fileList          = fileList.replace(",", "','");
 		
 		if (fileArr.length == 0) {
 			logger.debug("Parameter error!");
@@ -1104,6 +1105,30 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		}
 		
 		try {
+			//Check upload conditions
+			FolderVO folder = getFolderByFolderId(folderId, offset, userInfo.getTenantId());
+			
+			if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userId)) {
+				double totalUploadSize      = getTotalFilesSize(fileList, tenantId);
+				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+				
+				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
+				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+				
+				logger.debug("TotalUsed    : " + totalUsed);
+				logger.debug("TotalCapacity: " + totalCapa);
+				logger.debug("totalFileSize: " + totalUploadSize);
+				
+				if (totalUploadSize > (totalCapa - totalUsed)) {
+					logger.debug("Not enough storage to move/copy these files!");
+					result.put("status", "error");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
+					result.put("code", 1);
+					result.put("data", "");
+					return result;
+				}
+			}
+			
 			if (mode.equals("move")) {
 				//Check privileges
 				if (!privileges.equals("normal")) {
@@ -1115,10 +1140,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					}
 				}
 				else {
-					int totalFiles = fileArr.length;
-					fileList       = "'" + fileList + "'";
-					fileList       = fileList.replace(",", "','");
-					int count      = checkFilesOwner(userId, fileList, tenantId);
+					int count = checkFilesOwner(userId, fileList, tenantId);
 					
 					if (totalFiles == count) {
 						//move files
@@ -1189,6 +1211,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		}
 		
 		return result;
+	}
+
+	private double getTotalFilesSize(String fileList, int tenantId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileList",  fileList);
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getTotalFilesSize(map);
 	}
 
 	@Override

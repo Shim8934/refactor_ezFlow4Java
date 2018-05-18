@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -290,11 +291,8 @@ public class EzWebFolderGWController_y {
 				}
 			}
 			
-			
-			
-			
 			int pos = destFolder.getFolderPath().indexOf(folder.getFolderPath());
-		
+			
 			if (pos != -1) {
 				result.put("status", "error");
 				result.put("code", 2);
@@ -304,6 +302,23 @@ public class EzWebFolderGWController_y {
 				resmode = "move";
 			}else {
 				resmode = "copy";
+			}
+			
+			if (destFolder.getFolderType().equals("U") && folder.getOwnerId().equals(userId)) {
+				double folderSize           = ezWebFolderAdminService.getFolderSize(folder.getFolderPath(), tenantId);
+				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
+				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+				
+				if (folderSize > (totalCapa - totalUsed)) {
+					LOGGER.debug("Not enough storage to move/copy this folder!");
+					result.put("status", "error");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
+					result.put("code", 7);
+					result.put("data", "");
+					return result;
+				}
 			}
 			
 			String realPath = request.getServletContext().getRealPath("");
@@ -317,81 +332,6 @@ public class EzWebFolderGWController_y {
 			result.put("code", 2);
 		}
 		LOGGER.debug("folderCopy ended");
-		return result;
-	}
-	// 폴더 이동 			
-	@SuppressWarnings("unchecked")
-	@RequestMapping (value="/rest/ezwebfolder/folders2/{folderId}/folder-move", method = RequestMethod.PUT , produces = "application/json;charset=utf-8" )
-	public JSONObject folderMove (@PathVariable String folderId, HttpServletRequest request,@RequestBody JSONObject jsonObject ,Locale locale  )  {
-		LOGGER.debug("folderMove started");
-		JSONObject jsonObj 	= new JSONObject();
-		String serverName 	= request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host") 			: "";
-		String lang 		= (String) jsonObject.get("lang")   		!= null ? (String) jsonObject.get("lang") 		 	: "";
-		String userId		= (String) jsonObject.get("id") 		!= null ? (String) jsonObject.get("id")				: "";
-		String uppId		= (String) jsonObject.get("uppFolderId")!= null ? (String) jsonObject.get("uppFolderId") 	: "";
-		JSONObject result   = new JSONObject();
-		MCommonVO common;
-		try {
-			common = mOptionService.commonInfoWeb(serverName, userId);
-			int tenantId  = common.getTenantId();
-			String comId  = common.getCompanyId();
-			String offset = common.getOffSet();
-			String mode ="move";
-			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "lang : " + lang + "userId : "+userId + "tenantId : "+ tenantId
-					+ "comId : " + comId + "offset" + offset);
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
-			
-			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") || uppId.equals("")) {
-				LOGGER.debug("Parameter error!");
-				result.put("status", "error");
-				result.put("code", 1);
-				return result;
-			}
-			int checkSbCreater = 0;
-			checkSbCreater = service.checkCreater(folderId, tenantId, comId, userId);
-			
-			if (checkSbCreater == 1) {
-				FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-				FolderVO destFolder = ezWebFolderService.getFolderByFolderId(uppId, offset, tenantId);
-				//Check copy/move conditions
-				if (folder.getFolderUpper().equals(uppId)) {
-					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t224", locale));
-					result.put("code", 2);
-					return result;
-				}
-				
-				int pos = destFolder.getFolderPath().indexOf(folder.getFolderPath());
-			
-				if (pos != -1) {
-					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t245", locale));
-					result.put("code", 2);
-					return result;
-				}
-				
-				String realPath = request.getServletContext().getRealPath("");
-				ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo);
-				
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		
-			}else{
-				LOGGER.debug("subFolder or SubFile is not mine!");
-				result.put("status", "error");
-				result.put("code", 4);
-				result.put("data", "");
-				return result;
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 2);
-			result.put("data", "");
-		}
-		LOGGER.debug("folderMove ended");
 		return result;
 	}
 	
