@@ -23,6 +23,7 @@
 			var chCheckSysop = "<c:out value='${checkSysop }'/>";
 			var newMemberConfirmType = "<c:out value='${newMemberConfirmType }'/>";
 			var joinFlag = "<c:out value='${joinFlag }'/>";
+			var pastDate = "<c:out value = '${pastDate}' />";
 			var xmlhttp;
 			
 			var strLang1 = "<spring:message code='ezCommunity.t78' />";
@@ -31,7 +32,6 @@
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
 		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
-		    var isCrossBrowser = "{isCrossBrowser}";
 		    
 		    $(function () {
 		        $.ajax({
@@ -81,7 +81,6 @@
 		    });
 		    
 		    function getCommhomeBoardInfo() {
-		    	var pastDate = "";	
 		    	$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -147,7 +146,6 @@
 	            					},
 	            					dataType : "json",
 	            					success: function(result){
-	            						pastDate = result.pastDate;
 	            						var imageCnt = 0;
 	            						result.boardItemList.forEach(function(itemVO, index) {
 	            							var li = document.createElement("li");
@@ -663,13 +661,8 @@
 		    			resultXML = loadXMLString(result);
 		    			
 		    			var master = "";
+		    			master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
 		    			
-		    			if (isCrossBrowser == 'true') {
-		    				master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
-		    			} else {
-		    				master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
-		    			}
-	    		    
 				        if (master == null) {
 				        	master = "";
 				        }
