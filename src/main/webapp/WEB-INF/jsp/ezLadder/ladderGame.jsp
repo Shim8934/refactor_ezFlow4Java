@@ -601,13 +601,13 @@
 			if(editComtFlag == comtIndex) {
 				$("[id^=div2Cmt], [id^=_eCmt]").show();
 				$("[id^=editCmtDiv]").hide();
-				var editTemp= $("#cmtArea" + editComtFlag).html();
-				editTemp = editTemp.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n');
+				var editTemp= $("#cmtArea" + editComtFlag).text();
+				//editTemp = editTemp.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n');
 				
 				html += '<div style="display: inline-block; width: 100%; margin-top: 5px;">';
 				html += '<div style="display: block; float:left; border:1px solid #ddd;padding: 0 5px;;margin-left: 20px; border-radius: 3px; width: 95%; height: 30px; overflow: hidden;">';
-				html += '<input id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
-				html += editTemp + '</input></div></div>';
+				html += '<input id="editCmtArea' + editComtFlag + '" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
+				html += '</input></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
 				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="margin-right: 4px;"><spring:message code="ezLadder.t072" /></button>';
 				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '" style="width: 46px;"><spring:message code="ezLadder.t087" /></button></div>';
@@ -616,6 +616,7 @@
 			$("#div2Cmt" + comtIndex).toggle();
 			$("#_eCmt" + comtIndex).toggle();
 			$("#editCmtDiv" + comtIndex).html(html).toggle();
+			$("#editCmtArea" + editComtFlag).val(editTemp);
 			
 		}
 		/** 댓글 삭제 */
