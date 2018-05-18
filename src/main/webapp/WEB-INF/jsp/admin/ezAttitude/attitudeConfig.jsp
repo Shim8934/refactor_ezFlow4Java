@@ -53,7 +53,7 @@
 	            		attitudeConfigSet(result);
 	            	},
 	            	error : function() {
-	            		
+	            		alert("<spring:message code='ezAttitude.kbm3' />");
 	            	}
 	            });
 	        }
@@ -107,6 +107,7 @@
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezAttitude/updateAttitudeConfInfo.do",
+	            	dataType : "text",
 	            	data : {
 	            			companyId : encodeURI($("#ListCompany").val()),
 	            			workStartTime : $("#startTime").val(),
@@ -115,9 +116,13 @@
 	            			attitudeModAppl : $('input[name=attitude_mod_appl]:checked').val(),
 	            			closedDateAttitude : $('input[name=close_date_attitude]:checked').val()
 	            	},
-	            	success : function() {
-	            		alert("<spring:message code='ezAttitude.bbhs19' />");
-	            		company_change();
+	            	success : function(resultStatus) {
+	            		if (resultStatus == "success") {
+		            		alert("<spring:message code='ezAttitude.bbhs19' />");
+		            		company_change();
+	            		} else {
+	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            		}
 	            	},
 	            	error : function() {
 	            		alert("<spring:message code='ezAttitude.kbm3' />");
