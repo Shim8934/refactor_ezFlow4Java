@@ -1,41 +1,21 @@
 package egovframework.ezEKP.ezAttitude.web;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.image.PixelGrabber;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Base64;
-import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.ibm.icu.util.Calendar;
 
@@ -56,7 +36,6 @@ import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -832,7 +811,6 @@ public class EzAttitudeGWController {
 			} else {
 				result.put("status", "failed");
 			}
-			LOGGER.debug(result.get("status")+"***************************************************************************************************************");
 			
 			result.put("code", 0);
 			result.put("data", "");
@@ -1976,73 +1954,4 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	
-	/**
-	 * 조직도 부서 및 사원목록 검색 함수
-	 */
-	@RequestMapping(value = "/ezAttitude/getSearchList.do", produces="text/xml;charset=utf-8")
-	@ResponseBody
-	public String getSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
-	    LOGGER.debug("getSearchList started.");
-	    
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-        int tenantID = userInfo.getTenantId();        
-        
-        LOGGER.debug("tenantID=" + tenantID);       
-		
-		String searchlist = request.getParameter("search").trim();
-		String celllist = request.getParameter("cell");
-		String proplist = request.getParameter("prop");
-		String listtype = request.getParameter("type");
-		String lang = userInfo.getPrimary();
-		String page = request.getParameter("page");
-		String infoXML = "";
-		
-		LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
-		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
-		
-		if (page == null) {
-			infoXML = ezAttitudeService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
-		} else {
-			infoXML = ezAttitudeService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID);
-		}
-		
-		Document doc = commonUtil.convertStringToDocument(infoXML);
-
-		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
-            String[] arryCell = celllist.toUpperCase().split(";");
-            String tooltip = "";
-            int idx = 0;
-            
-            for (int j = 0; j < arryCell.length; j++) {
-                if (arryCell[j].equals("EXTENSIONATTRIBUTE5")) {
-                    idx = j;
-                }
-            }
-            
-            for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
-                Element Nodetip = doc.createElement("TOOLTIP");
-
-                if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
-                    String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
-                    tooltip = arry[3] + " ~ " + arry[4];
-                    
-                    if (arry.length > 5) {
-                        tooltip += " " + arry[5];
-                    }
-                    
-                    Nodetip.setTextContent(tooltip);
-                    
-                    doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).setTextContent("Y");
-                    doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).appendChild(Nodetip);
-                }
-            }
-        }
-		
-		String result = commonUtil.convertDocumentToString(doc);
-		result = result.replaceAll("null", "");
-		
-		LOGGER.debug("getSearchList ended.");
-		return result;
-	}
 }
