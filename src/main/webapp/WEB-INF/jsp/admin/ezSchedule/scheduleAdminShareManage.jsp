@@ -162,7 +162,6 @@
 		        <li><span onClick="share_delete()"><spring:message code='ezSchedule.t41' /></span></li>
 		    </ul>
 		</div>
-	    <br />
 	    <table style="width: 750px; height: 385px;" >
             <tr>
                 <td>
