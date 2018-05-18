@@ -586,7 +586,7 @@ public class EzWebFolderGWController {
 			//Check upload conditions
 			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
 			
-			if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userInfo.getUniqId())) {
+			if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userInfo.getId())) {
 				WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
 				double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
 				double totalUploadSize              = 0;
