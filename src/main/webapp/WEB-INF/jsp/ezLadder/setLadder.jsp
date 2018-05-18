@@ -40,13 +40,18 @@
 					ladder_window_resize();
 				});
 				
+				var handle = $("#custom-handle");
 				$("#slider-range-min").slider({ 
 					range: "min",
 					value: 0,
 					min: 0,
 					max: 0,
+					create: function() {
+						handle.text($(this).slider("value"));
+					},
 					slide: function( event, ui ) {
-						$("#amount").text(ui.value);
+						/* $("#amount").text(ui.value); */
+						handle.text(ui.value);
 					},
 					stop: function(event, ui) {
 						lineCnt = ui.value;
@@ -471,11 +476,13 @@
 					} else {
 						$("#slider-range-min").slider("option", "value", lineCnt);
 					}
-					$("#amount").text($("#slider-range-min").slider("value"));
+					$("#custom-handle").text($("#slider-range-min").slider("value"));
+					//$("#amount").text($("#slider-range-min").slider("value"));
 				} else {
 					$("#slider-range-min").slider("option", "max", 0);
 					$("#slider-range-min").slider("option", "value", 0);
-					$("#amount").text(0);
+					$("#custom-handle").text(0);
+					//$("#amount").text(0);
 				}
 			}
 
@@ -851,7 +858,8 @@
 				
 				$("input[name='secretFlag']").val($("#ladderSecret .active").attr("_flag"));
 				$("input[name='type']").val(ladderType);
-				$("input[name='lineCnt']").val($("#amount").text());
+				$("input[name='lineCnt']").val($("#custom-handle").text());
+				//$("input[name='lineCnt']").val($("#amount").text());
 				
 				if($("#tempItemList").css("display") == "block") {
 					var $items = $("input[name='items']");
@@ -927,7 +935,22 @@
 			}
 			.active {
 				display: inline;
-			}			
+			}	
+			#custom-handle {
+				width: 3em;
+				height: 1.6em;
+				top: 50%;
+				margin-top: -.8em;
+				text-align: center;
+				line-height: 1.6em;
+			}	
+			.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+				color: #000000;
+				border: 1px solid #d8dcdf;
+			}
+			.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+				font-weight: normal;
+			}
 		</style>
 	</head>
 	<body class="mainbody">
@@ -961,10 +984,12 @@
 							</div>														
 							<div style="float: right;height:40px; line-height: 40px;margin-left:20px;margin-top:5px;">
 								<img src="/images/line.png" style="vertical-align: middle;float: left;padding-top:6px" title="<spring:message code='ezLadder.t081'/>"/>								
-								<div style="height: 40px; width: 40px; line-height:40px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 3px; margin-right:15px; background-color: white">
+								<!-- <div style="height: 40px; width: 40px; line-height:40px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 3px; margin-right:15px; background-color: white">
 									<span id="amount">0</span>
+								</div> -->
+								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:90px; margin-left: 15px;">
+									<div id="custom-handle" class="ui-slider-handle"></div>
 								</div>
-								<div id="slider-range-min" style="width: 200px; top: 15px; float:left; margin-right:65px;"></div>
 								<input name="lineCnt" style="display: none;" />
 							</div>
 							<div style="float: right; height: 45px; line-height: 45px;margin-top:2px">
