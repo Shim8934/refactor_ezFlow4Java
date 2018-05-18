@@ -159,7 +159,7 @@
 			    var ohour, ominute;
 			    var otime = $('#Otimepicker').val() 
 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
-
+				
 			    if ("${data.startDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
 			    	alert("<spring:message code='ezAttitude.kbm35'/>");
 			    	return;
@@ -167,6 +167,11 @@
 			    
 			    if (!timeValid.test(ctime) || !timeValid.test(otime)) {
 			    	alert("<spring:message code='ezAttitude.kbm36'/>");
+			    	return;
+			    }
+			    
+			    if (ctime == otime) {
+			    	alert("신청시각이 기존시각과 일치합니다.");
 			    	return;
 			    }
 			    

@@ -184,7 +184,7 @@
 					$("#selectAtti option#A03").remove();
 				}
 		        
-		        if (typeId == 'A04' && dateType == 4) {
+		        if (selectType == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
 			        $('#Stimepicker').timepicker('setTime', SDate);
 			        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
@@ -195,7 +195,7 @@
 			        $("#periodblock").attr("datetype", dateType);
 		        	$("#Stimepicker").css("display", "none");
 					$("#Etimepicker").css("display", "none");
-					$(alldaycheck).prop("checked",true);
+					$("#alldaycheck").prop("checked",true);
 		        }
 			}
 			

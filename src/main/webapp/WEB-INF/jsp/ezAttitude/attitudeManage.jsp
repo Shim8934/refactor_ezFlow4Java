@@ -17,6 +17,8 @@
 	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    
 	    <style>
 	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: initial;}
@@ -43,12 +45,19 @@
 	    	var selectedDept = "${selectedDept}";
 	    	var listSize = 19;
 	    	
-	        document.onselectstart = function () { return false; };
+// 	        document.onselectstart = function () { return false; };
 	        
+	        $(document).ready(function() {
+	        	if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                document.body.style.MozUserSelect = 'none';
+	                document.body.style.WebkitUserSelect = 'none';
+	                document.body.style.khtmlUserSelect = 'none';
+	                document.body.style.oUserSelect = 'none';
+	                document.body.style.UserSelect = 'none';
+	            }
+	        });
+
 	        $(function() {
-	        	$("#Sdatepicker").val("${searchStartDate}");
-	    		$("#Edatepicker").val("${searchEndDate}");
-	        	
 	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
 	            
 	            if (document.getElementById("ListDept").length == 0) {
@@ -62,6 +71,60 @@
 		        }
 
 	            ChangeTab(document.getElementById(Tab1_SelectID));
+			});
+			
+	        $(function () {
+	            //datepicker
+				$("#Sdatepicker").datepicker({
+					changeMonth : true,
+					changeYear : true,
+					autoSize : true,
+					showOn : "both",
+					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly : true
+				});
+				
+				$("#Edatepicker").datepicker({
+					changeMonth : true,
+					changeYear : true,
+					autoSize : true,
+					showOn : "both",
+					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly : true
+				});
+
+				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Sdatepicker").datepicker('setDate', "${searchStartDate}");
+
+				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Edatepicker").datepicker('setDate', "${searchEndDate}");
+	        });
+	        
+			var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "일;월;화;수;목;금;토";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["ko"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		 	        prevText: "<spring:message code='main.t0604' />",
+		 	        nextText: "<spring:message code='main.t0605' />",
+		 	        currentText: "<spring:message code='main.t0606' />",
+		        	monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	        });
 	        
 	        $(function () {
@@ -83,32 +146,7 @@
 			    });
 			});
 			    
-	    	var monthMsg = "<spring:message code='ezSchedule.t110' />";
-		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
-		    var dayStr = dayMsg.split(";");
-		    
-		    $(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-		        	closeText: "<spring:message code='main.t3' />",
-		            prevText: "<spring:message code='main.t0604' />",
-		            nextText: "<spring:message code='main.t0605' />",
-					currentText: "<spring:message code='main.t0606' />",
-		            monthNames: monthStr,
-		            monthNamesShort: monthStr,
-		            dayNames: dayStr,
-		            dayNamesShort: dayStr,
-		            dayNamesMin: dayStr,
-		            weekHeader: 'Wk',
-		            dateFormat: 'yy-mm-dd',
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: 'show',
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		    });
+
 	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
@@ -335,6 +373,7 @@
 	        function layerHidden() {
 		        $.modal.close();
 		    }
+	        
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -409,36 +448,40 @@
 	    <div id="searchPopup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="width:490px; margin:10px 0px 0px 1px;">
 			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;간단주소록 추가</th>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태관리 검색</th>
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px">이름</th>
-						<td><input type="text" id="qname" name="qname" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
+						<td><input type="text" id="searchUserName" name="searchUserName" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px">회사</th>
-						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
+			  			<th style="width:90px;height:30px">직위</th>
+						<td><input type="text" id="searchTitle" name="searchTitle" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px">전화번호</th>
-						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="20"></td>
+			  			<th style="width:90px;height:30px">부서</th>
+						<td><input type="text" id="searchDept" name="searchDept" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-						<th style="width:90px;height:30px">휴대폰</th>
-						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="20"></td>
+			  			<th style="width:90px;height:30px">검색기간</th>
+						<td>
+							<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> 
+							~
+							<input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
+						</td>
 					</tr>
 					<tr>
-						<th style="height:30px">이메일</th>
-						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td>
+						<th style="width:90px;height:30px">근태유형</th>
+						<td><select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px;"></select></td>
 					</tr>
 				</table>
 				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
-<!-- 					<a class="imgbtn"><span onclick="quick_add()" >추가</span></a> -->
-<!-- 					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();">취소</span></a> -->
+					<a class="imgbtn"><span onclick="getList();" >검색</span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();">취소</span></a>
 			    </div>
 			</div>
 		</div>
