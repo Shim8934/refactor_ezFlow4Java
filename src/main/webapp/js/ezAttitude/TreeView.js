@@ -683,7 +683,7 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         objSpan.className = TreeClasses["normal"];
         objSpan.setAttribute("style", "color:" + eval(preSelectID).getAttribute("DATA4", "0"));
     }
-
+    
     if (pNodeID != "" && pNodeID != "undefined") {
         var objSpan = document.getElementById("spn_" + pNodeID);
         objSpan.className = TreeClasses["selected"];

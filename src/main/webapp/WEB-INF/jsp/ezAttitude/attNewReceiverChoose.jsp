@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
 	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
+	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
@@ -168,15 +169,34 @@
 	                xmlTree = loadXMLString(xmlHTTP.responseText);
 	                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
 	                document.getElementById('TreeView').innerHTML = "";
-	                var treeView = new TreeView();
-	                treeView.SetConfig(treeXML);
-	                treeView.SetID("FromTreeView");
-	                treeView.SetUseAgency(true);
-	                treeView.SetRequestData("RequestData");
-	                treeView.SetNodeClick("TreeViewNodeClick");
-	                treeView.DataSource(xmlTree);
-	                treeView.DataBind("TreeView");
-	
+	                var wholeHtml = '<div id="FromTreeView" nodeclick="TreeViewNodeClick" nodedblclick="" requestdata="RequestData" selectnodeid="' + deptid + '">';
+	                wholeHtml += '<div id="left" style="border-top:1px solid #dedede">';
+	                for (var i = 0; i < deptList.length ; i ++) {
+						if (deptList[i].authType == 'M') {
+							var html = '<h2 onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + deptList[i].deptId + '" nodename="' + deptList[i].deptName + '" manageflag="M" value="' + deptList[i].deptName + '" cn="'+ deptList[i].deptId +'" isleaf="TRUE" style="padding-left:0px; white-space: nowrap;">';
+	// 						html += '<img id="subImgNode_' + deptList[i].deptId + '" border="0" src="/images/OrganTree_cross/ic-open.gif" style="width: 18px; height: 18px;">';
+							html += '<span id="spn_' + deptList[i].deptId + '" class="node_normal" onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + deptList[i].deptName + '</span>';
+							html += '<div id="' + deptList[i].deptId + '_sub" style="display: none;"></div></li>';
+							wholeHtml += html;
+						}
+					}
+	                wholeHtml += '</div></div>';
+	                document.getElementById('TreeView').innerHTML += wholeHtml; 
+// 	                var treeView = new TreeView();
+// 	                treeView.SetConfig(treeXML);
+// 	                treeView.SetID("FromTreeView");
+// 	                treeView.SetUseAgency(true);
+// 	                treeView.SetDepth(1);
+// 	                treeView.SetRequestData("RequestData");
+// 	                treeView.SetNodeClick("TreeViewNodeClick");
+// 	                treeView.DataSource(xmlTree);
+// 	                treeView.DataBind("TreeView");
+					console.log($("h2#"+deptid).length);
+					if ($("h2#"+deptid).length > 0) {
+						$("h2#"+deptid).click();
+					}else {
+						$("h2#")[0].click();
+					}
 	                if (strSearch != "") {
 	                    document.getElementById('keyword').value = strSearch;
 	                    search_click();
@@ -185,9 +205,6 @@
 	            catch (ErrMsg) {
 	                alert(" TreeViewinitialize : " + ErrMsg.description);
 	            }
-				for (var i = 0; i < deptList.length ; i ++) {
-					console.log(deptList[i].deptId);
-				}
                 var arrayDept = $("#TreeView div.node_div");
 	            
 	            if (type == "config") {
@@ -1810,10 +1827,10 @@
 	                CurPage = "1";
 	                issearch = true;
 	            }
-	            if (document.getElementById("search_type").value == "description") {
-	                deptsearch_click();
-	                return;
-	            }
+// 	            if (document.getElementById("search_type").value == "description") {
+// 	                deptsearch_click();
+// 	                return;
+// 	            }
 	            
 	            $.ajax({
 		        	type : "POST",
@@ -3203,25 +3220,23 @@
                 var preSelectID = GetAttribute(treeDiv, "SELECTNODEID");
 
                 if (preSelectID != "" && preSelectID != "undefined") {
-                    var objSpan = document.getElementById("spn_" + preSelectID);
-                    objSpan.className = TreeClasses["normal"];
-                    objSpan.style.display = "inline-block";
-                    if (eval(preSelectID).getAttribute("DATA4", "0") == "TREE" || eval(preSelectID).getAttribute("DATA4", "0") == "BOARD")
-                        objSpan.style.color = "#000000"
-                    else
-                        objSpan.style.color = eval(preSelectID).getAttribute("DATA4", "0");
+                    var objH2 = $("h2#"+preSelectID);
+                    objH2.attr('class','off');
+                    
+//                     objH2.style.display = "inline-block";
+//                     objH2.style.color = "#333";
                     //objSpan.setAttribute("style", "color:" + eval(preSelectID).getAttribute("DATA4", "0"));
                 }
 
                 if (pNodeID != "" && pNodeID != "undefined") {
-                    var objSpan = document.getElementById("spn_" + pNodeID);
-                    objSpan.className = TreeClasses["selected"];
+                	var objH2 = $("h2#"+pNodeID);
+                    objH2.attr('class','on');
 
                     //if (objSpan.getAttribute("style") != "")
                     //    objSpan.removeAttribute("style");
 
                     treeDiv.setAttribute("SELECTNODEID", pNodeID);
-
+                    
                     if (callbackFunc != null & typeof (callbackFunc) == "function")
                         callbackFunc(pNodeID, pNodeNM);
                 }
@@ -3299,8 +3314,8 @@
 	            <td style="vertical-align: top;">
 	            	<div class="portlet_tabpart01" style="margin:0px;">
 	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
-	            			<p id="orgTabButton">
-	            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
+	            			<p id="orgTabButton" style="display: none;">
+	            				<span onclick="orgTabButton_onClick()"></span>
 	            			</p>
 	            			<p id="contactTabButton" style="display: none;">
 	            				<span onclick="contactTabButton_onClick()"><spring:message code='ezEmail.t592' /></span>
