@@ -75,13 +75,14 @@
 		
 		</script>
 		<style type="text/css">
-			.effect {width:30px; height:30px;}
+			.effect {width:30px; height:30px; margin-bottom: -2px;}
 			#mainmenu li {border-color: #ddd; border-radius:0px;}
 			.participantBtn {height:28px; border:1px solid #B5B3B3;}
 			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
 			#mainmenu .participantBtn{cursor: pointer;}
 			#cmt {color:#c64200;}
+			.mainlist tr td {padding: 1px 4px 0px 4px;}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">
