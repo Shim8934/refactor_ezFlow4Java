@@ -122,7 +122,11 @@
 						var barElmt     = document.getElementById("myBar");
 						var volumeInf   = document.getElementsByClassName("volumes")[0];
 						
-						barElmt.style.width = percent + "%";
+						if (percent < 100) {
+							barElmt.style.width = percent + "%";
+						} else {
+							barElmt.style.width = "100%";
+						}
 						
 						volumeInf.textContent = useVolume + " / " + totalVolume + " (" + percent + "%)";
 						
