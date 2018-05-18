@@ -3851,10 +3851,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
-		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getTenantId());
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getTenantId());		
 		
 		if (club != null) {
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			
 			if (!club.getC_Cate_A().equals("0")){
 				cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
 			}
