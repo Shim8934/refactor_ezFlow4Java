@@ -870,7 +870,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	                
 	                sb.append(commonUtil.getQueryResult(result));
 	                sb.append("</DATA>");
-	                
+
 	                ListInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
 	                memberlist2.append(ListInfo);
 	            }           
