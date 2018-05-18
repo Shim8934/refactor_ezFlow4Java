@@ -508,29 +508,35 @@ function setOverviewContent() {
 			 var logHTML = "";
 			 logHTML += "<div id='mainLog'>";
 			 
-			 for (var i = 0; i < logList.length; i++) {
+			 if (logList == null || logList.length == 0) {
 				 
-				 switch (logList[i].logStatus) {
-				 case 1 : 
-					 logList[i].logStatus = "<span style='background-color:#8DFF1B; font-size:13px;'>등록</span>";
-					 break;
+				 logHTML += "<div style='font-size:13px; margin-left:11%'>" + "작업이력이 존재하지 않습니다." + "</div>";
+				 
+			 } else {
+				 for (var i = 0; i < logList.length; i++) {
 					 
-				 case 2 : 
-					 logList[i].logStatus = "<span style='background-color:#ffff66; font-size:13px;'>수정</span>";
-					 break;
+					 switch (logList[i].logStatus) {
+					 case 1 : 
+						 logList[i].logStatus = "<span style='background-color:#8DFF1B; font-size:13px;'>등록</span>";
+						 break;
+						 
+					 case 2 : 
+						 logList[i].logStatus = "<span style='background-color:#ffff66; font-size:13px;'>수정</span>";
+						 break;
+						 
+					 case 3 : 
+						 logList[i].logStatus = "<span style='background-color:#FF7A1B; font-size:13px;'>삭제</span>";
+						 break;
+					 }
 					 
-				 case 3 : 
-					 logList[i].logStatus = "<span style='background-color:#FF7A1B; font-size:13px;'>삭제</span>";
-					 break;
+					 logHTML += "<div style='clear:both; margin-bottom:1px; border-bottom:1px;'>";
+					 logHTML += "<div style='width:16%; float:left; font-weight:bold;'>" + logList[i].logStatus + "</div>";
+					 logHTML += "<div style='font-size:13px;'>" + logList[i].logContent + "</div>";
+					 logHTML += "</div>";
 				 }
 				 
-				 logHTML += "<div style='clear:both; margin-bottom:1px; border-bottom:1px;'>";
-				 logHTML += "<div style='width:16%; float:left; font-weight:bold;'>" + logList[i].logStatus + "</div>";
-				 logHTML += "<div style='font-size:13px;'>" + logList[i].logContent + "</div>";
 				 logHTML += "</div>";
 			 }
-			 
-			 logHTML += "</div>";
 			 
 			 $("#logContentArea").html(logHTML);
 		}

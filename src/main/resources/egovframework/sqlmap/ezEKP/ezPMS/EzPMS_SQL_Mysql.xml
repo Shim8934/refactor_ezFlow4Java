@@ -1697,9 +1697,13 @@
 			TBL_PMS_TASK T
 		ON 
 			L.TASK_ID = T.TASK_ID
+		WHERE
+			L.PROJECT_ID = #projectId#
+		AND
+			L.TENANT_ID = #tenantId#
 		<isNotEmpty property="groupId">
 		<isEqual property="taskId" compareValue="0">
-		WHERE 
+		AND 
 			(L.GROUP_ID = #groupId# 
 				OR G.UPPER_GROUP_ID = #groupId#
 				OR G.UPPER_GROUP_ID = (
@@ -1708,7 +1712,7 @@
 			)
 		</isEqual>
 		<isNotEqual property="taskId" compareValue="0">
-		WHERE 
+		AND 
 			L.task_id = #taskId#
 		</isNotEqual>
 		<isNotEmpty property="searchByContent">
@@ -1722,10 +1726,6 @@
 			</isNotEqual>
 		</isNotEmpty>
 		</isNotEmpty>
-		AND
-			L.PROJECT_ID = #projectId#
-		AND
-			L.TENANT_ID = #tenantId#
 		<isNotEqual property="orderWhat" compareValue="init">
 		ORDER BY	
 			$orderWhat$ $orderHow$
