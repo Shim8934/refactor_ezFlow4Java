@@ -562,7 +562,8 @@ function DisplayWaitStat() {
 
 function getAprLine(tr) {
     var pDocID,pMode = "",pFlag = "";
-
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
+    
     if (pSelMenu == "hyubjo" || pSelMenu == "gamsa")
         pDocID = GetAttribute(tr, "DATA7");
     else
@@ -612,7 +613,8 @@ function getAprLine(tr) {
 		data : {
 				docID : pDocID,
 				mode  : pMode,
-				flag  : pFlag
+				flag  : pFlag,
+				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
 			getAprovSub_after(xml);
@@ -1256,6 +1258,8 @@ function getAprDocAproveInfo(tr) {
         pDocID = GetAttribute(tr, "DATA7");
     else
         pDocID = GetAttribute(tr, "DATA1");
+    
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     if (pDocInfoValue == "4") {
         if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
@@ -1291,7 +1295,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getTotalAttachInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1332,7 +1337,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getOpinionInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1373,7 +1379,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getReceiptinfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1410,7 +1417,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getCirculationinfo.do",
     		data : {
     			docID : pDocID,
-    			mode  : pFlag
+    			mode  : pFlag,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			RtnVal = xml;
