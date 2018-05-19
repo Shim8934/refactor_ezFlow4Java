@@ -2517,7 +2517,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        		
 				        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
 				        // otherwise, a wrong encoding may be used on some systems(linux, etc)
-				        String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", null);
+				        // nonghyup.com 메일 서버의 경우 QP로 인코딩된 경우 connection close(EOF)를 발생시켜
+				        // 무조건 BASE64로 인코딩하도록 변경함
+				        String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", "B");
 				        
 						// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
 						// and some mailers (Daum, etc) may not understand it.			        
