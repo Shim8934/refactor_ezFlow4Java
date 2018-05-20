@@ -248,7 +248,11 @@
 	        ///////
 	        function getAttitudeCheckList(){
 	        	searchAttitudeType = $('#searchAttitudeType').val(); 
-	    		
+	        	
+	        	if (searchAttitudeType == null) {
+	        		searchAttitudeType = "total";
+	        	}
+	        	
 	        	typeId = searchAttitudeType;
 	    		
 	        	if (typeId == "total") {
@@ -664,6 +668,17 @@
 		    			+ "&duplicated=duplicated&reqType="+Tab1_SelectID;
 		    	exportExcelframe.target="_blank";
 			}
+	        
+	        function searchPress(evt) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	getList();
+		            }
+		        } else {
+		            if (evt.which == 13)
+		            	getList();
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
