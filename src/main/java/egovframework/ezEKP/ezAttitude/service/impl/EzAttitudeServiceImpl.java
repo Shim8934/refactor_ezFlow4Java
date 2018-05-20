@@ -563,21 +563,29 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public boolean insertAttitudeType(String typeId, String typeName, String typeName2, int tenantId, String companyId) throws Exception {
+	public boolean insertAttitudeType(String typeName, String typeName2, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("insertAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("typeId", typeId);
 		map.put("typeName", typeName);
 		map.put("typeName2", typeName2);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "", "", tenantId);
+		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "1", "", tenantId);
 		
 		boolean result = false;
 		
-		if (list.size() < 27) {
+		if (list.size() < 15) {
+			String MaxTypeId = getAttitudeTypeMaxTypeId(companyId, tenantId);
+			String typeId = "";
+			if (MaxTypeId.length() == 1) {
+				typeId = "A0" + MaxTypeId;
+			} else {
+				typeId = "A" + MaxTypeId;
+			}
+			
+			map.put("typeId", typeId);
 			ezAttitudeDAO.insertAttitudeType(map);
 			
 			result = true;
