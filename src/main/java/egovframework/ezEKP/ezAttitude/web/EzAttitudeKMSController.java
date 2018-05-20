@@ -2192,7 +2192,10 @@ public class EzAttitudeKMSController {
 		
 		String resultStatus = "";
 		if (status.equals("ok")) {
-			resultStatus = "success";
+			resultStatus = resultBody.get("data").toString();
+			if (!resultStatus.equals("dupl")) {
+				resultStatus = "success";
+			}
 		} else {
 			resultStatus = "error";
 		}
