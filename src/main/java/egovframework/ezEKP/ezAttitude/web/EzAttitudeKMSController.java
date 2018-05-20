@@ -2131,9 +2131,7 @@ public class EzAttitudeKMSController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl;
 		
-		if (mode.equals("admin")) {
-			url += "/rest/ezattitude/users/" + userId + "/attitudes";
-		}
+		url += "/rest/ezattitude/users/" + userId + "/attitudes";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

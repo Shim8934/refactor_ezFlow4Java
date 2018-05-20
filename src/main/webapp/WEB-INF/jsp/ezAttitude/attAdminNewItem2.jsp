@@ -303,18 +303,27 @@
 				}
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
+				//미입력자 등록 시 사원 추가 여부
+				if ($("#forId").text() == "") {
+					alert("사원을 선택해주세요.");
+					return;
+				}
+				//달력 정규식
 				if ($('#Stimepicker').length && !timeValid.test($('#Stimepicker').val()) || $('#Etimepicker').length && !timeValid.test($('#Etimepicker').val())) {
 					alert("<spring:message code='ezAttitude.bbhs37'/>");
 					return;
 				}
+				//달력 유효성 검사
 				if (!check_time()) {
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
+				//퇴근 후 조퇴기능 불가
 				if (outComFlag && selectType == 'A08') {
 					alert("<spring:message code='ezAttitude.bbhs40'/>");
 					return;
 				}
+				//근무지, 연락처, 업무대리 입력 여부
 				if (inputCheckFlag) {
 					alert("정보를 입력해주세요.");
 					return;
@@ -327,7 +336,7 @@
 		        	async : false,
 		        	data : {
 		        		attitudeId : attitudeId,
-		        		userId : userId,
+		        		userId : $("#forId").text(),
 		        		typeId : selectType,
 		        		region : $("input[name=region]").val(),
 		        		mobile : $("input[name=mobile]").val(),
@@ -339,7 +348,7 @@
 		        		mode : mode
 		        	},
 		        	success : function (result) {
-		    			if (resultStatus == "success") {
+		    			if (result == "success") {
 			        		alert("<spring:message code='ezAttitude.bbhs19'/>");
 //	 		        		window.opener.getAttitudeMainList();
 //	 		        		window.opener.parent.frames["left"].getAttitudeList();
@@ -510,16 +519,7 @@
 			}
 			
 			function editorResize() {
-				var typeId = $("#selectAtti").val();
-				var editHeight = document.documentElement.clientHeight;
-				
-				if (typeId == "A05" || typeId == "A06" || typeId == "A07" || typeId == "A08") {
-					editHeight = editHeight - 180;
-				} else {
-					editHeight = editHeight - 210;
-				}
-				editHeight += "PX";
-				$("#EdtorSize").css("height", editHeight);
+				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
 			}
 			
 			function allday_change() {

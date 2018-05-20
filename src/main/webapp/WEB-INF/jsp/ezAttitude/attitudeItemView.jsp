@@ -56,7 +56,8 @@
 				doc.write('${attitudeInfo.content}');
 				doc.close();
 				
-				region == "" ? $("#message").css("height","405px") : $("#message").css("height", "380px"); 
+				$("#message").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 75 + "PX");
+				//region == "" ? $("#message").css("height","405px") : $("#message").css("height", "380px"); 
 				
 				var fontFamily = font.split("|")[0];
 				var fontSize = font.split("|")[1];
@@ -151,9 +152,11 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.bbhs28'/></span></li>
-	                                <li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
-	                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
+	                            	<c:if test="${userId == attitudeInfo.writerId}">
+		                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.bbhs28'/></span></li>
+		                                <li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
+		                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
+	                            	</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.bbhs21'/></span></li>
 	                            </ul>
 	                        </div>

@@ -171,7 +171,7 @@
 	    			$("#searchTitle").val("");
 	    			$("#searchStartTime").val("");
 	    			$("#searchEndTime").val("");
-	    			$("[type='radio']:checked").val("");
+	    			$("[type='radio'][value='']").prop("checked", true);
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";

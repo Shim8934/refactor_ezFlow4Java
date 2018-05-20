@@ -1214,23 +1214,26 @@
 	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
 						</td>
 						<td colspan="2">
-							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span>새로고침</span></a>
 							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span>검색</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span>새로고침</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="get_excelAtt_list()" style="margin-top:3px;"><span>엑셀 다운로드</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="modApprove()" style="margin-top:3px;"><span>승인</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="modReturn()" style="margin-top:3px;"><span>반려</span></a>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</c:if>
         <ul id="tb_Parent">
-        <c:if test="${adminFlag == 'true'}">
+        <c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
 			<li id="appr"><span onClick="modApprove()">승인</span></li>
         	<li id="ret"><span onClick="modReturn()">반려</span></li>
 		</c:if>
 		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
 			<li><span onClick="attList_del()">삭제</span></li>
 		</c:if>
-	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
         <c:if test="${checkAdmin != 'true'}">
+	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
         	<li><span onClick="att_search('refresh')">새로고침</span></li>
         	<li id="search"><span onClick="search_popup()">검색</span></li>
 		</c:if>
