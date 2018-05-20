@@ -137,6 +137,7 @@
 	</head>
 	<body class="mainbody">	
 		<h1><spring:message code="ezResource.t25" /></h1>
+		<div style="max-width:800px;">
     	<table class="content">
         	<tr>
             	<th>
@@ -154,11 +155,11 @@
         	<c:when test="${intSubClsCnt <= 1}">
         		<!---------------------- 하위게시판이 없는 경우 ------------------------>
 		    	<div id="EmptyMsg">
-    				<div class="warningbox01" style="margin-top:100px;">
+    				<div class="warningbox01" style="margin-top:50px; width:455px;">
         				<div class="warningbox02" style="height:130px;width:auto">
   	        				<div class="warnintxt01" style="text-align:left">
 	        					<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style='margin:18px'></span>
-	        					<dl class="warningdl">
+	        					<dl class="warningdl" style="padding:35px 0px 5px 100px;">
 	        						<dd><spring:message code="ezResource.t103" /> </dd>
 	        					</dl>
 	        				</div>
@@ -170,8 +171,8 @@
         		<!---------------------- 하위게시판 리스트 ----------------------------->
 				<table class="popuplist" style="width:100%">
         			<tr>
-            			<td>
-                			<select name="BRDLIST" size="10" id="BRDLIST" style="width: 100%; height: 150px; background:none;">  ${subBrdLst} </select>
+            			<td style="height:300px;">
+                			<select name="BRDLIST" size="10" id="BRDLIST" style="width: 100%; height: 99%; background:none;margin-top:1px; overflow-y: auto; overflow-x: auto;">  ${subBrdLst} </select>
             			</td>
             			<td width="30" align="center">
                         	<img src="/images/arr_up.gif" vspace="2" style="cursor:pointer" onClick="javascript:SetOrder(-1)"><br>
@@ -181,7 +182,7 @@
 				</table>        			
         	</c:otherwise>
         </c:choose>
-    
+    	</div>
 		<%--<div class="btnposition"><input type="submit" name="cmdSave" value="<%=RM.GetString("t101")%>" language="javascript" onClick="return cmdSave_onclick()"></div>--%>
     	<!-- 게시판 트리에서 값을 넘겨받기위한 곳 ---->
     	<form name="brds">
