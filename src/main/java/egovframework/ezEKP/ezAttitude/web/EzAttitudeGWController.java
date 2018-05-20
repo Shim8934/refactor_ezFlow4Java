@@ -1478,7 +1478,7 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String searchUserName = request.getParameter("searchUserName");
 			String searchDeptName = request.getParameter("searchDeptName");
-			String searchDeptId = request.getParameter("searchDeptId");
+			String searchDeptId = request.getParameter("searchDeptId") == null ? "" : request.getParameter("searchDeptId");
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
@@ -1498,13 +1498,15 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-			if (isAdmin.equals("Y") || searchDeptId.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, info.getUserId(), isAdmin);
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, info.getUserId(), "");
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					deptIdList.add(vo.getDeptId());
 				}
-				
+			}
+			
+			if (searchDeptId.equals("ALL")) {
 				searchDeptId = "";
 			}
 			
@@ -1563,13 +1565,15 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-			if (isAdmin.equals("Y") || searchDeptId.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), isAdmin);
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					deptIdList.add(vo.getDeptId());
 				}
-				
+			}
+			
+			if (searchDeptId.equals("ALL")) {
 				searchDeptId = "";
 			}
 			
@@ -1618,13 +1622,15 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-			if (isAdmin.equals("Y") || searchDeptId.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), isAdmin);
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					deptIdList.add(vo.getDeptId());
 				}
-				
+			}
+			
+			if (searchDeptId.equals("ALL")) {
 				searchDeptId = "";
 			}
 			
@@ -1941,13 +1947,15 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-			if (isAdmin.equals("Y") || searchDeptId.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), isAdmin);
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					deptIdList.add(vo.getDeptId());
 				}
-				
+			}
+			
+			if (searchDeptId.equals("ALL")) {
 				searchDeptId = "";
 			}
 			

@@ -1086,7 +1086,7 @@ public class EzAttitudeAdminBOMController {
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String isAdmin = "";
 		
-		if (requestURL.indexOf("/admin/ezAttitude/getAttitudeAbsentedList.do") < 0) {
+		if (requestURL.indexOf("/admin/ezAttitude/getAttitudeAbsentedList.do") > -1) {
 			isAdmin = "Y";
 		}
 		
@@ -2023,7 +2023,7 @@ public class EzAttitudeAdminBOMController {
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String isAdmin = "";
 		
-		if (requestURL.indexOf("/admin/ezAttitude/attitudeHistoryList.do") < 0) {
+		if (requestURL.indexOf("/admin/ezAttitude/attitudeHistoryList.do") > -1) {
 			isAdmin = "Y";
 		}
 		
