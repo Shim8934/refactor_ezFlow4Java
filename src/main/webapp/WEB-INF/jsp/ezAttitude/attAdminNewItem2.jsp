@@ -349,7 +349,7 @@
 			        		alert("<spring:message code='ezAttitude.bbhs19'/>");
 //	 		        		window.opener.getAttitudeMainList();
 //	 		        		window.opener.parent.frames["left"].getAttitudeList();
-							window.opener.getAttitudeAbsentedList();
+							window.opener.getList();
 			        		window.close();
 		    			} else {
 		    				alert("<spring:message code='ezAttitude.kbm3' />");
