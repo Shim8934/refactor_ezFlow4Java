@@ -70,7 +70,7 @@
 			}
 			
 			window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 180 + "PX";
 		    }
 			
 		    var monthMsg = "<spring:message code='ezAttitude.bbhs1'/>";
@@ -323,10 +323,11 @@
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attAdminSave.do",
+		        	dataType : "text",
 		        	async : false,
 		        	data : {
 		        		attitudeId : attitudeId,
-		        		userId : $("#forId").text(),
+		        		userId : userId,
 		        		typeId : selectType,
 		        		region : $("input[name=region]").val(),
 		        		mobile : $("input[name=mobile]").val(),
@@ -338,11 +339,18 @@
 		        		mode : mode
 		        	},
 		        	success : function (result) {
-		        		alert("<spring:message code='ezAttitude.bbhs19'/>");
-// 		        		window.opener.getAttitudeMainList();
-// 		        		window.opener.parent.frames["left"].getAttitudeList();
-						window.opener.getAttitudeCheckList();
-		        		window.close();
+		    			if (resultStatus == "success") {
+			        		alert("<spring:message code='ezAttitude.bbhs19'/>");
+//	 		        		window.opener.getAttitudeMainList();
+//	 		        		window.opener.parent.frames["left"].getAttitudeList();
+							window.opener.getAttitudeAbsentedList();
+			        		window.close();
+		    			} else {
+		    				alert("<spring:message code='ezAttitude.kbm3' />");
+		    			}
+		        	},
+		        	error : function() {
+		        		alert("<spring:message code='ezAttitude.kbm3' />");
 		        	}
 		        });
 			}
@@ -530,19 +538,15 @@
 			var inputCheckFlag = false;
 			function inputCheck() {
 				inputCheckFlag = true;
-				if (selectType != 'A01' && selectType != 'A02' && selectType != 'A03') {
-					if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
-						$("input[name=region]").focus();
-					} else if ($.trim($("input[name=mobile]").val()) == "") {
-						$("input[name=mobile]").focus();
-					} else if ($.trim($("input[name=bizsub]").val()) == "") {
-						$("input[name=bizsub]").focus();
-					} else {
-						inputCheckFlag = false;
-					}	
+				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
+					$("input[name=region]").focus();
+				} else if ($("#mobile").length != 0 && $.trim($("input[name=mobile]").val()) == "") {
+					$("input[name=mobile]").focus();
+				} else if ($("#bizsub").length != 0 && $.trim($("input[name=bizsub]").val()) == "") {
+					$("input[name=bizsub]").focus();
 				} else {
 					inputCheckFlag = false;
-				}
+				}	
 			}
 			
 			var mail_newreceiverchoose_dialogArguments = new Array();
@@ -608,7 +612,9 @@
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
-												<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+												<c:if test="${item.parentId ne 'A05'}">
+													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+												</c:if>
 											</c:forEach>
 										</select>
 										<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
@@ -631,7 +637,7 @@
 	            </table>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210+ "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 180+ "PX";
 		    </script>
 	    </form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

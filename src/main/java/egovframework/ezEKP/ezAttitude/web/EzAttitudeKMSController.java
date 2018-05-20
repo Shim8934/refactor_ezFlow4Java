@@ -2111,7 +2111,7 @@ public class EzAttitudeKMSController {
 	 */
 	@RequestMapping(value = "/ezAttitude/attAdminSave.do")
 	@ResponseBody
-	public void attAdminSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String attAdminSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attAdminSave started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2164,11 +2164,16 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
+		String resultStatus = "";
 		if (status.equals("ok")) {
-			
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
 		}
 		
 		LOGGER.debug("/ezAttitude/attAdminSave ended");
+		
+		return resultStatus;
 	}
 	
 	/**
@@ -2176,7 +2181,7 @@ public class EzAttitudeKMSController {
 	 */
 	@RequestMapping(value = "/ezAttitude/adminAttiDelItem.do")
 	@ResponseBody
-	public void attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2208,11 +2213,16 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
+		String resultStatus = "";
 		if (status.equals("ok")) {
-			
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
 		}
 		
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem ended");
+		
+		return resultStatus;
 	}
 	
 	/**
