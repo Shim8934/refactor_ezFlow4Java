@@ -65,7 +65,8 @@
 		        }
 				select_memorialDays(uselang);
 				setHoliday();
-				checkOutCom();
+				//checkOutCom();
+				setTypeName();
 			}
 			
 			window.onresize = function () {   	
@@ -563,6 +564,15 @@
 	            $("#forId").text(strId);
 	            $("#forName").text(strName);
 	        }
+	        
+	      	//특수문자
+			function setTypeName() {
+				$('#subSelectAtti option').each(function(){
+					var typeName = $(this).text();
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+					$(this).text(typeName);
+				})
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">

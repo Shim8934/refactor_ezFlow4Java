@@ -87,20 +87,15 @@ public class EzAttitudeKMSController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		
 		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		String searchStartDate = localDate + " 00:00:00";
-		String searchEndDate = localDate + " 23:59:59";
-		
-		Date startDate = sdf.parse(searchStartDate);
-		
 		cal = Calendar.getInstance();
-		cal.setTime(startDate);
+		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
 		
-		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+		String searchStartDate = sdf.format(cal.getTime());
+		String searchEndDate = localDate;
 		
 		//부서셀렉트박스
 		String adminFlag = "false";
@@ -166,6 +161,7 @@ public class EzAttitudeKMSController {
 		////
 		
 		model.addAttribute("deptList", deptList);
+		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDept", userInfo.getDeptID());
 		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
 		model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));

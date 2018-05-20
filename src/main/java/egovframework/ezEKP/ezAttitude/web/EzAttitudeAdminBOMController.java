@@ -453,13 +453,14 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 근태유형 등록 or 수정
+	 * 휴가유형 등록 or 수정
 	 * @param loginCookie
 	 * @param request
 	 * @param model
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do")
+	@ResponseBody
 	public String saveAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("saveAttutideType started.");
 		
@@ -502,7 +503,7 @@ public class EzAttitudeAdminBOMController {
 		}
 		
 		//등록, 수정시 오류처리 alert로 구분해야함 지금 등록안해도 무조건 등록됫다고 alert 뜨는중임
-		//insert시  count15개 넘으면 status failed로 리턴하게 해놓음
+		//insert시  count27개 넘으면 status failed로 리턴하게 해놓음
 		
 		JSONObject resultBody = (JSONObject) result.getBody();
 		
@@ -511,6 +512,8 @@ public class EzAttitudeAdminBOMController {
 		String resultStatus = "";
 		if (status.equals("ok")) {
 			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
 		} else {
 			resultStatus = "error";
 		}

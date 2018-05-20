@@ -576,7 +576,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		boolean result = false;
 		
-		if (list.size() < 15) {
+		if (list.size() < 27) {
 			ezAttitudeDAO.insertAttitudeType(map);
 			
 			result = true;

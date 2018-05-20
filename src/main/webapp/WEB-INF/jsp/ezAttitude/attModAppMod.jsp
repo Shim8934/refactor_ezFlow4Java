@@ -146,6 +146,7 @@
 		    function modify() {
 				var obj = new Object();
 		    	
+				var otime = $("#Otimepicker").val();
 			    var cDate = $("#Cdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			    var cYear = cDate.split("-")[0];
 			    var cMonth = cDate.split("-")[1];
@@ -161,6 +162,11 @@
 			    
 			    if (!timeValid.test(ctime)) {
 			    	alert("<spring:message code='ezAttitude.kbm36'/>");
+			    	return;
+			    }
+			    
+			    if (ctime == otime) {
+			    	alert("신청시각이 기존시각과 일치합니다.");
 			    	return;
 			    }
 			    
