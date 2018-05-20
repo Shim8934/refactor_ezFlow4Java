@@ -247,13 +247,13 @@
 	        
 	        ///////
 	        function getAttitudeCheckList(){
-	        	searchAttitudeType = $('#searchAttitudeType').val(); 
-	    		
-	        	typeId = searchAttitudeType;
-	    		
-	        	if (typeId == "total") {
-	    			typeId = "";
-	    		}
+	        	//페이지 로딩때 리스트 안가져오고 리스트뿌린다음 가져옴 수정필요.
+	        	if ($('#searchAttitudeType').val() == null) {
+	        		searchAttitudeType = "total";
+	        	} else {
+	        		searchAttitudeType = $('#searchAttitudeType').val();
+	        	}
+	        	
 	    		
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
@@ -396,12 +396,6 @@
 	    	}
 	        
 	        function getAttitudeHistoryList(){
-	    		var typeId = $('#attitudeType').val();
-	    		
-	    		if (typeId == "total") {
-	    			typeId = "";
-	    		}
-	    		
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
 	    		
@@ -422,7 +416,6 @@
 	   					title : searchTitle,
 	   					startDate : searchStartDate,
 	   					endDate : searchEndDate,
-	   					attitudeType : searchAttitudeType,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
@@ -432,8 +425,6 @@
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 	    				getAttitudeHistoryList_after(result.list);
-	    				//근태유형 리스트
-	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
 	    				alert('리스트를 가져오는중 오류 발생');

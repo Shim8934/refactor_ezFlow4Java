@@ -1931,7 +1931,6 @@ public class EzAttitudeGWController {
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
-			String searchAttitudeType = request.getParameter("searchAttitudeType");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
@@ -1959,8 +1958,8 @@ public class EzAttitudeGWController {
 				searchDeptId = "";
 			}
 			
-			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID, searchDeptId, deptIdList);
-			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList);
+			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID, searchDeptId, deptIdList);
+			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList);
 		
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
@@ -1968,7 +1967,6 @@ public class EzAttitudeGWController {
 			JSONObject data = new JSONObject();
 			data.put("list", list);
 			data.put("totalCount", totalCount);
-			data.put("typeId", searchAttitudeType);
 			data.put("typeList", typeList);
 			
 			result.put("status", "ok");

@@ -1755,7 +1755,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
+	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
 		LOGGER.debug("getAttitudeHistoryList started");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -1773,7 +1773,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchDeptName", searchDeptName);
 		map.put("deptId", deptId);
 		map.put("searchTitle", searchTitle);
-		map.put("searchAttitudeType", searchAttitudeType);
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
@@ -1794,7 +1793,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public String getAttitudeHistoryCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate,
-			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
+			String searchEndDate, String offset, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
 		LOGGER.debug("getAttitudeHistoryCount started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -1806,7 +1805,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
-		map.put("searchAttitudeType", searchAttitudeType);
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
 		map.put("deptId", deptId);
