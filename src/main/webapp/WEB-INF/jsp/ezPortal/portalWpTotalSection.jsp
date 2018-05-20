@@ -1028,7 +1028,7 @@
 		    }
 		    
 		    $(function(){
-		    	nowAttiTime = new Date(serverTime);
+		    	parseDate();
 		    	
 		    	var clock = $('#clock');
 		    	
@@ -1093,6 +1093,26 @@
 			        return s;
 		    	}    	
 		    	
+		    	function parseDate() {
+		    		var _strDate = "";
+		    		nowAttiTime = new Date(serverTime);
+		    		
+		    		if (nowAttiTime.toString() == 'Invalid Date') {
+		    		    var _parts = serverTime.split(' ');
+		    		
+		    		    var _dateParts = _parts[0];
+		    		    nowAttiTime = new Date(_dateParts);
+		    		
+		    		    if (_parts.length > 1) {
+		    		        var _timeParts = _parts[1].split(':');
+		    		        nowAttiTime.setHours(_timeParts[0]);
+		    		        nowAttiTime.setMinutes(_timeParts[1]);
+		    		        if (_timeParts.length > 2) {
+		    		        	nowAttiTime.setSeconds(_timeParts[2]);
+		    		        }
+		    		    }
+		    		}
+		    	}
 		    });
 		    
 		    window_onload_total();
