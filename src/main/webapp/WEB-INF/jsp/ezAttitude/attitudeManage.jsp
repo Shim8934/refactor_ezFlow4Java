@@ -622,6 +622,29 @@
 	            }
 			}
 	        
+	        //th 정렬
+	        $(function(){
+				$(document).on('click', '#contentlist .mainlist th', function(){
+					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+						src = "";
+						orderOption = "";
+						orderCell = $(this).attr("colname");
+					}
+				
+	    			if (orderOption == "" || orderOption == "DESC") {
+	    				src = '/images/etc/view-sortup.gif';
+	    				orderOption = "ASC";
+	    			} else {
+	    				src = '/images/etc/view-sortdown.gif';
+	    				orderOption = "DESC";
+	    			}
+	    			$("#contentlist .mainlist th").find("img").remove();
+	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+	    			
+	    			getList();
+				})
+			})
+	        
 			function exportExcel() {
 	    		if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
 					alert('출력할 내용이 없습니다');
