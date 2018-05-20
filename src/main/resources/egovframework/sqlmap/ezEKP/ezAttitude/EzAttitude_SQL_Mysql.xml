@@ -1603,4 +1603,30 @@
 					tenant_id = #tenantId#					
 				) c
 	</insert>
+	
+	<select id="ezAttitudeDAO.getIsAttitude" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		select
+			count(*)
+		from
+			tbl_attitude
+		where
+			tenant_id = #tenantId#
+		and
+			company_id = #companyId#
+		and
+			writer_id = #writerId#
+		]]>
+		<isNotEmpty property="typeIdArr" prepend="and">
+			<iterate prepend="type_id IN" property="typeIdArr" open="(" close=")" conjunction=",">
+				#typeIdArr[]#
+			</iterate>
+		</isNotEmpty>
+		<![CDATA[
+		and
+			start_date > date_add(concat(#checkStartDate#, ' 00:00:00'), INTERVAL -#offsetMin# minute)
+		and
+			start_date < date_add(concat(#checkStartDate#, ' 23:59:59'), INTERVAL -#offsetMin# minute)
+		]]>
+	</select>
 </sqlMap>

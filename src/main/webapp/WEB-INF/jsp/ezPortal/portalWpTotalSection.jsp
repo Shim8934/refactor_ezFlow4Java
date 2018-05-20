@@ -957,10 +957,11 @@
 		    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
 		    		alert("출근 후 퇴근이 가능합니다.");
 		    		return;
-		    	} else if (leaveEarlyFlag) {
-		    		alert("조퇴 후 퇴근은 불가능합니다.");
-		    		return;
-		    	}
+		    	} 
+// 		    	else if (pTypeId == "A03" && leaveEarlyFlag) {
+// 		    		alert("조퇴 후 퇴근은 불가능합니다.");
+// 		    		return;
+// 		    	}
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,
@@ -970,8 +971,15 @@
 		    			dateType : pDateType,
 		    			mode : "new"
 		    		},
-		    		success : function() {
+		    		success : function(result) {
 		    			getAttitudeList();
+		    			if (result == 'dupl') {
+		    				if (pTypeId == "A03" && !$("#outAttiBtn").hasClass("btn_disabled")) {
+		    					alert("조퇴 후 퇴근은 불가능합니다.");
+		    				} else {
+			    				alert("이미 등록되었습니다.");
+		    				}
+		    			}
 		    		}
 		    	})
 		    }

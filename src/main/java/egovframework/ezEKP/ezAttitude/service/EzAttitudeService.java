@@ -140,7 +140,7 @@ public interface EzAttitudeService {
 
 	public int checkUseAttitudeType(String typeId, int tenantId, String companyId) throws Exception;
 
-	public void deleteAttitudeType(String typeId, int tenantId, String companyId);
+	public void deleteAttitudeType(String typeId, int tenantId, String companyId) throws Exception;
 	
 	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception;
 		
@@ -149,4 +149,6 @@ public interface EzAttitudeService {
 	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception;
 	
 	public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID) throws Exception;
+	
+	public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId) throws Exception;
 }

@@ -580,7 +580,7 @@
 	                        		<td><c:out value="${info.userName }"/></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">
-									<th>구분</th>
+									<th><div style="width:48px;">구분</div></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
