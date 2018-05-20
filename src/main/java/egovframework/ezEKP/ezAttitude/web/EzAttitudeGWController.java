@@ -754,42 +754,6 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 근태유형 추가팝업에 필요한 데이터 조회
-	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/info", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getSaveAttitudeTypePopupInfo(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes/info] started.");
-		
-		JSONObject result = new JSONObject();
-		JSONObject data = new JSONObject();
-		
-		try{
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			//typeId 구하기
-			String MaxTypeId = ezAttitudeService.getAttitudeTypeMaxTypeId(companyId, info.getTenantId());
-			String typeId = "";
-			if (MaxTypeId.length() == 1) {
-				typeId = "A0" + MaxTypeId;
-			} else {
-				typeId = "A" + MaxTypeId;
-			}
-			
-			data.put("typeId", typeId);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", data);
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes/info] ended.");
-		return result;
-	}
-	
-	/**
 	 * G/W 근태관리 [POST] 근태유형 추가
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
@@ -802,11 +766,10 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			String typeId = request.getParameter("typeId");
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
 			
-			if (ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, info.getTenantId(), companyId)) {
+			if (ezAttitudeService.insertAttitudeType(typeName, typeName2, info.getTenantId(), companyId)) {
 				result.put("status", "ok");
 			} else {
 				result.put("status", "failed");
