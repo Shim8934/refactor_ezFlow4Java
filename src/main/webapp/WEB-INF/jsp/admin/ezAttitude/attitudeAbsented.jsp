@@ -198,7 +198,7 @@
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
-	    			resultHtml += "<tr userid='" + vo.writerId + "'>";
+	    			resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this);>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -300,27 +300,6 @@
 			}
 			
 			function sendMail() {
-				/* $.ajax({
-					type : "POST",
-					async : true,
-					url : "/admin/ezAttitude/absentedListSendMail.do",
-					data : {
-						companyId : pCompanyId,
-	   					userName : searchUserName,
-	   					deptName : searchDeptName,
-	   					title : searchTitle,
-	   					startDate : searchStartDate,
-	   					endDate : searchEndDate,
-	   					deptId : ''
-					},
-					success : function(result) {
-						if (result == "ok") {
-							alert("메일이 발송되었습니다.");
-						} else {
-							alert("메일 발송에 실패하였습니다.");
-						}
-					}
-				}); */
 				var pheight = window.screen.availHeight;
 				var conHeight = pheight * 0.8;
 				var pwidth = window.screen.availwidth;
@@ -329,6 +308,20 @@
 				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&pageNum=&listSize=&orderCell=&orderOption=";
 					
 				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
+			}
+			
+			function attitudeNewItem(obj) {
+				var userid = $(obj).attr("userid");
+				var date = $(obj).attr("date");
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=admin&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=admin&userid=" + userid, "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	            }
 			}
 	    </script>
 	</head>

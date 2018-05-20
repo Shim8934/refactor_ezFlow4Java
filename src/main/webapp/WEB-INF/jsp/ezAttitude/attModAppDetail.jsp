@@ -93,9 +93,12 @@
 					    data : obj,
 					    dataType : "text",
 					    error: function(xhr, status, error){
-					    	alert("삭제 중 오류 발생")
+					    	alert("삭제 중 오류 발생");
 					    },
 					    success : function(json){
+					    	if (json == "error") {
+					    		alert("오류 발생");
+					    	}
 				            try {
 				                window.opener.att_refresh();
 				            } catch (e) { 
