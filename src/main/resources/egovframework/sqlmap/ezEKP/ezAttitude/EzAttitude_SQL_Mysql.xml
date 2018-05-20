@@ -413,13 +413,11 @@
 		</isNotEmpty>
 		<isNotEmpty property="writerDeptName" prepend="and">
 			<isNotEmpty property="writerDeptName" >
-				<isNotEqual property="writerDeptName" compareValue="전체">
 				<isEqual property="sysLang" compareValue="primary" >
 						A.WRITER_DEPT_NAME LIKE CONCAT('%', #writerDeptName#,'%')
 				</isEqual>
 				<isNotEqual property="sysLang" compareValue="primary">
 						A.WRITER_DEPT_NAME2 LIKE CONCAT('%', #writerDeptName#,'%')
-				</isNotEqual>
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>

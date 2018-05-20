@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.ibm.icu.text.SimpleDateFormat;
@@ -358,8 +357,6 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String writerDeptId) throws Exception {
 		
 		LOGGER.debug("getAttModAppList started");
-
-		/* 2018-05-15 이효진 여기 관리자쪽 태울땐 16개정도하면 될듯*/
 		LOGGER.debug("adminFlag = " + adminFlag + " || checkAdmin = " + checkAdmin);
 		int currentPage = 1;
 		int pageSize = 19;
