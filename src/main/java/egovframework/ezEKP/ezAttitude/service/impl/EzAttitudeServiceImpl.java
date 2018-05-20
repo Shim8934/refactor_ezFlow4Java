@@ -318,20 +318,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			 */
 			
 			if (attVO.getTypeId().equals("A02")) {
-				//kms-todo
 				map.put("attModId", attitudeId);
 				map.put("offset", commonUtil.getMinuteUTC(offset));
 				
 				AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
 				//가장 마지막에 신청한 근태수정신청내역이 신청 상태가 아닐 경우
-				if (!aav.getApprStatus().equals("0")) {
-					
-				} else {
-					//마지막에 신청한 근태수정신청이 신청상태인 경우
-					map.put("ids", attitudeId);
-					map.put("changeStatus", "ret");
-					map.put("apprDate", commonUtil.getTodayUTCTime(""));
-					ezAttitudeDAO.adminChangeUsersModAtt(map);
+				if (aav != null) {
+					if (!aav.getApprStatus().equals("0")) {
+						
+					} else {
+						//마지막에 신청한 근태수정신청이 신청상태인 경우
+						map.put("ids", attitudeId);
+						map.put("changeStatus", "ret");
+						map.put("apprDate", commonUtil.getTodayUTCTime(""));
+						ezAttitudeDAO.adminChangeUsersModAtt(map);
+					}
 				}
 				
 				map.put("originDate", attVO.getStartDate());
