@@ -335,7 +335,7 @@
 		        		mode : mode
 		        	},
 		        	success : function (result) {
-		    			if (resultStatus == "success") {
+		    			if (result == "success") {
 			        		alert("<spring:message code='ezAttitude.bbhs19'/>");
 //	 		        		window.opener.getAttitudeMainList();
 //	 		        		window.opener.parent.frames["left"].getAttitudeList();
