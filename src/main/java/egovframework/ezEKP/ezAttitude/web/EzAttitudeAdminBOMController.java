@@ -1142,7 +1142,7 @@ public class EzAttitudeAdminBOMController {
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
+		LoginVO userInfo = commonUtil.userInfo(loginCookie); 
 		
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
