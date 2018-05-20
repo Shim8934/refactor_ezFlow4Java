@@ -1902,6 +1902,7 @@ public class EzAttitudeKMSController {
 		
 		for(int i = 0; i < deptList.size(); i++) {
 			JSONObject dept = (JSONObject) deptList.get(i);
+			LOGGER.debug("dept : " + dept.toJSONString());
 			if (dept.get("deptId").equals(userInfo.getDeptID())) {
 				myDeptCount++;
 			}
@@ -1910,7 +1911,7 @@ public class EzAttitudeKMSController {
 		if (myDeptCount == 1) {
 			for(int i = 0; i < deptList.size(); i++) {
 				JSONObject dept = (JSONObject) deptList.get(i);
-				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				if (dept.get("deptId").equals(userInfo.getDeptID()) && dept.get("mine") != null && dept.get("mine").equals("yes")) {
 					dept.put("mine", "no");
 					dept.put("authType", "R");
 				}
@@ -1920,7 +1921,6 @@ public class EzAttitudeKMSController {
 		//권한 부서 목록에서 부서의 권한을 읽음
 		for (int i = 0; i < deptList.size(); i++ ){
 			JSONObject dept = (JSONObject)deptList.get(i);
-			LOGGER.debug("dept : " + dept.toJSONString());
 			if (dept.get("deptId").equals(deptId)) {
 				authFlag = (String) dept.get("authType");
 			}
