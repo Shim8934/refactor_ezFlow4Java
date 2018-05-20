@@ -95,17 +95,22 @@
 						type : "POST",
 						async : true,
 						url : "/ezAttitude/adminAttiDelItem.do",
+						dataType : "text",
 						data : {
 							attitudeId : attitudeId,
 							mode : "admin"
 						},
-						success : function(result) {
-							window.opener.getAttitudeCheckList();
-// 							window.opener.parent.frames["left"].getAttitudeList();
-							window.close();
+						success : function(resultStatus) {
+							if (resultStatus == "success") {
+								window.opener.getAttitudeCheckList();
+//	 							window.opener.parent.frames["left"].getAttitudeList();
+								window.close();
+							} else {
+								alert("<spring:message code='ezAttitude.kbm3' />");
+							}
 						},
 						error: function(xhr, status, error){
-					    	alert("삭제 중 오류 발생")
+					    	alert("<spring:message code='ezAttitude.kbm3' />");
 					    }
 					})
 				}
