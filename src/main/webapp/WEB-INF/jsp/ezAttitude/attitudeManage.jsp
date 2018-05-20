@@ -455,27 +455,34 @@
 		   			resultHtml += "<td>" + vo.writerName + "</td>";
 		   			resultHtml += "<td>" + vo.writerTitle + "</td>";
 		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
-		   			
+		   			//일시
 		   			if (vo.originStartdate == null || vo.originStartdate == "") {
 		   				resultHtml += "<td>미입력";
 		   			} else {
 		   				if (vo.originEnddate == null || vo.originEnddate == "") {
-		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate;
-		   				} else {
 		   					resultHtml += "<td>" + vo.originStartdate;
+		   				} else {
+		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate;
 		   				}
 		   			}
-		   			
-		   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
-		   				resultHtml += " -> " + vo.changeStartdate + "</td>";
+		   			if (vo.changeStartdate == null || vo.changeStartdate == "") {
+		   				resultHtml += " -> 삭제</td>";
 		   			} else {
-		   				resultHtml += " -> " + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
+			   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
+			   				resultHtml += " -> " + vo.changeStartdate + "</td>";
+			   			} else {
+			   				resultHtml += " -> " + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
+			   			}
 		   			}
-		   			
+		   			//근태유형
 		   			if (vo.originTypeName == null || vo.originTypeName == "") {
 		   				resultHtml += "<td>미입력 -> " + vo.changeTypeName + "</td>";
 	    			} else {
-	    				resultHtml += "<td>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
+	    				if (vo.changeTypeName == null || vo.changeTypeName == "") {
+	    					resultHtml += "<td>" + vo.originTypeName + " -> 삭제</td>";
+	    				} else {
+		    				resultHtml += "<td>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
+	    				}
 	    			}
 		   			
 	    			resultHtml += "<td>" + vo.apprUserName + "</td>"
