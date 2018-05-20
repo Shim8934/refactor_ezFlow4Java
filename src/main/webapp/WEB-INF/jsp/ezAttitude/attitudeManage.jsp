@@ -298,11 +298,7 @@
 	    		$("#contentlist .mainlist tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
-					if ($('#ListDept option:selected').attr('authtype') == 'M') {
-		    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
-					} else {
-		    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "'>";
-					}
+	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
