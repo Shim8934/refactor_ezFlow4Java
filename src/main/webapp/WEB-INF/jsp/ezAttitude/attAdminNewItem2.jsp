@@ -538,19 +538,15 @@
 			var inputCheckFlag = false;
 			function inputCheck() {
 				inputCheckFlag = true;
-				if (selectType != 'A01' && selectType != 'A02' && selectType != 'A03') {
-					if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
-						$("input[name=region]").focus();
-					} else if ($.trim($("input[name=mobile]").val()) == "") {
-						$("input[name=mobile]").focus();
-					} else if ($.trim($("input[name=bizsub]").val()) == "") {
-						$("input[name=bizsub]").focus();
-					} else {
-						inputCheckFlag = false;
-					}	
+				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
+					$("input[name=region]").focus();
+				} else if ($("#mobile").length != 0 && $.trim($("input[name=mobile]").val()) == "") {
+					$("input[name=mobile]").focus();
+				} else if ($("#bizsub").length != 0 && $.trim($("input[name=bizsub]").val()) == "") {
+					$("input[name=bizsub]").focus();
 				} else {
 					inputCheckFlag = false;
-				}
+				}	
 			}
 			
 			var mail_newreceiverchoose_dialogArguments = new Array();

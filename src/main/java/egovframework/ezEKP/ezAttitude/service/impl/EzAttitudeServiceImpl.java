@@ -573,11 +573,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "", "", tenantId);
+		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "1", "", tenantId);
 		
 		boolean result = false;
 		
-		if (list.size() < 27) {
+		if (list.size() < 15) {
 			ezAttitudeDAO.insertAttitudeType(map);
 			
 			result = true;

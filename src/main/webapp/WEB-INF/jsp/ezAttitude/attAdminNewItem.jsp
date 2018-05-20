@@ -538,9 +538,9 @@
 				inputCheckFlag = true;
 				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
 					$("input[name=region]").focus();
-				} else if ($.trim($("input[name=mobile]").val()) == "") {
+				} else if ($("#mobile").length != 0 && $.trim($("input[name=mobile]").val()) == "") {
 					$("input[name=mobile]").focus();
-				} else if ($.trim($("input[name=bizsub]").val()) == "") {
+				} else if ($("#bizsub").length != 0 && $.trim($("input[name=bizsub]").val()) == "") {
 					$("input[name=bizsub]").focus();
 				} else {
 					inputCheckFlag = false;
