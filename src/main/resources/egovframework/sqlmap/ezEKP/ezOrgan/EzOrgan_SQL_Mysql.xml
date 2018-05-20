@@ -1592,7 +1592,8 @@
 			             	cn, 
 			                department as displayName, 
 			                '' as extensionAttribute15,
-			                'user' as type 
+			                'user' as type,
+			                DESCRIPTION 
 			             FROM  
 			             	TBL_USERMASTER A 
                          $strSQL$
@@ -1600,14 +1601,15 @@
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                      
                          AND 
                              A.TENANT_ID = #v_TENANT_ID#
-			       
+			       		 
 			             UNION ALL
 			            
        			         SELECT
        			        	a.cn  , 
        			            deptid as displayName , 
        			            '' as extensionAttribute15,
-       			            'user' as type  
+       			            'user' as type,
+       			            DESCRIPTION  
        			         FROM 
        			         	TBL_USERMASTER b   
        			         INNER JOIN 
@@ -1616,7 +1618,7 @@
        			         	a.cn = b.cn AND a.tenant_id = b.tenant_id
                          $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
                         )  AA
-                      ORDER BY displayName
+                      ORDER BY DESCRIPTION
                       LIMIT #startRowForMySQL#, #count#
                ]]>
           </isEqual>

@@ -292,9 +292,9 @@
         	$("#popup2").css("left", popupX);
         	
 			$("#popup2").modal({
-				  escapeClose: false,
-				  clickClose: false,
-				  showClose: false
+// 				  escapeClose: false,
+// 				  clickClose: false,
+// 				  showClose: false
 			});
 	    }
 	    
@@ -1164,9 +1164,9 @@
 		        	$("#popup").css("left", popupX);
 		        	
 					$("#popup").modal({
-						  escapeClose: false,
-						  clickClose: false,
-						  showClose: false
+// 						  escapeClose: false,
+// 						  clickClose: false,
+// 						  showClose: false
 					});
 			    }
 		    });
