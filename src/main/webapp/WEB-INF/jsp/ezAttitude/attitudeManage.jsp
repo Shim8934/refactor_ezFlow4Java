@@ -136,9 +136,6 @@
 	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
-	        	pageNum = 1;
-	    		totalPage = "";
-	    		totalCount = "";
 	    		
 	            getFullList();
 	        }
@@ -214,20 +211,27 @@
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
-	    			resultHtml += "<th style='width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
-	    			resultHtml += "<th style='width:18%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'></th>";
-	    			resultHtml += "<th style='width:6%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.lhj18' /></th>";
-	    			resultHtml += "<th style='width:8%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'></th>";
+	    			resultHtml += "<th style='width:400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.lhj18' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_User_Name'>수정자</th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'>수정일시</th>";
 	    			break;
 	    		}
 	        	
 	        	$("#contentlist .mainlist thead tr").html(resultHtml);
+	        	
+	        	pageNum = 1;
+	    		totalPage = "";
+	    		totalCount = "";
+	    		orderCell = "";
+	    		orderOption = "";
+	    		
 	        	getList();
 	        }
 	        
 	        function getList() {
+	        	layerHidden();
+	        	
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
 	    			getAttitudeCheckList();
@@ -453,35 +457,33 @@
 		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
 		   			
 		   			if (vo.originStartdate == null || vo.originStartdate == "") {
-		   				resultHtml += "<td>미입력</td>";
+		   				resultHtml += "<td>미입력";
 		   			} else {
-		   				if (vo.originEnddate == null || vo.originEnddate =="") {
-		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate + "</td>";
+		   				if (vo.originEnddate == null || vo.originEnddate == "") {
+		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate;
 		   				} else {
-		   					resultHtml += "<td>" + vo.originStartdate + "</td>";
+		   					resultHtml += "<td>" + vo.originStartdate;
 		   				}
 		   			}
 		   			
 		   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
-		   				resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeStartdate + "</td>";
+		   				resultHtml += " -> " + vo.changeStartdate + "</td>";
 		   			} else {
-		   				resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
+		   				resultHtml += " -> " + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
 		   			}
 		   			
 		   			if (vo.originTypeName == null || vo.originTypeName == "") {
-		   				resultHtml += "<td>미입력</td>";
+		   				resultHtml += "<td>미입력 -> " + vo.changeTypeName + "</td>";
 	    			} else {
-	    				resultHtml += "<td>" + vo.originTypeName + "</td>";
+	    				resultHtml += "<td>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
 	    			}
-		   			
-		   			resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeTypeName + "</td>"; 
 		   			
 	    			resultHtml += "<td>" + vo.apprUserName + "</td>"
 	    						+ "<td>" + vo.apprDate + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='10' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -550,6 +552,12 @@
 	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 	        	
 	        	$("#searchPopup").css("left", popupX);
+	        	
+	        	if (Tab1_SelectID == 'modify') {
+		        	$("#searchAttitudeType").closest("tr").css("display", "");
+	        	} else {
+		        	$("#searchAttitudeType").closest("tr").css("display", "none");
+	        	}
 	        	
 	        	$("#searchPopup").modal();
 	        }

@@ -86,7 +86,8 @@
    				},
    				success: function(result){
 					if (result == "ok") {
-						opener.changeUserConfList(workStartTime, workEndTime, gubun, "${selectedUserIdList}");
+// 						opener.changeUserConfList(workStartTime, workEndTime, gubun, "${selectedUserIdList}");
+						opener.getUserConfList();
 	   					window.close();
 					} else {
 						alert("<spring:message code='ezAttitude.lhj9' />");

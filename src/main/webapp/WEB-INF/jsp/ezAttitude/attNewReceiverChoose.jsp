@@ -19,6 +19,23 @@
 	    	.mainlist_free thead tr th:first-child{
 	    		padding-left:15px;
 	    	}
+	    	#left h2 {
+	    		background: url('/images/kr/left/left_dot02.gif') no-repeat left 5px;
+	    	}
+	    	
+	    	#left h2.on, #TopBoards h2.on {
+	    	    font-weight: bold;
+			    background: url('/images/kr/left/left_dot02.gif') no-repeat left 5px;
+			    background-color: #edf4fd;
+			    color: #333333;
+    			border-top: 1px solid #d1ddec;
+    			border-bottom: 1px solid #d1ddec;
+	    	}
+	    	
+	    	span.node_normal {
+	    		padding-top: 4px!important;
+	    		padding-left: 10px!important;
+	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -3319,7 +3336,7 @@
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
-	            	<div class="portlet_tabpart01" style="margin:0px;">
+	            	<div class="portlet_tabpart01" style="margin:0px; display: none;">
 	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
 	            			<p id="orgTabButton" style="display: none;">
 	            				<span onclick="orgTabButton_onClick()"></span>
