@@ -21,9 +21,9 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    
 	    <style>
-	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: initial;}
-	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: initial;}
-			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: initial;}
+	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: 0;}
+	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
+			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
 	    </style>
 	    
 		<script type="text/javascript" language="javascript">
@@ -640,6 +640,7 @@
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
+		      				<option value="all">전체</option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
 									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}" <c:if test="${selectedDeptID == dept.deptId}">selected</c:if>><c:out value='${dept.deptName}'/></option>
