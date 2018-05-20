@@ -99,7 +99,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		
+		map.put("typeId", typeId);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		
 		if (typeId.equals("A01") || typeId.equals("A03")) {
@@ -109,7 +110,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				startDate += ":00";
 				//startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 			}
-			
 			if (typeId.equals("A01")) {
 				//사용자별 근태설정이 있는 지 검사
 				String isValue = ezAttitudeDAO.getIsAttitudeUserConf(map);
@@ -150,8 +150,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("bizSub", bizsub);
 		map.put("content", content);
 		map.put("ipAddress", ip);
-		map.put("typeId", typeId);
-		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("isDefaultAtti", isDefaultAtti); // 출근, 퇴근과 다른 기타 근태의 insert쿼리를 다르게 하기 위해 적용
 		map.put("dateType", dateType);
 		
@@ -1711,7 +1709,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeAuthorVO> getCompanyDeptList(String userId,
-			String companyId, int tenantId) {
+			String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getCompanyDeptList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -1738,7 +1736,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void deleteAttitudeType(String typeId, int tenantId, String companyId) {
+	public void deleteAttitudeType(String typeId, int tenantId, String companyId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("typeId", typeId);
@@ -2307,5 +2305,35 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
         }
         
         return strRet;
+    }
+    
+    @Override
+    public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId) throws Exception {
+    	if (typeId.equals("A01") || typeId.equals("A02")) {
+    		typeId = "A01,A02";
+    	} else if (typeId.equals("A03") || typeId.equals("A08")) {
+    		typeId = "A03,A08";
+    	}
+    	
+    	String[] typeIdArr = typeId.split(",");
+    	if (startDate.equals("")) {
+			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+    	}
+    	
+    	Map<String,Object> map = new HashMap<String, Object>();
+    	map.put("typeIdArr", typeIdArr);
+    	map.put("writerId", writerId);
+    	map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+    	map.put("companyId", companyId);
+    	map.put("tenantId", tenantId);
+		map.put("checkStartDate", startDate.split(" ")[0]);
+		
+		String isAttitude = ezAttitudeDAO.getIsAttitude(map); 
+//		if (!isAttitude.equals("0")) {
+//			isAttitude = "dupl";
+//		} else {
+//			isAttitude = "notDupl";
+//		}
+		return isAttitude;
     }
 }

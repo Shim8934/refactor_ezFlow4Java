@@ -225,7 +225,10 @@ public class EzAttitudeBHSController {
 		
 		String resultStatus = "";
 		if (status.equals("ok")) {
-			resultStatus = "success";
+			resultStatus = resultBody.get("data").toString();
+			if (!resultStatus.equals("dupl")) {
+				resultStatus = "success";
+			}
 		} else {
 			resultStatus = "error";
 		}
@@ -1027,6 +1030,50 @@ public class EzAttitudeBHSController {
 			}
 		}
 		LOGGER.debug("/ezAttitude/getAttitudeItem ended");
+		return returnValue;
+	}
+	
+	@RequestMapping(value = "/ezAttitude/getIsAttitude.do")
+	@ResponseBody
+	public String getIsAttitude(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/getIsAttitude started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String typeId = request.getParameter("attitudeId");
+		String startDate = request.getParameter("startDate");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/checkIsAttitude"; //근태상세보기 가져오기
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("typeId", typeId)
+				.queryParam("startDate", startDate);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		String returnValue = "";
+		
+		if (status.equals("ok")) {
+			returnValue = (String) resultBody.get("data");
+		}
+		LOGGER.debug("/ezAttitude/getIsAttitude ended");
 		return returnValue;
 	}
 }
