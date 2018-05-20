@@ -406,6 +406,8 @@
 	    			typeId = "";
 	    		}
 	    		
+	    		searchUserName = $("#searchUserName").val();
+	    		searchTitle = $("#searchTitle").val();
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
 	    		
