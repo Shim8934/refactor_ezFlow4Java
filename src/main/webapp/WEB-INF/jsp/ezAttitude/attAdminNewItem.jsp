@@ -568,7 +568,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content">
-	                        	<tr id="userId" fixed="fix">
+	                        	<tr id="userId" fixed="fix" style="display:none;">
 	                        		<th>아이디</th>
 	                        		<td><c:out value="${info.userId }"/></td>
 	                        	</tr>

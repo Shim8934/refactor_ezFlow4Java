@@ -135,8 +135,8 @@ public class EzAttitudeKMSController {
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
 		}
-		
-		if (deptList.size() <= 1 || adminFlag.equals("false")) {
+
+		if (deptList.size() < 1 && adminFlag.equals("false")) {
 			return "cmm/error/accessDenied";
 		}
 		
