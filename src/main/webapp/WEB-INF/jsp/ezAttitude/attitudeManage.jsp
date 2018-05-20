@@ -648,7 +648,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated&reqType="+Tab1_SelectID;
+		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId + "&userName=" + searchUserName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated&reqType="+Tab1_SelectID;
 		    	exportExcelframe.target="_blank";
 			}
 	    </script>
