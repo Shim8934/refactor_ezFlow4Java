@@ -143,7 +143,7 @@
 	    	$.ajax({
 	    		type : "POST",
 	    		dataType : "json",
-	    		async : true,
+	    		async : false,
 	    		url : "/ezAttitude/getAttitudeList.do",
 	    		data : {},
 	    		success : function(result) {
@@ -214,10 +214,11 @@
 	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
 	    		alert("<spring:message code='ezAttitude.bbhs35'/>");
 	    		return;
-	    	} else if (leaveEarlyFlag) {
-	    		alert("<spring:message code='ezAttitude.bbhs36'/>");
-	    		return;
-	    	}
+	    	} 
+// 	    	else if (pTypeId == "A03" && leaveEarlyFlag) {
+// 	    		alert("<spring:message code='ezAttitude.bbhs36'/>");
+// 	    		return;
+// 	    	}
 	    	$.ajax({
 	    		type : "POST",
 	    		async : true,
@@ -227,13 +228,50 @@
 	    			dateType : pDateType,
 	    			mode : "new"
 	    		},
-	    		success : function() {
+	    		success : function(result) {
 	    			getAttitudeList();
 	    			parent.frames["right"].getAttitudeMainList();
+	    			if (result == 'dupl') {
+	    				if (pTypeId == "A03" && !$("#outAttiBtn").hasClass("btn_disabled")) {
+	    					alert("조퇴 후 퇴근은 불가능합니다.");
+	    				} else {
+		    				alert("이미 등록되었습니다.");
+	    				}
+	    			}
 	    		}
 	    	})
 	    }
 	    
+// 	    function getIsAttitude(obj) {
+// 	    	var pTypeId = obj.getAttribute("type");
+// 	    	var pDateType = obj.getAttribute("datetype");
+// 	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
+// 	    		alert("<spring:message code='ezAttitude.bbhs35'/>");
+// 	    		return;
+// 	    	} else if (leaveEarlyFlag) {
+// 	    		alert("<spring:message code='ezAttitude.bbhs36'/>");
+// 	    		return;
+// 	    	}
+// 	    	$.ajax({
+// 	    		type : "POST",
+// 	    		dataType : "text",
+// 	    		async : true,
+// 	    		url : "/ezAttitude/getIsAttitude.do",
+// 	    		data : {
+// 	    			typeId : pTypeId,
+// 	    			dateType : pDateType,
+// 	    			mode : "new"
+// 	    		},
+// 	    		success : function(result) {
+// 	    			if (result != 0) {
+	    				
+// 	    			} else {
+// 	    				addAttitude();
+// 	    			}
+// 	    		}
+// 	    	})
+// 	    }
+
 	    function setAttiBtnHover() {
 	    	$("#inAttiBtn, #outAttiBtn").hover(function(){
 	    		$(this).addClass("btn_hover");

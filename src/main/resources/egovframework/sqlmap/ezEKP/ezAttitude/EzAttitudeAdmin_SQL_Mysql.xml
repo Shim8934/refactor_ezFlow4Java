@@ -1010,11 +1010,6 @@
 				  AND
 				  appr_date <= #searchEndDate#)
 		]]>
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-			<![CDATA[
-				change_type_id = #searchAttitudeType#
-			]]>
-		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			<![CDATA[
 				writer_name LIKE CONCAT('%', #searchUserName#, '%')
@@ -1025,7 +1020,7 @@
 				writer_title LIKE CONCAT('%', #searchTitle#, '%')
 			]]>
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
+		<isNotEmpty prepend="AND" property="deptId">
 			WRITER_DEPT_ID = #deptId#
 		</isNotEmpty>
 		<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
@@ -1067,18 +1062,13 @@
 				  AND
 				  appr_date <= #searchEndDate#)
 		]]>
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-			<![CDATA[
-				CHANGE_TYPE_ID = #searchAttitudeType#
-			]]>
-		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
 			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
+		<isNotEmpty prepend="AND" property="deptId">
 			WRITER_DEPT_ID = #deptId#
 		</isNotEmpty>
 		<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">

@@ -153,17 +153,22 @@ public class EzAttitudeGWController {
 			String dateType = request.getParameter("dateType");
 			String mode = request.getParameter("mode");
 			String adminId = request.getParameter("adminId");
-			
+			String checkAttitude = "";
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), mode, adminId);
 			
-//			if (mode.equals("admin")) {
-//				//관리자 근태등록 기록.
-//				ezAttitudeService.insertAdminAttHistory(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), adminId);
-//			}
+			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
+				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+			}
+			
+			if (!checkAttitude.equals("") && !checkAttitude.equals("0")) {
+				checkAttitude = "dupl";
+			} else {
+				ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), mode, adminId);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", checkAttitude);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -1931,7 +1936,6 @@ public class EzAttitudeGWController {
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
-			String searchAttitudeType = request.getParameter("searchAttitudeType");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
@@ -1959,8 +1963,8 @@ public class EzAttitudeGWController {
 				searchDeptId = "";
 			}
 			
-			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID, searchDeptId, deptIdList);
-			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList);
+			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID, searchDeptId, deptIdList);
+			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList);
 		
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
@@ -1968,7 +1972,6 @@ public class EzAttitudeGWController {
 			JSONObject data = new JSONObject();
 			data.put("list", list);
 			data.put("totalCount", totalCount);
-			data.put("typeId", searchAttitudeType);
 			data.put("typeList", typeList);
 			
 			result.put("status", "ok");
@@ -2050,6 +2053,39 @@ public class EzAttitudeGWController {
 		result = result.replaceAll("null", "");
 		
 		LOGGER.debug("getSearchList ended.");
+		return result;
+	}
+	
+	/**
+	 * 당일 근태관리 중복
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/checkIsAttitude", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getCheckIsAttitude(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String typeId = request.getParameter("typeId");
+			String userId = request.getParameter("userId");
+			String startDate = request.getParameter("startDate");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String returnValue = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+						
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", returnValue);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] ended.");
 		return result;
 	}
 }

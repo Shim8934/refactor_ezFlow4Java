@@ -2013,7 +2013,6 @@ public class EzAttitudeAdminBOMController {
 		String searchTitle = request.getParameter("title");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
-		String searchAttitudeType = request.getParameter("attitudeType");
 		String pageNum = request.getParameter("pageNum");
 		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
@@ -2028,7 +2027,7 @@ public class EzAttitudeAdminBOMController {
 		}
 		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
-				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
+				+ " || searchEndDate = " + searchEndDate + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||deptId =" + deptId);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -2047,7 +2046,6 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
-				.queryParam("searchAttitudeType", searchAttitudeType)
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)
@@ -2074,7 +2072,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
 		
 		return data;
-		
 	}
 	
 	

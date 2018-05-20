@@ -27,9 +27,6 @@
 		<!-- time picker-->		
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<style>
-		th {
-			text-align : center!important;
-		}
 		</style>
 		<script type="text/javascript">
 			var userId = "<c:out value='${userInfo.id }'/>";
@@ -569,7 +566,9 @@
 	
 	        function addReceiver(strId, strName) {
 	            $("#forId").text(strId);
-	            $("#forName").text(strName);
+	            $("#forName").text("")
+	             .append($("<span></span>").css({"display":"inline-block", "padding-top":"5px", "margin-right":"4px"}).text(strName))
+	             .append('<a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 64px; text-align: center;">대상자 추가</span></a>');
 	        }
 	        
 	      	//특수문자
@@ -603,15 +602,15 @@
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content">
 	                        	<tr id="userName" fixed="fix">
-	                        		<th><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 50px; text-align: center;">대상자</span></a>
-	                        		<td id="forName"></td>
+	                        		<th>대상자</th>
+	                        		<td id="forName"><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 64px; text-align: center;">대상자 추가</span></a></td>
 	                        	</tr>
 	                        	<tr id="userId" fixed="fix" style="display:none;">
 	                        		<th>ID</a>
 	                        		<td id="forId"></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">
-									<th>구분</th>
+									<th><div style="width:48px;">구분</div></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">

@@ -148,12 +148,6 @@
 	    	}
 	    	
 	    	function getAttitudeCheckList(){
-	    		var typeId = $('#attitudeType').val();
-	    		
-	    		if (typeId == "total") {
-	    			typeId = "";
-	    		}
-	    		
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
 	    		

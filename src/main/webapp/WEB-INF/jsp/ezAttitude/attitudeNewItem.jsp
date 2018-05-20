@@ -325,7 +325,9 @@
 		        		mode : mode
 		        	},
 					success : function(resultStatus) {
-	            		if (resultStatus == "success") {
+						if (resultStatus == "dupl"){
+							alert("중복등록이 불가능합니다.");
+						} else if (resultStatus == "success") {
 	            			alert("<spring:message code='ezAttitude.bbhs19'/>");
 			        		window.opener.getAttitudeMainList();
 			        		window.opener.parent.frames["left"].getAttitudeList();
