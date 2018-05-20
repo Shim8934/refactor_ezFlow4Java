@@ -949,7 +949,7 @@ public class EzAttitudeAdminBOMController {
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; //
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1062,7 +1062,7 @@ public class EzAttitudeAdminBOMController {
 	/**
 	 * 근태조회 미입력자목록 조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/getAttitudeAbsentedList.do")
+	@RequestMapping(value = {"/admin/ezAttitude/getAttitudeAbsentedList.do", "/ezAttitude/getAttitudeAbsentedList.do"})
 	@ResponseBody
 	public JSONObject getAttitudeAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
@@ -1083,6 +1083,12 @@ public class EzAttitudeAdminBOMController {
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String duplicated = request.getParameter("duplicated");
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String isAdmin = "";
+		
+		if (requestURL.indexOf("/admin/ezAttitude/getAttitudeAbsentedList.do") < 0) {
+			isAdmin = "Y";
+		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
@@ -1106,7 +1112,8 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
 				.queryParam("duplicated", duplicated)
-				.queryParam("offsetMin", offsetMin);
+				.queryParam("offsetMin", offsetMin)
+				.queryParam("isAdmin", isAdmin);
 		
 		RestTemplate rest = new RestTemplate();
 		

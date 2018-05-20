@@ -262,7 +262,6 @@ public class EzAttitudeBHSController {
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			attitudeAdminCheck = true;
 			isAllDept = "Y";
-			
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
 			attitudeAdminCheck = true;
 		}		

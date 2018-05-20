@@ -628,7 +628,7 @@
 			]]>
 		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchDeptId">
-			C.DEPARTMENT = #searchDeptId#
+			C.department = #searchDeptId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			C.description LIKE CONCAT('%', #searchDeptName#, '%')
@@ -639,6 +639,9 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			C.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
+		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
@@ -712,6 +715,9 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			C.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
+		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
@@ -766,6 +772,9 @@
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			A.department = #searchDeptId#
 		</isNotEmpty>
+		<iterate prepend="AND A.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
 	</select>
 
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultClass="AttitudeAuthorVO">
