@@ -42,25 +42,9 @@
 	    	var totalPage = ""; // 게시판의 총 페이지갯수
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
-	    	var selectedDept = "${selectedDept}";
+	    	var selectedDeptID = "${selectedDeptID}";
 	    	var listSize = 19;
 
-	        $(function() {
-	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
-	            
-	            if (document.getElementById("ListDept").length == 0) {
-		            alert("부서 정보가 없습니다.");
-		        } else {
-		    		if (selectedDept != null) {
-		    			$('#ListDept').val(selectedDept);
-		    		} else {
-			            document.getElementById("ListDept").selectedIndex = 0;
-		    		}
-		        }
-
-	            ChangeTab(document.getElementById(Tab1_SelectID));
-			});
-			
 	        $(function () {
 	            //datepicker
 				$("#Sdatepicker").datepicker({
@@ -134,6 +118,22 @@
 			    });
 			});
 	        
+	        $(function() {
+	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
+	            
+	            if (document.getElementById("ListDept").length == 0) {
+		            alert("부서 정보가 없습니다.");
+		        } else {
+		    		if (selectedDeptID != null) {
+		    			$('#ListDept').val(selectedDeptID);
+		    		} else {
+			            document.getElementById("ListDept").selectedIndex = 0;
+		    		}
+		        }
+
+	            ChangeTab(document.getElementById(Tab1_SelectID));
+			});
+	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
 	    		
@@ -195,30 +195,30 @@
 	        	
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
-					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+					resultHtml += "<tr><th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
-					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.lhj18' /></th>";
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.lhj18' /></th></tr>";
 	    			break;
 	    		case "absent":
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<tr><th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th></tr>";
 	    			break;
 	    		case "history":
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<tr><th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
 	    			resultHtml += "<th style='width:400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.lhj18' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_User_Name'>수정자</th>";
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'>수정일시</th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'>수정일시</th></tr>";
 	    			break;
 	    		}
 	        	
-	        	$("#contentlist .mainlist thead tr").html(resultHtml);
+	        	$("#contentlist .mainlist thead").html(resultHtml);
 	        	
 	        	pageNum = 1;
 	    		totalPage = "";
@@ -298,11 +298,7 @@
 	    		$("#contentlist .mainlist tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
-					if ($('#ListDept option:selected').attr('authtype') == 'M') {
-		    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
-					} else {
-		    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "'>";
-					}
+	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -324,6 +320,7 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
+	    		$("#mainmenu ul li:last").html(" -  [총 " + totalCount + " 개]");
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -331,8 +328,6 @@
 	        function getAttitudeAbsentedList() {
 	    		searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
-// 				searchStartDate = "2018-05-11";
-//     			searchEndDate = "2018-05-18";
 	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
@@ -393,9 +388,9 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
+	    		$("#mainmenu ul li:last").html(" -  [총 " + totalCount + " 개]");
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
-// 	    		$("#absent",parent.document).html("근태입력(" + totalCount + ")");
 	    	}
 	        
 	        function getAttitudeHistoryList(){
@@ -455,27 +450,34 @@
 		   			resultHtml += "<td>" + vo.writerName + "</td>";
 		   			resultHtml += "<td>" + vo.writerTitle + "</td>";
 		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
-		   			
+		   			//일시
 		   			if (vo.originStartdate == null || vo.originStartdate == "") {
 		   				resultHtml += "<td>미입력";
 		   			} else {
 		   				if (vo.originEnddate == null || vo.originEnddate == "") {
-		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate;
-		   				} else {
 		   					resultHtml += "<td>" + vo.originStartdate;
+		   				} else {
+		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate;
 		   				}
 		   			}
-		   			
-		   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
-		   				resultHtml += " -> " + vo.changeStartdate + "</td>";
+		   			if (vo.changeStartdate == null || vo.changeStartdate == "") {
+		   				resultHtml += " -> 삭제</td>";
 		   			} else {
-		   				resultHtml += " -> " + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
+			   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
+			   				resultHtml += " -> " + vo.changeStartdate + "</td>";
+			   			} else {
+			   				resultHtml += " -> " + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
+			   			}
 		   			}
-		   			
+		   			//근태유형
 		   			if (vo.originTypeName == null || vo.originTypeName == "") {
 		   				resultHtml += "<td>미입력 -> " + vo.changeTypeName + "</td>";
 	    			} else {
-	    				resultHtml += "<td>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
+	    				if (vo.changeTypeName == null || vo.changeTypeName == "") {
+	    					resultHtml += "<td>" + vo.originTypeName + " -> 삭제</td>";
+	    				} else {
+		    				resultHtml += "<td>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
+	    				}
 	    			}
 		   			
 	    			resultHtml += "<td>" + vo.apprUserName + "</td>"
@@ -486,6 +488,7 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
+	    		$("#mainmenu ul li:last").html(" -  [총 " + totalCount + " 개]");
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -605,47 +608,20 @@
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}" <c:if test="${selectedDeptID == dept.deptId}">selected</c:if>><c:out value='${dept.deptName}'/></option>
 								</c:if>
 							</c:forEach>
 			      		</select>
 		      		</li>
+		      		<li></li>
 		      	</ul>
 		  	</div>
 	    </div>
 	    
 	    <div id="contentlist" style="width:100%; height:620px;">
 			<table class="mainlist" style="width:100%;">
-				<thead>
-					<tr>
-<!-- 					근태관리 -->
-						<%-- <th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th> --%>
-						
-<!-- 						근태입력 -->
-						<%-- <th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th> --%>
-						
-<!-- 						근태내역 -->
-						<%-- <th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
-						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
-						<th style="width:18%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate"></th>
-						<th style="width:6%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
-						<th style="width:8%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name">수정자</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date">수정일시</th> --%>
-						
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
+				<thead></thead>
+				<tbody></tbody>
 			</table>
 	  	</div>
 	    

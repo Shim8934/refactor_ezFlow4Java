@@ -152,9 +152,11 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.bbhs28'/></span></li>
-	                                <li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
-	                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
+	                            	<c:if test="${userId == attitudeInfo.writerId}">
+		                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.bbhs28'/></span></li>
+		                                <li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
+		                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
+	                            	</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.bbhs21'/></span></li>
 	                            </ul>
 	                        </div>

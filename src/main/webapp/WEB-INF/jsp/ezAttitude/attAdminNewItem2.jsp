@@ -603,10 +603,10 @@
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content">
 	                        	<tr id="userName" fixed="fix">
-	                        		<th><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 50px; text-align: center;">받는사람</span></a>
+	                        		<th><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 50px; text-align: center;">대상자</span></a>
 	                        		<td id="forName"></td>
 	                        	</tr>
-	                        	<tr id="userId" fixed="fix">
+	                        	<tr id="userId" fixed="fix" style="display:none;">
 	                        		<th>ID</a>
 	                        		<td id="forId"></td>
 	                        	</tr>

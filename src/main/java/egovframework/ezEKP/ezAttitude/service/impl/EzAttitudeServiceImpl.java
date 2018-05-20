@@ -104,10 +104,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		if (typeId.equals("A01") || typeId.equals("A03")) {
 			if (!mode.equals("admin")) {
-				startDate = commonUtil.getTodayUTCTime("");
+				startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 			} else {
 				startDate += ":00";
-				startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+				//startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 			}
 			
 			if (typeId.equals("A01")) {
@@ -117,7 +117,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				
 				AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map);
 				
-				String compareDate = commonUtil.getDateStringInUTC(startDate, offset, false).substring(11);
+				String compareDate = startDate.substring(11);
 				String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offset, false).substring(11);
 				
 				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
@@ -136,7 +136,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else {
 			if (mode.equals("admin")) {
 				startDate += ":00";
-				startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+				//startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 			}
 		}
 		

@@ -930,6 +930,7 @@
 	            }
 	            else if (Org_cmd == "attitudeAbsented") {
 	            	getAttitudeAbsentedList("duplicated");
+	            	return;
 	            }
 	            
 	            initFlag = true;

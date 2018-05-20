@@ -213,30 +213,24 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
-	    		for (var i = 0; i < result.length; i ++) {
-	    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
-	    			   			+ "<td>" + result[i].userName + "</td>"
-	    			   			+ "<td>" + result[i].userTitle + "</td>"
-	    			   			+ "<td>" + result[i].deptName + "</td>";
-	    						
-	    			if (result[i].endDate == null || result[i].endDate == "") {
-	    				resultHtml += "<td>" + result[i].startDate.substring(0,16) + "</td>";
+	    		result.forEach(function(vo, index) {
+	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this);>";
+	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<td>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td>" + vo.deptName + "</td>";
+	    			
+	    			if (vo.endDate == null || vo.endDate == "") {
+	    				resultHtml += "<td>" + vo.startDate.substring(0,16) + "</td>";
 	    			} else {
-	    				if (result[i].dateType == 4) {
-	    					resultHtml += "<td>" + result[i].startDate.substring(0,11) + " ~ " + result[i].endDate.substring(0,11) + "</td>";
+	    				if (vo.dateType == 4) {
+	    					resultHtml += "<td>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";
 	    				} else {
-		    				resultHtml += "<td>" + result[i].startDate.substring(0,16) + " ~ " + result[i].endDate.substring(0,16) + "</td>";
+		    				resultHtml += "<td>" + vo.startDate.substring(0,16) + " ~ " + vo.endDate.substring(0,16) + "</td>";
 	    				}
 	    			}
 	    			
-// 	    			if (result[i].endTime == null || result[i].endTime == "") {
-// 	    				resultHtml += "<td>" + result[i].startTime + "</td>";
-// 	    			} else {
-// 	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td>";
-// 	    			}
-	    			
-	    			resultHtml += "<td>" + result[i].typeName + "</td></tr>";
-	    		}
+	    			resultHtml += "<td>" + vo.typeName + "</td></tr>";
+	    		});
 	    		
 	    		if (resultHtml == "") {
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
@@ -319,7 +313,6 @@
 			
 			function checkPattern() {
 				var datePattern =  /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
-				/* var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/; */
 				
 				if (datePattern.test($("#Sdatepicker").val()) && datePattern.test($("#Edatepicker").val())) {
 					return true;
@@ -336,6 +329,20 @@
 					}
 				}
 			}
+			
+			function attDetail(obj) {
+				var pAttitudeId = obj.getAttribute("attitudeId"); 
+				var pTypeId = obj.getAttribute("typeId")
+				;
+				if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">

@@ -730,6 +730,8 @@ public class EzAttitudeBHSController {
 		LOGGER.debug("status : " + status);
 		
 		JSONObject formVO = new JSONObject();
+		JSONObject attitudeVO = new JSONObject();
+		
 		if (status.equals("ok")) {
 			formVO = (JSONObject) resultBody.get("data");
 			
@@ -747,13 +749,81 @@ public class EzAttitudeBHSController {
 			status = resultBody.get("status").toString();
 			LOGGER.debug("status : " + status);
 			
-			JSONObject attitudeVO = new JSONObject();
 			if (status.equals("ok")) {
 				attitudeVO = (JSONObject) resultBody.get("data");
 				model.addAttribute("attitudeInfo", attitudeVO);
 			}
 		} 
-		
+
+//		String adminFlag = "";
+//		String isAllDept = "";
+//		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
+//		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+//			adminFlag = "true";
+//			isAllDept = "Y";
+//		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+//			adminFlag = "true";
+//		}
+//		
+//		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+//		
+//		headers = new HttpHeaders();
+//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+//		headers.set("x-user-host", request.getServerName());
+//		
+//		entity = new HttpEntity<>(headers);
+//		
+//		builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("companyId", userInfo.getCompanyID())
+//				.queryParam("isAllDept", isAllDept)
+//				.queryParam("userId", userInfo.getId());
+//		
+//		rest = new RestTemplate();
+//		
+//		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
+//		jp = new JSONParser();
+//		
+//		resultBody = (JSONObject) jp.parse(result.getBody());
+//		
+//		status = resultBody.get("status").toString();
+//		
+//		JSONArray deptList = new JSONArray();
+//		
+//		if(status.equals("ok")){
+//			deptList = (JSONArray) resultBody.get("data");
+//		}
+//		
+//		if (deptList.size() > 1) {
+//			adminFlag = "true";
+//		}
+//		LOGGER.debug("dpetList : " + deptList.toJSONString());
+//		int myDeptCount = 0;
+//		String authType = "R";
+//		JSONObject dept = new JSONObject();
+//		
+//		for(int i = 0; i < deptList.size(); i++) {
+//			dept = (JSONObject) deptList.get(i);
+//			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+//				myDeptCount++;
+//			}
+//			if (dept.get("deptId").equals(attitudeVO.get("deptId"))) {
+//				authType = (String) dept.get("authType");  
+//			}
+//		}
+//		
+//		if (myDeptCount == 1) {
+//			for(int i = 0; i < deptList.size(); i++) {
+//				dept = (JSONObject) deptList.get(i);
+//				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+//					dept.put("mine", "no");
+//				}
+//			}
+//		}
+//		
+//		model.addAttribute("deptList", deptList);
+//		model.addAttribute("authType", authType);
+		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("font", font);
 		
 		LOGGER.debug("/ezAttitude/attitudeItemView ended");

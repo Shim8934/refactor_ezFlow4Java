@@ -135,8 +135,8 @@ public class EzAttitudeKMSController {
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
 		}
-		
-		if (deptList.size() <= 1 || adminFlag.equals("false")) {
+
+		if (deptList.size() < 1 && adminFlag.equals("false")) {
 			return "cmm/error/accessDenied";
 		}
 		
@@ -162,7 +162,7 @@ public class EzAttitudeKMSController {
 		
 		model.addAttribute("deptList", deptList);
 		model.addAttribute("companyId", userInfo.getCompanyID());
-		model.addAttribute("selectedDept", userInfo.getDeptID());
+		model.addAttribute("selectedDeptID", userInfo.getDeptID());
 		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
 		model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
 		
@@ -2131,9 +2131,7 @@ public class EzAttitudeKMSController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl;
 		
-		if (mode.equals("admin")) {
-			url += "/rest/ezattitude/users/" + userId + "/attitudes";
-		}
+		url += "/rest/ezattitude/users/" + userId + "/attitudes";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

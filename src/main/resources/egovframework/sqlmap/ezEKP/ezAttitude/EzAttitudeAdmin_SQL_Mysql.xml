@@ -989,7 +989,7 @@
 			    origin_type_name AS origintypename,
 			    IFNULL(change_type_name, '') AS changetypename,
 			    appr_user_name AS apprusername,
-			    DATE_FORMAT(appr_date, '%Y-%m-%d %H:%i') AS apprdate
+			    DATE_FORMAT(DATE_ADD(appr_date, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS apprdate
 			FROM
 				TBL_ATTITUDE_MODAPPL_HISTORY
 			WHERE
@@ -998,6 +998,10 @@
 				tenant_id = #tenantId#
 			AND
 				writer_dept_id = #deptId#
+			AND
+				(appr_date >= #searchStartDate# 
+				  AND
+				  appr_date <= #searchEndDate#)
 		]]>
 		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
@@ -1005,19 +1009,27 @@
 			]]>
 		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			writer_name LIKE CONCAT('%', #searchUserName#, '%')
+			<![CDATA[
+				writer_name LIKE CONCAT('%', #searchUserName#, '%')
+			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			writer_title LIKE CONCAT('%', #searchTitle#, '%')
+			<![CDATA[
+				writer_title LIKE CONCAT('%', #searchTitle#, '%')
+			]]>
 		</isNotEmpty>
 		<isNotEmpty property="orderCell">
-			ORDER BY
-				$orderCell$ $orderOption$
+			<![CDATA[
+				ORDER BY
+					$orderCell$ $orderOption$
+			]]>
 		</isNotEmpty>
 		<isEmpty property="orderCell">
-			ORDER BY
-				changestartdate DESC,
-				writername
+			<![CDATA[
+				ORDER BY
+					changestartdate DESC,
+					writername
+			]]>
 		</isEmpty>
 		<isNotEmpty property="listSize">
 			<![CDATA[
@@ -1039,6 +1051,10 @@
 				TENANT_ID = #tenantId#
 			AND
 				WRITER_DEPT_ID = #deptId#
+			AND
+				(appr_date >= #searchStartDate# 
+				  AND
+				  appr_date <= #searchEndDate#)
 		]]>
 		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
