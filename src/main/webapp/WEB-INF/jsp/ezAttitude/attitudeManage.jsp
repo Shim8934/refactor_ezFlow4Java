@@ -17,6 +17,8 @@
 	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    
 	    <style>
 	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: initial;}
@@ -26,8 +28,7 @@
 	    
 		<script type="text/javascript" language="javascript">
 			var Tab1_SelectID = "modify";
-			var pCompanyId = "${adminCompany}";
-	    	var pDeptId = ""; //현재 선택된 부서의 아이디
+			var companyId = "${companyId}";
 	    	//검색조건 저장 변수
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
@@ -43,13 +44,8 @@
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var selectedDept = "${selectedDept}";
 	    	var listSize = 19;
-	    	
-	        document.onselectstart = function () { return false; };
-	        
+
 	        $(function() {
-	        	$("#Sdatepicker").val("${searchStartDate}");
-	    		$("#Edatepicker").val("${searchEndDate}");
-	        	
 	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
 	            
 	            if (document.getElementById("ListDept").length == 0) {
@@ -63,6 +59,60 @@
 		        }
 
 	            ChangeTab(document.getElementById(Tab1_SelectID));
+			});
+			
+	        $(function () {
+	            //datepicker
+				$("#Sdatepicker").datepicker({
+					changeMonth : true,
+					changeYear : true,
+					autoSize : true,
+					showOn : "both",
+					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly : true
+				});
+				
+				$("#Edatepicker").datepicker({
+					changeMonth : true,
+					changeYear : true,
+					autoSize : true,
+					showOn : "both",
+					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly : true
+				});
+
+				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Sdatepicker").datepicker('setDate', "${searchStartDate}");
+
+				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Edatepicker").datepicker('setDate', "${searchEndDate}");
+	        });
+	        
+			var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "일;월;화;수;목;금;토";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["ko"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		 	        prevText: "<spring:message code='main.t0604' />",
+		 	        nextText: "<spring:message code='main.t0605' />",
+		 	        currentText: "<spring:message code='main.t0606' />",
+		        	monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	        });
 	        
 	        $(function () {
@@ -83,42 +133,21 @@
 			        buttonImageOnly: true
 			    });
 			});
-			    
-	    	var monthMsg = "<spring:message code='ezSchedule.t110' />";
-		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
-		    var dayStr = dayMsg.split(";");
-		    
-		    $(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-		        	closeText: "<spring:message code='main.t3' />",
-		            prevText: "<spring:message code='main.t0604' />",
-		            nextText: "<spring:message code='main.t0605' />",
-					currentText: "<spring:message code='main.t0606' />",
-		            monthNames: monthStr,
-		            monthNamesShort: monthStr,
-		            dayNames: dayStr,
-		            dayNamesShort: dayStr,
-		            dayNamesMin: dayStr,
-		            weekHeader: 'Wk',
-		            dateFormat: 'yy-mm-dd',
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: 'show',
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		    });
 	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
-
+	        	pageNum = 1;
+	    		totalPage = "";
+	    		totalCount = "";
+	    		
 	            getFullList();
 	        }
 	        
 	        function dept_change() {
 	    		$('#receiverlist').empty();
+	    		pageNum = 1;
+	    		totalPage = "";
+	    		totalCount = "";
 	    		
 	    		getList();
 	    	}
@@ -166,6 +195,7 @@
 	        
 	        function getFullList() {
 	        	var resultHtml = "";
+	        	
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
@@ -200,17 +230,293 @@
 	        function getList() {
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
-	    			//근태관리//list가져와서 tbodyhtml();
+	    			getAttitudeCheckList();
 	    			break;
 	    		case "absent":
-	    			//근태입력//list가져와서 tbodyhtml();
+	    			getAttitudeAbsentedList();
 	    			break;
 	    		case "history":
-	    			//관리내역//list가져와서 tbodyhtml();
-// 	    			getAttitudeHistoryList();
+	    			getAttitudeHistoryList();
 	    			break;
 	    		}
 	        }
+	        
+	        ///////
+	        function getAttitudeCheckList(){
+	    		typeId = searchAttitudeType;
+	    		
+	    		if (typeId == "total") {
+	    			typeId = "";
+	    		}
+	    		
+    			searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
+	    		
+	    		if (searchStartDate > searchEndDate) {
+					alert("<spring:message code='ezAttitude.lhj15' />");
+		            return;
+				}
+	    		
+	    		$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			async : false,
+	    			url : "/ezAttitude/attitudeCheckList.do",
+	    			data : {
+	    				companyId : companyId,
+	    				deptId : $('#ListDept').val(),
+	   					userName : searchUserName,
+	   					deptName : searchDeptName,
+	   					title : searchTitle,
+	   					startDate : searchStartDate,
+	   					endDate : searchEndDate,
+	   					attitudeType : searchAttitudeType,
+	   					pageNum : pageNum,
+	   					listSize : listSize,
+	   					orderCell : orderCell,
+	   					orderOption : orderOption
+    				},
+	    			success : function(result){
+	    				totalCount = result.totalCount;
+	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
+	    				getAttitudeCheckList_after(result.list);
+	    				//근태유형 리스트
+	    				getAttitudeTypeList(result.typeList, result.typeId);
+	    			},
+	    			error : function() {
+	    				alert('리스트를 가져오는중 오류 발생');
+	    			}
+	    		});
+	    	}
+	        
+	        function getAttitudeCheckList_after(result){
+	    		var resultHtml = "";
+	    		$("#contentlist .mainlist tbody").html("");
+	    		
+	    		result.forEach(function(vo, index) {
+					if ($('#ListDept option:selected').attr('authtype') == 'M') {
+		    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
+					} else {
+		    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "'>";
+					}
+	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<td>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td>" + vo.deptName + "</td>";
+	    						
+	    			if (vo.endDate == null || vo.endDate == "") {
+	    				resultHtml += "<td>" + vo.startDate.substring(0,16) + "</td>";
+	    			} else {
+	    				if (vo.dateType == 4) {
+	    					resultHtml += "<td>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";
+	    				} else {
+		    				resultHtml += "<td>" + vo.startDate.substring(0,16) + " ~ " + vo.endDate.substring(0,16) + "</td>";
+	    				}
+	    			}
+	    			
+	    			resultHtml += "<td>" + vo.typeName + "</td></tr>";
+	    		});
+	    		
+	    		if (resultHtml == "") {
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    		}
+	    		
+	    		$("#contentlist table.mainlist tbody").append(resultHtml);
+	    		makePageSelPageAtti();
+	    	}
+	        
+	        function getAttitudeAbsentedList() {
+	    		searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
+// 				searchStartDate = "2018-05-11";
+//     			searchEndDate = "2018-05-18";
+	    		
+	    		if (searchStartDate > searchEndDate) {
+					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+		            return;
+				}
+	    		
+	    		searchUserName = $("#searchUserName").val();
+				searchDeptName = $("#searchDeptName").val();
+				searchTitle = $("#searchTitle").val();
+	    		searchStartDate = $("#Sdatepicker").val();
+	    		searchEndDate = $("#Edatepicker").val();
+	    		
+	    		$.ajax({
+					type : "post",
+					dataType : "json",
+					async : false,
+					url : "/admin/ezAttitude/getAttitudeAbsentedList.do",
+					data : {
+						companyId : companyId,
+	   					deptId : $('#ListDept').val(),
+	   					userName : searchUserName,
+	   					deptName : searchDeptName,
+	   					title : searchTitle,
+	   					startDate : searchStartDate,
+	   					endDate : searchEndDate,
+	   					pageNum : pageNum,
+	   					listSize : listSize,
+	   					orderCell : orderCell,
+	   					orderOption : orderOption,
+	   					duplicated : "duplicated"
+					},
+					success : function(result) {
+						totalCount = result.totalCount;
+	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
+						getAttitudeAbsentedList_after(result.list);
+					}
+				});
+	    	}
+	        
+	        function getAttitudeAbsentedList_after(result){
+	    		var resultHtml = "";
+	    		$("#contentlist table.mainlist tbody").html("");
+	    		
+	    		result.forEach(function(vo, index) {
+	    			if ($('#ListDept option:selected').attr('authtype') == 'M') {
+	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
+	    			} else {
+	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "'>";
+	    			}
+	    			
+	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<td>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td>" + vo.deptName + "</td>";
+	    			resultHtml += "<td>" + vo.startDate + "</td></tr>"
+	    		});
+	    		
+	    		if (resultHtml == "") {
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
+	    		}
+	    		
+	    		$("#contentlist table.mainlist tbody").append(resultHtml);
+	    		makePageSelPageAtti();
+// 	    		$("#absent",parent.document).html("근태입력(" + totalCount + ")");
+	    	}
+	        
+	        function getAttitudeHistoryList(){
+	    		var typeId = $('#attitudeType').val();
+	    		
+	    		if (typeId == "total") {
+	    			typeId = "";
+	    		}
+	    		
+    			searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
+	    		
+	    		if (searchStartDate > searchEndDate) {
+					alert("<spring:message code='ezAttitude.lhj15' />");
+		            return;
+				}
+	    		
+	    		$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			async : false,
+	    			url : "/ezAttitude/attitudeHistoryList.do",
+	    			data : {
+	    				companyId : companyId,
+	    				deptId : $("#ListDept").val(),
+	   					userName : searchUserName,
+	   					deptName : searchDeptName,
+	   					title : searchTitle,
+	   					startDate : searchStartDate,
+	   					endDate : searchEndDate,
+	   					attitudeType : searchAttitudeType,
+	   					pageNum : pageNum,
+	   					listSize : listSize,
+	   					orderCell : orderCell,
+	   					orderOption : orderOption
+    				},
+	    			success : function(result){
+	    				totalCount = result.totalCount;
+	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
+	    				getAttitudeHistoryList_after(result.list);
+	    				//근태유형 리스트
+	    				getAttitudeTypeList(result.typeList, result.typeId);
+	    			},
+	    			error : function() {
+	    				alert('리스트를 가져오는중 오류 발생');
+	    			}
+	    		});
+	    	}
+	        
+	        function getAttitudeHistoryList_after(result){
+	    		var resultHtml = "";
+	    		
+	    		$("#contentlist table.mainlist tbody").html("");
+	    		
+	    		result.forEach(function(vo, index) {
+	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' userid='" + vo.writerId + "';>";
+		   			resultHtml += "<td>" + vo.writerName + "</td>";
+		   			resultHtml += "<td>" + vo.writerTitle + "</td>";
+		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
+		   			
+		   			if (vo.originStartdate == null || vo.originStartdate == "") {
+		   				resultHtml += "<td>미입력</td>";
+		   			} else {
+		   				if (vo.originEnddate == null || vo.originEnddate =="") {
+		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate + "</td>";
+		   				} else {
+		   					resultHtml += "<td>" + vo.originStartdate + "</td>";
+		   				}
+		   			}
+		   			
+		   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
+		   				resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeStartdate + "</td>";
+		   			} else {
+		   				resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
+		   			}
+		   			
+		   			if (vo.originTypeName == null || vo.originTypeName == "") {
+		   				resultHtml += "<td>미입력</td>";
+	    			} else {
+	    				resultHtml += "<td>" + vo.originTypeName + "</td>";
+	    			}
+		   			
+		   			resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeTypeName + "</td>"; 
+		   			
+	    			resultHtml += "<td>" + vo.apprUserName + "</td>"
+	    						+ "<td>" + vo.apprDate + "</td></tr>";
+	    		});
+	    		
+	    		if (resultHtml == "") {
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='10' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    		}
+	    		
+	    		$("#contentlist table.mainlist tbody").append(resultHtml);
+	    		makePageSelPageAtti();
+	    	}
+	        
+	        
+	        ////////
+	        function attDetail(obj) {
+				var pAttitudeId = obj.getAttribute("attitudeId"); 
+				var pTypeId = obj.getAttribute("typeId")
+				;
+				if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+		    }
+	        
+	        function attitudeNewItem(obj) {
+				var userid = $(obj).attr("userid");
+				var date = $(obj).attr("date");
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=admin&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=admin&userid=" + userid, "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	            }
+			}
 	        
 	        function goToPageByNum(pCurPage){
 	    		if (pCurPage == 0 || totalPage < pCurPage) {
@@ -220,6 +526,21 @@
 	    		}
 	    		
 	    		getList();
+	    	}
+	        
+	        //검색창 내부 근태유형 리스트 조회
+	        function getAttitudeTypeList(typeList, typeId) {
+	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
+	    		
+	    		for (var i = 0; i < typeList.length; i ++) {
+	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
+	    		}
+	    		
+	    		$('#searchAttitudeType').html(html);
+	    		
+	    		if (typeId != "") {
+	    			$('#searchAttitudeType').val(typeId);
+	    		}
 	    	}
 	        
 	        function searchPopup() {
@@ -236,6 +557,26 @@
 	        function layerHidden() {
 		        $.modal.close();
 		    }
+	        
+	        function checkPattern() {
+				var datePattern =  /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+				/* var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/; */
+				
+				if (datePattern.test($("#Sdatepicker").val()) && datePattern.test($("#Edatepicker").val())) {
+					return true;
+				} else {
+					if (!datePattern.test($("#Sdatepicker").val())&& !datePattern.test($("Edatepicker").val())) {
+						$("#Sdatepicker").focus();
+						return false;
+					} else if (!datePattern.test($("#Sdatepicker").val())) {
+						$("#Sdatepicker").focus();
+						return false;
+					} else if (!datePattern.test($("#Edatepicker").val())) {
+						$("#Edatepicker").focus();
+						return false;
+					}
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -256,7 +597,7 @@
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" auth="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
 								</c:if>
 							</c:forEach>
 			      		</select>
@@ -310,36 +651,40 @@
 	    <div id="searchPopup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="width:490px; margin:10px 0px 0px 1px;">
 			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;간단주소록 추가</th>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태관리 검색</th>
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px">이름</th>
-						<td><input type="text" id="qname" name="qname" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
+						<td><input type="text" id="searchUserName" name="searchUserName" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px">회사</th>
-						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
+			  			<th style="width:90px;height:30px">직위</th>
+						<td><input type="text" id="searchTitle" name="searchTitle" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px">전화번호</th>
-						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="20"></td>
+			  			<th style="width:90px;height:30px">부서</th>
+						<td><input type="text" id="searchDept" name="searchDept" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-						<th style="width:90px;height:30px">휴대폰</th>
-						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="20"></td>
+			  			<th style="width:90px;height:30px">검색기간</th>
+						<td>
+							<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> 
+							~
+							<input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
+						</td>
 					</tr>
 					<tr>
-						<th style="height:30px">이메일</th>
-						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td>
+						<th style="width:90px;height:30px">근태유형</th>
+						<td><select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px;"></select></td>
 					</tr>
 				</table>
 				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
-<!-- 					<a class="imgbtn"><span onclick="quick_add()" >추가</span></a> -->
-<!-- 					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();">취소</span></a> -->
+					<a class="imgbtn"><span onclick="getList();" >검색</span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();">취소</span></a>
 			    </div>
 			</div>
 		</div>
