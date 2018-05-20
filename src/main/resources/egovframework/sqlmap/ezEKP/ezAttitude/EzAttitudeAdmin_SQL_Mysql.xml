@@ -998,6 +998,10 @@
 				tenant_id = #tenantId#
 			AND
 				writer_dept_id = #deptId#
+			AND
+				(appr_date >= #searchStartDate# 
+				  AND
+				  appr_date <= #searchEndDate#)
 		]]>
 		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
@@ -1047,6 +1051,10 @@
 				TENANT_ID = #tenantId#
 			AND
 				WRITER_DEPT_ID = #deptId#
+			AND
+				(appr_date >= #searchStartDate# 
+				  AND
+				  appr_date <= #searchEndDate#)
 		]]>
 		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
