@@ -45,22 +45,6 @@
 	    	var selectedDept = "${selectedDept}";
 	    	var listSize = 19;
 
-	        $(function() {
-	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
-	            
-	            if (document.getElementById("ListDept").length == 0) {
-		            alert("부서 정보가 없습니다.");
-		        } else {
-		    		if (selectedDept != null) {
-		    			$('#ListDept').val(selectedDept);
-		    		} else {
-			            document.getElementById("ListDept").selectedIndex = 0;
-		    		}
-		        }
-
-	            ChangeTab(document.getElementById(Tab1_SelectID));
-			});
-			
 	        $(function () {
 	            //datepicker
 				$("#Sdatepicker").datepicker({
@@ -132,6 +116,22 @@
 			        buttonImage: "/images/ImgIcon/calendar-month.gif",
 			        buttonImageOnly: true
 			    });
+			});
+	        
+	        $(function() {
+	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
+	            
+	            if (document.getElementById("ListDept").length == 0) {
+		            alert("부서 정보가 없습니다.");
+		        } else {
+		    		if (selectedDept != null) {
+		    			$('#ListDept').val(selectedDept);
+		    		} else {
+			            document.getElementById("ListDept").selectedIndex = 0;
+		    		}
+		        }
+
+	            ChangeTab(document.getElementById(Tab1_SelectID));
 			});
 	        
 	        function ChangeTab(obj) {
@@ -331,8 +331,6 @@
 	        function getAttitudeAbsentedList() {
 	    		searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
-// 				searchStartDate = "2018-05-11";
-//     			searchEndDate = "2018-05-18";
 	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
