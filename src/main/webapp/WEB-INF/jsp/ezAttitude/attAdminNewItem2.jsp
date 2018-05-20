@@ -556,7 +556,7 @@
 	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
 	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
 	            
-	            var OpenWin = window.open("/ezAttitude/attNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 650));
+	            var OpenWin = window.open("/ezAttitude/attNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 630));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	
