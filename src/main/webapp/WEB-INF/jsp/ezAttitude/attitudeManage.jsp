@@ -636,7 +636,9 @@
 	    	<div id="mainmenu">
 				<ul>
 		      		<li><span onclick="searchPopup();">검색</span></li>
-		      		<li><span onclick="addAtt();">근태작성</span>
+		      		<c:if test="${manageFlag == 'M' }">
+		      			<li><span onclick="addAtt();">근태작성</span></li>
+		      		</c:if>
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">

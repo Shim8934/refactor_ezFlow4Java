@@ -140,12 +140,16 @@ public class EzAttitudeKMSController {
 		}
 		
 		int myDeptCount = 0;
+		String manageFlag = "N";
 		JSONObject dept = new JSONObject();
 		
 		for(int i = 0; i < deptList.size(); i++) {
 			dept = (JSONObject) deptList.get(i);
 			if (dept.get("deptId").equals(userInfo.getDeptID())) {
 				myDeptCount++;
+			}
+			if (dept.get("authType").equals("M")) {
+				manageFlag = "M";
 			}
 		}
 		
@@ -157,9 +161,9 @@ public class EzAttitudeKMSController {
 				}
 			}
 		}
-		////
 		
 		model.addAttribute("deptList", deptList);
+		model.addAttribute("manageFlag", manageFlag);
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDeptID", userInfo.getDeptID());
 		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
