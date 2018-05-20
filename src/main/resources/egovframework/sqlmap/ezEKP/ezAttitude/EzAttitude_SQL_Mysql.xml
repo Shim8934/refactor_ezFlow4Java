@@ -236,23 +236,6 @@
 			IP,
 			DATE_TYPE,
 			TYPE_ID)
-		<isEqual property="isDefaultAtti" compareValue="true">
-			VALUES(
-				#companyId#,
-				#tenantId#,
-				#writerId#,
-				#deptId#,
-				#startDate#,
-				IF(#endDate# = '', null, #endDate#),
-				IFNULL(#region#, ''),
-				IFNULL(#mobile#, ''),
-				IFNULL(#bizSub#, ''),
-				IFNULL(#content#, ''),
-				IFNULL(#ipAddress#, ''),
-				#dateType#,
-				#typeId#)
-		</isEqual>
-		<isEqual property="isDefaultAtti" compareValue="false">
 		VALUES(
 				#companyId#,
 				#tenantId#,
@@ -267,7 +250,6 @@
 				IFNULL(#ipAddress#, ''),
 				#dateType#,
 				#typeId#)
-		</isEqual>
 	</insert>
 	
 	<insert id="ezAttitude.insertAdminAttHistory" parameterClass="Map">
@@ -310,7 +292,7 @@
 				b.DESCRIPTION,
 				b.DESCRIPTION2,
 				date_add(#startDate#, INTERVAL -#offsetMin# minute),
-				IF(date_add(#endDate#, INTERVAL -#offsetMin# minute) = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
+				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
 				IFNULL(#region#, ''),
 				IFNULL(#mobile#, ''),
 				IFNULL(#bizSub#, ''),
@@ -1477,7 +1459,7 @@
 				#attVO.deptId#,
 				b.DESCRIPTION,
 				b.DESCRIPTION2,
-				date_add(#startDate#, INTERVAL -#offsetMin# minute),
+				IF(#startDate# = '', null, date_add(#startDate#, INTERVAL -#offsetMin# minute)),
 				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
 				IFNULL(#region#, ''),
 				IFNULL(#mobile#, ''),
@@ -1492,7 +1474,7 @@
 				c.displayname,
 				c.displayname2,
 				#attitudeId#,
-				IF(#attVO.startDate# = '', null, date_add(#attVO.startDate#, INTERVAL -#offsetMin# minute)),
+				date_add(#attVO.startDate#, INTERVAL -#offsetMin# minute),
 				IF(#attVO.endDate# = '', null, date_add(#attVO.endDate#, INTERVAL -#offsetMin# minute)),
 				#attVO.content#,
 				#attVO.region#,
@@ -1587,7 +1569,7 @@
 				c.displayname2,
 				#attitudeId#,
 				date_add(#attVO.startDate#, INTERVAL -#offsetMin# minute),
-				date_add(#attVO.endDate#, INTERVAL -#offsetMin# minute)
+				IF(#attVO.endDate# = '', null, date_add(#attVO.endDate#, INTERVAL -#offsetMin# minute)),
 				#attVO.content#,
 				#attVO.region#,
 				#attVO.mobile#,
