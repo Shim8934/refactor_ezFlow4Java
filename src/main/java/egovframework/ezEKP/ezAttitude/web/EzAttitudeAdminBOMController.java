@@ -362,41 +362,9 @@ public class EzAttitudeAdminBOMController {
 	public String addAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("addAttitudeType started.");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
 		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
-		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/info";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-				
-		String status = resultBody.get("status").toString();
-		
-		JSONObject data = new JSONObject();
-		String typeId = "";
-		
-		if (status.equals("ok")) {
-			data = (JSONObject) resultBody.get("data");
-			typeId = (String) data.get("typeId");
-			
-			model.addAttribute("typeId", typeId);
-			model.addAttribute("companyId", companyId);
-		}
+		model.addAttribute("companyId", companyId);
 		
 		LOGGER.debug("addAttitudeType ended.");
 		

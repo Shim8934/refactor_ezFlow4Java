@@ -35,7 +35,8 @@
 	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
 					$("#typeName").val(typeName);
 	            } else {
-	    			typeId = "<c:out value = '${typeId}' />";
+	            	saveMode = "new";
+// 	    			typeId = "<c:out value = '${typeId}' />";
 	            }
 		
 			})
