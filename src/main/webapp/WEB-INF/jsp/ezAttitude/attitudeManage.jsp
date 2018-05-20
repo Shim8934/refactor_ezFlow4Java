@@ -395,6 +395,14 @@
 	    	}
 	        
 	        function getAttitudeHistoryList(){
+	    		var typeId = $('#attitudeType').val();
+	    		
+	    		if (typeId == "total") {
+	    			typeId = "";
+	    		}
+	    		
+	    		searchUserName = $("#searchUserName").val();
+	    		searchTitle = $("#searchTitle").val();
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
 	    		
