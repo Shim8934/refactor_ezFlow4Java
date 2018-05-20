@@ -1036,11 +1036,6 @@ public class EzAttitudeKMSController {
 				adminFlag = "true";
 			}
 		}
-		if (!userInfo.getId().equals(data.get("writerId"))) {
-			if (authFlag.equals("")) {
-				return "cmm/error/adminDenied";
-			}
-		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
