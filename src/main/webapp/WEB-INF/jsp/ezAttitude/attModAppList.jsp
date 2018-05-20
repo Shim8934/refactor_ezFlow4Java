@@ -291,11 +291,7 @@
         	
         	$("#popup2").css("left", popupX);
         	
-			$("#popup2").modal({
-// 				  escapeClose: false,
-// 				  clickClose: false,
-// 				  showClose: false
-			});
+			$("#popup2").modal();
 	    }
 	    
 	    function popup_close() {
@@ -372,7 +368,7 @@
 		    		obj.writerDeptName = writerDept_search.value;
 		    	} else {
 		    		obj.writerDeptId = writerDept_search.value;
-			    	obj.writerDeptName = $("#writerDept_search option:selected").text();	
+			    	obj.writerDeptName = "";	
 		    	}
 		    	obj.writerName = searchWriter;
 		    }
@@ -420,7 +416,7 @@
 		    		obj.writerDeptName = writerDept_search.value;
 		    	} else {
 		    		obj.writerDeptId = writerDept_search.value;
-			    	obj.writerDeptName = $("#writerDept_search option:selected").text();	
+			    	obj.writerDeptName = "";	
 		    	}
 		    	obj.writerName = $('#writer_search').val();
 		    }
@@ -1241,9 +1237,6 @@
 			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
-					<c:if test="${selectedDeptID  == null}">
-						<option value=null selected></option>
-					</c:if>
 					<option value="all">전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
@@ -1415,10 +1408,6 @@
 				    </thead>
 				    <tbody style="max-height:500px; width:490px; display:block; overflow-y:auto;">
 				    	<tr>
-<!-- 				    		<th style="width:120px;height:30px">승인일시</th> -->
-<!-- 				  			<th style="height:30px">승인자</th> -->
-<!-- 				  			<th style="width:120px;height:30px">수정신청일시</th> -->
-<!-- 				  			<th style="height:30px">승인상태</th> -->
 							<th style="width:120px;height:30px">일자</th>
 				    		<th style="width:30px; height:30px">기존시각</th>
 				    		<th style="width:30px; height:30px">신청시긱</th>

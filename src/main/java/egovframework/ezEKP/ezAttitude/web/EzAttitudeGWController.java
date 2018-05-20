@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -307,7 +308,7 @@ public class EzAttitudeGWController {
 			
 			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
 			
-			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, userId);
+			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, userId, info.getOffSet());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -712,7 +713,7 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String isuse = request.getParameter("isuse");
-			String isAdmin = request.getParameter("isAdmin");
+			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics");
 			
 			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
@@ -1130,7 +1131,6 @@ public class EzAttitudeGWController {
 			
 			String order = orderCell + " " + orderOption;
 			String isAllDept = "";
-			
 
 			if (adminFlag == null) {
 				adminFlag = "false";
@@ -1140,7 +1140,7 @@ public class EzAttitudeGWController {
 				checkAdmin = "false";
 			}
 			
-			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+			if (checkAdmin.equals("true")){
 				isAllDept = "Y";
 			}
 			
@@ -1230,7 +1230,7 @@ public class EzAttitudeGWController {
 			}
 			String isAllDept = "";
 			
-			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+			if (checkAdmin.equals("true")){
 				isAllDept = "Y";
 			}
 			
@@ -1483,7 +1483,7 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String searchUserName = request.getParameter("searchUserName");
 			String searchDeptName = request.getParameter("searchDeptName");
-			String searchDeptId = request.getParameter("searchDeptId");
+			String searchDeptId = request.getParameter("searchDeptId") == null ? "" : request.getParameter("searchDeptId");
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
@@ -1493,16 +1493,30 @@ public class EzAttitudeGWController {
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
-			String isAdmin = request.getParameter("isAdmin");
+			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics");
 			String isuse = "1";
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			int tenantID = info.getTenantId();
+			int tenantId = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			String totalCount = ezAttitudeService.getAttitudeCount2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID, searchDeptId);
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId);
+			List<String> deptIdList = new ArrayList<>();
+			
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, info.getUserId(), "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					deptIdList.add(vo.getDeptId());
+				}
+			}
+			
+			if (searchDeptId.equals("ALL")) {
+				searchDeptId = "";
+			}
+			
+			String totalCount = ezAttitudeService.getAttitudeCount2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantId, searchDeptId, deptIdList);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantId, searchDeptId, deptIdList);
 			
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
@@ -1550,10 +1564,25 @@ public class EzAttitudeGWController {
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
 			String duplicated = request.getParameter("duplicated");
+			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, pageNum, listSize, orderCell, orderOption, duplicated, info.getLang(), info.getOffSet(), companyId, info.getTenantId());
+			List<String> deptIdList = new ArrayList<>();
+			
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					deptIdList.add(vo.getDeptId());
+				}
+			}
+			
+			if (searchDeptId.equals("ALL")) {
+				searchDeptId = "";
+			}
+			
+			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, pageNum, listSize, orderCell, orderOption, duplicated, info.getLang(), info.getOffSet(), companyId, info.getTenantId(), deptIdList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1588,6 +1617,7 @@ public class EzAttitudeGWController {
 			String searchDeptId = request.getParameter("searchDeptId");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
+			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String loginCookie = request.getParameter("loginCookie");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
@@ -1595,8 +1625,22 @@ public class EzAttitudeGWController {
 			String userLang = info.getLang();
 			String offset = info.getOffSet();
 			
-			JSONObject duplicatedData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "", userLang, offset, companyId, tenantID);
-			JSONObject distinctData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "distinct", userLang, offset, companyId, tenantID);
+			List<String> deptIdList = new ArrayList<>();
+			
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					deptIdList.add(vo.getDeptId());
+				}
+			}
+			
+			if (searchDeptId.equals("ALL")) {
+				searchDeptId = "";
+			}
+			
+			JSONObject duplicatedData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "", userLang, offset, companyId, tenantID, deptIdList);
+			JSONObject distinctData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "distinct", userLang, offset, companyId, tenantID, deptIdList);
 			
 			List<AdminAttitudeVO> duplicatedList = (List<AdminAttitudeVO>) duplicatedData.get("list");
 			List<AdminAttitudeVO> distinctList = (List<AdminAttitudeVO>) distinctData.get("list");
@@ -1888,17 +1932,16 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String searchUserName = request.getParameter("searchUserName");
 			String searchDeptName = request.getParameter("searchDeptName");
-			String deptId = request.getParameter("deptId");
+			String searchDeptId = request.getParameter("searchDeptId");
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
-			String searchAttitudeType = request.getParameter("searchAttitudeType");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
-			String isAdmin = request.getParameter("isAdmin");
+			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics");
 			String isuse = "1";
 			
@@ -1906,8 +1949,22 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID, deptId);
-			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, deptId);
+			List<String> deptIdList = new ArrayList<>();
+			
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					deptIdList.add(vo.getDeptId());
+				}
+			}
+			
+			if (searchDeptId.equals("ALL")) {
+				searchDeptId = "";
+			}
+			
+			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID, searchDeptId, deptIdList);
+			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList);
 		
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
@@ -1915,7 +1972,6 @@ public class EzAttitudeGWController {
 			JSONObject data = new JSONObject();
 			data.put("list", list);
 			data.put("totalCount", totalCount);
-			data.put("typeId", searchAttitudeType);
 			data.put("typeList", typeList);
 			
 			result.put("status", "ok");

@@ -949,7 +949,7 @@ public class EzAttitudeAdminBOMController {
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; //
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1062,7 +1062,7 @@ public class EzAttitudeAdminBOMController {
 	/**
 	 * 근태조회 미입력자목록 조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/getAttitudeAbsentedList.do")
+	@RequestMapping(value = {"/admin/ezAttitude/getAttitudeAbsentedList.do", "/ezAttitude/getAttitudeAbsentedList.do"})
 	@ResponseBody
 	public JSONObject getAttitudeAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
@@ -1083,6 +1083,12 @@ public class EzAttitudeAdminBOMController {
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String duplicated = request.getParameter("duplicated");
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String isAdmin = "";
+		
+		if (requestURL.indexOf("/admin/ezAttitude/getAttitudeAbsentedList.do") > -1) {
+			isAdmin = "Y";
+		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
@@ -1106,7 +1112,8 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
 				.queryParam("duplicated", duplicated)
-				.queryParam("offsetMin", offsetMin);
+				.queryParam("offsetMin", offsetMin)
+				.queryParam("isAdmin", isAdmin);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1992,7 +1999,7 @@ public class EzAttitudeAdminBOMController {
 	 * 관리내역 리스트 가져오는 함수
 	 * @return 
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeHistoryList.do")
+	@RequestMapping(value = {"/admin/ezAttitude/attitudeHistoryList.do", "/ezAttitude/attitudeHistoryList.do"})
 	@ResponseBody
 	public JSONObject attitudeHistoryList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
@@ -2006,16 +2013,21 @@ public class EzAttitudeAdminBOMController {
 		String searchTitle = request.getParameter("title");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
-		String searchAttitudeType = request.getParameter("attitudeType");
 		String pageNum = request.getParameter("pageNum");
 		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String isAdmin = "";
+		
+		if (requestURL.indexOf("/admin/ezAttitude/attitudeHistoryList.do") > -1) {
+			isAdmin = "Y";
+		}
 		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
-				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
+				+ " || searchEndDate = " + searchEndDate + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||deptId =" + deptId);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -2030,17 +2042,17 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("companyId", companyId)
 				.queryParam("searchUserName", searchUserName)
 				.queryParam("searchDeptName", searchDeptName)
-				.queryParam("deptId", deptId)
+				.queryParam("searchDeptId", deptId)
 				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
-				.queryParam("searchAttitudeType", searchAttitudeType)
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("offsetMin", offsetMin);
+				.queryParam("offsetMin", offsetMin)
+				.queryParam("isAdmin", isAdmin);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -2060,7 +2072,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
 		
 		return data;
-		
 	}
 	
 	

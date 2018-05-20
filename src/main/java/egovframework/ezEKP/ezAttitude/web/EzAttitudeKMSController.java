@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -34,15 +37,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -141,12 +147,16 @@ public class EzAttitudeKMSController {
 		}
 		
 		int myDeptCount = 0;
+		String manageFlag = "N";
 		JSONObject dept = new JSONObject();
 		
 		for(int i = 0; i < deptList.size(); i++) {
 			dept = (JSONObject) deptList.get(i);
 			if (dept.get("deptId").equals(userInfo.getDeptID())) {
 				myDeptCount++;
+			}
+			if (dept.get("authType").equals("M")) {
+				manageFlag = "M";
 			}
 		}
 		
@@ -158,9 +168,9 @@ public class EzAttitudeKMSController {
 				}
 			}
 		}
-		////
 		
 		model.addAttribute("deptList", deptList);
+		model.addAttribute("manageFlag", manageFlag);
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDeptID", userInfo.getDeptID());
 		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
@@ -358,8 +368,6 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String writerDeptId) throws Exception {
 		
 		LOGGER.debug("getAttModAppList started");
-
-		/* 2018-05-15 이효진 여기 관리자쪽 태울땐 16개정도하면 될듯*/
 		LOGGER.debug("adminFlag = " + adminFlag + " || checkAdmin = " + checkAdmin);
 		int currentPage = 1;
 		int pageSize = 19;
@@ -1028,11 +1036,6 @@ public class EzAttitudeKMSController {
 				adminFlag = "true";
 			}
 		}
-		if (!userInfo.getId().equals(data.get("writerId"))) {
-			if (authFlag.equals("")) {
-				return "cmm/error/adminDenied";
-			}
-		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
@@ -1496,7 +1499,7 @@ public class EzAttitudeKMSController {
 		String isAllDept = "";
 
 		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -1575,7 +1578,7 @@ public class EzAttitudeKMSController {
 	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeCheckList started.");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
@@ -1591,10 +1594,15 @@ public class EzAttitudeKMSController {
 		String orderOption = request.getParameter("orderOption");
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		String isAdmin = "";
 		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||searchDeptId =" + searchDeptId);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			isAdmin = "Y";
+		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
@@ -1618,7 +1626,8 @@ public class EzAttitudeKMSController {
 				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("offsetMin", offsetMin);
+				.queryParam("offsetMin", offsetMin)
+				.queryParam("isAdmin", isAdmin);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1711,7 +1720,7 @@ public class EzAttitudeKMSController {
 		String isAllDept = "";
 
 		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -1845,7 +1854,7 @@ public class EzAttitudeKMSController {
 				model.addAttribute("attitudeInfo", attitudeVO);
 			}
 		} 
-		deptId = (String) attitudeVO.get("deptId");
+		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
@@ -1888,13 +1897,32 @@ public class EzAttitudeKMSController {
 //			authFlag = "R";
 //		}
 		
+		int myDeptCount = 0;
+		
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			JSONObject dept = (JSONObject) deptList.get(i);
+			LOGGER.debug("dept : " + dept.toJSONString());
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				JSONObject dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID()) && dept.get("mine") != null && dept.get("mine").equals("yes")) {
+					dept.put("mine", "no");
+					dept.put("authType", "R");
+				}
+			}
+		}
+		
 		//권한 부서 목록에서 부서의 권한을 읽음
 		for (int i = 0; i < deptList.size(); i++ ){
 			JSONObject dept = (JSONObject)deptList.get(i);
 			if (dept.get("deptId").equals(deptId)) {
-				if (!((String) dept.get("authType")).equals("")) {
-					authFlag = (String) dept.get("authType");
-				}
+				authFlag = (String) dept.get("authType");
 			}
 		}
 		
@@ -2315,5 +2343,227 @@ public class EzAttitudeKMSController {
 		
 		LOGGER.debug("attNewReceiverChoose ended.");
 		return "ezAttitude/attNewReceiverChoose";
+	}
+	
+	/**
+	 * 근태입력조회, 근태미입력조회 엑셀 출력
+	 */
+	@RequestMapping(value = "/ezAttitude/adminManageExcel.do")
+	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
+		LOGGER.debug("excelFileExport started."); 
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
+		
+		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String searchDeptId = request.getParameter("deptId");
+		String searchStartDate = request.getParameter("startDate");
+		String searchEndDate = request.getParameter("endDate");
+		String searchAttitudeType = request.getParameter("attitudeType");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String duplicated = request.getParameter("duplicated");
+		String reqType = request.getParameter("reqType");
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String userId = userInfo.getId();
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		Locale locale = userInfo.getLocale();
+		
+		if (searchAttitudeType == null || searchAttitudeType.equals("")) {
+			searchAttitudeType = "total";
+		}
+		
+		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchDeptId = " + searchDeptId
+				+ " || searchStartDate = " + searchStartDate + " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType
+				+ " || pageNum = " + pageNum + " || listSize = " + listSize + " || orderCell = " + orderCell + "orderOption = " + orderOption + "||reqType = " + reqType);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		
+		if (reqType.equals("modify")) {
+//			근태조회엑셀
+			LOGGER.debug("근태조회");
+			url = gwServerUrl + "/rest/ezattitude/attitudes/bombom";
+		} else if (reqType.equals("absent")) {
+//			미입력자엑셀
+			url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
+		} else if (reqType.equals("history")) {
+			
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("searchDeptId", searchDeptId)
+				.queryParam("searchStartDate", searchStartDate)
+				.queryParam("searchEndDate", searchEndDate)
+				.queryParam("searchAttitudeType", searchAttitudeType)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("duplicated", duplicated)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject data = new JSONObject();
+		List<AdminAttitudeVO> attitudeList = new ArrayList<AdminAttitudeVO>();
+		Gson gson = new Gson();
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			
+			attitudeList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
+		}
+		
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		  
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		  
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+		
+		Row row;
+		      
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		
+		String pFileName = "";
+		
+		if (reqType.equals("modify")) {
+//			근태조회엑셀
+			pFileName = EgovDateUtil.getToday("-") +"_attitudeReport.xls";
+			
+			//header
+			row.createCell(0).setCellValue("이름");
+			row.getCell(0).setCellStyle(headerStyle);
+			row.createCell(1).setCellValue("직위");
+			row.getCell(1).setCellStyle(headerStyle);
+			row.createCell(2).setCellValue("부서");
+			row.getCell(2).setCellStyle(headerStyle);
+			row.createCell(3).setCellValue("날짜");
+			row.getCell(3).setCellStyle(headerStyle);
+			row.createCell(4).setCellValue("시간");
+			row.getCell(4).setCellStyle(headerStyle);
+			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t13", locale));
+			row.getCell(5).setCellStyle(headerStyle);
+			
+			//body
+			for (int i = 0 ; i < attitudeList.size(); i++) { 
+				AdminAttitudeVO vo = attitudeList.get(i);
+				row = sheet.createRow(i + 1);
+
+				row.createCell(0).setCellValue(vo.getUserName());
+				row.createCell(1).setCellValue(vo.getUserTitle());
+				row.createCell(2).setCellValue(vo.getDeptName());
+				
+				if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
+					row.createCell(3).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
+				} else {
+					row.createCell(3).setCellValue(vo.getStartDate());
+				}
+				
+				if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
+					row.createCell(4).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
+				} else {
+					row.createCell(4).setCellValue(vo.getStartTime());
+				}
+				
+				row.createCell(5).setCellValue(vo.getTypeName());
+				
+				row.getCell(0).setCellStyle(bodyStyle);
+				row.getCell(1).setCellStyle(bodyStyle);
+				row.getCell(2).setCellStyle(bodyStyle);
+				row.getCell(3).setCellStyle(bodyStyle);
+				row.getCell(4).setCellStyle(bodyStyle);
+				row.getCell(5).setCellStyle(bodyStyle);
+			}
+			
+			//width 조정
+			sheet.autoSizeColumn(0);
+			sheet.autoSizeColumn(1);
+			sheet.autoSizeColumn(2);
+			sheet.autoSizeColumn(3);
+			sheet.autoSizeColumn(4);
+			sheet.autoSizeColumn(5);
+		} else if (reqType.equals("absent")){
+//			미입력자조회엑셀
+			pFileName = EgovDateUtil.getToday("-") +"_absentedReport.xls";
+			
+			//header
+			row.createCell(0).setCellValue("이름");
+			row.getCell(0).setCellStyle(headerStyle);
+			row.createCell(1).setCellValue("직위");
+			row.getCell(1).setCellStyle(headerStyle);
+			row.createCell(2).setCellValue("부서");
+			row.getCell(2).setCellStyle(headerStyle);
+			row.createCell(3).setCellValue("날짜");
+			row.getCell(3).setCellStyle(headerStyle);
+			
+			//body
+			for (int i = 0 ; i < attitudeList.size(); i++) { 
+				AdminAttitudeVO vo = attitudeList.get(i);
+				row = sheet.createRow(i + 1);
+
+				row.createCell(0).setCellValue(vo.getUserName());
+				row.createCell(1).setCellValue(vo.getUserTitle());
+				row.createCell(2).setCellValue(vo.getDeptName());
+				row.createCell(3).setCellValue(vo.getStartDate());
+				
+				row.getCell(0).setCellStyle(bodyStyle);
+				row.getCell(1).setCellStyle(bodyStyle);
+				row.getCell(2).setCellStyle(bodyStyle);
+				row.getCell(3).setCellStyle(bodyStyle);
+			}
+			
+			//width 조정
+			sheet.autoSizeColumn(0);
+			sheet.autoSizeColumn(1);
+			sheet.autoSizeColumn(2);
+			sheet.autoSizeColumn(3);
+		} else if (reqType.equals("history")){
+			
+		}
+		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		
+		workbook.close();
+		
+		LOGGER.debug("excelFileExport ended.");
 	}
 }

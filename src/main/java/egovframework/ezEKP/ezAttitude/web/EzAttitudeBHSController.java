@@ -265,7 +265,6 @@ public class EzAttitudeBHSController {
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			attitudeAdminCheck = true;
 			isAllDept = "Y";
-			
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
 			attitudeAdminCheck = true;
 		}		
@@ -336,6 +335,15 @@ public class EzAttitudeBHSController {
 			for (int i = 0; i < deptList.size(); i++) {
 				dept = (JSONObject) deptList.get(i);
 				authFlag = (String) dept.get("authType");
+			}
+		}
+		
+		for (int i = 0; i < deptList.size(); i++) {
+			JSONObject dept = (JSONObject) deptList.get(i);
+			authFlag = (String) dept.get("authType");
+			
+			if (authFlag.equals("M")) {
+				attitudeAdminCheck = true;
 			}
 		}
 		

@@ -21,9 +21,9 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    
 	    <style>
-	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: initial;}
-	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: initial;}
-			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: initial;}
+	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: 0;}
+	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
+			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
 	    </style>
 	    
 		<script type="text/javascript" language="javascript">
@@ -211,7 +211,7 @@
 	    			resultHtml += "<tr><th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
-	    			resultHtml += "<th style='width:400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
+	    			resultHtml += "<th style='width:500px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.lhj18' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_User_Name'>수정자</th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'>수정일시</th></tr>";
@@ -247,14 +247,17 @@
 	        
 	        ///////
 	        function getAttitudeCheckList(){
-	    		typeId = searchAttitudeType;
-	    		
-	    		if (typeId == "total") {
-	    			typeId = "";
-	    		}
+	        	//페이지 로딩때 리스트 안가져오고 리스트뿌린다음 가져옴 수정필요.
+	        	if ($('#searchAttitudeType').val() == null) {
+	        		searchAttitudeType = "total";
+	        	} else {
+	        		searchAttitudeType = $('#searchAttitudeType').val();
+	        	}
 	    		
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
+	    		searchUserName = $("#searchUserName").val();
+	    		searchTitle = $("#searchTitle").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("<spring:message code='ezAttitude.lhj15' />");
@@ -269,11 +272,10 @@
 	    			data : {
 	    				companyId : companyId,
 	    				deptId : $('#ListDept').val(),
-	   					userName : searchUserName,
-	   					deptName : searchDeptName,
-	   					title : searchTitle,
-	   					startDate : searchStartDate,
-	   					endDate : searchEndDate,
+	   					userName : $("#searchUserName").val(),
+	   					title : $("#searchTitle").val(),
+	   					startDate : $("#Sdatepicker").val(),
+	   					endDate : $("#Edatepicker").val(),
 	   					attitudeType : searchAttitudeType,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
@@ -344,12 +346,11 @@
 					type : "post",
 					dataType : "json",
 					async : false,
-					url : "/admin/ezAttitude/getAttitudeAbsentedList.do",
+					url : "/ezAttitude/getAttitudeAbsentedList.do",
 					data : {
 						companyId : companyId,
 	   					deptId : $('#ListDept').val(),
 	   					userName : searchUserName,
-	   					deptName : searchDeptName,
 	   					title : searchTitle,
 	   					startDate : searchStartDate,
 	   					endDate : searchEndDate,
@@ -394,12 +395,6 @@
 	    	}
 	        
 	        function getAttitudeHistoryList(){
-	    		var typeId = $('#attitudeType').val();
-	    		
-	    		if (typeId == "total") {
-	    			typeId = "";
-	    		}
-	    		
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
 	    		
@@ -417,11 +412,9 @@
 	    				companyId : companyId,
 	    				deptId : $("#ListDept").val(),
 	   					userName : searchUserName,
-	   					deptName : searchDeptName,
 	   					title : searchTitle,
 	   					startDate : searchStartDate,
 	   					endDate : searchEndDate,
-	   					attitudeType : searchAttitudeType,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
@@ -431,8 +424,6 @@
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 	    				getAttitudeHistoryList_after(result.list);
-	    				//근태유형 리스트
-	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
 	    				alert('리스트를 가져오는중 오류 발생');
@@ -588,6 +579,92 @@
 					}
 				}
 			}
+	        
+	        function addAtt() {
+				today = new Date();
+		    	dd = today.getDate();
+		    	mm = today.getMonth()+1; //January is 0!
+		    	yyyy = today.getFullYear();
+
+		    	if(dd<10) {
+		    	    dd='0'+dd
+		    	} 
+
+		    	if(mm<10) {
+		    	    mm='0'+mm
+		    	} 
+
+		    	today = yyyy + '-' + mm + '-' + dd;
+				
+				var userid = "";
+				var date = today;
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + userid, "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+			}
+	        
+	        //th 정렬
+	        $(function(){
+				$(document).on('click', '#contentlist .mainlist th', function(){
+					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+						src = "";
+						orderOption = "";
+						orderCell = $(this).attr("colname");
+					}
+				
+	    			if (orderOption == "" || orderOption == "DESC") {
+	    				src = '/images/etc/view-sortup.gif';
+	    				orderOption = "ASC";
+	    			} else {
+	    				src = '/images/etc/view-sortdown.gif';
+	    				orderOption = "DESC";
+	    			}
+	    			$("#contentlist .mainlist th").find("img").remove();
+	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+	    			
+	    			getList();
+				})
+			})
+	        
+			function exportExcel() {
+	    		if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+					alert('출력할 내용이 없습니다');
+					return;
+				}
+				
+		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId 
+		    			+ "&userName=" + searchUserName 
+		    			+ "&title=" + searchTitle 
+		    			+ "&deptId="+ $('#ListDept').val()
+		    			+ "&startDate=" + searchStartDate 
+		    			+ "&endDate=" + searchEndDate 
+		    			+ "&orderCell=" + orderCell 
+		    			+ "&orderOption=" + orderOption 
+		    			+ "&attitudeType=" + searchAttitudeType
+		    			+ "&duplicated=duplicated&reqType="+Tab1_SelectID;
+		    	exportExcelframe.target="_blank";
+			}
+	        
+	        function searchPress(evt) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	getList();
+		            }
+		        } else {
+		            if (evt.which == 13)
+		            	getList();
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -603,9 +680,16 @@
 	    	<div id="mainmenu">
 				<ul>
 		      		<li><span onclick="searchPopup();">검색</span></li>
+		      		<c:if test="${manageFlag == 'M' }">
+		      			<li><span onclick="addAtt();">근태작성</span></li>
+		      		</c:if>
+		      		<li>
+		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>
+		      		</li>
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
-					<li>
+					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
+		      				<option value="ALL">전체</option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
 									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}" <c:if test="${selectedDeptID == dept.deptId}">selected</c:if>><c:out value='${dept.deptName}'/></option>
@@ -648,10 +732,6 @@
 						<td><input type="text" id="searchTitle" name="searchTitle" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px">부서</th>
-						<td><input type="text" id="searchDept" name="searchDept" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
-					</tr>
-					<tr>
 			  			<th style="width:90px;height:30px">검색기간</th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> 
@@ -672,6 +752,7 @@
 			    </div>
 			</div>
 		</div>
+		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

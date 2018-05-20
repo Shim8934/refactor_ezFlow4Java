@@ -628,7 +628,7 @@
 			]]>
 		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchDeptId">
-			C.DEPARTMENT = #searchDeptId#
+			C.department = #searchDeptId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			C.description LIKE CONCAT('%', #searchDeptName#, '%')
@@ -639,6 +639,9 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			C.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
+		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
@@ -712,6 +715,9 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			C.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
+		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
@@ -766,6 +772,9 @@
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			A.department = #searchDeptId#
 		</isNotEmpty>
+		<iterate prepend="AND A.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
 	</select>
 
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultClass="AttitudeAuthorVO">
@@ -997,17 +1006,10 @@
 			AND
 				tenant_id = #tenantId#
 			AND
-				writer_dept_id = #deptId#
-			AND
 				(appr_date >= #searchStartDate# 
 				  AND
 				  appr_date <= #searchEndDate#)
 		]]>
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-			<![CDATA[
-				change_type_id = #searchAttitudeType#
-			]]>
-		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			<![CDATA[
 				writer_name LIKE CONCAT('%', #searchUserName#, '%')
@@ -1018,6 +1020,12 @@
 				writer_title LIKE CONCAT('%', #searchTitle#, '%')
 			]]>
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="deptId">
+			WRITER_DEPT_ID = #deptId#
+		</isNotEmpty>
+		<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
 		<isNotEmpty property="orderCell">
 			<![CDATA[
 				ORDER BY
@@ -1050,23 +1058,22 @@
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				WRITER_DEPT_ID = #deptId#
-			AND
 				(appr_date >= #searchStartDate# 
 				  AND
 				  appr_date <= #searchEndDate#)
 		]]>
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-			<![CDATA[
-				CHANGE_TYPE_ID = #searchAttitudeType#
-			]]>
-		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
 			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="deptId">
+			WRITER_DEPT_ID = #deptId#
+		</isNotEmpty>
+		<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
 	</select>
 	
 </sqlMap>
