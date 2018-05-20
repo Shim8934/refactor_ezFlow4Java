@@ -21,9 +21,9 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    
 	    <style>
-	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: initial;}
-	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: initial;}
-			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: initial;}
+	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: 0;}
+	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
+			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
 	    </style>
 	    
 		<script type="text/javascript" language="javascript">
@@ -588,6 +588,39 @@
 					}
 				}
 			}
+	        
+	        function addAtt() {
+				today = new Date();
+		    	dd = today.getDate();
+		    	mm = today.getMonth()+1; //January is 0!
+		    	yyyy = today.getFullYear();
+
+		    	if(dd<10) {
+		    	    dd='0'+dd
+		    	} 
+
+		    	if(mm<10) {
+		    	    mm='0'+mm
+		    	} 
+
+		    	today = yyyy + '-' + mm + '-' + dd;
+				
+				var userid = "";
+				var date = today;
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + userid, "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -603,9 +636,13 @@
 	    	<div id="mainmenu">
 				<ul>
 		      		<li><span onclick="searchPopup();">검색</span></li>
+		      		<c:if test="${manageFlag == 'M' }">
+		      			<li><span onclick="addAtt();">근태작성</span></li>
+		      		</c:if>
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
+		      				<option value="all">전체</option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
 									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}" <c:if test="${selectedDeptID == dept.deptId}">selected</c:if>><c:out value='${dept.deptName}'/></option>

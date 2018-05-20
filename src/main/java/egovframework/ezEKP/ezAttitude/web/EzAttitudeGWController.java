@@ -1135,7 +1135,7 @@ public class EzAttitudeGWController {
 				checkAdmin = "false";
 			}
 			
-			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+			if (checkAdmin.equals("true")){
 				isAllDept = "Y";
 			}
 			
@@ -1225,7 +1225,7 @@ public class EzAttitudeGWController {
 			}
 			String isAllDept = "";
 			
-			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+			if (checkAdmin.equals("true")){
 				isAllDept = "Y";
 			}
 			

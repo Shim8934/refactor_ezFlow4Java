@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.ibm.icu.text.SimpleDateFormat;
@@ -141,12 +140,16 @@ public class EzAttitudeKMSController {
 		}
 		
 		int myDeptCount = 0;
+		String manageFlag = "N";
 		JSONObject dept = new JSONObject();
 		
 		for(int i = 0; i < deptList.size(); i++) {
 			dept = (JSONObject) deptList.get(i);
 			if (dept.get("deptId").equals(userInfo.getDeptID())) {
 				myDeptCount++;
+			}
+			if (dept.get("authType").equals("M")) {
+				manageFlag = "M";
 			}
 		}
 		
@@ -158,9 +161,9 @@ public class EzAttitudeKMSController {
 				}
 			}
 		}
-		////
 		
 		model.addAttribute("deptList", deptList);
+		model.addAttribute("manageFlag", manageFlag);
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDeptID", userInfo.getDeptID());
 		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
@@ -358,8 +361,6 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String writerDeptId) throws Exception {
 		
 		LOGGER.debug("getAttModAppList started");
-
-		/* 2018-05-15 이효진 여기 관리자쪽 태울땐 16개정도하면 될듯*/
 		LOGGER.debug("adminFlag = " + adminFlag + " || checkAdmin = " + checkAdmin);
 		int currentPage = 1;
 		int pageSize = 19;
@@ -1888,13 +1889,32 @@ public class EzAttitudeKMSController {
 //			authFlag = "R";
 //		}
 		
+		int myDeptCount = 0;
+		
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			JSONObject dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				JSONObject dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+					dept.put("authType", "R");
+				}
+			}
+		}
+		
 		//권한 부서 목록에서 부서의 권한을 읽음
 		for (int i = 0; i < deptList.size(); i++ ){
 			JSONObject dept = (JSONObject)deptList.get(i);
+			LOGGER.debug("dept : " + dept.toJSONString());
 			if (dept.get("deptId").equals(deptId)) {
-				if (!((String) dept.get("authType")).equals("")) {
-					authFlag = (String) dept.get("authType");
-				}
+				authFlag = (String) dept.get("authType");
 			}
 		}
 		
