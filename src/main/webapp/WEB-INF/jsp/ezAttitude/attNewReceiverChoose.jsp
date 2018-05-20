@@ -215,7 +215,7 @@
 					if ($("h2#"+deptid).length > 0) {
 						$("h2#"+deptid).click();
 					}else {
-						$("h2#")[0].click();
+						$("h2")[0].click();
 					}
 	                if (strSearch != "") {
 	                    document.getElementById('keyword').value = strSearch;

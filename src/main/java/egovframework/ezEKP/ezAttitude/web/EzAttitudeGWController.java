@@ -303,7 +303,7 @@ public class EzAttitudeGWController {
 			
 			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
 			
-			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, userId);
+			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, userId, info.getOffSet());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

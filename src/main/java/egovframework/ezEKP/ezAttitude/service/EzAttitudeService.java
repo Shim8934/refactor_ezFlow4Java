@@ -40,7 +40,7 @@ public interface EzAttitudeService {
 	public void updateAttitude(String attitudeId, String startDate, String endDate, String region,
 			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, int tenantId, String companyId) throws Exception;
 	
-	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String userId) throws Exception;
+	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String userId, String offset) throws Exception;
 	
 	//메일로 발송하는 부분.... 전자결재 부분보고 알아보자 AND 상세부분
 	
