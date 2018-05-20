@@ -253,7 +253,6 @@
 	        	} else {
 	        		searchAttitudeType = $('#searchAttitudeType').val();
 	        	}
-	        	
 	    		
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
@@ -646,7 +645,8 @@
 		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId 
 		    			+ "&userName=" + searchUserName 
 		    			+ "&title=" + searchTitle 
-		    			+ "&deptId=&startDate=" + searchStartDate 
+		    			+ "&deptId="+ $('#ListDept').val()
+		    			+ "&startDate=" + searchStartDate 
 		    			+ "&endDate=" + searchEndDate 
 		    			+ "&orderCell=" + orderCell 
 		    			+ "&orderOption=" + orderOption 
@@ -654,6 +654,17 @@
 		    			+ "&duplicated=duplicated&reqType="+Tab1_SelectID;
 		    	exportExcelframe.target="_blank";
 			}
+	        
+	        function searchPress(evt) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	getList();
+		            }
+		        } else {
+		            if (evt.which == 13)
+		            	getList();
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
