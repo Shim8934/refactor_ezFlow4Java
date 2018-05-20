@@ -66,7 +66,7 @@
 			}
 			
 			window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) + "PX";
+				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
 		    }
 			
 		    var monthMsg = "<spring:message code='ezAttitude.bbhs1'/>";
@@ -233,7 +233,6 @@
 				}
 				
 				getFormBody();
-				editorResize();
 			}
 			
 			function getFormBody() {
@@ -265,6 +264,7 @@
 						}
 						$("input[name=mobile]").val(mobile);
 						$("input[name=bizsub]").val(bizSub);
+						editorResize();
 					}
 				})
 			}
@@ -510,6 +510,9 @@
 			
 			function editorResize() {
 				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
+				if ($("#EdtorSize").css("display") == "none") {
+					$("#EdtorSize").css("display", "");
+				}
 			}
 			
 			function setTypeName() {
@@ -591,14 +594,14 @@
 	                    </td>
 	                </tr>
 	                <tr>
-	                    <td style="vertical-align:top;height:100%;" id="EdtorSize">
+	                    <td style="vertical-align:top;height:100%;display:none;" id="EdtorSize">
 		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
 	                    </td>
 	                </tr>
 	            </table>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) + "PX";
+		        //document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) + "PX";
 		    </script>
 	    </form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
