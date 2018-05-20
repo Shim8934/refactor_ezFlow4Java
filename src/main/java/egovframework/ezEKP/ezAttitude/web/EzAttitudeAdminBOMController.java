@@ -1999,7 +1999,7 @@ public class EzAttitudeAdminBOMController {
 	 * 관리내역 리스트 가져오는 함수
 	 * @return 
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeHistoryList.do")
+	@RequestMapping(value = {"/admin/ezAttitude/attitudeHistoryList.do", "/ezAttitude/attitudeHistoryList.do"})
 	@ResponseBody
 	public JSONObject attitudeHistoryList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
@@ -2020,6 +2020,12 @@ public class EzAttitudeAdminBOMController {
 		String orderOption = request.getParameter("orderOption");
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String isAdmin = "";
+		
+		if (requestURL.indexOf("/admin/ezAttitude/attitudeHistoryList.do") < 0) {
+			isAdmin = "Y";
+		}
 		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
@@ -2037,7 +2043,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("companyId", companyId)
 				.queryParam("searchUserName", searchUserName)
 				.queryParam("searchDeptName", searchDeptName)
-				.queryParam("deptId", deptId)
+				.queryParam("searchDeptId", deptId)
 				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
@@ -2047,7 +2053,8 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("offsetMin", offsetMin);
+				.queryParam("offsetMin", offsetMin)
+				.queryParam("isAdmin", isAdmin);
 		
 		RestTemplate rest = new RestTemplate();
 		

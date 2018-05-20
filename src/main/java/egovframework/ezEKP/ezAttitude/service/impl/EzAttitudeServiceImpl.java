@@ -1755,7 +1755,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId) throws Exception {
+	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
 		LOGGER.debug("getAttitudeHistoryList started");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -1783,6 +1783,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
+		map.put("deptIdList", deptIdList);
 
 		List<ModApplHistoryVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
 
@@ -1793,7 +1794,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public String getAttitudeHistoryCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate,
-			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId, String deptId) throws Exception {
+			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
 		LOGGER.debug("getAttitudeHistoryCount started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -1812,6 +1813,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("deptIdList", deptIdList);
 		
 		String result = ezAttitudeDAO.getAttitudeHistoryCount(map);
 		
