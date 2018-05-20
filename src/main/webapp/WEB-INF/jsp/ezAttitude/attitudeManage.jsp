@@ -42,7 +42,7 @@
 	    	var totalPage = ""; // 게시판의 총 페이지갯수
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
-	    	var selectedDept = "${selectedDept}";
+	    	var selectedDeptID = "${selectedDeptID}";
 	    	var listSize = 19;
 
 	        $(function () {
@@ -124,8 +124,8 @@
 	            if (document.getElementById("ListDept").length == 0) {
 		            alert("부서 정보가 없습니다.");
 		        } else {
-		    		if (selectedDept != null) {
-		    			$('#ListDept').val(selectedDept);
+		    		if (selectedDeptID != null) {
+		    			$('#ListDept').val(selectedDeptID);
 		    		} else {
 			            document.getElementById("ListDept").selectedIndex = 0;
 		    		}
@@ -612,7 +612,7 @@
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}" <c:if test="${selectedDeptID == dept.deptId}">selected</c:if>><c:out value='${dept.deptName}'/></option>
 								</c:if>
 							</c:forEach>
 			      		</select>
