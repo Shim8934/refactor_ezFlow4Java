@@ -646,7 +646,7 @@
 	                        		<td id="forId"></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">
-									<th><div style="width:48px;">구분</div></th>
+									<th><div style="width:48px;">근태유형</div></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">

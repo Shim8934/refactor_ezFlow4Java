@@ -340,7 +340,9 @@
 		        		mode : mode
 		        	},
 		        	success : function (result) {
-		    			if (result == "success") {
+		        		if (resultStatus == "dupl"){
+							alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
+						} else if (result == "success") {
 			        		alert("<spring:message code='ezAttitude.bbhs19'/>");
 //	 		        		window.opener.getAttitudeMainList();
 //	 		        		window.opener.parent.frames["left"].getAttitudeList();
@@ -611,7 +613,7 @@
 	                        		<td><c:out value="${info.userName }"/></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">
-									<th><div style="width:48px;">구분</div></th>
+									<th><div style="width:48px;">근태유형</div></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
