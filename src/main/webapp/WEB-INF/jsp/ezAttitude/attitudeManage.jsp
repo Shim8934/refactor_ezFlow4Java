@@ -247,14 +247,18 @@
 	        
 	        ///////
 	        function getAttitudeCheckList(){
-	    		typeId = searchAttitudeType;
+	        	searchAttitudeType = $('#searchAttitudeType').val(); 
 	    		
-	    		if (typeId == "total") {
+	        	typeId = searchAttitudeType;
+	    		
+	        	if (typeId == "total") {
 	    			typeId = "";
 	    		}
 	    		
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
+	    		searchUserName = $("#searchUserName").val();
+	    		searchTitle = $("#searchTitle").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("<spring:message code='ezAttitude.lhj15' />");
@@ -648,7 +652,15 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId + "&userName=" + searchUserName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated&reqType="+Tab1_SelectID;
+		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId 
+		    			+ "&userName=" + searchUserName 
+		    			+ "&title=" + searchTitle 
+		    			+ "&deptId=&startDate=" + searchStartDate 
+		    			+ "&endDate=" + searchEndDate 
+		    			+ "&orderCell=" + orderCell 
+		    			+ "&orderOption=" + orderOption 
+		    			+ "&attitudeType=" + searchAttitudeType
+		    			+ "&duplicated=duplicated&reqType="+Tab1_SelectID;
 		    	exportExcelframe.target="_blank";
 			}
 	    </script>
