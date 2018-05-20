@@ -508,16 +508,7 @@
 			}
 			
 			function editorResize() {
-				var typeId = $("#selectAtti").val();
-				var editHeight = document.documentElement.clientHeight;
-				
-				if (typeId == "A05" || typeId == "A06" || typeId == "A07" || typeId == "A08") {
-					editHeight = editHeight - 180;
-				} else {
-					editHeight = editHeight - 210;
-				}
-				editHeight += "PX";
-				$("#EdtorSize").css("height", editHeight);
+				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
 			}
 			
 			function allday_change() {
