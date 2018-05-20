@@ -335,6 +335,15 @@ public class EzAttitudeBHSController {
 			}
 		}
 		
+		for (int i = 0; i < deptList.size(); i++) {
+			JSONObject dept = (JSONObject) deptList.get(i);
+			authFlag = (String) dept.get("authType");
+			
+			if (authFlag.equals("M")) {
+				attitudeAdminCheck = true;
+			}
+		}
+		
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("deptList", deptList);
 		model.addAttribute("authFlag", authFlag);
