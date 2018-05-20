@@ -323,7 +323,7 @@
 				#adminId#,
 				c.displayname,
 				c.displayname2,
-				date_add(#apprDate#, INTERVAL -#offsetMin# minute)
+				#apprDate#
 			FROM
 				(select 
 					*
@@ -1503,7 +1503,7 @@
 				#attVO.typeName#,
 				#attVO.typeName2#,
 				#attVO.dateType#,
-				date_add(#apprDate#, INTERVAL -#offsetMin# minute)
+				#apprDate#
 			FROM
 				(select 
 					*
@@ -1597,7 +1597,7 @@
 				#attVO.typeName#,
 				#attVO.typeName2#,
 				#attVO.dateType#,
-				date_add(#apprDate#, INTERVAL -#offsetMin# minute)
+				#apprDate#
 			FROM
 				(select 
 					*
