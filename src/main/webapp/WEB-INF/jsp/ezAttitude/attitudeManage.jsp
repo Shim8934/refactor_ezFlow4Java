@@ -655,7 +655,8 @@
 		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId 
 		    			+ "&userName=" + searchUserName 
 		    			+ "&title=" + searchTitle 
-		    			+ "&deptId=&startDate=" + searchStartDate 
+		    			+ "&deptId="+ $('#ListDept').val()
+		    			+ "&startDate=" + searchStartDate 
 		    			+ "&endDate=" + searchEndDate 
 		    			+ "&orderCell=" + orderCell 
 		    			+ "&orderOption=" + orderOption 

@@ -1854,7 +1854,7 @@ public class EzAttitudeKMSController {
 				model.addAttribute("attitudeInfo", attitudeVO);
 			}
 		} 
-		deptId = (String) attitudeVO.get("deptId");
+		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
