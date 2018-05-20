@@ -344,9 +344,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String userId)
+	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String userId, String offset)
 			throws Exception {
 		LOGGER.debug("deleteAttitude started");
+		
+		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -359,6 +361,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("attVO", attitudeVO);
 			map.put("adminId", userId);
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
+			map.put("offsetMin", offsetMin);
 			ezAttitudeDAO.insertAdminAttHistory3(map);
 		}
 		
