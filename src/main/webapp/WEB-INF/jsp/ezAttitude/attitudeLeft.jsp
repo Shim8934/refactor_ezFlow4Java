@@ -264,9 +264,9 @@
 	    		case 5:	// 내꺼
 	    			window.open("/ezAttitude/attitudeManage.do", "right");
 	    			break;
-	    		/* case 6:	// 근태관리
-	    			window.open("/ezAttitude/attitudeAdminMod.do", "right");
-	    			break; */
+// 	    	    case 6:	// 근태관리
+// 	    			window.open("/ezAttitude/attitudeAdminMod.do", "right");
+// 	    			break;
 	    	}
 	    }
 	    

@@ -1888,13 +1888,32 @@ public class EzAttitudeKMSController {
 //			authFlag = "R";
 //		}
 		
+		int myDeptCount = 0;
+		
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			JSONObject dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				JSONObject dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+					dept.put("authType", "R");
+				}
+			}
+		}
+		
 		//권한 부서 목록에서 부서의 권한을 읽음
 		for (int i = 0; i < deptList.size(); i++ ){
 			JSONObject dept = (JSONObject)deptList.get(i);
+			LOGGER.debug("dept : " + dept.toJSONString());
 			if (dept.get("deptId").equals(deptId)) {
-				if (!((String) dept.get("authType")).equals("")) {
-					authFlag = (String) dept.get("authType");
-				}
+				authFlag = (String) dept.get("authType");
 			}
 		}
 		
