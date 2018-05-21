@@ -64,13 +64,23 @@ function setButtons(mode) {
 	
 	var libttns = document.getElementById("mainmenu2").firstElementChild.children;
 	libttns[0].firstElementChild.onclick  = function() {fileDownload();};
-	libttns[1].firstElementChild.onclick  = function() {fileUpload();};
-	libttns[2].firstElementChild.onclick  = function() {fileDelete();};
-	libttns[3].firstElementChild.onclick  = function() {fileRename();};
-	libttns[4].firstElementChild.onclick  = function() {fileMove();};
-	libttns[5].firstElementChild.onclick  = function() {openSearchPanel();};
-	libttns[6].firstElementChild.onclick  = function() {refreshView();};
-	libttns[7].firstElementChild.onchange = function() {search_Set("1");};
+	if (folderLevel != '0') {
+		libttns[1].firstElementChild.onclick  = function() {fileUpload();};
+		libttns[2].firstElementChild.onclick  = function() {fileDelete();};
+		libttns[3].firstElementChild.onclick  = function() {fileRename();};
+		libttns[4].firstElementChild.onclick  = function() {fileMove();};
+		libttns[5].firstElementChild.onclick  = function() {openSearchPanel();};
+		libttns[6].firstElementChild.onclick  = function() {refreshView();};
+		libttns[7].firstElementChild.onchange = function() {search_Set("1");};
+	}
+	else {
+		libttns[1].firstElementChild.onclick  = function() {fileDelete();};
+		libttns[2].firstElementChild.onclick  = function() {fileRename();};
+		libttns[3].firstElementChild.onclick  = function() {fileMove();};
+		libttns[4].firstElementChild.onclick  = function() {openSearchPanel();};
+		libttns[5].firstElementChild.onclick  = function() {refreshView();};
+		libttns[6].firstElementChild.onchange = function() {search_Set("1");};
+	}
 	
 	var listCountElmt = document.getElementById("listCount");
 	listCountElmt.onchange = function() {search_Set("1");};
@@ -272,7 +282,6 @@ function fileDownload() {
 	
 	var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
 	AttachDownFrame.location.href = downloadUrl;
-	refreshView();
 }
 
 function fileUpload() {
