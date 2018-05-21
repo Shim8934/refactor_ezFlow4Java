@@ -1231,7 +1231,12 @@
 				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
 				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
 			FROM
-				TBL_WEBFOLDER_FOLDER f JOIN
+				(
+				SELECT
+					DISTINCT
+					f1.*
+				FROM
+					TBL_WEBFOLDER_FOLDER f1 JOIN
 					(
 						SELECT
 							u.*
@@ -1282,15 +1287,16 @@
 							u.TENANT_ID = #tenantId#
 						AND
 							((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept'))
-					) s ON f.TENANT_ID = s.TENANT_ID AND f.FOLDER_ID = s.FOLDER_ID
+					) s ON f1.TENANT_ID = s.TENANT_ID AND f1.FOLDER_ID = s.FOLDER_ID
 			WHERE
-				f.FOLDER_TYPE  = 'C'
+				f1.FOLDER_TYPE  = 'C'
 			AND
-				f.USE_STATUS   = 'Y'
+				f1.USE_STATUS   = 'Y'
 			AND
-				f.TENANT_ID    = #tenantId#
+				f1.TENANT_ID    = #tenantId#
 			AND
-				f.FOLDER_UPPER = '1'
+				f1.FOLDER_UPPER = #compFolderId#
+			) f
 			ORDER BY
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
