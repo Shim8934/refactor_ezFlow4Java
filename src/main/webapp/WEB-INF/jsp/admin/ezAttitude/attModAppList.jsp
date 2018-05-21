@@ -51,7 +51,6 @@
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
 		var g_userLang 		  = "${userLang}";
 		var g_timezone 		  = "${userTimeSet}";
-		var adminFlag		  = "${adminFlag}";
 		var offsetMin 		  = "${offsetMin}";
 		var type 			  = "all";
 		var m_strColorSelect = "#edf4fd";
@@ -91,7 +90,7 @@
 				}
 			});
 			
-			/* if (document.getElementById("ListCompany").length == 0) {
+			if (document.getElementById("ListCompany").length == 0) {
 	            alert("<spring:message code = 'ezAttitude.t32' />");
 	        } else {
 	    		if (adminCompany != null) {
@@ -101,7 +100,7 @@
 	    		}
 	    		
 	            company_change();
-	        } */
+	        }
 
 			if (checkAdmin == 'true') {
 				authFlag = 'M';
@@ -182,11 +181,7 @@
 	    });
 
 		window.onload = function() {
-			if (adminFlag == 'true') {
-				type = '0';
-			}
-			
-			att_search();
+// 			att_search();
 			
 // 			if (checkAdmin == 'true') {
 // 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
@@ -217,10 +212,10 @@
         	$("#popup2").css("left", popupX);
         });
 		
-		/* function company_change(){
+		function company_change(){
     		pCompanyId = $("select[name=ListCompany]").val();
     		get_att_list();
-    	} */
+    	}
 		
 		function makePageSelPage(){
 	        var strtext;
@@ -390,6 +385,7 @@
 	    }
 	    
 	    function get_att_list(pageNum) {
+	    	console.log("get_att_list");
 	    	$("#HeaderAllCheckBox").prop("checked",false);
 	    	
 	    	var obj = new Object();
@@ -404,6 +400,7 @@
 		    	}
 		    	obj.writerName = searchWriter;
 		    }
+		    obj.companyId = $('#ListCompany').val();
 		    obj.startDate = searchStartDate;
 		    obj.endDate = searchEndDate;
 			obj.pageNum = pageNum;
@@ -452,6 +449,7 @@
 		    	}
 		    	obj.writerName = $('#writer_search').val();
 		    }
+		    obj.companyId = $('#ListCompany').val();
 		    obj.startDate = searchStartDate;
 		    obj.endDate = searchEndDate;
 			obj.totalPages = totalPages;
@@ -926,42 +924,39 @@
 	    		}
 	    	}
 	    	
-	    	if (attList.length == 0) {
-				alert("승인할 수정신청을 선택해주세요");
-				return;
-			}
+	    	if (idList == "") {
+    			if (attList.length == 0) {
+    				alert("승인할 수정신청을 선택해주세요");	
+    			} else {
+    				alert("이미 처리된 항목입니다.");
+    			}
+	    		get_att_list(currentPage);
+	    		HiddenAttProgress();
+	    		return;
+	    	}
 	    	
 	    	var obj = new Object();
 	    	
 		    obj.idList = idList.slice(0,-1);
 		    obj.changeStatus = "appr";
 			
-		    if (confirm("승인하시겠습니까?")) {
-	 	    	if (idList == "") {
-	    			alert("이미 처리된 항목입니다.");
-		    		get_att_list(currentPage);
-		    		HiddenAttProgress();
-		    		return;
-		    	}
-	 	    	
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/changeAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	ajaxRunning = false;
-				    	alert("승인 중 오류 발생")
-				    },
-				    success : function(json){
-				    	get_att_list(currentPage);
-						alert("승인되었습니다.");
-				    },
-					complete : function() {
-						HiddenAttProgress();
-					}
-			    });
-		    }
+		    $.ajax({
+				type : 'post',
+			    url : '/ezAttitude/changeAttModApp.do',
+			    data : obj,
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	ajaxRunning = false;
+			    	alert("승인 중 오류 발생")
+			    },
+			    success : function(json){
+			    	get_att_list(currentPage);
+					alert("승인되었습니다.");
+			    },
+				complete : function() {
+					HiddenAttProgress();
+				}
+		    });
 	    }
 	    
 	  	//반려
@@ -980,42 +975,39 @@
 	    		}
 	    	}
 	    	
-	    	if (attList.length == 0) {
-				alert("반려할 수정신청을 선택해주세요");
-				return;
-			}
+	    	if (idList == "") {
+    			if (attList.length == 0) {
+    				alert("반려할 수정신청을 선택해주세요");	
+    			} else {
+    				alert("이미 처리된 항목입니다.");
+    			}
+	    		get_att_list(currentPage);
+	    		HiddenAttProgress();
+	    		return;
+	    	}
 	    	
 	    	var obj = new Object();
 	    	
 		    obj.idList = idList.slice(0,-1);
 		    obj.changeStatus = "ret";
 			
-		    if (confirm("반려하시겠습니까?")) {
-		    	if (idList == "") {
-	    			alert("이미 처리된 항목입니다.");
-		    		get_att_list(currentPage);
-		    		HiddenAttProgress();
-		    		return;
-		    	}
-		    	
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/changeAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	ajaxRunning = false;
-				    	alert("반려 중 오류 발생")
-				    },
-				    success : function(json){
-				    	get_att_list(currentPage);
-						alert("반려되었습니다.");
-				    },
-					complete : function() {
-						HiddenAttProgress();
-					}
-			    });
-		    }
+		    $.ajax({
+				type : 'post',
+			    url : '/ezAttitude/changeAttModApp.do',
+			    data : obj,
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	ajaxRunning = false;
+			    	alert("반려 중 오류 발생")
+			    },
+			    success : function(json){
+			    	get_att_list(currentPage);
+					alert("반려되었습니다.");
+			    },
+				complete : function() {
+					HiddenAttProgress();
+				}
+		    });
 	    }
 	    
 	    function ArrayDelete(TargetArray, DeleteNodeStr) {
@@ -1220,7 +1212,7 @@
 	</c:if>
         <div id="mainmenu">
         <c:if test="${checkAdmin == 'true'}">
-        	<%-- <ul>
+        	<ul>
 	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
 				<li>
 					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
@@ -1229,7 +1221,7 @@
 						</c:forEach>
 		      		</select>
 	      		</li>
-	      	</ul> --%>
+	      	</ul>
 	        <table id="searchTable" style="width:100%; margin-bottom:10px;">
 				<tbody>
 					<tr>
@@ -1300,8 +1292,8 @@
 		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}"> 
 			<li id="right">
 				<span style="float:right;font-weight:normal;color:black;border: none;">
-					<input name="searchCheck" id="Radio1" type="radio" value="all" <c:if test="${adminFlag != 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
-					<input name="searchCheck" id="Radio2" type="radio" value="0" <c:if test="${adminFlag == 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
+					<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
+					<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
 					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
 					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
 				</span>

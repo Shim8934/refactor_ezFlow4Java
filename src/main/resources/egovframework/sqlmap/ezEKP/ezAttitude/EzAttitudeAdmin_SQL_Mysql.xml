@@ -938,9 +938,9 @@
 			WHERE 
 				TENANT_ID = #tenantId#
 			AND 
-				USEFLAG IS NOT NULL 
-			AND 
 				EXTENSIONATTRIBUTE2 = #companyId#
+			ORDER BY 
+				deptName
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">

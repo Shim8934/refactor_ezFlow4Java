@@ -365,7 +365,8 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String orderOption,
 			@RequestParam(required=false)String adminFlag,
 			@RequestParam(required=false)String checkAdmin,
-			@RequestParam(required=false)String writerDeptId) throws Exception {
+			@RequestParam(required=false)String writerDeptId,
+			@RequestParam(required=false)String companyId) throws Exception {
 		
 		LOGGER.debug("getAttModAppList started");
 		LOGGER.debug("adminFlag = " + adminFlag + " || checkAdmin = " + checkAdmin);
@@ -400,8 +401,14 @@ public class EzAttitudeKMSController {
 			startPoint = 0;
 			endPoint = 15;
 		}
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		
+		if (companyId == null) {
+			companyId = userInfo.getCompanyID();
+		}
+		
 		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
@@ -420,7 +427,7 @@ public class EzAttitudeKMSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyId", companyId)
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("apprUserName", apprUserName)
 				.queryParam("writerName", writerName)
@@ -488,7 +495,7 @@ public class EzAttitudeKMSController {
 		
 		if (excelReq.equals("true")) {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
-					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("companyId", companyId)
 					.queryParam("tenantId", userInfo.getTenantId())
 					.queryParam("apprUserName", apprUserName)
 					.queryParam("writerName", writerName)
@@ -506,7 +513,7 @@ public class EzAttitudeKMSController {
 					.queryParam("isAllDept", isAllDept);
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
-					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("companyId", companyId)
 					.queryParam("tenantId", userInfo.getTenantId())
 					.queryParam("apprUserName", apprUserName)
 					.queryParam("writerName", writerName)
