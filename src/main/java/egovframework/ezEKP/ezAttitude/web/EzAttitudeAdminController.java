@@ -344,6 +344,6 @@ public class EzAttitudeAdminController {
 		
 		LOGGER.debug("attModAppList ended");
 		
-		return "/ezAttitude/attModAppList";
+		return "/admin/ezAttitude/attModAppList";
 	}
 }

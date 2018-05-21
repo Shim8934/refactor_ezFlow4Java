@@ -407,7 +407,7 @@
 	    		}
 	    		
 	    		$("div#miniTitle").html("근태미입력자   [총 " 
-				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
+				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 명 - " 
 				+ $("#Sdatepicker").val().split("-")[0] + "년"
 				+ $("#Sdatepicker").val().split("-")[1] + "월"
 				+ $("#Sdatepicker").val().split("-")[2] + "일"
