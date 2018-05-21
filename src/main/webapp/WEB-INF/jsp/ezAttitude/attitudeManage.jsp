@@ -125,7 +125,7 @@
 		            alert("부서 정보가 없습니다.");
 		        } else {
 		    		if (selectedDeptID != null) {
-		    			$('#ListDept').val(selectedDeptID);
+		    			$('#ListDept').val("ALL");
 		    		} else {
 			            document.getElementById("ListDept").selectedIndex = 0;
 		    		}
@@ -173,7 +173,11 @@
 	                
 	                obj.className = "tabon";
 	                Tab1_SelectID = obj.id;
-	                
+	                if (Tab1_SelectID == "modify") {
+	                	$("div#mainmenu ul li:nth-child(2)").show();
+	                } else {
+	                	$("div#mainmenu ul li:nth-child(2)").hide();
+	                }
 	                ChangeTab(obj);
 	            }
 	        }
@@ -327,7 +331,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("#mainmenu ul li:last").html(" -  [총 " + totalCount + " 개]");
+	    		$("div#miniTitle").html("근태입력목록   [총 " 
+	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
+	    				+ $("#Sdatepicker").val().split("-")[0] + "년"
+	    				+ $("#Sdatepicker").val().split("-")[1] + "월"
+	    				+ $("#Sdatepicker").val().split("-")[2] + "일"
+	    				+ " ~ "
+	    				+ $("#Edatepicker").val().split("-")[0] + "년"
+	    				+ $("#Edatepicker").val().split("-")[1] + "월"
+	    				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -394,7 +406,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
-	    		$("#mainmenu ul li:last").html(" -  [총 " + totalCount + " 개]");
+	    		$("div#miniTitle").html("근태미입력자   [총 " 
+				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
+				+ $("#Sdatepicker").val().split("-")[0] + "년"
+				+ $("#Sdatepicker").val().split("-")[1] + "월"
+				+ $("#Sdatepicker").val().split("-")[2] + "일"
+				+ " ~ "
+				+ $("#Edatepicker").val().split("-")[0] + "년"
+				+ $("#Edatepicker").val().split("-")[1] + "월"
+				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -492,7 +512,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("#mainmenu ul li:last").html(" -  [총 " + totalCount + " 개]");
+	    		$("div#miniTitle").html("관리내역   [총 " 
+	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
+	    				+ $("#Sdatepicker").val().split("-")[0] + "년"
+	    				+ $("#Sdatepicker").val().split("-")[1] + "월"
+	    				+ $("#Sdatepicker").val().split("-")[2] + "일"
+	    				+ " ~ "
+	    				+ $("#Edatepicker").val().split("-")[0] + "년"
+	    				+ $("#Edatepicker").val().split("-")[1] + "월"
+	    				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -689,13 +717,14 @@
 		<h1><p style="padding-left:5px">전체근태관리</p></h1>
 	    <div class="portlet_tabpart01" style="margin-bottom:16px;">
 	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p><span id="modify" style="width:100px; text-align: center;">근태관리</span></p>
-	            <p><span id="absent" style="width:100px; text-align: center;">근태입력</span></p>
+	            <p><span id="modify" style="width:100px; text-align: center;">근태입력관리</span></p>
+	            <p><span id="absent" style="width:100px; text-align: center;">미입력자관리</span></p>
 	            <p><span id="history" style="width:100px; text-align: center;">관리내역</span></p>
 	        </div>
 	    </div>
 	    <div>
 	    	<div id="mainmenu">
+	    		<div id="miniTitle" style="margin-bottom:10px;">근태입력목록</div>
 				<ul>
 		      		<li><span onclick="searchPopup();">검색</span></li>
 		      		<c:if test="${manageFlag == 'M' }">
@@ -707,10 +736,10 @@
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
-		      				<option value="ALL">전체</option>
+		      				<option value="ALL" selected>전체</option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}" <c:if test="${selectedDeptID == dept.deptId}">selected</c:if>><c:out value='${dept.deptName}'/></option>
+									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
 								</c:if>
 							</c:forEach>
 			      		</select>

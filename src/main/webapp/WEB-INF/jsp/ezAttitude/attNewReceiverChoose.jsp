@@ -35,6 +35,8 @@
 	    	span.node_normal {
 	    		padding-top: 7px!important;
 	    		padding-left: 10px!important;
+	    		color: #333333!important;
+	    		font-weight: normal;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
