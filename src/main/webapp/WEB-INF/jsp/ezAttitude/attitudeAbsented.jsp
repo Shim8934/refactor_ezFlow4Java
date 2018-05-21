@@ -216,8 +216,11 @@
 	    		var resultHtml = "";
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
+	    		var i = ((pageNum - 1) * listSize) + 1;
+	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this);>";
+	    			resultHtml += "<td>" + i + "</td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -422,6 +425,7 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
+						<th style="width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="no">NO.</th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>

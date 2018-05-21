@@ -204,14 +204,16 @@
 	        	
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
-					resultHtml += "<tr><th style='padding-left: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+					resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='NO'>NO.</th>";
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.lhj18' /></th></tr>";
 	    			break;
 	    		case "absent":
-	    			resultHtml += "<tr><th style='padding-left: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='NO'>NO.</th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th></tr>";
@@ -308,9 +310,12 @@
 	    		var resultHtml = "";
 	    		$("#contentlist .mainlist tbody").html("");
 	    		
+	    		var i = ((pageNum - 1) * listSize) + 1;
+	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
-	    			resultHtml += "<td style='padding-left: 15px;'>" + vo.userName + "</td>";
+	    			resultHtml += "<td style='padding-left:15px'>" + i + "</td>";
+	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    						
@@ -325,6 +330,8 @@
 	    			}
 	    			
 	    			resultHtml += "<td>" + vo.typeName + "</td></tr>";
+	    			
+	    			i++;
 	    		});
 	    		
 	    		if (resultHtml == "") {
@@ -389,6 +396,8 @@
 	    		var resultHtml = "";
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
+	    		var i = ((pageNum - 1) * listSize) + 1;
+	    		
 	    		result.forEach(function(vo, index) {
 	    			if ($('#ListDept option:selected').attr('authtype') == 'M') {
 	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
@@ -396,10 +405,13 @@
 	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "'>";
 	    			}
 	    			
-	    			resultHtml += "<td style='padding-left: 15px;'>" + vo.userName + "</td>";
+	    			resultHtml += "<td style='padding-left:15px'>" + i + "</td>";
+	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			resultHtml += "<td>" + vo.startDate + "</td></tr>"
+	    			
+	    			i++;
 	    		});
 	    		
 	    		if (resultHtml == "") {
