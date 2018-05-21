@@ -710,9 +710,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 		        		if (_cmd.equals("FORWARD")) {
 		        			if (orgMessage.isMimeType("multipart/related")) {
-				        		MimeMultipart relatedPart = new MimeMultipart("related");
+				        		MimeMultipart relatedPart = new MimeMultipart("related");				        		
+				        		boolean isThereHtmlPart = ezEmailUtil.isThereHtmlPartInRelatedPart(relatedPart);
+				        		// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
+				        		boolean convertInlineImageToAttachment = isThereHtmlPart ? false : true;
 				        		
-				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, true)) {
+				        		logger.debug("convertInlineImageToAttachment=" + convertInlineImageToAttachment);
+				        		
+				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, true, convertInlineImageToAttachment)) {
 				        			replyMessage.setContent(relatedPart);
 				        		}	        			
 				        		else {

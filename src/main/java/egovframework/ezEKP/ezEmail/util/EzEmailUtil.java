@@ -54,6 +54,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.ContentDisposition;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
@@ -69,6 +70,7 @@ import javax.xml.bind.DatatypeConverter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -1826,7 +1828,68 @@ public class EzEmailUtil {
 		return newMessage;
 	}
 	
+	public boolean isThereHtmlPartInRelatedPart(Multipart relatedPart) throws MessagingException {
+		boolean isThereHtmlPart = false;
+		
+		int count = relatedPart.getCount();
+		
+		for (int i = 0; i < count; i++) {
+			BodyPart p = relatedPart.getBodyPart(i);
+			
+			if (p.isMimeType("text/html")) {
+				isThereHtmlPart = true;
+				
+				break;
+			}
+		}
+		
+		return isThereHtmlPart;
+	}
+	
+	public BodyPart getConvertedBodyPartFromInlineToAttachment(BodyPart p) throws MessagingException, IOException {
+		logger.debug("getConvertedBodyPartFromInlineToAttachment started");
+		
+		MimeBodyPart newBodyPart = (MimeBodyPart)p;
+			
+		if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {		
+			InternetHeaders newHeaders = new InternetHeaders();
+			
+			@SuppressWarnings("unchecked")
+			Enumeration<Header> enumerator = p.getAllHeaders();
+			
+			// 해당 파트의 헤더들을 읽는다.
+			while (enumerator.hasMoreElements()) {
+				Header h = (Header)enumerator.nextElement();
+				
+				String hValue = h.getValue();
+				
+				if (h.getName().equalsIgnoreCase("Content-Disposition")) {
+					hValue = hValue.replace("inline;", "attachment;");
+				} else if (h.getName().equalsIgnoreCase("Content-ID")) {
+					continue;
+				}
+				
+				newHeaders.addHeader(h.getName(), hValue);
+			}
+			
+			// 해당 파트의 body 데이터를 읽는다.
+			byte[] bytes = IOUtils.toByteArray(newBodyPart.getRawInputStream());
+				    										
+			// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
+			newBodyPart = new MimeBodyPart(newHeaders, bytes);	 
+		}
+		
+		logger.debug("getConvertedBodyPartFromInlineToAttachment ended");
+		
+		return newBodyPart;
+	}
+	
 	public boolean copyInlineParts(Part src, Multipart dest, boolean includeAttachment) throws MessagingException, IOException {
+		return this.copyInlineParts(src, dest, includeAttachment, false);
+	}
+	
+	public boolean copyInlineParts(Part src, Multipart dest, boolean includeAttachment, 
+						boolean convertInlineImageToAttachment) throws MessagingException, IOException {
 		if (src.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
@@ -1836,6 +1899,13 @@ public class EzEmailUtil {
 				BodyPart p = mp.getBodyPart(i);
 				
 				if (p instanceof MimePart) {
+					// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
+					if (convertInlineImageToAttachment) {
+						if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
+							p = getConvertedBodyPartFromInlineToAttachment(p);
+						}
+					}
+					
 					// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
 					// Content-Disposition: attachment 헤더가 있는 경우도 추가함
 					if (((MimePart)p).getContentID() != null
@@ -1854,7 +1924,7 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				if (copyInlineParts(p, dest, includeAttachment)) {
+				if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
 					return true;
 				}
 			}
