@@ -301,20 +301,10 @@
 			//저장
 			function save_attitude() {
 				dateTypeCheck();
-				attRegCheck();
 				inputCheck();
-				checkOutCom();
-				if (attRegHolidayFlag && holidayAttReg == "0") {
-					alert("<spring:message code='ezAttitude.bbhs18'/>");
-					attRegHolidayFlag = false;
-					return;
-				}
-				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
+// 				checkOutCom();
 				
-				if (selectType == "A07" && !weekWorkCheck()){
-					alert("평일 시 휴근등록이 불가능합니다.");
-					return;
-				}
+				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
 				if ($('#Stimepicker').length && !timeValid.test($('#Stimepicker').val()) || $('#Etimepicker').length && !timeValid.test($('#Etimepicker').val())) {
 					alert("<spring:message code='ezAttitude.bbhs37'/>");
@@ -324,10 +314,10 @@
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
-				if (outComFlag && selectType == 'A08') {
-					alert("<spring:message code='ezAttitude.bbhs40'/>");
-					return;
-				}
+// 				if (outComFlag && selectType == 'A08') {
+// 					alert("<spring:message code='ezAttitude.bbhs40'/>");
+// 					return;
+// 				}
 				if (inputCheckFlag) {
 					alert("정보를 입력해주세요.");
 					return;
@@ -350,9 +340,15 @@
 		        		mode : "admin"
 		        	},
 		        	success : function (result) {
-		        		alert("<spring:message code='ezAttitude.bbhs19'/>");
-		        		listRefresh();
-		        		window.close();
+		        		if (result == "dupl") {
+		        			alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
+		        		} else if (result == "success"){
+			        		alert("<spring:message code='ezAttitude.bbhs19'/>");
+			        		listRefresh();
+			        		window.close();
+		        		} else {
+		    				alert("<spring:message code='ezAttitude.kbm3' />");
+		    			}
 		        	}
 		        });
 			}
