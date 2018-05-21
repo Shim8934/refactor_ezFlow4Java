@@ -2595,9 +2595,40 @@ public class EzAttitudeKMSController {
 				row.createCell(0).setCellValue(vo.getWriterName());
 				row.createCell(1).setCellValue(vo.getWriterTitle());
 				row.createCell(2).setCellValue(vo.getWriterDeptName());
-				row.createCell(3).setCellValue(vo.getOriginStartdate() + "~" + vo.getOriginEnddate() + "->" +
-						vo.getChangeStartdate() + "~" + vo.getChangeEnddate());
-				row.createCell(4).setCellValue(vo.getOriginTypeName() + "->" + vo.getChangeTypeName());
+				String date = "";
+				if (vo.getOriginStartdate() == null || vo.getOriginStartdate().equals("")) {
+					date += "미입력";
+				} else {
+					if (vo.getOriginEnddate() == null || vo.getOriginEnddate().equals("")) {
+	   					date += vo.getOriginStartdate();
+	   				} else {
+	   					date += vo.getOriginStartdate() + " ~ " + vo.getOriginEnddate();
+	   				}
+				}
+				
+				if (vo.getChangeStartdate() == null || vo.getChangeStartdate().equals("")) {
+					date += " -> 삭제";
+				} else {
+		   			if (vo.getChangeEnddate() == null || vo.getChangeEnddate().length() == 0) {
+		   				date += " -> " + vo.getChangeStartdate();
+		   			} else {
+		   				date += " -> " + vo.getChangeStartdate() + " ~ " + vo.getChangeEnddate();
+		   			}
+	   			}
+				row.createCell(3).setCellValue(date);
+				
+				String type = "";
+				if (vo.getOriginTypeName() == null || vo.getOriginTypeName().equals("")) {
+	   				type += "미입력 -> " + vo.getChangeTypeName();
+    			} else {
+    				if (vo.getChangeTypeName() == null || vo.getChangeTypeName().equals("")) {
+    					type += vo.getOriginTypeName() + " -> 삭제";
+    				} else {
+	    				type += vo.getOriginTypeName() + " -> " + vo.getChangeTypeName();
+    				}
+    			}
+				
+				row.createCell(4).setCellValue(type);
 				row.createCell(5).setCellValue(vo.getApprUserName());
 				row.createCell(6).setCellValue(vo.getApprDate());
 				
