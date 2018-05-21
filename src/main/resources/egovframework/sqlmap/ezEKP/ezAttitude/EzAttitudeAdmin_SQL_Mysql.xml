@@ -938,8 +938,6 @@
 			WHERE 
 				TENANT_ID = #tenantId#
 			AND 
-				USEFLAG IS NOT NULL 
-			AND 
 				EXTENSIONATTRIBUTE2 = #companyId#
 	</select>
 	
