@@ -154,7 +154,7 @@
 			var agreeResultType = "${agreeResultType}";
 			var curDocNum = "";
 			var isEditorComplete = false;
-			
+			var orgCompanyID = "${userInfo.companyID}";
 		    window.onload = function ()
 		    {
 		        try {

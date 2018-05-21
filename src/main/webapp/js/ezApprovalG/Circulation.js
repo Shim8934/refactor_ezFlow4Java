@@ -34,7 +34,8 @@ function delAprLineInfoCC() {
 		async : false,
 		url : "/ezApprovalG/gongRamDocInfo.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

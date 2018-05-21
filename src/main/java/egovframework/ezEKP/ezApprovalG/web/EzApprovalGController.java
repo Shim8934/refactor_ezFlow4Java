@@ -1083,6 +1083,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("ezApprovalInfo ended.");
 		
@@ -3742,7 +3743,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
-		String result = ezApprovalGService.getCabinetNum(deptID, "", userInfo.getCompanyID(), docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (!orgCompanyID.equals(userInfo.getCompanyID())) {
+			companyID = orgCompanyID;
+		}
+		String result = ezApprovalGService.getCabinetNum(deptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		logger.debug("docID = " + docID + "deptID = " + deptID);
 
 		logger.debug("getCabinetSN result = " + result);
@@ -4226,7 +4233,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.gongRamDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			companyID = orgCompanyID;
+		}
+		
+		String result = ezApprovalGService.gongRamDocInfo(docID, companyID, userInfo.getTenantId());
 		
 		logger.debug("gongRamDocInfo ended.");
 		
@@ -7283,6 +7297,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String level = request.getParameter("level");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String result = ezApprovalGService.getCodeTreeInfo(code, level, userInfo);
 

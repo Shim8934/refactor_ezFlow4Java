@@ -193,7 +193,8 @@ function getRecvDocNumber(pDeptID) {
         		url : "/ezApprovalG/getCabinetSN.do",
         		data : {
         			docID : pDocID,
-        			deptID : pDeptID
+        			deptID : pDeptID,
+        			orgCompanyID : orgCompanyID
         		},
         		success: function(xml){
         			result = loadXMLString(xml);
@@ -228,7 +229,8 @@ function getRecvDocNumber(pDeptID) {
     		url : "/ezApprovalG/getCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : pDeptID
+    			deptID : pDeptID,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			result = loadXMLString(xml);
@@ -383,7 +385,8 @@ function getCurDocNumber() {
 		url : "/ezApprovalG/getCabinetSN.do",
 		data : {
 			docID : pDocID,
-			deptID : draftDeptID
+			deptID : draftDeptID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

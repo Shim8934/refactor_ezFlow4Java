@@ -88,6 +88,7 @@
  	        var period;
  	        var pDocInfoValue = "1";
  	       	var nowDate = "${nowDateUTC}";
+ 	        var orgComapnyID = "";
  	        
 	        document.onselectstart = function () { return false; };
 	

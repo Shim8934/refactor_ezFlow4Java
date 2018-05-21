@@ -1565,7 +1565,8 @@
 		    		url : "/ezApprovalG/getCabinetSN.do",
 		    		data : {
 		    			docID : pDocID,
-		    			deptID : draftDeptID
+		    			deptID : draftDeptID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = xml;
