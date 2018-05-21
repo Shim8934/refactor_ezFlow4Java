@@ -742,7 +742,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		if (checkAdmin.equals("false")){
+		if (adminFlag.equals("false")){
 			//신청현황에서는 본인의 ID로만 쿼리를 한다.
 			map.put("userId", userId);
 		}
@@ -811,7 +811,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		if (checkAdmin.equals("false")) {
+		if (adminFlag.equals("false")) {
 			map.put("userId", userId);
 		}
 		
