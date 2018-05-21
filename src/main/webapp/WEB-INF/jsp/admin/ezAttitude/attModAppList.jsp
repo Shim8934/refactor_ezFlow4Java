@@ -924,39 +924,42 @@
 	    		}
 	    	}
 	    	
-	    	if (idList == "") {
-    			if (attList.length == 0) {
-    				alert("승인할 수정신청을 선택해주세요");	
-    			} else {
-    				alert("이미 처리된 항목입니다.");
-    			}
-	    		get_att_list(currentPage);
-	    		HiddenAttProgress();
-	    		return;
-	    	}
+	    	if (attList.length == 0) {
+				alert("승인할 수정신청을 선택해주세요");
+				return;
+			}
 	    	
 	    	var obj = new Object();
 	    	
 		    obj.idList = idList.slice(0,-1);
 		    obj.changeStatus = "appr";
 			
-		    $.ajax({
-				type : 'post',
-			    url : '/ezAttitude/changeAttModApp.do',
-			    data : obj,
-			    dataType : "text",
-			    error: function(xhr, status, error){
-			    	ajaxRunning = false;
-			    	alert("승인 중 오류 발생")
-			    },
-			    success : function(json){
-			    	get_att_list(currentPage);
-					alert("승인되었습니다.");
-			    },
-				complete : function() {
-					HiddenAttProgress();
-				}
-		    });
+		    if (confirm("승인하시겠습니까?")) {
+	 	    	if (idList == "") {
+	    			alert("이미 처리된 항목입니다.");
+		    		get_att_list(currentPage);
+		    		HiddenAttProgress();
+		    		return;
+		    	}
+	 	    	
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/changeAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	ajaxRunning = false;
+				    	alert("승인 중 오류 발생")
+				    },
+				    success : function(json){
+				    	get_att_list(currentPage);
+						alert("승인되었습니다.");
+				    },
+					complete : function() {
+						HiddenAttProgress();
+					}
+			    });
+		    }
 	    }
 	    
 	  	//반려
@@ -974,40 +977,42 @@
 	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
 	    		}
 	    	}
-	    	
-	    	if (idList == "") {
-    			if (attList.length == 0) {
-    				alert("반려할 수정신청을 선택해주세요");	
-    			} else {
-    				alert("이미 처리된 항목입니다.");
-    			}
-	    		get_att_list(currentPage);
-	    		HiddenAttProgress();
-	    		return;
-	    	}
+	    	if (attList.length == 0) {
+				alert("반려할 수정신청을 선택해주세요");
+				return;
+			}
 	    	
 	    	var obj = new Object();
 	    	
 		    obj.idList = idList.slice(0,-1);
 		    obj.changeStatus = "ret";
 			
-		    $.ajax({
-				type : 'post',
-			    url : '/ezAttitude/changeAttModApp.do',
-			    data : obj,
-			    dataType : "text",
-			    error: function(xhr, status, error){
-			    	ajaxRunning = false;
-			    	alert("반려 중 오류 발생")
-			    },
-			    success : function(json){
-			    	get_att_list(currentPage);
-					alert("반려되었습니다.");
-			    },
-				complete : function() {
-					HiddenAttProgress();
-				}
-		    });
+		    if (confirm("반려하시겠습니까?")) {
+		    	if (idList == "") {
+	    			alert("이미 처리된 항목입니다.");
+		    		get_att_list(currentPage);
+		    		HiddenAttProgress();
+		    		return;
+		    	}
+		    	
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/changeAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	ajaxRunning = false;
+				    	alert("반려 중 오류 발생")
+				    },
+				    success : function(json){
+				    	get_att_list(currentPage);
+						alert("반려되었습니다.");
+				    },
+					complete : function() {
+						HiddenAttProgress();
+					}
+			    });
+		    }
 	    }
 	    
 	    function ArrayDelete(TargetArray, DeleteNodeStr) {
