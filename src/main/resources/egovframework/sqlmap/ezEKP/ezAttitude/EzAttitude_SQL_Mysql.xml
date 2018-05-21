@@ -384,13 +384,14 @@
 	
 	<sql id="ezAttitudeDAO.searchQuery">
 		<isNotEmpty property="userId" prepend="and"> 
-				a.WRITER_ID = #userId#
+			a.WRITER_ID = #userId#
 		</isNotEmpty>
-		<isNotEmpty property="deptIdList" prepend="and">
-			<iterate prepend="A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-	      		#deptIdList[]#
-			</iterate>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			A.WRITER_DEPT_ID = #searchDeptId#
 		</isNotEmpty>
+		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+      		#deptIdList[]#
+		</iterate>
 		<isNotEmpty property="apprUserName" prepend="and">
 			<isNotEmpty property="apprUserName" >
 				<isEqual property="sysLang" compareValue="primary" >

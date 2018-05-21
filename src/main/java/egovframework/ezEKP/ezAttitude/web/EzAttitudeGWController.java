@@ -1125,9 +1125,10 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-		String[] deptIdList;
 
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			String order = orderCell + " " + orderOption;
 			String isAllDept = "";
@@ -1157,20 +1158,23 @@ public class EzAttitudeGWController {
 				endPoint = Integer.parseInt(endPoint)- Integer.parseInt(startPoint) + "";
 			}
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
-
-			deptIdList = new String[authDeptlist.size()];
+			List<String> deptIdList = new ArrayList<>();
 			
-			for (int i = 0; i < authDeptlist.size(); i++) {
-				deptIdList[i] = authDeptlist.get(i).getDeptId();
+			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
+				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
+					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+					
+					for (AttitudeAuthorVO vo : authDeptlist) {
+						deptIdList.add(vo.getDeptId());
+					}
+				}
 			}
 			
-			if (deptid != null && !deptid.equals("all")) {
-				deptIdList = new String[1];
-				deptIdList[0] = deptid;
+			if (deptid.equals("ALL")) {
+				deptid = "";
 			}
 			
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptIdList);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptid, deptIdList);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -1212,8 +1216,9 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-		String[] deptIdList;
-		try{
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			if (adminFlag == null) {
 				adminFlag = "false";
@@ -1228,26 +1233,24 @@ public class EzAttitudeGWController {
 					type = null;
 				}
 			}
-			String isAllDept = "";
 			
-			if (checkAdmin.equals("true")){
-				isAllDept = "Y";
+			List<String> deptIdList = new ArrayList<>();
+			
+			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
+				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
+					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+					
+					for (AttitudeAuthorVO vo : authDeptlist) {
+						deptIdList.add(vo.getDeptId());
+					}
+				}
 			}
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
-			
-			deptIdList = new String[authDeptlist.size()];
-			
-			for (int i = 0; i < authDeptlist.size(); i++) {
-				deptIdList[i] = authDeptlist.get(i).getDeptId();
+			if (deptid.equals("ALL")) {
+				deptid = "";
 			}
 			
-			if (deptid != null && !deptid.equals("all")) {
-				deptIdList = new String[1];
-				deptIdList[0] = deptid;
-			}
-			
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, deptIdList, adminFlag, checkAdmin);
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, deptid, deptIdList, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
 			result.put("code", 0);

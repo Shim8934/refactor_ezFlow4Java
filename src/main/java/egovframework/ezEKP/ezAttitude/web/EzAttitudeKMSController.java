@@ -407,6 +407,16 @@ public class EzAttitudeKMSController {
 			sysLang = "primary";
 		}
 		
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			adminFlag = "true";
+			//권한부서 리스트
+			//c , k , wa -> 회사의 모든부서
+			isAllDept = "Y";
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+			// g -> 자신의 부서 + auth TB 확인해볼것.
+		}
+		
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
@@ -435,7 +445,8 @@ public class EzAttitudeKMSController {
 				.queryParam("orderOption", orderOption)
 				.queryParam("adminFlag", adminFlag)
 				.queryParam("checkAdmin", checkAdmin)
-				.queryParam("deptid", writerDeptId);
+				.queryParam("deptid", writerDeptId)
+				.queryParam("isAllDept", isAllDept);
 		
 		RestTemplate rest = new RestTemplate();
 
@@ -501,7 +512,8 @@ public class EzAttitudeKMSController {
 					.queryParam("orderOption", orderOption)
 					.queryParam("adminFlag", adminFlag)
 					.queryParam("checkAdmin", checkAdmin)
-					.queryParam("deptid", writerDeptId);;
+					.queryParam("deptid", writerDeptId)
+					.queryParam("isAllDept", isAllDept);
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", userInfo.getCompanyID())
@@ -520,7 +532,8 @@ public class EzAttitudeKMSController {
 					.queryParam("orderOption", orderOption)
 					.queryParam("adminFlag", adminFlag)
 					.queryParam("checkAdmin", checkAdmin)
-					.queryParam("deptid", writerDeptId);;
+					.queryParam("deptid", writerDeptId)
+					.queryParam("isAllDept", isAllDept);;
 		}
 
 		rest = new RestTemplate();
@@ -541,16 +554,6 @@ public class EzAttitudeKMSController {
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
 			resultj.put("list", list);
-		}
-		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
-			adminFlag = "true";
-			//권한부서 리스트
-			//c , k , wa -> 회사의 모든부서
-			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
-			adminFlag = "true";
-			// g -> 자신의 부서 + auth TB 확인해볼것.
 		}
 		
 		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
@@ -589,7 +592,6 @@ public class EzAttitudeKMSController {
 				}
 			}
 		}
-		
 		
 		resultj.put("startDate", startDate);
 		resultj.put("endDate", endDate);

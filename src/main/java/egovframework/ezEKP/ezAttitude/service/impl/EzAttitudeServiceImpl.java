@@ -734,21 +734,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
 			String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String sysLang, 
-			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String[] deptIdList) throws Exception {
+			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String deptId, List<String> deptIdList) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		if (!adminFlag.trim().equals("true")){
+		
+		if (checkAdmin.equals("false")){
 			//신청현황에서는 본인의 ID로만 쿼리를 한다.
 			map.put("userId", userId);
-		} else if (checkAdmin.equals("false")) {
-			//사용자 - 신청관리현황
-			map.put("deptIdList", deptIdList);
 		}
-		//userId와 deptIdList 둘다 map에 없는 경우는 회사 전체의 근태를 출력.
+		
+		map.put("searchDeptId", deptId);
+		map.put("deptIdList", deptIdList);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("apprUserName", apprUserName);
@@ -765,7 +765,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
 		
-		LOGGER.debug("getUsersModiyAtt started");
+		LOGGER.debug("getUsersModiyAtt ended");
 		return attAppList;
 	}
 	
@@ -800,7 +800,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public int getUsersModiyAttCount(String companyId, int tenantId,
 			String userId, String startDate, String endDate,
-			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String[] deptIdList,String adminFlag, String checkAdmin)
+			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String deptId, List<String> deptIdList,String adminFlag, String checkAdmin)
 			throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -810,11 +810,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		if (!adminFlag.trim().equals("true")){
+		
+		if (checkAdmin.equals("false")) {
 			map.put("userId", userId);
-		} else if (checkAdmin.equals("false")) {
-			map.put("deptIdList", deptIdList);
 		}
+		
+		map.put("searchDeptId", deptId);
+		map.put("deptIdList", deptIdList);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("apprUserName", apprUserName);
