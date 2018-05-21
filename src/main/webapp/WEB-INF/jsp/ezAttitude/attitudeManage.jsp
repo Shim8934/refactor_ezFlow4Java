@@ -134,6 +134,12 @@
 	            ChangeTab(document.getElementById(Tab1_SelectID));
 			});
 	        
+	        $(window).on("resize", function(){
+				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+				
+	        	$("#searchPopup").css("left", popupX);
+	        });
+	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
 	    		
