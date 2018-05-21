@@ -49,10 +49,10 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -2397,7 +2397,8 @@ public class EzAttitudeKMSController {
 //			미입력자엑셀
 			url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
 		} else if (reqType.equals("history")) {
-			
+			//kms-todo
+			url = gwServerUrl + "/rest/ezattitude/attitudes/manageHistories";
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -2433,12 +2434,18 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("status : " + status);
 		
 		JSONObject data = new JSONObject();
+		
 		List<AdminAttitudeVO> attitudeList = new ArrayList<AdminAttitudeVO>();
+		List<ModApplHistoryVO> historylist = new ArrayList<ModApplHistoryVO>();
+
 		Gson gson = new Gson();
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
-			
-			attitudeList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
+			if (reqType.equals("history")) {
+				historylist = gson.fromJson(data.get("list").toString(), new TypeToken<List<ModApplHistoryVO>>(){}.getType()) ;
+			} else {
+				attitudeList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
+			}
 		}
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -2561,7 +2568,56 @@ public class EzAttitudeKMSController {
 			sheet.autoSizeColumn(2);
 			sheet.autoSizeColumn(3);
 		} else if (reqType.equals("history")){
+//			관리내역조회엑셀
+			pFileName = EgovDateUtil.getToday("-") +"_historyReport.xls";
 			
+			//header
+			row.createCell(0).setCellValue("이름");
+			row.getCell(0).setCellStyle(headerStyle);
+			row.createCell(1).setCellValue("직위");
+			row.getCell(1).setCellStyle(headerStyle);
+			row.createCell(2).setCellValue("부서");
+			row.getCell(2).setCellStyle(headerStyle);
+			row.createCell(3).setCellValue("일시");
+			row.getCell(3).setCellStyle(headerStyle);
+			row.createCell(4).setCellValue("근태유형");
+			row.getCell(4).setCellStyle(headerStyle);
+			row.createCell(5).setCellValue("수정자");
+			row.getCell(5).setCellStyle(headerStyle);
+			row.createCell(6).setCellValue("수정일시");
+			row.getCell(6).setCellStyle(headerStyle);
+			
+			//body
+			for (int i = 0 ; i < historylist.size(); i++) { 
+				ModApplHistoryVO vo = historylist.get(i);
+				row = sheet.createRow(i + 1);
+
+				row.createCell(0).setCellValue(vo.getWriterName());
+				row.createCell(1).setCellValue(vo.getWriterTitle());
+				row.createCell(2).setCellValue(vo.getWriterDeptName());
+				row.createCell(3).setCellValue(vo.getOriginStartdate() + "~" + vo.getOriginEnddate() + "->" +
+						vo.getChangeStartdate() + "~" + vo.getChangeEnddate());
+				row.createCell(4).setCellValue(vo.getOriginTypeName() + "->" + vo.getChangeTypeName());
+				row.createCell(5).setCellValue(vo.getApprUserName());
+				row.createCell(6).setCellValue(vo.getApprDate());
+				
+				row.getCell(0).setCellStyle(bodyStyle);
+				row.getCell(1).setCellStyle(bodyStyle);
+				row.getCell(2).setCellStyle(bodyStyle);
+				row.getCell(3).setCellStyle(bodyStyle);
+				row.getCell(4).setCellStyle(bodyStyle);
+				row.getCell(5).setCellStyle(bodyStyle);
+				row.getCell(6).setCellStyle(bodyStyle);
+			}
+			
+			//width 조정
+			sheet.autoSizeColumn(0);
+			sheet.autoSizeColumn(1);
+			sheet.autoSizeColumn(2);
+			sheet.autoSizeColumn(3);
+			sheet.autoSizeColumn(4);
+			sheet.autoSizeColumn(5);
+			sheet.autoSizeColumn(6);
 		}
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");

@@ -666,13 +666,18 @@
 	        function searchPress(evt) {
 		        if (window.event) {
 		            if (window.event.keyCode == 13) {
-		            	getList();
+		            	search();
 		            }
 		        } else {
 		            if (evt.which == 13)
-		            	getList();
+		            	search();
 		        }
 		    }
+	        
+	        function search() {
+	        	goToPageByNum(1);
+	        	getList();
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -755,7 +760,7 @@
 				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="getList();" >검색</span></a>
+					<a class="imgbtn"><span onclick="search();" >검색</span></a>
 					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();">취소</span></a>
 			    </div>
 			</div>
