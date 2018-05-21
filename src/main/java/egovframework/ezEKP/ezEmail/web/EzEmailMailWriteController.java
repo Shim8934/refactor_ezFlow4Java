@@ -2455,12 +2455,23 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								
 								for (int i = 0; i < count; i++) {
 									p = mp.getBodyPart(i);
-									relatedPart.addBodyPart(p);
+									
+									// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
+									// 해당 첨부 파일을 multipart/mixed 파트로 옮기도록 한다.
+									if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+										multipart.addBodyPart(p);
+									} else {
+										relatedPart.addBodyPart(p);
+									}
 								}
 								
-								MimeBodyPart wrap = new MimeBodyPart();
-								wrap.setContent(relatedPart);
-								multipart.addBodyPart(wrap, 0);
+								// relatedPart에 속한 파트가 하나도 없는 경우 삽입하면 메시지가
+								// 정상적으로 생성되지 않는다.
+								if (relatedPart.getCount() > 0) {
+									MimeBodyPart wrap = new MimeBodyPart();
+									wrap.setContent(relatedPart);
+									multipart.addBodyPart(wrap, 0);
+								}
 							} else if (oldMessage.isMimeType("multipart/alternative")) {
 							    logger.debug("oldMessage is multipart/alternative");
 							    
