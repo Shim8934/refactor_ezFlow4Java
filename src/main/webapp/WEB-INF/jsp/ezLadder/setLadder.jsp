@@ -1049,20 +1049,20 @@
 								<!-- <div style="height: 40px; width: 40px; line-height:40px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 3px; margin-right:15px; background-color: white">
 									<span id="amount">0</span>
 								</div> -->
-								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:90px; margin-left: 15px;">
+								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:84px; margin-left: 15px;">
 									<div id="custom-handle" class="ui-slider-handle"></div>
 								</div>
 								<input name="lineCnt" style="display: none;" />
 							</div>
 							<div style="float: right; height: 45px;line-height: 45px;margin-top: 2px;position: relative;">
 								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" />
-								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px" placeholder="<spring:message code='ezLadder.t071' />"/>
+								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px; padding-right: 45px;" placeholder="<spring:message code='ezLadder.t071' />"/>
 								<div id="addAttendant" title="<spring:message code='ezLadder.t080'/>">
 									<img src="/images/ezLadder/icon_addAttendant.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: inline;" />
 									<img src="/images/ezLadder/icon_addAttendant_hover.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: none;" />
 								</div>
 							</div>
-							<div id="ladderSecret" style="position: absolute; right: 10px;">
+							<div id="ladderSecret" style="position: absolute; right: 5px;">
 								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t007'/>" class="default icon" _flag="0"/>
 								<img src="/images/ezLadder/icon_private.png" title="<spring:message code='ezLadder.t076'/>" class="select icon" _flag="1"/>
 							</div>							
