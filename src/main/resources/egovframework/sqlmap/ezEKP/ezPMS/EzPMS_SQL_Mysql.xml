@@ -260,6 +260,8 @@
 		<!-- tbl_pms_item_list에는 없는 컬럼 -->
 		<result property="taskName" 				column="task_name"/>
 		<result property="groupName"				column="group_name"/>
+		<result property="filePath"					column="file_path"/>
+		<result property="fileName"					column="file_name"/>
 	</resultMap>
 	
     <!-- 조직도 만들기 위한 쿼리 -->
@@ -1293,18 +1295,32 @@
 		]]>
 	</insert>
 	
+	<insert id="EzPMSDAO.insertProjectAttach" parameterClass="map">
+		<![CDATA[
+			INSERT INTO tbl_pms_item_attachment (
+				tenant_id, item_id, file_path, file_size, file_name
+			)
+			VALUES (
+				#tenantId#, LAST_INSERT_ID(), #filePath#, #fileSize#, #fileName#
+			)
+		]]>
+	</insert>
+	
 	<select id="EzPMSDAO.getBoardList" parameterClass="map" resultMap="projectBoardVO">
 		<![CDATA[
 			SELECT 
 				B.item_id, 			B.tenant_id,		B.writer_id,			B.title,					B.write_overview,			
 				B.write_type,		B.write_content,	B.write_date,			B.write_update_date,		B.read_count,				
 				B.task_id,			B.group_id,			B.writer_name,			B.writer_name2,				B.writer_deptname,		
-				B.writer_deptname2,	B.writer_position,	B.writer_position2, 	T.task_name,  				G.group_name
-			FROM jmocha.tbl_pms_item_list B
-			JOIN jmocha.tbl_pms_group G
+				B.writer_deptname2,	B.writer_position,	B.writer_position2, 	T.task_name,  				G.group_name,
+				A.file_name,		A.file_path
+			FROM tbl_pms_item_list B
+			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
-			LEFT JOIN jmocha.tbl_pms_task T
+			LEFT JOIN tbl_pms_task T
 			ON B.task_id = T.task_id
+			LEFT JOIN tbl_pms_item_attachment A
+			ON B.item_id = A.item_id
 		]]>	
 		<isEqual property="groupId" compareValue="-1">	
 			WHERE G.project_id = #projectId#

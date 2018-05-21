@@ -119,7 +119,7 @@ public interface EzPMSService {
 
 	public void completeAllTasks(long projectId, int tenantId, String realEndDate);
 
-	public void addBoard(ProjectBoardVO vo);
+	public void addBoard(JSONObject jsonParam, String realPath) throws Exception;
 	
 	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, int startRow, int limit);
 	

@@ -110,24 +110,27 @@ public class EzPMSController3 {
 		return "/ezPMS/pmsAddBoard";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/addBoard.do")
-	public String addBoard(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) throws Exception {		
+	public String addBoard(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) throws Exception {		
 		LOGGER.debug("ezPMS addBoard started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
-		param.put("tenantId", userInfo.getTenantId());
-		param.put("writerId", userInfo.getId());
-		param.put("writeDate", today);
-		param.put("writerName", userInfo.getDisplayName1());
-		param.put("writerName2", userInfo.getDisplayName2());
-		param.put("writerDeptname", userInfo.getDeptName1());
-		param.put("writerDeptname2", userInfo.getDeptName2());
-		param.put("writerPosition", userInfo.getTitle1());
-		param.put("writerPosition2", userInfo.getTitle2());
+		jsonParam.put("tenantId", userInfo.getTenantId());
+		jsonParam.put("writerId", userInfo.getId());
+		jsonParam.put("writeDate", today);
+		jsonParam.put("writerName", userInfo.getDisplayName1());
+		jsonParam.put("writerName2", userInfo.getDisplayName2());
+		jsonParam.put("writerDeptname", userInfo.getDeptName1());
+		jsonParam.put("writerDeptname2", userInfo.getDeptName2());
+		jsonParam.put("writerPosition", userInfo.getTitle1());
+		jsonParam.put("writerPosition2", userInfo.getTitle2());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "post", null);
+		Map<String, Object> param = null;
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "post", jsonParam);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
@@ -165,21 +168,16 @@ public class EzPMSController3 {
 		return "/ezPMS/pmsTaskSelectionTree";
 	}
 	
-	@RequestMapping(value="/ezPMS/getBoardList.do", method=RequestMethod.GET)
-	public String getBoardList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {	
+	@RequestMapping(value="/ezPMS/getBoardList.do", method=RequestMethod.POST)
+	public String getBoardList(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) throws Exception {	
 		LOGGER.debug("ezPMS getBoardList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int totalCount = 0;
 		int listCnt = 10;
 		int countPage = 10;
-		int currentPage = Integer.parseInt(request.getParameter("currentPage"));
-		String projectId = request.getParameter("projectId");
-		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		
-		param.put("groupId", request.getParameter("groupId"));
-		param.put("taskId", request.getParameter("taskId"));
-		
+		int currentPage = (int) param.get("currentPage");
+		int projectId = (int) param.get("projectId");
+	
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list-count/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
@@ -328,6 +326,8 @@ public class EzPMSController3 {
         return data.toString();
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/ezPMS/uploadFileDelete.do")
 	public String uploadFileDelete(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("ezPMS uploadFileDelete started");
 		
@@ -335,29 +335,18 @@ public class EzPMSController3 {
 		
 		String fileList = request.getParameter("fileList");
 		
-		String mode = "";
-		String projectId = "";
 		String filePath = "";
 		
 		LOGGER.debug("fileList : " + fileList);
-		
-		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
-			mode = request.getParameter("mode");
-		}
-		
-		if (request.getParameter("projectId") != null && !request.getParameter("projectId").equals("")) {
-			projectId = request.getParameter("projectId");
-		} 
 
-		filePath = "uploadFile";
+		filePath = "tempUploadFile";
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("mode", mode);
 		param.put("filePath", filePath);
 		param.put("fileList", fileList);
 		
-		String restUrl = "/rest/ezPMS/journals/" + projectId + "/attachfiles";
+		String restUrl = "/rest/ezPMS/attachfiles";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
 		
 		String status = result.get("status").toString();
@@ -366,7 +355,7 @@ public class EzPMSController3 {
 			LOGGER.debug("status : " + status);
 		}
 
-		LOGGER.debug("tempUploadFileDelete ended");
+		LOGGER.debug("ezPMS uploadFileDelete ended");
         
         return status;
 	}

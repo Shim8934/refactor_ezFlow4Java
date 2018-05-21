@@ -273,5 +273,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<TaskLogListVO> getTaskLogList(Map<String, Object> map) {
 		return (List<TaskLogListVO>) list ("EzPMSDAO.getTaskLogList", map);
 	}
+
+	public void insertProjectAttach(Map<String, Object> attachMap) {
+		insert("EzPMSDAO.insertProjectAttach", attachMap);
+	}
 	
 }

@@ -15,6 +15,7 @@
 	<script type="text/javascript" src="/js/dist/jstree.js"></script>
 	<script type="text/javascript" src="/js/ezPMS/common.js"></script>	
 	<script>
+	var projectId = "${projectId}";
 	var writerId = "${writerId}";
 	var writerName = "${writerName}";
 	var writerDeptName = "${writerDeptName}";
@@ -26,8 +27,16 @@
 	// 첨부파일 최대용량
 	var AttachLimit = 10;
 	
+	// 버튼 중복클릭 방지
+    var doubleSubmitFlag = false;
+    
 	function addBoard() {
 	
+		if (doubleSubmitFlag){
+    		return;
+    	}
+		doubleSubmitFlag = true;
+		
 		var title = $("#title").val().trim();
 		var writeContent = message.GetEditorContent();
 		var writeOverview = $("#writeOverview").val().trim();
@@ -57,7 +66,21 @@
 			return;
 		}
 		
+		//파일 첨부된 목록 가져오기
+		var listtable = dadiframe.document.getElementById("filelist");
+		var filelist = GetChildNodes(listtable);
+		var fileList = "";
+		
+		for (var i = 0; i < filelist.length - 1; i++) {	    
+			if (i == 0) {
+				fileList = GetAttribute(filelist[i + 1], "fileinfo");
+			} else {
+				fileList += "/" + GetAttribute(filelist[i + 1], "fileinfo");
+    		}
+		}
+		
 		data = {
+			projectId : projectId,
 			writerId : writerId,
 			writerName : writerName,
 			writerDeptName : writerDeptName,
@@ -66,7 +89,8 @@
 			writeType : writeType,
 			groupId : groupId,
 			taskId : taskId,
-			writeOverview : writeOverview
+			writeOverview : writeOverview,
+			fileList : fileList
 		}
 		
 		console.log(writerId);
@@ -78,6 +102,7 @@
 		console.log(groupId);
 		console.log(taskId);
 		console.log(writeOverview);
+		console.log(fileList)
 		
 		$.ajax({
 			type : "POST",
@@ -87,11 +112,13 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				alert("성공");
+				doubleSubmitFlag = false;
 				opener.getBoardList();
 				window.close();
 			},
 			error : function() {
 				alert("실패");
+				doubleSubmitFlag = false;
 			}
 		})
 	}
@@ -100,6 +127,37 @@
 		DivPopUpShow(320, 320, "/ezPMS/getTaskSelectionTree.do?projectId=" + projectId + "&onlyGroup=false");
 	}
 	
+	// 파일을 첨부한 후 등록을 누르지 않고 닫기 버튼을 눌렀을 대 tempUploadFile폴더에 업로드된 파일들이 다시 삭제됨
+	function cancelAddBoard() {
+		var filecnt = dadiframe.document.getElementById("filelist").childNodes.length;
+        var fileList = "";
+        
+        for (var i = 1; i < filecnt; i++) {
+        	var pAttachDelFileName = dadiframe.document.getElementById("filelist").childNodes[i].getAttribute("fileInfo");
+            
+            if (fileList == "") {
+				fileList = pAttachDelFileName;
+			} else {
+				fileList += "/" + pAttachDelFileName;
+			}
+        }
+        
+        $.ajax({
+			async : false,
+			url : "/ezPMS/uploadFileDelete.do",
+            type : 'POST',
+            dataType : 'text',
+            data : {
+            	fileList : fileList
+            },
+            success: function() {
+            	window.close();
+            },
+            error: function() {
+            	alert("<spring:message code='ezCircular.t102'/>");	
+            }
+		});
+	}
 	</script>
 </head>
 <body class="popup" style="height: 99%;">
@@ -109,7 +167,7 @@
 				<div id="menu">
 					<ul>
 						<li><span onclick="addBoard()">등록</span></li>
-						<li style="float: right;"><span onclick="window.close()">닫기</span></li>
+						<li style="float: right;"><span onclick="cancelAddBoard()">닫기</span></li>
 					</ul>
 				</div>
 			</td>

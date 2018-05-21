@@ -19,8 +19,11 @@
 	    var isfileup = false;
 	    var mode = "${mode}";
 	    var projectId = "${projectId}";
-	    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
-		    
+	    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");	
+	    var filesize = 0;
+	    var file = new Array;
+	    var xhr = new XMLHttpRequest();
+	    
 	    function onDragEnter(evt) {
 	        evt.dataTransfer.dropEffect = "copy";
 	        evt.stopPropagation();
@@ -32,9 +35,13 @@
 	        evt.preventDefault();
 	    }
 	
-	    var filesize = 0;
-	    var file = new Array;
-	    var xhr = new XMLHttpRequest();
+	    function btnfileup() {
+	        document.getElementById("file").click();
+	    }
+
+	    function filechange(evt) {
+	        onDrop();
+	    }
 	    
 	    function onDrop(evt) {
 	        file = new Array;
@@ -101,13 +108,43 @@
 	        xhr.send(fd);
 	        document.getElementById('progdiv').style.display = "inline-block";
 	    }	
-	    
-	    function btnfileup() {
-	        document.getElementById("file").click();
-	    }
+	     
+	    window.onload = function () {
+	        var ua = navigator.userAgent;
+	        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
+	            document.getElementById("file").multiple = false;
+	        }
+	        var oTable = document.createElement("TABLE");
+	        oTable.style.width = "100%";
+	        oTable.id = "filelist";
+	        oTable.className = "sublist";
 
-	    function filechange(e) {
-	        onDrop();
+	        var objTr = document.createElement("TR");
+	        var objTh = document.createElement("TH");
+	        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
+	            objTh.style.width = "24px";
+	        }
+	        else
+	            objTh.style.width = "15px";
+	        var input = document.createElement("input");
+	        input.type = "checkbox";
+	        input.id = "checkboxall";
+	        input.onclick = function () { checkall(); };
+	        objTh.appendChild(input);
+	        objTr.appendChild(objTh);
+
+	        var objTh2 = document.createElement("TH");
+	        objTh2.style.width = "87%";
+	        setNodeText(objTh2, "<spring:message code='ezBoard.t5008'/>");
+	        objTr.appendChild(objTh2);
+
+	        var objTh3 = document.createElement("TH");
+	        setNodeText(objTh3, "<spring:message code='ezJournal.t85'/>");
+	        objTh3.style.width = "13%";
+	        objTr.appendChild(objTh3);
+
+	        oTable.appendChild(objTr);
+	        document.getElementById("lstAttachLink").appendChild(oTable);
 	    }
 	    
 	    function btnfiledel() {
@@ -150,7 +187,7 @@
 	        
 	        $.ajax({
 				async : false,
-				url : "/ezJournal/tempUploadFileDelete.do",
+				url : "/ezPMS/uploadFileDelete.do",
                 type : 'POST',
                 dataType : 'text',
                 data : {
@@ -172,53 +209,13 @@
 	        }
 	    }
 	
-	    window.onload = function () {
-	        var ua = navigator.userAgent;
-	        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
-	            document.getElementById("file").multiple = false;
-	        }
-	        var oTable = document.createElement("TABLE");
-	        oTable.style.width = "100%";
-	        oTable.id = "filelist";
-	        oTable.className = "sublist";
-
-	        var objTr = document.createElement("TR");
-
-	        var objTh = document.createElement("TH");
-	        var ua = navigator.userAgent;
-	        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
-	            objTh.style.width = "24px";
-	        }
-	        else
-	            objTh.style.width = "15px";
-	        var input = document.createElement("input");
-	        input.type = "checkbox";
-	        input.id = "checkboxall";
-	        input.onclick = function () { checkall(); };
-	        objTh.appendChild(input);
-	        objTr.appendChild(objTh);
-
-	        var objTh2 = document.createElement("TH");
-	        objTh2.style.width = "87%";
-	        setNodeText(objTh2, "<spring:message code='ezBoard.t5008'/>");
-	        objTr.appendChild(objTh2);
-
-	        var objTh3 = document.createElement("TH");
-	        setNodeText(objTh3, "<spring:message code='ezJournal.t85'/>");
-	        objTh3.style.width = "13%";
-	        objTr.appendChild(objTh3);
-
-	        oTable.appendChild(objTr);
-	        document.getElementById("lstAttachLink").appendChild(oTable);
-	    }
-	
 	    function uploadComplete(evt) {
 	        document.getElementById('prog_bar').style.width = "0%";
 	        document.getElementById('prog_num').innerHTML = "0";
 	        document.getElementById('progdiv').style.display = "none";
 	        console.log(xhr.responseText);
 	        setAttachFileInfo(xhr.responseText);	        
-	        
+        
 	        isfileup = false;
 	    }
 	
@@ -322,6 +319,5 @@
 	<div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
 	</div>
 	<input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px; height:1px; display:none;" />
-	<input type="hidden" onclick ="fileupload()" />
 </body>
 </html>

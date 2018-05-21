@@ -2,12 +2,37 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <script>
 	$(function() {
 		$("#divList").css("height", (currentHeight - 100) + "px");
-		$("#projectListBody").css("height", (currentHeight - 120) + "px");
 	})
+	
+	//체크박스 전체선택 혹은 해제
+	function selectAllTR(elem) {
+		if($(elem).is(":checked")) {
+			 $('input:checkbox[name="boardCheckbox"]').each(function() {
+				 $(this).prop("checked","true");
+				 $(this).parent().parent().addClass("selectedTR");
+			 });
+		} else {
+			 $('input:checkbox[name="boardCheckbox"]').each(function() {
+				 $(this).removeProp("checked","true");
+				 $(this).parent().parent().removeClass("selectedTR");
+			 });
+		}
+	}
 </script>
+	
+<style>
+	.selectedTR {
+		background-color: rgb(233, 241, 255);
+	}
+	
+	tbody tr {
+		cursor: pointer;
+	}
+</style>
 <div id="divList" style="width: 100%;">
 	<div id="mainmenu">
 		<ul class="on">
@@ -20,8 +45,8 @@
 	</div>
 	<table class="mainlist" style="width: 100%;">
 		<thead>
-			<tr>
-				<th><input type="checkbox"></th>
+			<tr style="height: 37px;">
+				<th><input type="checkbox" onchange="selectAllTR(this);"></th>
 				<th>No</th>
 				<th><img src="/images/newAttach.gif"></th>
 				<th>제목</th>
@@ -35,9 +60,16 @@
 		<tbody>
 			<c:forEach items="${data}" var="projectBoardVO">	
 				<tr>
-					<td><input type="checkbox"></td>
+					<td><input type="checkbox" name="boardCheckbox"></td>
 					<td>${projectBoardVO.itemId}</td>
-					<td>파일</td>
+					<c:choose>
+						<c:when test="${projectBoardVO.fileName eq null}">
+							<td></td>
+						</c:when>
+						<c:otherwise>
+							<td><img src="/images/newAttach.gif"></td>
+						</c:otherwise>
+					</c:choose>	
 					<td>${projectBoardVO.title}</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.taskName eq null}">
@@ -49,7 +81,7 @@
 					</c:choose>
 					<td>${projectBoardVO.writerDeptName}</td>
 					<td>${projectBoardVO.writerName}</td>
-					<td>${projectBoardVO.writeDate}</td>
+					<td>${fn:substring(projectBoardVO.writeDate, 0, 16)}</td>
 					<td>${projectBoardVO.readCount}</td>
 				</tr>
 			</c:forEach>
