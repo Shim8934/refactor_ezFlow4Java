@@ -240,7 +240,7 @@
 						var trs = $("#attiwriteForm tr");
 						for (var i = 0; i < trs.length; i++) {
 							if (i > 2) {
-								trs[i].remove();	
+								trs.eq(i).remove();	
 							}
 						}
 						$("#attiwriteForm tbody").after(result.formHtml);
