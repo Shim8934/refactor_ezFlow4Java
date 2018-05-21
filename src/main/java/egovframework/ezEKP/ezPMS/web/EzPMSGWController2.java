@@ -492,8 +492,9 @@ public class EzPMSGWController2 {
 			
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			int isGantt = 0;
 			
-			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId);
+			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId, isGantt);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -554,10 +555,11 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int isGantt = 0;
 			
 			//추후 파라미터로 받도록 수정 필요.
 			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, "juhongsun", info.getTenantId(), info.getOffSet(), lang, "");
-			data.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId()));
+			data.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
 			
 			result.put("status", "ok");
 			result.put("code", 0);

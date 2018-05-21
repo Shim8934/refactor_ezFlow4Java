@@ -23,7 +23,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface EzPMSService {
 
-	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String offset, String lang);
+	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String lang);
 	
 	public Long addNewProject(Map<String, Object> map);
 	
@@ -99,7 +99,7 @@ public interface EzPMSService {
 
 	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception;
 	
-	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId);
+	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId, int isGantt);
 
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId);
 
@@ -124,4 +124,6 @@ public interface EzPMSService {
 	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, int startRow, int limit);
 	
 	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId);
+
+	List<ProjectInfoVO> getProgressProject(String status) throws Exception;
 }

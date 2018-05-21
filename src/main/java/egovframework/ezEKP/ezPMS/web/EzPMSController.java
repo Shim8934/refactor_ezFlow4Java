@@ -121,6 +121,7 @@ public class EzPMSController {
 		int listNumber = Integer.parseInt(param.get("listNumber").toString());
 		String projectSort = param.get("projectSort").toString();
 		String listProjectStatus = param.get("listProjectStatus").toString();
+		String deptId = userInfo.getDeptID();
 		
 		if(projectSort == null || projectSort.equals("")) {
 			projectSort = "0";
@@ -133,11 +134,14 @@ public class EzPMSController {
 				viewType = "Board";
 			} else {
 				viewType = "Memo";
-			}String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
+			}
+			
+		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
 		param.put("userIdType", "user");
 		param.put("projectSort", projectSort);
 		param.put("viewType", viewType);
+		param.put("deptId", deptId);
 		
 		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
 		String countStatus = countResult.get("status").toString();
@@ -1091,17 +1095,12 @@ public class EzPMSController {
 				toArr[i] = toArrList.get(i);
 			}
 			
-			String subject = "";
-			String content = "";
-			
-			for (int i = 0; i < toArr.length; i++) {
-				subject = "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다."; 
+			String subject = "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다."; 
 				
-				content = "<p>" + "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다." + "</p>";
-				content += "<p></p>";
-				content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectId + "\")'>[" + projectName + "] 프로젝트로 이동</a>";
-			}
-
+			String content = "<p>" + "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다." + "</p>";
+			content += "<p></p>";
+			content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectId + "\")'>[" + projectName + "] 프로젝트로 이동</a>";
+			
 			InternetAddress from;
 			from = new InternetAddress(userInfo.getEmail());
 			from.setPersonal(userInfo.getDisplayName());

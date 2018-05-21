@@ -48,13 +48,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status,
-			Map<String, Object> search, String offset, String lang) {
+			Map<String, Object> search, String lang) {
 		LOGGER.debug("[SERVICE] getProjectList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
-		map.put("offset", offset);
 		map.put("lang", lang);
 		map.put("deptId", deptId);
 		
@@ -321,7 +320,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId) {
+	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId, int isGantt) {
 		LOGGER.debug("getProjectMemberList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -329,7 +328,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("roleId", roleId);
 		param.put("lang", lang);
 		param.put("tenantId", tenantId);
-		param.put("isGantt", 0);
+		param.put("isGantt", isGantt);
 		
 		List<ProjectMemberVO> list = ezPMSDAO.getProjectMemberList(param);
 		
@@ -1032,5 +1031,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("taskId", taskId);
 		LOGGER.debug("[SERVICE] getBoardListCount Ended");
 		return ezPMSDAO.getBoardListCount(map);
+	}
+	
+	@Override
+	public List<ProjectInfoVO> getProgressProject(String status) throws Exception{
+		LOGGER.debug("getProgressProject Started");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("status", "P");
+		
+		List<ProjectInfoVO> projectList = ezPMSDAO.getProgressProject(map);
+		
+		LOGGER.debug("getProgressProject Ended");
+		return projectList;
 	}
 }

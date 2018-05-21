@@ -92,7 +92,7 @@ public class EzPMSGWController {
 			search.put("searchByOverview", request.getParameter("searchByOverview"));
 			
 			//프로젝트 리스트 가져오기
-			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, info.getOffSet(), lang);
+			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, lang);
 			
 			LOGGER.debug("projectList Count : " + projectList.size());
 			
@@ -501,8 +501,9 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			int isGantt = 1;
 			
-			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId);
+			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId, isGantt);
 			
 			//사원 이미지 사진 불러오기
 			for (ProjectMemberVO member: memberList) {
