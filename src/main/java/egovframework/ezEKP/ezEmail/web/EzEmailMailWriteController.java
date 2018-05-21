@@ -50,6 +50,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -60,6 +61,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -282,9 +284,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
-		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
-		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
+		logger.debug("stateName=" + stateName);
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
@@ -1092,7 +1093,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("newWindowId", newWindowId);
 		model.addAttribute("individualMailUser", individualMailUser); //int형
 		model.addAttribute("pSecurity", pSecurity);
-		model.addAttribute("folderDate", folderDate);
 		model.addAttribute("stateName", stateName);
 		model.addAttribute("pBigAttachDownloadDay", pBigAttachDownloadDay);
 		model.addAttribute("pBigAttachDownloadPeriod", pBigAttachDownloadPeriod);
@@ -2517,12 +2517,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        		
 				        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
 				        // otherwise, a wrong encoding may be used on some systems(linux, etc)
-				        String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", null);
+				        // nonghyup.com 메일 서버의 경우 QP로 인코딩된 경우 connection close(EOF)를 발생시켜
+				        // 무조건 BASE64로 인코딩하도록 변경함
+				        String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", "B");
 				        
 						// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
 						// and some mailers (Daum, etc) may not understand it.			        
 				        encodedFileName = MimeUtility.fold(0, encodedFileName);
-				        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"" + encodedFileName + "\"");
+				        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n filename=\"" + encodedFileName + "\"");
 				        
 				        // 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
 				        String contentType = "application/octet-stream";
@@ -3339,14 +3341,42 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								// 예) Content-Type: application/octet-stream;
 	    								//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 	    							    //    Content-Transfer-Encoding: base64	    								
-	    								else if (p.getDisposition() != null || p.isMimeType("application/*")) { 
-	    									mixedPart.addBodyPart(p);
+	    								else if (p.getDisposition() != null || p.isMimeType("application/*")) {	    									
+	    									MimeBodyPart newBodyPart = (MimeBodyPart)p;
 	    									
-	    									// 첨부파일 파트인 경우
+	    									// 첨부파일 파트인 경우	    									
 	    									if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
 	    											|| p.isMimeType("application/*")) {
 	    										hasAttach = true;
+	    											    										
+	    										InternetHeaders newHeaders = new InternetHeaders();
+	    										
+	    										@SuppressWarnings("unchecked")
+												Enumeration<Header> enumerator = p.getAllHeaders();
+	    										
+	    										// 해당 파트의 헤더들을 읽는다.
+	    										while (enumerator.hasMoreElements()) {
+	    											Header h = (Header)enumerator.nextElement();
+	    											
+	    											String hValue = h.getValue();
+	    											
+	    											// long header line의 경우 작성 시에는 folding이 되어 있으나
+	    											// 파트를 복사하는 과정에서 CRLF가 사라지는 현상이 있어
+	    											// 이곳에서 다시 CRLF를 삽입하도록 함
+	    											hValue = hValue.replace("attachment; filename=", "attachment;\r\n filename=");
+	    											hValue = hValue.replace("?= =?", "?=\r\n =?");
+	    											
+	    											newHeaders.addHeader(h.getName(), hValue);
+	    										}
+	    										
+	    										// 해당 파트의 body 데이터를 읽는다.
+	    										byte[] bytes = IOUtils.toByteArray(newBodyPart.getRawInputStream());
+	    											    										
+	    										// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
+	    										newBodyPart = new MimeBodyPart(newHeaders, bytes);	 
 	    									}
+	    									
+	    									mixedPart.addBodyPart(newBodyPart);	    									
 	    								}
 	    								// Part가 message 인 경우, 즉 메일이 첨부된 경우
 	    								else if (p.isMimeType("message/*")) {

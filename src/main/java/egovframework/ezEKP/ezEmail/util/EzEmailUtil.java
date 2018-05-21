@@ -662,12 +662,18 @@ public class EzEmailUtil {
 		return is;
 	}
 	
+	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, boolean mobile, Locale locale, 
+			String secureKey, String securePassword) throws Exception {
+		return this.getBodyInfo(part, folderPath, uid, bodyPartIndex, attachedFileList, forPrint, mobile, locale, secureKey, securePassword, false);
+	}
+	
 	/**
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
 			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, boolean mobile, Locale locale, 
-			String secureKey, String securePassword) throws Exception {
+			String secureKey, String securePassword, boolean includeInlineAsAttachment) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
 		String htmlBody = "";
@@ -706,10 +712,14 @@ public class EzEmailUtil {
 		// Content-Type이 application으로 시작하는 경우도 추가함 
 		// 예) Content-Type: application/octet-stream;
 		//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
-	    //    Content-Transfer-Encoding: base64	    										
+	    //    Content-Transfer-Encoding: base64	    	
+		//
+		// pacific에서 보낸 메일 중에 multipart/related안에 text/plain 파트만 있고 인라인 이미지가 첨부된 
+		// 경우가 있어 이 경우엔 인라인 이미지를 첨부 파일 형태로 표시하기 위해 includeInlineAsAttachment를 조건에 추가함.
 		if ((part.getDisposition() != null
 				&& (part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
-						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")))
+						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
+						|| includeInlineAsAttachment))
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
 				|| part.isMimeType("application/*")) {
             double size = part.getSize();
@@ -1122,12 +1132,15 @@ public class EzEmailUtil {
 		} else if (part.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
+			boolean isHtmlOrAlternativeFound = false;
 			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
 				if (!p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
+					isHtmlOrAlternativeFound = true;
+					
 					// 코린도에서 수신된 메일 중 multipart/related 안에 첨부파일이 있는 경우가 있어 패러메터값을 -1 대신 i로 변경함
 					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
 					htmlBody += tempList.get(0);
@@ -1142,6 +1155,33 @@ public class EzEmailUtil {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());
 				}
+			}
+			
+			// text/html 파트 혹은 multipart/alternative 파트가 발견되지 않았을 경우엔 
+			// text/plain 파트를 찾는다.
+			// pacific에서 보낸 메일 중에 multipart/related안에 text/plain 파트만 있고 인라인 이미지가 첨부된 
+			// 경우가 있어 추가함.
+			if (!isHtmlOrAlternativeFound) {
+				logger.debug("isHtmlOrAlternativeFound is false. Trying to find the text/plain part..");
+				
+				for (int i = 0; i < count; i++) {
+					Part p = mp.getBodyPart(i);
+					
+					if (p.isMimeType("text/plain")) {
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+						htmlBody += tempList.get(0);						
+					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword, true);
+						htmlBody += tempList.get(0);
+						pAttachListHtml += tempList.get(1);
+						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
+						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+						
+						if (tempList.get(4).equals("OK")) {
+							isAttach = "OK";
+						}						
+					}
+				}				
 			}
 		} else if (part.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)part.getContent();

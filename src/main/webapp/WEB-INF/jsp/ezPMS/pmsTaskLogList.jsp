@@ -43,7 +43,7 @@ $(function() {
 							text-overflow: ellipsis; cursor: pointer; width: 20px; text-align: center" class="h5_center">상태</th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="LOG_CONTENT"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 20%;"
-							class="h5_center">작업 내용</th>
+							class="h5_center">이력 내용</th>
 						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="GROUP_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 40px"
 							class="h5_center">작업 이름</th>

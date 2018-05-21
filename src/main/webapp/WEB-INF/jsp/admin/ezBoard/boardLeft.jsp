@@ -146,7 +146,21 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID(pTreeID);
 	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-	        }
+	       
+	            /* 18-05-18 김민성 - tootip 추가 및 글자수 관련 style 수정 */
+		        var node = document.getElementById(TreeIdx);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        if(nodeLevel > 9)
+		        	nodeLevel = 9;
+		        for(var i=0; i<title2.length; i++) {
+		        	title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
+		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }
+		    }
 
 	        var AccessLevel = "0";
 	        function TopBoard_onclick(obj, ID) {
@@ -164,6 +178,15 @@
 	            treeView.SetNodeClick("TreeCtrl_onNodeClick");            
 	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 	            treeView.DataBind(obj + "obj");
+	            
+	            /* 18-05-18 김민성 - tootip 추가 및 글자수 관련 style 수정 */
+				var node = $(".node_normal");
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
+					node[i].style.width = '156px';
+					node[i].style.textOverflow = 'ellipsis';
+					node[i].style.overflow = 'hidden';
+				} 
 	        }
 
 	        function SetTreeConfig() {
@@ -299,7 +322,7 @@
 							strHTML += "<h2><div AccessLevel='1' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
 	                        strHTML += i.boardName + "</div></h2>";
-	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px; max-height: 200px;'>";
+	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px;'>";
 	                        strHTML += "</div></ul>";
 						});
 						cnt = item.length;

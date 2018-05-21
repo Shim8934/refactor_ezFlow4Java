@@ -548,7 +548,7 @@ function setOverviewContent() {
 	float : left;
 	width : 78%;
 	padding : 5px;
-	border-right : 1px solid gray;
+	border-right : 1px solid #d1d1d1;
 }
 #overviewArea {
 	width : 20%;
@@ -561,8 +561,8 @@ function setOverviewContent() {
 
 .kanban {
 	display : table-cell;
-	margin-right : 16px;
-	border : 1px solid #666;
+	margin-right : 17px;
+	border : 1px solid #d1d1d1;
 	padding : 5px;
 	width : 22%;
 	overflow : auto;
