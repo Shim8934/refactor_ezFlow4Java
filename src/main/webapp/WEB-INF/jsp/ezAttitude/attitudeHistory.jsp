@@ -149,13 +149,11 @@
 		    });
 			
 // 	    	function company_change(){
-// 	    		$('#receiverlist').empty();
 // 	    		pCompanyId = $("select[name=ListCompany]").val();
 // // 	    		getAttitudeCheckList();
 // 	    	}
 	    	
 	    	function dept_change(){
-	    		$('#receiverlist').empty();
 // 	    		pDeptId = $("select[name=ListDept]").val();
 	    		getAttitudeHistoryList();
 	    	}
