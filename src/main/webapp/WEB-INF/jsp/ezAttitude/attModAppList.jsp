@@ -51,6 +51,7 @@
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
 		var g_userLang 		  = "${userLang}";
 		var g_timezone 		  = "${userTimeSet}";
+		var adminFlag		  = "${adminFlag}";
 		var offsetMin 		  = "${offsetMin}";
 		var type 			  = "all";
 		var m_strColorSelect = "#edf4fd";
@@ -181,6 +182,10 @@
 	    });
 
 		window.onload = function() {
+			if (adminFlag == 'true') {
+				type = '0';
+			}
+			
 			att_search();
 			
 // 			if (checkAdmin == 'true') {
@@ -1295,8 +1300,8 @@
 		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}"> 
 			<li id="right">
 				<span style="float:right;font-weight:normal;color:black;border: none;">
-					<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
-					<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
+					<input name="searchCheck" id="Radio1" type="radio" value="all" <c:if test="${adminFlag != 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
+					<input name="searchCheck" id="Radio2" type="radio" value="0" <c:if test="${adminFlag == 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
 					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
 					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
 				</span>
