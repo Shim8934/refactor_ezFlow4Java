@@ -1729,8 +1729,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String taskCode = request.getParameter("taskCode");
 		String flag = request.getParameter("flag");
 		String langType = request.getParameter("langType");
+		String selYear = request.getParameter("selYear");
 		
-		String result = ezApprovalGService.getSimpleCabinetList(companyID, processDeptCode, productionYear, taskCode, flag, langType, userInfo.getTenantId());
+		
+		String result = ezApprovalGService.getSimpleCabinetList(companyID, processDeptCode, productionYear, taskCode, flag, langType, userInfo.getTenantId(), selYear);
 		logger.debug("getCabinetSimpleList ended.");
 		return result;
 	}
