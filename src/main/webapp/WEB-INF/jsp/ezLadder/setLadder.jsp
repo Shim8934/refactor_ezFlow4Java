@@ -252,9 +252,12 @@
 						bombnum = len;
 					}
 					
-					html += "<div><div style='float:right;' id='cutBomb' class='typeOpbtn' onselectstart='return false'><img src='/images/minus_ladder.png' width='35px' /></div>";
-					html += "<div style='float:right;' id='addBomb' class='typeOpbtn' onselectstart='return false'><img src='/images/plus_ladder.png' width='35px' /></div>";
+					html += "<div><div style='float:right;' id='cutBomb' class='typeOpbtn' onselectstart='return false'><div class='typeOpbtnCover'></div><img src='/images/minus_ladder.png' width='35px' /></div>";
+					html += "<div style='float:right;' id='addBomb' class='typeOpbtn' onselectstart='return false'><div class='typeOpbtnCover'></div><img src='/images/plus_ladder.png' width='35px' /></div>";
 					html += "<div id='bombnum' style='float:right;border:1px solid #ddd;border-radius:10px;padding:0px 15px;height:45px;line-height:45px;margin:1px;margin-right:5px;background:white'>" + strLang23 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang9 + "</div></div>";
+					
+					$("#ladderTypeOption").html(html);
+					setBomb();
 				} else if(ladderType == "2") {
 					$itemList.css("display", "none");
 					$tempItemList.css("display", "block");
@@ -269,17 +272,34 @@
 						
 						html += "<div id='totalmoney' style='float: right; line-height: 45px;border:1px solid #ddd;padding:0px 15px;margin:1px;border-radius:10px;background:white'><spring:message code='ezLadder.t107' /><span style='margin: 0px 5px 0px 15px;'>" + totalmoneyStr + "</span>" + strLang24 + "</div>";
 					}
+					$("#ladderTypeOption").html(html);
 				}
-				$("#ladderTypeOption").html(html);
 			}
 			
 			var bombnum = 1;
 			function setBomb(bombadd) {
 				bombnum = Number($("#bombnum span").text());
-				if(bombadd && bombnum < $("#attendantList li").length) {
-					$("#bombnum span").html(++bombnum);
-				} else if(!bombadd && bombnum > 1) {
-					$("#bombnum span").html(--bombnum);
+				var liLen = $("#attendantList li").length;
+				var coverDiv = $(".typeOpbtnCover");
+				
+				if(typeof bombadd == "boolean") {
+					if(bombadd && bombnum < liLen) {
+						$("#bombnum span").html(++bombnum);
+					} else if(!bombadd && bombnum > 1) {
+						$("#bombnum span").html(--bombnum);
+					}
+				}
+				
+				if(liLen > 1 && liLen > bombnum) {
+					coverDiv.eq(1).removeClass("colorOpHide");
+				} else {
+					coverDiv.eq(1).addClass("colorOpHide");
+				}
+				
+				if(1 == bombnum) {
+					coverDiv.eq(0).addClass("colorOpHide")
+				} else {
+					coverDiv.eq(0).removeClass("colorOpHide")
 				}
 			}
 			
@@ -753,6 +773,9 @@
 					}
 					
 					setAttendantsView();
+					if(ladderType == "0") {
+						setBomb(ladderType);
+					}
 				}
 			}
 			
@@ -774,7 +797,13 @@
 				});
 				
 				setAttendantsView();
-				setLadderTypeDiv();
+				if(addtype == "preladder") {
+					setLadderTypeDiv();
+				} else {
+					if(ladderType == "0") {
+						setBomb(ladderType);
+					}
+				}
 			}
 			
 			/** 화면에 참여자 나타내기 */
@@ -927,6 +956,7 @@
 				border-radius: 15px;
 				cursor: pointer;
 				display: none;
+				background: #ffffff;
 			}
 			.default {
 				border: 1px solid #dddddd; 
@@ -939,9 +969,6 @@
 			}
 			.typeOpbtn {
 				display: inline-block;
-				/* border: 1px solid #dddddd;
-				padding: 10px 15px;
-				border-radius: 5px; */
 				padding-top:7px;
 				margin-left:3px;
 				cursor: pointer;
@@ -957,6 +984,7 @@
 				margin-top: -.8em;
 				text-align: center;
 				line-height: 1.6em;
+				cursor: pointer;
 			}	
 			.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
 				color: #000000;
@@ -964,6 +992,25 @@
 			}
 			.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
 				font-weight: normal;
+			}
+			.tempAddAttendant {
+				width: 35px;
+				height: 35px;
+				background: beige;
+				position: absolute;
+				top: 5px;
+				right: 5px;
+				cursor: pointer;
+			}
+			.typeOpbtnCover {
+				background: #f8f8fa;
+				width: 35px;
+				height: 35px;
+				position: absolute;
+				opacity: 0;
+			}
+			.colorOpHide {
+				opacity: 0.8;
 			}
 		</style>
 	</head>
@@ -1006,8 +1053,10 @@
 								</div>
 								<input name="lineCnt" style="display: none;" />
 							</div>
-							<div style="float: right; height: 45px; line-height: 45px;margin-top:2px">
-								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" /><input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px" placeholder="<spring:message code='ezLadder.t071' />"/>
+							<div style="float: right; height: 45px;line-height: 45px;margin-top: 2px;position: relative;">
+								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" />
+								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px" placeholder="<spring:message code='ezLadder.t071' />"/>
+								<div class="tempAddAttendant"></div>
 							</div>
 							<div id="ladderSecret" style="position: absolute; right: 15px;">
 								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t007'/>" class="default icon" _flag="0"/>
