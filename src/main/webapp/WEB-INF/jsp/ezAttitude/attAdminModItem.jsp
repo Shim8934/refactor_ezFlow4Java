@@ -170,13 +170,13 @@
 					$("#Sdatepicker").datepicker('disable');
 			        $("#Edatepicker").datepicker('disable');
 					$("#selectAtti option").not("#A01,#A02").each(function(i){
-						this.remove();
+						$(this).remove();
 					});
 				} else if (typeId == 'A03') {
 					$("#Sdatepicker").datepicker('disable');
 			        $("#Edatepicker").datepicker('disable');
 					$("#selectAtti option").not("#A03").each(function(i){
-						this.remove();
+						$(this).remove();
 					})
 				} else {
 					$("#selectAtti option#A01").remove();
