@@ -449,6 +449,7 @@
 		    	}
 		    	obj.writerName = $('#writer_search').val();
 		    }
+		    obj.companyId = $('#ListCompany').val();
 		    obj.startDate = searchStartDate;
 		    obj.endDate = searchEndDate;
 			obj.totalPages = totalPages;
