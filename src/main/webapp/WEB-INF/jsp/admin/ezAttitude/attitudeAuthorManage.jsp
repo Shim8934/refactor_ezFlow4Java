@@ -58,11 +58,11 @@
                 if (result.length != null && result.length != 0) {
 	                for (var i = 0; i < result.length; i++) {
 	                    html += "<tr id='" + result[i].userId + "' onclick='listClick(this);' ondblclick='author_modify()' style='cursor: pointer;'>";
-	                    html += "<td style='width:15%;color:gray;'>" + result[i].userName + "</td>";
-	                    html += "<td style='width:15%;color:gray;'>" + result[i].jikwi + "</td>";
-	                    html += "<td style='width:20%;color:gray;'>" + result[i].deptName + "</td>";
-	                    html += "<td style='width:15%;color:gray;'>" + result[i].authDeptName + " </td>";
-	                    html += "<td style='width:35%;color:gray;'><i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
+	                    html += "<td style='width:19%;color:gray;'>" + result[i].userName + "</td>";
+	                    html += "<td style='width:19%;color:gray;'>" + result[i].jikwi + "</td>";
+	                    html += "<td style='width:19%;color:gray;'>" + result[i].deptName + "</td>";
+	                    html += "<td style='width:18%;color:gray;'>" + result[i].authDeptName + " </td>";
+	                    html += "<td style='width:25%;color:gray;padding-left: 15px;'><i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
 	                    html += "</tr>";
 	                    
 	                    var deptList = [result[i].authDeptId, result[i].authDeptName2, result[i].authType];
@@ -303,11 +303,11 @@
         <div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-                    <th style="width: 15%;"><span><spring:message code='ezAttitude.t10' /></span></th>
-                    <th style="width: 15%;"><span><spring:message code='ezAttitude.t11' /></span></th>
-                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t9' /></span></th>
-                    <th style="width: 15%;"><span><spring:message code='ezAttitude.kbm18' /></span></th>
-                    <th style="width: 35%;"><span></span></th>
+                    <th style="width: 19%;"><span><spring:message code='ezAttitude.t10' /></span></th>
+                    <th style="width: 19%;"><span><spring:message code='ezAttitude.t11' /></span></th>
+                    <th style="width: 19%;"><span><spring:message code='ezAttitude.t9' /></span></th>
+                    <th style="width: 18%;"><span><spring:message code='ezAttitude.kbm18' /></span></th>
+                    <th style="width: 25%;"><span>권한정보</span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 460px; overflow-y: auto;">
