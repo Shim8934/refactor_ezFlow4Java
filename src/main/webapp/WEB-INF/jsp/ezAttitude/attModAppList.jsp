@@ -190,6 +190,14 @@
 		        $("#Edatepicker").datepicker('disable');	
 			}
 		}
+		
+		$(window).on("resize", function(){
+			var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			
+        	$("#popup").css("left", popupX);
+        	$("#popup2").css("left", popupX);
+        });
+		
 		function makePageSelPage(){
 	        var strtext;
 	        var PagingHTML = "";
@@ -1159,11 +1167,7 @@
 		        	
 		        	$("#popup").css("left", popupX);
 		        	
-					$("#popup").modal({
-// 						  escapeClose: false,
-// 						  clickClose: false,
-// 						  showClose: false
-					});
+					$("#popup").modal();
 			    }
 		    });
 	    }

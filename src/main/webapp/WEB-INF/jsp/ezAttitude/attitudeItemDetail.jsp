@@ -102,7 +102,7 @@
 						},
 						success : function(resultStatus) {
 							if (resultStatus == "success") {
-								window.opener.getAttitudeCheckList();
+								window.opener.getList();
 //	 							window.opener.parent.frames["left"].getAttitudeList();
 								window.close();
 							} else {
@@ -117,19 +117,19 @@
 			}
 			
 			function modifyAttitude() {
-				var openWin = null;
-				
-				if (CrossYN()) {
-                    openWin = window.open("/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(672, 640));
+// 				var openWin = null;
+
+// 				if (CrossYN()) {
+//                     openWin = window.open("/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
-                    try { openWin.focus(); } catch (e) { }
-	            } else {
-                	openWin = window.showModalDialog("/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod", "",
-                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
-                	 try { openWin.focus(); } catch (e) { }
-	            }
-				openWin.listRefresh = window.opener.getAttitudeCheckList;
-				window.close();
+//                     try { openWin.focus(); } catch (e) { }
+// 	            } else {
+//                 	openWin = window.showModalDialog("/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod", "",
+//                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+//                 	 try { openWin.focus(); } catch (e) { }
+// 	            }
+				window.location.href = "/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod";
+// 				window.close();
 			}
 			
 			function sendMailAttitude() {
