@@ -173,7 +173,11 @@
 	                
 	                obj.className = "tabon";
 	                Tab1_SelectID = obj.id;
-	                
+	                if (Tab1_SelectID == "modify") {
+	                	$("div#mainmenu ul li:nth-child(2)").show();
+	                } else {
+	                	$("div#mainmenu ul li:nth-child(2)").hide();
+	                }
 	                ChangeTab(obj);
 	            }
 	        }
@@ -327,7 +331,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("근태입력목록 -  [총 " + totalCount + " 개]");
+	    		$("div#miniTitle").html("근태입력목록   [총 " 
+	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
+	    				+ $("#Sdatepicker").val().split("-")[0] + "년"
+	    				+ $("#Sdatepicker").val().split("-")[1] + "월"
+	    				+ $("#Sdatepicker").val().split("-")[2] + "일"
+	    				+ " ~ "
+	    				+ $("#Edatepicker").val().split("-")[0] + "년"
+	    				+ $("#Edatepicker").val().split("-")[1] + "월"
+	    				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -394,7 +406,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("근태미입력자 -  [총 " + totalCount + " 개]");
+	    		$("div#miniTitle").html("근태미입력자   [총 " 
+				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
+				+ $("#Sdatepicker").val().split("-")[0] + "년"
+				+ $("#Sdatepicker").val().split("-")[1] + "월"
+				+ $("#Sdatepicker").val().split("-")[2] + "일"
+				+ " ~ "
+				+ $("#Edatepicker").val().split("-")[0] + "년"
+				+ $("#Edatepicker").val().split("-")[1] + "월"
+				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -492,7 +512,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("관리내역 -  [총 " + totalCount + " 개]");
+	    		$("div#miniTitle").html("관리내역   [총 " 
+	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
+	    				+ $("#Sdatepicker").val().split("-")[0] + "년"
+	    				+ $("#Sdatepicker").val().split("-")[1] + "월"
+	    				+ $("#Sdatepicker").val().split("-")[2] + "일"
+	    				+ " ~ "
+	    				+ $("#Edatepicker").val().split("-")[0] + "년"
+	    				+ $("#Edatepicker").val().split("-")[1] + "월"
+	    				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
