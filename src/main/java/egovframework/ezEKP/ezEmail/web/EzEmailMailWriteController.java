@@ -4203,47 +4203,37 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						Multipart mp = (Multipart)oldMessage.getContent();
 						int count = mp.getCount();
-						BodyPart p = null;
-						boolean containBody = false; 
+						BodyPart p = null; 
+						int nonAttachCount = 0;
+
+						// 첨부파일 파트 이전에 존재하는 파트들의 갯수를 구한다.
+						// 이 로직이 제대로 동작하려면 첨부파일들이 모두 메시지의 뒷부분에 연속으로 위치하여야 한다.
+						for (int i = 0; i < count; i++) {
+							p = mp.getBodyPart(i);
+
+							if (p.getDisposition() == null) {
+								nonAttachCount++;
+							} else {
+								break;
+							}
+						}
 						
 						for (int i = 0; i < count; i++) {
 							p = mp.getBodyPart(i);
-//							logger.debug("p.getDisposition : " + p.getDisposition());
-							//임시보관함에서 연 메일, 전달 하는 메일의 경우에는 이미 본문이 첫 번째 bodyPart를 차지하므로 getDisposition이 null이다.
-							if (p.getDisposition() == null) {
-								containBody = true;
-							}
 							
 							int length = rows.getLength();
 							boolean isRemoved = false;
 							
-							//파일의 index가 한칸씩 뒤로 밀렸으므로 i-1과 비교하여 파일을 삭제한다. 
-							if (containBody) {
-								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-									for (int j = 0; j < length; j++) {
-//										String mailFileName = MimeUtility.decodeText(p.getFileName());
-//										logger.debug("mailFileName : " + mailFileName + ", index i : " + (i-1));
-//										logger.debug("rows.item(j).getFirstChild().getTextContent() : " + rows.item(j).getFirstChild().getTextContent());
-//										logger.debug("rows.item(j).getChildNodes().item(1) : " + rows.item(j).getChildNodes().item(1).getTextContent());
-//										if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
-										if (rows.item(j).getChildNodes().item(1).getTextContent().equals((i-1)+"")) {
-											isRemoved = true;
-											break;
-										}
-									}
-								}
-							} else {
-								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-									for (int j = 0; j < length; j++) {
-//										String mailFileName = MimeUtility.decodeText(p.getFileName());
-//										logger.debug("mailFileName : " + mailFileName + ", index i : " + i);
-//										logger.debug("rows.item(j).getFirstChild().getTextContent() : " + rows.item(j).getFirstChild().getTextContent());
-//										logger.debug("rows.item(j).getChildNodes().item(1) : " + rows.item(j).getChildNodes().item(1).getTextContent());
-//										if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
-										if (rows.item(j).getChildNodes().item(1).getTextContent().equals(i+"")) {
-											isRemoved = true;
-											break;
-										}
+							// 파일의 index가 nonAttachCount 만큼 뒤로 밀렸으므로 i - nonAttachCount과 비교하여 파일을 삭제한다. 
+							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+								for (int j = 0; j < length; j++) {
+//									String mailFileName = MimeUtility.decodeText(p.getFileName());
+//									logger.debug("mailFileName : " + mailFileName + ", index i : " + (i-1));
+//									logger.debug("rows.item(j).getFirstChild().getTextContent() : " + rows.item(j).getFirstChild().getTextContent());
+//									logger.debug("rows.item(j).getChildNodes().item(1) : " + rows.item(j).getChildNodes().item(1).getTextContent());
+									if (rows.item(j).getChildNodes().item(1).getTextContent().equals((i - nonAttachCount) + "")) {
+										isRemoved = true;
+										break;
 									}
 								}
 							}
