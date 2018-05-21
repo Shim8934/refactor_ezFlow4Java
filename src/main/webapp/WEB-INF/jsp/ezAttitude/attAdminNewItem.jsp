@@ -290,7 +290,7 @@
 			function save_attitude() {
 				dateTypeCheck();
 				inputCheck();
-				checkOutCom();
+				//checkOutCom();
 				
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
@@ -300,10 +300,6 @@
 				}
 				if (!check_time()) {
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
-					return;
-				}
-				if (outComFlag && selectType == 'A08') {
-					alert("<spring:message code='ezAttitude.bbhs40'/>");
 					return;
 				}
 				if (inputCheckFlag) {

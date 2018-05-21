@@ -290,7 +290,7 @@
 			//저장
 			function save_attitude() {
 				dateTypeCheck();
-				checkOutCom();
+				//checkOutCom();
 				
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
@@ -310,11 +310,7 @@
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
-				//퇴근 후 조퇴기능 불가
-				if (outComFlag && selectType == 'A08') {
-					alert("<spring:message code='ezAttitude.bbhs40'/>");
-					return;
-				}
+				
 				//근무지, 연락처, 업무대리 입력 여부
 				if (inputCheck()) {
 					alert("정보를 입력해주세요.");
@@ -529,7 +525,9 @@
 		    		dataType : "json",
 		    		async : true,
 		    		url : "/ezAttitude/getAttitudeList.do",
-		    		data : {},
+		    		data : {
+		    			startDate : startDate.substring(0,10)
+		    		},
 		    		success : function(result) {
 		    			outComFlag = false;
 		    			for (var i = 0; i < result.length; i++) {
