@@ -82,7 +82,13 @@
 					}
 				});
 				$("#btn_CancelAprLineTempletName").on("click", function() {
-					parent.DivPopUpHidden();
+					if(poptype === "overlapOnlyName") {
+						if(retFunc !== null || retFunc !== "") {
+							retFunc();
+						}
+					} else {
+						parent.DivPopUpHidden();
+					}
 				});
 			});
 			

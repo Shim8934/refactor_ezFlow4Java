@@ -57,6 +57,10 @@
 						lineCnt = ui.value;
 					}
 				});
+				handle.on("mouseover", function() {
+					console.log(event.x);
+					//TODO 마우스 밑에 툴팁 바로뜨게?
+				});
 				
 				ladderId = "${ladderId}";
 				ladderSetInitVar(ladderId);
@@ -622,7 +626,13 @@
 							retAttendantPopInfo[0] = serchNameOverlapUser;
 							retAttendantPopInfo[1] = firstPopupComp;
 							
+							$("#inputAttendant").blur();
+							
 							DivPopUpShow(360, 258, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
+							
+							var leftF = parent.frames["left"];
+							var leftH = leftF.document.getElementById("left").clientHeight > leftF.innerHeight ? leftF.document.getElementById("left").clientHeight + "px" : "100%";
+							$(leftF.document.body).append("<div id='blockLeft' class='blockLeft' style='width:100%;height:" + leftH + ";position:absolute;top:0;z-index:10;background: rgba(0,0,0,0.5);'></div>");
 						} else {
 							showSecondOverlapPopup();
 						}
@@ -630,39 +640,23 @@
 						function firstPopupComp(retAttendants) {
 							DivPopUpHidden();
 							
-							var retLen = retAttendants["userId"].length;
-							var i = 0;
-							var removeIdx1;
-							var removeIdx2;
+							$(parent.frames["left"].document.body).find("#blockLeft").remove();
 							
-							while(true) {
-								removeIdx1 = alluser["userId"].indexOf(retAttendants["userId"][i]);
-								if(removeIdx1 != -1) {
-									alluser["userId"].splice(removeIdx1, 1);
-									alluser["userName"].splice(removeIdx1, 1);
-									alluser["userName2"].splice(removeIdx1, 1);
-									alluser["deptName"].splice(removeIdx1, 1);
-									alluser["pic"].splice(removeIdx1, 1);
-									alluser["temporder"].splice(removeIdx1, 1);
-								} else {
-									i++;
-									if(!retAttendants["userId"][i]) {
-										break;
-									}
-								}
-							}
-							if(!!overlapuser["userId"].length) {
-								i = 0;
+							if(!!retAttendants) {
+								var retLen = retAttendants["userId"].length;
+								var i = 0;
+								var removeIdx1;
+								var removeIdx2;
+								
 								while(true) {
-									removeIdx2 = overlapuser["userId"].indexOf(retAttendants["userId"][i]);
-									if(removeIdx2 != -1) {
-										overlapuser["userId"].splice(removeIdx2, 1);
-										overlapuser["userName"].splice(removeIdx2, 1);
-										overlapuser["userName2"].splice(removeIdx2, 1);
-										overlapuser["deptName"].splice(removeIdx2, 1);
-										overlapuser["pic"].splice(removeIdx2, 1);
-										overlapuser["temporder"].splice(removeIdx2, 1);
-										overlapuser["usertype"].splice(removeIdx2, 1);
+									removeIdx1 = alluser["userId"].indexOf(retAttendants["userId"][i]);
+									if(removeIdx1 != -1) {
+										alluser["userId"].splice(removeIdx1, 1);
+										alluser["userName"].splice(removeIdx1, 1);
+										alluser["userName2"].splice(removeIdx1, 1);
+										alluser["deptName"].splice(removeIdx1, 1);
+										alluser["pic"].splice(removeIdx1, 1);
+										alluser["temporder"].splice(removeIdx1, 1);
 									} else {
 										i++;
 										if(!retAttendants["userId"][i]) {
@@ -670,9 +664,29 @@
 										}
 									}
 								}
+								if(!!overlapuser["userId"].length) {
+									i = 0;
+									while(true) {
+										removeIdx2 = overlapuser["userId"].indexOf(retAttendants["userId"][i]);
+										if(removeIdx2 != -1) {
+											overlapuser["userId"].splice(removeIdx2, 1);
+											overlapuser["userName"].splice(removeIdx2, 1);
+											overlapuser["userName2"].splice(removeIdx2, 1);
+											overlapuser["deptName"].splice(removeIdx2, 1);
+											overlapuser["pic"].splice(removeIdx2, 1);
+											overlapuser["temporder"].splice(removeIdx2, 1);
+											overlapuser["usertype"].splice(removeIdx2, 1);
+										} else {
+											i++;
+											if(!retAttendants["userId"][i]) {
+												break;
+											}
+										}
+									}
+								}
+								
+								showSecondOverlapPopup();
 							}
-							
-							showSecondOverlapPopup();
 						}
 						
 						function showSecondOverlapPopup() {
