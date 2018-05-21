@@ -939,6 +939,8 @@
 				TENANT_ID = #tenantId#
 			AND 
 				EXTENSIONATTRIBUTE2 = #companyId#
+			ORDER BY 
+				deptName
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">
