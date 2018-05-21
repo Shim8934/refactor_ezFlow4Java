@@ -99,8 +99,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("typeId", typeId);
-		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		
 		if (typeId.equals("A01") || typeId.equals("A03")) {
@@ -142,6 +140,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 		
+		map.put("typeId", typeId);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("deptId", deptId);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
