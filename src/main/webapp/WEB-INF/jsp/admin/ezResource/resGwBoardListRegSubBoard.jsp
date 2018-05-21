@@ -168,7 +168,7 @@
 		<h1>
 		<spring:message code="ezResource.t23" />
 		</h1>
-		<div style="max-width:400px;">
+		<div style="max-width:800px;">
 		<table class="content">
 			<tr>
 				<th>
@@ -203,11 +203,11 @@
 				</td>
 			</tr>
 			<tr>
-				<th>
+				<th style="text-aline:center;">
 					<spring:message code="ezResource.t47" />
 				</th>
-				<td>
-					<textarea id="Brd_Explain" style="font-size:9pt ; width:96%; margin: 1px -1px -2px;" rows="3"><c:out value="${upExp}" /></textarea>
+				<td style="height: 300px;">
+					<textarea id="Brd_Explain" style="font-size:9pt ; width:98%; height:98%; margin-left:1px; margin-top: 1px;" rows="3"><c:out value="${upExp}" /></textarea>
 				</td>
 			</tr>
 			<tr style="display:none">
