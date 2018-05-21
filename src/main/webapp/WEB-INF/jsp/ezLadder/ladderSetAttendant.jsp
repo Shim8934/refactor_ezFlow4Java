@@ -1611,12 +1611,12 @@
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
-	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px; padding:0px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px; padding:0px; border-top-color:white">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #ddd;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td>
-	                                                <div style="margin-left: 5px;">
+	                                                <div style="margin-left: 5px;margin-top:1px">
 	                                                    <select id="search_type">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezLadder.t029' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezLadder.t028' /></option>
@@ -1628,7 +1628,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezLadder.t044' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezLadder.t045' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:20px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezLadder.t046' /></span></a>
 	                                                </div>
 	                                            </td>
