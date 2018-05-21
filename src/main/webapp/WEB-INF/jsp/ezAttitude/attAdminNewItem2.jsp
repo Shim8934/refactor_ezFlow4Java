@@ -163,9 +163,9 @@
 			        };
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		        
-		        $("#Sdatepicker").change(function(){
-		        	checkHoliday($(this).val());
-		        })
+// 		        $("#Sdatepicker").change(function(){
+// 		        	checkHoliday($(this).val());
+// 		        })
 		        
 		        if (typeId == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
@@ -247,7 +247,7 @@
 						$("#writerName").closest("tr").remove();
 						setDatePicker($("#periodblock").attr("datetype"));
 					    
-						checkHoliday($("#Sdatepicker").val());
+						//checkHoliday($("#Sdatepicker").val());
 						if ($("input[name=region]").length != 0) {
 							$("input[name=region]").val(region);
 						}
@@ -290,10 +290,9 @@
 			//저장
 			function save_attitude() {
 				dateTypeCheck();
-				attRegCheck();
-				inputCheck();
 				checkOutCom();
-				if (attRegHolidayFlag && holidayAttReg == "0") {
+				
+				if (attRegCheck() && holidayAttReg == "0") {
 					alert("<spring:message code='ezAttitude.bbhs18'/>");
 					attRegHolidayFlag = false;
 					return;
@@ -305,6 +304,12 @@
 					alert("사원을 선택해주세요.");
 					return;
 				}
+				
+				if (selectType == "A07" && !weekWorkCheck()){
+					alert("평일 시 휴근등록이 불가능합니다.");
+					return;
+				}
+				
 				//달력 정규식
 				if ($('#Stimepicker').length && !timeValid.test($('#Stimepicker').val()) || $('#Etimepicker').length && !timeValid.test($('#Etimepicker').val())) {
 					alert("<spring:message code='ezAttitude.bbhs37'/>");
@@ -321,7 +326,7 @@
 					return;
 				}
 				//근무지, 연락처, 업무대리 입력 여부
-				if (inputCheckFlag) {
+				if (inputCheck()) {
 					alert("정보를 입력해주세요.");
 					return;
 				}
@@ -345,7 +350,9 @@
 		        		mode : mode
 		        	},
 		        	success : function (result) {
-		    			if (result == "success") {
+		        		if (result == "dupl") {
+		        			alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
+		        		} else if (result == "success") {
 			        		alert("<spring:message code='ezAttitude.bbhs19'/>");
 //	 		        		window.opener.getAttitudeMainList();
 //	 		        		window.opener.parent.frames["left"].getAttitudeList();
@@ -395,7 +402,10 @@
 				var todayMemorialDayList = memorialDayCheck(checkDate, todayLunar);
 				var todayYearMemorialDayList = yearmemorialDayCheck(checkDate, todayLunar);
 				
-				if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
+				console.log(todayLunar);
+				console.log(todayMemorialDayList);
+				console.log(todayYearMemorialDayList);
+				if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
 					$("#selectAtti option[value=A07]").css("display", "");
 				} else {
 					if ($('#selectAtti').val() == "A07") {
@@ -406,11 +416,11 @@
 				}
 			}
 			
-			var attRegHolidayFlag = false;
+			//var attRegHolidayFlag = false;
 			function attRegCheck() {
-				if (selectType == "A07") {
-					return;
-				}
+// 				if (selectType == "A07") {
+// 					return;
+// 				}
 				var lunar = "";
 				var isMemorialDay = "";
 				var isYearMemorialDay = "";
@@ -429,10 +439,36 @@
 					isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
 					
 					if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
-						attRegHolidayFlag = true;
-						return;
+						return true;
 					}
 				}
+				return false;
+			}
+			
+			function weekWorkCheck() {
+				var lunar = "";
+				var isMemorialDay = "";
+				var isYearMemorialDay = "";
+				var subDate = "";
+				if (endDate == "") {
+					subDate = 0;
+				} else {
+					subDate = calDateRange(startDate.split(" ")[0], endDate.split(" ")[0]);
+				}
+				
+				var betweenDate = new Date(startDate.split(" ")[0]);
+				for (var i = 0; i <= subDate; i++) {
+					betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
+					lunar = lunarCalc(betweenDate.getFullYear(), betweenDate.getMonth() + 1, betweenDate.getDate(), 1);
+					isMemorialDay = memorialDayCheck(betweenDate, lunar);
+					isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
+					
+					//휴무일이 있는 경우
+					if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
+						return true;
+					}
+				}
+				return false;
 			}
 			
 			/**
@@ -535,9 +571,8 @@
 				}
 			}
 			
-			var inputCheckFlag = false;
 			function inputCheck() {
-				inputCheckFlag = true;
+				var inputCheckFlag = true;
 				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
 					$("input[name=region]").focus();
 				} else if ($("#mobile").length != 0 && $.trim($("input[name=mobile]").val()) == "") {
@@ -546,7 +581,8 @@
 					$("input[name=bizsub]").focus();
 				} else {
 					inputCheckFlag = false;
-				}	
+				}
+				return inputCheckFlag;
 			}
 			
 			var mail_newreceiverchoose_dialogArguments = new Array();
@@ -610,7 +646,7 @@
 	                        		<td id="forId"></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">
-									<th><div style="width:48px;">구분</div></th>
+									<th><div style="width:48px;">근태유형</div></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">

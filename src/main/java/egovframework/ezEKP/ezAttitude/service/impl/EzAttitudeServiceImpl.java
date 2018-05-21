@@ -135,7 +135,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			isDefaultAtti = true;
 		} else {
 			if (mode.equals("admin")) {
-				startDate += ":00";
+				startDate += "";
 				//startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 			}
 		}

@@ -169,7 +169,7 @@
 	                    <td style="height: 20px">
 	                        <table id="attiInfoView" class="content">
 	                               <tr id="HolderWrite">
-	                                   <th><div style="width:48px"><spring:message code='ezAttitude.bbhs22'/></div></th>
+	                                   <th><div style="width:48px">근태유형</th>
 	                                   <td id="typeName" colspan="2">
 	                                   </td>
 	                               </tr>
