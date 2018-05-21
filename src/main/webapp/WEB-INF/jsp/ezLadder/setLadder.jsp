@@ -261,6 +261,7 @@
 				} else if(ladderType == "2") {
 					$itemList.css("display", "none");
 					$tempItemList.css("display", "block");
+					$("#ladderTypeOption").html(html);
 				} else {
 					$itemList.css("display", "block");
 					$tempItemList.css("display", "none");
@@ -797,13 +798,7 @@
 				});
 				
 				setAttendantsView();
-				if(addtype == "preladder") {
-					setLadderTypeDiv();
-				} else {
-					if(ladderType == "0") {
-						setBomb(ladderType);
-					}
-				}
+				setLadderTypeDiv();
 			}
 			
 			/** 화면에 참여자 나타내기 */
