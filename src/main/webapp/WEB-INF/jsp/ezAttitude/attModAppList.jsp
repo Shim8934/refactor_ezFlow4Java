@@ -90,7 +90,7 @@
 				}
 			});
 			
-			if (document.getElementById("ListCompany").length == 0) {
+			/* if (document.getElementById("ListCompany").length == 0) {
 	            alert("<spring:message code = 'ezAttitude.t32' />");
 	        } else {
 	    		if (adminCompany != null) {
@@ -100,7 +100,7 @@
 	    		}
 	    		
 	            company_change();
-	        }
+	        } */
 
 			if (checkAdmin == 'true') {
 				authFlag = 'M';
@@ -212,10 +212,10 @@
         	$("#popup2").css("left", popupX);
         });
 		
-		function company_change(){
+		/* function company_change(){
     		pCompanyId = $("select[name=ListCompany]").val();
     		get_att_list();
-    	}
+    	} */
 		
 		function makePageSelPage(){
 	        var strtext;
@@ -1209,7 +1209,7 @@
 	</c:if>
         <div id="mainmenu">
         <c:if test="${checkAdmin == 'true'}">
-        	<ul>
+        	<%-- <ul>
 	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
 				<li>
 					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
@@ -1218,7 +1218,7 @@
 						</c:forEach>
 		      		</select>
 	      		</li>
-	      	</ul>
+	      	</ul> --%>
 	        <table id="searchTable" style="width:100%; margin-bottom:10px;">
 				<tbody>
 					<tr>
