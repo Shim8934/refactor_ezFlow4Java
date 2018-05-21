@@ -301,20 +301,10 @@
 			//저장
 			function save_attitude() {
 				dateTypeCheck();
-				attRegCheck();
 				inputCheck();
 				checkOutCom();
-				if (attRegHolidayFlag && holidayAttReg == "0") {
-					alert("<spring:message code='ezAttitude.bbhs18'/>");
-					attRegHolidayFlag = false;
-					return;
-				}
-				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
-				if (selectType == "A07" && !weekWorkCheck()){
-					alert("평일 시 휴근등록이 불가능합니다.");
-					return;
-				}
+				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
 				if ($('#Stimepicker').length && !timeValid.test($('#Stimepicker').val()) || $('#Etimepicker').length && !timeValid.test($('#Etimepicker').val())) {
 					alert("<spring:message code='ezAttitude.bbhs37'/>");

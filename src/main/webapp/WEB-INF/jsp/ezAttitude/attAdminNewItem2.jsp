@@ -292,21 +292,11 @@
 				dateTypeCheck();
 				checkOutCom();
 				
-				if (attRegCheck() && holidayAttReg == "0") {
-					alert("<spring:message code='ezAttitude.bbhs18'/>");
-					attRegHolidayFlag = false;
-					return;
-				}
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
 				//미입력자 등록 시 사원 추가 여부
 				if ($("#forId").text() == "") {
 					alert("사원을 선택해주세요.");
-					return;
-				}
-				
-				if (selectType == "A07" && !weekWorkCheck()){
-					alert("평일 시 휴근등록이 불가능합니다.");
 					return;
 				}
 				
