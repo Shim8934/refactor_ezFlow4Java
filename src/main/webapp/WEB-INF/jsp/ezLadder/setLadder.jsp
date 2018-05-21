@@ -40,27 +40,34 @@
 					ladder_window_resize();
 				});
 				
+				var tooltip = $(".moOverTooltip");
 				var handle = $("#custom-handle");
-				$("#slider-range-min").slider({ 
-					range: "min",
-					value: 0,
-					min: 0,
-					max: 0,
-					create: function() {
-						handle.text($(this).slider("value"));
-					},
-					slide: function( event, ui ) {
-						/* $("#amount").text(ui.value); */
-						handle.text(ui.value);
-					},
-					stop: function(event, ui) {
-						lineCnt = ui.value;
-					}
-				});
-				handle.on("mouseover", function() {
-					console.log(event.x);
-					//TODO 마우스 밑에 툴팁 바로뜨게?
-				});
+				$("#slider-range-min")
+					.slider({ 
+						range: "min",
+						value: 0,
+						min: 0,
+						max: 0,
+						create: function() {
+							handle.text($(this).slider("value"));
+						},
+						slide: function( event, ui ) {
+							/* $("#amount").text(ui.value); */
+							handle.text(ui.value);
+						},
+						stop: function(event, ui) {
+							lineCnt = ui.value;
+						}
+					})
+					.on("mouseenter", function() {
+						tooltip.html("<p><spring:message code='ezLadder.t081' /></p>").css({"display": "block", "width": tooltip.width() + "px"});
+					})
+					.on("mousemove", function() {
+						tooltip.css({"left": (event.clientX + 2) + "px", "top": (event.clientY + 2) + "px"});
+					})
+					.on("mouseleave", function() {
+						tooltip.css("display", "none");
+					});
 				
 				ladderId = "${ladderId}";
 				ladderSetInitVar(ladderId);
@@ -87,7 +94,7 @@
 						_manage_attendant();
 					})
 					.on("mouseenter", function() {
-						$("#addAttendant").css("background", "#ddeeff");
+						//$("#addAttendant").css("background", "#ddeeff");
 						$("#addAttendant img").toggle();
 					})
 					.on("mouseleave", function() {
@@ -988,15 +995,6 @@
 			.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
 				font-weight: normal;
 			}
-			.tempAddAttendant {
-				width: 35px;
-				height: 35px;
-				background: beige;
-				position: absolute;
-				top: 5px;
-				right: 5px;
-				cursor: pointer;
-			}
 			.typeOpbtnCover {
 				background: #f8f8fa;
 				width: 35px;
@@ -1007,12 +1005,20 @@
 			.colorOpHide {
 				opacity: 0.8;
 			}
+			.moOverTooltip {
+				position: absolute;
+				background: #fff;
+				z-index: 20;
+				border: 1px solid #dddddd;
+				padding: 0px 20px;
+			}
 		</style>
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezLadder.t018" /></h1>
+		<div class='moOverTooltip'></div>
 		<form id="ladMakeForm" method="post" action="/ezLadder/setLadder.do" name="ladMakeForm">
-			<table class="setTable" style="min-width: 750px;">
+			<table class="setTable" style="min-width: 1000px;">
 				<tr>
 					<td>
 						<div style="height: 50px; line-height: 50px; margin-bottom: 10px; position: relative;">
@@ -1026,7 +1032,7 @@
 				</tr>
 				<tr>
 					<td>
-						<div style="height: 50px; margin-bottom: 10px;padding:5px;background-color: #f8f8fa;border:1px solid #e8e8ea;">
+						<div style="height: 50px; margin-bottom: 10px;padding:5px;background-color: #f8f8fa;border:1px solid #e8e8ea;position: relative;">
 							<div style="float: left;">
 								<c:forEach begin="0" end="3" var="typenum">
 									<div class="ladderType" _num="${typenum}">
@@ -1051,9 +1057,12 @@
 							<div style="float: right; height: 45px;line-height: 45px;margin-top: 2px;position: relative;">
 								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" />
 								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px" placeholder="<spring:message code='ezLadder.t071' />"/>
-								<div class="tempAddAttendant"></div>
+								<div id="addAttendant" title="<spring:message code='ezLadder.t080'/>">
+									<img src="/images/ezLadder/icon_addAttendant.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: inline;" />
+									<img src="/images/ezLadder/icon_addAttendant_hover.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: none;" />
+								</div>
 							</div>
-							<div id="ladderSecret" style="position: absolute; right: 15px;">
+							<div id="ladderSecret" style="position: absolute; right: 10px;">
 								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t007'/>" class="default icon" _flag="0"/>
 								<img src="/images/ezLadder/icon_private.png" title="<spring:message code='ezLadder.t076'/>" class="select icon" _flag="1"/>
 							</div>							
@@ -1073,11 +1082,11 @@
 				</tr> --%>
 				<tr>
 					<td style="position: relative; margin-top: 20px;">
-						<div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 1px solid #0470e4; border-radius: 15px; cursor: pointer;">
+						<%-- <div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 1px solid #0470e4; border-radius: 15px; cursor: pointer;">
 							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 1px; padding-top: 1px; display: block" title="<spring:message code='ezLadder.t080'/>"/>
 							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 1px; padding-top: 1px; display: none" title="<spring:message code='ezLadder.t080'/>"/>
-						</div>
-						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 750px;">
+						</div> --%>
+						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 1000px;">
 							<div style="height: 140px;">
 								<ul id="attendantList"></ul>
 							</div>
@@ -1092,7 +1101,7 @@
 				</tr>
 			</table>
 			
-			<div class="wrap" style="min-width: 800px;">
+			<div class="wrap" style="min-width: 1000px;">
 				<input type="button" class="ladderBtn" id="makeLad" value="<spring:message code="ezLadder.t018"/>">
 				<input type="button" id="backToList" style="background: #efefef; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
 			</div>
