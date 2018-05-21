@@ -111,77 +111,80 @@
 		    }
 		    
 		    function modApprove() {
-		    	
-		    	if ("${data.apprStatus}" == 1) {
-		    		alert("이미 승인된 항목 입니다.");
-		    		return;
+		    	if (confirm("승인하시겠습니까?")) {
+			    	if ("${data.apprStatus}" == 1) {
+			    		alert("이미 승인된 항목 입니다.");
+			    		return;
+			    	}
+			    	
+			    	var obj = new Object();
+			    	
+				    obj.idList = attid;
+				    obj.changeStatus = "appr";
+					
+				    $.ajax({
+						type : 'post',
+					    url : '/ezAttitude/changeAttModApp.do',
+					    data : obj,
+					    dataType : "text",
+					    error: function(xhr, status, error){
+					    	ajaxRunning = false;
+					    	alert("승인 중 오류 발생");
+					    },
+					    success : function(json){
+					    	if (json == "ok") {
+					    		alert("승인되었습니다.");	
+					    	} else {
+					    		alert("승인 중 오류 발생");
+					    	}
+				            try {
+				                window.opener.att_refresh();
+				            } catch (e) {
+				            	window.opener.getAttitudeMainList();
+			        		}
+				            window.close();
+					    }
+				    });
 		    	}
-		    	
-		    	var obj = new Object();
-		    	
-			    obj.idList = attid;
-			    obj.changeStatus = "appr";
-				
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/changeAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	ajaxRunning = false;
-				    	alert("승인 중 오류 발생")
-				    },
-				    success : function(json){
-				    	if (json == "ok") {
-				    		alert("승인되었습니다.");	
-				    	} else {
-				    		alert("승인 중 오류 발생")	
-				    	}
-			            try {
-			                window.opener.att_refresh();
-			            } catch (e) {
-			            	window.opener.getAttitudeMainList();
-		        		}
-			            window.close();
-				    }
-			    });
 		    }
 		    
 		  	//반려
 		    function modReturn() {
-		    	if ("${data.apprStatus}" == 2) {
-		    		alert("이미 반려된 항목 입니다.");
-		    		return;
+		    	if (confirm("반려하시겠습니까?")) {
+			    	if ("${data.apprStatus}" == 2) {
+			    		alert("이미 반려된 항목 입니다.");
+			    		return;
+			    	}
+			  		
+			  		var obj = new Object();
+			    	
+				    obj.idList = attid;
+				    obj.changeStatus = "ret";
+					
+				    $.ajax({
+						type : 'post',
+					    url : '/ezAttitude/changeAttModApp.do',
+					    data : obj,
+					    dataType : "text",
+					    error: function(xhr, status, error){
+					    	ajaxRunning = false;
+					    	alert("반려 중 오류 발생")
+					    },
+					    success : function(json){
+					    	if (json == "ok") {
+					    		alert("반려되었습니다.");	
+					    	} else {
+					    		alert("반려 중 오류 발생");
+					    	}
+					    	try {
+				                window.opener.att_refresh();
+				            } catch (e) {
+				            	window.opener.getAttitudeMainList();
+			        		}
+				            window.close();
+					    }
+				    });
 		    	}
-		  		
-		  		var obj = new Object();
-		    	
-			    obj.idList = attid;
-			    obj.changeStatus = "ret";
-				
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/changeAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	ajaxRunning = false;
-				    	alert("반려 중 오류 발생")
-				    },
-				    success : function(json){
-				    	if (json == "ok") {
-				    		alert("반려되었습니다.");	
-				    	} else {
-				    		alert("반려 중 오류 발생");
-				    	}
-				    	try {
-			                window.opener.att_refresh();
-			            } catch (e) {
-			            	window.opener.getAttitudeMainList();
-		        		}
-			            window.close();
-				    }
-			    });
 		    }
 		  	
 		  	function reMod() {
