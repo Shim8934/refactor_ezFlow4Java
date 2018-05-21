@@ -1625,9 +1625,9 @@
 		</isNotEmpty>
 		<![CDATA[
 		and
-			start_date > date_add(concat(#checkStartDate#, ' 00:00:00'), INTERVAL -#offsetMin# minute)
+			start_date >= date_add(concat(#checkStartDate#, ' 00:00:00'), INTERVAL -#offsetMin# minute)
 		and
-			start_date < date_add(concat(#checkStartDate#, ' 23:59:59'), INTERVAL -#offsetMin# minute)
+			start_date <= date_add(concat(#checkStartDate#, ' 23:59:59'), INTERVAL -#offsetMin# minute)
 		]]>
 	</select>
 </sqlMap>
