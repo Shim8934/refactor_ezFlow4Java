@@ -156,13 +156,11 @@
 		    });
 			
 	    	function company_change(){
-	    		$('#receiverlist').empty();
 	    		pCompanyId = $("select[name=ListCompany]").val();
 // 	    		getAttitudeAbsentedList();
 	    	}
 	    	
 	    	function dept_change(){
-	    		$('#receiverlist').empty();
 	    		pDeptId = $("select[name=ListDept]").val();
 	    		getAttitudeAbsentedList();
 	    	}

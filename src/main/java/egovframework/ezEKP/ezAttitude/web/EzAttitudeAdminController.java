@@ -296,6 +296,41 @@ public class EzAttitudeAdminController {
 			model.addAttribute("list", list);
 		}
 		*/
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			String adminCompany = (String) data.get("adminCompany");
+			
+			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
+		}
+		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
@@ -311,5 +346,4 @@ public class EzAttitudeAdminController {
 		
 		return "/ezAttitude/attModAppList";
 	}
-
 }

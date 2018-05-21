@@ -142,7 +142,6 @@
 		    });
 			
 	    	function company_change(){
-	    		$('#receiverlist').empty();
 	    		pCompanyId = $("select[name=ListCompany]").val();
 	    		getAttitudeCheckList();
 	    	}

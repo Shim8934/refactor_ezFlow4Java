@@ -147,7 +147,6 @@
 	        }
 	        
 	        function dept_change() {
-	    		$('#receiverlist').empty();
 	    		pageNum = 1;
 	    		totalPage = "";
 	    		totalCount = "";

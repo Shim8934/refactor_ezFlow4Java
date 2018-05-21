@@ -40,6 +40,7 @@
 		#searchTable td {padding: 8px 5px;}
 		</style>
 		<script type="text/javascript">
+		var pCompanyId = ""; //현재 선택된 회사의 아이디
 		var totalAtt 		  = ${totalAtt};
 		var startDate		  = "<c:out value='${startDate}'/>";
 		var endDate 		  = "<c:out value='${endDate}'/>";
@@ -64,6 +65,7 @@
 		var searchStartDate = ""; //
 		var searchEndDate = ""; //
 		var pageInfo = "modList";
+		var adminCompany = "${adminCompany}";
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
@@ -86,7 +88,19 @@
 	    			
 	    			get_att_list();
 				}
-			})
+			});
+			
+			if (document.getElementById("ListCompany").length == 0) {
+	            alert("<spring:message code = 'ezAttitude.t32' />");
+	        } else {
+	    		if (adminCompany != null) {
+	    			$('#ListCompany').val(adminCompany);
+	    		} else {
+		            document.getElementById("ListCompany").selectedIndex = 0;
+	    		}
+	    		
+	            company_change();
+	        }
 
 			if (checkAdmin == 'true') {
 				authFlag = 'M';
@@ -197,6 +211,11 @@
         	$("#popup").css("left", popupX);
         	$("#popup2").css("left", popupX);
         });
+		
+		function company_change(){
+    		pCompanyId = $("select[name=ListCompany]").val();
+    		get_att_list();
+    	}
 		
 		function makePageSelPage(){
 	        var strtext;
@@ -1190,6 +1209,16 @@
 	</c:if>
         <div id="mainmenu">
         <c:if test="${checkAdmin == 'true'}">
+        	<ul>
+	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
+				<li>
+					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+						<c:forEach var = "companyItem" items="${list }">
+							<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
+						</c:forEach>
+		      		</select>
+	      		</li>
+	      	</ul>
 	        <table id="searchTable" style="width:100%; margin-bottom:10px;">
 				<tbody>
 					<tr>
