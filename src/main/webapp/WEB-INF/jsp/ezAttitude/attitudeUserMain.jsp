@@ -698,23 +698,23 @@
 
 				    			if (json[i].dateType == 1) {
 					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
-						    		objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:381px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:371px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].dateType == 2) {
 					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
-						    		objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:381px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:371px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].dateType == 3) {
 					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
-						    		objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:337px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:327px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
 					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
-						    		objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:337px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:327px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].typeId == 'A04') {
 					    			if (json[i].dateType == 4) {
 					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
 					    			} else if (json[i].dateType == 5) {
 					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
 					    			}
-						    		objTr.append($("<td style='width:40%;'></td>").append($("<div style='width:273px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:40%;'></td>").append($("<div style='width:263px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		}
 	
 					    		$("#addpopup_list tbody").append(objTr);
@@ -751,23 +751,23 @@
 					    		
 					    		if (json[i].dateType == 1) {
 					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:545px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:54px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].dateType == 2) {
 					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:545px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].dateType == 3) {
 					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:501px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
 					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:501px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].typeId == 'A04') {
 					    			if (json[i].dateType == 4) {
 					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
 					    			} else if (json[i].dateType == 5) {
 					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
 					    			}
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:441px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:400px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		}
 					    		
 					    		$("#addpopup_list tbody").append(objTr);
