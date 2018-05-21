@@ -59,12 +59,12 @@
             		navigation_info += " > " + pBrdNm + "</a>";
     		}
 
+    		/* 2018-05-21 홍승비 - 등록된 상위자원 없는 경우 메세지 출력 수정 */
     		function TreeLoad() {
         		initTreeInfo("", g_UserID, g_DeptID);
         		
         		if(document.getElementById("TreeView").innerText == "") {
-        			var msg = "<div style='margin-top:10px;margin-bottom:10px'><img width='183' height='27' src='/images/notify/warning01.gif'></div>";
-        			msg += "<div><spring:message code='ezResource.t368' /></div>";
+        			var msg = "<spring:message code='ezResource.t368' />";
         			var strUrl = "/ezResource/nonResList.do?msg="+msg;
             		locationInfo("");
             		Navigate(strUrl);
