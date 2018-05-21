@@ -255,14 +255,18 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			
-			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
+			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
+			
+			//1. startDate로 attitudeID 끌어와서 기존에 있던건지 검사를 먼저
+			//2. 똑같은 attitudeVO를 가져와서 비교할 수 는 없어 시작일 변경??
+			// ==> typeId와 startDate를 비교하면
+			if (typeId.equals("A08")) {
 				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
 			}
 			
-			if (!checkAttitude.equals("") && !checkAttitude.equals("0")) {
+			if (!checkAttitude.equals("") && !checkAttitude.equals("0") && !(typeId.equals(attitudeVO.getTypeId()) && startDate.split(" ")[0].equals(attitudeVO.getStartDate().split(" ")[0]))) {
 				checkAttitude = "dupl";
 			} else {
-				AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
 				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId(), info.getCompanyId());
 			}
 			
