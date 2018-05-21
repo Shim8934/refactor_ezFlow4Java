@@ -2,8 +2,23 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<div id="divList" style="width: 1200px;">
-	<table class="mainlist" width="100%">
+<script>
+	$(function() {
+		$("#divList").css("height", (currentHeight - 100) + "px");
+		$("#projectListBody").css("height", (currentHeight - 120) + "px");
+	})
+</script>
+<div id="divList" style="width: 100%;">
+	<div id="mainmenu">
+		<ul class="on">
+			<li class="off"><span onclick="goAddBoard()">등록</span></li>
+			<li class="off"><span onclick="">삭제</span></li>
+			<li class="off"><span onclick="">이동</span></li>
+			<li class="off"><span onclick="">새로고침</span></li>
+			<li class="off"><span onclick="">검색</span></li>
+		</ul>
+	</div>
+	<table class="mainlist" style="width: 100%;">
 		<thead>
 			<tr>
 				<th><input type="checkbox"></th>

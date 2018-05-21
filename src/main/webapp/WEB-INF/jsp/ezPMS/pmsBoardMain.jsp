@@ -19,13 +19,18 @@
 	var taskName = null;
 	var currentPage = 1;
 	var treeData = JSON.parse('${data}');
-	
+		
 	$(document).ready(function() {
+		
+		currentHeight = $(window).height()-100;
+		$("#taskTree").css("height", currentHeight + "px");
+		$("#projectContent").css("height", currentHeight + "px");
+		$("#contentList").css("height", (currentHeight - 50) + "px");
 		
 		getProjectTaskTree("taskTree", treeData, false);
 		getBoardList();
 		
-		$(".tree").on("click", ".jstree-anchor", function() {
+		$("#taskTree").on("click", ".jstree-anchor", function() {
 			taskName = $(this).text();
 			if($(this).parent().attr("id").charAt(0) == 't') { 
 				groupId = $(this).parents("li").eq(1).attr("id");
@@ -61,8 +66,7 @@
 	}
 	
 	function getBoardList() {
-		$("#list").attr("width", "1000px");
-		$("#list").load("/ezPMS/getBoardList.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId
+		$("#contentList").load("/ezPMS/getBoardList.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId
 												 + "&currentPage=" + currentPage);
 	}
 	
@@ -74,29 +78,33 @@
 </script>
 
 <style>
-.tree {
-	overflow: auto;
-	border: 1px solid silver;
-	height: auto;
-	width : 250px;
+#taskTree {
+	margin-right : 5px;
+	width : 16%;
+	overflow : auto;
+	border : 1px solid #d1d1d1;
+	float : left;
+	display : inline-block
+}
+
+#projectContent {
+	width : 83%;
+	overflow : auto;
+	border : 1px solid #d1d1d1;
+}
+
+#contentList {
+	width : 98%;
+	margin-left : 1%;
+	margin-top : 15px;
 }
 </style>
 
 </head>
-<body style="overflow: hidden;">
-	
-	<div id="taskTree" class="tree" style="float: left;"></div>
-	<div style="float: left; border: 1px solid silver; margin-left: 10px;">
-		<div id="mainmenu">
-			<ul class="on">
-				<li class="off"><span onclick="goAddBoard()">등록</span></li>
-				<li class="off"><span onclick="">삭제</span></li>
-				<li class="off"><span onclick="">이동</span></li>
-				<li class="off"><span onclick="">새로고침</span></li>
-				<li class="off"><span onclick="">검색</span></li>
-			</ul>
-		</div>
-		<span id="list"></span>
+<body>
+	<div id="taskTree"></div>
+	<div id="projectContent">
+		<div id="contentList"></div>
 	</div>
 </body>
 </html>
