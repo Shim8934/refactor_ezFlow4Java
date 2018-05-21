@@ -204,20 +204,20 @@
 	        	
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
-					resultHtml += "<tr><th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+					resultHtml += "<tr><th style='padding-left: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.lhj18' /></th></tr>";
 	    			break;
 	    		case "absent":
-	    			resultHtml += "<tr><th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<tr><th style='padding-left: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th></tr>";
 	    			break;
 	    		case "history":
-	    			resultHtml += "<tr><th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<tr><th style='padding-left: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
 	    			resultHtml += "<th style='width:500px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
@@ -310,7 +310,7 @@
 	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
-	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<td style='padding-left: 15px;'>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    						
@@ -396,7 +396,7 @@
 	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "'>";
 	    			}
 	    			
-	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<td style='padding-left: 15px;'>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			resultHtml += "<td>" + vo.startDate + "</td></tr>"
@@ -471,7 +471,7 @@
 	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' userid='" + vo.writerId + "';>";
-		   			resultHtml += "<td>" + vo.writerName + "</td>";
+		   			resultHtml += "<td style='padding-left: 15px;'>" + vo.writerName + "</td>";
 		   			resultHtml += "<td>" + vo.writerTitle + "</td>";
 		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
 		   			//일시
