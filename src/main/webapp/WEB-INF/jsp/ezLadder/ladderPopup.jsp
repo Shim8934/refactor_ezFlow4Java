@@ -112,11 +112,10 @@
 		</script>
 		<style type="text/css">
 			#userInfo {
-				height: 90px;
+				height: 216px;
 				overflow-y: auto;
 				border: 1px solid #efefef;
-				background-color: #efefef; 
-				margin-top: 6px;
+ 				margin-top: 20px;
 			}
 			#userInfo .spanWrap {
 				display: block;
@@ -126,7 +125,6 @@
 				cursor: pointer;
 			}
 			#userInfo .spanWrap:last-child {
-				border-bottom: 0;
 			}
 			.spanWrap span {
 				display: inline-block;

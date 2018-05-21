@@ -628,7 +628,7 @@
 							
 							$("#inputAttendant").blur();
 							
-							DivPopUpShow(360, 258, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
+							DivPopUpShow(380, 379, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
 							
 							var leftF = parent.frames["left"];
 							var leftH = leftF.document.getElementById("left").clientHeight > leftF.innerHeight ? leftF.document.getElementById("left").clientHeight + "px" : "100%";
