@@ -234,7 +234,7 @@
 		                                <li><span onclick="modReturn()">반려</span></li>
 	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
-	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && attitudeConfigVO.attitudeModAppl == 1 && (deptFlag != 'true')}">
+	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
 	                            		<li><span onclick="modify()">수정</span></li>
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">

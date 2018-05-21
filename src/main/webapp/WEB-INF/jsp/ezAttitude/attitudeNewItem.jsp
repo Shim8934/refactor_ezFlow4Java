@@ -281,7 +281,7 @@
 			//저장
 			function save_attitude() {
 				dateTypeCheck();
-				checkOutCom();
+				//checkOutCom();
 				
 				if (attRegCheck() && holidayAttReg == "0") {
 					if (selectType != "A07") {
@@ -305,10 +305,10 @@
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
-				if (outComFlag && selectType == 'A08') {
-					alert("<spring:message code='ezAttitude.bbhs40'/>");
-					return;
-				}
+// 				if (outComFlag && selectType == 'A08') {
+// 					alert("<spring:message code='ezAttitude.bbhs40'/>");
+// 					return;
+// 				}
 				if (inputCheck()) {
 					alert("정보를 입력해주세요.");
 					return;

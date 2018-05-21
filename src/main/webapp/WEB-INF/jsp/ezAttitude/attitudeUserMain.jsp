@@ -161,7 +161,8 @@
 					attitudeItemView(this);
 				});
 				
-				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02],tr td[typeid=A01]', function(){
+				/*
+				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02],[typeid=A01]', function(){
 					//근태수정신청은 개인근태현황에서만 가능
 					var typeid = $(this).attr('typeid');
 					var modappl = $(this).attr('modappl');
@@ -180,6 +181,7 @@
 						}
 					}
 				});
+				*/
 				
 				$(window).on("resize", function(){
 					var popupX = parent.document.body.clientWidth/2 - (883/2) - 220;
@@ -933,10 +935,34 @@
 			}
 			
 			function checkAttiModAppl(){
-				$('#attiCalendar tr td[typeid=A02],[typeid=A01]').each(function(){
-					if (!attitudeModAppl) {
-						$(this).css("cursor", "default");
-						$('#attiCalendar').off('dblclick', "tr td[typeid=A02],[typeid=A01]");
+				if (!attitudeModAppl) {
+					$('#attiCalendar tr td[typeid=A02],[typeid=A01]').each(function(){
+							if ($(this).attr("modappl") == 0) {
+								$(this).css("cursor", "default");
+							}
+					});
+				}
+				
+				$('#attiCalendar').off('dblclick', 'tr td[typeid=A02],[typeid=A01]');
+				
+				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02],[typeid=A01]', function(){
+					//근태수정신청은 개인근태현황에서만 가능
+					var typeid = $(this).attr('typeid');
+					var modappl = $(this).attr('modappl');
+					var attitudeid = $(this).attr('attitudeid');
+					if (deptFlag != "true") {
+						if (attitudeModAppl && modappl == 0 && typeid == 'A02') {
+							attitudeModItem(this);	
+						}
+						if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+							mod_detail(attitudeid);
+						}
+					} else {
+						if (modappl == 0 && typeid == 'A02') {
+							console.log(this);
+						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4){
+							mod_detail(attitudeid);
+						}
 					}
 				});
 			}

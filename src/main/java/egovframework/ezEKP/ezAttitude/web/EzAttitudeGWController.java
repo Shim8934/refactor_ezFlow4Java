@@ -251,22 +251,20 @@ public class EzAttitudeGWController {
 			String content = request.getParameter("content");
 			String dateType = request.getParameter("dateType");
 			String mode = request.getParameter("mode");
-			
+			String checkAttitude = "";
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
 			
-//			String originUserId = attitudeVO.getWriterId();
-//			String originTypeId = attitudeVO.getTypeId();
-//			String originStartDate = attitudeVO.getStartDate();
-//			String originEndDate = attitudeVO.getEndDate();
-//			String originRegion = attitudeVO.getRegion();
-//			String originMobile = attitudeVO.getMobile();
-//			String originBizSub = attitudeVO.getBizSub();
-//			String originContent = attitudeVO.getContent();
-//			String originDateType = attitudeVO.getDateType();
+			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
+				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+			}
 			
-			ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId(), info.getCompanyId());
+			if (!checkAttitude.equals("") && !checkAttitude.equals("0")) {
+				checkAttitude = "dupl";
+			} else {
+				AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
+				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId(), info.getCompanyId());
+			}
 			
 			//관리자에서 수정 했을 경우 테이블에 기록을 남긴다.
 			if (mode.equals("admin")) {
@@ -275,12 +273,11 @@ public class EzAttitudeGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
+			result.put("data", checkAttitude);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
-			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
 		return result;

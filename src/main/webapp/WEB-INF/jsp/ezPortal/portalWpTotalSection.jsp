@@ -974,11 +974,7 @@
 		    		success : function(result) {
 		    			getAttitudeList();
 		    			if (result == 'dupl') {
-		    				if (pTypeId == "A03" && !$("#outAttiBtn").hasClass("btn_disabled")) {
-		    					alert("조퇴 후 퇴근은 불가능합니다.");
-		    				} else {
-			    				alert("이미 등록되었습니다.");
-		    				}
+		    				alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
 		    			}
 		    		}
 		    	})
