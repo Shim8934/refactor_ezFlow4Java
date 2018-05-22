@@ -40,23 +40,34 @@
 					ladder_window_resize();
 				});
 				
+				var tooltip = $(".moOverTooltip");
 				var handle = $("#custom-handle");
-				$("#slider-range-min").slider({ 
-					range: "min",
-					value: 0,
-					min: 0,
-					max: 0,
-					create: function() {
-						handle.text($(this).slider("value"));
-					},
-					slide: function( event, ui ) {
-						/* $("#amount").text(ui.value); */
-						handle.text(ui.value);
-					},
-					stop: function(event, ui) {
-						lineCnt = ui.value;
-					}
-				});
+				$("#slider-range-min")
+					.slider({ 
+						range: "min",
+						value: 0,
+						min: 0,
+						max: 0,
+						create: function() {
+							handle.text($(this).slider("value"));
+						},
+						slide: function( event, ui ) {
+							/* $("#amount").text(ui.value); */
+							handle.text(ui.value);
+						},
+						stop: function(event, ui) {
+							lineCnt = ui.value;
+						}
+					})
+					.on("mouseenter", function() {
+						tooltip.html("<p><spring:message code='ezLadder.t081' /></p>").css({"display": "block", "width": tooltip.width() + "px"});
+					})
+					.on("mousemove", function() {
+						tooltip.css({"left": (event.clientX + 2) + "px", "top": (event.clientY + 2) + "px"});
+					})
+					.on("mouseleave", function() {
+						tooltip.css("display", "none");
+					});
 				
 				ladderId = "${ladderId}";
 				ladderSetInitVar(ladderId);
@@ -83,7 +94,7 @@
 						_manage_attendant();
 					})
 					.on("mouseenter", function() {
-						$("#addAttendant").css("background", "#ddeeff");
+						//$("#addAttendant").css("background", "#ddeeff");
 						$("#addAttendant img").toggle();
 					})
 					.on("mouseleave", function() {
@@ -248,12 +259,16 @@
 						bombnum = len;
 					}
 					
-					html += "<div><div style='float:right;' id='cutBomb' class='typeOpbtn' onselectstart='return false'><img src='/images/minus_ladder.png' width='35px' /></div>";
-					html += "<div style='float:right;' id='addBomb' class='typeOpbtn' onselectstart='return false'><img src='/images/plus_ladder.png' width='35px' /></div>";
+					html += "<div><div style='float:right;' id='cutBomb' class='typeOpbtn' onselectstart='return false'><div class='typeOpbtnCover'></div><img src='/images/minus_ladder.png' width='35px' /></div>";
+					html += "<div style='float:right;' id='addBomb' class='typeOpbtn' onselectstart='return false'><div class='typeOpbtnCover'></div><img src='/images/plus_ladder.png' width='35px' /></div>";
 					html += "<div id='bombnum' style='float:right;border:1px solid #ddd;border-radius:10px;padding:0px 15px;height:45px;line-height:45px;margin:1px;margin-right:5px;background:white'>" + strLang23 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang9 + "</div></div>";
+					
+					$("#ladderTypeOption").html(html);
+					setBomb();
 				} else if(ladderType == "2") {
 					$itemList.css("display", "none");
 					$tempItemList.css("display", "block");
+					$("#ladderTypeOption").html(html);
 				} else {
 					$itemList.css("display", "block");
 					$tempItemList.css("display", "none");
@@ -265,17 +280,34 @@
 						
 						html += "<div id='totalmoney' style='float: right; line-height: 45px;border:1px solid #ddd;padding:0px 15px;margin:1px;border-radius:10px;background:white'><spring:message code='ezLadder.t107' /><span style='margin: 0px 5px 0px 15px;'>" + totalmoneyStr + "</span>" + strLang24 + "</div>";
 					}
+					$("#ladderTypeOption").html(html);
 				}
-				$("#ladderTypeOption").html(html);
 			}
 			
 			var bombnum = 1;
 			function setBomb(bombadd) {
 				bombnum = Number($("#bombnum span").text());
-				if(bombadd && bombnum < $("#attendantList li").length) {
-					$("#bombnum span").html(++bombnum);
-				} else if(!bombadd && bombnum > 1) {
-					$("#bombnum span").html(--bombnum);
+				var liLen = $("#attendantList li").length;
+				var coverDiv = $(".typeOpbtnCover");
+				
+				if(typeof bombadd == "boolean") {
+					if(bombadd && bombnum < liLen) {
+						$("#bombnum span").html(++bombnum);
+					} else if(!bombadd && bombnum > 1) {
+						$("#bombnum span").html(--bombnum);
+					}
+				}
+				
+				if(liLen > 1 && liLen > bombnum) {
+					coverDiv.eq(1).removeClass("colorOpHide");
+				} else {
+					coverDiv.eq(1).addClass("colorOpHide");
+				}
+				
+				if(1 == bombnum) {
+					coverDiv.eq(0).addClass("colorOpHide")
+				} else {
+					coverDiv.eq(0).removeClass("colorOpHide")
 				}
 			}
 			
@@ -622,7 +654,13 @@
 							retAttendantPopInfo[0] = serchNameOverlapUser;
 							retAttendantPopInfo[1] = firstPopupComp;
 							
-							DivPopUpShow(360, 258, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
+							$("#inputAttendant").blur();
+							
+							DivPopUpShow(380, 379, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
+							
+							var leftF = parent.frames["left"];
+							var leftH = leftF.document.getElementById("left").clientHeight > leftF.innerHeight ? leftF.document.getElementById("left").clientHeight + "px" : "100%";
+							$(leftF.document.body).append("<div id='blockLeft' class='blockLeft' style='width:100%;height:" + leftH + ";position:absolute;top:0;z-index:10;background: rgba(0,0,0,0.5);'></div>");
 						} else {
 							showSecondOverlapPopup();
 						}
@@ -630,39 +668,23 @@
 						function firstPopupComp(retAttendants) {
 							DivPopUpHidden();
 							
-							var retLen = retAttendants["userId"].length;
-							var i = 0;
-							var removeIdx1;
-							var removeIdx2;
+							$(parent.frames["left"].document.body).find("#blockLeft").remove();
 							
-							while(true) {
-								removeIdx1 = alluser["userId"].indexOf(retAttendants["userId"][i]);
-								if(removeIdx1 != -1) {
-									alluser["userId"].splice(removeIdx1, 1);
-									alluser["userName"].splice(removeIdx1, 1);
-									alluser["userName2"].splice(removeIdx1, 1);
-									alluser["deptName"].splice(removeIdx1, 1);
-									alluser["pic"].splice(removeIdx1, 1);
-									alluser["temporder"].splice(removeIdx1, 1);
-								} else {
-									i++;
-									if(!retAttendants["userId"][i]) {
-										break;
-									}
-								}
-							}
-							if(!!overlapuser["userId"].length) {
-								i = 0;
+							if(!!retAttendants) {
+								var retLen = retAttendants["userId"].length;
+								var i = 0;
+								var removeIdx1;
+								var removeIdx2;
+								
 								while(true) {
-									removeIdx2 = overlapuser["userId"].indexOf(retAttendants["userId"][i]);
-									if(removeIdx2 != -1) {
-										overlapuser["userId"].splice(removeIdx2, 1);
-										overlapuser["userName"].splice(removeIdx2, 1);
-										overlapuser["userName2"].splice(removeIdx2, 1);
-										overlapuser["deptName"].splice(removeIdx2, 1);
-										overlapuser["pic"].splice(removeIdx2, 1);
-										overlapuser["temporder"].splice(removeIdx2, 1);
-										overlapuser["usertype"].splice(removeIdx2, 1);
+									removeIdx1 = alluser["userId"].indexOf(retAttendants["userId"][i]);
+									if(removeIdx1 != -1) {
+										alluser["userId"].splice(removeIdx1, 1);
+										alluser["userName"].splice(removeIdx1, 1);
+										alluser["userName2"].splice(removeIdx1, 1);
+										alluser["deptName"].splice(removeIdx1, 1);
+										alluser["pic"].splice(removeIdx1, 1);
+										alluser["temporder"].splice(removeIdx1, 1);
 									} else {
 										i++;
 										if(!retAttendants["userId"][i]) {
@@ -670,9 +692,29 @@
 										}
 									}
 								}
+								if(!!overlapuser["userId"].length) {
+									i = 0;
+									while(true) {
+										removeIdx2 = overlapuser["userId"].indexOf(retAttendants["userId"][i]);
+										if(removeIdx2 != -1) {
+											overlapuser["userId"].splice(removeIdx2, 1);
+											overlapuser["userName"].splice(removeIdx2, 1);
+											overlapuser["userName2"].splice(removeIdx2, 1);
+											overlapuser["deptName"].splice(removeIdx2, 1);
+											overlapuser["pic"].splice(removeIdx2, 1);
+											overlapuser["temporder"].splice(removeIdx2, 1);
+											overlapuser["usertype"].splice(removeIdx2, 1);
+										} else {
+											i++;
+											if(!retAttendants["userId"][i]) {
+												break;
+											}
+										}
+									}
+								}
+								
+								showSecondOverlapPopup();
 							}
-							
-							showSecondOverlapPopup();
 						}
 						
 						function showSecondOverlapPopup() {
@@ -739,6 +781,9 @@
 					}
 					
 					setAttendantsView();
+					if(ladderType == "0") {
+						setBomb(ladderType);
+					}
 				}
 			}
 			
@@ -913,6 +958,7 @@
 				border-radius: 15px;
 				cursor: pointer;
 				display: none;
+				background: #ffffff;
 			}
 			.default {
 				border: 1px solid #dddddd; 
@@ -925,9 +971,6 @@
 			}
 			.typeOpbtn {
 				display: inline-block;
-				/* border: 1px solid #dddddd;
-				padding: 10px 15px;
-				border-radius: 5px; */
 				padding-top:7px;
 				margin-left:3px;
 				cursor: pointer;
@@ -943,6 +986,7 @@
 				margin-top: -.8em;
 				text-align: center;
 				line-height: 1.6em;
+				cursor: pointer;
 			}	
 			.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
 				color: #000000;
@@ -951,12 +995,30 @@
 			.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
 				font-weight: normal;
 			}
+			.typeOpbtnCover {
+				background: #f8f8fa;
+				width: 35px;
+				height: 35px;
+				position: absolute;
+				opacity: 0;
+			}
+			.colorOpHide {
+				opacity: 0.8;
+			}
+			.moOverTooltip {
+				position: absolute;
+				background: #fff;
+				z-index: 20;
+				border: 1px solid #dddddd;
+				padding: 0px 20px;
+			}
 		</style>
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezLadder.t018" /></h1>
+		<div class='moOverTooltip'></div>
 		<form id="ladMakeForm" method="post" action="/ezLadder/setLadder.do" name="ladMakeForm">
-			<table class="setTable" style="min-width: 750px;">
+			<table class="setTable" style="min-width: 1000px;">
 				<tr>
 					<td>
 						<div style="height: 50px; line-height: 50px; margin-bottom: 10px; position: relative;">
@@ -970,7 +1032,7 @@
 				</tr>
 				<tr>
 					<td>
-						<div style="height: 50px; margin-bottom: 10px;padding:5px;background-color: #f8f8fa;border:1px solid #e8e8ea;">
+						<div style="height: 50px; margin-bottom: 10px;padding:5px;background-color: #f8f8fa;border:1px solid #e8e8ea;position: relative;">
 							<div style="float: left;">
 								<c:forEach begin="0" end="3" var="typenum">
 									<div class="ladderType" _num="${typenum}">
@@ -987,15 +1049,20 @@
 								<!-- <div style="height: 40px; width: 40px; line-height:40px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 3px; margin-right:15px; background-color: white">
 									<span id="amount">0</span>
 								</div> -->
-								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:90px; margin-left: 15px;">
+								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:84px; margin-left: 15px;">
 									<div id="custom-handle" class="ui-slider-handle"></div>
 								</div>
 								<input name="lineCnt" style="display: none;" />
 							</div>
-							<div style="float: right; height: 45px; line-height: 45px;margin-top:2px">
-								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" /><input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px" placeholder="<spring:message code='ezLadder.t071' />"/>
+							<div style="float: right; height: 45px;line-height: 45px;margin-top: 2px;position: relative;">
+								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" />
+								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px; padding-right: 45px;" placeholder="<spring:message code='ezLadder.t071' />"/>
+								<div id="addAttendant" title="<spring:message code='ezLadder.t080'/>">
+									<img src="/images/ezLadder/icon_addAttendant.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: inline;" />
+									<img src="/images/ezLadder/icon_addAttendant_hover.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: none;" />
+								</div>
 							</div>
-							<div id="ladderSecret" style="position: absolute; right: 15px;">
+							<div id="ladderSecret" style="position: absolute; right: 5px;">
 								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t007'/>" class="default icon" _flag="0"/>
 								<img src="/images/ezLadder/icon_private.png" title="<spring:message code='ezLadder.t076'/>" class="select icon" _flag="1"/>
 							</div>							
@@ -1015,11 +1082,11 @@
 				</tr> --%>
 				<tr>
 					<td style="position: relative; margin-top: 20px;">
-						<div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 1px solid #0470e4; border-radius: 15px; cursor: pointer;">
+						<%-- <div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 1px solid #0470e4; border-radius: 15px; cursor: pointer;">
 							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 1px; padding-top: 1px; display: block" title="<spring:message code='ezLadder.t080'/>"/>
 							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 1px; padding-top: 1px; display: none" title="<spring:message code='ezLadder.t080'/>"/>
-						</div>
-						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 750px;">
+						</div> --%>
+						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 1000px;">
 							<div style="height: 140px;">
 								<ul id="attendantList"></ul>
 							</div>
@@ -1034,7 +1101,7 @@
 				</tr>
 			</table>
 			
-			<div class="wrap" style="min-width: 800px;">
+			<div class="wrap" style="min-width: 1000px;">
 				<input type="button" class="ladderBtn" id="makeLad" value="<spring:message code="ezLadder.t018"/>">
 				<input type="button" id="backToList" style="background: #efefef; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
 			</div>

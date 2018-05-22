@@ -118,7 +118,7 @@
 				<tr>
 					<th style="font-weight: normal;"><spring:message code="ezBoard.t606" /></th>
 					<td style="height:300px;">
-						<select id="acllist" name="acllist" style="width: 99%; height: 99%; background:none; margin-left:3px; overflow-y: auto; overflow-x: auto;" size="10" onChange="selAclList_Change(this);">
+						<select id="acllist" name="acllist" style="width: 99%; height: 99%; background:none; margin-left:3px; overflow-y: auto; overflow-x: auto; padding-right:0px;" size="10" onChange="selAclList_Change(this);">
 							${strOptions}
 						</select>
 					</td>

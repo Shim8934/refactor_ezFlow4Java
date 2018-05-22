@@ -158,7 +158,7 @@
 		<div id="left">
   			<div class="left_admin"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code="ezResource.t17" /></div>
 			<div><h1 id="ToTitle" class="receiver_tltype01" style="border-bottom:0px;margin-left:8px;"><spring:message code="ezResource.t71" /></h1></div>
-    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc); height:250px; width:200px; overflow-x:auto;overflow-y:auto;
+    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc); height:250px; width:200px; overflow-x:hidden;overflow-y:auto;
     			BORDER:#eaeaea 1px solid; BACKGROUND-COLOR:white; margin-top:5px; margin-left:8px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
 				onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
 			</div>

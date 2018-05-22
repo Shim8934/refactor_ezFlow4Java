@@ -62,6 +62,7 @@
 	</head>
 	<body class="mainbody">	
 		<h1><spring:message code="ezBoard.t113"/></h1>
+		<div style="max-width:800px;">
 		<c:if test="${hasSubBoard == '1'}">		
 			<table  class="content">
 				<tr>
@@ -101,5 +102,6 @@
 			    <a class="imgbtn"><span onclick="Delete()" ><spring:message code="ezBoard.t89"/></span></a>
 			</div>
 		</c:if>
+		</div>
 	</body>
 </html>
