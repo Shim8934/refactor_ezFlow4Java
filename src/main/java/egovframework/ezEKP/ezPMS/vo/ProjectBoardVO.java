@@ -56,12 +56,34 @@ public class ProjectBoardVO {
 	// 게시자 직위 다국어
 	private String writerPosition2;
 	
-	// 업무 명(tbl_pms_item_list에는 없는 컬럼)
+	// 업무 명
 	private String taskName;
 	
-	// 그룹 명(tbl_pms_item_list에는 없는 컬럼)
+	// 그룹 명
 	private String groupName;
 	
+	// 첨부파일 경로
+	private String filePath;
+	
+	// 첨부파일 이름
+	private String fileName;
+	
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	public String getGroupName() {
 		return groupName;
 	}

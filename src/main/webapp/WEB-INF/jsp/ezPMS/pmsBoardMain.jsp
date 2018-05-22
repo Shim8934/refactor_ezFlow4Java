@@ -66,38 +66,60 @@
 	}
 	
 	function getBoardList() {
-		$("#contentList").load("/ezPMS/getBoardList.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId
-												 + "&currentPage=" + currentPage);
+		var data = {
+			projectId : projectId,
+			groupId : groupId,
+			taskId : taskId,
+			currentPage : currentPage
+		}
+		
+		console.log(projectId);
+		console.log(groupId);
+		console.log(taskId);
+		console.log(currentPage);
+		
+		$.ajax({
+			type : "POST",
+			contentType: "application/json; charset=UTF-8",
+			dataType : "html",
+			data : JSON.stringify(data),
+			url : "/ezPMS/getBoardList.do",
+			success : function(contentList) {
+				$("#contentList").html(contentList);
+			}	
+		});
+		/* $("#contentList").load("/ezPMS/getBoardList.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId
+												 + "&currentPage=" + currentPage); */
 	}
 	
 	//페이지 번호에 의한 셋팅
-	function goToPageByNum(page){
+	function goToPageByNum(page) {
 		currentPage = page;
 		getBoardList();
 	}
 </script>
 
 <style>
-#taskTree {
-	margin-right : 5px;
-	width : 16%;
-	overflow : auto;
-	border : 1px solid #d1d1d1;
-	float : left;
-	display : inline-block
-}
-
-#projectContent {
-	width : 83%;
-	overflow : auto;
-	border : 1px solid #d1d1d1;
-}
-
-#contentList {
-	width : 98%;
-	margin-left : 1%;
-	margin-top : 15px;
-}
+	#taskTree {
+		margin-right : 5px;
+		width : 16%;
+		overflow : auto;
+		border : 1px solid #d1d1d1;
+		float : left;
+		display : inline-block
+	}
+	
+	#projectContent {
+		width : 83%;
+		overflow : auto;
+		border : 1px solid #d1d1d1;
+	}
+	
+	#contentList {
+		width : 98%;
+		margin-left : 1%;
+		margin-top : 15px;
+	}
 </style>
 
 </head>

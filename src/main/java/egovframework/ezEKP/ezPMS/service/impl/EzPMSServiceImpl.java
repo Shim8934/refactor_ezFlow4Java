@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezPMS.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,10 +13,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -1001,9 +1007,86 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 //	by mslim
 	@Override
-	public void addBoard(ProjectBoardVO vo) {
+	@Transactional
+	public void addBoard(JSONObject jsonParam, String realPath) throws Exception {
 		LOGGER.debug("[SERVICE] addBoard Started");
+		
+		int tenantId = (int)jsonParam.get("tenantId");
+		int projectId = Integer.parseInt((String) jsonParam.get("projectId"));
+		
+		ProjectBoardVO vo = new ProjectBoardVO();
+		vo.setTenantId(tenantId);
+		vo.setWriterId((String) jsonParam.get("writerId"));
+		vo.setWriteDate((String) jsonParam.get("writeDate"));
+		vo.setWriterName((String) jsonParam.get("writerName"));
+		vo.setWriterName2((String) jsonParam.get("writerName2"));
+		vo.setWriterDeptName((String) jsonParam.get("writerDeptname"));
+		vo.setWriterDeptName2((String) jsonParam.get("writerDeptname2"));
+		vo.setTitle((String) jsonParam.get("title"));
+		vo.setWriteContent((String) jsonParam.get("writeContent"));
+		vo.setWriteType((int) jsonParam.get("writeType"));
+		vo.setReadCount(0);
+		vo.setGroupId(Long.parseLong((String) jsonParam.get("groupId")));
+		if(!jsonParam.get("taskId").equals("null")) {
+			vo.setTaskId(Long.parseLong((String) jsonParam.get("taskId")));
+		}
+		vo.setWriterPosition((String) jsonParam.get("writerPosition"));
+		vo.setWriterPosition2((String) jsonParam.get("writerPosition2"));
+		vo.setWriteOverview((String) jsonParam.get("writeOverview"));
+		
 		ezPMSDAO.addBoard(vo);
+		
+		String fileList = jsonParam.get("fileList").toString();
+		
+		// 첨부파일 저장
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		String pDirPath = "";
+		
+		if (fileList != null && !fileList.equals("")) {
+			
+			pDirPath = commonUtil.getUploadPath("upload_project.ROOT", tenantId);
+			pDirPath = realPath + pDirPath;
+			
+			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+				pDirPath = pDirPath + commonUtil.separator;
+			}
+			
+			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile");
+			
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			
+			String[] attach = fileList.split("/");
+			
+			attachMap.put("tenantId", tenantId);
+			
+			for (int i = 0; i < attach.length; i++) {
+				String[] files = attach[i].split(":");
+				String filePath = files[0];
+				String fileName = files[1];
+				String fileSize = files[2];
+				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+				
+				LOGGER.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
+				
+				String uploadFilePath = commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+			
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", uploadFilePath);
+				
+				ezPMSDAO.insertProjectAttach(attachMap);
+				
+				try {
+					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		LOGGER.debug("[SERVICE] addBoard Ended");
 	}
 
@@ -1043,5 +1126,29 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("getProgressProject Ended");
 		return projectList;
+	}
+
+	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
+		LOGGER.debug("fileMove started.");
+		LOGGER.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
+		
+		File srcFile = new File(beforeFilePath);
+		File destFile = new File(afterFilePath);
+		
+		try {
+			boolean rename = srcFile.renameTo(destFile);
+			if (!rename) {
+				FileUtils.copyFile(srcFile, destFile);
+				if (!srcFile.delete()) {
+					FileUtils.deleteQuietly(destFile);
+					throw new IOException("Failed to delete original file '" + srcFile +
+							"' after copy to '" + destFile + "'");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("fileMove ended.");
 	}
 }

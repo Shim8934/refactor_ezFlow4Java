@@ -58,33 +58,15 @@ public class EzPMSGWController3 {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/boards", method = RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject addBoard(HttpServletRequest request) {
+	public JSONObject addBoard(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards] started");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
-			ProjectBoardVO projectBoardVO = new ProjectBoardVO();
-			projectBoardVO.setTenantId(Integer.parseInt(request.getParameter("tenantId")));
-			projectBoardVO.setWriterId(request.getParameter("writerId"));
-			projectBoardVO.setWriteDate(request.getParameter("writeDate"));
-			projectBoardVO.setWriterName(request.getParameter("writerName"));
-			projectBoardVO.setWriterName2(request.getParameter("writerName2"));
-			projectBoardVO.setWriterDeptName(request.getParameter("writerDeptname"));
-			projectBoardVO.setWriterDeptName2(request.getParameter("writerDeptname2"));
-			projectBoardVO.setTitle(request.getParameter("title"));
-			projectBoardVO.setWriteContent(request.getParameter("writeContent"));
-			projectBoardVO.setWriteType(Integer.parseInt(request.getParameter("writeType")));
-			projectBoardVO.setReadCount(0);
-			projectBoardVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
-			if(!request.getParameter("taskId").equals("null")) {
-				projectBoardVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
-			}
-			projectBoardVO.setWriterPosition(request.getParameter("writerPosition"));
-			projectBoardVO.setWriterPosition2(request.getParameter("writerPosition2"));
-			projectBoardVO.setWriteOverview(request.getParameter("writeOverview"));
+			String realPath = commonUtil.getRealPath(request);
 			
-			ezPMSService.addBoard(projectBoardVO);
+			ezPMSService.addBoard(jsonParam, realPath);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -111,12 +93,13 @@ public class EzPMSGWController3 {
 	
 			Long groupId = -1L;
 			Long taskId = -1L;
-			if(!request.getParameter("groupId").equals("null")) {
-				groupId = Long.parseLong(request.getParameter("groupId"));
+			if(request.getParameter("groupId")!=null && !request.getParameter("groupId").equals("")) {
+				groupId = Long.parseLong(request.getParameter("groupId"));	
 			} 
-			if(!request.getParameter("taskId").equals("null")) {
-				taskId = Long.parseLong(request.getParameter("taskId"));
+			if(request.getParameter("taskId")!=null && !request.getParameter("taskId").equals("")) {
+				taskId = Long.parseLong(request.getParameter("taskId"));	
 			}
+			
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int limit = Integer.parseInt(request.getParameter("limit"));
 			
@@ -147,11 +130,11 @@ public class EzPMSGWController3 {
 			
 			Long groupId = -1L;
 			Long taskId = -1L;
-			if(!request.getParameter("groupId").equals("null")) {
-				groupId = Long.parseLong(request.getParameter("groupId"));
+			if(request.getParameter("groupId")!=null && !request.getParameter("groupId").equals("")) {
+				groupId = Long.parseLong(request.getParameter("groupId"));	
 			} 
-			if(!request.getParameter("taskId").equals("null")) {
-				taskId = Long.parseLong(request.getParameter("taskId"));
+			if(request.getParameter("taskId")!=null && !request.getParameter("taskId").equals("")) {
+				taskId = Long.parseLong(request.getParameter("taskId"));	
 			}
 			
 			int totalCount = ezPMSService.getBoardListCount(info.getTenantId(), Long.parseLong(projectId), groupId, taskId);
@@ -178,6 +161,9 @@ public class EzPMSGWController3 {
 		
 		JSONParser jp = new JSONParser();
 		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+		
+		String uploadPathName = "uploadFile";
+		String tempUploadPathName = "tempUploadFile";
 		
 		try {
 			JSONArray fileArray = new JSONArray();
@@ -245,10 +231,15 @@ public class EzPMSGWController3 {
 	        	pDirPath = pDirPath + commonUtil.separator;
 	        }
 	        
-	        File file = new File(pDirPath + "uploadFile");
+	        File file = new File(pDirPath + uploadPathName);
+	        File tempFile = new File(pDirPath + tempUploadPathName);
 
 	        if (!file.exists()) {
 	        	file.mkdirs();
+	        }
+	        
+	        if (!tempFile.exists()) {
+	        	tempFile.mkdir();
 	        }
 	        
 	        for (int i = 0; i < cnt; i++) {
@@ -264,12 +255,12 @@ public class EzPMSGWController3 {
                     if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {
                         resultUpload[i] = "denied";
                     } else {
-                        String pAttachPath = pDirPath + "uploadFile" + commonUtil.separator;
+                        String pAttachPath = pDirPath + tempUploadPathName + commonUtil.separator;
                         
                         // 업로드된 파일 데이터를 파일로 저장한다.
                         uploadFile((String)((JSONObject)fileArray.get(i)).get("bytes"), newFileName, pAttachPath);
                         
-                        fileLocation[i] = commonUtil.getUploadPath("upload_project.ROOT", info.getTenantId()) + commonUtil.separator + "uploadFile" + commonUtil.separator + pUploadSN[i];
+                        fileLocation[i] = commonUtil.getUploadPath("upload_project.ROOT", info.getTenantId()) + commonUtil.separator + tempUploadPathName + commonUtil.separator + pUploadSN[i];
                         resultUpload[i] = "true";
                     }
 	            }
@@ -299,6 +290,55 @@ public class EzPMSGWController3 {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] ended.");
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezPMS/attachfiles", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	public JSONObject deleteFile(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_project.ROOT", info.getTenantId());
+			String filePath = request.getParameter("filePath");
+			String fileList = request.getParameter("fileList");
+			
+			LOGGER.debug("pDirPath : " + pDirPath + " | fileList : " + fileList);
+			
+			if (fileList.length() != 0) {
+				String[] data = fileList.split("/"); 
+				
+				for (int i=0; i<data.length; i++) {
+					String sGUID = data[i].split(":")[0];
+					String fileName = data[i].split(":")[1];
+					String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+					LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
+					
+					File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
+					
+					file.delete();
+				}			
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] ended.");
+		return result;
+	}
+	
+	
+	
+	
 	
 	/**
      * 첨부파일을 서버에 저장한다.

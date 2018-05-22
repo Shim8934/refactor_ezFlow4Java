@@ -279,5 +279,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		// TODO Auto-generated method stub
 		return (List<ProjectInfoVO>) list("EzPMSDAO.getProgressProject", map);
 	}
+
+	public void insertProjectAttach(Map<String, Object> attachMap) {
+		insert("EzPMSDAO.insertProjectAttach", attachMap);
+	}
 	
 }
