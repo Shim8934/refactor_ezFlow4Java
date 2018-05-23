@@ -67,7 +67,7 @@
 			}
 		</style>
 	</head>
-<body class="leftbody">
+<body class="leftbody" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
 	<div class="left_pims" title="근태관리"><span>근태관리</span></div>
 <!-- 	<article class="time"> -->
 <%-- 		<p class="title"><spring:message code='main.t00023' /></p> --%>
