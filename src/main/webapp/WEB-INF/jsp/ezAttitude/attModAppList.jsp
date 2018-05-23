@@ -1265,10 +1265,8 @@
 			</table>
 		</c:if>
         <ul id="tb_Parent">
-        <c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
-			<li id="appr"><span onClick="modApprove()">승인</span></li>
-        	<li id="ret"><span onClick="modReturn()">반려</span></li>
-		</c:if>
+		<li id="appr"><span onClick="modApprove()">승인</span></li>
+       	<li id="ret"><span onClick="modReturn()">반려</span></li>
 		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
 			<li><span onClick="attList_del()">삭제</span></li>
 		</c:if>
@@ -1284,10 +1282,7 @@
 					<option value="ALL" selected>전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
-<%-- 							<c:if test="${selectedDeptID == dept.deptId}"> --%>
-<%-- 								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option> --%>
-<%-- 							</c:if> --%>
-							<c:if test="${selectedDeptID != dept.deptId}">
+							<c:if test="${dept.authType == 'M'}">
 								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
 							</c:if>
 						</c:if>										

@@ -1166,7 +1166,9 @@ public class EzAttitudeGWController {
 					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
-						deptIdList.add(vo.getDeptId());
+						if (vo.getAuthType().equals("M")) {
+							deptIdList.add(vo.getDeptId());
+						}
 					}
 				}
 			}
@@ -1242,7 +1244,9 @@ public class EzAttitudeGWController {
 					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
-						deptIdList.add(vo.getDeptId());
+						if (vo.getAuthType().equals("M")) {
+							deptIdList.add(vo.getDeptId());
+						}
 					}
 				}
 			}
