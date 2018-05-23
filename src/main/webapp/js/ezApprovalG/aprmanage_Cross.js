@@ -944,6 +944,7 @@ function openViewDocInfo(type) {
     var pArgument = new Array();
     var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     pArgument[0] = DocID;
     pArgument[1] = formURL;
@@ -1003,6 +1004,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&isOpinion=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
+        openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
     }
     openwindow(openLocation, "", 880, 570);
 }

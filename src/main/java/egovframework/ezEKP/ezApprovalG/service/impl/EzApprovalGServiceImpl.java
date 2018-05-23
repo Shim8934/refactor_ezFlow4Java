@@ -18123,6 +18123,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<DATA6>" + "" + "</DATA6>");
 						resultXML.append("<DATA7>" + "" + "</DATA7>");
 						resultXML.append("<DATA8>" + "" + "</DATA8>");
+						resultXML.append("<orgCompanyID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></orgCompanyID>");
 					}
 					
 					if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals(staDSSuSin) && !listType.equals("3")) {
