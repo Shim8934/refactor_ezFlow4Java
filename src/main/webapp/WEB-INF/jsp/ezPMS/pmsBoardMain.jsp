@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
+<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -53,16 +53,9 @@
 	});
 	
 	function goAddBoard() {
-	
-		// 중앙에 뜨게 하고 싶은데 잘 안됨
-		var height = window.screen.availHeight;
-	    var width = window.screen.availWidth;
-	    var top = (height - 820) / 2;
-	    var left = (width - 790) / 2;
-		
 		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&groupId=" + groupId 
 										 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=new", 
-					"", "width=790, height=820, resizable=no, scrollbars=no, status=no, top=" + top + ", left=" + left + ";");
+					"", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
 	}
 	
 	function getBoardList() {
@@ -88,8 +81,6 @@
 				$("#contentList").html(contentList);
 			}	
 		});
-		/* $("#contentList").load("/ezPMS/getBoardList.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId
-												 + "&currentPage=" + currentPage); */
 	}
 	
 	//페이지 번호에 의한 셋팅

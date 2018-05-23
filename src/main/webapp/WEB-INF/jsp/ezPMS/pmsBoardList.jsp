@@ -6,9 +6,24 @@
 <script>
 	$(function() {
 		$("#divList").css("height", (currentHeight - 100) + "px");
+		
+		$("tbody tr td:not(.checkbox)").on("click", function(evt) {
+			var checkbox = $(this).parent().children("td:eq(0)").children();
+			$('input:checkbox[name="boardCheckbox"]').each(function() {
+				$(this).removeProp("checked","true");
+				$(this).parent().parent().removeClass("selectedTR");
+			});
+			
+			checkbox.prop("checked", "true");
+			selectTR(checkbox);
+		});
+		
+		$("tbody tr").on("dblclick", function() {
+			goBoardDetail(this);
+		});
 	})
 	
-	//체크박스 전체선택 혹은 해제
+	// 체크박스 전체선택 혹은 해제
 	function selectAllTR(elem) {
 		if($(elem).is(":checked")) {
 			 $('input:checkbox[name="boardCheckbox"]').each(function() {
@@ -22,6 +37,20 @@
 			 });
 		}
 	}
+	
+	function selectTR(elem) {
+		if($(elem).is(":checked")) {
+			$(elem).parent().parent().addClass("selectedTR");
+		} else {
+			$(elem).parent().parent().removeClass("selectedTR");
+		}
+	}
+	
+	// 게시판 상세 화면
+	function goBoardDetail(elem) {
+		var itemId = $(elem).attr("data-itemId");
+		window.open("/ezPMS/getBoardDetail.do?itemId=" + itemId, "", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
+	}
 </script>
 	
 <style>
@@ -31,6 +60,10 @@
 	
 	tbody tr {
 		cursor: pointer;
+	}
+	
+	tr.noView td {
+		font-weight: bold;
 	}
 </style>
 <div id="divList" style="width: 100%;">
@@ -58,9 +91,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${data}" var="projectBoardVO">	
-				<tr>
-					<td><input type="checkbox" name="boardCheckbox"></td>
+			<c:forEach items="${data}" var="projectBoardVO">
+				<c:choose>
+					<c:when test="${projectBoardVO.readOrNot eq true}">
+						<tr data-itemId="${projectBoardVO.itemId}">
+					</c:when>
+					<c:otherwise>
+						<tr class="noView" data-itemId="${projectBoardVO.itemId}">
+					</c:otherwise>
+				</c:choose>
+					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
 					<td>${projectBoardVO.itemId}</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.fileName eq null}">
@@ -70,7 +110,7 @@
 							<td><img src="/images/newAttach.gif"></td>
 						</c:otherwise>
 					</c:choose>	
-					<td>${projectBoardVO.title}</td>
+						<td id="asdf">${projectBoardVO.title}</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.taskName eq null}">
 							<td>${projectBoardVO.groupName}</td>
@@ -90,7 +130,7 @@
 </div>
 <c:choose>
 	<c:when test="${paging.endPage>0 }">
-		<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
+		<div style="width:470px; margin:6px auto; font-size:0">
 			<div class="pagenavi">
 				<c:choose>
 					<c:when test="${paging.currentPage gt 1}">
@@ -140,7 +180,7 @@
 		</div>
 	</c:when>
 	<c:otherwise>
-		<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
+		<div style="width:470px; margin:6px auto; font-size:0">
 			<div class="pagenavi">  
 				<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
 				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>

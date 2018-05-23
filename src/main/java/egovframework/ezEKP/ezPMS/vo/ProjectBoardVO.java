@@ -62,26 +62,27 @@ public class ProjectBoardVO {
 	// 그룹 명
 	private String groupName;
 	
-	// 첨부파일 경로
-	private String filePath;
+	// 핸드폰 번호
+	private String mobileNumber;
 	
-	// 첨부파일 이름
-	private String fileName;
+	// 조회 여부
+	private boolean readOrNot = false;
 	
-	public String getFilePath() {
-		return filePath;
+	
+	public String getMobileNumber() {
+		return mobileNumber;
 	}
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public boolean isReadOrNot() {
+		return readOrNot;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setReadOrNot(boolean readOrNot) {
+		this.readOrNot = readOrNot;
 	}
 
 	public String getGroupName() {

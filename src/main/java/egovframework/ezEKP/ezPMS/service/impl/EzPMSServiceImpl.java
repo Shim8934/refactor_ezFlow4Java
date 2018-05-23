@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -1080,7 +1081,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setWriterPosition2((String) jsonParam.get("writerPosition2"));
 		vo.setWriteOverview((String) jsonParam.get("writeOverview"));
 		
-		ezPMSDAO.addBoard(vo);
+		int last_insert_id = ezPMSDAO.addBoard(vo);
 		
 		String fileList = jsonParam.get("fileList").toString();
 		
@@ -1120,6 +1121,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
 				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
 			
+				attachMap.put("last_insert_id", last_insert_id);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
@@ -1137,7 +1139,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, int startRow, int limit) {
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -1146,20 +1148,48 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("taskId", taskId);
 		map.put("startRow", startRow);
 		map.put("limit", limit);
+		
+		List<ProjectBoardVO> boardList = ezPMSDAO.getBoardList(map);
+		
+		for(ProjectBoardVO boardVO : boardList) {
+			map = new HashMap<String, Object>();
+			map.put("userId", userId);
+			map.put("itemId", boardVO.getItemId());
+			
+			if(ezPMSDAO.checkReadBoardOrNot(map) != -1) {
+				boardVO.setReadOrNot(true);
+			}
+		}
+		
 		LOGGER.debug("[SERVICE] getBoardList Ended");
-		return ezPMSDAO.getBoardList(map);
+		return boardList;
 	}
 
 	@Override
 	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId) {
 		LOGGER.debug("[SERVICE] getBoardListCount Started");
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
 		map.put("taskId", taskId);
 		LOGGER.debug("[SERVICE] getBoardListCount Ended");
 		return ezPMSDAO.getBoardListCount(map);
+	}
+	
+	@Transactional
+	@Override
+	public ProjectBoardVO getBoardDetail(int tenantId, int itemId, String userId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		System.out.println(tenantId);
+		System.out.println(itemId);
+		System.out.println(userId);
+		
+		map.put("tenantId", tenantId);
+		map.put("itemId", itemId);
+	
+		return ezPMSDAO.getBoardDetail(map);
 	}
 	
 	@Override

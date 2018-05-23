@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -39,7 +38,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @RestController
 public class EzPMSGWController3 {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSGWController2.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSGWController3.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -103,7 +102,7 @@ public class EzPMSGWController3 {
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int limit = Integer.parseInt(request.getParameter("limit"));
 			
-			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, startRow, limit);
+			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, startRow, limit);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -336,7 +335,32 @@ public class EzPMSGWController3 {
 		return result;
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/boards/{itemId}", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getBoardDetail(@PathVariable int itemId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			ProjectBoardVO boardVO = ezPMSService.getBoardDetail(info.getTenantId(), itemId, userId);
+			
+			result.put("data", boardVO);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards] ended.");
+		return result;
+	}
 	
 	
 	

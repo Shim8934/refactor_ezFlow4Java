@@ -15,6 +15,12 @@
 	var treeData = JSON.parse('${data}');
 	$(document).ready(function() {
 		getProjectTaskTree("taskTree", treeData, false);
+		
+		$("#taskTree").on("dblclick", ".jstree-anchor", function(evt) {
+			evt.preventDefault();
+			evt.stopPropagation();
+			register();
+		});
 	});
 	
 	function register() {
