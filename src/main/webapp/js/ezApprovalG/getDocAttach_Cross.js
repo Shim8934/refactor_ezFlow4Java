@@ -65,7 +65,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 		url : "/ezApprovalG/getTotalAttachInfo.do",
 		data : {
 			docID : tempDocID,
-			mode : INGFlag
+			mode : INGFlag,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

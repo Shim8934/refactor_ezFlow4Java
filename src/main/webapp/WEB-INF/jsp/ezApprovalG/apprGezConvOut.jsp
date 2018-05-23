@@ -72,7 +72,8 @@
 	        var logoName = "";
 	        var pAprType = "";
 	        var tempAttachSN = 0;
-	
+	        var orgCompanyID = "";
+	        
 		    window.onload = function () {
 		
 		    }

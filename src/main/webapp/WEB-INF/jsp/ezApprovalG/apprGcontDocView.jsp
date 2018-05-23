@@ -63,6 +63,7 @@
 		    var docState = "${docState}";
 		    var WhoKyulCNT = "${whoKyulCount}";
 		    var checkPwdFlag = "${checkPwdFlag}";
+		    var orgCompanyID = "";
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {

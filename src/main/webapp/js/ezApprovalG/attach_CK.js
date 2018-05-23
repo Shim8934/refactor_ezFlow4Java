@@ -10,7 +10,8 @@ function InitAttach(pDocID) {
 		async : false,
 		url : "/ezApprovalG/attachRequest.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

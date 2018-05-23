@@ -332,7 +332,8 @@ function SaveFile() {
     		url : "/ezApprovalG/saveFile.do",
     		data : {
     			docID : pDocID,
-    			html  : mhtBody
+    			html  : mhtBody,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(text){
     			result = text;

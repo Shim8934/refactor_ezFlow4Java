@@ -155,7 +155,8 @@ function AttachList() {
 		async : false,
 		url : "/ezApprovalG/getAttachInfo.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

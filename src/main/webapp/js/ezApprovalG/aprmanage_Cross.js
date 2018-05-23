@@ -2115,10 +2115,12 @@ function selFirstRow(Resultxml) {
 
         pDocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
+        orgCompanyID = tr.getAttribute("ORGCOMPANYID");
     }
     else {
         pDocID = "";
         pURL = "";
+        orgCompanyID = "" ;
     }
 
     switch (pDocInfoValue) {
@@ -2159,7 +2161,8 @@ function getDataInfo(jobState) {
         		url : "/ezApprovalG/getTotalAttachInfo.do",
         		data : {
         				docID : pDocID,
-        				flag  : pFlag
+        				flag  : pFlag,
+        				orgCompanyID : orgCompanyID
         				},
         		success: function(xml){
         			getdoclistSub_after(xml);

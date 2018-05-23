@@ -59,6 +59,7 @@
 			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var totalSize = 0;
+			var orgCompanyID = "${orgCompanyID}";
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
