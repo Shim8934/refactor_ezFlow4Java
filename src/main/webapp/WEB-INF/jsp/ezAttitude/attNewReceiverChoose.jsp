@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title><spring:message code='ezEmail.t572' /></title>
+	    <title>근태입력대상 설정</title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -213,7 +213,6 @@
 // 	                treeView.SetNodeClick("TreeViewNodeClick");
 // 	                treeView.DataSource(xmlTree);
 // 	                treeView.DataBind("TreeView");
-					console.log($("h2#"+deptid).length);
 					if ($("h2#"+deptid).length > 0) {
 						$("h2#"+deptid).click();
 					}else {
@@ -227,6 +226,7 @@
 	            catch (ErrMsg) {
 	                alert(" TreeViewinitialize : " + ErrMsg.description);
 	            }
+	            
                 var arrayDept = $("#TreeView div.node_div");
 	            
 	            if (type == "config") {
@@ -272,8 +272,6 @@
 // 	                    document.getElementById("h1Title").textContent = " <spring:message code='ezEmail.t99000080' />";
 // 	                else
 // 	                    document.getElementById("h1Title").innerText = " <spring:message code='ezEmail.t99000080' />";
-	
-	                document.title = " <spring:message code='ezEmail.t99000080' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "none";
 	                document.getElementById("contactTabButton").style.display = "none";
@@ -287,6 +285,7 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
+	                
 	            }
 	            else {
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
@@ -681,7 +680,7 @@
 	                    var strName = document.getElementById(listContentArry[0]).getAttribute("_data10");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    alert("근태입력대상을 선택해주세요.");
 	                    return;
 	                }
 	            }
