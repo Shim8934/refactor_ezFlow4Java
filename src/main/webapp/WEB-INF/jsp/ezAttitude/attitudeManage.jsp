@@ -727,6 +727,7 @@
     			searchEndDate = $("#Edatepicker").val();
 	    		searchUserName = $("#searchUserName").val();
 	    		searchTitle = $("#searchTitle").val();
+	    		searchAttitudeType = $("#searchAttitudeType").val();
 	    		
 	        	goToPageByNum(1);
 	        	getList();
@@ -737,6 +738,7 @@
 	    		$("#searchTitle").val("");
 	        	$("#Sdatepicker").datepicker('setDate', initSearchStartDate);
 				$("#Edatepicker").datepicker('setDate', initSearchEndDate);
+	        	$("#searchAttitudeType option:eq(0)").prop("selected", true);
 	        	
 				search();
 	        }
