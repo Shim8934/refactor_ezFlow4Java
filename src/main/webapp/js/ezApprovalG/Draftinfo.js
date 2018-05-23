@@ -452,7 +452,8 @@ function TreeViewCodeNodeClick() {
     	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
     	data : {
     			sCateCode : code,
-    			userFlag  : "2"
+    			userFlag  : "2",
+    			orgCompanyID : orgCompanyID
     			},
     	success : function(text) {
     		result = text;
