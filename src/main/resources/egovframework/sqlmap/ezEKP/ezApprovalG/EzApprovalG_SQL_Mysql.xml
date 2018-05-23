@@ -4789,8 +4789,8 @@
       				TBL_APRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
-<!--       		AND -->
-<!--       				TBL_APRDOCINFO.COMPANYID = #companyID# -->
+      		AND 
+       				TBL_APRDOCINFO.COMPANYID = #companyID# 
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="CHAMJOAPR">
 			SELECT 
@@ -4809,8 +4809,8 @@
       				TBL_APRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
-<!--       		AND -->
-<!--       				TBL_APRDOCINFO.COMPANYID = #companyID# -->
+      		AND 
+     				TBL_APRDOCINFO.COMPANYID = #companyID# 
 		</isEqual>
 		
 		<isNotEqual  property="v_MODE" compareValue="APR">
@@ -4831,8 +4831,8 @@
       				TBL_ENDAPRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-<!--       	 	AND		 -->
-<!--       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID# -->
+       	 	AND		 
+      	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -4854,8 +4854,8 @@
       				TBL_ENDAPRDOCINFO.DOCID = #beforeDocID#
       		AND
       				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-<!--       	 	AND		 -->
-<!--       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID# -->
+    	 	AND		 
+       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
 		</isEqual>
 	</select>
 	
