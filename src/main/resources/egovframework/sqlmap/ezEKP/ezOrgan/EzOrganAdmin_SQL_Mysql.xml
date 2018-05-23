@@ -2105,9 +2105,9 @@
 	    <![CDATA[
 	    	INSERT INTO
 	    		TBL_ATTITUDE_CONF
-	    			(COMPANY_ID, TENANT_ID, CONF_SET_DATE)
+	    			(COMPANY_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, CLOSED_DAY, ATTITUDE_MOD_APPL, CLOSED_DATE_ATTITUDE, CONF_SET_DATE)
 	    	VALUES
-	    			(#companyID#, #tenantID#, #nowDate#)
+	    			(#companyID#, #tenantID#, '09:00', '18:00', '1,0,0,0,0,0,1', '1', '1', #nowDate#)
 	    ]]>
     </insert>
     
@@ -2133,7 +2133,7 @@
 		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', 1, null, 'A05', 4),
 		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', 1, null, 'A05', 9),
 		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', 1, null, 'A05', 9),
-		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave, 1, null, 'A05', 9),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', 1, null, 'A05', 9),
 		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', 1, null, 'A05', 4),
 		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', 1, null, 'A05', 9),
 		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', 1, null, 'A05', 9),
@@ -2162,7 +2162,7 @@
 		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', 1, null, 'A05', 4),
 		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', 1, null, 'A05', 9),
 		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', 1, null, 'A05', 9),
-		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave, 1, null, 'A05', 9),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', 1, null, 'A05', 9),
 		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', 1, null, 'A05', 4),
 		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', 1, null, 'A05', 9),
 		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', 1, null, 'A05', 9),
