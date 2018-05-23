@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPMS.service.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -105,6 +106,25 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					} else if (project.getStatus().equals("D")) {
 						projectList.get(i).setStatus("삭제");
 					}
+					
+					//각 개수
+					map.put("status", "A");
+					map.put("projectId", project.getProjectId());
+					map.put("isMyTask", "A");
+					
+					int totalTaskCount = ezPMSDAO.getTaskListCount(map);
+					
+					map.remove("status");
+					map.put("status", "C");
+					int completeTaskCount = ezPMSDAO.getTaskListCount(map);
+					
+					map.remove("status");
+					map.put("status", "L");
+					int lateTaskCount = ezPMSDAO.getTaskListCount(map);
+					
+					projectList.get(i).setTotalTaskCount(totalTaskCount);
+					projectList.get(i).setCompleteTaskCount(completeTaskCount);
+					projectList.get(i).setLateTaskCount(lateTaskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -978,7 +998,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateProjectRealDate(Long projectId, int tenantId, String changeDate, String status) {
+	public void updateProjectRealDate(Long projectId, int tenantId, String changeDate, String status, String planEndDate) {
 		LOGGER.debug("[SERVICE] updateProjectRealDate Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -987,12 +1007,25 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("status", status);
 		map.put("progress", 100);
 		
+		try {
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(planEndDate);
+			Date today = new Date();
+			String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
+			int restDueday = getWorkinDays(now, endDate);
+			
+			map.put("restDueday", restDueday);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 		ezPMSDAO.updateProjectRealDate(map);
 		LOGGER.debug("[SERVICE] updateProjectRealDate Ended");
 	}
 
 	@Override
-	public void completeAllTasks(long projectId, int tenantId, String realEndDate) {
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate) {
 		LOGGER.debug("[SERVICE] completeAllTasks Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -1000,6 +1033,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("realEndDate", realEndDate);
 		map.put("status", "C");
 		map.put("progress", 100);
+
+		try {
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(planEndDate);
+			Date today = new Date();
+			String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
+			int restDueday = getWorkinDays(now, endDate);
+			
+			map.put("restDueday", restDueday);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		
 		ezPMSDAO.completeAllTasks(map);
 		LOGGER.debug("[SERVICE] completeAllTasks Started");

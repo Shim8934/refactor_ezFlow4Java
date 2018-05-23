@@ -358,7 +358,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType) {
 				break;
 			case "W" :
 				taskStatus = "대기";
-				statusColor = "grey";
+				statusColor = "#d1d1d1";
 				break;
 			case "L" :
 				taskStatus = "지연";
@@ -550,6 +550,7 @@ function setOverviewContent() {
 	padding : 5px;
 	border-right : 1px solid #d1d1d1;
 }
+
 #overviewArea {
 	width : 20%;
 	overflow : auto;

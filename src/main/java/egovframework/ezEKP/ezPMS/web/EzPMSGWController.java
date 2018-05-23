@@ -313,7 +313,7 @@ public class EzPMSGWController {
 	//프로젝트 상태 변경
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/status", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject udpateProjectStatus(@PathVariable String projectId, HttpServletRequest request) throws Exception {
+	public JSONObject updateProjectStatus(@PathVariable String projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/status] started.");
 		
 		JSONObject result = new JSONObject();
@@ -344,6 +344,8 @@ public class EzPMSGWController {
 			}
 			
 			if (roleCheck.equals("")) {
+				roleCheck = "permitted";
+				
 				for (int i = 0; i < projectIdList.length; i++) {
 					ProjectInfoVO project = ezPMSService.getProjectDetails(Long.parseLong(projectIdList[i]), userId, info.getTenantId(), "new", info.getLang(), deptId);
 					String planEndDate = project.getPlanEndDate();
@@ -351,17 +353,14 @@ public class EzPMSGWController {
 					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(), changeDate, planEndDate);	
 					
 					if (nowStatus.equals("W") && status.equals("P")) {
-						System.out.println(status);
-						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status);
+						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status, planEndDate);
 					}
 					
 					if (status.equals("C")) {
-						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status);
-						ezPMSService.completeAllTasks(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate);
+						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status, planEndDate);
+						ezPMSService.completeAllTasks(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, planEndDate);
 					}
 				}
-				
-				roleCheck = "permitted";
 			}
 			
 			result.put("status", "ok");

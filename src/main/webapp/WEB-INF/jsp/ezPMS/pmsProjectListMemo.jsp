@@ -33,10 +33,37 @@ $(function(){
 		var json = new Object();
 		json.projectId = "${project.projectId}";
 		json.progress = "${project.progress}";
+		json.totalTaskCount = "${project.totalTaskCount}";
+		json.completeTaskCount = "${project.completeTaskCount}";
+		json.lateTaskCount = "${project.lateTaskCount}";
+		json.status = "${project.status}";
 		projectList.push(json);
 	</c:forEach>
 	
 	for (var i = 0; i < projectList.length; i++) {
+		if (projectList[i].status == "진행") {
+		 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
+		} else if (projectList[i].status == "완료") {
+			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", completeColor);
+		} else if (projectList[i].status == "보류") {
+			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", holdColor);
+		} else if (projectList[i].status == "지연") {
+			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", overdueColor);
+		} else {
+			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#d1d1d1");
+		}
+		
+		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
+		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
+		
+		if (isNaN(completeTaskPercent)) {
+			completeTaskPercent = 0;
+		}
+		
+		if (isNaN(lateTaskPercent)) {
+			lateTaskPercent = 0;
+		}
+		
 		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
 			fillBackgroundColor : progressColor,
@@ -46,7 +73,7 @@ $(function(){
 		});
 		
 		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
+			percentage : completeTaskPercent,
 			fillBackgroundColor : completeColor,
 			height : '15px',
 			radius : '15px',
@@ -54,7 +81,7 @@ $(function(){
 		});
 		
 		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
+			percentage : lateTaskPercent,
 			fillBackgroundColor : overdueColor,
 			height : '15px',
 			radius : '15px',
@@ -108,10 +135,7 @@ $(function(){
 					</th>
 				</tr>
 				<tr onclick="selectedMemoTR(this);">
-					<td colspan="2">&nbsp;&nbsp;<c:out value="${project.status }" /></td>
-				</tr>
-				<tr>
-					<td colspan="2">&nbsp;</td>
+					<td colspan="2" style="height:32px;">&nbsp;&nbsp;<span class="statusSpan" style="font-size:13px; padding:4px;"><c:out value="${project.status }" /></span></td>
 				</tr>
 				<tr onclick="selectedMemoTR(this);">
 					<td colspan="2" style="text-align: center; font-size: 20px;" class="restDueday">D 
@@ -143,7 +167,7 @@ $(function(){
 					<td class="memoTd">&nbsp;&nbsp;완료된 업무</td>
 					<td><div complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 						<div style="margin-top: 5px; display: inline-block;">
-						<c:out value="${project.progress }" />
+						<c:out value="${project.completeTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
 						</div>
 					</td>
 				</tr>
@@ -151,7 +175,7 @@ $(function(){
 					<td class="memoTd">&nbsp;&nbsp;지연된 업무</td>
 					<td><div overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 						<div style="margin-top: 5px; display: inline-block;">
-						<c:out value="${project.progress }" />
+						<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
 						</div>
 					</td>
 				</tr>

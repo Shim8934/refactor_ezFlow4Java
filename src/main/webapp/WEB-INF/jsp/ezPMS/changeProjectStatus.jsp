@@ -40,6 +40,10 @@ $(function(){
 		strHTML += "</input></td></tr>";
 		break;
 	case 'L' :
+		strHTML += "<input type='radio' value='C' name='status' checked>";
+		strHTML += "완료 프로젝트";
+		strHTML += "</input></td></tr>";
+		strHTML += "<tr><td>";
 		strHTML += "<input type='radio' value='S' name='status' checked>";
 		strHTML += "보류 프로젝트";
 		strHTML += "</input></td></tr>";
@@ -75,7 +79,7 @@ function changeStatus() {
 		data :JSON.stringify(data),
 		success : function(result) {
 			if (result == "permitted") {
-				alert("상태가 변경되었습니다. \n현재일보다 마감일이 빠른 프로젝트는 지연 프로젝트 상태로 변경됩니다.");
+				alert("상태가 변경되었습니다.");
 				parent.checkedVal = "";
 				parent.setProjectList();
 				popupClose();

@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -180,6 +178,7 @@ public class EzPMSController {
 					
 					if (status.equals("ok")) {		
 						projectList = (JSONArray) result.get("data");
+						
 						model.addAttribute("viewType", viewType);
 					}
 				}

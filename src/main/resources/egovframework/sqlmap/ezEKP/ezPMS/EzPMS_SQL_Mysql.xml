@@ -727,7 +727,6 @@
 				$orderWhat$ $orderHow$
 		</isNotEqual>
 		<isEqual property="orderWhat" compareValue="init">
- 
 			ORDER BY 
 				$projectSort$
 		</isEqual>
@@ -1232,7 +1231,8 @@
 		<isEqual property="status" compareValue="C">
 			<![CDATA[
 				REAL_END_DATE = #changeDate#,
-				PROGRESS = #progress#
+				PROGRESS = #progress#,
+				REST_DUEDAY = #restDueday#
 			]]>
 		</isEqual>
 		</isNotEqual>

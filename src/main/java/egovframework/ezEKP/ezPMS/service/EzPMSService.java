@@ -113,11 +113,11 @@ public interface EzPMSService {
 
 	public void deleteProjectMember(Long projectId, int tenantId);
 
-	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status);
+	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status, String planEndDate);
 
 	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
 
-	public void completeAllTasks(long projectId, int tenantId, String realEndDate);
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate);
 
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception;
 	
