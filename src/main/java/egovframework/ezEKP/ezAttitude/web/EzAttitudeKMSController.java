@@ -1892,29 +1892,19 @@ public class EzAttitudeKMSController {
 			deptList = (JSONArray) resultBody.get("data");
 		}
 		
-//		//같은 부서면 최소한 읽기 권한은 부여
-//		if (userInfo.getDeptID().equals(deptId)) {
-//			authFlag = "R";
-//		}
-		
 		int myDeptCount = 0;
-		
 		
 		for(int i = 0; i < deptList.size(); i++) {
 			JSONObject dept = (JSONObject) deptList.get(i);
-			LOGGER.debug("dept : " + dept.toJSONString());
 			if (dept.get("deptId").equals(userInfo.getDeptID())) {
 				myDeptCount++;
 			}
 		}
 		
-		if (myDeptCount == 1) {
-			for(int i = 0; i < deptList.size(); i++) {
-				JSONObject dept = (JSONObject) deptList.get(i);
-				if (dept.get("deptId").equals(userInfo.getDeptID()) && dept.get("mine") != null && dept.get("mine").equals("yes")) {
-					dept.put("mine", "no");
-					dept.put("authType", "R");
-				}
+		for(int i = 0; i < deptList.size(); i++) {
+			JSONObject dept = (JSONObject) deptList.get(i);
+			if (dept.get("mine").equals("yes")) {
+				dept.put("authType", "R");
 			}
 		}
 		
@@ -1927,13 +1917,11 @@ public class EzAttitudeKMSController {
 		}
 		
 		//자신의 부서와 다르고 권한이 없을 경우에는 접근을 제한한다.		
-//		if (!userInfo.getDeptID().equals(deptId)) {
 		//아무런 권한이 없으면 접근을 제한한다.
 		if (authFlag.equals("")) {
 			return "cmm/error/adminDenied";
 		}
-//		}
-		
+	
 		model.addAttribute("font", font);
 		model.addAttribute("authFlag", authFlag);
 		

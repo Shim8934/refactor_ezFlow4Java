@@ -763,7 +763,7 @@
 		      		<li><span onclick="searchPopup();">검색</span></li>
 		      		<li><span onclick="refresh();">새로고침</span></li>
 		      		<c:if test="${manageFlag == 'M' }">
-		      			<li><span onclick="addAtt();">근태작성</span></li>
+		      			<li><span onclick="addAtt();">근태입력</span></li>
 		      		</c:if>
 		      		<li>
 		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>
