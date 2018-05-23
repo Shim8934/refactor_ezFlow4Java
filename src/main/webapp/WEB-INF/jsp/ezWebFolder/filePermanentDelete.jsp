@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
+	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>	
 	<script type="text/javascript">
 		var fileList = "<c:out value="${fileList}"/>";
 		var folderList = "<c:out value="${folderList}"/>";

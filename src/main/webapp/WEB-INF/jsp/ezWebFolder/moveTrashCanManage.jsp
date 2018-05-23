@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+   	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>	
     <script>
         var PostTreeView = null;
         var treeconfig = "";
