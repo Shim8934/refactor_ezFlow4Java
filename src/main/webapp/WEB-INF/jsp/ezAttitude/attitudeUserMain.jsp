@@ -83,8 +83,8 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #ccc31f;
-			    background: #e9de13;
+			    border: 1px solid #eede23;
+			    background: #feee33;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
 			    padding: 0;
@@ -1033,8 +1033,8 @@
 				<li style="background:none;margin-left:7px;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
 	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
 	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;근태수정신청</li>
+                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #eede23; background:#feee33; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
+                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;수정신청</li>
 			</ul>
 		</div>
 		
