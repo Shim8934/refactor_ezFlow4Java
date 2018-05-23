@@ -129,7 +129,6 @@
 	    var bigtrue = 0;
 	    var tmpXML = "";
 	    var tempUrl = "";
-	    var folderDate = "${folderDate}";
 	    var filedate = "${stateName}";
 	    var gubunlist = "1";
 	    var tempvalue = "0";

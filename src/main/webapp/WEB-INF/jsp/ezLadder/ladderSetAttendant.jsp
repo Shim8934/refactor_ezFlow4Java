@@ -11,6 +11,17 @@
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 	    <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+	    <style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;
+	    	}
+	    	.mainlist_free tr td{
+	    		height:28px;
+	    	}
+	    	.mainlist_free tr td input{
+	    		height:24px;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezLadder.e1' />"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -319,7 +330,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -736,6 +747,12 @@
 				}
 	            
                 function bindAllUser(value, type) {
+					DivPopUpHidden();
+					
+					if(value == "cancle") {
+						return;
+					}
+					
 					if(value) {
 						var overlapLen = overlapuser["userId"].length;
 						for(var i = 0; i < overlapLen; i++) {
@@ -754,8 +771,6 @@
 		    }
 		    
 			function parsingXMLUserList(userlist) {
-				DivPopUpHidden();
-				
 				var listid = "MsgToList"; // 추가된 유저목록 테이블 아이디
 				var i = 0;
 				var len = userlist["userId"].length;
@@ -888,7 +903,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang20 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang20 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -901,7 +916,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang20 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang20 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1604,20 +1619,20 @@
 				<td>
 	        		<table id="TreeViewTD">
 	                	<tr>
-	                		<div class="portlet_tabpart01">
-	        					<div class="portlet_tabpart01_top" id="tab1">
-					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t037' /></span></p>
-									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t038' /></span></p>
+	                		<div class="portlet_tabpart01" style="width:664px;">
+	        					<div class="portlet_tabpart01_top" id="tab1" style="width:664px;">
+					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer; text-align: center;" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t037' /></span></p>
+									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer;" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t038' /></span></p>
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
-	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px; padding:0px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 3px; padding:0px; border-top-color:white">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #ddd;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td>
-	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                <div style="margin-left: 5px;margin-top:1px">
+	                                                    <select id="search_type" style="height: 22px;">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezLadder.t029' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezLadder.t028' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezLadder.t039' /></option>
@@ -1628,7 +1643,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezLadder.t044' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezLadder.t045' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:22px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezLadder.t046' /></span></a>
 	                                                </div>
 	                                            </td>
@@ -1650,8 +1665,8 @@
 	                                    <td class="listview" style="width: 426px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
-	                                                <th style="white-space:normal">
-	                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px;height:30px;text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
+	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom; margin-top:2px;"></span>
 	                                                    <span style="float:right;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
@@ -1662,22 +1677,22 @@
 	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t029' /></td>
-	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t039' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezLadder.t040' /></td>
+	                                                    <td style="width: 170px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezLadder.t029' /></td>
+	                                                    <td style="width: 150px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezLadder.t039' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezLadder.t040' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t028' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t029' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t039' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezLadder.t040' /></td>
+	                                                    <td style="width: 130px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezLadder.t028' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezLadder.t029' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezLadder.t039' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezLadder.t040' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
 	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6;height:32px"></div>
+	                                        <div id="tblPageRayer" style="text-align:center;/* border-top:1px solid #B6B6B6; */height:32px"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -1737,12 +1752,12 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top; position: relative;">
-								<a class="imgbtn" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: 5px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
-	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;">
+								<a class="imgbtn" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: -30px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
+	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:-30px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezLadder.t013'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="position: relative;">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 516px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 544px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

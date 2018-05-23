@@ -10,6 +10,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<style>
+			.btype_list ul li .date {
+				-webkit-margin-start:20px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -232,8 +237,7 @@
 					}
 				});
 		    }
-		    
-		    
+		    	    
 		    function event_get_commhomeinfo(result) {
 	            var xmldom = loadXMLString(result);
 	            
@@ -780,7 +784,15 @@
 		    function refresh_onclick() {
 	            window.location.reload();
 	        }
- 	        
+		    
+//		    window.onload = function(){
+		    	/* 2018-05-21 홍승비 - IE와 크롬에서 게시물 등록일 표시 동일하게 조정 */
+//		    	if (navigator.userAgent.toLowerCase().indexOf("chrome") > -1) {
+//		    		console.log("크롬이에요!");
+//		    		$(".date").css('margin-left', '20px');
+//		    	}	    	
+//		    }
+
 		</script>
 	</head>
 	
