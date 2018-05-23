@@ -271,6 +271,9 @@
 	        
 	        ///////
 	        function getAttitudeCheckList(){
+	        	searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
+    			
 	        	//페이지 로딩때 리스트 안가져오고 리스트뿌린다음 가져옴 수정필요.
 	        	if ($('#searchAttitudeType').val() == null) {
 	        		searchAttitudeType = "total";
@@ -434,6 +437,9 @@
 	    	}
 	        
 	        function getAttitudeHistoryList(){
+	        	searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
+	        	
 	    		var typeId = $('#attitudeType').val();
 	    		
 	    		if (typeId == "total") {
