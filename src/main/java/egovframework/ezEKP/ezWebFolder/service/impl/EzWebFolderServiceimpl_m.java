@@ -887,7 +887,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		LOGGER.debug("pDirPath=" + pDirPath);
 		
-		if (file.exists()) {
+		if (file.exists() && file.isFile()) {
 			if (file.delete()) {
 				isDeleted = 1;
 				ezWebFolderService.saveLog("P", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userName1, userName2, 
