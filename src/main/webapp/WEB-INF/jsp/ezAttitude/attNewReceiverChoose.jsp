@@ -37,6 +37,10 @@
 	    		padding-left: 10px!important;
 	    		color: #333333!important;
 	    		font-weight: normal;
+	    		overflow: hidden!important; 
+	    		white-space: nowrap!important; 
+	    		text-overflow: ellipsis!important;
+	    		max-width: 200px!important;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
