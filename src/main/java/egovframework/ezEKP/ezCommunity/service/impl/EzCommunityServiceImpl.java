@@ -312,7 +312,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (clubVO != null) {
 			response.getWriter().write("<script language='javascript'>");
 			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", userInfo.getLocale()) + "');");
-			response.getWriter().write("history.back();");
+			/* 2018-05-16 홍승비 - 경고메세지 처리를 jsp 내부에서 보이도록 하기 위해 수정 */
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 			
@@ -377,7 +377,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		//TODO 2016-05-03 이효진 뷰에서 banner을 사용하지 않아서 파라미터로 받지 않는다.
-		//2018-04-11 홍승비 thumbnail을 로고와 분리하여 대표 이미지로 사용한다.
+		// 2018-04-11 홍승비 thumbnail을 로고와 분리하여 대표 이미지로 사용한다.
 		if (cClubThumb != null && !cClubThumb.isEmpty()) {
 			attachFile = cClubThumb.getOriginalFilename();
 			thumbFileSize = (int) cClubThumb.getSize();
@@ -489,6 +489,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			response.getWriter().write("<script language='javascript'>\n");
 			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1529", userInfo.getLocale()) + egovMessageSource.getMessage("ezCommunity.t1027", userInfo.getLocale()) + "');\n");
 			response.getWriter().write("window.close();");
+			response.getWriter().write("parent.window.close();");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		}
@@ -613,8 +614,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return boardInfoList;
 	}
 	
+	/* 2018-05-18 홍승비 - UTC시간에 offset을 적용한 writeDate를 가져오기 위해 offset 추가*/
 	@Override
-	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID) throws Exception {
+	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID, String offset) throws Exception {
 		logger.debug("commHomeBoardItemList started.");
 		logger.debug("boardID : " + boardID + ", tenantID : " + tenantID + ", now : " + commonUtil.getTodayUTCTime(""));
 		
@@ -622,6 +624,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pBoardID", boardID);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		map.put("offset", offset);
 		
 		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(map);
 		
@@ -1733,15 +1736,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String code = request.getParameter("code");
 		String copType = request.getParameter("type");
-		String defaultLogo = request.getParameter("default");
+		String defaultLogo = request.getParameter("defaultLogo");
+		String defaultThumb = request.getParameter("defaultThumb");
 		MultipartFile logoFile = request.getFile("logo");
 		MultipartFile thumbFile = request.getFile("thumb");
 		String logoFileNameLogo = "";
 		String logoFileNameThumbnail = "";
 		
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
-
-		//상단 이미지 저장
+		
+		// 상단 이미지 저장
 		if (!logoFile.isEmpty()) {
 			attachFile = logoFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
@@ -1765,7 +1769,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			file.delete();
 		}
-		//썸네일 저장
+		// 썸네일 저장
 		if (!thumbFile.isEmpty()) {
 			attachFile = thumbFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
@@ -1790,11 +1794,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			file.delete();
 		}
 		
-		if(defaultLogo != null) {
+		/* 2018-05-16 홍승비 - 등록한 로고, 썸네일 이미지 삭제 기능 추가 */
+		if (defaultLogo != null && !defaultLogo.equals("")) {
 			logoFileNameLogo = defaultLogo;
 		}
+		if (defaultThumb != null && !defaultThumb.equals("")) {
+			logoFileNameThumbnail = defaultThumb;
+		}
 		
-		if(!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
+		if (!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
 			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, copType, code, tenantID);
 		}		
 	}
@@ -5541,7 +5549,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		String id = userInfo.getId();
 		String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-		String offset = userInfo.getOffset();
+		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
 		int tenantID = userInfo.getTenantId();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5552,6 +5560,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_PENDROW", pEndRow);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		map.put("offset", offset);
 		
 		logger.debug("psortBY");
 		logger.debug(pSortBy);
@@ -5570,20 +5579,16 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	            sb.append("<WriterName>" + commonUtil.cleanValue(item.getWriterName()).trim() + "</WriterName>");
 	            sb.append("<WriterDeptName>" + commonUtil.cleanValue(item.getWriterDeptName()).trim() + "</WriterDeptName>");
 	            sb.append("<WriterCompanyName>" + commonUtil.cleanValue(item.getWriterCompanyName()).trim() + "</WriterCompanyName>");
-	
-	            if (EgovDateUtil.getDaysDiff(item.getWriteDate().substring(0, 10), item.getParentWriteDate().substring(0, 10)) > 0) {
-	            	sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(item.getWriteDate(), offset, false).substring(0, 10) + "</WriteDate>");
-	            } else {
-	            	sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(item.getParentWriteDate(), offset, false).substring(0, 10) + "</WriteDate>");
-	            }
 	            
+	            /* 2018-05-18 홍승비 - 쿼리가 UTC시간에 offset을 적용한 writeDate를 가져오도록 수정*/
+	            sb.append("<WriteDate>" + item.getWriteDate() + "</WriteDate>");	            
 	            sb.append("<Importance>" + item.getImportance() + "</Importance>");
 	            sb.append("<Title>" + commonUtil.cleanValue(item.getTitle()).trim() + "</Title>");
-	            if (item.getAttachments() == null)
+	            if (item.getAttachments() == null) {
 	                sb.append("<Attachments></Attachments>");
-	            else
+	            } else {
 	                sb.append("<Attachments>" + commonUtil.cleanValue(item.getAttachments()) + "</Attachments>");
-	
+	            }
 	            sb.append("<ReadCount>" + item.getReadCount() + "</ReadCount>");
 	            sb.append("<ItemLevel>" + item.getItemLevel() + "</ItemLevel>");
 	            sb.append("<ReadFlag>" + item.getReadFlag() + "</ReadFlag>");

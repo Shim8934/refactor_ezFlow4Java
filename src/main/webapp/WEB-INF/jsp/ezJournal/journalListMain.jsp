@@ -479,7 +479,6 @@
 			function selectedTR(elem){
 // 				onPreview = false;
 				var parentElem = $(elem).parent();
-				var isRead = "";
 				$("#journalList tr").removeClass("selectTR");
 				$("#journalList tr").find("input[type='checkbox']").removeProp("checked");
 	   			$(parentElem).addClass("selectTR");
@@ -491,7 +490,6 @@
 		   				if($(parentElem).attr("mine") == 'N'){
 		   	   				$(vc).text(parseInt($(vc).text())+1);
 		   				}
-		   				isRead = "N";
 			   			$(parentElem).removeClass("noView");
 		   			}
 // 	   				$("#ifrmPreViewH").attr("src","/ezJournal/journalPreview.do?journalId="+journalId);
@@ -503,7 +501,7 @@
 		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
-							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId + "&isRead=" + isRead);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId);
 							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
@@ -854,7 +852,7 @@
 				}
 				
 				for (var i = 0; i < journalIdList.length; i++) {
-					if ($("#" + journalIdList[i]).attr("mine") == "N") {
+					if ($("#" + journalIdList[i]).attr("mine") == "N" && listType != "recv") {
 						alert("<spring:message code='ezBoard.t265'/>");
 						return;
 					}
@@ -1330,12 +1328,10 @@
 	 //일지 상세화면
 	function goJournalDetail(elem){
 		var vc = $(elem).find(".viewCount");
-		var isRead = "";
 		if($(elem).hasClass("noView")){
 			if($(elem).attr("mine") == 'N'){
    				$(vc).text(parseInt($(vc).text()) + 1);
 			}
-			isRead = "N";
    			$(elem).removeClass("noView");
 		}
 // 	 	var pheight = window.sc reen.availHeight;
@@ -1352,7 +1348,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId + "&isRead=" + isRead, "journalDetail",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();
