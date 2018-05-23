@@ -260,8 +260,7 @@
 		<!-- tbl_pms_item_list에는 없는 컬럼 -->
 		<result property="taskName" 				column="task_name"/>
 		<result property="groupName"				column="group_name"/>
-		<result property="filePath"					column="file_path"/>
-		<result property="fileName"					column="file_name"/>
+		<result property="mobileNumber" 			column="mobile"/>
 	</resultMap>
 	
     <!-- 조직도 만들기 위한 쿼리 -->
@@ -1293,6 +1292,9 @@
 				#writerPosition#,	#writerPosition2#
 			)
 		]]>
+		<selectKey keyProperty="itemId" resultClass="Integer">
+    		SELECT LAST_INSERT_ID()
+    	</selectKey>
 	</insert>
 	
 	<insert id="EzPMSDAO.insertProjectAttach" parameterClass="map">
@@ -1301,7 +1303,7 @@
 				tenant_id, item_id, file_path, file_size, file_name
 			)
 			VALUES (
-				#tenantId#, LAST_INSERT_ID(), #filePath#, #fileSize#, #fileName#
+				#tenantId#, #last_insert_id#, #filePath#, #fileSize#, #fileName#
 			)
 		]]>
 	</insert>
@@ -1313,14 +1315,14 @@
 				B.write_type,		B.write_content,	B.write_date,			B.write_update_date,		B.read_count,				
 				B.task_id,			B.group_id,			B.writer_name,			B.writer_name2,				B.writer_deptname,		
 				B.writer_deptname2,	B.writer_position,	B.writer_position2, 	T.task_name,  				G.group_name,
-				A.file_name,		A.file_path
+				M.mobile
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
 			LEFT JOIN tbl_pms_task T
 			ON B.task_id = T.task_id
-			LEFT JOIN tbl_pms_item_attachment A
-			ON B.item_id = A.item_id
+			JOIN tbl_usermaster M
+			on B.writer_id = M.cn
 		]]>	
 		<isEqual property="groupId" compareValue="-1">	
 			WHERE G.project_id = #projectId#
@@ -1363,6 +1365,26 @@
 			AND B.tenant_id = #tenantId#
 	</select>
 
+	<select id="EzPMSDAO.getBoardDetail" parameterClass="map" resultMap="projectBoardVO">
+		<![CDATA[
+			SELECT 
+				B.item_id, 			B.tenant_id,		B.writer_id,			B.title,					B.write_overview,			
+				B.write_type,		B.write_content,	B.write_date,			B.write_update_date,		B.read_count,				
+				B.task_id,			B.group_id,			B.writer_name,			B.writer_name2,				B.writer_deptname,		
+				B.writer_deptname2,	B.writer_position,	B.writer_position2, 	T.task_name,  				G.group_name,
+				M.mobile
+			FROM tbl_pms_item_list B
+			JOIN tbl_pms_group G
+			ON B.group_id = G.group_id
+			LEFT JOIN tbl_pms_task T
+			ON B.task_id = T.task_id
+			JOIN tbl_usermaster M
+			on B.writer_id = M.cn
+			WHERE B.item_id = #itemId#
+			AND B.tenant_id = #tenantId#	
+		]]>	
+	</select>
+	
 	<insert id="EzPMSDAO.addKanbanOrder" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_PMS_MAINLIST (
@@ -1754,5 +1776,15 @@
 			limit 
 				#startCount#, #listNumber# 
 		]]>
+	</select>
+	
+	<select id="EzPMSDAO.checkReadBoardOrNot" parameterClass="map" resultClass="Integer">
+		SELECT 1 
+		FROM 
+			tbl_pms_item_read
+		WHERE 
+			item_id = #itemId#
+		AND
+			user_id = #userId#
 	</select>
 </sqlMap>

@@ -347,9 +347,9 @@ public class EzPMSController3 {
 		param.put("fileList", fileList);
 		
 		String restUrl = "/rest/ezPMS/attachfiles";
-		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
 		
-		String status = result.get("status").toString();
+		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
 			LOGGER.debug("status : " + status);
@@ -358,5 +358,28 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS uploadFileDelete ended");
         
         return status;
+	}
+	
+	@RequestMapping(value = "/ezPMS/getBoardDetail.do")
+	public String getBoardDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getBoardDetail started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		int itemId = Integer.parseInt(request.getParameter("itemId"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONObject board = (JSONObject) resultBody.get("data");
+			model.addAttribute("board", board);
+		}
+		
+		LOGGER.debug("ezPMS getBoardDetail ended");
+		
+		return "ezPMS/pmsBoardDetail";
 	}
 }

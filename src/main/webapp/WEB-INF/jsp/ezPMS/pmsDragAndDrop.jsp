@@ -12,6 +12,8 @@
 		#lstAttachLink {
 			height: 117px;
 			border: 1px solid #3C2F2E;
+			margin-top: 5px;
+			overflow: auto;
 		}
 	</style>
 	<script type="text/javascript">
@@ -316,7 +318,7 @@
 	    </div>
 	    <div style="clear:both"></div>
 	</div>
-	<div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+	<div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)">
 	</div>
 	<input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px; height:1px; display:none;" />
 </body>

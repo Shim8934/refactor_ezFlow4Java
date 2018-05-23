@@ -211,8 +211,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		insert ("EzPMSDAO.addTaskGroup", map);
 	}
 	
-	public Long addBoard(ProjectBoardVO vo) {
-		return (Long) insert ("EzPMSDAO.addBoard", vo);
+	public Integer addBoard(ProjectBoardVO vo) {
+		return (Integer) insert ("EzPMSDAO.addBoard", vo);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -223,6 +223,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public int getBoardListCount(Map<String, Object> map) {
 		return (int) select("EzPMSDAO.getBoardListCount", map);
 	}
+	
+	public ProjectBoardVO getBoardDetail(Map<String, Object> map) {
+		return (ProjectBoardVO) select("EzPMSDAO.getBoardDetail", map);
+	}
+	
 	public void addKanbanOrder(Map<String, Object> map) {
 		insert ("EzPMSDAO.addKanbanOrder", map);
 	}
@@ -278,4 +283,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		insert("EzPMSDAO.insertProjectAttach", attachMap);
 	}
 	
+	public int checkReadBoardOrNot(Map<String, Object> map) {
+		if(select("EzPMSDAO.checkReadBoardOrNot", map) == null) {
+			return -1;
+		} else {
+			return (int) select("EzPMSDAO.checkReadBoardOrNot", map);
+		}
+	}
 }
