@@ -187,9 +187,9 @@
 	                obj.className = "tabon";
 	                Tab1_SelectID = obj.id;
 	                if (Tab1_SelectID == "modify") {
-	                	$("div#mainmenu ul li:nth-child(2)").show();
+	                	$("div#mainmenu ul li:nth-child(3)").show();
 	                } else {
-	                	$("div#mainmenu ul li:nth-child(2)").hide();
+	                	$("div#mainmenu ul li:nth-child(3)").hide();
 	                }
 	                ChangeTab(obj);
 	            }
