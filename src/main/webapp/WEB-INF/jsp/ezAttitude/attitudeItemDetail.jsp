@@ -102,8 +102,11 @@
 						},
 						success : function(resultStatus) {
 							if (resultStatus == "success") {
-								window.opener.getList();
-//	 							window.opener.parent.frames["left"].getAttitudeList();
+								try {
+									window.opener.getList();
+								} catch (e) {
+									window.opener.getAttitudeCheckList();
+								}
 								window.close();
 							} else {
 								alert("<spring:message code='ezAttitude.kbm3' />");
