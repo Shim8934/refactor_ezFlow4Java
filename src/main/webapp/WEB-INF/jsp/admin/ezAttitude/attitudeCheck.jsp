@@ -206,8 +206,11 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
+	    		var i = ((pageNum - 1) * listSize) + 1;
+	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this);>";
+	    			resultHtml += "<td>" + i + "</td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -223,6 +226,8 @@
 	    			}
 	    			
 	    			resultHtml += "<td>" + vo.typeName + "</td></tr>";
+	    			
+	    			i++;
 	    		});
 	    		
 	    		if (resultHtml == "") {
@@ -360,19 +365,19 @@
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td>
-					<td style="width: 20%;">
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
-					</td>
+					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td>
+					<td style="width: 12%;"><select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select></td>
 				</tr>
 				<tr>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td>
-					<td style="width: *;" colspan=3>
-						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select>
-						<a class="imgbtn" style="margin-left:10px;"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
+					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td>
+					<td style="width: 12%;">
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
+					</td>
+					<td style="width: *;" colspan=2>
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
 					</td>
@@ -384,6 +389,7 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
+						<th style="width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="no">NO.</th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
