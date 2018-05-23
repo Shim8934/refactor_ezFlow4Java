@@ -1284,9 +1284,9 @@
 					<option value="ALL" selected>전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
-							<c:if test="${selectedDeptID == dept.deptId}">
-								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
-							</c:if>
+<%-- 							<c:if test="${selectedDeptID == dept.deptId}"> --%>
+<%-- 								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option> --%>
+<%-- 							</c:if> --%>
 							<c:if test="${selectedDeptID != dept.deptId}">
 								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
 							</c:if>
