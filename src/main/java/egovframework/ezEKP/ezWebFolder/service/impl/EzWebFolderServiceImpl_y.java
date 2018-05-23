@@ -584,7 +584,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			}
 			
 		} else {
-			status = "error";
+			status = "fail";
 		}
 		
 		LOGGER.debug("checkPermission ended. status=" + status);
