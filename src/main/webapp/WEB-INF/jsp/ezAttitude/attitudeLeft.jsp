@@ -105,9 +105,11 @@
 			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
 			<c:if test="${attitudeAdminCheck == true}">
 				<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
-				<li><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;전체근태관리</span></li>
 			</c:if>
 		</ul>
+		<c:if test="${attitudeAdminCheck == true}">
+			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;근태관리</span></h3>
+		</c:if>
 	</div>
 	<script type="text/javascript">
 		var userOffset = "${userOffset}";
