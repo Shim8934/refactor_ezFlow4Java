@@ -5,7 +5,7 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>전체근태관리</title>
+		<title>근태관리</title>
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
@@ -405,12 +405,7 @@
 	    		var i = ((pageNum - 1) * listSize) + 1;
 	    		
 	    		result.forEach(function(vo, index) {
-	    			if ($('#ListDept option:selected').attr('authtype') == 'M') {
-	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
-	    			} else {
-	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "'>";
-	    			}
-	    			
+    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
 	    			resultHtml += "<td style='padding-left:15px'>" + i + "</td>";
 	    			resultHtml += "<td>" + vo.startDate + "</td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
@@ -753,7 +748,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-		<h1><p style="padding-left:5px">전체근태관리</p></h1>
+		<h1><p style="padding-left:5px">근태관리</p></h1>
 	    <div class="portlet_tabpart01" style="margin-bottom:16px;">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	            <p><span id="modify" style="width:100px; text-align: center;">근태입력관리</span></p>
@@ -779,7 +774,9 @@
 		      				<option value="ALL" selected>전체</option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									<c:if test="${dept.authType == 'M'}">
+										<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									</c:if>
 								</c:if>
 							</c:forEach>
 			      		</select>
