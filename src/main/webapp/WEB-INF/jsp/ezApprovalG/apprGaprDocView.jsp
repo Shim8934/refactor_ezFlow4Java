@@ -66,6 +66,7 @@
 		    var signImageType = "${signImageType}";
 		    var pMode = "${mode}";
 		    var forceCallBackYN = "${forceCallBackYN}";
+		    var orgCompanyID = "";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {

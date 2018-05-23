@@ -42,7 +42,8 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    var companyID = "${userInfo.companyID}";       
-		 
+		 	var orgCompanyID = "${orgCompanyID}";
+		 	
 	        subCondition = "";
 	        
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {

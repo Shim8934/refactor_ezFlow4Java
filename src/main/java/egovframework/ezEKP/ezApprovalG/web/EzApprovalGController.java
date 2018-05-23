@@ -1922,6 +1922,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// 첨부파일명 최대길이
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
 		
 		if (attachFileNameMaxLength.equals("")) {
 			attachFileNameMaxLength = "100";
@@ -1946,6 +1947,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
 		model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("aprAttach ended");
 		
@@ -2144,7 +2146,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.getAttachFileInfo(docID, "ING", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			companyID = orgCompanyID;
+		}
+		String result = ezApprovalGService.getAttachFileInfo(docID, "ING", "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("attachRequest ended");
 		
@@ -2521,9 +2529,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			companyID = orgCompanyID;
+		}
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = ezApprovalGService.getAttachDocInfo(docID, "ING", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGService.getAttachDocInfo(docID, "ING", "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
 		logger.debug("getAttachInfo ended.");
 		
@@ -3281,6 +3295,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String formText = request.getParameter("html");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String saveFileName = "";
