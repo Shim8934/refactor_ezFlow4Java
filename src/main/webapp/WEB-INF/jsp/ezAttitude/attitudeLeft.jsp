@@ -125,6 +125,7 @@
 		window.onload = function(){
 			setAttiBtnHover();
 			getAttitudeList();
+			getHolidayList();
 		    //yourClock();
 		    select_memorialDays(uselang);
 		    
@@ -169,10 +170,7 @@
 	    	})
 	    }
 	    
-		function checkHoliday(obj) {
-			var now = new Date();
-			var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(userOffset.split(':')[0]) * 3600000) + (parseInt(userOffset.split(':')[1]) * 60000);
-			now.setTime(tz);
+		function getHolidayList() {
 			$.ajax({
 				type:"POST",
 				dataType : "json",
@@ -192,32 +190,40 @@
 																	  result.holidayList[i].isRest == 1 ? true : false));
 						}
 					}
-					
-					var todayLunar = lunarCalc(now.getFullYear(), now.getMonth() + 1, now.getDate(), 1);
-					var todayMemorialDayList = memorialDayCheck(now, todayLunar);
-					var todayYearMemorialDayList = yearmemorialDayCheck(now, todayLunar);
-					
-					if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
-						checkClosedToday = true;
-					}
-					
 					closedDay = result.attitudeConfigVO.closedDay.split(",");
-					if (closedDay[now.getDay()] == "1" || checkClosedToday) {
-			    		alert("<spring:message code='ezAttitude.bbhs34'/>");
-					} else {
-						getIsAttitude(obj);
-					}
 				}
 			});
+		}
+		
+		function checkHoliday(obj) {
+			var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
+			var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
+			var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
+			
+			if (closedDay[nowAttiTime.getDay()] == "1" || todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
+	    		alert("<spring:message code='ezAttitude.bbhs34'/>");
+			} else {
+				var returnValue = getIsAttitude(obj.getAttribute("type"));
+				
+				if (returnValue == 0) {
+					addAttitude(obj);
+				} else {
+					getAttitudeList();
+	    			parent.frames["right"].getAttitudeMainList();
+				}
+			}
 		}
 		
 		//시간놓고 alert내용을 파라미터로 던져서 체크??
 	    function addAttitude(obj) {
 	    	var pTypeId = obj.getAttribute("type");
 	    	var pDateType = obj.getAttribute("datetype");
-	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
-	    		alert("<spring:message code='ezAttitude.bbhs35'/>");
-	    		return;
+	    	if (pTypeId == "A03") {
+	    		var returnValue = getIsAttitude("A01");
+	    		if (returnValue == 0) {
+	    			alert("출근 후 퇴근이 가능합니다.");
+		    		return;
+	    		}
 	    	}
 	    	
 	    	beforeAlertDate = new Date();
@@ -253,28 +259,24 @@
 	    	})
 	    }
 	    
-	    function getIsAttitude(obj) {
-	    	var pTypeId = obj.getAttribute("type");
-	    	var pDateType = obj.getAttribute("datetype");
+	    function getIsAttitude(typeId) {
+			var isAttitudeReturn = "";
 	    	$.ajax({
 	    		type : "POST",
 	    		dataType : "text",
-	    		async : true,
+	    		async : false,
 	    		url : "/ezAttitude/getIsAttitude.do",
 	    		data : {
-	    			typeId : pTypeId
+	    			typeId : typeId
 	    		},
 	    		success : function(result) {
-    				getAttitudeList();
-	    			parent.frames["right"].getAttitudeMainList();
-	    			if (result == 0) {
-	    				addAttitude(obj);
-	    			}
+	    			isAttitudeReturn = result;
 	    		},
 	    		complete : function() {
 	    			
 	    		}
 	    	})
+	    	return isAttitudeReturn;
 	    }
 
 	    function setAttiBtnHover() {
