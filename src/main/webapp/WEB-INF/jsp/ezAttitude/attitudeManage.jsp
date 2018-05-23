@@ -405,12 +405,7 @@
 	    		var i = ((pageNum - 1) * listSize) + 1;
 	    		
 	    		result.forEach(function(vo, index) {
-	    			if ($('#ListDept option:selected').attr('authtype') == 'M') {
-	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
-	    			} else {
-	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "'>";
-	    			}
-	    			
+    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
 	    			resultHtml += "<td style='padding-left:15px'>" + i + "</td>";
 	    			resultHtml += "<td>" + vo.startDate + "</td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
@@ -779,7 +774,9 @@
 		      				<option value="ALL" selected>전체</option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									<c:if test="${dept.authType == 'M'}">
+										<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									</c:if>
 								</c:if>
 							</c:forEach>
 			      		</select>
