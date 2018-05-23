@@ -217,7 +217,7 @@
 	        	
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
-					resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='NO'>NO.</th>";
+					resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
@@ -225,7 +225,7 @@
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.lhj18' /></th></tr>";
 	    			break;
 	    		case "absent":
-	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='NO'>NO.</th>";
+	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
@@ -672,25 +672,27 @@
 	        //th 정렬
 	        $(function(){
 				$(document).on('click', '#contentlist .mainlist th', function(){
-					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
-						src = "";
-						orderOption = "";
-						orderCell = $(this).attr("colname");
+					if ($(this).attr("colname") != "NO") {
+						if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+							src = "";
+							orderOption = "";
+							orderCell = $(this).attr("colname");
+						}
+					
+		    			if (orderOption == "" || orderOption == "DESC") {
+		    				src = '/images/etc/view-sortup.gif';
+		    				orderOption = "ASC";
+		    			} else {
+		    				src = '/images/etc/view-sortdown.gif';
+		    				orderOption = "DESC";
+		    			}
+		    			$("#contentlist .mainlist th").find("img").remove();
+		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+		    			
+		    			getList();
 					}
-				
-	    			if (orderOption == "" || orderOption == "DESC") {
-	    				src = '/images/etc/view-sortup.gif';
-	    				orderOption = "ASC";
-	    			} else {
-	    				src = '/images/etc/view-sortdown.gif';
-	    				orderOption = "DESC";
-	    			}
-	    			$("#contentlist .mainlist th").find("img").remove();
-	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
-	    			
-	    			getList();
-				})
-			})
+				});
+			});
 	        
 			function exportExcel() {
 	    		if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
