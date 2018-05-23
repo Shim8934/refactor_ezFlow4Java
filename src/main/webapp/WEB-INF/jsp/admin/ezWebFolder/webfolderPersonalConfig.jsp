@@ -122,6 +122,8 @@
 			}
 			
 			function initProgressBar(barID, color, completerate) {
+				completerate = completerate > 100 ? 100 : completerate;
+				
 				if (completerate == '0') {
 					duration = 0;
 				}
