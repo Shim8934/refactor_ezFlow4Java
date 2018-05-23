@@ -152,6 +152,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("ipAddress", ip);
 		map.put("isDefaultAtti", isDefaultAtti); // 출근, 퇴근과 다른 기타 근태의 insert쿼리를 다르게 하기 위해 적용
 		map.put("dateType", dateType);
+		map.put("modappl", mode.equals("admin") ? "3" : "0");
 		
 		ezAttitudeDAO.insertAttitude(map);
 		
@@ -333,6 +334,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					}
 				}
 				
+				map.put("applDate", commonUtil.getTodayUTCTime(""));
 				map.put("originDate", attVO.getStartDate());
 				map.put("changeDate", startDate);
 				ezAttitudeDAO.adminAttSaveAppMod(map);
@@ -948,6 +950,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offset", offset);
 		map.put("content", content);
 		map.put("changeDate", changeDate);
+		map.put("applDate", commonUtil.getTodayUTCTime(""));
 		
 		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
 		
@@ -985,6 +988,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("apprStatus", "0");
 		map.put("offset", offset);
 		map.put("modappl", "1");
+		map.put("applDate", commonUtil.getTodayUTCTime(""));
 		
 		/*이미 신청된 항목이 있는지, 
 		 * 이미 신청된 항목의 상태가 

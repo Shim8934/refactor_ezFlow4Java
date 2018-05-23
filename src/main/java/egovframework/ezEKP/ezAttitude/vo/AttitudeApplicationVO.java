@@ -55,6 +55,8 @@ public class AttitudeApplicationVO {
 	private String description;
 	/** 직위 */
 	private String title;
+	/** 신청일자*/
+	private String applDate;
 	
 	
 	public String getAttitudeId() {
@@ -236,5 +238,11 @@ public class AttitudeApplicationVO {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public String getApplDate() {
+		return applDate;
+	}
+	public void setApplDate(String applDate) {
+		this.applDate = applDate;
 	}
 }
