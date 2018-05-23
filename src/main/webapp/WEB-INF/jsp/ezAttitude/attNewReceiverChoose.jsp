@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title><spring:message code='ezEmail.t572' /></title>
+	    <title>근태입력대상 설정</title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -37,6 +37,10 @@
 	    		padding-left: 10px!important;
 	    		color: #333333!important;
 	    		font-weight: normal;
+	    		overflow: hidden!important; 
+	    		white-space: nowrap!important; 
+	    		text-overflow: ellipsis!important;
+	    		max-width: 200px!important;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
@@ -192,10 +196,11 @@
 	                wholeHtml += '<div id="left" style="border-top:1px solid #dedede">';
 	                for (var i = 0; i < deptList.length ; i ++) {
 						if (deptList[i].authType == 'M') {
-							if (deptList[i].deptName.length > 14) {
-								deptList[i].deptName = deptList[i].deptName.substring(0,14) + "...";
-							}
-							var html = '<h2 onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + deptList[i].deptId + '" nodename="' + deptList[i].deptName + '" manageflag="M" value="' + deptList[i].deptName + '" cn="'+ deptList[i].deptId +'" isleaf="TRUE" style="padding-left:0px; white-space: nowrap;">';
+// 							if (deptList[i].deptName.length > 14) {
+// 								deptList[i].deptName = deptList[i].deptName.substring(0,14) + "⋯";
+// 							}
+							var html = '<h2 onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + deptList[i].deptId + '" nodename="' + deptList[i].deptName + '" manageflag="M" value="' + deptList[i].deptName + '" cn="'+ deptList[i].deptId +'" isleaf="TRUE" ' + 
+							'style="padding-left:0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
 	// 						html += '<img id="subImgNode_' + deptList[i].deptId + '" border="0" src="/images/OrganTree_cross/ic-open.gif" style="width: 18px; height: 18px;">';
 							html += '<span id="spn_' + deptList[i].deptId + '" class="node_normal" onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + deptList[i].deptName + '</span>';
 							html += '<div id="' + deptList[i].deptId + '_sub" style="display: none;"></div></li>';
@@ -213,7 +218,6 @@
 // 	                treeView.SetNodeClick("TreeViewNodeClick");
 // 	                treeView.DataSource(xmlTree);
 // 	                treeView.DataBind("TreeView");
-					console.log($("h2#"+deptid).length);
 					if ($("h2#"+deptid).length > 0) {
 						$("h2#"+deptid).click();
 					}else {
@@ -227,6 +231,7 @@
 	            catch (ErrMsg) {
 	                alert(" TreeViewinitialize : " + ErrMsg.description);
 	            }
+	            
                 var arrayDept = $("#TreeView div.node_div");
 	            
 	            if (type == "config") {
@@ -272,8 +277,6 @@
 // 	                    document.getElementById("h1Title").textContent = " <spring:message code='ezEmail.t99000080' />";
 // 	                else
 // 	                    document.getElementById("h1Title").innerText = " <spring:message code='ezEmail.t99000080' />";
-	
-	                document.title = " <spring:message code='ezEmail.t99000080' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "none";
 	                document.getElementById("contactTabButton").style.display = "none";
@@ -287,6 +290,7 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
+	                
 	            }
 	            else {
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
@@ -681,7 +685,7 @@
 	                    var strName = document.getElementById(listContentArry[0]).getAttribute("_data10");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    alert("근태입력대상을 선택해주세요.");
 	                    return;
 	                }
 	            }

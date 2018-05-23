@@ -1169,7 +1169,7 @@
 				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").append($("<div style='width:89px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(0,11))));
 				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(11,16))));
 				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].changeDate.substring(11,16))));
-				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='width:52px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
+				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='width:48px; padding-left: 5px;padding-right: 5px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
 				    		objTr.append($("<td style='width:45%'></td>").append($("<div style='width:118px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprDate)));
 				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprStatus)));
 				    		
@@ -1281,12 +1281,12 @@
 			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
-					<option value="ALL">전체</option>
+					<option value="ALL" selected>전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
-							<c:if test="${selectedDeptID == dept.deptId}">
-								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
-							</c:if>
+<%-- 							<c:if test="${selectedDeptID == dept.deptId}"> --%>
+<%-- 								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option> --%>
+<%-- 							</c:if> --%>
 							<c:if test="${selectedDeptID != dept.deptId}">
 								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
 							</c:if>
@@ -1380,34 +1380,6 @@
 				<th width="100px" style="cursor:pointer" colname="NO">내역확인</th>
 			</tr>
 		    
-		    <!-- 	
-			<c:forEach var="list" items="${list}" varStatus="i"> 
-				<tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
-					<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>_<c:out value ="${list.applCnt}"/>" value="<c:out value="${list.attitudeId}" />_<c:out value ="${list.applCnt}"/>" status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
-					<td>${i.count}</td>
-					<c:set var="changeDate" value="${list.changeDate}"/>
-					<c:set var="originDate" value="${list.originDate}"/>
-					<td>${fn:substring(originDate,0,10) }</td>
-					<c:if test="${adminFlag == true}">
-						<td>${list.writerName}</td>
-						<td>${list.writerDeptName}</td>
-					</c:if>
-					<td>${fn:substring(originDate,11,16) }</td>
-					<td>${fn:substring(changeDate,11,16) }</td>
-					<c:if test="${list.apprStatus == 0}">
-						<td id="attStauts">신청</td>
-					</c:if>
-					<c:if test="${list.apprStatus == 1}">
-						<td id="attStauts">승인</td>
-					</c:if>
-					<c:if test="${list.apprStatus == 2}">
-						<td id="attStauts">반려</td>
-					</c:if>
-					<td>${list.apprUserName}</td>
-					<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>
-				</tr>
-			</c:forEach>
-	        -->
 		    <c:if test="${list.size() == 0}"> 
 		        <tr>
 		        	<c:if test="${adminFlag == 'true'}"><td colspan="11" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
@@ -1456,7 +1428,7 @@
 				    	<tr>
 							<th style="width:120px;height:30px">일자</th>
 				    		<th style="width:30px; height:30px">기존시각</th>
-				    		<th style="width:30px; height:30px">신청시긱</th>
+				    		<th style="width:30px; height:30px">신청시각</th>
 				  			<th style="height:30px">승인자</th>
 				  			<th style="width:120px;height:30px">승인일시</th>
 				  			<th style="height:30px">승인상태</th>

@@ -1215,7 +1215,7 @@
 		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs33' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
-        <c:if test="${checkAdmin == 'true'}">
+        	<c:if test="${checkAdmin == 'true'}">
         	<ul>
 	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
 				<li>
@@ -1226,7 +1226,54 @@
 		      		</select>
 	      		</li>
 	      	</ul>
-	        <table id="searchTable" style="width:100%; margin-bottom:10px;">
+	      	</c:if>
+	        <ul id="tb_Parent">
+	        <c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
+				<li id="appr"><span onClick="modApprove()">승인</span></li>
+	        	<li id="ret"><span onClick="modReturn()">반려</span></li>
+			</c:if>
+			<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
+				<li><span onClick="attList_del()">삭제</span></li>
+			</c:if>
+	        <c:if test="${checkAdmin != 'true'}">
+		        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
+	        	<li><span onClick="att_search('refresh')">새로고침</span></li>
+	        	<li id="search"><span onClick="search_popup()">검색</span></li>
+			</c:if>
+			<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
+				<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+				<li>
+					<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
+						<option value="ALL">전체</option>
+						<c:forEach var="dept" items="${deptList}">
+							<c:if test="${dept.mine ne 'yes' }">
+								<c:if test="${selectedDeptID == dept.deptId}">
+									<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
+								</c:if>
+								<c:if test="${selectedDeptID != dept.deptId}">
+									<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+								</c:if>
+							</c:if>										
+						</c:forEach>
+					</select>
+				</li>
+			</c:if>
+	
+	
+			<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}"> 
+				<li id="right">
+					<span style="float:right;font-weight:normal;color:black;border: none;">
+						<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
+						<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
+						<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
+						<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
+					</span>
+				</li> 
+			</c:if>
+	        </ul>
+        </div>
+        <c:if test="${checkAdmin == 'true'}">
+	        <table id="searchTable" style="width:100%;">
 				<tbody>
 					<tr>
 						<td style="width: 3%;">신청자명</td>
@@ -1260,51 +1307,6 @@
 				</tbody>
 			</table>
 		</c:if>
-        <ul id="tb_Parent">
-        <c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
-			<li id="appr"><span onClick="modApprove()">승인</span></li>
-        	<li id="ret"><span onClick="modReturn()">반려</span></li>
-		</c:if>
-		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
-			<li><span onClick="attList_del()">삭제</span></li>
-		</c:if>
-        <c:if test="${checkAdmin != 'true'}">
-	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
-        	<li><span onClick="att_search('refresh')">새로고침</span></li>
-        	<li id="search"><span onClick="search_popup()">검색</span></li>
-		</c:if>
-		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
-			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
-			<li>
-				<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
-					<option value="ALL">전체</option>
-					<c:forEach var="dept" items="${deptList}">
-						<c:if test="${dept.mine ne 'yes' }">
-							<c:if test="${selectedDeptID == dept.deptId}">
-								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
-							</c:if>
-							<c:if test="${selectedDeptID != dept.deptId}">
-								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
-							</c:if>
-						</c:if>										
-					</c:forEach>
-				</select>
-			</li>
-		</c:if>
-
-
-		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}"> 
-			<li id="right">
-				<span style="float:right;font-weight:normal;color:black;border: none;">
-					<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
-					<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
-					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
-					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
-				</span>
-			</li> 
-		</c:if>
-        </ul>
-        </div>
         <c:if test="${checkAdmin != 'true'}">
 	        <div id="popup2" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 	            <div class="popupwrap3">
@@ -1375,35 +1377,7 @@
 				<th width="130px" style="cursor:pointer" colname="APPL_DATE">신청일자</th>
 				<th width="100px" style="cursor:pointer" colname="NO">내역확인</th>
 			</tr>
-		    
-		    <!-- 	
-			<c:forEach var="list" items="${list}" varStatus="i"> 
-				<tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
-					<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>_<c:out value ="${list.applCnt}"/>" value="<c:out value="${list.attitudeId}" />_<c:out value ="${list.applCnt}"/>" status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
-					<td>${i.count}</td>
-					<c:set var="changeDate" value="${list.changeDate}"/>
-					<c:set var="originDate" value="${list.originDate}"/>
-					<td>${fn:substring(originDate,0,10) }</td>
-					<c:if test="${adminFlag == true}">
-						<td>${list.writerName}</td>
-						<td>${list.writerDeptName}</td>
-					</c:if>
-					<td>${fn:substring(originDate,11,16) }</td>
-					<td>${fn:substring(changeDate,11,16) }</td>
-					<c:if test="${list.apprStatus == 0}">
-						<td id="attStauts">신청</td>
-					</c:if>
-					<c:if test="${list.apprStatus == 1}">
-						<td id="attStauts">승인</td>
-					</c:if>
-					<c:if test="${list.apprStatus == 2}">
-						<td id="attStauts">반려</td>
-					</c:if>
-					<td>${list.apprUserName}</td>
-					<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>
-				</tr>
-			</c:forEach>
-	        -->
+			
 		    <c:if test="${list.size() == 0}"> 
 		        <tr>
 		        	<c:if test="${adminFlag == 'true'}"><td colspan="10" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>

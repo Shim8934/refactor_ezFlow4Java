@@ -71,7 +71,7 @@
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#contentlist table.mainlist th', function(){
-	    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
+	    			if (!$(this).find("input[type=checkbox]").length && $(this).attr("colname") != "NO") { // checkbox는 sort에서 제외
 	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 	    					src = "";
 	    					orderOption = "";
@@ -206,8 +206,11 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
+	    		var i = ((pageNum - 1) * listSize) + 1;
+	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this);>";
+	    			resultHtml += "<td style='padding-left: 15px;'>" + i + "</td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -223,6 +226,8 @@
 	    			}
 	    			
 	    			resultHtml += "<td>" + vo.typeName + "</td></tr>";
+	    			
+	    			i++;
 	    		});
 	    		
 	    		if (resultHtml == "") {
@@ -325,8 +330,8 @@
 			
 			function attDetail(obj) {
 				var pAttitudeId = obj.getAttribute("attitudeId"); 
-				var pTypeId = obj.getAttribute("typeId")
-				;
+				var pTypeId = obj.getAttribute("typeId");
+				
 				if (CrossYN()) {
 					var OpenWin = window.open("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
 					
@@ -336,6 +341,38 @@
 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 				}
 		    }
+			
+			function addAtt() {
+				today = new Date();
+		    	dd = today.getDate();
+		    	mm = today.getMonth()+1; //January is 0!
+		    	yyyy = today.getFullYear();
+
+		    	if(dd<10) {
+		    	    dd='0'+dd
+		    	} 
+
+		    	if(mm<10) {
+		    	    mm='0'+mm
+		    	} 
+
+		    	today = yyyy + '-' + mm + '-' + dd;
+				
+				var date = today;
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=", "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=", "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -360,21 +397,23 @@
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td>
-					<td style="width: 20%;">
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
-					</td>
+					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td>
+					<td style="width: 12%;"><select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select></td>
 				</tr>
 				<tr>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td>
-					<td style="width: *;" colspan=3>
-						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select>
-						<a class="imgbtn" style="margin-left:10px;"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
+					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td>
+					<td style="width: 12%;">
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
+					</td>
+					<td style="width: *;" colspan=2>
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="addAtt();">근태작성</span></a>&nbsp;
+						
 					</td>
 				</tr>
 			</tbody>
@@ -384,11 +423,11 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
+						<th style="padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="NO">NO.</th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
-<%-- 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime"><spring:message code='ezAttitude.lhj19' /></th> --%>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th>
 					</tr>
 				</thead>
