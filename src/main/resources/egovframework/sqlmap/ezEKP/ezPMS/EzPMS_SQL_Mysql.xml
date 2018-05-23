@@ -108,6 +108,7 @@
     	<result property="userPosition2"					column="USER_POSITION2"				columnIndex="7"/>
     	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="8"/>
     	<result property="userIdType"						column="USER_ID_TYPE"				columnIndex="9"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="10"/>
     </resultMap>
     
     <resultMap id="projectTaskVO" class="ProjectTaskVO">
@@ -437,7 +438,8 @@
 			USER_POSITION,
 			USER_POSITION2,
 			MEMBER_ROLE_ID,
-			USER_ID_TYPE
+			USER_ID_TYPE,
+			TENANT_ID
 		FROM 
 			TBL_PMS_MEMBER
 		WHERE
@@ -464,12 +466,14 @@
 				TITLE AS USER_POSITION,
 				TITLE2 AS USER_POSITION2,
 				C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
-				C.USER_ID_TYPE AS USER_ID_TYPE
+				C.USER_ID_TYPE AS USER_ID_TYPE,
+				C.TENANT_ID AS TENANT_ID
 			FROM TBL_USERMASTER D JOIN
 			(SELECT DISTINCT 
 				B.CN AS DEPARTMENT,
 				A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
-				A.USER_ID_TYPE AS USER_ID_TYPE
+				A.USER_ID_TYPE AS USER_ID_TYPE,
+				A.TENANT_ID AS TENANT_ID
 			FROM
 				TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
 			ON
@@ -722,7 +726,6 @@
 				$orderWhat$ $orderHow$
 		</isNotEqual>
 		<isEqual property="orderWhat" compareValue="init">
- 
 			ORDER BY 
 				$projectSort$
 		</isEqual>
@@ -1227,7 +1230,8 @@
 		<isEqual property="status" compareValue="C">
 			<![CDATA[
 				REAL_END_DATE = #changeDate#,
-				PROGRESS = #progress#
+				PROGRESS = #progress#,
+				REST_DUEDAY = #restDueday#
 			]]>
 		</isEqual>
 		</isNotEqual>
@@ -1786,5 +1790,39 @@
 			item_id = #itemId#
 		AND
 			user_id = #userId#
+	</select>
+
+	<select id="EzPMSDAO.getProgressProject" parameterClass="Map" resultMap="projectInfoVO">
+		SELECT
+			PROJECT_ID, 
+			TENANT_ID,
+			PROJECT_NAME, 
+			PLAN_START_DATE,
+			PLAN_END_DATE, 
+			REAL_START_DATE, 
+			REAL_END_DATE,
+			HEAD_MANAGER_ID, 
+			HEAD_MANAGER_NAME, 
+			HEAD_MANAGER_NAME2,
+			HEAD_MANAGER_DEPTNAME, 
+			HEAD_MANAGER_DEPTNAME2, 
+			STATUS, 
+			PROGRESS, 
+			OVERVIEW,  
+			WEIGHT_INPUT, 
+			CREATOR_ID, 
+			CREATE_DATE, 
+			CREATOR_NAME, 
+			CREATOR_NAME2, 
+			CREATOR_DEPTNAME,
+			CREATOR_DEPTNAME2, 
+			WORKINGDAY, 
+			REST_DUEDAY, 
+			ALAM_MAIL_STATUS,
+			0 AS ISFAVORITE 
+		FROM
+			TBL_PMS_PROJECT
+		WHERE
+			STATUS = #status#
 	</select>
 </sqlMap>

@@ -33,10 +33,24 @@ $(function(){
 		var json = new Object();
 		json.projectId = "${project.projectId}";
 		json.progress = "${project.progress}";
+		json.totalTaskCount = "${project.totalTaskCount}";
+		json.completeTaskCount = "${project.completeTaskCount}";
+		json.lateTaskCount = "${project.lateTaskCount}";
 		projectList.push(json);
 	</c:forEach>
 	
 	for (var i = 0; i < projectList.length; i++) {
+		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
+		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
+		
+		if (isNaN(completeTaskPercent)) {
+			completeTaskPercent = 0;
+		}
+		
+		if (isNaN(lateTaskPercent)) {
+			lateTaskPercent = 0;
+		}
+		
 		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
 			fillBackgroundColor : progressColor,
@@ -46,7 +60,7 @@ $(function(){
 		});
 		
 		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
+			percentage : completeTaskPercent,
 			fillBackgroundColor : completeColor,
 			height : '15px',
 			radius : '15px',
@@ -54,7 +68,7 @@ $(function(){
 		});
 		
 		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
+			percentage : lateTaskPercent,
 			fillBackgroundColor : overdueColor,
 			height : '15px',
 			radius : '15px',
@@ -68,7 +82,7 @@ $(function(){
 	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;">
 		<div style="width: 100%;" id="divList">
 			<div id="lvBoardList">
-				<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowondblclick="ItemRead_onclick(this)" width="100%" border="0"
+				<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0"
 							class="mainlist" style="overflow:hidden">
 					<thead id="BoardList_THEAD">
 						<tr id="BoardList_TH">
@@ -105,7 +119,7 @@ $(function(){
 						</table>
 					</div>
 					<div id="projectListBody" multiselectable="false" useocs="false" style="overflow:auto; min-width: 469px; height: 456px;">
-					<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)"  width="100%" border="0" class="mainlist" style="">
+					<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" width="100%" border="0" class="mainlist" style="">
 							<tbody style="background-color: rgb(255, 255, 255);">
 								<c:choose>
 									<c:when test="${empty projectList}">
@@ -136,13 +150,13 @@ $(function(){
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
 												complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.progress }" />
+												<c:out value="${project.completeTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
 											</div></td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
 												overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.progress }" />
+												<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
 											</div></td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px">D

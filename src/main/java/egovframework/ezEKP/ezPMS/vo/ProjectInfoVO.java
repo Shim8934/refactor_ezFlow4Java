@@ -87,7 +87,40 @@ public class ProjectInfoVO {
 	    // 프로젝트 즐겨찾기 여부
 	    private int isFavorite;
 	    
-	    public Long getProjectId() {
+	    //전체 task 개수
+	    private int totalTaskCount;
+	    
+	    //기한이 지난 task 개수
+	    private int lateTaskCount;
+	    
+	    //완료된 task 개수
+	    private int completeTaskCount;
+	    
+	    public int getTotalTaskCount() {
+			return totalTaskCount;
+		}
+
+		public void setTotalTaskCount(int totalTaskCount) {
+			this.totalTaskCount = totalTaskCount;
+		}
+
+		public int getLateTaskCount() {
+			return lateTaskCount;
+		}
+
+		public void setLateTaskCount(int lateTaskCount) {
+			this.lateTaskCount = lateTaskCount;
+		}
+
+		public int getCompleteTaskCount() {
+			return completeTaskCount;
+		}
+
+		public void setCompleteTaskCount(int completeTaskCount) {
+			this.completeTaskCount = completeTaskCount;
+		}
+
+		public Long getProjectId() {
 	        return projectId;
 	    }
 

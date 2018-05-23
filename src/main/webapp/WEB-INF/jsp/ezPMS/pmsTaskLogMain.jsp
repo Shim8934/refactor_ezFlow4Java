@@ -42,7 +42,7 @@ $(document).ready(function(){
 		$("#divList").css("height", (CurrentHeight - 100) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 120) + "px");
 	});
-	
+
 });
 
 $(function(){
@@ -256,7 +256,7 @@ function selectedTR(elem){
 				<option value="1" selected>이력 내용</option>
 				<option value="2">이력 상태</option>
 			</select>
-			<input type="text" id="searchByContent">
+			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}">
 			<a class="imgbtn" id="searchButton" onclick="searchLogContent()" style="margin-left:1px; margin-top:1px;"><span>검색</span></a>
 			<select id="searchStatus" onchange="searchLogStatus(this.value)">
 				<option value="0">전체</option>

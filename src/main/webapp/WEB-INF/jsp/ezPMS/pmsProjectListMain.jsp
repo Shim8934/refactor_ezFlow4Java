@@ -58,6 +58,41 @@ function addNewProject(){
 }
 
 $(document).ready(function(){
+	var clickOutside;
+	var leftDocument;
+	
+	try {
+		leftDocument = $(window.parent.frames['left'].document);
+	} catch (e) {
+		try {
+			leftDocument = $(window.parent.parent.frames['left'].document);
+		} catch (e) {
+			leftDocument = $(window.parent.parent.frames['board_menu'].document);
+		}
+	}
+	
+	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+	} else {
+		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+	}	  
+	
+	clickOutside.mouseup(function (e) {
+		MailOptionHiddenOutside(e);
+	});
+	
+	leftDocument.mouseup(function (e) {
+		MailOptionHiddenOutside(e);
+	});
+	
+	$(parent.document).mouseup(function (e) {
+		MailOptionHiddenOutside(e);
+	});
+	
+	$(document).mouseup(function (e) {
+		MailOptionHiddenOutside(e);
+	});
+	
 	$(window).resize(function() {
 		CurrentHeight = $(window).height()-110;
 		if (viewType == 0) {
@@ -100,10 +135,11 @@ function projectListScroll(){
 		document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
 	}
 	
-	
-	var thWidth = document.getElementById("tableHeader").clientWidth - document.getElementById("tableBody").clientWidth;
-	if(thWidth > 0){ 
-		$("#BoardList_TH").append('<th style=width:2px;></th>');
+	if (viewType == "1") {
+		var thWidth = document.getElementById("tableHeader").clientWidth - document.getElementById("tableBody").clientWidth;
+		if(thWidth > 0){ 
+			$("#BoardList_TH").append('<th style=width:2px;></th>');
+		}	
 	} 
 }
 
@@ -238,6 +274,7 @@ function MailOptionHidden() {
 function MailOptionHiddenOutside(e) {
 	var container = $('#layer_Viewpopup');
 	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	
 	if (maillistoptionmode == "on") {
 		if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
 			MailOptionHidden();
@@ -306,6 +343,7 @@ function ChangeProjectSort(sortType) {
 	setProjectList();
 	
 }
+
 //페이지 번호에 의한 셋팅
 function goToPageByNum(page){
 	currentPage = page;
@@ -315,7 +353,6 @@ function goToPageByNum(page){
 
 //헤더 리스트 셋팅
 function setListOrder(elem){
-	
 	orderWhat = $(elem).attr("order");
 	orderHow = $(elem).attr("sort");
 	
@@ -346,7 +383,7 @@ function setInitOrder(){
 	projectListScroll();
 }
 
-function setProjectList() {
+function setProjectList() {	
 	var param = {
 		projectSort : projectSort,
 		viewType : viewType,
@@ -384,22 +421,29 @@ function setProjectList() {
 
 //tr선택시 - 메모지용
 function selectedMemoTR(elem){
-//		onPreview = false;
-	var parentElem = $(elem).parent().parent();
-	$(".projectList").removeClass("selectTR");
-	$(".projectList").find("input[type='checkbox']").removeProp("checked");
-	$(parentElem).addClass("selectTR");
-	$(parentElem).find("input[type='checkbox']").prop("checked","true");
+	if (PressCtrlKey == true) {
+		checkedCheckboxMemo(elem);
+	} else {
+		var parentElem = $(elem).parent().parent();
+		$(".projectList").removeClass("selectTR");
+		$(".projectList").find("input[type='checkbox']").removeProp("checked");
+		$(parentElem).addClass("selectTR");
+		$(parentElem).find("input[type='checkbox']").prop("checked","true");
+	}
 }
 
 //tr선택시 - 게시판용
 function selectedTR(elem){
-//		onPreview = false;
-	var parentElem = $(elem).parent();
-	$("#projectList tr").removeClass("selectTR");
-	$("#projectList tr").find("input[type='checkbox']").removeProp("checked");
-	$(parentElem).addClass("selectTR");
-	$(parentElem).find("input[type='checkbox']").prop("checked","true");
+	if (PressCtrlKey == true) {
+		checkedCheckbox(elem);
+	} else {
+		var parentElem = $(elem).parent();
+		$("#tableBody tr").removeClass("selectTR");
+		$("#tableBody tr").find("input[type='checkbox']").removeProp("checked");
+		$(parentElem).addClass("selectTR");
+		$(parentElem).find("input[type='checkbox']").prop("checked","true");
+
+	}	
 }
 
 //체크박스 전체선택 혹은 해제
@@ -419,23 +463,47 @@ function selectedAllTR(elem) {
 
 //게시판용
 function checkedCheckbox(elem) {
-	if ($(elem).is(":checked")) {
-		$(elem).prop("checked","true");
-		$(elem).parent().parent().addClass("selectTR");
+	var selectRow = '' + elem;
+	
+	if (selectRow.indexOf("TableCell") == -1) {
+		if ($(elem).is(":checked")) {
+			$(elem).prop("checked","true");
+			$(elem).parent().parent().addClass("selectTR");
+		} else {
+			$(elem).removeProp("checked");
+			$(elem).parent().parent().removeClass("selectTR");
+		}
 	} else {
-		$(elem).removeProp("checked");
-		$(elem).parent().parent().removeClass("selectTR");
+		if (!$(elem).parent().find("input:checkbox[name='boardCheckbox']").is(":checked")) {
+			$(elem).parent().find("input:checkbox[name='boardCheckbox']").prop("checked","true");
+			$(elem).parent().addClass("selectTR");
+		} else {
+			$(elem).parent().find("input:checkbox[name='boardCheckbox']").removeProp("checked");
+			$(elem).parent().removeClass("selectTR");
+		}
 	}
 }
 
 //메모용
 function checkedCheckboxMemo(elem) {
-	if ($(elem).is(":checked")) {
-		$(elem).prop("checked","true");
-		$(elem).parent().parent().parent().parent().addClass("selectTR");
+	var selectRow = '' + elem;
+	
+	if (selectRow.indexOf("TableRow") == -1) {
+		if ($(elem).is(":checked")) {
+			$(elem).prop("checked","true");
+			$(elem).parent().parent().parent().parent().addClass("selectTR");
+		} else {
+			$(elem).removeProp("checked");
+			$(elem).parent().parent().parent().parent().removeClass("selectTR");
+		}
 	} else {
-		$(elem).removeProp("checked");
-		$(elem).parent().parent().parent().parent().removeClass("selectTR");
+		if (!$(elem).parent().parent().find("input:checkbox[name='memoCheckbox']").is(":checked")) {
+			$(elem).parent().parent().find("input:checkbox[name='memoCheckbox']").prop("checked", "true");
+			$(elem).parent().parent().addClass("selectTR");
+		} else {
+			$(elem).parent().parent().find("input:checkbox[name='memoCheckbox']").removeProp("checked");
+			$(elem).parent().parent().removeClass("selectTR");
+		}
 	}
 }
 
@@ -645,6 +713,32 @@ function addFavorite() {
 	}
 }
 
+var PressCtrlKey = false;
+function event_listOnkeyUp(event) {
+	
+	if (event.target.className == "Mail_Input") {
+		return;
+	}
+	
+    if (navigator.userAgent.indexOf('Firefox') != -1) {
+        if (!event) event = window.event;
+    }
+    
+    if (event.keyCode == 17) {
+    	PressCtrlKey = false;
+    }
+
+}
+function event_listOnkeyDown(event) {
+    if (navigator.userAgent.indexOf('Firefox') != -1) {
+        if (!event) event = window.event;
+    }
+    
+    if (event.keyCode == 17) {
+    	PressCtrlKey = true;
+    }
+}
+
 function deleteFavorite() {
 	var result = getCheckedVal();
 	var response;
@@ -822,7 +916,7 @@ function emptyDate(elem){
 }
 </style>
 </head>
-<body class="mainbody">
+<body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
 	<h1>프로젝트 관리<span id="mailBoxInfo"> - [총 <span style="color:#017BEC;" id="totalCount"> </span>개]</span></h1>
 	<div id="mainmenu">
 	<ul>

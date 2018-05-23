@@ -23,7 +23,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface EzPMSService {
 
-	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String offset, String lang);
+	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String lang);
 	
 	public Long addNewProject(Map<String, Object> map);
 	
@@ -99,7 +99,7 @@ public interface EzPMSService {
 
 	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception;
 	
-	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId);
+	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId, int isGantt);
 
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId);
 
@@ -113,11 +113,11 @@ public interface EzPMSService {
 
 	public void deleteProjectMember(Long projectId, int tenantId);
 
-	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status);
+	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status, String planEndDate);
 
 	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
 
-	public void completeAllTasks(long projectId, int tenantId, String realEndDate);
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate);
 
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception;
 	
@@ -126,4 +126,6 @@ public interface EzPMSService {
 	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId);
 	
 	public ProjectBoardVO getBoardDetail(int tenantId, int itemId, String userId);
+
+	List<ProjectInfoVO> getProgressProject(String status) throws Exception;
 }

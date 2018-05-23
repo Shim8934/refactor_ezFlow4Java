@@ -279,6 +279,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<TaskLogListVO>) list ("EzPMSDAO.getTaskLogList", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ProjectInfoVO> getProgressProject(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (List<ProjectInfoVO>) list("EzPMSDAO.getProgressProject", map);
+	}
+
 	public void insertProjectAttach(Map<String, Object> attachMap) {
 		insert("EzPMSDAO.insertProjectAttach", attachMap);
 	}
