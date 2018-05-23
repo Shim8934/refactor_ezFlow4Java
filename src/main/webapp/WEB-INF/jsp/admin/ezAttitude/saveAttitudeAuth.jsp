@@ -155,32 +155,28 @@
 	        			authlist = authlist.slice(0, -1);
 	        		}
 	        	}
-	    		if (deptIds.length != 0) {
-					$.ajax({
-		   				type:"post",
-		   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
-		   				dataType : "text",
-		   				data:{
-		   					selectedUser : selectedUser,
-		   					companyId : companyId,
-		   					deptIds : deptIdStr,
-		   					authTypes : authlist
-		   				},
-						success : function(resultStatus) {
-		            		if (resultStatus == "success") {
-		   						opener.company_change();
-		   						window.close();
-		            		} else {
-		            			alert("<spring:message code='ezAttitude.kbm3' />");
-		            		}
-		            	},
-		   				error : function() {
-		   					alert("<spring:message code='ezAttitude.kbm3' />");
-		   				}
-		   			});
-	    		} else {
-	    			alert("<spring:message code='ezAttitude.kbm25' />");
-	    		}
+				$.ajax({
+	   				type:"post",
+	   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
+	   				dataType : "text",
+	   				data:{
+	   					selectedUser : selectedUser,
+	   					companyId : companyId,
+	   					deptIds : deptIdStr,
+	   					authTypes : authlist
+	   				},
+					success : function(resultStatus) {
+	            		if (resultStatus == "success") {
+	   						opener.company_change();
+	   						window.close();
+	            		} else {
+	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            		}
+	            	},
+	   				error : function() {
+	   					alert("<spring:message code='ezAttitude.kbm3' />");
+	   				}
+	   			});
 	   		}
 	    	
 		</script>
