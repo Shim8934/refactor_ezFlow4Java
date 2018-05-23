@@ -373,11 +373,18 @@
 		}
 		
 		function clickUserLadderAnimation() {
+			var $ladLineBox = $("#ladderLineBox");
+			var $body = $("html, body");
+			var ladLineTop = $ladLineBox.offset().top + Number($ladLineBox.css("padding-top").slice(0,-2));
+			
 			$(document)
 			.on("click", "[id^=drag]", function() {
 				if(userClickFlag) {
 					clickUserOrder = Number($(this).attr("id").slice(4));
 					
+					if($body.scrollTop() != ladLineTop) {
+						$body.animate({"scrollTop": ladLineTop}, 200);
+					}
 					if(userStatus[clickUserOrder] == 0) {
 						aniOneUser();
 					} else {
@@ -404,9 +411,10 @@
 				$moveImgUser = $("#copyUser");
 			}
 			
+			var $ladLineBox = $("#ladderLineBox");
 			if(type.substring(0, 3) == "ani" || type.substring(3, 6) == "one") {
-				var scrollval = (resultOrder * wSize - $("#ladderLineBox").width()/2) + wSize/2;
-				$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
+				var scrollval = (resultOrder * wSize - $ladLineBox.width()/2) + wSize/2;
+				$ladLineBox.animate({"scrollLeft": scrollval}, 300);
 			} else {
 				$(".resultItem").css({"background": "#ffffff"});
 				$(".resultUser").css({"background": "#f2f2f2", "color": "#000000"});

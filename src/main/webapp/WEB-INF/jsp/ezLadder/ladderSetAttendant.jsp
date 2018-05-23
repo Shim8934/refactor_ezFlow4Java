@@ -1617,8 +1617,8 @@
 	                	<tr>
 	                		<div class="portlet_tabpart01" style="width:664px;">
 	        					<div class="portlet_tabpart01_top" id="tab1" style="width:664px;">
-					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t037' /></span></p>
-									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t038' /></span></p>
+					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer; text-align: center;" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t037' /></span></p>
+									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer;" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t038' /></span></p>
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
