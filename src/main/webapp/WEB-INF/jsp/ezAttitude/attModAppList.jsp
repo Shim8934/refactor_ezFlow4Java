@@ -345,6 +345,18 @@
     			$(Radio1).prop("checked", true);
     			type_set();
 			}
+			else if (r == "deptChange") {
+				$("#writer_search").val("");
+				if (checkAdmin == 'true') {
+	    			$("#writerDept_search").val("");
+				}
+    			$("#appr_search").val("");
+    			if (usepostDate) {
+    				date_reset();
+    			}
+    			$("input[name=searchCheck]").val(type);
+    			type_set();
+			}
 			
 			//정렬 초기화
 			orderCell = "";
@@ -371,9 +383,14 @@
 		        	searchStartDate = "";
 		        	searchEndDate = "";
 		        }
- 	    	} else {
- 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
- 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+ 	    	} else {////////여기서 if문써서 부서변경시는 아무값안들어가게?????????
+ 	    		if (r == "deptChange") {
+	 	    		searchStartDate = "";
+	 	    		searchEndDate = "";
+ 	    		} else {
+	 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+ 	    		}
 	            if (searchStartDate > searchEndDate) {
 	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
 	                return;
@@ -494,14 +511,6 @@
 	    			if(checkAdmin == 'true') {
 		    			authFlag = 'M'; 
 		    		}
-	    			
-		    		if (authFlag == 'M') {
-						$("#appr").show();
-						$("#ret").show();
-					} else {
-						$("#appr").hide();
-						$("#ret").hide();
-					}
 	    		}	
 	    		
 	    		totalAtt = data.totalAtt;
@@ -720,7 +729,7 @@
 	    
 	    function dept_change() {
 	    	type = $("input:radio[name=searchCheck]:checked").val();
-	    	att_search('refresh');
+	    	att_search('deptChange');
 	    }
 	    
 	    var PressShiftKey = false;
@@ -1265,7 +1274,7 @@
 			</table>
 		</c:if>
         <ul id="tb_Parent">
-        <c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
+		<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
 			<li id="appr"><span onClick="modApprove()">승인</span></li>
         	<li id="ret"><span onClick="modReturn()">반려</span></li>
 		</c:if>
@@ -1284,11 +1293,8 @@
 					<option value="ALL" selected>전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
-<%-- 							<c:if test="${selectedDeptID == dept.deptId}"> --%>
-<%-- 								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option> --%>
-<%-- 							</c:if> --%>
-							<c:if test="${selectedDeptID != dept.deptId}">
-								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+							<c:if test="${dept.authType == 'M'}">
+								<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
 							</c:if>
 						</c:if>										
 					</c:forEach>

@@ -327,16 +327,16 @@ public class EzAttitudeBHSController {
 			deptList = (JSONArray) resultBody.get("data");
 		}
 		
-		if (deptList.size() > 1) {
-			attitudeAdminCheck = true;
-			
-			JSONObject dept = new JSONObject();
-			
-			for (int i = 0; i < deptList.size(); i++) {
-				dept = (JSONObject) deptList.get(i);
-				authFlag = (String) dept.get("authType");
-			}
-		}
+//		if (deptList.size() > 1) {
+//			attitudeAdminCheck = true;
+//			
+//			JSONObject dept = new JSONObject();
+//			
+//			for (int i = 0; i < deptList.size(); i++) {
+//				dept = (JSONObject) deptList.get(i);
+//				authFlag = (String) dept.get("authType");
+//			}
+//		}
 		
 		for (int i = 0; i < deptList.size(); i++) {
 			JSONObject dept = (JSONObject) deptList.get(i);

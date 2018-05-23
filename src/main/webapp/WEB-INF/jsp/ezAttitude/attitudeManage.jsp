@@ -5,7 +5,7 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>전체근태관리</title>
+		<title>근태정보관리</title>
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
@@ -347,7 +347,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
 	    		$("div#miniTitle").html("근태입력목록   &nbsp;[총 " 
@@ -405,12 +405,7 @@
 	    		var i = ((pageNum - 1) * listSize) + 1;
 	    		
 	    		result.forEach(function(vo, index) {
-	    			if ($('#ListDept option:selected').attr('authtype') == 'M') {
-	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
-	    			} else {
-	    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "'>";
-	    			}
-	    			
+    				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
 	    			resultHtml += "<td style='padding-left:15px'>" + i + "</td>";
 	    			resultHtml += "<td>" + vo.startDate + "</td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
@@ -421,7 +416,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
 	    		$("div#miniTitle").html("근태미입력자   &nbsp;[총 " 
@@ -753,7 +748,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-		<h1><p style="padding-left:5px">전체근태관리</p></h1>
+		<h1><p style="padding-left:5px">근태정보관리</p></h1>
 	    <div class="portlet_tabpart01" style="margin-bottom:16px;">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	            <p><span id="modify" style="width:100px; text-align: center;">근태입력관리</span></p>
@@ -768,7 +763,7 @@
 		      		<li><span onclick="searchPopup();">검색</span></li>
 		      		<li><span onclick="refresh();">새로고침</span></li>
 		      		<c:if test="${manageFlag == 'M' }">
-		      			<li><span onclick="addAtt();">근태작성</span></li>
+		      			<li><span onclick="addAtt();">근태입력</span></li>
 		      		</c:if>
 		      		<li>
 		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>
@@ -779,7 +774,9 @@
 		      				<option value="ALL" selected>전체</option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									<c:if test="${dept.authType == 'M'}">
+										<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+									</c:if>
 								</c:if>
 							</c:forEach>
 			      		</select>
@@ -808,7 +805,7 @@
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:490px; margin:10px 0px 0px 1px;">
 			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태관리 검색</th>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태정보관리 검색</th>
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px">이름</th>

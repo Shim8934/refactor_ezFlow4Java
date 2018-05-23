@@ -1195,27 +1195,12 @@ public class EzAttitudeKMSController {
 		
 		String adminFlag = "false";
 		String isAllDept = "";
+		String displayFlag = "false";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
-		
-		
-//		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 admin
-//		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
-//			adminFlag = "true";
-//			//권한부서 리스트
-//			//c , k , wa -> 회사의 모든부서
-//			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/depts";
-//			
-//		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
-//			adminFlag = "true";
-//			isGAdmin = "Y";////////////////////////////////////////////없애도 될듯하다
-//			// g -> 자신의 부서 + auth TB 확인해볼것.
-//			url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
-//		}
-		
 		
 		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
@@ -1256,6 +1241,7 @@ public class EzAttitudeKMSController {
 		
 		if (deptList.size() > 1) {
 			adminFlag = "true";
+			displayFlag = "true";
 		}
 		
 		int myDeptCount = 0;
@@ -1277,6 +1263,10 @@ public class EzAttitudeKMSController {
 			}
 		}
 		
+		if (myDeptCount == deptList.size()) {
+			displayFlag = "false";
+		}
+		
 		model.addAttribute("deptList", deptList);
 		model.addAttribute("userInfo", userInfo);
 		if (deptid == null) {
@@ -1286,6 +1276,7 @@ public class EzAttitudeKMSController {
 		}
 		model.addAttribute("deptFlag", "true");
 		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("displayFlag", displayFlag);
 		
 		LOGGER.debug("attitudeUserMain ended");
 		return "/ezAttitude/attitudeUserMain";
@@ -1901,29 +1892,19 @@ public class EzAttitudeKMSController {
 			deptList = (JSONArray) resultBody.get("data");
 		}
 		
-//		//같은 부서면 최소한 읽기 권한은 부여
-//		if (userInfo.getDeptID().equals(deptId)) {
-//			authFlag = "R";
-//		}
-		
 		int myDeptCount = 0;
-		
 		
 		for(int i = 0; i < deptList.size(); i++) {
 			JSONObject dept = (JSONObject) deptList.get(i);
-			LOGGER.debug("dept : " + dept.toJSONString());
 			if (dept.get("deptId").equals(userInfo.getDeptID())) {
 				myDeptCount++;
 			}
 		}
 		
-		if (myDeptCount == 1) {
-			for(int i = 0; i < deptList.size(); i++) {
-				JSONObject dept = (JSONObject) deptList.get(i);
-				if (dept.get("deptId").equals(userInfo.getDeptID()) && dept.get("mine") != null && dept.get("mine").equals("yes")) {
-					dept.put("mine", "no");
-					dept.put("authType", "R");
-				}
+		for(int i = 0; i < deptList.size(); i++) {
+			JSONObject dept = (JSONObject) deptList.get(i);
+			if (dept.get("mine").equals("yes")) {
+				dept.put("authType", "R");
 			}
 		}
 		
@@ -1936,13 +1917,11 @@ public class EzAttitudeKMSController {
 		}
 		
 		//자신의 부서와 다르고 권한이 없을 경우에는 접근을 제한한다.		
-//		if (!userInfo.getDeptID().equals(deptId)) {
 		//아무런 권한이 없으면 접근을 제한한다.
 		if (authFlag.equals("")) {
 			return "cmm/error/adminDenied";
 		}
-//		}
-		
+	
 		model.addAttribute("font", font);
 		model.addAttribute("authFlag", authFlag);
 		

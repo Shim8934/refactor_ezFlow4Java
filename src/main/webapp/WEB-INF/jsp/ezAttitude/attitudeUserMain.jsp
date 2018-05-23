@@ -1011,7 +1011,7 @@
 		        	<li id="search"><span onClick="excelDown()"><spring:message code='ezAttitude.bbhs7'/></span></li>
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>
-						<select id="authDeptList" style="width:100px; margin-top:5px;" onchange="deptChange()">
+						<select id="authDeptList" style="width:100px; margin-top:5px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
 								<c:if test="${dept.mine != 'yes' }">
 									<c:if test="${selectedDeptID == dept.deptId}">

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.bbhs24'/></title>
+		<title>근태상세보기</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -102,8 +102,11 @@
 						},
 						success : function(resultStatus) {
 							if (resultStatus == "success") {
-								window.opener.getList();
-//	 							window.opener.parent.frames["left"].getAttitudeList();
+								try {
+									window.opener.getList();
+								} catch (e) {
+									window.opener.getAttitudeCheckList();
+								}
 								window.close();
 							} else {
 								alert("<spring:message code='ezAttitude.kbm3' />");

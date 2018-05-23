@@ -67,7 +67,7 @@
 			}
 		</style>
 	</head>
-<body class="leftbody">
+<body class="leftbody" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
 	<div class="left_pims" title="근태관리"><span>근태관리</span></div>
 <!-- 	<article class="time"> -->
 <%-- 		<p class="title"><spring:message code='main.t00023' /></p> --%>
@@ -104,9 +104,11 @@
 			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
 			<c:if test="${attitudeAdminCheck == true}">
 				<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
-				<li><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;전체근태관리</span></li>
 			</c:if>
 		</ul>
+		<c:if test="${attitudeAdminCheck == true}">
+			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;근태정보관리</span></h3>
+		</c:if>
 	</div>
 	<script type="text/javascript">
 		var userOffset = "${userOffset}";
