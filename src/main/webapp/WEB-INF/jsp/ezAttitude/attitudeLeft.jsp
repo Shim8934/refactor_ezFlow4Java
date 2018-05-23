@@ -84,7 +84,6 @@
 	<article class="time">
 		<div id="clock" class="light">
 			<div class="display">
-				<%-- <p class="title" style="padding:3px 0px 0px 11px; width:200px;"><spring:message code='main.t00023'/></p> --%>
 				<div class="digits" style="padding:18px 5px 0px 5px; width:186px; border:1px solid #ddd; margin:16px; margin-left:10px; border-radius:15px; height:130px"></div>
 			</div>
 		</div>
@@ -117,6 +116,10 @@
 		var leaveEarlyFlag = false; // 조퇴가 등록되어있는지 체크
 		var serverTime = "${serverTime}";
 		var nowAttiTime = "";
+		var beforeAlertDate = "";
+		var afterAlertDate = "";
+		var overTime = "";
+		
 		window.onload = function(){
 			setAttiBtnHover();
 			getAttitudeList();
@@ -158,8 +161,6 @@
 	    				} else if (result[i].typeId == "A03") {
 	    					$("#outAttiClock").text("퇴근 : " + result[i].startDate.split(" ")[1]);
 	    					$("#outAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
-	    				} else if (result[i].typeId == "A08") {
-	    					leaveEarlyFlag = true;
 	    				}
 	    			}
 	    		}
@@ -202,23 +203,30 @@
 					if (closedDay[now.getDay()] == "1" || checkClosedToday) {
 			    		alert("<spring:message code='ezAttitude.bbhs34'/>");
 					} else {
-						addAttitude(obj);
+						getIsAttitude(obj);
 					}
 				}
 			});
 		}
 		
+		//시간놓고 alert내용을 파라미터로 던져서 체크??
 	    function addAttitude(obj) {
 	    	var pTypeId = obj.getAttribute("type");
 	    	var pDateType = obj.getAttribute("datetype");
 	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
 	    		alert("<spring:message code='ezAttitude.bbhs35'/>");
 	    		return;
+	    	}
+	    	
+	    	beforeAlertDate = new Date();
+	    	var dateAlert = nowAttiTime.getFullYear() + "년 " + (nowAttiTime.getMonth() + 1) + "월 " + (nowAttiTime.getDate()) + "일 " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+	    	var saveFlag = confirm("현재 시각은 " + dateAlert + "입니다.");
+	    	if (!saveFlag) {
+	    		afterAlertDate = new Date();
+	    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+	    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+	    		return;
 	    	} 
-// 	    	else if (pTypeId == "A03" && leaveEarlyFlag) {
-// 	    		alert("<spring:message code='ezAttitude.bbhs36'/>");
-// 	    		return;
-// 	    	}
 	    	$.ajax({
 	    		type : "POST",
 	    		async : true,
@@ -234,39 +242,38 @@
 	    			if (result == 'dupl') {
 	    				alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
 	    			}
+	    		},
+	    		complete : function() {
+	    			afterAlertDate = new Date();
+		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
 	    		}
 	    	})
 	    }
 	    
-// 	    function getIsAttitude(obj) {
-// 	    	var pTypeId = obj.getAttribute("type");
-// 	    	var pDateType = obj.getAttribute("datetype");
-// 	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
-// 	    		alert("<spring:message code='ezAttitude.bbhs35'/>");
-// 	    		return;
-// 	    	} else if (leaveEarlyFlag) {
-// 	    		alert("<spring:message code='ezAttitude.bbhs36'/>");
-// 	    		return;
-// 	    	}
-// 	    	$.ajax({
-// 	    		type : "POST",
-// 	    		dataType : "text",
-// 	    		async : true,
-// 	    		url : "/ezAttitude/getIsAttitude.do",
-// 	    		data : {
-// 	    			typeId : pTypeId,
-// 	    			dateType : pDateType,
-// 	    			mode : "new"
-// 	    		},
-// 	    		success : function(result) {
-// 	    			if (result != 0) {
-	    				
-// 	    			} else {
-// 	    				addAttitude();
-// 	    			}
-// 	    		}
-// 	    	})
-// 	    }
+	    function getIsAttitude(obj) {
+	    	var pTypeId = obj.getAttribute("type");
+	    	var pDateType = obj.getAttribute("datetype");
+	    	$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : true,
+	    		url : "/ezAttitude/getIsAttitude.do",
+	    		data : {
+	    			typeId : pTypeId
+	    		},
+	    		success : function(result) {
+    				getAttitudeList();
+	    			parent.frames["right"].getAttitudeMainList();
+	    			if (result == 0) {
+	    				addAttitude(obj);
+	    			}
+	    		},
+	    		complete : function() {
+	    			
+	    		}
+	    	})
+	    }
 
 	    function setAttiBtnHover() {
 	    	$("#inAttiBtn, #outAttiBtn").hover(function(){
@@ -298,6 +305,37 @@
 	    	}
 	    }
 	    
+    	function format(type){
+	        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
+	        
+	        var s =
+	        	leadingZeros(nowAttiTime.getHours(), 2)+
+	            leadingZeros(nowAttiTime.getMinutes(), 2)+
+	            leadingZeros(nowAttiTime.getSeconds(), 2);
+	        return s;
+    	}
+    	
+    	function parseDate() {
+    		var _strDate = "";
+    		nowAttiTime = new Date(serverTime);
+    		
+    		if (nowAttiTime.toString() == 'Invalid Date') {
+    		    var _parts = serverTime.split(' ');
+    		
+    		    var _dateParts = _parts[0];
+    		    nowAttiTime = new Date(_dateParts);
+    		
+    		    if (_parts.length > 1) {
+    		        var _timeParts = _parts[1].split(':');
+    		        nowAttiTime.setHours(_timeParts[0]);
+    		        nowAttiTime.setMinutes(_timeParts[1]);
+    		        if (_timeParts.length > 2) {
+    		        	nowAttiTime.setSeconds(_timeParts[2]);
+    		        }
+    		    }
+    		}
+    	}
+    	
 	    $(function(){
 	    	parseDate();
 	    	
@@ -356,36 +394,6 @@
 
 	    	})();
 	    	
-	    	function format(type){
-		        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-		        
-		        var s =
-		        	leadingZeros(nowAttiTime.getHours(), 2)+
-		            leadingZeros(nowAttiTime.getMinutes(), 2)+
-		            leadingZeros(nowAttiTime.getSeconds(), 2);
-		        return s;
-	    	}
-	    	
-	    	function parseDate() {
-	    		var _strDate = "";
-	    		nowAttiTime = new Date(serverTime);
-	    		
-	    		if (nowAttiTime.toString() == 'Invalid Date') {
-	    		    var _parts = serverTime.split(' ');
-	    		
-	    		    var _dateParts = _parts[0];
-	    		    nowAttiTime = new Date(_dateParts);
-	    		
-	    		    if (_parts.length > 1) {
-	    		        var _timeParts = _parts[1].split(':');
-	    		        nowAttiTime.setHours(_timeParts[0]);
-	    		        nowAttiTime.setMinutes(_timeParts[1]);
-	    		        if (_timeParts.length > 2) {
-	    		        	nowAttiTime.setSeconds(_timeParts[2]);
-	    		        }
-	    		    }
-	    		}
-	    	}
 	    });
 	</script>
 </body>

@@ -250,7 +250,10 @@
 		 	/*근태관리 추가*/
 		 	var serverTime = "${serverTime}";
 		 	var nowAttiTime = "";
-		 	
+		 	var beforeAlertDate = "";
+			var afterAlertDate = "";
+			var overTime = "";
+			
 		 	$("#todayTime").html(year + "년 " + mon + "월 " + day + "일");
 
 		    function window_onload_total() {
@@ -955,13 +958,19 @@
 		    	var pTypeId = obj.getAttribute("type");
 		    	var pDateType = obj.getAttribute("datetype");
 		    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
-		    		alert("출근 후 퇴근이 가능합니다.");
+		    		alert("<spring:message code='ezAttitude.bbhs35'/>");
+		    		return;
+		    	}
+	    	
+		    	beforeAlertDate = new Date();
+		    	var dateAlert = nowAttiTime.getFullYear() + "년 " + (nowAttiTime.getMonth() + 1) + "월 " + (nowAttiTime.getDate()) + "일 " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+		    	var saveFlag = confirm("현재 시각은 " + dateAlert + "입니다.");
+		    	if (!saveFlag) {
+		    		afterAlertDate = new Date();
+		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
 		    		return;
 		    	} 
-// 		    	else if (pTypeId == "A03" && leaveEarlyFlag) {
-// 		    		alert("조퇴 후 퇴근은 불가능합니다.");
-// 		    		return;
-// 		    	}
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,
@@ -976,6 +985,11 @@
 		    			if (result == 'dupl') {
 		    				alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
 		    			}
+		    		},
+		    		complete : function() {
+		    			afterAlertDate = new Date();
+			    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+			    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
 		    		}
 		    	})
 		    }
@@ -1017,11 +1031,34 @@
 						if (closedDay[now.getDay()] == "1" || checkClosedToday) {
 				    		alert("휴일은 출/퇴근을 등록할 수 없습니다.");
 						} else {
-							addAttitude(obj);
+							getIsAttitude(obj);
 						}
 					}
 				});
 			}
+		    
+		    function getIsAttitude(obj) {
+		    	var pTypeId = obj.getAttribute("type");
+		    	var pDateType = obj.getAttribute("datetype");
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : true,
+		    		url : "/ezAttitude/getIsAttitude.do",
+		    		data : {
+		    			typeId : pTypeId
+		    		},
+		    		success : function(result) {
+	    				getAttitudeList();
+		    			if (result == 0) {
+		    				addAttitude(obj);
+		    			}
+		    		},
+		    		complete : function() {
+		    			
+		    		}
+		    	})
+		    }
 		    
 		    function setAttiBtnHover() {
 		    	$("#inAttiBtn, #outAttiBtn").hover(function(){

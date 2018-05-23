@@ -1049,7 +1049,7 @@ public class EzAttitudeBHSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userId = userInfo.getId();
-		String typeId = request.getParameter("attitudeId");
+		String typeId = request.getParameter("typeId");
 		String startDate = request.getParameter("startDate");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
