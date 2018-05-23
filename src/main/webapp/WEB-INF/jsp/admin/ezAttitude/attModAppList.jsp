@@ -583,6 +583,11 @@
     			} else {
     				htmlStr += '<td>' + attList[i].apprUserName + '</td>';	
     			}
+    			if (attList[i].applDate == null) {
+    				htmlStr += '<td></td>';
+    			} else {
+    				htmlStr += '<td>' + attList[i].applDate.substring(0,16) + '</td>';
+    			}
     			
     			if  (excel != true) {
     				htmlStr += '<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>';	
@@ -1149,12 +1154,6 @@
 			    				json[i].apprDate = "";
 			    			}
 			    			
-			    			if (json[i].apprUserName != null) {
-			    				if (json[i].apprUserName.length > 3) {
-				    				name = json[i].apprUserName.substring(0,2) + "...";
-				    			}	
-			    			}
-			    			
 			    			if (json[i].apprUserName == null) {
 			    				json[i].description = "";
 			    				json[i].apprUserName = "";
@@ -1335,7 +1334,7 @@
 		                </td>
 	                  </tr>
 	                  <tr>
-	                    <th>변경일자기간</th>
+	                    <th>검색기간</th>
 	                    <td>
 	                    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">검색기간 사용</label>
 	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
@@ -1374,8 +1373,9 @@
 				<th width="125px" style="cursor:pointer" colname="ORIGIN_TIME">기존시각</th>
 				<th width="125px" style="cursor:pointer" colname="NO">신청시각</th>
 				<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
-				<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
-				<th width="150px" style="cursor:pointer" colname="NO">내역확인</th>
+				<th width="100px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
+				<th width="130px" style="cursor:pointer" colname="APPL_DATE">신청일자</th>
+				<th width="100px" style="cursor:pointer" colname="NO">내역확인</th>
 			</tr>
 			
 		    <c:if test="${list.size() == 0}"> 
