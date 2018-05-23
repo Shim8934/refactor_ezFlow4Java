@@ -845,7 +845,7 @@ public class EzEmailAdminController {
 		}
 
 		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
-			totalPage = totalPage + 1;
+			totalPage = totalPage;
 		}
 
 		currentPage = Math.min(currentPage, totalPage);
