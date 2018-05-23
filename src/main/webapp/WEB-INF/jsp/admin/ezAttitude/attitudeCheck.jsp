@@ -330,8 +330,8 @@
 			
 			function attDetail(obj) {
 				var pAttitudeId = obj.getAttribute("attitudeId"); 
-				var pTypeId = obj.getAttribute("typeId")
-				;
+				var pTypeId = obj.getAttribute("typeId");
+				
 				if (CrossYN()) {
 					var OpenWin = window.open("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
 					
@@ -341,6 +341,38 @@
 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 				}
 		    }
+			
+			function addAtt() {
+				today = new Date();
+		    	dd = today.getDate();
+		    	mm = today.getMonth()+1; //January is 0!
+		    	yyyy = today.getFullYear();
+
+		    	if(dd<10) {
+		    	    dd='0'+dd
+		    	} 
+
+		    	if(mm<10) {
+		    	    mm='0'+mm
+		    	} 
+
+		    	today = yyyy + '-' + mm + '-' + dd;
+				
+				var date = today;
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=", "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=", "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -380,6 +412,8 @@
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="addAtt();">근태작성</span></a>&nbsp;
+						
 					</td>
 				</tr>
 			</tbody>
@@ -394,7 +428,6 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
-<%-- 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime"><spring:message code='ezAttitude.lhj19' /></th> --%>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th>
 					</tr>
 				</thead>

@@ -226,13 +226,14 @@
 	    			break;
 	    		case "absent":
 	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th></tr>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th></tr>";
 	    			break;
 	    		case "history":
-	    			resultHtml += "<tr><th style='padding-left: 15px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
 	    			resultHtml += "<th style='width:500px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
@@ -349,15 +350,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("근태입력목록   [총 " 
+	    		$("div#miniTitle").html("근태입력목록   &nbsp;[총 " 
 	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
-	    				+ $("#Sdatepicker").val().split("-")[0] + "년"
-	    				+ $("#Sdatepicker").val().split("-")[1] + "월"
+	    				+ $("#Sdatepicker").val().split("-")[0] + "년 "
+	    				+ $("#Sdatepicker").val().split("-")[1] + "월 "
 	    				+ $("#Sdatepicker").val().split("-")[2] + "일"
 	    				+ " ~ "
-	    				+ $("#Edatepicker").val().split("-")[0] + "년"
-	    				+ $("#Edatepicker").val().split("-")[1] + "월"
-	    				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
+	    				+ $("#Edatepicker").val().split("-")[0] + "년 "
+	    				+ $("#Edatepicker").val().split("-")[1] + "월 "
+	    				+ $("#Edatepicker").val().split("-")[2] + "일]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -411,10 +412,10 @@
 	    			}
 	    			
 	    			resultHtml += "<td style='padding-left:15px'>" + i + "</td>";
+	    			resultHtml += "<td>" + vo.startDate + "</td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
-	    			resultHtml += "<td>" + vo.deptName + "</td>";
-	    			resultHtml += "<td>" + vo.startDate + "</td></tr>"
+	    			resultHtml += "<td>" + vo.deptName + "</td></tr>";
 	    			
 	    			i++;
 	    		});
@@ -423,15 +424,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("근태미입력자   [총 " 
+	    		$("div#miniTitle").html("근태미입력자   &nbsp;[총 " 
 				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 명 - " 
-				+ $("#Sdatepicker").val().split("-")[0] + "년"
-				+ $("#Sdatepicker").val().split("-")[1] + "월"
+				+ $("#Sdatepicker").val().split("-")[0] + "년 "
+				+ $("#Sdatepicker").val().split("-")[1] + "월 "
 				+ $("#Sdatepicker").val().split("-")[2] + "일"
 				+ " ~ "
-				+ $("#Edatepicker").val().split("-")[0] + "년"
-				+ $("#Edatepicker").val().split("-")[1] + "월"
-				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
+				+ $("#Edatepicker").val().split("-")[0] + "년 "
+				+ $("#Edatepicker").val().split("-")[1] + "월 "
+				+ $("#Edatepicker").val().split("-")[2] + "일]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -484,9 +485,12 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
+	    		var i = ((pageNum - 1) * listSize) + 1;
+	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' userid='" + vo.writerId + "';>";
-		   			resultHtml += "<td style='padding-left: 15px;'>" + vo.writerName + "</td>";
+	    			resultHtml += "<td style='padding-left: 15px;'>" + i + "</td>";
+		   			resultHtml += "<td>" + vo.writerName + "</td>";
 		   			resultHtml += "<td>" + vo.writerTitle + "</td>";
 		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
 		   			//일시
@@ -521,21 +525,23 @@
 		   			
 	    			resultHtml += "<td>" + vo.apprUserName + "</td>"
 	    						+ "<td>" + vo.apprDate + "</td></tr>";
+	    						
+	    			i++;
 	    		});
 	    		
 	    		if (resultHtml == "") {
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("관리내역   [총 " 
+	    		$("div#miniTitle").html("관리내역   &nbsp;[총 " 
 	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
-	    				+ $("#Sdatepicker").val().split("-")[0] + "년"
-	    				+ $("#Sdatepicker").val().split("-")[1] + "월"
+	    				+ $("#Sdatepicker").val().split("-")[0] + "년 "
+	    				+ $("#Sdatepicker").val().split("-")[1] + "월 "
 	    				+ $("#Sdatepicker").val().split("-")[2] + "일"
 	    				+ " ~ "
-	    				+ $("#Edatepicker").val().split("-")[0] + "년"
-	    				+ $("#Edatepicker").val().split("-")[1] + "월"
-	    				+ $("#Edatepicker").val().split("-")[2] + "일 ]")
+	    				+ $("#Edatepicker").val().split("-")[0] + "년 "
+	    				+ $("#Edatepicker").val().split("-")[1] + "월 "
+	    				+ $("#Edatepicker").val().split("-")[2] + "일]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
