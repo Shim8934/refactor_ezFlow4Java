@@ -82,7 +82,11 @@
 					}
 				});
 				$("#btn_CancelAprLineTempletName").on("click", function() {
-					if(poptype === "overlapOnlyName") {
+					if(poptype === "overlap") {
+						if(retFunc !== null || retFunc !== "") {
+							retFunc("cancle");
+						}
+					} else if(poptype === "overlapOnlyName") {
 						if(retFunc !== null || retFunc !== "") {
 							retFunc();
 						}
