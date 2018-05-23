@@ -1152,11 +1152,11 @@
 			    				json[i].apprDate = "";
 			    			}
 			    			
-			    			if (json[i].apprUserName != null) {
-			    				if (json[i].apprUserName.length > 3) {
-				    				name = json[i].apprUserName.substring(0,2) + "...";
-				    			}	
-			    			}
+// 			    			if (json[i].apprUserName != null) {
+// 			    				if (json[i].apprUserName.length > 3) {
+// 				    				name = json[i].apprUserName.substring(0,2) + "...";
+// 				    			}	
+// 			    			}
 			    			
 			    			if (json[i].apprUserName == null) {
 			    				json[i].description = "";
@@ -1169,7 +1169,7 @@
 				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").append($("<div style='width:89px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(0,11))));
 				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(11,16))));
 				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].changeDate.substring(11,16))));
-				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='width:52px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
+				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='width:48px; padding-left: 5px;padding-right: 5px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
 				    		objTr.append($("<td style='width:45%'></td>").append($("<div style='width:118px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprDate)));
 				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprStatus)));
 				    		
@@ -1454,7 +1454,7 @@
 				    	<tr>
 							<th style="width:120px;height:30px">일자</th>
 				    		<th style="width:30px; height:30px">기존시각</th>
-				    		<th style="width:30px; height:30px">신청시긱</th>
+				    		<th style="width:30px; height:30px">신청시각</th>
 				  			<th style="height:30px">승인자</th>
 				  			<th style="width:120px;height:30px">승인일시</th>
 				  			<th style="height:30px">승인상태</th>
