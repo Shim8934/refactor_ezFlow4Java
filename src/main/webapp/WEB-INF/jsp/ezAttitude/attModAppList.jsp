@@ -1281,12 +1281,12 @@
 			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
-					<option value="ALL">전체</option>
+					<option value="ALL" selected>전체</option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
-							<c:if test="${selectedDeptID == dept.deptId}">
-								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
-							</c:if>
+<%-- 							<c:if test="${selectedDeptID == dept.deptId}"> --%>
+<%-- 								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option> --%>
+<%-- 							</c:if> --%>
 							<c:if test="${selectedDeptID != dept.deptId}">
 								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
 							</c:if>
