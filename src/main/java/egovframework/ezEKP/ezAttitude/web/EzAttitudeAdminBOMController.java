@@ -852,7 +852,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 근태입력조회 메인화면 호출
+	 * 관리자 근태입력관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do")
 	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -921,7 +921,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 근태조회 리스트 조회
+	 * 관리자 근태입력관리 조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -992,7 +992,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 근태조회 미입력자조회
+	 * 근태조회 미입력자관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAbsented.do")
 	public String attitudeAbsented(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -1060,7 +1060,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 근태조회 미입력자목록 조회
+	 * 근태조회 미입력자관리 조회
 	 */
 	@RequestMapping(value = {"/admin/ezAttitude/getAttitudeAbsentedList.do", "/ezAttitude/getAttitudeAbsentedList.do"})
 	@ResponseBody
