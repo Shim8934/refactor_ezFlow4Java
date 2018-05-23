@@ -37,6 +37,8 @@
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartDate = "${searchStartDate}";
 	    	var searchEndDate = "${searchEndDate}";
+	    	var initSearchStartDate = "${searchStartDate}";
+	    	var initSearchEndDate = "${searchEndDate}";
 	    	var pageNum = 1; // 페이지 ==> 초기값 설정
 	    	var totalCount = "" // 게시물 총 갯수
 	    	var totalPage = ""; // 게시판의 총 페이지갯수
@@ -165,6 +167,17 @@
 	        }
 	        
 	        function Tab1_MouseClick(obj) {
+	        	//검색 초기화
+    			searchStartDate = "";
+    			searchEndDate = "";
+	    		searchUserName = "";
+	    		searchTitle = "";
+	    		
+				$("#Sdatepicker").datepicker('setDate', initSearchStartDate);
+				$("#Edatepicker").datepicker('setDate', initSearchEndDate);
+	    		$("#searchUserName").val("");
+	    		$("#searchTitle").val("");
+	        	
 	            obj.className = "tabon";
 	            if (obj.id != Tab1_SelectID) {
 	                if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null){
@@ -265,11 +278,6 @@
 	        		searchAttitudeType = $('#searchAttitudeType').val();
 	        	}
 	    		
-    			searchStartDate = $("#Sdatepicker").val();
-    			searchEndDate = $("#Edatepicker").val();
-	    		searchUserName = $("#searchUserName").val();
-	    		searchTitle = $("#searchTitle").val();
-	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("<spring:message code='ezAttitude.lhj15' />");
 		            return;
@@ -283,10 +291,10 @@
 	    			data : {
 	    				companyId : companyId,
 	    				deptId : $('#ListDept').val(),
-	   					userName : $("#searchUserName").val(),
-	   					title : $("#searchTitle").val(),
-	   					startDate : $("#Sdatepicker").val(),
-	   					endDate : $("#Edatepicker").val(),
+	   					userName : searchUserName,
+	   					title : searchTitle,
+	   					startDate : searchStartDate,
+	   					endDate : searchEndDate,
 	   					attitudeType : searchAttitudeType,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
@@ -360,12 +368,6 @@
 		            return;
 				}
 	    		
-	    		searchUserName = $("#searchUserName").val();
-				searchDeptName = $("#searchDeptName").val();
-				searchTitle = $("#searchTitle").val();
-	    		searchStartDate = $("#Sdatepicker").val();
-	    		searchEndDate = $("#Edatepicker").val();
-	    		
 	    		$.ajax({
 					type : "post",
 					dataType : "json",
@@ -437,11 +439,6 @@
 	    		if (typeId == "total") {
 	    			typeId = "";
 	    		}
-	    		
-	    		searchUserName = $("#searchUserName").val();
-	    		searchTitle = $("#searchTitle").val();
-    			searchStartDate = $("#Sdatepicker").val();
-    			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("<spring:message code='ezAttitude.lhj15' />");
@@ -720,8 +717,22 @@
 		    }
 	        
 	        function search() {
+    			searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
+	    		searchUserName = $("#searchUserName").val();
+	    		searchTitle = $("#searchTitle").val();
+	    		
 	        	goToPageByNum(1);
 	        	getList();
+	        }
+	        
+	        function refresh() {
+	        	$("#searchUserName").val("");
+	    		$("#searchTitle").val("");
+	        	$("#Sdatepicker").datepicker('setDate', initSearchStartDate);
+				$("#Edatepicker").datepicker('setDate', initSearchEndDate);
+	        	
+				search();
 	        }
 	    </script>
 	</head>
@@ -739,6 +750,7 @@
 	    		<div id="miniTitle" style="margin-bottom:10px;">근태입력목록</div>
 				<ul>
 		      		<li><span onclick="searchPopup();">검색</span></li>
+		      		<li><span onclick="refresh();">새로고침</span></li>
 		      		<c:if test="${manageFlag == 'M' }">
 		      			<li><span onclick="addAtt();">근태작성</span></li>
 		      		</c:if>
