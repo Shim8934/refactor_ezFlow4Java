@@ -101,7 +101,6 @@
 		    var bigtrue = 0;
 		    var isClosedSave = false;
 		    var filedate = "${stateName}";
-		    var folderDate = "${folderDate}";
 		    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
 		    var defaultFontAndSize = "${defaultFontAndSize}";
