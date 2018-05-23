@@ -83,8 +83,8 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #ccc31f;
-			    background: #e9de13;
+			    border: 1px solid #eede23;
+			    background: #feee33;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
 			    padding: 0;
@@ -410,6 +410,15 @@
 				var imgPath = "";	  // 이미지 경로
 				if (deptFlag == false){
 					for (var i = 0; i < result.length; i++) {
+						var iconStr = "";
+						//0과 2는 icon을 추가하지 않는다.
+						if (result[i].modAppl  == '2') {
+							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
+							iconStr = " <img class='pencil' src='/images/pencil.png' />";
+						} else if (result[i].modAppl  == '3') {
+							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
+							iconStr = " <img class='pencil' src='/images/pencil.png' />";
+						}
 						startDate = result[i].startDate.split(" ")[0]; 
 						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
 						 
@@ -423,24 +432,15 @@
 								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append($("<tr></tr>").append($("<td></td>")
 																															.attr("attitudeId", result[i].attitudeId)
 																															.attr("typeId", result[i].typeId)
-																															.html(result[i].typeName + (result[i].region.trim() != "" ? " : " + result[i].region.trim() : ""))));
+																															.html(result[i].typeName + (result[i].region.trim() != "" ? " : " + result[i].region.trim() : "") + iconStr)));
 							}
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
 						} else if (result[i].dateType == '1') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + iconStr + "</td></tr>"); 
 						} else {
-							var iconStr = "";
-							//0과 2는 icon을 추가하지 않는다.
-							if (result[i].modAppl  == '2') {
-								/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
-								iconStr = " <img class='pencil' src='/images/pencil.png' />";
-							} else if (result[i].modAppl  == '3') {
-								/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
-								iconStr = " <img class='pencil' src='/images/pencil.png' />";
-							}
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
 						} 
@@ -448,6 +448,14 @@
 					setAttitudeSquare();
 				} else {
 					for (var i = 0; i < result.length; i++) {
+						var iconStr = "";
+						if (result[i].modAppl  == '2') {
+							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
+							iconStr = " <img class='pencil' src='/images/pencil.png' />";
+						} else if (result[i].modAppl  == '3') {
+							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
+							iconStr = " <img class='pencil' src='/images/pencil.png' />";
+						}
 						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
 							startDate = result[i].startDate.split(" ")[0];
 							endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
@@ -461,23 +469,15 @@
 									var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
 									$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
 											"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" +
-											result[i].typeName + " : " + result[i].writerName + "</td></tr>");
+											result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 								}
 							} else if (result[i].dateType == '3') {
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + "</td></tr>");
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							} else if (result[i].dateType == '1') {
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + "</td></tr>");
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							} else {
-								var iconStr = "";
-								if (result[i].modAppl  == '2') {
-									/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
-									iconStr = " <img class='pencil' src='/images/pencil.png' />";
-								} else if (result[i].modAppl  == '3') {
-									/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
-									iconStr = " <img class='pencil' src='/images/pencil.png' />";
-								}
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							}	
@@ -1033,8 +1033,8 @@
 				<li style="background:none;margin-left:7px;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
 	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
 	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;근태수정신청</li>
+                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #eede23; background:#feee33; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
+                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;수정신청</li>
 			</ul>
 		</div>
 		

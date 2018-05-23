@@ -311,9 +311,10 @@
 					return;
 				}
 				
-				//근무지, 연락처, 업무대리 입력 여부
-				if (inputCheck()) {
-					alert("정보를 입력해주세요.");
+				//근무지 입력 여부
+				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
+					$("input[name=region]").focus();
+					alert("근무지를 입력해주세요.");
 					return;
 				}
 				

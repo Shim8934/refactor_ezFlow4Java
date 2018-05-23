@@ -301,18 +301,18 @@
 					alert("<spring:message code='ezAttitude.bbhs37'/>");
 					return;
 				}
+				
 				if (!check_time()) {
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
-// 				if (outComFlag && selectType == 'A08') {
-// 					alert("<spring:message code='ezAttitude.bbhs40'/>");
-// 					return;
-// 				}
-				if (inputCheck()) {
-					alert("정보를 입력해주세요.");
+				
+				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
+					$("input[name=region]").focus();
+					alert("근무지를 입력해주세요.");
 					return;
 				}
+				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",

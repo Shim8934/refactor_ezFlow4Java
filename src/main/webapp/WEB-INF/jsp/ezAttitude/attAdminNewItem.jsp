@@ -290,7 +290,6 @@
 			function save_attitude() {
 				dateTypeCheck();
 				inputCheck();
-				//checkOutCom();
 				
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
@@ -302,8 +301,9 @@
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
-				if (inputCheckFlag) {
-					alert("정보를 입력해주세요.");
+				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
+					$("input[name=region]").focus();
+					alert("근무지를 입력해주세요.");
 					return;
 				}
 				
