@@ -556,11 +556,13 @@
 									FOLDER_ID,
 									TENANT_ID
 									FROM
-										TBL_WEBFOLDER_FOLDER 
+										TBL_WEBFOLDER_FOLDER
 									WHERE
 										OWNER_ID     = #ownerId#
 									AND
 										COMPANY_ID   = #companyId#
+									AND
+										FOLDER_TYPE  = #folderType#
 									AND
 										TENANT_ID    = #tenantId#
 								)

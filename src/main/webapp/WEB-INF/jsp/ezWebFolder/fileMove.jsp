@@ -56,14 +56,14 @@
 		}
 		
 		function renderData(result, mode) {
-			var divTree   = document.getElementById("folderTree");
+			var divTree = document.getElementById("folderTree");
 			
 			while (divTree.hasChildNodes()) {
 				divTree.removeChild(divTree.lastChild);
 			}
 			
 			if (!result || (result.length == 0 && mode != "1")) {
-				alert("<spring:message code='ezWebFolder.t134'/>");
+				alert("<spring:message code='ezWebFolder.t325'/>");
 				return;
 			}
 			

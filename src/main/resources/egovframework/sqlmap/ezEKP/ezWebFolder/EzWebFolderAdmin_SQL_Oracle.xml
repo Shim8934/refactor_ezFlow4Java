@@ -591,6 +591,8 @@
 									AND
 										COMPANY_ID   = #companyId#
 									AND
+										FOLDER_TYPE  = #folderType#
+									AND
 										TENANT_ID    = #tenantId#
 								)
 			]]>

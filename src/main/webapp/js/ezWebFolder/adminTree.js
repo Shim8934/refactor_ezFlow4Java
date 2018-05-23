@@ -10,7 +10,7 @@ function getCompanyData(companyId, mode, rootDiv) {
 		async: false,
 		success : function(data) {
 			var result = data.companyTree;
-			renderData(result, mode, rootDiv);
+			renderData(companyId, result, mode, rootDiv);
 		},
 		error : function(error) {
 			alert(strMessage);
@@ -18,19 +18,22 @@ function getCompanyData(companyId, mode, rootDiv) {
 	});
 }
 
-function renderData(result, mode, rootDiv) {
+function renderData(companyId, result, mode, rootDiv) {
 	if (!result) {
 		alert(strMessage3);
 		return;
 	}
 	
-	var divTree   = document.getElementById(rootDiv);
-	var divComp   = document.createElement("div");
-	compFolderId  = result["folderId"];
+	var divTree    = document.getElementById(rootDiv);
+	var divComp    = document.createElement("div");
+	compFolderId   = result["folderId"];
+	selectedFolder = compFolderId;
 	
 	if (mode == "") {
-		selectedFolder = compFolderId;
 		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=0", "right");
+	}
+	else {
+		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&companyId=" + companyId + "&level=0", "right");
 	}
 	
 	while (divTree.hasChildNodes()) {
@@ -40,16 +43,8 @@ function renderData(result, mode, rootDiv) {
 	displaySubFolder(divTree, divComp, result, "comp");
 	
 	var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;
-	
-	if (mode == "") {
-		spanCompany.style.color      = "#004a87";
-		spanCompany.style.fontWeight = "bold";
-		//window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId, "right");
-	}
-	else {
-		selectedFolder = "";
-		getSelected(spanCompany, "comp");
-	}
+	spanCompany.style.color      = "#004a87";
+	spanCompany.style.fontWeight = "bold";
 	
 	divTree.style.display = "";
 }
@@ -212,7 +207,7 @@ function getDepartmentData(companyId, mode, rootDiv) {
 		async: false,
 		success : function(data) {
 			var result = data.deptTree;
-			renderData2(result, mode, rootDiv);
+			renderData2(companyId, result, mode, rootDiv);
 		},
 		error : function(error) {
 			alert(strMessage);
@@ -220,7 +215,7 @@ function getDepartmentData(companyId, mode, rootDiv) {
 	});
 }
 
-function renderData2(result, mode, rootDiv) {
+function renderData2(companyId, result, mode, rootDiv) {
 	if (!result || result.length == 0) {
 		alert(strMessage2);
 		return;
@@ -232,7 +227,10 @@ function renderData2(result, mode, rootDiv) {
 	if (mode == "") {
 		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=0", "right");
 	}
-		
+	else {
+		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&companyId=" + companyId + "&level=0", "right");
+	}
+	
 	while (divTree.hasChildNodes()) {
 		divTree.removeChild(divTree.lastChild);
 	}
@@ -244,15 +242,8 @@ function renderData2(result, mode, rootDiv) {
 	
 	var spanFirstDept = document.getElementById(selectedFolder).nextSibling.nextSibling;
 	
-	if (mode == "") {
-		spanFirstDept.style.color      = "#004a87";
-		spanFirstDept.style.fontWeight = "bold";
-		//window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder, "right");
-	}
-	else {
-		selectedFolder = "";
-		getSelected(spanFirstDept, "dept");
-	}
+	spanFirstDept.style.color      = "#004a87";
+	spanFirstDept.style.fontWeight = "bold";
 	
 	divTree.style.display = "";
 }
