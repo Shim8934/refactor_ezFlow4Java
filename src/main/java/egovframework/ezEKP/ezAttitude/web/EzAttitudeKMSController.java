@@ -1195,27 +1195,12 @@ public class EzAttitudeKMSController {
 		
 		String adminFlag = "false";
 		String isAllDept = "";
+		String displayFlag = "false";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
-		
-		
-//		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 admin
-//		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
-//			adminFlag = "true";
-//			//권한부서 리스트
-//			//c , k , wa -> 회사의 모든부서
-//			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/depts";
-//			
-//		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
-//			adminFlag = "true";
-//			isGAdmin = "Y";////////////////////////////////////////////없애도 될듯하다
-//			// g -> 자신의 부서 + auth TB 확인해볼것.
-//			url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
-//		}
-		
 		
 		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
@@ -1256,6 +1241,7 @@ public class EzAttitudeKMSController {
 		
 		if (deptList.size() > 1) {
 			adminFlag = "true";
+			displayFlag = "true";
 		}
 		
 		int myDeptCount = 0;
@@ -1277,6 +1263,10 @@ public class EzAttitudeKMSController {
 			}
 		}
 		
+		if (myDeptCount == deptList.size()) {
+			displayFlag = "false";
+		}
+		
 		model.addAttribute("deptList", deptList);
 		model.addAttribute("userInfo", userInfo);
 		if (deptid == null) {
@@ -1286,6 +1276,7 @@ public class EzAttitudeKMSController {
 		}
 		model.addAttribute("deptFlag", "true");
 		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("displayFlag", displayFlag);
 		
 		LOGGER.debug("attitudeUserMain ended");
 		return "/ezAttitude/attitudeUserMain";
