@@ -5,7 +5,7 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>전체근태관리</title>
+		<title>근태관리</title>
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
@@ -748,7 +748,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-		<h1><p style="padding-left:5px">전체근태관리</p></h1>
+		<h1><p style="padding-left:5px">근태관리</p></h1>
 	    <div class="portlet_tabpart01" style="margin-bottom:16px;">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	            <p><span id="modify" style="width:100px; text-align: center;">근태입력관리</span></p>
