@@ -747,6 +747,12 @@
 				}
 	            
                 function bindAllUser(value, type) {
+					DivPopUpHidden();
+					
+					if(value == "cancle") {
+						return;
+					}
+					
 					if(value) {
 						var overlapLen = overlapuser["userId"].length;
 						for(var i = 0; i < overlapLen; i++) {
@@ -765,8 +771,6 @@
 		    }
 		    
 			function parsingXMLUserList(userlist) {
-				DivPopUpHidden();
-				
 				var listid = "MsgToList"; // 추가된 유저목록 테이블 아이디
 				var i = 0;
 				var len = userlist["userId"].length;

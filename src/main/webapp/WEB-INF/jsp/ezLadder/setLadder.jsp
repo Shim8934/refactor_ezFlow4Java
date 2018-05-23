@@ -34,6 +34,13 @@
 				
 				$(".setTable").css("width", win_width + "px");
 				$linebox.css("width", (win_width - $linebox.css("padding-left").replace("px", "")) + "px");
+				
+				var $popup = $("#iFramePanel");
+				if($popup.css("display") != "none") {
+					var position = DivPopUpPosition($popup.width(), $popup.height());
+					
+					$popup.css({"top": position[0] + "px", "left": position[1] + "px"});
+				}
 			}
 			$(function() {
 				$(window).resize(function (){
@@ -658,9 +665,7 @@
 							
 							DivPopUpShow(380, 379, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
 							
-							var leftF = parent.frames["left"];
-							var leftH = leftF.document.getElementById("left").clientHeight > leftF.innerHeight ? leftF.document.getElementById("left").clientHeight + "px" : "100%";
-							$(leftF.document.body).append("<div id='blockLeft' class='blockLeft' style='width:100%;height:" + leftH + ";position:absolute;top:0;z-index:10;background: rgba(0,0,0,0.5);'></div>");
+							setFrameBlock(true);
 						} else {
 							showSecondOverlapPopup();
 						}
@@ -668,7 +673,7 @@
 						function firstPopupComp(retAttendants) {
 							DivPopUpHidden();
 							
-							$(parent.frames["left"].document.body).find("#blockLeft").remove();
+							setFrameBlock(false);
 							
 							if(!!retAttendants) {
 								var retLen = retAttendants["userId"].length;
@@ -723,6 +728,8 @@
 								retAttendantPopInfo[1] = bindAllUser;
 								
 								DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=overlap");
+								
+								setFrameBlock(true);
 							} else {
 								bindAllUser(false);
 							}
@@ -730,10 +737,34 @@
 					}
 				} 
 				
+				function setFrameBlock(blockFlag) {
+					var leftF = parent.frames["left"];
+					var leftFBody = leftF.document.body;
+					if(blockFlag) {
+						//var leftH = leftF.document.getElementById("left").clientHeight > leftF.innerHeight ? leftF.document.getElementById("left").clientHeight + "px" : "100%";
+						$(leftFBody).append("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%;position:absolute;top:" + $(leftF.document).scrollTop() + "px;z-index:10;background: rgba(0,0,0,0.5);'></div>");
+						$("#mailPanel").css("top", $("html, body").scrollTop());
+						
+						// 프레임 스크롤바 제거 (윈도우 리사이즈시 하얀 화면 보이기때문) 
+						$("body").css("overflow", "hidden");
+						$(leftFBody).css("overflow", "hidden")
+					} else {
+						$(leftFBody).find("#blockLeft").remove();
+						
+						$("body").css("overflow", "auto");
+						$(leftFBody).css("overflow", "auto")
+					}
+				}
+				
 				/** 이름 검색으로 중복 처리한 유저 포함하여 추가 */
 				var bindAllUser;
 				function bindAllUser(value, type) {
 					DivPopUpHidden();
+					
+					setFrameBlock(false);
+					if(value == "cancle") {
+						return;
+					}
 					
 					var totalLen = attendants["id"].length;
 					var allUserLen = (function() {
@@ -1011,6 +1042,7 @@
 				z-index: 20;
 				border: 1px solid #dddddd;
 				padding: 0px 20px;
+				display: none;
 			}
 		</style>
 	</head>
@@ -1106,9 +1138,10 @@
 				<input type="button" id="backToList" style="background: #efefef; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
 			</div>
 		</form>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
-		<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
-			<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+		<div style="width: 100%; height: 100%; overflow: auto; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">
+			<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+				<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+			</div>
 		</div>
 	</body>
 </html>
