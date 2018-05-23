@@ -1294,7 +1294,7 @@
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.mine ne 'yes' }">
 							<c:if test="${dept.authType == 'M'}">
-								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+								<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
 							</c:if>
 						</c:if>										
 					</c:forEach>
