@@ -345,6 +345,18 @@
     			$(Radio1).prop("checked", true);
     			type_set();
 			}
+			else if (r == "deptChange") {
+				$("#writer_search").val("");
+				if (checkAdmin == 'true') {
+	    			$("#writerDept_search").val("");
+				}
+    			$("#appr_search").val("");
+    			if (usepostDate) {
+    				date_reset();
+    			}
+    			$("input[name=searchCheck]").val(type);
+    			type_set();
+			}
 			
 			//정렬 초기화
 			orderCell = "";
@@ -371,9 +383,14 @@
 		        	searchStartDate = "";
 		        	searchEndDate = "";
 		        }
- 	    	} else {
- 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
- 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+ 	    	} else {////////여기서 if문써서 부서변경시는 아무값안들어가게?????????
+ 	    		if (r == "deptChange") {
+	 	    		searchStartDate = "";
+	 	    		searchEndDate = "";
+ 	    		} else {
+	 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+ 	    		}
 	            if (searchStartDate > searchEndDate) {
 	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
 	                return;
@@ -712,7 +729,7 @@
 	    
 	    function dept_change() {
 	    	type = $("input:radio[name=searchCheck]:checked").val();
-	    	att_search('refresh');
+	    	att_search('deptChange');
 	    }
 	    
 	    var PressShiftKey = false;
