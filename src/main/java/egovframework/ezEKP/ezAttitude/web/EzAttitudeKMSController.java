@@ -1439,7 +1439,7 @@ public class EzAttitudeKMSController {
 	/**
 	 * 근태입력조회 메인화면 호출
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeCheck.do")
+	/*@RequestMapping(value = "/ezAttitude/attitudeCheck.do")
 	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeDeptConf started");
 		
@@ -1577,7 +1577,7 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("/ezAttitude/attitudeDeptConf ended");
 		
 		return "/ezAttitude/attitudeCheck";
-	}
+	}*/
 	
 	/**
 	 * 관리자 근태조회 리스트 조회
@@ -1661,7 +1661,7 @@ public class EzAttitudeKMSController {
 	/**
 	 * 근태조회 미입력자조회
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeAbsented.do")
+	/*@RequestMapping(value = "/ezAttitude/attitudeAbsented.do")
 	public String attitudeAbsented(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeAbsented.do");
 		
@@ -1798,7 +1798,7 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("/ezAttitude/attitudeAbsented.do");
 		
 		return "/ezAttitude/attitudeAbsented";
-	}
+	}*/
 	
 	/**
 	 * 근태 상세보기
