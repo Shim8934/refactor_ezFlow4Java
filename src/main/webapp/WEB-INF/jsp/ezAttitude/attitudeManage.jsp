@@ -347,7 +347,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
 	    		$("div#miniTitle").html("근태입력목록   &nbsp;[총 " 
@@ -421,7 +421,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
 	    		$("div#miniTitle").html("근태미입력자   &nbsp;[총 " 
