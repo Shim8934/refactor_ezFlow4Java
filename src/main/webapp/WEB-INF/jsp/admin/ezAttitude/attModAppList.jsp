@@ -1377,35 +1377,7 @@
 				<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
 				<th width="150px" style="cursor:pointer" colname="NO">내역확인</th>
 			</tr>
-		    
-		    <!-- 	
-			<c:forEach var="list" items="${list}" varStatus="i"> 
-				<tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
-					<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>_<c:out value ="${list.applCnt}"/>" value="<c:out value="${list.attitudeId}" />_<c:out value ="${list.applCnt}"/>" status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
-					<td>${i.count}</td>
-					<c:set var="changeDate" value="${list.changeDate}"/>
-					<c:set var="originDate" value="${list.originDate}"/>
-					<td>${fn:substring(originDate,0,10) }</td>
-					<c:if test="${adminFlag == true}">
-						<td>${list.writerName}</td>
-						<td>${list.writerDeptName}</td>
-					</c:if>
-					<td>${fn:substring(originDate,11,16) }</td>
-					<td>${fn:substring(changeDate,11,16) }</td>
-					<c:if test="${list.apprStatus == 0}">
-						<td id="attStauts">신청</td>
-					</c:if>
-					<c:if test="${list.apprStatus == 1}">
-						<td id="attStauts">승인</td>
-					</c:if>
-					<c:if test="${list.apprStatus == 2}">
-						<td id="attStauts">반려</td>
-					</c:if>
-					<td>${list.apprUserName}</td>
-					<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>
-				</tr>
-			</c:forEach>
-	        -->
+			
 		    <c:if test="${list.size() == 0}"> 
 		        <tr>
 		        	<c:if test="${adminFlag == 'true'}"><td colspan="10" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
