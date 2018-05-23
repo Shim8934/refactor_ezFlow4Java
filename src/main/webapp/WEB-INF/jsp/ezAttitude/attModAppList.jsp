@@ -494,14 +494,6 @@
 	    			if(checkAdmin == 'true') {
 		    			authFlag = 'M'; 
 		    		}
-	    			
-		    		if (authFlag == 'M') {
-						$("#appr").show();
-						$("#ret").show();
-					} else {
-						$("#appr").hide();
-						$("#ret").hide();
-					}
 	    		}	
 	    		
 	    		totalAtt = data.totalAtt;
@@ -1265,8 +1257,10 @@
 			</table>
 		</c:if>
         <ul id="tb_Parent">
-		<li id="appr"><span onClick="modApprove()">승인</span></li>
-       	<li id="ret"><span onClick="modReturn()">반려</span></li>
+		<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
+			<li id="appr"><span onClick="modApprove()">승인</span></li>
+        	<li id="ret"><span onClick="modReturn()">반려</span></li>
+		</c:if>
 		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
 			<li><span onClick="attList_del()">삭제</span></li>
 		</c:if>
