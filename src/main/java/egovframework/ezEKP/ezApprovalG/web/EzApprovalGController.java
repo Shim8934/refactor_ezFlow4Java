@@ -1179,6 +1179,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String strXML = request.getParameter("ret");
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.updateLineInfo(strXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		logger.debug("aprLineSave result : " + result); 
@@ -1198,6 +1205,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String strXML = request.getParameter("aprDeptInfo");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 
 		String result = ezApprovalGService.updateReceiptInfo(strXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
@@ -1812,7 +1826,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 기안 의견버튼 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprOpinion.do")
-	public String aprOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String aprOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("aprOpinion started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -1820,6 +1834,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -1848,6 +1868,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getOpinionInfo(docID, "CAPR", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("opinionRequest ended.");
@@ -1880,11 +1907,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/opinionSave.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String opinionSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
+	public String opinionSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom, HttpServletRequest request) throws Exception{
 		logger.debug("opinionSave Start");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document docXML = commonUtil.convertStringToDocument(xmlDom);
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.updateOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		logger.debug("opinionSave End");
 		return result;
@@ -6842,6 +6876,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (request.getParameter("type") != null) {
 			type = request.getParameter("type");
+		}
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
 		}
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);

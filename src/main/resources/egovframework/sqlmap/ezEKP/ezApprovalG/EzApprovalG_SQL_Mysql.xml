@@ -327,8 +327,7 @@
 			            						 ISPUBLIC, 
 			            						 FORMNAME, 
 			            						 FORMNAME2, 
-			            						 URGENTAPPROVAL,
-			            						 COMPANYID
+			            						 URGENTAPPROVAL
 			            			FROM 
 			            				VAPRWILLDOCLIST  
 			            			WHERE 

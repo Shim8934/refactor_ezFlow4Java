@@ -866,7 +866,7 @@ function openOpinionUI(ret, CompleteFunction) {
     else
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
-    DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+    DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do?orgCompanyID="+orgCompanyID);
 }
 function openOpinionUI_Complete(ret) {
     DivPopUpHidden();

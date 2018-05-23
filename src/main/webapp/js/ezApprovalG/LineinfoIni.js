@@ -577,7 +577,8 @@ function InitListViewCC() {
     		data : {
     			docID : pGongRamDocID,
     			mode  : "APR",
-    			docState : "015"
+    			docState : "015",
+    			orgCompanyID : companyID
     		},
     		success: function(text){
     			result = text;

@@ -1343,7 +1343,8 @@
 			                    		async : false,
 			                    		url : "/ezApprovalG/aprLineSave.do",
 			                    		data : {
-			                    				ret    : ret[1]
+			                    				ret    : ret[1],
+			                    				orgCompanyID : orgCompanyID
 			                    				},
 			                    		success : function(result){
 			                    			
@@ -1368,7 +1369,8 @@
 			                    		async : false,
 			                    		url : "/ezApprovalG/aprLineSave.do",
 			                    		data : {
-			                    				ret    : ret[1]
+			                    				ret    : ret[1],
+			                    				orgCompanyID : orgCompanyID
 			                    				},
 			                    		success : function(result){
 			                    			
@@ -1394,7 +1396,8 @@
 		                    		async : false,
 		                    		url : "/ezApprovalG/aprDeptSave.do",
 		                    		data : {
-		                    				aprDeptInfo : ret[2]
+		                    				aprDeptInfo : ret[2],
+		                    				orgCompanyID : orgCompanyID
 		                    				},
 		                    		success : function(result){
 		                    			if (result == 'TRUE') {
