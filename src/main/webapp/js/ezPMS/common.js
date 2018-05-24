@@ -104,6 +104,7 @@ function addProjectPopup(topPct, leftPct, popUpW, popUpH, URL) {
 
 //작업이력 추가
 function addTaskLog(projectId, logStatus, groupId, taskId, logContent) {
+	//logStatus : 1(등록), 2(수정), 3(삭제)
 	var data = {
 		projectId : projectId,
 		logStatus : logStatus,

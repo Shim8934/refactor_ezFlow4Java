@@ -250,6 +250,7 @@
 		<result property="taskName" 				column="task_name"/>
 		<result property="groupName"				column="group_name"/>
 		<result property="fileCNT"					column="file_cnt"/>
+		<result property="writeContent"				column="WRITE_CONTENT"/>
 	</resultMap>
 	
 	<resultMap class="FileVO" id="fileVO">
@@ -1300,7 +1301,7 @@
 			SELECT 
 				B.item_id, 				B.title,			B.write_overview,		B.write_type,				B.write_date,			
 				B.write_update_date,	B.read_count,		B.writer_name,			B.writer_deptname,			T.task_name,  		
-				G.group_name,			F.file_cnt
+				G.group_name,			F.file_cnt,			B.write_content
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id

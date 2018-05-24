@@ -2100,10 +2100,33 @@ public class EzEmailUtil {
 		if (part.isMimeType("multipart/mixed") 
 				|| part.isMimeType("multipart/report")
 				|| part.isMimeType("multipart/related")) {
-			Part p = ((Multipart)part.getContent()).getBodyPart(index);
+			Multipart mp = (Multipart)part.getContent();
+			Part p = mp.getBodyPart(index);
 			
-			logger.debug("getAttachPart ended.");
-			return p;
+			String fileName = p.getFileName();
+			
+			logger.debug("fileName=" + fileName);
+			
+			if (fileName != null) {
+				logger.debug("getAttachPart ended.");
+				
+				return p;
+			// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/alternative와 multipart/mixed 파트가
+			// 또 들어 있는 경우가 있어 선택된 파트가 첨부 파일 파트가 아닌 경우엔(filename이 있는 지 여부로 구분)
+			// 또 다른 multipart를 찾도록 한다.
+			} else {
+	            int count = mp.getCount();
+	            
+	            for (int i = 0; i < count; i++) {
+	            	if (i != index) {
+		                p = getAttachPart(mp.getBodyPart(i), index);
+		                
+		                if (p != null) {
+		                    return p;
+		                }
+	            	}
+	            }				
+			}
 		// multipart/alternative 안에 multipart/mixed가 있는 경우의 처리
 		} else if (part.isMimeType("multipart/*")) {
             Multipart mp = (Multipart)part.getContent();

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
@@ -577,21 +578,44 @@ public class EzPMSController {
 				param.put("userId", userId);
 				param.put("status", kanbanStatus[i]);
 				
-				JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
-				String countStatus = countResult.get("status").toString();
-				
-				if (countStatus.equals("ok")) {
-					long taskCount = (Long) countResult.get("data");
+				if (kanbanStatus[i].contains("B")) {
+					String boardCountUrl = "/rest/ezPMS/boards/list-count/" + projectId + "/users/" + userId;
+					JSONObject boardCountResult = commonUtil.getJsonFromRestApi(boardCountUrl, param, request, "get", null);
+					String boardCountStatus = boardCountResult.get("status").toString();
 					
-					json.put("kanbanTaskCount" + (i + 1), taskCount);
-					
-					if (taskCount != 0) {
-						JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
-						String status = result.get("status").toString();
+					if (boardCountStatus.equals("ok")) {
+						String boardCount = boardCountResult.get("data").toString();
 						
-						if (status.equals("ok")) {
-							JSONArray kanbanTask = (JSONArray) result.get("data");
-							json.put("kanbanTask" + (i + 1), kanbanTask);
+						json.put("kanbanTaskCount" + (i + 1), boardCount);
+						
+						if (!boardCount.equals("0")) {
+							String boardUrl = "/rest/ezPMS/boards/list/" + projectId + "/users/" + userId;
+							JSONObject boardResult = commonUtil.getJsonFromRestApi(boardUrl, param, request, "get", null);
+							String boardStatus = boardResult.get("status").toString();
+							
+							if (boardStatus.equals("ok")) {
+								JSONArray boardList = (JSONArray) boardResult.get("data");
+								json.put("kanbanTask" + (i + 1), boardList);
+							}
+						}
+					}
+				}  else {
+					JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+					String countStatus = countResult.get("status").toString();
+					
+					if (countStatus.equals("ok")) {
+						long taskCount = (Long) countResult.get("data");
+						
+						json.put("kanbanTaskCount" + (i + 1), taskCount);
+						
+						if (taskCount != 0) {
+							JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+							String status = result.get("status").toString();
+							
+							if (status.equals("ok")) {
+								JSONArray kanbanTask = (JSONArray) result.get("data");
+								json.put("kanbanTask" + (i + 1), kanbanTask);
+							}
 						}
 					}
 				}
