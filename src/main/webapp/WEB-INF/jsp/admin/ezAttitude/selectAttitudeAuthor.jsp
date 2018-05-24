@@ -124,8 +124,8 @@
 	   			var userId = selectedUser;
 				if (userId) {
 					opener.setSelectedUser(userId,selectedUserName);
-		   			opener.setDeptName(lpDepts, lpDeptNames);
-		   			opener.authRadioSet(lpAuthTypes);
+		   			opener.setDeptName(lpDepts.toString(), lpDeptNames.toString());
+		   			opener.authRadioSet(lpAuthTypes.toString());
 		   			opener.userDeptId = userDeptId;
 					window.close();
 				} else {

@@ -30,6 +30,39 @@
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
+	   		
+	   		$(document).ready(function() {
+	   			treeContent = ${deptList};
+		   		setDeptList();
+		    	
+	   			$(function () {
+		   			$(document).on({
+		   				"dblclick":function(){delTargetDept(this);},
+		   				"click":function(){targetDept = this;
+			   				$("*").removeClass("selectTR");
+				   			$(this).addClass("selectTR");
+		   				}
+	   				},"#lplistView tr");
+	   			});
+	   			
+	   			try {
+	   				RetValue = parent.ezattitude_dialogArguments[0];
+	            } catch (e) {
+	                try {
+	                	RetValue = opener.ezattitude_dialogArguments[0];
+	                } catch (e) {
+	                    RetValue = window.dialogArguments;
+	                }
+	            }
+	            
+		   		for (var i = 0; i < RetValue[0].length; i++) {
+	   				lpDeptId = RetValue[0][i];
+	   				lpDeptName = RetValue[1][i];
+	   				lpAuthType = RetValue[2][i];
+	   				
+	   				addDeptInLP();
+				}
+   			});
 	   	
 	   		function close_Click() {
 	   			window.close();
@@ -52,12 +85,14 @@
 	   		//권한부서 리스트에 추가
 	   		function addDeptInLP() {
 	   			var flag = true;
+	   			
 	   			for (var i = 0; i < lpDepts.length; i++) {
 					if (lpDepts[i] == lpDeptId) {
 		   				alert("<spring:message code='ezAttitude.kbm33' />");
 						flag = false;
 					}
 				}
+	   			
 	   			if (flag) {
 		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" targetAuthType="+lpAuthType+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 		   			lpDepts.push(lpDeptId);
@@ -84,32 +119,10 @@
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅
 	   		function setAuthorViewDept() {
-	   			opener.setDeptName(lpDepts, lpDeptNames);
-	   			opener.authRadioSet(lpAuthTypes);
+	   			opener.setDeptName(lpDepts.toString(), lpDeptNames.toString());
+	   			opener.authRadioSet(lpAuthTypes.toString());
 	   			window.close();
 	   		}
-	   		
-	   		$(document).ready(function() {
-	   			treeContent = ${deptList};
-		   		setDeptList();
-		    	
-	   			$(function () {
-		   			$(document).on({
-		   				"dblclick":function(){delTargetDept(this);},
-		   				"click":function(){targetDept = this;
-			   				$("*").removeClass("selectTR");
-				   			$(this).addClass("selectTR");
-		   				}
-	   				},"#lplistView tr");
-	   			});
-
-	   			for (var i = 0; i < opener.deptIds.length; i++) {
-	   				lpDeptId = opener.deptIds[i];
-	   				lpDeptName = opener.deptNames[i];
-	   				lpAuthType = opener.authTypes[i];
-	   				addDeptInLP();
-				}
-   			});
 		</script>
 		
 		<style>

@@ -56,7 +56,7 @@
 			    	setSelectedUser("${selectedUser }","${selectedUserName }");
 		    		setDeptName();
 		    		$('#contentlist .mainlist').html(html);
-		    		authRadioSet(authTypes);
+		    		authRadioSet(authTypes.toString());
 	    		</c:if>
    			});
 	    	
@@ -75,14 +75,20 @@
 	    	}
 	    	
 	    	//부서선택
-	    	var selecttarget_dialogArguments = new Array();
+	    	var ezattitude_dialogArguments = new Array();
 	    	function selectDept() {
 	    		if (selectedUser == "" || selectedUser == null) {
 	    			alert("<spring:message code='ezAttitude.kbm24' />");
 	    			return;
 	    		}
 	    		
-	    		selecttarget_dialogArguments[0] = deptIds;
+	    		var para = new Array();
+	    		
+	    		para[0] = deptIds;
+	    		para[1] = deptNames;
+	    		para[2] = authTypes;
+	    		
+	    		ezattitude_dialogArguments[0] = para;
 	    		
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do";
 				url+="?companyId="+companyId+"&userId="+selectedUser;
@@ -94,8 +100,8 @@
 	    	//부서 이름 세팅
 	    	function setDeptName(pdeptIds, pdeptNames) {
 	            if (pdeptIds && pdeptNames) {
-	               deptIds = eval(pdeptIds);
-	               deptNames = eval(pdeptNames);
+	               deptIds = pdeptIds.split(',');
+	               deptNames = pdeptNames.split(',');
 	            }
 	    		
 				var deptString = "";
@@ -132,13 +138,12 @@
 	   				$(".mainlist th:eq(1)").css("padding-right", "");
 	   				$(".mainlist th:eq(2)").css("padding-right", "");
 	   			}
-	   			
 	    	}	  
 	    	
 	    	//권한 라디오 체크
 	        function authRadioSet(pauthTypes) {
 	            if (pauthTypes) {
-	            	authTypes = eval(pauthTypes);
+	            	authTypes = pauthTypes.split(',');
 		        }
 	            
 	        	for (var i = 0; i < deptIds.length; i++) {
