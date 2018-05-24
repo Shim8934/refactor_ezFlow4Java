@@ -701,7 +701,7 @@
 					    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
 					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 	
-					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
+					    		var objTr = $("<tr style='height:30px;'></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
 				    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + json[i].writerName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerName)));	
 				    			objTr.append($("<td style='width:10%;' title='" + json[i].writerDeptName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerDeptName)));
 
@@ -756,7 +756,7 @@
 					    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
 					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 					    		
-					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
+					    		var objTr = $("<tr style='height:30px;'></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
 					    		
 					    		if (json[i].dateType == 1) {
 					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
@@ -837,7 +837,7 @@
 				    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
 				    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:37px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i-j+1))));
+				    		var objTr = $("<tr style='height:30px;'></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:37px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i-j+1))));
 				    		objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(json[i].typeName)));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + json[i].writerName + "'></td>").append($("<div style='width:72px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerName)));	
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + json[i].writerDeptName + "'></td>").append($("<div style='width:72px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerDeptName)));
@@ -863,7 +863,7 @@
 				    	}
 				    	
 						if (i == 0) {
-				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; height:0px; border:none;'></td>"));
+				    		var uvobjTr = $("<tr style='height:30px;'></tr>").append($("<td style='width:5%; height:0px; border:none;'></td>"));
 				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
 				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
 				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
@@ -871,7 +871,7 @@
 				    		uvobjTr.append($("<td style='width:30%; height:0px; border:none;'></td>"));
 				    		$("#addpopupDay_list tbody").append(uvobjTr);
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:900px; border-top:none;'></td>").text("내역이 없습니다."));
+				    		var objTr = $("<tr style='height:30px;'></tr>").append($("<td colspan='6' style='text-align:center; width:900px; border-top:none;'></td>").text("내역이 없습니다."));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	}
 				    },
@@ -1092,8 +1092,8 @@
 							</c:if>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:500px; overflow-y:auto; width:738px; display:block;">
-				    	<tr>
+				    <tbody style="max-height:466px; overflow-y:auto; width:738px; display:block;">
+				    	<tr style='height:30px;'>
 				    		<c:if test="${deptFlag == 'true'}">
 				    			<th style="height:30px">No.</th>
 					    		<th style="height:30px;"><spring:message code='ezAttitude.t10'/></th>
@@ -1127,8 +1127,8 @@
 						</th>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:500px; width:820px; display:block; overflow-y:auto;">
-				    	<tr>
+				    <tbody style="max-height:466px; width:820px; display:block; overflow-y:auto;">
+				    	<tr style='height:30px;'>
 				    		<th style="height:30px">No.</th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.bbhs15'/></th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>

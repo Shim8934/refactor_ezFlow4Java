@@ -181,22 +181,6 @@
 	    });
 
 		window.onload = function() {
-// 			att_search();
-			
-// 			if (checkAdmin == 'true') {
-// 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
-		    	
-// 	    		infoStr += '</span> 개] ';
-// 	    		infoStr += startDate.substring(0,4) + '년' + 
-// 	    		startDate.substring(5,7) + '월' + 
-// 	    		startDate.substring(8,10) + '일~';
-// 		    	infoStr += endDate.substring(0,4) + '년' + 
-// 		    	endDate.substring(5,7) + '월' + 
-// 		    	endDate.substring(8,10) + '일]</span>';
-		    	
-// 		    	$("#mailBoxInfo").html(infoStr);
-// 			}
-			
 			var obj = $("#search").offset();
 			
 			if (checkAdmin != 'true') {
@@ -1405,7 +1389,8 @@
 				<th>기존시각</th>
 				<th>신청시각</th>
 				<th>승인상태</th>
-				<th>승인자</th>				
+				<th>승인자</th>
+				<th>신청일자</th>				
 			</tr>
 		</table>
 <!-- 		팝업 -->

@@ -2340,12 +2340,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	map.put("tenantId", tenantId);
 		map.put("checkStartDate", startDate.split(" ")[0]);
 		
-		String isAttitude = ezAttitudeDAO.getIsAttitude(map); 
-//		if (!isAttitude.equals("0")) {
-//			isAttitude = "dupl";
-//		} else {
-//			isAttitude = "notDupl";
-//		}
+		String isAttitude = ezAttitudeDAO.getIsAttitude(map);
+		
 		return isAttitude;
     }
 }
