@@ -297,6 +297,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		insert("EzPMSDAO.insertProjectAttach", attachMap);
 	}
 	
+	/*public FileVO*/
 	public int checkReadBoardOrNot(Map<String, Object> map) {
 		if(select("EzPMSDAO.checkReadBoardOrNot", map) == null) {
 			return -1;

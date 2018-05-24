@@ -3,22 +3,23 @@
 
 <sqlMap namespace="ezPMS">
 
-	<typeAlias	alias="ProjectInfoVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectInfoVO"/>
-	<typeAlias	alias="ProjectGroupVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectGroupVO"/>
-	<typeAlias	alias="ProjectMainSettingVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO"/>
-	<typeAlias	alias="ProjectMemberScheduleVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO"/>
-	<typeAlias	alias="ProjectMemberVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
-	<typeAlias	alias="ProjectTaskVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectTaskVO"/>
-	<typeAlias	alias="ProjectSearchVO"									type="egovframework.ezEKP.ezPMS.vo.SearchVO"/>
-	<typeAlias	alias="ProjectTaskLogListVO"								type="egovframework.ezEKP.ezPMS.vo.TaskLogListVO"/>
-	<typeAlias	alias="ProjectTaskTreeVO"							type="egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO"/>
-	<typeAlias 	alias="ProjectUserVO" 										type="egovframework.ezEKP.ezPMS.vo.ProjectUserVO" />
-	<typeAlias 	alias="ProjectDeptViewVO" 									type="egovframework.ezEKP.ezPMS.vo.DeptViewVO" />
-	<typeAlias 	alias="ProjectDeptInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.DeptInfoVO" />
-	<typeAlias 	alias="ProjectCompanyVO" 							type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
-	<typeAlias 	alias="ProjectUserInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
-	<typeAlias 	alias="ProjectTaskMemberVO" 									type="egovframework.ezEKP.ezPMS.vo.TaskMemberVO"/>
-	<typeAlias 	alias="ProjectBoardVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectBoardVO"/>
+	<typeAlias	alias="ProjectInfoVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectInfoVO"/>
+	<typeAlias	alias="ProjectGroupVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectGroupVO"/>
+	<typeAlias	alias="ProjectMainSettingVO"				type="egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO"/>
+	<typeAlias	alias="ProjectMemberScheduleVO"				type="egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO"/>
+	<typeAlias	alias="ProjectMemberVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
+	<typeAlias	alias="ProjectTaskVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectTaskVO"/>
+	<typeAlias	alias="ProjectSearchVO"						type="egovframework.ezEKP.ezPMS.vo.SearchVO"/>
+	<typeAlias	alias="ProjectTaskLogListVO"				type="egovframework.ezEKP.ezPMS.vo.TaskLogListVO"/>
+	<typeAlias	alias="ProjectTaskTreeVO"					type="egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO"/>
+	<typeAlias 	alias="ProjectUserVO" 						type="egovframework.ezEKP.ezPMS.vo.ProjectUserVO" />
+	<typeAlias 	alias="ProjectDeptViewVO" 					type="egovframework.ezEKP.ezPMS.vo.DeptViewVO" />
+	<typeAlias 	alias="ProjectDeptInfoVO" 					type="egovframework.ezEKP.ezPMS.vo.DeptInfoVO" />
+	<typeAlias 	alias="ProjectCompanyVO" 					type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
+	<typeAlias 	alias="ProjectUserInfoVO" 					type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
+	<typeAlias 	alias="ProjectTaskMemberVO" 				type="egovframework.ezEKP.ezPMS.vo.TaskMemberVO"/>
+	<typeAlias 	alias="ProjectBoardVO" 						type="egovframework.ezEKP.ezPMS.vo.ProjectBoardVO"/>
+	<typeAlias 	alias="FileVO" 								type="egovframework.ezEKP.ezPMS.vo.FileVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -249,6 +250,12 @@
 		<result property="taskName" 				column="task_name"/>
 		<result property="groupName"				column="group_name"/>
 		<result property="fileCNT"					column="file_cnt"/>
+	</resultMap>
+	
+	<resultMap class="FileVO" id="fileVO">
+		<result property="filePath"					column="file_path"/>
+		<result property="fileSize"					column="file_size"/>
+		<result property="fileName"					column="file_name"/>
 	</resultMap>
 	
     <!-- 조직도 만들기 위한 쿼리 -->
@@ -1271,13 +1278,22 @@
 	<insert id="EzPMSDAO.insertProjectAttach" parameterClass="map">
 		<![CDATA[
 			INSERT INTO tbl_pms_item_attachment (
-				tenant_id, item_id, file_path, file_size, file_name
+				tenant_id, 		item_id, 			file_path, 		file_size, 		file_name
 			)
 			VALUES (
-				#tenantId#, #last_insert_id#, #filePath#, #fileSize#, #fileName#
+				#tenantId#, 	#last_insert_id#, 	#filePath#, 	#fileSize#, 	#fileName#
 			)
 		]]>
 	</insert>
+	
+	<select id="EzPMSDAO.getProjectAttach" parameterClass="Integer" resultMap="fileVO">
+		<![CDATA[
+			SELECT 
+				file_path, 		file_size, 		file_name
+			FROM tbl_pms_item_attachment
+			WHERE item_id = #itemId#
+		]]>
+	</select>
 	
 	<select id="EzPMSDAO.getBoardList" parameterClass="map" resultMap="projectBoardVOForList">
 		<![CDATA[
@@ -1348,7 +1364,7 @@
 			LEFT JOIN tbl_pms_task T
 			ON B.task_id = T.task_id
 			JOIN tbl_usermaster M
-			on B.writer_id = M.cn
+			on B.writer_id = M.cn and B.tenant_id = M.tenant_id
 			WHERE B.item_id = #itemId#
 			AND B.tenant_id = #tenantId#	
 		]]>	
