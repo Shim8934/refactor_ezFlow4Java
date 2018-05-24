@@ -121,11 +121,11 @@ public class EzPMSController3 {
 		jsonParam.put("tenantId", userInfo.getTenantId());
 		jsonParam.put("writerId", userInfo.getId());
 		jsonParam.put("writeDate", today);
-		jsonParam.put("writerName", userInfo.getDisplayName1());
+		jsonParam.put("writerName", userInfo.getDisplayName());
 		jsonParam.put("writerName2", userInfo.getDisplayName2());
-		jsonParam.put("writerDeptname", userInfo.getDeptName1());
+		jsonParam.put("writerDeptname", userInfo.getDeptName());
 		jsonParam.put("writerDeptname2", userInfo.getDeptName2());
-		jsonParam.put("writerPosition", userInfo.getTitle1());
+		jsonParam.put("writerPosition", userInfo.getTitle());
 		jsonParam.put("writerPosition2", userInfo.getTitle2());
 		
 		Map<String, Object> param = null;
@@ -365,9 +365,17 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS getBoardDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String projectId = request.getParameter("projectId");
+		String itemId = request.getParameter("itemId");
+		
 		Map<String, Object> param = new HashMap<String, Object>();
+		
 		param.put("userId", userInfo.getId());
-		int itemId = Integer.parseInt(request.getParameter("itemId"));
+		param.put("userName", userInfo.getDisplayName());
+		param.put("userName2", userInfo.getDisplayName2());
+		param.put("userDeptName", userInfo.getDeptName());
+		param.put("userDeptName2", userInfo.getDeptName2());
+		param.put("projectId", projectId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
 		

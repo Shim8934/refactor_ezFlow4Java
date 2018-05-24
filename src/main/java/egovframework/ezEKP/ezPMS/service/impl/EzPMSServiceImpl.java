@@ -1181,17 +1181,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	
 	@Transactional
 	@Override
-	public ProjectBoardVO getBoardDetail(int tenantId, int itemId, String userId) {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public ProjectBoardVO getBoardDetail(int tenantId, Map<String, Object> param) {
 		
-		System.out.println(tenantId);
-		System.out.println(itemId);
-		System.out.println(userId);
+		param.put("tenantId", tenantId);
+		ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(param);
 		
-		map.put("tenantId", tenantId);
-		map.put("itemId", itemId);
-	
-		return ezPMSDAO.getBoardDetail(map);
+		if(ezPMSDAO.checkReadBoardOrNot(param) == -1) {
+			ezPMSDAO.insertReadBoardLog(param);
+			if(!boardVO.getWriterId().equals(param.get("userId"))) {
+				ezPMSDAO.updateBoardReadCount((int) param.get("itemId"));
+			}
+		}
+		return boardVO;
 	}
 	
 	@Override
