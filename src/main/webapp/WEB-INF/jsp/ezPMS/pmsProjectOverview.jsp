@@ -26,7 +26,6 @@ var nowStatus = "${project.status}";
 var strHTML = "";
 var projectId = "${project.projectId}";
 var kanbanOrder = "${kanbanOrder}";
-var projectName = "${project.projectName}";
 var userRole = "${userRole}";
 var progressColor = "${mainSetting.progressColor}";
 var completeColor = "${mainSetting.completeColor}";

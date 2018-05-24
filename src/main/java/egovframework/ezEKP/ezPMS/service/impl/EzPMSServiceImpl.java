@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -126,6 +125,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					projectList.get(i).setTotalTaskCount(totalTaskCount);
 					projectList.get(i).setCompleteTaskCount(completeTaskCount);
 					projectList.get(i).setLateTaskCount(lateTaskCount);
+					
+					//프로젝트 이름에 따옴표
+					projectList.get(i).setProjectName(projectList.get(i).getProjectName().replaceAll("&quot;", "\"").replace("&#39;", "\'"));
 				}
 			}
 		} catch (Exception e) {
@@ -274,6 +276,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 		
 		try {
+			project.setProjectName(project.getProjectName().replaceAll("&quot;", "\"").replaceAll("&#39;", "\'"));
+			
 			if (!project.getStatus().equals("C")) {
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 				Date today = new Date();
@@ -1054,7 +1058,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] completeAllTasks Started");
 	}
 
-//	by mslim
 	@Override
 	@Transactional
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception {
@@ -1143,7 +1146,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
@@ -1207,6 +1210,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return projectList;
 	}
 
+	// 파일 이동 함수
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
 		LOGGER.debug("fileMove started.");
 		LOGGER.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);

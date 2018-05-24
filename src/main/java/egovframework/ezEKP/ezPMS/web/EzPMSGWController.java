@@ -69,9 +69,29 @@ public class EzPMSGWController {
 			String deptId = info.getDeptId();
 			
 			String searchByName = "";
+			String searchByUser = request.getParameter("searchByUser").toString();
+			String searchByOverview = request.getParameter("searchByOverview").toString();
+			
 			if (!request.getParameter("searchByName").equals("{}")) {
 				searchByName = request.getParameter("searchByName").toString();
+				searchByName = searchByName.replace("\\","\\\\");
+				searchByName = searchByName.replace("%", "\\%");
+				searchByName = searchByName.replace("_", "\\_");
 			}
+			
+			if (searchByUser != null) {
+				searchByUser = searchByUser.replace("\\","\\\\");
+				searchByUser = searchByUser.replace("%", "\\%");
+				searchByUser = searchByUser.replace("_", "\\_");
+			}
+			
+			if (searchByOverview != null) {
+				searchByOverview = searchByOverview.replace("\\","\\\\");
+				searchByOverview = searchByOverview.replace("%", "\\%");
+				searchByOverview = searchByOverview.replace("_", "\\_");
+				
+			}
+			
 			//검색 및 환경설정 세팅
 			Map<String, Object> search = new HashMap<>();
 			search.put("projectSort", request.getParameter("projectSort"));
@@ -122,7 +142,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			Map<String, Object> project = new HashMap<String, Object>();
-			project.put("projectName", request.getParameter("projectName").replaceAll("\"", "&quot;"));
+			project.put("projectName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
 			project.put("weightInput", request.getParameter("weightInput"));
 			project.put("planStartDate", request.getParameter("planStartDate"));
 			project.put("planEndDate", request.getParameter("planEndDate"));
@@ -153,7 +173,7 @@ public class EzPMSGWController {
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
 			
 			project.put("projectId", projectId);
-			project.put("groupName", request.getParameter("projectName"));
+			project.put("groupName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
 			project.put("memberCount", projectMemberList.size());
 			//그룹 생성
 			ezPMSService.addGroup(project);
@@ -709,7 +729,8 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-
+			String searchByContent = request.getParameter("searchByContent");
+			
 			//검색을 위한 search 파라미터
 			Map<String, Object> search = new HashMap<>();
 			search.put("location", request.getParameter("location"));
@@ -720,8 +741,15 @@ public class EzPMSGWController {
 			search.put("orderHow", request.getParameter("orderHow"));
 			search.put("taskId", request.getParameter("taskId"));
 			search.put("groupId", request.getParameter("groupId"));
-			search.put("searchByContent", request.getParameter("searchByContent"));
 			search.put("searchByStatus", request.getParameter("searchByStatus"));
+
+			if (searchByContent != null) {
+				searchByContent = searchByContent.replace("\\","\\\\");
+				searchByContent = searchByContent.replace("%", "\\%");
+				searchByContent = searchByContent.replace("_", "\\_");
+			}
+			
+			search.put("searchByContent", searchByContent);
 			
 			List<TaskLogListVO> taskLogList = ezPMSService.getTaskLogList(projectId, search, info.getOffSet(), lang, info.getTenantId());
 			
@@ -752,10 +780,28 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+
 			String searchByName = "";
+			String searchByUser = request.getParameter("searchByUser").toString();
+			String searchByOverview = request.getParameter("searchByOverview").toString();
 			
 			if (!request.getParameter("searchByName").equals("{}")) {
 				searchByName = request.getParameter("searchByName").toString();
+				searchByName = searchByName.replace("\\","\\\\");
+				searchByName = searchByName.replace("%", "\\%");
+				searchByName = searchByName.replace("_", "\\_");
+			}
+			
+			if (searchByUser != null) {
+				searchByUser = searchByUser.replace("\\","\\\\");
+				searchByUser = searchByUser.replace("%", "\\%");
+				searchByUser = searchByUser.replace("_", "\\_");
+			}
+			
+			if (searchByOverview != null) {
+				searchByOverview = searchByOverview.replace("\\","\\\\");
+				searchByOverview = searchByOverview.replace("%", "\\%");
+				searchByOverview = searchByOverview.replace("_", "\\_");
 			}
 			
 			ProjectInfoVO project = new ProjectInfoVO();
@@ -763,11 +809,11 @@ public class EzPMSGWController {
 			project.setProjectName(searchByName);
 			project.setPlanStartDate(request.getParameter("searchByStartDate"));
 			project.setPlanEndDate(request.getParameter("searchByEndDate"));
-			project.setOverview(request.getParameter("searchByOverview"));
-			project.setHeadManagerName(request.getParameter("searchByUser"));
+			project.setOverview(searchByOverview);
+			project.setHeadManagerName(searchByUser);
 			
 			String deptId = request.getParameter("deptId");
-			
+			System.out.println(project.getOverview());
 			LOGGER.debug("status : " + project.getStatus() + ", deptId : " + deptId);
 			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId, lang);
 			
@@ -836,7 +882,16 @@ public class EzPMSGWController {
 			
 			TaskLogListVO taskLog = new TaskLogListVO();
 			taskLog.setProjectId(projectId);
-			taskLog.setLogContent(request.getParameter("searchByContent"));
+			
+			String searchByContent = request.getParameter("searchByContent");
+			
+			if (searchByContent != null) {
+				searchByContent = searchByContent.replace("\\","\\\\");
+				searchByContent = searchByContent.replace("%", "\\%");
+				searchByContent = searchByContent.replace("_", "\\_");
+			}
+			
+			taskLog.setLogContent(searchByContent);
 			
 			if (!request.getParameter("searchByStatus").equals("") && request.getParameter("searchByStatus") != null) {
 				taskLog.setLogStatus(Integer.parseInt(request.getParameter("searchByStatus")));
