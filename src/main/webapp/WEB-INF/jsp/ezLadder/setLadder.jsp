@@ -964,7 +964,46 @@
 				}
 				$("#ladMakeForm").submit();
 			} 
+	
+			function DivPopUpPosition(popUpW, popUpH) {
+			    var ReturnValue = new Array();
+			    var heigth = document.documentElement.clientHeight;
+			    if (heigth == 0)
+			        heigth = document.body.clientHeight;
 
+			    var width = document.documentElement.clientWidth;
+			    if (width == 0)
+			        width = document.body.clientWidth;
+				var tWidth = parent.document.documentElement.clientWidth;
+				
+				tWidth = tWidth - width;
+				width = width - tWidth;
+			   
+			    var pleftpos;
+			    pleftpos = parseInt(width) - popUpW;
+			    heigth = parseInt(heigth) - popUpH;
+			   
+			    if (heigth < (popUpH + 50))
+			        ReturnValue[0] = (heigth / 2);
+			    else
+			        ReturnValue[0] = (heigth / 2) - 50;
+			    ReturnValue[1] = pleftpos / 2;
+			    return ReturnValue
+			}
+			
+			function DivPopUpShow(popUpW, popUpH, URL) {
+			    try {
+			        var Position = DivPopUpPosition(popUpW, popUpH);
+			        document.getElementById("iFrameLayer").src = URL;
+			        document.getElementById("iFramePanel").style.top = Position[0] + "px";
+			        document.getElementById("iFramePanel").style.left = Position[1] + "px";
+			        document.getElementById("iFramePanel").style.height = popUpH + "px";
+			        document.getElementById("iFrameLayer").style.width = popUpW + "px";
+			        document.getElementById("iFrameLayer").style.height = popUpH + "px";
+			        document.getElementById("mailPanel").style.display = "";
+			        document.getElementById("iFramePanel").style.display = "";
+			    } catch (e) {}
+			}
 		</script>
 		<style type="text/css">
 			input[type=text]::-ms-clear {
