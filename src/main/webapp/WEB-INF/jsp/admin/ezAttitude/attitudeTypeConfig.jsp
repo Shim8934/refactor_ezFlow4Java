@@ -253,7 +253,7 @@
                      <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                  </tr>
                 </thead>
-                <tbody>
+                <tbody id="contentlist">
                  <tr>
                      <td style="text-align: center;">
                          <img src="/images/email/progress_img.gif"/>
