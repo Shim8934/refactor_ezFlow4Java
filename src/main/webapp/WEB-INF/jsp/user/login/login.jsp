@@ -15,7 +15,10 @@
 		<style>
 			.blocker {
 				text-align: center;
-			} 
+			}
+			.modal p {
+				background:none;
+			}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
