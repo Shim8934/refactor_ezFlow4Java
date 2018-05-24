@@ -1903,7 +1903,7 @@ public class EzAttitudeKMSController {
 		
 		for(int i = 0; i < deptList.size(); i++) {
 			JSONObject dept = (JSONObject) deptList.get(i);
-			if (dept.get("mine").equals("yes")) {
+			if (dept.get("mine") != null && dept.get("mine").equals("yes")) {
 				dept.put("authType", "R");
 			}
 		}
