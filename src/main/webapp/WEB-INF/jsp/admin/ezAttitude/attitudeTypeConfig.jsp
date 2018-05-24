@@ -69,7 +69,8 @@
                 } else {
     	    		html = "<tr><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
                 }
-                $("#contentlist table").html(html);
+//                 $("#contentlist table").html(html);
+                $("table.mainlist tbody").html(html);
 	        }
 	        
 	        function useSelect(result) {
@@ -241,32 +242,26 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-	  	
-	  	<table style="width: 450px; height: 500px;" >
-            <tr>
-                <td>
-                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
-                        <table class="mainlist" style="width: 100%;">
-                            <tr>
-                                <th style="width: 110px;padding-left:15px;"><span><spring:message code='ezAttitude.t35' /></span></th>
-                                <th style="width: 110px;text-align: center;"><span><spring:message code='ezAttitude.kbm13' /></span></th>
-                                <th style="width: 90px;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
-                                <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
-                            </tr>
-                        </table>
-                        <div id="contentlist" name="contentlist" style="height: 466px; overflow-y: auto;">
-                        	<table class="mainlist" style="width: 100%;">
-                                <tr>
-                                    <td style="text-align: center;">
-                                        <img src="/images/email/progress_img.gif"/>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
+<!--         <div style="border: 1px solid #dededd; border-top:0px; border-bottom:0px; width: 450px; height: 503px;"> -->
+        <div style="border: 1px solid #e2e2e1; border-top:0px; border-bottom:0px; width: 450px; height: 503px;">
+            <table class="mainlist" style="width: 450px; height:500px;">
+            	<thead>
+                 <tr>
+                     <th style="width: 110px;padding-left:15px;"><span><spring:message code='ezAttitude.t35' /></span></th>
+                     <th style="width: 110px;text-align: center;"><span><spring:message code='ezAttitude.kbm13' /></span></th>
+                     <th style="width: 90px;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
+                     <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
+                 </tr>
+                </thead>
+                <tbody>
+                 <tr>
+                     <td style="text-align: center;">
+                         <img src="/images/email/progress_img.gif"/>
+                     </td>
+                 </tr>
+                </tbody>
+            </table>
+        </div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
