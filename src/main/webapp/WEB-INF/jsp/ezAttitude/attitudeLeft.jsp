@@ -227,6 +227,9 @@
 	    		if (returnValue == 0) {
 	    			alert("출근 후 퇴근이 가능합니다.");
 		    		return;
+	    		} else {
+	    			getAttitudeList();
+	    			parent.frames["right"].getAttitudeMainList();
 	    		}
 	    	}
 	    	
@@ -251,9 +254,6 @@
 	    		success : function(result) {
 	    			getAttitudeList();
 	    			parent.frames["right"].getAttitudeMainList();
-	    			if (result == 'dupl') {
-	    				alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
-	    			}
 	    		},
 	    		complete : function() {
 	    			afterAlertDate = new Date();
