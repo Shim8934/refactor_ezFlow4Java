@@ -61,32 +61,38 @@
    			});
 	    	
 	    	//사원 세팅
-	    	function setSelectedUser(userId, userName){
+	    	function setSelectedUser(userId, userName) {
 	    		selectedUserName = userName;
 	    		selectedUser = userId;
 	    		$("#txtuser").val(" " + userName);
 	    	} 
 	    	
 	    	//사원선택
-	    	function select_person(){
+	    	function select_person() {
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthor.do";
 				url+="?companyId="+companyId;
 				window.open(url, "author", GetOpenWindowfeature(705, 575));
 	    	}
 	    	
 	    	//부서선택
-	    	function selectDept(){
+	    	var selecttarget_dialogArguments = new Array();
+	    	function selectDept() {
 	    		if (selectedUser == "" || selectedUser == null) {
 	    			alert("<spring:message code='ezAttitude.kbm24' />");
 	    			return;
 	    		}
+	    		
+	    		selecttarget_dialogArguments[0] = deptIds;
+	    		
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do";
 				url+="?companyId="+companyId+"&userId="+selectedUser;
-				window.open(url, "authorDept", GetOpenWindowfeature(500, 540));
+				var SelectTarget = window.open(url, "authorDept", GetOpenWindowfeature(500, 540));
+				try { SelectTarget.focus(); } catch (e) {
+	            }
 	    	}
 	    	 
 	    	//부서 이름 세팅
-	    	function setDeptName(pdeptIds, pdeptNames){
+	    	function setDeptName(pdeptIds, pdeptNames) {
 	            if (pdeptIds && pdeptNames) {
 	               deptIds = eval(pdeptIds);
 	               deptNames = eval(pdeptNames);
@@ -118,6 +124,14 @@
 	    		$("#txtdept").val(deptString);
 	   			//리스트 출력
 	    		$('#contentlist .mainlist').html(html);
+	   			//스크롤바로 인한 밀림현상 막기
+	   			if (deptIds.length > 5) {
+	   				$(".mainlist th:eq(1)").css("padding-right", "20px");
+	   				$(".mainlist th:eq(2)").css("padding-right", "30px");
+	   			} else {
+	   				$(".mainlist th:eq(1)").css("padding-right", "");
+	   				$(".mainlist th:eq(2)").css("padding-right", "");
+	   			}
 	   			
 	    	}	  
 	    	
@@ -139,7 +153,7 @@
 	        }
 	    	
 	    	//권한 저장
-	    	function saveAuthDept(){
+	    	function saveAuthDept() {
 	    		if (deptIdStr == "" || deptIdStr == null) {
 	    			alert("<spring:message code='ezAttitude.kbm25' />");
 	    			return;
@@ -196,16 +210,29 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.kbm27' /></th>
 	            <td>
-	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:1px; width:80%" onfocus="this.blur();" readonly="readonly" />
 	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:2px;"><span onclick="select_person()"><spring:message code='ezAttitude.kbm29' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.kbm28' /></th>
-	            <td>
-<!-- 	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" /> -->
-	                <textarea rows="3" id="txtdept" type="text" style="margin-top:2px; width:77%; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	            <td style="height: 60px; width: 400px;">
+	                <textarea rows="3" id="txtdept" type="text" style="height: 43px; margin-top:2px; width:77%; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea>
 	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.kbm29' /></span></a>                
+<!-- 	                <table style="width: 400px;"> -->
+<!-- 	                	<tr> -->
+<!-- 	                		<td> -->
+<!-- 				                <div style="margin: auto;"> -->
+<!-- 					                <textarea rows="3" id="txtdept" type="text" style="height: 43px; width:77%; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea> -->
+<!-- 				                </div> -->
+<!-- 	                		</td> -->
+<!-- 	                		<td> -->
+<!-- 				                <div style="margin: auto;"> -->
+<%-- 					                <a href="#" class="imgbtn"><span onclick="selectDept()"><spring:message code='ezAttitude.kbm29' /></span></a>                 --%>
+<!-- 				                </div> -->
+<!-- 	                		</td> -->
+<!-- 	                	</tr> -->
+<!-- 	                </table> -->
 	            </td>
 	        </tr>
 	    </table>
@@ -227,7 +254,7 @@
                 </table>
             </div>
         </div>
-        <div class="btnposition">
+        <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="saveAuthDept();" ><spring:message code='ezAttitude.t16' /></span></a>
 	        <a class="imgbtn"><span onclick="window.close();"><spring:message code='ezAttitude.t34' /></span></a>
 	    </div>

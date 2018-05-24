@@ -60,8 +60,8 @@
 		var usepostDate = false;
 		var searchAppr = ""; //#appr_search
 		var searchWriter = ""; //#writer_search
-		var searchStartDate = "<c:out value='${startDate}'/>"; //
-		var searchEndDate = "<c:out value='${endDate}'/>"; //
+		var searchStartDate = "<c:out value='${startDate}'/>";
+		var searchEndDate = "<c:out value='${endDate}'/>";
 		var pageInfo = "modList";
 		var adminCompany = "${adminCompany}";
 		
@@ -135,8 +135,7 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
-	        console.log("${startDate}");
-	        console.log("${endDate}");
+	        
 			if (checkAdmin == 'true') {
 				$("#Sdatepicker").val("${startDate}");
 	    		$("#Edatepicker").val("${endDate}");
