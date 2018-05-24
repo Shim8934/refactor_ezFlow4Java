@@ -383,7 +383,7 @@
   				</c:otherwise>
   			</c:choose>
 		</div>
-		<div style="width:900px; border: 1px solid #e8e8e8; border-top:0px; border-bottom:0px;">
+		<div style="width:100%; border: 1px solid #e8e8e8; border-top:0px; border-bottom:0px;">
 			<table class="mainlist" style="width:100%"> 
 				<tr>
 					<th width="120" style="display:none"><spring:message code='ezPortal.t255'/></th>

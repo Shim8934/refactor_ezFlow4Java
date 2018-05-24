@@ -196,6 +196,23 @@ public class MLoginGWController {
     			    	String mAgent = request.getHeader("agent");
     			    	String mBrowser = request.getHeader("browser");
     			    	String mOs = request.getHeader("os");
+    			    	
+    			    	if (mIp == null) {
+    			    		mIp = ClientUtil.getClientIP(request);
+    			    	}
+    			    	
+    			    	if (mAgent == null) {
+    			    		mAgent = ClientUtil.getClientInfo(request, "agent");
+    			    	}
+    			    	
+    			    	if (mBrowser == null) {
+    			    		mBrowser = ClientUtil.getClientInfo(request, "browser");
+    			    	}
+    			    	
+    			    	if (mOs == null) {
+    			    		mOs = ClientUtil.getClientInfo(request, "os");
+    			    	}
+    			    	
     					loginVO.setIp(mIp);
     					
     					//IP Address,  마지막 login시간 저장

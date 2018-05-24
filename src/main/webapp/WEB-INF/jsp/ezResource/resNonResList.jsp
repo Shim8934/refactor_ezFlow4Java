@@ -23,14 +23,14 @@
 		<br/>				
 		<br/>
 			<div id="EmptyMsg">
-    			<div class="warningbox01" style="margin-top:100px;">
+    			<div class="warningbox01" style="margin-top:130px;">
         			<div class="warningbox02">
   	        			<div class="warnintxt01" style="text-align:left; display:inline-block;">
 	        				<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin:18px 0px 18px 34px;"></span>
 	        				<dl class="warningdl">
 	        				<dt><img src="/images/notify/warning01.gif" width="183" height="27"></dt>
 	        					<dd>
-	        					 ${accMessage}	
+	        						${accMessage}	
 	        					</dd>
 	        				</dl>
 	        			</div>

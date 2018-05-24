@@ -163,7 +163,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<div style="width:502px;">
+		<div style="width:100%;">
 		<table class="content" style="height: 34px;">
   			<tr>
     			<th><spring:message code='ezPortal.t64'/></th>
@@ -176,7 +176,7 @@
 		</table>
 		</div>
 		<br>
-		<div style="width:500px; border: 1px solid #e8e8e8; border-bottom:0px;">
+		<div style="width:100%; border: 1px solid #e8e8e8; border-bottom:0px;">
 		<table  class="mainlist" style="width:100%">
   			<tr>
     			<th style="width: 60px; border-top:0px;"><spring:message code='ezPortal.t101'/></th>
