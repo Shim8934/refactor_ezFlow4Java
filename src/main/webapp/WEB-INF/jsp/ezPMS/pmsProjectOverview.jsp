@@ -158,7 +158,7 @@ function initKanbanList() {
 		strHTML += "</div>";
 	}
 	
-	$("#kanbanArea").html(strHTML);
+	$("#kanbanDraw").html(strHTML);
 	
 	//칸반 내 업무 넣기
 	data = {
@@ -175,16 +175,37 @@ function initKanbanList() {
 		url : "/ezPMS/getTaskList.do",
 		data :JSON.stringify(data),
 		success : function(result) {
+			var kanbanOrderArr = kanbanOrder.split(",");
+
 			$("#kanban1").find("h1").append(" (" + result.kanbanTaskCount1 + ")");
 			$("#kanban2").find("h1").append(" (" + result.kanbanTaskCount2 + ")");
 			$("#kanban3").find("h1").append(" (" + result.kanbanTaskCount3 + ")");
 			$("#kanban4").find("h1").append(" (" + result.kanbanTaskCount4 + ")");
 			
-			setTasksIntoKanban(result.kanbanTask1, "kanban1", result.kanbanTaskCount1, "new");
-			setTasksIntoKanban(result.kanbanTask2, "kanban2", result.kanbanTaskCount2, "new");
-			setTasksIntoKanban(result.kanbanTask3, "kanban3", result.kanbanTaskCount3, "new");
-			setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new");
+			if (kanbanOrderArr[0] != "B") {
+				setTasksIntoKanban(result.kanbanTask1, "kanban1", result.kanbanTaskCount1, "new", false);
+			} else {
+				setTasksIntoKanban(result.kanbanTask1, "kanban1", result.kanbanTaskCount1, "new", true);
+			}
 			
+			if (kanbanOrderArr[1] != "B") {
+				setTasksIntoKanban(result.kanbanTask2, "kanban2", result.kanbanTaskCount2, "new", false);
+			} else {
+				setTasksIntoKanban(result.kanbanTask2, "kanban2", result.kanbanTaskCount2, "new", true);
+			}
+			
+			if (kanbanOrderArr[2] != "B") {
+				setTasksIntoKanban(result.kanbanTask3, "kanban3", result.kanbanTaskCount3, "new", false);
+			} else {
+				console.log(result.kanbanTask3);
+				setTasksIntoKanban(result.kanbanTask3, "kanban3", result.kanbanTaskCount3, "new", true);
+			}
+			
+			if (kanbanOrderArr[3] != "B") {
+				setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new", false);
+			} else {
+				setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new", true);
+			}
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 		}
@@ -302,43 +323,52 @@ function getProjectMember(roleId) {
 	addProjectPopup(18, 29, 374, 350, "/ezPMS/getProjectMember.do?projectId=" + projectId + "&roleId=" + roleId);
 }
 
-function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType) {
+function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoard) {
+	console.log(isBoard);
+	console.log(taskList.length);
 	if (taskList != null) {
 		var kanbanHTML = "";
 		for (var i = 0; i < taskList.length; i++) {
-			var taskStatus = "";
-			var statusColor = "";
-			
-			switch (taskList[i].status) {
-			case "P" :
-				taskStatus = "진행";
-				statusColor = progressColor;
-				break;
-			case "W" :
-				taskStatus = "대기";
-				statusColor = "grey";
-				break;
-			case "L" :
-				taskStatus = "지연";
-				statusColor = overdueColor;
-				break;
-			case "S" :
-				taskStatus = "보류";
-				statusColor = holdColor;
-				break;
-			case "C" :
-				taskStatus = "완료";
-				statusColor = completeColor;
-				break;
+			if (!isBoard) {
+				var taskStatus = "";
+				var statusColor = "";
+				
+				switch (taskList[i].status) {
+				case "P" :
+					taskStatus = "진행";
+					statusColor = progressColor;
+					break;
+				case "W" :
+					taskStatus = "대기";
+					statusColor = "grey";
+					break;
+				case "L" :
+					taskStatus = "지연";
+					statusColor = overdueColor;
+					break;
+				case "S" :
+					taskStatus = "보류";
+					statusColor = holdColor;
+					break;
+				case "C" :
+					taskStatus = "완료";
+					statusColor = completeColor;
+					break;
+				}
+				
+				kanbanHTML += "<div id='" + taskList[i].taskId + "' class='card' onclick='getTaskDetails(this)'>";
+				kanbanHTML += "<h5>" + taskList[i].taskName + "</h5>";
+				kanbanHTML += "<div class='progressArea" + taskList[i].taskId + "'></div>";
+				kanbanHTML += "<div style='float:left'><span style='border:1px solid black'>start</span>" + taskList[i].planStartDate + "</div><br>";
+				kanbanHTML += "<div><span style='border:1px solid black'>end </span>" + taskList[i].planEndDate;
+				kanbanHTML += "<div class='taskStatus' style='background-color:" + statusColor + "'>" + taskStatus + "</div></div>";
+				kanbanHTML += "</div>";
+			} else {
+				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='card' onclick='getBoardDetails(this)'>";
+				kanbanHTML += "<h5>" + taskList[i].title + "</h5>";
+				kanbanHTML += "<div class='boardContent'>" + taskList[i].writeContent + "</div>";
+				kanbanHTML += "</div>"
 			}
-			
-			kanbanHTML += "<div id='" + taskList[i].taskId + "' class='card' onclick='getTaskDetails(this)'>";
-			kanbanHTML += "<h5>" + taskList[i].taskName + "</h5>";
-			kanbanHTML += "<div class='progressArea" + taskList[i].taskId + "'></div>";
-			kanbanHTML += "<div style='float:left'><span style='border:1px solid black'>start</span>" + taskList[i].planStartDate + "</div><br>";
-			kanbanHTML += "<div><span style='border:1px solid black'>end </span>" + taskList[i].planEndDate;
-			kanbanHTML += "<div class='taskStatus' style='background-color:" + statusColor + "'>" + taskStatus + "</div></div>";
-			kanbanHTML += "</div>";
 		}
 		
 		if (taskType == "add") {
@@ -548,6 +578,11 @@ function setOverviewContent() {
 	width : 78%;
 	padding : 5px;
 	border-right : 1px solid #d1d1d1;
+	overflow : auto;
+}
+
+#kanbanDraw {
+	min-width : 1011px;
 }
 
 #overviewArea {
@@ -579,6 +614,11 @@ function setOverviewContent() {
 	color : block;
 	border : 1px solid black;
 	background-color : rgb(255, 255, 255);
+	overflow : hidden;
+}
+
+.boardContent {
+	text-overflow : ellipsis; 	
 }
 
 .kanban > h1 {
@@ -593,6 +633,7 @@ function setOverviewContent() {
 	margin : 0;
 	border-bottom : 1px solid #999;
 	padding-bottom : 5px;
+	text-overflow : ellipsis; 	
 }
 
 .icon {
@@ -614,7 +655,7 @@ function setOverviewContent() {
 </style>
 </head>
 <body>
-<div id="kanbanArea" class="overview"></div>
+<div id="kanbanArea" class="overview"><div id="kanbanDraw" class="overview"></div></div>
 
 <div id="iconArea" class="rightPart">
 		<div id="printReport" class="icon">출력</div>
