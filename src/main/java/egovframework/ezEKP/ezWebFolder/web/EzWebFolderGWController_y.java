@@ -221,17 +221,15 @@ public class EzWebFolderGWController_y {
 			service.updateFolder(folderId, tenantId, userId, comId, newFolderName1, newFolderName2, timeUTC);
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
-			jsonObj.put("data", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
-			jsonObj.put("data", "");
 		}
 		LOGGER.debug("folderUpdate ended");
 		return jsonObj;
 	}
-	// 폴더 복사 
+	// 폴더 이동, 복사
 	@SuppressWarnings("unchecked")
 	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/{mode}" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
 	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) throws Exception  {
@@ -394,6 +392,11 @@ public class EzWebFolderGWController_y {
 		
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		JSONObject data = new JSONObject();
+		if (folderId.equals("") || userId.equals("") ) {
+			LOGGER.debug("Parameter error!");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 1);
+		}
 		try {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = common.getTenantId();
@@ -516,7 +519,7 @@ public class EzWebFolderGWController_y {
 			e.printStackTrace();
 			LOGGER.debug(" fail ");
 			jsonObj.put("status", "error");
-			jsonObj.put("code", 1);
+			jsonObj.put("code", 2);
 			jsonObj.put("data", "");
 		}
 
@@ -570,7 +573,6 @@ public class EzWebFolderGWController_y {
 					LOGGER.debug("this folder conection is not permission ");
 					jsonObj.put("status", "error");
 					jsonObj.put("code"	, 3);
-					jsonObj.put("data"	, "");
 					LOGGER.debug("fileList method Ended ");
 					return jsonObj;
 				}
@@ -585,7 +587,6 @@ public class EzWebFolderGWController_y {
 			
 			jsonObj.put("status"	, "error");
 			jsonObj.put("code"		, 2);
-			jsonObj.put("data"		, "");
 		}
 		
 		LOGGER.debug("checkPermission ended.");
