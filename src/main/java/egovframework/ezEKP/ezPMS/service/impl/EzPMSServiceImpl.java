@@ -126,6 +126,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					projectList.get(i).setTotalTaskCount(totalTaskCount);
 					projectList.get(i).setCompleteTaskCount(completeTaskCount);
 					projectList.get(i).setLateTaskCount(lateTaskCount);
+					
+					//프로젝트 이름에 따옴표
+					projectList.get(i).setProjectName(projectList.get(i).getProjectName().replaceAll("&quot;", "\"").replace("&#39;", "\'"));
 				}
 			}
 		} catch (Exception e) {
@@ -274,6 +277,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 		
 		try {
+			project.setProjectName(project.getProjectName().replaceAll("&quot;", "\"").replaceAll("&#39;", "\'"));
+			
 			if (!project.getStatus().equals("C")) {
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 				Date today = new Date();

@@ -367,7 +367,7 @@ function setListOrder(elem){
 	setProjectList();
 }
 
-function setInitOrder(){	
+function setInitOrder(){
 	$("#BoardList_TH th").each(function () {
 		if(orderWhat == $(this).attr("order")) {
 			if(orderHow == 'asc'){
@@ -380,6 +380,13 @@ function setInitOrder(){
 		}
 	});
 
+	//검색 초기화
+	$("#searchByName").val("");
+	$("#searchByUser").val("");
+	$("#Sdatepicker").val("");
+	$("#Edatepicker").val("");
+	$("#searchByOverview").val("");
+	
 	projectListScroll();
 }
 
@@ -887,7 +894,7 @@ function emptyDate(elem){
 }
 
 .memoTd {
-	width : 30%;
+	width : 92px;
 }
 
 .restDueday {

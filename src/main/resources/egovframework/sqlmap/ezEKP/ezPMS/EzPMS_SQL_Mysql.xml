@@ -705,7 +705,7 @@
 		</isNotEmpty>
 		<isNotEmpty property="searchByOverview">
 			AND
-				A.OVERVIEW LIKE CONCAT('%',#"searchByOverview"#,'%')
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
 		</isNotEmpty>
 		<isNotEqual property="orderWhat" compareValue="init">
 			ORDER BY	
@@ -872,7 +872,7 @@
 		</isNotEmpty>
 		<isNotEmpty property="searchByOverview">
 			AND
-				A.OVERVIEW LIKE CONCAT('%',#"searchByOverview"#,'%')
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
 		</isNotEmpty>
 	</select>
 	
@@ -1670,7 +1670,11 @@
 			COUNT(L.LOG_ID)
 		FROM
 			TBL_PMS_LOG L
-		JOIN 
+		JOIN	
+			TBL_PMS_PROJECT P
+		ON	
+			L.PROJECT_ID = P.PROJECT_ID
+		LEFT JOIN 
 			TBL_PMS_GROUP G
 		ON 
 			L.GROUP_ID = G.GROUP_ID
@@ -1691,6 +1695,16 @@
 		WHERE 
 			L.task_id = #taskId#
 		</isNotEqual>
+		<isNotEmpty property="searchByContent">
+		AND
+			L.LOG_CONTENT LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStatus">
+			<isNotEqual property="searchByStatus" compareValue="0">
+			AND
+				L.LOG_STATUS = #searchByStatus#
+			</isNotEqual>
+		</isNotEmpty>
 		AND
 			L.PROJECT_ID = #projectId#
 		AND
@@ -1714,7 +1728,11 @@
 			T.TASK_NAME AS TASK_NAME
 		FROM
 			TBL_PMS_LOG L
-		JOIN 
+		JOIN	
+			TBL_PMS_PROJECT P
+		ON	
+			L.PROJECT_ID = P.PROJECT_ID
+		LEFT JOIN 
 			TBL_PMS_GROUP G
 		ON 
 			L.GROUP_ID = G.GROUP_ID
