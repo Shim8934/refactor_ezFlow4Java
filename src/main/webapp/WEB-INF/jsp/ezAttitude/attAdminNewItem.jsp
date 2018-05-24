@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.bbhs16'/></title>
+		<title>근태입력</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -575,7 +575,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.bbhs17'/></h1>
+	                            <h1 style="padding:0px; margin-top:-5px;">근태입력</h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>

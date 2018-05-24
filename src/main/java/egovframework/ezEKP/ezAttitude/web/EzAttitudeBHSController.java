@@ -327,23 +327,59 @@ public class EzAttitudeBHSController {
 			deptList = (JSONArray) resultBody.get("data");
 		}
 		
-//		if (deptList.size() > 1) {
-//			attitudeAdminCheck = true;
-//			
-//			JSONObject dept = new JSONObject();
-//			
-//			for (int i = 0; i < deptList.size(); i++) {
-//				dept = (JSONObject) deptList.get(i);
-//				authFlag = (String) dept.get("authType");
-//			}
-//		}
-		
 		for (int i = 0; i < deptList.size(); i++) {
 			JSONObject dept = (JSONObject) deptList.get(i);
 			authFlag = (String) dept.get("authType");
 			
 			if (authFlag.equals("M")) {
 				attitudeAdminCheck = true;
+			}
+		}
+		
+		if (attitudeAdminCheck == true) {
+			String offset = userInfo.getOffset();
+			String offsetMin = commonUtil.getMinuteUTC(offset);			
+			String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+			url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+										
+			headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			entity = new HttpEntity<>(headers);
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", "")
+					.queryParam("writerName", "")
+					.queryParam("writerDeptName", "")
+					.queryParam("startDate", "")
+					.queryParam("endDate", "")
+					.queryParam("sysLang", sysLang)
+					.queryParam("offset", offsetMin)
+					.queryParam("pageNum", "")
+					.queryParam("type", "0")
+					.queryParam("adminFlag", "true")
+					.queryParam("deptid", "ALL")
+					.queryParam("isAllDept", isAllDept);
+			
+			rest = new RestTemplate();
+
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+			jp = new JSONParser();
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			JSONObject data = new JSONObject();
+			JSONArray list = new JSONArray();
+			
+			if(status.equals("ok")){
+				int totalAtt = Integer.parseInt(resultBody.get("data").toString());
+				model.addAttribute("totalAtt", totalAtt);
 			}
 		}
 		
@@ -1049,7 +1085,7 @@ public class EzAttitudeBHSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userId = userInfo.getId();
-		String typeId = request.getParameter("attitudeId");
+		String typeId = request.getParameter("typeId");
 		String startDate = request.getParameter("startDate");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");

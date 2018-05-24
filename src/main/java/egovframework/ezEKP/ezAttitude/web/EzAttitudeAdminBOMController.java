@@ -1234,6 +1234,7 @@ public class EzAttitudeAdminBOMController {
 		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		HSSFFont font = workbook.createFont();
 		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
@@ -1251,41 +1252,44 @@ public class EzAttitudeAdminBOMController {
 			pFileName = EgovDateUtil.getToday("-") +"_attitudeReport.xls";
 			
 			//header
-			row.createCell(0).setCellValue("이름");
+			row.createCell(0).setCellValue("NO");
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("직위");
+			row.createCell(1).setCellValue("이름");
 			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("부서");
+			row.createCell(2).setCellValue("직위");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("날짜");
+			row.createCell(3).setCellValue("부서");
 			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("시간");
+			row.createCell(4).setCellValue("날짜");
 			row.getCell(4).setCellStyle(headerStyle);
-			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t13", locale));
+			row.createCell(5).setCellValue("시간");
 			row.getCell(5).setCellStyle(headerStyle);
+			row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t13", locale));
+			row.getCell(6).setCellStyle(headerStyle);
 			
 			//body
 			for (int i = 0 ; i < attitudeList.size(); i++) { 
 				AdminAttitudeVO vo = attitudeList.get(i);
 				row = sheet.createRow(i + 1);
-
-				row.createCell(0).setCellValue(vo.getUserName());
-				row.createCell(1).setCellValue(vo.getUserTitle());
-				row.createCell(2).setCellValue(vo.getDeptName());
+				
+				row.createCell(0).setCellValue(i + 1);
+				row.createCell(1).setCellValue(vo.getUserName());
+				row.createCell(2).setCellValue(vo.getUserTitle());
+				row.createCell(3).setCellValue(vo.getDeptName());
 				
 				if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
-					row.createCell(3).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
+					row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
 				} else {
-					row.createCell(3).setCellValue(vo.getStartDate());
+					row.createCell(4).setCellValue(vo.getStartDate());
 				}
 				
 				if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
-					row.createCell(4).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
+					row.createCell(5).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
 				} else {
-					row.createCell(4).setCellValue(vo.getStartTime());
+					row.createCell(5).setCellValue(vo.getStartTime());
 				}
 				
-				row.createCell(5).setCellValue(vo.getTypeName());
+				row.createCell(6).setCellValue(vo.getTypeName());
 				
 				row.getCell(0).setCellStyle(bodyStyle);
 				row.getCell(1).setCellStyle(bodyStyle);
@@ -1293,6 +1297,7 @@ public class EzAttitudeAdminBOMController {
 				row.getCell(3).setCellStyle(bodyStyle);
 				row.getCell(4).setCellStyle(bodyStyle);
 				row.getCell(5).setCellStyle(bodyStyle);
+				row.getCell(6).setCellStyle(bodyStyle);
 			}
 			
 			//width 조정
@@ -1302,34 +1307,39 @@ public class EzAttitudeAdminBOMController {
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(4);
 			sheet.autoSizeColumn(5);
+			sheet.autoSizeColumn(6);
 		} else if (requestURL.indexOf("excelAbsentedListExport.do") > -1){
 //			미입력자조회엑셀
 			pFileName = EgovDateUtil.getToday("-") +"_absentedReport.xls";
 			
 			//header
-			row.createCell(0).setCellValue("이름");
+			row.createCell(0).setCellValue("NO");
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("직위");
+			row.createCell(1).setCellValue("이름");
 			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("부서");
+			row.createCell(2).setCellValue("직위");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("날짜");
+			row.createCell(3).setCellValue("부서");
 			row.getCell(3).setCellStyle(headerStyle);
+			row.createCell(4).setCellValue("날짜");
+			row.getCell(4).setCellStyle(headerStyle);
 			
 			//body
 			for (int i = 0 ; i < attitudeList.size(); i++) { 
 				AdminAttitudeVO vo = attitudeList.get(i);
 				row = sheet.createRow(i + 1);
-
-				row.createCell(0).setCellValue(vo.getUserName());
-				row.createCell(1).setCellValue(vo.getUserTitle());
-				row.createCell(2).setCellValue(vo.getDeptName());
-				row.createCell(3).setCellValue(vo.getStartDate());
+				
+				row.createCell(0).setCellValue(i + 1);
+				row.createCell(1).setCellValue(vo.getUserName());
+				row.createCell(2).setCellValue(vo.getUserTitle());
+				row.createCell(3).setCellValue(vo.getDeptName());
+				row.createCell(4).setCellValue(vo.getStartDate());
 				
 				row.getCell(0).setCellStyle(bodyStyle);
 				row.getCell(1).setCellStyle(bodyStyle);
 				row.getCell(2).setCellStyle(bodyStyle);
 				row.getCell(3).setCellStyle(bodyStyle);
+				row.getCell(4).setCellStyle(bodyStyle);
 			}
 			
 			//width 조정
@@ -1337,6 +1347,7 @@ public class EzAttitudeAdminBOMController {
 			sheet.autoSizeColumn(1);
 			sheet.autoSizeColumn(2);
 			sheet.autoSizeColumn(3);
+			sheet.autoSizeColumn(4);
 		}
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");

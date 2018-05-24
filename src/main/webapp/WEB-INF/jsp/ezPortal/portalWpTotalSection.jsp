@@ -250,7 +250,10 @@
 		 	/*근태관리 추가*/
 		 	var serverTime = "${serverTime}";
 		 	var nowAttiTime = "";
-		 	
+		 	var beforeAlertDate = "";
+			var afterAlertDate = "";
+			var overTime = "";
+			
 		 	$("#todayTime").html(year + "년 " + mon + "월 " + day + "일");
 
 		    function window_onload_total() {
@@ -267,6 +270,7 @@
 // 			    draw_clock();
 				setAttiBtnHover();
 				getAttitudeList();
+				getHolidayList();
 			    //yourClock();
 
 			    CalendarMiniDataSource();
@@ -951,17 +955,27 @@
 		    	})
 		    }
 		    
+		  //시간놓고 alert내용을 파라미터로 던져서 체크??
 		    function addAttitude(obj) {
 		    	var pTypeId = obj.getAttribute("type");
 		    	var pDateType = obj.getAttribute("datetype");
-		    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
-		    		alert("출근 후 퇴근이 가능합니다.");
+		    	if (pTypeId == "A03") {
+		    		var returnValue = getIsAttitude("A01");
+		    		if (returnValue == 0) {
+		    			alert("출근 후 퇴근이 가능합니다.");
+			    		return;
+		    		}
+		    	}
+		    	
+		    	beforeAlertDate = new Date();
+		    	var dateAlert = nowAttiTime.getFullYear() + "년 " + (nowAttiTime.getMonth() + 1) + "월 " + (nowAttiTime.getDate()) + "일 " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+		    	var saveFlag = confirm("현재 시각은 " + dateAlert + "입니다.");
+		    	if (!saveFlag) {
+		    		afterAlertDate = new Date();
+		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
 		    		return;
 		    	} 
-// 		    	else if (pTypeId == "A03" && leaveEarlyFlag) {
-// 		    		alert("조퇴 후 퇴근은 불가능합니다.");
-// 		    		return;
-// 		    	}
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,
@@ -976,15 +990,16 @@
 		    			if (result == 'dupl') {
 		    				alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
 		    			}
+		    		},
+		    		complete : function() {
+		    			afterAlertDate = new Date();
+			    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+			    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
 		    		}
 		    	})
 		    }
 		    
-		    var checkClosedToday = false;
-		    function checkHoliday(obj) {
-				var now = new Date();
-				var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000) + (parseInt(UserOffset.split(':')[1]) * 60000);
-				now.setTime(tz);
+		    function getHolidayList() {
 				$.ajax({
 					type:"POST",
 					dataType : "json",
@@ -1004,24 +1019,48 @@
 																		  result.holidayList[i].isRest == 1 ? true : false));
 							}
 						}
-						
-						var todayLunar = lunarCalc(now.getFullYear(), now.getMonth() + 1, now.getDate(), 1);
-						var todayMemorialDayList = memorialDayCheck(now, todayLunar);
-						var todayYearMemorialDayList = yearmemorialDayCheck(now, todayLunar);
-						
-						if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
-							checkClosedToday = true;
-						}
-						
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
-						if (closedDay[now.getDay()] == "1" || checkClosedToday) {
-				    		alert("휴일은 출/퇴근을 등록할 수 없습니다.");
-						} else {
-							addAttitude(obj);
-						}
 					}
 				});
 			}
+		    
+		    function checkHoliday(obj) {
+				var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
+				var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
+				var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
+				
+				if (closedDay[nowAttiTime.getDay()] == "1" || todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
+		    		alert("<spring:message code='ezAttitude.bbhs34'/>");
+				} else {
+					var returnValue = getIsAttitude(obj.getAttribute("type"));
+					
+					if (returnValue == 0) {
+						addAttitude(obj);
+					} else {
+						getAttitudeList();
+					}
+				}
+			}
+		    
+		    function getIsAttitude(typeId) {
+				var isAttitudeReturn = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezAttitude/getIsAttitude.do",
+		    		data : {
+		    			typeId : typeId
+		    		},
+		    		success : function(result) {
+		    			isAttitudeReturn = result;
+		    		},
+		    		complete : function() {
+		    			
+		    		}
+		    	})
+		    	return isAttitudeReturn;
+		    }
 		    
 		    function setAttiBtnHover() {
 		    	$("#inAttiBtn, #outAttiBtn").hover(function(){
