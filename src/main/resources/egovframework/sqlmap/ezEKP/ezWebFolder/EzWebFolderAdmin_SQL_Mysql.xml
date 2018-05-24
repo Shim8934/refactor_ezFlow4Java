@@ -228,19 +228,11 @@
 				(
 					SELECT IFNULL(SUM(CAST(F.FILE_SIZE AS INT)), 0)
 						FROM
-							(
-								TBL_WEBFOLDER_FOLDER S INNER JOIN TBL_WEBFOLDER_FILE F ON S.FOLDER_ID = F.FOLDER_ID
-							)
+							TBL_WEBFOLDER_FILE F
 						WHERE
-							F.TENANT_ID   = #tenantId#
+							F.TENANT_ID = #tenantId#
 						AND
-							S.FOLDER_TYPE = 'U'
-						AND
-							F.USE_STATUS != 'N'
-						AND
-							S.OWNER_ID    = U.CN
-						AND
-							U.CN          = #userId#
+							F.CREATE_ID = #userId#
 				)                                                                            AS TOTAL_USED,
 				U.TENANT_ID                                                                  AS TENANT_ID
 			FROM
@@ -268,17 +260,11 @@
 				(
 					SELECT IFNULL(SUM(CAST(F.FILE_SIZE AS INT)), 0)
 						FROM
-							(
-								TBL_WEBFOLDER_FOLDER S INNER JOIN TBL_WEBFOLDER_FILE F ON S.FOLDER_ID = F.FOLDER_ID
-							)
+							TBL_WEBFOLDER_FILE F
 						WHERE
-							F.TENANT_ID   = #tenantId#
+							F.TENANT_ID = #tenantId#
 						AND
-							S.FOLDER_TYPE = 'U'
-						AND
-							F.USE_STATUS != 'N'
-						AND
-							S.OWNER_ID    = U.CN
+							F.CREATE_ID = U.CN
 				)                                                                            AS TOTAL_USED,
 				U.TENANT_ID                                                                  AS TENANT_ID
 			FROM
@@ -556,11 +542,13 @@
 									FOLDER_ID,
 									TENANT_ID
 									FROM
-										TBL_WEBFOLDER_FOLDER 
+										TBL_WEBFOLDER_FOLDER
 									WHERE
 										OWNER_ID     = #ownerId#
 									AND
 										COMPANY_ID   = #companyId#
+									AND
+										FOLDER_TYPE  = #folderType#
 									AND
 										TENANT_ID    = #tenantId#
 								)

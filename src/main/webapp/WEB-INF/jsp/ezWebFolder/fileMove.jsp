@@ -56,14 +56,14 @@
 		}
 		
 		function renderData(result, mode) {
-			var divTree   = document.getElementById("folderTree");
+			var divTree = document.getElementById("folderTree");
 			
 			while (divTree.hasChildNodes()) {
 				divTree.removeChild(divTree.lastChild);
 			}
 			
 			if (!result || (result.length == 0 && mode != "1")) {
-				alert("<spring:message code='ezWebFolder.t134'/>");
+				alert("<spring:message code='ezWebFolder.t325'/>");
 				return;
 			}
 			
@@ -341,7 +341,7 @@
 			</c:if>
 		</div>
 	</div>
-	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px;" id="folderTree"></div>
+	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px; white-space: nowrap;" id="folderTree"></div>
 	
 	<div style="margin: 0px 0px 15px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
 		<c:if test="${type ne 'copy'}">

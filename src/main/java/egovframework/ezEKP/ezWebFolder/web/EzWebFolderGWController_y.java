@@ -302,7 +302,7 @@ public class EzWebFolderGWController_y {
 				resmode = "copy";
 			}
 			
-			if (destFolder.getFolderType().equals("U") && folder.getOwnerId().equals(userId)) {
+			if (resmode.equals("copy")) {
 				double folderSize           = ezWebFolderAdminService.getFolderSize(folder.getFolderPath(), tenantId);
 				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
 				

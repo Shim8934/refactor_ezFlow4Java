@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/ezResource/admin/gwBoardsInfo.js" ></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js" ></script>
 		<style type="text/css">
-    		.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
+    		.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
     		.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
     		.warnintxt01 { position:relative ;padding-bottom:10px;margin-top:15px}
     		.warningimg { position:absolute; top:0px; left:0px;}
@@ -137,7 +137,7 @@
 	</head>
 	<body class="mainbody">	
 		<h1><spring:message code="ezResource.t25" /></h1>
-		<div style="max-width:477px;">
+		<div style="max-width:800px;">
     	<table class="content">
         	<tr>
             	<th>
@@ -160,7 +160,7 @@
   	        				<div class="warnintxt01" style="text-align:left">
 	        					<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style='margin:18px'></span>
 	        					<dl class="warningdl" style="padding:35px 0px 5px 100px;">
-	        						<dd><spring:message code="ezResource.t103" /> </dd>
+	        						<dd style="font-weight: normal;"><spring:message code="ezResource.t103" /> </dd>
 	        					</dl>
 	        				</div>
 	    				</div>
@@ -171,8 +171,8 @@
         		<!---------------------- 하위게시판 리스트 ----------------------------->
 				<table class="popuplist" style="width:100%">
         			<tr>
-            			<td>
-                			<select name="BRDLIST" size="10" id="BRDLIST" style="width: 100%; height: 150px; background:none;margin-top:1px;">  ${subBrdLst} </select>
+            			<td style="height:300px;">
+                			<select name="BRDLIST" size="10" id="BRDLIST" style="width: 100%; height: 99%; background:none;margin-top:1px; overflow-y: auto; overflow-x: auto;">  ${subBrdLst} </select>
             			</td>
             			<td width="30" align="center">
                         	<img src="/images/arr_up.gif" vspace="2" style="cursor:pointer" onClick="javascript:SetOrder(-1)"><br>

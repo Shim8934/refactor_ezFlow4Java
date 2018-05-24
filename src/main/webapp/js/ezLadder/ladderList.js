@@ -1,8 +1,6 @@
 function mouseCursor() {
 	var overColor = "rgb(244, 245, 245)";
 	var origColor = "#FFF";
-	var id_check;
-	var oriColor;
 
 	$(document)
 	.on("mouseenter", ".black", function() {
@@ -11,17 +9,6 @@ function mouseCursor() {
 	})
 	.on("mouseleave", ".black", function() {
 		$(this).css("background", origColor);
-	})
-	.on("mouseenter", ".participantBtn", function() {
-		 id_check = $(this).attr("id");
-		 oriColor = $("#"+id_check).css("color");
-		 $(this).css("color", "#0072c6");
-		 $(this).css("border-color", "#0072c6");
-	})
-	.on("mouseleave", ".participantBtn", function() {
-		 id_check = $(this).attr("id");
-		 $("#"+id_check).css("color", oriColor);
-		 $("#"+id_check).css("border-color", "#B5B3B3");
 	});
 }
 
@@ -75,15 +62,9 @@ function participant(val) {
 // 참여자 버튼 색깔 바꾸기
 function changeBtnColor(){
 	if (modeCheck === 'part') {	// 일부
-		$("#part").css("color", "white");
-		$("#part").css("background-color", "#B5B3B3");
-		$("#all").css("color", "grey");
-		$("#all").css("background-color", "#FFFFFF");		
+		$("#part").attr('checked', 'checked');	
 	} else { // 전체
-		$("#all").css("color", "white");
-		$("#all").css("background-color", "#B5B3B3");
-		$("#part").css("color", "grey");
-		$("#part").css("background-color", "#FFFFFF");
+		$("#all").attr('checked', 'checked');	
 	}
 }
 

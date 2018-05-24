@@ -303,6 +303,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		String folderId      = request.getParameter("folderId");
 		String rootFolder    = request.getParameter("rootFolder");
+		String selectedComp  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String level         = request.getParameter("level");
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
@@ -325,7 +326,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			String companyId      = (String) resultBody.get("userCompany");
 			JSONArray companyList = (JSONArray) resultBody.get("data");
-			model.addAttribute("userCompany", companyId);
+			model.addAttribute("userCompany", selectedComp.equals("") ? companyId : selectedComp);
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", user.getLang());
 			model.addAttribute("folderId", folderId);
@@ -347,6 +348,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		String folderId      = request.getParameter("folderId");
 		String level         = request.getParameter("level");
+		String selectedComp  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
 		
@@ -368,7 +370,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			String companyId      = (String) resultBody.get("userCompany");
 			JSONArray companyList = (JSONArray) resultBody.get("data");
-			model.addAttribute("userCompany", companyId);
+			model.addAttribute("userCompany", selectedComp.equals("") ? companyId : selectedComp);
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", user.getLang());
 			model.addAttribute("folderId", folderId);

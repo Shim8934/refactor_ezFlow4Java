@@ -12,11 +12,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -32,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -586,37 +583,35 @@ public class EzWebFolderGWController {
 			//Check upload conditions
 			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
 			
-			if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userInfo.getId())) {
-				WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
-				double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
-				double totalUploadSize              = 0;
-				
-				for (int i = 0; i < multiFileLists.size(); i++) {
-					totalUploadSize += multiFileLists.get(i).getSize();
-				}
-				
-				if (limitUploadValue * 1073741824 < totalUploadSize) {
-					logger.debug("limited upload value!");
-					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t249", locale));
-					result.put("code", 1);
-					result.put("data", "");
-					return result;
-				} else {
-					UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
-					
-					long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-					long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
-					
-					if (totalUploadSize > (totalCapa - totalUsed)) {
-						logger.debug("Not enough storage to upload these files!");
-						result.put("status", "error");
-						result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
-						result.put("code", 1);
-						result.put("data", "");
-						return result;
-					}
-				}
+			WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
+			double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
+			double totalUploadSize              = 0;
+			
+			for (int i = 0; i < multiFileLists.size(); i++) {
+				totalUploadSize += multiFileLists.get(i).getSize();
+			}
+			
+			if (limitUploadValue * 1073741824 < totalUploadSize) {
+				logger.debug("limited upload value!");
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t249", locale));
+				result.put("code", 1);
+				result.put("data", "");
+				return result;
+			}
+			
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+			
+			long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
+			long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+			
+			if (totalUploadSize > (totalCapa - totalUsed)) {
+				logger.debug("Not enough storage to upload these files!");
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
+				result.put("code", 1);
+				result.put("data", "");
+				return result;
 			}
 			
 			String realPath   = request.getServletContext().getRealPath("");

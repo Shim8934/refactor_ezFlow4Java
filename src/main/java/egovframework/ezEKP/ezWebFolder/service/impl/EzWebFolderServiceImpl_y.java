@@ -539,47 +539,52 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		List<String> idList = ezWebFolderService_m.getPermissionIdList(userId, deptId, comId, tenantId);
 		
-		String folderType = folderVO.getFolderType();
-		String folderPath = folderVO.getFolderPath();
-		
-		if (folderType.equals("C")) {
-			if (folderPath.equals("|" + folderVO.getFolderId() + "|")) {
-				if (folderVO.getOwnerId().equals(comId)) {
+		if (folderVO != null) {
+			String folderType = folderVO.getFolderType();
+			String folderPath = folderVO.getFolderPath();
+			
+			if (folderType.equals("C")) {
+				if (folderPath.equals("|" + folderVO.getFolderId() + "|")) {
+					if (folderVO.getOwnerId().equals(comId)) {
+						status = "ok";
+					}
+				} else {
+					map = new HashMap<String, Object>();
+					
+					map.put("folderIdList", folderPath.split("\\|"));
+					map.put("permissionIdList", idList);
+					map.put("tenantId", tenantId);
+					
+					if (ezWebFolderDAO_y.checkCompanyFolderPermission(map) > 0) {
+						status = "ok";
+					}
+				}
+			} else if (folderType.equals("D")) {
+				if (idList.contains(folderVO.getOwnerId())) {
 					status = "ok";
 				}
 			} else {
+				if (folderVO.getOwnerId().equals(userId)) {
+					status = "ok";
+				}
+			}
+			
+			if (!status.equals("ok")) {
 				map = new HashMap<String, Object>();
 				
+				map.put("folderFileId", folderFileId);
+				map.put("folderFileType", folderFileType);
 				map.put("folderIdList", folderPath.split("\\|"));
 				map.put("permissionIdList", idList);
 				map.put("tenantId", tenantId);
 				
-				if (ezWebFolderDAO_y.checkCompanyFolderPermission(map) > 0) {
+				if (ezWebFolderDAO_m.checkSharePermission(map) > 0) {
 					status = "ok";
 				}
 			}
-		} else if (folderType.equals("D")) {
-			if (idList.contains(folderVO.getOwnerId())) {
-				status = "ok";
-			}
+			
 		} else {
-			if (folderVO.getOwnerId().equals(userId)) {
-				status = "ok";
-			}
-		}
-		
-		if (!status.equals("ok")) {
-			map = new HashMap<String, Object>();
-			
-			map.put("folderFileId", folderFileId);
-			map.put("folderFileType", folderFileType);
-			map.put("folderIdList", folderPath.split("\\|"));
-			map.put("permissionIdList", idList);
-			map.put("tenantId", tenantId);
-			
-			if (ezWebFolderDAO_m.checkSharePermission(map) > 0) {
-				status = "ok";
-			}
+			status = "fail";
 		}
 		
 		LOGGER.debug("checkPermission ended. status=" + status);

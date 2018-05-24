@@ -40,6 +40,10 @@ function fileupload() {
 		fd.append("fileToUpload", file[i]);
 	}
 	
+	var dragZone = document.getElementById("dragDropArea");
+	var height   = dragZone.clientHeight;
+	dragZone.style.height = height - 34 + "px";
+	
 	$.ajax({
 		url : "/ezWebFolder/uploadFile.do",
 		type: "POST",
@@ -51,6 +55,7 @@ function fileupload() {
 		xhr: function(){
 			//upload Progress
 			document.getElementById('progress-wrp').style.display = "";
+			
 			var xhr = $.ajaxSettings.xhr();
 			if (xhr.upload) {
 				xhr.upload.addEventListener('progress', function(event) {
@@ -88,6 +93,9 @@ function fileupload() {
 		$(progress_bar_id + " .progress-bar").css("width", "0%");
 		$(progress_bar_id + " .status").text("0%");
 		document.getElementById('progress-wrp').style.display = "none";
+		var dragZone = document.getElementById("dragDropArea");
+		var height = dragZone.clientHeight;
+		dragZone.style.height = height + 34 + "px";
 	});
 }
 
