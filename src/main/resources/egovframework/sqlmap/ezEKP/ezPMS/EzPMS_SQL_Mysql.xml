@@ -1363,7 +1363,7 @@
 			ON B.group_id = G.group_id
 			LEFT JOIN tbl_pms_task T
 			ON B.task_id = T.task_id
-			JOIN tbl_usermaster M
+			LEFT JOIN tbl_usermaster M
 			on B.writer_id = M.cn and B.tenant_id = M.tenant_id
 			WHERE B.item_id = #itemId#
 			AND B.tenant_id = #tenantId#	

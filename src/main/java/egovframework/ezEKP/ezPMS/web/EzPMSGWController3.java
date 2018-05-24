@@ -142,7 +142,7 @@ public class EzPMSGWController3 {
 			
 			int totalCount = ezPMSService.getBoardListCount(info.getTenantId(), Long.parseLong(projectId), groupId, taskId);
 			
-			result.put("data", totalCount + "");
+			result.put("data", totalCount + "");	// JSON으로 넘기면 숫자가 Long으로 바뀌는데 Long에서 int로 cast할 때의 오류를 피하기 위해서 String으로 바꾼 후에 파싱한다
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
