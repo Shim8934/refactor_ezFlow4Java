@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,12 +71,13 @@ public class EzPMSGWController3 {
 			ezPMSService.addBoard(jsonParam, realPath);
 			
 			result.put("status", "ok");
-			result.put("code", 0);
-			
+			result.put("code", 0);			
+			result.put("data", "");		
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards] ended");
@@ -85,7 +87,7 @@ public class EzPMSGWController3 {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/boards/list/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getBoardList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list] started");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId +"/users/" + userId + "] started");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -115,14 +117,14 @@ public class EzPMSGWController3 {
 			result.put("data", "");
 			e.printStackTrace();
 		}
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list] ended");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId +"/users/" + userId + "] ended");
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/boards/list-count/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getBoardListCount(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count] started");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count/" + projectId + "/users/" +  userId+ "] started");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -147,9 +149,10 @@ public class EzPMSGWController3 {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			e.printStackTrace();
 		}
 		
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count] ended");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count/" + projectId + "/users/" +  userId+ "] ended");
 		return result;
 	}
 	
@@ -267,7 +270,7 @@ public class EzPMSGWController3 {
 	            }
 	        }
 
-	        ArrayList<JSONObject> filelist = new ArrayList<JSONObject>();
+	        List<JSONObject> filelist = new ArrayList<JSONObject>();
 	        
 	        for (int i = 0; i < cnt; i++) {
 	        	JSONObject fileInfo = new JSONObject();
@@ -286,6 +289,7 @@ public class EzPMSGWController3 {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 0);
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] ended.");
@@ -332,6 +336,7 @@ public class EzPMSGWController3 {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] ended.");
 		return result;
@@ -340,7 +345,7 @@ public class EzPMSGWController3 {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/boards/{itemId}", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getBoardDetail(@PathVariable int itemId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards] started.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -352,12 +357,13 @@ public class EzPMSGWController3 {
 			Map<String, Object> param = new HashMap<String, Object>();
 			
 			param.put("itemId", itemId);
-			param.put("userId", userId);
-			param.put("userName", request.getParameter("userName"));
-			param.put("userName2", request.getParameter("userName2"));
-			param.put("userDeptName", request.getParameter("userDeptName"));
-			param.put("userDeptName2", request.getParameter("userDeptName2"));
-			param.put("projectId", request.getParameter("projectId"));
+			
+			Enumeration<String> parameterNames = request.getParameterNames();
+			
+			while(parameterNames.hasMoreElements()) {
+				String parameterName = parameterNames.nextElement();
+				param.put(parameterName, request.getParameter(parameterName));
+			}
 			
 			ProjectBoardVO boardVO = ezPMSService.getBoardDetail(info.getTenantId(), param);
 			
@@ -365,12 +371,12 @@ public class EzPMSGWController3 {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			e.printStackTrace();
 		}
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards] ended.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "] ended.");
 		return result;
 	}
 	

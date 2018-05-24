@@ -252,9 +252,7 @@
 		<result property="writeUpdateDate" 			column="write_update_date"/>
 		<result property="readCount" 				column="read_count"/>
 		<result property="writerName" 				column="writer_name"/>
-		<result property="writerName2" 				column="writer_name2"/>
 		<result property="writerDeptName" 			column="writer_deptname"/>
-		<result property="writerDeptName2" 			column="writer_deptname2"/>
 		<result property="taskName" 				column="task_name"/>
 		<result property="groupName"				column="group_name"/>
 		<result property="fileCNT"					column="file_cnt"/>
@@ -1292,8 +1290,8 @@
 		<![CDATA[
 			SELECT 
 				B.item_id, 				B.title,			B.write_overview,		B.write_type,				B.write_date,			
-				B.write_update_date,	B.read_count,		B.writer_name,			B.writer_name2,				B.writer_deptname,		
-				B.writer_deptname2,	 	T.task_name,  		G.group_name,			F.file_cnt
+				B.write_update_date,	B.read_count,		B.writer_name,			B.writer_deptname,			T.task_name,  		
+				G.group_name,			F.file_cnt
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
