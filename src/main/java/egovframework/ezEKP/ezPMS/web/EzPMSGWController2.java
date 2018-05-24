@@ -68,7 +68,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			String isMyTask = request.getParameter("isMyTask");
+			String isMyTask = request.getParameter("isMyTask") == null ? "A" : request.getParameter("isMyTask");
 			int tenantId = info.getTenantId();
 			String offset = info.getOffSet();
 			int limit = 0; 
@@ -558,7 +558,7 @@ public class EzPMSGWController2 {
 			int isGantt = 0;
 			
 			//추후 파라미터로 받도록 수정 필요.
-			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, "juhongsun", info.getTenantId(), info.getOffSet(), lang, "");
+			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang, "");
 			data.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
 			
 			result.put("status", "ok");

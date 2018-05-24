@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPMS.web;
 
 import java.net.URI;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +61,12 @@ public class EzPMSController3 {
 		String projectId = request.getParameter("projectId");
 		String onlyGroup = request.getParameter("onlyGroup");
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("onlyGroup", onlyGroup);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
@@ -88,23 +90,18 @@ public class EzPMSController3 {
 		String writerId = userInfo.getId();
 		String writerName = userInfo.getDisplayName();
 		String writerDeptName = userInfo.getDeptName();	
-		String projectName = request.getParameter("projectName");
-		String projectId = request.getParameter("projectId");
-		String taskName = request.getParameter("taskName");
-		String groupId = request.getParameter("groupId");
-		String taskId = request.getParameter("taskId");
-		String mode = request.getParameter("mode");
 		
-		model.addAttribute("projectName", projectName);
-		model.addAttribute("projectId", projectId);
 		model.addAttribute("writerId", writerId);
 		model.addAttribute("writerName", writerName);
 		model.addAttribute("writerDeptName", writerDeptName);
-		model.addAttribute("taskName", taskName);
-		model.addAttribute("groupId", groupId);
-		model.addAttribute("taskId", taskId);
-		model.addAttribute("mode", mode);
 		
+		Enumeration<String> parameterNames = request.getParameterNames();
+		
+		while(parameterNames.hasMoreElements()) {
+			String parameterName = parameterNames.nextElement();
+			model.addAttribute(parameterName, request.getParameter(parameterName));
+		}
+	
 		LOGGER.debug("ezPMS goAddBoard ended");
 		
 		return "/ezPMS/pmsAddBoard";
@@ -134,7 +131,7 @@ public class EzPMSController3 {
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
-			model.addAttribute("data", "test");
+			model.addAttribute("data", "success");
 		}
 		
 		LOGGER.debug("ezPMS addBoard ended");
@@ -144,14 +141,13 @@ public class EzPMSController3 {
 	
 	@RequestMapping(value="/ezPMS/getTaskSelectionTree.do")
 	public String getTaskSelectionTree(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {		
-		LOGGER.debug("ezPMS getTaskTree started");
+		LOGGER.debug("ezPMS getTaskSelectionTree started");
 		
-		// 여기 거의 다 getProjectBoard()랑 똑같은데 메서드로 묶어버릴까...
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
 		String onlyGroup = request.getParameter("onlyGroup");
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("onlyGroup", onlyGroup);
 		
@@ -163,7 +159,7 @@ public class EzPMSController3 {
 			model.addAttribute("data", treeData);
 		}
 				
-		LOGGER.debug("ezPMS getTaskTree started");
+		LOGGER.debug("ezPMS getTaskSelectionTree ended");
 		
 		return "/ezPMS/pmsTaskSelectionTree";
 	}

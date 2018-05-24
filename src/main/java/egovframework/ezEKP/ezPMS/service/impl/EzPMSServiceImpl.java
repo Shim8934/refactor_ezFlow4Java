@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -1059,7 +1058,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] completeAllTasks Started");
 	}
 
-//	by mslim
 	@Override
 	@Transactional
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception {
@@ -1148,7 +1146,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
@@ -1212,6 +1210,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return projectList;
 	}
 
+	// 파일 이동 함수
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
 		LOGGER.debug("fileMove started.");
 		LOGGER.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);

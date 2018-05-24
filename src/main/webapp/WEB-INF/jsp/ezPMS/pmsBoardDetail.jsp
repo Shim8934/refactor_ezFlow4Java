@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE>
 <html>
 <head>
@@ -60,7 +61,8 @@
 						
 						</td>
 						<th>게시일</th>
-						<td>${board.writeDate}</td>
+						<td>${fn:substring(board.writeDate, 0, 19)}</td>
+						
 					</tr>
 					<tr>
 						<th>제&nbsp;&nbsp;목</th>
