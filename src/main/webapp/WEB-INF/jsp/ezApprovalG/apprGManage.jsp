@@ -383,6 +383,7 @@
 		        SelList.LoadFromID("DocList");
 		        var oArrRows = SelList.GetSelectedRows();
 		        var pCurSelRow = oArrRows[0];
+		        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		        if (pCurSelRow != null && oArrRows.length > 0) {
 		            if (GetBujaeFlag())
 		                return;
@@ -431,7 +432,7 @@
 		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
 		                else {
 	                        openLocation = "/ezApprovalG/contDocView.do";
-		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
+		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 		                }
 		                openwindow(openLocation, "", 880, 570);
 		            }
@@ -549,6 +550,8 @@
 		            var DocList = new ListView();
 		            DocList.LoadFromID("DocList");
 		            var oArrRows = DocList.GetSelectedRows();
+		            var pCurSelRow = oArrRows[0];
+			        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		            if (oArrRows.length > 0)
 		                openViewDocInfo();
 		            else {
@@ -568,7 +571,7 @@
 		            else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
+		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" + "&orgCompanyID=" + orgCompanyID;
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }

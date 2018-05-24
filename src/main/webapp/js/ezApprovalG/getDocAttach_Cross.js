@@ -51,7 +51,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     			async : false,
     			url : "/ezApprovalG/getLineMode.do",
     			data : {
-    					docID : pDocID
+    					docID : pDocID,
+    					orgCompanyID : orgCompanyID
     					},
     			success: function(xml){
     				INGFlag = xml;

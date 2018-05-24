@@ -2267,6 +2267,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("aprAttachSave started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
@@ -2672,6 +2678,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
@@ -2746,6 +2753,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("whoKyulCount", whoKyulCount);
 		model.addAttribute("checkPwdFlag", checkPwdFlag);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 
 		logger.debug("contDocView ended.");
 		
@@ -2967,6 +2975,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getHistoryForDoc(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("getDocHistory ended");
@@ -2985,6 +3000,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getHistoryForLine(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("getLineHistory ended");
@@ -3003,6 +3025,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String result = ezApprovalGService.getHistoryForAttach(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
@@ -3023,6 +3052,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String modifySN = request.getParameter("changeSN");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());		
 		String result = ezApprovalGService.getHistoryForLineDetail(docID, modifySN, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		

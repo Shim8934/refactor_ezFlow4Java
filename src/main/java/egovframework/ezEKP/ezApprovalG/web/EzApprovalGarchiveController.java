@@ -2649,6 +2649,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		String docID = request.getParameter("docID");
 
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getLineModeFlag(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("result = " + result);

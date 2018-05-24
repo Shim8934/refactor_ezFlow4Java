@@ -107,7 +107,7 @@ function DelAttachFileAtList(pAttachCurSel) {
 }
 function SaveAttachListInfo(Attachxml) {
     var ReturnVal;
-    xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do", false);
+    xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do?orgCompanyID="+orgCompanyID, false);
     xmlhttp.send(Attachxml);
     
     if (xmlhttp.responseText == "TRUE") {

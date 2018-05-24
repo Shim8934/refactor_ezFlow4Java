@@ -585,7 +585,7 @@
 		            var selRow = DocList.GetSelectedRows();
 		            var tr = selRow[0];
 		            pURL = tr.getAttribute("DATA2");
-		
+					orgCompanyID = tr.getAttribute("ORGCOMPANYID");
 		            var formid = tr.getAttribute("DATA6");
 		            var docState =  tr.getAttribute("DATA12");
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
@@ -596,7 +596,7 @@
 		            else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;
+		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
