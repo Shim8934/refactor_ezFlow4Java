@@ -595,6 +595,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("projectId", search.getProjectId());
 		param.put("tenantId", search.getTenantId());
+		param.put("lang", ""); // 수정 필요
 		
 		List<ProjectGroupVO> list = ezPMSDAO.getGroupList(param);
 		
@@ -697,6 +698,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("taskId", taskId);
 		param.put("tenantId", tenantId);
+		param.put("lang", ""); //수정 필요
 		
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
 		
@@ -1197,7 +1199,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("getProgressProject Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("status", "P");
-		
+		map.put("lang", ""); //수정 필요
 		List<ProjectInfoVO> projectList = ezPMSDAO.getProgressProject(map);
 		
 		LOGGER.debug("getProgressProject Ended");
