@@ -66,9 +66,42 @@ public class ProjectBoardVO {
 	private String mobileNumber;
 	
 	// 조회 여부
-	private boolean readOrNot = false;
+	private boolean readOrNot;
+	
+	// 첨부파일
+	private String[] fileNames;
+	
+	// 첨부파일 경로
+	private String[] filePaths;
+	
+	// 첨부파일 갯수
+	private Integer fileCNT;
 	
 	
+	public Integer getFileCNT() {
+		return fileCNT;
+	}
+
+	public void setFileCNT(Integer fileCNT) {
+		this.fileCNT = fileCNT;
+	}
+
+	public String[] getFileNames() {
+		return fileNames;
+	}
+
+	public void setFileNames(String[] fileNames) {
+		this.fileNames = fileNames;
+	}
+
+	public String[] getFilePaths() {
+		return filePaths;
+	}
+
+	public void setFilePaths(String[] filePaths) {
+		this.filePaths = filePaths;
+	}
+
 	public String getMobileNumber() {
 		return mobileNumber;
 	}

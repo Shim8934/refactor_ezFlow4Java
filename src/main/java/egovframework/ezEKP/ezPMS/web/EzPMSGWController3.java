@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.Base64.Decoder;
@@ -347,7 +349,17 @@ public class EzPMSGWController3 {
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ProjectBoardVO boardVO = ezPMSService.getBoardDetail(info.getTenantId(), itemId, userId);
+			Map<String, Object> param = new HashMap<String, Object>();
+			
+			param.put("itemId", itemId);
+			param.put("userId", userId);
+			param.put("userName", request.getParameter("userName"));
+			param.put("userName2", request.getParameter("userName2"));
+			param.put("userDeptName", request.getParameter("userDeptName"));
+			param.put("userDeptName2", request.getParameter("userDeptName2"));
+			param.put("projectId", request.getParameter("projectId"));
+			
+			ProjectBoardVO boardVO = ezPMSService.getBoardDetail(info.getTenantId(), param);
 			
 			result.put("data", boardVO);
 			result.put("status", "ok");

@@ -49,7 +49,8 @@
 	// 게시판 상세 화면
 	function goBoardDetail(elem) {
 		var itemId = $(elem).attr("data-itemId");
-		window.open("/ezPMS/getBoardDetail.do?itemId=" + itemId, "", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
+		$(elem).removeClass("noView");
+		window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
 	}
 </script>
 	
@@ -103,7 +104,7 @@
 					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
 					<td>${projectBoardVO.itemId}</td>
 					<c:choose>
-						<c:when test="${projectBoardVO.fileName eq null}">
+						<c:when test="${projectBoardVO.fileCNT eq null}">
 							<td></td>
 						</c:when>
 						<c:otherwise>

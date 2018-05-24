@@ -224,8 +224,16 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select("EzPMSDAO.getBoardListCount", map);
 	}
 	
-	public ProjectBoardVO getBoardDetail(Map<String, Object> map) {
-		return (ProjectBoardVO) select("EzPMSDAO.getBoardDetail", map);
+	public ProjectBoardVO getBoardDetail(Map<String, Object> param) {
+		return (ProjectBoardVO) select("EzPMSDAO.getBoardDetail", param);
+	}
+	
+	public void insertReadBoardLog(Map<String, Object> map) {
+		insert("EzPMSDAO.insertReadBoardLog", map);
+	}
+	
+	public void updateBoardReadCount(int itemId) {
+		update("EzPMSDAO.updateBoardReadCount", itemId);
 	}
 	
 	public void addKanbanOrder(Map<String, Object> map) {

@@ -13,13 +13,12 @@ import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface EzPMSService {
 
@@ -125,7 +124,7 @@ public interface EzPMSService {
 	
 	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId);
 	
-	public ProjectBoardVO getBoardDetail(int tenantId, int itemId, String userId);
+	public ProjectBoardVO getBoardDetail(int tenantId, Map<String, Object> param);
 
 	List<ProjectInfoVO> getProgressProject(String status) throws Exception;
 }
