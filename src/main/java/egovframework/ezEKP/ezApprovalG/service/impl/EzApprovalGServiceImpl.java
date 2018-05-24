@@ -4282,16 +4282,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType, int tenantID) throws Exception{
+	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType, int tenantID, String selYear) throws Exception{
 		logger.debug("getSimpleCabinetList started.");
 		logger.debug("companyID = " + companyID + " || processDeptCode = " + processDeptCode + " || productionYear = " + productionYear + " || taskCode = " + taskCode + " || flag = " + flag + " || langType = " + langType);
 		
 		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
 		
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		if (selYear != null) {
+			map.put("v_PACCOUNTPYEAR", selYear);
+		} else {
+			map.put("v_PYEAR", productionYear);
+			map.put("v_PACCOUNTPYEAR", accountYear);
+		}
 		map.put("v_PDEPTCODE", processDeptCode);
-		map.put("v_PYEAR", productionYear);
-		map.put("v_PACCOUNTPYEAR", accountYear);
 		map.put("v_TASKCODE", taskCode);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);

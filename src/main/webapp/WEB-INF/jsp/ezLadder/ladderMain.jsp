@@ -76,12 +76,12 @@
 		</script>
 		<style type="text/css">
 			.effect {width:30px; height:30px;}
-			#mainmenu li {border-color: #ddd; border-radius:0px;}
-			.participantBtn {height:28px; border:1px solid #B5B3B3;}
+			#mainmenu li {border-color: #ddd; border-radius:0px; }
 			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
-			#mainmenu .participantBtn{cursor: pointer;}
-			#cmt {color:red;}
+			#cmt {color:#c64200;}
+			label {position:relative; top: -3px;}
+			.participantBtn:HOVER, label:HOVER {cursor: pointer;}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">
@@ -110,9 +110,11 @@
 		<div id="mainmenu">
 			<ul style="width:100%;">
 				<li id="btnInsert" onClick="newLad()" ><a><span><spring:message code="ezLadder.t018"/></span></a></li>
-				<li style="float:right; font-weight:normal;">
-					<button type="button" class="participantBtn" id="all" onclick="participant(this.value)" value="all" style="float: right;"><spring:message code="ezLadder.t011"/></button>
-					<button type="button" class="participantBtn" id="part" onclick="participant(this.value)" value="part" style="position:relative;"><spring:message code="ezLadder.t012"/></button>
+				<li style="float:right; font-weight:normal; position: relative; top:4px; right:22px;">
+					<input type="radio" class="participantBtn" id="part" onclick="participant(this.value)" value="part">
+					<label for="part"><spring:message code='ezLadder.t012' /></label>	
+					<input type="radio" class="participantBtn" id="all" onclick="participant(this.value)" value="all">
+					<label for="all"><spring:message code='ezLadder.t011' /></label>	
 				</li>
 			</ul>
 		</div>
@@ -134,13 +136,9 @@
 		 		<c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
 						<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>
-						<jsp:useBean id="toDay" class="java.util.Date" />
-						<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
-						<fmt:parseDate value="${vo.writeDate}" pattern="yyyy-MM-dd" var="localeDay"/>
-						<fmt:formatDate value="${localeDay}" pattern="yyyy-MM-dd" var="localeDay"/>
-						
+					
 						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-							<c:if test="${nowDay <= localeDay }"><img src="/images/i_new.gif">&nbsp;</c:if>
+							<c:if test="${vo.newFlag == 1 }"><img src="/images/i_new.gif">&nbsp;</c:if>
 							<c:out value ="${vo.title }" />
 							<c:if test="${vo.cmt>0 }"><span id="cmt">[${vo.cmt}]</span></c:if>
 						</td>
@@ -167,7 +165,7 @@
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t077'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t053'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
 							</c:when>
 							<c:otherwise>
 								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t078'/>" src ='/images/ezLadder/icon_imposDelete_thirty.png' /></td>

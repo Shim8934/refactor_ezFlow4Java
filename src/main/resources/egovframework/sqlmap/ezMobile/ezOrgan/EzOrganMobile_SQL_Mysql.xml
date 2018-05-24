@@ -7,25 +7,27 @@
     
 	<select id="MOrganDAO.getPersonList" parameterClass="Map" resultClass="MPersonListVO">
         <![CDATA[
-
-            SELECT
-                A.*,@rownum:=@rownum+1 as rowNum
-            FROM
-               (select @rownum:=0) tmp, tbl_usermaster AS A
-            LEFT JOIN 
-            	tbl_usermaster_retire AS B
-            ON
-            	A.CN = B.CN
-            AND
-            	A.TENANT_ID = B.TENANT_ID
-            AND
-            	A.PHYSICALDELIVERYOFFICENAME = B.PHYSICALDELIVERYOFFICENAME
-            WHERE
-                A.PHYSICALDELIVERYOFFICENAME = #companyID#
-            AND
-                A.TENANT_ID = #tenantID#
-            AND 
-            	B.CN IS NULL
+			SELECT 
+				*
+			FROM
+	            (SELECT
+	                A.*,@rownum:=@rownum+1 as rowNum
+	            FROM
+	               (select @rownum:=0) tmp, tbl_usermaster AS A
+	            LEFT JOIN 
+	            	tbl_usermaster_retire AS B
+	            ON
+	            	A.CN = B.CN
+	            AND
+	            	A.TENANT_ID = B.TENANT_ID
+	            AND
+	            	A.PHYSICALDELIVERYOFFICENAME = B.PHYSICALDELIVERYOFFICENAME
+	            WHERE
+	                A.PHYSICALDELIVERYOFFICENAME = #companyID#
+	            AND
+	                A.TENANT_ID = #tenantID#
+	            AND 
+	            	B.CN IS NULL
         ]]>        
         <isNotEmpty property="pSearchText">
             <![CDATA[
@@ -35,8 +37,8 @@
         </isNotEmpty>
         
         <![CDATA[    
-            ORDER BY
-                A.DISPLAYNAME ASC
+	            ORDER BY
+	                A.DISPLAYNAME ASC ) C
         ]]>
         <isNotEmpty property="rowNum">
             <![CDATA[

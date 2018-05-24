@@ -631,9 +631,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public JournalVO getJournal(String journalId,String userId, String isRead, int tenantId, String lang, String offset) throws Exception {
+	public JournalVO getJournal(String journalId,String userId, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getJournal started");
-		logger.debug("journalId: " + journalId + ", tenantId: " + tenantId + ", userId: " + userId + ", isRead: " + isRead);
+		logger.debug("journalId: " + journalId + ", tenantId: " + tenantId + ", userId: " + userId);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("journalId", journalId);
@@ -643,9 +643,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("lang", lang);
 		param.put("offset", commonUtil.getMinuteUTC(offset));
 		
-		if (isRead.equals("N")) {
-			ezJournalDAO.insertViewInfo(param);
-		}
+		ezJournalDAO.insertViewInfo(param);
 		JournalVO result = ezJournalDAO.selectJournal(param);
 		logger.debug("getJournal ended");
 		
@@ -1192,16 +1190,15 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public void saveJournalViewInfo(List<String> journalIdList, String viewDate, String userId, int tenantId) throws Exception {
+	public void saveJournalViewInfo(List<String> journalIdList, String userId, int tenantId) throws Exception {
 		logger.debug("saveJournalViewInfo started");
 		
 		logger.debug("tenantId : "+tenantId);
 		logger.debug("userId : "+userId);
-		logger.debug("viewDate : "+viewDate);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
-		param.put("viewDate", viewDate);
+		param.put("viewDate", commonUtil.getTodayUTCTime(""));
 		
 		for (int i = 0; i < journalIdList.size(); i++) {
 			param.put("journalId", journalIdList.get(i));

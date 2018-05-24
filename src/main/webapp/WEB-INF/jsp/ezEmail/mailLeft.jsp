@@ -35,6 +35,7 @@
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
+	        	/* 2018-05-23 이소담 - 편지함 목록 스크롤 제거 
 	            if (document.documentElement.clientHeight > 900) {
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
@@ -42,7 +43,8 @@
 	            else {
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px";
-	            }
+	            }*/
+	        	
 	        }
 	        
 	        window.onload = function () {
@@ -56,6 +58,7 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
+	            /* 2018-05-23 이소담 - 편지함 목록 스크롤 제거 
 	            if (document.documentElement.clientHeight > 900) {
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
@@ -63,7 +66,7 @@
 	            else {
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
-	            }
+	            } */
 	            document.getElementById("mailexportall").style.display = "none";
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);

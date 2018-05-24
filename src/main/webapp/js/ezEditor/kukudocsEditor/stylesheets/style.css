@@ -47,7 +47,7 @@ body{
 
 #kk_ms_clipboard {width: 1px; height:1px; position: absolute; top : -100000px; left:-100000px; z-index: 1000; opacity:0;overflow: hidden;}
 
-.kk_editor ::selection {background-color:rgba(135,206,235, 0.9);}
+.kk_editor ::selection {background-color:rgba(135,206,235, 1);}
 .kk_editor input::-ms-clear { display: none; }
 .kk_editor {border:1px solid #c8c8c8; outline: none; position: relative; overflow: hidden; }
 
@@ -59,8 +59,20 @@ body{
 .kk_editor .kk_editView .kk_contentView .kk_contents.dragover { background-color: #ffffcc; }
 
 .kk_editor .kk_editView .kk_contentView .kk_contents .selected { background-image: url('../images/selected.png') !important; background-color: transparent !important; background-repeat: repeat !important;}
-.kk_editor .kk_editView .kk_contentView .kk_contents span:before,
-.kk_editor .kk_editView .kk_contentView .kk_contents .selected:before{content:'\200B';}
+
+
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h1:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h2:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h3:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h4:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h5:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h6:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents li:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents div:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents p:before {content:'\200B'; display:inline-block; color: transparent;}*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents br {content: "\200B"; }*/
+.kk_editor .kk_editView .kk_contentView .kk_contents span {background:rgba(255,255,255,0)}
+.kk_editor .kk_editView .kk_contentView .kk_contents span:first-child:before {content:'\200B'}
 
 .kk_editor .kk_editView .kk_contentView .kk_contents .selected_td { background-image: url('../images/selected.png') !important; background-color: transparent !important; background-repeat: repeat !important;}
 .kk_editor .kk_editView .kk_contentView .kk_contents .selected_table { background-image: url('../images/selected.png') !important; background-color: transparent !important; background-repeat: repeat !important;}
