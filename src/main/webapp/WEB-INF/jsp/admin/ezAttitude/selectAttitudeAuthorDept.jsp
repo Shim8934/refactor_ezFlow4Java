@@ -30,17 +30,12 @@
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
-	   		
-// 	   		function setLpDeptId(elem){
-// 	   			lpDeptId = $(elem).attr("targetId");
-// 	   			lpDeptName = $(elem).attr("targetName");
-// 	   		}
 	   	
-	   		function close_Click(){
+	   		function close_Click() {
 	   			window.close();
 	   		}
 	   		//조직도 뿌리는 펑션
-	   		function setDeptList(){
+	   		function setDeptList() {
 				$('#treeview').on('changed.jstree', function (e, data) {
 					lpDeptId = data.instance.get_node(data.selected).id;
 					lpDeptName = data.instance.get_node(data.selected).text;
@@ -55,7 +50,7 @@
 	   		}
 			
 	   		//권한부서 리스트에 추가
-	   		function addDeptInLP(){
+	   		function addDeptInLP() {
 	   			var flag = true;
 	   			for (var i = 0; i < lpDepts.length; i++) {
 					if (lpDepts[i] == lpDeptId) {
@@ -64,7 +59,6 @@
 					}
 				}
 	   			if (flag) {
-// 		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" targetAuthType="+lpAuthType+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 		   			lpDepts.push(lpDeptId);
 		   			lpDeptNames.push(lpDeptName);
@@ -73,15 +67,15 @@
 	   		}
 	   		
 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
-	   		function delTargetDept(elem){
+	   		function delTargetDept(elem) {
 	   			var targetDeptId = $(".selectTR").attr("targetId");
 	   			if (targetDeptId) {
 		   			var targetDeptName = $(".selectTR").attr("targetName");
 		   			var targetAuthType = $(".selectTR").attr("targetAuthType");
 		   			
-	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
-	   				lpAuthTypes.splice(lpAuthTypes.indexOf(targetAuthType),1);
+	   				lpDepts.splice(lpDepts.indexOf(targetDeptId), 1);
+	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName), 1);
+	   				lpAuthTypes.splice(lpAuthTypes.indexOf(targetAuthType), 1);
 	   				$(".selectTR").remove();
 	   			} else {
 	   				alert("<spring:message code='ezAttitude.kbm34' />");
@@ -89,13 +83,13 @@
 	   		}
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅
-	   		function setAuthorViewDept(){
+	   		function setAuthorViewDept() {
 	   			opener.setDeptName(lpDepts, lpDeptNames);
 	   			opener.authRadioSet(lpAuthTypes);
 	   			window.close();
 	   		}
 	   		
-	   		$(document).ready(function(){
+	   		$(document).ready(function() {
 	   			treeContent = ${deptList};
 		   		setDeptList();
 		    	
@@ -108,6 +102,7 @@
 		   				}
 	   				},"#lplistView tr");
 	   			});
+
 	   			for (var i = 0; i < opener.deptIds.length; i++) {
 	   				lpDeptId = opener.deptIds[i];
 	   				lpDeptName = opener.deptNames[i];
