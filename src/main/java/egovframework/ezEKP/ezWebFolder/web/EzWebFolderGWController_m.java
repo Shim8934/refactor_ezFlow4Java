@@ -1320,38 +1320,6 @@ public class EzWebFolderGWController_m {
 				}
 			}
 			
-			//Check upload conditions
-			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, user.getTenantId());
-			
-			if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userId)) {
-					double totalSize = 0;
-				if (fileIDList.length > 0) {
-					totalSize = ezWebFolderService.getTotalFilesSize(fileList, tenantId);
-				}
-
-				for (String _folderId : folderIDList) {
-					if (!_folderId.equals("")) {
-						FolderVO folderVO  = ezWebFolderService.getFolderByFolderId(_folderId, offset, tenantId);
-						double folderSize  = ezWebFolderAdminService.getFolderSize(folderVO.getFolderPath(), tenantId);
-						totalSize         += folderSize;
-					}
-				}
-				
-				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, user.getPrimary(), user.getTenantId());
-				
-				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
-				
-				if (totalSize > (totalCapa - totalUsed)) {
-					logger.debug("Not enough storage to move/copy these files!");
-					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
-					result.put("code", 1);
-					result.put("data", "");
-					return result;
-				}
-			}
-			
 			ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId, tenantId, userId, offset, user.getCompanyId(), user.getUserName(), user.getUserName2(), timeUTC);
 			
 			result.put("status", "ok");
