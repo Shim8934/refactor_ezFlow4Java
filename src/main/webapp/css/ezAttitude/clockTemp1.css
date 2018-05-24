@@ -47,7 +47,7 @@ section, footer, header, aside{
 #clock:after{
 	content:'';
 	position:absolute;
-	width:400px;
+/* 	width:400px; */
 	height:20px;
 	border-radius:100%;
 	left:50%;
