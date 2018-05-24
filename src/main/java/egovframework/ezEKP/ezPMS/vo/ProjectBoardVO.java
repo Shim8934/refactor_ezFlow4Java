@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezPMS.vo;
 
+import java.util.List;
+
 // 게시판 관련 VO
 public class ProjectBoardVO {
 	// 게시물 아이디
@@ -69,71 +71,12 @@ public class ProjectBoardVO {
 	private boolean readOrNot;
 	
 	// 첨부파일
-	private String[] fileNames;
-	
-	// 첨부파일 경로
-	private String[] filePaths;
+	private List<FileVO> fileList;
 	
 	// 첨부파일 갯수
 	private Integer fileCNT;
+
 	
-	
-	public Integer getFileCNT() {
-		return fileCNT;
-	}
-
-	public void setFileCNT(Integer fileCNT) {
-		this.fileCNT = fileCNT;
-	}
-
-	public String[] getFileNames() {
-		return fileNames;
-	}
-
-	public void setFileNames(String[] fileNames) {
-		this.fileNames = fileNames;
-	}
-
-	public String[] getFilePaths() {
-		return filePaths;
-	}
-
-	public void setFilePaths(String[] filePaths) {
-		this.filePaths = filePaths;
-	}
-
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-
-	public boolean isReadOrNot() {
-		return readOrNot;
-	}
-
-	public void setReadOrNot(boolean readOrNot) {
-		this.readOrNot = readOrNot;
-	}
-
-	public String getGroupName() {
-		return groupName;
-	}
-
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-
-	public String getTaskName() {
-		return taskName;
-	}
-
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
-
 	public int getItemId() {
 		return itemId;
 	}
@@ -277,7 +220,52 @@ public class ProjectBoardVO {
 	public void setWriterPosition2(String writerPosition2) {
 		this.writerPosition2 = writerPosition2;
 	}
-	
-	
-	
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public boolean isReadOrNot() {
+		return readOrNot;
+	}
+
+	public void setReadOrNot(boolean readOrNot) {
+		this.readOrNot = readOrNot;
+	}
+
+	public List<FileVO> getFileList() {
+		return fileList;
+	}
+
+	public void setFileList(List<FileVO> fileList) {
+		this.fileList = fileList;
+	}
+
+	public Integer getFileCNT() {
+		return fileCNT;
+	}
+
+	public void setFileCNT(Integer fileCNT) {
+		this.fileCNT = fileCNT;
+	}	
 }
