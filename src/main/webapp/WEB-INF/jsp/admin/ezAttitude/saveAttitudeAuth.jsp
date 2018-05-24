@@ -56,7 +56,7 @@
 			    	setSelectedUser("${selectedUser }","${selectedUserName }");
 		    		setDeptName();
 		    		$('#contentlist .mainlist').html(html);
-		    		authRadioSet(authTypes);
+		    		authRadioSet(authTypes.toString());
 	    		</c:if>
    			});
 	    	
