@@ -133,9 +133,9 @@
 					    },
 					    success : function(json){
 					    	if (json == "ok") {
-					    		alert("승인되었습니다.");	
+					    		//alert("승인되었습니다.");	
 					    	} else {
-					    		alert("승인 중 오류 발생");
+					    		//alert("승인 중 오류 발생");
 					    	}
 				            try {
 				                window.opener.att_refresh();
@@ -172,9 +172,9 @@
 					    },
 					    success : function(json){
 					    	if (json == "ok") {
-					    		alert("반려되었습니다.");	
+					    		//alert("반려되었습니다.");	
 					    	} else {
-					    		alert("반려 중 오류 발생");
+					    		//alert("반려 중 오류 발생");
 					    	}
 					    	try {
 				                window.opener.att_refresh();

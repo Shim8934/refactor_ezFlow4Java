@@ -966,11 +966,11 @@
 				    dataType : "text",
 				    error: function(xhr, status, error){
 				    	ajaxRunning = false;
-				    	alert("승인 중 오류 발생")
+				    	//alert("승인 중 오류 발생")
 				    },
 				    success : function(json){
 				    	get_att_list(currentPage);
-						alert("승인되었습니다.");
+						//alert("승인되었습니다.");
 				    },
 					complete : function() {
 						HiddenAttProgress();
@@ -1020,11 +1020,11 @@
 				    dataType : "text",
 				    error: function(xhr, status, error){
 				    	ajaxRunning = false;
-				    	alert("반려 중 오류 발생")
+				    	//alert("반려 중 오류 발생")
 				    },
 				    success : function(json){
 				    	get_att_list(currentPage);
-						alert("반려되었습니다.");
+						//alert("반려되었습니다.");
 				    },
 					complete : function() {
 						HiddenAttProgress();

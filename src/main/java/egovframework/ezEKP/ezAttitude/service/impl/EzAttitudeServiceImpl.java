@@ -149,6 +149,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("adminId", adminId);
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
 			ezAttitudeDAO.insertAdminAttHistory(map);
+			if (typeId.equals("A01") || typeId.equals("A02")) {
+				map.put("applDate", commonUtil.getTodayUTCTime(""));
+				map.put("originDate", startDate);
+				map.put("changeDate", startDate);
+				ezAttitudeDAO.adminAttSaveAppMod(map);
+			}
 		}
 		
 		LOGGER.debug("insertAttitude ended");
@@ -305,7 +311,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			 * 신청내역에 승인으로 기록한다.
 			 */
 			
-			if (attVO.getTypeId().equals("A02")) {
+			if (attVO.getTypeId().equals("A02") || (attVO.getTypeId().equals("A01") && !attVO.getModAppl().equals("0"))) {
 				map.put("attModId", attitudeId);
 				map.put("offset", commonUtil.getMinuteUTC(offset));
 				

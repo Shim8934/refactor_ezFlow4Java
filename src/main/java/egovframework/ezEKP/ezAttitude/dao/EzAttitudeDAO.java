@@ -79,8 +79,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeVO>) list("ezAttitude.getAttitudeList", map);//TODO  ezAttitude -> ezAttitudeDAO
 	}
 	
-	public void insertAttitude(Map<String, Object> map) throws Exception {
-		insert("ezAttitude.insertAttitude", map);//TODO  ezAttitude -> ezAttitudeDAO 
+	public int insertAttitude(Map<String, Object> map) throws Exception {
+		return (int) insert("ezAttitude.insertAttitude", map);//TODO  ezAttitude -> ezAttitudeDAO 
 	}
 	
 	public void	insertAdminAttHistory(Map<String, Object> map) throws Exception {
