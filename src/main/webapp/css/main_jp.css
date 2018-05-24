@@ -32,7 +32,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 /*------------ Layout ------------*/
 /*#top {top:0px; left:0px; height:99px; width:100%;clear:both; z-index:10; background:#525761; border-bottom:1px solid #4a4c51;}*/
 #top {top:0px; left:0px; height:56px; width:100%;clear:both; z-index:10; border-bottom:1px solid #424242; box-sizing:border-box;}
-#Center {min-height:600px; margin:0px; padding:0px 0px 10px 0px; background:#fff;}
+#Center {min-height:600px; margin:0px; padding:0px; background:#fff;}
 header{height:55px; background:url(../images/kr/cm/header_bg.gif) repeat-x; clear:both; overflow:hidden;}
 nav {height:56px;}
 aside {position:absolute; top:0px; right:0; width:88px; height:100%; z-index:9; overflow:visible;  min-height:100%; }
