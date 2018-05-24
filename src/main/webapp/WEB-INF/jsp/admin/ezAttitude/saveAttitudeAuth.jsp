@@ -130,6 +130,14 @@
 	    		$("#txtdept").val(deptString);
 	   			//리스트 출력
 	    		$('#contentlist .mainlist').html(html);
+	   			//스크롤바로 인한 밀림현상 막기
+	   			if (deptIds.length > 5) {
+	   				$(".mainlist th:eq(1)").css("padding-right", "20px");
+	   				$(".mainlist th:eq(2)").css("padding-right", "30px");
+	   			} else {
+	   				$(".mainlist th:eq(1)").css("padding-right", "");
+	   				$(".mainlist th:eq(2)").css("padding-right", "");
+	   			}
 	    	}	  
 	    	
 	    	//권한 라디오 체크

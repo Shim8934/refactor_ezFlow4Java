@@ -23,7 +23,7 @@
 			var companyId = "${companyId}";
 			var typeId = "${typeInfo.typeId}";
 	        var typeName = "<c:out value = '${typeInfo.typeName}' />";
-	        var typeName2 = "${typeInfo.typeName2}";
+	        var typeName2 = "<c:out value = '${typeInfo.typeName2}' />";
 			var saveMode = "";
 
 			$(function(){
@@ -34,9 +34,12 @@
 	            	//휴가유형명
 	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
 					$("#typeName").val(typeName);
+					if (typeName2 != null && typeName2 != "") {
+						typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+						$("#typeName2").val(typeName2);
+					}
 	            } else {
 	            	saveMode = "new";
-// 	    			typeId = "<c:out value = '${typeId}' />";
 	            }
 		
 			})
@@ -54,7 +57,7 @@
 				typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
 				
 				if (typeName2) {
-					typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
+					typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
 				}
 				
 				$.ajax({
@@ -115,7 +118,7 @@
 			        	</tr>
 			        	<tr class="secondary">
 			          		<th><spring:message code='ezAttitude.t42' /></th>
-			          		<td><input id="typeName2" type="text" style="width:100%" value="${typeInfo.typeName2}"></td>
+			          		<td><input id="typeName2" type="text" style="width:100%" value=""></td>
 			        	</tr>
     				</table>
     			</td> 

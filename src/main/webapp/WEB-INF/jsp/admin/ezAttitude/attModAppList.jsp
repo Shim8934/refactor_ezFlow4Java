@@ -42,8 +42,6 @@
 		<script type="text/javascript">
 		var pCompanyId = ""; //현재 선택된 회사의 아이디
 		var totalAtt 		  = ${totalAtt};
-		var startDate		  = "<c:out value='${startDate}'/>";
-		var endDate 		  = "<c:out value='${endDate}'/>";
 		var currentPage		  = ${currentPage};
 		var totalPages 		  = ${totalPages};
 	    var blockSize 		  = 10;
@@ -62,8 +60,8 @@
 		var usepostDate = false;
 		var searchAppr = ""; //#appr_search
 		var searchWriter = ""; //#writer_search
-		var searchStartDate = ""; //
-		var searchEndDate = ""; //
+		var searchStartDate = "<c:out value='${startDate}'/>";
+		var searchEndDate = "<c:out value='${endDate}'/>";
 		var pageInfo = "modList";
 		var adminCompany = "${adminCompany}";
 		
@@ -137,8 +135,7 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
-	        console.log("${startDate}");
-	        console.log("${endDate}");
+	        
 			if (checkAdmin == 'true') {
 				$("#Sdatepicker").val("${startDate}");
 	    		$("#Edatepicker").val("${endDate}");

@@ -95,46 +95,36 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			mode = "";
 		}
 		
-		boolean isDefaultAtti = false;
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		
 		if (typeId.equals("A01") || typeId.equals("A03")) {
 			if (!mode.equals("admin")) {
 				startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+				if (typeId.equals("A01")) {
+					//사용자별 근태설정이 있는 지 검사
+					String isValue = ezAttitudeDAO.getIsAttitudeUserConf(map);
+					map.put("isValue", isValue);
+					
+					AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map);
+					
+					String compareDate = startDate.substring(11);
+					String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offset, false).substring(11);
+					
+					LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
+					//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
+					SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
+					
+					Date userConfTime = f.parse(resultConfDate);
+					Date userInTime = f.parse(compareDate);
+					
+					if (userInTime.after(userConfTime)) { //지각인 경우
+						typeId = "A02";
+					}
+				}
 			} else {
 				startDate += ":00";
-				//startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
-			}
-			if (typeId.equals("A01")) {
-				//사용자별 근태설정이 있는 지 검사
-				String isValue = ezAttitudeDAO.getIsAttitudeUserConf(map);
-				map.put("isValue", isValue);
-				
-				AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map);
-				
-				String compareDate = startDate.substring(11);
-				String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offset, false).substring(11);
-				
-				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
-				//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
-				SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
-
-				Date userConfTime = f.parse(resultConfDate);
-				Date userInTime = f.parse(compareDate);
-				
-				if (userInTime.after(userConfTime)) { //지각인 경우
-					typeId = "A02";
-				}
-			}
-			
-			isDefaultAtti = true;
-		} else {
-			if (mode.equals("admin")) {
-				startDate += "";
-				//startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 			}
 		}
 		
@@ -150,7 +140,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("bizSub", bizsub);
 		map.put("content", content);
 		map.put("ipAddress", ip);
-		map.put("isDefaultAtti", isDefaultAtti); // 출근, 퇴근과 다른 기타 근태의 insert쿼리를 다르게 하기 위해 적용
 		map.put("dateType", dateType);
 		map.put("modappl", mode.equals("admin") ? "3" : "0");
 		

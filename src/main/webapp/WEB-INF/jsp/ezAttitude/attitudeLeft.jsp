@@ -101,7 +101,12 @@
 		<ul></ul>
 		<h2>
 			<span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">
-				<spring:message code = 'ezAttitude.t7' /><c:if test="${attitudeAdminCheck == true}"><span class="attCount">(${totalAtt})</span></c:if>
+				<spring:message code = 'ezAttitude.t7' />
+				<c:if test="${attitudeAdminCheck == true}">
+					<c:if test="${totalAtt != 0 }">
+						<span class="attCount">(${totalAtt})</span>
+					</c:if>
+				</c:if>
 			</span>
 		</h2>
 		<ul>
