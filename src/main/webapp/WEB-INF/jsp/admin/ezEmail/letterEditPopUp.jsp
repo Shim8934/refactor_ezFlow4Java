@@ -61,7 +61,8 @@
 			var lengthMsg = opener.lengthMsg; // "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
 			var contentMsg = "<spring:message code='ezEmail.letter10'/>"; // "<spring:message code='ezEmail.letter15'/>"; // 내용을 입력해주세요.
 			var letterNameMsg = "<spring:message code='ezEmail.letter32'/>"; // "<spring:message code='ezEmail.letter32'/>"; // 편지지명은
-			                            
+			var defaultFontAndSize = "${defaultFontAndSize}";
+			
 			window.onload = function() {
 				console.log(popUpType);
 				if (popUpType == "modify") {
@@ -82,6 +83,8 @@
 				if (popUpType == "modify") {
 					modifyDataView();
 				}
+				
+				rebody();
 			}
 			
 			function modifyDataView() {
@@ -172,6 +175,12 @@
 			function letterPopUpClose() {
 				window.close();
 			}
+			
+			function Rebody() {
+				if (popUpType != "modify") {
+					window.message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>");	
+				}
+		    }
 		</script>	
 	</body>
 </html>

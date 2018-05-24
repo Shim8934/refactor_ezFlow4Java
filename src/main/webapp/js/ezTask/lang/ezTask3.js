@@ -66,3 +66,6 @@ var strLang67	=	"期間の指定が正しくありません";
 var strLang68	=	"タスクを保存しました。";
 var strLang69	=	"指示事項を保存しました。";
 var strLang70	=	"機関の指定が正しくありません。";
+/*2018-05-24 구해안*/
+var strLang71 = "期間";
+var strLang72 = "終了日を指定しない";
