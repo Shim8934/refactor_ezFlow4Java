@@ -103,17 +103,17 @@
 	            company_change();
 	        } */
 
-			if (checkAdmin == 'true') {
+			if (checkAdmin == 'true' || adminFlag == 'true') {
 				authFlag = 'M';
 			}
-			if (authFlag == 'M') {
+// 			if (authFlag == 'M') {
 				
-			} else {
-				if (adminFlag == "true"){
-					$("#appr").hide();
-					$("#ret").hide();
-				}
-			}
+// 			} else {
+// 				if (adminFlag == "true"){
+// 					$("#appr").hide();
+// 					$("#ret").hide();
+// 				}
+// 			}
 		})
 		
 		$(function () {
@@ -506,7 +506,7 @@
 	    		$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
 	    	} else {
 	    		if (adminFlag == "true"){
-	    			authFlag = data.authFlag;
+	    			authFlag = 'M';
 	    			
 	    			if(checkAdmin == 'true') {
 		    			authFlag = 'M'; 
