@@ -59,9 +59,11 @@
 .jstree .jstree-leaf > .jstree-children {
   display: none;
 }
+/*
 .jstree-anchor > .jstree-themeicon {
   margin-right: 2px;
 }
+*/
 .jstree-no-icons .jstree-themeicon,
 .jstree-anchor > .jstree-themeicon-hidden {
   display: none;
@@ -417,10 +419,12 @@
   background: transparent;
 }
 .jstree-default .jstree-open > .jstree-ocl {
-  background-position: -132px -4px;
+  background : url("/images/OrganTree_cross/minus_normal.gif");
+  background-repeat : no-repeat;
 }
 .jstree-default .jstree-closed > .jstree-ocl {
-  background-position: -100px -4px;
+  background : url("/images/OrganTree_cross/plus_normal.gif");
+  background-repeat : no-repeat;
 }
 .jstree-default .jstree-leaf > .jstree-ocl {
   background-position: -68px -4px;
@@ -433,10 +437,10 @@
   background: transparent;
 }
 .jstree-default > .jstree-no-dots .jstree-open > .jstree-ocl {
-  background-position: -36px -4px;
+  background-position: 5px 4px;
 }
 .jstree-default > .jstree-no-dots .jstree-closed > .jstree-ocl {
-  background-position: -4px -4px;
+  background-position: 5px 4px;
 }
 .jstree-default .jstree-disabled {
   background: transparent;
@@ -515,10 +519,14 @@
   background: url("throbber.gif") center center no-repeat;
 }
 .jstree-default .jstree-file {
-  background: url("32px.png") -100px -68px no-repeat;
+  background: url("/images/ImgIcon/icon_approval.gif");
+  background-repeat: no-repeat;
+  margin-top : 3px;
 }
 .jstree-default .jstree-folder {
-  background: url("32px.png") -260px -4px no-repeat;
+  background: url("/images/OrganTree_cross/fldr.gif");
+  background-repeat: no-repeat;
+  margin-top : 3px;
 }
 .jstree-default > .jstree-container-ul > .jstree-node {
   margin-left: 0;

@@ -10,7 +10,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
+<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

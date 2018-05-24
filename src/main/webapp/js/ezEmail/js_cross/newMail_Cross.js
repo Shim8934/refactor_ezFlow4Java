@@ -2240,6 +2240,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                 if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
                     var strTarget = "target='_blank'";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
+                    FileName = replaceAll(FileName, "&", "&amp;");
                     var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
                     var fileLocation = getNodeText(GetChildNodes(nodes[i])[4]);
                     var fileDate = fileLocation.split("|!|")[0];
@@ -3572,5 +3573,9 @@ function getEmailAddressList2(ReceiverList, pollSendType) {
     }
 
     return retVal;
+}
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }
 //end

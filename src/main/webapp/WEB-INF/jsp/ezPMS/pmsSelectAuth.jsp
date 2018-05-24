@@ -68,9 +68,10 @@
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				}).on('ready.jstree', function(e, data) {
-					var offset = $(".jstree-clicked").offset();
-		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
-			    });
+					var offset = $(".jstree-wholerow-clicked").offset();
+					var jstree = document.getElementById("treeview");
+					$('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
+				});
 	   		}
 	   		
 	   		//사원 리스트 뿌리기

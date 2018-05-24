@@ -995,18 +995,18 @@ public class EzPMSGWController {
 				
 				for (ProjectUserVO member: userList) {
 					String imagePath = ezOrganService.getPropertyValue(member.getUserId(), "extensionAttribute2", tenantId);
-					
+					System.out.println(imagePath);
 					if (imagePath != null && !imagePath.equals("")) {
 						String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId)+ commonUtil.separator + imagePath;
 						String fullPath = request.getServletContext().getRealPath(realPath);
-					
+						
 						if (fullPath != null || !fullPath.equals("")) {
-							member.setUserImg("ezCommon/downloadAttach.do?filePath=" + realPath);
+							member.setUserImg(imagePath);
 						} else {
-							member.setUserImg("images/poll/default_pic_vote.gif");
+							member.setUserImg("/images/poll/default_pic_vote.gif");
 						}
 					} else {
-						member.setUserImg("images/poll/default_pic_vote.gif");
+						member.setUserImg("/images/poll/default_pic_vote.gif");
 					}
 				}
 				

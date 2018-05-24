@@ -30,23 +30,19 @@
     	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="7"/>
     	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="8"/>
     	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="9"/>
-    	<result property="headManagerName2"					column="HEAD_MANAGER_NAME2"			columnIndex="10"/>
-    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="11"/>
-    	<result property="headManagerDeptname2"				column="HEAD_MANAGER_DEPTNAME2"		columnIndex="12"/>
-    	<result property="status"							column="STATUS"						columnIndex="13"/>
-    	<result property="progress"							column="PROGRESS"					columnIndex="14"/>
-    	<result property="overview"							column="OVERVIEW"					columnIndex="15"/>
-    	<result property="weightInput"						column="WEIGHT_INPUT"				columnIndex="16"/>
-    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="17"/>
-    	<result property="createDate"						column="CREATE_DATE"				columnIndex="18"/>
-    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="19"/>
-    	<result property="creatorName2"						column="CREATOR_NAME2"				columnIndex="20"/>
-    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="21"/>
-    	<result property="creatorDeptname2"					column="CREATOR_DEPTNAME2"			columnIndex="22"/>
-    	<result property="workingday"						column="WORKINGDAY"					columnIndex="23"/>
-    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="24"/>
-    	<result property="alamMailStatus"					column="ALAM_MAIL_STATUS"			columnIndex="25"/>
-    	<result property="isFavorite"						column="ISFAVORITE"					columnIndex="26"/>    	
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="10"/>
+    	<result property="status"							column="STATUS"						columnIndex="11"/>
+    	<result property="progress"							column="PROGRESS"					columnIndex="12"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="13"/>
+    	<result property="weightInput"						column="WEIGHT_INPUT"				columnIndex="14"/>
+    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="15"/>
+    	<result property="createDate"						column="CREATE_DATE"				columnIndex="16"/>
+    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="17"/>
+    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="18"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="19"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="20"/>
+    	<result property="alamMailStatus"					column="ALAM_MAIL_STATUS"			columnIndex="21"/>
+    	<result property="isFavorite"						column="ISFAVORITE"					columnIndex="22"/>    	
     </resultMap>
     
     <resultMap id="projectGroupVO" class="ProjectGroupVO">
@@ -64,21 +60,17 @@
     	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="12"/>
     	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="13"/>
     	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="14"/>
-    	<result property="headManagerName2"					column="HEAD_MANAGER_NAME2"			columnIndex="15"/>
-    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="16"/>
-    	<result property="headManagerDeptname2"				column="HEAD_MANAGER_DEPTNAME2"		columnIndex="17"/>
-    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="18"/>
-    	<result property="createDate"						column="CREATE_DATE"				columnIndex="19"/>
-    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="20"/>
-    	<result property="creatorName2"						column="CREATOR_NAME2"				columnIndex="21"/>
-    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="22"/>
-    	<result property="creatorDeptname2"					column="CREATOR_DEPTNAME2"			columnIndex="23"/>
-    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="24"/>
-    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="25"/>
-    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="26"/>
-    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="27"/>
-    	<result property="workingday"						column="WORKINGDAY"					columnIndex="28"/>
-    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="29"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="15"/>
+    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="16"/>
+    	<result property="createDate"						column="CREATE_DATE"				columnIndex="17"/>
+    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="18"/>
+    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="19"/>
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="20"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="21"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="22"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="23"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="24"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
     </resultMap>
     
     <resultMap id="projectMainSettingVO" class="ProjectMainSettingVO">
@@ -101,14 +93,11 @@
     <resultMap id="projectMemberVO" class="ProjectMemberVO">
     	<result property="userId"							column="USER_ID"					columnIndex="1"/>
     	<result property="userName"							column="USER_NAME"					columnIndex="2"/>
-    	<result property="userName2"						column="USER_NAME2"					columnIndex="3"/>
-    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="4"/>
-    	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="5"/>
-    	<result property="userPosition"						column="USER_POSITION"				columnIndex="6"/>
-    	<result property="userPosition2"					column="USER_POSITION2"				columnIndex="7"/>
-    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="8"/>
-    	<result property="userIdType"						column="USER_ID_TYPE"				columnIndex="9"/>
-    	<result property="tenantId"							column="TENANT_ID"					columnIndex="10"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="3"/>
+    	<result property="userPosition"						column="USER_POSITION"				columnIndex="4"/>
+    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="5"/>
+    	<result property="userIdType"						column="USER_ID_TYPE"				columnIndex="6"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="7"/>
     </resultMap>
     
     <resultMap id="projectTaskVO" class="ProjectTaskVO">
@@ -128,22 +117,18 @@
     	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="14"/>
     	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="15"/>
     	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="16"/>
-    	<result property="headManagerName2"					column="HEAD_MANAGER_NAME2"			columnIndex="17"/>
-    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="18"/>
-    	<result property="headManagerDeptname2"				column="HEAD_MANAGER_DEPTNAME2"		columnIndex="19"/>
-    	<result property="writerId"							column="WRITER_ID"					columnIndex="20"/>
-    	<result property="writeDate"						column="WRITE_DATE"					columnIndex="21"/>
-    	<result property="writerName"						column="WRITER_NAME"				columnIndex="22"/>
-    	<result property="writerName2"						column="WRITER_NAME2"				columnIndex="23"/>
-    	<result property="writerDeptname"					column="WRITER_DEPTNAME"			columnIndex="24"/>
-    	<result property="writerDeptname2"					column="WRITER_DEPTNAME2"			columnIndex="25"/>
-    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="26"/>
-    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="27"/>
-    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="28"/>
-    	<result property="workingday"						column="WORKINGDAY"					columnIndex="29"/>
-    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="30"/>
-    	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="31"/>
-    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="32"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="17"/>
+    	<result property="writerId"							column="WRITER_ID"					columnIndex="18"/>
+    	<result property="writeDate"						column="WRITE_DATE"					columnIndex="19"/>
+    	<result property="writerName"						column="WRITER_NAME"				columnIndex="20"/>
+    	<result property="writerDeptname"					column="WRITER_DEPTNAME"			columnIndex="21"/>    	
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="22"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="23"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="24"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="25"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="26"/>
+    	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
     </resultMap>
     
     <resultMap id="projectTaskMemberVO" class="ProjectTaskMemberVO">
@@ -152,10 +137,8 @@
     	<result property="taskId"							column="TASK_ID"					columnIndex="3"/>
     	<result property="userId"							column="USER_ID"					columnIndex="4"/>
     	<result property="userName"							column="USER_NAME"					columnIndex="5"/>
-		<result property="userName2"						column="USER_NAME2"					columnIndex="6"/>
-    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="7"/>
-    	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="8"/>
-    	<result property="pctinput"							column="PCTINPUT"					columnIndex="9"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="6"/>
+    	<result property="pctinput"							column="PCTINPUT"					columnIndex="7"/>
     </resultMap>
    
     <resultMap id="projectMemberScheduleVO" class="ProjectMemberScheduleVO">
@@ -176,12 +159,10 @@
     	<result property="logStatus"						column="LOG_STATUS"					columnIndex="7"/>
     	<result property="userId"							column="USER_ID"					columnIndex="8"/>
     	<result property="userName"							column="USER_NAME"					columnIndex="9"/>
-    	<result property="userName2"						column="USER_NAME2"					columnIndex="10"/>
-    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="11"/>
-    	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="12"/>
-   		<result property="logContent" 						column="LOG_CONTENT"				columnIndex="13"/>
-   		<result property="taskName" 						column="TASK_NAME"					columnIndex="14"/>
-   		<result property="groupName" 						column="GROUP_NAME"					columnIndex="15"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="10"/>
+   		<result property="logContent" 						column="LOG_CONTENT"				columnIndex="11"/>
+   		<result property="taskName" 						column="TASK_NAME"					columnIndex="12"/>
+   		<result property="groupName" 						column="GROUP_NAME"					columnIndex="130"/>
     </resultMap>
     
     <resultMap id="projectTaskTreeVO" class="ProjectTaskTreeVO">
@@ -446,12 +427,9 @@
 	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO" remapResults="true">
 		SELECT
 			USER_ID AS USER_ID,
-			USER_NAME,
-			USER_NAME2,
-			USER_DEPTNAME,
-			USER_DEPTNAME2,
-			USER_POSITION,
-			USER_POSITION2,
+			USER_NAME$lang$ AS USER_NAME,
+			USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+			USER_POSITION$lang$ AS USER_POSITION,
 			MEMBER_ROLE_ID,
 			USER_ID_TYPE,
 			TENANT_ID
@@ -474,12 +452,9 @@
 		UNION
 			SELECT 
 				CN AS USER_ID,
-				DISPLAYNAME AS USER_NAME,
-				DISPLAYNAME2 AS USER_NAME2,
-				DESCRIPTION AS USER_DEPTNAME,
-				DESCRIPTION2 AS USER_DEPTNAME2,
+				DISPLAYNAME$lang$ AS USER_NAME,
+				DESCRIPTION$lang$ AS USER_DEPTNAME,
 				TITLE AS USER_POSITION,
-				TITLE2 AS USER_POSITION2,
 				C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
 				C.USER_ID_TYPE AS USER_ID_TYPE,
 				C.TENANT_ID AS TENANT_ID
@@ -645,20 +620,16 @@
 				A.REAL_START_DATE AS REAL_START_DATE, 
 				A.REAL_END_DATE AS REAL_END_DATE,
 				A.HEAD_MANAGER_ID AS HEAD_MANAGER_ID, 
-				A.HEAD_MANAGER_NAME AS HEAD_MANAGER_NAME, 
-				A.HEAD_MANAGER_NAME2 AS HEAD_MANAGER_NAME2,
-				A.HEAD_MANAGER_DEPTNAME AS HEAD_MANAGER_DEPTNAME, 
-				A.HEAD_MANAGER_DEPTNAME2 AS HEAD_MANAGER_DEPTNAME2, 
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME, 
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME, 
 				A.STATUS AS STATUS, 
 				A.PROGRESS AS PROGRESS, 
 				A.OVERVIEW AS OVERVIEW,  
 				A.WEIGHT_INPUT AS WEIGHT_INPUT, 
 				A.CREATOR_ID AS CREATOR_ID, 
 				A.CREATE_DATE AS CREATE_DATE, 
-				A.CREATOR_NAME AS CREATOR_NAME, 
-				A.CREATOR_NAME2 AS CREATOR_NAME2, 
-				A.CREATOR_DEPTNAME AS CREATOR_DEPTNAME,
-				A.CREATOR_DEPTNAME2 AS CREATOR_DEPTNAME2, 
+				A.CREATOR_NAME$lang$ AS CREATOR_NAME, 
+				A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
 				A.WORKINGDAY AS WORKINGDAY, 
 				A.REST_DUEDAY AS REST_DUEDAY, 
 				A.ALAM_MAIL_STATUS AS ALAM_MAIL_STATUS,
@@ -760,9 +731,9 @@
     			sort_order, 			workingday
     		) 
     		VALUES ( 
-    			#tenantId#, 				#projectId#, 			#groupId#, 		#taskName#,			#status#,			#planStartDate#,			#planEndDate#, 
-    			#realProgress#,			#weight#,				#overview#,		#memberCount#,
-    			#headManagerId#, 		#headManagerName#,		#headManagerName2#, 		#headManagerDeptname#,			#headManagerDeptname2#, 
+    			#tenantId#, 			#projectId#, 			#groupId#, 				#taskName#,				#status#,			#planStartDate#,			#planEndDate#, 
+    			#realProgress#,			#weight#,				#overview#,				#memberCount#,
+    			#headManagerId#, 		#headManagerName#,		#headManagerName2#, 	#headManagerDeptname#,	#headManagerDeptname2#, 
     			#writerId#,				#writeDate#, 			#writerName#, 			#writerName2#, 			#writerDeptname#, 		#writerDeptname2#, 
     			#sortOrder#, 			#workingday#
     		)
@@ -946,20 +917,16 @@
 			A.REAL_START_DATE, 
 			A.REAL_END_DATE,
 			A.HEAD_MANAGER_ID, 
-			A.HEAD_MANAGER_NAME, 
-			A.HEAD_MANAGER_NAME2,
-			A.HEAD_MANAGER_DEPTNAME, 
-			A.HEAD_MANAGER_DEPTNAME2, 
+			A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+			A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME, 
 			A.STATUS, 
 			A.PROGRESS, 
 			A.OVERVIEW,  
 			A.WEIGHT_INPUT, 
 			A.CREATOR_ID, 
 			A.CREATE_DATE, 
-			A.CREATOR_NAME, 
-			A.CREATOR_NAME2, 
-			A.CREATOR_DEPTNAME,
-			A.CREATOR_DEPTNAME2, 
+			A.CREATOR_NAME$lang$ AS CREATOR_NAME, 
+			A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
 			A.WORKINGDAY, 
 			A.REST_DUEDAY, 
 			A.ALAM_MAIL_STATUS,
@@ -1008,16 +975,12 @@
 				A.OVERVIEW,
 				A.MEMBER_COUNT,
 				A.HEAD_MANAGER_ID,
-				A.HEAD_MANAGER_NAME,
-				A.HEAD_MANAGER_NAME2,
-				A.HEAD_MANAGER_DEPTNAME,
-				A.HEAD_MANAGER_DEPTNAME2,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
 				A.WRITER_ID,
 				A.WRITE_DATE,
-				A.WRITER_NAME,
-				A.WRITER_NAME2,
-				A.WRITER_DEPTNAME,
-				A.WRITER_DEPTNAME2,
+				A.WRITER_NAME$lang$ AS WRITER_NAME,
+				A.WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
 				A.TREE_DEPTH,
 				A.ANCESTER_GROUP,
 				A.SORT_ORDER,
@@ -1182,10 +1145,8 @@
 				TENANT_ID,
 				TASK_ID,
 				USER_ID,
-				USER_NAME,
-				USER_NAME2,
-				USER_DEPTNAME,
-				USER_DEPTNAME2,
+				USER_NAME$lang$ AS USER_NAME,
+				USER_DEPTNAME$lang$ AS USER_DEPTNAME,
 				PCTINPUT
 			FROM	
 				tbl_pms_taskmember	
@@ -1515,16 +1476,12 @@
 				OVERVIEW,
 				MEMBER_COUNT,
 				HEAD_MANAGER_ID,
-				HEAD_MANAGER_NAME,
-				HEAD_MANAGER_NAME2,
-				HEAD_MANAGER_DEPTNAME,
-				HEAD_MANAGER_DEPTNAME2,
+				HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
 				CREATOR_ID,
 				CREATE_DATE,
-				CREATOR_NAME,
-				CREATOR_NAME2,
-				CREATOR_DEPTNAME,
-				CREATOR_DEPTNAME2,
+				CREATOR_NAME$lang$ AS CREATOR_NAME,
+				CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
 				TREE_DEPTH,
 				ANCESTER_GROUP,
 				SORT_ORDER,
@@ -1558,16 +1515,12 @@
 				OVERVIEW,
 				MEMBER_COUNT,
 				HEAD_MANAGER_ID,
-				HEAD_MANAGER_NAME,
-				HEAD_MANAGER_NAME2,
-				HEAD_MANAGER_DEPTNAME,
-				HEAD_MANAGER_DEPTNAME2,
+				HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
 				WRITER_ID,
 				WRITE_DATE,
-				WRITER_NAME,
-				WRITER_NAME2,
-				WRITER_DEPTNAME,
-				WRITER_DEPTNAME2,
+				WRITER_NAME$lang$ AS WRITER_NAME,
+				WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
 				TREE_DEPTH,
 				ANCESTER_GROUP,
 				SORT_ORDER,
@@ -1602,16 +1555,12 @@
 			A.OVERVIEW,
 			A.MEMBER_COUNT,
 			A.HEAD_MANAGER_ID,
-			A.HEAD_MANAGER_NAME,
-			A.HEAD_MANAGER_NAME2,
-			A.HEAD_MANAGER_DEPTNAME,
-			A.HEAD_MANAGER_DEPTNAME2,
+			A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+			A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
 			A.WRITER_ID,
 			A.WRITE_DATE,
-			A.WRITER_NAME,
-			A.WRITER_NAME2,
-			A.WRITER_DEPTNAME,
-			A.WRITER_DEPTNAME2,
+			A.WRITER_NAME$lang$ AS WRITER_NAME,
+			A.WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
 			A.TREE_DEPTH,
 			A.ANCESTER_GROUP,
 			A.SORT_ORDER,
@@ -1758,10 +1707,8 @@
 			DATE_ADD(DATE_FORMAT(LOG_DATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as LOG_DATE,
 			L.LOG_STATUS AS LOG_STATUS,
 			L.USER_ID AS USER_ID,
-			L.USER_NAME AS USER_NAME,
-			L.USER_NAME2 AS USER_NAME2,
-			L.USER_DEPTNAME AS USER_DEPTNAME,
-			L.USER_DEPTNAME2 AS USER_DEPTNAME2,
+			L.USER_NAME$lang$ AS USER_NAME,
+			L.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
 			L.LOG_CONTENT AS LOG_CONTENT,
 			G.GROUP_NAME AS GROUP_NAME,
 			T.TASK_NAME AS TASK_NAME
@@ -1838,20 +1785,16 @@
 			REAL_START_DATE, 
 			REAL_END_DATE,
 			HEAD_MANAGER_ID, 
-			HEAD_MANAGER_NAME, 
-			HEAD_MANAGER_NAME2,
-			HEAD_MANAGER_DEPTNAME, 
-			HEAD_MANAGER_DEPTNAME2, 
+			HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NANE, 
+			HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME, 
 			STATUS, 
 			PROGRESS, 
 			OVERVIEW,  
 			WEIGHT_INPUT, 
 			CREATOR_ID, 
 			CREATE_DATE, 
-			CREATOR_NAME, 
-			CREATOR_NAME2, 
-			CREATOR_DEPTNAME,
-			CREATOR_DEPTNAME2, 
+			CREATOR_NAME$lang$ AS CREATOR_NAME, 
+			CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
 			WORKINGDAY, 
 			REST_DUEDAY, 
 			ALAM_MAIL_STATUS,

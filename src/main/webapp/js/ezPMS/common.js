@@ -8,12 +8,12 @@ function getProjectTaskTree(containerId, data, location) {
 			'multiple' : false,
 			'animation' : 0,
 			'themes' : {
-				'responsive' : false,
+				'responsive' : true
 				//'variant' : 'small',
-				'stripes' : false
+				//'stripes' : false
 			}
 		},
-		'plugins' : [ 'sort' ],
+		'plugins' : [ 'sort', "wholerow" ],
 		'sort' : function(a, b) {
 			var a1 = this.get_node(a);
 			var b1 = this.get_node(b);
@@ -28,10 +28,11 @@ function getProjectTaskTree(containerId, data, location) {
 		
 		firstNodeId = firstNodeId.substring(0, firstNodeId.indexOf("_"));
 		
-		if (location == "taskLog") {
+		if (location == "taskLog") {			
 			groupId = firstNodeId;
 			setContentList();
 		}
+	
 	})
 	.on("select_node.jstree", function(e, data) {
 		if (location == "taskLog") {
@@ -44,7 +45,7 @@ function getProjectTaskTree(containerId, data, location) {
 				setContentList();
 			}
 		}
-	})
+	});
 }
 
 
