@@ -600,20 +600,18 @@ public class EzWebFolderGWController {
 				return result;
 			}
 			
-			if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userInfo.getId())) {
-				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
-				
-				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
-				
-				if (totalUploadSize > (totalCapa - totalUsed)) {
-					logger.debug("Not enough storage to upload these files!");
-					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
-					result.put("code", 1);
-					result.put("data", "");
-					return result;
-				}
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+			
+			long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
+			long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+			
+			if (totalUploadSize > (totalCapa - totalUsed)) {
+				logger.debug("Not enough storage to upload these files!");
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
+				result.put("code", 1);
+				result.put("data", "");
+				return result;
 			}
 			
 			String realPath   = request.getServletContext().getRealPath("");
