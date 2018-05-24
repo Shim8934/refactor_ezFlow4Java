@@ -122,7 +122,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			Map<String, Object> project = new HashMap<String, Object>();
-			project.put("projectName", request.getParameter("projectName"));
+			project.put("projectName", request.getParameter("projectName").replaceAll("\"", "&quot;"));
 			project.put("weightInput", request.getParameter("weightInput"));
 			project.put("planStartDate", request.getParameter("planStartDate"));
 			project.put("planEndDate", request.getParameter("planEndDate"));
@@ -324,7 +324,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String deptId = info.getDeptId();
-			
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			String status = request.getParameter("status");
 			String nowStatus = request.getParameter("nowStatus");
 			String changeDate = request.getParameter("changeDate");
@@ -347,7 +347,7 @@ public class EzPMSGWController {
 				roleCheck = "permitted";
 				
 				for (int i = 0; i < projectIdList.length; i++) {
-					ProjectInfoVO project = ezPMSService.getProjectDetails(Long.parseLong(projectIdList[i]), userId, info.getTenantId(), "new", info.getLang(), deptId);
+					ProjectInfoVO project = ezPMSService.getProjectDetails(Long.parseLong(projectIdList[i]), userId, info.getTenantId(), "new", lang, deptId);
 					String planEndDate = project.getPlanEndDate();
 					
 					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(), changeDate, planEndDate);	
