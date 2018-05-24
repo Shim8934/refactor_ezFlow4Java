@@ -67,7 +67,7 @@
 			}
 		</style>
 	</head>
-<body class="leftbody" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
+<body class="leftbody">
 	<div class="left_pims" title="근태관리"><span>근태관리</span></div>
 <!-- 	<article class="time"> -->
 <%-- 		<p class="title"><spring:message code='main.t00023' /></p> --%>
@@ -99,14 +99,18 @@
 		<ul></ul>
 		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs6'/></span></h2>
 		<ul></ul>
-		<h2><span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block"><spring:message code = 'ezAttitude.t7' /></span></h2>
+		<h2>
+			<span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">
+				<spring:message code = 'ezAttitude.t7' /><c:if test="${attitudeAdminCheck == true}"><span class="attCount">(${totalAtt})</span></c:if>
+			</span>
+		</h2>
 		<ul>
 			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
 			<c:if test="${attitudeAdminCheck == true}">
 				<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
 			</c:if>
 		</ul>
-		<c:if test="${attitudeAdminCheck == true}">
+		<c:if test="${attitudeAdminCheck == true}"> 
 			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;근태정보관리</span></h3>
 		</c:if>
 	</div>

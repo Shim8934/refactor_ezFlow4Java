@@ -1092,7 +1092,7 @@
 							</c:if>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:500px; overflow-y:auto; width:738px; display:block;">
+				    <tbody style="max-height:466px; overflow-y:auto; width:738px; display:block;">
 				    	<tr>
 				    		<c:if test="${deptFlag == 'true'}">
 				    			<th style="height:30px">No.</th>
@@ -1127,7 +1127,7 @@
 						</th>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:500px; width:820px; display:block; overflow-y:auto;">
+				    <tbody style="max-height:466px; width:820px; display:block; overflow-y:auto;">
 				    	<tr>
 				    		<th style="height:30px">No.</th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.bbhs15'/></th>

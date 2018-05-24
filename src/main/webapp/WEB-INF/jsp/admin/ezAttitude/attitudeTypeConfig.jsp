@@ -242,7 +242,7 @@
 	      	</ul>
 	  	</div>
 	  	
-	  	<table style="width: 450px; height: 435px;" >
+	  	<table style="width: 450px; height: 500px;" >
             <tr>
                 <td>
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
@@ -254,7 +254,7 @@
                                 <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
-                        <div id="contentlist" name="contentlist" style="height: 403px; overflow-y: auto;">
+                        <div id="contentlist" name="contentlist" style="height: 466px; overflow-y: auto;">
                         	<table class="mainlist" style="width: 100%;">
                                 <tr>
                                     <td style="text-align: center;">

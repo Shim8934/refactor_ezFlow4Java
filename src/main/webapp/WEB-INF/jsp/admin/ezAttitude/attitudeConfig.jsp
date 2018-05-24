@@ -199,9 +199,6 @@
 	      		</select>
 	      		</li>
 	      	</ul>
-	      	<ul>
-	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
-	      	</ul>
 	  	</div>
 	  	
 		<table class="content" style="width:500px">
@@ -250,5 +247,13 @@
 	            </td>
 	        </tr>
 		</table>
+		<table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; width: 500px;">
+	        <tbody><tr>
+	            <td style="height: 50px; text-align: center;">
+	                <a class="imgbtn"><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></a>
+	                <a class="imgbtn"><span onclick="company_change()">취소</span></a>
+	            </td>
+	        </tr>
+	    </tbody></table>
 	</body>
 </html>
