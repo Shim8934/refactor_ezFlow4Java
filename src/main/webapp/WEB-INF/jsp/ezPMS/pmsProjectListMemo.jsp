@@ -105,6 +105,16 @@ $(function(){
 });
 
 </script>
+<style type="text/css">
+.projectList tr th span {
+	width : 280px;
+	text-overflow : ellipsis;
+	overflow : hidden;
+	display : inline-block;
+	white-space : nowrap;
+	font-size : 13px;
+}
+</style>
 <body>
 	<div id="memoStyleDiv" style="height: 80%; width: 100%; overflow: auto; display: none;">
 		<c:choose>
@@ -120,22 +130,22 @@ $(function(){
 			<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px gray; clear: none; width: 360px; left: 2%; cursor:pointer;" ondblclick="goProjectDetails(this)">
 				<tr>
 					<th colspan="2" style="height: 30px; font-size: 15px;">
-						<input type="checkbox" onchange="checkedCheckboxMemo(this);" name="memoCheckbox" style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float: left">
-							<c:out value="${project.projectName }" />
+						<input type="checkbox" onchange="checkedCheckboxMemo(this);" name="memoCheckbox" style="margin-top: 7px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float: left">
+							<span style="margin-top:7px;"><c:out value="${project.projectName }" /></span>
 							<c:choose>
 								<c:when test="${project.isFavorite eq 0}">
-									<img class="star" style="cursor: pointer; float: right;" draggable="false" src="/images/ImgIcon/view-flag.gif"
+									<img class="star" style="cursor: pointer; float: right; margin-top:7px;" draggable="false" src="/images/ImgIcon/view-flag.gif"
 									onclick="addFavoriteMemo(${project.projectId })">
 								</c:when>
 								<c:otherwise>
-									<img class="star" style="cursor: pointer; float: right;" draggable="false" src="/images/ImgIcon/icon-flag.gif"
+									<img class="star" style="cursor: pointer; float: right; margin-top:7px;" draggable="false" src="/images/ImgIcon/icon-flag.gif"
 									onclick="deleteFavoriteMemo(${project.projectId })">
 								</c:otherwise>
 							</c:choose>
 					</th>
 				</tr>
 				<tr onclick="selectedMemoTR(this);">
-					<td colspan="2" style="height:32px;">&nbsp;&nbsp;<span class="statusSpan" style="font-size:13px; padding:4px;"><c:out value="${project.status }" /></span></td>
+					<td colspan="2" style="height:29px;">&nbsp;&nbsp;<span class="statusSpan" style="font-size:13px; padding:4px;"><c:out value="${project.status }" /></span></td>
 				</tr>
 				<tr onclick="selectedMemoTR(this);">
 					<td colspan="2" style="text-align: center; font-size: 20px;" class="restDueday">D 
@@ -148,10 +158,7 @@ $(function(){
 					<td colspan="2" style="text-align: center">(<c:out value="${project.planStartDate }" /> ~ <c:out value="${project.planEndDate }" />)</td>
 				</tr>
 				<tr onclick="selectedMemoTR(this);">
-					<td colspan="2">&nbsp;</td>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td colspan="2">&nbsp;</td>
+					<td colspan="2" style="height:22px;">&nbsp;</td>
 				</tr>
 				<tr onclick="selectedMemoTR(this);">
 					<td class="memoTd">&nbsp;&nbsp;총괄 담당자</td>

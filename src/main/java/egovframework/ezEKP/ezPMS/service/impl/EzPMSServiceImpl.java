@@ -125,6 +125,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					projectList.get(i).setTotalTaskCount(totalTaskCount);
 					projectList.get(i).setCompleteTaskCount(completeTaskCount);
 					projectList.get(i).setLateTaskCount(lateTaskCount);
+					
+					//프로젝트 이름에 따옴표
+					projectList.get(i).setProjectName(projectList.get(i).getProjectName().replaceAll("&quot;", "\"").replace("&#39;", "\'"));
 				}
 			}
 		} catch (Exception e) {
@@ -273,6 +276,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 		
 		try {
+			project.setProjectName(project.getProjectName().replaceAll("&quot;", "\"").replaceAll("&#39;", "\'"));
+			
 			if (!project.getStatus().equals("C")) {
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 				Date today = new Date();
@@ -691,17 +696,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectTaskVO getTaskDetails(Long taskId, int tenantId) {
-		LOGGER.debug("[SERVICE] getGroupList started.");
+	public ProjectTaskVO getTaskDetails(Long taskId, int tenantId, String lang) {
+		LOGGER.debug("[SERVICE] getTaskDetails started.");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("taskId", taskId);
 		param.put("tenantId", tenantId);
-		param.put("lang", ""); //수정 필요
+		param.put("lang", lang);
 		
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
 		
-		LOGGER.debug("[SERVICE] getGroupList ended.");
+		LOGGER.debug("[SERVICE] getTaskDetails ended.");
 		return taskDetails;
 	}
 
