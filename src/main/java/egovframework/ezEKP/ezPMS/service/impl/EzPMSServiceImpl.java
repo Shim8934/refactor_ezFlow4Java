@@ -692,17 +692,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectTaskVO getTaskDetails(Long taskId, int tenantId) {
-		LOGGER.debug("[SERVICE] getGroupList started.");
+	public ProjectTaskVO getTaskDetails(Long taskId, int tenantId, String lang) {
+		LOGGER.debug("[SERVICE] getTaskDetails started.");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("taskId", taskId);
 		param.put("tenantId", tenantId);
-		param.put("lang", ""); //수정 필요
+		param.put("lang", lang);
 		
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
 		
-		LOGGER.debug("[SERVICE] getGroupList ended.");
+		LOGGER.debug("[SERVICE] getTaskDetails ended.");
 		return taskDetails;
 	}
 

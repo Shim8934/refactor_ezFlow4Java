@@ -201,7 +201,7 @@
 	   			var taskId = 0;
 	   			curTask = ge.currentTask;
 	   			if(curTask.id.indexOf("_t") != -1){
-	   				taskId = curTask.id.match(/_t\d+/)[0].match(/\d/)[0];
+	   				taskId = curTask.id.match(/t(\d+)/)[1];
 	   			}
 	   			else{
 	   				return false;

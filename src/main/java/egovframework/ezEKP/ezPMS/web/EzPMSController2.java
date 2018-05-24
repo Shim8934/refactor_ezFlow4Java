@@ -418,7 +418,7 @@ public class EzPMSController2 {
 		
 		LOGGER.debug("ezPMS getTaskDetails ended");
 		
-		return "json";
+		return "/ezPMS/pmsTaskDetails";
 	}
 	
 }

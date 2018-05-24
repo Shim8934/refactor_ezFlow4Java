@@ -14,9 +14,12 @@
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
+<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 <script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
+
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -29,16 +32,82 @@
 <script type="text/javascript">
 	var taskDetails;
 	
-	window.onload(function(){
+	$(function(){
 		taskDetails = ${taskDetails};
-	})
+		initProgressBar();
+		document.getElementById("closeBtn").onclick = popupClose;
+	});
+	
+	function popupClose() {
+		parent.DivPopUpHidden();
+	}
+	
+	function initProgressBar() {
+		var strStatus = "";
+		var circleColor = "";
+		
+		switch(nowStatus){
+		case "P" :
+			strStatus = "진행";
+			circleColor = progressColor;
+			break;
+		case "W" :
+			strStatus = "대기";
+			circleColor = "grey";
+			break;
+		case "L" :
+			strStatus = "지연";
+			circleColor = overdueColor;
+			break;
+		case "S" :
+			strStatus = "보류";
+			circleColor = holdColor;
+			break;
+		case "C" :
+			strStatus = "완료";
+			circleColor = completeColor;
+			break;
+		}
+		
+		$(".progress_graph").circleProgress({
+			value: 0.4,
+			fill : {color : circleColor},
+			size : 134
+		}).on('circle-animation-progress', function(event, progress) {
+			$(this).find('strong').html(40 + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+		});
+	}
+	
 </script>
+<style>
+.popupHeader{
+	height:34px;
+}
+button.PHBtn {
+    margin-top: 5px;
+}
+#closeBtn{
+	float:right;
+}
+
+</style>
 </head>
 <body class="popup">
-	<div id="main_body">
-		<div></div>
-		<div></div>	
-		<div></div>	
+	<div class="popupHeader">
+	    <button id="deleteBtn" class="PHBtn">삭제</button>
+   		<button id="closeBtn" class="PHBtn">닫기</button>
+	</div>
+	<div id="mainBody">
+		<div class="mainBodyTop">
+			<div class="statusDiv">
+				
+			</div>
+			<table>
+				
+			</table>
+		</div>
+		<div class="mainBodyMid"></div>	
+		<div class="mainBodyBot"></div>	
 	</div>
 </body>
 </html>
