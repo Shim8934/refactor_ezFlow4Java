@@ -1729,9 +1729,8 @@
 				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
 				<div style="float: right; margin-top: 3px;">
 				<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
-					<c:if test="${taskInfoVO.personID eq userInfo.id}">
-						<a id="editTaskInfo" class="imgbtn"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
-					</c:if>					
+				<!-- 18-05-16 구해안 - 지시자만 업무 정보 수정 가능 하도록 수정, 담당자만 업무 내용 수정 가능하도록 수정 -->
+					<a id="editTaskInfo" class="imgbtn" style="display:none;"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
 					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t1511' /></span></a>
 					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
