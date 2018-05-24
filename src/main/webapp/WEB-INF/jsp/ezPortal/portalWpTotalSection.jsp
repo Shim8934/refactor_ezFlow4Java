@@ -927,16 +927,14 @@
 		    }
 			
 		    /** 배현상 근태관리메서드 추가 */
-		    var leaveEarlyFlag = false; // 조퇴가 등록되어있는지 체크
 		    function getAttitudeList() {
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "json",
-		    		async : true,
+		    		async : false,
 		    		url : "/ezAttitude/getAttitudeList.do",
 		    		data : {},
 		    		success : function(result) {
-		    			leaveEarlyFlag = false;
 		    			for (var i = 0; i < result.length; i++) {
 		    				if (result[i].typeId == "A01") {
 		    					$("#inAttiClock").text("출근 : " + result[i].startDate.split(" ")[1]);
@@ -947,8 +945,6 @@
 		    				} else if (result[i].typeId == "A03") {
 		    					$("#outAttiClock").text("퇴근 : " + result[i].startDate.split(" ")[1]);
 		    					$("#outAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
-		    				} else if (result[i].typeId == "A08") {
-		    					leaveEarlyFlag = true;
 		    				}
 		    			}
 		    		}
@@ -964,6 +960,8 @@
 		    		if (returnValue == 0) {
 		    			alert("출근 후 퇴근이 가능합니다.");
 			    		return;
+		    		} else {
+		    			getAttitudeList();
 		    		}
 		    	}
 		    	
@@ -987,9 +985,6 @@
 		    		},
 		    		success : function(result) {
 		    			getAttitudeList();
-		    			if (result == 'dupl') {
-		    				alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
-		    			}
 		    		},
 		    		complete : function() {
 		    			afterAlertDate = new Date();
