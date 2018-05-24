@@ -1139,23 +1139,19 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				//copy files
 				
 				//Check upload conditions
-				FolderVO folder = getFolderByFolderId(folderId, offset, userInfo.getTenantId());
+				double totalUploadSize      = getTotalFilesSize(fileList, tenantId);
+				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
 				
-				if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userId)) {
-					double totalUploadSize      = getTotalFilesSize(fileList, tenantId);
-					UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
-					
-					long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-					long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
-					
-					if (totalUploadSize > (totalCapa - totalUsed)) {
-						logger.debug("Not enough storage to move/copy these files!");
-						result.put("status", "error");
-						result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
-						result.put("code", 1);
-						result.put("data", "");
-						return result;
-					}
+				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
+				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+				
+				if (totalUploadSize > (totalCapa - totalUsed)) {
+					logger.debug("Not enough storage to move/copy these files!");
+					result.put("status", "error");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
+					result.put("code", 1);
+					result.put("data", "");
+					return result;
 				}
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
