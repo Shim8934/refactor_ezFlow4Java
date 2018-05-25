@@ -2332,6 +2332,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.deleteAttachFileInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("attachRemove ended");

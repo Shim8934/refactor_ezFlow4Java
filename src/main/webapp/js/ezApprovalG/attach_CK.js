@@ -387,7 +387,8 @@ function AttachRemoveAll() {
 		async : false,
 		url : "/ezApprovalG/attachRemove.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
