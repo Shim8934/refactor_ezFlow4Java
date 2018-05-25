@@ -49,7 +49,7 @@
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
 	    	var adminCompany = "${adminCompany}";
-	    	var listSize = 18;
+	    	var listSize = 15;
 	    	
 	    	$(function(){
 	    		$('#searchStartTime').timepicker({ 'timeFormat': 'H:i' });

@@ -49,7 +49,7 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
-	    	var listSize = 18;
+	    	var listSize = 15;
 	    	
 	    	$(function(){
 	    		$("#Sdatepicker").val("${searchStartDate}");
