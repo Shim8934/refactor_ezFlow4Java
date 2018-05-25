@@ -121,6 +121,8 @@
 			});
 	        
 	        $(function() {
+	        	windowResize();
+	        	
 	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
 	            
 	            if (document.getElementById("ListDept").length == 0) {
@@ -140,7 +142,15 @@
 				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 				
 	        	$("#searchPopup").css("left", popupX);
+	        	
+	            windowResize();
 	        });
+	        
+	        function windowResize() {
+	        	var height = document.documentElement.clientHeight - 130 - document.getElementById("mainmenu").clientHeight;
+	        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
@@ -786,7 +796,7 @@
 		  	</div>
 	    </div>
 	    
-	    <div id="contentlist" style="width:100%; height:620px;">
+	    <div id="contentlist" style="width:100%; overflow:auto; height:620px;">
 			<table class="mainlist" style="width:100%;">
 				<thead></thead>
 				<tbody></tbody>
