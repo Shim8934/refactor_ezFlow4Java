@@ -35,7 +35,7 @@
 			    } else if (document.loginForm.password.value =="") {
 			        alert("<spring:message code='main.jjs01'/>");
 			        return;
-			    } else {		    	
+			    } else {
 			    	var frm = document.loginForm;
 			    	var rsa = new RSAKey();
 					rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
@@ -95,10 +95,13 @@
 			    // 로그인 페이지가 로드된 프레임이 Top 프레임이 아니면 Top 프레임으로 로드시킨다.
                 if (top != self) {
                     top.location.href = self.location.href;
-                }			    		                 
+                }
 			    
-			    var message = document.loginForm.message.value;	    
-			    if (message != "") {
+			    var message = document.loginForm.message.value;
+			    if ("${isWrongPass}" == "Y") {
+			    	$("#exDiv2").modal();
+			    }
+			    else if (message != "") {
 			        alert(message);
 			    }
 			    getid(document.loginForm);
@@ -107,7 +110,7 @@
 					$("#exDiv").modal();
 					$("#exDiv").show(function() {						
 						$("#txtOldPassword").focus();
-					});													
+					});
 			    }				
 			}
 			
@@ -253,5 +256,20 @@
 			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>			
 		</div>
+		
+		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
+		<div id="exDiv2" style="display:none;max-width:580px;height:230px;padding-top:20px;">
+			<div style="height:150px;border-top:1px solid rgb(0, 72, 149);border-bottom:1px solid rgb(0, 72, 149);">
+				<div style="float:left;margin-top:50px;">
+					<img src="/images/warning.png" width="52px" height="52px"/>
+				</div>
+				<div style="float:right;color:rgb(0, 72, 149);width:440px;padding-top:18px;padding-bottom:10px;font-size:12px;white-space: pre-wrap;">▒ ${message}
+				</div>
+			</div>		
+			<div class="btnposition" style="margin:10px;">
+			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t4' /></span></a>
+			</div>	
+		</div>
+		
 	</body>
 </html>
