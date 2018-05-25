@@ -53,9 +53,10 @@
 	});
 	
 	function goAddBoard() {
+		var feature = GetOpenPosition(790, 800);
 		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&groupId=" + groupId 
 										 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=new", 
-					"", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
+					"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
 	}
 	
 	function getBoardList() {

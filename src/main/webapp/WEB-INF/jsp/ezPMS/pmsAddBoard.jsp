@@ -48,17 +48,17 @@
 		var writeOverview = $("#writeOverview").val().trim();
 		
 		// 긴급 게시 / 공지 사항 여부
-		if($("#emergency").is(":checked") == true) {
-			if($("#notice").is(":checked") == true) {
-				writeType = 1;
+		if($("#notice").is(":checked") == true) {
+			if($("#emergency").is(":checked") == true) {
+				writeType = 1; // 공지사항 O, 긴급게시 O
 			} else {
-				writeType = 2;
+				writeType = 2; // 공지사항 O, 긴급게시 X
 			}
 		} else {
-			if($("#notice").is(":checked") == true) {
-				writeType = 3;
+			if($("#emergency").is(":checked") == true) {
+				writeType = 3; // 공지사항 X, 긴급게시 O
 			} else {
-				writeType = 4;
+				writeType = 4; // 공지사항 X, 긴급게시 X
 			}
 		}
 		

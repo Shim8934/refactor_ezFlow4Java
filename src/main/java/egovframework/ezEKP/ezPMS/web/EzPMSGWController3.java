@@ -93,9 +93,10 @@ public class EzPMSGWController3 {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-	
-			Long groupId = -1L;
-			Long taskId = -1L;
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
+			Long groupId = 0L;
+			Long taskId = 0L;
 			if(request.getParameter("groupId")!=null && !request.getParameter("groupId").equals("")) {
 				groupId = Long.parseLong(request.getParameter("groupId"));	
 			} 
@@ -106,7 +107,7 @@ public class EzPMSGWController3 {
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int limit = Integer.parseInt(request.getParameter("limit"));
 			
-			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, startRow, limit);
+			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, startRow, limit, lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -131,8 +132,8 @@ public class EzPMSGWController3 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			Long groupId = -1L;
-			Long taskId = -1L;
+			Long groupId = 0L;
+			Long taskId = 0L;
 			if(request.getParameter("groupId")!=null && !request.getParameter("groupId").equals("")) {
 				groupId = Long.parseLong(request.getParameter("groupId"));	
 			} 
@@ -142,7 +143,7 @@ public class EzPMSGWController3 {
 			
 			int totalCount = ezPMSService.getBoardListCount(info.getTenantId(), Long.parseLong(projectId), groupId, taskId);
 			
-			result.put("data", totalCount + "");
+			result.put("data", totalCount + "");	// JSON으로 넘기면 숫자가 Long으로 바뀌는데 Long에서 int로 cast할 때의 오류를 피하기 위해서 String으로 바꾼 후에 파싱한다
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -353,10 +354,12 @@ public class EzPMSGWController3 {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			
 			param.put("itemId", itemId);
+			param.put("lang", lang);
 			
 			Enumeration<String> parameterNames = request.getParameterNames();
 			

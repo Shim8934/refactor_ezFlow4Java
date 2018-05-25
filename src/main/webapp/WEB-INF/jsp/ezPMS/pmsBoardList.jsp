@@ -50,7 +50,9 @@
 	function goBoardDetail(elem) {
 		var itemId = $(elem).attr("data-itemId");
 		$(elem).removeClass("noView");
-		window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
+		var feature = GetOpenPosition(790, 800);
+		window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", 
+					"width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
 	}
 </script>
 	
@@ -65,6 +67,10 @@
 	
 	tr.noView td {
 		font-weight: bold;
+	}
+	
+	tr.emergency td {
+		color: red;
 	}
 </style>
 <div id="divList" style="width: 100%;">
@@ -94,15 +100,30 @@
 		<tbody>
 			<c:forEach items="${data}" var="projectBoardVO">
 				<c:choose>
-					<c:when test="${projectBoardVO.readOrNot eq true}">
-						<tr data-itemId="${projectBoardVO.itemId}">
+					<c:when test="${projectBoardVO.readOrNot eq false && (projectBoardVO.writeType == 1 || projectBoardVO.writeType == 3)}">
+						<tr class="noView emergency" data-itemId="${projectBoardVO.itemId}">
+					</c:when>
+					<c:when test="${projectBoardVO.readOrNot eq true && (projectBoardVO.writeType == 1 || projectBoardVO.writeType == 3)}">
+						<tr class="emergency" data-itemId="${projectBoardVO.itemId}">
+					</c:when>
+					<c:when test="${projectBoardVO.readOrNot eq false && (projectBoardVO.writeType != 1 && projectBoardVO.writeType != 3)}">
+						<tr class="noView" data-itemId="${projectBoardVO.itemId}">
 					</c:when>
 					<c:otherwise>
-						<tr class="noView" data-itemId="${projectBoardVO.itemId}">
+						<tr data-itemId="${projectBoardVO.itemId}">
 					</c:otherwise>
 				</c:choose>
 					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
-					<td>${projectBoardVO.itemId}</td>
+					<td>
+						<c:choose>
+							<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
+								<img src="/images/i_notice.gif" alt="NOTICE" />
+							</c:when>
+							<c:otherwise>
+								${projectBoardVO.itemId}
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.fileCNT eq null}">
 							<td></td>
@@ -122,7 +143,7 @@
 					</c:choose>
 					<td>${projectBoardVO.writerDeptName}</td>
 					<td>${projectBoardVO.writerName}</td>
-					<td>${fn:substring(projectBoardVO.writeDate, 0, 16)}</td>
+					<td>${fn:substring(projectBoardVO.writeDate, 0, 19)}</td>
 					<td>${projectBoardVO.readCount}</td>
 				</tr>
 			</c:forEach>

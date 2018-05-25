@@ -59,6 +59,10 @@
 	});
 
 	function setContentList() {
+		if (searchByStatus == "") {
+			searchByStatus = "A";
+		}
+		
 		var data = {
 			//기본 setting
 			projectId : projectId,

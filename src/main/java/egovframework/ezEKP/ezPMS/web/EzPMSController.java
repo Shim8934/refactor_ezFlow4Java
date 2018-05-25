@@ -567,7 +567,6 @@ public class EzPMSController {
 		JSONObject json = new JSONObject();
 		if (!kanbanOrder.equals("") || kanbanOrder != null) {
 			String[] kanbanStatus = kanbanOrder.split(",");
-			System.out.println(kanbanStatus);
 			for (int i = 0; i < kanbanStatus.length; i++) {
 				if (kanbanStatus[i].contains("M")) {
 					kanbanStatus[i] = kanbanStatus[i].substring(kanbanStatus[i].length()-1);
@@ -601,7 +600,6 @@ public class EzPMSController {
 						}
 					}
 				}  else {
-					System.out.println(param.get("status"));
 					JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
 					String countStatus = countResult.get("status").toString();
 					

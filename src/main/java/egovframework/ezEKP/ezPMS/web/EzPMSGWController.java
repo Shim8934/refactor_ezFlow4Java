@@ -174,9 +174,14 @@ public class EzPMSGWController {
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
 			
 			project.put("projectId", projectId);
-			project.put("groupName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
 			project.put("memberCount", projectMemberList.size());
+			
+			// 이슈리스트 그룹 생성
+			project.put("groupName", "이슈 리스트");
+			ezPMSService.addGroup(project);
+			
 			//그룹 생성
+			project.put("groupName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
 			ezPMSService.addGroup(project);
 			
 			//프로젝트 멤버 테이블에 추가
