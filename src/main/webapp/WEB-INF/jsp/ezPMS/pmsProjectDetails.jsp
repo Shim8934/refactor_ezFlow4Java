@@ -44,7 +44,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//업무리스트로 가는 부분 url 수정하기
-		$("#FBoard_ifrm").attr("src", "/ezPMS/taskListMain.do?projectId=" + projectId);
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskListMain.do?projectId=" + projectId + "&onlyGroup=true");
 	});
 	
 	$("#1tab3").click(function(){

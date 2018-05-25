@@ -38,9 +38,9 @@ $(document).ready(function(){
 		CurrentHeight = $(window).height()-100;
 		$("#taskTree").css("height", CurrentHeight + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 50) + "px");
-		$("#divList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 120) + "px");
+		$("#contentList").css("height", (CurrentHeight - 100) + "px");
+		$("#divList").css("height", (CurrentHeight - 160) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 150) + "px");
 	});
 
 });
@@ -52,9 +52,9 @@ $(function(){
 	$("MailListRayer").css("height", CurrentHeight + "px");
 	$("#taskTree").css("height", CurrentHeight + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
-	$("#contentList").css("height", (CurrentHeight - 50) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 120) + "px");
-	$("#divList").css("height", (CurrentHeight - 100) + "px");
+	$("#contentList").css("height", (CurrentHeight - 100) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
+	$("#divList").css("height", (CurrentHeight - 150) + "px");
 	
 	$("#searchStatus").css("display", "none");
 	
@@ -208,21 +208,19 @@ function selectedTR(elem){
 }
 
 #taskName {
-	float : left;
-	display : inline-block;
 	margin-top : 10px;
 	margin-left : 10px;
 }
 
 #iconLine {
-	clear : both;
-	height : 35px;
+	margin-left: 10px;
+	margin-top: 5px;
+	height: 72px;
 }
 
 #contentList {
 	width : 98%;
 	margin-left : 1%;
-	margin-top : 15px;
 }
 
 #MailListRayer tr:not (.selectTR ):hover {

@@ -29,14 +29,14 @@ function getProjectTaskTree(containerId, data, location) {
 		
 		firstNodeId = firstNodeId.substring(0, firstNodeId.indexOf("_"));
 		
-		if (location == "taskLog") {			
+		if (location == "taskLog" || location == "taskList") {
 			groupId = firstNodeId;
 			setContentList();
 		}
 	
 	})
 	.on("select_node.jstree", function(e, data) {
-		if (location == "taskLog") {
+		if (location == "taskLog" || location == "taskList") {
 			if (data.node.id.indexOf("t") != -1) {
 				taskId = data.node.id.substring(1);
 				setContentList();

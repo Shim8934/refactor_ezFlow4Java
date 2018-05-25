@@ -9,6 +9,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.annotations.Param;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -851,8 +852,16 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String status = request.getParameter("status");
 			String isMyTask = request.getParameter("isMyTask");
+			long groupId = 0;
 			
-			int taskListCount = ezPMSService.getTaskListCount(status, isMyTask, projectId, info.getTenantId(), userId);
+			System.out.println(status);
+			System.out.println(isMyTask);
+			
+			if (request.getParameter("groupId") != null) {
+				 groupId = Long.parseLong(request.getParameter("groupId")); 
+			 }
+			
+			int taskListCount = ezPMSService.getTaskListCount(status, isMyTask, projectId, info.getTenantId(), userId, groupId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

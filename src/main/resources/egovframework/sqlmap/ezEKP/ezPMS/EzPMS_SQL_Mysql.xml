@@ -130,6 +130,7 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="26"/>
     	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
     	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
+    	<result property="groupName"						column="GROUP_NAME"					columnIndex="29"/>
     </resultMap>
     
     <resultMap id="projectTaskMemberVO" class="ProjectTaskMemberVO">
@@ -1000,7 +1001,8 @@
 				A.WORKINGDAY,
 				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
 				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
-				A.DEL_STATUS
+				A.DEL_STATUS,
+				D.GROUP_NAME
 			FROM 
 				tbl_pms_task A
 			JOIN 
@@ -1024,6 +1026,10 @@
 			AND
 				C.USER_ID = #userId#
 		]]>
+		<isEqual property="isMyTask" compareValue="M">
+			AND
+            	E.USER_ID = #userId#
+        </isEqual>
 		<isNotNull property="status">
 			<isNotEqual property="status" compareValue="A">
 				AND
@@ -1060,6 +1066,17 @@
 		<isNotNull property="planEndDate">
 			AND
 				A.PLAN_END_DATE LIKE CONCAT('%',#planEndDate#,'%')
+		</isNotNull>
+		<isNotNull property="groupId">
+			<isNotEqual property="groupId" compareValue="0">
+			AND 
+				(A.GROUP_ID = #groupId# 
+				OR D.UPPER_GROUP_ID = #groupId#
+				OR D.UPPER_GROUP_ID = (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
+			</isNotEqual>
 		</isNotNull>
 			ORDER BY 
 				PLAN_END_DATE DESC
@@ -1587,7 +1604,8 @@
 			A.WORKINGDAY,
 			IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
 			IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
-			A.DEL_STATUS
+			A.DEL_STATUS,
+			D.GROUP_NAME
 			FROM 
 				tbl_pms_task A
 			JOIN 
@@ -1656,19 +1674,62 @@
 			ON
 				A.TASK_ID = E.TASK_ID
 			WHERE 
-		]]>
-		<isEqual property="isMyTask" compareValue="M">
-				E.USER_ID = #userId#
-			AND  
-		</isEqual>
 				A.PROJECT_ID = #projectId#
 			AND 
 				A.TENANT_ID = #tenantId#
-		
+			AND
+				C.USER_ID = #userId#
+		]]>
+		<isEqual property="isMyTask" compareValue="M">
+			AND
+           	 E.USER_ID = #userId#
+        </isEqual>
 		<isNotNull property="status">
 			<isNotEqual property="status" compareValue="A">
 				AND
-				A.STATUS = #status#
+					A.STATUS = #status#
+			</isNotEqual>
+			</isNotNull>
+		<isNotNull property="taskName">
+			AND
+				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
+		</isNotNull>
+		<isNotNull property="upperGroupName">
+			AND
+				D.GROUP_NAME IN
+					(SELECT 
+						PGA.GROUP_NAME 
+                     FROM 
+                     	TBL_PMS_GROUP PGA 
+                     JOIN 
+                     	TBL_PMS_GROUP PGB 
+                     ON 
+                     	PGA.UPPER_GROUP_ID = PGB.GROUP_ID
+                     WHERE 
+                     	PGB.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
+                    )
+		</isNotNull>
+		<isNotNull property="headManagerName">
+			AND
+				A.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
+		</isNotNull>
+		<isNotNull property="planStartDate">
+			AND
+				A.PLAN_START_DATE LIKE CONCAT('%',#planStartDate#,'%')
+		</isNotNull>
+		<isNotNull property="planEndDate">
+			AND
+				A.PLAN_END_DATE LIKE CONCAT('%',#planEndDate#,'%')
+		</isNotNull>
+		<isNotNull property="groupId">
+			<isNotEqual property="groupId" compareValue="0">
+			AND 
+				(A.GROUP_ID = #groupId# 
+				OR D.UPPER_GROUP_ID = #groupId#
+				OR D.UPPER_GROUP_ID = (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
 			</isNotEqual>
 		</isNotNull>
 	</select>
@@ -1823,7 +1884,7 @@
 			REAL_START_DATE, 
 			REAL_END_DATE,
 			HEAD_MANAGER_ID, 
-			HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NANE, 
+			HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME, 
 			HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME, 
 			STATUS, 
 			PROGRESS, 
