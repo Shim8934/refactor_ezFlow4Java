@@ -367,7 +367,6 @@
 			    	alert("오류발생");
 			    },
 			    success : function(result){
-			    	alert(result);
 			    	if (result == "0") {
 			    		result = "";
 			    	} else {
@@ -376,7 +375,6 @@
 			    	try {
 						document.getElementsByClassName("attCount")[0].innerText = result;
 						document.getElementsByClassName("attCount")[1].innerText = result;
-			    		alert(result);
 					} catch (e) {	}
 			    }
 	    	})
