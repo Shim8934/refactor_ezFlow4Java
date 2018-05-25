@@ -904,13 +904,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		//첨부파일 정보 추출
 		        		if (_cmd.equals("FORWARD")) {
 							if (attachedFileList.size() > 0) {
+								List<Map<String, String>> attachedFileListInReply = new ArrayList<Map<String, String>>();	
+								
+								// replyMessage의 첨부 파일 구성이 orgMessage와 다르게 될 수 있기 때문에 다시 첨부파일 정보를 구하도록 한다.
+								ezEmailUtil.getBodyInfo(replyMessage, folderPath, uid, -1, attachedFileListInReply, false, false, locale, null, null);					
+								
 				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
 
-				                multipartFirstIdx = attachedFileList.get(0).get("index");
+				                multipartFirstIdx = attachedFileListInReply.get(0).get("index");
 				                logger.debug("FORWARD multipartFirstIdx=" + multipartFirstIdx);
 				                
-								for (int i = 0; i < attachedFileList.size(); i++) {
-									Map<String, String> fileInfo = attachedFileList.get(i);
+								for (int i = 0; i < attachedFileListInReply.size(); i++) {
+									Map<String, String> fileInfo = attachedFileListInReply.get(i);
 									
 					                attachXmlList.append("<NODE>");
 					                //TODO : <PUPLOADSN>" + (i + 1) + "</PUPLOADSN> 으로 수정(인덱스로 파일 지울 때)
