@@ -459,8 +459,10 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-		
-			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Long.parseLong(projectId), request.getParameter("onlyGroup"));
+			String location = request.getParameter("location");
+			int tenantId = info.getTenantId();
+			
+			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Long.parseLong(projectId), request.getParameter("onlyGroup"), location, tenantId);
 			
 			LOGGER.debug(list.get(0).getText());
 			

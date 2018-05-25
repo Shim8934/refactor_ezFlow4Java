@@ -90,7 +90,7 @@ public interface EzPMSService {
 	
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String userIdType);
 	
-	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup);
+	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup, String location, int tenantId);
 
 	public List<ProjectUserVO> getDeptUserList(int tenantId, String key, String value, String lang) throws Exception;
 

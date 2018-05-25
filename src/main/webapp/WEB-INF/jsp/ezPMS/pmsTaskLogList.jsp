@@ -24,8 +24,10 @@ $(function() {
 	if (contentTitle == "") {
 		var treeItemId = $("li[role=treeitem]").attr("id");
 		contentTitle = $("#" + treeItemId + "_anchor").text();
+		contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
 		setContentTitle(contentTitle, "${taskLogListCount}");
 	} else {
+		contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
 		setContentTitle(contentTitle, "${taskLogListCount}");
 	}
 });

@@ -54,12 +54,12 @@ $(function() {
 	$(".kanban").css("height", CurrentHeight - 14 + "px");
 	$("#kanbanArea").css("height", CurrentHeight + "px");
 	
-	$("#kanbanArea").sortable({
+	$("#kanbanDraw").sortable({
 		update : function(event, ui) {
 			updateOrderStatus();
 		}
 	});
-	$("#kanbanArea").disableSelection();
+	$("#kanbanDraw").disableSelection();
 });
 
 function initProgressBar() {
@@ -197,7 +197,6 @@ function initKanbanList() {
 			if (kanbanOrderArr[2] != "B") {
 				setTasksIntoKanban(result.kanbanTask3, "kanban3", result.kanbanTaskCount3, "new", false);
 			} else {
-				console.log(result.kanbanTask3);
 				setTasksIntoKanban(result.kanbanTask3, "kanban3", result.kanbanTaskCount3, "new", true);
 			}
 			
@@ -324,8 +323,6 @@ function getProjectMember(roleId) {
 }
 
 function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoard) {
-	console.log(isBoard);
-	console.log(taskList.length);
 	if (taskList != null) {
 		var kanbanHTML = "";
 		for (var i = 0; i < taskList.length; i++) {
