@@ -151,6 +151,7 @@ public class EzPMSController3 {
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("onlyGroup", onlyGroup);
+		param.put("location", "board");
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -169,6 +170,7 @@ public class EzPMSController3 {
 	public String getBoardList(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) throws Exception {	
 		LOGGER.debug("ezPMS getBoardList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		int totalCount = 0;
 		int listCnt = 10;
 		int countPage = 10;
@@ -187,7 +189,7 @@ public class EzPMSController3 {
 		
 		param.put("startRow", paging.getStartCount());
 		param.put("limit", listCnt);
-	
+		
 		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		status = resultBody.get("status").toString();
 		

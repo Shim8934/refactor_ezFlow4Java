@@ -1313,9 +1313,9 @@
 	<select id="EzPMSDAO.getBoardList" parameterClass="map" resultMap="projectBoardVOForList">
 		<![CDATA[
 			SELECT 
-				B.item_id, 				B.title,			B.write_overview,		B.write_type,				B.write_date,			
-				B.write_update_date,	B.read_count,		B.writer_name,			B.writer_deptname,			T.task_name,  		
-				G.group_name,			F.file_cnt,			B.write_content
+				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
+				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
+				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		F.file_cnt,								B.write_content
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
@@ -1326,21 +1326,21 @@
 					   GROUP BY item_id) F
 			ON B.item_id = F.item_id
 		]]>	
-		<isEqual property="groupId" compareValue="-1">	
+		<isEqual property="groupId" compareValue="0">	
 			WHERE G.project_id = #projectId#
 		</isEqual>
-		<isNotEqual property="groupId" compareValue="-1">
-			<isEqual property="taskId" compareValue="-1">
+		<isNotEqual property="groupId" compareValue="0">
+			<isEqual property="taskId" compareValue="0">
 				WHERE (B.group_id = #groupId# 
 				OR G.upper_group_id = #groupId#
 				OR G.upper_group_id = (select group_id from tbl_pms_group where upper_group_id = #groupId#))
 			</isEqual>
-			<isNotEqual property="taskId" compareValue="-1">
+			<isNotEqual property="taskId" compareValue="0">
 				WHERE B.task_id = #taskId#
 			</isNotEqual>
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
-			ORDER BY B.item_id DESC
+			ORDER BY B.write_type ASC, B.item_id DESC
 			LIMIT #startRow#, #limit#
 	</select>
 	
@@ -1351,16 +1351,16 @@
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
 		]]>
-		<isEqual property="groupId" compareValue="-1">	
+		<isEqual property="groupId" compareValue="0">	
 			WHERE G.project_id = #projectId#
 		</isEqual>
-		<isNotEqual property="groupId" compareValue="-1">
-			<isEqual property="taskId" compareValue="-1">
+		<isNotEqual property="groupId" compareValue="0">
+			<isEqual property="taskId" compareValue="0">
 				WHERE (B.group_id = #groupId# 
 				OR G.upper_group_id = #groupId#
 				OR G.upper_group_id = (select group_id from tbl_pms_group where upper_group_id = #groupId#))
 			</isEqual>
-			<isNotEqual property="taskId" compareValue="-1">
+			<isNotEqual property="taskId" compareValue="0">
 				WHERE B.task_id = #taskId#
 			</isNotEqual>
 		</isNotEqual>
@@ -1371,8 +1371,9 @@
 		<![CDATA[
 			SELECT 
 				B.writer_id, 			B.title,				B.write_overview,		B.write_type,		B.write_content,		
-				B.write_date,			B.write_update_date,	B.read_count,			B.writer_name,		B.writer_deptname,		
-				B.writer_position,		T.task_name,  			G.group_name,			M.mobile
+				B.write_date,			B.write_update_date,	B.read_count,			B.writer_name$lang$ AS writer_name,		
+				B.writer_deptname$lang$ AS writer_deptname,		B.writer_position$lang$ AS writer_position,		
+				T.task_name,  			G.group_name,			M.mobile
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
