@@ -169,12 +169,12 @@
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
 				
-
-				if (receiverList.indexOf(userMyName) == -1) {
+				// 18-05-24 김민성 - 작성자 이름이 A, 회람자 이름이 A1 과 같은 유사한 이름의 경우 작성된회람판에서 안보이는 문제
+				//if (receiverList.indexOf(userMyName) == -1) {
 					receiverList += ", " + userMyName;
 					receiverList2 += ", " + userMyName2;
 					receiverID += ", " + userMyID;
-				}
+				//}
 
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
@@ -398,8 +398,8 @@
 	       					<td style="width:200px;">
 								<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option1" name="chkList" checked/><spring:message code="ezCircular.t119"/>
-		                				<input type="checkbox" id="option2" name="chkList"/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList" checked><spring:message code='ezCircular.t119'/>
+		                				<input type="checkbox" id="option2" name="chkList"><spring:message code="ezCircular.t120"/>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
 		                				<input type="checkbox" id="option1" name="chkList"/><spring:message code="ezCircular.t119"/>

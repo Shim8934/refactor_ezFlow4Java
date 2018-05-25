@@ -470,6 +470,8 @@
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  			</script>
             	    
+            	    <!-- 18-05-24 김민성 - 회람판 > 회람 본문 작성일 단어 등록일로 수정 -->
+            	    
 					<table class="content" style="width:100%;">
 	                    <tr>
     	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
@@ -478,7 +480,7 @@
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
 	       					<td style="padding-left: 4px;" ><div id="writer"  onclick="OpenUserInfo()" style="vertical-align: middle; cursor: pointer;"> ${result.memberName }</div></td>
-							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t33' /></th> 
+							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezBoard.t5007' /></th> 
  							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
 						</tr>
                     	<tr>
@@ -606,7 +608,8 @@
 	        	</td>
         	</tr>
 		</table>
-
+		
+		<!-- 18-05-24 김민성 - 회람 인쇄 시 작성일 > 등록일로 수정 -->
 		<table id="printScreen" style="display: none;">
 			<tr style="text-align:center">
 				<td style="vertical-align:top">
@@ -624,7 +627,7 @@
 	       					<td style="padding-left: 4px;">								
 	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
-							<th style="padding-left:10px"><spring:message code='ezCircular.t33' /></th> 
+							<th style="padding-left:10px"><spring:message code='ezBoard.t5007' /></th> 
  							<td style="padding-left:6px">
  								<div id="printStatus">${result.regDate }</div>
  							</td> 
