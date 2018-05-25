@@ -45,7 +45,7 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var selectedDeptID = "${selectedDeptID}";
-	    	var listSize = 19;
+	    	var listSize = 15;
 
 	        $(function () {
 	            //datepicker

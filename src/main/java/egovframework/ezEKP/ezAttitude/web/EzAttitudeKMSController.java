@@ -195,9 +195,9 @@ public class EzAttitudeKMSController {
 		int totalAtt = 0;
 		int currentPage = 1;
 		int totalPages = 1;
-		int pageSize = 19;
+		int pageSize = 15;
 		int startPoint = 0;
-		int endPoint = 19;
+		int endPoint = 15;
 		String type = "all";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -238,9 +238,9 @@ public class EzAttitudeKMSController {
 		int totalAtt = 0;
 		int currentPage = 1;
 		int totalPages = 1;
-		int pageSize = 19;
+		int pageSize = 15;
 		int startPoint = 0;
-		int endPoint = 19;
+		int endPoint = 15;
 		String adminFlag = "true";
 		String url = "";
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -371,9 +371,9 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("getAttModAppList started");
 		LOGGER.debug("adminFlag = " + adminFlag + " || checkAdmin = " + checkAdmin);
 		int currentPage = 1;
-		int pageSize = 19;
+		int pageSize = 15;
 		int startPoint = 0;
-		int endPoint = 19;
+		int endPoint = 15;
 		int totalPages = 1;
 		int totalAtt = 0;
 		String isAllDept = "";
