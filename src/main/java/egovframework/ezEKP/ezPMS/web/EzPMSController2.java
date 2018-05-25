@@ -361,9 +361,122 @@ public class EzPMSController2 {
 			model.addAttribute("taskDetails", taskDetails);
 		}
 		
+		param.put("userIdType", request.getParameter("userIdType"));
+		JSONObject resultMS = commonUtil.getJsonFromRestApi("/rest/ezPMS/users/"+ userInfo.getId() +"/setting", param, request, "get", null);
+		status = resultMS.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject mainSetting = (JSONObject) resultMS.get("data");
+			model.addAttribute("mainSetting", mainSetting);
+		}
+		
 		LOGGER.debug("ezPMS getTaskDetails ended");
 		
 		return "/ezPMS/pmsTaskDetails";
+	}
+	
+	/**
+	 * 업무 데이터 상세 조회 (업무정보 탭)
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/getTaskDetailsTab.do")
+	public String getTaskDetailsTab(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS getTaskDetailsTab started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String taskId = request.getParameter("taskId");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject taskDetails = (JSONObject) resultBody.get("data");
+			model.addAttribute("taskDetails", taskDetails);
+		}
+		
+		LOGGER.debug("ezPMS getTaskDetailsTab ended");
+		
+		return "/ezPMS/pmsTaskInfoTab";
+	}
+	
+	/**
+	 * 업무 정보 수정 페이지 호출
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/goUpdateTaskInfo.do")
+	public String goTaskInfo(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS goTaskInfo started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String taskId = request.getParameter("taskId");
+		long projectId = 0;
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject taskDetails = (JSONObject) resultBody.get("data");
+			model.addAttribute("taskDetails", taskDetails);
+			projectId = Long.parseLong(taskDetails.get("projectId").toString());
+		}
+		
+		
+		JSONObject resultBodyWeight = commonUtil.getJsonFromRestApi("/rest/ezPMS/weight/" + projectId, param, request, "get", null);
+		status = resultBodyWeight.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject weightData = (JSONObject) resultBodyWeight.get("data");
+			model.addAttribute("weightData", weightData);
+		}
+		LOGGER.debug("ezPMS goUpdateTaskInfo ended");
+		
+		return "/ezPMS/pmsTaskInfoUpdate";
+	}
+	
+	/**
+	 * 업무 정보 수정
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/updateTaskInfo.do")
+	public String updateTaskInfo(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS updateTaskInfo started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String taskId = request.getParameter("taskId");
+		
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "put", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject taskDetails = (JSONObject) resultBody.get("data");
+			model.addAttribute("taskDetails", taskDetails);
+		}
+		
+		LOGGER.debug("ezPMS updateTaskInfo ended");
+		
+		return "/ezPMS/pmsTaskInfoTab";
 	}
 	
 }

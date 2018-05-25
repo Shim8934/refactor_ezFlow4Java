@@ -204,29 +204,25 @@
 	   				taskId = curTask.id.match(/t(\d+)/)[1];
 	   			}
 	   			else{
+	   				alert("업무를 선택해주세요.");
 	   				return false;
 	   			}
 	   			
+// 	   			makeLayerPopup();
 				var top = ($(window).height() - $(this).outerHeight()) / 2;
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
-   				DivPopUpShow(845, 555, "/ezPMS/getTaskDetails.do?taskId=" + taskId);
+   				DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?taskId=" + taskId + "&userIdType=user");
    				
-// 	   			$.ajax({
-// 					type: "POST",
-// 					url: "/ezPMS/getTaskDetails.do",
-// 					data: {"taskId": taskId},
-// 					dataType: "json",
-// 					success: function(result) {
-// 					},
-// 					error: function (xhr, status, e){
-// 						alert("error");
-// 					},
-// 					complete: function() {
-						
-// 			        }
-// 				});
+	   		}
+	   		
+	   		function makeLayerPopup(){
+	   			var targetFrame = frames.parent.parent.parent.document.getElementById("mainFrame");
+	   			var htmlText = "<div style='width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;' id='mailPanel'>&nbsp;</div>"
+	   							+ "<div class='layerpopup'  style='z-index: 2000; position: absolute;display: none;' id='iFramePanel'>"
+	   							+ "<iframe src='/blank_kr.htm' style='border:none;' id='iFrameLayer'></iframe> </div>";
+	   			$(targetFrame).append(htmlText);
 	   		}
 	   		
 	   		(function(){
@@ -992,7 +988,6 @@
 			  }
 		</script>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
-		</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
