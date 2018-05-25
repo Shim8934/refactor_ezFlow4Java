@@ -1008,7 +1008,7 @@
 						<col style ="width:120px;">
 						<tr>
 							<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-							<th  style="text-align:center;"><spring:message code='ezTask.t156'/></th>
+							<th  style="text-align:center;"><img src="/images/ImgIcon/view-importance.gif"></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
@@ -1020,6 +1020,7 @@
 								<th ></th>
 							</c:if>
 		                    <!-- 2018-05-16 구해안 업무구분과 완료율 간격 조정 -->
+		                    <!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
 		                    <th  style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
 							<th id="_thprogress"  style="text-align:center;padding-right: 12px;"><spring:message code='ezTask.t120' /></th>						
 							<th  style="text-align:center;"><spring:message code='ezTask.t121'/></th>
