@@ -196,8 +196,10 @@
 				    	}
 			            try {
 			            	window.opener.getAttitudeMainList();
+			            	//신청갯수 refresh
+			            	window.opener.parent.frames["left"].leftCount();
 			            } catch (e) { 
-			            	window.opener.att_refresh();
+// 			            	window.opener.att_refresh();
 			            }
 			            window.close();
 				    }
