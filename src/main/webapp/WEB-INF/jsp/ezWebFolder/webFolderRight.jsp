@@ -259,12 +259,12 @@
 				detailName.onclick = function() {
 					nameFileList(this.id);
 				};
-
+				
 				divName.textContent = path[i] ;
+				divName.setAttribute("title", path[i]);
 				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
 				divName.setAttribute("style", "font-size:15px; ");
 				detailName.appendChild(divName);
-				
 				nameTag.appendChild(detailName);
 				
 				if(length == 1) {
@@ -274,9 +274,9 @@
 					//detailName.setAttribute("style", "font-size:15px;");
 					//nameTag.appendChild(detailName);
 					var divSeparator = document.createElement("div");
-					divSeparator.setAttribute("style", "font-size:14px;");
+					divSeparator.setAttribute("class", "separator");
 					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-					detailName.appendChild(divSeparator);
+					nameTag.appendChild(divSeparator);
 				}
 				
 				/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
@@ -290,8 +290,8 @@
 					nameTag.appendChild(detailName); */
 					var divSeparator = document.createElement("div");
 					divSeparator.textContent = " > ";
-					divSeparator.setAttribute("style", "font-size:14px;");
-					detailName.appendChild(divSeparator);
+					divSeparator.setAttribute("class", "separator");
+					nameTag.appendChild(divSeparator);
 				}	
 			}
 		}
