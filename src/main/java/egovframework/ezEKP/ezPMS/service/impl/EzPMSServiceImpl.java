@@ -1253,6 +1253,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				ezPMSDAO.updateBoardReadCount((int) map.get("itemId"));
 			}
 		}
+		boardVO.setFileList(ezPMSDAO.getBoardAttach(map));
+		
 		return boardVO;
 	}
 	

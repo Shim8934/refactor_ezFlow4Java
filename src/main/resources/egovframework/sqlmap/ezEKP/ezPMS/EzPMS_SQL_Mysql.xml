@@ -1301,12 +1301,15 @@
 		]]>
 	</insert>
 	
-	<select id="EzPMSDAO.getProjectAttach" parameterClass="Integer" resultMap="fileVO">
+	<select id="EzPMSDAO.getBoardAttach" parameterClass="map" resultMap="fileVO">
 		<![CDATA[
 			SELECT 
 				file_path, 		file_size, 		file_name
 			FROM tbl_pms_item_attachment
-			WHERE item_id = #itemId#
+			WHERE 
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
 		]]>
 	</select>
 	

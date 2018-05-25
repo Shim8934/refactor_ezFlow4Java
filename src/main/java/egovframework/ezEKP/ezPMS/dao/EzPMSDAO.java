@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.FileVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
@@ -289,15 +290,18 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<ProjectInfoVO> getProgressProject(HashMap<String, Object> map) {
-		// TODO Auto-generated method stub
 		return (List<ProjectInfoVO>) list("EzPMSDAO.getProgressProject", map);
 	}
 
-	public void insertProjectAttach(Map<String, Object> attachMap) {
-		insert("EzPMSDAO.insertProjectAttach", attachMap);
+	public void insertProjectAttach(Map<String, Object> map) {
+		insert("EzPMSDAO.insertProjectAttach", map);
 	}
 	
-	/*public FileVO*/
+	@SuppressWarnings("unchecked")
+	public List<FileVO> getBoardAttach(Map<String, Object> map) {
+		return (List<FileVO>) list("EzPMSDAO.getBoardAttach", map);
+	}
+	
 	public int checkReadBoardOrNot(Map<String, Object> map) {
 		if(select("EzPMSDAO.checkReadBoardOrNot", map) == null) {
 			return -1;

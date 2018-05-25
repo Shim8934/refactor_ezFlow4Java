@@ -85,36 +85,10 @@
 						<th>첨부파일</th>
 						<td>
 							<div id="lstAttachLink" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
-								<c:forEach items="${journal.fileList }" var="file">
+								<c:forEach items="${board.fileList }" var="file">
 									<div style="margin-top: 3px; height: 20px">
-										<c:set var="imagePath" value="/images/file.gif" />
-									
 										<input type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
-										<c:if test="${file.fileType == 'jpg' || file.fileType == 'jpeg' || file.fileType == 'bmp' || file.fileType == 'gif' || file.fileType == 'png' || file.fileType == 'tif' || file.fileType == 'tiff'}">
-											<c:set var="imagePath" value="/images/image.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'doc' || file.fileType == 'docx'}">
-											<c:set var="imagePath" value="/images/doc.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'xls' || file.fileType == 'xlsx'}">
-											<c:set var="imagePath" value="/images/xls.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'ppt' || file.fileType == 'pptx' || file.fileType == 'pps' || file.fileType == 'ppsx'}">
-											<c:set var="imagePath" value="/images/ppt.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'txt'}">
-											<c:set var="imagePath" value="/images/txt.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'zip'}">
-											<c:set var="imagePath" value="/images/zip.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'pdf'}">
-											<c:set var="imagePath" value="/images/pdf.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'ecm'}">
-											<c:set var="imagePath" value="/images/ecm.png" />
-										</c:if>
-										<img src="${imagePath}" />&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}"><c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })</a><br>
+										<img src="/images/${file.fileType}.png"/>&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}"><c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })</a><br>
 									</div>
 								</c:forEach>
 							</div>
