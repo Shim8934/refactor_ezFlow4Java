@@ -259,11 +259,8 @@
 		
 		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
 		<div id="exDiv2" style="display:none;max-width:580px;height:230px;padding-top:20px;">
-			<div style="height:150px;border-top:1px solid rgb(0, 72, 149);border-bottom:1px solid rgb(0, 72, 149);">
-				<div style="float:left;margin-top:50px;">
-					<img src="/images/warning.png" width="52px" height="52px"/>
-				</div>
-				<div style="float:right;color:rgb(0, 72, 149);width:440px;padding-top:18px;padding-bottom:10px;font-size:12px;white-space: pre-wrap;">▒ ${message}
+			<div style="height:150px;border:1px solid rgb(0, 72, 149);margin:5px;border-radius:10px">
+				<div style="color:rgb(0, 72, 149);width:440px;padding:18px 0px 10px 20px;font-size:12px;white-space: pre-wrap;">▒ ${message}
 				</div>
 			</div>		
 			<div class="btnposition" style="margin:10px;">
