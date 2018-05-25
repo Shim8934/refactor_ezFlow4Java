@@ -216,6 +216,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
 				} else {
+					
 					FetchProfile fp = new FetchProfile();
 					
 					fp.add(FetchProfile.Item.ENVELOPE);
@@ -451,6 +452,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						logger.debug("Message's seen flag changed to true.");
 					}
 				}
+				
+				// 수정중
+				if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
+					if (ezEmailUtil.hasSentDateFlag(message)) {
+						String sentDate = ezEmailUtil.getSentDateFlag(message);
+						sentDate = sentDate.split("-")[1];
+						String timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(Long.parseLong(sentDate)));
+						
+						model.addAttribute("timeFormat", timeFormat);
+						logger.debug("sentDate=" + sentDate);
+						logger.debug(timeFormat);
+					}
+				}
+				
 				f.close(true);
 			}
 		} catch (MessagingException e) {
