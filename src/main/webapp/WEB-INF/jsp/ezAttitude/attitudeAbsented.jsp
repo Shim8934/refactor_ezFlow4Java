@@ -52,7 +52,7 @@
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
 	    	var selectedDept = "${selectedDept}";
-	    	var listSize = 19;
+	    	var listSize = 15;
 	    	
 	    	$(function(){
 	    		$("#Sdatepicker").val("${searchStartDate}");

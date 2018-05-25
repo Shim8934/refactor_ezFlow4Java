@@ -549,6 +549,8 @@
 		    	}
 	    	}
 	    	
+	    	var no = ((currentPage - 1) * 15) + 1;
+	    	
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
 	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
@@ -561,14 +563,10 @@
 	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';	
 	    		}
 	    		if (excel == true) {
-	    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(1)-1) * 15) + '</td>';
+	    			htmlStr += '<td>' + no + '</td>';
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';
 	    		} else {
-	    			if (checkAdmin == 'true') {
-		    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
-	    			} else {
-	    				htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 19) + '</td>';
-	    			}
+    				htmlStr += '<td>' + no + '</td>';
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';	
 	    		}
     			
@@ -581,13 +579,13 @@
     			htmlStr += '<td>' + attList[i].changeDate.substring(11,16) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
-    				htmlStr += '<td id="attStauts">신청</td>';	
+    				htmlStr += '<td id="attStauts">신청</td>';
     			}
     			if (attList[i].apprStatus == 1) {
-    				htmlStr += '<td id="attStauts">승인</td>';	
+    				htmlStr += '<td id="attStauts">승인</td>';
     			}
     			if (attList[i].apprStatus == 2) {
-    				htmlStr += '<td id="attStauts">반려</td>';	
+    				htmlStr += '<td id="attStauts">반려</td>';
     			}
     			if (attList[i].apprUserName == null) {
     				htmlStr += '<td>' + "" + '</td>';
@@ -612,6 +610,8 @@
     			} else {
     				$('#AttList tbody').append(htmlStr);
     			}
+    			
+    			no++;
 	    	}
 	    	//신청갯수
 // 	    	leftCount();

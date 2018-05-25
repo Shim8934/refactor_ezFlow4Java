@@ -760,7 +760,7 @@
 					    		
 					    		if (json[i].dateType == 1) {
 					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:54px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    		} else if (json[i].dateType == 2) {
 					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
 						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -916,16 +916,16 @@
 					var tdClassName = "";
 					switch(tdTypeId)
 					{
-						case "A01": case "A03": case "A06": case "A07": //출근, 퇴근, 외출, 조퇴
+						case "A01": case "A03": case "A06": case "A07": case "A04": case "A09": case "A10"://출근, 퇴근, 외출, 조퇴
 							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
 								tdClassName = "attiModLate";
 							} else {
 							    tdClassName = "attiDefault";
 							}
 							break;
-						case "A04": case "A09": case "A10": //외근, 출장, 휴가
-							tdClassName = "attiOutCom";
-							break;
+// 						case "A04": case "A09": case "A10": //외근, 출장, 휴가
+// 							tdClassName = "attiOutCom";
+// 							break;
 						case "A02": case "A08": //지각
 							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
 								tdClassName = "attiModLate";
@@ -1073,25 +1073,28 @@
 		</div>
 		<!-- 근태유형별 팝업창 -->
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:800px;">
-			<div class="popupwrap3">
+			<div class="popupwrap3" style="max-height:496px;">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="table-layout:fixed; margin:10px 0px 0px 1px; display:block;">
+			    <table class="popuplist" style="table-layout:fixed; display:block;">
 				    <thead>
 				    	<tr>
 					    	<c:if test="${deptFlag == 'true'}">
-								<th class="layerHeader" colspan="5" style="width:716px;">
+								<th class="layerHeader" colspan="5" style="width:718px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 								</th>
 							</c:if>
 							<c:if test="${deptFlag != 'true'}">
-								<th class="layerHeader" colspan="3" style="width:716px;">
+								<th class="layerHeader" colspan="3" style="width:718px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 								</th>
 							</c:if>
 						</tr>
 				    </thead>
+				</table>
+				<div style="max-height:466px; overflow-y:auto;">
+				<table class="popuplist" id="addpopup_list" style="table-layout:fixed; display:block;">
 				    <tbody style="max-height:466px; overflow-y:auto; width:738px; display:block;">
 				    	<tr>
 				    		<c:if test="${deptFlag == 'true'}">
@@ -1109,6 +1112,7 @@
 						</tr>
 				    </tbody>
 				</table>
+				</div>
 				<br />
 			</div>
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
