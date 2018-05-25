@@ -280,6 +280,10 @@
 			
 			//저장
 			function save_attitude() {
+				if (!CheckStrLen()) {
+					return;
+				}
+				
 				dateTypeCheck();
 				//checkOutCom();
 				
@@ -335,8 +339,11 @@
 							alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
 						} else if (resultStatus == "success") {
 	            			alert("<spring:message code='ezAttitude.bbhs19'/>");
-			        		window.opener.getAttitudeMainList();
-			        		window.opener.parent.frames["left"].getAttitudeList();
+			        		try {
+				        		window.opener.getAttitudeMainList();
+				        		window.opener.parent.frames["left"].getAttitudeList();
+			        		} catch (e) {	}
+			        		
 			        		window.close();
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.kbm3' />");
@@ -568,6 +575,22 @@
 					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
 					$(this).text(typeName);
 				})
+			}
+			
+			//글자 수 제한
+			function CheckStrLen() {
+				var temp; //들어오는 문자값...
+				var msglen = 500;
+				var value = message.GetEditorContent().replace(/(\s+)|(\s+)/gi, " ");
+
+				len = message.GetEditorContent().replace(/(\s+)|(\s+)/gi, " ").length;
+				
+				if (len > 500) {
+					alert("내용은 500글자까지 작성 가능합니다.");
+					return false;
+				} else {
+					return true;
+				}
 			}
 		</script>
 	</head>
