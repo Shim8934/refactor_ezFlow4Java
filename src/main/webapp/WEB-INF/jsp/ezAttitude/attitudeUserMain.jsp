@@ -916,16 +916,16 @@
 					var tdClassName = "";
 					switch(tdTypeId)
 					{
-						case "A01": case "A03": case "A06": case "A07": //출근, 퇴근, 외출, 조퇴
+						case "A01": case "A03": case "A06": case "A07": case "A04": case "A09": case "A10"://출근, 퇴근, 외출, 조퇴
 							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
 								tdClassName = "attiModLate";
 							} else {
 							    tdClassName = "attiDefault";
 							}
 							break;
-						case "A04": case "A09": case "A10": //외근, 출장, 휴가
-							tdClassName = "attiOutCom";
-							break;
+// 						case "A04": case "A09": case "A10": //외근, 출장, 휴가
+// 							tdClassName = "attiOutCom";
+// 							break;
 						case "A02": case "A08": //지각
 							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
 								tdClassName = "attiModLate";
