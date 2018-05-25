@@ -398,20 +398,23 @@
 <!-- 			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span> -->
 <!-- 		</div> -->
 <!-- 	</article> -->
-	<article class="time">
-		<div id="clock" class="light">
-			<div class="display">
-				<div class="digits" style="padding:18px 5px 0px 5px; width:186px; border:1px solid #ddd; margin:16px; margin-left:10px; border-radius:15px; height:130px"></div>
-			</div>
-		</div>
-		<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
-			<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:14px; text-align: left; margin-left:50px; padding-left:22px;">출근 : 출근 전</p>
-			<p id="outAttiClock" style="margin:5px 0px 30px 8px;  font-size:14px; text-align: left; margin-left:50px; padding-left:22px">퇴근 : 퇴근 전</p>
-			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
-			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px">퇴근</span>
-		</div>
-	</article>
 	<div id="left" style="border-top:1px solid #dedede">
+		<div style="display: block;">
+			<article class="time">
+				<div id="clock" class="light">
+					<div class="display">
+						<div class="digits" style="padding:18px 5px 0px 5px; width:186px; border:1px solid #ddd; margin:16px; margin-left:10px; border-radius:15px; height:130px"></div>
+					</div>
+				</div>
+				<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
+					<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:14px; text-align: left; margin-left:50px; padding-left:22px;">출근 : 출근 전</p>
+					<p id="outAttiClock" style="margin:5px 0px 30px 8px;  font-size:14px; text-align: left; margin-left:50px; padding-left:22px">퇴근 : 퇴근 전</p>
+					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
+					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px">퇴근</span>
+				</div>
+			</article>
+		</div>
+<!-- 	<div id="left" style="border-top:1px solid #dedede"> -->
 		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs5'/></span></h2>
 		<ul></ul>
 		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs6'/></span></h2>
