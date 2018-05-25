@@ -50,7 +50,9 @@
 	function goBoardDetail(elem) {
 		var itemId = $(elem).attr("data-itemId");
 		$(elem).removeClass("noView");
-		window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
+		var feature = GetOpenPosition(790, 800);
+		window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", 
+					"width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
 	}
 </script>
 	
