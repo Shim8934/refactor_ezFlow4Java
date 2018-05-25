@@ -112,7 +112,14 @@
 		<ul>
 			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
 			<c:if test="${attitudeAdminCheck == true}">
-				<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
+				<li>
+					<span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">
+						&nbsp;<spring:message code='ezAttitude.bbhs33'/>
+						<c:if test="${totalAtt != 0 }">
+							<span class="attCount">(${totalAtt})</span>
+						</c:if>
+					</span>
+				</li>
 			</c:if>
 		</ul>
 		<c:if test="${attitudeAdminCheck == true}"> 

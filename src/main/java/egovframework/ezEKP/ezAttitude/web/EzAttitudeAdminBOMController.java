@@ -46,6 +46,7 @@ import com.ibm.icu.util.Calendar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -62,11 +63,15 @@ public class EzAttitudeAdminBOMController {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private EzCommonService ezCommonService;
+	
 	@Resource(name="crypto")
 	private EgovFileScrty egovFileScrty;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
 	
 	/**
 	 * 관리자 근태규율관리 화면 호출 함수
@@ -2042,7 +2047,7 @@ public class EzAttitudeAdminBOMController {
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||deptId =" + deptId);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/manageHistories"; //TODO
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/manageHistories";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2083,6 +2088,62 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
 		
 		return data;
+	}
+	
+	@RequestMapping(value = "/ezAttitude/getTotalAttCount.do")
+	@ResponseBody
+	public String getTotalAttCount(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String isAllDept = "";
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);			
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+		
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("apprUserName", "")
+				.queryParam("writerName", "")
+				.queryParam("writerDeptName", "")
+				.queryParam("startDate", "")
+				.queryParam("endDate", "")
+				.queryParam("sysLang", sysLang)
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", "")
+				.queryParam("type", "0")
+				.queryParam("adminFlag", "true")
+				.queryParam("deptid", "ALL")
+				.queryParam("isAllDept", isAllDept);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		String totalAtt = "";
+		
+		if (status.equals("ok")) {
+			totalAtt = resultBody.get("data").toString();
+		}
+		
+		return totalAtt;
 	}
 	
 	

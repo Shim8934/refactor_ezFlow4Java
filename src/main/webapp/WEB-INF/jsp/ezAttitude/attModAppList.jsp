@@ -613,6 +613,8 @@
     				$('#AttList tbody').append(htmlStr);
     			}
 	    	}
+	    	//신청갯수
+	    	leftCount();
 	    }
 	    
 	    function date_reset() {
@@ -1214,6 +1216,29 @@
 	    function layerHidden() {
 	        $.modal.close();
 	        $('#addpopup_list tbody').children('tr').not(":first").remove();
+	    }    
+	    
+	    //left count
+	    function leftCount() {
+	    	$.ajax({
+				type : 'get',
+			    url : '/ezAttitude/getTotalAttCount.do',
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	alert("오류발생");
+			    },
+			    success : function(result){
+			    	if (result == "0") {
+			    		result = "";
+			    	} else {
+			    		result = "("+ result +")";
+			    	}
+			    	try {
+						parent.frames["left"].document.body.getElementsByClassName("attCount")[0].innerText = result;
+						parent.frames["left"].document.body.getElementsByClassName("attCount")[1].innerText = result;
+					} catch (e) {	}
+			    }
+	    	})
 	    }
 		</script>
 </head>
