@@ -305,4 +305,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 			return (int) select("EzPMSDAO.checkReadBoardOrNot", map);
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getStatusCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (List<Map<String, Object>>) list("EzPMSDAO.getStatusCount", map);
+	}
 }

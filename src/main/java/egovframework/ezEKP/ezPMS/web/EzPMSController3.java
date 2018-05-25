@@ -64,6 +64,7 @@ public class EzPMSController3 {
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("onlyGroup", onlyGroup);
+		param.put("location", "board");
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		

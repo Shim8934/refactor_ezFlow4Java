@@ -7,8 +7,28 @@ public class ProjectTaskTreeVO {
 	private String text;
 	private int sort;
 	private String icon;
+	private long groupId;
+	private long taskId;
+	private long projectId;
 	
-	
+	public long getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
+	}
+	public long getTaskId() {
+		return taskId;
+	}
+	public void setTaskId(long taskId) {
+		this.taskId = taskId;
+	}
+	public long getProjectId() {
+		return projectId;
+	}
+	public void setProjectId(long projectId) {
+		this.projectId = projectId;
+	}
 	public String getId() {
 		return id;
 	}

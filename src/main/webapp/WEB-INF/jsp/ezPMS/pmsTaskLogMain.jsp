@@ -175,7 +175,7 @@ function setContentTitle(taskName, totalCount) {
 
 function selectedTR(elem){
 	var parentElem = $(elem).parent();
-	$("#projectList tr").removeClass("selectTR");
+	$("#tableBody tr").removeClass("selectTR");
 	$(parentElem).addClass("selectTR");
 }
 

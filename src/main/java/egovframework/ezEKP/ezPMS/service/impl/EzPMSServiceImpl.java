@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.annotations.Param;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,20 +108,26 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						projectList.get(i).setStatus("삭제");
 					}
 					
+					map.put("projectId", projectList.get(i).getProjectId());
+					
+					List<Map<String, Object>> statusCount = ezPMSDAO.getStatusCount(map);
 					//각 개수
-					map.put("status", "A");
-					map.put("projectId", project.getProjectId());
-					map.put("isMyTask", "A");
+					int totalTaskCount = 0;
+					int completeTaskCount = 0;
+					int lateTaskCount = 0;
 					
-					int totalTaskCount = ezPMSDAO.getTaskListCount(map);
-					
-					map.remove("status");
-					map.put("status", "C");
-					int completeTaskCount = ezPMSDAO.getTaskListCount(map);
-					
-					map.remove("status");
-					map.put("status", "L");
-					int lateTaskCount = ezPMSDAO.getTaskListCount(map);
+					for (int j = 0; j < statusCount.size(); j++) {
+						String taskStatus = statusCount.get(j).get("status").toString();
+						int taskCount = Integer.parseInt(statusCount.get(j).get("count").toString());
+						
+						if (taskStatus.equals("C")) {
+							completeTaskCount = taskCount;
+						} else if (taskStatus.equals("L")) {
+							lateTaskCount = taskCount;
+						}
+						
+						totalTaskCount += taskCount;
+					}
 					
 					projectList.get(i).setTotalTaskCount(totalTaskCount);
 					projectList.get(i).setCompleteTaskCount(completeTaskCount);
@@ -807,10 +814,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup) {
+	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup, String location, int tenantId) {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("project_Id", projectId);
+		map.put("tenantId", tenantId);
 		
 		List<ProjectTaskTreeVO> list = ezPMSDAO.getProjectGroupTree(map);
 		
@@ -820,6 +828,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			if(vo.getParent().equals("0")) {
 				vo.setParent("#");
 			}
+			
+			if (location.equals("taskLog")) {
+				map.put("taskId", vo.getTaskId());
+				map.put("groupId", vo.getGroupId());
+				map.put("projectId", projectId);
+				
+				int taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
+				vo.setText(vo.getText() + "(" + taskGroupCount + ")");
+				
+				map.remove("taskId");
+				map.remove("groupId");
+				map.remove("projectId");
+			}
 		}
 		
 		if(onlyGroup.equals("false")) {
@@ -828,6 +849,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			for(int i = 0; i < list2.size(); i++) {
 				ProjectTaskTreeVO vo = list2.get(i);
 				vo.setIcon("jstree-file");
+				
+				if (location.equals("taskLog")) {
+					map.put("taskId", vo.getTaskId());
+					map.put("groupId", vo.getGroupId());
+					map.put("projectId", projectId);
+					
+					int taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
+					vo.setText(vo.getText() + "(" + taskGroupCount + ")");
+					
+					map.remove("taskId");
+					map.remove("groupId");
+					map.remove("projectId");
+				}
+				
 				list.add(vo);
 			}
 		}

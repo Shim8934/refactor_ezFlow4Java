@@ -168,9 +168,12 @@
     
     <resultMap id="projectTaskTreeVO" class="ProjectTaskTreeVO">
     	<result property="id"							column="ID"						columnIndex="1"/>
-    	<result property="parent"							column="PARENT"					columnIndex="2"/>
-    	<result property="text"						column="TEXT"					columnIndex="3"/>
+    	<result property="parent"						column="PARENT"					columnIndex="2"/>
+    	<result property="text"							column="TEXT"					columnIndex="3"/>
     	<result property="sort"							column="SORT"					columnIndex="4"/>
+    	<result property="projectId"					column="PROJECT_ID"				columnIndex="5"/>
+    	<result property="groupId"						column="GROUP_ID"				columnIndex="6"/>
+    	<result property="taskId"						column="TASK_ID"				columnIndex="7"/>
     </resultMap>
     
     <resultMap class="ProjectdeptViewVO" id="projectDeptViewMap">
@@ -257,6 +260,11 @@
 		<result property="filePath"					column="file_path"/>
 		<result property="fileSize"					column="file_size"/>
 		<result property="fileName"					column="file_name"/>
+	</resultMap>
+	
+	<resultMap class="java.util.HashMap" id="StatusCount">
+		<result property="status"	column="STATUS"/>
+		<result property="count"	column="COUNT"/>
 	</resultMap>
 	
     <!-- 조직도 만들기 위한 쿼리 -->
@@ -399,7 +407,10 @@
 					GROUP_ID AS id,
 					UPPER_GROUP_ID AS parent,
 					GROUP_NAME AS text,
-					SORT_ORDER AS sort
+					SORT_ORDER AS sort,
+					PROJECT_ID,
+					GROUP_ID,
+					0 AS TASK_ID
 				FROM TBL_PMS_GROUP
 				WHERE
 					PROJECT_ID = #project_Id#
@@ -414,7 +425,10 @@
 					CONCAT('t',TASK_ID) AS id,
 					GROUP_ID AS parent,
 					TASK_NAME AS text,
-					SORT_ORDER AS sort
+					SORT_ORDER AS sort,
+					PROJECT_ID,
+					GROUP_ID,
+					TASK_ID
 				FROM TBL_PMS_TASK
 				WHERE
 					PROJECT_ID = #project_Id#
@@ -1827,5 +1841,25 @@
 			TBL_PMS_PROJECT
 		WHERE
 			STATUS = #status#
+	</select>
+	
+	<select id="EzPMSDAO.getStatusCount" parameterClass="Map" resultMap="StatusCount">
+		select 
+			A.status,
+   			count(*) as count
+		from
+			tbl_pms_task A
+		JOIN
+			tbl_PMS_PROJECT B
+		ON
+			A.PROJECT_ID = B.PROJECT_ID
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		WHERE
+			A.PROJECT_ID = #projectId#
+		AND
+			A.TENANT_ID = #tenantId#
+		GROUP BY 
+			A.STATUS
 	</select>
 </sqlMap>
