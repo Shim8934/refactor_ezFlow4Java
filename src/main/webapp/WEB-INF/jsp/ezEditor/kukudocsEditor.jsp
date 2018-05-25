@@ -55,6 +55,10 @@
 	            } catch (e) {
 	            }
 	        }
+	        
+	        function GetEditorBody() {
+	        	return kukudocsEditor.getContentViewElement()[0];
+	        }
 		</script> 
 	</head>
 	<body>
