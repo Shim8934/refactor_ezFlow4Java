@@ -52,6 +52,8 @@
 	    	var listSize = 15;
 	    	
 	    	$(function(){
+	    		windowResize();
+	    		
 	    		$('#searchStartTime').timepicker({ 'timeFormat': 'H:i' });
         		$('#searchEndTime').timepicker({ 'timeFormat': 'H:i' });
         		
@@ -91,6 +93,16 @@
 	    			}
 	    		});
 	    	});
+	    	
+	    	$(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
+	        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 	    	
 	    	function company_change(){
 	    		pCompanyId = $("select[name=ListCompany]").val();
