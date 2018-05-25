@@ -233,7 +233,8 @@
 		// folderPath 는 숫자 
 		function namePath(folderPath, originalPath) {
 			var orginalPathElmt = document.getElementById("originalPath");
-			var nameTag = document.createElement("span");
+			var nameTag = document.createElement("div");
+			nameTag.setAttribute("class", "mainPath");
 			var originPath;
 			
 			// for statement using
@@ -250,7 +251,8 @@
 			length = path.length - 1;
 			
 			for (var i = 0; i < length; i++) {
-				detailName = document.createElement("span");
+				detailName  = document.createElement("div");
+				var divName = document.createElement("div");
 				
 				detailName.className = "aName";
 				detailName.id = originPath[i];
@@ -258,17 +260,23 @@
 					nameFileList(this.id);
 				};
 
-				detailName.textContent = path[i] ;
+				divName.textContent = path[i] ;
 				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
-				detailName.setAttribute("style", "font-size:15px; ");
+				divName.setAttribute("style", "font-size:15px; ");
+				detailName.appendChild(divName);
+				
 				nameTag.appendChild(detailName);
 				
 				if(length == 1) {
-					detailName = document.createElement("span");
+					/* detailName = document.createElement("div");
 					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
-					detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-					detailName.setAttribute("style", "font-size:15px;");
-					nameTag.appendChild(detailName);
+					//detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+					//detailName.setAttribute("style", "font-size:15px;");
+					//nameTag.appendChild(detailName);
+					var divSeparator = document.createElement("div");
+					divSeparator.setAttribute("style", "font-size:14px;");
+					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+					detailName.appendChild(divSeparator);
 				}
 				
 				/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
@@ -277,9 +285,13 @@
 				imgElmt.src = "/images/webfolder/arrow2.png"; */
 				
 				if (i != length - 1) {
-					detailName = document.createElement("span");
+/* 					detailName = document.createElement("span");
 					detailName.textContent = " > ";
-					nameTag.appendChild(detailName);
+					nameTag.appendChild(detailName); */
+					var divSeparator = document.createElement("div");
+					divSeparator.textContent = " > ";
+					divSeparator.setAttribute("style", "font-size:14px;");
+					detailName.appendChild(divSeparator);
 				}	
 			}
 		}
@@ -586,7 +598,7 @@
     <h1><spring:message code='ezWebFolder.t10' /><span id="mailBoxInfo"></span></h1>
     <div id="pageArea">
 		<div style="height:40px;">
-			<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath" ></span>
+			<div style="font-size: 24px;font-weight: bold;font-weight: bold; padding: 8px 0px;" id ="originalPath" ></div>
 		</div>
 		<div id="mainmenu">
 			<ul>
