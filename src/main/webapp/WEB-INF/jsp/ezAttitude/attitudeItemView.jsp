@@ -87,6 +87,7 @@
 				$("#attiTime").text(" " + showTime);
 			}
 			
+			//삭제
 			function deleteAttitude() {
 				var delFlag = confirm("<spring:message code='ezAttitude.bbhs26'/>");
 				if (delFlag) {
@@ -100,8 +101,10 @@
 						},
 						success : function(resultStatus) {
 		            		if (resultStatus == "success") {
-								window.opener.getAttitudeMainList();
-								window.opener.parent.frames["left"].getAttitudeList();
+		            			try {
+									window.opener.getAttitudeMainList();
+									window.opener.parent.frames["left"].getAttitudeList();
+		            			} catch (e) { }
 								window.close();
 		            		} else {
 		            			alert("<spring:message code='ezAttitude.kbm3' />");
@@ -114,6 +117,7 @@
 				}
 			}
 			
+			//수정
 			function modifyAttitude() {
 				var openWin = null;
 				if (CrossYN()) {
@@ -129,6 +133,7 @@
 				window.close();
 			}
 			
+			//메일로발송
 			function sendMailAttitude() {
 				var pheight = window.screen.availHeight;
 				var conHeight = pheight * 0.8;
