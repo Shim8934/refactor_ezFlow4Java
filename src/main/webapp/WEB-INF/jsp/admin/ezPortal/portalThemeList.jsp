@@ -102,7 +102,7 @@
 	            </c:if>
 	        </ul>
 	    </div>
-		<div style="width:900px;">
+		<div style="width:100%;">
 	    <table class="themelist_box " >
 	        <colgroup>
 	            <col width="195px">

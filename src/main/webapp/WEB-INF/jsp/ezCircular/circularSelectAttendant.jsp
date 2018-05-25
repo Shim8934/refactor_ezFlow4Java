@@ -500,9 +500,9 @@
 	                    var CurlistContent = obj.getAttribute("id");
 	                    var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
 	                    var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
-	                    if (PrePoint < CurPoint) {
+	                    if (PrePoint <= CurPoint) { //2018-05-18 문성업 (수정)
 	
-	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
+	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) { 
 	                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
 	                            for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
 	                                p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
@@ -512,7 +512,7 @@
 	
 	                    }
 	                    else if (PrePoint > CurPoint) {
-	                        for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) {
+	                        for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) { 
 	                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
 	                            for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
 	                                p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
@@ -774,8 +774,7 @@
 	 		                         }
 								}
 							}
-						} else { // 회람자 ->조직도-> 조직원의  직원이 한 명도 없을 때
-							alert("<spring:message code='ezCircular.t152' />");
+						} else { // 2018.05.18 문성업 (수정) - 메시지 삭제
 							return;
 						}    
 					} else { //끝 **
@@ -920,12 +919,17 @@
 
 							var getlistview = new ListView();
 							getlistview.LoadFromID(listid);
-							var bFlag = getlistview.ExistRow("DATA2", strEmail);
+							var bFlag = getlistview.ExistRow("DATA2", strName); //2018.05.16 (문성업) 수정  - 시작 
+							
+							if (strId == "<c:out value='${userID}' />") {
+								alert("<spring:message code='ezCircular.t149' />");
+								return;
+							} // 회람자 한 명 누른 상태에서 shift+마우스 왼클릭 하고 화살표를 누르면 회람자가 연속으로 출력되지 않거나 작성자도 출력되지 않게 수정 - 끝
 
 							if (bFlag) {
 								pAddFlag = true;
 							} else {
-								pparsingXML2 = "";
+								/* pparsingXML2 = ""; 2018.05.18 (문성업) -사용하지 않음 
 								pparsingXML = "";
 								pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 								pparsingXML = pparsingXML
@@ -953,7 +957,7 @@
 
 								var listview = new ListView();
 								listview.LoadFromID(listid);
-
+								
 								var MaxID = 0;
 								var InitTr = listview.GetDataRows();
 								var MaxCntNum = 0;
@@ -993,7 +997,7 @@
 											.getElementsByTagName("TD")[y].style.textOverflow = "";
 									document.getElementById(listid)
 											.getElementsByTagName("TD")[y].style.overflow = "";
-								}
+								} */
 							}
 						}
 					}
@@ -2009,9 +2013,10 @@
 	                                            	<table class="mainlist" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
+									                        <!-- 18-05-24 김민성 - 회람자 추가시 즐겨찾기 작성일 -> 등록일로 수정 -->
 									                        	<th style="width: 5%;"><span><spring:message code='ezCircular.t31' /></span></th>
 									                            <th style="width: 35%; "><span><spring:message code='ezCircular.t32' /></span></th>
-									                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
+									                            <th style="width: 27%; "><span><spring:message code='ezBoard.t5007' /></span></th>
 									                            <th style="width: 19%; "><span><spring:message code='ezCircular.t34' /></span></th>
 									                            <th style="width: 13%; "></th>
 									                        </tr>

@@ -1505,11 +1505,11 @@
 			</tr>
 			<tr>
 				<th style="height:30px">
-					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px" />
+					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px; height:22px;" />
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
 				</th>
 				<th>
-					<select id="search_type" style="WIDTH:60px">
+					<select id="search_type" style="WIDTH:60px; height:22px;">
 						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
 						<option value="description"><spring:message code='ezOrgan.t68' /></option>
@@ -1521,7 +1521,7 @@
 						<option value="mail"><spring:message code='ezOrgan.t99' /></option>
 						<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
 					</select>
-					<input id="keyword" onKeyPress="search_press()" style="WIDTH:100px" />
+					<input id="keyword" onKeyPress="search_press()" style="WIDTH:120px; height:22px;" />
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span></a>
 				</th>
 			</tr>

@@ -59,12 +59,12 @@
             		navigation_info += " > " + pBrdNm + "</a>";
     		}
 
+    		/* 2018-05-21 홍승비 - 등록된 상위자원 없는 경우 메세지 출력 수정 */
     		function TreeLoad() {
         		initTreeInfo("", g_UserID, g_DeptID);
         		
         		if(document.getElementById("TreeView").innerText == "") {
-        			var msg = "<div style='margin-top:10px;margin-bottom:10px'><img width='183' height='27' src='/images/notify/warning01.gif'></div>";
-        			msg += "<div><spring:message code='ezResource.t368' /></div>";
+        			var msg = "<spring:message code='ezResource.t368' />";
         			var strUrl = "/ezResource/nonResList.do?msg="+msg;
             		locationInfo("");
             		Navigate(strUrl);
@@ -117,7 +117,7 @@
 		<div id="left">
 	        <div class="left_resource" title="<spring:message code="main.t28" />"><span><spring:message code="main.t28" /></span></div>
 	        <h2 style="background-color:#FFFFFF;"><span id="menu01" ><spring:message code="ezResource.t342" /></span></h2>
-	        <ul style="overflow-x:auto;overflow-y:auto;">
+	        <ul style="overflow-x:hidden ;overflow-y:auto;">
 	            <div class="tree" id="TreeView" style="height:auto;border:#ddd 0px solid; background-color:#ffffff; vertical-align:top;padding-left:20px;background-color:#ffffff;" ></div>
 	        </ul>
 	    </div>

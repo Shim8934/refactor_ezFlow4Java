@@ -68,6 +68,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		if (vo == null) { // 새로운 유저가 접속했을때 Config 값 없으면 기본 값 설정
 			vo = new CircularConfigVO();
 			vo.setMemberID(memberId);
+			vo.setTenantID(tenantId);
 			vo.setListCnt(10);
 			vo.setIsPreview(0);
 			vo.setPreviewListValue("50");

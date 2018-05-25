@@ -935,17 +935,19 @@
 		    
 		    function displayDetail(pQstID) {		    	
 		    	 var feature = GetOpenPosition(420, 438);
-		    	 window_open2 = window.open("/ezPoll/showUnJoinedUsersInfo.do?qstId=" + pQstID, "", "height=438px,width=395px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    	 var target = "${question.target}";
+		    	 window_open2 = window.open("/ezPoll/showUnJoinedUsersInfo.do?qstId=" + pQstID + "&target=" + target, "", "height=438px,width=395px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 		    
 		    function displayVotedUser(pQstID, pOptId) {		    		    
 		    	var feature = GetOpenPosition(420, 438);
+		    	var target = "${question.target}";
 		    	
  		    	if (window_open3 != null && !window_open3.closed) {		    		
  		    		window_open3.close();
 		    	}
 		    	
-		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId, "", "height=384px,width=390px, status = no, toolbar=no, menubar=no,location=no, resizable=no" + feature);
+		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId  + "&target=" + target, "", "height=384px,width=390px, status = no, toolbar=no, menubar=no,location=no, resizable=no" + feature);
 		    }
 		    
 		    function finishVote() {	    	

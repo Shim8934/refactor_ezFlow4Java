@@ -3901,7 +3901,7 @@
 	   		<isNotEmpty property="v_PACCOUNTPYEAR" >
 	   		<![CDATA[
 	   			 AND 
-	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_PACCOUNTPYEAR#
+	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR = #v_PACCOUNTPYEAR#
 	   		]]>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_TASKCODE" >
@@ -8675,7 +8675,7 @@
    		UNION ALL 
 	<!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<![CDATA[
-	   		SELECT COUNT (DISTINCT DOCID,COMPANYID)
+	   		SELECT COUNT (DISTINCT DOCID,COMPANYID) AS COUNT
 	   		FROM 
 	   			VAPRWILLDOCLIST 
 	   		WHERE 

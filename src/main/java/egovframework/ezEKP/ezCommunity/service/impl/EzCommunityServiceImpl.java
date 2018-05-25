@@ -614,8 +614,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return boardInfoList;
 	}
 	
+	/* 2018-05-18 홍승비 - UTC시간에 offset을 적용한 writeDate를 가져오기 위해 offset 추가*/
 	@Override
-	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID) throws Exception {
+	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID, String offset) throws Exception {
 		logger.debug("commHomeBoardItemList started.");
 		logger.debug("boardID : " + boardID + ", tenantID : " + tenantID + ", now : " + commonUtil.getTodayUTCTime(""));
 		
@@ -623,6 +624,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pBoardID", boardID);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		map.put("offset", offset);
 		
 		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(map);
 		
@@ -5547,7 +5549,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		String id = userInfo.getId();
 		String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-		String offset = userInfo.getOffset();
+		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
 		int tenantID = userInfo.getTenantId();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5558,6 +5560,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_PENDROW", pEndRow);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		map.put("offset", offset);
 		
 		logger.debug("psortBY");
 		logger.debug(pSortBy);
@@ -5576,20 +5579,16 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	            sb.append("<WriterName>" + commonUtil.cleanValue(item.getWriterName()).trim() + "</WriterName>");
 	            sb.append("<WriterDeptName>" + commonUtil.cleanValue(item.getWriterDeptName()).trim() + "</WriterDeptName>");
 	            sb.append("<WriterCompanyName>" + commonUtil.cleanValue(item.getWriterCompanyName()).trim() + "</WriterCompanyName>");
-	
-	            if (EgovDateUtil.getDaysDiff(item.getWriteDate().substring(0, 10), item.getParentWriteDate().substring(0, 10)) > 0) {
-	            	sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(item.getWriteDate(), offset, false).substring(0, 10) + "</WriteDate>");
-	            } else {
-	            	sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(item.getParentWriteDate(), offset, false).substring(0, 10) + "</WriteDate>");
-	            }
 	            
+	            /* 2018-05-18 홍승비 - 쿼리가 UTC시간에 offset을 적용한 writeDate를 가져오도록 수정*/
+	            sb.append("<WriteDate>" + item.getWriteDate() + "</WriteDate>");	            
 	            sb.append("<Importance>" + item.getImportance() + "</Importance>");
 	            sb.append("<Title>" + commonUtil.cleanValue(item.getTitle()).trim() + "</Title>");
-	            if (item.getAttachments() == null)
+	            if (item.getAttachments() == null) {
 	                sb.append("<Attachments></Attachments>");
-	            else
+	            } else {
 	                sb.append("<Attachments>" + commonUtil.cleanValue(item.getAttachments()) + "</Attachments>");
-	
+	            }
 	            sb.append("<ReadCount>" + item.getReadCount() + "</ReadCount>");
 	            sb.append("<ItemLevel>" + item.getItemLevel() + "</ItemLevel>");
 	            sb.append("<ReadFlag>" + item.getReadFlag() + "</ReadFlag>");

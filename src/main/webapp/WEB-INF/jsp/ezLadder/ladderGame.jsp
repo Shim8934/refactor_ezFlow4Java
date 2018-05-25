@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
+	<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css" type="text/css">
 	<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -249,7 +250,7 @@
 				ladder_window_resize();
 				canvasSetting();
 			} else {
-				alert("<spring:message code='ezLadder.t010' />");
+				alert("<spring:message code='ezLadder.hyh01' />");
 				window.close();
 			}
 		}
@@ -372,11 +373,18 @@
 		}
 		
 		function clickUserLadderAnimation() {
+			var $ladLineBox = $("#ladderLineBox");
+			var $body = $("html, body");
+			var ladLineTop = $ladLineBox.offset().top + Number($ladLineBox.css("padding-top").slice(0,-2));
+			
 			$(document)
 			.on("click", "[id^=drag]", function() {
 				if(userClickFlag) {
 					clickUserOrder = Number($(this).attr("id").slice(4));
 					
+					if($body.scrollTop() != ladLineTop) {
+						$body.animate({"scrollTop": ladLineTop}, 200);
+					}
 					if(userStatus[clickUserOrder] == 0) {
 						aniOneUser();
 					} else {
@@ -403,9 +411,10 @@
 				$moveImgUser = $("#copyUser");
 			}
 			
+			var $ladLineBox = $("#ladderLineBox");
 			if(type.substring(0, 3) == "ani" || type.substring(3, 6) == "one") {
-				var scrollval = (resultOrder * wSize - $("#ladderLineBox").width()/2) + wSize/2;
-				$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
+				var scrollval = (resultOrder * wSize - $ladLineBox.width()/2) + wSize/2;
+				$ladLineBox.animate({"scrollLeft": scrollval}, 300);
 			} else {
 				$(".resultItem").css({"background": "#ffffff"});
 				$(".resultUser").css({"background": "#f2f2f2", "color": "#000000"});
@@ -581,6 +590,11 @@
 				setComment("add", 0, comment);
 			}
 		}
+		function cmtKeyEvent() {
+			if(event.keyCode == 13) {
+				addComt($("#comment_input").val());
+			}
+		}
 		/** 댓글 수정 */
 		function modifyComt(comtIndex, submitFlag) {
 			if(submitFlag) {
@@ -595,21 +609,22 @@
 			if(editComtFlag == comtIndex) {
 				$("[id^=div2Cmt], [id^=_eCmt]").show();
 				$("[id^=editCmtDiv]").hide();
-				var editTemp= $("#cmtArea" + editComtFlag).html();
-				editTemp = editTemp.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n');
+				var editTemp= $("#cmtArea" + editComtFlag).text();
+				//editTemp = editTemp.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n');
 				
 				html += '<div style="display: inline-block; width: 100%; margin-top: 5px;">';
 				html += '<div style="display: block; float:left; border:1px solid #ddd;padding: 0 5px;;margin-left: 20px; border-radius: 3px; width: 95%; height: 30px; overflow: hidden;">';
-				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
-				html += editTemp + '</textarea></div></div>';
+				html += '<input id="editCmtArea' + editComtFlag + '" type="text" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
+				html += '</input></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
-				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '" style="width: 46px;"><spring:message code="ezLadder.t087" /></button>';
-				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t072" /></button></div>';
+				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="margin-right: 4px;"><spring:message code="ezLadder.t072" /></button>';
+				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '" style="width: 46px;"><spring:message code="ezLadder.t087" /></button></div>';
 			} 
 			
 			$("#div2Cmt" + comtIndex).toggle();
 			$("#_eCmt" + comtIndex).toggle();
 			$("#editCmtDiv" + comtIndex).html(html).toggle();
+			$("#editCmtArea" + editComtFlag).val(editTemp);
 			
 		}
 		/** 댓글 삭제 */
@@ -670,6 +685,9 @@
 		}
 	</script>
 	<style type="text/css">
+		input[type=text]::-ms-clear {
+			display:none;
+		}
 		ul {
 		    list-style:none;
 		    margin:0;
@@ -819,10 +837,7 @@
 					<ul class="edit">
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_list.png" width="45px;" height="45px;" id="toList" onmouseover="this.src='/images/ezLadder/icon_list_hover.png'" onmouseout="this.src='/images/ezLadder/icon_list.png'" title="<spring:message code='ezLadder.t083'/>"></li>
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" onmouseover="this.src='/images/ezLadder/icon_reuse_hover.png'" onmouseout="this.src='/images/ezLadder/icon_reuse.png'" title="<spring:message code='ezLadder.t082'/>"></li>
-						<c:choose>
-							<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" onmouseover="this.src='/images/ezLadder/icon_posDelete_hover.png'" onmouseout="this.src='/images/ezLadder/icon_posDelete.png'" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
-							<c:when test="${vo.writerId != id}"><li><img src="/images/ezLadder/icon_imposDelete.png" onmouseover="this.src='/images/ezLadder/icon_imposDelete_hover.png'" onmouseout="this.src='/images/ezLadder/icon_imposDelete.png'" title="<spring:message code='ezLadder.t078'/>" width="45px;" height="45px;"></li></c:when>
-						</c:choose>
+						<c:if test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" onmouseover="this.src='/images/ezLadder/icon_posDelete_hover.png'" onmouseout="this.src='/images/ezLadder/icon_posDelete.png'" title="<spring:message code='ezLadder.t053'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:if>
 					</ul>
 				</div>
 			</div>
@@ -851,16 +866,16 @@
 				<tr id="ladderContents" onmousedown="scrollMouseDownEvent(this, event);" onmousemove="scrollMouseDragEvent(this, event);" onmouseup="scrollMouseUpEvent(this, event);" onselectstart="return false;">
 					<td>
 						<c:if test="${vo.status eq 0}">
-							<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0;">
+							<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0; margin-top:-10px">
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 10px;"/></a>
+											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 150px; background: white; text-align: center;">
-											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
+										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #e8e8ef">
+											<span style="font-size: large; color: palevioletred; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
 									</c:otherwise>
@@ -894,7 +909,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 380px;background: #f5faff; position: absolute;left: -50px;right: 0;border-top:1px solid #dde4ed;border-bottom:1px solid #dde4ed">
+									<div id="blackBox" style="height: 398px;background: #f9f9fc; position: absolute;left: -50px;right: 0;border-top:1px solid #dde;border-bottom:1px solid #dde">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
@@ -966,7 +981,7 @@
 				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px 0px 0px 0px;">
 					<div class="sendComment_layout">
 						<div class="comment_input_layout" style="border: none; width: 86%;">
-							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
+							<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
 						</div>
 						<div class="commentBtn">
 							<button id="sendBttn" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;"><spring:message code="ezLadder.t054" /></button>						
