@@ -2251,6 +2251,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String tempUserDeptName = request.getParameter("userDeptName");
 		String tempUserDeptName2 = request.getParameter("userDeptName2");
 		String modifyFlag = request.getParameter("modifyFlag");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String result = ezApprovalGService.updateHistoryForAttach(docID, attachSN, tempUserID, tempUserName, tempUserName2, tempUserJobTitle, tempUserJobTitle2, 
 																  tempUserDeptID, tempUserDeptName, tempUserDeptName2, modifyFlag, dirPath, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -3453,6 +3460,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userDeptName = request.getParameter("userDeptName");
 		String userDeptName2 = request.getParameter("userDeptName2");
 		String chkFlag = request.getParameter("chkFlag");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String result = ezApprovalGService.updateHistoryForLine(docID ,userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, chkFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("docID = " + docID + ", userID = " + userID + ", userName = " + userName + ", userName2 = " + userName2 + ", userJobTitle = " + userJobTitle + ", userJobTitle2 = " + userJobTitle2 + ", userDeptID = " + userDeptID + ", userDeptName = " + userDeptName + ", userDeptName2 =" + userDeptName + ", chkFlag = " + chkFlag);
@@ -4917,6 +4930,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("aprDocView ended.");
 		

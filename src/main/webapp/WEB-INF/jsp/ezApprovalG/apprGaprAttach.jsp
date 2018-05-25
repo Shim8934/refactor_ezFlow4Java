@@ -761,7 +761,7 @@
 		        isfileup = true;
 		        fd.append("boardid", window.parent.pBoardID);
 		        fd.append("maxsize", pBoardFileSize * 1024 * 1024);
-		        fd.append("compid", document.getElementById("compid").value);
+		        fd.append("compid", orgCompanyID);
 		        fd.append("docid", document.getElementById("docid").value);
 		        fd.append("attachsn", pAttachSN);
 		        

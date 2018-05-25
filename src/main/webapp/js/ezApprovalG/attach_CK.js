@@ -535,7 +535,8 @@ function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
 			modifyFlag : pModifyFlag,
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16]
+			userDeptName2 : arr_userinfo[16],
+			orgCompanyID : orgCompanyID
 		},
 		success: function(result){
 			if (result == "TRUE") {
