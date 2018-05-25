@@ -39,6 +39,10 @@
 				preProcessing();
 			}
 			
+			window.onbeforeunload = function() {
+				closeAllPopup();
+			}
+			
 			function preProcessing() {
 				var divList          = document.getElementById("mainSetting");
 				var reheight         = document.documentElement.clientHeight - 190;

@@ -73,6 +73,10 @@
 			window.onresize();
 		}
 		
+		window.onbeforeunload = function() {
+			closeAllPopup();
+		}
+		
 		$(function () {
 			$.datepicker.regional["<spring:message code='main.t0619' />"] = {
 				closeText: "<spring:message code='main.t3' />",

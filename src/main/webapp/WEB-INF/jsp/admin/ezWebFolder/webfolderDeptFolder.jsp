@@ -26,6 +26,10 @@
 				getData();
 			}
 			
+			window.onbeforeunload = function() {
+				closeAllPopup();
+			}
+			
 			function getData() {
 				 $.ajax({
 					type: "GET",

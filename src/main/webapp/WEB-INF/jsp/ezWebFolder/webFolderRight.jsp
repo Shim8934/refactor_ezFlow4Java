@@ -54,6 +54,11 @@
 			return false;
 		};
 		
+		window.onbeforeunload = function() {
+			closeAllPopup();
+			searchOptionHidden();
+		}
+		
 		window.onload = function() {
 			$('#upload').css('display','none');
 			getFileList(folderId);

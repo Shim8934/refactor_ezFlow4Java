@@ -46,6 +46,11 @@
 				return false;
 			}
 			
+			window.onbeforeunload = function() {
+				closeAllPopup();
+				searchOptionHidden();
+			}
+			
 			$(function () {
 				// dom elements setup
 				initDomElement();
