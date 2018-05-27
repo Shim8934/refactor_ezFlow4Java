@@ -837,24 +837,24 @@
 				    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
 				    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:37px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i-j+1))));
-				    		objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(json[i].typeName)));
-			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + json[i].writerName + "'></td>").append($("<div style='width:72px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerName)));	
-			    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + json[i].writerDeptName + "'></td>").append($("<div style='width:72px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerDeptName)));
+				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:35px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i-j+1))));
+				    		objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(json[i].typeName)));
+			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + json[i].writerName + "'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerName)));	
+			    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + json[i].writerDeptName + "'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerDeptName)));
 			    			
 			    			if (json[i].dateType == 1) {
-				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
 				    		} else if (json[i].dateType == 2) {
-				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
 				    		} else if (json[i].dateType == 3) {
-				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
 				    		} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
-				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
 				    		} else if (json[i].typeId == 'A04') {
 				    			if (json[i].dateType == 4) {
-				    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
+				    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
 				    			} else if (json[i].dateType == 5) {
-				    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:281px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
+				    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
 				    			}
 				    		}
 				    		objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:240px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -871,7 +871,7 @@
 				    		uvobjTr.append($("<td style='width:30%; height:0px; border:none;'></td>"));
 				    		$("#addpopupDay_list tbody").append(uvobjTr);
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:900px; border-top:none;'></td>").text("내역이 없습니다."));
+				    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:820px; border-top:none;'></td>").text("내역이 없습니다."));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	}
 				    },
@@ -1095,7 +1095,7 @@
 				</table>
 				<div style="max-height:466px; overflow-y:auto;">
 				<table class="popuplist" id="addpopup_list" style="table-layout:fixed; display:block;">
-				    <tbody style="max-height:466px; overflow-y:auto; width:738px; display:block;">
+				    <tbody style="max-height:466px; overflow-y:auto; width:740px; display:block;">
 				    	<tr>
 				    		<c:if test="${deptFlag == 'true'}">
 				    			<th style="height:30px">No.</th>
@@ -1119,19 +1119,22 @@
 		</div>
 		
 		<!-- 근태날짜별 팝업창 -->
-		<div id="popupDay" class="popupwrap4" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px; max-width:883px;">
+		<div id="popupDay" class="popupwrap4" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px; max-width:880px;">
 			<div class="popupwrap5">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopupDay_list" style="table-layout:fixed; display:block; margin:10px 0px 0px 1px;">
+			    <table class="popuplist" style="table-layout:fixed; display:block;">
 				    <thead>
 				    	<tr>
-						<th class="layerHeader" colspan="6" style="width:798px;">
+						<th class="layerHeader" colspan="6" style="width:820px;">
 							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 							<span id="popupDay_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 						</th>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:466px; width:820px; display:block; overflow-y:auto;">
+				</table>
+				<div style="max-height:466px; overflow-y:auto;">
+				<table class="popuplist" id="addpopupDay_list" style="table-layout:fixed; display:block;">
+				    <tbody style="max-height:466px; width:820; display:block; overflow-y:auto;">
 				    	<tr>
 				    		<th style="height:30px">No.</th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.bbhs15'/></th>
@@ -1142,6 +1145,7 @@
 						</tr>
 				    </tbody>
 				</table>
+				</div>
 				<!-- /내용 -->
 				<br />
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
