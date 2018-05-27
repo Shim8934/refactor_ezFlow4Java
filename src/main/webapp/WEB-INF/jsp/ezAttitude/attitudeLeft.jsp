@@ -66,60 +66,8 @@
 				font-family: Malgun Gothic, Meiryo UI;
 			}
 		</style>
-	</head>
-<body class="leftbody">
-	<div class="left_pims" title="근태관리"><span>근태관리</span></div>
-<!-- 	<article class="time"> -->
-<%-- 		<p class="title"><spring:message code='main.t00023' /></p> --%>
-<!-- 		<div style=" margin-left:52px ;width:110px; height:67px; border:2px solid grey; border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);"> -->
-<!-- 			<p id="timeinput" style="margin:21px 0px 0px 2px;"></p> -->
-<!-- 		</div> -->
-<!-- 			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; overflow:hidden;"> -->
-<!-- 			<p id="inAttiClock" style="margin:5px 0px 0px 0px; font-size:13px;">출근 : 00:00:00</p> -->
-<!-- 			<p id="outAttiClock" style="margin:5px 0px 8px 0px;  font-size:13px;">퇴근 : 00:00:00</p> -->
-<!-- 			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)" style="margin-left:0px;">출근</span> -->
-<!-- 			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span> -->
-<!-- 		</div> -->
-<!-- 	</article> -->
-	<article class="time">
-		<div id="clock" class="light">
-			<div class="display">
-				<div class="digits" style="padding:18px 5px 0px 5px; width:186px; border:1px solid #ddd; margin:16px; margin-left:10px; border-radius:15px; height:130px"></div>
-			</div>
-		</div>
-		<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
-			<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:14px; text-align: left; margin-left:50px; padding-left:22px;">출근 : 출근 전</p>
-			<p id="outAttiClock" style="margin:5px 0px 30px 8px;  font-size:14px; text-align: left; margin-left:50px; padding-left:22px">퇴근 : 퇴근 전</p>
-			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
-			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px">퇴근</span>
-		</div>
-	</article>
-	<div id="left" style="border-top:1px solid #dedede">
-		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs5'/></span></h2>
-		<ul></ul>
-		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs6'/></span></h2>
-		<ul></ul>
-		<h2>
-			<span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">
-				<spring:message code = 'ezAttitude.t7' />
-				<c:if test="${attitudeAdminCheck == true}">
-					<c:if test="${totalAtt != 0 }">
-						<span class="attCount">(${totalAtt})</span>
-					</c:if>
-				</c:if>
-			</span>
-		</h2>
-		<ul>
-			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
-			<c:if test="${attitudeAdminCheck == true}">
-				<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
-			</c:if>
-		</ul>
-		<c:if test="${attitudeAdminCheck == true}"> 
-			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;근태정보관리</span></h3>
-		</c:if>
-	</div>
-	<script type="text/javascript">
+		
+		<script type="text/javascript">
 		var userOffset = "${userOffset}";
 		var uselang = "${uselang}";
 		var closedDay = "";
@@ -408,6 +356,93 @@
 	    	})();
 	    	
 	    });
-	</script>
+		
+    	//카운트 refresh
+    	function leftCount() {
+	    	$.ajax({
+				type : 'get',
+			    url : '/ezAttitude/getTotalAttCount.do',
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	alert("오류발생");
+			    },
+			    success : function(result){
+			    	if (result == "0") {
+			    		result = "";
+			    	} else {
+			    		result = "("+ result +")";
+			    	}
+			    	try {
+						document.getElementsByClassName("attCount")[0].innerText = result;
+						document.getElementsByClassName("attCount")[1].innerText = result;
+					} catch (e) {	}
+			    }
+	    	})
+	    }
+    	
+		</script>
+	</head>
+<body class="leftbody">
+	<div class="left_pims" title="근태관리"><span>근태관리</span></div>
+<!-- 	<article class="time"> -->
+<%-- 		<p class="title"><spring:message code='main.t00023' /></p> --%>
+<!-- 		<div style=" margin-left:52px ;width:110px; height:67px; border:2px solid grey; border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);"> -->
+<!-- 			<p id="timeinput" style="margin:21px 0px 0px 2px;"></p> -->
+<!-- 		</div> -->
+<!-- 			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; overflow:hidden;"> -->
+<!-- 			<p id="inAttiClock" style="margin:5px 0px 0px 0px; font-size:13px;">출근 : 00:00:00</p> -->
+<!-- 			<p id="outAttiClock" style="margin:5px 0px 8px 0px;  font-size:13px;">퇴근 : 00:00:00</p> -->
+<!-- 			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)" style="margin-left:0px;">출근</span> -->
+<!-- 			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span> -->
+<!-- 		</div> -->
+<!-- 	</article> -->
+	<div id="left" style="border-top:1px solid #dedede">
+		<div style="display: block;">
+			<article class="time">
+				<div id="clock" class="light">
+					<div class="display">
+						<div class="digits" style="padding:18px 5px 0px 5px; width:186px; border:1px solid #ddd; margin:16px; margin-left:10px; border-radius:15px; height:130px"></div>
+					</div>
+				</div>
+				<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
+					<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:14px; text-align: left; margin-left:50px; padding-left:22px;">출근 : 출근 전</p>
+					<p id="outAttiClock" style="margin:5px 0px 30px 8px;  font-size:14px; text-align: left; margin-left:50px; padding-left:22px">퇴근 : 퇴근 전</p>
+					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
+					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px">퇴근</span>
+				</div>
+			</article>
+		</div>
+<!-- 	<div id="left" style="border-top:1px solid #dedede"> -->
+		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs5'/></span></h2>
+		<ul></ul>
+		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs6'/></span></h2>
+		<ul></ul>
+		<h2>
+			<span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">
+				<spring:message code = 'ezAttitude.t7' />
+				<c:if test="${attitudeAdminCheck == true}">
+					<c:if test="${totalAtt != 0 }">
+						<span class="attCount">(${totalAtt})</span>
+					</c:if>
+				</c:if>
+			</span>
+		</h2>
+		<ul>
+			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
+			<c:if test="${attitudeAdminCheck == true}">
+				<li>
+					<span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">
+						&nbsp;<spring:message code='ezAttitude.bbhs33'/>
+						<c:if test="${totalAtt != 0 }">
+							<span class="attCount">(${totalAtt})</span>
+						</c:if>
+					</span>
+				</li>
+			</c:if>
+		</ul>
+		<c:if test="${attitudeAdminCheck == true}"> 
+			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;근태정보관리</span></h3>
+		</c:if>
+	</div>
 </body>
 </html>

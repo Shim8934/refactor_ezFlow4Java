@@ -1059,6 +1059,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG");
 		/*근태관리 추가*/
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String accessID = ezPortalService.getAccessList(userInfo);
+		String attitudeLinkURL = "/ezAttitude/attitudeMain.do";
+		String isUseAttMenuItem = "";
 		mailAddress = userInfo.getEmail();
 		
 		if (userInfo.getPrimary().equals("1")) {
@@ -1100,6 +1103,9 @@ public class EzPortalController extends EgovFileMngUtil {
 			checkBrowser = false;
 		}
 		
+		//근태관리 사용에 따른 시계 사용 유무 로직
+		isUseAttMenuItem = ezPortalService.getMainMenuItemUID(accessID, attitudeLinkURL, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("department", department);
 		model.addAttribute("title", title);
@@ -1119,6 +1125,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("checkBrowser", checkBrowser);
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
+		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";

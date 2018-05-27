@@ -165,18 +165,27 @@
     		</div>
     		<div class="blue_bar"></div>
     		<article class="time" style="margin-right:0px">
-    			<div id="clock" class="light">
-					<div class="display">
-						<p id="todayTime" class="title" style="margin-left:0px"></p>
-						<div class="digits" style="padding-top:7px;padding-left:5px;height:52px;"></div>
-					</div>
-				</div>
-    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
-    				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px">출근 : 출근 전</p>
-					<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px">퇴근 : 퇴근 전</p>
-					<span style="margin-left:13px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
-					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:5px">퇴근</span>
-    			</div>
+	   			<c:choose>
+	       			<c:when test="${isUseAttMenuItem == 'N'}">
+				             <p class="title"><spring:message code='main.t00023' /></p>
+				             <div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
+				             <div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>             
+	       			</c:when>
+	       			<c:otherwise>
+		    			<div id="clock" class="light">
+							<div class="display">
+								<p id="todayTime" class="title" style="margin-left:0px"></p>
+								<div class="digits" style="padding-top:7px;padding-left:5px;height:52px;"></div>
+							</div>
+						</div>
+		    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
+		    				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px">출근 : 출근 전</p>
+							<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px">퇴근 : 퇴근 전</p>
+							<span style="margin-left:13px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
+							<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:5px">퇴근</span>
+		    			</div>
+	       			</c:otherwise>
+	       		</c:choose>  
    			</article>
 		</section>
 			
@@ -253,6 +262,7 @@
 		 	var beforeAlertDate = "";
 			var afterAlertDate = "";
 			var overTime = "";
+			var isUseAttMenuItem = "${isUseAttMenuItem}";
 			
 		 	$("#todayTime").html(year + "년 " + mon + "월 " + day + "일");
 
@@ -266,12 +276,15 @@
 			    }
 			    
 			    CalendarMiniView("CalendarMini");
-
-// 			    draw_clock();
-				setAttiBtnHover();
-				getAttitudeList();
-				getHolidayList();
-			    //yourClock();
+				
+			    if (isUseAttMenuItem == "N") {
+				    draw_clock();
+				    yourClock();
+			    } else {
+					setAttiBtnHover();
+					getAttitudeList();
+					getHolidayList();
+			    }
 
 			    CalendarMiniDataSource();
 

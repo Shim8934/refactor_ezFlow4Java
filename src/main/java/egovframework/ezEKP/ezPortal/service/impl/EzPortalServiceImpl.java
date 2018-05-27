@@ -1151,6 +1151,25 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			pIDCompany = userInfo.getCompanyID();
 			pIDDept = pDeptPathCode.split("\\,")[3].trim();
 			pDeptPathCode = pIDUser + "," + pIDTop + "," + pIDDept + "," + pIDCompany;
+		} else if (pDeptPathCode.split("\\,").length > 4) {
+			//DEPT_CN_PATH의 순서를 바꿔서 포탈 권한 체크를 사원>부서>회사 로 할 수있도록 변경
+			String[] deptPathCode = pDeptPathCode.split("\\,");
+			//userID, top, Top, (DEPT_CN_PATH) ==> userID, top, Top, 하위부서, 부서, 회사 순으로 만드는 작업
+			String tempDept = "";
+			int transCount = (deptPathCode.length - 3) / 2;
+			for (int i = 0; i < transCount; i++) {
+				tempDept = deptPathCode[3+i];
+				deptPathCode[3+i] = deptPathCode[deptPathCode.length - 1 - i];
+				deptPathCode[deptPathCode.length -1 - i] = tempDept;
+			}
+			pDeptPathCode = "";
+			for (int i = 0; i < deptPathCode.length; i++) {
+				if (i == 0) {
+					pDeptPathCode += deptPathCode[i];
+				} else {
+					pDeptPathCode += "," + deptPathCode[i];
+				}
+			}
 		}
 		
 		if (pDeptPathCode.toLowerCase().indexOf(",everyone") == -1) {
@@ -3652,5 +3671,26 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("ezCkAdminACL ended");
 		
 		return "OK";
+	}
+	
+	@Override
+	public String getMainMenuItemUID(String accessID, String linkURL, String userLang, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String returnValue = "Y";
+		
+		map.put("linkURL", linkURL);
+		map.put("tenantID", tenantID);
+		map.put("parentUID", "203"); //메인메뉴영역
+		map.put("companyID", companyID);
+		map.put("lang", userLang);
+		
+		String menuItemUID = ezPortalDAO.getMainMenuItemUID(map);
+		if (checkViewRightBln(menuItemUID, accessID, tenantID)) {
+			returnValue = "Y";
+		} else {
+			returnValue = "N";
+		}
+		return returnValue;
 	}
 }
