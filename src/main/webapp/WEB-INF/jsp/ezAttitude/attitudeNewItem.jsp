@@ -61,6 +61,7 @@
 				setHoliday();
 				//checkOutCom();
 				setTypeName();
+				setInputValue();
 			}
 			
 			window.onresize = function () {   	
@@ -575,6 +576,22 @@
 					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
 					$(this).text(typeName);
 				})
+			}
+			
+			//연락처, 외근지, 업무대리 특수문자
+			function setInputValue() {
+				if (mobile != "") {
+					mobile = ReplaceText(ReplaceText(ReplaceText(ReplaceText(mobile, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+					$("input[name=mobile]").val(mobile);
+				}
+				if (region != "") {
+					region = ReplaceText(ReplaceText(ReplaceText(ReplaceText(region, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+					$("input[name=region]").val(region);
+				}
+				if (bizSub != "") {
+					bizSub = ReplaceText(ReplaceText(ReplaceText(ReplaceText(bizSub, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+					$("input[name=bizSub]").val(bizSub);
+				}
 			}
 			
 			//글자 수 제한
