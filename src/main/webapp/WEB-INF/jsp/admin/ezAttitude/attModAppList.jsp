@@ -66,6 +66,8 @@
 		var adminCompany = "${adminCompany}";
 		
 		$(function(){
+			windowResize();
+			
 			$(document).on('click', '#AttList th', function(){
 				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") && $(this).attr("colname") != "ORIGIN_TIME") { // checkbox는 sort에서 제외
 					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
@@ -191,7 +193,15 @@
 			
         	$("#popup").css("left", popupX);
         	$("#popup2").css("left", popupX);
+        	
+        	windowResize();
         });
+		
+	    function windowResize() {
+        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
+        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+        	document.getElementById("contentlist").style.overflow = "auto";
+        }
 		
 		function company_change(){
     		pCompanyId = $("select[name=ListCompany]").val();

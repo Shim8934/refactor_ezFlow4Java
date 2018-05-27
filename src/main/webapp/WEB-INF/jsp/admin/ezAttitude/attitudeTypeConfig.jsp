@@ -60,10 +60,10 @@
 	                    	gubun = "<spring:message code='ezAttitude.kbm8' />";
 	                    }
 	                    html += "<tr id='" + result[i].typeId + "' onclick='listClick(this);' ondblclick='dbclick(this);' style='cursor:pointer;' isAdd='" + result[i].isAdd + "'>";
-	                    html += "<td style='width:110px;color:gray;padding-left:15px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;' title='" + result[i].typeName + "'>" + result[i].typeName + "</td>";
+	                    html += "<td style='width:110px;color:gray;border-left:1px solid #e2e2e1;padding-left:15px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;' title='" + result[i].typeName + "'>" + result[i].typeName + "</td>";
 	                    html += "<td style='width:110px;color:gray;text-align:center;border-left:1px solid rgb(239, 239, 239);'>" + gubun + "</td>";
 	                    html += "<td style='width:90px;color:gray;text-align:center;border-left:1px solid rgb(239, 239, 239);'><input type='radio' name='useRadio"+ i +"' value='1' /></td>";
-	                    html += "<td style='color:gray;text-align:center;border-left:1px solid rgb(239, 239, 239);'><input type='radio' name='useRadio"+ i +"' value='0' /></td>";
+	                    html += "<td style='color:gray;text-align:center;border-left:1px solid rgb(239, 239, 239); border-right:1px solid #e2e2e1;'><input type='radio' name='useRadio"+ i +"' value='0' /></td>";
 	                    html += "</tr>";
 	                }
                 } else {
@@ -243,14 +243,14 @@
 	      	</ul>
 	  	</div>
 <!--         <div style="border: 1px solid #dededd; border-top:0px; border-bottom:0px; width: 450px; height: 503px;"> -->
-        <div style="border: 1px solid #e2e2e1; border-top:0px; border-bottom:0px; width: 450px; height: 503px;">
-            <table class="mainlist" style="width: 450px; height:500px;">
+<!--         <div style="border: 1px solid #e2e2e1; border-top:0px; border-bottom:0px; width: 450px; max-height: 503px;"> -->
+            <table class="mainlist" style="width: 450px; max-height:500px;">
             	<thead>
                  <tr>
-                     <th style="width: 110px;padding-left:15px;"><span><spring:message code='ezAttitude.t35' /></span></th>
+                     <th style="width: 110px;padding-left:15px;border-left:1px solid #e2e2e1;"><span><spring:message code='ezAttitude.t35' /></span></th>
                      <th style="width: 110px;text-align: center;"><span><spring:message code='ezAttitude.kbm13' /></span></th>
                      <th style="width: 90px;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
-                     <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
+                     <th style="text-align: center;border-right:1px solid #e2e2e1;"><span><spring:message code='ezAttitude.t37' /></span></th>
                  </tr>
                 </thead>
                 <tbody id="contentlist">
@@ -261,7 +261,7 @@
                  </tr>
                 </tbody>
             </table>
-        </div>
+<!--         </div> -->
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>

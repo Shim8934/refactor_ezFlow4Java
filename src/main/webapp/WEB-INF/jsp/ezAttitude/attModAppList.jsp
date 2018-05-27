@@ -69,6 +69,8 @@
 		var adminCompany = "${adminCompany}";
 		
 		$(function(){
+			windowResize();
+			
 			$(document).on('click', '#AttList th', function(){
 				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") && $(this).attr("colname") != "ORIGIN_TIME") { // checkbox는 sort에서 제외
 					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
@@ -188,20 +190,6 @@
 			
 			att_search();
 			
-// 			if (checkAdmin == 'true') {
-// 				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
-		    	
-// 	    		infoStr += '</span> 개] ';
-// 	    		infoStr += startDate.substring(0,4) + '년' + 
-// 	    		startDate.substring(5,7) + '월' + 
-// 	    		startDate.substring(8,10) + '일~';
-// 		    	infoStr += endDate.substring(0,4) + '년' + 
-// 		    	endDate.substring(5,7) + '월' + 
-// 		    	endDate.substring(8,10) + '일]</span>';
-		    	
-// 		    	$("#mailBoxInfo").html(infoStr);
-// 			}
-			
 			var obj = $("#search").offset();
 			
 			if (checkAdmin != 'true') {
@@ -215,7 +203,15 @@
 			
         	$("#popup").css("left", popupX);
         	$("#popup2").css("left", popupX);
+        	
+        	windowResize();
         });
+		
+		function windowResize() {
+        	var height = document.documentElement.clientHeight - 81 - document.getElementById("mainmenu").clientHeight;
+        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+        	document.getElementById("contentlist").style.overflow = "auto";
+        }
 		
 		/* function company_change(){
     		pCompanyId = $("select[name=ListCompany]").val();
@@ -549,6 +545,8 @@
 		    	}
 	    	}
 	    	
+	    	var no = ((currentPage - 1) * 15) + 1;
+	    	
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
 	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
@@ -561,14 +559,10 @@
 	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';	
 	    		}
 	    		if (excel == true) {
-	    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(1)-1) * 15) + '</td>';
+	    			htmlStr += '<td>' + no + '</td>';
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';
 	    		} else {
-	    			if (checkAdmin == 'true') {
-		    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
-	    			} else {
-	    				htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 19) + '</td>';
-	    			}
+    				htmlStr += '<td>' + no + '</td>';
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';	
 	    		}
     			
@@ -581,13 +575,13 @@
     			htmlStr += '<td>' + attList[i].changeDate.substring(11,16) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
-    				htmlStr += '<td id="attStauts">신청</td>';	
+    				htmlStr += '<td id="attStauts">신청</td>';
     			}
     			if (attList[i].apprStatus == 1) {
-    				htmlStr += '<td id="attStauts">승인</td>';	
+    				htmlStr += '<td id="attStauts">승인</td>';
     			}
     			if (attList[i].apprStatus == 2) {
-    				htmlStr += '<td id="attStauts">반려</td>';	
+    				htmlStr += '<td id="attStauts">반려</td>';
     			}
     			if (attList[i].apprUserName == null) {
     				htmlStr += '<td>' + "" + '</td>';
@@ -612,7 +606,12 @@
     			} else {
     				$('#AttList tbody').append(htmlStr);
     			}
+    			
+    			no++;
 	    	}
+	    	//신청갯수
+// 	    	leftCount();
+	    	parent.frames["left"].leftCount();
 	    }
 	    
 	    function date_reset() {
@@ -1214,10 +1213,33 @@
 	    function layerHidden() {
 	        $.modal.close();
 	        $('#addpopup_list tbody').children('tr').not(":first").remove();
-	    }
+	    }    
+	    
+	    //left count
+// 	    function leftCount() {
+// 	    	$.ajax({
+// 				type : 'get',
+// 			    url : '/ezAttitude/getTotalAttCount.do',
+// 			    dataType : "text",
+// 			    error: function(xhr, status, error){
+// 			    	alert("오류발생");
+// 			    },
+// 			    success : function(result){
+// 			    	if (result == "0") {
+// 			    		result = "";
+// 			    	} else {
+// 			    		result = "("+ result +")";
+// 			    	}
+// 			    	try {
+// 						parent.frames["left"].document.body.getElementsByClassName("attCount")[0].innerText = result;
+// 						parent.frames["left"].document.body.getElementsByClassName("attCount")[1].innerText = result;
+// 					} catch (e) {	}
+// 			    }
+// 	    	})
+// 	    }
 		</script>
 </head>
-	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
+	<body id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
 	<c:if test="${adminFlag == 'true' && checkAdmin == 'true'}">
 		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
 	</c:if>

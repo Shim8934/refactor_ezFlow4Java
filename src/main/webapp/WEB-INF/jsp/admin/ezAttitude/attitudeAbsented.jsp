@@ -49,9 +49,11 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
-	    	var listSize = 18;
+	    	var listSize = 15;
 	    	
 	    	$(function(){
+	    		windowResize();
+	    		
 	    		$("#Sdatepicker").val("${searchStartDate}");
 	    		$("#Edatepicker").val("${searchEndDate}");
 	    		
@@ -139,6 +141,16 @@
 		        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
+		    
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
+	        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 			
 	    	function company_change(){
 	    		pCompanyId = $("select[name=ListCompany]").val();

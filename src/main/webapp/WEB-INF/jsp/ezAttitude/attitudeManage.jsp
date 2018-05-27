@@ -45,7 +45,7 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var selectedDeptID = "${selectedDeptID}";
-	    	var listSize = 19;
+	    	var listSize = 15;
 
 	        $(function () {
 	            //datepicker
@@ -121,6 +121,8 @@
 			});
 	        
 	        $(function() {
+	        	windowResize();
+	        	
 	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
 	            
 	            if (document.getElementById("ListDept").length == 0) {
@@ -140,7 +142,15 @@
 				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 				
 	        	$("#searchPopup").css("left", popupX);
+	        	
+	            windowResize();
 	        });
+	        
+	        function windowResize() {
+	        	var height = document.documentElement.clientHeight - 130 - document.getElementById("mainmenu").clientHeight;
+	        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 	        
 	        function ChangeTab(obj) {
 	        	pSelectTab = obj.getAttribute("id");
@@ -350,7 +360,7 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("근태입력목록   &nbsp;[총 " 
+	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;근태입력목록   &nbsp;[총 " 
 	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
 	    				+ $("#Sdatepicker").val().split("-")[0] + "년 "
 	    				+ $("#Sdatepicker").val().split("-")[1] + "월 "
@@ -419,7 +429,7 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("근태미입력자   &nbsp;[총 " 
+	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;근태미입력자   &nbsp;[총 " 
 				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 명 - " 
 				+ $("#Sdatepicker").val().split("-")[0] + "년 "
 				+ $("#Sdatepicker").val().split("-")[1] + "월 "
@@ -528,7 +538,7 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("관리내역   &nbsp;[총 " 
+	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;관리내역   &nbsp;[총 " 
 	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
 	    				+ $("#Sdatepicker").val().split("-")[0] + "년 "
 	    				+ $("#Sdatepicker").val().split("-")[1] + "월 "
@@ -758,7 +768,6 @@
 	    </div>
 	    <div>
 	    	<div id="mainmenu">
-	    		<div id="miniTitle" style="margin-bottom:10px;">근태입력목록</div>
 				<ul>
 		      		<li><span onclick="searchPopup();">검색</span></li>
 		      		<li><span onclick="refresh();">새로고침</span></li>
@@ -783,10 +792,11 @@
 		      		</li>
 		      		<li></li>
 		      	</ul>
+		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px">근태입력목록</div>
 		  	</div>
 	    </div>
 	    
-	    <div id="contentlist" style="width:100%; height:620px;">
+	    <div id="contentlist" style="width:100%; overflow:auto; height:620px;">
 			<table class="mainlist" style="width:100%;">
 				<thead></thead>
 				<tbody></tbody>
