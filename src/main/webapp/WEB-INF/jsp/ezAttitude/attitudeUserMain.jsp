@@ -670,11 +670,13 @@
 						typeId : t.getAttribute("id"),
 						selectedDeptID : encodeURIComponent(authDeptList.value)
 					},
-					success : function(json) {
-						if (deptFlag == 'true'){
-					    	$('#addpopup_list tbody').children('tr').not(":first").remove();
+					success : function(result) {
+						var len = result.length;
+						
+						if (deptFlag == 'true') {
+							$('#addpopup_list tbody').children('tr').not(":first").remove();
 					    	
-					    	if (json.length == 0) {
+					    	if (len == 0) {
 					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
 					    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
 					    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
@@ -686,52 +688,81 @@
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 					    	
-					    	for(var i = 0; i < json.length; i++) {
-					    		if (json[i].apprStatus == 1) {
-					    			json[i].apprStatus = "승인";
+					    	result.forEach(function(vo, index) {
+					    		if (vo.apprStatus == 1) {
+					    			vo.apprStatus = "승인";
 					    		} else {
-					    			json[i].apprStatus = "반려";
+					    			vo.apprStatus = "반려";
 					    		}
 					    		
 					    		var gubunBar = "";
-					    		if (json[i].region != "" && json[i].content != "") {
+					    		if (vo.region != "" && vo.content != "") {
 					    			gubunBar = " / ";
 					    		}
 					    		
-					    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
+					    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
+					    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "근무지 : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 	
-					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
-				    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + json[i].writerName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerName)));	
-				    			objTr.append($("<td style='width:10%;' title='" + json[i].writerDeptName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].writerDeptName)));
+					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
+				    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + vo.writerName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
+				    			objTr.append($("<td style='width:10%;' title='" + vo.writerDeptName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerDeptName)));
 
-				    			if (json[i].dateType == 1) {
-					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
-						    		objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:371px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    		} else if (json[i].dateType == 2) {
-					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
-						    		objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:371px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    		} else if (json[i].dateType == 3) {
-					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
-						    		objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:327px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    		} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
-					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
-						    		objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:327px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    		} else if (json[i].typeId == 'A04') {
-					    			if (json[i].dateType == 4) {
-					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
-					    			} else if (json[i].dateType == 5) {
-					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
+				    			if (vo.dateType == 1) {
+					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
+					    			
+					    			if (len >= 15) {
+					    				objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:355px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+					    				objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:371px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    			}
-						    		objTr.append($("<td style='width:40%;'></td>").append($("<div style='width:263px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+						    		
+					    		} else if (vo.dateType == 2) {
+					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
+					    			
+					    			if (len >= 15) {
+					    				objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:355px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+					    				objTr.append($("<td style='width:60%;'></td>").append($("<div style='width:371px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			}
+						    		
+					    		} else if (vo.dateType == 3) {
+					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16) + "\u00a0~\u00a0" + vo.endDate.substring(11,16))));
+					    			
+					    			if (len >= 15) {
+					    				objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:311px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+					    				objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:327px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			}
+						    		
+					    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
+					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+					    			
+					    			if (len >= 15) {
+					    				objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:311px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+					    				objTr.append($("<td style='width:50%;'></td>").append($("<div style='width:327px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			}
+						    		
+					    		} else if (vo.typeId == 'A04') {
+					    			if (vo.dateType == 4) {
+					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+					    			} else if (vo.dateType == 5) {
+					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16)+ "\u00a0~\u00a0" + vo.endDate.substring(0,16))));
+					    			}
+					    			
+					    			if (len >= 15) {
+					    				objTr.append($("<td style='width:40%;'></td>").append($("<div style='width:247px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+					    				objTr.append($("<td style='width:40%;'></td>").append($("<div style='width:263px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			}
 					    		}
 	
 					    		$("#addpopup_list tbody").append(objTr);
-					    	}
+					    	});
 						} else {
 							$('#addpopup_list tbody').children('tr').not(":first").remove();
 					    	
-					    	if (json.length == 0) {
+					    	if (len == 0) {
 					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
 					    		uvobjTr.append($("<td style='width:25%; height:0px; border:none;'></td>"));
 					    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
@@ -741,46 +772,72 @@
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 					    	
-					    	for(var i = 0; i < json.length; i++) {
-					    		if (json[i].apprStatus == 1) {
-					    			json[i].apprStatus = "승인";
+					    	result.forEach(function(vo, index) {
+					    		if (vo.apprStatus == 1) {
+					    			vo.apprStatus = "승인";
 					    		} else {
-					    			json[i].apprStatus = "반려";
+					    			vo.apprStatus = "반려";
 					    		}
 								
 					    		var gubunBar = "";
-					    		if (json[i].region != "" && json[i].content != "") {
+					    		if (vo.region != "" && vo.content != "") {
 					    			gubunBar = " / ";
 					    		}
 					    		
-					    		var contentTrim = $.trim($("<p></p>").html(json[i].content).text());
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
+					    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
+					    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "근무지 : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 					    		
-					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text((i+1))));
+					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
 					    		
-					    		if (json[i].dateType == 1) {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,11))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    		} else if (json[i].dateType == 2) {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    		} else if (json[i].dateType == 3) {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(11,16))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    		} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    		} else if (json[i].typeId == 'A04') {
-					    			if (json[i].dateType == 4) {
-					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,10)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,10))));
-					    			} else if (json[i].dateType == 5) {
-					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16))));
+					    		if (vo.dateType == 1) {
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
+					    			
+					    			if (len >= 15) {
+							    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:519px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+							    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    			}
-						    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:400px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    		} else if (vo.dateType == 2) {
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
+					    			
+									if (len >= 15) {
+							    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:519px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+							    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			}
+					    		} else if (vo.dateType == 3) {
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16) + "\u00a0~\u00a0" + vo.endDate.substring(11,16))));
+					    			
+									if (len >= 15) {
+							    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:475px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+							    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			}
+					    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+					    			
+									if (len >= 15) {
+										objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:475px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+							    		objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			}
+					    		} else if (vo.typeId == 'A04') {
+					    			if (vo.dateType == 4) {
+					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+					    			} else if (vo.dateType == 5) {
+					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16)+ "\u00a0~\u00a0" + vo.endDate.substring(0,16))));
+					    			}
+					    			
+									if (len >= 15) {
+										objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:384px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			} else {
+					    				objTr.append($("<td style='width:75%;'></td>").append($("<div style='width:400px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+					    			}
+						    		
 					    		}
 					    		
 					    		$("#addpopup_list tbody").append(objTr);
-					    	}
+					    	});
 						}
 				    },
 				    complete : function() {
@@ -860,7 +917,7 @@
 				    		}
 			    			
 			    			if (len >= 15) {
-			    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:225px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
+			    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:226px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 			    			} else {
 			    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:240px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));			    				
 			    			}
@@ -1086,13 +1143,13 @@
 				    <thead>
 				    	<tr>
 					    	<c:if test="${deptFlag == 'true'}">
-								<th class="layerHeader" colspan="5" style="width:718px;">
+								<th class="layerHeader" colspan="5" style="width:740px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 								</th>
 							</c:if>
 							<c:if test="${deptFlag != 'true'}">
-								<th class="layerHeader" colspan="3" style="width:718px;">
+								<th class="layerHeader" colspan="3" style="width:740px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 								</th>
