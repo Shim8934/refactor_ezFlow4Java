@@ -743,7 +743,7 @@
 	    		searchAttitudeType = $("#searchAttitudeType").val();
 	    		
 	        	goToPageByNum(1);
-	        	getList();
+	        	//getList();
 	        }
 	        
 	        function refresh() {
