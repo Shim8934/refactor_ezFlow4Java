@@ -2027,10 +2027,18 @@ public class EzAttitudeGWController {
 		LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
 		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
 		
+		List<String> deptIdList = new ArrayList<>();
+		
+		List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getId(), "");
+		
+		for (AttitudeAuthorVO vo : authDeptlist) {
+			deptIdList.add(vo.getDeptId());
+		}
+		
 		if (page == null) {
 			infoXML = ezAttitudeService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
 		} else {
-			infoXML = ezAttitudeService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID);
+			infoXML = ezAttitudeService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, deptIdList);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);

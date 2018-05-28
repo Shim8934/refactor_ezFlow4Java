@@ -20,6 +20,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -306,4 +307,22 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public String getIsAttitude(Map<String, Object> map) throws Exception {
 		return (String) select("ezAttitudeDAO.getIsAttitude", map);
 	}
+	
+	public int getSearchListCount(Map<String, Object> map) throws Exception {
+		return getSearchListCountForLocal(map);                       
+	}
+	
+	private int getSearchListCountForLocal(Map<String, Object> map) {
+        return (int) select("ezAttitudeDAO.getSearchListCount", map);
+    }
+	
+    @SuppressWarnings("unchecked")
+    private List<OrganDeptVO> attOrganSearchListForLocal(Map<String, Object> map) throws Exception{
+        return (List<OrganDeptVO>) list("ezAttitudeDAO.attOrganSearchList", map);
+    }
+    
+    public List<OrganDeptVO> attOrganSearchList(Map<String, Object> map) throws Exception{
+        return attOrganSearchListForLocal(map);
+    }
+	
 }
