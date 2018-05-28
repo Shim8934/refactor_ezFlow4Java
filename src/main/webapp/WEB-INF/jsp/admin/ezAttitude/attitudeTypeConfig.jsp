@@ -105,7 +105,7 @@
 	            	},
 	            	success : function(resultStatus) {
 	            		if (resultStatus == "success") {
-		            		alert("<spring:message code='ezAttitude.bbhs19' />");
+		            		alert("<spring:message code='ezAttitude.t155' />");
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}

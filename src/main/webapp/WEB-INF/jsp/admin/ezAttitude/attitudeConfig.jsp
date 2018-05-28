@@ -118,7 +118,7 @@
 	            	},
 	            	success : function(resultStatus) {
 	            		if (resultStatus == "success") {
-		            		alert("<spring:message code='ezAttitude.bbhs19' />");
+		            		alert("<spring:message code='ezAttitude.t155' />");
 		            		company_change();
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");

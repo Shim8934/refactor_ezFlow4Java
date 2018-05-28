@@ -348,7 +348,7 @@
 	 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		            if (searchStartDate > searchEndDate) {
-		                alert("<spring:message code='ezAttitude.bbhs23'/>");
+		                alert("<spring:message code='ezAttitude.t131'/>");
 		                return;
 		            } else {
 		            	date_reset();
@@ -361,7 +361,7 @@
  	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
  	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	            if (searchStartDate > searchEndDate) {
-	                alert("<spring:message code='ezAttitude.bbhs23'/>");
+	                alert("<spring:message code='ezAttitude.t131'/>");
 	                return;
 	            }
  	    	}
@@ -423,7 +423,7 @@
 	    function get_excelAtt_list() {
 	    	if (usepostDate) {
 	            if (searchStartDate > searchEndDate) {
-	                alert("<spring:message code='ezAttitude.bbhs23'/>");
+	                alert("<spring:message code='ezAttitude.t131'/>");
 	                HiddenAttProgress();
 	                return;
 	            }
@@ -1200,10 +1200,10 @@
 		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
-		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs32' /><span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.t166' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
-		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.bbhs33' /><span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.t7' /><span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
         	<c:if test="${checkAdmin == 'true'}">

@@ -423,7 +423,7 @@
 					<td style="width: *;" colspan=2>
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="addAtt();">근태입력</span></a>&nbsp;
 						
 					</td>

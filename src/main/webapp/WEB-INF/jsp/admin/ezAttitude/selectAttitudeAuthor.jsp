@@ -147,7 +147,7 @@
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span></li>
-	            <li><span onclick="close_Click()"><spring:message code='ezAttitude.bbhs21' /></span></li>
+	            <li><span onclick="close_Click()"><spring:message code='ezAttitude.t157' /></span></li>
 	        </ul>
 	    </div>
 		<table id="TreeViewTD">
