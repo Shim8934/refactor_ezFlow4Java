@@ -143,7 +143,8 @@ function covBody(pbody) {
 
     BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
 
-	var xmlpara = createXmlDom();
+	//var xmlpara = createXmlDom();
+	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 	xmlpara.async = false;
     xmlpara.loadXML(BodyStr)
 	var bodyNodes = xmlpara.documentElement;
@@ -157,6 +158,15 @@ function removeTags(input, allowed) {
         return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
     });
 }
+
+function setNodeTextHwp(node, value) {
+    if (typeof (node.innerText) == "undefined") {
+        node.text = value;
+    } else {
+        node.innerText = value;
+    }
+}
+
 function makeXML(newDocID) {
 	GetEndDocInfo();
 	
@@ -170,31 +180,52 @@ function makeXML(newDocID) {
 		}
 	}
 	
-	sihangXML = createXmlDom();
-	sihangXML.async = false;
-	sihangXML.load("/myoffice/ezApprovalG/enforce/pubdocsample.xml");
-	
-	var eNodes = sihangXML.documentElement;
-	
-	var Nodes = eNodes.selectNodes("head/organ");
+	//sihangXML = createXmlDom();
+    //var sihangXML;
+	//sihangXML.async = false;
+	//sihangXML.load("/xml/ezApprovalG/pubdocsample.xml");
+	var xmlhttp;
+	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	xmlhttp.open("GET", "/xml/ezApprovalG/pubdocsample.xml", false);
+    xmlhttp.send();
+    
+    var xmlDoc;
+    xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+    xmlDoc.async = "false";
+    xmlDoc.loadXML(xmlhttp.responseText);
+    
+    sihangXML = loadXMLFile("/xml/ezApprovalG/pubdocsample.xml");
+	var eNodes = xmlDoc;
+    //var eNodes = 
+ 
+    var Nodes = eNodes.selectNodes("head/organ");
     if (HwpCtrl.CheckFieldExist("organ")) {
-        setNodeText(Nodes(0) , HwpCtrl.GetFieldText("organ"));
+        //setNodeText(Nodes.item(0) , HwpCtrl.GetFieldText("organ"));
+    	//HwpCtrl.SetFieldText(Nodes(0), HwpCtrl.GetFieldText("organ"));
+        HwpCtrl.SetFieldText("organ", getNodeText(Nodes(0)));
+    	
     } else {
-        setNodeText(Nodes(0) , "");
+        //setNodeText(Nodes(0) , "");
+    	HwpCtrl.SetFieldText("", getNodeText(Nodes(0)));
 	}
 	
 	var Nodes = eNodes.selectNodes("head/receiptinfo/recipient");
     if (HwpCtrl.CheckFieldExist("recipients")) {
         if (trim(HwpCtrl.GetFieldText("recipients")) == "") {
-			Nodes(0).setAttribute("refer", "false");
+			//Nodes(0).setAttribute("refer", "false");
+			SetAttribute(Nodes(0),"refer","false");
             if (HwpCtrl.CheckFieldExist("recipient")) {
                 tempNode = eNodes.selectNodes("head/receiptinfo/recipient/rec");
-                setNodeText(tempNode(0) , HwpCtrl.GetFieldText("recipient"));
+                //setNodeText(tempNode(0) , HwpCtrl.GetFieldText("recipient"));
+                HwpCtrl.SetFieldText(HwpCtrl.GetFieldText("recipient"), getNodeText(tempNode(0)));
 			}
         } else {
 			Nodes(0).setAttribute("refer", "true");	
             tempNode = eNodes.selectNodes("head/receiptinfo/recipient/rec");
-            setNodeText(tempNode(0) , HwpCtrl.GetFieldText("recipients").replace(strLang177, ""));
+            //setNodeText(tempNode(0) , HwpCtrl.GetFieldText("recipients").replace(strLang177, ""));
+            
+            HwpCtrl.SetFieldText(HwpCtrl.GetFieldText("recipients").replace(strLang177, ""), getNodeText(tempNode(0)));
+            
 		}
 	}
 	
@@ -209,19 +240,23 @@ function makeXML(newDocID) {
 	
 	var Nodes = eNodes.selectNodes("body/title");
     if (HwpCtrl.CheckFieldExist("doctitle")) {
-        setNodeText(Nodes(0) , HwpCtrl.GetFieldText("doctitle"));
+        //setNodeText(Nodes(0) , HwpCtrl.GetFieldText("doctitle"));
+    	HwpCtrl.SetFieldText(HwpCtrl.GetFieldText("doctitle"), getNodeText(Nodes(0)));
     } else {
         setNodeText(Nodes(0) , "");
 	}
 
 	var Nodes = eNodes.selectNodes("body");	
     if (attachbodyPath != "") {
-		Nodes(0).setAttribute("separate", "true");	
+		//Nodes(0).setAttribute("separate", "true");
+    	SetAttribute(Nodes(0),"separate","true");
     } else {
-		Nodes(0).setAttribute("separate", "false");	
+		//Nodes(0).setAttribute("separate", "false");
+    	SetAttribute(Nodes(0),"separate","false");
 	}
 	
-	var Nodes = eNodes.selectNodes("body");	
+	//var Nodes = eNodes.selectNodes("body");	
+    var Nodes = eNodes.getElementsByTagName("body");
     if (HwpCtrl.CheckFieldExist("body")) {
 		var strBody = GetHTMLBody(HwpCtrl.GetCloneData("body", "HTML"));
 		var pBody = Encode(strBody);
@@ -234,27 +269,30 @@ function makeXML(newDocID) {
 		var re = /vAlign=center/g;
 		pBody = pBody.replace(re,"vAlign=middle");
 		
-		var rtnNodes = covBody(pBody);
-        Nodes(0).appendChild(rtnNodes);
+		pBody = covBody(pBody); 
+        Nodes[0].appendChild(pBody);
     } else {
         setNodeText(Nodes(0) , "");
 	}
 	
 	var Nodes = eNodes.selectNodes("foot/sendername");
     if (HwpCtrl.CheckFieldExist("chief")) {
-        setNodeText(Nodes(0) , HwpCtrl.GetFieldText("chief"));
+        //setNodeText(Nodes(0) , HwpCtrl.GetFieldText("chief"));
+    	HwpCtrl.SetFieldText(HwpCtrl.GetFieldText("chief"), getNodeText(Nodes(0)));
     } else {
         setNodeText(Nodes(0) , "");
 	}
 
 	var Nodes = eNodes.selectNodes("foot/seal");
     if (NostampFlag) {
-		Nodes(0).setAttribute("omit", "true");
+		//Nodes(0).setAttribute("omit", "true");
+    	SetAttribute(Nodes(0),"omit","true");
     } else {
         if (HwpCtrl.CheckFieldExist("sealsign")) {
 			sealPath = GetDocumentElement(HwpCtrl, "surl");
             if (sealPath != "") {
-				Nodes(0).setAttribute("omit", "false");
+				//Nodes(0).setAttribute("omit", "false");
+            	SetAttribute(Nodes(0),"omit","false");
 				var tempNode2 = sihangXML.createNode(1,"img","")
 				Nodes(0).appendChild(tempNode2)
 				
@@ -262,21 +300,30 @@ function makeXML(newDocID) {
 				var filelength = sealPath.length - (len + 1);  
 				
 				sealName = sealPath.substr(len + 1,filelength);
-				tempNode2.setAttribute("src",sealName)
+				/*tempNode2.setAttribute("src",sealName)
                 tempNode2.setAttribute("alt", strLang178);
 				tempNode2.setAttribute("height", GetDocumentElement(HwpCtrl, "sheight").toString() + "mm");
-				tempNode2.setAttribute("width", GetDocumentElement(HwpCtrl, "swidth").toString() + "mm");
+				tempNode2.setAttribute("width", GetDocumentElement(HwpCtrl, "swidth").toString() + "mm");*/
+				
+				SetAttribute(tempNode2,"src",sealName);
+				SetAttribute(tempNode2,"alt",strLang178);
+				SetAttribute(tempNode2,"height",GetDocumentElement(HwpCtrl, "sheight").toString() + "mm");
+				SetAttribute(tempNode2,"width",GetDocumentElement(HwpCtrl, "swidth").toString() + "mm");
 			}
 		}
 	}
 
-	var Nodes = eNodes.selectNodes("foot/approvalinfo");
+	//var Nodes = eNodes.selectNodes("foot/approvalinfo");
+    sihangXML = loadXMLFile("/xml/ezApprovalG/pubdocsample.xml");
+    var eNodes = sihangXML.documentElement;
+    var Nodes = eNodes.getElementsByTagName("approvalinfo");
 	var LineNode = getLineInfo();
 	var SignSN = 1;
 	psignCount = 1;
 	var DekyulFlag = false;
-
-    for (i = 0; i < LineNode.documentElement.childNodes.length; i++) {
+	var LineNodes = SelectNodes(LineNode, "APPROVALINFO/APPROVAL");
+	
+   /* for (i = 0; i < LineNode.documentElement.childNodes.length; i++) {
         if (getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("TYPE")) != strLang3) {
 			var tempNode2 = sihangXML.createNode(1,"approval","");
 			Nodes(0).appendChild(tempNode2);
@@ -367,27 +414,119 @@ function makeXML(newDocID) {
 			}			
 			SignSN = SignSN + 1;
 		}
-	}
+	} */
+	
+	for (i = 0; i < LineNodes.length; i++) {
+        if (getNodeText(LineNodes.item(i).getElementsByTagName("TYPE").item(0)) != strLang3) {
+            var tempNode2;
+            tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "approval", "");
+            tempNode2.setAttribute("order", getNodeText(LineNodes.item(i).getElementsByTagName("ORDER").item(0)));
+
+            var tempNode3;
+            tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "signposition", "");
+            if (getNodeText(LineNodes.item(i).getElementsByTagName("OPINION").item(0)) == "YES")
+                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("SIGNPOSITION").item(0)));
+            else
+                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("SIGNPOSITION").item(0)));
+
+            var tempNode3;
+            tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "type", "");
+            setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("TYPE").item(0)));
+
+            if (getNodeText(LineNodes.item(i).getElementsByTagName("TYPE").item(0)) == strLang7)
+                DekyulFlag = true;
+
+            if ((getNodeText(LineNodes.item(i).getElementsByTagName("TYPE").item(0)) == strLang6) && (DekyulFlag)) {
+                var tempNode3;
+                tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "name", "");
+                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("NAME").item(0)));
+
+                tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "date", "");
+            }
+            else {
+                if (HwpCtrl.CheckFieldExist("sign" + SignSN)) {
+                	var signPath = GetDocumentElement(HwpCtrl, "sign" + SignSN);
+                    if (signPath != "") {
+                        var imageflag = true;
+                        for (j = 0; j < field.childNodes.length; j++) {
+                            if (imageflag && field.childNodes.item(j).tagName == "IMG") {
+                                var tempNode3;
+                                tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "signimage", "");
+
+                                var tempNode4;
+                                tempNode4 = createNodeAndAppandNodeText(sihangXML, tempNode3, tempNode4, "img", "");
+
+                                var signPath = imageflag && GetAttribute(field.childNodes.item(j),"spath");
+                                var len = signPath.lastIndexOf("/");
+                                var filelength = signPath.length - (len + 1);
+                                var signName = signPath.substr(len + 1, filelength);
+                                tempNode4.setAttribute("src", signName)
+                                tempNode4.setAttribute("alt", strLang179)
+                                tempNode4.setAttribute("height", Conversion(field.childNodes.item(j).height).toString() + "mm")
+                                tempNode4.setAttribute("width", Conversion(field.childNodes.item(j).width).toString() + "mm")
+
+                                psignName[psignCount] = signName;
+                                psignPath[psignCount] = signPath;
+                                psignCount = psignCount + 1;
+                                imageflag = false;
+                            }
+                        }
+                        var tempNode3;
+                        tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "name", "");
+                        setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("NAME").item(0)));
+                    }
+                    else {
+                        var tempNode3;
+                        tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "name", "");
+                        setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("NAME").item(0)));
+                    }
+                }
+                else {
+                    var tempNode3;
+                    tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "name", "");
+                    setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("NAME").item(0)));
+
+                }
+                var tempNode3;
+                tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "date", "");
+
+                if (getNodeText(LineNodes.item(i).getElementsByTagName("ORDER").item(0)) == "final" || DekyulFlag)
+                    setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("DATE").item(0)));
+            }
+            SignSN = SignSN + 1;
+        }
+    }
 
     for (i = 0; i < LineNode.documentElement.childNodes.length; i++) {
 		var SignSN = 1;
-		if (getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/TYPE").item(i)) == strLang3) {
-			var tempNode2 = sihangXML.createNode(1,"assist","");
+		if (getNodeText(LineNodes.item(i).getElementsByTagName("TYPE").item(0)) == strLang3) {
+			/*var tempNode2 = sihangXML.createNode(1,"assist","");
 			Nodes(0).appendChild(tempNode2);
-			tempNode2.setAttribute("order",getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/ORDER").item(i)))
-
-			var tempNode3 = sihangXML.createNode(1,"signposition","");
+			tempNode2.setAttribute("order",getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/ORDER").item(i)))*/
+			var tempNode2;
+            tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "assist", "");
+            tempNode2.setAttribute("order", getNodeText(LineNodes.item(i).getElementsByTagName("ORDER").item(0)));
+			
+			/*var tempNode3 = sihangXML.createNode(1,"signposition","");
 			tempNode2.appendChild(tempNode3);
 			if (getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/OPINION").item(i)) == "YES")
 			    setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/SIGNPOSITION").item(i)) + "(" + strLang5);
 			else
-			    setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/SIGNPOSITION").item(i)));
-			
-			var tempNode3 = sihangXML.createNode(1,"type","");
+			    setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/SIGNPOSITION").item(i)));*/
+            var tempNode3;
+            tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "signposition", "");
+            if (getNodeText(LineNodes.item(i).getElementsByTagName("OPINION").item(0)) == "YES")
+                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("ORDER").item(0)));
+            else
+                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("ORDER").item(0)));
+            
+			/*var tempNode3 = sihangXML.createNode(1,"type","");
 			tempNode2.appendChild(tempNode3);
-			setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/TYPE").item(i)));
-			
-
+			setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/TYPE").item(i)));*/
+            var tempNode3;
+            tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "type", "");
+            setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("TYPE").item(0)));
+            
             if (HwpCtrl.CheckFieldExist("habyuisign" + SignSN)) {
 				var signPath = GetDocumentElement(HwpCtrl, "habyuisign" + SignSN);
 				
@@ -448,115 +587,155 @@ function makeXML(newDocID) {
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/processinfo/regnumber");
+	//var Nodes = eNodes.selectNodes("foot/processinfo/regnumber");
+    var Nodes = eNodes.getElementsByTagName("regnumber");
     if (HwpCtrl.CheckFieldExist("docnumber")) {
 
         setNodeText(Nodes(0) , HwpCtrl.GetFieldText("docnumber"));
-		
-		var regnumbercode;
-		regnumbercode = getNodeText(pDocInfoXML.documentElement.childNodes(32));
-		Nodes(0).setAttribute("regnumbercode", regnumbercode);
+        Nodes.item(0).setAttribute("regnumbercode", getNodeText(pDocInfoXML.getElementsByTagName("DOCNUMCODE").item(0)));
+        
+		//var regnumbercode;
+		//regnumbercode = getNodeText(pDocInfoXML.documentElement.childNodes(32));
+		//Nodes(0).setAttribute("regnumbercode", regnumbercode);
     } else {
         setNodeText(Nodes(0) , "");
 		Nodes(0).setAttribute("regnumbercode", "");
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/processinfo/enforcedate");
+	//var Nodes = eNodes.selectNodes("foot/processinfo/enforcedate");
+    var Nodes = eNodes.getElementsByTagName("enforcedate");
     if (HwpCtrl.CheckFieldExist("enforcedate")) {
         setNodeText(Nodes(0) , HwpCtrl.GetFieldText("enforcedate"));
     } else {
         setNodeText(Nodes(0) , "");
 	}
 
-	var Nodes = eNodes.selectNodes("foot/processinfo");
+	//var Nodes = eNodes.selectNodes("foot/processinfo");
+    var Nodes = eNodes.getElementsByTagName("processinfo");
     if (HwpCtrl.CheckFieldExist("receiptnumber")) {
-		var tempNode2 = sihangXML.createNode(1,"receipt","");
-		Nodes(0).appendChild(tempNode2);
-
-		var tempNode3 = sihangXML.createNode(1,"number","");
-		tempNode2.appendChild(tempNode3);
+		/*var tempNode2 = sihangXML.createNode(1,"receipt","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+        tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "receipt", "");
+    	
+		/*var tempNode3 = sihangXML.createNode(1,"number","");
+		tempNode2.appendChild(tempNode3);*/
+        var tempNode3;
+        tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "number", "");
 		setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptnumber"));
 
-		var tempNode3 = sihangXML.createNode(1,"date","");
-		tempNode2.appendChild(tempNode3);
-
+		/*var tempNode3 = sihangXML.createNode(1,"date","");
+		tempNode2.appendChild(tempNode3);*/
+		var tempNode3;
+        tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "date", "");
+		
         if (HwpCtrl.CheckFieldExist("receiptdate")) {
             setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptdate"));
 		}
 	}
 
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
+    var Nodes = eNodes.getElementsByTagName("sendinfo");
     if (HwpCtrl.CheckFieldExist("zipcode")) {
-		var tempNode2 = sihangXML.createNode(1,"zipcode","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"zipcode","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "zipcode", "");
 		setNodeText(tempNode2 , HwpCtrl.GetFieldText("zipcode"));
     } else {
-		var tempNode2 = sihangXML.createNode(1,"zipcode","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"zipcode","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "zipcode", "");
+		setNodeText(tempNode2 , HwpCtrl.GetFieldText("zipcode"));
 		setNodeText(tempNode2 , "");
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("address")) {
-		var tempNode2 = sihangXML.createNode(1,"address","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"address","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "address", "");
 		setNodeText(tempNode2 , HwpCtrl.GetFieldText("address"));
     } else {
-		var tempNode2 = sihangXML.createNode(1,"address","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"address","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "address", "");
 		setNodeText(tempNode2 , "");
 	}
 
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("homepage")) {
-		var tempNode2 = sihangXML.createNode(1,"homeurl","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"homeurl","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "homeurl", "");
 		setNodeText(tempNode2 , HwpCtrl.GetFieldText("homepage"));
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("telephone")) {
-		var tempNode2 = sihangXML.createNode(1,"telephone","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"telephone","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "telephone", "");
 		setNodeText(tempNode2 , HwpCtrl.GetFieldText("telephone"));
     } else {
-		var tempNode2 = sihangXML.createNode(1,"telephone","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"telephone","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "telephone", "");
 		setNodeText(tempNode2 , "");
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("fax")) {
-		var tempNode2 = sihangXML.createNode(1,"fax","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"fax","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "fax", "");
 		setNodeText(tempNode2 , HwpCtrl.GetFieldText("fax"));
     } else {
-		var tempNode2 = sihangXML.createNode(1,"fax","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"fax","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "fax", "");
 		setNodeText(tempNode2 , "");
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("email")) {
-		var tempNode2 = sihangXML.createNode(1,"email","");
-		Nodes(0).appendChild(tempNode2);
+		/*var tempNode2 = sihangXML.createNode(1,"email","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "email", "");
 		setNodeText(tempNode2 , HwpCtrl.GetFieldText("email"));
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("publication")) {
-		var tempNode2 = sihangXML.createNode(1,"publication","");
+		/*var tempNode2 = sihangXML.createNode(1,"publication","");
 		Nodes(0).appendChild(tempNode2);
 		setNodeText(tempNode2 , HwpCtrl.GetFieldText("publication"));
-		tempNode2.setAttribute("code", getNodeText(pDocInfoXML.documentElement.childNodes(27)));		
+		tempNode2.setAttribute("code", getNodeText(pDocInfoXML.documentElement.childNodes(27)));*/
+    	var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "publication", "");
+	    tempNode2.setAttribute("code", getNodeText(pDocInfoXML.getElementsByTagName("PUBLICITYCODE").item(0)));
+	    setNodeText(tempNode2 , HwpCtrl.GetFieldText("publication"));
     } else {
-		var tempNode2 = sihangXML.createNode(1,"publication","");
+		/*var tempNode2 = sihangXML.createNode(1,"publication","");
 		Nodes(0).appendChild(tempNode2);
 		setNodeText(tempNode2 , "");
-		tempNode2.setAttribute("code", getNodeText(pDocInfoXML.documentElement.childNodes(27)));		
+		tempNode2.setAttribute("code", getNodeText(pDocInfoXML.documentElement.childNodes(27)));*/
+		var tempNode2;
+	    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "publication", "");
+	    tempNode2.setAttribute("code", getNodeText(pDocInfoXML.getElementsByTagName("PUBLICITYCODE").item(0)));
+	    setNodeText(tempNode2 , "");
 	}
 
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("symbol")) {
 		symbolPath = GetDocumentElement(HwpCtrl, "symbolurl");
         if (symbolPath != "") {
@@ -591,7 +770,7 @@ function makeXML(newDocID) {
 			}
 	}
 
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("logo")) {
 		logoPath = GetDocumentElement(HwpCtrl, "logourl");
 		
@@ -630,28 +809,40 @@ function makeXML(newDocID) {
 	}
 	
     if (HwpCtrl.CheckFieldExist("headcampaign")) {
-		var Nodes = eNodes.selectNodes("foot");
-		var tempNode2 = sihangXML.createNode(1,"campaign","");
-		Nodes(0).appendChild(tempNode2);
+		//var Nodes = eNodes.selectNodes("foot");
+    	var Nodes = eNodes.getElementsByTagName("foot");
+		/*var tempNode2 = sihangXML.createNode(1,"campaign","");
+		Nodes(0).appendChild(tempNode2);*/
+    	var tempNode2;
+        tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "campaign", "");
 
-		var tempNode3 = sihangXML.createNode(1,"headcampaign","");
-		tempNode2.appendChild(tempNode3);		
+		/*var tempNode3 = sihangXML.createNode(1,"headcampaign","");
+		tempNode2.appendChild(tempNode3);		*/
+        var tempNode3;
+        tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "headcampaign", "");
 		setNodeText(tempNode3 , HwpCtrl.GetFieldText("headcampaign"));
 		
         if (HwpCtrl.CheckFieldExist("footcampaign")) {
-			var tempNode3 = sihangXML.createNode(1,"footcampaign","");
+			/*var tempNode3 = sihangXML.createNode(1,"footcampaign","");
 			tempNode2.appendChild(tempNode3);		
-			setNodeText(tempNode3 , HwpCtrl.GetFieldText("footcampaign"));
+			setNodeText(tempNode3 , HwpCtrl.GetFieldText("footcampaign"));*/
+        	var tempNode3;
+            tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "footcampaign", HwpCtrl.GetFieldText("footcampaign"));
 		}		
     } else {
         if (HwpCtrl.CheckFieldExist("footcampaign")) {
-			var Nodes = eNodes.selectNodes("foot");
-			var tempNode2 = sihangXML.createNode(1,"campaign","");
-			Nodes(0).appendChild(tempNode2);
-
-			var tempNode3 = sihangXML.createNode(1,"footcampaign","");
+			//var Nodes = eNodes.selectNodes("foot");
+        	var Nodes = eNodes.getElementsByTagName("foot");
+			/*var tempNode2 = sihangXML.createNode(1,"campaign","");
+			Nodes(0).appendChild(tempNode2);*/
+        	var tempNode2;
+            tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "campaign", "");
+        	
+			/*var tempNode3 = sihangXML.createNode(1,"footcampaign","");
 			tempNode2.appendChild(tempNode3);		
-			setNodeText(tempNode3 , HwpCtrl.GetFieldText("footcampaign"));
+			setNodeText(tempNode3 , HwpCtrl.GetFieldText("footcampaign"));*/
+            var tempNode3;
+            tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "footcampaign", HwpCtrl.GetFieldText("footcampaign"));
 		}
 	}
 
@@ -669,7 +860,7 @@ function makeXML(newDocID) {
 		}
 	}
 	
-	var result = true;
+	/*var result = true;
 	var sihangXML2 = sihangXML.xml;
 	var strtempxml = sihangXML2;
 	
@@ -743,7 +934,44 @@ function makeXML(newDocID) {
 		var pAlertContent = strLang185;
 		OpenAlertUI(pAlertContent);
 		return false;
-	}
+	}*/
+    
+    var SaveDocHTTp = createXMLHttpRequest();
+    SaveDocHTTp.open("POST", "/ezApprovalG/simsaGUpload.do?docID=" + pDocID, false);
+    SaveDocHTTp.send(getXmlString(sihangXML));
+     
+    if (SaveDocHTTp.responseText == "OK") {
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/checkPubDocXML.do",
+    		data : {
+    			xmlPath :  "/sendXML/" + pDocID + "pubdoc.xml"
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+        
+        if (result != "OK") {
+            var pAlertContent = strLang185;
+            OpenAlertUI(pAlertContent);
+            return false;
+        } else {
+            var rtnXML = makeExtinfo(sihangXML, newDocID, "SEND");
+            var resultXml = encodeDN(rtnXML);
+            ContentXML = resultXml.split('::')[1];
+            ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
+            result = sendExtDoc(ContentXML);
+            if (result) {
+            	return true;
+            } else {
+            	return false;
+            }
+        }
+    }
 }
 
 function FileUpload(pFileName, pURL, localPath) {
@@ -774,41 +1002,45 @@ function FileUpload(pFileName, pURL, localPath) {
 function makeExtinfo(psihangXML, newDocID, mode) {
 	var ExtSNodes, Nodes, Nodes2, strTO, i;
 	var isfirst;
-	
     
-	var ExtXML =  createXmlDom();
+	/*var ExtXML =  createXmlDom();
 	ExtXML.async = false;
-	ExtXML.load("/myoffice/ezApprovalG/enforce/packXML.xml");
+	ExtXML.load("/myoffice/ezApprovalG/enforce/packXML.xml");*/
 	
   try {
-	var objSave = new ActiveXObject("EzUtil.MiscFunc"); 
+	var ExtXML = loadXMLFile("/xml/ezApprovalG/packXML.xml");
+	//var objSave = new ActiveXObject("EzUtil.MiscFunc"); 
 	var eNodes = ExtXML.documentElement;
 	var Nodes = psihangXML.documentElement;
 	
         
-	var Nodes = eNodes.selectNodes("header/send-orgcode");
-	setNodeText(Nodes(0) , companyID);
-	
+	//var Nodes = eNodes.selectNodes("header/send-orgcode");
+	//setNodeText(Nodes(0) , companyID);
+	var Nodes = SelectNodes(eNodes, "send-orgcode");
+    setNodeText(Nodes[0], companyID);
         
-	var Nodes = eNodes.selectNodes("header/send-id");
-	setNodeText(Nodes(0) , companyID);
-	
+	//var Nodes = eNodes.selectNodes("header/send-id");
+	//setNodeText(Nodes(0) , companyID);
+    Nodes = SelectNodes(eNodes, "send-id");
+    setNodeText(Nodes[0],companyID);
         
-	var Nodes = eNodes.selectNodes("header/send-name");
-	setNodeText(Nodes(0) , objSave.EncodeBase64(companyName));
-	
+	/*var Nodes = eNodes.selectNodes("header/send-name");
+	setNodeText(Nodes(0) , objSave.EncodeBase64(companyName));*/
+    Nodes = SelectNodes(eNodes, "send-name");
+    setNodeText(Nodes[0], companyName);
+    
 	isfirst = true;
         if (mode == "GPKI") {
             for (i = 0; i < isGPKI.length; i++) {
                 if (isGPKI[i] == "Y") {
-                    if (isfirst) {
-					strTO = BaseURL[i];
-					isfirst = false;	
-                    } else {
-					strTO = strTO + ";" + BaseURL[i];
-			}		
-		}	
-	}
+	                if (isfirst) {
+	                	strTO = BaseURL[i];
+	                	isfirst = false;	
+	                } else {
+	                	strTO = strTO + ";" + BaseURL[i];
+	                }		
+                }	
+            }
         } else {
             for (i = 0; i < isGPKI.length; i++) {
                 if (isGPKI[i] == "N") {
@@ -822,8 +1054,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		}
 	}
 	
-        
-	var Nodes = eNodes.selectNodes("header/receive-id");
+	/*var Nodes = eNodes.selectNodes("header/receive-id");
 	setNodeText(Nodes(0) , strTO);
 
         
@@ -843,19 +1074,38 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 	if (pAprType == strLang186 )
 		Nodes(0).setAttribute("type", "resend");
 	else
-		Nodes(0).setAttribute("type", "send");
+		Nodes(0).setAttribute("type", "send");*/
+        
+    Nodes = SelectNodes(eNodes, "receive-id");
+    setNodeText(Nodes[0], strTO);
 
-        
-	Nodes(0).setAttribute("dept", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(17))));
-        
-	Nodes(0).setAttribute("name", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(14))));
+    Nodes = SelectNodes(eNodes, "date");
+    setNodeText(Nodes[0], "");
 
-        
-	var Nodes = eNodes.selectNodes("header/send-gw");
-	setNodeText(Nodes(0) , objSave.EncodeBase64("ezFlow2000/G"));
+    Nodes = SelectNodes(eNodes, "title");
+    setNodeText(Nodes[0], getNodeText(GetChildNodes(GetChildNodes(pDocInfoXML)[0])[7]));
 
+    Nodes = SelectNodes(eNodes, "doc-id");
+    setNodeText(Nodes[0], pOrgDocID);
+
+    Nodes = SelectNodes(eNodes, "doc-type");
+    if (pAprType == strLang186)
+        SetAttribute(Nodes[0], "type", "resend")            
+    else
+        SetAttribute(Nodes[0], "type", "send");    
         
-	var Nodes = eNodes.selectNodes("header/dtd-version");
+	/*Nodes(0).setAttribute("dept", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(17))));
+        
+	Nodes(0).setAttribute("name", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(14))));*/
+    SetAttribute(Nodes[0], "dept", getNodeText(GetChildNodes(GetChildNodes(pDocInfoXML)[0])[17]));
+    SetAttribute(Nodes[0], "name", getNodeText(GetChildNodes(GetChildNodes(pDocInfoXML)[0])[14]));
+        
+	/*var Nodes = eNodes.selectNodes("header/send-gw");
+	setNodeText(Nodes(0) , objSave.EncodeBase64("ezFlow2000/G"));*/
+    Nodes = SelectNodes(eNodes, "send-gw");
+    setNodeText(Nodes[0], "ezFlow2000/G");
+        
+	/*var Nodes = eNodes.selectNodes("header/dtd-version");
 	setNodeText(Nodes(0) , "2.0");
 
         
@@ -869,9 +1119,25 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 	tempNode.setAttribute("filename", objSave.EncodeBase64("pubdoc.xml"));
 	tempNode.setAttribute("content-transfer-encoding", "base64");
 	tempNode.setAttribute("content-type", "text/xml");
-        tempNode.setAttribute("charset", "euc-kr");
-	
-	var strtempxml = psihangXML.xml;
+    tempNode.setAttribute("charset", "euc-kr");*/
+    Nodes = SelectNodes(eNodes, "dtd-version");
+    setNodeText(Nodes[0], "2.0");
+
+    Nodes = SelectNodes(eNodes, "xsl-version");
+    setNodeText(Nodes[0], "2.0");
+
+    Nodes = SelectNodes(eNodes, "contents");
+
+    var tempNode = createNode(sihangXML, "content");
+    Nodes[0].appendChild(tempNode);
+
+    SetAttribute(tempNode, "content-role", "pubdoc");
+    SetAttribute(tempNode, "filename", "pubdoc.xml");
+    SetAttribute(tempNode, "content-transfer-encoding", "base64");
+    SetAttribute(tempNode, "content-type", "text/xml");
+    SetAttribute(tempNode, "charset", "");
+    
+	/*var strtempxml = psihangXML.xml;
 	var re = /&amp;nbsp;/g; 
 	var strtempxml = strtempxml.replace(re,"&nbsp;")
 	var re = /strong>/g; 
@@ -968,7 +1234,111 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		tempNode.setAttribute("content-type", "");
 		tempNode.setAttribute("charset", "euc-kr");
 		setNodeText(tempNode , logoPath.replace(pDomainName, ""));
-	}			
+	}	*/	
+    
+    var strtempxml = getXmlString(psihangXML);
+    var re = /&amp;nbsp;/g;
+    var strtempxml = strtempxml.replace(re, "&nbsp;")
+    var re = /strong>/g;
+    var strtempxml = strtempxml.replace(re, "b>")
+    
+    setNodeText(tempNode, "<?xml version=\"1.0\" encoding=\"euc-kr\"?><?xml:stylesheet type=\"text/xsl\" href=\"siheng.xsl\"?><!DOCTYPE pubdoc SYSTEM \"pubdoc.dtd\">" + strtempxml);
+
+    if (sealName != "") {
+        var Nodes = SelectNodes(eNodes, "contents");
+        var tempNode = createNode(sihangXML, "content"); 
+        Nodes[0].appendChild(tempNode);
+
+        SetAttribute(tempNode, "content-role", "seal");
+        SetAttribute(tempNode, "filename", sealName); // btoa
+        SetAttribute(tempNode, "content-transfer-encoding", "base64");
+        SetAttribute(tempNode, "content-type", "");
+        SetAttribute(tempNode, "charset", "UTF-8");
+        setNodeText(tempNode, sealPath.replace(pDomainName, ""));                        
+    }
+
+
+    for (i = 0; i < attachName.length; i++) {
+        var Nodes = SelectNodes(eNodes, "contents"); 
+        var tempNode = createNode(sihangXML, "content");
+        Nodes[0].appendChild(tempNode);
+        if (attachType[i] == "Y")
+            SetAttribute(tempNode, "content-role", "attach_body");
+        else
+            SetAttribute(tempNode, "content-role", "attach");
+
+        SetAttribute(tempNode, "filename", attachName[i]); // btoa
+        SetAttribute(tempNode, "content-transfer-encoding", "base64");
+        SetAttribute(tempNode, "content-type", "");
+        SetAttribute(tempNode, "charset", "");
+        setNodeText(tempNode, attachPath[i].replace(pDomainName, ""));                        
+    }
+
+    if (attachxmlPath != "") {
+        var Nodes = SelectNodes(eNodes, "contents"); 
+        var tempNode = createNode(sihangXML, "content");
+        Nodes[0].appendChild(tempNode);
+
+        SetAttribute(tempNode, "content-role", "attach_xml");
+        SetAttribute(tempNode, "filename", attachxmlName); // btoa
+        SetAttribute(tempNode, "content-transfer-encoding", "base64");
+        SetAttribute(tempNode, "content-type", "html/xml");
+        SetAttribute(tempNode, "charset", "");
+        setNodeText(tempNode, attachxmlPath.replace(pDomainName, ""));
+    }
+
+    if (attachxslPath != "") {
+        var Nodes = SelectNodes(eNodes, "contents");
+        var tempNode = createNode(sihangXML, "content");
+        Nodes[0].appendChild(tempNode);
+
+        SetAttribute(tempNode, "content-role", "attach_xsl");
+        SetAttribute(tempNode, "filename", attachxslName); // btoa
+        SetAttribute(tempNode, "content-transfer-encoding", "base64");
+        SetAttribute(tempNode, "content-type", "html/xsl");
+        SetAttribute(tempNode, "charset", "");
+        setNodeText(tempNode, attachxslPath.replace(pDomainName, ""));
+    }
+
+    for (i = 1; i < psignCount; i++) {
+        var Nodes = SelectNodes(eNodes, "contents");
+        var tempNode = createNode(sihangXML, "content");
+        Nodes[0].appendChild(tempNode);
+
+        SetAttribute(tempNode, "content-role", "sign");
+        SetAttribute(tempNode, "filename", psignName[i]); // btoa
+        SetAttribute(tempNode, "content-transfer-encoding", "base64");
+        SetAttribute(tempNode, "content-type", "");
+        SetAttribute(tempNode, "charset", "");
+        setNodeText(tempNode, psignPath[i].replace(pDomainName, ""));
+    }
+
+    if (symbolName != "") {
+        var Nodes = SelectNodes(eNodes, "contents"); 
+        var tempNode = createNode(sihangXML, "content");
+        Nodes[0].appendChild(tempNode);
+
+        SetAttribute(tempNode, "content-role", "symbol");
+        SetAttribute(tempNode, "filename", symbolName); // btoa
+        SetAttribute(tempNode, "content-transfer-encoding", "base64");
+        SetAttribute(tempNode, "content-type", "");
+        SetAttribute(tempNode, "charset", "");
+        setNodeText(tempNode, symbolPath.replace(pDomainName, ""));
+    }
+
+    if (logoName != "") {
+        var Nodes = SelectNodes(eNodes, "contents");
+        var tempNode = createNode(sihangXML, "content");
+        Nodes[0].appendChild(tempNode);
+
+        SetAttribute(tempNode, "content-role", "logo");
+        SetAttribute(tempNode, "filename", logoName); // btoa
+        SetAttribute(tempNode, "content-transfer-encoding", "base64");
+        SetAttribute(tempNode, "content-type", "");
+        SetAttribute(tempNode, "charset", "");
+        setNodeText(tempNode, logoPath.replace(pDomainName, ""));
+    }
+    
 	return ExtXML;
 	
   } catch(e) {
@@ -977,7 +1347,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 }
 
 var i = 0;
-function sendExtDoc(ExtXML) {
+/*function sendExtDoc(ExtXML) {
     try {
 		i = i + 1;
 		var objSaveTmp = new ActiveXObject("EzUtil.MiscFunc"); 
@@ -1015,9 +1385,37 @@ function sendExtDoc(ExtXML) {
     catch (e) {
 		return false;
 	}
+}*/
+function sendExtDoc(ExtXML) {
+	try {
+		i = i + 1;		
+		
+	    $.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/sendMsg.do",
+			data : {
+				xmlData : "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">" + ExtXML ,
+				xmlPath : pDocID + i + "pack.xml"
+			},
+			success: function(xml){
+				result = xml;
+			} ,
+			error : function () {
+				return false;
+			}       			
+		});
+		
+	    if (result == "OK") {
+	    	return true;
+	    }
+	} catch(e) {
+		return false;
+	}
 }
 
-function encodeDN(ExtXML) {
+/*function encodeDN(ExtXML) {
 	var xmlhttp = createXMLHttpRequest();
 	xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/sendMsg2.aspx", false);
 	xmlhttp.send(ExtXML);
@@ -1035,8 +1433,22 @@ function encodeDN(ExtXML) {
     catch (e) {
 		return emlName;
 	}
+}*/
+function encodeDN(ExtXML) {
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/sendMsg2.do",
+		data : {
+			extXML : getXmlString(ExtXML)
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	return result;
 }
-
 
 function encodeUP(emlName) {
 	var ouCodes;

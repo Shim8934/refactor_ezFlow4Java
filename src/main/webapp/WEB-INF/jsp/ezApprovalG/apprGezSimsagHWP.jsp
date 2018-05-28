@@ -17,6 +17,7 @@
 	<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/ezSimsaG_Cross.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/ezSimsaG_HWP.js"></script>
+	
 	<script type="text/javascript" src="/js/escapenew.js"></script>
 	<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
     <script type="text/javascript">
@@ -304,7 +305,7 @@
                 }
             } catch (e) {
                 alert("ezsimsag_hwp.aspx.btnSend_onclick()" + e.description);
-            }
+        	}
         }
 
         function DeleteLocalFiles() {
@@ -690,7 +691,7 @@
 
         function Encode(text) {
             try {
-                var xmlhttp = createXMLHttpRequest();
+                /* var xmlhttp = createXMLHttpRequest();
                 var xmlpara = createXmlDom();
                 var objNode;
 
@@ -699,11 +700,26 @@
                 createNodeAndInsertText(xmlpara, objNode, "DEFAULTFONTSIZE", "");
                 createNodeAndInsertText(xmlpara, objNode, "CONTENT", text);
                 xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/GetContentXml.aspx", false);
-                xmlhttp.send(xmlpara);
-
+                xmlhttp.send(xmlpara); */
+                $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getContentXml.do",
+		    		data : {
+		    			fontFamily : "",
+		    			fontSize : "",
+		    			content : text
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}     			
+		    	});
+                
                 var Content = document.createElement("DIV");
-                var pTemp = xmlhttp.responseXML;
-
+                //var pTemp = xmlhttp.responseXML;
+				var pTemp = result;	
+                
                 if (getNodeText(pTemp.getElementsByTagName("RESULT")[0]) === "OK") {
                     Content.innerHTML = getNodeText(pTemp.getElementsByTagName("CONTENT")[0]);
                 }

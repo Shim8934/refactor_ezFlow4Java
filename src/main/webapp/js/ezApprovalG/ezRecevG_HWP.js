@@ -216,7 +216,7 @@ function UpdateAttachURL()
 	}
 }
 
-function SendAckForSend(errMsg, type)
+/*function SendAckForSend(errMsg, type)
 {
     var xmlpara = createXmlDom();
     var xmlhttp = createXMLHttpRequest();
@@ -239,6 +239,29 @@ function SendAckForSend(errMsg, type)
 		var pAlertContent = strLang725;
 		OpenAlertUI(pAlertContent);
 	}
+}*/
+function SendAckForSend(errMsg, type) {
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/sendAckforReSend.do",
+		data : {
+				docID : pDocID,
+				type  : type,
+				userName : arr_userinfo[11],
+				userDeptName : arr_userinfo[15],
+				errMsg : errMsg
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    if (type == "req-resend") {
+        var pAlertContent = strLang725;
+        OpenAlertUI(pAlertContent);
+    }
 }
 
 function RemoveDocInfo()
@@ -255,10 +278,11 @@ function RemoveDocInfo()
     xmlhttp.send(xmlpara);
 }
 
-function getExtInfo()
-{
-    var xmlURL = getNodeText(pRelayDocInfo.getElementsByTagName("xmlURL").item(0));
-    var sealURL = getNodeText(pRelayDocInfo.getElementsByTagName("sealURL").item(0));
+function getExtInfo() {
+    /*var xmlURL = getNodeText(pRelayDocInfo.getElementsByTagName("xmlURL").item(0));
+    var sealURL = getNodeText(pRelayDocInfo.getElementsByTagName("sealURL").item(0));*/
+	var xmlURL = getNodeText(GetElementsByTagName(pRelayDocInfo, "xmlURL")[0]);
+    var sealURL = getNodeText(GetElementsByTagName(pRelayDocInfo, "sealURL")[0]);
 	
 	if( xmlURL == "" )
 	{
@@ -268,39 +292,60 @@ function getExtInfo()
 		return false;
 	}
 	
-	xmlURL = "/Upload_ApprovalG/" + sCompanyID + "/ExDocXML/" + xmlURL;
+	//xmlURL = "/Upload_ApprovalG/" + sCompanyID + "/ExDocXML/" + xmlURL;
+	xmlURL = sCompanyID + "/ExDocXML/" + xmlURL;
 	
-	var xmlhttp = createXMLHttpRequest();
+	/*var xmlhttp = createXMLHttpRequest();
 	var xmlDocCheck = createXmlDom();
 	var sihangXML =  createXmlDom();
 	var objNode;
 	createNodeInsert(xmlDocCheck, objNode, "PARAMETER");
 	createNodeAndInsertText(xmlDocCheck, objNode, "XMLPATH", xmlURL);
 	xmlhttp.open("POST","/myoffice/ezApprovalG/ReceivUI/aspx/loadDocXML.aspx",false);
-	xmlhttp.send(xmlDocCheck);
+	xmlhttp.send(xmlDocCheck);*/
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/loadDocXML.do",
+		data : {
+			XMLPATH : xmlURL
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 	
-	sihangXML = loadXMLString(xmlhttp.responseText);
+	//sihangXML = loadXMLString(xmlhttp.responseText);
+	sihangXML = loadXMLString(result);
 	
-	if (sihangXML.xml == "") {
+	/*if (sihangXML.xml == "") {
 	    alert(strLang726 + xmlURL);
 	    return false;
-	}
+	}*/
+	if (getXmlString(sihangXML) == "") {
+        alert(strLang726 + xmlURL);
+        return false;
+    }
 
-	var eNodes = sihangXML.documentElement;
-
+	//var eNodes = sihangXML.documentElement;
+	var eNodes = sihangXML;
 
 	var bodyTagUse = true;
     // 에러로그 여부
     try {
-        var Nodes = eNodes.selectNodes("body");
+        //var Nodes = eNodes.selectNodes("body");
+    	Nodes = SelectNodes(eNodes, "pubdoc/body");
+    	
         if (Nodes.length > 0) {
             bodyTagUse = true;
         }
         else {
             bodyTagUse = false;
         }
-        Nodes = eNodes.selectNodes("ERRORMESSAGE");
-
+        //Nodes = eNodes.selectNodes("ERRORMESSAGE");
+        Nodes = SelectNodes(eNodes, "pubdoc/ERRORMESSAGE");
+        
         if (Nodes.length > 0) {
             if (bodyTagUse) {
                 OpenAlertUI("오류내용:" + getNodeText(Nodes[0]) + "<br>" + " > 문서를 불러올수 있으나 정상표시되는지 확인하세요.");
@@ -314,7 +359,8 @@ function getExtInfo()
 
 
 
-	var Nodes = eNodes.selectNodes("head/organ");		
+	//var Nodes = eNodes.selectNodes("head/organ");
+    Nodes = SelectNodes(eNodes, "pubdoc/head/organ");
 	if( Nodes.length > 0 )
 	{
 		if( HwpCtrl.CheckFieldExist("organ") )
@@ -931,7 +977,7 @@ function getExtInfo()
 	return true;
 }          
 
-function SetHref(mode) {
+/*function SetHref(mode) {
     var xmlpara = createXmlDom();
     var xmlhttp = createXMLHttpRequest();
     var objNode;
@@ -941,6 +987,24 @@ function SetHref(mode) {
     createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
     xmlhttp.open("POST", "/myoffice/ezApprovalG/ReceivUI/aspx/setHref.aspx", false); 
     xmlhttp.send(xmlpara);
+}
+*/
+function SetHref(mode) {
+ 	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/setHref.do",
+		data : {
+			docID : pDocID,
+			fileType : "hwp",
+			mode  : mode
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 }
 
 function ConversionPt(cmm) {
@@ -1009,7 +1073,7 @@ function getSignURL(SignURL) {
     return rtnVal;
 }
 
-function SetDocInfo() {
+/*function SetDocInfo() {
     var xmlpara = createXmlDom();
     var xmlhttp = createXMLHttpRequest();
     var objNode;
@@ -1024,6 +1088,27 @@ function SetDocInfo() {
 
     xmlhttp.open("POST", "/myoffice/ezApprovalG/ReceivUI/aspx/setRecvDocInfo.aspx", false);
     xmlhttp.send(xmlpara);
+}*/
+function SetDocInfo() {
+    var result ="";
+  	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/setRecvDocInfo.do",
+		data : {
+			docID : pDocID,
+			publicFlag : pPublicFlag,
+			docNo : pDocNo,
+			docNumCode : pDocNumCode,
+			orgDocNumCode : pOrgDocNumCode,
+			mode : "I",
+			fileType : "hwp"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 }
 
 function convertDate(datestring) {
