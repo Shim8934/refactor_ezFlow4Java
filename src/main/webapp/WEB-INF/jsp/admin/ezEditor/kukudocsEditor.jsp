@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<!DOCTYPE html>
 <html>
 	<head>
 		<title></title>
@@ -275,10 +274,10 @@
 			var useHTMLMode = "${useHTMLMode}" == "NO" ? false : true;
 			
 			// 메뉴 설정			
-			var customAlignMenu = [['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent'],
-								   ['table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
-								   'table_merge','table_split_col','table_split_row','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin'],
-								   ['template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','paragraph_remove_format','color','background_color']];
+			var customAlignMenu = ['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent',
+								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
+								   'table_merge','table_split_col','table_split_row','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
+								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','paragraph_remove_format','color','background_color'];
 			
 			// 이미지 업로드 URL 설정
 			var imageUploadURL = "/ezEditor/kukudocsUpload.do?type=" + type;
@@ -338,12 +337,13 @@
 	            maxHeight : 0,
 	            width : '100%',
 	            height : '100%',
-	            lang : lang,
+	            defaultLanguage : lang,
 	            languagePathURL : '/js/ezEditor/kukudocsEditor/lang/',
 	            defaultFontFamily : defaultFontFamily,
 	            defaultFontSize : defaultFontSize,
 	            fontSize : fontSize,
 	            fontFamily : fontFamily,
+	            defaultTableWidth : 700,
 	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
@@ -359,7 +359,6 @@
 	            Mouse_event : {'keyup' : CellCheckField},
 	            Key_event : {'mouseup' : CellCheckField}
 	        });
-			
 		</script>
 	</body>
 </html>

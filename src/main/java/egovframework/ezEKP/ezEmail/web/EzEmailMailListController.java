@@ -118,6 +118,7 @@ public class EzEmailMailListController {
 		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
 		String useReSend = ezCommonService.getTenantConfig("useReSend", userInfo.getTenantId());
 		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId()); // 수아 수정(useMailWriteSenderClick 추가)
+		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
 		
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -175,6 +176,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 수정 (useMailWriteSenderClick 추가)
+		model.addAttribute("useSearchContent", useSearchContent);
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
@@ -611,12 +613,17 @@ public class EzEmailMailListController {
 			if (uniqueId.endsWith(",")) {
 				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
 			}
+			
 			String[] folderAndMsgIdArray = uniqueId.split(",");
-			folderId = folderAndMsgIdArray[0].split("/")[0];			
+			
+			int delimiterIndex = folderAndMsgIdArray[0].lastIndexOf("/");
+			folderId = folderAndMsgIdArray[0].substring(0, delimiterIndex);			
 			uids = new long[folderAndMsgIdArray.length];
+			
 			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 				String folderAndMsgId = folderAndMsgIdArray[i];
-				String msgId = folderAndMsgId.split("/")[1];
+				delimiterIndex = folderAndMsgId.lastIndexOf("/");
+				String msgId = folderAndMsgId.substring(delimiterIndex + 1);
 				uids[i] = Long.parseLong(msgId);
 			}	
 		}

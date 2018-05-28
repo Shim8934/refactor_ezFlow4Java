@@ -396,7 +396,7 @@
 								SELECT 
 									* 
 									FROM 
-										VAPRDOINGDOCLIST 
+										VGONGRAMAPRDOINGDOCLIST
 		               				WHERE 
 		               					APRMEMBERID = #v_USERID#
 		               				AND 
@@ -3216,6 +3216,8 @@
 	        AND
 	        	    TBL_FormContainer.COMPANYID = #companyID#
 		</isNotEmpty>
+		ORDER BY
+			TBL_FORMCONTAINER.formcontid
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO"> -->
 <!-- 		{CALL EZSP_GETSECURITYTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3873,7 +3875,7 @@
 	   		<isNotEmpty property="v_PACCOUNTPYEAR" >
 	   		<![CDATA[
 	   			 AND 
-	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_PACCOUNTPYEAR#
+	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR = #v_PACCOUNTPYEAR#
 	   		]]>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_TASKCODE" >
@@ -8914,7 +8916,7 @@
    			SELECT 
    				COUNT(DOCID) 
    			FROM 
-   				VAPRDOINGDOCLIST 
+   				VGONGRAMAPRDOINGDOCLIST 
    			WHERE 
    				APRMEMBERID = #v_USERID# 
    			AND 
@@ -9897,7 +9899,7 @@
 			 SELECT 
 			 		COUNT(DOCID) 
 			 FROM 
-			 		VAPRDOINGDOCLIST  
+			 		VGONGRAMAPRDOINGDOCLIST
 			 WHERE 
 			 		APRMEMBERID = #v_USERID#
 			 AND 
@@ -12254,7 +12256,7 @@
 				SELECT 
 					COUNT(DOCID) 
 				FROM 
-					vgongramaprdoingdoclist 
+					VGONGRAMAPRDOINGDOCLIST
          		WHERE 
          			TENANT_ID = #v_TENANTID#
          		AND
@@ -20360,9 +20362,9 @@
    <insert id="EzApprovalG.insertGongRamExpAprDocInfo" parameterClass="Map">
    		    INSERT INTO 
    		    	TBL_EXPAPRDOCINFO 
-   		    (         DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, PUBLICITYYN) 
+   		    (         DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
    		    (SELECT 
-   		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, PUBLICITYYN 
+   		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
    		     FROM 
    		     	TBL_EXPENDAPRDOCINFO 
              WHERE 
@@ -24543,5 +24545,18 @@
 		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
 			ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , 1) > A.STARTDATE
 		</isEqual>
+	</select>
+	
+	<select id="EzApprovalG.getDocExt" parameterClass="Map" resultClass="String">
+		SELECT 
+			HREF
+		FROM
+			TBL_APRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
 	</select>
 </sqlMap>

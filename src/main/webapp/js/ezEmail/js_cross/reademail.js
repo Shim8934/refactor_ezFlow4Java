@@ -385,49 +385,56 @@ function download_mail() {
         form1.submit();
     }
 }
-var address_foldermanage_dialogArguments = new Array();
-function func_addaddr(stype) {
-    var ret;
-    address_foldermanage_dialogArguments[1] = timedCall_func_addaddr_Complete;
-    address_foldermanage_dialogArguments[3] = stype;
-    DivPopUpShow(450, 500, "/ezAddress/addressFolderManage.do?mode=Show");
+
+var address_selectAddress_dialogArguments = new Array();
+function func_addaddr() {
+	address_selectAddress_dialogArguments[1] = func_addaddr2;
+	address_selectAddress_dialogArguments[2] = [];
+	DivPopUpShow(600, 500, "/ezEmail/mailSelectAddress.do?url=" + encodeURIComponent(g_paramURL));
 }
 
-function timedCall_func_addaddr_Complete(ret) {
-	setTimeout(function() {
-		func_addaddr_Complete(ret);
-	}, 1000);
+var address_foldermanage_dialogArguments = new Array();
+function func_addaddr2(result) {
+	DivPopUpHidden();
+	
+	if (result) {
+		address_foldermanage_dialogArguments[1] = func_addaddr_Complete;
+		DivPopUpShow(450, 500, "/ezAddress/addressFolderManage.do?mode=Show");
+	}
 }
 
 function func_addaddr_Complete(ret) {
-	try {
-    
-		DivPopUpHidden();
+	DivPopUpHidden();
 
-		if (ret == "0" || ret == "1") {
-            return;
-        }
-        
-        var xmlHTTP = createXMLHttpRequest();
-        var type = ret.split(':')[0];
+	if (ret == 0 || ret == 1) {
+        return;
+    }
+	
+    var xmlHTTP = createXMLHttpRequest();
+
+    try {
+    	var addressList = address_selectAddress_dialogArguments[2];
+    	var type = ret.split(':')[0];
         var folderId = ret.split(':')[1];
-
-        try {
-            senderName = TrimText(ConvertCharToEntityReference(LabelFromName.textContent));
-            senderEmail = TrimText(ConvertCharToEntityReference(g_fromEmail));
+        
+    	var objNode, objRow;
+    	var xmlDom;
+    	var name, email;
+    	var duplicateList = [];
+    	
+    	for (i = 0; i < addressList.length; i++) {
+    		name = addressList[i]["name"];
+    		email = addressList[i]["email"];
             
-            // 주소록에 추가시 중복체크
-            if (senderEmail != "") {
-            	var AddressCnt = Get_DupliCateAddressCnt(senderEmail, folderId, type);
-            	
-            	if (parseInt(AddressCnt) > 0) {
-            		alert(strLang134);
-            		return;
-            	}
-            }
-            
-            var xmlDom = createXmlDom();
-            var objNode, objRow;
+    		// 주소록에 추가시 중복체크
+        	var AddressCnt = Get_DupliCateAddressCnt(email, folderId, type);
+        	
+        	if (parseInt(AddressCnt) > 0) {
+        		duplicateList.push(addressList[i]);
+        		continue;
+        	}
+    		
+            xmlDom = createXmlDom();
             
             objNode = createNodeInsert(xmlDom, objNode, "DATA");
             createNodeAndInsertText(xmlDom, objNode, "FOLDERID", folderId);
@@ -436,14 +443,14 @@ function func_addaddr_Complete(ret) {
             createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", "");
             createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", "");
             createNodeAndInsertText(xmlDom, objNode, "PHOTOPATH", "");
-            createNodeAndInsertText(xmlDom, objNode, "SNAME", senderName);
+            createNodeAndInsertText(xmlDom, objNode, "SNAME", name);
             createNodeAndInsertText(xmlDom, objNode, "SCOMPANY", "");
             createNodeAndInsertText(xmlDom, objNode, "SDEPT", "");
             createNodeAndInsertText(xmlDom, objNode, "STITLE", "");
             createNodeAndInsertText(xmlDom, objNode, "SCOMPANYPHONE", "");
             createNodeAndInsertText(xmlDom, objNode, "SMOBILE", "");
             createNodeAndInsertText(xmlDom, objNode, "SFAX", "");
-            createNodeAndInsertText(xmlDom, objNode, "SEMAIL", senderEmail);
+            createNodeAndInsertText(xmlDom, objNode, "SEMAIL", email);
             createNodeAndInsertText(xmlDom, objNode, "SHOMEPAGE", "");
             createNodeAndInsertText(xmlDom, objNode, "SCOMPANYZIP", "");
             createNodeAndInsertText(xmlDom, objNode, "SCOMPANYADDR", "");
@@ -458,34 +465,32 @@ function func_addaddr_Complete(ret) {
             
             xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);
             xmlHTTP.send(xmlDom);
-        }
-        catch (e) {
-            xmlHTTP = null;
-            alert(strLang133 + e.description);
-            return;
-        }
-        
-        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-            if (xmlHTTP.status != 200) {
-            	alert(strLang133 + xmlHTTP.statusText);
+            
+            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+                if (xmlHTTP.status != 200) {
+                	alert(strLang133 + xmlHTTP.statusText);
+                	return;
+                }
+                
+                if (xmlHTTP.responseText == "NO_AUTHORITY") {
+                	alert(strLangLHM02);
+                	return;
+                }
+                else {
+                	alert(strLang135);
+                	return;
+                }
             }
-            else if (xmlHTTP.responseText == "PRE") {
-                alert(strLang134);
-                return;
-            }
-            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
-            	alert(strLangLHM02);
-            }
-            else {
-            	alert(strLang135);
-            }
-        }
-        else {
-        	alert(strLang136);
-        }
-
+    	}
+    	
+		alert(strLang136);
+    } catch (e) {
         xmlHTTP = null;
-    } catch (e) { }
+        alert(strLang133 + e.message);
+        return;
+    }
+    
+    xmlHTTP = null;
 }
 
 function Get_DupliCateAddressCnt(senderEmail, folderId, type) {
@@ -1053,6 +1058,6 @@ function mail_link(){
 		}
 	}
 	
-	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
+	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900));
 
 }

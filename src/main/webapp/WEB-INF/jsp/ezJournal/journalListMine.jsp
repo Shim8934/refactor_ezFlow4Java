@@ -50,7 +50,7 @@
 		<c:choose>
 			<c:when test="${fn:length(journalList) ne 0}">
 				<c:forEach items="${journalList}" var="journal" varStatus="status">
-				<tr id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
+				<tr class="${journal.isView }" id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
 					<td class="cbTD" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20px;"><input onchange="checkedCheckbox(this);" type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
 						<c:if test="${journal.deptShare eq 'N' }">
@@ -96,7 +96,7 @@
 						</c:if>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20%;">
-						<c:out value='${journal.journalDate}'/>
+						<c:out value='${fn:substring(journal.journalDate, 0, 16) }'/>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20%;">
 						<c:out value='${journal.formName}'/>

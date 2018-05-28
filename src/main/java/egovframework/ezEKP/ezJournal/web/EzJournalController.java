@@ -103,7 +103,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		if (status.equals("ok")) {			
 			String recvCount = (String) resultBody.get("data");
 			model.addAttribute("recvCount", recvCount);
-			logger.debug("recvCount = ********" + recvCount);
+		//	logger.debug("recvCount = ********" + recvCount);
 		}
 		
 		param.put("companyId",userInfo.getCompanyID());
@@ -116,7 +116,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		if (status.equals("ok")) {			
 			JSONArray typeList = (JSONArray) resultBody.get("data");
 			model.addAttribute("typeList", typeList);
-			logger.debug("typeList = ********" + typeList);
+		//	logger.debug("typeList = ********" + typeList);
 		}
 		logger.debug("journalLeft ended");
 		
@@ -158,7 +158,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		if (status.equals("ok")) {			
 			//업무일지 환경설정
 			JSONObject journalEnv =  (JSONObject) ((JSONObject) resultBody.get("data")).get("journalOpt");
-			logger.debug("journalEnv : " + journalEnv);
+			logger.debug("journalEnv: " + journalEnv);
 			model.addAttribute("journalEnv", journalEnv);
 		}
 		logger.debug("journalListMain ended");
@@ -291,13 +291,15 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {			
 			JSONArray journalList =  (JSONArray) resultBody.get("data");
-			logger.debug(journalList.toJSONString());
+//			logger.debug(journalList.toJSONString());
+			/*
 			for (int i = 0; i < journalList.size(); i++) {
 				JSONObject journal = (JSONObject) journalList.get(i);
-				String journalDate = (String) journal.get("journalDate");
-				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-				journal.put("journalDate", journalDate.substring(0, 16));
+			//	String journalDate = (String) journal.get("journalDate");
+			//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+			//	journal.put("journalDate", journalDate.substring(0, 16));
 			}
+			*/
 			model.addAttribute("journalList", journalList);
 			model.addAttribute("totalCount",totalCount);
 		}
@@ -329,7 +331,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		String recvCount="";
 		if (status.equals("ok")) {			
 			recvCount= (String) resultBody.get("data");
-			logger.debug("recvCount = ********" + recvCount);
+		//	logger.debug("recvCount = ********" + recvCount);
 		}
 		logger.debug("leftRecvCount ended");
 		
@@ -825,7 +827,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		URI uri = URI.create(url);
 		
-		String typeId = request.getParameter("typeId");
+//		String typeId = request.getParameter("typeId");
 		List<MultipartFile> files = request.getFiles("fileToUpload"); 
 		int cnt = files.size();
 		int maxSize = 0;
@@ -1209,21 +1211,22 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/journalDetail.do")
 	public String getJournalDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		/*
 		String viewDate ="";
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("viewDate", viewDate);
+//		param.put("viewDate", viewDate);
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1234,9 +1237,9 @@ public class EzJournalController extends EgovFileMngUtil {
 		JSONObject journal = null;
 		if (status.equals("ok")) {			
 			journal = (JSONObject) resultBody.get("data");
-			String journalDate = (String) journal.get("journalDate");
-			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-			journal.put("journalDate", journalDate);
+		//	String journalDate = (String) journal.get("journalDate");
+		//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+		//	journal.put("journalDate", journalDate);
 			model.addAttribute("journal",journal);
 		}
 		
@@ -1252,7 +1255,6 @@ public class EzJournalController extends EgovFileMngUtil {
 		 * @param loginCookie
 		 * @return
 		 */
-		@SuppressWarnings("unchecked")
 		@RequestMapping(value="/ezJournal/journalPreview.do")
 		public String getJournalPreview(HttpServletRequest request,Model model, @CookieValue("loginCookie") String loginCookie) {
 			logger.debug("getJournalPreview started");
@@ -1260,11 +1262,13 @@ public class EzJournalController extends EgovFileMngUtil {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userInfo.getId());
+			/*
 			try {
 				param.put("viewDate",commonUtil.getTodayUTCTime(""));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			*/
 			
 			String journalId = request.getParameter("journalId");
 			
@@ -1275,9 +1279,9 @@ public class EzJournalController extends EgovFileMngUtil {
 			JSONObject journal = null;
 			if (status.equals("ok")) {
 				journal = (JSONObject) resultBody.get("data");
-				String journalDate = (String) journal.get("journalDate");
-				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-				journal.put("journalDate", journalDate);
+			//	String journalDate = (String) journal.get("journalDate");
+			//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+			//	journal.put("journalDate", journalDate);
 				model.addAttribute("journal",journal);
 			}
 			
@@ -1294,7 +1298,6 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/journalReply.do")
 	public String journalReply(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalReply started");
@@ -1305,18 +1308,20 @@ public class EzJournalController extends EgovFileMngUtil {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/replies", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId + "/replies", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		JSONArray replyList = null;
 		if (status.equals("ok")) {			
 			replyList=  (JSONArray) resultBody.get("data");
+			/*
 			for (Object reply : replyList) {
 				JSONObject JOReply = (JSONObject)reply;
 				String replyDate = (String) JOReply.get("replyDate");
 				replyDate = commonUtil.getDateStringInUTC(replyDate, userInfo.getOffset(), false);
 				JOReply.put("replyDate", replyDate);
 			}
+			*/
 			model.addAttribute("replyList",replyList);
 			model.addAttribute("journalId",journalId);
 		}
@@ -1341,19 +1346,21 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		String journalId = request.getParameter("journalId");
 		String replyContent = request.getParameter("replyContent");
+		/*
 		String replyDate=null;
 		try {
 			replyDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("replyContent", replyContent);
-		param.put("replyDate", replyDate);
-		param.put("loginCookie", loginCookie);
+//		param.put("replyDate", replyDate);
+//		param.put("loginCookie", loginCookie);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId+"/replies", param, request, "post", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId + "/replies", param, request, "post", null);
 		String journalWriter = (String) resultBody.get("data");
 		logger.debug("saveJournalReply ended");
 		
@@ -1393,7 +1400,6 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/JournalViewerList.do")
 	public String getJournalViewerList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalViewerList started");
@@ -1430,14 +1436,14 @@ public class EzJournalController extends EgovFileMngUtil {
 			
 			if (status.equals("ok")) {			
 				JSONArray viewerList=  (JSONArray) resultBody.get("data");
-				
+				/*
 				for (Object viewer : viewerList) {
 					JSONObject JOViewer = (JSONObject)viewer;
 					String viewDate = (String) JOViewer.get("date");
 					viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
 					JOViewer.put("date", viewDate);
 				}
-				
+				*/
 				model.addAttribute("viewerList", viewerList);
 			}
 		}
@@ -1494,7 +1500,6 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/JournalReceiverList.do")
 	public String getJournalReveiberList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalViewerList started");
@@ -1529,14 +1534,14 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {			
 			JSONArray viewerList=  (JSONArray) resultBody.get("data");
-			
+			/*
 			for (Object viewer : viewerList) {
 				JSONObject JOViewer = (JSONObject) viewer;
 				String viewDate = (String) JOViewer.get("date");
 				viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
 				JOViewer.put("date", viewDate);
 			}
-			
+			*/
 			model.addAttribute("viewerList",viewerList);
 		}
 		
@@ -1644,16 +1649,18 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("getJournalJSON started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		/*
 		String viewDate ="";
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("viewDate", viewDate);
+//		param.put("viewDate", viewDate);
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1664,11 +1671,11 @@ public class EzJournalController extends EgovFileMngUtil {
 		JSONObject journal = null;
 		if (status.equals("ok")) {			
 			journal = (JSONObject) resultBody.get("data");
-			String journalDate = (String) journal.get("journalDate");
-			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+		//	String journalDate = (String) journal.get("journalDate");
+		//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
 			String journalContent = ((String) journal.get("journalContent")).replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 			journal.put("journalContent", journalContent);
-			journal.put("journalDate", journalDate);
+		//	journal.put("journalDate", journalDate);
 		}
 		
 		logger.debug("getJournalJSON ended");
@@ -1721,20 +1728,21 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("journalViewCheck started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		/*
 		String viewDate ="";
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		*/
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		String journalIdList = request.getParameter("journalIdList");
 		String userId = userInfo.getId();
 				
 		param.put("userId", userId);
-		param.put("viewDate", viewDate);
+//		param.put("viewDate", viewDate);
 		param.put("journalIdList", journalIdList);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/viewers/" + userId, param, request, "put", null);
@@ -1901,6 +1909,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 환경설정 화면 호출
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/journalConfig.do")
 	public String journalConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("journalConfig started");
@@ -1926,7 +1935,6 @@ public class EzJournalController extends EgovFileMngUtil {
 			
 			for (int i = 0; i < deptList.size(); i++) {
 				JSONObject dept = (JSONObject) deptList.get(i);
-				
 				dept.put("icon", "icon-dept");
 				
 				if (dept.get("myDept").equals("yes")) {

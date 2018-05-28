@@ -1731,8 +1731,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String taskCode = request.getParameter("taskCode");
 		String flag = request.getParameter("flag");
 		String langType = request.getParameter("langType");
+		String selYear = request.getParameter("selYear");
 		
-		String result = ezApprovalGService.getSimpleCabinetList(companyID, processDeptCode, productionYear, taskCode, flag, langType, userInfo.getTenantId());
+		
+		String result = ezApprovalGService.getSimpleCabinetList(companyID, processDeptCode, productionYear, taskCode, flag, langType, userInfo.getTenantId(), selYear);
 		logger.debug("getCabinetSimpleList ended.");
 		return result;
 	}
@@ -5393,12 +5395,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
 		String docState = request.getParameter("docState");
+		String aprState = request.getParameter("aprState");
 		String childDocInfo = ezApprovalGService.getInnerLineInfo(docID, deptID, docState, userInfo.getCompanyID(), userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		model.addAttribute("docID", docID);
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("docState", docState);
+		model.addAttribute("aprState", aprState);
 		model.addAttribute("childDocInfo", childDocInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
 		
@@ -5865,7 +5869,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			int width = Integer.parseInt(headerWidth) * 2;
 			
-			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + " " + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
 		}
 		resultExcel.append("</tr></table>");
 		
@@ -7678,5 +7682,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getUseZipCodeSearchInApr ended.");
 		
 		return result;
+	}
+	
+	
+	/*
+	 * 2018-05-14 강민수92 문서의 확장자 체크
+	 */
+	@RequestMapping(value="/ezApprovalG/checkDocExt.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String checkDocExt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("checkDocExt started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+		
+		String ext = ezApprovalGService.getDocExt(docID, companyID, tenantID);
+		
+		logger.debug("checkDocExt ended");
+		return ext;
 	}
 }

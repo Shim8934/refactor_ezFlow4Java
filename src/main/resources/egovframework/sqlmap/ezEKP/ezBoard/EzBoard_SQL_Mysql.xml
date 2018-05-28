@@ -816,8 +816,6 @@
        			TENANT_ID = #v_TENANTID#
        		AND  
        			ITEMID = #v_PORGITEMID#
-            AND 
-            	BOARDID = #v_PORGBOARDID#
 		]]>
 	</select>
 	
@@ -4587,6 +4585,19 @@
 			   						ITEMID = #itemID# )
 	  	]]>
   </select>
-	
+  
+  <update id="EzBoardDAO.updateMoveOneLineReply" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ONELINEREPLY
+			SET 
+				BOARDID = #destBoardID#,
+	            ITEMID = #destItemID#
+	        WHERE
+	        	BOARDID = #orgBoardID#
+	        AND
+	        	ITEMID = #orgItemID#
+		]]>
+  </update>
+  	
 </sqlMap>
 

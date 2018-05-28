@@ -736,7 +736,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 									 egovMessageSource.getMessage("ezResource.t9900005", locale) + " <br><br>";
 					pWrnMsg = pWrnMsg + egovMessageSource.getMessage("ezResource.t70", locale);
 				} else {
-					pWrnMsg = egovMessageSource.getMessage("ezResource.t71", locale) + " <b style='overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;word-wrap:break-word;' >'" + upNm + "'</b> " + egovMessageSource.getMessage("ezResource.t72", locale) + " <BR>";
+					/*pWrnMsg = egovMessageSource.getMessage("ezResource.t71", locale) + " <b style='overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;word-wrap:break-word;' >'" + upNm + "'</b> " + egovMessageSource.getMessage("ezResource.t72", locale) + " <BR>";*/
+					pWrnMsg = egovMessageSource.getMessage("ezResource.t71", locale) + " <b style='overflow:hidden;text-overflow:ellipsis;display:contents;-webkit-line-clamp:5;-webkit-box-orient:vertical;word-wrap:break-word;' >'" + upNm + "'</b> " + egovMessageSource.getMessage("ezResource.t72", locale) + " <BR>";
 					blnChkDelBtn = true;
 				}
 			} else {

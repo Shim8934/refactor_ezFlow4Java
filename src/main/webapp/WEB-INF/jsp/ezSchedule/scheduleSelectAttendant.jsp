@@ -198,6 +198,8 @@
 	                
 	                listview.AddDataRow(objTr, Resultxml);
 	            }
+	            
+	            ChangeListView_onClick(getOrganListType());
 	        }
 	
 	        var schedule_add_user_cross_dialogArguments = new Array();
@@ -320,7 +322,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right: 3px;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right: 3px;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -735,7 +737,7 @@
 		            
 		            if (pSeach) {
 		                //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -749,7 +751,7 @@
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
 	                    //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1031,6 +1033,7 @@
 		        pListType = Div;
 		        ListTypeChangeIcon();
 		        DisplayUserImageList();
+		        setOrganListType(pListType);
 		    }
 		    function keyword_Clear() {
 		    	document.getElementById("keyword").value = "";
@@ -1300,6 +1303,36 @@
 					}
 				});
 		    }
+		    
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
@@ -1316,7 +1349,7 @@
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                    <select id="search_type" style="height: 22px;">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezSchedule.t18' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezSchedule.t12' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezSchedule.t14' /></option>
@@ -1327,7 +1360,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezSchedule.t22' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezSchedule.t23' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height: 22px;">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezSchedule.t24' /></span></a>
 	                                                </div>
 	                                            </td>
@@ -1351,8 +1384,8 @@
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-	                                                    <span style="float:right;">
+	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom; margin-top:2px;"></span>
+	                                                    <span style="float:right;margin-right: 1px;margin-top: 1px;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
 	                                                    </span>

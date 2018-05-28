@@ -250,6 +250,8 @@
 	            $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
 	            });
+	            
+	            ChangeListView_onClick(getOrganListType());
 
 	        }
 		    function recevieListview(pID, pListView) {
@@ -1994,6 +1996,7 @@
 	            pListType = Div;
 	            ListTypeChangeIcon();
 	            DisplayUserImageList();
+	            setOrganListType(pListType);
 	        }
 	        function keyword_Clear() {
 	            document.getElementsByName('keyword').value = "";
@@ -3188,6 +3191,36 @@
             		tab4.className = "tabon";
             	}
             }
+            
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3260,7 +3293,7 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	            	<div class="portlet_tabpart01" style="margin:0px;">
-	            		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
+	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
 	            			<p id="orgTabButton">
 	            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
 	            			</p>
@@ -3292,9 +3325,9 @@
 	                <table id="TreeViewTD">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 0px solid #eaeaea;">
-	                                    <table style="margin-top: 3px; width: 100%;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height:26px;">
+	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
@@ -3344,7 +3377,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 410px; overflow: auto; width: 446px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 411px; overflow: auto; width: 446px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t31' /></td>
@@ -3375,9 +3408,9 @@
 	                            <table style="width: 100%;">
 	                                <tr>
 	                                    <td id="AddrSearch">
-	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
-	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 0px solid #eaeaea;">
-	                                                <table style="margin-top: 3px; width: 100%;">
+	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                            <div class="portlet_tabpart03_top" id="Div1" style="border-bottom: 0px; height:26px;">
+	                                                <table style="margin-top: 4px; width: 100%;">
 	                                                    <tr>
 	                                                        <td>
 	                                                            <div style="margin-left: 5px;">
@@ -3421,7 +3454,7 @@
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
 	                                -[<span id="addressFolderCnt" style="color: #017BEC;"></span>]
 	                            </div>
-	                            <div style="width: 446px; height: 410px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea" id="AddressListView" class="border_gray">
+	                            <div style="width: 446px; height: 411px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea" id="AddressListView" class="border_gray">
 	                            </div>
 	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; height: 32px;"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
@@ -3443,9 +3476,9 @@
 	                <table id="ListViewDLTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
-	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 0px solid #eaeaea;">
-	                                    <table style="margin-top: 3px; width: 100%;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
+	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
 	                                            <td id="dlmember" style="display: none">
 	                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
@@ -3455,7 +3488,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 668px; height: 473px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -3485,7 +3518,7 @@
 	                </table>
 	            </td>
 	            <td style="vertical-align: top;">
-	                <table id="listType1">
+	                <table id="listType1" style="margin-top:1px;">
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"

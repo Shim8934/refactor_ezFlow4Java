@@ -6,7 +6,6 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<title><spring:message code='ezEmail.t546' /></title>
@@ -37,7 +36,7 @@
 	    </script>
 	</head>
 	<body>    
-	    <table cellpadding="0" cellspacing="0" style="margin:5px 5px 5px 5px; border-collapse:collapse;" >
+	    <table cellpadding="0" cellspacing="0" style="margin:5px 5px 5px 5px; border-collapse:collapse; font-family:Gulim;" >
 	        <tr>
 	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f8f8f8; border:1px solid #ddd;"><spring:message code='ezEmail.t161' /></th>
 	            <td style="width:60%; font-size:12px; color:#393939; border:1px solid #ddd; vertical-align:middle; padding:7px 7px 7px 7px;">
@@ -79,6 +78,10 @@
 	            </td>
 	        </tr>
 	        </c:if>
+	        <tr>
+	        	<td colspan="4" style="border : medium none" height="10px">
+	        	</td>
+	        </tr>
 	        </table>
 	        <div style="height:100%; margin:5px; word-wrap:break-word; word-break:normal; display:block">
 	            <div style="height:100%; border:1px solid #ddd;vertical-align:top;">
@@ -87,6 +90,5 @@
 	                </div>
 	            </div>
 	        </div>
-	    
 	</body>
 </html>

@@ -1036,9 +1036,9 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                      alert(strLang1103);
                      return;
             	 } else {
-            		 if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-                         openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
-                     }
+            		if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
+            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
+                    }
             	 }
             }
             openwindow(openLocation, "receive", 880, 550);

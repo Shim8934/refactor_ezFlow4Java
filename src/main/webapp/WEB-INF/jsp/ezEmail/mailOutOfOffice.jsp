@@ -263,6 +263,15 @@
 		        var BujaeText1 = tbContentElement1.GetEditorContent();
 		        var BujaeText2 = tbContentElement2.GetEditorContent();
 		        BujaeTextFontCheck(BujaeText1);
+		        
+		        // 재은 수정
+		        //if (document.getElementById("chkOut").checked == false) {
+		        	if (BujaeText2 == "" || BujaeText2 == null) {
+		        		BujaeText2 = "<p></p>"; // 기본으로 넣어주기
+		        		//BujaeText2 = "<p style='font-family: 굴림; font-size: 13px;'> </p>";
+		        		
+		        	}
+		        //}
 		
 		
 		        var xmlHTTP = createXMLHttpRequest();

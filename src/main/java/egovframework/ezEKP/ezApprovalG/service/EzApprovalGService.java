@@ -125,7 +125,7 @@ public interface EzApprovalGService {
 	
 	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID, String approvalFlag) throws Exception;
 	
-	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType, int tenantID) throws Exception;
+	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType, int tenantID, String selYear) throws Exception;
 	
 	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType, String pageSize, String pageNO, int tenantID, String approvalFlag) throws Exception;
 	
@@ -529,5 +529,7 @@ public interface EzApprovalGService {
 	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
 	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
+	
+	public String getDocExt(String docID, String companyID, int tenantID) throws Exception;
 
 }

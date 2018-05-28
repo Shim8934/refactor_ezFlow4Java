@@ -1312,13 +1312,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception {
+	public BoardListVO getCopyItem(String orgItemID, int tenantID) throws Exception {
 		logger.debug("getCopyItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PORGITEMID", orgItemID);
-		map.put("v_PORGBOARDID", orgBoardID);
 		map.put("v_TENANTID", tenantID);
 
 		logger.debug("getCopyItem ended");
@@ -3344,23 +3343,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String destItemID = "";
 		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
-		String[] boardIDArray = orgBoardIDList.split(";");
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
-			if (boardIDArray.length > 1) {
-				orgBoardID = boardIDArray[i];
-			} else {
-				orgBoardID = boardIDArray[0];				
-			}
-			
 			destItemID = "{" + UUID.randomUUID() + "}";
 			
-			BoardListVO boardListVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
-			System.out.println("뽝 : " + boardListVO.getContent());
+			BoardListVO boardListVO = getCopyItem(orgItemID, userInfo.getTenantId());
+			//게시판아이디는 itemID로 가져오자
+			orgBoardID = boardListVO.getBoardID();
+			
 			//MHT 파일위치 변경
 			boardListVO.setContentLocation(boardListVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 			boardListVO.setStartDate("");
@@ -3398,6 +3392,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (attachmentList != null) {
 				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "move", userInfo.getTenantId());
 			}
+			
+			//2018-05-09 강민수92 댓글도 이동
+			moveOneLineReply(orgBoardID, orgItemID, destBoardID, destItemID); 
 			
 			StringBuilder sb = new StringBuilder();
 
@@ -3448,7 +3445,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("moveItem ended");
 		return result;
 	}
-	
+
 	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception {
 		logger.debug("copyAttachments started");
 
@@ -3674,22 +3671,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String destItemID = "";
 		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
-		String[] boardIDArray = orgBoardIDList.split(";");
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
-			if (boardIDArray.length > 1) {
-				orgBoardID = boardIDArray[i];
-			} else {
-				orgBoardID = boardIDArray[0];				
-			}
-			
 			destItemID = "{" + UUID.randomUUID() + "}";		
 
-			BoardListVO boardLisitVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
+			BoardListVO boardLisitVO = getCopyItem(orgItemID, userInfo.getTenantId());
+			
+			orgBoardID = boardLisitVO.getBoardID();
 			//MHT 파일위치 변경
 			boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 			boardLisitVO.setStartDate("");
@@ -3831,6 +3823,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getReaderListCount ended");
 		return ezBoardDAO.getReaderListCount(map);
+	}
+
+	@Override
+	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception {
+		logger.debug("moveOneLineReply started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("orgBoardID", orgBoardID);
+		map.put("orgItemID", orgItemID);
+		map.put("destBoardID", destBoardID);
+		map.put("destItemID", destItemID);
+		
+		ezBoardDAO.updateMoveOneLineReply(map);
+		
+		logger.debug("moveOneLineReply ended");
 	}
 
 

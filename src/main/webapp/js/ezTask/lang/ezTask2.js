@@ -70,3 +70,6 @@ var strLang67	=	"업무정보를 저장하였습니다.";
 var strLang68	=	"업무내용을 저장하였습니다.";
 var strLang69	=	"지시사항을 저장하였습니다.";
 var strLang70	=	"Start time must earlier than end time.";
+/*2018-05-24 구해안*/
+var strLang71 = "Period";
+var strLang72 = "Do not set the end date";
