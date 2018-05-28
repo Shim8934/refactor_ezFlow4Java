@@ -377,4 +377,12 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public List<OrganDeptVO> getChildrenDeptID(Map<String, Object> map) throws Exception {
 		return (List<OrganDeptVO>) list("EzOrganDAO.getChildrenDeptID", map);
 	}
+	
+	public void setListType(Map<String, Object> map) throws Exception {
+		update("EzOrganDAO.setListType", map);
+	}
+
+	public String getListType(Map<String, Object> map) {
+		return (String) select("EzOrganDAO.getListType", map);
+	}
 }

@@ -1484,7 +1484,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewVote is running!");
 		userInfo = commonUtil.userInfo(loginCookie);
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		int qstId = -1;
 		String qstTitle = "";
 		int totalVoteToday = 0;

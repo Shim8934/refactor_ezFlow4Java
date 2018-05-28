@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>관리내역</title>
+		<title><spring:message code='ezAttitude.t57'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -61,7 +61,7 @@
 	    		
 	    		//부서리스트
 		        if (document.getElementById("ListDept").length == 0) {
-		            alert("부서 정보가 없습니다.");
+		            alert("<spring:message code='ezAttitude.t53'/>");
 		        } else {
 		    		if (selectedDept != null) {
 		    			$('#ListDept').val(selectedDept);
@@ -200,7 +200,7 @@
 	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
-	    				alert('리스트를 가져오는중 오류 발생');
+	    				alert("<spring:message code='ezAttitude.t59'/>");
 	    			}
 	    		});
 	    	}
@@ -232,7 +232,7 @@
 		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
 		   			
 		   			if (vo.originStartdate == null || vo.originStartdate == "") {
-		   				resultHtml += "<td>미입력</td>";
+		   				resultHtml += "<td><spring:message code='ezAttitude.t61'/></td>";
 		   			} else {
 		   				if (vo.originEnddate == null || vo.originEnddate =="") {
 		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate + "</td>";
@@ -248,7 +248,7 @@
 		   			}
 		   			
 		   			if (vo.originTypeName == null || vo.originTypeName == "") {
-		   				resultHtml += "<td>미입력</td>";
+		   				resultHtml += "<td><spring:message code='ezAttitude.t61'/></td>";
 	    			} else {
 	    				resultHtml += "<td>" + vo.originTypeName + "</td>";
 	    			}
@@ -380,7 +380,7 @@
 	    <h1>관리내역<span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none;"><span style="border: none;"><b>부서선택</b></span></li>
+	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t60'/></b></span></li>
 				<li>
 	      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
 						<c:forEach var = "dept" items="${deptList}">
@@ -390,7 +390,7 @@
 						</c:forEach>
 		      		</select>
 	      		</li>
-	      		<li><span onclick="ShowQuickAddres();">검색</span></li>
+	      		<li><span onclick="ShowQuickAddres();"><spring:message code='ezAttitude.lhj5'/></span></li>
 	      	</ul>
 	  	</div> 	
 <!-- 	  	<table id="searchTable" style="width:100%;"> -->
@@ -426,12 +426,12 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
-						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
+						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate"><spring:message code='ezAttitude.bbhs12'/></th>
 						<th style="width:18%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate"></th>
 						<th style="width:6%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
 						<th style="width:8%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name">수정자</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date">수정일시</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name"><spring:message code='ezAttitude.t62'/></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date"><spring:message code='ezAttitude.t63'/></th>
 					</tr>
 				</thead>
 				<tbody>

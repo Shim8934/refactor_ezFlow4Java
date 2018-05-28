@@ -72,7 +72,7 @@
 		        }
 	    		
 		        if (document.getElementById("ListDept").length == 0) {
-		            alert("부서 정보가 없습니다.");
+		            alert("<spring:message code='ezAttitude.t53'/>");
 		        } else {
 		    		if (selectedDept != null) {
 		    			$('#ListDept').val(selectedDept);
@@ -207,7 +207,7 @@
 	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
-	    				alert('리스트를 가져오는중 오류 발생');
+	    				alert("<spring:message code='ezAttitude.t59'/>");
 	    			}
 	    		});
 	    	}
@@ -263,7 +263,7 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
-	    		$("#modify",parent.document).html("근태관리(" + totalCount + ")");
+	    		$("#modify",parent.document).html("<spring:message code='ezAttitude.t1'/>(" + totalCount + ")");
 	    	}
 	    	
 	    	//페이지 이동 함수
@@ -318,7 +318,7 @@
 			//엑셀 다운로드
 			function exportExcel() {
 				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
-					alert('출력할 내용이 없습니다');
+					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
 				
@@ -408,7 +408,7 @@
 		<h1><span id="mailBoxInfo" style="display:none"></span></h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none;"><span style="border: none;"><b>부서선택</b></span></li>
+	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t60'/></b></span></li>
 				<li>
 					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px; display:none;">
 						<c:forEach var = "companyItem" items="${list }">

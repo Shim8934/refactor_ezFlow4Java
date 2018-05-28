@@ -265,7 +265,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalVO getJournal(String journalId, String userId, String viewDate, int tenantId,String lang, String offset) throws Exception;
+	public JournalVO getJournal(String journalId, String userId, int tenantId,String lang, String offset) throws Exception;
 
 	/**
 	 * 일지 저장하기
@@ -356,12 +356,11 @@ public interface EzJournalService {
 	 * @param journalId
 	 * @param userId
 	 * @param replyContent
-	 * @param replyDate
 	 * @param tenantId
 	 * @return 
 	 * @throws Exception
 	 */
-	public String saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId) throws Exception;
+	public String saveJorunalReply(String journalId, String userId, String replyContent, int tenantId) throws Exception;
 	
 	/**
 	 * 업무일지 댓글 삭제
@@ -399,11 +398,10 @@ public interface EzJournalService {
 	/**
 	 * 일지 조회정보 입력
 	 * @param journalIdList
-	 * @param viewDate
 	 * @param userId
 	 * @param tenantId
 	 */
-	public void saveJournalViewInfo(List<String> journalIdList,String viewDate, String userId, int tenantId) throws Exception;
+	public void saveJournalViewInfo(List<String> journalIdList, String userId, int tenantId) throws Exception;
 
 	/**
 	 * 일지함 삭제

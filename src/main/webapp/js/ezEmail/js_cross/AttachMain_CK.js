@@ -237,9 +237,10 @@ function AppendFileAttachInfo(ret) {
                         var objTd2 = document.createElement("TD");
                         
                         if(is_big == "Y") {
-                        	objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
+                        	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
+                        	objTd2.innerHTML += "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
                         } else {
-                        	objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
+                        	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
                         	console.log("AppendFileAttachInfo CrossYN true.");
                         	
                         	/* 20180510 김윤진 - 수정창에서 파일클릭시 다운로드링크 적용 */
@@ -290,6 +291,20 @@ function AppendFileAttachInfo(ret) {
                         }
                         
                         objTr.appendChild(objTd3);
+                        
+                        // 대용량 다운로드 기한 표시
+                        var objTd4 = document.createElement("TD");
+                        
+                        if(is_big == "Y") {
+                        	if(CrossYN()) {
+                        		objTd4.textContent = _pBigAttachDownloadPeriod;
+                        	} else {
+                        		objTd4.innerText = _pBigAttachDownloadPeriod;
+                        	}
+                        }
+                        
+                        objTr.appendChild(objTd4);
+
                         dadiframe.document.getElementById("filelist").appendChild(objTr);
                     } else {
                         EzHTTPTrans.InsertFileList(ServerFile, ServerFile, "N", ServerFile, fileSize);
@@ -327,10 +342,12 @@ function AppendFileAttachInfo(ret) {
                             objTd2.setAttribute('style', 'cursor:pointer');
                             objTd2.setAttribute("_href", "");
 
-                            if (is_big == "Y") {
-                            	objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
+                            
+                            if(is_big == "Y") {
+                            	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
+                            	objTd2.innerHTML += "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
                             } else {
-                            	objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
+                            	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
                             	
                             	/* 20180510 김윤진 - 수정창에서 파일클릭시 다운로드링크 적용 */
                             	objTd2.onclick = function () { 
@@ -380,6 +397,20 @@ function AppendFileAttachInfo(ret) {
                             }
                             
                             objTr.appendChild(objTd3);
+                            
+                            // 대용량 다운로드 기한 표시
+                            var objTd4 = document.createElement("TD");
+                            
+                            if(is_big == "Y") {
+                            	if(CrossYN()) {
+                            		objTd4.textContent = _pBigAttachDownloadPeriod;
+                            	} else {
+                            		objTd4.innerText = _pBigAttachDownloadPeriod;
+                            	}
+                            }
+                            
+                            objTr.appendChild(objTd4);
+
                             dadiframe.document.getElementById("filelist").appendChild(objTr);
                         } else {
                             EzHTTPTrans.InsertFileList(ServerFile, ServerFile, "N", ServerFile, fileSize);
@@ -392,6 +423,10 @@ function AppendFileAttachInfo(ret) {
         AttachFlag = false;
     }
     catch (e) { alert("AppendFileAttachInfo :: " + e.description); }
+}
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }
 
 function AttachFileList() {
@@ -501,4 +536,8 @@ function AttachFileList_Photo() {
         }
     }
     return strRet;
+}
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }

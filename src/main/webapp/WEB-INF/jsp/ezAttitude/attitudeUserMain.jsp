@@ -690,9 +690,9 @@
 					    	
 					    	result.forEach(function(vo, index) {
 					    		if (vo.apprStatus == 1) {
-					    			vo.apprStatus = "승인";
+					    			vo.apprStatus = "<spring:message code='ezAttitude.kbm41'/>";
 					    		} else {
-					    			vo.apprStatus = "반려";
+					    			vo.apprStatus = "<spring:message code='ezAttitude.kbm42'/>";
 					    		}
 					    		
 					    		var gubunBar = "";
@@ -701,7 +701,7 @@
 					    		}
 					    		
 					    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
-					    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "근무지 : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
+					    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "<spring:message code='ezAttitude.t47'/> : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 	
 					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
 				    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + vo.writerName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
@@ -785,7 +785,7 @@
 					    		}
 					    		
 					    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
-					    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "근무지 : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
+					    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "<spring:message code='ezAttitude.t47'/> : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 					    		
 					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
 					    		
@@ -881,9 +881,9 @@
 				    	
 				    	result.forEach(function(vo, index) {
 				    		if (vo.apprStatus == 1) {
-				    			vo.apprStatus = "승인";
+				    			vo.apprStatus = "<spring:message code='ezAttitude.kbm41'/>";
 				    		} else {
-				    			vo.apprStatus = "반려";
+				    			vo.apprStatus = "<spring:message code='ezAttitude.kbm42'/>";
 				    		}
 
 				    		var gubunBar = "";
@@ -893,7 +893,7 @@
 				    		}
 				    		
 				    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
-				    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "근무지 : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
+				    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "<spring:message code='ezAttitude.t47'/> : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 				    		
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:35px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
 				    		objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(vo.typeName)));
@@ -935,7 +935,7 @@
 				    		uvobjTr.append($("<td style='width:30%; height:0px; border:none;'></td>"));
 				    		$("#addpopupDay_list tbody").append(uvobjTr);
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:820px; border-top:none;'></td>").text("내역이 없습니다."));
+				    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:820px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	}
 				    },
@@ -1094,11 +1094,11 @@
 						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
 					</select>
 				</c:if>
-				<li style="background:none;margin-left:7px;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
-	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
-	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #eede23; background:#feee33; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;수정신청</li>
+				<li style="background:none;margin-left:7px;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t64'/>,<spring:message code='ezAttitude.t65'/></li>
+	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t112'/></li>
+	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t113'/>,<spring:message code='ezAttitude.t114'/></li>
+                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #eede23; background:#feee33; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t115'/></li>
+                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.kbm45'/></li>
 			</ul>
 		</div>
 		
@@ -1166,12 +1166,12 @@
 					    		<th style="height:30px;"><spring:message code='ezAttitude.t10'/></th>
 					    		<th style="height:30px;"><spring:message code='ezAttitude.t9'/></th>
 					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-					    		<th style="height:30px; text-align:center">근무지 및 내용</th>
+					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t46'/></th>
 				    		</c:if>
 				    		<c:if test="${deptFlag != 'true'}">
 				    			<th style="height:30px;">No.</th>
 				    			<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-				    			<th style="height:30px; text-align:center">근무지 및 내용</th>
+				    			<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t46'/></th>
 				    		</c:if>
 						</tr>
 				    </tbody>
@@ -1205,7 +1205,7 @@
 				    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.t9'/></th>
 				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
-				    		<th style="height:30px; text-align:center">근무지 및 내용</th>
+				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t46'/></th>
 						</tr>
 				    </tbody>
 				</table>

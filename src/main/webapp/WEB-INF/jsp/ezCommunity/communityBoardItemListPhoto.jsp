@@ -12,8 +12,13 @@
 	        .photo_tit {
 	            font-size: 9pt;
 	            color: #333333;
+	            width:132px;
 	            padding-left:4.5px;
 	            padding-bottom:2px;
+	            white-space: nowrap;
+    			overflow: hidden;
+    			text-overflow: ellipsis;
+    			display:inline-block;            
 	        }
 	        .photo_name {
 	            font-size: 9pt;
@@ -51,9 +56,9 @@
 	        var url = "<c:out value = '${url}' />";
 	        var ShowAdjacent = "<c:out value = '${showAdjacent}' />";
 	        var gubun = "<c:out value = '${ boardInfo.gubun }' />";
-// 	        var ch_CommunityAdmin = "<c:out value = '${chCommunityAdmin}' />";
 	        var UserLevel = "<c:out value = '${userLevel}' />";
 	        var pUse_Editor = "<c:out value = '${useEditor}' />";
+	        var pastDate = "<c:out value = '${pastDate}' />";
 	        
 	        $(function () {
     			var xmldoc = loadXMLString('${strXML}');
@@ -77,30 +82,32 @@
     					}
     					
     					if (idx < cnt) {
-    						listXML += "<table width='146' border='0' cellspacing='0' cellpadding='0' style='margin-right:10px'>";
+    						listXML += "<table width='146px' border='0' cellspacing='0' cellpadding='0' style='margin-right:10px'>";
     						listXML += "<tr>";
     						var fileName = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "EXTENSIONATTRIBUTE4").trim();
     						var imgUrl = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "EXTENSIONATTRIBUTE5").trim();
-                            listXML += "<td width='146' height='116' align='center' background='/images/photo_bg.gif'><img style='cursor:pointer;width:100px;height:100px;' src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + pBoardID + "&imgUrl=" + imgUrl + "&fileName=" + fileName + "' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'></td>";                       
+                            listXML += "<td width='146px' height='116px' align='center' background='/images/photo_bg.gif'><img style='cursor:pointer;width:100px;height:100px;' src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + pBoardID + "&imgUrl=" + imgUrl + "&fileName=" + fileName + "' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'></td>";                       
                             listXML += "</tr></table>";
-                            listXML += "<table width='146' border='0' cellpadding='1' cellspacing='1' style='margin-top:5px'>";
+                            listXML += "<table width='146px' border='0' cellpadding='1' cellspacing='1' style='margin-top:5px'>";
                             listXML += "<tr><td class='photo_tit' style='cursor:pointer;'  onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'>";
                             
                             var title = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "Title").trim();
                             var oneLineCnt = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ONELINECNT");
-
-                            if (title.length > 8) {
-                                title = title.substring(0, 8) + "...";
-                            }                            
+                            var writeDate = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriteDate");
+                            
+                            /* 2018-05-18 홍승비 - 커뮤니티 포토게시판 리스트에서 new 표시 */
+                            if (pastDate <= writeDate) {
+                            	listXML += "<img src='/images/new_icon.gif'>&nbsp;";
+		 					}
                             listXML += title;
                             
-                            /* 2018-05-07 홍승비 - 커뮤니티 포토게시판 리스트에서 댓글 표시하기 */ 
+                            /* 2018-05-07 홍승비 - 댓글 표시하기 */ 
                             if (oneLineCnt > 0) {
                             	listXML+="<SPAN style='color:#c64200'> [" + oneLineCnt + "]</SPAN>";
                             }
                             
                             listXML += "</td>";
-                            listXML += "<tr><td style='padding-left:5px'><span class='photo_name' style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width:146px; display: inline-block;'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterName").trim() + " / " + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriteDate").split(' ')[0] + "</span>"
+                            listXML += "<tr><td style='padding-left:5px'><span class='photo_name' style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width:146px; display: inline-block;'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterName").trim() + " / " + writeDate.split(' ')[0] + "</span>";
                             listXML += "</td></tr></table>";
     					}
     					listXML += "</td>";
@@ -139,11 +146,7 @@
 	            var pTop = (pheight - 720) / 2;
 	            var pLeft = (pwidth - 765) / 2;
 	
-	            if (CrossYN()) {
-	                window.open("/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	            } else {
-                    window.open("/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	            }
+              	window.open("/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	        }
 	
 			function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {

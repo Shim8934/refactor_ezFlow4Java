@@ -5,7 +5,7 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>근태정보관리</title>
+		<title><spring:message code='ezAttitude.t73'/></title>
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
@@ -74,9 +74,9 @@
 				$("#Edatepicker").datepicker('setDate', "${searchEndDate}");
 	        });
 	        
-			var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+			var monthMsg = "<spring:message code='ezAttitude.bbhs1'/>";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "일;월;화;수;목;금;토";
+		    var dayMsg = "<spring:message code='ezAttitude.bbhs2'/>";
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
@@ -126,7 +126,7 @@
 	            document.getElementById(Tab1_SelectID).setAttribute("class", "tabon");
 	            
 	            if (document.getElementById("ListDept").length == 0) {
-		            alert("부서 정보가 없습니다.");
+		            alert("<spring:message code='ezAttitude.t53'/>");
 		        } else {
 		    		if (selectedDeptID != null) {
 		    			$('#ListDept').val("ALL");
@@ -246,10 +246,10 @@
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
-	    			resultHtml += "<th style='width:500px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'>일시</th>";
+	    			resultHtml += "<th style='width:500px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'><spring:message code='ezAttitude.bbhs12'/></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.lhj18' /></th>";
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_User_Name'>수정자</th>";
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'>수정일시</th></tr>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_User_Name'><spring:message code='ezAttitude.t62'/></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'><spring:message code='ezAttitude.t63'/></th></tr>";
 	    			break;
 	    		}
 	        	
@@ -323,7 +323,7 @@
 	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
-	    				alert('리스트를 가져오는중 오류 발생');
+	    				alert("<spring:message code='ezAttitude.t59'/>");
 	    			}
 	    		});
 	    	}
@@ -360,15 +360,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;근태입력목록   &nbsp;[총 " 
-	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
-	    				+ $("#Sdatepicker").val().split("-")[0] + "년 "
-	    				+ $("#Sdatepicker").val().split("-")[1] + "월 "
-	    				+ $("#Sdatepicker").val().split("-")[2] + "일"
+	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t74'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
+	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+	    				+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+	    				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+	    				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
 	    				+ " ~ "
-	    				+ $("#Edatepicker").val().split("-")[0] + "년 "
-	    				+ $("#Edatepicker").val().split("-")[1] + "월 "
-	    				+ $("#Edatepicker").val().split("-")[2] + "일]")
+	    				+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+	    				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+	    				+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -378,7 +378,7 @@
     			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+					alert("<spring:message code='ezAttitude.t55'/>");
 		            return;
 				}
 	    		
@@ -429,15 +429,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;근태미입력자   &nbsp;[총 " 
-				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 명 - " 
-				+ $("#Sdatepicker").val().split("-")[0] + "년 "
-				+ $("#Sdatepicker").val().split("-")[1] + "월 "
-				+ $("#Sdatepicker").val().split("-")[2] + "일"
+	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
+				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t77'/> - " 
+				+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
 				+ " ~ "
-				+ $("#Edatepicker").val().split("-")[0] + "년 "
-				+ $("#Edatepicker").val().split("-")[1] + "월 "
-				+ $("#Edatepicker").val().split("-")[2] + "일]")
+				+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+				+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -480,7 +480,7 @@
 	    				getAttitudeHistoryList_after(result.list);
 	    			},
 	    			error : function() {
-	    				alert('리스트를 가져오는중 오류 발생');
+	    				alert("<spring:message code='ezAttitude.t59'/>");
 	    			}
 	    		});
 	    	}
@@ -500,7 +500,7 @@
 		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
 		   			//일시
 		   			if (vo.originStartdate == null || vo.originStartdate == "") {
-		   				resultHtml += "<td>미입력";
+		   				resultHtml += "<td><spring:message code='ezAttitude.t61'/>";
 		   			} else {
 		   				if (vo.originEnddate == null || vo.originEnddate == "") {
 		   					resultHtml += "<td>" + vo.originStartdate;
@@ -509,7 +509,7 @@
 		   				}
 		   			}
 		   			if (vo.changeStartdate == null || vo.changeStartdate == "") {
-		   				resultHtml += " -> 삭제</td>";
+		   				resultHtml += " -> <spring:message code='ezAttitude.bbhs30'/></td>";
 		   			} else {
 			   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
 			   				resultHtml += " -> " + vo.changeStartdate + "</td>";
@@ -519,10 +519,10 @@
 		   			}
 		   			//근태유형
 		   			if (vo.originTypeName == null || vo.originTypeName == "") {
-		   				resultHtml += "<td>미입력 -> " + vo.changeTypeName + "</td>";
+		   				resultHtml += "<td><spring:message code='ezAttitude.t61'/> -> " + vo.changeTypeName + "</td>";
 	    			} else {
 	    				if (vo.changeTypeName == null || vo.changeTypeName == "") {
-	    					resultHtml += "<td>" + vo.originTypeName + " -> 삭제</td>";
+	    					resultHtml += "<td>" + vo.originTypeName + " -> <spring:message code='ezAttitude.bbhs30'/></td>";
 	    				} else {
 		    				resultHtml += "<td>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
 	    				}
@@ -538,15 +538,15 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;관리내역   &nbsp;[총 " 
-	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " 개 - " 
-	    				+ $("#Sdatepicker").val().split("-")[0] + "년 "
-	    				+ $("#Sdatepicker").val().split("-")[1] + "월 "
-	    				+ $("#Sdatepicker").val().split("-")[2] + "일"
+	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t57'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
+	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+	    				+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+	    				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+	    				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
 	    				+ " ~ "
-	    				+ $("#Edatepicker").val().split("-")[0] + "년 "
-	    				+ $("#Edatepicker").val().split("-")[1] + "월 "
-	    				+ $("#Edatepicker").val().split("-")[2] + "일]")
+	    				+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+	    				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+	    				+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
@@ -707,7 +707,7 @@
 	        
 			function exportExcel() {
 	    		if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
-					alert('출력할 내용이 없습니다');
+					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
 				
@@ -758,21 +758,21 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-		<h1><p style="padding-left:5px">근태정보관리</p></h1>
+		<h1><p style="padding-left:5px"><spring:message code='ezAttitude.t73'/></p></h1>
 	    <div class="portlet_tabpart01" style="margin-bottom:16px;">
 	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p><span id="modify" style="width:100px; text-align: center;">근태입력관리</span></p>
-	            <p><span id="absent" style="width:100px; text-align: center;">미입력자관리</span></p>
-	            <p><span id="history" style="width:100px; text-align: center;">관리내역</span></p>
+	            <p><span id="modify" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
+	            <p><span id="absent" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
+	            <p><span id="history" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
 	        </div>
 	    </div>
 	    <div>
 	    	<div id="mainmenu">
 				<ul>
-		      		<li><span onclick="searchPopup();">검색</span></li>
-		      		<li><span onclick="refresh();">새로고침</span></li>
+		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.lhj5'/></span></li>
+		      		<li><span onclick="refresh();"><spring:message code='ezAttitude.lhj6'/></span></li>
 		      		<c:if test="${manageFlag == 'M' }">
-		      			<li><span onclick="addAtt();">근태입력</span></li>
+		      			<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
 		      		</c:if>
 		      		<li>
 		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>
@@ -780,7 +780,7 @@
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
-		      				<option value="ALL" selected>전체</option>
+		      				<option value="ALL" selected><spring:message code='ezAttitude.lhj8'/></option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
 									<c:if test="${dept.authType == 'M'}">
@@ -792,7 +792,7 @@
 		      		</li>
 		      		<li></li>
 		      	</ul>
-		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px">근태입력목록</div>
+		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px"><spring:message code='ezAttitude.t74'/></div>
 		  	</div>
 	    </div>
 	    
@@ -815,18 +815,18 @@
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:490px; margin:10px 0px 0px 1px;">
 			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태정보관리 검색</th>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAttitude.t79'/></th>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px">이름</th>
+			  			<th style="width:90px;height:30px"><spring:message code='ezAttitude.t10'/></th>
 						<td><input type="text" id="searchUserName" name="searchUserName" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px">직위</th>
+			  			<th style="width:90px;height:30px"><spring:message code='ezAttitude.t11'/></th>
 						<td><input type="text" id="searchTitle" name="searchTitle" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px">검색기간</th>
+			  			<th style="width:90px;height:30px"><spring:message code='ezAttitude.lhj22'/></th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> 
 							~
@@ -834,15 +834,15 @@
 						</td>
 					</tr>
 					<tr>
-						<th style="width:90px;height:30px">근태유형</th>
+						<th style="width:90px;height:30px"><spring:message code='ezAttitude.bbhs15'/></th>
 						<td><select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px;"></select></td>
 					</tr>
 				</table>
 				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="search();" >검색</span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();">취소</span></a>
+					<a class="imgbtn"><span onclick="search();" ><spring:message code='ezAttitude.lhj5'/></span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
 			    </div>
 			</div>
 		</div>

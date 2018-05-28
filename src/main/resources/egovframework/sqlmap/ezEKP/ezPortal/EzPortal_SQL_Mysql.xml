@@ -1079,8 +1079,6 @@
 				A.OWNERPAGEID = #v_pOWNERPAGEID#
 			AND
 				A.TENANT_ID = #tenantID#	
-			AND
-				B.TENANT_ID = #tenantID#	
         	ORDER BY
         		A.COLUMNPOS ASC
 		]]>
