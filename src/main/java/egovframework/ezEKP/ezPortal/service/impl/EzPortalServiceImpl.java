@@ -1827,7 +1827,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			strHTML = getSubMenuHTML(pCallingMenuID, pUID, userInfo);
 			break;
 		case 5:
-			strHTML = getSearchHTML(pCallingMenuID, pUID);
+			/*strHTML = getSearchHTML(pCallingMenuID, pUID);*/
+			strHTML = "";
 			break;
 		case 7:
 			strHTML = getUserInfoHTML(pCallingMenuID, pUID);
@@ -2114,15 +2115,20 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		StringBuilder sb = new StringBuilder();
 		
-		if (userInfo.getTheme().equals("BASIC")) {
+		/*if (userInfo.getTheme().equals("BASIC")) {
 			sb.append("</header>\n");
-		}
+		}*/
 		
 		sb.append("<nav>\n");
 		sb.append("<ul class='topmenu'>");
 		
 		for (int i=0; i<result.size(); i++) {
 			if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
+				continue;
+			}
+			
+			/* 2018-05-24 장진혁 홈 메뉴 pass */
+			if (result.get(i).getLinkURL().equals("/ezPortal/myPortal.do")) {
 				continue;
 			}
 			
@@ -2162,6 +2168,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 		
 		sb.append("</ul></nav>");
+
+		if (userInfo.getTheme().equals("BASIC")) {
+			sb.append("</header>\n");
+		}
 
 		logger.debug("getMainMenuHTML ended");
         

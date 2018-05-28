@@ -10,9 +10,15 @@
 		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+		<style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;	    		
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	   	<script type="text/javascript">
 	   		//트리조직도 JSON
 	   		var treeContent;
@@ -160,7 +166,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: rgb(233, 241, 255);
+				background-color: rgb(237, 244, 253);
 			}
 		</style>
 	</head>
@@ -172,18 +178,21 @@
 	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
 	        </ul>
 	    </div>
+	    <script type="text/javascript">
+			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		</script>
 		<table id="TreeViewTD">
 		 	<tr>
 	            <td>
-	                <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
-	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                    <div class="portlet_tabpart03_top" id="tab1">
 	                        <table style="margin-top: 3px; width: 100%;">
 	                            <tr>
 	                                <td>
 	                                </td>
 	                                <td>
-	                                    <div style="float:right">
-	                                        <select id="search_type">
+	                                    <div style="float:right; margin-right:5px;">
+	                                        <select id="search_type" style="height:22px;">
 	                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
 					                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
 					                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
@@ -195,7 +204,7 @@
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
-	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" id="keyword" value="" style="width: 130px; margin: 0px;" />
+	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" id="keyword" value="" style="width: 130px; height:22px; margin: 0px;" />
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    
@@ -204,7 +213,7 @@
 	                        </table>
 	                    </div>
 	                </div>
-					<table style="margin-top: 3px;">
+					<table style="margin-top: 4px;">
 			            <tr>
 			                <td class="box" style="border-right: 0px; height: 465px;">
 			                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
@@ -215,7 +224,7 @@
 			            </tr>
 			        </table>
 				</td>
-				<td style="vertical-align:top; padding-top:4px; padding-left:3px;">
+				<td style="vertical-align:top; padding-top:5px; padding-left:4px;">
 	                <table>
 						<tbody>
 							<tr>
@@ -224,7 +233,7 @@
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
 									</h2>
 									<div class="receiver_borderbox">
-										<div id="authorDeptList" style="width: 250px; Height: 475px; overflow-x: auto; overflow-y: auto;">
+										<div id="authorDeptList" style="width: 250px; Height: 472px; overflow-x: auto; overflow-y: auto;">
 										</div>
 									</div>
 								</td>

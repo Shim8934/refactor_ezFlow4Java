@@ -250,6 +250,8 @@
 	            $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
 	            });
+	            
+	            ChangeListView_onClick(getOrganListType());
 
 	        }
 		    function recevieListview(pID, pListView) {
@@ -1994,6 +1996,7 @@
 	            pListType = Div;
 	            ListTypeChangeIcon();
 	            DisplayUserImageList();
+	            setOrganListType(pListType);
 	        }
 	        function keyword_Clear() {
 	            document.getElementsByName('keyword').value = "";
@@ -3188,6 +3191,36 @@
             		tab4.className = "tabon";
             	}
             }
+            
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">

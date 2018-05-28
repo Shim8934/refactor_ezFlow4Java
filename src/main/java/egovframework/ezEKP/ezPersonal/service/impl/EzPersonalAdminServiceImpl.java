@@ -594,12 +594,14 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		StringBuilder result = new StringBuilder();
 		
+		// 18-05-10 김민성 - 관리자 > 슬라이드 이미지 url 추가
 		if (sliderID.equals(" ")) {
 			result.append("<LISTVIEWDATA>");
 			result.append("<HEADERS>");
 			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t937", userInfo.getLocale()) + "</NAME><WIDTH>30</WIDTH><COLNAME>ISUSE</COLNAME></HEADER>");
-			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t9", userInfo.getLocale()) + "</NAME><WIDTH>250</WIDTH><COLNAME>SLIDERNAME</COLNAME></HEADER>");
+			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t9", userInfo.getLocale()) + "</NAME><WIDTH>200</WIDTH><COLNAME>SLIDERNAME</COLNAME></HEADER>");
 			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t1024", userInfo.getLocale()) + "</NAME><WIDTH>130</WIDTH><COLNAME>REGDATE</COLNAME></HEADER>");
+			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.kmsp01", userInfo.getLocale()) + "</NAME><WIDTH>200</WIDTH><COLNAME>URL</COLNAME></HEADER>");
 			result.append("</HEADERS>");
 			result.append("<ROWS>");
 			
@@ -627,6 +629,10 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<CELL>");
 				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE>");
 				result.append("</CELL>");
+				// 18-05-18 김민성 - URL 탭 null일때 처리
+				result.append("<CELL>");
+				result.append("<VALUE>" + commonUtil.cleanValue(vo.getUrl()) + "</VALUE>");
+				result.append("</CELL>");
 				result.append("</ROW>");
 			}
 			
@@ -648,8 +654,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		return result.toString();
 	}
 
+	// 18-05-10 김민성 - 슬라이드 이미지 등록 URL 컬럼 추가
 	@Override
-	public void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception {
+	public void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo, String url) throws Exception {
 		logger.debug("setSliderImage started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -660,6 +667,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_FILENAME", fileName);
 		map.put("v_IMAGEPATH", sliderPath);
 		map.put("v_REGUSERID", userInfo.getId());
+		map.put("v_URL", url);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));

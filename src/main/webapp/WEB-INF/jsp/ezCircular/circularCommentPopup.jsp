@@ -15,7 +15,8 @@
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		
 		<style type="text/css">
-			.commentConfirmDiv {
+		/* 18-05-25 김민성 - commentConfirmDiv 사용 안해서 주석 처리 & 의견란 placeholder style 추가*/
+			/* .commentConfirmDiv {
 				position:absolute;
 				right:10px;
 				top:7px;
@@ -34,28 +35,41 @@
 				vertical-align:middle
 			}
 
-			.commentConfirmDiv span {
+			 .commentConfirmDiv span {
 				display:inline-block;
 				background:url(/images/kr/cm/btn_default_offright.gif) no-repeat top right;
 				height:28px;
 				padding:0px 8px 0px 0px;
 				line-height:28px;
 				font-size:12px;
-			}
+			} 
 			
 			.commentConfirmDiv ul li.on {
-				background:url(/images/kr/cm/btn_default_onleft.gif) no-repeat top left;
+				 background:url(/images/kr/cm/btn_default_onleft.gif) no-repeat top left; 
 				color:#333;
 			}
 			
-			.commentConfirmDiv ul li.on span {
+			 .commentConfirmDiv ul li.on span {
 				background:url(/images/kr/cm/btn_default_onright.gif) no-repeat top right;
 				color:#333;
-			}
+			} 
 			
 			.commentConfirmDiv ul li.off {
-				background:url(/images/kr/cm/btn_default_offleft.gif) no-repeat top left;
+				 background:url(/images/kr/cm/btn_default_offleft.gif) no-repeat top left; 
+			}  */
+			
+			textarea::placeholder {
+ 				 color: #b4b4b4;
+ 			}
+ 			
+ 			textarea::-webkit-input-placeholder {
+  				color: #b4b4b4;
 			}
+
+			textarea:-ms-input-placeholder {
+				color: #b4b4b4;
+			}
+}
 		</style>
 		
 		<script type="text/javascript">
@@ -131,17 +145,21 @@
 			</ul>
 		</div>
 		
-		<script type="text/javascript" >
-   			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-		
-		<div style='height:702px;overflow-y:auto;'>
+		<!-- 18-05-24 김민성 - 회람판 > 상세정보 > 의견목록 검색 부분 UI 수정 -->
+		<c:choose>
+			<c:when test="${myCommentCount != 0 }">
+				<div style='height:702px;overflow-y:auto;'>
+			</c:when>
+			<c:otherwise>
+				<div style='height:750px;overflow-y:auto;'>
+			</c:otherwise>
+		</c:choose>
 			<table class="mainlist" style="width:99.5%;">
 				<tr>
 					<th style="width:51.5px;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<spring:message code='ezCircular.t85' /></th>
 					<th style="text-align:right;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-						<input type="radio" name='searchType' class='searchType' value='userID' checked="checked" /><spring:message code='ezCircular.t34' />
-						<input type="radio" name='searchType' class='searchType' value='content' /><spring:message code='ezCircular.t188' />&nbsp;
+						<input style="vertical-align:middle; " type="radio" name='searchType' class='searchType' value='userID' checked="checked" /><spring:message code='ezCircular.t34' />
+						<input style="vertical-align:middle; " type="radio" name='searchType' class='searchType' value='content' /><spring:message code='ezCircular.t188' />&nbsp;
 						<input type='text' id='searchValue' />
 						<a class='imgbtn' style="vertical-align: middle"><span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span></a>
 						<a class='imgbtn' style="vertical-align: middle"><span onclick="commentRefresh()"><spring:message code='ezCircular.t173' /></span></a>
@@ -165,13 +183,29 @@
 			
 			<table id="circularUserList" style="width:99.5%;margin-top:0px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 		</div>
-
-		<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;background-color: #f8f8fa;">
+	
+		<!-- 18-05-25 김민성 - 회람판 > 상세정보 > 의견목록 회람확인 UI 수정  -->
+		<%-- <div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;background-color: #f8f8fa;">
 			<div class="commentConfirmDiv" style="right:330px; display:none;">
 		        <ul style="padding-top:2px">
 		            <li><span id="commentConfirm" onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
 		        </ul>
 		    </div>
-		</div>
+		</div> --%>
+		
+		<c:if test="${myCommentCount != 0 }">
+			<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px; background-color:rgba(229, 239, 255, 1);">
+				<div id="menu" style="margin-top:8px; margin-left:45%; position:relative">
+			        <ul>
+			            <li><span onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
+			        </ul>
+			    </div>
+			</div>
+		</c:if>
+		
+		<script type="text/javascript" >
+   			selToggleList(document.getElementById("close"), "ul", "li", "0");
+   			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+		</script>
 	</body>
 </html>

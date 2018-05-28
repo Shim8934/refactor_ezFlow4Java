@@ -10,6 +10,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<style>
+			.btype_list ul li .date {
+				-webkit-margin-start:20px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -20,10 +25,10 @@
 			var treedate = "${retXML }";
 			var code = "<c:out value='${code }'/>";
 			var userLevel = "<c:out value='${userLevel }'/>";
-// 			var chCommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
 			var chCheckSysop = "<c:out value='${checkSysop }'/>";
 			var newMemberConfirmType = "<c:out value='${newMemberConfirmType }'/>";
 			var joinFlag = "<c:out value='${joinFlag }'/>";
+			var pastDate = "<c:out value = '${pastDate}' />";
 			var xmlhttp;
 			
 			var strLang1 = "<spring:message code='ezCommunity.t78' />";
@@ -32,7 +37,6 @@
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
 		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
-		    var isCrossBrowser = "{isCrossBrowser}";
 		    
 		    $(function () {
 		        $.ajax({
@@ -81,7 +85,7 @@
 		        }
 		    });
 		    
-		    function getCommhomeBoardInfo() {		    	
+		    function getCommhomeBoardInfo() {
 		    	$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -138,7 +142,6 @@
 	                            p.appendChild(span);
 
 	                            var ul = document.createElement("ul");
-	                            
 	                            $.ajax({
 	            					type : "POST",
 	            					dataType : "text",
@@ -157,8 +160,13 @@
 		                                    
 		                                    if (itemVO.gubun != "3") {
 		                                    	span2.className = "txt";
-		                                        span2.innerHTML = itemVO.title;		                                       
-		                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 댓글수 표출 */
+		                                    	/* 2018-05-18 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 new 표시 */
+		                                    	if (pastDate <= itemVO.writeDate) {
+		                                    		span2.innerHTML = "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
+                   		 						}
+		                                        span2.innerHTML += itemVO.title;
+		                                        
+		                                        /* 2018-05-04 홍승비 - 댓글수 표출 */
 		                                        if (itemVO.oneLineCnt > 0) {
 		                                        	span2.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
 		                                        }
@@ -185,15 +193,19 @@
 			                                        var img = document.createElement("IMG");
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
-			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈화면 사진경로 수정 */
+			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 사진경로 수정 */
 			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
 			                                        span2.appendChild(img);
 			                                        span3.className = "ptxt";
-			                                        span3.innerHTML = itemVO.title;
-			                                        /* 2018-05-07 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 댓글수 표출 */
+			                                        /* 2018-05-18 홍승비 - new 표시 */
+			                                        if (pastDate <= itemVO.writeDate) {
+			                                    		span3.innerHTML = "<img src='/images/new_icon.gif'>&nbsp;";
+	                   		 						}
+			                                        span3.innerHTML += itemVO.title;
+			                                        /* 2018-05-07 홍승비 - 댓글수 표출 */
 			                                        if (itemVO.oneLineCnt > 0) {
 			                                        	span3.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
 			                                        }
@@ -225,8 +237,7 @@
 					}
 				});
 		    }
-		    
-		    
+		    	    
 		    function event_get_commhomeinfo(result) {
 	            var xmldom = loadXMLString(result);
 	            
@@ -563,7 +574,7 @@
 		                    }
 		                    
 		                    break;
-		                case "btn_Manager": open_admin_home(code,"2");
+		                case "btn_Manager": open_admin(code);
 		                    break;
 		                case "btn_Manager_home1": open_admin_home(code,"2");
 		                    break;
@@ -654,13 +665,8 @@
 		    			resultXML = loadXMLString(result);
 		    			
 		    			var master = "";
+		    			master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
 		    			
-		    			if (isCrossBrowser == 'true') {
-		    				master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
-		    			} else {
-		    				master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
-		    			}
-	    		    
 				        if (master == null) {
 				        	master = "";
 				        }
@@ -689,7 +695,7 @@
 		    
 		    function open_admin(code) {
 		        var wWeight = "860";
-		        var wHeight = "530";
+		        var wHeight = "567";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = (width - wWeight) / 2;
@@ -778,7 +784,15 @@
 		    function refresh_onclick() {
 	            window.location.reload();
 	        }
- 	        
+		    
+//		    window.onload = function(){
+		    	/* 2018-05-21 홍승비 - IE와 크롬에서 게시물 등록일 표시 동일하게 조정 */
+//		    	if (navigator.userAgent.toLowerCase().indexOf("chrome") > -1) {
+//		    		console.log("크롬이에요!");
+//		    		$(".date").css('margin-left', '20px');
+//		    	}	    	
+//		    }
+
 		</script>
 	</head>
 	

@@ -313,7 +313,7 @@
 		
 	</head>
 	<body class="leftbody">  
-		<div id="left" style="height:500px;overflow-y:auto;">
+		<div id="left" style="height:526px;overflow-y:auto;">
 			<div class="left_admin" title="Community Administrator"><spring:message code = 'ezCommunity.t234' /></div>
 			<h2><span onClick="goPage(2)" id="goPage_2" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2012' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>	

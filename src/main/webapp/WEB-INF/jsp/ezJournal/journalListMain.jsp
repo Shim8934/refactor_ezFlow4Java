@@ -159,6 +159,7 @@
 			//업무일지 리스트 뿌리기
 			function setJournalList() {
 				var url = "/ezJournal/journalList.do";
+				console.log("listCnt : " + listCnt);
 				var jsonParam={};
 				jsonParam["listType"] = listType;
 				jsonParam["formId"] = $("#formId").val();
@@ -500,7 +501,7 @@
 		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
-							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId="+journalId);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId);
 							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
@@ -851,7 +852,7 @@
 				}
 				
 				for (var i = 0; i < journalIdList.length; i++) {
-					if ($("#" + journalIdList[i]).attr("mine") == "N") {
+					if ($("#" + journalIdList[i]).attr("mine") == "N" && listType != "recv") {
 						alert("<spring:message code='ezBoard.t265'/>");
 						return;
 					}
@@ -1347,7 +1348,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();

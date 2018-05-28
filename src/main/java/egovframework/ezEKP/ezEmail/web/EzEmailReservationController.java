@@ -330,9 +330,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
  		
         logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
-		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
-		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
+		logger.debug("stateName=" + stateName);
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
@@ -581,7 +580,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("pCDOMessageID", pCDOMessageID);
 		model.addAttribute("pReservedSaveTime", pReservedSaveTime);
 		model.addAttribute("stateName", stateName);
-		model.addAttribute("folderDate", folderDate);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("mailInnerDomain", mailInnerDomain);
 		model.addAttribute("individualMailUser", individualMailUser);

@@ -31,6 +31,7 @@
 		    var pDocID = "${docID}";
 		    var pDeptID = "${deptID}";
 		    var pDocState = "${docState}";
+		    var pAprState = "${aprState}";
 		    var ChildDocInfo = "${childDocInfo}";
 		    var xmlhttp = createXMLHttpRequest();	
 		    var FLAG;
@@ -51,7 +52,12 @@
 		                getEndLine(tempDocID);
 		            }
 		            else if (FLAG == "APR") {
-		                getAprLine(tempDocID);
+		            	if (pAprState == "N") {
+		            		getAprLine("");
+			                return;
+		            	} else {
+			                getAprLine(tempDocID);
+		            	}
 		            }
 		            else {
 		                getAprLine("");
@@ -253,7 +259,12 @@
 		            getEndLine(tempDocID);
 		        }
 		        else if (FLAG == "APR") {
-		            getAprLine(tempDocID);
+		        	if (pAprState == "N") {
+	            		getAprLine("");
+		                return;
+	            	} else {
+		                getAprLine(tempDocID);
+	            	}
 		        }
 		        else
 		            getAprLine("");
@@ -288,7 +299,7 @@
             	var tab2 = document.getElementById("tagsub4").children[0];
             	var tab3 = "";
             	if (document.getElementById("tdGongRam") != null) {
-            		document.getElementById("tdGongRam").children[0];
+            		tab3 = document.getElementById("tdGongRam").children[0];
             	}
             	if (target == "1") {
             		tab1.className = "tabon";
@@ -304,7 +315,6 @@
             		tab1.className = "";
             		tab2.className = "";
             		tab3.className = "tabon";
-            		if (tab3 != "")
             	}
             }
 		</script>
@@ -362,7 +372,7 @@
        	
 		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:350px;WIDTH:100%;"></div></div>
 		<script type="text/javascript" >
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+			//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>

@@ -192,17 +192,37 @@ public class MLoginGWController {
     					
     					return result;    	        	
     				} else {			
-    					String ip = ClientUtil.getClientIP(request);		
-    					loginVO.setIp(ip);
+    			    	String mIp = request.getHeader("ip");
+    			    	String mAgent = request.getHeader("agent");
+    			    	String mBrowser = request.getHeader("browser");
+    			    	String mOs = request.getHeader("os");
+    			    	
+    			    	if (mIp == null) {
+    			    		mIp = ClientUtil.getClientIP(request);
+    			    	}
+    			    	
+    			    	if (mAgent == null) {
+    			    		mAgent = ClientUtil.getClientInfo(request, "agent");
+    			    	}
+    			    	
+    			    	if (mBrowser == null) {
+    			    		mBrowser = ClientUtil.getClientInfo(request, "browser");
+    			    	}
+    			    	
+    			    	if (mOs == null) {
+    			    		mOs = ClientUtil.getClientInfo(request, "os");
+    			    	}
+    			    	
+    					loginVO.setIp(mIp);
     					
     					//IP Address,  마지막 login시간 저장
     					loginService.updateUser(loginVO);
     					
     					//접속 로그정보 저장
-    					resultVO.setIp(ip);
-    					resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
-    					resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
-    					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+    					resultVO.setIp(mIp);
+    					resultVO.setAgent(mAgent);
+    					resultVO.setOs(mOs);
+    					resultVO.setBrowser(mBrowser);
     					resultVO.setTenantId(tenantId);
     					
     					if(resultVO.getTitle2() == null){
@@ -275,7 +295,7 @@ public class MLoginGWController {
     					
     					Map<String, Object> map = new HashMap<String, Object>();
     					map.put("uid", uid);
-    					map.put("ip", ip);
+    					map.put("ip", mIp);
     					map.put("locale", returnValue);
     					map.put("lang", lang);
     					map.put("timeZone", timeZone);
