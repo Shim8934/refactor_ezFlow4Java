@@ -1671,6 +1671,46 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return list;
 	}
+	
+	@Override
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String adminFlag, String userAuthType, String listAuthType, String comFlag) throws Exception {
+		LOGGER.debug("getAttitudeAuthDeptList started.");
+		
+		if (userAuthType == null || userAuthType.equals("")) {
+			if (rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wa=1")) {
+				// 전체, 회사, 근태관리자 -> 모든부서 관리권한
+				userAuthType = "all";
+			} else if (rollInfo.contains("g=1")) {
+				// 부서관리자 -> 자기부서 관리권한 + 권한테이블
+				userAuthType = "dept";
+			} else {
+				// 일반사용자 -> 권한테이블
+				userAuthType = "";
+			}
+		}
+		
+		if (listAuthType == null || listAuthType.equals("")) {
+			// all:관리+열람, M:관리, R:열람
+			listAuthType = "all";
+		}
+		
+		LOGGER.debug("userId = " + userId + " || adminFlag = " + adminFlag + " || userAuthType = " + userAuthType + " || listAuthType = " + listAuthType + " || comFlag = " + comFlag);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("adminFlag", adminFlag);
+		map.put("userAuthType", userAuthType);
+		map.put("listAuthType", listAuthType);
+		map.put("comFlag", comFlag);
+		
+		List<AttitudeAuthorVO> list = ezAttitudeDAO.getAttitudeAuthDeptList(map);
+		
+		LOGGER.debug("getAttitudeAuthDeptList ended.");
+		
+		return list;
+	}
 
 	@Override
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId,

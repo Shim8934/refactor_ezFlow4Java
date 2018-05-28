@@ -1808,10 +1808,7 @@ public class EzAttitudeGWController {
 	
 	/**
 	 * G/W 근태관리 [GET] 근태권한자 상세 조회(권한있는 부서 체크)
-	 * @param companyId
-	 * @param request
-	 * @return
-	 * @throws Exception
+	 * 
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-auth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeAuthDeptList(@PathVariable String userId, HttpServletRequest request) throws Exception{
@@ -1821,14 +1818,19 @@ public class EzAttitudeGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
-			String isAllDept = request.getParameter("isAllDept");
+			String adminFlag = request.getParameter("adminFlag");
+			String userAuthType = request.getParameter("userAuthType");
+			String listAuthType = request.getParameter("listAuthType");
+			String comFlag = request.getParameter("comFlag");
+			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-		
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
+			
+//			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, userId, info.getRollInfo(), adminFlag, userAuthType, listAuthType, comFlag);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", authDeptlist);
+//			result.put("data", authDeptlist);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
