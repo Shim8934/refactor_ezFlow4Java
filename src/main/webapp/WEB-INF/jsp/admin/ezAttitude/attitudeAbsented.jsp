@@ -159,7 +159,7 @@
 	    	
 	    	function getAttitudeAbsentedList() {
 	    		if (!checkPattern()) {
-	    			alert("올바른 시간을 지정해야 합니다.");
+	    			alert("<spring:message code='ezAttitude.t132' />");
 	    			return;
 	    		}
 	    		
@@ -167,7 +167,7 @@
     			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("시작시간은 종료시간보다 빨라야합니다.");
+					alert("<spring:message code='ezAttitude.t131' />");
 		            return;
 				}
 	    		
@@ -276,7 +276,7 @@
 			
 			function exportExcel() {
 	    		if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
-					alert('출력할 내용이 없습니다');
+					alert("<spring:message code='ezAttitude.t56' />");
 					return;
 				}
 				
