@@ -113,13 +113,13 @@
 	    			leaveEarlyFlag = false;
 	    			for (var i = 0; i < result.length; i++) {
 	    				if (result[i].typeId == "A01") {
-	    					$("#inAttiClock").text("출근 : " + result[i].startDate.split(" ")[1]);
+	    					$("#inAttiClock").text("<spring:message code='ezAttitude.t64'/> : " + result[i].startDate.split(" ")[1]);
 	    					$("#inAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
 	    				} else if (result[i].typeId == "A02") {
-	    					$("#inAttiClock").text("").append("출근 : <font color='#ff4b00'>" + result[i].startDate.split(" ")[1] + "</font>");
+	    					$("#inAttiClock").text("").append("<spring:message code='ezAttitude.t64'/> : <font color='#ff4b00'>" + result[i].startDate.split(" ")[1] + "</font>");
 	    					$("#inAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
 	    				} else if (result[i].typeId == "A03") {
-	    					$("#outAttiClock").text("퇴근 : " + result[i].startDate.split(" ")[1]);
+	    					$("#outAttiClock").text("<spring:message code='ezAttitude.t65'/> : " + result[i].startDate.split(" ")[1]);
 	    					$("#outAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
 	    				}
 	    			}
@@ -178,7 +178,7 @@
 	    	if (pTypeId == "A03") {
 	    		var returnValue = getIsAttitude("A01");
 	    		if (returnValue == 0) {
-	    			alert("출근 후 퇴근이 가능합니다.");
+	    			alert("<spring:message code='ezAttitude.bbhs35'/>");
 		    		return;
 	    		} else {
 	    			getAttitudeList();
@@ -187,8 +187,8 @@
 	    	}
 	    	
 	    	beforeAlertDate = new Date();
-	    	var dateAlert = nowAttiTime.getFullYear() + "년 " + (nowAttiTime.getMonth() + 1) + "월 " + (nowAttiTime.getDate()) + "일 " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
-	    	var saveFlag = confirm("현재 시각은 " + dateAlert + "입니다.");
+	    	var dateAlert = nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + (nowAttiTime.getMonth() + 1) + "<spring:message code='ezAttitude.t67'/> " + (nowAttiTime.getDate()) + "<spring:message code='ezAttitude.t68'/> " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+	    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
 	    	if (!saveFlag) {
 	    		afterAlertDate = new Date();
 	    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
@@ -383,7 +383,7 @@
 		</script>
 	</head>
 <body class="leftbody">
-	<div class="left_pims" title="근태관리"><span>근태관리</span></div>
+	<div class="left_pims" title="<spring:message code='ezAttitude.t1'/>"><span><spring:message code='ezAttitude.t1'/></span></div>
 <!-- 	<article class="time"> -->
 <%-- 		<p class="title"><spring:message code='main.t00023' /></p> --%>
 <!-- 		<div style=" margin-left:52px ;width:110px; height:67px; border:2px solid grey; border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);"> -->
@@ -405,10 +405,10 @@
 					</div>
 				</div>
 				<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
-					<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:14px; text-align: left; margin-left:50px; padding-left:22px;">출근 : 출근 전</p>
-					<p id="outAttiClock" style="margin:5px 0px 30px 8px;  font-size:14px; text-align: left; margin-left:50px; padding-left:22px">퇴근 : 퇴근 전</p>
-					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
-					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px">퇴근</span>
+					<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:14px; text-align: left; margin-left:50px; padding-left:22px;"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p>
+					<p id="outAttiClock" style="margin:5px 0px 30px 8px;  font-size:14px; text-align: left; margin-left:50px; padding-left:22px"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p>
+					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span>
+					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px"><spring:message code='ezAttitude.t65'/></span>
 				</div>
 			</article>
 		</div>
@@ -441,7 +441,7 @@
 			</c:if>
 		</ul>
 		<c:if test="${attitudeAdminCheck == true}"> 
-			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;근태정보관리</span></h3>
+			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.t73'/></span></h3>
 		</c:if>
 	</div>
 </body>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>근태작성</title>
+		<title><spring:message code='ezAttitude.bbhs17'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -296,7 +296,7 @@
 				}
 				
 				if (selectType == "A07" && !weekWorkCheck()){
-					alert("평일 시 휴근등록이 불가능합니다.");
+					alert("<spring:message code='ezAttitude.t81'/>");
 					return;
 				}
 				
@@ -314,7 +314,7 @@
 				
 				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
 					$("input[name=region]").focus();
-					alert("근무지를 입력해주세요.");
+					alert("<spring:message code='ezAttitude.t49'/>");
 					return;
 				}
 				
@@ -337,7 +337,7 @@
 		        	},
 					success : function(resultStatus) {
 						if (resultStatus == "dupl"){
-							alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
+							alert("<spring:message code='ezAttitude.t50'/>");
 						} else if (resultStatus == "success") {
 	            			alert("<spring:message code='ezAttitude.bbhs19'/>");
 			        		try {
@@ -603,7 +603,7 @@
 				len = message.GetEditorContent().replace(/(\s+)|(\s+)/gi, " ").length;
 				
 				if (len > 500) {
-					alert("내용은 500글자까지 작성 가능합니다.");
+					alert("<spring:message code='ezAttitude.t82'/>");
 					return false;
 				} else {
 					return true;
@@ -632,7 +632,7 @@
 	                    <td style="height: 20px;">
 	                        <table id="attiwriteForm" class="content">
 								<tr id="selectTR">
-									<th>근태유형</th>
+									<th><spring:message code='ezAttitude.bbhs15'/></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
