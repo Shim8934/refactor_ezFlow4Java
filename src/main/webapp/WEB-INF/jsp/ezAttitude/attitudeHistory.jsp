@@ -121,9 +121,9 @@
 			    });
 			});
 			    
-	    	var monthMsg = "<spring:message code='ezSchedule.t110' />";
+	    	var monthMsg = "<spring:message code='ezAttitude.t139' />";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayMsg = "<spring:message code='ezAttitude.t140' />";
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
@@ -169,7 +169,7 @@
     			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("<spring:message code='ezAttitude.lhj15' />");
+					alert("<spring:message code='ezAttitude.t131' />");
 		            return;
 				}
 	    		
@@ -207,7 +207,7 @@
 	    	
 	    	//검색 > 근태유형selectBox
 	    	function getAttitudeTypeList(typeList, typeId) {
-	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
+	    		var html = "<option value='total'><spring:message code='ezAttitude.t124' /></option>";
 	    		
 	    		for (var i = 0; i < typeList.length; i ++) {
 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
@@ -260,7 +260,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='10' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='10' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -280,7 +280,7 @@
 	    	
 			function searchAttitudeHistoryList(searchType){
 				if (!checkPattern()) {
-					alert("<spring:message code='ezAttitude.lhj16' />")
+					alert("<spring:message code='ezAttitude.t132' />")
 					return;
 				}
 				
@@ -390,7 +390,7 @@
 						</c:forEach>
 		      		</select>
 	      		</li>
-	      		<li><span onclick="ShowQuickAddres();"><spring:message code='ezAttitude.lhj5'/></span></li>
+	      		<li><span onclick="ShowQuickAddres();"><spring:message code='ezAttitude.t121'/></span></li>
 	      	</ul>
 	  	</div> 	
 <!-- 	  	<table id="searchTable" style="width:100%;"> -->
@@ -426,9 +426,9 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
-						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate"><spring:message code='ezAttitude.bbhs12'/></th>
+						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate"><spring:message code='ezAttitude.t149'/></th>
 						<th style="width:18%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate"></th>
-						<th style="width:6%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
+						<th style="width:6%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.t134' /></th>
 						<th style="width:8%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name"><spring:message code='ezAttitude.t62'/></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date"><spring:message code='ezAttitude.t63'/></th>

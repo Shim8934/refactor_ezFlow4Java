@@ -111,9 +111,9 @@
 		        $('#Otimepicker').timepicker({ 'timeFormat': 'H:i' });
 		    });
 		    
-		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthMsg = "<spring:message code='ezAttitude.t139' />";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayMsg = "<spring:message code='ezAttitude.t140' />";
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
@@ -156,12 +156,12 @@
 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 
 			    if ("${data.changeDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
-			    	alert("<spring:message code='ezAttitude.kbm35'/>");
+			    	alert("<spring:message code='ezAttitude.t205'/>");
 			    	return;
 			    }
 			    
 			    if (!timeValid.test(ctime)) {
-			    	alert("<spring:message code='ezAttitude.kbm36'/>");
+			    	alert("<spring:message code='ezAttitude.t170'/>");
 			    	return;
 			    }
 			    
@@ -180,12 +180,12 @@
 				    data : obj,
 				    dataType : "text",
 				    error: function(xhr, status, error){
-				    	alert("<spring:message code='ezAttitude.kbm3'/>")
+				    	alert("<spring:message code='ezAttitude.t175'/>")
 				    },
 				    success : function(json){
 				    	console.log(json);
 						if (json == 1) {
-							alert("<spring:message code='ezAttitude.kbm43'/>");
+							alert("<spring:message code='ezAttitude.t212'/>");
 						} else {
 							alert("<spring:message code='ezAttitude.t99'/>");
 						}
@@ -201,14 +201,14 @@
 		    	var obj = new Object();
 		    	
 		    	obj.idList = attid; 
-				if(confirm("<spring:message code='ezAttitude.bbhs26'/>")){
+				if(confirm("<spring:message code='ezAttitude.t160'/>")){
 				    $.ajax({
 						type : 'post',
 					    url : '/ezAttitude/delAttModApp.do',
 					    data : obj,
 					    dataType : "text",
 					    error: function(xhr, status, error){
-					    	alert("<spring:message code='ezAttitude.kbm3'/>");
+					    	alert("<spring:message code='ezAttitude.t175'/>");
 					    },
 					    success : function(json){
 							window.close();
@@ -233,9 +233,9 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                                <li><span onclick="modify()"><spring:message code='ezAttitude.bbhs29'/></span></li>
-	                                <li><span onclick="del()" style="display:none;"><spring:message code='ezAttitude.bbhs30'/></span></li>
-	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+	                                <li><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></li>
+	                                <li><span onclick="del()" style="display:none;"><spring:message code='ezAttitude.t164'/></span></li>
+	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.t157'/></span></li>
 	                            </ul>
 	                        </div>
 	                    </td>
@@ -246,20 +246,20 @@
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
-                                            <th><spring:message code='ezAttitude.bbhs15'/></th>
+                                            <th><spring:message code='ezAttitude.t134'/></th>
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
 <!--                                             	다국어 작업 -->
                                             </td>
                                         </tr>
 	                                    <tr>
-	                                        <th><spring:message code='ezAttitude.kbm37'/></th>
+	                                        <th><spring:message code='ezAttitude.t206'/></th>
 	                                        <td colspan="2">
 	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center" disabled><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
-	                                        <th><spring:message code='ezAttitude.kbm38'/></th>
+	                                        <th><spring:message code='ezAttitude.t207'/></th>
 	                                        <td colspan="2">
 	                                        	<span id="periodblock">
 	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center" disabled><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
@@ -267,15 +267,15 @@
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
-	                                        <th><spring:message code='ezAttitude.kbm39'/></th>
+	                                        <th><spring:message code='ezAttitude.t208'/></th>
                                         	<c:if test="${data.apprStatus == 0}">
-								          		<td colspan="2"><spring:message code='ezAttitude.kbm40'/></td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.t209'/></td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 1}">
-								          		<td colspan="2"><spring:message code='ezAttitude.kbm41'/></td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.t210'/></td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 2}">
-								          		<td colspan="2"><spring:message code='ezAttitude.kbm42'/></td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.t211'/></td>	
 								          	</c:if>
 	                                    </tr>
 	                                </table>

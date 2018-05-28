@@ -866,6 +866,195 @@
 		]]>
 	</select>
 	
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList_hyo" parameterClass="Map" resultClass="AttitudeAuthorVO">
+		<isEqual property="userAuthType" compareValue="all">
+			SELECT
+				displayname AS deptname,
+				cn AS deptid,
+				'no' AS mine,
+				'M' AS authtype
+			FROM 
+				TBL_DEPTMASTER
+			WHERE 
+				tenant_id = #tenantId#
+			AND
+				extensionattribute2 = #companyId#
+			AND
+				cn != (SELECT
+							department
+						FROM
+							TBL_USERMASTER
+						WHERE
+							TBL_USERMASTER.tenant_id = #tenantId#
+						AND
+							TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+						AND
+							TBL_USERMASTER.cn = #userId#)
+			UNION
+			
+			SELECT
+				displayname AS deptname,
+				cn AS deptid,
+				'yes' AS mine,
+				'M' AS authtype
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				cn = (SELECT
+							department
+						FROM
+							TBL_USERMASTER
+						WHERE
+							TBL_USERMASTER.tenant_id = #tenantId#
+						AND
+							TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+						AND
+							TBL_USERMASTER.cn = #userId#)
+			ORDER BY
+				deptName
+		</isEqual>
+		
+		<isEqual property="userAuthType" compareValue="dept">
+			SELECT
+				TBL_DEPTMASTER.displayname AS deptname,
+				TBL_DEPTMASTER.cn AS deptid,
+				'no' AS mine,
+				TBL_ATTITUDE_AUTH.auth_type AS authtype
+			FROM
+				TBL_ATTITUDE_AUTH
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_ATTITUDE_AUTH.auth_dept_id = TBL_DEPTMASTER.cn 
+			AND
+				TBL_ATTITUDE_AUTH.tenant_id = TBL_DEPTMASTER.tenant_id
+			WHERE
+				TBL_ATTITUDE_AUTH.user_id = #userId#
+			AND
+				TBL_DEPTMASTER.tenant_id = #tenantId#
+			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				TBL_DEPTMASTER.cn != (SELECT
+											department
+										FROM
+											TBL_USERMASTER
+										WHERE
+											TBL_USERMASTER.tenant_id = #tenantId#
+										AND
+											TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+										AND
+											TBL_USERMASTER.cn = #userId#)
+			<isEqual prepend="AND" property="listAuthType" compareValue="m">
+				TBL_ATTITUDE_AUTH.auth_type = 'M'
+			</isEqual>
+			<isEqual prepend="AND" property="listAuthType" compareValue="r">
+				TBL_ATTITUDE_AUTH.auth_type = 'R'
+			</isEqual>
+			UNION
+			SELECT
+				displayname AS deptname,
+				cn AS deptid,
+				'yes' AS mine,
+				'M' AS authtype
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				cn = (SELECT
+							department
+						FROM
+							TBL_USERMASTER
+						WHERE
+							TBL_USERMASTER.tenant_id = #tenantId#
+						AND
+							TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+						AND
+							TBL_USERMASTER.cn = #userId#)
+			ORDER BY
+				deptName
+		</isEqual>
+		
+		<isEqual property="userAuthType" compareValue="">
+			SELECT
+				TBL_DEPTMASTER.displayname AS deptname,
+				TBL_DEPTMASTER.cn AS deptid,
+				'no' AS mine,
+				TBL_ATTITUDE_AUTH.auth_type AS authtype
+			FROM
+				TBL_ATTITUDE_AUTH
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_ATTITUDE_AUTH.auth_dept_id = TBL_DEPTMASTER.cn 
+			AND
+				TBL_ATTITUDE_AUTH.tenant_id = TBL_DEPTMASTER.tenant_id
+			WHERE
+				TBL_ATTITUDE_AUTH.user_id = #userId#
+			AND
+				TBL_DEPTMASTER.tenant_id = #tenantId#
+			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				TBL_DEPTMASTER.cn != (SELECT
+											department
+										FROM
+											TBL_USERMASTER
+										WHERE
+											TBL_USERMASTER.tenant_id = #tenantId#
+										AND
+											TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+										AND
+											TBL_USERMASTER.cn = #userId#)
+			<isEqual prepend="AND" property="listAuthType" compareValue="m">
+				TBL_ATTITUDE_AUTH.auth_type = 'M'
+			</isEqual>
+			<isEqual prepend="AND" property="listAuthType" compareValue="r">
+				TBL_ATTITUDE_AUTH.auth_type = 'R'
+			</isEqual>
+			UNION
+			SELECT
+				displayname AS deptname,
+				cn AS deptid,
+				'yes' AS mine,
+				(SELECT
+					IFNULL(A.auth_type, 'R') AS authtype
+				FROM
+					TBL_ATTITUDE_TYPE A
+				WHERE
+					auth_dept_id = (SELECT
+										department
+									FROM
+										TBL_USERMASTER
+									WHERE
+										TBL_USERMASTER.tenant_id = #tenantId#
+									AND
+										TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+									AND
+										TBL_USERMASTER.cn = #userId#) B) C AS authtype
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				cn = (SELECT
+							department
+						FROM
+							TBL_USERMASTER
+						WHERE
+							TBL_USERMASTER.tenant_id = #tenantId#
+						AND
+							TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+						AND
+							TBL_USERMASTER.cn = #userId#)
+			ORDER BY
+				deptName
+		</isEqual>
+	</select>
+	
 	<insert id="ezAttitudeAdminDAO.insertAttitudeAuth" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ATTITUDE_AUTH (USER_ID, TENANT_ID, COMPANY_ID, AUTH_DEPT_ID, AUTH_TYPE)

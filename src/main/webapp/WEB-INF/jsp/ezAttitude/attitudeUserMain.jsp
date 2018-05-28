@@ -215,9 +215,9 @@
 			    });
 			});
 			    
-			var monthMsg = "<spring:message code='ezAttitude.bbhs1'/>";
+			var monthMsg = "<spring:message code='ezAttitude.t139'/>";
 			var monthStr = monthMsg.split(";");		    
-			var dayMsg = "<spring:message code='ezAttitude.bbhs2'/>";
+			var dayMsg = "<spring:message code='ezAttitude.t140'/>";
 			var dayStr = dayMsg.split(";");
 			
 			$(function () {
@@ -294,7 +294,7 @@
 					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
 					
 // 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd"}).text($("#calTitle").text())));
-					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.bbhs38'/>")));
+					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.t171'/>")));
 					for (var i = 0; i < result.length; i++) {
 						
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
@@ -656,7 +656,7 @@
 				var startDate = pDate + "-01 00:00:00";
 				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
 
-				document.getElementById("popup_title").innerText = "<spring:message code='ezAttitude.bbhs3'/>" + "[" + typeName + "]";
+				document.getElementById("popup_title").innerText = "<spring:message code='ezAttitude.t141'/>" + "[" + typeName + "]";
 				
 				$.ajax({
 					type : "POST",
@@ -684,15 +684,15 @@
 					    		uvobjTr.append($("<td style='width:35%; height:0px; border:none;'></td>"));
 					    		$("#addpopup_list tbody").append(uvobjTr);
 					    		
-					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
+					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 					    	
 					    	result.forEach(function(vo, index) {
 					    		if (vo.apprStatus == 1) {
-					    			vo.apprStatus = "<spring:message code='ezAttitude.kbm41'/>";
+					    			vo.apprStatus = "<spring:message code='ezAttitude.t210'/>";
 					    		} else {
-					    			vo.apprStatus = "<spring:message code='ezAttitude.kbm42'/>";
+					    			vo.apprStatus = "<spring:message code='ezAttitude.t211'/>";
 					    		}
 					    		
 					    		var gubunBar = "";
@@ -768,7 +768,7 @@
 					    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
 					    		$("#addpopup_list tbody").append(uvobjTr);
 					    		
-					    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
+					    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; border-top:none;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 					    	
@@ -881,9 +881,9 @@
 				    	
 				    	result.forEach(function(vo, index) {
 				    		if (vo.apprStatus == 1) {
-				    			vo.apprStatus = "<spring:message code='ezAttitude.kbm41'/>";
+				    			vo.apprStatus = "<spring:message code='ezAttitude.t210'/>";
 				    		} else {
-				    			vo.apprStatus = "<spring:message code='ezAttitude.kbm42'/>";
+				    			vo.apprStatus = "<spring:message code='ezAttitude.t211'/>";
 				    		}
 
 				    		var gubunBar = "";
@@ -935,7 +935,7 @@
 				    		uvobjTr.append($("<td style='width:30%; height:0px; border:none;'></td>"));
 				    		$("#addpopupDay_list tbody").append(uvobjTr);
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:820px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
+				    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:820px; border-top:none;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	}
 				    },
@@ -1063,16 +1063,16 @@
 	</head>
 	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
 		<c:if test="${deptFlag != 'true'}">
-			<h1 id="titleimg"><spring:message code='ezAttitude.bbhs5'/></h1>
+			<h1 id="titleimg"><spring:message code='ezAttitude.t143'/></h1>
 		</c:if>
 		<c:if test="${deptFlag == 'true'}">
-			<h1 id="titleimg"><spring:message code='ezAttitude.bbhs6'/></h1>
+			<h1 id="titleimg"><spring:message code='ezAttitude.t144'/></h1>
 		</c:if>
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminFlag == 'true'}">
 		        	<li id="search"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
-		        	<li id="search"><span onClick="excelDown()"><spring:message code='ezAttitude.bbhs7'/></span></li>
+		        	<li id="search"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>
 						<select id="authDeptList" style="width:100px; margin-top:5px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
@@ -1098,7 +1098,7 @@
 	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t112'/></li>
 	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t113'/>,<spring:message code='ezAttitude.t114'/></li>
                 <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #eede23; background:#feee33; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t115'/></li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.kbm45'/></li>
+                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t213'/></li>
 			</ul>
 		</div>
 		
@@ -1118,10 +1118,10 @@
 		<table class="mainlist" style="width:100%; display:none;" id="ExcelAttList">
 	       	<tr>
 				<th>NO.</th>
-				<th><spring:message code='ezAttitude.bbhs9'/></th>
-				<th><spring:message code='ezAttitude.bbhs10'/></th>
-				<th><spring:message code='ezAttitude.bbhs11'/></th>
-				<th><spring:message code='ezAttitude.bbhs12'/></th>
+				<th><spring:message code='ezAttitude.t146'/></th>
+				<th><spring:message code='ezAttitude.t147'/></th>
+				<th><spring:message code='ezAttitude.t148'/></th>
+				<th><spring:message code='ezAttitude.t149'/></th>
 			</tr>
 		</table>
 
@@ -1145,13 +1145,13 @@
 					    	<c:if test="${deptFlag == 'true'}">
 								<th class="layerHeader" colspan="5" style="width:740px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
+								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.t141'/></span>
 								</th>
 							</c:if>
 							<c:if test="${deptFlag != 'true'}">
 								<th class="layerHeader" colspan="3" style="width:740px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
+								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.t141'/></span>
 								</th>
 							</c:if>
 						</tr>
@@ -1165,12 +1165,12 @@
 				    			<th style="height:30px">No.</th>
 					    		<th style="height:30px;"><spring:message code='ezAttitude.t10'/></th>
 					    		<th style="height:30px;"><spring:message code='ezAttitude.t9'/></th>
-					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
+					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t149'/></th>
 					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t46'/></th>
 				    		</c:if>
 				    		<c:if test="${deptFlag != 'true'}">
 				    			<th style="height:30px;">No.</th>
-				    			<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
+				    			<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t149'/></th>
 				    			<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t46'/></th>
 				    		</c:if>
 						</tr>
@@ -1191,7 +1191,7 @@
 				    	<tr>
 						<th class="layerHeader" colspan="6" style="width:820px;">
 							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-							<span id="popupDay_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
+							<span id="popupDay_title">&nbsp;<spring:message code='ezAttitude.t141'/></span>
 						</th>
 						</tr>
 				    </thead>
@@ -1201,10 +1201,10 @@
 				    <tbody style="max-height:466px; width:820; display:block; overflow-y:auto;">
 				    	<tr>
 				    		<th style="height:30px">No.</th>
-				    		<th style="height:30px"><spring:message code='ezAttitude.bbhs15'/></th>
+				    		<th style="height:30px"><spring:message code='ezAttitude.t134'/></th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.t9'/></th>
-				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
+				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t149'/></th>
 				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t46'/></th>
 						</tr>
 				    </tbody>

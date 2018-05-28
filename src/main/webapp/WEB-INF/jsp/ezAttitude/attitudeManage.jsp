@@ -74,9 +74,9 @@
 				$("#Edatepicker").datepicker('setDate', "${searchEndDate}");
 	        });
 	        
-			var monthMsg = "<spring:message code='ezAttitude.bbhs1'/>";
+			var monthMsg = "<spring:message code='ezAttitude.t139'/>";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezAttitude.bbhs2'/>";
+		    var dayMsg = "<spring:message code='ezAttitude.t140'/>";
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
@@ -231,12 +231,12 @@
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
-					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
-					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.lhj18' /></th></tr>";
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
+					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.t134' /></th></tr>";
 	    			break;
 	    		case "absent":
 	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.lhj17' /></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th></tr>";
@@ -246,8 +246,8 @@
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
-	    			resultHtml += "<th style='width:500px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'><spring:message code='ezAttitude.bbhs12'/></th>";
-	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.lhj18' /></th>";
+	    			resultHtml += "<th style='width:500px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'><spring:message code='ezAttitude.t149'/></th>";
+	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.t134' /></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_User_Name'><spring:message code='ezAttitude.t62'/></th>";
 	    			resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'><spring:message code='ezAttitude.t63'/></th></tr>";
 	    			break;
@@ -293,7 +293,7 @@
 	        	}
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("<spring:message code='ezAttitude.lhj15' />");
+					alert("<spring:message code='ezAttitude.t131' />");
 		            return;
 				}
 	    		
@@ -357,7 +357,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
 	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t74'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
@@ -426,7 +426,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.t138' /></td></tr>";	
 	    		}
 	    		
 	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
@@ -453,7 +453,7 @@
 	    		}
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("<spring:message code='ezAttitude.lhj15' />");
+					alert("<spring:message code='ezAttitude.t131' />");
 		            return;
 				}
 	    		
@@ -509,7 +509,7 @@
 		   				}
 		   			}
 		   			if (vo.changeStartdate == null || vo.changeStartdate == "") {
-		   				resultHtml += " -> <spring:message code='ezAttitude.bbhs30'/></td>";
+		   				resultHtml += " -> <spring:message code='ezAttitude.t164'/></td>";
 		   			} else {
 			   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
 			   				resultHtml += " -> " + vo.changeStartdate + "</td>";
@@ -522,7 +522,7 @@
 		   				resultHtml += "<td><spring:message code='ezAttitude.t61'/> -> " + vo.changeTypeName + "</td>";
 	    			} else {
 	    				if (vo.changeTypeName == null || vo.changeTypeName == "") {
-	    					resultHtml += "<td>" + vo.originTypeName + " -> <spring:message code='ezAttitude.bbhs30'/></td>";
+	    					resultHtml += "<td>" + vo.originTypeName + " -> <spring:message code='ezAttitude.t164'/></td>";
 	    				} else {
 		    				resultHtml += "<td>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
 	    				}
@@ -535,7 +535,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
 	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t57'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
@@ -593,7 +593,7 @@
 	        
 	        //검색창 내부 근태유형 리스트 조회
 	        function getAttitudeTypeList(typeList, typeId) {
-	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
+	    		var html = "<option value='total'><spring:message code='ezAttitude.t124' /></option>";
 	    		
 	    		for (var i = 0; i < typeList.length; i ++) {
 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
@@ -769,18 +769,18 @@
 	    <div>
 	    	<div id="mainmenu">
 				<ul>
-		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.lhj5'/></span></li>
-		      		<li><span onclick="refresh();"><spring:message code='ezAttitude.lhj6'/></span></li>
+		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
+		      		<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
 		      		<c:if test="${manageFlag == 'M' }">
 		      			<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
 		      		</c:if>
 		      		<li>
-		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>
+		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 		      		</li>
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
-		      				<option value="ALL" selected><spring:message code='ezAttitude.lhj8'/></option>
+		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 							<c:forEach var = "dept" items="${deptList}">
 								<c:if test="${dept.mine ne 'yes' }">
 									<c:if test="${dept.authType == 'M'}">
@@ -826,7 +826,7 @@
 						<td><input type="text" id="searchTitle" name="searchTitle" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px"><spring:message code='ezAttitude.lhj22'/></th>
+			  			<th style="width:90px;height:30px"><spring:message code='ezAttitude.t137'/></th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> 
 							~
@@ -834,14 +834,14 @@
 						</td>
 					</tr>
 					<tr>
-						<th style="width:90px;height:30px"><spring:message code='ezAttitude.bbhs15'/></th>
+						<th style="width:90px;height:30px"><spring:message code='ezAttitude.t134'/></th>
 						<td><select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px;"></select></td>
 					</tr>
 				</table>
 				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="search();" ><spring:message code='ezAttitude.lhj5'/></span></a>
+					<a class="imgbtn"><span onclick="search();" ><spring:message code='ezAttitude.t121'/></span></a>
 					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
 			    </div>
 			</div>

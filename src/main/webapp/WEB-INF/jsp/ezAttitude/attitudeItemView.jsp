@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.bbhs24'/></title>
+		<title><spring:message code='ezAttitude.t158'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -89,7 +89,7 @@
 			
 			//삭제
 			function deleteAttitude() {
-				var delFlag = confirm("<spring:message code='ezAttitude.bbhs26'/>");
+				var delFlag = confirm("<spring:message code='ezAttitude.t160'/>");
 				if (delFlag) {
 					$.ajax({
 						type : "POST",
@@ -107,11 +107,11 @@
 		            			} catch (e) { }
 								window.close();
 		            		} else {
-		            			alert("<spring:message code='ezAttitude.kbm3' />");
+		            			alert("<spring:message code='ezAttitude.t175' />");
 		            		}
 						},
 						error: function(xhr, status, error){
-					    	alert("<spring:message code='ezAttitude.kbm3' />");
+					    	alert("<spring:message code='ezAttitude.t175' />");
 					    }
 					})
 				}
@@ -153,16 +153,16 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.bbhs25'/></h1>
+	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t159'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
 	                            	<c:if test="${userId == attitudeInfo.writerId}">
-		                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.bbhs28'/></span></li>
-		                                <li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
-		                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
+		                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span></li>
+		                                <li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></li>
+		                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></li>
 	                            	</c:if>
-	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.bbhs21'/></span></li>
+	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.t157'/></span></li>
 	                            </ul>
 	                        </div>
 	                    </td>
@@ -171,7 +171,7 @@
 	                    <td style="height: 20px">
 	                        <table id="attiInfoView" class="content">
 	                               <tr id="HolderWrite">
-	                                   <th><spring:message code='ezAttitude.bbhs15'/></th>
+	                                   <th><spring:message code='ezAttitude.t134'/></th>
 	                                   <td id="typeName" colspan="2">
 	                                   </td>
 	                               </tr>
