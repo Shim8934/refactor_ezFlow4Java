@@ -325,7 +325,7 @@
 	    </table>
 	    
 	    <br />
-	    <div style="text-align:center" class="btnpositionNew">
+	    <div style="text-align:center;" class="btnposition  btnpositionNew">
 		    <a class="imgbtn"><span onclick="save_onclick()" ><spring:message code = 'ezCommunity.t20' /></span></a>
 		    <a class="imgbtn"><span onclick="cancel_click()" ><spring:message code = 'ezCommunity.t109' /></span></a>
 		    <a class="imgbtn"><span onclick="parent.parent.window.close()" ><spring:message code = 'ezCommunity.t21' /></span></a>

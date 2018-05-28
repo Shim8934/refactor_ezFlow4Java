@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezAttitude.kbm2' /></title>
+		<title><spring:message code='ezAttitude.t28' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -166,7 +166,7 @@
 			    }
 			    
 			    if (ctime == otime) {
-			    	alert("신청시각이 기존시각과 일치합니다.");
+			    	alert("<spring:message code='ezAttitude.t80'/>");
 			    	return;
 			    }
 			    
@@ -187,7 +187,7 @@
 						if (json == 1) {
 							alert("<spring:message code='ezAttitude.kbm43'/>");
 						} else {
-							alert("<spring:message code='ezAttitude.kbm44'/>");
+							alert("<spring:message code='ezAttitude.t99'/>");
 						}
 						window.close();
 			            try {
@@ -229,7 +229,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.kbm2' /></h1>
+	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t28' /></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
@@ -246,7 +246,7 @@
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
-                                            <th>근태유형</th>
+                                            <th><spring:message code='ezAttitude.bbhs15'/></th>
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
 <!--                                             	다국어 작업 -->

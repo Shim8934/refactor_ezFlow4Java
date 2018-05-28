@@ -54,11 +54,11 @@
                 if (CrossYN()) {
                     var resultvalue2 = "<spring:message code='ezEmail.t313' />" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent + "<spring:message code='ezEmail.t314' />";
                     resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
-                    MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent))
+                    MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent));
                 } else {
                     var resultvalue2 = "<spring:message code='ezEmail.t313' />" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text + "<spring:message code='ezEmail.t314' />";
                     resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
-                    MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text))                    
+                    MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text));                    
                 }
                 
 		        MailQuater.refreshtitle(resultvalue2);		        
@@ -334,7 +334,7 @@
 		          <span id="PreviewHSizeDiv" <c:if test="${previewMode != 'H'}">style="display:none;"</c:if>>
 		          <spring:message code='ezEmail.t99000020' /> 
 		              <select  id="HListUser" style="width:50px;" onchange="HChange(this);">
-		                  <c:forEach var="i" begin="39" end="64" step="1"> <!-- TODO: for문 잘 돌아가나 확인(String값을 int값으로 convert안해서 잘 안돌아갈 듯) -->
+		                  <c:forEach var="i" begin="39" end="74" step="1"> <!-- TODO: for문 잘 돌아가나 확인(String값을 int값으로 convert안해서 잘 안돌아갈 듯) -->
 		                      <c:choose> 
 		                      	<c:when test="${previewHListSize == i}">
 		                      		<option value="<c:out value='${i}'/>" selected><c:out value='${i}'/></option>
@@ -347,7 +347,7 @@
 		              </select>
 		          <spring:message code='ezEmail.t99000021' />
 		              <select  id="HPreUser" style="width:50px;" onchange="HChange(this);">
-		                  <c:forEach var="i" begin="36" end="61" step="1">
+		                  <c:forEach var="i" begin="26" end="61" step="1">
 		                      <c:choose>
 		                      	<c:when test="${previewHContentSize == i}">
 		                      		<option value="<c:out value='${i}'/>" selected><c:out value='${i}'/></option>

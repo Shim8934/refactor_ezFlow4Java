@@ -4938,7 +4938,7 @@ CREATE TABLE `tbl_journal_form` (
   `form_content` text COMMENT '양식 내용',
   `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
   `form_date` datetime NOT NULL COMMENT '양식 일',
-  `form_writer` varchar(200) NOT NULL COMMENT '양식 작성자',
+  `form_writer` varchar(200) COMMENT '양식 작성자',
   `form_info` varchar(4000) DEFAULT NULL COMMENT '양식 설명',
   `form_status` varchar(45) DEFAULT NULL COMMENT '양식 상태',
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
@@ -6433,6 +6433,7 @@ CREATE TABLE `tbl_ps_sliderimage` (
   `ISUSE` bigint(10) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `URL` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`SLIDERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -8430,6 +8431,7 @@ CREATE TABLE `tbl_usermaster` (
   `LASTLOGIN` datetime DEFAULT NULL,
   `LOGINCNT` bigint(10) DEFAULT '0',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+  `LISTTYPE` varchar(3) DEFAULT 'TXT',
   PRIMARY KEY (`TENANT_ID`,`CN`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -8680,6 +8682,27 @@ CREATE TABLE `tbl_vote_user_and_question` (
   `TENANT_ID` int(11) NOT NULL,
   `USER_TYPE` varchar(50) NOT NULL DEFAULT '0',
   PRIMARY KEY (`QST_ID`,`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_vote_user_and_question`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_users` (
+  `TENANT_ID` int(11) NOT NULL,
+  `QST_ID` int(11) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `USER_NAME` varchar(120) NOT NULL,
+  `USER_NAME2` varchar(120),
+  `DEPT_ID` varchar(80),
+  `DEPT_NAME` varchar(200),
+  `DEPT_NAME2` varchar(200),
+  `USER_STATUS` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`TENANT_ID`,`QST_ID`,`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

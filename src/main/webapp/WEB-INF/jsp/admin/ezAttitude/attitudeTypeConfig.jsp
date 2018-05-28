@@ -69,7 +69,6 @@
                 } else {
     	    		html = "<tr><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
                 }
-//                 $("#contentlist table").html(html);
                 $("table.mainlist tbody").html(html);
 	        }
 	        

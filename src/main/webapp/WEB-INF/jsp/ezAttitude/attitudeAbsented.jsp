@@ -72,7 +72,7 @@
 		        }
 	    		
 		        if (document.getElementById("ListDept").length == 0) {
-		            alert("부서 정보가 없습니다.");
+		            alert("<spring:message code='ezAttitude.t53'/>");
 		        } else {
 		    		if (selectedDept != null) {
 		    			$('#ListDept').val(selectedDept);
@@ -167,7 +167,7 @@
 	    	
 	    	function getAttitudeAbsentedList() {
 	    		if (!checkPattern()) {
-	    			alert("날짜를 다시 지정해주세요.");
+	    			alert("<spring:message code='ezAttitude.t54'/>");
 	    			return;
 	    		}
 	    		
@@ -175,7 +175,7 @@
     			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+					alert("<spring:message code='ezAttitude.t55'/>");
 		            return;
 				}
 	    		
@@ -233,7 +233,7 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
-	    		$("#absent",parent.document).html("근태입력(" + totalCount + ")");
+	    		$("#absent",parent.document).html("<spring:message code='ezAttitude.t51'/>(" + totalCount + ")");
 	    	}
 			
 			function attitudeNewItem(t) {
@@ -302,7 +302,7 @@
 			
 			function exportExcel() {
 	    		if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
-					alert('출력할 내용이 없습니다');
+					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
 				
@@ -377,7 +377,7 @@
 	    <h1><span id="mailBoxInfo" style="display:none;"></span></h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none;"><span style="border: none;"><b>부서선택</b></span></li>
+	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t60'/></b></span></li>
 				<li>
 					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px; display:none;">
 						<c:forEach var = "companyItem" items="${list }">

@@ -251,7 +251,7 @@
 	        <tbody><tr>
 	            <td style="height: 50px; text-align: center;">
 	                <a class="imgbtn"><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></a>
-	                <a class="imgbtn"><span onclick="company_change()">취소</span></a>
+	                <a class="imgbtn"><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></a>
 	            </td>
 	        </tr>
 	    </tbody></table>

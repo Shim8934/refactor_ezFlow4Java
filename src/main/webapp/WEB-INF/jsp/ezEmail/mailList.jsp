@@ -92,6 +92,7 @@
 		    var dec = "decrypt";
 		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
 		    var useReSend = "${useReSend}";
+		    var useSearchContent = "${useSearchContent}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -452,6 +453,8 @@
 		            return radiosearch.item(0).value + "=" + key;
 		        else if (radiosearch.item(1).checked)
 		            return radiosearch.item(1).value + "=" + key;
+		        else if (radiosearch.item(2).checked)
+		            return radiosearch.item(2).value + "=" + key;
 		    }
 		    
 		    function reloadReadContent(url) {
@@ -781,6 +784,9 @@
 	          </c:if>
 	          <c:if test="${isSentItems != true}">
 			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
+			  </c:if>
+			  <c:if test="${useSearchContent == 'YES'}">
+			  <input name="searchCheck" id="Radio4" type="radio" value="CONTENT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio4">&nbsp;<spring:message code="ezEmail.t649" /></label>
 			  </c:if>
 			  &nbsp;
 			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 

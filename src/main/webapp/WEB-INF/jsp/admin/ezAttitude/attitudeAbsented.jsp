@@ -159,7 +159,7 @@
 	    	
 	    	function getAttitudeAbsentedList() {
 	    		if (!checkPattern()) {
-	    			alert("날짜를 다시 지정해주세요.");
+	    			alert("올바른 시간을 지정해야 합니다.");
 	    			return;
 	    		}
 	    		
@@ -167,7 +167,7 @@
     			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+					alert("시작시간은 종료시간보다 빨라야합니다.");
 		            return;
 				}
 	    		

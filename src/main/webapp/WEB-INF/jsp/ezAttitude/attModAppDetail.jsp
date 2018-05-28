@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezAttitude.kbm2'/></title>
+		<title><spring:message code='ezAttitude.t28'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -86,18 +86,18 @@
 		    	
 		    	obj.idList = attid; 
 		    	
-		    	if (confirm("정말로 삭제하시겠습니까?")) {
+		    	if (confirm("<spring:message code='ezAttitude.kbm11'/>")) {
 				    $.ajax({
 						type : 'post',
 					    url : '/ezAttitude/delAttModApp.do',
 					    data : obj,
 					    dataType : "text",
 					    error: function(xhr, status, error){
-					    	alert("삭제 중 오류 발생");
+					    	alert("<spring:message code='ezAttitude.t83'/>");
 					    },
 					    success : function(json){
 					    	if (json == "error") {
-					    		alert("오류 발생");
+					    		alert("<spring:message code='ezAttitude.kbm3'/>");
 					    	}
 				            try {
 				                window.opener.att_refresh();
@@ -111,9 +111,9 @@
 		    }
 		    
 		    function modApprove() {
-		    	if (confirm("승인하시겠습니까?")) {
+		    	if (confirm("<spring:message code='ezAttitude.t84'/>")) {
 			    	if ("${data.apprStatus}" == 1) {
-			    		alert("이미 승인된 항목 입니다.");
+			    		alert("<spring:message code='ezAttitude.t85'/>");
 			    		return;
 			    	}
 			    	
@@ -129,7 +129,7 @@
 					    dataType : "text",
 					    error: function(xhr, status, error){
 					    	ajaxRunning = false;
-					    	alert("승인 중 오류 발생");
+					    	alert("<spring:message code='ezAttitude.t86'/>");
 					    },
 					    success : function(json){
 					    	if (json == "ok") {
@@ -150,9 +150,9 @@
 		    
 		  	//반려
 		    function modReturn() {
-		    	if (confirm("반려하시겠습니까?")) {
+		    	if (confirm("<spring:message code='ezAttitude.t87'/>")) {
 			    	if ("${data.apprStatus}" == 2) {
-			    		alert("이미 반려된 항목 입니다.");
+			    		alert("<spring:message code='ezAttitude.t88'/>");
 			    		return;
 			    	}
 			  		
@@ -168,7 +168,7 @@
 					    dataType : "text",
 					    error: function(xhr, status, error){
 					    	ajaxRunning = false;
-					    	alert("반려 중 오류 발생")
+					    	alert("<spring:message code='ezAttitude.t89'/>")
 					    },
 					    success : function(json){
 					    	if (json == "ok") {
@@ -206,11 +206,11 @@
 				    dataType : "json",
 				    error: function(xhr, status, error){
 				    	ajaxRunning = false;
-				    	alert("재신청 중 오류 발생");
+				    	alert("<spring:message code='ezAttitude.t90'/>");
 				    },
 				    success : function(json){
 				    	if (json.apprStatus == 0) {
-				    		alert("이미 신청중인 근태수정이 있습니다.");
+				    		alert("<spring:message code='ezAttitude.t91'/>");
 				    		return;
 				    	}
 				    }
@@ -228,23 +228,23 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.kbm2'/></h1>
+	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t28'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
 	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
-		                            	<li><span onclick="modApprove()">승인</span></li>
-		                                <li><span onclick="modReturn()">반려</span></li>
+		                            	<li><span onclick="modApprove()"><spring:message code='ezAttitude.kbm41'/></span></li>
+		                                <li><span onclick="modReturn()"><spring:message code='ezAttitude.kbm42'/></span></li>
 	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-	                            		<li><span onclick="modify()">수정</span></li>
+	                            		<li><span onclick="modify()"><spring:message code='ezAttitude.bbhs29'/></span></li>
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
-	                            		<li><span onclick="reMod()">재신청</span></li>
+	                            		<li><span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span></li>
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-	                            		<li><span onclick="del()">삭제</span></li>
+	                            		<li><span onclick="del()"><spring:message code='ezAttitude.bbhs30'/></span></li>
 	                            	</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
@@ -257,40 +257,40 @@
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
-                                            <th>근태유형</th>
+                                            <th><spring:message code='ezAttitude.bbhs15'/></th>
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
 <!--                                             	다국어 작업 -->
                                             </td>
                                         </tr>
                                         <tr id="HolderWrite">
-                                            <th>성명</th>
+                                            <th><spring:message code='ezAttitude.t93'/></th>
                                             <td colspan="2" readonly title="<c:out value='${data.writerDeptName}' /> <c:out value='${data.writerName}' /> <c:out value='${data.writerTitle}' />">
                                             	<c:out value='${data.writerName}' />
                                             </td>
                                         </tr>
 	                                    <tr>
-	                                        <th>기존시각</th>
+	                                        <th><spring:message code='ezAttitude.kbm37'/></th>
 	                                        <td colspan="2">
 	                                        	<c:out value='${data.originDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
-	                                        <th>신청시각</th>
+	                                        <th><spring:message code='ezAttitude.kbm38'/></th>
 	                                        <td colspan="2">
                                            		<c:out value='${data.changeDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
-	                                        <th>승인상태</th>
+	                                        <th><spring:message code='ezAttitude.kbm39'/></th>
                                         	<c:if test="${data.apprStatus == 0}">
-								          		<td colspan="2">신청</td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.kbm40'/></td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 1}">
-								          		<td colspan="2">승인</td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.kbm41'/></td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 2}">
-								          		<td colspan="2">반려</td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.kbm42'/></td>	
 								          	</c:if>
 	                                    </tr>
 	                                </table>
