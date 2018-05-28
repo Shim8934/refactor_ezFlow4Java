@@ -320,7 +320,7 @@
 		}
 	</script>
 </head>
-<body class="popup">
+<body class="popup" style="overflow: hidden;">
 	<h1 id="topMenu" >
 		<c:if test="${type eq 'copy'}"><spring:message code='ezWebFolder.t316'/></c:if>
 		<c:if test="${type ne 'copy'}"><spring:message code='ezWebFolder.t120'/></c:if>

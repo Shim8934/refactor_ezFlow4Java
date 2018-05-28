@@ -291,7 +291,7 @@
 		}
 	</script>
 </head>
-<body class="popup">
+<body class="popup" style="overflow: hidden;">
 	<h1 id ="topmenu"><spring:message code='ezWebFolder.t30'/></h1>
 	<div id="close">
 		<ul>
