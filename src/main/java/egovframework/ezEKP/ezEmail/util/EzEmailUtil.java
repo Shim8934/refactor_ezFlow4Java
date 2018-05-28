@@ -2340,6 +2340,53 @@ public class EzEmailUtil {
 		message.setFlags(secureMailFlag, isSet);
 	}
 	
+	// 회신, 전달 테스트
+	public void setSentDateFlag(Message message, boolean isSet) throws MessagingException {
+		logger.debug("setSentDateFlag");
+		
+		String nowMillisTime = Long.toString(System.currentTimeMillis());
+		Flags sentDateFlag = new Flags("$SentDate-" + nowMillisTime);
+		
+		logger.debug(nowMillisTime);
+		
+		message.setFlags(sentDateFlag, isSet);
+	}
+	
+	// 회신, 전달 테스트
+	public boolean hasSentDateFlag(Message message) throws MessagingException {
+		logger.debug("hasSentDateFlag");
+		
+		boolean isSentDate = false;
+		String[] flags = message.getFlags().getUserFlags();		
+		
+		for (String flag : flags) {
+			if (flag.indexOf("$SentDate-") != -1) {
+				isSentDate = true;
+				break;
+			}
+		}
+
+		logger.debug(Boolean.toString(isSentDate));
+		return isSentDate;
+	}
+	
+	// 회신, 전달 테스트
+	public String getSentDateFlag(Message message) throws MessagingException {
+		logger.debug("getSentDateFlag");
+		
+		String[] flags = message.getFlags().getUserFlags();
+		String sentDate = "";
+		
+		for (String flag : flags) {
+			if (flag.indexOf("$SentDate-") != -1) {
+				sentDate = flag;
+				break;
+			}
+		}
+
+		return sentDate;
+	}
+	
 	public List<String> getInnerDomain(int tenantId) throws Exception {
 		List<String> innerDomainList = new ArrayList<String>();
 		

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.kbm30' /></title>
+		<title><spring:message code='ezAttitude.t200' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
@@ -115,7 +115,7 @@
 	   			if(value) {
 		   			setUserList(key, value);
 	   			} else {
-	   				alert("<spring:message code='ezAttitude.kbm32' />");
+	   				alert("<spring:message code='ezAttitude.t202' />");
 	   			}
 	   		}
 	   		
@@ -129,7 +129,7 @@
 		   			opener.userDeptId = userDeptId;
 					window.close();
 				} else {
-					alert("<spring:message code='ezAttitude.kbm19' />");
+					alert("<spring:message code='ezAttitude.t52' />");
 				}
 	   		}
 	   		
@@ -143,11 +143,11 @@
 		</style>
 	</head>
 	<body class="popup"> 
-        <h1><spring:message code='ezAttitude.kbm30' /></h1>
+        <h1><spring:message code='ezAttitude.t200' /></h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span></li>
-	            <li><span onclick="close_Click()"><spring:message code='ezAttitude.bbhs21' /></span></li>
+	            <li><span onclick="close_Click()"><spring:message code='ezAttitude.t157' /></span></li>
 	        </ul>
 	    </div>
 		<table id="TreeViewTD">
