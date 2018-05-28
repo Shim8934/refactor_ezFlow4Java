@@ -148,6 +148,26 @@ public class EzPMSController3 {
 		return "json";
 	}
 	
+	@RequestMapping(value="/ezPMS/deleteBoard.do")
+	public String deleteBoard(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS deleteBoard started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "delete", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("data", "success");
+		}
+		LOGGER.debug("ezPMS deleteBoard ended");
+		
+		return "json";
+	}
+	
 	@RequestMapping(value="/ezPMS/getTaskSelectionTree.do")
 	public String getTaskSelectionTree(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {		
 		LOGGER.debug("ezPMS getTaskSelectionTree started");

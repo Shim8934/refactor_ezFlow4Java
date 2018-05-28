@@ -225,6 +225,7 @@
 	</resultMap>
 	
 	<resultMap class="ProjectBoardVO" id="projectBoardVOForDetail">
+		<result property="itemId"					column="item_id"/>
 		<result property="writerId"					column="writer_id"/>
 		<result property="title" 					column="title"/>
 		<result property="writeOverview" 			column="write_overview"/>
@@ -1316,6 +1317,17 @@
     	</selectKey>
 	</insert>
 	
+	<update id="EzPMSDAO.deleteBoard" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_item_list
+			SET del_status = 1
+			WHERE
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
 	<insert id="EzPMSDAO.insertProjectAttach" parameterClass="map">
 		<![CDATA[
 			INSERT INTO tbl_pms_item_attachment (
@@ -1369,12 +1381,8 @@
 			</isNotEqual>
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
-		<isEmpty property="position">
+			AND B.del_status = 0
 			ORDER BY B.write_type ASC, B.item_id DESC
-		</isEmpty>
-		<isNotEmpty property="position">
-			ORDER BY B.item_id DESC
-		</isNotEmpty>
 			LIMIT #startRow#, #limit#
 	</select>
 	
@@ -1399,15 +1407,16 @@
 			</isNotEqual>
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
+			AND B.del_status = 0
 	</select>
 
 	<select id="EzPMSDAO.getBoardDetail" parameterClass="map" resultMap="projectBoardVOForDetail">
 		<![CDATA[
 			SELECT 
-				B.writer_id, 			B.title,				B.write_overview,		B.write_type,		B.write_content,		
-				B.write_date,			B.write_update_date,	B.read_count,			B.writer_name$lang$ AS writer_name,		
-				B.writer_deptname$lang$ AS writer_deptname,		B.writer_position$lang$ AS writer_position,		
-				T.task_name,  			G.group_name,			M.mobile
+				B.item_id,				B.writer_id, 			B.title,				B.write_overview,		B.write_type,		
+				B.write_content,		B.write_date,			B.write_update_date,	B.read_count,		
+				B.writer_name$lang$ AS writer_name,				B.writer_deptname$lang$ AS writer_deptname,		
+				B.writer_position$lang$ AS writer_position,		T.task_name,  			G.group_name,			M.mobile
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
@@ -1416,7 +1425,8 @@
 			LEFT JOIN tbl_usermaster M
 			on B.writer_id = M.cn and B.tenant_id = M.tenant_id
 			WHERE B.item_id = #itemId#
-			AND B.tenant_id = #tenantId#	
+			AND B.tenant_id = #tenantId#
+			AND B.del_status = 0	
 		]]>	
 	</select>
 	

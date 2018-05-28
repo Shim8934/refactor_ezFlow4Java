@@ -216,6 +216,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Integer) insert ("EzPMSDAO.addBoard", vo);
 	}
 	
+	public void deleteBoard(Map<String, Object> map) {
+		update ("EzPMSDAO.deleteBoard", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ProjectBoardVO> getBoardList(Map<String, Object> map) {
 		return (List<ProjectBoardVO>) list("EzPMSDAO.getBoardList", map);

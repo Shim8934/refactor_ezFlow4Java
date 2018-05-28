@@ -4,6 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <script>
+	var boardDetail;
+	
 	$(function() {
 		$("#divList").css("height", (currentHeight - 100) + "px");
 		
@@ -51,8 +53,21 @@
 		var itemId = $(elem).attr("data-itemId");
 		$(elem).removeClass("noView");
 		var feature = GetOpenPosition(790, 800);
-		window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", 
-					"width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
+		boardDetail = window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", 
+								  "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
+	}
+	
+	function deleteBoards() {
+		if(confirm("정말 삭제하시겠습니까?") == true) {
+			var itemIds = new Array();
+			$('input:checkbox[name="boardCheckbox"]').each(function() {
+				if($(this).is(":checked")) {
+					var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
+					itemIds.push(itemId);
+				}
+			});
+			deleteBoardAction(itemIds);
+		}	
 	}
 </script>
 	
@@ -77,7 +92,7 @@
 	<div id="mainmenu">
 		<ul class="on">
 			<li class="off"><span onclick="goAddBoard()">등록</span></li>
-			<li class="off"><span onclick="">삭제</span></li>
+			<li class="off"><span onclick="deleteBoards()">삭제</span></li>
 			<li class="off"><span onclick="">이동</span></li>
 			<li class="off"><span onclick="">새로고침</span></li>
 			<li class="off"><span onclick="">검색</span></li>
@@ -101,16 +116,16 @@
 			<c:forEach items="${data}" var="projectBoardVO">
 				<c:choose>
 					<c:when test="${projectBoardVO.readOrNot eq false && (projectBoardVO.writeType == 1 || projectBoardVO.writeType == 3)}">
-						<tr class="noView emergency" data-itemId="${projectBoardVO.itemId}">
+						<tr class="noView emergency" data-itemid="${projectBoardVO.itemId}">
 					</c:when>
 					<c:when test="${projectBoardVO.readOrNot eq true && (projectBoardVO.writeType == 1 || projectBoardVO.writeType == 3)}">
-						<tr class="emergency" data-itemId="${projectBoardVO.itemId}">
+						<tr class="emergency" data-itemid="${projectBoardVO.itemId}">
 					</c:when>
 					<c:when test="${projectBoardVO.readOrNot eq false && (projectBoardVO.writeType != 1 && projectBoardVO.writeType != 3)}">
-						<tr class="noView" data-itemId="${projectBoardVO.itemId}">
+						<tr class="noView" data-itemid="${projectBoardVO.itemId}">
 					</c:when>
 					<c:otherwise>
-						<tr data-itemId="${projectBoardVO.itemId}">
+						<tr data-itemid="${projectBoardVO.itemId}">
 					</c:otherwise>
 				</c:choose>
 					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
@@ -125,7 +140,7 @@
 						</c:choose>
 					</td>
 					<c:choose>
-						<c:when test="${projectBoardVO.fileCNT eq null}">
+						<c:when test="${projectBoardVO.fileCNT eq 0}">
 							<td></td>
 						</c:when>
 						<c:otherwise>

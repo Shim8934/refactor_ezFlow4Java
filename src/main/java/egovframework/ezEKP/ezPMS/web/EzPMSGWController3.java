@@ -87,6 +87,32 @@ public class EzPMSGWController3 {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/boards", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteBoard(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/boards] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			ezPMSService.deleteBoard(info.getTenantId(), jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/boards] ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/boards/list/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getBoardList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId +"/users/" + userId + "] started");
@@ -97,7 +123,6 @@ public class EzPMSGWController3 {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String uploadPathName = "uploadFile";
-			String tempUploadPathName = "tempUploadFile";
 			
 			Long groupId = 0L;
 			Long taskId = 0L;
@@ -110,9 +135,8 @@ public class EzPMSGWController3 {
 			
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int limit = Integer.parseInt(request.getParameter("limit"));
-			String position = request.getParameter("position");
 			
-			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, startRow, limit, lang, position);
+			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, startRow, limit, lang);
 			String imageFileType = "PNG,JPEG,BMP,GIF,JPG";
 			
 			

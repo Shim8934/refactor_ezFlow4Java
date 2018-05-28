@@ -58,6 +58,15 @@
 				return;
 			}
 		}
+		
+		function deleteBoard() {
+			if(confirm("정말 삭제하시겠습니까?") == true) {
+				var items = new Array();
+				items.push('${board.itemId}');
+				opener.deleteBoardAction(items);
+				window.close();
+			}	
+		}
 	</script>
 </head>
 <body class="popup" style="height: 99%;">
@@ -68,7 +77,7 @@
 					<ul>
 						<li><span>답변</span></li>
 						<li><span>수정</span></li>
-						<li><span>삭제</span></li>
+						<li><span onclick="deleteBoard()">삭제</span></li>
 						<li><span>복사</span></li>
 						<li><span>이동</span></li>
 						<li><span>메일로 발송</span></li>

@@ -67,11 +67,6 @@
 			currentPage : currentPage
 		}
 		
-		console.log(projectId);
-		console.log(groupId);
-		console.log(taskId);
-		console.log(currentPage);
-		
 		$.ajax({
 			type : "POST",
 			contentType: "application/json; charset=UTF-8",
@@ -88,6 +83,28 @@
 	function goToPageByNum(page) {
 		currentPage = page;
 		getBoardList();
+	}
+	
+	function deleteBoardAction(itemIds) {
+		
+		data = {
+			itemIds : itemIds
+		}
+		
+		$.ajax({
+			type : "DELETE",
+			url : "/ezPMS/deleteBoard.do",
+			dataType : "json",
+			contentType : "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(result) {
+				alert("삭제되었습니다.");
+				getBoardList();
+			},
+			error : function() {
+				alert("삭제에 실패했습니다.");
+			}
+		})
 	}
 </script>
 

@@ -120,7 +120,9 @@ public interface EzPMSService {
 
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception;
 	
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position);
+	public void deleteBoard(int tenantId, JSONObject jsonParam);
+	
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang);
 	
 	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId);
 	

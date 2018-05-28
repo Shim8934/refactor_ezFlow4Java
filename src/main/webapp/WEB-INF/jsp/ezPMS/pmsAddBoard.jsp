@@ -98,18 +98,7 @@
 			writeOverview : writeOverview,
 			fileList : fileList
 		}
-		
-		console.log(writerId);
-		console.log(writerName);
-		console.log(writerDeptName);
-		console.log(title);
-		console.log(writeContent);
-		console.log(writeType);
-		console.log(groupId);
-		console.log(taskId);
-		console.log(writeOverview);
-		console.log(fileList)
-		
+	
 		$.ajax({
 			type : "POST",
 			url : "/ezPMS/addBoard.do",

@@ -1226,8 +1226,25 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] addBoard Ended");
 	}
 
+	@SuppressWarnings("unchecked")
+	@Transactional
 	@Override
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position) {
+	public void deleteBoard(int tenantId, JSONObject jsonParam) {
+		LOGGER.debug("[SERVICE] deleteBoard started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		ArrayList<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
+		for(String itemId : itemIds) {
+			map.put("itemId", itemId);
+			ezPMSDAO.deleteBoard(map);
+		}
+		
+		LOGGER.debug("[SERVICE] deleteBoard ended");
+	}
+	
+	@Override
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -1237,7 +1254,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("startRow", startRow);
 		map.put("limit", limit);
 		map.put("lang", lang);
-		map.put("position", position);
 		
 		List<ProjectBoardVO> boardList = ezPMSDAO.getBoardList(map);
 		
@@ -1258,11 +1274,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId) {
 		LOGGER.debug("[SERVICE] getBoardListCount Started");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
 		map.put("taskId", taskId);
+		
 		LOGGER.debug("[SERVICE] getBoardListCount Ended");
 		return ezPMSDAO.getBoardListCount(map);
 	}
@@ -1270,6 +1288,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Transactional
 	@Override
 	public ProjectBoardVO getBoardDetail(int tenantId, Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] getBoardDetail started");
 		
 		map.put("tenantId", tenantId);
 		ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
@@ -1282,6 +1301,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		}
 		boardVO.setFileList(ezPMSDAO.getBoardAttach(map));
 		
+		LOGGER.debug("[SERVICE] getBoardDetail ended");
 		return boardVO;
 	}
 	
@@ -1344,7 +1364,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("itemId", itemId);
 		
 		List<Map<String, Object>> fileList = ezPMSDAO.getFilePath(map);
-		LOGGER.debug("[SERVICE] getFilePath started");
+		LOGGER.debug("[SERVICE] getFilePath ended");
 		
 		return fileList;
 	}
