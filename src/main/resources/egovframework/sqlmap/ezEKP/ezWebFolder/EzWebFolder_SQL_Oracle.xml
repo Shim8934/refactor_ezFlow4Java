@@ -1504,7 +1504,6 @@
 		AND
 			TENANT_ID = #tenantId#
 		ORDER BY
-			FOLDER_NAME,
 			FOLDER_LEVEL ASC
 	</select>
 	
