@@ -171,7 +171,7 @@
 			    }
 			    
 			    if (ctime == otime) {
-			    	alert("신청시각이 기존시각과 일치합니다.");
+			    	alert("<spring:message code='ezAttitude.t80'/>");
 			    	return;
 			    }
 			    
@@ -231,7 +231,7 @@
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
-                                            <th>근태유형</th>
+                                            <th><spring:message code='ezAttitude.bbhs15'/></th>
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
 <!--                                             	다국어 작업 -->

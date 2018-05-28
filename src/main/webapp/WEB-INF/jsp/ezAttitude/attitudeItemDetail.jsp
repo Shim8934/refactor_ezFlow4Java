@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>근태상세보기</title>
+		<title><spring:message code='ezAttitude.bbhs25'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -172,7 +172,7 @@
 	                    <td style="height: 20px">
 	                        <table id="attiInfoView" class="content">
 	                               <tr id="HolderWrite">
-	                                   <th><div style="width:48px">근태유형</th>
+	                                   <th><div style="width:48px"><spring:message code='ezAttitude.bbhs15'/></th>
 	                                   <td id="typeName" colspan="2">
 	                                   </td>
 	                               </tr>

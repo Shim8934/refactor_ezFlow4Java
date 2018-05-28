@@ -171,7 +171,7 @@
 	                    <td style="height: 20px">
 	                        <table id="attiInfoView" class="content">
 	                               <tr id="HolderWrite">
-	                                   <th>근태유형</th>
+	                                   <th><spring:message code='ezAttitude.bbhs15'/></th>
 	                                   <td id="typeName" colspan="2">
 	                                   </td>
 	                               </tr>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>근태입력</title>
+		<title><spring:message code='ezAttitude.t51'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -303,7 +303,7 @@
 				}
 				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
 					$("input[name=region]").focus();
-					alert("근무지를 입력해주세요.");
+					alert("<spring:message code='ezAttitude.t49'/>");
 					return;
 				}
 				
@@ -327,7 +327,7 @@
 		        	},
 		        	success : function (result) {
 		        		if (result == "dupl"){
-							alert("출/퇴근, 조퇴는 중복등록이 불가능합니다.");
+							alert("<spring:message code='ezAttitude.t50'/>");
 						} else if (result == "success") {
 			        		alert("<spring:message code='ezAttitude.bbhs19'/>");
 							window.opener.getAttitudeAbsentedList();
@@ -575,7 +575,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <h1 style="padding:0px; margin-top:-5px;">근태입력</h1>
+	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t51'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
@@ -597,7 +597,7 @@
 	                        		<td><c:out value="${info.userName }"/></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">
-									<th><div style="width:48px;">근태유형</div></th>
+									<th><div style="width:48px;"><spring:message code='ezAttitude.bbhs15'/></div></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
