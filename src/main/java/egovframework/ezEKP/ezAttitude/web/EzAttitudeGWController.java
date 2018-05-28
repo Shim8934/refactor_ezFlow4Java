@@ -2003,82 +2003,95 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * 조직도 부서 및 사원목록 검색 함수
+	 * 조직도 부서 및 사원목록 검색
 	 */
-	@RequestMapping(value = "/ezAttitude/getSearchList.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/rest/ezAttitude/getSearchList.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String getSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
-	    LOGGER.debug("getSearchList started.");
+	public JSONObject getSearchList(HttpServletRequest request){	    
+		LOGGER.debug("getSearchList started.");
+	    JSONObject resultJ = new JSONObject();
 	    
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-        int tenantID = userInfo.getTenantId();        
-        
-        LOGGER.debug("tenantID=" + tenantID);       
-		
-		String searchlist = request.getParameter("search").trim();
-		String celllist = request.getParameter("cell");
-		String proplist = request.getParameter("prop");
-		String listtype = request.getParameter("type");
-		String lang = userInfo.getPrimary();
-		String page = request.getParameter("page");
-		String infoXML = "";
-		
-		LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
-		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
-		
-		List<String> deptIdList = new ArrayList<>();
-		
-		List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getId(), "");
-		
-		for (AttitudeAuthorVO vo : authDeptlist) {
-			LOGGER.debug("!@#!@#@#$!@$#@! ID : " + vo.getDeptId());
-			deptIdList.add(vo.getDeptId());
+	    try {
+			String serverName = request.getHeader("x-user-host");
+	    	MCommonVO userInfo = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+	        int tenantID = userInfo.getTenantId();        
+	        
+	        LOGGER.debug("tenantID=" + tenantID);       
+			
+			String searchlist = request.getParameter("searchlist").trim();
+			String celllist = request.getParameter("celllist");
+			String proplist = request.getParameter("proplist");
+			String listtype = request.getParameter("listtype");
+			String lang = userInfo.getPrimary();
+			String page = request.getParameter("page");
+			String infoXML = "";
+			
+			LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
+			        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
+			
+			List<String> deptIdList = new ArrayList<>();
+			
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(userInfo.getTenantId(), userInfo.getCompanyId(), userInfo.getUserId(), "");
+			
+			for (AttitudeAuthorVO vo : authDeptlist) {
+				LOGGER.debug("!@#!@#@#$!@$#@! ID : " + vo.getDeptId());
+				deptIdList.add(vo.getDeptId());
+			}
+			
+			if (page == null) {
+				infoXML = ezAttitudeService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
+			} else {
+				infoXML = ezAttitudeService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, deptIdList);
+			}
+			
+			Document doc = commonUtil.convertStringToDocument(infoXML);
+	
+			if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
+	            String[] arryCell = celllist.toUpperCase().split(";");
+	            String tooltip = "";
+	            int idx = 0;
+	            
+	            for (int j = 0; j < arryCell.length; j++) {
+	                if (arryCell[j].equals("EXTENSIONATTRIBUTE5")) {
+	                    idx = j;
+	                }
+	            }
+	            
+	            for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+	                Element Nodetip = doc.createElement("TOOLTIP");
+	
+	                if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
+	                    String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
+	                    tooltip = arry[3] + " ~ " + arry[4];
+	                    
+	                    if (arry.length > 5) {
+	                        tooltip += " " + arry[5];
+	                    }
+	                    
+	                    Nodetip.setTextContent(tooltip);
+	                    
+	                    doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).setTextContent("Y");
+	                    doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).appendChild(Nodetip);
+	                }
+	            }
+	        }
+			
+			String result = commonUtil.convertDocumentToString(doc);
+			result = result.replaceAll("null", "");
+			
+			resultJ.put("status", "ok");
+			resultJ.put("code", 0);
+			resultJ.put("data", result);
+			
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    	resultJ.put("status", "error");
+	    	resultJ.put("code", 1);
+	    	resultJ.put("data", "");
 		}
-		
-		if (page == null) {
-			infoXML = ezAttitudeService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
-		} else {
-			infoXML = ezAttitudeService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, deptIdList);
-		}
-		
-		Document doc = commonUtil.convertStringToDocument(infoXML);
-
-		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
-            String[] arryCell = celllist.toUpperCase().split(";");
-            String tooltip = "";
-            int idx = 0;
-            
-            for (int j = 0; j < arryCell.length; j++) {
-                if (arryCell[j].equals("EXTENSIONATTRIBUTE5")) {
-                    idx = j;
-                }
-            }
-            
-            for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
-                Element Nodetip = doc.createElement("TOOLTIP");
-
-                if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
-                    String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
-                    tooltip = arry[3] + " ~ " + arry[4];
-                    
-                    if (arry.length > 5) {
-                        tooltip += " " + arry[5];
-                    }
-                    
-                    Nodetip.setTextContent(tooltip);
-                    
-                    doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).setTextContent("Y");
-                    doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).appendChild(Nodetip);
-                }
-            }
-        }
-		
-		String result = commonUtil.convertDocumentToString(doc);
-		result = result.replaceAll("null", "");
-		
 		LOGGER.debug("getSearchList ended.");
-		return result;
+		return resultJ;
 	}
 	
 	/**
