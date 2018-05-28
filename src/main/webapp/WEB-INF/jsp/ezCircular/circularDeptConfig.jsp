@@ -216,10 +216,11 @@
 		                    <table class="mainlist" style="width: 100%;">
 		                    	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>
 		                    	
+		                    	<!-- 18-05-24 김민성 - 회람판 > 즐겨찾기 단어 수정 -->
 		                        <tr>
 									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>
 		                            <th><spring:message code='ezCircular.t32' /></th>
-		                            <th><spring:message code='ezCircular.t33' /></th>
+		                            <th><spring:message code='ezBoard.t5007' /></th>
 		                            <th><spring:message code='ezCircular.t34' /></th>
 		                        	<th></th>
 		                        </tr>

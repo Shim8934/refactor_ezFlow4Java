@@ -1,17 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		
+
+		<!-- 18-05-16 김민성 - 포탈 메인 슬라이드 이미지 링크 추가 -->
 		<section class="body_bg1">
 			<div id="featured">
 				<c:choose>
 	            	<c:when test="${not empty sliderList}">
 	            		<c:forEach items="${sliderList}" var="slider">
-							<img src="${slider.imagePath}" style="width:467px;height:200px"/>
+		            		<c:choose>
+		            			<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
+		            				<img src="${slider.imagePath}" style="width:467px;height:200px;cursor:pointer;" onclick="window.open('${slider.url }')" />
+		            			</c:when>
+		            			<c:otherwise> 
+									<img src="${slider.imagePath}" style="width:467px;height:200px;cursor:pointer;" onclick="window.open('http://${slider.url }')" />
+								</c:otherwise>
+							</c:choose>
 						</c:forEach>
 	            	</c:when>
 	            	<c:otherwise>
@@ -31,7 +40,7 @@
 		<style type="text/css">
 		 	div {
 				margin: auto;
-		        padding-top:10px;
+				padding-top: 10px;
 		    }
 		</style>
 		<script type="text/javascript">

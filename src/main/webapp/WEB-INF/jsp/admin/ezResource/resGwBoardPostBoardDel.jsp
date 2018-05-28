@@ -74,6 +74,7 @@
 	</head>
 	<body class="mainbody">	
 		<h1><spring:message code="ezResource.t27" /></h1>
+		<div style="max-width:800px;">
     	<table class="content">
         	<tr>
             	<th><spring:message code="ezResource.t44" /></th>
@@ -82,13 +83,15 @@
     	</table>
     	<br>
 			<div id="EmptyMsg">
-    			<div class="warningbox01" style="margin-top:100px;">
-        			<div class="warningbox02">
+    			<div class="warningbox01" style="margin-top:50px; width:445px;">
+        			<div class="warningbox02" style="width:375px;">
   	        			<div class="warnintxt01" style="text-align:left; display:inline-block;">
-	        				<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin:18px 0px 18px 34px;"></span>
-	        				<dl class="warningdl">
-	        				<dt><img src="/images/notify/warning01.gif" width="183" height="27"></dt>
-	        					<dd>
+	        				<span class="warningimg" style="padding-left:30px;"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin:-10px 0px 0px -10px;"></span>
+	        				<dl class="warningdl" style="padding:10px 0px 0px 20px;">
+	        					<dt style="margin-top:0px; padding-left:90px;">
+	        					<img src="/images/notify/warning01.gif" width="183" height="27">
+	        					</dt>
+	        					<dd style="font-weight: normal; text-align:center; padding-top:15px; padding-left:0px; height:30px;">
 	        					 ${pWrnMsg}
 	        					</dd>
 	        				</dl>
@@ -102,7 +105,7 @@
 				<a class="imgbtn"><span onclick="cmdDel_onclick()" ><spring:message code="ezResource.t65" /></span></a>
 			</c:if>
 		</div>
-			
+		</div>
     	<form name="brds">
         	<input type="hidden" id="proc" name="proc" value="DEL">
         	<input type="hidden" id="test" value="">

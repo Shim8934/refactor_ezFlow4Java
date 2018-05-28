@@ -229,7 +229,7 @@ public class EzOrganController {
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
-
+		
 		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
             String[] arryCell = celllist.toUpperCase().split(";");
             String tooltip = "";
@@ -404,5 +404,40 @@ public class EzOrganController {
 		
 		logger.debug("isProxyUser ended.");
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezOrgan/setListType.do", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String setListType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("setListType started.");
+		String listType = request.getParameter("listType");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		ezOrganService.setListType(listType, userID, tenantID, companyID);
+		
+		logger.debug("setListType ended.");
+		return "TRUE";
+	}
+	
+	@RequestMapping(value = "/ezOrgan/getListType.do", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String getListType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("getListType started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		String listType = ezOrganService.getListType(userID, tenantID, companyID);
+		
+		if (listType == null) {
+			listType = "TXT";
+		}
+		
+		logger.debug("getListType ended.");
+		return listType;
 	}
 }

@@ -720,6 +720,7 @@
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t304' /></NAME>
 		        		<WIDTH>100</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 			</LISTVIEWDATA>
@@ -730,14 +731,17 @@
 		    		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t68' /></NAME>
 		        		<WIDTH>80</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t7' /></NAME>
 		        		<WIDTH>100</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t69' />/<spring:message code = 'ezPersonal.t175' /></NAME>
 		        		<WIDTH>80</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>		      		
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
@@ -767,8 +771,8 @@
 	                </table>
 	            </td>
 	            <td width="30" align="center">
-	                <img style="cursor: pointer" src="/images/arr_right.gif" alt="" border="0" onclick="InsertReceiver(ListViewMsgTo)" width="16" height="16">
-	                <img style="cursor: pointer" src="/images/arr_left.gif" alt="" border="0" onclick="DeleteReceiver(ListViewMsgTo)" width="16" height="16">
+	                <img style="cursor: pointer" src="/images/kr/cm/arr_right.gif" alt="" border="0" onclick="InsertReceiver(ListViewMsgTo)" width="16" height="16">
+	                <img style="cursor: pointer" src="/images/kr/cm/arr_left.gif" alt="" border="0" onclick="DeleteReceiver(ListViewMsgTo)" width="16" height="16">
 	            </td>
 	            <td>
 	            	<table>
@@ -783,7 +787,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <table class="content" style="width:100%; margin-top:1px;">
+	                        <table class="content" style="width:100%; margin-top:2px;">
 	                            <tr>
 	                                <th><spring:message code = 'ezPersonal.t1019' /></th>
 	                                <td>
