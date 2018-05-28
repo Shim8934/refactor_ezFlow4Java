@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
+import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -859,14 +860,25 @@ public class EzPMSGWController {
 			String isMyTask = request.getParameter("isMyTask");
 			long groupId = 0;
 			
-			System.out.println(status);
-			System.out.println(isMyTask);
-			
 			if (request.getParameter("groupId") != null) {
 				 groupId = Long.parseLong(request.getParameter("groupId")); 
 			 }
+
+			SearchVO search = new SearchVO();
+			search.setTenantId(info.getTenantId());
+			search.setStatus(status);
+			search.setIsMyTask(isMyTask);
+			search.setProjectId(projectId);
+			search.setGroupId(groupId);
+			search.setUpperGroupName(request.getParameter("searchByGroupName"));
+			search.setPlanStartDate(request.getParameter("searchByStartDate"));
+			search.setPlanEndDate(request.getParameter("searchByEndDate"));
+			search.setOverview(request.getParameter("searchByOverview"));
+			search.setMemberName(request.getParameter("searchByUser"));
+			search.setProjectName(request.getParameter("searchByName"));
 			
-			int taskListCount = ezPMSService.getTaskListCount(status, isMyTask, projectId, info.getTenantId(), userId, groupId);
+			
+			int taskListCount = ezPMSService.getTaskListCount(search, userId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1162,6 +1174,113 @@ public class EzPMSGWController {
 			}
 			
 			LOGGER.debug("ezPMS G/W getHeadManagerList ended.");
+			return result;
+		}
+		
+		/**
+		 * 프로젝트관리 업무 삭제
+		 */
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId}", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
+		public JSONObject deleteTask(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try{
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+				String[] taskIdList = taskId.split("_");
+				int tenantId = info.getTenantId();
+				String deptId = info.getDeptId();
+				long projectId = Long.parseLong(request.getParameter("projectId"));
+				String roleCheck = "";
+				
+				//권한 체크
+				//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
+				int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, deptId);
+				if (userProjectRole == 1) {
+					roleCheck = "permitted";
+				} else if (userProjectRole == 3) {
+					//프로젝트 조회자는 열람권한밖에 없음
+					roleCheck = "rejected";
+				} else {
+					//2. task의 담당자인지 확인
+					for (int i = 0; i < taskIdList.length; i++) {
+						String userTaskRole = ezPMSService.getUserTaskRole(userId, tenantId, Long.parseLong(taskIdList[i]));
+							
+						if (userTaskRole == null) {
+							roleCheck = "rejected";
+							break;
+						}
+					}
+					
+					if (roleCheck.equals("")) {
+						roleCheck = "permitted";
+					}
+				}
+				
+				LOGGER.debug("DELETETASK ROLECHECK : " + roleCheck);
+				
+				if (roleCheck.equals("permitted")) {
+					for (int i = 0; i < taskIdList.length; i++) {
+						ezPMSService.deleteTask(Long.parseLong(taskIdList[i]), projectId, tenantId);
+					}
+					
+				}
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", roleCheck);		
+			} catch (Exception e) {
+				result.put("status", "error");
+				result.put("code", 1);
+				result.put("data", "");		
+			}
+			
+			LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
+			return result;
+		}
+		
+	/**
+	 * file path 불러오기
+	 */
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/rest/ezPMS/items/{itemId}/files", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+		public JSONObject getFilePath (@PathVariable long itemId, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/items/" + itemId + "/files] started.");
+
+			JSONObject result = new JSONObject();
+			
+			try{
+				String serverName = request.getHeader("x-user-host");
+				String userId = request.getParameter("userId");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+				String filePath = "";
+				String imageFileType = "PNG,JPEG,BMP,GIF,JPG";
+				
+				List<Map<String, Object>> filePathList = ezPMSService.getFilePath(itemId, info.getTenantId());
+				
+				for (int i = 0; i < filePathList.size(); i++) {
+					String fileName = filePathList.get(i).get("fileName").toString();
+					fileName = fileName.substring(fileName.indexOf("."), fileName.length());
+					
+					if (fileName.contains(imageFileType)) {
+						filePath = filePathList.get(i).get("filePath").toString();
+						break;
+					}
+				}
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", filePath);		
+			} catch (Exception e) {
+				result.put("status", "error");
+				result.put("code", 1);
+				result.put("data", "");		
+			}
+			
+			LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/items/" + itemId + "/files] ended.");
 			return result;
 		}
 }

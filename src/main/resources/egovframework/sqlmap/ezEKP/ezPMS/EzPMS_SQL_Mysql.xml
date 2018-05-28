@@ -861,7 +861,7 @@
 			AND
 				A.TENANT_ID = #tenantId#
 			AND 
-				DEL_STATUS = 0
+				A.DEL_STATUS = 0
 		<isNotEqual property="status" compareValue="F">
 			<isNotEqual property="status" compareValue="A">
 				AND  
@@ -1019,12 +1019,18 @@
 				tbl_pms_group D
 			ON
 				A.GROUP_ID = D.GROUP_ID
+			JOIN	
+				tbl_pms_taskmember E
+			ON
+				A.TASK_ID = E.TASK_ID
 			WHERE		 
 				A.PROJECT_ID = #projectId#
 			AND 
 				A.TENANT_ID = #tenantId#
 			AND
 				C.USER_ID = #userId#
+			AND
+				A.DEL_STATUS = 0
 		]]>
 		<isNotNull property="status">
 			<isNotEqual property="status" compareValue="A">
@@ -1032,38 +1038,39 @@
 				A.STATUS LIKE CONCAT('%',#status#,'%')
 			</isNotEqual>
 			</isNotNull>
-		<isNotNull property="taskName">
+		<isNotEmpty property="taskName">
 			AND
 				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
-		</isNotNull>
-		<isNotNull property="upperGroupName">
+		</isNotEmpty>
+		<isNotEmpty property="upperGroupName">
 			AND
-				D.GROUP_NAME IN
-					(SELECT 
-						PGA.GROUP_NAME 
-                     FROM 
-                     	TBL_PMS_GROUP PGA 
-                     JOIN 
-                     	TBL_PMS_GROUP PGB 
-                     ON 
-                     	PGA.UPPER_GROUP_ID = PGB.GROUP_ID
-                     WHERE 
-                     	PGB.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
-                    )
-		</isNotNull>
-		<isNotNull property="headManagerName">
+                D.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="headManagerName">
 			AND
 				A.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
-		</isNotNull>
-		<isNotNull property="planStartDate">
+		</isNotEmpty>
+		<isNotEmpty property="searhByStartDate">
+		<![CDATA[
 			AND
-				A.PLAN_START_DATE LIKE CONCAT('%',#planStartDate#,'%')
-		</isNotNull>
-		<isNotNull property="planEndDate">
+				A.PLAN_START_DATE >= #searhByStartDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByUser">
 			AND
-				A.PLAN_END_DATE LIKE CONCAT('%',#planEndDate#,'%')
-		</isNotNull>
-		<isNotNull property="groupId">
+				E.USER_NAME LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+		<![CDATA[
+			AND
+				A.PLAN_END_DATE <= #searchByEndDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="groupId">
 			<isNotEqual property="groupId" compareValue="0">
 			AND 
 				(A.GROUP_ID = #groupId# 
@@ -1073,9 +1080,15 @@
 				)
 			)
 			</isNotEqual>
-		</isNotNull>
+		</isNotEmpty>
+		<isNotEqual property="orderWhat" compareValue="init">
+			ORDER BY
+				$orderWhat$ $orderHow$
+		</isNotEqual>
+		<isEqual property="orderWhat" compareValue="init">
 			ORDER BY 
 				PLAN_END_DATE DESC
+		</isEqual>
 		<isNotEqual property="limit" compareValue="0">
 			LIMIT 
 				#startRow#, #limit#
@@ -1331,7 +1344,7 @@
 			SELECT 
 				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
 				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
-				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		F.file_cnt,								B.write_content
+				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		IFNULL(F.file_cnt, 0) AS FILE_CNT,								B.write_content
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
@@ -1356,7 +1369,12 @@
 			</isNotEqual>
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
+		<isEmpty property="position">
 			ORDER BY B.write_type ASC, B.item_id DESC
+		</isEmpty>
+		<isNotEmpty property="position">
+			ORDER BY B.item_id DESC
+		</isNotEmpty>
 			LIMIT #startRow#, #limit#
 	</select>
 	
@@ -1679,6 +1697,8 @@
 				A.TENANT_ID = #tenantId#
 			AND
 				C.USER_ID = #userId#
+			AND	
+				A.DEL_STATUS = 0
 		]]>
 		<isEqual property="isMyTask" compareValue="M">
 			AND
@@ -1690,37 +1710,38 @@
 					A.STATUS = #status#
 			</isNotEqual>
 			</isNotNull>
-		<isNotNull property="taskName">
+		<isNotEmpty property="upperGroupName">
 			AND
-				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
-		</isNotNull>
-		<isNotNull property="upperGroupName">
-			AND
-				D.GROUP_NAME IN
-					(SELECT 
-						PGA.GROUP_NAME 
-                     FROM 
-                     	TBL_PMS_GROUP PGA 
-                     JOIN 
-                     	TBL_PMS_GROUP PGB 
-                     ON 
-                     	PGA.UPPER_GROUP_ID = PGB.GROUP_ID
-                     WHERE 
-                     	PGB.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
-                    )
-		</isNotNull>
-		<isNotNull property="headManagerName">
+               D.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="headManagerName">
 			AND
 				A.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
-		</isNotNull>
-		<isNotNull property="planStartDate">
+		</isNotEmpty>
+		<isNotEmpty property="taskName">
 			AND
-				A.PLAN_START_DATE LIKE CONCAT('%',#planStartDate#,'%')
-		</isNotNull>
-		<isNotNull property="planEndDate">
+				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByUser">
 			AND
-				A.PLAN_END_DATE LIKE CONCAT('%',#planEndDate#,'%')
-		</isNotNull>
+				E.USER_NAME LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searhByStartDate">
+		<![CDATA[
+			AND
+				A.PLAN_START_DATE >= #searhByStartDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+		<![CDATA[
+			AND
+				A.PLAN_END_DATE <= #searchByEndDate#
+		]]>
+		</isNotEmpty>
 		<isNotNull property="groupId">
 			<isNotEqual property="groupId" compareValue="0">
 			AND 
@@ -1922,5 +1943,49 @@
 			A.TENANT_ID = #tenantId#
 		GROUP BY 
 			A.STATUS
+	</select>
+	
+	<select id="EzPMSDAO.getUserTaskRole" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT 
+			TASK_MEMBER_ID 
+		FROM 
+			TBL_PMS_TASKMEMBER 
+		WHERE 
+			 USER_ID = #userId#
+		AND	
+			TASK_ID = #taskId#
+		AND
+			TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.deleteTask" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			tbl_pms_task
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TASK_ID = #taskId# 
+		AND
+			TENANT_ID = #tenantId#
+	]]>		
+	</update>
+	
+	<select id="EzPMSDAO.getFilePath" parameterClass="Map" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT	
+			FILE_PATH AS filePath,
+			FILE_NAME AS fileName
+		FROM 
+			TBL_PMS_ITEM_ATTACHMENT
+		WHERE
+			ITEM_ID = #itemId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
 	</select>
 </sqlMap>

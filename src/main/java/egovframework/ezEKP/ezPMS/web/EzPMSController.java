@@ -578,7 +578,7 @@ public class EzPMSController {
 				param.put("userId", userId);
 				param.put("status", kanbanStatus[i]);
 				
-				if (kanbanStatus[i].contains("B")) {
+				if (kanbanStatus[i].equals("B")) {
 					String boardCountUrl = "/rest/ezPMS/boards/list-count/" + projectId + "/users/" + userId;
 					JSONObject boardCountResult = commonUtil.getJsonFromRestApi(boardCountUrl, param, request, "get", null);
 					String boardCountStatus = boardCountResult.get("status").toString();
@@ -1354,5 +1354,37 @@ public class EzPMSController {
 		LOGGER.debug("ezPMS taskListMain ended");
 		
 		return "/ezPMS/pmsTaskListMain";
+	}
+	
+	/**
+	 * 프로젝트 관리 업무 삭제 실행
+	 */
+	@RequestMapping(value="/ezPMS/deleteTask.do")
+	@ResponseBody
+	public String deleteTask(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS deleteTask started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String taskId = request.getParameter("taskId");
+		long projectId = Long.parseLong(request.getParameter("projectId"));
+		
+		String url = "/rest/ezPMS/tasks/" + taskId + "/users/" + userId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("projectId", projectId);
+		
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
+		String status = result.get("status").toString();
+		String checkPermission = "";
+		
+		if (status.equals("ok")) {
+			checkPermission = result.get("data").toString();
+		}
+		
+		
+		LOGGER.debug("ezPMS deleteTask ended");
+		
+		return checkPermission;
 	}
 }

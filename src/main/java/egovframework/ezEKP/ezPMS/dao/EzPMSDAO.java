@@ -315,4 +315,17 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		// TODO Auto-generated method stub
 		return (List<Map<String, Object>>) list("EzPMSDAO.getStatusCount", map);
 	}
+
+	public String getUserTaskRole(Map<String, Object> map) {
+		return (String) select("EzPMSDAO.getUserTaskRole", map);
+	}
+
+	public void deleteTask(Map<String, Object> map) {
+		update("EzPMSDAO.deleteTask", map);		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getFilePath(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzPMSDAO.getFilePath", map);
+	}
 }

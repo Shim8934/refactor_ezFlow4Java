@@ -73,6 +73,12 @@ public class EzPMSGWController2 {
 			String offset = info.getOffSet();
 			int limit = 0; 
 			int startRow = 0;
+			String orderWhat = request.getParameter("orderWhat");
+			String orderHow = request.getParameter("orderHow");
+			
+			if (orderWhat == null) {
+				orderWhat = "init";
+			}
 			
 			if (request.getParameter("limit") != null) {
 				limit = Integer.parseInt(request.getParameter("limit"));
@@ -96,13 +102,21 @@ public class EzPMSGWController2 {
 			search.setMemberId(request.getParameter("headManagerName"));
 			search.setIsMyTask(request.getParameter("isMyTask"));
 			search.setTenantId(tenantId);
-
+			
+			//추가
+			search.setProjectName(request.getParameter("searchByName"));
+			search.setMemberName(request.getParameter("searchByUser"));
+			search.setPlanStartDate(request.getParameter("searchByStartDate"));
+			search.setPlanEndDate(request.getParameter("searchByEndDate"));
+			search.setUpperGroupName(request.getParameter("searchByGroupName"));
+			search.setOverview(request.getParameter("searchByOverview"));
+			
 			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
 			if (isMyTask.equals("M")) {
 				String status  =request.getParameter("status");
 				taskList = ezPMSService.getMyTasks(projectId, status, tenantId, userId, offset, lang, limit, startRow);
 			} else {
-				taskList = ezPMSService.getTaskList(search, userId, limit, startRow);
+				taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow);
 			}
 			 
 			
@@ -259,36 +273,6 @@ public class EzPMSGWController2 {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
 		return result;
 	}
-	
-	/**
-	 * 프로젝트관리 업무 삭제
-	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId}", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public JSONObject deleteTask(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
-			ezPMSService.deleteTask(Long.parseLong(taskId));
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");		
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");		
-		}
-		
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
-		return result;
-	}
-	
 	
 	/**
 	 * 프로젝트관리 그룹 리스트

@@ -33,6 +33,7 @@ var overdueColor = "${mainSetting.overdueColor}";
 var holdColor = "${mainSetting.holdColor}";
 var startCount = 0;
 var listNumber = 5;
+var position = "overview";
 
 $(document).ready(function(){
 	$(window).resize(function() {
@@ -165,7 +166,8 @@ function initKanbanList() {
 			projectId : projectId,
 			kanbanOrder : kanbanOrder,
 			limit : 10,
-			startRow : 0
+			startRow : 0,
+			position : position
 	}
 			
 	$.ajax({
@@ -361,9 +363,15 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				kanbanHTML += "<div class='taskStatus' style='background-color:" + statusColor + "'>" + taskStatus + "</div></div>";
 				kanbanHTML += "</div>";
 			} else {
-				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='card' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
+				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='card board' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
 				kanbanHTML += "<h5>" + taskList[i].title + "</h5>";
-				kanbanHTML += "<div class='boardContent'>" + taskList[i].writeContent + "</div>";
+				console.log(taskList[i].imageFilePath);
+				if (taskList[i].imageFilePath == null) {
+					kanbanHTML += "<div class='boardContent'>" + taskList[i].writeContent + "</div>";
+				} else {
+					kanbanHTML += "<div class='boardContent' style='text-align:center;'><img style='width:135px; height:82px; margin-top:11px;' src='" + taskList[i].imageFilePath + "'></div>";
+				}
+				
 				kanbanHTML += "</div>"
 			}
 		}
@@ -400,13 +408,15 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				break;
 			}
 			
-			$("#" + targetPosition).find(".progressArea" + taskList[i].taskId).LineProgressbar({
-				percentage : taskList[i].realProgress,
-				fillBackgroundColor : statusColor,
-				height : '15px',
-				radius : '15px',
-				width : '71%'
-			});
+			if (!(taskList[i].status == "B")) {
+				$("#" + targetPosition).find(".progressArea" + taskList[i].taskId).LineProgressbar({
+					percentage : taskList[i].realProgress,
+					fillBackgroundColor : statusColor,
+					height : '15px',
+					radius : '15px',
+					width : '71%'
+				});
+			}
 		}
 		
 		var targetStatus = $("#" + targetPosition).attr("name");
@@ -434,7 +444,8 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 		targetPosition : targetPosition,
 		kanbanOrder : targetStatus,
 		limit : 10,
-		startRow : startRow
+		startRow : startRow,
+		position : position
 	}
 	
 	$.ajax({
@@ -445,8 +456,13 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 		data :JSON.stringify(data),
 		success : function(result) {
 			$("#" + targetPosition).attr("name", targetStatus);
-			setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType);
 			
+			if (targetStatus == "B") {
+				setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, true);
+			} else {
+				setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, false);
+			}
+
 			var title = "";
 			
 			if (targetStatus.indexOf("M") != -1) {
@@ -624,6 +640,10 @@ function getBoardDetails(elem) {
 	border : 1px solid black;
 	background-color : rgb(255, 255, 255);
 	overflow : hidden;
+}
+
+.board {
+	height : 120px;
 }
 
 .boardContent {

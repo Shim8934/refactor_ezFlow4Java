@@ -54,7 +54,7 @@ public interface EzPMSService {
 	
 	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang);
 	
-	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId, String userId, long groupId);
+	public int getTaskListCount(SearchVO search, String userId);
 	
 	public int getTaskLogListCount(TaskLogListVO taskLog, int tenantId);
 	
@@ -64,7 +64,7 @@ public interface EzPMSService {
 	
 	public List<String> getProjectNameList(String userId, int tenantId);
 	
-	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow);
+	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow);
 	
 	public List<ProjectGroupVO> getGroupList(SearchVO search);
 	
@@ -76,7 +76,7 @@ public interface EzPMSService {
 	
 	public int updateTask(ProjectTaskVO task);
 	
-	public int deleteTask(Long taskId);
+	public void deleteTask(Long taskId, long projectId, int tenantId);
 	
 	public void addGroup(Map<String, Object> map);
 	
@@ -120,11 +120,15 @@ public interface EzPMSService {
 
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception;
 	
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang);
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position);
 	
 	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId);
 	
 	public ProjectBoardVO getBoardDetail(int tenantId, Map<String, Object> param);
 
 	List<ProjectInfoVO> getProgressProject(String status) throws Exception;
+
+	public String getUserTaskRole(String userId, int tenantId, long taskId);
+
+	List<Map<String, Object>> getFilePath(long itemId, int tenantId);
 }

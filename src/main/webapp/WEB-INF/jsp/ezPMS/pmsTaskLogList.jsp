@@ -54,7 +54,7 @@ $(function() {
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="LOG_CONTENT"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 20%;"
 							class="h5_center">이력 내용</th>
-						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="GROUP_NAME"
+						<th id="BoardList_TH_2"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 40px"
 							class="h5_center">작업 이름</th>
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="USER_NAME"

@@ -15,6 +15,14 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
+
+<!-- time picker-->
+<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script>
 	var projectId = "${projectId}";
 	var CurrentHeight = document.documentElement.clientHeight - 100;
@@ -24,18 +32,29 @@
 	var totalCount = "${taskListCount}";
 	var orderWhat = "";
 	var orderHow = "";
+	var checkedVal = "";
+	var viewType = "1";
+	
+	//검색을 위한 variables
 	var searchByStatus = "";
+	var searchByName = "";
+	var searchByUser = "";
+	var searchByPlanStartDate = "";
+	var searchByPlanEndDate = "";
+	var searchByGroupName = "";
+	var searchByOverview = "";
 	
 	function goAddTask() {
 		var top = ($(window).height() - $(this).outerHeight()) / 2;
 		var left = ($(window).width() - $(this).outerWidth()) / 2;
 		var feature = GetOpenPosition(top, left);
 
-		DivPopUpShow(845, 555, "/ezPMS/goAddTask.do?projectId=" + projectId);
+		DivPopUpShow(845, 478, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	};
 
 	$(function() {
 		getProjectTaskTree("taskTree", taskData, "taskList");
+		getDatePicker();
 
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
@@ -74,7 +93,13 @@
 			orderWhat : orderWhat,
 			orderHow : orderHow,
 			//검색
-			status : searchByStatus
+			status : searchByStatus,
+			searchByName : searchByName,
+			searchByUser : searchByUser,
+			searchByStartDate : searchByPlanStartDate,
+			searchByEndDate : searchByPlanEndDate,
+			searchByGroupName : searchByGroupName,
+			searchByOverview : searchByOverview
 		}
 
 		$.ajax({
@@ -86,6 +111,20 @@
 			success : function(contentList) {
 				$("#contentList").html(contentList);
 				//찾아 준 후 초기화
+				$("#searchByName").val("");
+				$("#searchByUser").val("");
+				$("#Sdatepicker").val("");
+				$("#Edatepicker").val("");
+				$("#searchByGroupName").val("");
+				$("#searchByOverview").val("");
+				
+				searchByName = "";
+				searchByUser = "";
+				searchByPlanStartDate = "";
+				searchByPlanEndDate = "";
+				searchByGroupName = "";
+				searchByOverview = "";
+				
 				setInitOrder();
 			}
 		});
@@ -202,6 +241,123 @@
 		searchByStatus = status;
 		setContentList();
 	}
+	
+	function getDatePicker() {
+		$("#Sdatepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true,
+			beforeShow: function (input) {
+				var i_offset = $(input).offset();
+				setTimeout(function () {
+					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+				})
+			}
+		});
+
+		$("#Edatepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true,
+			beforeShow: function (input) {
+				var i_offset = $(input).offset();
+				setTimeout(function () {
+					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+				})
+			}
+		});
+		
+		var SDate = new Date();
+		var EDate = new Date();
+
+		$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		$("#Sdatepicker").datepicker('setDate', "");
+		
+		$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		$("#Edatepicker").datepicker('setDate', "");
+		
+		$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+				closeText: "<spring:message code='main.t3' />",
+				prevText: "<spring:message code='main.t0604' />",
+				nextText: "<spring:message code='main.t0605' />",
+				currentText: "<spring:message code='main.t0606' />",
+				monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+				             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+				             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+				             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+				monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+				                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+				                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+				                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+				dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+				           "<spring:message code='main.t0627' />"],
+				dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				                "<spring:message code='main.t0627' />"],
+				dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				              "<spring:message code='main.t0627' />"],
+				weekHeader: "Wk",
+				dateFormat: "yy-mm-dd",
+				firstDay: 0,
+				isRTL: false,
+				duration: 200,
+				showAnim: "show",
+				showMonthAfterYear: true
+		  };
+		  
+		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+	}
+	
+	function searchTask() {
+		searchByName = $("#searchByName").val();
+		searchByUser = $("#searchByUser").val();
+		searchByPlanStartDate = $("#Sdatepicker").val();
+		searchByPlanEndDate = $("#Edatepicker").val();
+		searchByGroupName = $("#searchByGroupName").val();
+		searchByOverview = $("#searchByOverview").val();
+		
+		setContentList();
+	}
+	
+	function deleteTask() {
+		var result = getCheckedVal();
+		
+		if (result == 1) {
+			var response = confirm("정말로 삭제하시겠습니까?");
+			console.log(result);
+			if (response == true) {
+				$.ajax({
+					type : "POST",
+					dataType: "text",
+					url : "/ezPMS/deleteTask.do",
+					data : {
+						taskId : checkedVal,
+						projectId : projectId
+					},
+					success : function(result) {
+						if (result == "permitted") {
+							alert("삭제되었습니다.");
+							checkedVal = "";
+							setContentList();
+						} else {
+							alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+							return;
+						}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+					}
+				});
+			}
+		}
+	}
 </script>
 <style>
 #taskTree {
@@ -264,6 +420,10 @@
 .listRow:hover {
 	background-color: rgb(233, 241, 255);
 }
+
+#searchDiv {
+	margin-left : 11px;
+}
 </style>
 </head>
 <div id="taskTree"></div>
@@ -273,10 +433,10 @@
 		<div id="icons">
 			<a class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
 				style="margin-left: 1px; margin-top: 1px;"><span>새업무 추가</span></a> <a
-				class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
+				class="imgbtn" id="addTaskBtn" onclick="deleteTask()"
 				style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a> <a
-				class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
-				style="margin-left: 1px; margin-top: 1px;"><span>검색</span></a>
+				class="imgbtn" id="addTaskBtn" onclick="showSearchDiv()"
+				style="margin-left: 1px; margin-top: 1px;"><span>검색 <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></a>
 				<div>
 				업무 상태별 보기 <select id="searchStatus" onchange="searchStatus(this.value)">
 					<option value="A">전체</option>
@@ -288,6 +448,33 @@
 				</select>
 				</div>
 		</div>
+	</div>
+	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
+		<table class="content" style="width:80%; margin-bottom:5px;">
+			<tbody>
+				<tr>
+					<th>업무명 </th>
+					<td style="width:50%"><input type="text" id="searchByName" style="width:50%; margin-right:5px;"></td>
+					<th>담당자</th>
+					<td><input type="text" id="searchByUser"></td>
+				</tr>
+				<tr>
+					<th>시작일 </th>
+					<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+					<th>종료일</th>
+					<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+				</tr>
+				<tr>
+					<th>상위그룹 </th>
+					<td colspan="3" style="width:50%"><input type="text" style="width:100%" id="searchByGroupName"></td>
+				</tr>
+				<tr>
+					<th>업무개요</th>
+					<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
+				</tr>
+			</tbody>
+		</table>
+		<a class="imgbtn" onclick="searchTask()" style="margin-left:40%;"><span>검색</span></a>
 	</div>
 	<div id="contentList" style="overflow: auto">
 		<span id="MailListRayer"

@@ -75,7 +75,9 @@ public class ProjectBoardVO {
 	
 	// 첨부파일 갯수
 	private Integer fileCNT;
-
+	
+	//이미지 첨부파일 경로
+	private String imageFilePath;
 	
 	public int getItemId() {
 		return itemId;
@@ -267,5 +269,13 @@ public class ProjectBoardVO {
 
 	public void setFileCNT(Integer fileCNT) {
 		this.fileCNT = fileCNT;
+	}
+
+	public String getImageFilePath() {
+		return imageFilePath;
+	}
+
+	public void setImageFilePath(String imageFilePath) {
+		this.imageFilePath = imageFilePath;
 	}	
 }

@@ -127,3 +127,39 @@ function addTaskLog(projectId, logStatus, groupId, taskId, logContent) {
 		}
 	});
 }
+
+//목록에서 체크된 값을 저장
+function getCheckedVal() {
+
+	checkedVal = "";
+	
+	if (viewType == "1") {
+		$("input[type='checkbox']:checked").parent().parent().each(function(){
+			checkedVal += "_" + $(this).attr("id");
+		});
+		
+		if (checkedVal != "") {
+			if ($("input:checkbox[id='HeaderAllCheckBox']").is(":checked") == true) {
+				checkedVal = checkedVal.substring(14);
+			} else {
+				checkedVal = checkedVal.substring(1);
+			}
+		}
+		
+	} else {
+		$("input[type='checkbox']:checked").parent().parent().parent().parent().each(function(){
+			checkedVal += "_" + $(this).attr("id");
+		});
+		
+		if(checkedVal != "") {
+			checkedVal = checkedVal.substring(1);
+		}
+	}
+	
+	if (checkedVal == "") {
+		alert("하나 이상의 프로젝트를 선택해 주세요.");
+		return 0;
+	}
+	
+	return 1;
+}

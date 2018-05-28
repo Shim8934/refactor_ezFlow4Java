@@ -94,20 +94,49 @@ public class EzPMSGWController3 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String uploadPathName = "uploadFile";
+			String tempUploadPathName = "tempUploadFile";
 			
 			Long groupId = 0L;
 			Long taskId = 0L;
-			if(request.getParameter("groupId")!=null && !request.getParameter("groupId").equals("")) {
+			if(request.getParameter("groupId")!= null && !request.getParameter("groupId").equals("")) {
 				groupId = Long.parseLong(request.getParameter("groupId"));	
 			} 
-			if(request.getParameter("taskId")!=null && !request.getParameter("taskId").equals("")) {
+			if(request.getParameter("taskId")!= null && !request.getParameter("taskId").equals("")) {
 				taskId = Long.parseLong(request.getParameter("taskId"));	
 			}
 			
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int limit = Integer.parseInt(request.getParameter("limit"));
+			String position = request.getParameter("position");
 			
-			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, startRow, limit, lang);
+			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, startRow, limit, lang, position);
+			String imageFileType = "PNG,JPEG,BMP,GIF,JPG";
+			
+			
+			for (int i = 0; i < boardList.size(); i++) {
+				int fileCount = boardList.get(i).getFileCNT();
+				if (fileCount > 0) {
+					String filePath = "";
+					
+					List<Map<String, Object>> filePathList = ezPMSService.getFilePath(boardList.get(i).getItemId(), info.getTenantId());
+					
+					for (int j = 0; j < filePathList.size(); j++) {
+						String fileName = filePathList.get(j).get("fileName").toString();
+						
+						if (fileName.indexOf(".") != -1) {
+							fileName = fileName.substring(fileName.indexOf(".") + 1, fileName.length()).toUpperCase();
+							
+							if (imageFileType.contains(fileName)) {
+								filePath = filePathList.get(j).get("filePath").toString().substring(1);
+								String realPath = commonUtil.getUploadPath("upload_project.ROOT", info.getTenantId())+ commonUtil.separator + uploadPathName + commonUtil.separator +  filePath;
+								
+								boardList.get(i).setImageFilePath("/ezCommon/downloadAttach.do?filePath=" + realPath);
+							}
+						}
+					}
+				}
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
