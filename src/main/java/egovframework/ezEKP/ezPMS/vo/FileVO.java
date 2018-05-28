@@ -6,7 +6,6 @@ public class FileVO {
 	private Long fileSize;
 	private String fileName;
 	private String fileType;
-	private String fileEncodeName;
 	private String fileTransSize;
 	
 	public String getFilePath() {
@@ -28,7 +27,6 @@ public class FileVO {
 		
 		while(size > 1024.0) {
 			size /= 1024.0;
-			System.out.println("--------------------------" + size);
 			i++;
 		}
 		
@@ -78,12 +76,6 @@ public class FileVO {
 	}
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
-	}
-	public String getFileEncodeName() {
-		return fileEncodeName;
-	}
-	public void setFileEncodeName(String fileEncodeName) {
-		this.fileEncodeName = fileEncodeName;
 	}
 	public String getFileTransSize() {
 		return fileTransSize;

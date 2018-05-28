@@ -5,15 +5,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -340,6 +342,57 @@ public class EzPMSGWController3 {
 			e.printStackTrace();
 		}
 		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezPMS/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject downloadFile(HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			String realPath = commonUtil.getRealPath(request);
+			String uploadFilePath = commonUtil.getUploadPath("upload_project.ROOT", info.getTenantId());
+			String filePath = request.getParameter("filePath");
+			realPath += uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
+			
+			LOGGER.debug("filePath on download : " + realPath);
+			
+			File file = new File(realPath);
+			
+			if(!file.exists() || !file.isFile()) {
+				throw new FileNotFoundException(realPath);
+			}
+			
+			int fileSize = (int) file.length();
+			
+			if(fileSize > 0) {
+				byte[] bytes = Files.readAllBytes(Paths.get(realPath));
+				
+				JSONObject data = new JSONObject();
+				
+				data.put("bytes", bytes);
+				data.put("fileSize", fileSize + "");
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", data);
+			}
+		} catch (FileNotFoundException e){
+			result.put("status", "fileNotFound");
+			result.put("code", 1);
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] ended.");
 		return result;
 	}
 	

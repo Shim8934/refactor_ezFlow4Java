@@ -1,6 +1,10 @@
 package egovframework.ezEKP.ezPMS.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +13,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -24,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +49,8 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 public class EzPMSController3 {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSController3.class);
+	
+	public static final int BUFF_SIZE = 2048;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -357,6 +365,63 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS uploadFileDelete ended");
         
         return status;
+	}
+	
+	@RequestMapping(value = "/ezPMS/downloadFile.do")
+	public void downloadFile(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("ezPMS downloadFile started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String filePath = request.getParameter("filePath");
+		String fileName = request.getParameter("fileName");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("filePath", filePath);
+		
+		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezPMS/attachfiles", param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject data = (JSONObject) result.get("data");
+			String bytes = (String) data.get("bytes");
+			int fileSize = Integer.parseInt((String)data.get("fileSize"));
+			
+			String mimetype = "application/octet-stream";
+		    byte[] tempBytes = Base64.getDecoder().decode(bytes);
+		    
+		    fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
+		    
+		    try(InputStream is = new ByteArrayInputStream(tempBytes)) {
+		    	response.setBufferSize(BUFF_SIZE);
+		    	response.setContentType(mimetype);
+		    	response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+		    	response.setContentLength(fileSize);
+		    	
+		    	FileCopyUtils.copy(is, response.getOutputStream());
+		    	
+		    	response.getOutputStream().flush();
+		    	response.getOutputStream().close();
+		    } catch (Exception e) {
+		    	LOGGER.debug("ezPMS downloadFile error");
+		    }	    
+		} else if(status.equals("fileNotFound")) {
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/html;charset=UTF-8");
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("<script type='text/javascript'>");
+			sb.append("alert('파일을 찾을 수 없습니다');");
+			sb.append("history.go(-1);");
+			sb.append("</script>");
+			
+			response.getWriter().println(sb.toString());
+			response.getWriter().close();
+			
+		}	
+		LOGGER.debug("ezPMS downloadFile ended");
 	}
 	
 	@RequestMapping(value = "/ezPMS/getBoardDetail.do")
