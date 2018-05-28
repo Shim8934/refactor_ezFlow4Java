@@ -11,6 +11,54 @@
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 	<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		// 첨부파일 모두 선택
+		function attach_SelectAll() {
+			var checkboxes = document.getElementById('lstAttachLink').getElementsByTagName("input");
+			for(var i = 0; i < checkboxes.length; i++) {
+				checkboxes.item(i).checked = true;
+			}
+		}
+		
+		function attach_Download() {
+			var checkboxes = $("input:checked");
+			var i = 0;
+			
+			if(!checkboxes.length) {
+				alert("파일을 선택해주십시오.");
+			}
+			
+			var link = document.createElement('a');
+			$(link).attr("display", "none");
+			$(link).attr("href", "/ezPMS/downloadFile.do?filePath=" + checkboxes.eq(i).attr("data-filepath") 
+													 + "&fileName=" + checkboxes.eq(i).attr("data-filename"));
+			link.click();
+													 
+			var process = setInterval(function() {
+				i++;
+				
+				if(i < checkboxes.length) {
+					$(link).attr("href", "/ezPMS/downloadFile.do?filePath=" + checkboxes.eq(i).attr("data-filepath") 
+							 + "&fileName=" + checkboxes.eq(i).attr("data-filename"));
+					link.click();
+				} else {
+					clearInterval(process);
+				}
+			}, 1000);
+		}
+		
+		var suffix = 0;
+		function downloadFiles(items) {
+			var item = items.get(suffix++);
+			
+			location.href = "/ezPMS/downloadFile.do?filePath=" + $(item).attr("data-filepath") + "&fileName=" + $(item).attr("data-filename");
+			setTimeout(downloadFiles(items), 1000);
+			
+			if(suffix > items.length) {
+				return;
+			}
+		}
+	</script>
 </head>
 <body class="popup" style="height: 99%;">
 	<table class="layout" style="width: 100%">
@@ -87,8 +135,10 @@
 							<div id="lstAttachLink" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
 								<c:forEach items="${board.fileList }" var="file">
 									<div style="margin-top: 3px; height: 20px">
-										<input type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
-										<img src="/images/${file.fileType}.png"/>&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}"><c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })</a><br>
+										<input type="checkbox" data-filename="${file.fileName}" data-filepath="${file.filePath}">
+										<img src="/images/${file.fileType}.png"/>&nbsp; 
+										<a href="/ezPMS/downloadFile.do?filePath=${file.filePath}&fileName=${file.fileName}">${file.fileName}&nbsp;(${file.fileTransSize})</a>
+										<br>
 									</div>
 								</c:forEach>
 							</div>
