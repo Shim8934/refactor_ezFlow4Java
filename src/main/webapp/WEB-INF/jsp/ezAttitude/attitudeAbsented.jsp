@@ -128,9 +128,9 @@
 			    });
 			});
 			    
-	    	var monthMsg = "<spring:message code='ezSchedule.t110' />";
+	    	var monthMsg = "<spring:message code='ezAttitude.t139' />";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayMsg = "<spring:message code='ezAttitude.t140' />";
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
@@ -228,7 +228,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.t138' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -267,7 +267,7 @@
 	    	
 			function searchAttitudeAbsentedList(searchType){
 				if (!checkPattern()) {
-					alert("<spring:message code='ezAttitude.lhj16' />")
+					alert("<spring:message code='ezAttitude.t132' />")
 					return;
 				}
 				
@@ -402,7 +402,7 @@
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t137' /></td>
 					<td style="width: 20%;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
@@ -412,10 +412,10 @@
 					<td style="width: *;" colspan=4>
 					</td>
 					<td colspan=2>
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.lhj21' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.t121' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.t136' /></span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
@@ -429,7 +429,7 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.t133' /></th>
 					</tr>
 				</thead>
 				<tbody>

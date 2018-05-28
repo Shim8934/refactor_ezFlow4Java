@@ -86,7 +86,7 @@
 		    	
 		    	obj.idList = attid; 
 		    	
-		    	if (confirm("<spring:message code='ezAttitude.kbm11'/>")) {
+		    	if (confirm("<spring:message code='ezAttitude.t183'/>")) {
 				    $.ajax({
 						type : 'post',
 					    url : '/ezAttitude/delAttModApp.do',
@@ -97,7 +97,7 @@
 					    },
 					    success : function(json){
 					    	if (json == "error") {
-					    		alert("<spring:message code='ezAttitude.kbm3'/>");
+					    		alert("<spring:message code='ezAttitude.t175'/>");
 					    	}
 				            try {
 				                window.opener.att_refresh();
@@ -233,18 +233,18 @@
 	                        <div id="close">
 	                            <ul>
 	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
-		                            	<li><span onclick="modApprove()"><spring:message code='ezAttitude.kbm41'/></span></li>
-		                                <li><span onclick="modReturn()"><spring:message code='ezAttitude.kbm42'/></span></li>
+		                            	<li><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
+		                                <li><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
 	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-	                            		<li><span onclick="modify()"><spring:message code='ezAttitude.bbhs29'/></span></li>
+	                            		<li><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></li>
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
 	                            		<li><span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span></li>
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-	                            		<li><span onclick="del()"><spring:message code='ezAttitude.bbhs30'/></span></li>
+	                            		<li><span onclick="del()"><spring:message code='ezAttitude.t164'/></span></li>
 	                            	</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
@@ -257,7 +257,7 @@
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
-                                            <th><spring:message code='ezAttitude.bbhs15'/></th>
+                                            <th><spring:message code='ezAttitude.t134'/></th>
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
 <!--                                             	다국어 작업 -->
@@ -270,27 +270,27 @@
                                             </td>
                                         </tr>
 	                                    <tr>
-	                                        <th><spring:message code='ezAttitude.kbm37'/></th>
+	                                        <th><spring:message code='ezAttitude.t206'/></th>
 	                                        <td colspan="2">
 	                                        	<c:out value='${data.originDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
-	                                        <th><spring:message code='ezAttitude.kbm38'/></th>
+	                                        <th><spring:message code='ezAttitude.t207'/></th>
 	                                        <td colspan="2">
                                            		<c:out value='${data.changeDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
-	                                        <th><spring:message code='ezAttitude.kbm39'/></th>
+	                                        <th><spring:message code='ezAttitude.t208'/></th>
                                         	<c:if test="${data.apprStatus == 0}">
-								          		<td colspan="2"><spring:message code='ezAttitude.kbm40'/></td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.t209'/></td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 1}">
-								          		<td colspan="2"><spring:message code='ezAttitude.kbm41'/></td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.t210'/></td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 2}">
-								          		<td colspan="2"><spring:message code='ezAttitude.kbm42'/></td>	
+								          		<td colspan="2"><spring:message code='ezAttitude.t211'/></td>	
 								          	</c:if>
 	                                    </tr>
 	                                </table>

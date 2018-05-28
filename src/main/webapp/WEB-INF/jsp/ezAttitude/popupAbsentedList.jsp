@@ -65,7 +65,7 @@
 			
 	    	function getAbsentedList() {
 				if (searchEndDate == '') {
-					var resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";
+					var resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.t138' /></td></tr>";
 					$("#contentlist table.mainlist tbody").append(resultHtml);
 					
 					return;
@@ -109,7 +109,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.t138' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -169,7 +169,7 @@
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="startdate"><spring:message code='ezAttitude.lhj17'/></th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="startdate"><spring:message code='ezAttitude.t133'/></th>
 					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10'/></th>
 					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11'/></th>
 					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9'/></th>
@@ -183,7 +183,7 @@
 		</div>
 		
 		<div class="btnposition">
-			<a class="imgbtn"><span onclick="return btnClose_onclick()"><spring:message code='ezAttitude.bbhs21'/></span></a>
+			<a class="imgbtn"><span onclick="return btnClose_onclick()"><spring:message code='ezAttitude.t157'/></span></a>
 		</div>
 	</body>
 </html>
