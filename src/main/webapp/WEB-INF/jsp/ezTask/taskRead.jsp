@@ -744,8 +744,10 @@
 			    switch (pSelectTab) {
 				    case "MailEnv_div0":
 			            selecttab = "0";
-			            if(creatorid == userid){			            	
+			            if(creatorid == userid || ((personid == userid) && (tasktype == "1")) || ((personid == userid) && (tasktype == "4"))){			            	
 				            document.getElementById("editTaskInfo").style.display = "";
+			            }else{
+			            	document.getElementById("editTaskInfo").style.display = "none";
 			            }
 			            document.getElementById("taskInfo").style.display = "";
 			            document.getElementById("normalScreen").style.display = "none";
@@ -1056,7 +1058,7 @@
 			        if (document.getElementById("taskstatus").checked || document.getElementById("taskstatus3").checked)
 			            document.getElementById("taskstatus2").checked = true;
 			}
-			 /* 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 (editTaskInfo 주석) */
+			 
 			function beforeprint() {
 				$(".popup").css('background-image', 'none');
 				
@@ -1707,7 +1709,7 @@
 					</ul>
 					<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
 					<!-- 18-05-16 구해안 - 지시자만 업무 정보 수정 가능 하도록 수정, 담당자만 업무 내용 수정 가능하도록 수정 -->
-					<a id="editTaskInfo" class="imgbtn" style="display:none;"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
+					<a id="updateStatus" class="imgbtn" ><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
 				</div>
 				<div id="Sdatepicker" style="float:right;"></div>
 			</div>

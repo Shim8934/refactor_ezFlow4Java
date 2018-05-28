@@ -32,20 +32,20 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 /*------------ Layout ------------*/
 /*#top {top:0px; left:0px; height:99px; width:100%;clear:both; z-index:10; background:#525761; border-bottom:1px solid #4a4c51;}*/
 #top {top:0px; left:0px; height:56px; width:100%;clear:both; z-index:10; border-bottom:1px solid #424242; box-sizing:border-box;}
-#Center {min-height:600px; margin:0px; padding:0px 0px 10px 0px; background:#fff;}
+#Center {min-height:600px; margin:0px; padding-bottom:20px; background:#fff;}
 header{height:55px; background:url(../images/kr/cm/header_bg.gif) repeat-x; clear:both; overflow:hidden;}
 nav {height:56px;}
 aside {position:absolute; top:0px; right:0; width:88px; height:100%; z-index:9; overflow:visible;  min-height:100%; }
-.section1_bg { width:100%; height:233px; padding:10px 0px; margin:0px; background:#f5f8fc; border-bottom:1px solid #d6dce4;}
+.section1_bg { width:100%; height:233px; padding:0px 0px; margin:0px; background:#f5f8fc; border-bottom:1px solid #d6dce4;}
 .section1 {width:1140px; height:202px; margin:0 auto;    vertical-align:top; border:0px solid #F00; z-index:3;}
-.section2 {width:1140px;  margin:30px auto 0px; vertical-align:top; overflow:hidden;}
-.section3 {width:1140px; margin:30px auto 0px;vertical-align:top;overflow:hidden;}
-.section4 {width:1140px;margin:30px auto 0px;vertical-align:top; overflow:hidden;}
-.section5 {width:1140px;margin:30px auto 0px;vertical-align:top; overflow:hidden;}
+.section2 {width:1140px;  margin:25px auto 0px; vertical-align:top; overflow:hidden;}
+.section3 {width:1140px; margin:25px auto 0px;vertical-align:top;overflow:hidden;}
+.section4 {width:1140px;margin:25px auto 0px;vertical-align:top; overflow:hidden;}
+.section5 {width:1140px;margin:25px auto 0px;vertical-align:top; overflow:hidden;}
 aside {position:absolute; top:0px; right:0; width:70px; z-index:9; overflow:visible; }
 
 /*------------ header ------------*/
-header .logo {float:left;margin:0px; padding:5px 0px 0px 0px; width:200px;height:48px;  display:inline-block;}
+header .logo {float:left;margin:0px; padding:5px 0px 0px 0px; width:150px;height:48px;  display:inline-block;}
 /*-- top_search --*/
 .top_search {font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
 
@@ -67,7 +67,7 @@ header .logo {float:left;margin:0px; padding:5px 0px 0px 0px; width:200px;height
 
 /*------------ nav ------------*/
 nav .topmenu {margin:0 auto; padding:0px; height:55px; overflow:hidden;text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-nav .topmenu li {letter-spacing:-2px; list-style:none; cursor:pointer; display:inline-block;  text-align:center; margin:0px; padding:0px 29px; height:55px; line-height:53px; color:#333; font-size:17px; font-weight:bold; }
+nav .topmenu li {letter-spacing:-3px; list-style:none; cursor:pointer; display:inline-block;  text-align:center; margin:0px; padding:0px 25px; height:55px; line-height:53px; color:#333; font-size:17px; font-weight:bold; }
 nav .topmenu li:hover{ color:#146bb8;  /*background:url(../images/kr/cm/top_menuPoint.gif) no-repeat bottom center;*/}
 nav .topmenu li  span { margin:0px; padding:0px;}
 
