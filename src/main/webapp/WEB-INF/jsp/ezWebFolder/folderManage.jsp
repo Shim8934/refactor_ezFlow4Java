@@ -137,7 +137,7 @@
 			
 			if (folderType == "C") {
 				if (parent == '#') {
-					alert("회사폴더 최상위에는 폴더를 추가할 수 없습니다.");
+					alert("<spring:message code='ezWebFolder.t326'/>");
 					return;
 				}
 			}
@@ -165,9 +165,9 @@
 			
 			if (parent == '#') {
 				if (folderType == "S") {
-					alert("공유받은 폴더는 수정할 수 없습니다.");
+					alert("<spring:message code='ezWebFolder.t327'/>");
 				} else {
-					alert("최상위 폴더는 수정할 수 없습니다.");
+					alert("<spring:message code='ezWebFolder.t328'/>");
 				}
 				
 				return;
@@ -177,7 +177,7 @@
 				for (var i = 0; i < parentControll.length; i++) {
 					if (parentControll[i].id == parent) {
 						if (parentControll[i].parent == '#') {
-							alert("관리자만  관리가 가능한 폴더입니다.");
+							alert("<spring:message code='ezWebFolder.t329'/>");
 							return;
 						}
 					}
@@ -212,9 +212,9 @@
 			
 			if (parent == '#') {
 				if (folderType == "S") {
-					alert("공유받은 폴더는 삭제할 수 없습니다.");
+					alert("<spring:message code='ezWebFolder.t330'/>");
 				} else {
-					alert("최상위 폴더는 삭제할 수 없습니다.");
+					alert("<spring:message code='ezWebFolder.t331'/>");
 				}
 				return;
 			} 
@@ -223,7 +223,7 @@
 				for (var i = 0; i < parentControll.length; i++) {
 					if (parentControll[i].id == parent) {
 						if (parentControll[i].parent == '#') {
-							alert("관리자만  관리가 가능한 폴더입니다.");
+							alert("<spring:message code='ezWebFolder.t329'/>");
 							return;
 						}
 					}
@@ -254,9 +254,9 @@
 			
 			if (parent == '#') {
 				if (folderType == "S") {
-					alert("공유받은 폴더는 이동할 수 없습니다.");
+					alert("<spring:message code='ezWebFolder.t332'/>");
 				} else {
-					alert("최상위 폴더는 이동할 수 없습니다.");
+					alert("<spring:message code='ezWebFolder.t333'/>");
 				}
 				
 				return;
@@ -265,7 +265,7 @@
 				for (var i = 0; i < parentControll.length; i++) {
 					if (parentControll[i].id == parent) {
 						if (parentControll[i].parent == '#') {
-							alert("관리자만  관리가 가능한 폴더입니다.");
+							alert("<spring:message code='ezWebFolder.t329'/>");
 							return;
 						}
 					}
@@ -273,7 +273,7 @@
 			}
 			
 			if (userId != createId) {
-				alert("폴더생성자가 아닙니다. 폴더를 이동할 권한이 없습니다.");
+				alert("<spring:message code='ezWebFolder.t334'/>");
 				return;
 			}
 			
@@ -291,12 +291,13 @@
 
 		function copy_onclick() {
 			if (folderId == "") {
-				alert("복사할 폴더를 선택하세요");
+				alert("<spring:message code='ezWebFolder.t335'/>");
 				return;
 			}
 			
 			if (parent == '#' && folderType != "S") {
-				alert("최상위 폴더는 복사할 수 없습니다.");
+				alert("<spring:message code='ezWebFolder.t336'/>");
+				alert("<spring:message code='ezWebFolder.t336'/>");
 				return;
 			}
 			
@@ -312,12 +313,12 @@
 		
 		function share_onclick() {
 			if (folderId == "") {
-				alert("공유할 폴더를 선택하세요");
+				alert("<spring:message code='ezWebFolder.t337'/>");
 				return;
 			}
 			
 			if (parent == '#' && folderType != "S") {
-				alert("최상위 폴더는 공유할 수 없습니다.");
+				alert("<spring:message code='ezWebFolder.t338'/>");
 				return;
 			}
 			
@@ -353,7 +354,7 @@
 	</script>
 </head>
 <body scroll="no" class="popup" >
-	<h1>폴더관리</h1>
+	<h1><spring:message code="ezWebFolder.t268"/></h1> 
 	<div id="close">
 		<ul>
 			<li><span onclick="Window_Close();"><spring:message code='ezWebFolder.t110'/></span></li>
