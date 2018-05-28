@@ -376,7 +376,7 @@
       	<a class="webfolderBttn" onclick="update_onclick()"><span><spring:message code="ezWebFolder.t162"/></span></a>
       	<a class="webfolderBttn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
       	<a class="webfolderBttn" onclick="copy_onclick()"><span><spring:message code="ezWebFolder.t122"/></span></a>
-      	<a class="webfolderBttn" onclick="share_onclick()"><span>공유</span></a>
+      	<a class="webfolderBttn" onclick="share_onclick()"><span><spring:message code="ezWebFolder.t254"/></span></a>
       	<a class="webfolderBttn" onclick="delete_onclick()"><span><spring:message code="ezWebFolder.t111"/></span></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

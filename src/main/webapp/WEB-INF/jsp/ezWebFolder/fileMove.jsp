@@ -322,7 +322,7 @@
 </head>
 <body class="popup">
 	<h1 id="topMenu" >
-		<c:if test="${type eq 'copy'}">파일 복사</c:if>
+		<c:if test="${type eq 'copy'}"><spring:message code='ezWebFolder.t316'/></c:if>
 		<c:if test="${type ne 'copy'}"><spring:message code='ezWebFolder.t120'/></c:if>
 	</h1>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
