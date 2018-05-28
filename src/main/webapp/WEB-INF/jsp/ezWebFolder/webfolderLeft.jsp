@@ -77,7 +77,7 @@
 							folderId = data.selected[0];
 							getFileList(folderId);
 						}).jstree({
-							'plugins': ["core","types","json_data","themes","ui","sort"],
+							'plugins': ["core","types","json_data","themes","ui"],
 							'core' : {
 								"animation" : 0,
 								'data' : data.data,

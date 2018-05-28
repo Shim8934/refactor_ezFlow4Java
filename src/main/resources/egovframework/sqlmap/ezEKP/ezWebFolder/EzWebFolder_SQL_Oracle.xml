@@ -706,6 +706,7 @@
 			AND
 				a.TENANT_ID    = #tenantId#
 			ORDER BY
+				a.FOLDER_NAME1,
 				a.FOLDER_LEVEL ASC,
 				a.FOLDER_STEP  ASC
 		]]>
@@ -742,6 +743,7 @@
 			AND
 				TENANT_ID    = #tenantId#
 			ORDER BY
+				FOLDER_NAME1,
 				FOLDER_LEVEL ASC,
 				FOLDER_STEP  ASC
 		]]>
@@ -1027,6 +1029,7 @@
 			AND
 				a.TENANT_ID    = #tenantId#
 			ORDER BY
+				a.FOLDER_NAME1,
 				a.FOLDER_LEVEL ASC,
 				a.FOLDER_STEP  ASC
 		]]>
@@ -1112,6 +1115,7 @@
 			AND
 				f.USE_STATUS = 'Y'
 			ORDER BY
+				f.FOLDER_NAME1,
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
 		]]>
@@ -1175,6 +1179,7 @@
 			AND
 				f.USE_STATUS  = 'Y'
 			ORDER BY
+				f.FOLDER_NAME1,
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
 		]]>
@@ -1217,6 +1222,7 @@
 			AND
 				f.FOLDER_UPPER = #compFolderId#
 			ORDER BY
+				f.FOLDER_NAME1,
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
 		]]>
@@ -1298,6 +1304,7 @@
 				f1.FOLDER_UPPER = #compFolderId#
 			) f
 			ORDER BY
+				f.FOLDER_NAME1,
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
 		]]>
@@ -1323,6 +1330,7 @@
 			AND
 				a.TENANT_ID    = #tenantId#
 			ORDER BY
+				a.FOLDER_NAME1,
 				a.FOLDER_LEVEL ASC,
 				a.FOLDER_STEP  ASC
 	</select>
@@ -1496,6 +1504,7 @@
 		AND
 			TENANT_ID = #tenantId#
 		ORDER BY
+			FOLDER_NAME,
 			FOLDER_LEVEL ASC
 	</select>
 	

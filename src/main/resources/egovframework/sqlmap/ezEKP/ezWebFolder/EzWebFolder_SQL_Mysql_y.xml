@@ -291,7 +291,7 @@
 	        AND FOLDER_TYPE = 'U'
 	        AND TENANT_ID = #tenantId#
 	        AND OWNER_ID = #userId#
-	        ORDER BY SELECTED DESC, FOLDER_LEVEL
+	        ORDER BY SELECTED DESC, FOLDERNAME1
 		]]>
 	</select>
 	
@@ -324,7 +324,7 @@
 			<iterate property="idList" open="(" close=")" conjunction=",">
 				#idList[]#
 			</iterate>
-			ORDER BY SELECTED DESC , FOLDER_LEVEL 
+			ORDER BY SELECTED DESC ,  FOLDERNAME1 
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getCompFolderTree" resultMap="folderTreeVO" parameterClass="Map">
@@ -384,7 +384,7 @@
 	        AND FOLDER_UPPER = 'root'
 	        AND USE_STATUS = 'Y'
 	        AND TENANT_ID = #tenantId#
-	        ORDER BY SELECTED DESC , FOLDERLEVEL 
+	        ORDER BY SELECTED DESC ,  FOLDERNAME1
 		]]>
 	</select>
     
