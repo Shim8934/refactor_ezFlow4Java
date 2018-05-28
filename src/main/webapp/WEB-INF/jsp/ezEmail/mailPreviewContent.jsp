@@ -17,6 +17,8 @@
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
 	        var pNoneActiveX = "${NoneActiveX}";
+		    var sentDate = "${sentDate}"; // 전달, 회신 시 보낸 시간
+		    var contentClass = "${contentClass}";
 		    
 	        function window_onload() {}
 		    
@@ -36,6 +38,10 @@
 	        			}
 	        		}
 	        	})
+	        	
+	        	if (sentDate != "") {
+			    	sentDateView();
+			    }
 	        });
 		    
 		    function AttachDetail_view(obj) {
@@ -286,6 +292,19 @@
 	        	});
 	        }
 	        
+	     	// 전달, 회신 시 보낸 시간
+	        function sentDateView() {
+	        	var sentMsg = contentClass == "FORWARD" ? "<spring:message code='ezEmail.ksa02' />" : "<spring:message code='ezEmail.ksa01' />";
+		    	var sentDateStr = sentDate + sentMsg;
+		    	
+		    	$("body").prepend("<div class='sentDateStr'>" + sentDateStr + "</div>");
+		    	$(".sentDateStr").css({
+		    		"padding" : "5px 0",
+			        "margin-bottom" : "10px",
+			        "font-size" : "14px",
+			        "background" : "rgba(255,250,205,0.5)"
+		    	});
+	        }
 	    </script> 
 	</head>
 
