@@ -727,7 +727,8 @@ public class EzAttitudeKMSController {
 	@ResponseBody
 	public String changeAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=true)String idList,
-			@RequestParam(required=true)String changeStatus
+			@RequestParam(required=true)String changeStatus,
+			@RequestParam(required=true)String companyID
 			) throws Exception {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -740,6 +741,10 @@ public class EzAttitudeKMSController {
 			sysLang = "primary";
 		}
 		
+		if (companyID == null) {
+			companyID = userInfo.getCompanyID();
+		}
+		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
 		
@@ -750,7 +755,7 @@ public class EzAttitudeKMSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyId", companyID)
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("idList", idList)
 				.queryParam("changeStatus", changeStatus);
@@ -773,7 +778,8 @@ public class EzAttitudeKMSController {
 	@RequestMapping(value="/ezAttitude/retAttModApp.do" , method= RequestMethod.POST)
 	@ResponseBody
 	public String retAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
-			@RequestParam(required=false)String idList) throws Exception {
+			@RequestParam(required=false)String idList,
+			@RequestParam(required=false)String companyID) throws Exception {
 		LOGGER.debug("retAttModApp started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -781,6 +787,10 @@ public class EzAttitudeKMSController {
 
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
+		}
+		
+		if (companyID == null) {
+			companyID = userInfo.getCompanyID();
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -793,7 +803,7 @@ public class EzAttitudeKMSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyId", companyID)
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("idList", idList);
 		
@@ -987,7 +997,7 @@ public class EzAttitudeKMSController {
 			attModDeptId = (String) data.get("writerDeptId");
 			model.addAttribute("data", data);
 			
-			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
+			url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
 			
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("userId", userInfo.getId());
@@ -1022,7 +1032,7 @@ public class EzAttitudeKMSController {
 		entity = new HttpEntity<>(headers);
 		
 		builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyId", companyId)
 				.queryParam("isAllDept", isAllDept)
 				.queryParam("userId", userInfo.getId());
 		
@@ -1818,9 +1828,14 @@ public class EzAttitudeKMSController {
 		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 		String userId = userInfo.getId();
 		String attitudeId = request.getParameter("attitudeId");
+		String companyID = request.getParameter("companyID");
 		String typeId = request.getParameter("typeId");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + typeId +"/forms/form";
+		
+		if (companyID == null) {
+			companyID = userInfo.getCompanyID();
+		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1882,7 +1897,7 @@ public class EzAttitudeKMSController {
 		entity = new HttpEntity<>(headers);
 		
 		builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyId", companyID)
 				.queryParam("isAllDept", isAllDept)
 				.queryParam("userId", userInfo.getId());
 		
@@ -2088,9 +2103,15 @@ public class EzAttitudeKMSController {
 		String userId = userInfo.getId();
 		String date = request.getParameter("date");
 		String mode = request.getParameter("mode");
+		String companyID = request.getParameter("companyID");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String userOffset = userInfo.getOffset().split("\\|")[1];
-		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() +"/attitudetypes";
+		
+		if (companyID == null) {
+			companyID = userInfo.getCompanyID();
+		}
+		
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyID +"/attitudetypes";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2123,6 +2144,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("userOffset", userOffset);
 		//관리자 정보
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("companyID", companyID);
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
 		model.addAttribute("time", time);
@@ -2270,6 +2292,7 @@ public class EzAttitudeKMSController {
 		String defaultWin = request.getParameter("defaultwin") == null ? "To" : request.getParameter("defaultwin").trim();
 		String type = request.getParameter("type") == null ? "" : request.getParameter("type").trim();
 		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
+		String companyID = request.getParameter("companyID") == null ? userInfo.getCompanyID() : request.getParameter("companyID");
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
 		
 		
@@ -2290,7 +2313,7 @@ public class EzAttitudeKMSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyId", companyID)
 				.queryParam("isAllDept", isAllDept)
 				.queryParam("userId", userInfo.getId());
 		
@@ -2341,6 +2364,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("ruleKind", ruleKind);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("companyID", companyID);
 		
 		LOGGER.debug("attNewReceiverChoose ended.");
 		return "ezAttitude/attNewReceiverChoose";
@@ -2685,12 +2709,13 @@ public class EzAttitudeKMSController {
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
 		String listtype = request.getParameter("type");
+		String companyID = request.getParameter("companyID") == null ? userInfo.getCompanyID() : request.getParameter("companyID");
 		String lang = userInfo.getPrimary();
 		String page = request.getParameter("page");
 		String infoXML = "";
 		
 		LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
-		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
+		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + "companyID=" + companyID);
 	    
 		
 		String offset = userInfo.getOffset();
@@ -2706,7 +2731,7 @@ public class EzAttitudeKMSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyID", companyID)
 				.queryParam("userId", userInfo.getId())
 				.queryParam("searchlist", searchlist)
 				.queryParam("celllist", celllist)

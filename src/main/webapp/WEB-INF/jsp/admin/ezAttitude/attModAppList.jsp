@@ -929,6 +929,7 @@
 	    	
 		    obj.idList = idList.slice(0,-1);
 		    obj.changeStatus = "appr";
+		    obj.companyID = pCompanyId;
 			
 		    if (confirm("<spring:message code='ezAttitude.t84'/>")) {
 	 	    	if (idList == "") {
@@ -982,6 +983,7 @@
 	    	
 		    obj.idList = idList.slice(0,-1);
 		    obj.changeStatus = "ret";
+		    obj.companyID = pCompanyId;
 			
 		    if (confirm("<spring:message code='ezAttitude.t87'/>")) {
 		    	if (idList == "") {

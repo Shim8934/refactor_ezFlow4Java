@@ -33,7 +33,7 @@
 			var writerName = "${userInfo.displayName}";
 			var uselang = "${userInfo.lang}";
 			var userOffset = "${userOffset}";
-			var companyId = "${companyId}";
+			var companyId = "${companyID}";
 			var date = "${date}";
 			var time = "${time}";//현재시간
 			var nowTime = time.split(":");
@@ -587,7 +587,7 @@
 	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
 	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
 	            
-	            var OpenWin = window.open("/ezAttitude/attNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 630));
+	            var OpenWin = window.open("/ezAttitude/attNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "&companyID=" + companyId, "mail_foldermanage_Cross", GetOpenWindowfeature(690, 630));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	

@@ -2056,18 +2056,20 @@ public class EzAttitudeGWController {
 			String celllist = request.getParameter("celllist");
 			String proplist = request.getParameter("proplist");
 			String listtype = request.getParameter("listtype");
+			String companyID = request.getParameter("companyID");
 			String lang = userInfo.getPrimary();
 			String page = request.getParameter("page");
 			String infoXML = "";
 			
 			LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
-			        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
+			        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + ",companyID=" + companyID);
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(userInfo.getTenantId(), userInfo.getCompanyId(), userInfo.getUserId(), userInfo.getRollInfo(), "", "M", "");
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(userInfo.getTenantId(), companyID, userInfo.getUserId(), userInfo.getRollInfo(), "", "M", "");
 			
 			for (AttitudeAuthorVO vo : authDeptlist) {
+				LOGGER.debug("!@#(!($@$#*%!@# : " + vo.getDeptId());
 				deptIdList.add(vo.getDeptId());
 			}
 			

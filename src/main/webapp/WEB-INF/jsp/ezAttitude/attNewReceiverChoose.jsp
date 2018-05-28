@@ -79,7 +79,7 @@
 	        var searchgubun = "N";
 	        var userid = "${userInfo.id}";
 	        var deptid = "${userInfo.deptID}";
-	        var companyid = "${userInfo.companyID}";
+	        var companyid = "${companyID}";
 	        var susinTo = 0;
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
@@ -1867,7 +1867,9 @@
 		        			cell : "company;department;displayName;title;telephoneNumber;"+ document.getElementById("search_type").value, 
 		        			prop : "mail;displayName;description;title;company;telephonenumber;extensionAttribute2", 
 		        			page : CurPage, 
-		        			type : "user"},
+		        			type : "user",
+		        			companyID : companyid
+		        			},
 		        	success : function(result){	
 		        		pListXML_Info = loadXMLString(result);
 		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0) {

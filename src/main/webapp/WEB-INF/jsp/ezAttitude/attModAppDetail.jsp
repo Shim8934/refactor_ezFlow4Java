@@ -121,6 +121,7 @@
 			    	
 				    obj.idList = attid;
 				    obj.changeStatus = "appr";
+				    obj.companyID = companyID; 
 					
 				    $.ajax({
 						type : 'post',
@@ -160,6 +161,7 @@
 			    	
 				    obj.idList = attid;
 				    obj.changeStatus = "ret";
+				    obj.companyID = companyID;
 					
 				    $.ajax({
 						type : 'post',
