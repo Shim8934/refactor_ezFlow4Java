@@ -6333,6 +6333,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.gongRamUpdate(docID, userID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("gongRamUpdate ended");	

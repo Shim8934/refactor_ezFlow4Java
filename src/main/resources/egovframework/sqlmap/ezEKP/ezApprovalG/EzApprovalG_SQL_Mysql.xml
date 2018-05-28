@@ -539,7 +539,8 @@
 		                  		TBL_APRLINEINFO.ReceivedDate, 
 		                  		TBL_EXPAPRDOCINFO.FormName, 
 		                  		TBL_EXPAPRDOCINFO.FormName2, 
-		                  		TBL_EXPAPRDOCINFO.UrgentApproval
+		                  		TBL_EXPAPRDOCINFO.UrgentApproval,
+		                  		TBL_APRDOCINFO.COMPANYID
 		                  	FROM 
 		                  		TBL_APRDOCINFO 
 		                  	INNER JOIN 

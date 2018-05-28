@@ -367,7 +367,8 @@
 		    		url : "/ezApprovalG/gongRamUpdate.do",
 		    		data : {
 		    			docID : DocID,
-		    			userID: ListSusin
+		    			userID: ListSusin,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
