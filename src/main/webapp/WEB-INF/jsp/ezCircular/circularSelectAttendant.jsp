@@ -2013,9 +2013,10 @@
 	                                            	<table class="mainlist" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
+									                        <!-- 18-05-24 김민성 - 회람자 추가시 즐겨찾기 작성일 -> 등록일로 수정 -->
 									                        	<th style="width: 5%;"><span><spring:message code='ezCircular.t31' /></span></th>
 									                            <th style="width: 35%; "><span><spring:message code='ezCircular.t32' /></span></th>
-									                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
+									                            <th style="width: 27%; "><span><spring:message code='ezBoard.t5007' /></span></th>
 									                            <th style="width: 19%; "><span><spring:message code='ezCircular.t34' /></span></th>
 									                            <th style="width: 13%; "></th>
 									                        </tr>

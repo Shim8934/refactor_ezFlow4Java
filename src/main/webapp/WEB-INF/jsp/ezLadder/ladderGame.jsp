@@ -373,11 +373,18 @@
 		}
 		
 		function clickUserLadderAnimation() {
+			var $ladLineBox = $("#ladderLineBox");
+			var $body = $("html, body");
+			var ladLineTop = $ladLineBox.offset().top + Number($ladLineBox.css("padding-top").slice(0,-2));
+			
 			$(document)
 			.on("click", "[id^=drag]", function() {
 				if(userClickFlag) {
 					clickUserOrder = Number($(this).attr("id").slice(4));
 					
+					if($body.scrollTop() != ladLineTop) {
+						$body.animate({"scrollTop": ladLineTop}, 200);
+					}
 					if(userStatus[clickUserOrder] == 0) {
 						aniOneUser();
 					} else {
@@ -404,9 +411,10 @@
 				$moveImgUser = $("#copyUser");
 			}
 			
+			var $ladLineBox = $("#ladderLineBox");
 			if(type.substring(0, 3) == "ani" || type.substring(3, 6) == "one") {
-				var scrollval = (resultOrder * wSize - $("#ladderLineBox").width()/2) + wSize/2;
-				$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
+				var scrollval = (resultOrder * wSize - $ladLineBox.width()/2) + wSize/2;
+				$ladLineBox.animate({"scrollLeft": scrollval}, 300);
 			} else {
 				$(".resultItem").css({"background": "#ffffff"});
 				$(".resultUser").css({"background": "#f2f2f2", "color": "#000000"});
@@ -862,12 +870,12 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:12px" /></a>
+											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #f2f2f2">
-											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
+										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #e8e8ef">
+											<span style="font-size: large; color: palevioletred; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
 									</c:otherwise>
@@ -901,7 +909,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 398px;background: #fafafa; position: absolute;left: -50px;right: 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
+									<div id="blackBox" style="height: 398px;background: #f9f9fc; position: absolute;left: -50px;right: 0;border-top:1px solid #dde;border-bottom:1px solid #dde">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
