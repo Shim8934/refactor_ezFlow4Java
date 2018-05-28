@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
-		<title><spring:message code='ezAttitude.bbhs31' /></title>
+		<title><spring:message code='ezAttitude.t165' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
@@ -561,13 +561,13 @@
     			htmlStr += '<td>' + attList[i].changeDate.substring(11,16) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
-    				htmlStr += '<td id="attStauts"><spring:message code="ezAttitude.kbm40"/></td>';	
+    				htmlStr += '<td id="attStauts"><spring:message code="ezAttitude.t209"/></td>';	
     			}
     			if (attList[i].apprStatus == 1) {
-    				htmlStr += '<td id="attStauts"><spring:message code="ezAttitude.kbm41"/></td>';	
+    				htmlStr += '<td id="attStauts"><spring:message code="ezAttitude.t210"/></td>';	
     			}
     			if (attList[i].apprStatus == 2) {
-    				htmlStr += '<td id="attStauts"><spring:message code="ezAttitude.kbm42"/></td>';	
+    				htmlStr += '<td id="attStauts"><spring:message code="ezAttitude.t211"/></td>';	
     			}
     			if (attList[i].apprUserName == null) {
     				htmlStr += '<td>' + "" + '</td>';
@@ -877,7 +877,7 @@
 	    	
 		    obj.idList = idList.slice(0,-1);
 			
-		    if (confirm("<spring:message code='ezAttitude.kbm11'/>")) {
+		    if (confirm("<spring:message code='ezAttitude.t183'/>")) {
 			    $.ajax({
 					type : 'post',
 				    url : '/ezAttitude/delAttModApp.do',
@@ -885,7 +885,7 @@
 				    dataType : "text",
 				    error: function(xhr, status, error){
 				    	ajaxRunning = false;
-				    	alert("<spring:message code='ezAttitude.kbm3'/>")
+				    	alert("<spring:message code='ezAttitude.t175'/>")
 				    },
 				    success : function(json){
 				    	get_att_list(currentPage);
@@ -945,11 +945,11 @@
 				    dataType : "text",
 				    error: function(xhr, status, error){
 				    	ajaxRunning = false;
-				    	alert("<spring:message code='ezAttitude.kbm3'/>");
+				    	alert("<spring:message code='ezAttitude.t175'/>");
 				    },
 				    success : function(json){
 				    	get_att_list(currentPage);
-						alert("<spring:message code='ezAttitude.kbm3'/>");
+						alert("<spring:message code='ezAttitude.t175'/>");
 				    },
 					complete : function() {
 						HiddenAttProgress();
@@ -998,11 +998,11 @@
 				    dataType : "text",
 				    error: function(xhr, status, error){
 				    	ajaxRunning = false;
-				    	alert("<spring:message code='ezAttitude.kbm3'/>");
+				    	alert("<spring:message code='ezAttitude.t175'/>");
 				    },
 				    success : function(json){
 				    	get_att_list(currentPage);
-						alert("<spring:message code='ezAttitude.kbm63'/>");
+						alert("<spring:message code='ezAttitude.t215'/>");
 				    },
 					complete : function() {
 						HiddenAttProgress();
@@ -1116,25 +1116,25 @@
 			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 			    	
 			    	if (json.length == 0) {
-			    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("<spring:message code='ezAttitude.kbm64'/>"));
+			    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
 			    	
 			    	for(var i = 0; i < json.length; i++) {
 						if (json.length == 1 && json[i].apprStatus == 0) {
-							var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("<spring:message code='ezAttitude.kbm64'/>"));
+							var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
 				    		
 				    		$("#addpopup_list tbody").append(objTr);
 			    		} else {
 			    			var name = json[i].apprUserName;
 			    			
 			    			if (json[i].apprStatus == 1) {
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.kbm41'/>";
+				    			json[i].apprStatus = "<spring:message code='ezAttitude.t210'/>";
 				    		} else if (json[i].apprStatus == 2){
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.kbm42'/>";
+				    			json[i].apprStatus = "<spring:message code='ezAttitude.t211'/>";
 				    		} else {
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.kbm40'/>";
+				    			json[i].apprStatus = "<spring:message code='ezAttitude.t209'/>";
 				    		}
 				    		
 			    			if (json[i].apprDate != null) {
@@ -1220,22 +1220,22 @@
 	      	</c:if>
 	        <ul id="tb_Parent">
 	        <c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
-				<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.kbm41'/></span></li>
-	        	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.kbm42'/></span></li>
+				<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
+	        	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
 			</c:if>
 			<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
-				<li><span onClick="attList_del()"><spring:message code='ezAttitude.kbm65'/></span></li>
+				<li><span onClick="attList_del()"><spring:message code='ezAttitude.t164'/></span></li>
 			</c:if>
 	        <c:if test="${checkAdmin != 'true'}">
-		        <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.kbm66'/></span></li>
-	        	<li><span onClick="att_search('refresh')"><spring:message code='ezAttitude.kbm67'/></span></li>
-	        	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.kbm68'/></span></li>
+		        <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
+	        	<li><span onClick="att_search('refresh')"><spring:message code='ezAttitude.t122'/></span></li>
+	        	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
 			</c:if>
 			<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
 				<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 				<li>
 					<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
-						<option value="ALL"><spring:message code='ezAttitude.kbm69'/></option>
+						<option value="ALL"><spring:message code='ezAttitude.t124'/></option>
 						<c:forEach var="dept" items="${deptList}">
 							<c:if test="${dept.mine ne 'yes' }">
 								<c:if test="${selectedDeptID == dept.deptId}">
@@ -1254,10 +1254,10 @@
 			<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}"> 
 				<li id="right">
 					<span style="float:right;font-weight:normal;color:black;border: none;">
-						<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.kbm69'/></label>
-						<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.kbm40'/></label>
-						<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.kbm41'/></label>
-						<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.kbm42'/></label>
+						<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
+						<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
+						<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.t210'/></label>
+						<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label>
 					</span>
 				</li> 
 			</c:if>
@@ -1269,30 +1269,30 @@
 					<tr>
 						<td style="width: 3%;"><spring:message code='ezAttitude.t103'/></td>
 						<td style="width: 12%;"><input type="text" id="writer_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
-						<td style="width: 3%;">신청부서</td>
+						<td style="width: 3%;"><spring:message code='ezAttitude.t148'/></td>
 						<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
 						<td style="width: 3%;"><spring:message code='ezAttitude.t13'/></td>
 						<td style="width: 11%;">
-							<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.kbm69'/></label>
-							<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.kbm40'/></label>
-							<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.kbm41'/></label>
-							<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.kbm42'/></label>
+							<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
+							<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
+							<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.t210'/></label>
+							<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label>
 						</td>
 					</tr>
 					<tr>
 						<td style="width: 3%;"><spring:message code='ezAttitude.t104'/></td>
 						<td style="width: 12%;"><input type="text" id="appr_search" style="width: 90%;" maxlength="50" onkeyup="search_keypress(event);"></td>
-						<td style="width: 3%;">검색기간</td>
+						<td style="width: 3%;"><spring:message code='ezAttitude.t137'/></td>
 						<td style="width: 9%;">
 <!-- 							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()" style="float:left; margin-left:0px;"><label for="usepostdate" style="float:left; margin:3px;">검색기간 사용</label> -->
 	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
 						</td>
 						<td colspan="2">
-							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span>검색</span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span>새로고침</span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="get_excelAtt_list()" style="margin-top:3px;"><span>엑셀 다운로드</span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="modApprove()" style="margin-top:3px;"><span>승인</span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="modReturn()" style="margin-top:3px;"><span>반려</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t121'/></span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span><spring:message code='ezAttitude.t122'/></span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="get_excelAtt_list()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t145'/></span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="modApprove()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t210'/></span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="modReturn()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t211'/></span></a>
 						</td>
 					</tr>
 				</tbody>
@@ -1306,7 +1306,7 @@
 				    	<tr>
 						<th class="layerHeader" colspan="4" style="width:440px;">
 							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-							&nbsp;검색
+							&nbsp;<spring:message code='ezAttitude.t121'/>
 						</th>
 						</tr>
 				    </thead>
@@ -1319,13 +1319,13 @@
 						</tr>
 	              	</c:if>
 	              	  <tr>
-	                    <th nowrap>승인자명</th>
+	                    <th nowrap><spring:message code='ezAttitude.t104'/></th>
 	                    <td style="width:100%;"> 
 							<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
 		                </td>
 	                  </tr>
 	                  <tr>
-	                    <th>검색기간</th>
+	                    <th><spring:message code='ezAttitude.t137'/></th>
 	                    <td>
 	                    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code='ezAttitude.t105'/></label>
 	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
@@ -1334,8 +1334,8 @@
 	              </table>
 	              <div class="btnposition">
 			        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
-			        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span>검색</span></a>
-			        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span>취소</span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span><spring:message code='ezAttitude.t121'/></span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span><spring:message code='ezAttitude.t34'/></span></a>
 			      </div>
 	            </div>
 	            <a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
@@ -1358,21 +1358,21 @@
 				<th style="cursor:pointer" colname="START_DATE"><spring:message code='ezAttitude.t107'/></th>
 				
 				<c:if test="${adminFlag == true}">
-					<th style="cursor:pointer" colname="WRITER_NAME">신청자</th>
-					<th style="cursor:pointer" colname="WRITER_DEPT_NAME">신청부서</th>
+					<th style="cursor:pointer" colname="WRITER_NAME"><spring:message code='ezAttitude.t147'/></th>
+					<th style="cursor:pointer" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
 				</c:if>
-				<th width="125px" style="cursor:pointer" colname="ORIGIN_TIME">기존시각</th>
-				<th width="125px" style="cursor:pointer" colname="NO">신청시각</th>
-				<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
+				<th width="125px" style="cursor:pointer" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
+				<th width="125px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t207'/></th>
+				<th width="80px" style="cursor:pointer" colname="APPR_STATUS" ><spring:message code='ezAttitude.t208'/></th>
 				<th width="100px" style="cursor:pointer" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
-				<th width="130px" style="cursor:pointer" colname="APPL_DATE">신청일자</th>
-				<th width="100px" style="cursor:pointer" colname="NO">내역확인</th>
+				<th width="130px" style="cursor:pointer" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
+				<th width="100px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t97'/></th>
 			</tr>
 			
 		    <c:if test="${list.size() == 0}"> 
 		        <tr>
-		        	<c:if test="${adminFlag == 'true'}"><td colspan="10" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
-					<c:if test="${adminFlag != 'true'}"><td colspan="8" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
+		        	<c:if test="${adminFlag == 'true'}"><td colspan="10" align="center"  bgcolor="#FFFFFF"><spring:message code='ezAttitude.t96'/></td></c:if>
+					<c:if test="${adminFlag != 'true'}"><td colspan="8" align="center"  bgcolor="#FFFFFF"><spring:message code='ezAttitude.t96'/></td></c:if>
 	       		</tr>
 	        </c:if>
 		</table>
@@ -1388,16 +1388,16 @@
         <table class="mainlist" style="width:100%;display:none;" id="ExcelAttList">
 	       	<tr>
 				<th>NO.</th>
-				<th>일자</th>
+				<th><spring:message code='ezAttitude.t107'/></th>
 				<c:if test="${adminFlag == true}">
-					<th>신청자</th>
-					<th>신청부서</th>
+					<th><spring:message code='ezAttitude.t147'/></th>
+					<th><spring:message code='ezAttitude.t148'/></th>
 				</c:if>
-				<th>기존시각</th>
-				<th>신청시각</th>
-				<th>승인상태</th>
+				<th><spring:message code='ezAttitude.t206'/></th>
+				<th><spring:message code='ezAttitude.t207'/></th>
+				<th><spring:message code='ezAttitude.t208'/></th>
 				<th><spring:message code='ezAttitude.t104'/></th>
-				<th>신청일자</th>				
+				<th><spring:message code='ezAttitude.t108'/></th>				
 			</tr>
 		</table>
 <!-- 		팝업 -->
@@ -1409,18 +1409,18 @@
 				    	<tr>
 							<th class="layerHeader" colspan="4" style="width:490px;">
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-								&nbsp;근태내역확인
+								&nbsp;<spring:message code='ezAttitude.t141'/>
 							</th>
 						</tr>
 				    </thead>
 				    <tbody style="max-height:500px; width:490px; display:block; overflow-y:auto;">
 				    	<tr>
-							<th style="width:120px;height:30px">일자</th>
-				    		<th style="width:30px; height:30px">기존시각</th>
-				    		<th style="width:30px; height:30px">신청시긱</th>
+							<th style="width:120px;height:30px"><spring:message code='ezAttitude.t107'/></th>
+				    		<th style="width:30px; height:30px"><spring:message code='ezAttitude.t206'/></th>
+				    		<th style="width:30px; height:30px"><spring:message code='ezAttitude.t207'/></th>
 				  			<th style="height:30px"><spring:message code='ezAttitude.t104'/></th>
-				  			<th style="width:120px;height:30px">승인일시</th>
-				  			<th style="height:30px">승인상태</th>
+				  			<th style="width:120px;height:30px"><spring:message code='ezAttitude.t116'/></th>
+				  			<th style="height:30px"><spring:message code='ezAttitude.t208'/></th>
 						</tr>
 				    </tbody>
 				</table>

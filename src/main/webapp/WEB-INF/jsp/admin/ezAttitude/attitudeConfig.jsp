@@ -53,7 +53,7 @@
 	            		attitudeConfigSet(result);
 	            	},
 	            	error : function() {
-	            		alert("<spring:message code='ezAttitude.kbm3' />");
+	            		alert("<spring:message code='ezAttitude.t175' />");
 	            	}
 	            });
 	        }
@@ -121,11 +121,11 @@
 		            		alert("<spring:message code='ezAttitude.bbhs19' />");
 		            		company_change();
 	            		} else {
-	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
 	            	},
 	            	error : function() {
-	            		alert("<spring:message code='ezAttitude.kbm3' />");
+	            		alert("<spring:message code='ezAttitude.t175' />");
 	            	}
 	            });
 	        }

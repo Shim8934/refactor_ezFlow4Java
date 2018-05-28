@@ -8,10 +8,10 @@
 		<title>
 			<c:choose>
 				<c:when test="${not empty selectedUser }">
-					<spring:message code='ezAttitude.kbm16' />
+					<spring:message code='ezAttitude.t188' />
 				</c:when>
 				<c:otherwise>
-					<spring:message code='ezAttitude.kbm15' />
+					<spring:message code='ezAttitude.t187' />
 				</c:otherwise>
 			</c:choose>
 		</title>
@@ -78,7 +78,7 @@
 	    	var ezattitude_dialogArguments = new Array();
 	    	function selectDept() {
 	    		if (selectedUser == "" || selectedUser == null) {
-	    			alert("<spring:message code='ezAttitude.kbm24' />");
+	    			alert("<spring:message code='ezAttitude.t195' />");
 	    			return;
 	    		}
 	    		
@@ -160,7 +160,7 @@
 	    	//권한 저장
 	    	function saveAuthDept() {
 	    		if (deptIdStr == "" || deptIdStr == null) {
-	    			alert("<spring:message code='ezAttitude.kbm25' />");
+	    			alert("<spring:message code='ezAttitude.t196' />");
 	    			return;
 	    		}
 
@@ -189,11 +189,11 @@
 	   						opener.company_change();
 	   						window.close();
 	            		} else {
-	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
 	            	},
 	   				error : function() {
-	   					alert("<spring:message code='ezAttitude.kbm3' />");
+	   					alert("<spring:message code='ezAttitude.t175' />");
 	   				}
 	   			});
 	   		}
@@ -204,26 +204,26 @@
 	    <h1>
 	    	<c:choose>
 				<c:when test="${not empty selectedUser }">
-					<spring:message code='ezAttitude.kbm16' />
+					<spring:message code='ezAttitude.t188' />
 				</c:when>
 				<c:otherwise>
-					<spring:message code='ezAttitude.kbm15' />
+					<spring:message code='ezAttitude.t187' />
 				</c:otherwise>
 			</c:choose>
 	    </h1>
 	    <table class="content">
 	        <tr>
-	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.kbm27' /></th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t198' /></th>
 	            <td>
 	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:1px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:2px;"><span onclick="select_person()"><spring:message code='ezAttitude.kbm29' /></span></a>                
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:2px;"><span onclick="select_person()"><spring:message code='ezAttitude.t199' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.kbm28' /></th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t190' /></th>
 	            <td style="height: 60px; width: 400px;">
 	                <textarea rows="3" id="txtdept" type="text" style="height: 43px; margin-top:2px; width:77%; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea>
-	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.kbm29' /></span></a>                
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.t199' /></span></a>                
 <!-- 	                <table style="width: 400px;"> -->
 <!-- 	                	<tr> -->
 <!-- 	                		<td> -->
@@ -233,7 +233,7 @@
 <!-- 	                		</td> -->
 <!-- 	                		<td> -->
 <!-- 				                <div style="margin: auto;"> -->
-<%-- 					                <a href="#" class="imgbtn"><span onclick="selectDept()"><spring:message code='ezAttitude.kbm29' /></span></a>                 --%>
+<%-- 					                <a href="#" class="imgbtn"><span onclick="selectDept()">지정</span></a>                 --%>
 <!-- 				                </div> -->
 <!-- 	                		</td> -->
 <!-- 	                	</tr> -->
@@ -247,8 +247,8 @@
             <table class="mainlist" style="width: 100%;">
                 <tr>
                     <th style="width: 50%; padding-left:15px;"><span><spring:message code='ezAttitude.t9' /></span></th>
-                    <th style="width: 25%; text-align: center;"><span><spring:message code='ezAttitude.kbm22' /></span></th>
-                    <th style="width: 25%; text-align: center;"><span><spring:message code='ezAttitude.kbm23' /></span></th>
+                    <th style="width: 25%; text-align: center;"><span><spring:message code='ezAttitude.t193' /></span></th>
+                    <th style="width: 25%; text-align: center;"><span><spring:message code='ezAttitude.t194' /></span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 160px; overflow-y: auto;">

@@ -44,7 +44,7 @@
 	            		useSelect(result);
 	            	},
 	            	error : function() {
-	            		alert("<spring:message code='ezAttitude.kbm3' />");
+	            		alert("<spring:message code='ezAttitude.t175' />");
 	            	}
 	            });
 	        }
@@ -55,9 +55,9 @@
 	                for (var i = 0; i < result.length; i++) {
 	                    var gubun = "";
 	                    if (result[i].isAdd == "0") {
-	                    	gubun = "<spring:message code='ezAttitude.kbm7' />";
+	                    	gubun = "<spring:message code='ezAttitude.t179' />";
 	                    } else {
-	                    	gubun = "<spring:message code='ezAttitude.kbm8' />";
+	                    	gubun = "<spring:message code='ezAttitude.t180' />";
 	                    }
 	                    html += "<tr id='" + result[i].typeId + "' onclick='listClick(this);' ondblclick='dbclick(this);' style='cursor:pointer;' isAdd='" + result[i].isAdd + "'>";
 	                    html += "<td style='width:110px;color:gray;border-left:1px solid #e2e2e1;padding-left:15px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;' title='" + result[i].typeName + "'>" + result[i].typeName + "</td>";
@@ -107,11 +107,11 @@
 	            		if (resultStatus == "success") {
 		            		alert("<spring:message code='ezAttitude.bbhs19' />");
 	            		} else {
-	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
 	            	},
 	            	error : function() {
-	            		alert("<spring:message code='ezAttitude.kbm3' />");
+	            		alert("<spring:message code='ezAttitude.t175' />");
 	            	}
 	            });
 	            
@@ -145,16 +145,16 @@
 	        //유형 삭제
 	        function del_type() {
 	        	if (selectTypeId == null || selectTypeId == "") {
-	        		alert("<spring:message code='ezAttitude.kbm9' />");
+	        		alert("<spring:message code='ezAttitude.t181' />");
 	        		return;
 	        	}
 	        	
 	        	if (isAdd == 0) {
-	        		alert("<spring:message code='ezAttitude.kbm10' />");
+	        		alert("<spring:message code='ezAttitude.t182' />");
 	        		return;
 	        	}
 	        	
-	        	if (confirm("<spring:message code='ezAttitude.kbm11' />")) {
+	        	if (confirm("<spring:message code='ezAttitude.t183' />")) {
 					$.ajax({
 						type : "POST",
 						url : "/admin/ezAttitude/deleteAttitudeType.do",
@@ -165,13 +165,13 @@
 						},
 						success : function(result) {
 							if (result == "false") {
-								alert("<spring:message code='ezAttitude.kbm12' />");
+								alert("<spring:message code='ezAttitude.t184' />");
 							} else {
 								company_change();
 							}
 						},
 						error : function() {
-							alert("<spring:message code='ezAttitude.kbm3' />");
+							alert("<spring:message code='ezAttitude.t175' />");
 						}
 					})
 	        	}
@@ -180,7 +180,7 @@
 	        //수정버튼
 	        function mod_type() {
 	        	if (selectTypeId == null || selectTypeId == "") {
-	        		alert("<spring:message code='ezAttitude.kbm9' />");
+	        		alert("<spring:message code='ezAttitude.t181' />");
 	        		return;
 	        	}
 // 	        	if (isAdd == 0) {
@@ -233,9 +233,9 @@
 	      		</li>
 	      	</ul>
 	      	<ul>
-	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.kbm4' /></span></li>
-	      		<li><span onclick="mod_type()"><spring:message code='ezAttitude.kbm5' /></span></li>
-	      		<li><span onclick="del_type()"><spring:message code='ezAttitude.kbm6' /></span></li>
+	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t176' /></span></li>
+	      		<li><span onclick="mod_type()"><spring:message code='ezAttitude.t177' /></span></li>
+	      		<li><span onclick="del_type()"><spring:message code='ezAttitude.t178' /></span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
@@ -247,7 +247,7 @@
             	<thead>
                  <tr>
                      <th style="width: 110px;padding-left:15px;border-left:1px solid #e2e2e1;"><span><spring:message code='ezAttitude.t35' /></span></th>
-                     <th style="width: 110px;text-align: center;"><span><spring:message code='ezAttitude.kbm13' /></span></th>
+                     <th style="width: 110px;text-align: center;"><span><spring:message code='ezAttitude.t185' /></span></th>
                      <th style="width: 90px;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
                      <th style="text-align: center;border-right:1px solid #e2e2e1;"><span><spring:message code='ezAttitude.t37' /></span></th>
                  </tr>
