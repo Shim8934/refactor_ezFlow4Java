@@ -85,8 +85,15 @@ public class EzPMSGWController2 {
 			SearchVO search = new SearchVO();
 			search.setTenantId(info.getTenantId());
 			search.setProjectId(projectId);
-			search.setMemberId(request.getParameter("headManagerName"));
 			search.setStatus(request.getParameter("status"));
+			
+			 if (request.getParameter("groupId") != null) {
+				 search.setGroupId(Long.parseLong(request.getParameter("groupId"))); 
+			 } else {
+				 search.setGroupId(0L);
+			 }
+			
+			search.setMemberId(request.getParameter("headManagerName"));
 			search.setIsMyTask(request.getParameter("isMyTask"));
 			search.setTenantId(tenantId);
 
@@ -462,7 +469,7 @@ public class EzPMSGWController2 {
 			String location = request.getParameter("location");
 			int tenantId = info.getTenantId();
 			
-			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Long.parseLong(projectId), request.getParameter("onlyGroup"), location, tenantId);
+			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Long.parseLong(projectId), request.getParameter("onlyGroup"), location, tenantId, userId);
 			
 			LOGGER.debug(list.get(0).getText());
 			

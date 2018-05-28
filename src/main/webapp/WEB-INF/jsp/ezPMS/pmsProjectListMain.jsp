@@ -722,11 +722,6 @@ function addFavorite() {
 
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {
-	
-	if (event.target.className == "Mail_Input") {
-		return;
-	}
-	
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (!event) event = window.event;
     }

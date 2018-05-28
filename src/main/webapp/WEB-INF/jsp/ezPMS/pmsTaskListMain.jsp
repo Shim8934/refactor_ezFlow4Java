@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="/css/ezPMS/default/style.min.css"
+<link rel="stylesheet" href="/css/ezPMS/default/style.css"
 	type="text/css" />
 <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -17,45 +17,291 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
 	var projectId = "${projectId}";
-	var containerId = "test";
+	var CurrentHeight = document.documentElement.clientHeight - 100;
+	var taskData = JSON.parse('${data}');
+	var groupId = 0;
+	var currentPage = 1;
+	var totalCount = "${taskListCount}";
+	var orderWhat = "";
+	var orderHow = "";
+	var searchByStatus = "";
 	
-	function goAddTask(){
+	function goAddTask() {
 		var top = ($(window).height() - $(this).outerHeight()) / 2;
-	    var left = ($(window).width() - $(this).outerWidth()) / 2;
+		var left = ($(window).width() - $(this).outerWidth()) / 2;
 		var feature = GetOpenPosition(top, left);
-	 
-		DivPopUpShow(845, 555, "/ezPMS/goAddTask.do?projectId="+projectId);
+
+		DivPopUpShow(845, 555, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	};
-	
-	$(document).ready(function() {
-		getProjectTaskTree(containerId, projectId, false);
+
+	$(function() {
+		getProjectTaskTree("taskTree", taskData, "taskList");
+
+		CurrentHeight = $(window).height() - 100;
+		$("MailListRayer").css("height", CurrentHeight + "px");
+		$("#taskTree").css("height", CurrentHeight + "px");
+		$("#projectContent").css("height", CurrentHeight + "px");
+		$("#contentList").css("height", (CurrentHeight - 100) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
+		$("#divList").css("height", (CurrentHeight - 150) + "px");
 	});
+
+	$(document).ready(function() {
+		$(window).resize(function() {
+			CurrentHeight = $(window).height() - 100;
+			$("#taskTree").css("height", CurrentHeight + "px");
+			$("#projectContent").css("height", CurrentHeight + "px");
+			$("#contentList").css("height", (CurrentHeight - 100) + "px");
+			$("#divList").css("height", (CurrentHeight - 150) + "px");
+			$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
+		});
+
+	});
+
+	function setContentList() {
+		if (searchByStatus == "") {
+			searchByStatus = "A";
+		}
+		
+		var data = {
+			//기본 setting
+			projectId : projectId,
+			groupId : groupId,
+			currentPage : currentPage,
+			totalCount : totalCount,
+			listNumber : 10,
+			//내용 header 정렬
+			orderWhat : orderWhat,
+			orderHow : orderHow,
+			//검색
+			status : searchByStatus
+		}
+
+		$.ajax({
+			type : "post",
+			contentType : "application/json; charset=UTF-8",
+			dataType : "html",
+			data : JSON.stringify(data),
+			url : "/ezPMS/getProjectTaskList.do",
+			success : function(contentList) {
+				$("#contentList").html(contentList);
+				//찾아 준 후 초기화
+				setInitOrder();
+			}
+		});
+	}
+
+	function setInitOrder() {
+		$("#BoardList_TH th").each(function() {
+				if (orderWhat == $(this).attr("order")) {
+					if (orderHow == 'asc') {
+						$(this).attr("sort", "asc");
+						$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
+					} else if (orderHow == 'desc') {
+						$(this).attr("sort", "desc");
+						$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
+					}
+				}
+		});
+
+		projectListScroll();
+	}
+
+	function projectListScroll() {
+		var thWidth = document.getElementById("tableHeader").clientWidth
+				- document.getElementById("tableBody").clientWidth;
+		if (thWidth > 0) {
+			$("#BoardList_TH").append('<th style=width:2px;></th>');
+		}
+	}
+
+	function selectedTR(elem) {
+		var parentElem = $(elem).parent();
+		$("#tableBody tr").removeClass("selectTR");
+		$("#tableBody tr").find("input[type='checkbox']").removeProp("checked");
+		$(parentElem).addClass("selectTR");
+		$(parentElem).find("input[type='checkbox']").prop("checked","true");
+	}
+
+	//체크박스 전체선택 혹은 해제
+	function selectedAllTR(elem) {
+		if ($(elem).is(":checked")) {
+			 $('input:checkbox[name="boardCheckbox"]').each(function() {
+				 $(this).prop("checked","true");
+				 $(this).parent().parent().addClass("selectTR");
+			 });
+		} else {
+			 $('input:checkbox[name="boardCheckbox"]').each(function() {
+				 $(this).removeProp("checked","true");
+				 $(this).parent().parent().removeClass("selectTR");
+			 });
+		}
+	}
 	
+	function checkedCheckbox(elem) {
+		var selectRow = '' + elem;
+		
+		if (selectRow.indexOf("TableCell") == -1) {
+			if ($(elem).is(":checked")) {
+				$(elem).prop("checked","true");
+				$(elem).parent().parent().addClass("selectTR");
+			} else {
+				$(elem).removeProp("checked");
+				$(elem).parent().parent().removeClass("selectTR");
+			}
+		} else {
+			if (!$(elem).parent().find("input:checkbox[name='boardCheckbox']").is(":checked")) {
+				$(elem).parent().find("input:checkbox[name='boardCheckbox']").prop("checked","true");
+				$(elem).parent().addClass("selectTR");
+			} else {
+				$(elem).parent().find("input:checkbox[name='boardCheckbox']").removeProp("checked");
+				$(elem).parent().removeClass("selectTR");
+			}
+		}
+	}
 	
-	
+	//페이지 번호에 의한 셋팅
+	function goToPageByNum(page) {
+		currentPage = page;
+		setContentList();
+	}
+
+	//헤더 리스트 셋팅
+	function setListOrder(elem) {
+
+		orderWhat = $(elem).attr("order");
+		orderHow = $(elem).attr("sort");
+
+		if (orderHow == null) {
+			orderHow = 'asc';
+		} else if (orderHow == 'asc') {
+			orderHow = 'desc';
+		} else if (orderHow == 'desc') {
+			orderHow = 'asc';
+		}
+
+		setContentList();
+	}
+
+	function setContentTitle(taskName, contentCount) {
+		var contentTitle = "";
+
+		if (!totalCount) {
+			totalCount = 0;
+		} else {
+			totalCount = contentCount;
+		}
+
+		contentTitle = taskName + "<span id='totalCount'> - [총 " + contentCount
+				+ " 개]</span>";
+
+		$("#taskName").html(contentTitle);
+	}
+	 
+	function searchStatus(status) {
+		searchByStatus = status;
+		setContentList();
+	}
 </script>
 <style>
-
-.tree {
+#taskTree {
+	margin-right: 5px;
+	width: 16%;
 	overflow: auto;
-	border: 1px solid silver;
-	height: auto;
-	width : 250px;
+	border: 1px solid #d1d1d1;
+	float: left;
+	display: inline-block
+}
+
+#projectContent {
+	width: 83%;
+	overflow: auto;
+	border: 1px solid #d1d1d1;
+}
+
+#taskName {
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+#contentList {
+	width: 98%;
+	margin-left: 1%;
+}
+
+#iconLine {
+	height: 72px;
+	margin-left: 10px;
+	margin-top: 5px;
+}
+
+#icons {
+	margin-top: 21px;
+}
+
+#MailListRayer tr:not (.selectTR ):hover {
+	background-color: rgb(244, 245, 245);
+}
+
+#basicFormList td:not (.selectTD ):hover {
+	background-color: rgb(244, 245, 245);
+}
+
+.selectTR {
+	background-color: rgb(233, 241, 255);
+}
+#icons div{
+	float : right;
+	margin-right: 10px;
+	height: 23px;
+	font-size : 12px;
+}
+
+#icons div select {
+	width : 66px;
+}
+
+.listRow:hover {
+	background-color: rgb(233, 241, 255);
 }
 </style>
 </head>
-<body style="overflow:hidden;">
-	<div id="mainmenu">
-		<ul class="on">
-			<li class="off"><span onclick="goAddTask()">업무 추가</span></li>
-			<li class="off"><span onclick="">삭제</span></li>
-			<li class="off"><span onclick="">검색</span></li>
-		</ul>
+<div id="taskTree"></div>
+<div id="projectContent">
+	<div id="iconLine">
+		<div id="taskName"></div>
+		<div id="icons">
+			<a class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
+				style="margin-left: 1px; margin-top: 1px;"><span>새업무 추가</span></a> <a
+				class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
+				style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a> <a
+				class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
+				style="margin-left: 1px; margin-top: 1px;"><span>검색</span></a>
+				<div>
+				업무 상태별 보기 <select id="searchStatus" onchange="searchStatus(this.value)">
+					<option value="A">전체</option>
+					<option value="P">진행</option>
+					<option value="W">대기</option>
+					<option value="C">완료</option>
+					<option value="L">지연</option>
+					<option value="S">보류</option>
+				</select>
+				</div>
+		</div>
 	</div>
-	<div id="test" class="tree"></div>
-	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
-	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+	<div id="contentList" style="overflow: auto">
+		<span id="MailListRayer"
+			style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+		</span>
 	</div>
+</div>
+<div
+	style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.4); display: none;"
+	id="mailPanel">&nbsp;</div>
+<div class="layerpopup"
+	style="z-index: 2000; position: absolute; display: none;"
+	id="iFramePanel">
+	<iframe src="/blank_kr.htm" style="border: none;" id="iFrameLayer"></iframe>
+</div>
 </body>
 </html>

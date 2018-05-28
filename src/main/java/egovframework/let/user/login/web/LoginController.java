@@ -417,7 +417,7 @@ public class LoginController {
         // 사용자가 입력한 암호가 맞지 않는 경우
         } else {     	
         	//Check login state of the user 
-        	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);        
+        	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
 
         	switch (check) {
 				case -3: 
@@ -429,6 +429,8 @@ public class LoginController {
 	        		ezCommonService.insertUserConfigInfo(tenantId,  _uid, "LoginFailCount", "1");
 	        		//Show warning message
 	            	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {1, numberOfLoginFailPermit}, locale));
+	            	/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가 */
+	            	model.addAttribute("isWrongPass", "Y");
 	            	return "forward:/user/login/login.do";
         		case -1:
         			//Show normal login fail message
@@ -445,6 +447,7 @@ public class LoginController {
         			} else {
             			//Show warning message
                     	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {check + 1, numberOfLoginFailPermit}, locale));
+                    	model.addAttribute("isWrongPass", "Y");
                     	return "forward:/user/login/login.do";
         			}
         	}

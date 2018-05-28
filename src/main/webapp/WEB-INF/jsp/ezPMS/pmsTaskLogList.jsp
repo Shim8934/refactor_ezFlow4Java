@@ -18,16 +18,24 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 var contentTitle = $(".jstree-clicked").text();
 
 $(function() {
-	$("#divList").css("height", (CurrentHeight - 100) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 120) + "px");
+	$("#divList").css("height", (CurrentHeight - 150) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
 	
 	if (contentTitle == "") {
 		var treeItemId = $("li[role=treeitem]").attr("id");
 		contentTitle = $("#" + treeItemId + "_anchor").text();
-		contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
+		
+		if (contentTitle.indexOf("(") != -1) {
+			contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
+		}
+		
 		setContentTitle(contentTitle, "${taskLogListCount}");
 	} else {
-		contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
+		
+		if (contentTitle.indexOf("(") != -1) {
+			contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
+		}
+		
 		setContentTitle(contentTitle, "${taskLogListCount}");
 	}
 });

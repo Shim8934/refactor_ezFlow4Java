@@ -2077,10 +2077,17 @@ public class EzEmailUtil {
 		if (src.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
+			
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				dest.addBodyPart(p);										
+				// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/mixed 파트가
+				// 또 들어 있는 경우가 있어 추가함.
+				if (p.isMimeType("multipart/mixed")) {
+					copyAllPartsInMultipart(p, dest);
+				} else {
+					dest.addBodyPart(p);
+				}
 			}
 			
 			return true;

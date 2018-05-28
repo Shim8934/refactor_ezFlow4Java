@@ -353,7 +353,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 					break;
 				}
 				
-				kanbanHTML += "<div id='" + taskList[i].taskId + "' class='card' onclick='getTaskDetails(this)'>";
+				kanbanHTML += "<div id='" + targetPosition + taskList[i].taskId + "' class='card' onclick='selectedTR(this)' ondblclick='getTaskDetails(this)'>";
 				kanbanHTML += "<h5>" + taskList[i].taskName + "</h5>";
 				kanbanHTML += "<div class='progressArea" + taskList[i].taskId + "'></div>";
 				kanbanHTML += "<div style='float:left'><span style='border:1px solid black'>start</span>" + taskList[i].planStartDate + "</div><br>";
@@ -361,7 +361,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				kanbanHTML += "<div class='taskStatus' style='background-color:" + statusColor + "'>" + taskStatus + "</div></div>";
 				kanbanHTML += "</div>";
 			} else {
-				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='card' onclick='getBoardDetails(this)'>";
+				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='card' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
 				kanbanHTML += "<h5>" + taskList[i].title + "</h5>";
 				kanbanHTML += "<div class='boardContent'>" + taskList[i].writeContent + "</div>";
 				kanbanHTML += "</div>"
@@ -410,13 +410,20 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 		}
 		
 		var targetStatus = $("#" + targetPosition).attr("name");
-		var position = targetPosition;
 		var startRow = $("#" + targetPosition).find(".card").length;
 		
 		if (taskList.length >= 10) {
 			$("#" + targetPosition).append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")' style='border:1px solid black; background-color:white; text-align:center;'><span>더보기</span></div>");
 		}
 	}
+}
+
+function selectedTR(elem){
+	var selectElem = elem.id;
+	console.log(selectElem);
+	console.log(elem);
+	$(".card").removeClass("selectTR");
+	$("#" + selectElem).addClass("selectTR");
 }
 
 function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
@@ -437,9 +444,9 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 		url : "/ezPMS/getTaskList.do",
 		data :JSON.stringify(data),
 		success : function(result) {
+			$("#" + targetPosition).attr("name", targetStatus);
 			setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType);
 			
-			$("#" + targetPosition).attr("name", targetStatus);
 			var title = "";
 			
 			if (targetStatus.indexOf("M") != -1) {
@@ -471,7 +478,7 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 			}
 			
 			if (targetStatus.indexOf("M") == -1) {
-				$("#" + targetPosition).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"M" + targetStatus + "\", \""+ targetPosition +"\", 0, \"new\")'>MY!</span>");	
+				$("#" + targetPosition).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"M" + targetStatus + "\", \""+ targetPosition +"\", 0, \"new\")'>MY!</span>");
 			} else if (targetStatus.indexOf("B") == -1) {
 				$("#" + targetPosition).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"" + targetStatus.slice(-1) + "\", \""+ targetPosition +"\", 0, \"new\")'>MY!</span>");
 			} else {
@@ -568,6 +575,11 @@ function setOverviewContent() {
 		}
 	})
 }
+
+function getBoardDetails(elem) {
+	var itemId = elem.id.slice(1);
+	window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
+}
 </script>
 <style type="text/css">
 #kanbanArea {
@@ -648,6 +660,10 @@ function setOverviewContent() {
 .percentCount {
 	width : 20%;
 	padding-left : 5px;
+}
+
+.selectTR {
+	background-color: rgb(233, 241, 255);
 }
 </style>
 </head>

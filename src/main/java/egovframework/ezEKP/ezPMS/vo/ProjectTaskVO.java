@@ -109,6 +109,9 @@ public class ProjectTaskVO {
     
     // 업무 멤버
     private List<TaskMemberVO> taskMember;
+    
+    //그룹이름
+    private String groupName;
 
     public Long getTaskId() {
         return taskId;
@@ -388,6 +391,14 @@ public class ProjectTaskVO {
 
 	public void setTaskMember(List<TaskMemberVO> taskMember) {
 		this.taskMember = taskMember;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
     
 }

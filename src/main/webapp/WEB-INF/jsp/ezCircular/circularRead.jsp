@@ -35,6 +35,7 @@
 				text-decoration: underline;
 				cursor: pointer;
 			}
+			
 		</style>
 		
 		<script type="text/javascript" >
@@ -70,6 +71,7 @@
 // 				document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 			};
 			
+			/* 18-05-25 김민성 - 회람판 > 회람 상세정보 회람확인 시 창 새로고침 되도록 수정 */
 			function circularConfirm() {
 				if(!confirm("<spring:message code='ezCircular.t196' />")) {
 					return;
@@ -83,7 +85,8 @@
 						circularID : circularID
 					},
 					success : function(result) {
-						getConfirmStatus();
+						//getConfirmStatus();
+						window.location.reload();
 						window.opener.getLeftCount();
 						window.opener.refresh_onclick();
 					},error : function(jqXHR, textStatus, errorThrown) {
@@ -97,6 +100,8 @@
 				$("#circularConfirm").hide();
 				
 				$(".confirmStatus").html(confirmStatus);
+				
+				$("#circular_bar").hide();
 			}
 			
 			function getCommentCount() {
@@ -430,6 +435,7 @@
 	</style>
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
+ 	<!-- 18-05-25 김민성 - 회람판 조회 상단 부분 수정 및 확인자정보 추가 -->
 	<body id="mainbodytag" class="popup">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -442,10 +448,12 @@
                 	    <ul>
                 	    	<c:if test="${result.confirmStatus == '0' && result.status == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t195' /></span></li>
+								<li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" class="off"><img src="/images/i_bar.gif" ></li>
                 	    	</c:if>
                 	    	
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
-	                        <li style="background:none; padding-right:2px;margin-left:3px" class="off"><img src="/images/ImgIcon/circular_bar.gif"></li>
+	                        
+	                        <!-- <li><span id=checkList">확인자정보</span></li> -->
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
 		                        <li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
@@ -470,6 +478,8 @@
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  			</script>
             	    
+            	    <!-- 18-05-24 김민성 - 회람판 > 회람 본문 작성일 단어 등록일로 수정 -->
+            	    
 					<table class="content" style="width:100%;">
 	                    <tr>
     	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
@@ -478,7 +488,7 @@
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
 	       					<td style="padding-left: 4px;" ><div id="writer"  onclick="OpenUserInfo()" style="vertical-align: middle; cursor: pointer;"> ${result.memberName }</div></td>
-							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t33' /></th> 
+							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezBoard.t5007' /></th> 
  							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
 						</tr>
                     	<tr>
@@ -606,7 +616,8 @@
 	        	</td>
         	</tr>
 		</table>
-
+		
+		<!-- 18-05-24 김민성 - 회람 인쇄 시 작성일 > 등록일로 수정 -->
 		<table id="printScreen" style="display: none;">
 			<tr style="text-align:center">
 				<td style="vertical-align:top">
@@ -624,7 +635,7 @@
 	       					<td style="padding-left: 4px;">								
 	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
-							<th style="padding-left:10px"><spring:message code='ezCircular.t33' /></th> 
+							<th style="padding-left:10px"><spring:message code='ezBoard.t5007' /></th> 
  							<td style="padding-left:6px">
  								<div id="printStatus">${result.regDate }</div>
  							</td> 

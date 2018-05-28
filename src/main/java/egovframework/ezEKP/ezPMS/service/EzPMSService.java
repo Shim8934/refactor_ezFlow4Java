@@ -54,7 +54,7 @@ public interface EzPMSService {
 	
 	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang);
 	
-	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId, String userId);
+	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId, String userId, long groupId);
 	
 	public int getTaskLogListCount(TaskLogListVO taskLog, int tenantId);
 	
@@ -90,7 +90,7 @@ public interface EzPMSService {
 	
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String userIdType);
 	
-	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup, String location, int tenantId);
+	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup, String location, int tenantId, String userId);
 
 	public List<ProjectUserVO> getDeptUserList(int tenantId, String key, String value, String lang) throws Exception;
 
