@@ -140,6 +140,7 @@
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
 	    var pDocID = "${docID}";
+	    var orgCompanyID = "${orgCompanyID}";
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFontAndSize = "${defaultFontAndSize}";

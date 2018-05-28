@@ -1178,7 +1178,8 @@ function getApprovInfo() {
 	 			async : false,
 	 			url : "/ezApprovalG/getLineMode.do",
 	 			data : {
-	 					docID : pDocID
+	 					docID : pDocID,
+	 					orgCompanyID : pCompanyID
 	 					},
 	 			success: function(xml){
 	 				if (xml == "END") {
@@ -3551,7 +3552,8 @@ function getNextDocInfo() {
     		data : {
     			docID : pDocID,
     			userID  : pUserID,
-    			userDeptID  : arr_userinfo[4]
+    			userDeptID  : arr_userinfo[4],
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -3577,6 +3579,8 @@ function getNextDocInfo() {
             NextDocAprType = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRTYPE"));
             NextDocHref = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "HREF"));
             NextDocExtended = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "EXTENDEDNAME"));
+            pCompanyID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "COMPANYID"));
+            orgCompanyID = pCompanyID;
         }
     } catch (e) { }
 }
