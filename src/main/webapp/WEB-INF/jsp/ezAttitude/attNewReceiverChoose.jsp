@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>근태입력대상 설정</title>
+	    <title><spring:message code='ezAttitude.t109'/></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -685,7 +685,7 @@
 	                    var strName = document.getElementById(listContentArry[0]).getAttribute("_data10");
 	                }
 	                else {
-	                    alert("근태입력대상을 선택해주세요.");
+	                    alert("<spring:message code='ezAttitude.t110'/>");
 	                    return;
 	                }
 	            }
@@ -3341,7 +3341,7 @@
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-	    <h1 id="h1Title">근태입력대상 설정</h1>
+	    <h1 id="h1Title"><spring:message code='ezAttitude.t109'/></h1>
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
