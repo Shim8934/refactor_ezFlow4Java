@@ -214,7 +214,7 @@ CREATE TABLE `jmocha_address_folder` (
   `folder_type` char(1) DEFAULT NULL,
   `folder_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`folder_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -268,7 +268,7 @@ CREATE TABLE `jmocha_address_info` (
   `s_type` char(1) DEFAULT NULL,
   PRIMARY KEY (`address_id`),
   KEY `owner_id` (`owner_id`,`s_email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3115 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -302,7 +302,7 @@ CREATE TABLE `jmocha_address_simple` (
   `simple_email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`simple_idx`),
   KEY `user_id_index` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -427,7 +427,7 @@ CREATE TABLE `jmocha_inbox_rule` (
   `PRIORITY` int(11) NOT NULL,
   PRIMARY KEY (`RULE_ID`),
   KEY `idx_jmocha_inbox_rule_USER_ID` (`USER_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=266 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -446,7 +446,7 @@ CREATE TABLE `jmocha_inbox_rule_sub` (
   PRIMARY KEY (`ITEM_ID`),
   KEY `RULE_ID_idx` (`RULE_ID`),
   CONSTRAINT `RULE_ID` FOREIGN KEY (`RULE_ID`) REFERENCES `jmocha_inbox_rule` (`RULE_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=652 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -490,7 +490,7 @@ DROP TABLE IF EXISTS `jmocha_letterbox`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_letterbox` (
-  `letterbox_no` int(11) NOT NULL,
+  `letterbox_no` int(11) NOT NULL AUTO_INCREMENT,
   `parent_letterbox_no` int(11) DEFAULT NULL,
   `displayname` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
   `displayname2` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -625,7 +625,7 @@ CREATE TABLE `jmocha_mail_pop3` (
   `ssl_yn` int(11) DEFAULT NULL,
   PRIMARY KEY (`pop3_idx`),
   KEY `pop3_index` (`user_id`,`pop3_server`,`pop3_user_id`(255))
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -675,7 +675,7 @@ CREATE TABLE `jmocha_mail_recall` (
   `recall_date` datetime DEFAULT NULL,
   PRIMARY KEY (`recall_idx`),
   KEY `recall_message_id_index` (`message_id`,`sender_email`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -731,7 +731,7 @@ CREATE TABLE `jmocha_mail_secure` (
   PRIMARY KEY (`secure_id`),
   KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`),
   CONSTRAINT `fk_mail_secure` FOREIGN KEY (`mailbox_id`, `mail_uid`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -906,7 +906,7 @@ CREATE TABLE `jmocha_stat_mail_log` (
   KEY `IDX_TENANT_ID` (`TENANT_ID`),
   KEY `IDX_LOG_DATE` (`LOG_DATE`),
   KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`)
-) ENGINE=InnoDB AUTO_INCREMENT=489292 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2173,6 +2173,212 @@ CREATE TABLE `tbl_attendant` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_attitude`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude` (
+  `ATTITUDE_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WRITER_ID` varchar(80) NOT NULL,
+  `DEPT_ID` varchar(80) NOT NULL,
+  `START_DATE` datetime DEFAULT NULL,
+  `END_DATE` datetime DEFAULT NULL,
+  `MODAPPL` char(1) DEFAULT '0',
+  `REGION` varchar(200) DEFAULT NULL,
+  `MOBILE` varchar(50) DEFAULT NULL,
+  `BIZSUB` varchar(120) DEFAULT NULL,
+  `CONTENT` varchar(3000) DEFAULT NULL,
+  `IP` varchar(60) DEFAULT NULL,
+  `DATE_TYPE` char(1) NOT NULL,
+  `TYPE_ID` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`ATTITUDE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_auth`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_auth` (
+  `user_id` varchar(80) NOT NULL,
+  `tenant_id` mediumint(5) NOT NULL,
+  `auth_dept_id` varchar(80) NOT NULL,
+  `company_id` varchar(80) DEFAULT NULL,
+  `auth_type` varchar(10) NOT NULL DEFAULT 'R',
+  PRIMARY KEY (`user_id`,`tenant_id`,`auth_dept_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_conf`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_conf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_conf` (
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WORK_STARTTIME` varchar(40) NOT NULL DEFAULT '09:00',
+  `WORK_ENDTIME` varchar(40) NOT NULL DEFAULT '18:00',
+  `CLOSED_DAY` varchar(30) NOT NULL DEFAULT '1,0,0,0,0,0,1',
+  `ATTITUDE_MOD_APPL` char(1) NOT NULL DEFAULT '1',
+  `CLOSED_DATE_ATTITUDE` char(1) NOT NULL DEFAULT '1',
+  `CONF_SET_DATE` date NOT NULL,
+  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_form`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_form`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_form` (
+  `FORM_ID` int(11) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `FORM_NAME` varchar(80) DEFAULT NULL,
+  `FORM_NAME2` varchar(80) DEFAULT NULL,
+  `FORM_HTML` varchar(3000) DEFAULT NULL,
+  PRIMARY KEY (`FORM_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_modappl`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_modappl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_modappl` (
+  `ATTITUDE_ID` bigint(20) NOT NULL,
+  `APPL_CNT` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WRITER_ID` varchar(80) NOT NULL,
+  `WRITER_NAME` varchar(100) DEFAULT NULL,
+  `WRITER_NAME2` varchar(100) DEFAULT NULL,
+  `WRITER_TITLE` varchar(200) DEFAULT NULL,
+  `WRITER_TITLE2` varchar(200) DEFAULT NULL,
+  `WRITER_DEPT_ID` varchar(80) NOT NULL,
+  `WRITER_DEPT_NAME` varchar(100) DEFAULT NULL,
+  `WRITER_DEPT_NAME2` varchar(100) DEFAULT NULL,
+  `ORIGIN_DATE` datetime NOT NULL,
+  `CHANGE_DATE` datetime NOT NULL,
+  `DELFLAG` char(1) DEFAULT '0',
+  `APPR_USER_ID` varchar(80) DEFAULT NULL,
+  `APPR_DATE` datetime DEFAULT NULL,
+  `APPR_STATUS` char(1) DEFAULT '0',
+  `CONTENT` varchar(3000) DEFAULT NULL,
+  `APPR_USER_NAME` varchar(100) DEFAULT NULL,
+  `APPR_USER_NAME2` varchar(100) DEFAULT NULL,
+  `APPL_DATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`ATTITUDE_ID`,`APPL_CNT`,`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_modappl_history`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_modappl_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_modappl_history` (
+  `ATTITUDE_ID` bigint(20) DEFAULT NULL,
+  `MOD_CNT` int(11) NOT NULL AUTO_INCREMENT,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WRITER_ID` varchar(80) NOT NULL,
+  `WRITER_NAME` varchar(100) DEFAULT NULL,
+  `WRITER_NAME2` varchar(100) DEFAULT NULL,
+  `WRITER_TITLE` varchar(200) DEFAULT NULL,
+  `WRITER_TITLE2` varchar(200) DEFAULT NULL,
+  `WRITER_DEPT_ID` varchar(80) NOT NULL,
+  `WRITER_DEPT_NAME` varchar(100) DEFAULT NULL,
+  `WRITER_DEPT_NAME2` varchar(100) DEFAULT NULL,
+  `ORIGIN_STARTDATE` datetime DEFAULT NULL,
+  `ORIGIN_ENDDATE` datetime DEFAULT NULL,
+  `CHANGE_STARTDATE` datetime DEFAULT NULL,
+  `CHANGE_ENDDATE` datetime DEFAULT NULL,
+  `APPR_USER_ID` varchar(80) NOT NULL,
+  `APPR_USER_NAME` varchar(100) DEFAULT NULL,
+  `APPR_USER_NAME2` varchar(100) DEFAULT NULL,
+  `APPR_DATE` datetime DEFAULT NULL,
+  `ORIGIN_CONTENT` varchar(3000) DEFAULT NULL,
+  `CHANGE_CONTENT` varchar(3000) DEFAULT NULL,
+  `ORIGIN_REGION` varchar(200) DEFAULT NULL,
+  `ORIGIN_MOBILE` varchar(50) DEFAULT NULL,
+  `ORIGIN_BIZSUB` varchar(120) DEFAULT NULL,
+  `ORIGIN_IP` varchar(60) DEFAULT NULL,
+  `ORIGIN_TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `CHANGE_REGION` varchar(200) DEFAULT NULL,
+  `CHANGE_MOBILE` varchar(50) DEFAULT NULL,
+  `CHANGE_BIZSUB` varchar(120) DEFAULT NULL,
+  `CHANGE_IP` varchar(60) DEFAULT NULL,
+  `CHANGE_TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `ORIGIN_TYPE_NAME` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `ORIGIN_TYPE_NAME2` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `CHANGE_TYPE_NAME` varchar(45) DEFAULT NULL,
+  `CHANGE_TYPE_NAME2` varchar(45) DEFAULT NULL,
+  `ORIGIN_DATE_TYPE` varchar(45) DEFAULT NULL,
+  `CHANGE_DATE_TYPE` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`MOD_CNT`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_type`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_type` (
+  `TYPE_ID` varchar(30) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `TYPE_NAME` varchar(120) NOT NULL,
+  `TYPE_NAME2` varchar(120) NOT NULL,
+  `ISUSE` char(1) NOT NULL DEFAULT '1',
+  `IMG_PATH` varchar(400) DEFAULT NULL,
+  `PARENT_ID` varchar(30) DEFAULT NULL,
+  `FORM_ID` int(11) NOT NULL,
+  `ISADD` char(1) NOT NULL DEFAULT '0',
+  `ISDEL` char(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`TYPE_ID`,`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_user_conf`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_user_conf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_user_conf` (
+  `USER_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WORK_STARTTIME` varchar(40) NOT NULL,
+  `WORK_ENDTIME` varchar(40) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `DEPT_ID` varchar(80) NOT NULL,
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_audio_visualrecexinfo`
 --
 
@@ -2845,7 +3051,7 @@ CREATE TABLE `tbl_c_clubguest` (
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
   PRIMARY KEY (`NO`),
   UNIQUE KEY `IDX_TBL_C_CLUBGUEST` (`TENANT_ID`,`NO`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3023,7 +3229,7 @@ CREATE TABLE `tbl_c_pollanswer` (
   `TENANT_ID` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ANSWERID`),
   UNIQUE KEY `PK_TBL_C_POLLANSWER` (`TENANT_ID`,`ANSWERID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3046,7 +3252,7 @@ CREATE TABLE `tbl_c_pollmanager` (
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
   PRIMARY KEY (`MANAGERID`),
   UNIQUE KEY `IDX_TBL_C_POLLMANAGER` (`TENANT_ID`,`MANAGERID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3067,7 +3273,7 @@ CREATE TABLE `tbl_c_pollquestion` (
   `TENANT_ID` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`QUESTIONID`),
   UNIQUE KEY `IDX_TBL_C_POLLQUESTION` (`TENANT_ID`,`QUESTIONID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3092,7 +3298,7 @@ CREATE TABLE `tbl_c_pollresponse` (
   KEY `FK_TBL_C_POLLRESPONSE2_idx` (`TENANT_ID`,`ANSWERID`),
   CONSTRAINT `FK_TBL_C_POLLRESPONSE1` FOREIGN KEY (`TENANT_ID`, `QUESTIONID`) REFERENCES `tbl_c_pollquestion` (`TENANT_ID`, `QUESTIONID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_TBL_C_POLLRESPONSE2` FOREIGN KEY (`TENANT_ID`, `ANSWERID`) REFERENCES `tbl_c_pollanswer` (`TENANT_ID`, `ANSWERID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3284,7 +3490,7 @@ CREATE TABLE `tbl_circular` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3302,7 +3508,7 @@ CREATE TABLE `tbl_circular_bm` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularBMId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3321,7 +3527,7 @@ CREATE TABLE `tbl_circular_bmuser` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularBMUserId`),
   KEY `tenantId_memberId_circularBMId_index` (`tenantId`,`memberId`,`circularBMId`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3343,7 +3549,7 @@ CREATE TABLE `tbl_circular_comment` (
   `status` mediumint(5) DEFAULT NULL,
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularCommentId`,`circularId`,`tenantId`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3363,7 +3569,7 @@ CREATE TABLE `tbl_circular_commentstate` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularCommentStateId`),
   KEY `tenantId_cn_circularCommentId_index` (`tenantId`,`memberId`,`circularCommentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3382,7 +3588,7 @@ CREATE TABLE `tbl_circular_file` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularFileId`),
   KEY `tenantId_circularId_index` (`tenantId`,`circularId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3400,7 +3606,7 @@ CREATE TABLE `tbl_circular_folder` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularFolderId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3418,7 +3624,7 @@ CREATE TABLE `tbl_circular_link` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularLinkId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3459,7 +3665,7 @@ CREATE TABLE `tbl_circular_option` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularOptionId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3485,7 +3691,7 @@ CREATE TABLE `tbl_circular_user` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3804,7 +4010,7 @@ CREATE TABLE `tbl_connection_info` (
   `CONNECTAGENT` varchar(1000) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
   PRIMARY KEY (`SEQUENCE`)
-) ENGINE=InnoDB AUTO_INCREMENT=15311 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4565,7 +4771,7 @@ CREATE TABLE `tbl_formconninfo` (
   `DESCRIPTION` varchar(100) DEFAULT NULL,
   `UPPERNODE` varchar(100) NOT NULL,
   PRIMARY KEY (`SN`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4841,7 +5047,7 @@ CREATE TABLE `tbl_holidaylist` (
   `TENANT_ID` mediumint(5) DEFAULT NULL,
   PRIMARY KEY (`HOLIDAYID`),
   UNIQUE KEY `IDX_TBL_HOLIDAYLIST` (`TENANT_ID`,`HOLIDAYID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4867,7 +5073,7 @@ CREATE TABLE `tbl_journal` (
   PRIMARY KEY (`journal_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_id_tbl_journal_form_form_id` (`form_id`),
   CONSTRAINT `FK_tbl_journal_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=591 DEFAULT CHARSET=utf8 COMMENT='일지';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4921,7 +5127,7 @@ CREATE TABLE `tbl_journal_file` (
   PRIMARY KEY (`file_id`,`tenant_id`),
   KEY `FK_tbl_journal_file_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_file_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='첨부파일';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='첨부파일';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4938,14 +5144,14 @@ CREATE TABLE `tbl_journal_form` (
   `form_content` text COMMENT '양식 내용',
   `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
   `form_date` datetime NOT NULL COMMENT '양식 일',
-  `form_writer` varchar(200) COMMENT '양식 작성자',
+  `form_writer` varchar(200) DEFAULT NULL COMMENT '양식 작성자',
   `form_info` varchar(4000) DEFAULT NULL COMMENT '양식 설명',
   `form_status` varchar(45) DEFAULT NULL COMMENT '양식 상태',
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
   PRIMARY KEY (`form_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_type_id_tbl_journal_form_type_type_id_idx` (`type_id`),
   KEY `FK_tbl_journal_form_company_id_tbl_journal_form_type_compan_idx` (`company_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='양식';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5012,7 +5218,7 @@ CREATE TABLE `tbl_journal_recv_favorite` (
   `favorite_name` varchar(200) DEFAULT NULL COMMENT '즐찾 명',
   `favorite_date` datetime DEFAULT NULL COMMENT '즐찾 일',
   PRIMARY KEY (`favorite_id`,`tenant_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='즐찾';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='즐찾';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5048,7 +5254,7 @@ CREATE TABLE `tbl_journal_reply` (
   PRIMARY KEY (`reply_id`,`tenant_id`),
   KEY `FK_tbl_journal_reply_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_reply_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='댓글';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='댓글';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5095,7 +5301,7 @@ CREATE TABLE `tbl_ladder` (
   `startdate` varchar(40) DEFAULT NULL,
   `deletedate` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`ladderid`,`tenant_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5112,7 +5318,7 @@ CREATE TABLE `tbl_ladder_bm` (
   `userId` varchar(80) NOT NULL,
   `regdate` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`ladderbmid`,`tenant_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5171,7 +5377,7 @@ CREATE TABLE `tbl_ladder_comment` (
   PRIMARY KEY (`id`,`tenant_id`),
   KEY `tbl_ladder_comment_fk` (`ladderid`),
   CONSTRAINT `tbl_ladder_comment_fk` FOREIGN KEY (`ladderid`) REFERENCES `tbl_ladder` (`ladderid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5196,7 +5402,7 @@ CREATE TABLE `tbl_ladder_line` (
   PRIMARY KEY (`id`,`tenant_id`),
   KEY `tbl_ladder_line_fk` (`ladderid`),
   CONSTRAINT `tbl_ladder_line_fk` FOREIGN KEY (`ladderid`) REFERENCES `tbl_ladder` (`ladderid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=470 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5612,7 +5818,7 @@ CREATE TABLE `tbl_notification` (
   `COMPANYID` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`ITEMSEQ`),
   UNIQUE KEY `IDX_TBL_NOTIFICATION` (`TENANT_ID`,`ITEMSEQ`)
-) ENGINE=InnoDB AUTO_INCREMENT=11791 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6368,7 +6574,7 @@ CREATE TABLE `tbl_ps_popup` (
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`ITEMSEQ`),
   UNIQUE KEY `IDX_TBL_PS_POPUP` (`TENANT_ID`,`COMPANYID`,`ITEMSEQ`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7149,7 +7355,7 @@ CREATE TABLE `tbl_schedule` (
   `CONTENTPATH` varchar(500) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`SCHEDULEID`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7189,7 +7395,7 @@ CREATE TABLE `tbl_scheduleattach` (
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`ATTACHID`),
   UNIQUE KEY `IDX_TBL_SCHEDULEATTACH` (`ATTACHID`,`SCHEDULEID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7427,7 +7633,7 @@ CREATE TABLE `tbl_serialnumgen` (
   `COMPANYID` varchar(20) DEFAULT NULL,
   `IDX` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`IDX`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7593,7 +7799,7 @@ CREATE TABLE `tbl_task` (
   `TOTALREP` mediumint(9) NOT NULL DEFAULT '0',
   `TENANTID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TASKID`,`TENANTID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7741,7 +7947,7 @@ CREATE TABLE `tbl_taskcomment` (
   `COMMENT` longtext NOT NULL,
   `TENANTID` mediumint(5) NOT NULL,
   PRIMARY KEY (`COMMENTID`,`TASKID`,`TENANTID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8686,7 +8892,7 @@ CREATE TABLE `tbl_vote_user_and_question` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_vote_user_and_question`
+-- Table structure for table `tbl_vote_users`
 --
 
 DROP TABLE IF EXISTS `tbl_vote_users`;
@@ -8697,10 +8903,10 @@ CREATE TABLE `tbl_vote_users` (
   `QST_ID` int(11) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
   `USER_NAME` varchar(120) NOT NULL,
-  `USER_NAME2` varchar(120),
-  `DEPT_ID` varchar(80),
-  `DEPT_NAME` varchar(200),
-  `DEPT_NAME2` varchar(200),
+  `USER_NAME2` varchar(120) DEFAULT NULL,
+  `DEPT_ID` varchar(80) DEFAULT NULL,
+  `DEPT_NAME` varchar(200) DEFAULT NULL,
+  `DEPT_NAME2` varchar(200) DEFAULT NULL,
   `USER_STATUS` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`QST_ID`,`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

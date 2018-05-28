@@ -25231,7 +25231,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			int getEndLineCnt = ezApprovalGDAO.getLineAprMode(map);
 			
-			if (getEndLineCnt >= 0) {
+			if (getEndLineCnt > 0) {
 				result = "END";
 			}
 		} else {

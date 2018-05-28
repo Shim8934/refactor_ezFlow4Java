@@ -3896,11 +3896,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+				    		        	
 				    		        }
 				    		        else {
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 				    		        }
+			    		        	// 전달, 회신 테스트
+			    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
 			    		        }
 			    		        
 			    		        orgMsgFolder.close(true);

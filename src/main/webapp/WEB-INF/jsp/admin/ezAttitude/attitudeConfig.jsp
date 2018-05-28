@@ -53,7 +53,7 @@
 	            		attitudeConfigSet(result);
 	            	},
 	            	error : function() {
-	            		alert("<spring:message code='ezAttitude.kbm3' />");
+	            		alert("<spring:message code='ezAttitude.t175' />");
 	            	}
 	            });
 	        }
@@ -90,12 +90,12 @@
 	        
 	        function save_config() {
 	        	if (!checkPattern()) {
-	    			alert("<spring:message code='ezAttitude.lhj1' />");
+	    			alert("<spring:message code='ezAttitude.t117' />");
 	    			return;
 	    		}
 	        	//시간
 	        	if( $("#endTime").val() < $("#startTime").val() ) {
-	        		alert("<spring:message code='ezAttitude.lhj15' />");
+	        		alert("<spring:message code='ezAttitude.t131' />");
 	        		return;
 	        	}
 	        	//휴무요일
@@ -118,14 +118,14 @@
 	            	},
 	            	success : function(resultStatus) {
 	            		if (resultStatus == "success") {
-		            		alert("<spring:message code='ezAttitude.bbhs19' />");
+		            		alert("<spring:message code='ezAttitude.t155' />");
 		            		company_change();
 	            		} else {
-	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
 	            	},
 	            	error : function() {
-	            		alert("<spring:message code='ezAttitude.kbm3' />");
+	            		alert("<spring:message code='ezAttitude.t175' />");
 	            	}
 	            });
 	        }

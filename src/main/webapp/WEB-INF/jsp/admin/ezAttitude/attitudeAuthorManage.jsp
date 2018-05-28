@@ -45,7 +45,7 @@
 	            		attitudeAuthListSet(result);
 	            	},
 	            	error : function() {
-	            		alert("<spring:message code = 'ezAttitude.kbm3' />");
+	            		alert("<spring:message code = 'ezAttitude.t175' />");
 	            	}
 	            });
 	        }
@@ -69,7 +69,7 @@
 	                    userList.push(deptList);
 	                }
                 } else {
-                	html = "<tr><td colspan='4' style='text-align:center'><spring:message code = 'ezAttitude.lhj14' /></td></tr>";
+                	html = "<tr><td colspan='4' style='text-align:center'><spring:message code = 'ezAttitude.t130' /></td></tr>";
                 }
                 
                 $("#contentlist table.mainlist").html(html);
@@ -84,7 +84,7 @@
 	        //권한수정
 			function author_modify() {
 	        	if (selectedUserId == null || selectedUserId == "") {
-	        		alert("<spring:message code = 'ezAttitude.kbm19' />");
+	        		alert("<spring:message code = 'ezAttitude.t52' />");
 	        		return;
 	        	}
 				var userId = selectedUserId;
@@ -95,17 +95,17 @@
 					url+="&userId="+userId+"&userName="+selectedUserName;
 					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 				} else {
-					alert("<spring:message code = 'ezAttitude.kbm20' />");
+					alert("<spring:message code = 'ezAttitude.t191' />");
 				}
 			}
 	        
 	        //권한 삭제
 	        function author_delete() {
 	        	if (selectedUserId == null || selectedUserId == "") {
-	        		alert("<spring:message code = 'ezAttitude.kbm19' />");
+	        		alert("<spring:message code = 'ezAttitude.t52' />");
 	        		return;
 	        	}
-	        	if (confirm("<spring:message code = 'ezAttitude.kbm11' />")) {
+	        	if (confirm("<spring:message code = 'ezAttitude.t183' />")) {
 					$.ajax({
 						type : "POST",
 						url : "/admin/ezAttitude/deleteAttitudeAuth.do",
@@ -118,11 +118,11 @@
 		            		if (resultStatus == "success") {
 			            		company_change();
 		            		} else {
-		            			alert("<spring:message code='ezAttitude.kbm3' />");
+		            			alert("<spring:message code='ezAttitude.t175' />");
 		            		}
 		            	},
 						error : function() {
-							alert("<spring:message code = 'ezAttitude.kbm3' />");
+							alert("<spring:message code = 'ezAttitude.t175' />");
 						}
 					})
 	        	}
@@ -157,7 +157,7 @@
 			    var html = "";
 			    html += "<table name='tooltip' class='calendar_layer' cellpadding='0' cellspacing='0' border='0' width='100%'>";
 				html += "<tr class='selectTR' style='background-color: rgb(237, 244, 253);'>";
-				html += "<th scope='col'><spring:message code = 'ezAttitude.kbm21' /></th>";
+				html += "<th scope='col'><spring:message code = 'ezAttitude.t192' /></th>";
 				html += "</tr>";
 				html += "<tr class='' style='background-color: rgb(255, 255, 255);'>";
 				html += "<td class='text'>";
@@ -165,9 +165,9 @@
 				for (var i = 0; i < deptNameList.length; i++) {
 					var authName = "";
 					if (authTypeList[i] == "R") {
-						authName = "<spring:message code = 'ezAttitude.kbm22' />";
+						authName = "<spring:message code = 'ezAttitude.t193' />";
 					} else {
-						authName = "<spring:message code = 'ezAttitude.kbm23' />";
+						authName = "<spring:message code = 'ezAttitude.t194' />";
 					}
 					html += "<tr class='' style='background-color: rgb(255, 255, 255);'>";
 					html += "<td>" + deptNameList[i] + " (" + authName + ")</td>";
@@ -295,9 +295,9 @@
 	      		</li>
 	      	</ul>
 		    <ul>
-		        <li><span onClick="author_add()"><spring:message code='ezAttitude.kbm15' /></span></li>
-		        <li><span onClick="author_modify()"><spring:message code='ezAttitude.kbm16' /></span></li>
-		        <li><span onClick="author_delete()"><spring:message code='ezAttitude.kbm17' /></span></li>
+		        <li><span onClick="author_add()"><spring:message code='ezAttitude.t187' /></span></li>
+		        <li><span onClick="author_modify()"><spring:message code='ezAttitude.t188' /></span></li>
+		        <li><span onClick="author_delete()"><spring:message code='ezAttitude.t189' /></span></li>
 		    </ul>
 		</div>
         <div style="width: 100%; height: 100%;">
@@ -306,7 +306,7 @@
                     <th style="width: 19%;"><span><spring:message code='ezAttitude.t10' /></span></th>
                     <th style="width: 19%;"><span><spring:message code='ezAttitude.t11' /></span></th>
                     <th style="width: 19%;"><span><spring:message code='ezAttitude.t9' /></span></th>
-                    <th style="width: 18%;"><span><spring:message code='ezAttitude.kbm18' /></span></th>
+                    <th style="width: 18%;"><span><spring:message code='ezAttitude.t190' /></span></th>
                     <th style="width: 25%;"><span>권한정보</span></th>
                 </tr>
             </table>

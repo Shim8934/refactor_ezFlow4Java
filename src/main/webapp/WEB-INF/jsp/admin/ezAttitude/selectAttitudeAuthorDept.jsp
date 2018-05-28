@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.kbm31' /></title>
+		<title><spring:message code='ezAttitude.t201' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
@@ -88,7 +88,7 @@
 	   			
 	   			for (var i = 0; i < lpDepts.length; i++) {
 					if (lpDepts[i] == lpDeptId) {
-		   				alert("<spring:message code='ezAttitude.kbm33' />");
+		   				alert("<spring:message code='ezAttitude.t203' />");
 						flag = false;
 					}
 				}
@@ -113,7 +113,7 @@
 	   				lpAuthTypes.splice(lpAuthTypes.indexOf(targetAuthType), 1);
 	   				$(".selectTR").remove();
 	   			} else {
-	   				alert("<spring:message code='ezAttitude.kbm34' />");
+	   				alert("<spring:message code='ezAttitude.t204' />");
 	   			}
 	   		}
 	   		
@@ -135,7 +135,7 @@
 	</head>
 	
 	<body class="popup">
-        <h1><spring:message code='ezAttitude.kbm31' /></h1>
+        <h1><spring:message code='ezAttitude.t201' /></h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewDept()"><spring:message code='main.t4008'/></span></li>

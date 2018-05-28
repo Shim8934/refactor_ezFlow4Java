@@ -49,7 +49,7 @@
 				var typeName2 = $('#typeName2').val();
 				
 				if (typeName == "") {
-					alert("<spring:message code='ezAttitude.kbm14' />");
+					alert("<spring:message code='ezAttitude.t186' />");
 					return;
 				}
 				
@@ -74,17 +74,17 @@
 		        	},
 	            	success : function(resultStatus) {
 	            		if (resultStatus == "success") {
-		            		alert("<spring:message code='ezAttitude.bbhs19' />");
+		            		alert("<spring:message code='ezAttitude.t155' />");
 		            		window.opener.company_change();
 							window.close();
 	            		} else if (resultStatus == "failed") {
 	            			alert("15개 이상은 추가할 수 없습니다.");
 	            		} else {
-	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
 	            	},
 		        	error : function() {
-		        		alert("<spring:message code='ezAttitude.kbm3' />");
+		        		alert("<spring:message code='ezAttitude.t175' />");
 		        	}
 		        });
 			}

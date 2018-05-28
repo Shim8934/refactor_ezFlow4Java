@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code = 'ezAttitude.lhj7' /></title>
+		<title><spring:message code = 'ezAttitude.t123' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -58,7 +58,7 @@
 		
 		function btnOk_onclick() {
 			if (!checkPattern()) {
-    			alert("<spring:message code='ezAttitude.lhj1' />")
+    			alert("<spring:message code='ezAttitude.t117' />")
     			return;
     		}
 			
@@ -90,7 +90,7 @@
 						opener.getUserConfList();
 	   					window.close();
 					} else {
-						alert("<spring:message code='ezAttitude.lhj9' />");
+						alert("<spring:message code='ezAttitude.t125' />");
 	   					window.close();
 					}
    				}
@@ -103,11 +103,11 @@
 	</script>
 	
 	<body class="popup">
-		<h1><spring:message code='ezAttitude.lhj7' /></h1>
+		<h1><spring:message code='ezAttitude.t123' /></h1>
 		<table class="content"> 
 			<tr>
-				<th><spring:message code='ezAttitude.lhj10' /></th>
-				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> /><spring:message code='ezAttitude.lhj11' /></td>
+				<th><spring:message code='ezAttitude.t126' /></th>
+				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> /><spring:message code='ezAttitude.t127' /></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezAttitude.t12' /></th>
@@ -116,8 +116,8 @@
 		</table> 
 		
 		<div class="btnposition">
-			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezAttitude.lhj12' /></span></a>
-			<a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code='ezAttitude.lhj13' /></span></a>
+			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezAttitude.t128' /></span></a>
+			<a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code='ezAttitude.t129' /></span></a>
 		</div>
 	</body>
 </html>

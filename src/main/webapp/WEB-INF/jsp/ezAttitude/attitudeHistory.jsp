@@ -393,32 +393,6 @@
 	      		<li><span onclick="ShowQuickAddres();"><spring:message code='ezAttitude.t121'/></span></li>
 	      	</ul>
 	  	</div> 	
-<!-- 	  	<table id="searchTable" style="width:100%;"> -->
-<!-- 			<tbody> -->
-<!-- 				<tr> -->
-<%-- 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td> --%>
-<!-- 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td> -->
-<%-- 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td> --%>
-<!-- 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td> -->
-<%-- 					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td> --%>
-<!-- 					<td style="width: 20%;"> -->
-<!-- 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~ -->
-<!-- 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/> -->
-<!-- 					</td> -->
-<!-- 				</tr> -->
-<!-- 				<tr> -->
-<%-- 					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td> --%>
-<!-- 					<td style="width: *;"  colspan=3> -->
-<!-- 						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select> -->
-<!-- 					</td> -->
-<!-- 					<td colspan=2> -->
-<%-- 						<a class="imgbtn"><span onclick="searchAttitudeHistoryList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp; --%>
-<%-- 						<a class="imgbtn"><span onclick="searchAttitudeHistoryList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp; --%>
-<!-- 					</td> -->
-<!-- 				</tr> -->
-<!-- 			</tbody> -->
-<!-- 		</table> -->
-		
 	  	<div id="contentlist" style="width:100%; height:620px;">
 			<table class="mainlist" style="width:100%;">
 				<thead>

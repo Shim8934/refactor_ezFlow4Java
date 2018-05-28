@@ -158,7 +158,6 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-<%-- 	                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.bbhs28'/></span></li> --%>
 									<c:if test="${authFlag == 'M' }">
 										<li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></li>
 		                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></li>

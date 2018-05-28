@@ -1269,7 +1269,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I20", map);
     }
     public void insertCompanyInfo_I21(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_I20", map);
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I21", map);
     }
     
 	/**
