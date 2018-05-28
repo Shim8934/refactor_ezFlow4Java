@@ -58,13 +58,17 @@
 	}
 	
 	function deleteBoards() {
+		var checkBoxes = $('input:checked[name="boardCheckbox"]');
+		if(!checkBoxes.length) {
+			alert("삭제할 글을 선택하세요.");
+			return;
+		}
+		
 		if(confirm("정말 삭제하시겠습니까?") == true) {
 			var itemIds = new Array();
-			$('input:checkbox[name="boardCheckbox"]').each(function() {
-				if($(this).is(":checked")) {
-					var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
-					itemIds.push(itemId);
-				}
+			checkBoxes.each(function() {
+				var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
+				itemIds.push(itemId);		
 			});
 			deleteBoardAction(itemIds);
 		}	

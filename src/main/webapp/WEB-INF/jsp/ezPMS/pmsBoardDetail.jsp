@@ -47,18 +47,6 @@
 			}, 1000);
 		}
 		
-		var suffix = 0;
-		function downloadFiles(items) {
-			var item = items.get(suffix++);
-			
-			location.href = "/ezPMS/downloadFile.do?filePath=" + $(item).attr("data-filepath") + "&fileName=" + $(item).attr("data-filename");
-			setTimeout(downloadFiles(items), 1000);
-			
-			if(suffix > items.length) {
-				return;
-			}
-		}
-		
 		function deleteBoard() {
 			if(confirm("정말 삭제하시겠습니까?") == true) {
 				var items = new Array();
