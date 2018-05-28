@@ -2025,7 +2025,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
     @Override
-    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID) throws Exception {
+    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID, List<String> deptIdList) throws Exception {
     	LOGGER.debug("getSearchListPagination started");
     	
         String strSQL="";
@@ -2114,6 +2114,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	         Map<String , Object> map = new HashMap<String , Object>();
 	                  
 	         map.put("strSQL" , strSQL);
+	         map.put("deptIdList", deptIdList);
 	         map.put("type", type);
 	         map.put("class", pClass);
 	         map.put("startRow", startRow);
@@ -2124,10 +2125,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	         
 	         LOGGER.debug("strSQL=" + strSQL);
 	         
-	         List<OrganDeptVO> list = ezOrganDAO.attOrganSearchList(map);
+	         List<OrganDeptVO> list = ezAttitudeDAO.attOrganSearchList(map);
 	         
 	         if(pClass.equals("user")){
-	        	 int totalcount = ezOrganDAO.getSearchListCount(map);
+	        	 int totalcount = ezAttitudeDAO.getSearchListCount(map);
 	             memberlist2 = new StringBuilder("<LISTVIEWDATA>");
 	             memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
 	         }else{

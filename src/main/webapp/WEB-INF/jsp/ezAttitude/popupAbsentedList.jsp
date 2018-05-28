@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>미입력자 팝업</title>
+		<title><spring:message code='ezAttitude.t111'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
@@ -65,7 +65,7 @@
 			
 	    	function getAbsentedList() {
 				if (searchEndDate == '') {
-					var resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";
+					var resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.t138' /></td></tr>";
 					$("#contentlist table.mainlist tbody").append(resultHtml);
 					
 					return;
@@ -109,7 +109,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.t138' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -165,14 +165,14 @@
 	</head>
 	
 	<body class="popup">
-		<h1>미입력자 목록<c:if test="${searchEndDate != ''}"><img style="float: right; margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()"></c:if></h1>
+		<h1><spring:message code='ezAttitude.t111'/><c:if test="${searchEndDate != ''}"><img style="float: right; margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()"></c:if></h1>
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="startdate">날짜</th>
-					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="startdate"><spring:message code='ezAttitude.t133'/></th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10'/></th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11'/></th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9'/></th>
 				</tr>
 			</thead>
 		</table>
@@ -183,7 +183,7 @@
 		</div>
 		
 		<div class="btnposition">
-			<a class="imgbtn"><span onclick="return btnClose_onclick()">닫기</span></a>
+			<a class="imgbtn"><span onclick="return btnClose_onclick()"><spring:message code='ezAttitude.t157'/></span></a>
 		</div>
 	</body>
 </html>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.bbhs17'/></title>
+		<title><spring:message code='ezAttitude.t153'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -68,9 +68,9 @@
 				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
 		    }
 			
-		    var monthMsg = "<spring:message code='ezAttitude.bbhs1'/>";
+		    var monthMsg = "<spring:message code='ezAttitude.t139'/>";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezAttitude.bbhs2'/>";
+		    var dayMsg = "<spring:message code='ezAttitude.t140'/>";
 		    var dayStr = dayMsg.split(";");
 		    
 			function setDatePicker(type) {
@@ -290,7 +290,7 @@
 				
 				if (attRegCheck() && holidayAttReg == "0") {
 					if (selectType != "A07") {
-						alert("<spring:message code='ezAttitude.bbhs18'/>");
+						alert("<spring:message code='ezAttitude.t154'/>");
 						return;
 	 				} 
 				}
@@ -303,12 +303,12 @@
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
 				if ($('#Stimepicker').length && !timeValid.test($('#Stimepicker').val()) || $('#Etimepicker').length && !timeValid.test($('#Etimepicker').val())) {
-					alert("<spring:message code='ezAttitude.bbhs37'/>");
+					alert("<spring:message code='ezAttitude.t170'/>");
 					return;
 				}
 				
 				if (!check_time()) {
-					alert("<spring:message code='ezAttitude.bbhs23'/>");
+					alert("<spring:message code='ezAttitude.t131'/>");
 					return;
 				}
 				
@@ -339,7 +339,7 @@
 						if (resultStatus == "dupl"){
 							alert("<spring:message code='ezAttitude.t50'/>");
 						} else if (resultStatus == "success") {
-	            			alert("<spring:message code='ezAttitude.bbhs19'/>");
+	            			alert("<spring:message code='ezAttitude.t155'/>");
 			        		try {
 				        		window.opener.getAttitudeMainList();
 				        		window.opener.parent.frames["left"].getAttitudeList();
@@ -347,7 +347,7 @@
 			        		
 			        		window.close();
 	            		} else {
-	            			alert("<spring:message code='ezAttitude.kbm3' />");
+	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
 	            	}
 		        });
@@ -618,11 +618,11 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.bbhs17'/></h1>
+	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t153'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                                <li><span onclick="save_attitude()"><spring:message code='ezAttitude.bbhs20'/></span></li>
+	                                <li><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>
@@ -632,7 +632,7 @@
 	                    <td style="height: 20px;">
 	                        <table id="attiwriteForm" class="content">
 								<tr id="selectTR">
-									<th><spring:message code='ezAttitude.bbhs15'/></th>
+									<th><spring:message code='ezAttitude.t134'/></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">

@@ -158,7 +158,7 @@
 			var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
 			
 			if (closedDay[nowAttiTime.getDay()] == "1" || todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
-	    		alert("<spring:message code='ezAttitude.bbhs34'/>");
+	    		alert("<spring:message code='ezAttitude.t167'/>");
 			} else {
 				var returnValue = getIsAttitude(obj.getAttribute("type"));
 				
@@ -166,7 +166,7 @@
 					addAttitude(obj);
 				} else {
 					getAttitudeList();
-	    			parent.frames["right"].getAttitudeMainList();
+	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 				}
 			}
 		}
@@ -178,11 +178,11 @@
 	    	if (pTypeId == "A03") {
 	    		var returnValue = getIsAttitude("A01");
 	    		if (returnValue == 0) {
-	    			alert("<spring:message code='ezAttitude.bbhs35'/>");
+	    			alert("<spring:message code='ezAttitude.t168'/>");
 		    		return;
 	    		} else {
 	    			getAttitudeList();
-	    			parent.frames["right"].getAttitudeMainList();
+	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 	    		}
 	    	}
 	    	
@@ -206,7 +206,7 @@
 	    		},
 	    		success : function(result) {
 	    			getAttitudeList();
-	    			parent.frames["right"].getAttitudeMainList();
+	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 	    		},
 	    		complete : function() {
 	    			afterAlertDate = new Date();
@@ -413,9 +413,9 @@
 			</article>
 		</div>
 <!-- 	<div id="left" style="border-top:1px solid #dedede"> -->
-		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs5'/></span></h2>
+		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.t143'/></span></h2>
 		<ul></ul>
-		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs6'/></span></h2>
+		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.t144'/></span></h2>
 		<ul></ul>
 		<h2>
 			<span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">
@@ -428,11 +428,11 @@
 			</span>
 		</h2>
 		<ul>
-			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
+			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.t166'/></span></li>
 			<c:if test="${attitudeAdminCheck == true}">
 				<li>
 					<span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">
-						&nbsp;<spring:message code='ezAttitude.bbhs33'/>
+						&nbsp;<spring:message code='ezAttitude.t7'/>
 						<c:if test="${totalAtt != 0 }">
 							<span class="attCount">(${totalAtt})</span>
 						</c:if>
