@@ -112,7 +112,7 @@
 	    	
 	    	function getUserConfList(){
 	    		if (!checkPattern()) {
-	    			alert("<spring:message code= 'ezAttitude.lhj1' />")
+	    			alert("<spring:message code= 'ezAttitude.t117' />")
 	    			return;
 	    		}
 	    		
@@ -157,11 +157,11 @@
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			resultHtml += "<td>" + vo.workStartTime + " ~ " + vo.workEndTime + "</td>";
-	    			resultHtml += "<td>" + (vo.gubun == "0" ? "<spring:message code='ezAttitude.lhj2' />" : "<spring:message code='ezAttitude.lhj3' />") + "</td></tr>";
+	    			resultHtml += "<td>" + (vo.gubun == "0" ? "<spring:message code='ezAttitude.t118' />" : "<spring:message code='ezAttitude.t119' />") + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";
+	    			resultHtml = "<tr><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -224,7 +224,7 @@
 	   			selectedUserIdList = selectedUserIdList.slice(0, -2);
 	   			
 	   			if (selectedUserIdList == "") {
-	   				alert("<spring:message code = 'ezAttitude.lhj4' />");
+	   				alert("<spring:message code = 'ezAttitude.t120' />");
 	   			} else {
 		   			editUserConf(selectedUserIdList);
 	   			}
@@ -246,7 +246,7 @@
 	    	/* function changeUserConfList(workStartTime, workEndTime, gubun, userIdList) {
 	    		userIdList.split(", ").forEach(function(id, index) {
 	    			$("tr[userid = '" + id + "'] td:nth-child(5)").html(workStartTime + " ~ " + workEndTime);
-	    			$("tr[userid = '" + id + "'] td:nth-child(6)").html(gubun == "0" ? "<spring:message code='ezAttitude.lhj2' />" : "<spring:message code='ezAttitude.lhj3' />");
+	    			$("tr[userid = '" + id + "'] td:nth-child(6)").html(gubun == "0" ? "<spring:message code='ezAttitude.t118' />" : "<spring:message code='ezAttitude.t119' />");
 	    		});
 	    	} */
 	    	
@@ -312,9 +312,9 @@
 					<td style="width: 3%;"><spring:message code='ezAttitude.t13' /></td>
 					<td style="width: 20%;">
 						<span style="width: 90%;">
-							<input type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;<spring:message code='ezAttitude.lhj8' />
-							<input type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;<spring:message code='ezAttitude.lhj2' />
-							<input type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;<spring:message code='ezAttitude.lhj3' />
+							<input type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;<spring:message code='ezAttitude.t124' />
+							<input type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;<spring:message code='ezAttitude.t118' />
+							<input type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;<spring:message code='ezAttitude.t119' />
 						</span>
 					</td>
 				</tr>
@@ -326,9 +326,9 @@
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px; text-align:center;"/></span>
 					</td>
 					<td style=" width:*;" colspan=2>
-						<a class="imgbtn"><span onclick="searchUserConfList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchUserConfList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="editUserConfList();"><spring:message code='ezAttitude.lhj7' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('search');"><spring:message code='ezAttitude.t121' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="editUserConfList();"><spring:message code='ezAttitude.t123' /></span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>

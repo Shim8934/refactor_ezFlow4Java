@@ -109,7 +109,7 @@
 				var html = "";
 				
 				if (deptIds.length == 0) {
-					html = "<tr><td colspan='3' style='text-align: center;'><spring:message code='ezAttitude.lhj14' /></td></tr>";
+					html = "<tr><td colspan='3' style='text-align: center;'><spring:message code='ezAttitude.t130' /></td></tr>";
 				} else {
 		    		for (var i = 0; i < deptIds.length; i++) {
 	    				deptString += deptNames[i] + ", "; //이름
@@ -254,7 +254,7 @@
             <div id="contentlist" name="contentlist" style="height: 160px; overflow-y: auto;">
                 <table class="mainlist" style="width: 100%;">
                     <tr>
-                        <td colspan="3" style="text-align: center;"><spring:message code='ezAttitude.lhj14' /></td>
+                        <td colspan="3" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
                     </tr>
                 </table>
             </div>

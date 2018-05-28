@@ -69,7 +69,7 @@
 	                    userList.push(deptList);
 	                }
                 } else {
-                	html = "<tr><td colspan='4' style='text-align:center'><spring:message code = 'ezAttitude.lhj14' /></td></tr>";
+                	html = "<tr><td colspan='4' style='text-align:center'><spring:message code = 'ezAttitude.t130' /></td></tr>";
                 }
                 
                 $("#contentlist table.mainlist").html(html);
