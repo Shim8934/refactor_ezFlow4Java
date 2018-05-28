@@ -902,6 +902,8 @@
 			WHERE
 				tenant_id = #tenantId#
 			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
 				cn = (SELECT
 							department
 						FROM
@@ -964,6 +966,8 @@
 			WHERE
 				tenant_id = #tenantId#
 			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
 				cn = (SELECT
 							department
 						FROM
@@ -1023,9 +1027,9 @@
 				(SELECT
 					IFNULL(A.auth_type, 'R') AS authtype
 				FROM
-					TBL_ATTITUDE_TYPE A
+					TBL_ATTITUDE_AUTH A
 				WHERE
-					auth_dept_id = (SELECT
+					A.auth_dept_id = (SELECT
 										department
 									FROM
 										TBL_USERMASTER
@@ -1034,11 +1038,15 @@
 									AND
 										TBL_USERMASTER.physicaldeliveryofficename = #companyId#
 									AND
-										TBL_USERMASTER.cn = #userId#) B) C AS authtype
+										TBL_USERMASTER.cn = #userId#)
+				AND
+					A.user_id = #userId#) AS authtype
 			FROM
 				TBL_DEPTMASTER
 			WHERE
 				tenant_id = #tenantId#
+			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
 			AND
 				cn = (SELECT
 							department
