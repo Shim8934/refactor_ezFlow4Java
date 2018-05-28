@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>폴더관리</title>
+    <title><spring:message code="ezWebFolder.t268"/></title>
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="<spring:message code='main.lhm02'/>" type="text/css">
