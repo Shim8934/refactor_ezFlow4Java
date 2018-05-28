@@ -2068,7 +2068,6 @@ public class EzAttitudeGWController {
 			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(userInfo.getTenantId(), userInfo.getCompanyId(), userInfo.getUserId(), userInfo.getRollInfo(), "", "M", "");
 			
 			for (AttitudeAuthorVO vo : authDeptlist) {
-				LOGGER.debug("@($(@!#$*@%**%#*%! : " + vo.getDeptId());
 				deptIdList.add(vo.getDeptId());
 			}
 			
