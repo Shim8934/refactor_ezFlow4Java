@@ -48,6 +48,7 @@
 	            		alert("<spring:message code = 'ezAttitude.t175' />");
 	            	}
 	            });
+	            selectedUserId = "";
 	        }
 	        
 	        //권한자 리스트 셋팅

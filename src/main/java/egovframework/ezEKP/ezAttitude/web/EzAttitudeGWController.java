@@ -2065,10 +2065,10 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(userInfo.getTenantId(), userInfo.getCompanyId(), userInfo.getUserId(), "");
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(userInfo.getTenantId(), userInfo.getCompanyId(), userInfo.getUserId(), userInfo.getRollInfo(), "", "M", "");
 			
 			for (AttitudeAuthorVO vo : authDeptlist) {
-				LOGGER.debug("!@#!@#@#$!@$#@! ID : " + vo.getDeptId());
+				LOGGER.debug("@($(@!#$*@%**%#*%! : " + vo.getDeptId());
 				deptIdList.add(vo.getDeptId());
 			}
 			
