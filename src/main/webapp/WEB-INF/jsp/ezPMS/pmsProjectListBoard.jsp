@@ -56,7 +56,7 @@ $(function(){
 			fillBackgroundColor : progressColor,
 			height : '15px',
 			radius : '15px',
-			width : '80%'
+			width : '68%'
 		});
 		
 		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
@@ -64,7 +64,7 @@ $(function(){
 			fillBackgroundColor : completeColor,
 			height : '15px',
 			radius : '15px',
-			width : '80%'
+			width : '68%'
 		});
 		
 		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
@@ -72,7 +72,7 @@ $(function(){
 			fillBackgroundColor : overdueColor,
 			height : '15px',
 			radius : '15px',
-			width : '80%'
+			width : '68%'
 		});
 	}
 });

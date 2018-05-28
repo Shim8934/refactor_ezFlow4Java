@@ -974,7 +974,7 @@
 	
 	<select id="EzPMSDAO.getTaskList" parameterClass="Map" resultMap="projectTaskVO">
 		<![CDATA[
-			SELECT
+			SELECT DISTINCT
 				A.TASK_ID,
 				A.TENANT_ID,
 				A.PROJECT_ID,
@@ -1088,7 +1088,7 @@
 		</isNotEqual>
 		<isEqual property="orderWhat" compareValue="init">
 			ORDER BY 
-				PLAN_END_DATE DESC
+				PLAN_END_DATE
 		</isEqual>
 		<isNotEqual property="limit" compareValue="0">
 			LIMIT 
@@ -1609,7 +1609,7 @@
 	
 	<select id="EzPMSDAO.getMyTasks" parameterClass="map" resultMap="projectTaskVO">
 	<![CDATA[
-		SELECT	
+		SELECT	DISTINCT
 			A.TASK_ID,
 			A.TENANT_ID,
 			A.PROJECT_ID,
@@ -1667,6 +1667,8 @@
 				A.PROJECT_ID = #projectId#
 			AND 
 				A.TENANT_ID = #tenantId#
+			AND
+				A.DEL_STATUS = 0
 		]]>
 		<isNotNull property="status">
 			<isNotEqual property="status" compareValue="A">
@@ -1675,7 +1677,7 @@
 			</isNotEqual>
 		</isNotNull>
 			ORDER BY 
-				PLAN_END_DATE DESC	
+				PLAN_END_DATE	
 		<isNotEqual property="limit" compareValue="0">
 			LIMIT 
 				#startRow#, #limit#
@@ -1685,7 +1687,7 @@
 	<select id="EzPMSDAO.getTaskListCount" parameterClass="map" resultClass="Integer">
 	<![CDATA[
 		SELECT	
-			COUNT(A.TASK_ID)	
+			COUNT(DISTINCT A.TASK_ID)	
 		FROM
 				tbl_pms_task A
 			JOIN 
