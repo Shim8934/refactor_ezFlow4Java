@@ -168,7 +168,7 @@ function setContentTitle(taskName, totalCount) {
 		totalCount = 0;
 	}
 	
-	contentTitle = taskName + "<span id='totalCount'> - [총 " + totalCount + " 개]</span>";
+	contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:18px; font-weight:bold;'>" + taskName + "<span id='totalCount'> - [총 " + totalCount + " 개]</span></span>";
 	
 	$("#taskName").html(contentTitle);
 }
@@ -190,10 +190,14 @@ function selectedTR(elem){
 	display : inline-block
 }
 
-#projectContent {
+#projectArea {
 	width : 83%;
 	overflow : auto;
 	border : 1px solid #d1d1d1;
+}
+
+#projectContent {
+	min-width : 1070px;
 }
 
 #searchArea {
@@ -210,6 +214,7 @@ function selectedTR(elem){
 #taskName {
 	margin-top : 10px;
 	margin-left : 10px;
+	overflow : hidden;
 }
 
 #iconLine {
@@ -246,6 +251,7 @@ function selectedTR(elem){
 </head>
 <body>
 <div id="taskTree"></div>
+<div id="projectArea">
 <div id="projectContent">
 	<div id="iconLine">
 		<div id="taskName"></div>
@@ -267,6 +273,7 @@ function selectedTR(elem){
 	<div id="contentList" style="overflow:auto">
 	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 	</span>
+	</div>
 	</div>
 </div>
 </body>

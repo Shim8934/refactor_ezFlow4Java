@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -224,15 +224,14 @@
 
 	function setContentTitle(taskName, contentCount) {
 		var contentTitle = "";
-
-		if (!totalCount) {
+		
+		if (contentCount == null || contentCount == "") {
 			totalCount = 0;
 		} else {
 			totalCount = contentCount;
 		}
 
-		contentTitle = taskName + "<span id='totalCount'> - [총 " + contentCount
-				+ " 개]</span>";
+		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:18px; font-weight:bold;'>" + taskName + "<span id='totalCount'> - [총 " + totalCount + " 개]</span></span>";
 
 		$("#taskName").html(contentTitle);
 	}
@@ -369,20 +368,19 @@
 	display: inline-block
 }
 
-#projectContent {
-	width: 83%;
-	overflow: auto;
-	border: 1px solid #d1d1d1;
-}
-
 #taskName {
 	margin-top: 10px;
 	margin-left: 10px;
 }
 
-#contentList {
-	width: 98%;
-	margin-left: 1%;
+#projectArea {
+	width : 83%;
+	overflow : auto;
+	border : 1px solid #d1d1d1;
+}
+
+#projectContent {
+	min-width : 1070px;
 }
 
 #iconLine {
@@ -427,6 +425,7 @@
 </style>
 </head>
 <div id="taskTree"></div>
+<div id="projectArea">
 <div id="projectContent">
 	<div id="iconLine">
 		<div id="taskName"></div>
@@ -480,6 +479,7 @@
 		<span id="MailListRayer"
 			style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 		</span>
+	</div>
 	</div>
 </div>
 <div

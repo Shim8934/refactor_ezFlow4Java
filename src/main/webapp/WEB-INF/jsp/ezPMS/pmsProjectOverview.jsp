@@ -74,7 +74,7 @@ function initProgressBar() {
 		break;
 	case "W" :
 		strStatus = "대기";
-		circleColor = "grey";
+		circleColor = "#d1d1d1";
 		break;
 	case "L" :
 		strStatus = "지연";
