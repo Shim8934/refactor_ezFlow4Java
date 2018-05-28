@@ -78,7 +78,7 @@
 		            		window.opener.company_change();
 							window.close();
 	            		} else if (resultStatus == "failed") {
-	            			alert("15개 이상은 추가할 수 없습니다.");
+	            			alert("<spring:message code='ezAttitude.t217' />");
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}

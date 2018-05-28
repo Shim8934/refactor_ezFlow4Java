@@ -1090,10 +1090,10 @@
 			modAttId = modAttId.split("\_")[0];
 			
 			if (adminFlag == "true") {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo, "",
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo + "&companyId=" + pCompanyId, "",
 			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			} else {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt + "&pageInfo=" + pageInfo, "",
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt + "&pageInfo=" + pageInfo + "&companyId=" + pCompanyId, "",
 			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 			}
 	    }
@@ -1103,6 +1103,7 @@
 			var obj = new Object();
 	    	
 		    obj.attModId = $(t).parent().parent().find('td input').attr("value");
+			obj.companyId = $("#ListCompany").val();
 			
 			$.ajax({
 				type : 'get',

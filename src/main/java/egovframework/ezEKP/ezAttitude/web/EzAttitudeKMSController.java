@@ -926,6 +926,7 @@ public class EzAttitudeKMSController {
 	@RequestMapping(value="/ezAttitude/attModAppDetail.do")
 	public String attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=true)String attModId,
+			@RequestParam(required=false)String companyId,
 			@RequestParam(required=false)String applCnt,
 			@RequestParam(required=false)String adminFlag,
 			@RequestParam(required=false)String pageInfo) throws Exception {
@@ -940,6 +941,9 @@ public class EzAttitudeKMSController {
 		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
+		}
+		if (companyId == null) {
+			companyId = userInfo.getCompanyID();
 		}
 		
 		String deptFlag = "";
@@ -959,7 +963,7 @@ public class EzAttitudeKMSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyId", companyId)
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("sysLang", sysLang)
@@ -1287,7 +1291,8 @@ public class EzAttitudeKMSController {
 	@RequestMapping(value="/ezAttitude/getAttHistory.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONArray getAttHistory(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
-		@RequestParam(required=true)String attModId) throws Exception {
+		@RequestParam(required=true)String attModId,
+		@RequestParam(required=false)String companyId) throws Exception {
 		
 		LOGGER.debug("getAttHistory started");
 		
@@ -1296,6 +1301,9 @@ public class EzAttitudeKMSController {
 		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
+		}
+		if (companyId == null) {
+			companyId = userInfo.getCompanyID();
 		}
 		
 		String offset = userInfo.getOffset();
@@ -1311,7 +1319,7 @@ public class EzAttitudeKMSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("companyId", companyId)
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("offset", offsetMin);
