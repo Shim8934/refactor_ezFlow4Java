@@ -193,6 +193,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void deleteProjectMember(HashMap<String, Object> map) {
 		delete ("EzPMSDAO.deleteProjectMember", map);		
 	}
+	
+	public void deleteTaskMember(HashMap<String, Object> map) {
+		delete ("EzPMSDAO.deleteTaskMember", map);		
+	}
 
 	public void updateProjectInfo(Map<String, Object> map) {
 		update ("EzPMSDAO.updateProjectInfo", map);
@@ -331,5 +335,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getFilePath(Map<String, Object> map) {
 		return (List<Map<String, Object>>) list("EzPMSDAO.getFilePath", map);
+	}
+
+	public void updateTaskInfo(ProjectTaskVO vo) {
+		update ("EzPMSDAO.updateTaskInfo", vo);
 	}
 }

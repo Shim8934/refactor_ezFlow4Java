@@ -77,6 +77,8 @@ public interface EzPMSService {
 	public int updateTask(ProjectTaskVO task);
 	
 	public void deleteTask(Long taskId, long projectId, int tenantId);
+
+	public void updateTaskInfo(ProjectTaskVO task);
 	
 	public void addGroup(Map<String, Object> map);
 	
@@ -111,6 +113,8 @@ public interface EzPMSService {
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
 
 	public void deleteProjectMember(Long projectId, int tenantId);
+	
+	public void deleteTaskMember(Long taskId, int tenantId);
 
 	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status, String planEndDate);
 
