@@ -1673,7 +1673,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String adminFlag, String userAuthType, String listAuthType, String comFlag) throws Exception {
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag) throws Exception {
 		LOGGER.debug("getAttitudeAuthDeptList started.");
 		
 		if (userAuthType == null || userAuthType.equals("")) {
@@ -1694,18 +1694,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			listAuthType = "all";
 		}
 		
-		LOGGER.debug("userId = " + userId + " || adminFlag = " + adminFlag + " || userAuthType = " + userAuthType + " || listAuthType = " + listAuthType + " || comFlag = " + comFlag);
+		LOGGER.debug("userId = " + userId + " || userAuthType = " + userAuthType + " || listAuthType = " + listAuthType + " || comFlag = " + comFlag);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("adminFlag", adminFlag);
 		map.put("userAuthType", userAuthType);
 		map.put("listAuthType", listAuthType);
 		map.put("comFlag", comFlag);
 		
-		List<AttitudeAuthorVO> list = ezAttitudeDAO.getAttitudeAuthDeptList(map);
+		List<AttitudeAuthorVO> list = ezAttitudeDAO.getAttitudeAuthDeptList_hyo(map);
 		
 		LOGGER.debug("getAttitudeAuthDeptList ended.");
 		

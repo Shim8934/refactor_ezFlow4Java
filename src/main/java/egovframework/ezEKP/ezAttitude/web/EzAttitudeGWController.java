@@ -1818,19 +1818,15 @@ public class EzAttitudeGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
-			String adminFlag = request.getParameter("adminFlag");
-			String userAuthType = request.getParameter("userAuthType");
-			String listAuthType = request.getParameter("listAuthType");
-			String comFlag = request.getParameter("comFlag");
+			String isAllDept = request.getParameter("isAllDept");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-//			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, userId, info.getRollInfo(), adminFlag, userAuthType, listAuthType, comFlag);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-//			result.put("data", authDeptlist);
+			result.put("data", authDeptlist);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
@@ -1838,6 +1834,41 @@ public class EzAttitudeGWController {
 		}
 		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태권한자 상세 조회(권한있는 부서 체크)
+	 * userAuthType  all:(회사,전체,근태관리자), dept:,부서관리자, (''/null):일반사용자       전달받은 인자없으면 userInfo체크해서 동작
+	 * listAuthType  (''/null/all):전체, M:관리, R:열람
+	 * comFlag  회사에 포함된 인원 처리(미사용)
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-auth/hyo", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeAuthDeptListhyo(@PathVariable String userId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth/hyo] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			String userAuthType = request.getParameter("userAuthType");
+			String listAuthType = request.getParameter("listAuthType");
+			String comFlag = request.getParameter("comFlag");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, userId, info.getRollInfo(), userAuthType, listAuthType, comFlag);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", authDeptlist);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth/hyo] ended.");
 		return result;
 	}
 	
