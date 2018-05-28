@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -596,10 +598,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     		}
         } while (retryFlag && retryCount > -1);		
 		
+        String htmlBody = bodyInfoList.get(0);
+        Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(htmlBody);
+		htmlBody = m.replaceAll("");
         
-     
-        
-		model.addAttribute("htmlBody", bodyInfoList.get(0));
+        model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));

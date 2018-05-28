@@ -573,12 +573,15 @@
 	        var sign = "";
 	        var signcom = "";
         	var indexSignValue = message.GetEditorContent().indexOf("id=\"MailSign\"");
+			var mailSignDiv = "<DIV id='MailSign'></DIV>";
+	        mailSignDiv = editorPtagChk() + mailSignDiv;
+	        
             if (indexSignValue == -1) {
                 if (gg_cmd == "REPLY" || gg_cmd == "REPLYALL" || gg_cmd == "FORWARD") {
-                    message.SetEditorContent("<DIV id='MailSign'></DIV>" + message.GetEditorContent());
+                    message.SetEditorContent(mailSignDiv + message.GetEditorContent());
                 }
                 else {
-                    message.SetEditorContent(message.GetEditorContent() + "<DIV id='MailSign'></DIV>");
+                    message.SetEditorContent(message.GetEditorContent() + mailSignDiv);
                 }
             }
 	        switch (SelMailSign.value) {
@@ -917,6 +920,21 @@
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
+	        
+	        mailSignInnerHtml();
+	    }
+
+		// 180517 : 메일 mailsign div에 메일을 작성 후 서명 등록 또는 변경 시 본문 사라지는 현상 수정
+	    function mailSignInnerHtml() {
+			if (mailsel == 0) {
+				if (pUse_Editor == "KUKUDOCS") {
+					setTimeout(function() {
+							message.EditorElementSetHtml("MailSign", "");
+					}, 300);
+				} else {
+					message.EditorElementSetHtml("MailSign", "");
+				}
+			}
 	    }
 	
 	    function getJournalToMail(){
@@ -1475,6 +1493,29 @@
 	    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
 	    }
 	    
+	    function editorPtagChk() {
+	    	var editorBody = message.GetEditorBody();
+	    	var editorBodyChild = editorBody.childNodes;
+	    	var appPtag = "";
+	    	
+	    	for (var i = 0; i < editorBodyChild.length; i++) {
+            	if ( editorBodyChild[i].tagName.toLowerCase() == "p" && message.GetEditorContent() != ""){
+            		break;
+            	}
+            	
+            	if (i + 1 == editorBodyChild.length) {
+            		appPtag = "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>";
+            	}
+            }
+	    	
+	    	return appPtag;
+	    }
+	    /* 
+	    $(document).on("click", "#MailSign", function() {
+	    	if (mailsel == 0) {
+				message.EditorElementSetHtml("MailSign", "");
+			}
+	    }) */
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
