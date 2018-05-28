@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezAttitude.kbm2'/></title>
+		<title><spring:message code='ezAttitude.t28'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -215,7 +215,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.kbm2'/></h1>
+	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t28'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
