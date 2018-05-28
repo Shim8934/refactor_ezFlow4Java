@@ -24701,8 +24701,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTemp = objXML.getDocumentElement().toString();
              strResult = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
              strResult = strResult + strTemp.replace("&amp;", "&");
-
-             File ackFile = new File(config.getProperty("relay_root") + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName);
+             
+             File ackFile = new File(config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName);
              
          	if( ackFile.exists()) {
          		ackFile.delete();
@@ -25245,7 +25245,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			int getEndLineCnt = ezApprovalGDAO.getLineAprMode(map);
 			
-			if (getEndLineCnt > 0) {
+			if (getEndLineCnt >= 0) {
 				result = "END";
 			}
 		} else {
