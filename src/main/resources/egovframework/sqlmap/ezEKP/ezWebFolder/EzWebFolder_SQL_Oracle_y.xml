@@ -978,7 +978,7 @@
 		<![CDATA[
 			SELECT *
 			FROM TBL_WEBFOLDER_FOLDER
-			WHERE TENANT_ID = #tenantId# and COMPANY_ID = #comId# and FOLDER_ID = #folderId# 
+			WHERE TENANT_ID = #tenantId# and and FOLDER_ID = #folderId# 
 		]]>
 	</select>
 	<select id="EzWebFolderDAO_y.getUserInfo" parameterClass="Map" resultMap ="login">
@@ -1354,7 +1354,7 @@
 		<![CDATA[
 			SELECT fld.*
 			FROM TBL_WEBFOLDER_FOLDER fld inner join TBL_WEBFOLDER_FILE f ON f.folder_id = fld.folder_id
-			WHERE f.TENANT_ID = #tenantId# and fld.COMPANY_ID = #comId# and f.FILE_ID = #fileId# 
+			WHERE f.TENANT_ID = #tenantId# and f.FILE_ID = #fileId# 
 		]]>
 	</select>
 	
