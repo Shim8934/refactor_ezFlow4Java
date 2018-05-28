@@ -40,6 +40,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.google.gson.Gson;
@@ -49,6 +50,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -2659,5 +2661,78 @@ public class EzAttitudeKMSController {
 		workbook.close();
 		
 		LOGGER.debug("excelFileExport ended.");
+	}
+	
+	/**
+	 * 조직도 부서 및 사원목록 검색 함수
+	 */
+	@RequestMapping(value = "/ezAttitude/getSearchList.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSearchList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    LOGGER.debug("getSearchList started.");
+
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    
+	    String searchlist = request.getParameter("search").trim();
+		String celllist = request.getParameter("cell");
+		String proplist = request.getParameter("prop");
+		String listtype = request.getParameter("type");
+		String lang = userInfo.getPrimary();
+		String page = request.getParameter("page");
+		String infoXML = "";
+		
+		LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
+		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
+	    
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezAttitude/getSearchList.do";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("searchlist", searchlist)
+				.queryParam("celllist", celllist)
+				.queryParam("proplist", proplist)
+				.queryParam("listtype", listtype)
+				.queryParam("lang", lang)
+				.queryParam("page", page);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		String data = "";
+		
+		if(status.equals("ok")){
+			data = (String) resultBody.get("data");
+		}
+	    
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+        int tenantID = userInfo.getTenantId();        
+        
+        LOGGER.debug("tenantID=" + tenantID);       
+		
+		String XMLResult = data;
+		XMLResult = XMLResult.replaceAll("null", "");
+		
+		LOGGER.debug("getSearchList ended.");
+		return XMLResult;
 	}
 }

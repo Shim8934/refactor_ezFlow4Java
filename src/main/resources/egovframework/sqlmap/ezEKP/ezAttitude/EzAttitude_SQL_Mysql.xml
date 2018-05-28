@@ -2,15 +2,15 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezAttitude">
-	<typeAlias alias="AttitudeDeptVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
-	<typeAlias alias="AttitudeConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
-	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
-	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
-	<typeAlias alias="AttitudeApplicationVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO"/>
-	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
-	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
-	<typeAlias alias="HolidayVO" type="egovframework.ezEKP.ezAttitude.vo.HolidayVO"/>
-	<typeAlias alias="attitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
+	<typeAlias alias="AttitudeDeptVO" 				type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
+	<typeAlias alias="AttitudeConfigVO" 			type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
+	<typeAlias alias="AttitudeUserConfigVO" 		type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
+	<typeAlias alias="AttitudeTypeVO" 				type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
+	<typeAlias alias="AttitudeApplicationVO" 		type="egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO"/>
+	<typeAlias alias="AttitudeVO" 					type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
+	<typeAlias alias="AttitudeStatisVO" 			type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
+	<typeAlias alias="HolidayVO" 					type="egovframework.ezEKP.ezAttitude.vo.HolidayVO"/>
+	<typeAlias alias="attitudeFormVO" 				type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
 	
 	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
 		<result property="attitudeId"		column="ATTITUDE_ID" 		columnIndex="1"/>
@@ -23,6 +23,13 @@
 		<result property="applCnt"			column="APPL_CNT" 			columnIndex="8"/>
 		<result property="writerId"			column="WRITER_ID" 			columnIndex="9"/>
 		<result property="applDate"			column="APPL_DATE"			columnIndex="10"/>
+	</resultMap>
+	
+	<resultMap id="deptTreeInfo" class="OrganDeptVO">
+		<result property="cn" 									column="cn" 							columnIndex="1"/>
+		<result property="displayName" 					        column="displayName" 			        columnIndex="2"/>
+		<result property="extensionAttribute15" 			    column="extensionAttribute15"	        columnIndex="3"/>
+		<result property="type" 								column="type" 						    columnIndex="4"/>		
 	</resultMap>
 		
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
@@ -1646,5 +1653,165 @@
 		and
 			start_date <= date_add(concat(#checkStartDate#, ' 23:59:59'), INTERVAL -#offsetMin# minute)
 		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getSearchListCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(*) AS TOTALCOUNT 
+			FROM (
+				SELECT
+					CN
+				FROM
+					TBL_USERMASTER  A
+					$strSQL$
+		]]>					
+		<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
+      		#deptIdList[]#
+		</iterate>
+		<![CDATA[					
+				AND 
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+				AND 
+					A.TENANT_ID = #v_TENANT_ID#
+
+				UNION ALL
+
+				SELECT
+					A.CN
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN  TBL_ADDJOBMASTER A
+				ON
+					a.cn = b.cn and a.tenant_id = b.tenant_id
+					$strSQL$
+		]]>
+		<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
+      		#deptIdList[]#
+		</iterate>
+		<![CDATA[					 
+				AND 
+					A.TENANT_ID = #v_TENANT_ID#
+				) A
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.attOrganSearchList" parameterClass="Map" resultMap="deptTreeInfo">
+		<isEqual property="type" compareValue="U">
+			<![CDATA[
+				 	  SELECT  
+						cn, 
+						displayName,
+						extensionAttribute15, 
+						type 
+			          FROM 
+			          	(SELECT  
+			             	cn, 
+			                department as displayName, 
+			                '' as extensionAttribute15,
+			                'user' as type,
+			                DESCRIPTION 
+			             FROM  
+			             	TBL_USERMASTER A 
+                         $strSQL$
+			]]>					
+			<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
+	      		#deptIdList[]#
+			</iterate>
+			<![CDATA[
+                         AND 
+                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                      
+                         AND 
+                             A.TENANT_ID = #v_TENANT_ID#
+			       		 
+			             UNION ALL
+			            
+       			         SELECT
+       			        	a.cn  , 
+       			            deptid as displayName , 
+       			            '' as extensionAttribute15,
+       			            'user' as type,
+       			            DESCRIPTION  
+       			         FROM 
+       			         	TBL_USERMASTER b   
+       			         INNER JOIN 
+       			         	TBL_ADDJOBMASTER A  
+       			         ON  
+       			         	a.cn = b.cn AND a.tenant_id = b.tenant_id
+                         $strSQL$
+			]]>					
+			<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
+	      		#deptIdList[]#
+			</iterate>
+			<![CDATA[                        
+                      AND A.TENANT_ID = #v_TENANT_ID#
+                        )  AA
+                      ORDER BY DESCRIPTION
+                      LIMIT #startRowForMySQL#, #count#
+               ]]>
+          </isEqual>
+          <isEqual property="class" compareValue="all">
+          	<![CDATA[
+            SELECT
+            *
+            FROM
+                (
+			    SELECT 
+				cn,
+				department as displayName,
+				'' as extensionAttribute15,
+				'user' as type				
+     			FROM 
+     	    		TBL_USERMASTER A 
+                $strSQL$
+                AND 
+                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                             
+                AND 
+                    A.TENANT_ID = #v_TENANT_ID#
+     	    		 
+     	      	UNION ALL
+     	      		      	
+     	      	SELECT 
+     	      		A.cn,
+     	      		deptid as displayName,
+     	      		'' as extensionAttribute15,
+     	      		'user' as type
+     	      	FROM	
+     				TBL_USERMASTER B 
+     			INNER JOIN 
+     				TBL_ADDJOBMASTER A 
+     			ON 
+     				A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+     				
+     			UNION ALL
+				
+				SELECT
+					CN,
+					'' as displayName,
+					'' as extensionAttribute15,
+					'group' as type
+				FROM
+					TBL_DEPTMASTER A	
+                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+                ) AA
+			ORDER BY DISPLAYNAME                
+            LIMIT #startRowForMySQL#, #count#
+			]]>
+          </isEqual>
+		  <isEqual property="type" compareValue="G">
+		  	<![CDATA[
+			SELECT
+	    		cn,
+	    		'' as displayName,
+	    		'' as extensionAttribute15,
+	    		'group' as type
+	    	FROM
+	    		TBL_DEPTMASTER A
+            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+            ORDER BY DISPLAYNAME
+            LIMIT #startRowForMySQL#, #count#
+			]]>
+	      </isEqual>
 	</select>
 </sqlMap>
