@@ -568,37 +568,6 @@
 				}
 			}
 			
-			//수정신청 레이어 팝업띄우깅
-			/* function showDialog(obj) {
-				if (attitudeModAppl) {
-					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	
-		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-		        	
-		        	$("#popup").css("left", popupX);
-		        	
-					$("#popup").modal();
-					
-					$("#originInCom").text($(obj).parents("td").attr("day") + $(obj).text().split(" :")[1]);
-					
-					var uploadSDate = $(obj).parents("td").attr("day") + " 00:00:00";
-					var sYear = uploadSDate.substring(0, 4);
-					var sMonth = uploadSDate.substring(5, 7);
-					var sDay = uploadSDate.substring(8, 10);
-					var sHour = uploadSDate.substring(11, 13);
-					var sMin = uploadSDate.substring(14, 16);
-					
-			        var SDate = new Date();
-			        SDate.setFullYear(sYear, sMonth-1, sDay);
-			        SDate.setHours(sHour, sMin, 0, 0);
-			        
-			        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-			        $("#Sdatepicker").datepicker('setDate', SDate);
-				} else {
-					 alert("<spring:message code='ezAttitude.bbhs39'/>");
-				}
-			} */
-			
 			function layerHidden() {
 		        $.modal.close();
 		    }
