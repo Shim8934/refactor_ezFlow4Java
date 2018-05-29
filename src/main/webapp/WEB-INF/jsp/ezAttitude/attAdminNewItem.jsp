@@ -589,11 +589,11 @@
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content">
 	                        	<tr id="userId" fixed="fix" style="display:none;">
-	                        		<th>아이디</th>
+	                        		<th><spring:message code='ezAttitude.t218'/></th>
 	                        		<td><c:out value="${info.userId }"/></td>
 	                        	</tr>
 	                        	<tr id="userName" fixed="fix">
-	                        		<th>이름</th>
+	                        		<th><spring:message code='ezAttitude.t10'/></th>
 	                        		<td><c:out value="${info.userName }"/></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">

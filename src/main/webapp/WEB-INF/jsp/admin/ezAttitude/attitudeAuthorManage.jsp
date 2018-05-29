@@ -305,7 +305,7 @@
                     <th style="width: 19%;"><span><spring:message code='ezAttitude.t11' /></span></th>
                     <th style="width: 19%;"><span><spring:message code='ezAttitude.t9' /></span></th>
                     <th style="width: 18%;"><span><spring:message code='ezAttitude.t190' /></span></th>
-                    <th style="width: 25%;"><span>권한정보</span></th>
+                    <th style="width: 25%;"><span><spring:message code='ezAttitude.t216'/></span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 460px; overflow-y: auto;">

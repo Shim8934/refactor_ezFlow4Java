@@ -743,9 +743,9 @@
 					    	
 					    	result.forEach(function(vo, index) {
 					    		if (vo.apprStatus == 1) {
-					    			vo.apprStatus = "승인";
+					    			vo.apprStatus = "<spring:message code='ezAttitude.t210'/>";
 					    		} else {
-					    			vo.apprStatus = "반려";
+					    			vo.apprStatus = "<spring:message code='ezAttitude.t211'/>";
 					    		}
 								
 					    		var gubunBar = "";
@@ -830,7 +830,7 @@
 				var startDate = date + " 00:00:00";
 				var endDate = date + " 23:59:59";
 				
-				document.getElementById("popupDay_title").innerText = "근태내역확인 [" + date + "]";
+				document.getElementById("popupDay_title").innerText = "<spring:message code='ezAttitude.t141'/> [" + date + "]";
 				
 				$.ajax({
 					type : "POST",

@@ -364,7 +364,7 @@
 			    url : '/ezAttitude/getTotalAttCount.do',
 			    dataType : "text",
 			    error: function(xhr, status, error){
-			    	alert("오류발생");
+			    	alert("<spring:message code='ezAttitude.t175'/>");
 			    },
 			    success : function(result){
 			    	if (result == "0") {
