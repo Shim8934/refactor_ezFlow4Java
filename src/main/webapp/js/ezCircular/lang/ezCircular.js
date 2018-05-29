@@ -23,3 +23,4 @@ var strLang22 = "리스트의 ID가 지정되지 않았습니다.";
 var strLang23 = "데이터가 지정되지 않았습니다.";
 var strLang24 = "이전";
 var strLang25 = "다음";
+var strLang26 = "작성자에게 의견을 남겨주세요.";

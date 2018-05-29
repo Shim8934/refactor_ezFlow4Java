@@ -162,14 +162,36 @@ public class EzEmailAdminController {
 			Document doc = commonUtil.convertStringToDocument(bodyData);
 			String companyId = doc.getElementsByTagName("COMPID").item(0)
 					.getTextContent();
-
-			List<MailDistributionVO> distributionList = ezEmailService
+			String cn = doc.getElementsByTagName("CN").item(0).getTextContent() == null ? "" 
+					: doc.getElementsByTagName("CN").item(0).getTextContent();
+			
+			List<MailDistributionVO> distributionSearchList = ezEmailService
 					.getDistributionList(companyId, auth.getTenantId());
-
+			
+			List<MailDistributionVO> distributionResultList = new ArrayList<MailDistributionVO>();
+			
+			String isIncluded = "NO";
+			
+			if (!cn.equals("null") && !cn.equals("")) {
+				for (MailDistributionVO vo : distributionSearchList) {
+					if (!vo.getId().equals(cn)) {
+						isIncluded = ezEmailService.checkDistributionIsIncluded(cn, vo.getId(), auth.getTenantId());
+						
+						if (isIncluded.equals("NO")) {
+							distributionResultList.add(vo);
+						} 
+					} else {
+					distributionResultList.add(vo);
+					}	
+				}
+			} else {
+				distributionResultList = distributionSearchList;
+			}
+			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<LISTVIEWDATA><ROWS>");
 
-			for (MailDistributionVO vo : distributionList) {
+			for (MailDistributionVO vo : distributionResultList) {
 				sb.append("<ROW><CELL>");
 
 				sb.append("<VALUE>");
@@ -491,6 +513,22 @@ public class EzEmailAdminController {
 								+ egovMessageSource.getMessage("ezOrgan.t68",
 										locale) + "</TITLE>");
 						sb.append("</ROW>");
+					} else {
+						if (ezCommonService.getTenantConfig("useRankMail", userInfo.getTenantId()).equals("YES")) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + "distribution" + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(pCn)
+								+ "</DISPLAYNAME>");
+						sb.append("<MAIL>"
+								+ commonUtil.cleanValue(cn)
+								+ "</MAIL>");
+						sb.append("<DEPT>"
+								+ egovMessageSource.getMessage("ezEmail.t57",
+										locale) + "</DEPT>");
+						sb.append("</ROW>");
+				}
 					}
 
 				} else {
@@ -518,11 +556,9 @@ public class EzEmailAdminController {
 						sb.append("</ROW>");
 					}
 				}
-
 			}
 
 			sb.append("</DATA>");
-
 			returnData = sb.toString();
 
 		} catch (Exception e) {
