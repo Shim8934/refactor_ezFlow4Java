@@ -455,29 +455,25 @@ public class EzPMSController2 {
 	 * @param loginCookie
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/updateTaskInfo.do")
-	public String updateTaskInfo(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	public String updateTaskInfo(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
 		
 		LOGGER.debug("ezPMS updateTaskInfo started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String taskId = request.getParameter("taskId");
+		String taskId = (String)param.get("taskId");
 		
+		JSONObject jsonList = new JSONObject();
+		jsonList.put("managerList", param.get("managerList"));
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "put", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "put", jsonList);
 		String status = resultBody.get("status").toString();
-		
-		if(status.equals("ok")) {
-			JSONObject taskDetails = (JSONObject) resultBody.get("data");
-			model.addAttribute("taskDetails", taskDetails);
-		}
 		
 		LOGGER.debug("ezPMS updateTaskInfo ended");
 		
-		return "/ezPMS/pmsTaskInfoTab";
+		return "json";
 	}
 	
 }

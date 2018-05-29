@@ -60,6 +60,9 @@ var writerId= "";
 
  $(function() {
 	 taskDetails = ${taskDetails};
+	 managerList = ${taskDetails.taskMember};
+	 headManagerId = "${taskDetails.headManagerId}";
+	 applyList();
  });
  
 function openMemberList() {
@@ -114,6 +117,11 @@ function updateTaskInfo() {
 	 overview = convertString(document.getElementById("overview").value.trim());
 	 var weightInput = 1; // 수정해야함.
 	 var remainingWeight = ${weightData.remainingWeight};
+	 var projectStartDate = "${taskDetails.planStartDate}";
+	 var projectEndDate = "${projectEndDate}";
+	 var planStartDate = "${taskDetails.planStartDate}";
+	 var planEndDate = "${taskDetails.planEndDate}";
+	 var writeDate = "${taskDetails.writeDate}";
 	 
 	 //업무 이름 길이 제한
 	 if (taskName.length == 0) {
@@ -158,13 +166,16 @@ function updateTaskInfo() {
 	
 	data = {
 			taskName : taskName,
+			taskId : taskDetails.taskId + "",
 			projectId : projectId,
 			groupId : groupId,
 			overview	 : overview,
 			headManagerId : headManagerId,
 			managerList : managerList,
-			weight : weight,
-			writerId : writerId
+			planStartDate : planStartDate,
+			planEndDate : planEndDate,
+			writeDate : writeDate,
+			weight : weight
 	}
 	
 	$.ajax({
@@ -174,7 +185,7 @@ function updateTaskInfo() {
 		contentType: "application/json; charset=UTF-8",
 		data : JSON.stringify(data),
 		success : function(data) {
-			alert("<spring:message code='ezTask.t150' />");
+			alert("업무 정보를 변경하였습니다.");
 			
 			parent.location.reload();
 			popupClose();
@@ -221,7 +232,7 @@ function updateTaskInfo() {
 			<tr>
 				<th>업무개요</th>
 				<td>
-					<textarea id="overview">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
+					<textarea id="overview" placeholder="내용을 입력해주세요">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
 				</td>
 			</tr>
 		</table>

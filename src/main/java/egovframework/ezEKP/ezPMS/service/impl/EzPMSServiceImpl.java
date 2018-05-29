@@ -734,8 +734,85 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public int updateTask(ProjectTaskVO task) {
-		// TODO Auto-generated method stub
-		return 0;
+		LOGGER.debug("[SERVICE] updateTask started.");
+		Long taskId = (long) 0;
+		
+		try {
+			List<TaskMemberVO> taskMemberList = task.getTaskMember();
+			
+			String projectId = task.getProjectId() + "";
+			
+			// 정렬 순서 구하기
+			int sortOrder = ezPMSDAO.getSortOrder(task.getGroupId() + "");
+			task.setSortOrder(sortOrder);
+			
+			// 투입률 총합
+			float sumPctinput = 0;
+			
+			task.setRealProgress((float) 0);
+			task.setMemberCount(taskMemberList.size());
+			
+			//workingday 계산
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
+			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
+			
+			int calWorkingDays = getWorkinDays(startDate, endDate);
+			
+			int createAndEndDateComp = createDate.compareTo(endDate);
+			
+			if(createAndEndDateComp > 0) {
+				task.setStatus("L");
+			} else {
+				task.setStatus("W");
+			}
+			
+			//업무 총괄담당자 정보 불러오기
+			ProjectMemberVO headManagerInfo = getUserInfo(task.getHeadManagerId(), task.getTenantId(), "user");
+			task.setHeadManagerName(headManagerInfo.getUserName());
+			task.setHeadManagerName2(headManagerInfo.getUserName2());
+			task.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
+			task.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
+			
+			taskId = ezPMSDAO.addTask(task);
+			
+			for(int i=0;i<taskMemberList.size();i++) {
+				TaskMemberVO taskMemberVO = taskMemberList.get(i);
+				taskMemberVO.setTaskId(taskId);
+				sumPctinput += taskMemberVO.getPctinput();
+				ezPMSDAO.addTaskMember(taskMemberVO);
+			}
+			
+			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
+			
+			HashMap<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("projectId", projectId);
+			map1.put("workingday", taskWorkingday);
+			ezPMSDAO.updateProjectWorkingday(map1);
+			
+			HashMap<String, Object> map2 = new HashMap<String, Object>();
+			
+			// 가중치 계산
+			if(task.getWeight() == -1) {
+				int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
+				float calWeight = (taskWorkingday / projectWorkingday) * 100;
+				System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
+				map2.put("weight", calWeight);
+			} else {
+				map2.put("weight", task.getWeight());
+			}
+			map2.put("taskId", taskId);
+			map2.put("workingday", taskWorkingday);
+			
+			ezPMSDAO.updateTaskWDNW(map2);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("[SERVICE] updateTask ended.");
+		
+		return taskId.intValue();
 	}
 
 	@Override
@@ -1355,7 +1432,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("fileMove ended.");
 	}
 
-	@Override
 	public String getUserTaskRole(String userId, int tenantId, long taskId) {
 		LOGGER.debug("[SERVICE] getUserTaskRole started");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1380,5 +1456,96 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getFilePath ended");
 		
 		return fileList;
+	}
+
+	public void updateTaskInfo(ProjectTaskVO task) {
+		LOGGER.debug("[SERVICE] updateTaskInfo started.");
+		Long taskId = (long) 0;
+		
+		try {
+			List<TaskMemberVO> taskMemberList = task.getTaskMember();
+			taskId = task.getTaskId();
+			
+			String projectId = task.getProjectId() + "";
+			
+			// 투입률 총합
+			float sumPctinput = 0;
+			
+			task.setRealProgress((float) 0);
+			task.setMemberCount(taskMemberList.size());
+			
+			//workingday 계산
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
+			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
+			
+			int calWorkingDays = getWorkinDays(startDate, endDate);
+			
+			int createAndEndDateComp = createDate.compareTo(endDate);
+			
+			if(createAndEndDateComp > 0) {
+				task.setStatus("L");
+			} else {
+				task.setStatus("W");
+			}
+			
+			//업무 총괄담당자 정보 불러오기
+			ProjectMemberVO headManagerInfo = getUserInfo(task.getHeadManagerId(), task.getTenantId(), "user");
+			task.setHeadManagerName(headManagerInfo.getUserName());
+			task.setHeadManagerName2(headManagerInfo.getUserName2());
+			task.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
+			task.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
+			
+			ezPMSDAO.updateTaskInfo(task);
+			deleteTaskMember(taskId, task.getTenantId());
+			
+			for(int i=0;i<taskMemberList.size();i++) {
+				TaskMemberVO taskMemberVO = taskMemberList.get(i);
+				taskMemberVO.setTaskId(taskId);
+				sumPctinput += taskMemberVO.getPctinput();
+				ezPMSDAO.addTaskMember(taskMemberVO);
+			}
+			
+			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
+			
+			HashMap<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("projectId", projectId);
+			map1.put("workingday", taskWorkingday);
+			ezPMSDAO.updateProjectWorkingday(map1);
+			
+			HashMap<String, Object> map2 = new HashMap<String, Object>();
+			
+			// 가중치 계산
+			if(task.getWeight() == -1) {
+				int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
+				float calWeight = (taskWorkingday / projectWorkingday) * 100;
+				System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
+				map2.put("weight", calWeight);
+			} else {
+				map2.put("weight", task.getWeight());
+			}
+			map2.put("taskId", taskId);
+			map2.put("workingday", taskWorkingday);
+			
+			ezPMSDAO.updateTaskWDNW(map2);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("[SERVICE] updateTaskInfo ended.");
+	}
+
+	@Override
+	public void deleteTaskMember(Long taskId, int tenantId) {
+		LOGGER.debug("[SERVICE] deleteTaskMember Started");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("taskId", taskId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.deleteTaskMember(map);
+		
+		LOGGER.debug("[SERVICE] deleteTaskMember Ended");
+		
 	}
 }

@@ -226,6 +226,7 @@ public class EzPMSGWController2 {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
 			ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Long.parseLong(taskId), info.getTenantId(), lang);
+			taskVO.setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskVO.getTaskId(), lang));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -253,13 +254,51 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
 			
-			Gson gson = new Gson();
-			ProjectTaskVO vo = new ProjectTaskVO();
-			vo = gson.fromJson(jsonParam.toJSONString(), ProjectTaskVO.class);
-			vo.setTenantId(info.getTenantId());
+			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam.get("managerList");
+			List<TaskMemberVO> taskMemberList2 = new ArrayList<TaskMemberVO>();
 			
-			ezPMSService.updateTask(vo);
+			for (int i = 0; i < taskMemberList1.size(); i++) {
+				String taskMemberId = (String)taskMemberList1.get(i).get("userId");
+				Float pctinput = Float.parseFloat(taskMemberList1.get(i).get("pctinput").toString());
+				
+				TaskMemberVO taskMemberVO = new TaskMemberVO();
+				taskMemberVO.setTenantId(tenantId);
+				taskMemberVO.setUserId(taskMemberId);
+				taskMemberVO.setPctinput(pctinput);
+				
+				ProjectMemberVO member = ezPMSService.getUserInfo(taskMemberId, tenantId, "user");
+				
+				taskMemberVO.setUserName(member.getUserName());
+				taskMemberVO.setUserName2(member.getUserName2());
+				taskMemberVO.setUserDeptname(member.getUserDeptname());
+				taskMemberVO.setUserDeptname2(member.getUserDeptname2());
+				
+				taskMemberList2.add(taskMemberVO);
+			}
+			
+			
+			ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+			projectTaskVO.setTenantId(tenantId);
+			projectTaskVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
+			projectTaskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			projectTaskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
+			projectTaskVO.setTaskName(request.getParameter("taskName"));
+			projectTaskVO.setWeight(Float.parseFloat(request.getParameter("weight")));
+			projectTaskVO.setOverview(request.getParameter("overview"));
+			projectTaskVO.setHeadManagerId(request.getParameter("headManagerId"));
+			projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
+			projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+			projectTaskVO.setWriterId(request.getParameter("writerId"));
+			projectTaskVO.setWriteDate(request.getParameter("writeDate"));
+			projectTaskVO.setWriterName(request.getParameter("writerName"));
+			projectTaskVO.setWriterName2(request.getParameter("writerName2"));
+			projectTaskVO.setWriterDeptname(request.getParameter("writerDeptname"));
+			projectTaskVO.setWriterDeptname2(request.getParameter("writerDeptname2"));
+			projectTaskVO.setTaskMember(taskMemberList2);
+			
+			ezPMSService.updateTaskInfo(projectTaskVO);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
