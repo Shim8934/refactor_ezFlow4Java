@@ -516,20 +516,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeConfig(JSONObject jsonParam)
-			throws Exception {
+	public void updateAttitudeConfig(String workStartTime, String workEndTime, String closedDay, String attitudeModAppl, String closedDateAttitude, String confSetDate, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("updateAttitudeConfig started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("tenantId", jsonParam.get("tenantId").toString());
-		map.put("companyId", jsonParam.get("companyId").toString());
-		map.put("workStartTime", jsonParam.get("workStartTime").toString());
-		map.put("workEndTime", jsonParam.get("workEndTime").toString());
-		map.put("closedDay", jsonParam.get("closedDay").toString());
-		map.put("attitudeModAppl", jsonParam.get("attitudeModAppl").toString());
-		map.put("closedDateAttitude", jsonParam.get("closedDateAttitude").toString());
-		map.put("confSetDate", jsonParam.get("confSetDate").toString());
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("workStartTime", workStartTime);
+		map.put("workEndTime", workEndTime);
+		map.put("closedDay", closedDay);
+		map.put("attitudeModAppl", attitudeModAppl);
+		map.put("closedDateAttitude", closedDateAttitude);
+		map.put("confSetDate", confSetDate);
 		
 		ezAttitudeDAO.updateAttitudeConfig(map);
 		
@@ -537,19 +535,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeTypeConfig(String typeConfigList, String companyId,
-			int tenantId) throws Exception {
+	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("updateAttitudeTypeConfig started");
+		LOGGER.debug("typeConfigList = " + typeConfigList);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
 		for (String typeInfoList : typeConfigList.split(";")) {
 			String[] typeInfo = typeInfoList.split(",");
-			
-			LOGGER.debug("typeId = " + typeInfo[0]);
 			
 			map.put("typeId", typeInfo[0]);
 			map.put("isuse", typeInfo[1]);
@@ -595,18 +590,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId,
-			String typeId) throws Exception {
+	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception {
 		LOGGER.debug("getAttitudeTypeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("typeId", typeId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
+		AttitudeTypeVO result = ezAttitudeDAO.getAttitudeTypeInfo(map);
+		
 		LOGGER.debug("getAttitudeTypeInfo ended");
-		return ezAttitudeDAO.getAttitudeTypeInfo(map);
+		
+		return result;
 	}
 
 	@Override
