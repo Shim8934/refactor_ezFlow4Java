@@ -163,3 +163,8 @@ function getCheckedVal() {
 	
 	return 1;
 }
+
+//검색 - 날짜 초기화 버튼
+function emptyDate(elem){
+	$(elem).siblings('input').val("");
+}

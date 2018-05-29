@@ -112,7 +112,10 @@ public class ProjectTaskVO {
     
     //그룹이름
     private String groupName;
-
+    
+    //프로젝트 이름
+    private String projectName;
+    
     public Long getTaskId() {
         return taskId;
     }
@@ -399,6 +402,14 @@ public class ProjectTaskVO {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
     
 }

@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -1257,6 +1258,7 @@ public class EzPMSController {
 		
 		String countUrl = "/rest/ezPMS/projects/" + projectId + "/tasks/count";
 		String url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId;
+		
 		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
 		String countStatus = countResult.get("status").toString();
 		
@@ -1268,6 +1270,7 @@ public class EzPMSController {
 			if (!countResult.get("data").equals("")){
 				taskListCount = Integer.parseInt(countResult.get("data").toString());
 				model.addAttribute("taskListCount", taskListCount);
+				
 				ProjectPagination paging = new ProjectPagination(taskListCount, listNumber, 10, currentPage);
 				model.addAttribute("paging", paging);
 				
@@ -1295,6 +1298,7 @@ public class EzPMSController {
 					if (status.equals("ok")) {
 						JSONArray taskList = (JSONArray) result.get("data");
 						model.addAttribute("taskList", taskList);
+						model.addAttribute("position", param.get("position"));
 					}
 				}
 			}
@@ -1327,6 +1331,7 @@ public class EzPMSController {
 		
 		param.put("onlyGroup", onlyGroup);
 		param.put("location", "taskList");
+		param.put("userId", userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -1387,4 +1392,59 @@ public class EzPMSController {
 		
 		return checkPermission;
 	}
+	
+	/**
+	 * 나의 업무 : 담당 그룹 리스트 호출
+	 */
+
+	@RequestMapping(value="/ezPMS/getGroupList.do")
+	public String getMyGroupList(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getMyGroupList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String projectId = param.get("projectId").toString(); 
+		
+		String countUrl = "/rest/ezPMS/users/" + userId + "/groups/count";
+		String url = "/rest/ezPMS/projects/" + projectId + "/groups/users/" + userId;
+		
+		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+		String countStatus = countResult.get("status").toString();
+		int groupCount = 0;
+		
+		int listNumber = Integer.parseInt(param.get("listNumber").toString());
+		int currentPage = Integer.parseInt(param.get("currentPage").toString());
+		
+		if (countStatus.equals("ok")) {
+			if (!countResult.get("data").equals("")){
+				groupCount = Integer.parseInt(countResult.get("data").toString());
+				model.addAttribute("taskListCount", groupCount);
+				
+				ProjectPagination paging = new ProjectPagination(groupCount, listNumber, 10, currentPage);
+				model.addAttribute("paging", paging);
+				
+				if (groupCount != 0) {
+					//현재 페이지
+					param.put("currentPage", currentPage);
+					//한 페이지에 보여질 개수
+					param.put("limit", listNumber);
+					//프로젝트 총 개수
+					param.put("listCount", groupCount);
+					param.put("startRow", paging.getStartCount());
+					
+					JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+					String status = result.get("status").toString();
+					
+					if (status.equals("ok")) {
+						JSONArray groupList = (JSONArray) result.get("data");
+						model.addAttribute("taskList", groupList);
+						model.addAttribute("position", param.get("position"));
+					}
+				}
+			}
+		}
+		
+		LOGGER.debug("ezPMS getMyGroupList ended");
+		return "ezPMS/pmsTaskList";
+	}
+	
 }

@@ -29,6 +29,7 @@ $(function(){
 	selStatus = kanbanOrderArr;
 	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
+		console.log(kanbanOrderArr[i]);
 		if (kanbanOrderArr[i].indexOf("MA") != -1) {
 			strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='selMA'>";
 			strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white;' >";
@@ -38,12 +39,11 @@ $(function(){
 			$("#MA").prop("checked", true);
 		} else {
 			$("#" + kanbanOrderArr[i].slice(-1)).prop("checked", true);	
+			
 			strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + kanbanOrderArr[i].slice(-1) + "'>";
 			strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white;'>";
 			strHTML += $("#" + kanbanOrderArr[i].slice(-1)).val();
 			strHTML += "</td></tr>";
-			
-			$("#" + kanbanOrderArr[i].slice(-1)).prop("checked", true);
 		}
 	}
 
@@ -228,6 +228,9 @@ body {
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('MA')" onclick="selectOneStatus('MA')">
 								<td><input type="checkbox" id="MA" name="kanbanStatus" value="나의 전체 업무" onchange="selectStatus('MA')">나의 전체 업무</td>
 							</tr>
+							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('A')" onclick="selectOneStatus('A')">
+								<td><input type="checkbox" id="A" name="kanbanStatus" value="전체 업무" onchange="selectStatus('A')">전체 업무</td>
+							</tr>
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('P')" onclick="selectOneStatus('P')">
 								<td><input type="checkbox" id="P" name="kanbanStatus" value="진행 중인 업무" onchange="selectStatus('P')">진행 중인 업무</td>
 							</tr>
@@ -257,7 +260,7 @@ body {
 	                </td>
 	           </tr>
 	         </table>
-			<table style="margin-top : 3px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+			<table style="margin-top : 5px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
 				<td><a class="imgbtn" id="submit" onclick="updateKanbanStatus()"><span>확인</span></a></td>
 				<td></td>

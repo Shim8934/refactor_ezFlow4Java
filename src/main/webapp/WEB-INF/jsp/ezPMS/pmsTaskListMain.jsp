@@ -37,7 +37,7 @@
 	
 	//검색을 위한 variables
 	var searchByStatus = "";
-	var searchByName = "";
+	var searchByTaskName = "";
 	var searchByUser = "";
 	var searchByPlanStartDate = "";
 	var searchByPlanEndDate = "";
@@ -94,7 +94,7 @@
 			orderHow : orderHow,
 			//검색
 			status : searchByStatus,
-			searchByName : searchByName,
+			searchByTaskName : searchByTaskName,
 			searchByUser : searchByUser,
 			searchByStartDate : searchByPlanStartDate,
 			searchByEndDate : searchByPlanEndDate,
@@ -453,7 +453,7 @@
 			<tbody>
 				<tr>
 					<th>업무명 </th>
-					<td style="width:50%"><input type="text" id="searchByName" style="width:50%; margin-right:5px;"></td>
+					<td style="width:50%"><input type="text" id="searchByTaskName" style="width:50%; margin-right:5px;"></td>
 					<th>담당자</th>
 					<td><input type="text" id="searchByUser"></td>
 				</tr>

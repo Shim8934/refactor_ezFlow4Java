@@ -35,6 +35,10 @@ var startCount = 0;
 var listNumber = 5;
 var position = "overview";
 
+//내가 담당인 업무 완료/보류/진행 시키기 위한 변수
+var beforePosition = "";
+var afterPosition = "";
+
 $(document).ready(function(){
 	$(window).resize(function() {
 		CurrentHeight = $(window).height()-100;
@@ -42,6 +46,7 @@ $(document).ready(function(){
 		$(".kanban").css("height", CurrentHeight - 14 + "px");
 		$("#kanbanArea").css("height", CurrentHeight + "px");
 	});
+	
 });
 
 $(function() {
@@ -59,8 +64,10 @@ $(function() {
 		update : function(event, ui) {
 			updateOrderStatus();
 		}
-	});
-	$("#kanbanDraw").disableSelection();
+	}).disableSelection();
+	
+
+
 });
 
 function initProgressBar() {
@@ -145,7 +152,7 @@ function editProjectInfo() {
 }
 
 function kanbanSetting() {
-	addProjectPopup(18, 29, 500, 350, "/ezPMS/kanbanSetting.do?projectId=" + projectId);
+	addProjectPopup(18, 29, 500, 386, "/ezPMS/kanbanSetting.do?projectId=" + projectId);
 }
 
 function initKanbanList() {
@@ -207,6 +214,39 @@ function initKanbanList() {
 			} else {
 				setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new", true);
 			}
+			
+			for (var i = 0; i < kanbanOrderArr.length; i++) {
+				if (kanbanOrderArr[i].includes("P") || kanbanOrderArr[i].includes("W") || kanbanOrderArr[i].includes("C")) {
+					$("#kanban" + (i + 1)).find(".cardArea").addClass("cardSortable");
+					$("#kanban" + (i + 1)).find(".cardArea").addClass("connectedSortable");
+				}
+			}
+			
+			$(".cardSortable").sortable({
+				connectWith : ".connectedSortable",
+				start : function(event, ui) {
+					beforePosition = $("#" + ui.item.context.id).parent().parent().attr("id");
+				},
+				stop : function (event, ui) {
+					afterPosition = $("#" + ui.item.context.id).parent().parent().attr("id");
+					
+					var beforeStatus = $("#" + beforePosition).attr("name");
+					var afterStatus = $("#" + afterPosition).attr("name");
+					var targetTaskId = ui.item.context.id;
+					
+					if (beforePosition == afterPosition || beforeStatus.includes("C") || afterStatus.includes("W")) {
+						$(".cardSortable").sortable("cancel");
+					} else {
+						var response = confirm("업무의 상태를 변경하시겠습니까?");
+						
+						if (response == false) {
+							$(".cardSortable").sortable("cancel");
+						} else {
+							updateTaskStatus(targetTaskId, afterStatus);
+						}
+					}
+				}
+			}).disableSelection();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 		}
@@ -255,6 +295,37 @@ function initKanbanList() {
 			$("#kanban" + (i + 1)).find("h1").html(title);
 		}
 	}
+}
+
+
+function updateTaskStatus(targetTaskId, afterStatus) {
+	var targetId = targetTaskId.subString(targetTaskId.lastIndexOf("n") + 1);
+	console.log(targetId);
+	
+	$.ajax({
+		type : "POST",
+		dataType: "text",
+		contentType: "application/json; charset=UTF-8",
+		url : "/ezPMS/updateTaskStatus.do",
+		data : {
+			projectId : projectId,
+			taskId : targetTaskId,
+			status : afterStatus
+		},
+		success : function(result) {
+			if (result == "permitted") {
+				alert("상태가 변경되었습니다.");
+				initKanbanList();
+			} else {
+				alert("업무 담당자나 프로젝트 담당자만 상태를 변경할 수 있습니다.");
+				return;
+			}
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+		}
+	
+		
+	});
 }
 
 function moveToPage(target) {
@@ -365,7 +436,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 			} else {
 				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='card board' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
 				kanbanHTML += "<h5>" + taskList[i].title + "</h5>";
-				console.log(taskList[i].imageFilePath);
+
 				if (taskList[i].imageFilePath == null) {
 					kanbanHTML += "<div class='boardContent'>" + taskList[i].writeContent + "</div>";
 				} else {
@@ -430,8 +501,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 
 function selectedTR(elem){
 	var selectElem = elem.id;
-	console.log(selectElem);
-	console.log(elem);
+	
 	$(".card").removeClass("selectTR");
 	$("#" + selectElem).addClass("selectTR");
 }

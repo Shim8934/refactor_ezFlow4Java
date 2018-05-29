@@ -89,8 +89,30 @@ public class ProjectGroupVO {
 
     // 남은 기한 
     private int restDueday;
+    
+    //프로젝트 이름
+    private String projectName;
+    
+    //상위 그룹 이름
+    private String upperGroupName;
+    
+    public String getProjectName() {
+		return projectName;
+	}
 
-    public Long getGroupId() {
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getUpperGroupName() {
+		return upperGroupName;
+	}
+
+	public void setUpperGroupName(String upperGroupName) {
+		this.upperGroupName = upperGroupName;
+	}
+
+	public Long getGroupId() {
         return groupId;
     }
 

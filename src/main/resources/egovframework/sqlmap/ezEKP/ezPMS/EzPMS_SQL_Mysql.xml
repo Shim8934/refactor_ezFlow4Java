@@ -72,6 +72,8 @@
     	<result property="delStatus"						column="DEL_STATUS"					columnIndex="23"/>
     	<result property="workingday"						column="WORKINGDAY"					columnIndex="24"/>
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
+    	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
     </resultMap>
     
     <resultMap id="projectMainSettingVO" class="ProjectMainSettingVO">
@@ -131,6 +133,7 @@
     	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
     	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
     	<result property="groupName"						column="GROUP_NAME"					columnIndex="29"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
     </resultMap>
     
     <resultMap id="projectTaskMemberVO" class="ProjectTaskMemberVO">
@@ -1003,7 +1006,10 @@
 				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
 				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
 				A.DEL_STATUS,
-				D.GROUP_NAME
+				D.GROUP_NAME,
+				B.PROJECT_NAME
+		]]>
+		<![CDATA[
 			FROM 
 				tbl_pms_task A
 			JOIN 
@@ -1024,15 +1030,21 @@
 				tbl_pms_taskmember E
 			ON
 				A.TASK_ID = E.TASK_ID
-			WHERE		 
-				A.PROJECT_ID = #projectId#
-			AND 
+			WHERE
 				A.TENANT_ID = #tenantId#
 			AND
 				C.USER_ID = #userId#
 			AND
 				A.DEL_STATUS = 0
 		]]>
+		<isNotEqual property="projectId" compareValue="0">
+			AND  
+				A.PROJECT_ID = #projectId#
+		</isNotEqual>
+		<isEqual property="isMyTask" compareValue="M">
+			AND
+				E.USER_ID = #userId#
+		</isEqual>
 		<isNotNull property="status">
 			<isNotEqual property="status" compareValue="A">
 				AND
@@ -1064,6 +1076,10 @@
 		<isNotEmpty property="searchByOverview">
 			AND
 				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByProjectName">
+			AND
+				B.PROJECT_NAME LIKE CONCAT('%',#searchByProjectName#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="searchByEndDate">
 		<![CDATA[
@@ -1541,39 +1557,97 @@
 	<select id="EzPMSDAO.getGroupList" parameterClass="map" resultMap="projectGroupVO">
 		<![CDATA[
 			SELECT	
-				GROUP_ID,
-				TENANT_ID,
-				PROJECT_ID,
-				GROUP_NAME,
-				UPPER_GROUP_ID,
-				PLAN_START_DATE,
-				PLAN_END_DATE,
-				REAL_START_DATE,
-				REAL_END_DATE,
-				REAL_PROGRESS,
-				OVERVIEW,
-				MEMBER_COUNT,
-				HEAD_MANAGER_ID,
-				HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
-				HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
-				CREATOR_ID,
-				CREATE_DATE,
-				CREATOR_NAME$lang$ AS CREATOR_NAME,
-				CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
-				TREE_DEPTH,
-				ANCESTER_GROUP,
-				SORT_ORDER,
-				DEL_STATUS,
-				WORKINGDAY,
-				REST_DUEDAY
-			FROM 
-				TBL_PMS_GROUP
-			WHERE 
-				PROJECT_ID = #projectId#
+				A.GROUP_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_NAME,
+				A.UPPER_GROUP_ID,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.CREATOR_ID,
+				A.CREATE_DATE,
+				A.CREATOR_NAME$lang$ AS CREATOR_NAME,
+				A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
+				A.TREE_DEPTH,
+				A.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				A.DEL_STATUS,
+				A.WORKINGDAY,
+				A.REST_DUEDAY,
+				P.PROJECT_NAME,
+				B.GROUP_NAME AS UPPER_GROUP_NAME
+			FROM
+				TBL_PMS_GROUP A
+			JOIN	
+				TBL_PMS_PROJECT P
+			ON	
+				A.PROJECT_ID = P.PROJECT_ID
+			LEFT JOIN
+				TBL_PMS_GROUP B
+			ON
+				A.UPPER_GROUP_ID = B.GROUP_ID
+			JOIN
+				TBL_PMS_GROUPMEMBER M
+			ON
+				A.GROUP_ID = M.GROUP_ID
+			WHERE
+				M.USER_ID = #userId#
 			AND
-				TENANT_ID = #tenantId#
+				A.TENANT_ID = #tenantId#
+			AND
+				M.MEMBER_ROLE_ID = 1
 		]]>
-	</select>
+			<isNotEqual property="projectId" compareValue="0">
+			AND
+				A.PROJECT_ID = #projectId#
+			</isNotEqual>
+			<isNotEmpty property="searchByGroupName">
+				AND 
+					A.GROUP_NAME LIKE CONCAT('%', #searchByGroupName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByUpperGroupName">
+				AND 
+					B.GROUP_NAME LIKE CONCAT('%', #searchByUpperGroupName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByUser">
+				AND 
+					M.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByProjectName">
+				AND 
+					P.PROJECT_NAME LIKE CONCAT('%', #searchByProjectName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByOverview">
+				AND 
+					A.OVERVIEW LIKE CONCAT('%', #searchByOverview#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByStartDate">
+				AND 
+					A.PLAN_START_DATE LIKE CONCAT('%', #searchByStartDate#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByEndDate">
+				AND 
+					A.PLAN_END_DATE LIKE CONCAT('%', #searchByEndDate#, '%')	
+			</isNotEmpty>
+			<isEqual property="orderWhat" compareValue="init">
+				ORDER BY
+					A.PLAN_END_DATE
+			</isEqual>
+			<isNotEqual property="orderWhat" compareValue="init">
+				ORDER BY
+					$orderWhat$ $orderHow$
+			</isNotEqual>
+				limit
+					#startRow#, #limit#
+		</select>
 	
 	<select id="EzPMSDAO.getTaskDetails" parameterClass="map" resultMap="projectTaskVO">
 		<![CDATA[
@@ -1620,83 +1694,6 @@
 		]]>
 	</select>
 	
-	<select id="EzPMSDAO.getMyTasks" parameterClass="map" resultMap="projectTaskVO">
-	<![CDATA[
-		SELECT	DISTINCT
-			A.TASK_ID,
-			A.TENANT_ID,
-			A.PROJECT_ID,
-			A.GROUP_ID,
-			A.TASK_NAME,
-			A.STATUS,
-			A.PLAN_START_DATE,
-			A.PLAN_END_DATE,
-			A.REAL_START_DATE,
-			A.REAL_END_DATE,
-			A.REAL_PROGRESS,
-			A.WEIGHT,
-			A.OVERVIEW,
-			A.MEMBER_COUNT,
-			A.HEAD_MANAGER_ID,
-			A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
-			A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
-			A.WRITER_ID,
-			A.WRITE_DATE,
-			A.WRITER_NAME$lang$ AS WRITER_NAME,
-			A.WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
-			A.TREE_DEPTH,
-			A.ANCESTER_GROUP,
-			A.SORT_ORDER,
-			A.WORKINGDAY,
-			IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
-			IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
-			A.DEL_STATUS,
-			D.GROUP_NAME
-			FROM 
-				tbl_pms_task A
-			JOIN 
-				tbl_pms_project B
-			ON
-				A.PROJECT_ID = B.PROJECT_ID
-			AND
-				A.TENANT_ID = B.TENANT_ID
-			JOIN
-				tbl_pms_member C
-			ON	
-				A.PROJECT_ID = C.PROJECT_ID
-			JOIN
-				tbl_pms_group D
-			ON
-				A.GROUP_ID = D.GROUP_ID
-			JOIN	
-				tbl_pms_taskmember E
-			ON
-				A.TASK_ID = E.TASK_ID
-			AND 
-				C.USER_ID = E.USER_ID
-			WHERE 
-				E.USER_ID = #userId#
-			AND  
-				A.PROJECT_ID = #projectId#
-			AND 
-				A.TENANT_ID = #tenantId#
-			AND
-				A.DEL_STATUS = 0
-		]]>
-		<isNotNull property="status">
-			<isNotEqual property="status" compareValue="A">
-				AND
-				A.STATUS = #status#
-			</isNotEqual>
-		</isNotNull>
-			ORDER BY 
-				PLAN_END_DATE	
-		<isNotEqual property="limit" compareValue="0">
-			LIMIT 
-				#startRow#, #limit#
-		</isNotEqual>
-	</select>
-	
 	<select id="EzPMSDAO.getTaskListCount" parameterClass="map" resultClass="Integer">
 	<![CDATA[
 		SELECT	
@@ -1722,14 +1719,16 @@
 			ON
 				A.TASK_ID = E.TASK_ID
 			WHERE 
-				A.PROJECT_ID = #projectId#
-			AND 
 				A.TENANT_ID = #tenantId#
 			AND
 				C.USER_ID = #userId#
 			AND	
 				A.DEL_STATUS = 0
 		]]>
+		<isNotEqual property="projectId" compareValue="0">
+			AND  
+				A.PROJECT_ID = #projectId#
+		</isNotEqual>
 		<isEqual property="isMyTask" compareValue="M">
 			AND
            	 E.USER_ID = #userId#
@@ -1759,6 +1758,10 @@
 		<isNotEmpty property="searchByOverview">
 			AND
 				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByProjectName">
+			AND
+				B.PROJECT_NAME LIKE CONCAT('%',#searchByProjectName#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="searhByStartDate">
 		<![CDATA[
@@ -2041,4 +2044,57 @@
   				TENANT_ID = #tenantId#
 	]]>
 	</update>
+	
+	<select id="EzPMSDAO.getGroupCount" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT	
+			COUNT(A.GROUP_ID)
+		FROM
+			TBL_PMS_GROUP A
+		JOIN	
+			TBL_PMS_PROJECT P
+		ON	
+			A.PROJECT_ID = P.PROJECT_ID
+		LEFT JOIN
+			TBL_PMS_GROUP B
+		ON
+			A.UPPER_GROUP_ID = B.GROUP_ID
+		JOIN
+			TBL_PMS_GROUPMEMBER M
+		ON
+			A.GROUP_ID = M.GROUP_ID
+		WHERE
+			M.USER_ID = #userId#
+		AND
+			A.TENANT_ID = #tenantId#
+	]]>
+	<isNotEmpty property="searchByGroupName">
+		AND 
+			A.GROUP_NAME LIKE CONCAT('%', #searchByGroupName#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByUpperGroupName">
+		AND 
+			B.GROUP_NAME LIKE CONCAT('%', #searchByUpperGroupName#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByUser">
+		AND 
+			M.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByProjectName">
+		AND 
+			P.PROJECT_NAME LIKE CONCAT('%', #searchByProjectName#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByOverview">
+		AND 
+			A.OVERVIEW LIKE CONCAT('%', #searchByOverview#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByStartDate">
+		AND 
+			A.PLAN_START_DATE LIKE CONCAT('%', #searchByStartDate#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByEndDate">
+		AND 
+			A.PLAN_END_DATE LIKE CONCAT('%', #searchByEndDate#, '%')	
+	</isNotEmpty>
+	</select>
 </sqlMap>

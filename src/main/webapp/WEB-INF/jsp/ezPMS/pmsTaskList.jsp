@@ -16,29 +16,41 @@
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var contentTitle = $(".jstree-clicked").text();
+var position = "${position}";
 
 $(function() {
-	$("#divList").css("height", (CurrentHeight - 150) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
-	
-	if (contentTitle == "") {
-		var treeItemId = $("li[role=treeitem]").attr("id");
-		contentTitle = $("#" + treeItemId + "_anchor").text();
+	if (position == null || position == "") {
+		$("#divList").css("height", (CurrentHeight - 150) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
+		
+		if (contentTitle == "") {
+			var treeItemId = $("li[role=treeitem]").attr("id");
+			contentTitle = $("#" + treeItemId + "_anchor").text();
 
-		if (contentTitle.indexOf("(") != -1) {
-			contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
+			if (contentTitle.indexOf("(") != -1) {
+				contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
+			}
+			
+			setContentTitle(contentTitle, "${taskListCount}");
+		} else {
+			
+			if (contentTitle.indexOf("(") != -1) {
+				contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
+			}
+			
+			setContentTitle(contentTitle, "${taskListCount}");
 		}
+	} else { 
+		CurrentHeight = $(window).height()-100;
+		$("MailListRayer").css("height", CurrentHeight + "px");
+		$("#divList").css("height", (CurrentHeight - 100) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 170) + "px");
+		$("#projectContent").css("height", CurrentHeight + "px");
+		$("#contentList").css("height", (CurrentHeight - 65) + "px");
+		$("#divList").css("overflow", "auto");
 		
-		setContentTitle(contentTitle, "${taskListCount}");
-	} else {
-		
-		if (contentTitle.indexOf("(") != -1) {
-			contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
-		}
-		
-		setContentTitle(contentTitle, "${taskListCount}");
+		$("#totalCount").text("${taskListCount}");
 	}
-	
 });
 </script>
 </head>
@@ -55,23 +67,37 @@ $(function() {
 								style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 						</th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="TASK_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-							text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">업무명</th>
+							text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">
+							<c:choose>
+								<c:when test="${position eq 'group' }">그룹  이름</c:when>
+								<c:otherwise>업무 이름</c:otherwise>
+							</c:choose>
+							</th>
 						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="GROUP_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px;"
 							class="h5_center">상위 그룹 이름</th>
-						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
+						<c:if test="${position eq 'task' || position eq 'group'}">
+						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROJECT_NAME"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px;"
+							class="h5_center">프로젝트 이름</th>	
+						</c:if>
+						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px"
-							class="h5_center">담당자</th>
-						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="PLAN_START_DATE"
+							class="h5_center">대표 담당자</th>
+						<th id="BoardList_TH_5" onclick="setListOrder(this)" order="PLAN_START_DATE"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
 							class="h5_center">시작일</th>
-						<th id="BoardList_TH_5" onclick="setListOrder(this)" order="PLAN_END_DATE"
+						<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_END_DATE"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
 							class="h5_center">종료일</th>
-						<th id="BoardList_TH_6" onclick="setListOrder(this)" order="STATUS"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
-							class="h5_center">상태</th>
-						<th id="BoardList_TH_7" onclick="setListOrder(this)" order="REAL_PROGRESS"
+						<c:choose>
+							<c:when test="${position ne 'group' }">
+								<th id="BoardList_TH_7" onclick="setListOrder(this)" order="STATUS"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
+								class="h5_center">상태</th>
+							</c:when>
+						</c:choose>
+						<th id="BoardList_TH_8" onclick="setListOrder(this)" order="REAL_PROGRESS"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
 							class="h5_center">잔행률</th>
 						</thead>
@@ -86,7 +112,7 @@ $(function() {
 										<td colspan="8" style="text-align : center"> 업무가 없습니다. </td>
 									</tr>
 								</c:when>
-								<c:otherwise>
+								<c:when test="${position ne 'group' }">
 									<c:forEach items="${taskList }" var="task">
 								<tr style="cursor: pointer;" id="${task.taskId }" class="listRow" ondblclick="goTaskDetails(this)">
 									<td style="width: 20px; cursor: default; text-align: center"><input
@@ -99,6 +125,11 @@ $(function() {
 									<td onclick="selectedTR(this);"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
 											value="${task.groupName }" /></td>
+									<c:if test="${position eq 'task' }">
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
+											value="${task.projectName }" /></td>
+									</c:if>
 									<td onclick="selectedTR(this);"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><div
 											style="margin-right: 2px;"></div>
@@ -143,7 +174,47 @@ $(function() {
 									</td>
 								</tr>
 							</c:forEach>
-								</c:otherwise>
+								</c:when>
+							<c:when test="${position eq 'group' }">
+								<c:forEach items="${taskList }" var="task">
+								<tr style="cursor: pointer;" id="${task.groupId }" class="listRow" ondblclick="goGroupDetails(this)">
+									<td style="width: 20px; cursor: default; text-align: center"><input
+										type="checkbox" onchange="checkedCheckbox(this);"
+										name="boardCheckbox"
+										style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
+									<td onclick="selectedTR(this);"
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 12%"><c:out
+											value="${task.groupName }" /></td>
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
+											value="${task.upperGroupName }" /></td>
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
+											value="${task.projectName }" /></td>
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><div
+											style="margin-right: 2px;"></div>
+											<c:out value="${task.headManagerName }" />
+									</td>
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px"><div
+											style="margin-right: 2px;"></div>
+											<c:out value="${task.planStartDate }" />
+									</td>
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px"><div
+											style="margin-right: 2px;"></div>
+											<c:out value="${task.planEndDate }" />
+									</td>
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px">
+										<div style="margin-top: 5px; display: inline-block;">
+											<c:out value="${task.realProgress }"/>%
+										</div>
+									</td>
+								</tr>
+							</c:forEach>
+							</c:when>
 							</c:choose>
 						</tbody>
 					</table>

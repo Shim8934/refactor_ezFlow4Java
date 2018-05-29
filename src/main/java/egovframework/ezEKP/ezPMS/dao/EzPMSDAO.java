@@ -194,7 +194,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		delete ("EzPMSDAO.deleteProjectMember", map);		
 	}
 	
-	public void deleteTaskMember(HashMap<String, Object> map) {
+	public void deleteTaskMember(Map<String, Object> map) {
 		delete ("EzPMSDAO.deleteTaskMember", map);		
 	}
 
@@ -339,5 +339,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	public void updateTaskInfo(ProjectTaskVO vo) {
 		update ("EzPMSDAO.updateTaskInfo", vo);
+	}
+
+	public int getGroupCount(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.getGroupCount", map);
 	}
 }

@@ -37,11 +37,7 @@ public interface EzPMSService {
 	public void updateProject(ProjectInfoVO project, int tenantId);
 	
 	public List<ProjectMemberVO> getProjectMember(Long projectId, int roleId, String lang);
-	
-	public List<ProjectTaskVO> getMyTasks(Long projectId, String status, int tenantId, String userId, String offset, String lang, int limit, int startRow);
-	
-	public List<ProjectTaskVO> getProjectTasks(Long projectId, String status, int tenantId, String offset, String lang);
-	
+
 	public void changeKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
 	
 	public int addFavoriteProject(Long projectId, String userId, int tenantId);
@@ -66,7 +62,7 @@ public interface EzPMSService {
 	
 	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow);
 	
-	public List<ProjectGroupVO> getGroupList(SearchVO search);
+	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang);
 	
 	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList);
 	
@@ -137,4 +133,6 @@ public interface EzPMSService {
 	public String getUserTaskRole(String userId, int tenantId, long taskId);
 
 	List<Map<String, Object>> getFilePath(long itemId, int tenantId);
+
+	public int getGroupCount(SearchVO search, int tenantId, String userId);
 }

@@ -826,11 +826,6 @@ function searchProject() {
 	setProjectList();
 }
 
-function emptyDate(elem){
-	$(elem).siblings('input').val("");
-}
-
-
 </script>
 <style type="text/css">
 .viewType {
