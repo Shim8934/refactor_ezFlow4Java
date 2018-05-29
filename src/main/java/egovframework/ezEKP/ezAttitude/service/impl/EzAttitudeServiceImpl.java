@@ -516,20 +516,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeConfig(JSONObject jsonParam)
-			throws Exception {
+	public void updateAttitudeConfig(String workStartTime, String workEndTime, String closedDay, String attitudeModAppl, String closedDateAttitude, String confSetDate, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("updateAttitudeConfig started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("tenantId", jsonParam.get("tenantId").toString());
-		map.put("companyId", jsonParam.get("companyId").toString());
-		map.put("workStartTime", jsonParam.get("workStartTime").toString());
-		map.put("workEndTime", jsonParam.get("workEndTime").toString());
-		map.put("closedDay", jsonParam.get("closedDay").toString());
-		map.put("attitudeModAppl", jsonParam.get("attitudeModAppl").toString());
-		map.put("closedDateAttitude", jsonParam.get("closedDateAttitude").toString());
-		map.put("confSetDate", jsonParam.get("confSetDate").toString());
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("workStartTime", workStartTime);
+		map.put("workEndTime", workEndTime);
+		map.put("closedDay", closedDay);
+		map.put("attitudeModAppl", attitudeModAppl);
+		map.put("closedDateAttitude", closedDateAttitude);
+		map.put("confSetDate", confSetDate);
 		
 		ezAttitudeDAO.updateAttitudeConfig(map);
 		

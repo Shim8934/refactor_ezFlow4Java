@@ -67,7 +67,7 @@ public interface EzAttitudeService {
 	
 	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId) throws Exception;
 	
-	public void updateAttitudeConfig(JSONObject jsonParam) throws Exception;
+	public void updateAttitudeConfig(String workStartTime, String workEndTime, String closedDay, String attitudeModAppl, String closedDateAttitude, String confSetDate, String companyId, int tenantId) throws Exception;
 	
 	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception;
 	
