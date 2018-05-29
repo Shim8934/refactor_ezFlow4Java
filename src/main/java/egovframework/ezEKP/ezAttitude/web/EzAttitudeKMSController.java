@@ -407,7 +407,7 @@ public class EzAttitudeKMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
-		if (companyId == null) {
+		if (companyId == null || companyId.equals("")) {
 			companyId = userInfo.getCompanyID();
 		}
 		
@@ -728,7 +728,7 @@ public class EzAttitudeKMSController {
 	public String changeAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=true)String idList,
 			@RequestParam(required=true)String changeStatus,
-			@RequestParam(required=true)String companyID
+			@RequestParam(required=false)String companyID
 			) throws Exception {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -741,7 +741,7 @@ public class EzAttitudeKMSController {
 			sysLang = "primary";
 		}
 		
-		if (companyID == null) {
+		if (companyID == null || companyID.equals("")) {
 			companyID = userInfo.getCompanyID();
 		}
 		
@@ -789,7 +789,7 @@ public class EzAttitudeKMSController {
 			sysLang = "primary";
 		}
 		
-		if (companyID == null) {
+		if (companyID == null || companyID.equals("")) {
 			companyID = userInfo.getCompanyID();
 		}
 		
@@ -952,7 +952,7 @@ public class EzAttitudeKMSController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-		if (companyId == null) {
+		if (companyId == null || companyId.equals("")) {
 			companyId = userInfo.getCompanyID();
 		}
 		
@@ -1312,7 +1312,7 @@ public class EzAttitudeKMSController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-		if (companyId == null) {
+		if (companyId == null || companyId.equals("")) {
 			companyId = userInfo.getCompanyID();
 		}
 		
@@ -1833,7 +1833,7 @@ public class EzAttitudeKMSController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + typeId +"/forms/form";
 		
-		if (companyID == null) {
+		if (companyID == null || companyID.equals("")) {
 			companyID = userInfo.getCompanyID();
 		}
 		
@@ -2107,7 +2107,7 @@ public class EzAttitudeKMSController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String userOffset = userInfo.getOffset().split("\\|")[1];
 		
-		if (companyID == null) {
+		if (companyID == null || companyID.equals("")) {
 			companyID = userInfo.getCompanyID();
 		}
 		
