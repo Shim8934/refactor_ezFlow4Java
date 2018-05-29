@@ -1768,28 +1768,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return ezAttitudeDAO.getCompanyDeptList(map);
 		
 	}
-
+	
 	@Override
-	public int checkUseAttitudeType(String typeId, int tenantId,
-			String companyId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public String deleteAttitudeType(String typeId, int tenantId, String companyId) throws Exception {
+		LOGGER.debug("deleteAttitudeType started.");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("typeId", typeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		return ezAttitudeDAO.checkUseAttitudeType(map);
-	}
-
-	@Override
-	public void deleteAttitudeType(String typeId, int tenantId, String companyId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+		String result = "false";
 		
-		map.put("typeId", typeId);
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
+		if (ezAttitudeDAO.checkUseAttitudeType(map) == 0) {
+			ezAttitudeDAO.deleteAttitudeType(map);
+			
+			result = "true";
+		}
 		
-		ezAttitudeDAO.deleteAttitudeType(map);
+		LOGGER.debug("deleteAttitudeType ended.");
+		
+		return result;
 	}
 	
 	@Override

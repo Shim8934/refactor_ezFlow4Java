@@ -778,10 +778,10 @@ public class EzAttitudeGWController {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			if (ezAttitudeService.insertAttitudeType(typeName, typeName2, info.getTenantId(), companyId)) {
 				result.put("status", "ok");
@@ -868,41 +868,34 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [PUT] 근태유형 삭제
+	 * G/W 근태관리 [DELETE] 근태유형 삭제
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
 		
 		JSONObject result = new JSONObject();
-		String isUse = "";
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
 			String typeId = request.getParameter("typeId");
 			
-			//사용하고 있는지 확인
-			int useCount = ezAttitudeService.checkUseAttitudeType(typeId, info.getTenantId(), companyId);
-			//삭제
-			if (useCount == 0) {
-				isUse = "true";
-				ezAttitudeService.deleteAttitudeType(typeId, info.getTenantId(), companyId);
-			} else {
-				isUse = "false";
-			}
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
+			//삭제
+			String data = ezAttitudeService.deleteAttitudeType(typeId, info.getTenantId(), companyId);
+				
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", isUse);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] ended.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] ended.");
+		
 		return result;
 	}
 	
