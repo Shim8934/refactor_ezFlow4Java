@@ -196,12 +196,8 @@
 	                wholeHtml += '<div id="left" style="border-top:1px solid #dedede">';
 	                for (var i = 0; i < deptList.length ; i ++) {
 						if (deptList[i].authType == 'M') {
-// 							if (deptList[i].deptName.length > 14) {
-// 								deptList[i].deptName = deptList[i].deptName.substring(0,14) + "⋯";
-// 							}
 							var html = '<h2 onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + deptList[i].deptId + '" nodename="' + deptList[i].deptName + '" manageflag="M" value="' + deptList[i].deptName + '" cn="'+ deptList[i].deptId +'" isleaf="TRUE" ' + 
 							'style="padding-left:0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
-	// 						html += '<img id="subImgNode_' + deptList[i].deptId + '" border="0" src="/images/OrganTree_cross/ic-open.gif" style="width: 18px; height: 18px;">';
 							html += '<span id="spn_' + deptList[i].deptId + '" class="node_normal" onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + deptList[i].deptName + '</span>';
 							html += '<div id="' + deptList[i].deptId + '_sub" style="display: none;"></div></li>';
 							wholeHtml += html;
@@ -209,15 +205,7 @@
 					}
 	                wholeHtml += '</div></div>';
 	                document.getElementById('TreeView').innerHTML += wholeHtml; 
-// 	                var treeView = new TreeView();
-// 	                treeView.SetConfig(treeXML);
-// 	                treeView.SetID("FromTreeView");
-// 	                treeView.SetUseAgency(true);
-// 	                treeView.SetDepth(1);
-// 	                treeView.SetRequestData("RequestData");
-// 	                treeView.SetNodeClick("TreeViewNodeClick");
-// 	                treeView.DataSource(xmlTree);
-// 	                treeView.DataBind("TreeView");
+
 					if ($("h2#"+deptid).length > 0) {
 						$("h2#"+deptid).click();
 					}else {
@@ -273,10 +261,6 @@
 	                SelectReceiverWindow(ToTitle, ListViewMsgTo);
 	            }
 	            else if (type == "auto") {
-// 	                if (CrossYN())
-// 	                    document.getElementById("h1Title").textContent = " <spring:message code='ezEmail.t99000080' />";
-// 	                else
-// 	                    document.getElementById("h1Title").innerText = " <spring:message code='ezEmail.t99000080' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "none";
 	                document.getElementById("contactTabButton").style.display = "none";
