@@ -13,22 +13,17 @@ import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
-import javax.xml.bind.ParseConversionEvent;
 
-import org.bouncycastle.util.encoders.UrlBase64Encoder;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -37,7 +32,6 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
-import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
