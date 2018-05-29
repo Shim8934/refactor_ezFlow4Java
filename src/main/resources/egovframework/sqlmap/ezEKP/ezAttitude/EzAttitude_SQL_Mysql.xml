@@ -866,6 +866,8 @@
 				B.COMPANY_ID = #companyId#
 			AND
 				B.TYPE_ID = #typeId#
+			AND
+				A.TENANT_ID = #tenantId#
 		]]>
 	</select>
 	
