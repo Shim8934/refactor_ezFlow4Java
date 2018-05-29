@@ -344,4 +344,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public int getGroupCount(Map<String, Object> map) {
 		return (int) select("EzPMSDAO.getGroupCount", map);
 	}
+	
+	public void updateTaskStatus(ProjectTaskVO vo) {
+		update ("EzPMSDAO.updateTaskStatus", vo);
+	}
 }

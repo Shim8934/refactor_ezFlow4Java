@@ -620,5 +620,44 @@ public class EzPMSGWController2 {
 		return result;
 	}
 		
-	
+	/**
+	 * 프로젝트관리 업무 상태 수정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId}/status", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateTaskStatus(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+			projectTaskVO.setTenantId(tenantId);
+			projectTaskVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
+			projectTaskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
+			projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+			projectTaskVO.setRealStartDate(request.getParameter("realStartDate"));
+			projectTaskVO.setRealEndDate(request.getParameter("realEndDate"));
+			projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+			projectTaskVO.setStatus(request.getParameter("status"));
+			
+			ezPMSService.updateTaskStatus(projectTaskVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
+		return result;
+	}
 }

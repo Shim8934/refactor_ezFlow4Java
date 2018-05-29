@@ -213,7 +213,7 @@
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
-   				DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?taskId=" + taskId + "&userIdType=user");
+   				DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + taskId + "&userIdType=user");
    				
 	   		}
 	   		

@@ -2104,4 +2104,28 @@
 			A.PLAN_END_DATE LIKE CONCAT('%', #searchByEndDate#, '%')	
 	</isNotEmpty>
 	</select>
+
+	<update id="EzPMSDAO.updateTaskStatus" parameterClass="ProjectTaskVO">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_task
+		SET	
+			STATUS = #status#,
+			PLAN_START_DATE = #planStartDate#,
+			PLAN_END_DATE = #planEndDate#,
+	]]>
+	<isNotEmpty property="realStartDate">
+			REAL_START_DATE = #realStartDate#,
+	</isNotEmpty>
+	<isNotEmpty property="realEndDate">
+			REAL_END_DATE = #realEndDate#,
+	</isNotEmpty>
+	<![CDATA[
+			REAL_PROGRESS = #realProgress#
+		WHERE
+			TASK_ID = #taskId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</update>
 </sqlMap>

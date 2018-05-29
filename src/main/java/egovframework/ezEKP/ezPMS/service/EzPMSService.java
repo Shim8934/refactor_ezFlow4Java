@@ -75,6 +75,8 @@ public interface EzPMSService {
 	public void deleteTask(Long taskId, long projectId, int tenantId);
 
 	public void updateTaskInfo(ProjectTaskVO task);
+
+	public void updateTaskStatus(ProjectTaskVO task);
 	
 	public void addGroup(Map<String, Object> map);
 	

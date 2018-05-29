@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -30,6 +30,7 @@
 <script type="text/javascript">
 	var taskDetails;
 	var nowStatus;
+	var weightData;
 	var progressColor = "${mainSetting.progressColor}";
 	var completeColor = "${mainSetting.completeColor}";
 	var overdueColor = "${mainSetting.overdueColor}";
@@ -37,10 +38,12 @@
 	
 	$(function(){
 		taskDetails = ${taskDetails};
+		weightData = ${weightData};
+		setFrameParams();
 		initProgressBar();
 		tabFuncSetting();
-		document.getElementById("closeBtn").onclick = popupClose;
-		document.getElementById("taskUpdateBtn").onclick = taskUpdate;
+		btnEvent();
+		
 	});
 	
 	function popupClose() {
@@ -88,6 +91,8 @@
 	
 	function tabFuncSetting(){
 		var taskId = "${taskDetails.taskId}"
+		var projectId = taskDetails.projectId;
+		var groupId = taskDetails.groupId;
 		$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?taskId=" + taskId);
 		$("#1tab0").addClass("tabon");
 		
@@ -95,28 +100,28 @@
 			var clickTabId = $(this).attr("id");
 			var nowTabAttr = $(".tabon").attr("id");
 			changeTab(clickTabId, nowTabAttr);
-			//업무정보
+			//업무정보 탭
 			$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?taskId=" + taskId);
 			
 		});
 		
-// 		$("#1tab1").click(function(){
-// 			var clickTabId = $(this).attr("id");
-// 			var nowTabAttr = $(".tabon").attr("id");
-// 			changeTab(clickTabId, nowTabAttr);
+		$("#1tab1").click(function(){
+			var clickTabId = $(this).attr("id");
+			var nowTabAttr = $(".tabon").attr("id");
+			changeTab(clickTabId, nowTabAttr);
 			
-// 			//간트차트로 가는 부분 url 수정하기
-// 			$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectForGantt.do?projectId=" + projectId);
-// 		});
+			//관련 게시물 탭
+			$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
+		});
 		
-// 		$("#1tab2").click(function(){
-// 			var clickTabId = $(this).attr("id");
-// 			var nowTabAttr = $(".tabon").attr("id");
-// 			changeTab(clickTabId, nowTabAttr);
+		$("#1tab2").click(function(){
+			var clickTabId = $(this).attr("id");
+			var nowTabAttr = $(".tabon").attr("id");
+			changeTab(clickTabId, nowTabAttr);
 			
-// 			//업무리스트로 가는 부분 url 수정하기
-// 			$("#FBoard_ifrm").attr("src", "/ezPMS/taskListMain.do?projectId=" + projectId);
-// 		});
+			//작업이력 탭
+			$("#FBoard_ifrm").attr("src", "/ezPMS/getLogListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
+		});
 		
 // 		$("#1tab3").click(function(){
 // 			var clickTabId = $(this).attr("id");
@@ -165,6 +170,22 @@
 		DivPopUpShow(760, 500, "/ezPMS/goUpdateTaskInfo.do?taskId=" + taskId);
 	}
 	
+	function taskStatusUpdate(){
+		DivPopUpShow(500, 370, "/ezPMS/goUpdateTaskStatus.do");
+		
+	}
+	
+	function btnEvent(){
+		document.getElementById("closeBtn").onclick = popupClose;
+		document.getElementById("taskUpdateBtn").onclick = taskUpdate;
+		document.getElementById("statusChgBtn").onclick = taskStatusUpdate;
+	}
+	
+	function setFrameParams(){
+		document.querySelector("[name='frameParamTaskDetails']").value = JSON.stringify(taskDetails);
+		document.querySelector("[name='frameParamWeight']").value = JSON.stringify(taskDetails);
+	}
+	
 </script>
 <style>
 .popupHeader{
@@ -183,7 +204,7 @@ button.PHBtn {
 .detailsTable .dateTd{width:180px}
 .mainBodyTop{margin-top:8px;width:825px;}
 .mainBodyMid{height:320px;}
-.statusDiv{width:165px;height:168px;float:left;border: 1px solid #ccc;border-right:0px;}
+.statusDivBrd{width:165px;height:168px;float:left;border: 1px solid #ccc;border-right:0px;}
 .statusChgBtn{float:left;margin:3px 25px;border:1px solid #ddd;border-radius:5px; padding:0px 7px; cursor:pointer;}
 .taskUpdateBtn{display:inline-block;width:100px;height:16px;float:right;top:25px;position:relative;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px;cursor:pointer;z-index:101;}
 </style>
@@ -195,11 +216,11 @@ button.PHBtn {
 	</div>
 	<div id="mainBody">
 		<div class="mainBodyTop">
-			<div class="statusDiv">
+			<div class="statusDivBrd">
 					<div class="circle progress_graph" style="width:150px;margin:6px 6px 0px 6px;">
 						<strong style="top:30px;"></strong>
 					</div>
-					<div class="statusChgBtn">진행상태변경</div>
+					<div id="statusChgBtn" class="statusChgBtn">진행상태변경</div>
 			</div>
 			<table class="detailsTable" style="clear:none">
 			  <tr>
@@ -256,6 +277,8 @@ button.PHBtn {
 		</div>	
 		<div class="mainBodyBot"></div>	
 	</div>
+	<input type="hidden" name="frameParamTaskDetails" value="">
+	<input type="hidden" name="frameParamWeight" value="">
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
