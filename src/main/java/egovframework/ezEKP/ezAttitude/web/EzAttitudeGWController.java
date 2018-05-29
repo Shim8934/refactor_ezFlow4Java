@@ -752,9 +752,11 @@ public class EzAttitudeGWController {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+			String typeConfigList = request.getParameter("typeConfigList");
+			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			ezAttitudeService.updateAttitudeTypeConfig(request.getParameter("typeConfigList"), companyId, info.getTenantId());
+			ezAttitudeService.updateAttitudeTypeConfig(typeConfigList, companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -764,7 +766,9 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
+		
 		return result;
 	}
 	
@@ -812,17 +816,10 @@ public class EzAttitudeGWController {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			AttitudeTypeVO typeInfo = ezAttitudeService.getAttitudeTypeInfo(info.getTenantId(), companyId, attitudetypeId);
-			//imgPath 셋팅
-//			String imgPath = typeInfo.getImgPath();
-//			if (!imgPath.equals("")) {
-//				imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-//				typeInfo.setImgPath(imgPath);
-//			} else {
-//				typeInfo.setImgPath("/images/default_pic.jpg");
-//			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -832,7 +829,9 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] ended.");
+		
 		return result;
 	}
 	
@@ -847,12 +846,11 @@ public class EzAttitudeGWController {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
 			String typeId = request.getParameter("typeId");
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			ezAttitudeService.updateAttitudeType(typeId, typeName, typeName2, info.getTenantId(), companyId);
 			
@@ -865,6 +863,7 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] ended.");
+		
 		return result;
 	}
 	

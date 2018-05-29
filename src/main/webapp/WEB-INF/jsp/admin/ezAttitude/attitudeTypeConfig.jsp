@@ -105,7 +105,7 @@
 	            	url : "/admin/ezAttitude/saveAttitudeTypeConfig.do",
 	            	dataType : "text",
 	            	data : {
-	            		"typelist" : typestr,
+	            		"typeList" : typestr,
 	            		"companyId" : encodeURIComponent($("#ListCompany").val())
 	            	},
 	            	success : function(resultStatus) {

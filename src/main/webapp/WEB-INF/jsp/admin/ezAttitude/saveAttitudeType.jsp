@@ -29,20 +29,16 @@
 			$(function(){
 	            //수정모드일 때
 	            if(typeId != "") {
-	            	saveMode = "modify";
-	            	
 	            	//휴가유형명
 	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
 					$("#typeName").val(typeName);
+					
 					if (typeName2 != null && typeName2 != "") {
 						typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
 						$("#typeName2").val(typeName2);
 					}
-	            } else {
-	            	saveMode = "new";
 	            }
-		
-			})
+			});
 
 			function OK_Click() {
 				var typeName = $('#typeName').val();

@@ -123,7 +123,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("attitudeConfig ended.");
 		
-		return "admin/ezAttitude/attitudeConfig";
+		return "/admin/ezAttitude/attitudeConfig";
 	}
 	/**
 	 * 관리자 근태규율관리 회사별 설정 호출 함수
@@ -169,7 +169,6 @@ public class EzAttitudeAdminBOMController {
 	}
 	/**
 	 * 관리자 근태규율관리 회사별 설정 수정 함수
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/updateAttitudeConfInfo.do")
 	@ResponseBody
@@ -222,8 +221,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 휴가유형 화면 호출 함수
-	 * @throws Exception 
+	 * 근태관리 휴가유형관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfig.do")
 	public String attitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -271,12 +269,11 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("attitudeTypeConfig ended.");
 		
-		return "admin/ezAttitude/attitudeTypeConfig";
+		return "/admin/ezAttitude/attitudeTypeConfig";
 	}
 	
 	/**
-	 * 관리자 휴가유형 설정 정보 호출 함수
-	 * @throws Exception 
+	 * 근태관리 휴가유형관리 리스트 조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfigInfo.do")
 	@ResponseBody
@@ -318,15 +315,14 @@ public class EzAttitudeAdminBOMController {
 		return dataList;
 	}
 	/**
-	 * 관리자 유형 사용여부 설정 일괄저장 함수
-	 * @throws Exception
+	 * 근태관리 휴가유형관리 저장
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeTypeConfig.do")
 	@ResponseBody
 	public String saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("saveAttitudeTypeConfig started.");
 		
-		String typeConfigList = request.getParameter("typelist");
+		String typeConfigList = request.getParameter("typeList");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
@@ -365,8 +361,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 휴가유형 유형추가 팝업창 호출 함수
-	 * @return
+	 * 근태관리 휴가유형관리 휴가유형추가 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/addAttitudeType.do")
 	public String addAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -378,12 +373,11 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("addAttitudeType ended.");
 		
-		return "admin/ezAttitude/saveAttitudeType";
+		return "/admin/ezAttitude/saveAttitudeType";
 	}
 	
 	/**
-	 * 관리자 휴가유형 유형수정 팝업창 호출 함수
-	 * @return
+	 * 근태관리 휴가유형관리 휴가유형추가,수정 화면 조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/showAttitudeType.do")
 	public String  showAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -431,11 +425,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 휴가유형 등록 or 수정
-	 * @param loginCookie
-	 * @param request
-	 * @param model
-	 * @throws Exception
+	 * 근태관리 휴가유형관리 휴가유형 등록 ,수정
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do")
 	@ResponseBody
@@ -446,16 +436,15 @@ public class EzAttitudeAdminBOMController {
 		
 		String companyId = request.getParameter("companyId");
 		String typeId = request.getParameter("typeId");
-		String saveMode = request.getParameter("saveMode");
 		String typeName = request.getParameter("typeName");
 		String typeName2 = request.getParameter("typeName2");
 		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
-		if (saveMode != null && saveMode.equals("modify")) {
-			url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/" + typeId;
-		} else {
+		if (typeId.equals("")) {
 			url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/";
+		} else {
+			url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/" + typeId;
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -474,10 +463,10 @@ public class EzAttitudeAdminBOMController {
 		
 		ResponseEntity<?> result;
 		
-		if (saveMode != null && saveMode.equals("modify")) {
-			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
-		} else {
+		if (typeId.equals("")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		} else {
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
 		}
 		
 		//insert시  count27개 넘으면 status failed로 리턴하게 해놓음
@@ -595,7 +584,7 @@ public class EzAttitudeAdminBOMController {
 		}
 		
 		LOGGER.debug("userList ended");
-		return "admin/ezAttitude/deptUserList";
+		return "/admin/ezAttitude/deptUserList";
 	}
 
 	/**
@@ -812,7 +801,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf ended");
 		
-		return "admin/ezAttitude/editAttitudeUserConf";
+		return "/admin/ezAttitude/editAttitudeUserConf";
 	}
 	
 	/**
@@ -1489,7 +1478,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("attitudeTypeConfig ended.");
 		
-		return "admin/ezAttitude/attitudeAuthorManage";
+		return "/admin/ezAttitude/attitudeAuthorManage";
 	}
 	
 	/**
@@ -1651,7 +1640,7 @@ public class EzAttitudeAdminBOMController {
 		
 		model.addAttribute("companyId",request.getParameter("companyId"));
 
-		return "admin/ezAttitude/saveAttitudeAuth";
+		return "/admin/ezAttitude/saveAttitudeAuth";
 	}
 	
 	/**
@@ -1728,7 +1717,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("/admin/ezAttitude/selectAttitudeAuthor ended");
 		
-		return "admin/ezAttitude/selectAttitudeAuthor";
+		return "/admin/ezAttitude/selectAttitudeAuthor";
 	}
 	
 	/**
@@ -1799,7 +1788,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("selectAttitudeAuthorDept ended");
 		
-		return "admin/ezAttitude/selectAttitudeAuthorDept";
+		return "/admin/ezAttitude/selectAttitudeAuthorDept";
 	}
 	
 	/**
