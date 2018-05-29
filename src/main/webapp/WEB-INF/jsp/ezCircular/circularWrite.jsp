@@ -56,7 +56,7 @@
 		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
 		    	}
 				if (listSize != 0) {
-		        	document.getElementById("title").value = '${result.title}';
+		        	document.getElementById("title").value = "${result.title}";
 		        	document.getElementById("receiverlist").innerHTML = "${userName}";
 		        	document.getElementById("receiverlist2").innerHTML = "${userName2}";
 		        	document.getElementById("receiverID").innerHTML = "${userID}";
