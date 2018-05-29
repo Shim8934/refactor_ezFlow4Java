@@ -6,25 +6,21 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.CookieValue;
-
-import com.ibm.icu.util.Calendar;
-
+import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
@@ -43,7 +39,6 @@ import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 

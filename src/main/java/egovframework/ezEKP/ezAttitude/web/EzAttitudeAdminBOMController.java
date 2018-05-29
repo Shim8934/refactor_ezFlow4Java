@@ -1650,6 +1650,7 @@ public class EzAttitudeAdminBOMController {
 		
 		String companyId = request.getParameter("companyId");
 		String userId =null;
+		
 		if (request.getParameter("userId")!=null) {
 			userId = request.getParameter("userId");
 			model.addAttribute("selectedUser",userId.trim());
