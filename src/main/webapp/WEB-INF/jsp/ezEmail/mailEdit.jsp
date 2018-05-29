@@ -775,7 +775,7 @@
                     </c:if>
 		            <li style="display:none;"><span onClick="Print_onClick()"><spring:message code='ezEmail.t546' /></span></li>
 		            <li style="display:none;"><span onClick="LoadFormat_onClick()"><spring:message code='ezEmail.t824' /></span></li>
-		            <li><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>
+		            <li style="display:none;"><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>
 		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li>
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
@@ -791,9 +791,9 @@
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                         <img src="/images/pbar.gif"></li> 
                     <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
-                        <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
+                        <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
                         	<option value="0">HTML</option>
-                        	<option value="1">Plain Text</option>
+                        	<option value="1">PlainText</option>
                         </select>
                     </li>
 		            <li style="display:none;">
