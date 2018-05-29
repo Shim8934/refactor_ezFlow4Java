@@ -278,6 +278,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return getSearchListCountForLocal(map);                       
 	}
 	
+	public int checkRetired(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganDAO.checkRetired", map);
+	}
+	
     private void updatePropertyForLocal(Map<String, Object> map) throws Exception{
         update("EzOrganDAO.updateProperty", map);
     }
@@ -363,5 +367,13 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> getChildrenDeptID(Map<String, Object> map) throws Exception {
 		return (List<OrganDeptVO>) list("EzOrganDAO.getChildrenDeptID", map);
+	}
+	
+	public void setListType(Map<String, Object> map) throws Exception {
+		update("EzOrganDAO.setListType", map);
+	}
+
+	public String getListType(Map<String, Object> map) {
+		return (String) select("EzOrganDAO.getListType", map);
 	}
 }

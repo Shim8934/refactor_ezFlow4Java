@@ -36,6 +36,7 @@
 			var selObjClass = "";
 			var SkinExist = "${skinExist}";
 			var pNoneActiveX = "${noneActiveX}";
+			var useHWP = "${useHWP}";
 			
 			// 2009.11.25 - 소스보기시 개인정보 유출방지
 			var pwd = "";
@@ -87,20 +88,27 @@
 				    	 //브라우저 정보 가져오기
 				    	var userAgent = window.navigator.userAgent;
 						
-				    	//IE9 일때만 ActiveX 설치하게 설정
-						if (userAgent.indexOf("Trident/5.0") > 0) {
-							//var objectNode = document.getElementById("objectDiv");
-					    	 //objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
-					    	 //var objectProgressNode = document.getElementById("objectProgressDiv");
-					    	 //objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
-					    	 GetObject();
-					    	 ezNotieSetting();
-					    	 
-					    	 /* var objectProgressNode = document.getElementById("objectProgressDiv");
-					    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>"; */
-					    	 
-						}
-				        
+				    	if (useHWP == "YES") {
+				    		//한글기안기 사용일때는 ie9,10,11 전부 activeX 설치
+							if (userAgent.indexOf("Trident/5.0") > 0 || userAgent.indexOf("Trident/6.0") > 0 || userAgent.indexOf("Trident/7.0") > 0) {
+						    	 GetObject();
+						    	 ezNotieSetting();
+							}
+				    	} else {
+				    		//IE9 일때만 ActiveX 설치하게 설정
+							if (userAgent.indexOf("Trident/5.0") > 0) {
+								//var objectNode = document.getElementById("objectDiv");
+						    	 //objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
+						    	 //var objectProgressNode = document.getElementById("objectProgressDiv");
+						    	 //objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
+						    	 GetObject();
+						    	 ezNotieSetting();
+						    	 
+						    	 /* var objectProgressNode = document.getElementById("objectProgressDiv");
+						    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>"; */
+						    	 
+							}
+				    	}
 				    } 
 	//				window.setInterval("update_connectinfo()", 30000);	
 				}
@@ -1538,21 +1546,29 @@
 					<div id="mainmenu">
 						<ul>
 							<li><span onClick="save()"><spring:message code='ezPortal.t62' /></span></li>
+							<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
 							<li><span onClick="layoutmode()"><spring:message code='ezPortal.t322' /></span></li>
 							<li><span onClick="editingmode()"><spring:message code='ezPortal.t323' /></span></li>					
-							<li><span onClick="preview()"><spring:message code='ezPortal.t63' /></span></li>				
+							<li><span onClick="preview()"><spring:message code='ezPortal.t63' /></span></li>
+							<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
 							<li><span onClick="insertpage()"><spring:message code='ezPortal.t325' /></span></li>
 							<li><span onClick="removecell('field')"><spring:message code='ezPortal.t326' /></span></li>
+							<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
 							<li><span onClick="insertcell()"><spring:message code='ezPortal.t327' /></span></li>
 							<li><span onClick="removecell()"><spring:message code='ezPortal.t328' /></span></li>
+							<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
 							<li><span onClick="insertrow()"><spring:message code='ezPortal.t329' /></span></li>
 							<li><span onClick="removerow()"><spring:message code='ezPortal.t330' /></span></li>
+							<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
 							<li><span onClick="swaprow('up')"><spring:message code='ezPortal.t331' /></span></li>
 							<li><span onClick="swaprow('down')"><spring:message code='ezPortal.t332' /></span></li>
 							<li><span onClick="swaprow('left')"><spring:message code='ezPortal.t72' /></span></li>
 							<li><span onClick="swaprow('right')"><spring:message code='ezPortal.t74' /></span></li>					
 						</ul>
-					</div>	
+					</div>
+					<script type="text/javascript">
+						selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+					</script>
 					<table width="1020" class="popuplist" >
 						<tr>
 							<th height="30" style="width:100px"><spring:message code='ezPortal.t359' /></th>
@@ -1560,25 +1576,35 @@
 				    			<table style="width:100%;">
 			            			<tr class="primary">
 				            			<th style="width:80px;">${langPrimary}</th>
-				            			<td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;" maxLength="255"></td>	
+				            			<td><input type="text" id="txtDisplayName" value="${displayName}" style="width:100%;" maxLength="255"></td>	
 			            			</tr>
 			            			<tr class="secondary">
 				            			<th style="width:80px;">${langSecondary}</th>
-				            			<td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;" maxLength="255"></td>	
+				            			<td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:100%;" maxLength="255"></td>	
 			            			</tr>
 		            			</table>
 							</td>
 						</tr>
 					</table>
 					<br>
-					<table width="1020" class="box">
+					<table style="width:1020px; background-color:#F5f5f5;"class="box">
 						<tr>
-			  				<td height="30" bgcolor="#F5f5f5"><spring:message code='ezPortal.t334' /><input type="text" id="txtWidth" name="txtWidth" style="WIDTH:50px" maxLength="10">
-								px * <spring:message code='ezPortal.t335' /><input type="text" id="txtHeight" name="txtHeight" style="WIDTH:50px" maxLength="10"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code='ezPortal.t336' /></span></a>
+			  				<td style="padding-left:10px; height:30px;">
+			  					<spring:message code='ezPortal.t334' />
+			  					<input type="text" id="txtWidth" name="txtWidth" style="WIDTH:50px" maxLength="10">
+								px * 
+								<spring:message code='ezPortal.t335' />
+								<input type="text" id="txtHeight" name="txtHeight" style="WIDTH:50px" maxLength="10">
+								 px 
+								<a class="imgbtn">
+									<span onClick="resizeTable()">
+										<spring:message code='ezPortal.t336' />
+									</span>
+								</a>
 			  				</td>
-                			<td bgcolor="#F5f5f5" ><spring:message code='ezPortal.t990022' />:</td>
-                			<td bgcolor="#F5f5f5">
-                    			<select id="Themeinfo">
+                			<td style="width:56px;"><spring:message code='ezPortal.t990022' />:</td>
+                			<td style="width:135px;">
+                    			<select id="Themeinfo" style="width:130px; height: 23px;">
 			                        ${pThemeSelectObject}
                     			</select>
                 			</td>

@@ -362,6 +362,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
 		
 		map.put("v_CLASS", pClass);
 		map.put("v_CN", pDeptID);
@@ -408,7 +409,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
             memberCount++;
         }
-		
+
         StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
         
         for (int i = 0; i < memberCount; i++) {
@@ -694,7 +695,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
         
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
-        
+      
 		for(int j=0; j < list.size(); j++){
 			Map<String, Object> map1 = new HashMap<String, Object>();			
 			OrganDeptVO organVO = list.get(j);
@@ -1421,10 +1422,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getProxyUserInfo(String userID, int tenantID) throws Exception {
+	public String getProxyUserInfo(String userID, int tenantID, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_TENANT_ID", tenantID);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		List<OrganProxyVO> organProxyVOList = ezOrganDAO.getProxyUserInfo(map);
 		
@@ -1645,6 +1647,30 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return list;
 	}
 	
+	@Override
+	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("checkRetired started.");
+		
+		boolean chkValue = false;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		int count = ezOrganDAO.checkRetired(map);
+		
+		logger.debug("count = " + count);
+		
+		if (count != 0) {
+			chkValue = true;
+		}
+		
+		logger.debug("checkRetired ended. chkValue = " + chkValue);
+		
+		return chkValue;
+	}
+	
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception {
 		logger.debug("getChildrenDeptID sratred.");
 		
@@ -1669,6 +1695,60 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		logger.debug("getChildrenDeptID ended.");
 		return jArr.toString();
+	}
+	
+	public String isProxyUser(int tenantId, String userId, String nowDateTime) throws Exception {
+		logger.debug("isProxyUser started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_CN",userId);
+		map.put("nowDate",nowDateTime);
+		
+		String result = ezOrganDAO.getPropertyValue_S2(map);
+		
+		if (result == null) {
+			result = "0";
+		}
+		
+		logger.debug("result : " + result);
+		
+		logger.debug("isProxyUser ended");
+		
+		return result;
+	}
+	
+	@Override
+	public String setListType(String listType, String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("setListType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("listType", listType);
+		map.put("userID",userID);
+		map.put("tenantID",tenantID);
+		map.put("companyID", companyID);
+
+		ezOrganDAO.setListType(map);
+		
+		logger.debug("setListType started");
+		return "TRUE";
+		
+	}
+
+	@Override
+	public String getListType(String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("getListType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		
+		String listType = ezOrganDAO.getListType(map);
+		
+		logger.debug("getListType started");
+		return listType;
+		
 	}
 }
 

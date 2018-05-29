@@ -7,6 +7,7 @@
 		<title><spring:message code="ezCircular.t180" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -87,8 +88,10 @@
 				
 		        if (type == 'totalComment') {
 		        	//전체의견 가져오면서
-		        	$("#tab1").attr("class", "on");
-		        	$("#tab2").attr("class", "off");
+		        	//$("#tab1").attr("class", "on");
+		        	//$("#tab2").attr("class", "off");
+		        	$("#tab1").children("span").attr("class" , "tabon");
+		        	$("#tab2").children("span").attr("class" , "");
 		        	
 		        	commentType = type;
 		        	
@@ -96,8 +99,10 @@
 		        } else if (type == 'myComment') {
 		        	//내게 달린 의견 및 공유된 의견
 		        	//앞쪽 아이콘 삭제하고 작성자 내용 작성일
-		        	$("#tab2").attr("class", "on");
-		        	$("#tab1").attr("class", "off");
+		        	//$("#tab2").attr("class", "on");
+		        	//$("#tab1").attr("class", "off");
+		        	$("#tab1").children("span").attr("class" , "");
+		        	$("#tab2").children("span").attr("class" , "tabon");
 		        	
 		        	commentType = type;
 		        	
@@ -144,17 +149,24 @@
 				</tr>
 			</table>
 			
-			<div id="tabnav" style="width:99%; margin-top:15px;">
+			<%-- <div id="tabnav" style="width:99%; margin-top:15px;">
 				<ul class="on">
 					<li id="tab1" class="on"><span onclick="swapTab('totalComment')"><spring:message code='ezCircular.t141' /></span></li>
 					<li id="tab2" class="off"><span onclick="swapTab('myComment')"><spring:message code='ezCircular.t142' /></span></li>
 				</ul>
-			</div>
+			</div> --%>
 			
-			<table id="circularUserList" style="width:99.5%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+			<div class="portlet_tabpart01" style="margin-top:10px;">
+	       		<div class="portlet_tabpart01_top" style="border-bottom:0px;">
+	       			<p id="tab1"><span onclick="swapTab('totalComment')" class="tabon"><spring:message code='ezCircular.t141' /></span></p>
+	       			<p id="tab2"><span onclick="swapTab('myComment')"><spring:message code='ezCircular.t142' /></span></p>
+	       		</div>
+      	 	</div>
+			
+			<table id="circularUserList" style="width:99.5%;margin-top:0px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 		</div>
 
-		<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">
+		<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;background-color: #f8f8fa;">
 			<div class="commentConfirmDiv" style="right:330px; display:none;">
 		        <ul style="padding-top:2px">
 		            <li><span id="commentConfirm" onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>

@@ -865,8 +865,9 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20;
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage + 1;
+		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
+		
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
@@ -880,7 +881,7 @@ public class EzEmailAdminController {
 		}
 
 		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
-			totalPage = totalPage + 1;
+			totalPage = totalPage;
 		}
 
 		currentPage = Math.min(currentPage, totalPage);
@@ -889,7 +890,7 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-									   maxItemPerPage, searchKeycode, searchKeyword);
+									   endRow, maxItemPerPage, searchKeycode, searchKeyword);
 		
 		IMAPAccess ia = null;
 		Locale locale = Locale.getDefault();
@@ -914,7 +915,7 @@ public class EzEmailAdminController {
 				String email = userId + "@" + domain;
 				logger.debug("email=" + email);
 				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale);
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 	
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 	
@@ -963,14 +964,15 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20;
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-
+		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
+		
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), 
-									   startRow, maxItemPerPage, searchKeycode, searchKeyword);
+									   startRow, endRow, maxItemPerPage, searchKeycode, searchKeyword);
 		
 		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
 		
@@ -998,7 +1000,7 @@ public class EzEmailAdminController {
 			try {
 				String email = userId + "@" + domain;
 				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale);
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 	

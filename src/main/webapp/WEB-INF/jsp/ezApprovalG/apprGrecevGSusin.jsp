@@ -90,7 +90,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pLimitRange = "", pPageNum = "1";
+		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
 		    var DocNumCode = "";
@@ -1270,6 +1270,7 @@
 		        parameter[37] = pPageNum;
 		        parameter[38] = tempSecurityDate;
 		        parameter[39] = SummaryFlag;
+		        parameter[45] = pPublicityYN;
 		        
 		        if (approvalFlag == "S") {
 		            parameter[19] = "ING";
@@ -1360,13 +1361,16 @@
 		                pSummery = ret[9];
 		                pPublicityCode = ret[11];
 		                tempSecurityDate = ret[14];
+		                pPublicityYN = ret[21]; 
 		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
 			                
-			                setPublicFlag();
+			                /*2018-04-05 김은석 수정 건설공사 공개여부*/
+// 			                setPublicFlag();
+			                setPublicFlag2()
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
@@ -1406,9 +1410,9 @@
 			<li id="btnFileAttach"style="display:none" ><span onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 			<li id="btnAprDocAttach" style="display:none"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
 			<c:if test="${approvalFlag == 'G'}">
-		    <c:if test="${hideCabinet == '0'}">
+<%-- 		    <c:if test="${hideCabinet == '0'}"> --%>
 			<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
-			</c:if>
+<%-- 			</c:if> --%>
 			</c:if>
 			<li id="btnAssign" ><span  onClick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
 			<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>

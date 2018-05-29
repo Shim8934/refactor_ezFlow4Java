@@ -239,6 +239,8 @@ public class LoginController {
 				// 사원번호를 사용한 로그인을 허용하는 경우
 				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
 					
+					String orgId = resultVO.getId();
+					
 					// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
 					if (useMasteradminLogin.equals("YES")) {
 						displayName1 = resultVO.getDisplayName1();
@@ -259,7 +261,7 @@ public class LoginController {
 					
 					if (!masteradminLogin) {
 						// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
-						_uid = resultVO.getId();
+						_uid = orgId;
 						_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 			        	loginVO.setId(_uid);
 			        	loginVO.setPassword(_pwd);
@@ -415,7 +417,7 @@ public class LoginController {
         // 사용자가 입력한 암호가 맞지 않는 경우
         } else {     	
         	//Check login state of the user 
-        	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);        
+        	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
 
         	switch (check) {
 				case -3: 
@@ -427,6 +429,8 @@ public class LoginController {
 	        		ezCommonService.insertUserConfigInfo(tenantId,  _uid, "LoginFailCount", "1");
 	        		//Show warning message
 	            	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {1, numberOfLoginFailPermit}, locale));
+	            	/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가 */
+	            	model.addAttribute("isWrongPass", "Y");
 	            	return "forward:/user/login/login.do";
         		case -1:
         			//Show normal login fail message
@@ -443,6 +447,7 @@ public class LoginController {
         			} else {
             			//Show warning message
                     	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {check + 1, numberOfLoginFailPermit}, locale));
+                    	model.addAttribute("isWrongPass", "Y");
                     	return "forward:/user/login/login.do";
         			}
         	}
@@ -519,7 +524,16 @@ public class LoginController {
 		
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
     	cookieID.setPath("/");
-    	response.addCookie(cookieID);    	
+    	response.addCookie(cookieID);
+    	
+    	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
+    	
+    	if (!("NO".equalsIgnoreCase(useSSOCookie) || "".equals(useSSOCookie))) {
+    		Cookie ssoLoginCookie = new Cookie("loginCookieSSO", loginCookie);
+    		ssoLoginCookie.setPath("/");
+    		ssoLoginCookie.setDomain(useSSOCookie);
+    		response.addCookie(ssoLoginCookie);
+    	}
     }
     
     /**
@@ -529,10 +543,18 @@ public class LoginController {
 	 */
     @RequestMapping(value="/user/login/actionLogout.do")
 	public String actionLogout(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+        
     	Cookie[] cookies = request.getCookies();
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
+    			if (cookie.getName().equals("loginCookieSSO")) {
+    				String ssoDomain = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
+    				cookie.setDomain(ssoDomain);
+    			}
+    			
     			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
@@ -540,9 +562,6 @@ public class LoginController {
     			}
     	    }
     	}
-    	
-        String serverName = request.getServerName();
-        int tenantId = loginService.getTenantId(serverName);
     	
         String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
         

@@ -350,7 +350,7 @@
 			    
 			    selecttarget_cross_dialogArguments[0] = receiverData;
 			    selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
-			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(800, 520));
+			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
 			    try { SelectTarget_Cross.focus(); } catch (e) {}
 			}
 			function SelectTarget_Complete(ret) {
@@ -537,9 +537,10 @@
 		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>
 	</c:if>	
 	<c:if test="${adminType == 'y'}">
-		<body>
+		<body style="padding-top:5px;">
 	</c:if>		
 		<xml id="listviewheader" style ="display:none"></xml>
+		<div style="max-width: 800px;">
 		<table class="content">
 	        <tr>
 	            <th><spring:message code="ezBoard.t114"/></th>
@@ -560,23 +561,25 @@
 	            </td>
 	        </tr>
 	    </table>
+	    </div>
 	    <br/>
+	    <div style="max-width : 800px;">
 	    <table class="content">
 	        <tr>
 	            <th><spring:message code="ezBoard.t111"/></th>
 	            <td style="padding: 0;">
 	                <c:if test="${use_multiData == 'YES'}">
-		                <table style="width: 100%">
+		                <table style="width: 100%;">
 		                    <tr class="primary">
 		                        <th><c:out value='${lang_primary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;">
-		                            <input type="text" id="txtBoardName" style="width: 99%" value="<c:out value='${model.boardName}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
 		                        <th><c:out value='${lang_secondary}' /></th>
 		                        <td>
-		                            <input type="text" id="txtBoardName2" style="width: 99%" value="<c:out value='${model.boardName2}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="25" />
 		                        </td>
 		                    </tr>
 		                </table>
@@ -593,7 +596,7 @@
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t155"/></th>
 	            <td>
-	                <input type="text" id="txtBoardDescription" style="width: 99%" value="<c:out value='${model.boardDescription}' />" maxlength="99" />
+	                <input type="text" id="txtBoardDescription" style="width: 100%" value="<c:out value='${model.boardDescription}' />" maxlength="99" />
 	            </td>
 	        </tr>
 	        <tr style="${style}">
@@ -741,7 +744,7 @@
 	        <tr style="${style}">
 	            <th>URL</th>
 	            <td>
-	                <input type="text" id="txtURL" style="width: 99%" value="<c:out value='${model.url}' />" />
+	                <input type="text" id="txtURL" style="width: 100%" value="<c:out value='${model.url}' />" />
 	            </td>
 	        </tr>
 	        <tr style="${style}">
@@ -799,6 +802,7 @@
     	<br/>
 	    <div class="btnposition">
 	        <a class="imgbtn" href="javascript:Save()"><span><spring:message code="ezBoard.t98" /></span></a>
+	    </div>
 	    </div>
 	</body>
 </html>

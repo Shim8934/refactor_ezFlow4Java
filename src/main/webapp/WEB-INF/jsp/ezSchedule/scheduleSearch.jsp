@@ -228,13 +228,13 @@
 		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
 		        	</td> 
 		    	</tr> 
-		    	<tr height="55px"> 
+		    	<tr> 
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
 		      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-		          		<div style="margin-top:9px">&nbsp;(<spring:message code='ezSchedule.t351'/></div> 
+		          		<span>&nbsp;(<spring:message code='ezSchedule.t351'/></span> 
 		          		<!-- <tr style="DISPLAY:none"> 
 		            		<td colspan="2">
 		                    	<span id="T_st">
@@ -288,8 +288,8 @@
 		    			<td style="width:80px">${item.ownerName2}</td> 
 		            	<td style="width:80px">${item.creatorName2}</td>
 		    		</c:if>
-		    		<td style="width:60%">${item.title}</td> 
-	          		<td style="width:140px">${item.location}</td>		         
+		    		<td style="width:60%"><c:out value="${item.title}"/></td> 
+	          		<td style="width:140px"><c:out value="${item.location}"/></td>		         
 	            	<td style="width:140px">	            		
 	            		<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)} (<spring:message code='ezSchedule.t280'/></c:if>
 	            		<c:if test="${item.dateType != '2'}">${fn:substring(item.startDate,0,16)}</c:if>	            		

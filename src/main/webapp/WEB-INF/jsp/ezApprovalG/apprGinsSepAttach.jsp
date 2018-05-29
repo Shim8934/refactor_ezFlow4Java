@@ -138,9 +138,8 @@
 		        if (CrossYN()) {
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
-		
+		            
 		            DivPopUpShow(700, 615, url);
-
 		        }
 		        else {
 		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
@@ -265,11 +264,11 @@
 		        SetAttribute(objRow, "DATA1", SelectSingleNodeValue(InfoXml.documentElement, "CABINETID"));  
 		        SetAttribute(objRow, "DATA2", SelectSingleNodeValue(InfoXml.documentElement, "REGTYPE"));  
 		        SetAttribute(objRow, "DATA3", SelectSingleNodeValue(InfoXml.documentElement, "AVTYPE"));  
-		
-		        objRow.cells[1].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "TITLE");  
+
+		        objRow.cells[1].innerHTML = Replace2HTML(SelectSingleNodeValue(InfoXml.documentElement, "TITLE"));  
 		        objRow.cells[2].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "CABINETNAME");  
-		        objRow.cells[3].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "REGTYPEDESC");  
-		
+		        objRow.cells[3].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "REGTYPEDESC");
+		        
 		        var Data = SelectSingleNodeValue(InfoXml.documentElement, "NUMOFPAGE");
 		        if (Data == "")
 		            objRow.cells[4].innerHTML = " ";
@@ -309,7 +308,7 @@
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
-		                DivPopUpShow(500, 615, url);
+		                DivPopUpShow(700, 615, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
@@ -392,7 +391,6 @@
 		    
 		    function GetSelAttachInfoXml(selRow) {
 		        var xmlpara = createXmlDom();
-		
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "PARAMETERS");
 		        createNodeAndInsertText(xmlpara, objNode, "RECORDID", "");
@@ -513,9 +511,9 @@
 	<body class="popup">
 		<div id="menu">
 		        <ul id="trModify" style="display:none">
-		          <li id="btnAddList"><span onClick="return btnAddList_onclick()"><spring:message code='ezApprovalG.t268'/></span></li>
-		          <li id="btnModList" ><span onClick="return btnModList_onclick()"><spring:message code='ezApprovalG.t1033'/></span></li>
-				  <li id="btnDelList"><span onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+		          <li id="btnAddList"><span style="padding-top:1px" onClick="return btnAddList_onclick()"><spring:message code='ezApprovalG.t268'/></span></li>
+		          <li id="btnModList" ><span style="padding-top:1px" onClick="return btnModList_onclick()"><spring:message code='ezApprovalG.t1033'/></span></li>
+				  <li id="btnDelList"><span style="padding-top:1px" onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 		        </ul>
 				<ul id="trChangeCabinet" style="display:none">
 		          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>

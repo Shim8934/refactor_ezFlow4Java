@@ -7,6 +7,11 @@
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <style>
+	    .mainlist tr th {
+	    	border-top : 0px;
+	    }
+	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -33,7 +38,7 @@
 			                        var tempi = i + 1;
 			                        _html += "<tr id = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "SAVEFILENAME")[0]) + "' backgroundid = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "BACKGROUNDID")[0]) + "' priority = '" + tempi
 			                                + "' imgwidth = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "WIDTH")[0]) + "' imgheight = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HEIGHT")[0])
-			                                + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>"
+			                                + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);' style='cursor:pointer;'>"
 			                        if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1")
 			                            _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' checked = true onclick='event_statuschange(this);'></td>";
 			                        else
@@ -130,7 +135,7 @@
 		        var imgwidth = document.getElementById("backimage").width;
 		        var imgheight = document.getElementById("backimage").height;
 
-		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=UPT&backgroundID=" + clickitem.getAttribute("backgroundid") + "&width=" + imgwidth + "&height=" + imgheight, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=610,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=UPT&backgroundID=" + clickitem.getAttribute("backgroundid") + "&width=" + imgwidth + "&height=" + imgheight, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=578,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		    
 		    function MakeDescription(filepath) {
@@ -265,7 +270,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 330) / 2;
 		        var pLeft = (pwidth - 610) / 2;
-		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=NEW", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=610,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=NEW", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=578,top=" + pTop + ",left=" + pLeft, "");
 		    }
 	    </script>
 	</head>
@@ -291,7 +296,7 @@
                         		<th style="width:32%;"><span><spring:message code="ezBoard.t5007"/></span></th>
                     		</tr>
                 		</table>
-              			<div id="contentlist" name="contentlist" style="height:353px;overflow-y:auto;">
+              			<div id="contentlist" name="contentlist" style="height:347px;overflow-y:auto;">
                 			<table class="mainlist" style="width:100%;">
                     			<tr>
                         			<td style="text-align:center;">

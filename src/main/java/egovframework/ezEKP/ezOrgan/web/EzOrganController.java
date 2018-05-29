@@ -318,6 +318,23 @@ public class EzOrganController {
 
 		return strXML;
 	}
+	/**
+	 * 선택한 서브트리정보  함수 
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/ezOrgan/insertAllOrganSubTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String insertAllOrganSubTreeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo , String deptID) throws Exception{
+		logger.debug("insertAllOrganSubTreeInfo Started (outer)");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
+		
+		int intScope = 1;
+		String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, deptID, intScope);
+		logger.debug("insertAllOrganSubTreeInfo ended (outer)");
+		
+		return strXML;
+	}
 //	/**
 //	 * 조직도 부서 및 사원정보 함수
 //	 */
@@ -371,5 +388,56 @@ public class EzOrganController {
 		
 		logger.debug("getAllDeptID ended.");
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezOrgan/isProxyUser.do", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String isProxyUser(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("isProxyUser started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String nowDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
+		String result ="0";
+		
+		if (ezOrganService.isProxyUser(userInfo.getTenantId(), userInfo.getId(), nowDateTime).equals("1")) {
+			result = "1";
+		}
+		
+		logger.debug("isProxyUser ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezOrgan/setListType.do", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String setListType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("setListType started.");
+		String listType = request.getParameter("listType");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		ezOrganService.setListType(listType, userID, tenantID, companyID);
+		
+		logger.debug("setListType ended.");
+		return "TRUE";
+	}
+	
+	@RequestMapping(value = "/ezOrgan/getListType.do", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String getListType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("getListType started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		String listType = ezOrganService.getListType(userID, tenantID, companyID);
+		
+		if (listType == null) {
+			listType = "TXT";
+		}
+		
+		logger.debug("getListType ended.");
+		return listType;
 	}
 }

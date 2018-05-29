@@ -9,76 +9,104 @@
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
-// 			var ch_CommunityAdmin = "${chCommunityAdmin}";
+// 		var ch_CommunityAdmin = "${chCommunityAdmin}";
 		    var UserLevel = "<c:out value ='${userLevel}' />";
+		    var userID = "<c:out value ='${userInfo.id}' />";
 		    
 		    window.onload = function () {
 				$("#tblList").html($("#tblList").html() + '${strXML}');
 			}
 		    
-		    function alertMessage() {
-				alert("<spring:message code = 'ezCommunity.t667' />");
-			}	  
-
 			function poll_edit(pClubNo, managerID) {
 				window.location.href = "/ezCommunity/pollEdit.do?pClubNo=" + encodeURIComponent(pClubNo) + "&managerID=" + encodeURIComponent(managerID);
 			}
-
-			function poll_Delete(pClubNo, managerID) {
-				window.location.href = "/ezCommunity/pollDelete.do?code=" + encodeURIComponent(pClubNo) + "&managerID=" + encodeURIComponent(managerID);
-			}
-					
-			function poll_add() {
-				if (UserLevel == "0" || UserLevel == "9") {
-		            alert("<spring:message code='ezCommunity.t1102' />");
-		            return;
-		        }
+			
+			/* 2018-05-07 홍승비 - 체크박스를 사용하는 상단 삭제 버튼 기능 추가 */
+			var pClubNo = "";
+			var managerIDs = "";
+			var delOK = "";
+			function poll_BeforeDelete () {
+				pClubNo = "";
+				managerIDs = "";
+				delOK = "";
 				
-				window.location.href = "/ezCommunity/pollAdd.do?code=" + encodeURIComponent(code);
-			}
+				if ($("input:checkbox:checked").length == 0) {
+					alert("<spring:message code='ezQuestion.t161' />");
+					return;
+				}
+				if (UserLevel == "0" || UserLevel == "9") {
+					alert("<spring:message code='ezCommunity.t431' />");
+			     	return;
+				}
+				else {
+					$("input:checkbox:checked[id != 'checkBoxHeader']").each(function () {
+						/* 2018-05-10 삭제 권한 확인 .do에서 jsp로 옮김 */
+						if (UserLevel != "4" && $(this).attr("pollRegID") != userID) {
+							delOK = "no";
+							alert("<spring:message code='ezCommunity.t431' />");
+					     	return false;
+						}
+
+						if (pClubNo == "") {
+							pClubNo = $(this).attr("clubNo");
+						}
+						managerIDs += $(this).attr("id");
+					});
 					
-			function poll_chManage(strMsg) {
-				alert("<spring:message code='ezCommunity.t668' />"+strMsg+"<spring:message code='ezCommunity.t669' />");
-				return;
+					if (delOK != "no") {
+						poll_Delete(pClubNo, managerIDs);
+					}
+				}
+			}
+
+			/* 2018-05-07 홍승비 - 삭제 여부 확인창 추가 */
+			function poll_Delete(pClubNo, managerID) {
+				if (confirm("<spring:message code='ezCommunity.t426' />")) {
+					window.location.href = "/ezCommunity/pollDelete.do?code=" + encodeURIComponent(pClubNo) + "&managerID=" + encodeURIComponent(managerID);			
+				}
 			}
 			
+			/* 2018-05-07 홍승비 - 설문추가 권한체크 html 분기(jstl)에서 스크립트 분기로 변경 */
+			function poll_add() {
+				if (UserLevel == "0" || UserLevel == "9") {
+		            alert("<spring:message code='ezCommunity.t431' />");
+		            return;
+		        } else if ("${disable}" == true) {
+		        	alert("<spring:message code = 'ezCommunity.t667' />");
+		        	return;
+		        } else {
+					window.location.href = "/ezCommunity/pollAdd.do?code=" + encodeURIComponent(code);
+		        }
+			}
+
 		    function movepage(code, itemno, pollstate) {
 		        if (UserLevel == "0" || UserLevel == "9") {
-		            alert("<spring:message code='ezCommunity.t1102' />");
+		            alert("<spring:message code='ezCommunity.t431' />");
 		            return;
-		        }
-		        
+		        } 
 		        window.location.href = "/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + itemno + "&pollState=" + pollstate;
 		    }
+		    
+		    function checkAll(obj) {
+		    	if (obj.checked) {
+		    		$("input:checkbox").prop("checked", true);
+		    	} else {
+		    		$("input:checkbox").prop("checked", false);
+		    	}    	
+		    }
+		    
 		</script>
 	</head>
 	<body class ="cmhome_body">
 		<h1 class="type1_h1"><spring:message code='ezCommunity.t598' /></h1>
 		<div id="mainmenu">
+		<%-- 2018-05-07 홍승비 - 사용하지 않는 변수와 jstl 분기 제거 --%>
 			<ul>
-				<c:if test="${guest != '1' }">
-					<c:choose>
-						<c:when test="${disable == false }">
-							<c:choose>
-								<c:when test="${chCommunityAdmin < 0 && (userLevel == '0' || userLevel == '9')}">
-									<li><span onClick="poll_chManage('<spring:message code='ezCommunity.t670' />')"><spring:message code='ezCommunity.t671' /></span></li>
-								</c:when>
-								
-								<c:otherwise>
-									<li><span  onClick="poll_add()"><spring:message code='ezCommunity.t671' /></span></li>
-								</c:otherwise>
-							</c:choose>	
-						</c:when>
-						
-						<c:otherwise>
-							<li><span  onClick="javascript:alertMessage();"><spring:message code='ezCommunity.t671' /></span></li>
-						</c:otherwise>
-					</c:choose>
-				</c:if>
+				<li><span  onClick="poll_add()"><spring:message code='ezCommunity.t671' /></span></li>
+				<li><span  onClick="poll_BeforeDelete()"><spring:message code='ezCommunity.t208' /></span></li>
 			</ul>
 		</div>
 		
@@ -88,13 +116,18 @@
 		
 		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:12px">
 			<tr>
-				<th><spring:message code='ezCommunity.t673' /></th>
-				<%-- <th style="width:40px;"><spring:message code='ezCommunity.t32' /></th> --%>
+				<th style="width:27px;"><input id="checkBoxHeader" type="checkbox" onclick="checkAll(this)"/></th>
+				<th><spring:message code='ezCommunity.t673' /></th>			
 			    <th style="width:170px;"><spring:message code='ezCommunity.t672' /></th>
 			    <th style="width:60px;"><spring:message code='ezCommunity.t674' /></th>
 			    <th style="width:60px;"><spring:message code='ezCommunity.t675' /></th>
 			    <th style="width:80px;"><spring:message code='ezCommunity.t676' /></th>
 			</tr>
+				<c:if test="${strXML eq ''}" >
+					<tr>
+						<td align="center" colspan="6"><spring:message code='ezQuestion.t312'/></td>
+					</tr>
+				</c:if>
 		</table>
 	</body>
 </html>

@@ -91,12 +91,14 @@ function weekonload(s_Year, s_Month, s_Date)
     
     if (DefaultView == 0) { //일요일시작
         if (sz_DayOfWeek == 0)
-            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek));
+        	//weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
         else
             weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 0);
 
         if (sz_DayOfWeek == 0)
-            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek) + 6);
+	        //weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
         else
             weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek));
     } else { //월요일시작
@@ -668,18 +670,25 @@ function tableListControl_Week()
                 }
                 else if (s_weekDateSet < weekdatename[0] && e_weekDateSet <= weekdatename[6]) {
                     var endCnt = getNodeText(xmldom.getElementsByTagName("deDaytype")[j]);
-                    for (var i = endCnt; 0 <= i; i--) {
-                        makeTable(xmldom, j, i);
+                    if (DefaultView == 0) { //일요일 시작
+                    	for (var i = endCnt; 0 <= i; i--) {
+                    		makeTable(xmldom, j, i);
+                    	}
+                    } else { // 월요일 시작
+	                    for (var i = endCnt; 0 < i; i--) {
+	                    	makeTable(xmldom, j, i);
+	                    }
                     }
                 }
                 else if (weekdatename[0] <= s_weekDateSet && weekdatename[6] < e_weekDateSet) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
                     for (var i = startCnt; i < 8; i++) {
-                        if (i == 7) {
-                        	//makeTable(xmldom, j, 0); // 천성준 2018-03-09 자원관리 > 금토일 자원예약시 폴더 주보기에서 자원예약이 잘못표시되는 버그수정
+                        if (i == 7 || i == 0) {
+                        	if (DefaultView == 1) { // 월요일 시작
+                        		makeTable(xmldom, j, 0);
+                        	}
                         	break;
-                        }
-                        else{
+                        } else {
                         	makeTable(xmldom, j, i);
                         }
                     }
@@ -865,6 +874,7 @@ function DataSetRemove(fs_Date, fe_Date) {
     }
 }
 
+var agent = navigator.userAgent.toLowerCase(); 
 function tableListControl_today() {
     if (c_xmlhttp.readyState == 4 && c_xmlhttp.status == 200) {
         var xmldom = createXmlDom();
@@ -984,7 +994,6 @@ function tableListControl_today() {
                 var pObjectId = "Day_" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]);
                 var pObjectSP = Math.floor((parseInt(getNodeText(xmldom.getElementsByTagName("dstartTime")[j])) / 30)) + 1;
                 var pObjectEP = Math.ceil((parseInt(getNodeText(xmldom.getElementsByTagName("dendTime")[j])) / 30));
-
                 var pObjectSPDay = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0];
                 var pObjectEPDay = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0];
                 
@@ -1036,7 +1045,13 @@ function tableListControl_today() {
                             document.getElementById(pObjectId + "_" + TCnt).onmouseover = function (event) { onmouse_over_today(this, event); };
                             document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
                             document.getElementById(pObjectId + "_" + pObjectSP).onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                            document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1;
+                            document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1; 
+                          //늘어난 colspan만큼 오른쪽으로 밀려난 td들을 display:none 처리한다.(ie11문제 수정)
+                            if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+                                for(var tdR = 1; tdR < (pObjectEP - pObjectSP) + 1; tdR++){
+                               	 	document.getElementById(pObjectId + "_" + (TCnt+tdR)).style.display = "none";    	
+                                }
+                			}	
                         }
                     }
                 } else {
@@ -1065,14 +1080,19 @@ function tableListControl_today() {
                     document.getElementById(pObjectId + "_1").setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
                     document.getElementById(pObjectId + "_1").style.backgroundColor = "rgba(237, 244, 253, 1)";
-                    document.getElementById(pObjectId + "_1").style.border = "1.1px solid #b5c8e3";//주보기?
+                    document.getElementById(pObjectId + "_1").style.border = "1.1px solid #b5c8e3";
                     document.getElementById(pObjectId + "_1").style.cursor = "pointer";
                     document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
                     document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
                     document.getElementById(pObjectId + "_1").onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                     document.getElementById(pObjectId + "_1").colSpan = 48;
-                }
-                
+                  //하루종일 시 우측 td 전부 삭제(ie11문제 수정)
+                    if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+                        for(var tdR = 2; tdR <= 48; tdR++){
+                       	 	document.getElementById(pObjectId + "_" + (tdR)).style.display = "none";    	
+                        }
+        			}	
+                }     
             }
         }
         var dateresult = "";
@@ -1201,7 +1221,7 @@ function tableListControl_today() {
                                     _TD.onmouseout = new Function("onmouse_out_today(this);");
                                     _TD.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + title_name[k].split("/")[1] + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                                     _TD.colSpan = width_td;
-                                    
+
                                     _Tr2.appendChild(_TD);
                                     
                                 } else {

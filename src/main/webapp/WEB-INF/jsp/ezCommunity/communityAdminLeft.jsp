@@ -302,7 +302,7 @@
 				for (var i = 0; i < SelectNodes(retXML, "TREEVIEWDATA/NODE").length; i++) {
 					treeXML += "<li><span id='" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "\" , \"" + cnt + "\", event)'>" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA2") + "</span>";
 					treeXML += "<span id=\"sub" + i + "\" style=\"display:none;margin-left:0px;padding-bottom:15px\">";
-					treeXML += "<div class='tree' id='TreeCtrl" + i + "obj' style='height:auto;width:135px;padding-left:40px;margin-left:-40px;overflow-x:auto;overflow-y:hidden;'></div>\n";
+					treeXML += "<div class='tree' id='TreeCtrl" + i + "obj' style='height:auto;width:135px;padding-left:20px;margin-left:-40px;overflow-x:auto;overflow-y:hidden;'></div>\n";
 					treeXML += "</span></li>";
 				}
 				
@@ -313,20 +313,20 @@
 		
 	</head>
 	<body class="leftbody">  
-		<div id="left" style="height:500px;overflow-y:auto;">
+		<div id="left" style="height:526px;overflow-y:auto;">
 			<div class="left_admin" title="Community Administrator"><spring:message code = 'ezCommunity.t234' /></div>
-			<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(2)" id="goPage_2" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2012' /></span><ul></ul></h2>	
+			<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>	
 	        <h2><span onClick="goPage(10)" id="goPage_10" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2014' /></span><ul></ul></h2>
 			<h2><span onClick="Open_Func()" id="BoardList" style="display:inline-block;width:100%"> <spring:message code = 'ezCommunity.t418' /></span></h2>
 			
 			<ul id = "treeUL"></ul>
 			
 			<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t490' /></span><ul></ul></h2>	
-			<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t491' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(6)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t492' /></span><ul></ul></h2>
 			<h2><span onClick="goPage(7)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t493' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t494' /></span><ul></ul></h2>	
+			<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t491' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(9)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t475' /></span><ul></ul></h2>
 		       
 		</div>

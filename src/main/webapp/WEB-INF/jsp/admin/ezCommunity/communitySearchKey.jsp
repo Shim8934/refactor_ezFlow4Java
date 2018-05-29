@@ -8,6 +8,14 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<style>
+		.mainlist tr th:first-child{
+			padding-left: 10px;
+		}
+		.mainlist tr td:first-child{
+			padding-left: 10px;
+		}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
@@ -26,10 +34,10 @@
 			};	
 			
 			function view_CommunityInfo(pcode) {
-				var pheight = window.screen.availHeight;
+ 				var pheight = window.screen.availHeight;
 				var pwidth = window.screen.availWidth;
-				var pTop = (pheight - 760) / 2;
-				var pLeft = (pwidth - 765) / 2;
+				var pTop = (pheight - 430) / 2;
+				var pLeft = (pwidth - 500) / 2; 
 				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 			}
 			
@@ -143,6 +151,10 @@
 	                }
 	            }
 	            
+                if (MaxNum == 0) {
+	            	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+	            }
+                
 	            if (sTotalPage > BlockSize) {
 	                if (sTotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
@@ -219,13 +231,13 @@
 				<tr>
 					<th ><spring:message code = 'ezCommunity.t31' /></th>
 			  		<td>
-						<select id="QuerySelect" name="QuerySelect" style="vertical-align:middle">
+						<select id="QuerySelect" name="QuerySelect" style="vertical-align:middle; height: 22px; margin-left:2px;width:100px;">
 							<option selected value="pCommunityName"><spring:message code = 'ezCommunity.t9991' /></option>
 							<option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option>
 						</select>
 						
-						<input name="text" type="text" style="WIDTH:200px;vertical-align:middle" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 
-						<a class="imgbtn" style="vertical-align:middle"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
+						<input name="text" type="text" style="WIDTH:200px;vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 
+						<a class="imgbtn" style="vertical-align:middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			  		</td>
 				</tr>
 			</table>
@@ -237,10 +249,10 @@
 			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
 			
 			<br />
-			
+			<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
 			<table class="mainlist" style="width:100%">
 				<tr>
-					<th style="width:50px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
+					<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
 					<th style="width:250px;"><spring:message code = 'ezCommunity.t9991' /></th>
 					<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></th>
 					<th style="width:100px;"><spring:message code = 'ezCommunity.t33' /></th>
@@ -259,9 +271,8 @@
 				</c:forEach>
 				
 			</table>
-			
+			</div>
 			<br />
-			
 			<div id="tblPageRayer"></div>
 		</form>
 	</body>

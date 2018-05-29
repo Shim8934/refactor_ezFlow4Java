@@ -405,8 +405,8 @@
 				var item_readlist_cross_dialogArguments = new Array();
 				function ReaderList()
 				{
-		            var swidth = 520;
-		            var sheight = 410;
+		            var swidth = 600;
+		            var sheight = 415;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
@@ -415,12 +415,12 @@
 		            var ptop = (pheight - sheight) / 2;
 		
 					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
-					var strFeature = "status:no;dialogHeight: 410px;dialogWidth: 520px;help: no;resizable:yes";
+					var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
 					    item_readlist_cross_dialogArguments[0] = "";
 					    item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-					    DivPopUpShow(520, 410, szHref);
+					    DivPopUpShow(600, 415, szHref);
 					}
 					else
 					    window.open(szHref,"", "width=" + swidth + ",height=" + sheight + ",top=" + ptop + ",left=" + pleft + ", resizable=yes, scrollbars=yes");
@@ -631,11 +631,13 @@
 		            imageonmouse(imagefilename.id);
 		
 		            var mainfilename = imagefilename.src;
-		            if (imagefilename.src.indexOf("s_") > -1)
+		            if (imagefilename.src.indexOf("s_") > -1) {
 		                mainfilename = imagefilename.src.split("s_")[0] + imagefilename.src.split("s_")[1];
+		            }
 		    
 		            viewimage = imagefilename.id;
 		
+		            document.getElementById("mainimages").style.display = "none";
 		            document.getElementById("mainimages").src = mainfilename;
 		            document.getElementById("mainimages").name = imagefilename.name;
 		            document.getElementById("MainContent").innerHTML = imagefilename.title;
@@ -645,55 +647,50 @@
 		
 		        function imageloding()
 		        {
-		            var loading = 1000;
+					var newimage = new Image();
+			        newimage.src = document.getElementById("mainimages").src;
+
+			        /* 2018-04-25 홍승비 - 기존 setTimeout을 이미지.onload로 수정 */
+			        newimage.onload = function() {
+					    var we = newimage.width;
+						var he = newimage.height;
+	
+						if (we > 400) {
+							document.getElementById("mainimages").width = 400;
+					  	} else {
+					  		document.getElementById("mainimages").width = we;
+					  	}
+						if (he > 300) {
+							document.getElementById("mainimages").height = 280;
+						} else {
+							document.getElementById("mainimages").height = he;
+						}
+	
+						document.getElementById("mainimages").style.display = "";
+			
+			            var maxWidth = 400;
+			            var maxHeight = 280;
+			            var ratio = 0;
 		
-		            var newiamge = new Image();
-		            newiamge.src = document.getElementById("mainimages").src;
-		            var we = newiamge.width;
-		            var he = newiamge.height;
-		            
-		            if(we == 0 && he == 0)
-		            {
-		                var endloading = loading + loading;
-		                setTimeout("imageloding()", endloading);
-		            }
-		           
-		            if(we > 400)
-		                document.getElementById("mainimages").width = 400;
-		            else
-		                document.getElementById("mainimages").width = we;
-		                
-		            if(he > 300)
-		                document.getElementById("mainimages").height = 280;
-		            else
-		                document.getElementById("mainimages").height = he;
-		
-		            var maxWidth = 400;
-		            var maxHeight = 280;
-		            var ratio = 0;
-		
-		
-		            if (we > maxWidth) {
-		                ratio = maxWidth / we;
-		                document.getElementById("mainimages").width = maxWidth;
-		                document.getElementById("mainimages").height = he * ratio;
-		
-		                if (document.getElementById("mainimages").height > maxHeight) {
-		                    ratio = maxHeight / document.getElementById("mainimages").height;
-		                    document.getElementById("mainimages").height = maxHeight;
-		                    document.getElementById("mainimages").width = document.getElementById("mainimages").width * ratio;
-		                }
-		            }
-		            else {
-		                if (he > maxHeight) {
-		                    ratio = maxHeight / he;
-		                    document.getElementById("mainimages").height = maxHeight;
-		                    document.getElementById("mainimages").width = we * ratio;
-		                }
-		            }
-		
-		
-		            
+			            if (we > maxWidth) {
+			                ratio = maxWidth / we;
+			                document.getElementById("mainimages").width = maxWidth;
+			                document.getElementById("mainimages").height = he * ratio;
+			
+			                if (document.getElementById("mainimages").height > maxHeight) {
+			                    ratio = maxHeight / document.getElementById("mainimages").height;
+			                    document.getElementById("mainimages").height = maxHeight;
+			                    document.getElementById("mainimages").width = document.getElementById("mainimages").width * ratio;
+			                }
+			            }
+			            else {
+			                if (he > maxHeight) {
+			                    ratio = maxHeight / he;
+			                    document.getElementById("mainimages").height = maxHeight;
+			                    document.getElementById("mainimages").width = we * ratio;
+			                }
+			            }
+			        }
 		        }
 		
 		        function Pagenationimage(page)
@@ -786,8 +783,20 @@
 		                }
 		            }
 		            else {
-		                swidth = 380;
-		                sheight = 380;
+		            	var agent = navigator.userAgent.toLowerCase();
+		            	
+		            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
+		            		if (gubun != 4) {
+		            			swidth = 440;
+			               		sheight = 460;
+		            		} else {
+			            		swidth = 440;
+				                sheight = 480;
+		            		}
+		            	} else {
+		               		swidth = 460;
+		                	sheight = 380;
+		            	}
 		                
 			            pleft = (pwidth - swidth) / 2;
 			            ptop = (pheight - sheight) / 2;

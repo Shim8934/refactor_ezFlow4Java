@@ -125,7 +125,7 @@
 		        try {
 		        	// 수정 수아 재은
 		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />"
-						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-left: -4px;' />";
+						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer;' />";
 						html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>"
 						html += "<br><br>";
 						
@@ -449,7 +449,6 @@
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick() {
-		    	console.log("modify");
 		        if (Write_FG != "true" && gubun != "2") {
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
@@ -578,7 +577,8 @@
 
 		        var i = 0;
 		        var pos = 0;
-		        var filename = "";
+		        var filenameOrg = "";
+		        var filenameView = "";
 		        var filepath = "";
 		        var strAttach = "";
 		        var fileImage = "";
@@ -586,8 +586,11 @@
 		        var regData = GetbrowserLanguage();
 		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-		            filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+		            /* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
+		            filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+		            filenameView = ReplaceText(ReplaceText(ReplaceText(filenameOrg, ">", "&gt;"), "<", "&lt;"), "&", "&amp;");
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
+		            
 		            var strTarget = "target=''";
 		            var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
 		            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
@@ -619,9 +622,9 @@
 		            var protocol = window.location.protocol;
 		            var serverName = window.location.hostname;
 		            
-		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
-		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filename) + "'\">";
-		            strAttach += filename + "&nbsp;(" + filesize + ")</a><br>";
+		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' >";
+		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
+		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a><br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
@@ -671,17 +674,17 @@
 		    function ReaderList() {
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 400) / 2;
+		        var left = (width - 600) / 2;
+		        var top = (heigth - 415) / 2;
 		        var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-		        var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
+		        var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(520, 410, szHref);
+		            DivPopUpShow(600, 415, szHref);
 		        }
 		        else
-		            window.open(szHref, "", "width=520, height=400, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		            window.open(szHref, "", "width=600, height=415, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
 		    }
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
@@ -1154,7 +1157,7 @@
 				                        <c:if test="${guBun != '2'}">
 <%-- 				                        	<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 				                        </c:if>
-				                        <li ID='btn_Move' style="display:none;"><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+				                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 				                        <li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
 				                    </c:if>
 			        			</c:otherwise>

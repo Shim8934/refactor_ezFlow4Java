@@ -221,6 +221,14 @@
 		        return regx.test(strEmailAddr);
 		    }
 		    function pop_addcon() {
+		    	
+		    	if (inboxRuleCon1.value.trim().length == 0) {
+		    		alert(strLangKYJ03);
+		    		inboxRuleCon1.value = "";
+                    inboxRuleCon1.focus();
+		    		return;
+		    	}
+		    	
 		        if (inboxRuleCon1.value.length > 0) {
 		            var ischeck = true;
 		            if (_RuleKind == "SENDER" || _RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION")

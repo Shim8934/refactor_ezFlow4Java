@@ -55,6 +55,7 @@ public class ClientUtil {
 	public static String getClientInfo(HttpServletRequest request, String type) {
 	     String agent = request.getHeader("User-Agent");
 	     agent = agent != null ? agent : "";
+	    
 	     String result = "";
 	     
 	     if(type.equals("agent")){
@@ -72,6 +73,25 @@ public class ClientUtil {
             	 result = "Windows Vista";
              else if (agent.indexOf("Windows NT 5.2") > 0 || agent.indexOf("Windows NT 5.1") > 0)
             	 result = "Windows XP";
+             /* 모바일 (수정된 부분)  2018.04.26 문성업 로그인 기록 수정 - 리눅스 접속 추가  */
+             else if (agent.indexOf("iPhone") > 0) 
+            	 result = "iPhone";
+             else if (agent.indexOf("iPod") > 0)
+            	 result = "iPod";
+             else if (agent.indexOf("iPad") > 0)
+            	 result = "iPad";
+             else if (agent.indexOf("Android") > 0)
+            	 result = "Android";
+             else if (agent.indexOf("BlackBerry") > 0)
+            	 result = "BlackBerry";
+             else if (agent.indexOf("Windows CE") > 0)
+            	 result = "Windows CE";
+             else if (agent.indexOf("IEMobile") > 0)
+            	 result = "NOKIA";
+             else if (agent.indexOf("Webos") > 0)
+            	 result = "Webos";
+             else if (agent.indexOf("Linux x86") > 0) //수정
+            	 result = "Linux";
              else if (agent.indexOf("Mac OS") > 0)
             	 result = "Mac OS";
              else
@@ -87,7 +107,9 @@ public class ClientUtil {
 	             // Windows 10에서 Trident/8.0으로 전송되는 경우가 발생하여 추가함.  
 	             else if (agent.indexOf("Trident/7.0") > 0 || agent.indexOf("Trident/8.0") > 0)
 	            	 result = "IE11";
-	         }else{
+	             else
+	            	 result = "Etc";
+		     }else{
 	             if (agent.indexOf("Edge") > 0)
 	            	 result = "Edge";	        	 
 	             else if (agent.indexOf("Chrome") > 0)
@@ -96,6 +118,9 @@ public class ClientUtil {
 	            	 result = "Safari";
 	             else if (agent.indexOf("Firefox") > 0)
 	            	 result = "Firefox";
+	            /* (수정된 부분) 2018.04.16 문성업 로그인 기록 수정  */
+	             else if (agent.indexOf("Presto") > 0)
+	            	 result = "Opera";
 	             else
 	            	 result = "Etc";
 	         }

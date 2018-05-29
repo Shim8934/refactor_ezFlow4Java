@@ -9,6 +9,9 @@ import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserVO;
+import egovframework.ezEKP.ezPoll.vo.PollUsersVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPollDAO")
@@ -186,5 +189,73 @@ public class EzPollDAO extends EgovAbstractDAO {
 
 	public PollUserAnswerVO getSpecificPollUserAndAnswer(Map<String, Object> map) {		
 		return (PollUserAnswerVO) select("EzPollDAO.getSpecificPollUserAndAnswer", map);
+	}	
+	
+	public int checkUsingFile(Map<String, Object> map) {		
+		return (int) select("EzPollDAO.checkUsingFile", map);
+	}
+	
+	public int checkQstUsingFile(Map<String, Object> map) {		
+		return (int) select("EzPollDAO.checkQstUsingFile", map);
+	}
+	
+	public String getQuestionFileById(Map<String, Object> map) {		
+		return (String) select("EzPollDAO.getQuestionFileById", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAnswerFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getAnswerFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getCommentFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getCommentFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getCommentImgFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getCommentImgFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PollUserVO> getListOfUserIdForQstByQstId(Map<String, Object> map) {		
+		return (List<PollUserVO>) list("EzPollDAO.getListOfUserIdForQstByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PollQuestionVO> getOpenToAllQuestion(Map<String, Object> map) {		
+		return (List<PollQuestionVO>) list("EzPollDAO.getOpenToAllQuestion", map);
+	}
+	
+	public void insertQstUsers(Map<String, Object> map) {
+		insert("EzPollDAO.insertQstUsers", map);
+	}
+	
+	public PollUsersVO getQstUsers(Map<String, Object> map) {		
+		return (PollUsersVO) select("EzPollDAO.getQstUsers", map);
+	}
+	
+	public void updateQstUsersStatus(Map<String, Object> map) {
+		update("EzPollDAO.updateQstUsersStatus", map);
+	}	
+	
+	public void deleteUsersForQst(Map<String, Object> map) {
+		delete("EzPollDAO.deleteUsersForQst", map);
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<PollUsersVO> getAllUsersForQst(Map<String, Object> map) {
+		return (List<PollUsersVO>) list("EzPollDAO.getQstUsers", map);
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getQstAllUsers(Map<String, Object> map) {
+		return (List<LoginVO>) list("EzPollDAO.getQstAllUsers", map);
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getInfoOfSeenUsers(Map<String, Object> map) {
+		return (List<LoginVO>) list("EzPollDAO.getInfoOfSeenUsers", map);
 	}	
 }

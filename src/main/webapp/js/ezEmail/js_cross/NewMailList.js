@@ -67,6 +67,12 @@ function MakeHeaderHTML(HeaderObject) {
             _HeaderRow.style.cursor = "pointer";
             _HeaderRow.setAttribute("prop", SelectSingleNodeValue(XmlRows[Cnt], "prop"));
 
+            if (SelectSingleNodeValue(XmlRows[Cnt], "propname") == "subject" || SelectSingleNodeValue(XmlRows[Cnt], "receivedt") == "sender") {
+            	_HeaderRow.style.overflow = "hidden";
+                _HeaderRow.style.textOverflow = "ellipsis";
+                _HeaderRow.style.whiteSpace = "nowrap";	
+            }
+            
             var HeaderType = SelectSingleNodeValue(XmlRows[Cnt], "heading");
             if (HeaderType == "IMG")
                 _HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
@@ -208,6 +214,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Flag = SelectSingleNodeValue(XmlRows[Cnt], "flag");
                 var p_Attach = SelectSingleNodeValue(XmlRows[Cnt], "attach");
                 var p_Sender = SelectSingleNodeValue(XmlRows[Cnt], "sender");
+                var p_Msgto = SelectSingleNodeValue(XmlRows[Cnt], "msgto");
                 var p_Subject = SelectSingleNodeValue(XmlRows[Cnt], "subject");
                 var p_ReceiveDT = SelectSingleNodeValue(XmlRows[Cnt], "receivedt");
                 var p_Size = SelectSingleNodeValue(XmlRows[Cnt], "size");
@@ -248,7 +255,8 @@ function MakeListInfoHTML(ConentObject) {
                 for (var HRows = 0; HRows < XmlHeaderRows.length; HRows++) {
 
                     var _TDColum = document.createElement("TD");
-                    switch (SelectSingleNodeValue(XmlHeaderRows[HRows], "propname")) {
+                    var ssNodeValue = SelectSingleNodeValue(XmlHeaderRows[HRows], "propname");
+                    switch (ssNodeValue) {
                         case "importance":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
@@ -275,14 +283,22 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = p_Attach == "1" ? "<IMG id='imgCol' draggable='false' style='cursor:default' src='/images/newAttach.gif'/>" : "";
                             break;
                         case "sender":
+                        	var innerHTML = p_Sender;
+                        	
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.overflow = "hidden";
                             _TDColum.style.textOverflow = "ellipsis";
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
-                            _TDColum.innerHTML = p_Sender;
+
+                            _TDColum.innerHTML = innerHTML;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
+                            // 수아 수정 (보낸사람 클릭 -> 보낸 사람에게 메일 전송창)
+                            _TDColum.setAttribute("data-msgto", p_Msgto);
+                            // 재원 수정
+                            _TDColum.setAttribute("data-name", p_Sender);
+                            //_TDColum.onclick = function (event) { useMailWriteSenderClick == "NO" ? event_listclick(this, event) : new_mail_onclick(this); };
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
                             _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
@@ -313,6 +329,10 @@ function MakeListInfoHTML(ConentObject) {
                         case "receivedt":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
+                            _TDColum.style.overflow = "hidden";
+                            _TDColum.style.textOverflow = "ellipsis";
+                            _TDColum.style.whiteSpace = "nowrap";
+                            _TDColum.style.minWidth = "70px";
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_ReceiveDT;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
@@ -336,6 +356,19 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                     }
                     _TR.appendChild(_TDColum);
+                    
+                    // 180514 보낸사람 클릭 시 메일 작성
+                    if (ssNodeValue == "sender" && useMailWriteSenderClick == "YES") { 
+                    	var _TDColumSpan = document.createElement("span");
+
+                    	_TDColumSpan.style.padding = "7px 0";
+                        _TDColumSpan.innerHTML = innerHTML;
+                        _TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
+                        _TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                        
+                        _TR.lastChild.innerHTML = "";
+                        _TR.lastChild.appendChild(_TDColumSpan);
+                    }
                 }
                 GetListInfo_ContentObject.appendChild(_TR);
             }
@@ -521,6 +554,9 @@ function MakeListInfoHTML_SUB(ConentObject) {
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             break;
                         case "receivedt":
+                        	_TDColum.style.overflow = "hidden";
+                            _TDColum.style.textOverflow = "ellipsis";
+                            _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
@@ -1492,6 +1528,24 @@ function event_SublistDBClick(obj) {
     callMsgDlg(obj.getAttribute("_contentclass"), obj.getAttribute("_href"));
     MailList_ChangeStatus(obj);
 }
+// 보낸사람 클릭
+var mailWriteSenderChk = true;
+function event_senderNameClick(thisParent, event){
+	if (!mailWriteSenderChk) { 
+		return; 
+	} else {
+		setTimeout(function(){
+			new_mail_onclick(thisParent); // 메일쓰기
+			
+			mailWriteSenderChk = true;
+		}, 200);
+		
+		mailWriteSenderChk = false;
+	}
+}
+function event_senderNameDBClick(event) {
+	event.stopPropagation();
+}  
 var pGroupListClickObject;
 function event_GrouplistDBClick(obj) {
     if (_SublistDBClickEvent) {

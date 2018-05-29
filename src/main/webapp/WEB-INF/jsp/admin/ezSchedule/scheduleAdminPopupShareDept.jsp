@@ -27,7 +27,7 @@
 	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(735, 580));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                } else {
-	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(735, 555));
+	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(1000, 590));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                }
 	            } else {
@@ -60,16 +60,16 @@
 	            if (CrossYN()) {
 	                schedule_select_sharedept_cross_dialogArguments[1] = select_sharedept_Complete;
 	
-	                var OpenWin = window.open("/ezSchedule/scheduleSelectShareDept.do", "scheduleSelectShareDept", GetOpenWindowfeature(280, 435));
+	                var OpenWin = window.open("/ezSchedule/scheduleSelectShareDept.do", "scheduleSelectShareDept", GetOpenWindowfeature(300, 590));
 	                try { OpenWin.focus(); } catch (e) { }
 	            } else {
 	                var rtnValue = "";
 	                var feature = GetShowModalPosition(280, 435);
 	                
 	                if (navigator.appName.indexOf("Microsoft") > -1) {
-	                    rtnValue = window.showModalDialog("/ezSchedule/scheduleSelectShareDept.do", "","dialogHeight:435px;dialogwidth:280px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
+	                    rtnValue = window.showModalDialog("/ezSchedule/scheduleSelectShareDept.do", "","dialogHeight:435px;dialogwidth:275px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                } else {
-	                    rtnValue = window.showModalDialog("/ezSchedule/scheduleSelectShareDept.do", "","dialogHeight:435px;dialogwidth:280px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
+	                    rtnValue = window.showModalDialog("/ezSchedule/scheduleSelectShareDept.do", "","dialogHeight:435px;dialogwidth:275px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                }
 	                if (typeof (rtnValue) != "undefined") {
 	                    if (rtnValue.split(":").length > 1) {
@@ -156,14 +156,14 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t999' /></th>
 	            <td>
-	                <input id="txtuser" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <input id="txtuser" type="text" style="width:84%" onfocus="this.blur();" readonly="readonly" />
 	                <a href="#" class="imgbtn"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t1004' /></th>
 	            <td>
-	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <input id="txtdept" type="text" style="width:84%" onfocus="this.blur();" readonly="readonly" />
 	                <a href="#" class="imgbtn"><span onclick="select_sharedept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>

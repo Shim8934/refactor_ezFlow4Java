@@ -88,12 +88,12 @@
 .calendar_week .td_list .today td{background:#edf4fd;}/* 오늘의 일 표시배경 */
 
 
-.calendar_data_ok{background:rgba(242, 255, 235, 1); border:1px solid #f2f2f2; line-height:150%; color:black;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
+.calendar_data_ok{background:rgb(250, 255, 243); border:1.2px solid #e9ffcc; line-height:150%; color:black;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
 .calendar_data_ok .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 승인 주보기,일보기 데이터 */
-.calendar_data_ok table td{background:rgba(242, 255, 235, 1) !important;} /* 20130418_임의로 작업 추후변경 */
-.calendar_data_no{background:rgba(255, 234, 234, 1); border:1px solid #f2f2f2; line-height:150%; color:black;}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
+.calendar_data_ok table td{background:rgb(250, 255, 243) !important;} /* 20130418_임의로 작업 추후변경 */
+.calendar_data_no{background:rgba(255, 250, 250, 1); border:1.2px solid #ffedeb; line-height:150%; color:black;}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
 .calendar_data_no .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 비승인 주보기,일보기 데이터 */
-.calendar_data_no table td{background:rgba(255, 234, 234, 1) !important; color:black} /* 20130418_임의로 작업 추후변경 */
+.calendar_data_no table td{background:rgba(255, 250, 250, 1) !important; color:black} /* 20130418_임의로 작업 추후변경 */
 /* //주보기 */
 
 /* 일보기 */

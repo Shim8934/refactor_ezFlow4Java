@@ -444,6 +444,11 @@
 		                    PagingHTML += strtext;
 		                }
 		            }
+		            
+			        if (MaxNum == 0) {
+			        	PagingHTML += "<span class='on'>" + 1 + "</span>";
+			        }
+			       
 		            if (totalPage > BlockSize) {
 		                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
@@ -743,18 +748,17 @@
 		        }
 			    function search(type) {
 			        if (type == "basic") {
-			
-			            if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+			        	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+			        			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 			                alert("<spring:message code='ezBoard.t192' />");
 			                return;
 			            }
-			
 			            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-			                alert("<spring:message code='ezBoard.t189' />");
+			        		alert("<spring:message code='ezSystem.x0035' />");	
 			                return;
 			            }
 			            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-			                alert("<spring:message code='ezBoard.t189' />");
+			                alert("<spring:message code='ezSystem.x0036' />");
 			                return;
 			            }
 			            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {

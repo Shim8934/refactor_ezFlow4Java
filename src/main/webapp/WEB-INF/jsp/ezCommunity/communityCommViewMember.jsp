@@ -40,7 +40,6 @@
 			    makePageSelPage();
 			}
 			
-			
 			function openinfo1(a,b,c) {
 			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=440";
 			    feature = feature + GetOpenPosition(420, 440);
@@ -258,24 +257,24 @@
 	<body class="cmhome_body">
 		<h1 class="type1_h1"><spring:message code = 'ezCommunity.t723' /><span id="mailBoxInfo"></span></h1>
 		<form name="page">
-			<table class="content">			
+			<table class="content" style="width:100%;border:0px">			
 				<tr>
-					<td style="background-color: #f8f8fa;border:1px solid #ddd">
-						<select id="s_radio" name="s_radio" style="font-size: 13px;vertical-align: middle;text-align: center;height: 21px;cursor: pointer;margin-left:2px">
+					<td style="border:1px solid #ddd;border:0px;padding:0px">
+						<select id="s_radio" name="s_radio" style="font-size: 13px;vertical-align: middle;text-align: center;height: 24px;cursor: pointer;">
 							<option value="id"><spring:message code = 'ezCommunity.t512' /></option>
 							<option selected value="name"><spring:message code = 'ezCommunity.t10' /></option>
 						</select>						
 						<input class="inputText" type="text" id="keyword" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px">
-						<a class="imgbtn"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>						
+						<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="javascript:search();" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t31' /></span></a>						
 						<c:if test="${keyword != '' }">
-							<a class="imgbtn"><span onClick="searchList()"><spring:message code = 'ezCommunity.t724' /></span></a>
+							<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="searchList()" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t724' /></span></a>
 						</c:if>						
 					</td>
 				</tr>			
 			</table>
-		</form>	
-		<br>		
-		<table id="tblList" class="cmhomelist" width="100%">
+		</form>
+		<div  style = "height:370px;">
+		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:10px">
 			<tr> 
 				<th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
 				<th style="width:110px"><spring:message code = 'ezCommunity.t10' /></th>
@@ -286,7 +285,8 @@
 				<th style="width:60px"><spring:message code = 'ezCommunity.t727' /></th>
 			</tr>
 			${strXML}
-		</table>		
+		</table>
+		</div>		
 		<div id="tblPageRayer" style="margin-top:10px"></div>
 	</body>
 </html>

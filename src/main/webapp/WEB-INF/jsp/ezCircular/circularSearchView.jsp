@@ -200,7 +200,9 @@
 		        } else {
 		        	url = "/ezCircular/getFolderCircularList.do"
 		        }
+		        
 		        console.log("sDate :: "+sdate + "edate :: "+edate);
+		        
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -222,20 +224,32 @@
 						
 	                    if (OrderOption == "") {
 	                    	imgTag = '<img src="/images/view-sortup.gif" width="9" height="9">';
-	                    	}
-	                    else {
+                    	} else {
 	                    	imgTag = '<img src="/images/view-sortdown.gif" width="9" height="9">';
-	                    	}
+                    	}
 						
-		                if(OrderCell == 'TITLE') {
-		                	$('#BoardList_TH_5').append(imgTag);
-		                } else if(OrderCell == 'MEMBERNAME') {
-		                	$('#BoardList_TH_6').append(imgTag);
-		                } else if(OrderCell == 'REGDATE') {
-		                	$('#BoardList_TH_7').append(imgTag);
-		                } else if(OrderCell == 'STATUS') {
-		                	$('#BoardList_TH_9').append(imgTag);
-		                }
+	                    if (filter == "circularNew") {
+	                    	if(OrderCell == 'TITLE') {
+			                	$('#BoardList_TH_5').append(imgTag);
+			                } else if(OrderCell == 'MEMBERNAME') {
+			                	$('#BoardList_TH_6').append(imgTag);
+			                } else if(OrderCell == 'REGDATE') {
+			                	$('#BoardList_TH_7').append(imgTag);
+			                } else if(OrderCell == 'STATUS') {
+			                	$('#BoardList_TH_9').append(imgTag);
+			                }
+	                    } else {
+	                    	if(OrderCell == 'TITLE') {
+			                	$('#BoardList_TH_4').append(imgTag);
+			                } else if(OrderCell == 'MEMBERNAME') {
+			                	$('#BoardList_TH_5').append(imgTag);
+			                } else if(OrderCell == 'REGDATE') {
+			                	$('#BoardList_TH_6').append(imgTag);
+			                } else if(OrderCell == 'STATUS') {
+			                	$('#BoardList_TH_8').append(imgTag);
+			                }
+	                    }
+		                
 		        	}
 		        })
 		    }
@@ -286,6 +300,11 @@
                 DocList = null;
 				
                 strListInfo = "";
+                
+                /* 2018-04-25 홍승비 - 회람판 검색메뉴 디폴트 로우 삭제 */
+                if(document.getElementById("BoardList_TR_noItems") != null) {
+                	document.getElementById("BoardList_TR_noItems").outerHTML = "";
+                }
                 
                 var tempno = 0;
                 tempno = tempno + "";
@@ -401,7 +420,10 @@
 	        
 	        function selbeforeBlock() {
 	            var pageNum = parseInt(CurPage);
-	            pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+	            if(pageNum%BlockSize==0) {
+	            	pageNum = pageNum -1;
+	            }
+	            pageNum = ((parseInt(pageNum / BlockSize)) * BlockSize) ;
 	            goToPageByNum(pageNum);
 	        }
 	        

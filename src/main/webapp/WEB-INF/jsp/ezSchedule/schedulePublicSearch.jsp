@@ -265,6 +265,8 @@
 		    			<!-- 2018.02.06 김기하 #11433 -->
 		    			<c:if test="${item.scheduleType == '6'}"><spring:message code='ezSchedule.t281'/></c:if>
 		    			<c:if test="${item.scheduleType == '4'}"><spring:message code='ezSchedule.t282'/></c:if>
+		    			<!-- 2018.02.02 김기하 #11433 -->
+		    			<c:if test="${item.scheduleType == '6'}"><spring:message code='ezSchedule.t281'/></c:if>
 		    			<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282'/></c:if>
 		    			<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t12'/></c:if>
 		    		</td>
@@ -276,8 +278,8 @@
 		    			<td style="width:80px">${item.ownerName2}</td> 
 		            	<td style="width:80px">${item.creatorName2}</td>
 		    		</c:if>
-		    		<td style="width:60%">${item.title}</td> 
-	          		<td style="width:140px">${item.location}</td>		         
+		    		<td style="width:60%"><c:out value = "${item.title}"/></td> 
+	          		<td style="width:140px"><c:out value = "${item.location}"/></td>		         
 	            	<td style="width:140px">	            		
 	            		<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)} (<spring:message code='ezSchedule.t280'/></c:if>
 	            		<c:if test="${item.dateType != '2'}">${fn:substring(item.startDate,0,16)}</c:if>	            		

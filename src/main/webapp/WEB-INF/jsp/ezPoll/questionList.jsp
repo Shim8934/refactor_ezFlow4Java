@@ -62,6 +62,8 @@
 				preProcessing();				
 				makePageSelPage();
 				getConnect();
+				paginationProcess();
+				creatorResultAlert();
 			}		
 			
 			function getConnect() {
@@ -265,6 +267,7 @@
 		    		url : "/ezPoll/checkPoll.do",
 		    		data : {
 		    			qstId : pReceve
+		    			
 		    		},
 		    		success: function(data) {		    			
 						var result = JSON.parse(data).result;					
@@ -282,7 +285,7 @@
 					    	
 					    	list_params += currentPage + "," + checkSeeAll + "," + radioBttn + "," + mode1 + "," + pollType;
 							
-							document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve + "&params=" + list_params + "&search=" + searchParam + "&searchN=" + _searchPrm;
+							document.location.href = "/ezPoll/pollVote.do?brdId=" + brdID + "&qstId=" + pReceve + "&params=" + list_params + "&search=" + searchParam + "&searchN=" + _searchPrm;
 						}
 						else {
 							alert("<spring:message code = 'ezPoll.t233'/>");
@@ -435,6 +438,23 @@
 					window.location.href = szUrl;
 				}
 			}
+		    
+		    function creatorResultAlert(){
+		    	var resultFirst = "${resultFirst}" + "";
+		    	if(resultFirst === "2"){
+			    	alert("<spring:message code = 'ezPoll.hdp08'/>");
+		    	}
+		    }
+		    
+		    //목록 버튼 눌렀을 때, 해당 필터와 페이지로 보여주기 위함.
+		    function paginationProcess(){
+		    	var pollType = ${pollType};
+				var gotoList = ${gotoList};
+				if(gotoList === 1){
+					pollType = pollType == 0 ? 1 : pollType;
+					document.querySelector("input[value='"+ pollType +"']").checked = true;
+				}
+		    }
 		    
 		</script>
 	</head>

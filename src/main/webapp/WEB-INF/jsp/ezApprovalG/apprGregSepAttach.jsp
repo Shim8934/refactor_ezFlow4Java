@@ -338,8 +338,8 @@
 		            g_RecordID = "";
 		        }
 		        g_CabinetID = SelectSingleNodeValueNew(InfoXml, "PARAMETERS/CABINETID");
-		
-		        txtTitle.value = SelectSingleNodeValueNew(InfoXml, "PARAMETERS/TITLE");
+		        
+		        txtTitle.value = ReplaceText(ReplaceText(ReplaceText(ReplaceText(SelectSingleNodeValueNew(InfoXml, "PARAMETERS/TITLE"), "&nbsp;", " "), "&gt;", ">"), "&lt;", "<"), "&amp;", "&");
 		        txtNumOfPage.value = SelectSingleNodeValueNew(InfoXml, "PARAMETERS/NUMOFPAGE");
 		
 		        g_RegType = SelectSingleNodeValueNew(InfoXml, "PARAMETERS/REGTYPE");

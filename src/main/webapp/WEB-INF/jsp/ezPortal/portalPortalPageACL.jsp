@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPortal.t87'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<style>
 			.pstitle {
 				border-top:0px;
@@ -15,6 +16,7 @@
 			}
 		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
 		 	var uid = "${uID}";
 		 	
@@ -106,10 +108,18 @@
             <li><span onClick="window.returnValue=0;window.close()"><spring:message code='ezPortal.t8'/></span></li>
           </ul>
         </div>
-        <div id="tabnav">
+        <script type="text/javascript">
+    			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		</script>
+        <%-- <div id="tabnav">
   			<ul class="on">
     			<li id="menu_1" class="on"><span><spring:message code='ezPortal.t87'/></span></li>
   			</ul>
+		</div> --%>
+		<div class="portlet_tabpart01" style="margin-top: 0px;">
+			<div class="portlet_tabpart01_top" id="tab1" style="border-bottom: 0px;">
+				<p id="menu_1"><span style="min-width: 45px; cursor:pointer;" class="tabon"><spring:message code='ezPortal.t87'/></span></p>
+			</div>
 		</div>
         <div style="width:100%;height:300px;overflow-x:hidden;overflow-y:auto;border:1px solid #ddd;border-bottom:0px;">
 	        <table class="content" style="border-top:0px;border-left:0px;border-bottom:0px;border-right:0px">

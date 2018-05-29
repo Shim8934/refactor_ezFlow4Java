@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -8,13 +9,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -25,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
 		
+		// set useLetter
+		String useLetter = ezCommonService.getTenantConfig("useLetter", user.getTenantId());
+		if (useLetter == null || useLetter.equals("")) {
+			useLetter = "NO";
+		}
+				
+		logger.debug("useLetter=" + useLetter);
+		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("useLetter", useLetter);
 		
 		return "admin/ezOrgan/organLeft";
 	}
@@ -278,18 +288,32 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 					
+					//업무일지 - 일지함 생성
+					Map<String, Object> param = new HashMap<String, Object>();
+					param.put("tenantId", tenantID);
+					param.put("companyId", cn);
+					param.put("userId", userInfo.getId());
+					JSONObject journalResult = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request, "post", null);
+					
+					String journalStatus = (String) journalResult.get("status");
+					
+					if (journalStatus.equals("ok")) {
+						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+					}
+					
 					logger.debug("updateGroupAdd rc=" + rc);
 					
-					if (rc == 0) { // updateGroupAdd 성공
+					if (rc == 0 && journalStatus.equals("ok")) { // updateGroupAdd 성공
 						
 						// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 						try {
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
-							result = "OK";	
+							result = "OK";
 						} catch (Exception e) {
 							e.printStackTrace();
-							
+							commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request, "delete", null);
+
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeGroup(mailAddr);
 							result = "EMAIL_ERROR";
@@ -1327,7 +1351,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         		result = "EMAIL_ERROR";
         	}
 		// 새로운 사용자를 등록한다.
-		} else {		    
+		} else {
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String cn = vo.getCn();
 						
@@ -1436,7 +1460,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
 							
+							String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 							
+							if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {							
+								createDefaultFolders(loginCookie, mailAddr, locale);
+							}
 							
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
@@ -1702,10 +1730,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 			writeUploadedFile(multiFile, fileName + extension, tempPath);
 			File imageFile = new File(tempPath + fileName + extension);			
-			
+
 			BufferedImage bi = ImageIO.read(imageFile);
-            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
-            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+			/*2018-04-12이효진  bi.getType으로 지정시 color변경되어 TYPE_4BYTE_ABGR로 지정*/
+//            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
+            BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
+            /*2018-04-12이효진  PNG파일 배경지정*/
+//            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
             
             File file2 = new File(serverPath + fileName + "png");
             ImageIO.write(bufferedImage, "png", file2);
@@ -2527,10 +2559,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 				return returnValue;
 			}
+			int tenantId = userInfo.getTenantId();
 			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String mail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
-			returnValue = ezEmailService.checkIndividualAlias(mail);
+			returnValue = ezEmailService.checkIndividualAlias(mail,tenantId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2886,7 +2919,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
         try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					vo.getMail(), password, egovMessageSource, locale);
+					vo.getMail(), password, egovMessageSource, locale, ezEmailUtil);
 			
 			for (int i = 0; i < mailboxList.size(); i++) {
 				ia.createFolder(mailboxList.get(i));
@@ -2901,4 +2934,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		ezEmailService.setInitInboxRule(vo.getTenantId(), vo.getCn());
 		logger.debug("InitInboxRule set.");
 	}
+	
+	private void createDefaultFolders(String loginCookie, String userEmail, Locale locale) throws Exception {
+		String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);		
+		IMAPAccess ia = null;
+		
+        try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+						
+			// 기본 폴더들이 없을 때 생성한다.
+			ia.getTopLevelFolders(true, false);			
+		} finally {
+			if (ia != null) {
+				ia.close();
+				ia = null;
+			}
+		}		
+	}
+	
 }

@@ -288,8 +288,9 @@
 			
 	            for(i=0;i<xmldomNodes.length;i++) {
 	                str += "<ROW><CELL>";	
-	                str += "<VALUE>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</VALUE>";
-	                str += "<DATA1>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</DATA1>";
+	                /* 2018-04-30 홍승비 - 커뮤니티 게시판 첨부파일명 특문처리 수정 */
+	                str += "<VALUE><![CDATA[" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "]]></VALUE>";
+	                str += "<DATA1><![CDATA[" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "]]></DATA1>";
 	                str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath")) + "</DATA2>";
 	                str += "<DATA3></DATA3>";
 	                str += "<DATA4></DATA4>";
@@ -340,7 +341,7 @@
 		    		return ;
 		    	}
 		    }
-		    
+	    
 		    // 2018-02-13 천성준
 		    function checkDoubleClick() {
 		    	if (clickFlag) {
@@ -348,8 +349,8 @@
 		    	} else {
 		    		return false;
 		    	}
-		    }
-	
+		    }	
+
 		    function SaveItem() {
 		    	checkSaveItem();
 		    	
@@ -511,8 +512,7 @@
 		        if (pDocID != "") {
 		        	message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
 		        }
-		            
-		        JSleep(1000);
+
 		        var strBody = message.GetEditorContent();
 		        
 		        if (trim_Cross(strBody) != "" || pDocID == "") {
@@ -568,7 +568,6 @@
 		                alert("<spring:message code='ezCommunity.t1150'/>" + pStartDate.substr(0, 16) + "<spring:message code='ezCommunity.t1151'/>");
 		            }
 		            
-		            JSleep(500);
 					window.opener.location.reload(true);
 					saveFlag = false;
 					
@@ -583,13 +582,14 @@
 		        clickFlag = true;
 		    }
 	
-		    function JSleep(sTime) {
+			 /* 2018-05-10 홍승비 - 게시물 저장 시 JSleep 함수 미사용 */
+		  	/* function JSleep(sTime) {
 		        var start = new Date().getTime();
 		        
 		        while (new Date().getTime() < start + sTime) {
 		        };
-		    }
-	
+		    } */
+
 		    function ReplaceText( orgStr, findStr, replaceStr ) {
 		        var re = new RegExp( findStr, "gi" );
 		        return ( orgStr.replace( re, replaceStr ) );
@@ -602,15 +602,16 @@
 		        return str;
 		    }
 		    
+		    /* 2018-04-30 홍승비 - 커뮤니티 게시물 수정, 답변 시 특수문자 처리 */
 		    function ConvMakeXMLString(str) {
-                str = ReplaceText(str, "&amp;", "&");
-                str = ReplaceText(str, "&lt;", "<");
-                str = ReplaceText(str, "&gt;", ">");
-                str = ReplaceText(str, "&quot;", "\"");
-                str = ReplaceText(str, "&#034;", "\"");
-                str = ReplaceText(str, "&#039;", "\'");
-                return str;
-            }
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		  		str = ReplaceText(str, "&#92;", "\\");
+		        return str;
+		    }
 	
 		    function btn_PostDate_Clear() {
 	        	settime = strStartDate;
@@ -639,7 +640,7 @@
 		            document.getElementById("reservation_date").style.display = "none";
 		        }
 		    }
-						
+
 		    function PreviewItem() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -947,7 +948,7 @@
 								id="Sdatepicker" style="width: 80px; text-align: center" /> <input
 								id="Stimepicker" type="text" class="time"
 								style="width: 43px; margin-left: 10px; text-align: center;" /> <a
-								class="imgbtn"><span onclick="btn_PostDate_Clear()"
+								class="imgbtn" style="margin-top: 4px;"><span onclick="btn_PostDate_Clear()"
 									popuplocation='topright'><spring:message
 											code='ezCommunity.t444' /></span></a>
 						</span></td>

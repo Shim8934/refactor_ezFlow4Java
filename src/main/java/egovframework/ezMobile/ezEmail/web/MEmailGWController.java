@@ -190,7 +190,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("locale : ," + locale.getDisplayLanguage());
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			List<Folder> subMailFolder = null;
 			
@@ -209,15 +209,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			for (int i = 0; i < subMailFolder.size(); i++) {
 				Folder f = subMailFolder.get(i);
+							
+				String displayName = ezEmailUtil.getDisplayNameFromFolderId(f.getName(), locale);
 				
 				folder = new JSONObject();
 				
-				if (f.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
-					folder.put("name", egovMessageSource.getMessage("ezEmail.t99000025", locale));
-				} else {
-					folder.put("name", f.getName());
-				}
-				
+				folder.put("name", displayName);				
 				folder.put("fullName", f.getFullName());
 				folder.put("unReadCount", f.getUnreadMessageCount());
 				
@@ -311,10 +308,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			Locale locale = new Locale(ld);
 			
 			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
-			String sendName = egovMessageSource.getMessage("ezEmail.t645", locale);
-			String tempName = egovMessageSource.getMessage("ezEmail.t646", locale);
+			String sendName = ezEmailUtil.getSentFolderId(locale);
+			String tempName = ezEmailUtil.getDraftsFolderId(locale);
 			
-	        folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
+	        folderId = ezEmailUtil.getFolderIdFromDisplayName(folderId, locale);
 	        
 	        LOGGER.debug("sendName : " + sendName + ", tempName : " + tempName);
 	        
@@ -344,7 +341,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("userEmail : " + userEmail);
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -566,9 +563,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String folderName = folder.getName();
 			
-			if (folderName.equals("INBOX")) {
-				folderName = egovMessageSource.getMessage("ezEmail.t99000025", locale);
-			}
+			folderName = ezEmailUtil.getDisplayNameFromFolderId(folderName, locale);
 			
 			folder.close(false);
 			
@@ -701,7 +696,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			ia.makeTopLevelFolders();
 
 			if (!messageId.equals("") && !folderId.equals("")) {
@@ -715,14 +710,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				LOGGER.debug("tenantID=" + tenantID + ",userId=" + userId);
 				
+				folderPath = ezEmailUtil.getFolderIdFromDisplayName(folderPath, locale);
+				
 	    		Folder orgFolder = ia.getFolder(folderPath);
 	    		orgFolder.open(Folder.READ_ONLY);       
 	    		
 				// retrieve the Drafts folder name
-	        	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
+	        	String draftsFolderName = ezEmailUtil.getDraftsFolderId(locale);
 	    		
 	        	// retrieve the Sent folder name
-	        	String sentFolderName = egovMessageSource.getMessage("ezEmail.t99000026", locale);
+	        	String sentFolderName = ezEmailUtil.getSentFolderId(locale);
 	        	
 	    		// retrieve the specified message.
 				Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
@@ -789,7 +786,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        		if (orgMessage.isMimeType("multipart/related")) {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			resendMessage.setContent(relatedPart);
 			        		} else {
 			        			resendMessage.setText("placeholder");
@@ -881,7 +878,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        			if (orgMessage.isMimeType("multipart/related")) {
 				        		MimeMultipart relatedPart = new MimeMultipart("related");
 				        		
-				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, true)) {
 				        			replyMessage.setContent(relatedPart);
 				        		} else {
 				        			replyMessage.setText("placeholder");
@@ -898,7 +895,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        		} else {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			replyMessage.setContent(relatedPart);
 			        		} else {
 			        			replyMessage.setText("placeholder");
@@ -1579,10 +1576,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					newMessage = sa.createMimeMessage();
 					
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, password, egovMessageSource, locale);
+							userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 					// 임시 보관함 폴더 오픈 
-					folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+					folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 					folder.open(Folder.READ_WRITE);
 					
 					// 첨부파일 Part들을 삽입할 Multipart를 생성한다.
@@ -1827,9 +1824,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					IMAPAccess ia = null;
 					try {
 						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-								userEmail, password, egovMessageSource, locale);
+								userEmail, password, egovMessageSource, locale, ezEmailUtil);
 						
-						Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+						Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 						folder.open(Folder.READ_WRITE);
 						Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 						
@@ -2048,7 +2045,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			do {
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, password, egovMessageSource, locale);
+							userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 					// 메일 발송 재시도일 경우 draftUID의 메일을 지우고 retryFlag와 draftUID를 초기화한다.
 					if (retryFlag) {
@@ -2056,7 +2053,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							Folder draftFolder = null;
     					
 							try {
-								draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+								draftFolder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 								draftFolder.open(Folder.READ_WRITE);
 								Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
 								draftMessage.setFlag(Flags.Flag.DELETED, true);
@@ -2088,7 +2085,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					    if (sentFolderMessageUID != 0) {
 	                        Folder sentFolder = null;
 	                        try {
-	                            sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+	                            sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 	                            sentFolder.open(Folder.READ_WRITE);
 	                            Message sentMessage = ((IMAPFolder)sentFolder).getMessageByUID(sentFolderMessageUID);
 	                            sentMessage.setFlag(Flags.Flag.DELETED, true);
@@ -2255,7 +2252,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        Message oldMessage = null;
 			        long uid = 0;
 			        
-			        Folder draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+			        Folder draftFolder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 			        draftFolder.open(Folder.READ_WRITE);
 			        
 			        LOGGER.debug("url=" + url);
@@ -2539,7 +2536,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        } else if (cmd.equalsIgnoreCase("SEND")) {
 			        	LOGGER.debug("Sending the message");
 			        	
-	                    Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+	                    Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 	                    		        			                            
 	                    message.setFlag(Flags.Flag.SEEN, true);
 			            
@@ -2677,9 +2674,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
                     Thread.sleep(1000);
                     
                     ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                            userEmail, password, egovMessageSource, locale);                
+                            userEmail, password, egovMessageSource, locale, ezEmailUtil);                
                     
-                    sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+                    sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
                     sentFolder.open(Folder.READ_WRITE);
                     Message sentMessage = ((IMAPFolder)sentFolder).getMessageByUID(sentFolderMessageUID);
                     sentMessage.setFlag(Flags.Flag.DELETED, true);
@@ -2802,7 +2799,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String flagged = "0";
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			Folder f = ia.getFolder(folderId);
 			
 			if (f == null || !f.exists()) {
@@ -3084,11 +3081,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
 					}
 					
-					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+					if (message.getFolder().getFullName().equals(ezEmailUtil.getSentFolderId(locale))) {
 						isSentItems = true;
 					}
 					
-					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000028", locale))) {
+					if (message.getFolder().getFullName().equals(ezEmailUtil.getTrashFolderId(locale))) {
 						isDelete = "BDELETE";
 					}
 					
@@ -3111,7 +3108,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
 					pAttachListHtmlSub = bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + " (" + strSize + ")";
 					
-					if (!folderId.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+					if (!folderId.equals(ezEmailUtil.getSentFolderId(locale))) {
 					    String[] messageIds = message.getHeader("Message-ID");
 					    
 					    if (messageIds != null) {
@@ -3267,7 +3264,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("index=" + intIndex);
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			Folder f = ia.getFolder(folderPath);
 			
@@ -3391,7 +3388,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("folderPath=" + folderPath + ",uid=" + uid + ",contentId=" + contentId);
 				
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 	
 			Folder f = ia.getFolder(folderPath);
 			
@@ -3485,17 +3482,24 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			Locale locale = new Locale(ld);
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);
 			
 			Message[] messages = sourceFolder.getMessagesByUID(uids);
 			
-			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
-			sourceFolder.copyUIDMessages(messages, movefolder);
+			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);	
 			
-			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
+			
+			if (useImapMoveCommand.equals("YES")) {
+				sourceFolder.moveUIDMessages(messages, movefolder);
+			} else {			
+				sourceFolder.copyUIDMessages(messages, movefolder);
+				
+				sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			}
 			
 			sourceFolder.close(true);
 		
@@ -3561,7 +3565,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale);
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
 						
 				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 				sourceFolder.open(Folder.READ_WRITE);		
@@ -3628,7 +3632,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			if (folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
+			if (folderId.equals(ezEmailUtil.getTrashFolderId(locale))) {
 				permanentlyDelete = true;
 			}
 			
@@ -3642,7 +3646,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("folderId=" + folderId);
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 						
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -3651,12 +3655,22 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
 	        deleteMsgs = sourceFolder.getMessagesByUID(uids);
 	        
-			if (!permanentlyDelete) {
-				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
-				sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-			}
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
+			IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));	
 			
-			sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+			if (useImapMoveCommand.equals("YES")) {
+				if (!permanentlyDelete) {
+					sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+				} else {
+					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+				}
+			} else {
+				if (!permanentlyDelete) {			
+					sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+				}
+				
+				sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+			}
 
 			sourceFolder.close(true);
 							
@@ -3706,7 +3720,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			if (folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
+			if (folderId.equals(ezEmailUtil.getTrashFolderId(locale))) {
 				permanentlyDelete = true;
 			}
 			
@@ -3720,7 +3734,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("folderId=" + folderId);
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 						
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -3810,9 +3824,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			if (!pDLSearchList.isEmpty()) {
 				dlXML = getOrganDLSearch(pDLSearchList, info);
 			}
+			int[] searchCount = {0, 0};
 			
 			if (!pAddressFilter.isEmpty()) {
-				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, null);
+				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, searchCount);
 			}
 	        
 	        data.put("organXML", organXML);
@@ -3836,7 +3851,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public Object searchAddressBook(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
 		LOGGER.debug("MOBILE G/W MAIL searchAddressBook started.");
 		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
@@ -3904,7 +3919,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook", method= RequestMethod.PUT,  produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook", method= RequestMethod.PUT,  produces="application/json;charset=utf-8")
 	public Object addAddress(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
 		LOGGER.debug("MOBILE G/W MAIL addAddress started.");
 		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
@@ -3997,7 +4012,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook/{addressId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId) {		
 		LOGGER.debug("MOBILE G/W MAIL getAddressInfo started.");
 		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
@@ -4035,7 +4050,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 메일 책갈피 지정 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/setFlag", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId:.+}/setFlag", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mailSetFlag(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mailSetFlag started.");
 		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
@@ -4083,7 +4098,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("folderId=" + folderId + "uniqueId=" + uniqueId);		
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userEmail, password, egovMessageSource, locale);
+				userEmail, password, egovMessageSource, locale, ezEmailUtil);
 				
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -4135,7 +4150,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/quota", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/quota", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getQuotaInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo started.");
 		LOGGER.debug("userId=" + userId);
@@ -4155,7 +4170,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			Locale locale = new Locale("ko");	
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 						
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 			
@@ -4188,7 +4203,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/config", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/config", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getConfigInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL getConfigInfo started.");
 		LOGGER.debug("userId=" + userId);

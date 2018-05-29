@@ -101,7 +101,6 @@
 		    var bigtrue = 0;
 		    var isClosedSave = false;
 		    var filedate = "${stateName}";
-		    var folderDate = "${folderDate}";
 		    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
 		    var defaultFontAndSize = "${defaultFontAndSize}";
@@ -111,6 +110,8 @@
 		    var securePassword = "${securePassword}";
 		    var secureReadCount = "${secureMaxReadCount}";
 		    var secureReadDate = "${secureMaxReadDate}";
+		    var folderPath = "${draftsFolderName}";
+		    var multipartFirstIdx = "${multipartFirstIdx}";
 		    
 			function window_onload() {
 	            if (!CrossYN()) {
@@ -637,45 +638,65 @@
 		        var objRow;
 		        var objRows;
 		        objNode = createNodeInsert(xmlReturnValue, objNode, "DATA");
+		        
 		        if (xmlhttp.status == "200") {
+		        	
 		        	if (xmlhttp.responseText.indexOf("NO APPEND failed.") > -1) {
 		        		alert(strLang241);
-		        	}
-		        	else {
+		        	} else {
 			            xmlDoc = loadXMLString(xmlhttp.responseText);
 			
-			            if (CrossYN())
+			            if (CrossYN()) {
 			                g_url = xmlDoc.getElementsByTagName("URL").item(0).textContent;
-			            else
+			            } else {
 			                g_url = xmlDoc.getElementsByTagName("URL").item(0).text;
+			            }
+		        
 			            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
+			            var scheme = document.location.protocol + "//" + document.location.hostname;
+		        	    
+		                if (document.location.port != "80") {
+		                	scheme += ":" + document.location.port;
+		                }
+			            
+		                /* 2018-05-09 김유진 - 파일 첨부시 href에 넣어줄 aitem 수정 */
 			            for (var i = 0; i < filelist.length; i++) {
 			                filename = SelectSingleNodeValue(filelist[i], "NAME");
 			                path = SelectSingleNodeValue(filelist[i], "PATH");
 			                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
 			                size = SelectSingleNodeValue(filelist[i], "SIZE");
 			                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-			                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
+			                
 			                if (big_yn == "Y") {
-			                    bigtrue = bigtrue + 1;
-			                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURIComponent(path) + "&filedate=" + encodeURIComponent(attid.split('\\')[0]);
+			                	// 대용량 첨부시 
+			                	bigtrue = bigtrue + 1;
+			                	aitem = scheme  + "/ezEmail/downloadAttachCommon.do?"
+			                					+ "fileid=" + encodeURIComponent(path)
+			                					+ "&filedate=" + encodeURIComponent(attid.split('/')[0])
+			                					+ "&tid=" + tid;
+			                } else {
+			                	// 일반파일 첨부시
+				                aitem = "/ezEmail/downloadAttach.do?" 
+				                				+ "mode=Attach"
+				                				+ "&folderPath=" + encodeURIComponent(folderPath)
+				                				+ "&filename=" + encodeURIComponent(filename);
 			                }
-			                else {
-			                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
-			                }
+			                
 			                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "URL", aitem);
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
+			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "UID", g_url);
 			            }
 			            
 			            returnvalue(strXML);
 		        	}
-		        }
-		        else {
+		        	
+		        } else {
 		            alert(xmlhttp.status + " : " + strLang241);
 		        }
+		        
 		        return xmlReturnValue;
 		    }
 			
@@ -724,7 +745,11 @@
 		    function fromAddressChange(val) {
 		    	g_from = val;
 		    }
-		    
+
+		    // 재은 수정(편지지)
+		    function Letter_onClick() {
+		    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
+		    }
 		</script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -745,6 +770,9 @@
 		          <ul>
 		            <li><span onClick="ReserverdMail_Save()"><spring:message code='ezEmail.t48' /></span></li>
 		            <li style="display:none;"><span onClick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
+		           	<c:if test="${useLetter == 'YES'}">
+                    <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
+                    </c:if>
 		            <li style="display:none;"><span onClick="Print_onClick()"><spring:message code='ezEmail.t546' /></span></li>
 		            <li style="display:none;"><span onClick="LoadFormat_onClick()"><spring:message code='ezEmail.t824' /></span></li>
 		            <li><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>
@@ -781,7 +809,7 @@
                     </li>
                     <li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
                     	<input type="checkbox" id="chkSecureMail" />
-                    	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>
+                    	<label for="chkSecureMail"><spring:message code='ezEmail.lhm63' /></label>
                     </li>
 		          </ul>
 		        </div>

@@ -68,6 +68,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		if (vo == null) { // 새로운 유저가 접속했을때 Config 값 없으면 기본 값 설정
 			vo = new CircularConfigVO();
 			vo.setMemberID(memberId);
+			vo.setTenantID(tenantId);
 			vo.setListCnt(10);
 			vo.setIsPreview(0);
 			vo.setPreviewListValue("50");
@@ -160,7 +161,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 							   String endDate, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName,
 							   String fileList, String[] receiverName2, String pDirPath, String mode, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("insertCircular started.");
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		//파일이 있으면 hasFile을 1로 설정
@@ -222,7 +222,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				attachMap.put("filePath", uploadFilePath);
 				
 				logger.debug("uploadFilePath : " + uploadFilePath);
-				
+
 				ezCircularDAO.insertCircularAttach(attachMap);
 
 				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
@@ -751,8 +751,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 			map.put("circularBMId", circularBMId);
 			
 			ezCircularDAO.circularDeptDel(map);
+			ezCircularDAO.deleteCircularMemberList(map); // 2018-03-26 황윤호 추가
 		}
-		
 		logger.debug("circularDeptDel ended.");
 	}
 

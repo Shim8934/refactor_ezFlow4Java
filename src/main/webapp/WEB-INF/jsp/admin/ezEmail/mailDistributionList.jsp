@@ -9,8 +9,17 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<style>
+			.mainlist tr td {
+				padding:0px;
+			}
 			.mainlist_free tr th {
 				border-top:0px;
+			}
+			.mainlist_free tr td:first-child{
+				padding-left:10px;
+			}
+			.mainlist_free tr th:first-child{
+				padding-left:10px;
 			}
 		</style>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
@@ -251,7 +260,7 @@
 	<form id="Form1" method="post">
 		<h1><spring:message code='ezEmail.t58' /></h1>
 		<div id="mainmenu">
-			<span><b> <spring:message code='ezEmail.t59' /></b></span>
+			<span><b> <spring:message code='ezEmail.t59' /></b></span>&nbsp;
 			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
 				<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

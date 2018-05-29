@@ -1,4 +1,4 @@
-﻿var beforeJob = "0";
+﻿﻿var beforeJob = "0";
 var pDocTypeValue = "000";
 var pageSize = "10";
 var CallPage = "Right";
@@ -18,18 +18,12 @@ function getDocList() {
         OrderOption = "";
         OrderCell = "";
     }
-
+    
     if (SQLPARADATA == "") {
-        var nowyear = new Date().getFullYear();
-        var nowmonth = new Date().getMonth() + 1;
-        var nowday = new Date().getDate();
-
-        if (nowmonth < 10)
-            nowmonth = "0" + nowmonth;
-
-        if (nowday < 10)
-            nowday = "0" + nowday;
-
+        var nowyear = nowDate.substring(0,4);
+        var nowmonth = nowDate.substring(5,7);
+        var nowday = nowDate.substring(8,10);
+        
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }
     
@@ -208,6 +202,22 @@ function getReceivedDocList(p_FormCd) {
         manager = "admin";
     else
         manager = pSusinManagerFlag;
+    
+    // 2018-05-02 강민수92 대리수신자일때 부서수신함 표출
+    if (pListTypeValue == "4") {
+        $.ajax({
+        	type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/isProxyUser.do",
+    		success: function(xml){
+    			if (xml == 1) {
+    				manager = "admin";
+    			}
+    		}
+    	});
+    }
+
 
     if (beforeJob != pListTypeValue || SelYearFlag) {
         beforeJob = pListTypeValue;
@@ -217,15 +227,9 @@ function getReceivedDocList(p_FormCd) {
     }
 
     if (SQLPARADATA == "") {
-        var nowyear = new Date().getFullYear();
-        var nowmonth = new Date().getMonth() + 1;
-        var nowday = new Date().getDate();
-
-        if (nowmonth < 10)
-            nowmonth = "0" + nowmonth;
-
-        if (nowday < 10)
-            nowday = "0" + nowday;
+    	var nowyear = nowDate.substring(0,4);
+        var nowmonth = nowDate.substring(5,7);
+        var nowday = nowDate.substring(8,10);
 
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }
@@ -676,7 +680,7 @@ function openUserInfo() {
             var pDocID = GetAttribute(tr, "DATA3");
             var pDeptID = GetAttribute(tr, "DATA4");
             if (pCheckval == "Y") {
-                window.open("/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=012", "", "height=260px,width=655px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + GetOpenPosition(580, 200));
+                window.open("/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + GetOpenPosition(1155, 460));
             } else {
                 var heigth = window.screen.availHeight;
                 var width = window.screen.availWidth;
@@ -1588,29 +1592,18 @@ function makePageSelPage() {
 
     var period;
     if (document.getElementById("sel_year").value.toLowerCase() == "all") {
-        /*var nowyear = new Date().getFullYear();
-        var nowmonth = new Date().getMonth() + 1;
-        var nowday = new Date().getDate();*/
-        
     	var nowyear = nowDate.substring(0,4);
         var nowmonth = nowDate.substring(5,7);
         var nowday = nowDate.substring(8,10);
         
-/*        if (nowmonth < 10)
-            nowmonth = "0" + nowmonth;
-
-        if (nowday < 10)
-            nowday = "0" + nowday;*/
-        
-        	if (SearchCond[5] != null && SearchCond[5] != "" ) {
-        		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
-        	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
-        		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + SearchCond[3].substring(5, 7) + strLang1029 + " " + SearchCond[3].substring(8, 10) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + SearchCond[4].substring(5, 7) + strLang1029 + " " + SearchCond[4].substring(8, 10) + strLang1030;
-        	} else {
-        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
-            }
-    }
-    else {
+    	if (SearchCond[5] != null && SearchCond[5] != "" ) {
+    		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
+    	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
+    		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + SearchCond[3].substring(5, 7) + strLang1029 + " " + SearchCond[3].substring(8, 10) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + SearchCond[4].substring(5, 7) + strLang1029 + " " + SearchCond[4].substring(8, 10) + strLang1030;
+    	} else {
+    		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        }
+    } else {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
@@ -1687,10 +1680,6 @@ function makePageSelPage() {
     else {
         MaxNum = totalPage;
     }
-    
-    if(totalPage == "0") {
-    	MaxNum = 1;
-    }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
             strtext = "<span class='on'>" + i + "</span>";
@@ -1700,6 +1689,10 @@ function makePageSelPage() {
             strtext = "<span onclick = 'goToPageByNum(" + i + ")'>" + i + "</span>";
             PagingHTML += strtext;
         }
+    }
+    if (i == 1) {
+    	strtext = "<span class='on'>" + i + "</span>";
+        PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
@@ -2283,15 +2276,9 @@ function getSimsaDocList() {
     }
 
     if (SQLPARADATA == "") {
-        var nowyear = new Date().getFullYear();
-        var nowmonth = new Date().getMonth() + 1;
-        var nowday = new Date().getDate();
-
-        if (nowmonth < 10)
-            nowmonth = "0" + nowmonth;
-
-        if (nowday < 10)
-            nowday = "0" + nowday;
+    	var nowyear = nowDate.substring(0,4);
+        var nowmonth = nowDate.substring(5,7);
+        var nowday = nowDate.substring(8,10);
 
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }

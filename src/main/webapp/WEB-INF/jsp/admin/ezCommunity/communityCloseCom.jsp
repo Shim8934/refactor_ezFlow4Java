@@ -7,6 +7,14 @@
 		<title>close_com</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<style>
+		.mainlist tr th:first-child{
+			padding-left: 10px;
+		}
+		.mainlist tr td:first-child{
+			padding-left: 10px;
+		}
+		</style>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -53,10 +61,10 @@
 			
 			function open_info( code ) {
 				if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=370";
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=375";
 				    feature = feature + GetOpenPosition(380, 350);
 				} else {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=380,height=350";
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=380,height=355";
 				    feature = feature + GetOpenPosition(380, 350);
 				}
 				
@@ -118,6 +126,10 @@
                         PagingHTML += strtext;
                     }
                 }
+
+                if (MaxNum == 0) {
+	            	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+	            }
                 
                 if (sTotalPage > BlockSize) {
                     if (sTotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
@@ -200,22 +212,22 @@
 		<table class="content"  >
 			<form name="comm_search" method="post">	
 				<tr>          
-					<th><spring:message code = 'ezCommunity.t41' /></th>
+					<th><spring:message code = 'ezCommunity.t31' /></th>
 				  	<td>
-				  		<select name="s_radio" style="Width:115px; Height:19px;vertical-align:middle"  class="text">
-							<option value = "1"><spring:message code = 'ezCommunity.t29' /></option>
+				  		<select name="s_radio" style="vertical-align:middle; height: 22px; margin-left:2px;width:100px;"  class="text">
+							<option value = "1"><spring:message code = 'ezCommunity.t33' /></option>
 							<option value = "2" selected ><spring:message code = 'ezCommunity.t9991' /></option>
 						</select>
 						
-						<input style="width:165px;vertical-align:middle" name="keyword" onKeyDown="return keyword_onkeydown()">
-						<a class="imgbtn" style="vertical-align:middle"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
+						<input style="width:200px;vertical-align:middle; height: 22px;" name="keyword" onKeyDown="return keyword_onkeydown()">
+						<a class="imgbtn" style="vertical-align:middle; margin-bottom:0px;"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
 				  	</td>
 				</tr>
 			</form>
 		</table>
 		
 	    <br/>
-	    
+	    <div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
 		<table class="mainlist" style="width:100%">
 			<tr> 
 				<th style="width:70px"><spring:message code = 'ezCommunity.t32' /></th>
@@ -226,6 +238,7 @@
 			</tr>
 			<span id="idSpan">${idSpanValue }</span>
 		</table>
+	    </div>
 		
 		<br/>
 		

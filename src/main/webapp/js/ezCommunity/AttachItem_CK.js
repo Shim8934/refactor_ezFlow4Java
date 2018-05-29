@@ -194,9 +194,11 @@ function AddAttachFileInfoXmlParsing(resultXML) {
         pstrXML += "</HEADERS><ROWS>";
         for (i = 0; i < nodes.length; i++) {
             if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") != "denied") {
-                pstrXML += "<ROW><CELL><VALUE>" + SelectSingleNodeValue(nodes[i], "PFILENAME").replace(re, "&amp;") + "</VALUE>";//파일명
-                pstrXML += "<DATA1>" + SelectSingleNodeValue(nodes[i], "PFILENAME").replace(re, "&amp;") + "</DATA1>"; //파일명
-                pstrXML += "<DATA2>" + SelectSingleNodeValue(nodes[i], "PUPLOADSN").replace(re, "&amp;") + "</DATA2>"; //저장될 파일명
+            	
+            	/* 2018-04-30 홍승비 - 커뮤니티 게시물 등록시 첨부파일 특수문자 처리 */
+                pstrXML += "<ROW><CELL><VALUE><![CDATA[" + SelectSingleNodeValue(nodes[i], "PFILENAME").replace(re, "&amp;") + "]]></VALUE>";//파일명
+                pstrXML += "<DATA1><![CDATA[" + SelectSingleNodeValue(nodes[i], "PFILENAME").replace(re, "&amp;") + "]]></DATA1>"; //파일명
+                pstrXML += "<DATA2>" + SelectSingleNodeValue(nodes[i], "PUPLOADSN").replace(re, "&amp;") + "</DATA2>"; //저장될 파일명3
                 pstrXML += "<DATA3></DATA3>";
                 pstrXML += "<DATA4></DATA4>";
                 pstrXML += "<DATA5>Y</DATA5>";

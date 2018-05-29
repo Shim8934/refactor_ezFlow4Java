@@ -113,7 +113,7 @@
 		    var sihangURL = "${sihangURL}";
 		    var CurAprType = "";
 		    var NextAprType = "";
-		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "";
+		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "";
 		    var pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
@@ -1074,12 +1074,14 @@
 // 		        SummaryFlag = true;
 // 		        return;
 // 		    }
+			/*PublicType, PublicLevel 기존의 공개여부 2018-04-04 김은석 수정*/
 		    function setPublicFlag() {
 		        var fields = message.GetFieldsList();
 		        var field = message.GetListItem(fields, "publication");
 		        if (!field) return;
 		        var PublicType = pPublicityCode.substring(0, 1);
 		        var PublicLevel = pPublicityCode.substring(1, 9);
+		        var PublicType2 = pPublicityCode2;
 		        var PublicText = "";
 		        if (pLimitRange != "")
 		            PublicText = " (" + pLimitRange + ")";
@@ -1091,8 +1093,34 @@
 		            PublicText = "<spring:message code='ezApprovalG.t46'/>" + getPublicLevel(PublicLevel);
 		        else
 		            PublicText = " ";
+		        
+		        if (PublicType2 == "1")
+		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
+		        else if (PublicType2 == "2")
+		            PublicText = "<spring:message code='ezApprovalG.t150'/>";
+		        else
+		            PublicText = " ";
 		        field.innerHTML = PublicText;
 		    }
+			
+		    /*기존의 공개여부 함수 2018-04-04 김은석 수정*/
+		    function setPublicFlag2() {
+		        var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "publication");
+		        if (!field) return;
+		        var PublicType = pPublicityYN.substring(0, 1);
+
+		        var PublicText = "";
+		        if (PublicType == "Y")
+		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
+		        else if (PublicType == "N")
+		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
+		        else
+		            PublicText = " ";
+		        
+		        field.innerHTML = PublicText;
+		    }
+		    
 		    function getPublicLevel(PublicLevel) {
 		        var strRtn = "";
 		        var firstFlag = true;
@@ -1296,13 +1324,17 @@
 		        parameter[40] = SummaryOuterReceiverList;
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
+		        parameter[45] = pPublicityYN;
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
-		
+		        
+				if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
+					pGubun = "11";
+				}
 		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun ;
 		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;
@@ -1381,17 +1413,21 @@
 		                pSummery = ret[9];
 		                tempSecurityDate = ret[14];
 		                pPublicityCode = ret[11];
+		                pPublicityYN = ret[21];
 		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
 			                
-			                if (ret[11].substring(0,1) == 3) {
+// 			                if (ret[11].substring(0,1) == 3) {
+// 			                	tempPublic = "N";
+// 			                }
+			                if (ret[21].substring(0,1) == "N") {
 			                	tempPublic = "N";
 			                }
-			                
-			                setPublicFlag();
+// 			                setPublicFlag();
+			                setPublicFlag2();
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
@@ -1446,6 +1482,12 @@
 		
 		            if ((btnSendDraftEnable == "false" && ListType != "21") && DraftFlag != "REDRAFT") {
 		                setFirstDrafterAuto();//저장된 결재선 없을때 기안자를 결재선에 등록
+		            } else {
+			             if (typeof (LastSignSN) == "undefined") { // 임시보관함에서의 기안>임시저장은 결재선을 수동으로 지정해준다 2018-03-23 천성준
+			            	var pAlertContent = "<spring:message code='ezApprovalG.t1485'/>";
+			                OpenAlertUI(pAlertContent, check_btnSendDraft);
+			                return;
+			            }
 		            }
 		        }        
 		        if (DraftFlag == "REDRAFT" && ListType == "21") {
@@ -1512,7 +1554,7 @@
 	            tempStr = ConvertMHTtoHTML(URL);
 	            
 	            tempXML = loadXMLString(tempStr);
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            var _DocContentHtml = getNodeText(XmlBodyDATA);
 	            var ConXmlDiv = document.createElement("DIV");

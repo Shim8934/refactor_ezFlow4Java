@@ -184,6 +184,8 @@
             	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
             AND
             	A.status != 2
+           	AND
+				B.updatestatus IN (0, 1)
             AND
                 B.memberid = #memberID#
             AND
@@ -1408,9 +1410,14 @@
 			]]>
 			
 			<isNotEqual property="searchValue" compareValue="">
-				<isEqual property="searchType" compareValue="content" prepend="AND ">
+				<isEqual property="searchType" compareValue="content" prepend="AND">
 					<![CDATA[
 						circularcomment LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isEqual property="searchType" compareValue="userID" prepend="AND">
+					<![CDATA[
+						membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 					]]>
 				</isEqual>
 			</isNotEqual>
@@ -1446,13 +1453,13 @@
 			]]>
 			
 			<isNotEqual property="searchValue" compareValue="">
-				<isEqual property="searchType" compareValue="userID" prepend="AND ">
+				<isEqual property="searchType" compareValue="userID" prepend="AND">
 					<![CDATA[
 						A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 					]]>
 				</isEqual>
 				
-				<isEqual property="searchType" compareValue="content" prepend="AND ">
+				<isEqual property="searchType" compareValue="content" prepend="AND">
 					<![CDATA[
 						A.circularcomment LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 					]]>
@@ -1573,6 +1580,8 @@
 					(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
 				AND
 					A.status != 2
+				AND
+					B.updatestatus IN (0, 1)
 				AND
 					B.memberid = #userID#
 				AND

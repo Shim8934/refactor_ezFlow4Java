@@ -256,8 +256,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 
 					//임시보관함에 저장
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, password, egovMessageSource, locale);
-					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+							userEmail, password, egovMessageSource, locale, ezEmailUtil);
+					Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 					
 					if (folder.exists()) {
 						folder.open(Folder.READ_WRITE);
@@ -307,6 +307,14 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
 		
         String displayNamePrintable = userInfo.getDisplayName();
+
+		// set useLetter
+		String useLetter = ezCommonService.getTenantConfig("useLetter", loginInfo.getTenantId());
+		if (useLetter == null || useLetter.equals("")) {
+			useLetter = "NO";
+		}
+		
+		logger.debug("useLetter=" + useLetter);
 		
         // set serverName
  		String serverName = loginInfo.getServerName();
@@ -322,9 +330,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
  		
         logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
-		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
-		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
+		logger.debug("stateName=" + stateName);
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
@@ -382,6 +389,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
   				+ ",postType=" + postType);
   		
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", loginInfo.getTenantId());
+		String multipartFirstIdx = "0";
 		
 		//set cmdOwn
 		if (request.getParameter("cmd") != null) {
@@ -394,7 +402,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		}
 		
 		// retrieve the Drafts folder name
-    	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
+    	String draftsFolderName = ezEmailUtil.getDraftsFolderId(locale);
     	
 		if (message != null) {
 			if (message.getFrom() != null && message.getFrom()[0] != null) {
@@ -431,7 +439,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			if (attachedFileList.size() > 0) {
                 StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
                 
-				for (int i = 0; i < attachedFileList.size(); i++) {
+                multipartFirstIdx = attachedFileList.get(0).get("index");
+                logger.debug("RESEND multipartFirstIdx=" + multipartFirstIdx);
+
+                for (int i = 0; i < attachedFileList.size(); i++) {
 					Map<String, String> fileInfo = attachedFileList.get(i);
 					
 	                attachXmlList.append("<NODE>");
@@ -569,7 +580,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("pCDOMessageID", pCDOMessageID);
 		model.addAttribute("pReservedSaveTime", pReservedSaveTime);
 		model.addAttribute("stateName", stateName);
-		model.addAttribute("folderDate", folderDate);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("mailInnerDomain", mailInnerDomain);
 		model.addAttribute("individualMailUser", individualMailUser);
@@ -599,7 +609,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("replyReadTime", replyReadTime);
 		model.addAttribute("senderInfo", senderInfo);
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("tid", loginInfo.getTenantId());
+		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("unread", unread);
 		model.addAttribute("charsetCheck", charsetCheck);
 		model.addAttribute("reSendFlag", reSendFlag);
@@ -619,6 +629,9 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("secureMaxReadDate", secureReadDate);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("useLetter", useLetter);
+		model.addAttribute("draftsFolderName", draftsFolderName);
+		model.addAttribute("multipartFirstIdx", multipartFirstIdx);
 		
         logger.debug("mailEdit ended.");
         

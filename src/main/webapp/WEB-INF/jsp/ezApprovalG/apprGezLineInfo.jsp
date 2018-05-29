@@ -16,6 +16,12 @@
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<style>
+			.mainlist tr th {
+				border-top:0px;
+			}
+		</style>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -25,6 +31,7 @@
 		    var pDocID = "${docID}";
 		    var pDeptID = "${deptID}";
 		    var pDocState = "${docState}";
+		    var pAprState = "${aprState}";
 		    var ChildDocInfo = "${childDocInfo}";
 		    var xmlhttp = createXMLHttpRequest();	
 		    var FLAG;
@@ -45,14 +52,21 @@
 		                getEndLine(tempDocID);
 		            }
 		            else if (FLAG == "APR") {
-		                getAprLine(tempDocID);
+		            	if (pAprState == "N") {
+		            		getAprLine("");
+			                return;
+		            	} else {
+			                getAprLine(tempDocID);
+		            	}
 		            }
 		            else {
 		                getAprLine("");
 		                return;
 		            }
-		            if (pDocState == "011") {
-		                document.getElementById("tdGongRam").style.display = "";
+		            if ('${approvalFlag}' == 'G') {
+		            	if (pDocState == "011") {
+		                	document.getElementById("tdGongRam").style.display = "";
+		            	}
 		            }
 		        }
 		        catch (e) {
@@ -131,6 +145,11 @@
 		            if (xml == "") return;
 		
 		            document.getElementById("lvAprLine").innerHTML = "";
+		            
+		            if (xml == "NOTPERMISSION") {
+		            	document.getElementById("lvAprLine").innerHTML = "<div style='height:170px;text-align:center;padding-top:150px;font-size:12px'><spring:message code='main.t00001'/></div>";
+		            	return;
+		            }		            
 		
 		            var listview = new ListView();                          
 		            listview.SetID("AprLine");                              
@@ -172,7 +191,7 @@
 		        if (tr.length != 0) {
 		            var pCheckval = tr[0].getAttribute("DATA5");
 		            if (pCheckval == "Y") {
-		                window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr[0].getAttribute("DATA3") + "&deptID=" + tr[0].getAttribute("DATA4") + "&docState=012", "", "height=270px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(600, 270));
+		                window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr[0].getAttribute("DATA3") + "&deptID=" + tr[0].getAttribute("DATA4") + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1155, 460));
 		            }
 		            else {
 		                window.open("/ezCommon/showPersonInfo.do?id=" + tr[0].getAttribute("DATA4"), "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 438));
@@ -181,6 +200,7 @@
 		    }
 		    var g_tagSelectsub = "1";
 		    function MM_swapImagesub(nSel) {
+		    	methodForTabAction(nSel);
 		        if (nSel != g_tagSelectsub) {
 		            g_tagSelectsub = nSel;
 		            if (g_tagSelectsub == "1") {
@@ -195,8 +215,10 @@
 		
 		                var str2 = "tagsub4.src" + "=" + "\"/images/tab_appsub4a.gif\"";
 		                eval(str2);
-		                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
-		                eval(str3);
+		                if ('${approvalFlag}' == 'G') {
+			                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
+			                eval(str3);
+		                }
 		            }
 		            else if (g_tagSelectsub == "4") {
 		                if (pDocState == "015") {
@@ -210,8 +232,10 @@
 		
 		                var str2 = "tagsub4.src" + "=" + "\"/images/tab_appsub4.gif\"";
 		                eval(str2);
-		                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
-		                eval(str3);
+		                if ('${approvalFlag}' == 'G') {
+			                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
+			                eval(str3);
+		                }
 		            }
 		            else {
 		                if (pDocState == "015") {
@@ -235,7 +259,12 @@
 		            getEndLine(tempDocID);
 		        }
 		        else if (FLAG == "APR") {
-		            getAprLine(tempDocID);
+		        	if (pAprState == "N") {
+	            		getAprLine("");
+		                return;
+	            	} else {
+		                getAprLine(tempDocID);
+	            	}
 		        }
 		        else
 		            getAprLine("");
@@ -265,6 +294,29 @@
 		    		}        			
 		    	});
 		    }
+		    function methodForTabAction(target) {
+            	var tab1 = document.getElementById("tagsub1").children[0];
+            	var tab2 = document.getElementById("tagsub4").children[0];
+            	var tab3 = "";
+            	if (document.getElementById("tdGongRam") != null) {
+            		tab3 = document.getElementById("tdGongRam").children[0];
+            	}
+            	if (target == "1") {
+            		tab1.className = "tabon";
+            		tab2.className = "";
+            		if (tab3 != "")
+            		tab3.className = "";
+            	} else if (target == "4") {
+            		tab1.className = "";
+            		tab2.className = "tabon";
+            		if (tab3 != "")
+            		tab3.className = "";
+            	} else if (target == "5") {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "tabon";
+            	}
+            }
 		</script>
 	</head>
 	<body class="popup">
@@ -284,7 +336,7 @@
 		  </ul>
 		</div>
 		
-		<div id="tabnav">
+		<%-- <div id="tabnav">
 		  <ul>
 		  	<c:choose>
 				<c:when test="${docState == '015'}">
@@ -295,12 +347,32 @@
 				</c:otherwise>
 			</c:choose>
 		    <li id="tagsub4"><span onclick="pDocInfoValue='4';MM_swapImagesub('4');Opinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
-		    <li id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()" ><spring:message code='ezApprovalG.t946'/></span></li>
+		    <c:if test="${approvalFlag == 'G'}">
+		    	<li id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()" ><spring:message code='ezApprovalG.t946'/></span></li>
+		    </c:if>
 		  </ul>
-		</div>
-		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:120px;WIDTH:100%;"></div></div>
+		</div> --%>
+		
+		<div class="portlet_tabpart01" style="margin:0px;">
+       		<div class="portlet_tabpart01_top" style="border-bottom:0px;">
+	       		<c:choose>
+					<c:when test="${docState == '015'}">
+		       			<p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t946'/></span></p>
+					</c:when>
+					<c:otherwise>
+		       			<p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t1769'/></span></p>
+					</c:otherwise>
+				</c:choose>
+       			<p id="tagsub4"><span onclick="pDocInfoValue='4';MM_swapImagesub('4');Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></p>
+       			<c:if test="${approvalFlag == 'G'}">
+	       			<p id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()"><spring:message code='ezApprovalG.t946'/></span></p>
+       			</c:if>
+       		</div>
+       	</div>
+       	
+		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:350px;WIDTH:100%;"></div></div>
 		<script type="text/javascript" >
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+			//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>

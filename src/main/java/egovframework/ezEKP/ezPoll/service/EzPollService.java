@@ -1,13 +1,16 @@
 package egovframework.ezEKP.ezPoll.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUsersVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPollService {	
@@ -96,4 +99,38 @@ public interface EzPollService {
 	public void unhideQuestion(String qstID, String userID, int tenantId) throws Exception;
 
 	public PollUserAnswerVO getSpecificPollUserAndAnswer(int optId, int qstId, String id, int tenantId) throws Exception;	
+	
+	public int checkUsingFile(int tenantID, String FilePath) throws Exception;
+	
+	public int checkQstUsingFile(int tenantID, int qstId, String FilePath) throws Exception;
+	
+	public void deleteAllFilesByQstId(int tenantID, int qstId, String pDirPath, String realPath) throws Exception;
+	
+	public void deleteQstFiles(Map<String, Object> map) throws Exception;
+	
+	public void deleteAnsFiles(Map<String, Object> map) throws Exception;
+	
+	public void deleteCmtFiles(Map<String, Object> map) throws Exception;
+	
+	public void sendPostNotiMail(LoginVO userInfo, String loginCookie, PollQuestionVO pollQuestion) throws Exception;
+	
+	public OrganUserVO getRetireEntryInfo(String cn, String lang, int tenantID) throws Exception;
+	
+	public void insertQstUsers(PollUsersVO user) throws Exception;
+	
+	public void insertQstUsers(PollQuestionVO pollQuestionVO) throws Exception;
+	
+	public void getAllMemberOfDept(List<LoginVO> list, String deptId, int tenantID) throws Exception;
+	
+	public PollUsersVO getQstUsers(PollUsersVO user) throws Exception;
+	
+	public void updateQstUsersStatus(int tenantId, int qstId, String userId, int userStatus) throws Exception;
+	
+	public void deleteUsersForQst(int tenantId, int qstId) throws Exception;
+	
+	public List<PollUsersVO> getAllUsersForQst(int tenantId, int qstId) throws Exception;
+	
+	public List<LoginVO> getQstAllUsers(int tenantId, int qstId) throws Exception;
+	
+	public List<LoginVO> getInfoOfSeenUsers(int tenantId, int qstId) throws Exception;
 }

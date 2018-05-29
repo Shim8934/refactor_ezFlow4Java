@@ -85,11 +85,14 @@
 		    var protocol = window.location.protocol;
 		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
-			var uploading = "uploading";
+		    var uploading = "uploading";
+			var useMailBoxBackUp = "${useMailBoxBackUp}";
+			var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정 useMailWriteSenderClick추가
 		    var enc = "encrypt";
 		    var dec = "decrypt";
 		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
 		    var useReSend = "${useReSend}";
+		    var useSearchContent = "${useSearchContent}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -158,7 +161,7 @@
 		            g_bPrevShow = true;
 		            
 		            /* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지
-		            if (parseInt(document.documentElement.clientWidth) < 1000) {
+		            if (parseInt(document.documentElement.clientWidth) < 1000) { 
 		                document.getElementById("PreViewleft").style.display = "none";
 		                pPreviewShow_HOW = "W";
 		            }
@@ -450,6 +453,8 @@
 		            return radiosearch.item(0).value + "=" + key;
 		        else if (radiosearch.item(1).checked)
 		            return radiosearch.item(1).value + "=" + key;
+		        else if (radiosearch.item(2).checked)
+		            return radiosearch.item(2).value + "=" + key;
 		    }
 		    
 		    function reloadReadContent(url) {
@@ -780,6 +785,9 @@
 	          <c:if test="${isSentItems != true}">
 			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
 			  </c:if>
+			  <c:if test="${useSearchContent == 'YES'}">
+			  <input name="searchCheck" id="Radio4" type="radio" value="CONTENT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio4">&nbsp;<spring:message code="ezEmail.t649" /></label>
+			  </c:if>
 			  &nbsp;
 			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
 	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="start_search()"></a>
@@ -962,10 +970,10 @@
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="reply_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_mailreply.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t511" /></span></td>
 		    </tr>
 		    <tr>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('R');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/msg-rd.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000006" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('R');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-msg-read.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000006" /></span></td>
 		    </tr>
 		    <tr>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('U');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/msg-unrd.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000007" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('U');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000007" /></span></td>
 		    </tr>
 		    <tr>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="move_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t482" /></span></td>
@@ -985,6 +993,10 @@
 		<form name="PrevViewFormW" action="mailPreviewContent.do" method="post" target="ifrmPreViewW">
 		<input  type="hidden"  name="iptURL" value="">
 		<input  type="hidden" name="iSecurity" value="">
+		</form>
+		<form name="mailWriteSenderClick" action="mailWrite.do" method="post"> <!-- 추가 -->
+		<input  type="hidden"  name="cmd" value="NEW">
+		<input  type="hidden" name="msgto" value="">
 		</form>
 		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">

@@ -1,4 +1,4 @@
-﻿var ListTypeFlag;
+﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -79,7 +79,7 @@ function ezCabMunuCtl(MenuType, selRow) {
     switch (MenuType) {
         case "0":
             if (typeof (tdNewVol) != "undefined" && typeof (tdNewVol) != "unknown") {
-                document.getElementById("tdNewVol").style.display = pMenuFlag;
+                document.getElementById("tdNewVol").style.display = "none"; // 권호수 안보이게
             }
 
             if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown") {
@@ -89,7 +89,8 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (selRow.getAttribute("DATA6") == "0") {
                 if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-					if (GetCabChargerRight() == "true") {                    	
+                	console.log(g_bDeptCharger)
+					if (GetCabChargerRight() == "true" || g_bDeptCharger) {                    	
                         document.getElementById("tdbtnEndProduce").style.display = "";
                         //SwapImage(btnEndProduce, "");
                     }
@@ -150,10 +151,11 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (typeof (tdRegSepAtt) != "undefined" && typeof (tdRegSepAtt) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
-                    if (GetCabChargerRight() == "true")
+                	if (GetCabChargerRight() == "true" || g_bDeptCharger) {
                         document.getElementById("tdRegSepAtt").style.display = "";
-                    else
+                    } else {
                         document.getElementById("tdRegSepAtt").style.display = "none";
+                    }
                 }
                 else {
                     document.getElementById("tdRegSepAtt").style.display = "none";
@@ -1321,7 +1323,7 @@ function OpenWin(wfileLocation, wName, wWidth, wHeigth) {
 }
 
 function HasRecReadRight(pRecID, pSepAttNo, pUserID) {
-    if (GetUserRecRight(pRecID, pSepAttNo, pUserID) == "1")
+    if (GetUserRecRight(pRecID, pSepAttNo, pUserID) != "0")
         return true;
     else
         return false;

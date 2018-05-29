@@ -7,7 +7,7 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script language="javascript" type="text/javascript">
-	        var XmlBodyATT = createXmlDom();
+// 	        var XmlBodyATT = createXmlDom();
 	        document.onselectstart = function () { return false; };
 	        var BODYTag;
 	        var BODYHTML;
@@ -39,7 +39,7 @@
 	                }
 	                else {
 	                    tempXML = loadXMLString(tempStr);
-	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 
 	                    var Content = getNodeText(XmlBodyDATA);
@@ -55,22 +55,43 @@
 	                        CONNINFO.innerHTML = ConXmlDiv.getElementsByTagName("XML").item(0).outerHTML;
 	                        _DocContentHtml = ConXmlDiv.innerHTML;
 	                    }
-
-	                    document.getElementById('div_Content').innerHTML = _DocContentHtml;
+						document.getElementById('div_Content').innerHTML = _DocContentHtml; //.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');
+	                    
+	                    var Document_Ptag = document.getElementById('div_Content').getElementsByTagName("P");
+	                    if (Document_Ptag.length > 0) {
+	                        for (var i = 0 ; i < Document_Ptag.length; i++) {
+	                            if (Document_Ptag[i].style.marginBottom == "")
+	                                Document_Ptag[i].style.marginBottom = "0px";
+	                            if (Document_Ptag[i].style.marginTop == "")
+	                                Document_Ptag[i].style.marginTop = "0px";
+	                        }
+	                    }
+	                    
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
-	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD")
+	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
 	                    for (var i = 0; i < TDRows.length; i++) {
-	                        if (GetAttribute(TDRows.item(i),"id") != null) {
+	                        if (TDRows.item(i).getAttribute("class") == "FIELD") {
 	                            if (TDRows.item(i).childNodes.length == 0) {
 	                                if (TDRows.item(i).innerHTML == "" || TDRows.item(i).innerHTML == " ") {
-	                                    TDRows.item(i).innerHTML = "&nbsp;";
+	                                    TDRows.item(i).innerHTML = "";
 	                                }
 	                            }
 	                        }
+	
+	                        if (TDRows.item(i).style.borderLeftWidth.indexOf("0.") > -1) {
+	                            TDRows.item(i).style.borderLeftWidth = "1px";
+	                        }
+	                        if (TDRows.item(i).style.borderRightWidth.indexOf("0.") > -1) {
+	                            TDRows.item(i).style.borderRightWidth = "1px";
+	                        }
+	                        if (TDRows.item(i).style.borderTopWidth.indexOf("0.") > -1) {
+	                            TDRows.item(i).style.borderTopWidth = "1px";
+	                        }
+	                        if (TDRows.item(i).style.borderBottomWidth.indexOf("0.") > -1) {
+	                            TDRows.item(i).style.borderBottomWidth = "1px";
+	                        }
 	                    }
-	                    for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
-	                        SetAttribute(document.getElementsByTagName("body")[0], getNodeText(GetElementsByTagName(XmlBodyATT, "NODENAME")[i]), getNodeText(GetElementsByTagName(XmlBodyATT, "NODEVALUE")[i]));
-	                    }
+	                    parent.OrgHtml = _htmlcontent;
 	                    BodyTagsDisabled(document.getElementById('div_Content'));
 	                    parent.FieldsAvailable();
 	                }
@@ -85,7 +106,7 @@
 	                var URL = encodeURI(url);
 	                tempStr = ConvertMHTtoHTML(URL);
 	                tempXML = loadXMLString(tempStr);
-	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 
 	                var _DocContentHtml = getNodeText(XmlBodyDATA);

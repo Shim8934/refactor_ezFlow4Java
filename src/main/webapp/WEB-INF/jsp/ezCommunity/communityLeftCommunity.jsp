@@ -141,11 +141,11 @@
 
                             var _img = document.createElement("img");
                             _img.style.width = "33px";
-                            _img.style.height = "33px";
-                            if (copLogo.indexOf("default_logo_type") > -1)
+                            _img.style.height = "23.57px";
+                            if (copLogo.indexOf("default_logo_") > -1)
                                 _img.setAttribute("src", "/images/ezCommunity/logo/" + copLogo);
                             else
-                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + encodeURIComponent(copLogo));
+                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + encodeURIComponent(copLogo));
 
                             _span.appendChild(_img);
                             _li.innerHTML = _span.outerHTML + copName;
@@ -327,7 +327,7 @@
 	                    	window.open("/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
 	                        break;
 	                    case "btn_MemberInfo": 
-	                    	alert("<spring:message code='ezCommunity.t1102' />");
+	                    	alert("<spring:message code='ezCommunity.t431' />");
 	                		break;
 			            case "btn_MemberOut": 
 			            	alert("<spring:message code='ezCommunity.t1102' />");
@@ -563,8 +563,11 @@
                 window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
             }
             
+            /* 2018-05-15 홍승비 - 커뮤니티 만들기 팝업창으로 수정 */
             function make_Cop() {
-                window.open("/ezCommunity/commMake.do", "right");
+            	 var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=1,width=850,height=560";
+                 feature = feature + GetOpenPosition(850, 560);
+                window.open("/ezCommunity/commMake.do", "", feature);
             }
 		</script>
 	</head>

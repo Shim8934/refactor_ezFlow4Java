@@ -51,7 +51,8 @@ public interface EzCommunityService {
 	
 	public List<CommunityBoardInfoVO> commHomeBoardInfo(String code, int tenantID) throws Exception;
 	
-	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID) throws Exception;
+	/* 2018-05-18 홍승비 - UTC시간에 offset을 적용한 writeDate를 가져오기 위해 offset 추가*/
+	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID, String offset) throws Exception;
 	
 	public List<CommunityClubVO> adminNoticeMailOkGet2(String code, int tenantID) throws Exception;
 	
@@ -66,6 +67,8 @@ public interface EzCommunityService {
 	public CommunityClubVO adminLeftGet(String code, int tenantID) throws Exception;
 	
 	public CommunityClubVO adminLogoGet(String code, String primary, int tenantID) throws Exception;
+	
+	public CommunityClubVO adminLogoGet2(String code, int tenantId) throws Exception;
 	
 	public CommunityClubVO adminCommCloseOkGet2(String code, int tenantID) throws Exception;
 		
@@ -237,6 +240,8 @@ public interface EzCommunityService {
 	
 	public String adminLogoUpload(String code, String realPath, String logoPath, MultipartFile logoFile, int tenantId) throws Exception;
 	
+	public String adminThumbUpload(String code, String realPath,String thumbPath, MultipartFile thumbFile, int tenantId) throws Exception;
+	
 	public String getMyCoummunityBoardList(LoginVO userInfo, String clubNo) throws Exception;
 	
 //	public String getContentInfo(String type, String itemID, int tenantID) throws Exception;
@@ -359,5 +364,6 @@ public interface EzCommunityService {
 
 	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
 	
-	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception;
+	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception;	
+
 }

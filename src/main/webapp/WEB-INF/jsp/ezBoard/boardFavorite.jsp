@@ -65,9 +65,11 @@
                 	document.getElementById("contentlist").innerHTML = "<table id='favorite_list'  class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang53 + "</td></tr></table>";
             	}	
         	}
+        	
+        	//저장하지 않아도 탭 체크박스를 누르면 즉각적으로 반영하는 코드
         	var checkArr = new Array();
         	function event_statuschange(obj) {
-	            var tabUsed = "";
+	           /*  var tabUsed = "";
     	        if(obj.checked) {
       						tabUsed = "Y"; 
       					}
@@ -87,7 +89,7 @@
   					error : function(jqXHR, textStatus, errorThrown) {
              	    	alert('Error : ' + jqXHR.status + ", " + textStatus);
   					}
-  				});       
+  				});        */
         	}
         	function Priority_UP() {
             	if (!CrossYN()) {
@@ -182,36 +184,79 @@
         	}
         	function Save() {
             	var boardID = "";
-            	var listArr = document.getElementById("favorite_list").getElementsByTagName("tr");
-            	for (var i = 0; i < listArr.length; i++) {
-                	if (listArr[i].getAttribute("BoardID") != null || listArr[i].getAttribute("BoardID") != "") {
-                    	boardID += listArr[i].getAttribute("BoardID");
-                    	if (i != (listArr.length - 1))
-                        	boardID += ";";
-                	}
+            	var tabBoardID = "";
+            	var tabuseds = "";
+            	var listArr = document.getElementById("favorite_list").getElementsByTagName("tr"); 
+            	var checkedList = $("input:checkbox");
+            	var checkedListY = $("input:checkbox:checked");
+            	var checkedLength = checkedList.length;
+            	//즐겨찾기 탭 '저장' 시, 반드시 하나 이상의 탭을 선택해야 한다.
+            	if(checkedListY.length < 1){
+            		alert('<spring:message code="ezBoard.t5005" />');
+            		return;
             	}
-            	var delBoardID = "";
-            	for (var i = 0; i < delArr.length; i++) {
-                	delBoardID += delArr[i];
-                	if (i != delArr.length - 1)
-                    	delBoardID += ";";
+            	else{
+            		//즐겨찾기 게시판 순서조정용 데이터
+	            	for (var i = 0; i < listArr.length; i++) {
+	                	if (listArr[i].getAttribute("BoardID") != null || listArr[i].getAttribute("BoardID") != "") {
+	                    	boardID += listArr[i].getAttribute("BoardID");
+	                    	if (i != (listArr.length - 1))
+	                        	boardID += ";";
+	                	}
+	            	}	            	
+	            	//즐겨찾기 게시판 삭제용 데이터
+	            	var delBoardID = "";
+	            	for (var i = 0; i < delArr.length; i++) {
+	                	delBoardID += delArr[i];
+	                	if (i != delArr.length - 1)
+	                    	delBoardID += ";";
+	            	}
+	            	$.ajax({
+	 					url : '/ezBoard/saveListOrder.do',
+	 					method : 'POST',
+	 					dataType : 'text',
+	 					data : {
+		     				pBoardList : boardID ,
+			 				pDelboardList : delBoardID,
+	 					} ,
+	     				success : function(data, textStatus, jqXHR) {
+		 					alert('<spring:message code="ezEmail.t42" />');
+	 					},
+	 					error : function(jqXHR, textStatus, errorThrown) {
+	            	    	alert('Error : ' + jqXHR.status + ", " + textStatus);
+	 					}
+	 				});
+	            	//즐겨찾기 게시판 탭 표출용 데이터
+	            	checkedList.each(function(index){
+	            		tabBoardID += $(this).attr("boardid");
+	            		if(this.checked == true ){
+            				tabuseds += "Y";
+            			}else{
+            				tabuseds += "N";
+            			}
+	            		if(index !== checkedLength -1 ){
+	            			tabBoardID +=  ";";	
+	            			tabuseds += ";";
+	            		}
+	            	});
+	            	
+	            	$.ajax({
+	  					url : '/ezBoard/set_TabUse2.do',
+	  					method : 'POST',
+	  					dataType : 'text',
+	  					data : {
+	      					pBoardList : tabBoardID ,
+	      					tabUsed :  tabuseds
+	  					} ,
+	      				success : function(data, textStatus, jqXHR) {
+	  					},
+	  					error : function(jqXHR, textStatus, errorThrown) {
+	             	    	alert('Error : ' + jqXHR.status + ", " + textStatus);
+	  					}
+	  				});       
             	}
-            	$.ajax({
- 					url : '/ezBoard/saveListOrder.do',
- 					method : 'POST',
- 					dataType : 'text',
- 					data : {
-	     				pBoardList : boardID ,
-		 				pDelboardList : delBoardID,
- 					} ,
-     				success : function(data, textStatus, jqXHR) {
-	 					alert('<spring:message code="ezEmail.t42" />');
- 					},
- 					error : function(jqXHR, textStatus, errorThrown) {
-            	    	alert('Error : ' + jqXHR.status + ", " + textStatus);
- 					}
- 				});       
         	}
+        	
         	var delArr = new Array();
         	function favorite_Delete() {
             	if (_RowObject == null) {
@@ -243,7 +288,6 @@
 	<body style="margin-left: 10px; margin-right: 10px;">
 		<br/>
     	<h2><spring:message code="ezBoard.t00010" /></h2>
-    	<span class="txt">▒ <spring:message code="ezBoard.t00014" /></span><br />
     	<span class="txt">▒ 
         	<img src="/images/ImgIcon/prev.gif" style="height: 16px; margin-top: -3px; vertical-align: middle; text-align: center;" />
         	<img src="/images/ImgIcon/next.gif" align="absmiddle" style="height: 16px; margin-top: -3px;" />

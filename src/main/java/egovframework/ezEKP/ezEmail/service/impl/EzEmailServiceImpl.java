@@ -1030,12 +1030,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
-	public String checkIndividualAlias(String individualAlias) throws Exception {
+	public String checkIndividualAlias(String individualAlias,int  tenantId) throws Exception {
 		logger.debug("checkIndividualAlias started. individualAlias=" + individualAlias);
 		
 		String returnValue = "ERROR";
 		
 		String inputParams = "individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
+		inputParams += "&tenantId=" + tenantId;
 		logger.debug("inputParams=" + inputParams);
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkIndividualAlias";
@@ -1217,9 +1218,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (isSaved) {
 	        	//보낸편지함에 저장
 	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	        			userEmail, password, egovMessageSource, userLocale);
+	        			userEmail, password, egovMessageSource, userLocale, ezEmailUtil);
 	        	
-	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userLocale));
+	    		Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(userLocale));
 	    		
 	    		if (!sentFolder.exists()) {
 	    			ia.createFolder(sentFolder.getFullName());
@@ -1323,9 +1324,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (isSaved) {
 	        	//보낸편지함에 저장
 	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	        			userAccount, password, egovMessageSource, userInfo.getLocale());
+	        			userAccount, password, egovMessageSource, userInfo.getLocale(), ezEmailUtil);
 	        	
-	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
+	    		Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(userInfo.getLocale()));
 	    		
 	    		if (!sentFolder.exists()) {
 	    			ia.createFolder(sentFolder.getFullName());
@@ -1375,7 +1376,7 @@ public class EzEmailServiceImpl implements EzEmailService {
             IMAPAccess ia = null;
             try {
             	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, password, egovMessageSource, userInfo.getLocale());
+						userAccount, password, egovMessageSource, userInfo.getLocale(), ezEmailUtil);
             	
             	Folder folder = ia.getFolder(mailbox);
             	
@@ -1434,7 +1435,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, userInfo.getLocale());
+					userAccount, password, egovMessageSource, userInfo.getLocale(), ezEmailUtil);
 					
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 			
@@ -1555,9 +1556,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, userInfo.getLocale(), 40*1000, 20*1000);
+					userEmail, password, egovMessageSource, userInfo.getLocale(), 40*1000, 20*1000, ezEmailUtil);
 		
-			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));		
+			Folder folder = ia.getFolder(ezEmailUtil.getInboxFolderId());		
 			folder.open(Folder.READ_ONLY);
 	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
@@ -1567,7 +1568,7 @@ public class EzEmailServiceImpl implements EzEmailService {
  			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
 	        
  			// set mailCount
- 			int unreadCount = ia.getUnreadCount(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));
+ 			int unreadCount = ia.getUnreadCount(ezEmailUtil.getInboxFolderId());
  			if (unreadCount < count) {
  				count = unreadCount;
  			}

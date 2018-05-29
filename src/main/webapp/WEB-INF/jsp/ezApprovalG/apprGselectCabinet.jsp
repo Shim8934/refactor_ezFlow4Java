@@ -83,6 +83,15 @@
 	                    InitCabClassInfo(GetCabinetClassInfo(g_SelCabID));
 	                }
 	            }
+	            var date = new Date();
+	            var nowYear = date.getFullYear();
+	            
+	            //2018-05-18 강민수92 셀렉트 박스 추가
+	            for (var i = nowYear + 5; i >= nowYear - 5; i--) {
+	            	$('#selYear').append("<option value='" + i + "'>" + i + "</option>")
+	            }
+				
+	            $("#selYear").val(nowYear).prop("selected", true);
 	            InitCategorySelection();
 	            selTaskCategory_onchange();
 	        };
@@ -119,7 +128,7 @@
 	                arrTask[3] = selnode[0].getAttribute("DATA2");
 	                bDisplayFlag = selnode[0].getAttribute("DATA4");
 	                bSpecialFlag = selnode[0].getAttribute("DATA5");
-	                GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], g_SelCabID, g_InitFlag);
+	                GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], g_SelCabID, g_InitFlag, $('#selYear').val());
 	                if (typeof (g_SelCabID) != "undefined") {
 	                    if (g_SelCabID != "") {
 	                        AddRowToCabList();
@@ -128,7 +137,7 @@
 	                g_SelCabID = "";
 	            }
 	            else {
-	                GetCabinetSimpleList("", "", "__Dump__Year__", "", g_InitFlag);
+	                GetCabinetSimpleList("", "", "__Dump__Year__", "", g_InitFlag, $('#selYear').val());
 	            }
 	        }
 	        function SelCabinetList_rowdblclick() {
@@ -397,7 +406,7 @@
 	    function btnCreateCab_onclick_Complete(rtn) {
 	        DivPopUpHidden();
 	        if (rtn[0] == "TRUE") {
-	            GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], rtn[1], g_InitFlag);
+	            GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], rtn[1], g_InitFlag, $('#selYear').val());
 	        }
 	    }
 	    function btnNewVolume_onclick() {
@@ -408,7 +417,7 @@
 	            var selnode = selnodes[0];
 	            var rtn = NewVolume(trim(GetAttribute(selnode, "DATA1")), trim(GetAttribute(selnode, "DATA3")));
 	            if (rtn != "FALSE") {
-	                GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], rtn, g_InitFlag);
+	                GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], rtn, g_InitFlag, $('#selYear').val());
 	            }
 	        }
 	        else {
@@ -527,6 +536,13 @@
 	                <h2 style="padding-top:7px;"><spring:message code='ezApprovalG.t1039'/></h2>
 	                <table class="content">
 	                    <tr>
+	                        <th><spring:message code='ezApprovalG.garm02'/></th>
+	                        <td>
+	                            <select id="selYear" style="width: 100%" onchange="return TaskList_rowclick()">
+	                            </select>
+	                        </td>
+	                    </tr>
+	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t592'/></th>
 	                        <td>
 	                            <select id="selTaskCategory" style="width: 100%" onchange="return selTaskCategory_onchange()">
@@ -571,7 +587,7 @@
 	                	<c:if test="${initFlag == '1'}">
 		                    <tr id="trCreateCab">
 		                        <th style="height: 23px; text-align: left; padding-left:3px;"><a class="imgbtn"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-		                            <a class="imgbtn"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a></th>
+		                            <a class="imgbtn" style="display : none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a></th>
 		                    </tr>
 		                    <tr id="trCreateCabDummy" style="display: none">
 		                        <td></td>

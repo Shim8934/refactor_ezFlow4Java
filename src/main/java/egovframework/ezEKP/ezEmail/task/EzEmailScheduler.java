@@ -187,7 +187,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				logger.debug("expireTime=" + expireTime);
 
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale);
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
 				Folder f = ia.getFolder(path);
 
 				if (f != null && f.exists()) {
@@ -434,8 +434,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	                    
     		        	//보낸편지함에 저장
 						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-								userAccount, password, egovMessageSource, locale);
-						Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+								userAccount, password, egovMessageSource, locale, ezEmailUtil);
+						Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 						
 						message.setFlag(Flags.Flag.SEEN, true);
 						folder.open(Folder.READ_WRITE);
@@ -475,8 +475,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					} else {
 						//보낸편지함에 저장
 						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-								userAccount, password, egovMessageSource, locale);
-						Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+								userAccount, password, egovMessageSource, locale, ezEmailUtil);
+						Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 						
 						if (folder.exists()) {
 							message.setFlag(Flags.Flag.SEEN, true);
@@ -625,7 +625,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                 try {
                     email = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenant.getTenantId());
                     ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                                        email, password, egovMessageSource, locale);
+                                        email, password, egovMessageSource, locale, ezEmailUtil);
                             
                     long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
                     
@@ -776,7 +776,14 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			try {
 				// user quota info
 				Double[] userQuotaData = ezEmailUtil.getUserQuota(userEmail);
-				IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource, locale);
+				
+				if (userQuotaData[0] == null) {
+					String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
+					userQuotaData = ezEmailUtil.getDefaultQuota(domainName);
+				}
+				
+				IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource, 
+														locale, ezEmailUtil);
 				
 				// KB
 				long mailboxUsage = imapAccess.getStorageUsageAndLimit()[0];

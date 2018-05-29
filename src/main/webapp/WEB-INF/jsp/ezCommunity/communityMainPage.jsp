@@ -8,17 +8,35 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<!-- 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 -->
+		<style>
+			.category_select span {
+				color : rgb(4, 112, 228);
+			}
+			.category_select {
+				font-Weight : bold;
+			}
+			.tabpartMycommunityList table td.read {
+				text-align: center;
+				white-space: nowrap;
+    			text-overflow: ellipsis;
+    			overflow: hidden;
+   				width: 60px;
+   				padding-right:5px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 	        var xmlhttp3 = null;
 	        var xmlhttp4 = null;
 	        var xmlhttp5 = null;
 	        var str = "<c:out value = '${strXML}' />";
 	        var primary = "<c:out value = '${primary}' />";
+	        var pastDate = "<c:out value = '${pastDate}' />";
 	        var totalPage = "<c:out value = '${totalPage}' />";
 	        var temptotalPage = totalPage;
 	        var CurPage = "1";
@@ -34,16 +52,17 @@
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
 	        
 			document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
-		        else
+		        } else {
 		            return true;
-				};
+		        }
+			};
 			window.onload = function () {
-		            get_todaycop();
-		            get_bestCommunity();
-		            get_myCommunity();
-		            makePageSelPage();
+		    	get_todaycop();
+		        get_bestCommunity();
+		        get_myCommunity();
+		        makePageSelPage();   
 		    }
 	        function change_tab(val) {
 	            if (val == "best") {
@@ -136,10 +155,10 @@
 
                     var img = document.createElement("IMG");
                     
-                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
+                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_") > -1) {
                         img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     } else {
-                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     }
                     
                     img.style.width = "56px";
@@ -194,10 +213,10 @@
 
                     var img = document.createElement("IMG");
                     
-                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
+                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_") > -1) {
                         img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     } else {
-                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     }
                     
                     img.style.width = "56px";
@@ -337,19 +356,26 @@
                     }
 
                     var tr = document.createElement("TR");
+                    
+                    if (j != 4) {
+                    	tr.style.borderBottom = "1px solid #efefef";
+                    }
+                    
                     if (j % 2 == 0) {
-                    	tr.style.backgroundColor = "rgb(250, 250, 250)"; 
+                    	//tr.style.backgroundColor = "rgb(250, 250, 250)"; 
                     }
                     var td = document.createElement("TD");
                     var td2 = document.createElement("TD");
                     var td3 = document.createElement("TD");
                     var td4 = document.createElement("TD");
+                    var td5 = document.createElement("TD");
                     
                     td.className = "text";
                     var boardid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDID");
                     var itemid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMID");
                     var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                     var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
+                    var writeDate = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE");
                     td.style.cursor = "pointer";
                     td.setAttribute("boardid", boardid);
                     td.setAttribute("itemid", itemid);
@@ -357,14 +383,27 @@
                     td.setAttribute("code", copno);
                     td.onclick = function () { ItemRead_onclick(this); };
                     
+                    /* 2018-05-17 홍승비 - 새 게시물의 제목 앞에 new 표시 추가 */
+                    if (pastDate <= writeDate ) {
+                    	td.innerHTML = "<img src='/images/i_new.gif'>&nbsp;";
+                    }
+                    
                     if (primary == "1") {
-                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        td.innerHTML += "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
+                        if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
+                        	td.innerHTML += " <SPAN style='color:#c64200'> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN>";
+                        }
                         td2.className = "team";
                         td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME");
                         td3.className = "name";
                         td3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERNAME");
                     } else {
-                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        td.innerHTML += "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
+                        if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
+							td.innerHTML += " <SPAN style='color:#c64200'> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN>";
+			          	}                   
                         td2.className = "team";
                         td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME2");
                         td3.className = "name";
@@ -372,12 +411,17 @@
                     }
                     
                     td4.className = "day";
-                    td4.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE").substring(0, 10);
+                    td4.innerHTML = writeDate.substring(0, 10);
+                    
+                    /* 2018-05-18 홍승비 - 커뮤니티 메인 페이지에서 게시물 조회수 표시 */
+                    td5.className = "read";
+                    td5.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "READCOUNT");
 
                     tr.appendChild(td);
                     tr.appendChild(td2);
                     tr.appendChild(td3);
                     tr.appendChild(td4);
+                    tr.appendChild(td5);
                     table.appendChild(tr);
                     
                     j++;
@@ -571,7 +615,8 @@
 					}
 				});
 	        }
-	        
+
+            /* 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 */
 	        function event_get_categoryCommunity(list) {
                 document.getElementById("categorytab").innerHTML = "";
 
@@ -585,7 +630,11 @@
                     a.style.cursor = "pointer";
                     a.setAttribute("type", categoryVO.cate);
                     a.setAttribute("cnt", categoryVO.cnt);
-                    a.onclick = function () { select_category(this); };
+                    a.onclick = function () { 
+                    	$(".category_select").removeClass("category_select");
+                    	$(this).addClass("category_select"); 
+                    	select_category(this); 
+                    };
                     
                     if (index == 0) {
                         a.onclick();
@@ -755,16 +804,20 @@
                     var dt = document.createElement("DT");
                     var img = document.createElement("IMG");
                     
-                	if (clubVO.c_Logo_Thumbnail.indexOf("default_logo_type") > -1) {
+                	if (clubVO.c_Logo_Thumbnail.indexOf("default_logo_") > -1) {
                         img.src = "/images/ezCommunity/logo/" + clubVO.c_Logo_Thumbnail;
                     } else {
-                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + clubVO.c_Logo_Thumbnail;
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + clubVO.c_Logo_Thumbnail;
                     }
                     
                     img.style.width = "84px";
                     img.style.height = "60px";
                     var dd = document.createElement("DD");
                     var strong = document.createElement("STRONG");
+                    strong.setAttribute("code", clubVO.c_ClubNo.trim());
+                    strong.setAttribute("type", clubVO.c_ClubConfirmType);
+                    strong.style.cursor = "pointer";
+                    strong.onclick = function () { move_cop(this); };
                     
                     if (primary == "1") {
                         strong.innerHTML = clubVO.c_ClubName;
@@ -960,10 +1013,10 @@
                 img3.style.width = "198px";
                 img3.style.height = "140px";
                 
-                if (result["clubVO"]["c_Logo_Thumbnail"].indexOf("default_logo_type") > -1) {
+                if (result["clubVO"]["c_Logo_Thumbnail"].indexOf("default_logo_") > -1) {
                     img3.src = "/images/ezCommunity/logo/" + result["clubVO"]["c_Logo_Thumbnail"];
                 } else {
-                    img3.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + result["clubVO"]["c_Logo_Thumbnail"];
+                    img3.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + result["clubVO"]["c_Logo_Thumbnail"];
                 }
 
                 p2.appendChild(img3);
@@ -1114,9 +1167,9 @@
 	                }
 	            } else {
 	                if (CrossYN()) {
-	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 	                } else {
-	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 	                }
 	            }
 	        }
@@ -1245,11 +1298,11 @@
 		    }
 	
 		    function Tab1_MouserOut(obj) {
-		        if(Tab1_SelectID != obj.id)
+		        if(Tab1_SelectID != obj.id) 
 		            obj.className = "";
 		    }
 	
-		    function Tab1_MouseClick(obj) {		    	
+		    function Tab1_MouseClick(obj) {		
 		        obj.className = "tabon";
 		        if (obj.id != Tab1_SelectID) {
 		            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)

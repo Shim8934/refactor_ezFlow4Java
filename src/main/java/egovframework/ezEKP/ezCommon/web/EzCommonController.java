@@ -247,7 +247,7 @@ public class EzCommonController extends EgovFileMngUtil{
         			strHTML = strHTML.substring(strHTML.indexOf(">", strHTML.indexOf("<body")) + 1, strHTML.indexOf("</body>"));
         			strHTML = commonUtil.cleanValue(strHTML);
         		}
-        		String attribute = "orgdocnum";
+        		/*String attribute = "orgdocnum";
 		
 				StringBuffer sb = new StringBuffer();
 				
@@ -261,7 +261,9 @@ public class EzCommonController extends EgovFileMngUtil{
 				sb.append("<NODEVALUE>" + strHTML + "</NODEVALUE>");
 				sb.append("</NODE>");
 				
-				result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYATTS>" + commonUtil.cleanValue(sb.toString()) + "</BODYATTS>" + "<BODYDATA>" + strHTML + "</BODYDATA></ROOT>";
+				result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYATTS>" + commonUtil.cleanValue(sb.toString()) + "</BODYATTS>" + "<BODYDATA>" + strHTML + "</BODYDATA></ROOT>";*/
+				
+				result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYDATA>" + strHTML + "</BODYDATA></ROOT>";
 			}
 		}
 
@@ -442,6 +444,10 @@ public class EzCommonController extends EgovFileMngUtil{
 			fileName = request.getParameter("fileName");
 		} else {
 			fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
+		}
+		/* 2018-05-04 홍승비 - 포탈 홈 화면에서 커뮤니티 디폴트 썸네일 표출하기 */
+		if(fileName.equals("default_logo_empty.png")) {
+			filePath = "/images/ezCommunity/logo/default_logo_empty.png";			
 		}
 		
 		downFile(request, response, realPath + filePath, fileName);

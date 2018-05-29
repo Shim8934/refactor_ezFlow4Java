@@ -39,9 +39,6 @@
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 	
-	<!-- DispatcherServlet이 찾지 못한 URL 들을 톰캣의 default-servlet 설정으로 넘겨준다 -->
-    <mvc:default-servlet-handler/>    
-
     <!-- DispatcherServlet이 찾지 못한 URL 들을 톰캣의 default-servlet 설정으로 넘겨준다 -->
     <mvc:default-servlet-handler/>
     
@@ -70,7 +67,8 @@
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>      
             <mvc:exclude-mapping path="/ezTalkGate/main.do"/>      
             <mvc:exclude-mapping path="/ezConn/**"/>      
-            <mvc:exclude-mapping path="/ezUCMessenger/**"/>      
+            <mvc:exclude-mapping path="/ezUCMessenger/**"/>  
+            <mvc:exclude-mapping path="/admin/ezEmail/**"/>    
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
         
@@ -91,7 +89,11 @@
     <mvc:resources location="/files/" mapping="/files/**"/>
     <mvc:resources location="/docs/" mapping="/docs/**"/>
     
-    <mvc:annotation-driven/>
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="false" />
+	</bean>
+    
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" />
 
 	<websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">		
 	    <websocket:stomp-endpoint path="/hello" >  	    	 	
@@ -102,7 +104,7 @@
 				<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"></bean>
 			</websocket:handshake-interceptors>
 		</websocket:stomp-endpoint>
-	    <websocket:simple-broker prefix="/reply, /topic, /message"/>
+	    <websocket:simple-broker prefix="/reply, /topic, /message, /lad"/>
 	</websocket:message-broker>
 		
 </beans>

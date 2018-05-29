@@ -10,10 +10,11 @@
 		<script  type="text/javascript">
 			var type = "${type}";
 			var height = "${height}";
+			var editorLoadFlag = false;
 			
 		    CKEDITOR.on( 'instanceReady', function( ev ) {
+		    	editorLoadFlag = true;
 			    ExecuteCommand("maximize");
-			    
 			    parent.Editor_Complete();
 			    
 			    if (type == "MAILOUTOFOFFICE") {
@@ -35,7 +36,7 @@
 		    // Setdata 후 실행 함수.
 		    CKEDITOR.on( 'afterSetData', function( ev ) {
 		    });
-			
+		    
 			// 에디터 커맨드 실행
 			function ExecuteCommand(commandName) {
 				var oEditor = CKEDITOR.instances.editor1;
@@ -85,26 +86,26 @@
 			// 웹에디터에 내용 삽입(MHT 파일 url 받음)
 			function SetEditorContentURL(url) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
 	        }
 			
 			function GetEditorContentURL(url) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            return getNodeText(XmlBodyDATA);
 	        }
@@ -124,18 +125,18 @@
 	        
 	        function SetEditorContentPathSign(url, strMailSign) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            CKEDITOR.instances.editor1.editable().setHtml(getNodeText(XmlBodyDATA) + strMailSign);
-	            for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
+	            /* for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
 	                BodySetAttribute(getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODENAME")), getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODEVALUE")))
-	            }
+	            } */
 	        }
 
 	        function BodySetAttribute(name, Value) {
@@ -222,6 +223,9 @@
 	            }
 	        }
 	        
+	        function GetEditorBody() {
+	        	return CKEDITOR.instances.editor1.document.$.body;
+	        }
 		</script> 
 	</head>
 	<body style="margin: 0px; padding: 0px;">
@@ -231,6 +235,7 @@
 			var useHTMLMode = "${useHTMLMode}";
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var uploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
 			
 			if (type == "APPROVAL" || type == "APPROVALG") {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
@@ -243,6 +248,12 @@
 	            CKEDITOR.config.removePlugins = '_Insert_Image';
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
+	        } else if (type == "MAILLETTER") { // 편지지 
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	uploadUrl += "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        } else {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        }
@@ -251,7 +262,7 @@
 				CKEDITOR.config.removePlugins = "sourcearea";
 			}
 			
-			CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
+			CKEDITOR.config.imageUploadUrl = uploadUrl;
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
 		    CKEDITOR.config.font_defaultLabel = defaultFontFamily;
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";

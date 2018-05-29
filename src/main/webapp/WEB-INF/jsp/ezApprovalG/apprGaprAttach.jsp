@@ -472,6 +472,7 @@
 			            var pCurSelRow = CurSelList.GetSelectedRows();
 			            SetAttribute(pCurSelRow[0], "DATA9", retValue[1]);
 			            pCurSelRow[0].childNodes[1].innerHTML = retValue[2];
+			            pCurSelRow[0].childNodes[1].title = retValue[2];
 // 			            pCurSelRow[0].childNodes[3].innerHTML = retValue[1];
 			            SetAttribute(pCurSelRow[0], "DATA12", retValue[2]);
 			        }
@@ -734,7 +735,8 @@
 			        	if (totalSize + calTotalSize > totMaxSize) {
 				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
-				        	
+				        	// 용량 초과 파일 같은 파일 업로드 시 알러트 다시 뜨게 수정 2018-04-19 강민수92
+				        	document.form.file1.value = "";
 				        	return;
 				        } else {
 				        	totalSize += calTotalSize;
@@ -748,7 +750,7 @@
 		        	if (fnl > attachFileNameMaxLength) {
 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
-		        		
+		        		document.form.file1.value = "";
 		        		return;
 		        	} else {
 		        		fd.append("file1", file[i]);
@@ -780,6 +782,8 @@
 		    			isfileup = false;
 		    		}
 		    	});
+		       	// 같은 파일 업로드 할 수 있게 수정 2018-04-19 강민수92
+		        document.form.file1.value = "";
 		    }		    
 		</script>
 		<style>
@@ -806,7 +810,7 @@
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition btnpositionNew">       
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
-		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span></label></a>
+		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachSaveSure" onClick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		        <a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>

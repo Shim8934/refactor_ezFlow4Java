@@ -39,12 +39,12 @@
 	        function SetEditorContentURL(pURL) {
 	            try {
 	                var tempXML = createXmlDom();
-	                var XmlBodyATT = createXmlDom();
+// 	                var XmlBodyATT = createXmlDom();
 	                var XmlBodyDATA = createXmlDom();
 	                var tempStr = "";
 	                tempStr = ConvertMHTtoHTML(pURL);
 	                tempXML = loadXMLString(tempStr)
-	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	                var htmlData = getNodeText(XmlBodyDATA);
 	                xfe.setBodyValue(htmlData);
@@ -53,13 +53,13 @@
 	        
 	        function GetEditorContentURL(url) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            return getNodeText(XmlBodyDATA);
 	        }
@@ -67,12 +67,12 @@
 	        function SetEditorContentURL_Admin(pURL) {
 	            try {
 	                var tempXML = createXmlDom();
-	                var XmlBodyATT = createXmlDom();
+// 	                var XmlBodyATT = createXmlDom();
 	                var XmlBodyDATA = createXmlDom();
 	                var tempStr = "";
 	                tempStr = ConvertMHTtoHTML(pURL);
 	                tempXML = loadXMLString(tempStr)
-	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	
 	                var Doc_ContentHtml = document.createElement("DIV");
@@ -95,18 +95,18 @@
 	
 	        function SetEditorContentPathSign(url, strMailSign) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            CKEDITOR.instances.editor1.editable().setHtml(getNodeText(XmlBodyDATA) + strMailSign);
-	            for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
+	            /* for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
 	                BodySetAttribute(getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODENAME")), getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODEVALUE")))
-	            }
+	            } */
 	        }
 	        
 	        function BodySetAttribute(name, Value) {
@@ -228,7 +228,13 @@
 	            }
 	
 	            if (type == "DEL") {
-	                selCell.removeAttribute("id");
+	            	// 일지 양식작성에서 사용하는 부분
+	            	if ("${type}" == "JOURNAL") {
+	            		selCell.removeAttribute("id");
+	            		selCell.innerHTML = "";
+	            	} else {
+		                selCell.removeAttribute("id");
+	            	}
 	
 	                if (selCell.classList != null) {
 	                    if (selCell.classList.contains("FIELD"))
@@ -284,7 +290,13 @@
 	                }
 	            }
 	            else {
-	                selCell.setAttribute("id", id);
+	            	// 일지 양식작성에서 사용하는 부분
+	            	if ("${type}" == "JOURNAL") {
+	            		selCell.setAttribute("id", id);
+	            		selCell.innerHTML = "@" + id;
+	            	} else {
+		                selCell.setAttribute("id", id);
+	            	}
 	
 	                if (selCell.classList != null) {
 	                    if (!selCell.classList.contains("FIELD"))

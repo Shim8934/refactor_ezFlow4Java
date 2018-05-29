@@ -352,16 +352,16 @@
 		</div>
 	    <table>
 	    	<tr>
-	        	<td style="padding-right:5px">
-	        		<div class="box" style="margin-bottom:7px" >
-		                <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px" />
-	                	<a href="#" class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezSchedule.t17' /></span></a>
+	        	<td style="padding-right:4px">
+	        		<div class="box" style="margin-bottom:4px; background-color: #f8f8fa; border: 1px solid #eaeaea; height:26px;" >
+		                <input id="deptkeyword" onkeypress="deptsearch_press()" style="width:120px; height:22px; margin-left:4px; margin-top :2px;" />
+	                	<a href="#" class="imgbtn" style="margin-top :2px;"><span onclick="deptsearch_click()"><spring:message code='ezSchedule.t17' /></span></a>
 	            	</div>
-	            	<div style="border: 1px solid #ddd; padding-top:2px;height: 414px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>	            	
+	            	<div style="border: 1px solid #ddd; padding-top:2px;height: 444px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>	            	
 	        	</td>
-	        	<td valign="top" style="padding-left:5px">
-	        		<div class="box" style="margin-bottom:7px" >
-		            	<select id="search_type" style="margin-bottom:2px">
+	        	<td valign="top">
+	        		<div class="box" style="margin-bottom:4px; background-color: #f8f8fa; border: 1px solid #eaeaea; height:26px;" >
+		            	<select id="search_type" style="height:22px; margin-bottom:2px; margin-left:4px; margin-top:2px;">
 		                	<option selected value="displayname"><spring:message code='ezSchedule.t18' /></option> 
 		                  	<option value="description"><spring:message code='ezSchedule.t12' /></option> 
 		                  	<option value="title"><spring:message code='ezSchedule.t14' /></option> 
@@ -372,11 +372,11 @@
 		                  	<option value="mail"><spring:message code='ezSchedule.t22' /></option> 
 		                  	<option value="streetAddress"><spring:message code='ezSchedule.t23' /></option> 
 		                </select>
-		                <input id="keyword" onkeypress="search_press()" style="WIDTH:130px; margin-bottom:2px" />
-		                <a href="#" class="imgbtn"><span onclick="search_click()"><spring:message code='ezSchedule.t24' /></span></a>
+		                <input id="keyword" onkeypress="search_press()" style="width:130px; height:22px; margin-bottom:2px;" />
+		                <a href="#" class="imgbtn" style="margin-top :2px;"><span onclick="search_click()"><spring:message code='ezSchedule.t24' /></span></a>
 		            </div>
-	            	<div class="listview" style="border-top:0px">
-	                	<div id="OrganListView" style="border: 0px solid #ddd; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto;"></div>
+	            	<div class="listview" style="border-top:0px;">
+	                	<div id="OrganListView" style="border: 0px solid #ddd; Width: 100%; min-width:687px; Height: 446px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto;"></div>
 	            	</div>		            
 	        	</td>
 	      	</tr>

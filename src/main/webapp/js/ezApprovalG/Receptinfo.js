@@ -72,8 +72,8 @@ function ChangeReceptTab(obj) {
         internalTab = false;
         //2015-06-23 표준모듈:추가 - KSK
         SelDivName = "Outer";
-        document.getElementById("imgInsertAll").style.display = "none";
-        document.getElementById("imgDeleteAll").style.display = "none";
+        document.getElementById("imgInsertAll").style.display = "";
+        document.getElementById("imgDeleteAll").style.display = "";
         document.getElementById("AddRemoveBTN").style.display = "";
     }
 }
@@ -1434,7 +1434,7 @@ function btnSearchDept_onClick_Complete(reParam) {
 
             var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
             if (DuplicateFlag) {
-                Resultxml.async = false;
+              //  Resultxml.async = false;
                 if(approvalFlag == "G") {
                 	Resultxml = loadXMLFile(strLangEtcFile1);
                 } else {
@@ -2050,6 +2050,7 @@ function btnAddAddress() {
 }
 
 var TempAddressUserName;
+var TempstrAddress = "";
 var address_zip_select_dialogArguments = new Array();
 function btnAddAddress_Complete(AddressUserName) {
     if (AddressUserName == "cancel" || AddressUserName == "") {
@@ -2057,23 +2058,41 @@ function btnAddAddress_Complete(AddressUserName) {
         return;
     }
     
-    if (useAddressOpenAPI == "YES") {
-        address_zip_select_dialogArguments[0] = "";
-    	address_zip_select_dialogArguments[1] = jusoCallBack;
-    	
-    	var OpenWin = window.open("/ezAddress/addressZipCodePopUpOpen.do", "", GetOpenWindowfeature(570, 420));
-        try { OpenWin.focus(); } catch (e) { }
-        
-    } else {
-    	DivPopUpHidden();
-    	
-        address_zip_select_dialogArguments[0] = "";
-    	address_zip_select_dialogArguments[1] = btnAddAddress_Complete2;
-    	
-    	DivPopUpShow(655, 620, "/ezAddress/addressZipCodePopUp.do");
-    }
+    var useZipCodeSearchInApr = null;
     
-    TempAddressUserName = AddressUserName;
+    // 우편번호검색 사용여부 체크 후 분기
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getUseZipCodeSearchInApr.do",
+		success: function(text){
+			useZipCodeSearchInApr = text;
+		}        			
+	});
+    
+    if (useZipCodeSearchInApr == "YES") {
+    	if (useAddressOpenAPI == "YES") {
+    		address_zip_select_dialogArguments[0] = "";
+    		address_zip_select_dialogArguments[1] = jusoCallBack;
+    		
+    		var OpenWin = window.open("/ezAddress/addressZipCodePopUpOpen.do", "", GetOpenWindowfeature(570, 420));
+    		try { OpenWin.focus(); } catch (e) { }
+    		
+    	} else {
+    		DivPopUpHidden();
+    		
+    		address_zip_select_dialogArguments[0] = "";
+    		address_zip_select_dialogArguments[1] = btnAddAddress_Complete2;
+    		
+    		DivPopUpShow(655, 620, "/ezAddress/addressZipCodePopUp.do");
+    	}
+    	
+    	TempAddressUserName = AddressUserName;
+    } else {
+    	TempstrAddress = AddressUserName;
+    	btnAddAddress_Complete4(AddressUserName);
+    }
 }
 
 var aprdeptaddressname_cross_dialogArguments = new Array();
@@ -2103,8 +2122,6 @@ function btnAddAddress_Complete2(Para) {
         btnAddAddress_Complete3("");
     }
 }
-
-var TempstrAddress = "";
 
 //Local 주소검색 사용경우 상세주소 입력후 실행되는 함수
 function btnAddAddress_Complete3(AddressName) {
@@ -2247,15 +2264,26 @@ function AprLineAddDeptAddress(AddressName) {
 var SelDivName = "";
 function InsertRecAll() {
     try {
-
-        if (CrossYN()) {
-            var pAlertContent = T1361andT1362;
+    	var deptid = $("#"+nodeIdx).attr("cn");
+    	if (GetEntryInfo(deptid) == "N") {
+    		var pAlertContent = strLang1105;
+    		OpenAlertUI(pAlertContent);
+    		return;
+    	}
+    	if (isReceiverChk(deptid)) {
+            
+	        if (CrossYN()) {
+	            var pAlertContent = T1361andT1362;
+	            var Ans = OpenInformationUI(pAlertContent, InsertRecAll_Complete);
+	        } else {
+	            var pAlertContent = T1361andT1362;
+	            var Ans = OpenInformationUI(pAlertContent);
+	            InsertRecAll_Complete(Ans);
+	        }
+    	} else {
+    		var pAlertContent = strLang1101+strLang1102;
             var Ans = OpenInformationUI(pAlertContent, InsertRecAll_Complete);
-        } else {
-            var pAlertContent = T1361andT1362;
-            var Ans = OpenInformationUI(pAlertContent);
-            InsertRecAll_Complete(Ans);
-        }
+    	}
 
     } catch (e) {
         alert("Receptinfo.js.InsertRecAll()::" + e.description);
@@ -2506,7 +2534,7 @@ function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocu
     		type : "POST",
     		dataType : "text",
     		async : false,
-    		url : "/ezOrgan/getOrganSubTreeInfo.do",
+    		url : "/ezOrgan/insertAllOrganSubTreeInfo.do",
     		data : {
     			deptID 	: outerdeptoupath
     		},
@@ -2537,7 +2565,7 @@ function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocu
 function AddOuter(strOuterDeptId, strOuterDeptName) {
     try {
         var isCurretnCompany = "Y";
-        Resultxml.async = false;
+        //Resultxml.async = false;
 
         if(approvalFlag == "G") {
         	Resultxml = loadXMLFile(strLangEtcFile1);

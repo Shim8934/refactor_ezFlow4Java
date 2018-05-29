@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html style="height:100%">
+<html style="height:100%"> 
 	<head>
 		<c:choose>
 			<c:when test="${mode eq 'reuse'}">
@@ -70,7 +70,7 @@
 		        	var nameList = userName.split(", ");
 		        	var nameList2 = userName2.split(", ");
 
-		        	// 수정이나 임시저장일경우 작성자는 회람자로 무조건 추가되기때문에 -1
+		        	// 수정이나 임시저장일경우 작성자는 회람자로 무조건 추가되기때문에 -1처리함
 		        	if (mode != "write") {
 		        		listSize = listSize - 1;
 		        	}
@@ -168,12 +168,13 @@
 				var receiverList = document.getElementById("receiverlist").innerHTML;
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
-
-				if (receiverList.indexOf(userMyName) == -1) {
+				
+				// 18-05-24 김민성 - 작성자 이름이 A, 회람자 이름이 A1 과 같은 유사한 이름의 경우 작성된회람판에서 안보이는 문제
+				//if (receiverList.indexOf(userMyName) == -1) {
 					receiverList += ", " + userMyName;
 					receiverList2 += ", " + userMyName2;
 					receiverID += ", " + userMyID;
-				}
+				//}
 
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
@@ -259,9 +260,7 @@
 						receiverList = userMyName;
 						receiverList2 = userMyName2;
 						receiverID = userMyID;
-					}
-
-					if (receiverList.indexOf(userMyName) == -1) {
+					} else {
 						receiverList += ", " + userMyName;
 						receiverList2 += ", " + userMyName2;
 						receiverID += ", " + userMyID;
@@ -399,20 +398,20 @@
 	       					<td style="width:200px;">
 								<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option1" name="chkList" checked/><spring:message code="ezCircular.t119"/>
-		                				<input type="checkbox" id="option2" name="chkList"/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList" checked><label for="option1"><spring:message code='ezCircular.t119'/></label>
+		                				<input type="checkbox" id="option2" name="chkList"><label for="option2"><spring:message code="ezCircular.t120"/></label>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option1" name="chkList"/><spring:message code="ezCircular.t119"/>
-		                				<input type="checkbox" id="option2" name="chkList" checked/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList"/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+		                				<input type="checkbox" id="option2" name="chkList" checked/><label for="option2"><spring:message code="ezCircular.t120"/></label>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option1" name="chkList" checked/><spring:message code="ezCircular.t119"/>
-										<input type="checkbox" id="option2" name="chkList" checked/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList" checked/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+										<input type="checkbox" id="option2" name="chkList" checked/><label for="option2"><spring:message code="ezCircular.t120"/></label>
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option1" name="chkList"/><spring:message code="ezCircular.t119"/>
-										<input type="checkbox" id="option2" name="chkList"/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList"/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+										<input type="checkbox" id="option2" name="chkList"/><label for="option2"><spring:message code="ezCircular.t120"/></label>
 		                			</c:otherwise>
 		                		</c:choose>					
 	         				</td>

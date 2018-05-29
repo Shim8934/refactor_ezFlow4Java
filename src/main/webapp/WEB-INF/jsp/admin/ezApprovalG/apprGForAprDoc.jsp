@@ -646,9 +646,9 @@
 			        	if (GetAttribute(tr, "DATA5") == "Y") {
 			        		var heigth = window.screen.availHeight;
 			                var width = window.screen.availWidth;
-			                var left = (parseInt(width) - 525) / 2;
-			                var top = (parseInt(heigth) - 220) / 2;
-			                window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(GetAttribute(tr, "DATA1")) + "&docState=012", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                var left = (parseInt(width) - 1155) / 2;
+			                var top = (parseInt(heigth) - 460) / 2;
+			                window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(GetAttribute(tr, "DATA1")) + "&docState=012", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			            } else {
 			            	var heigth = window.screen.availHeight;
 			                var width = window.screen.availWidth;
@@ -669,7 +669,9 @@
 			                feature = feature + GetShowModalPosition(555, 240);
 			                var ret = window.showModalDialog(url, "", feature);
 			            } else {
-			                window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(GetAttribute(tr, "DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			            	left = (parseInt(width) - 1155) / 2;
+					        top = (parseInt(heigth) - 460) / 2;
+			                window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(GetAttribute(tr, "DATA1")) + "&docState=011", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			            }
 			        } else if (jobState == "ATTACH") {
 			    		var AttachfilenameA1 = tr.cells[1].innerHTML;
@@ -693,7 +695,7 @@
                                 if (GetAttribute(tr,"data4") == "file") {
                                     window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
                                 } else {
-                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl);
+                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
                                 }
                             }
                         }
@@ -902,8 +904,7 @@
     	<div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
         	<div id="lvtDoclist"></div>
     	</div>
-    	<div id="tblPageRayer"></div>
-    	<br />
+    	<div id="tblPageRayer"></div>    	
 
     	<%-- <div id="tabnav" style="width: 100%">
         	<ul>

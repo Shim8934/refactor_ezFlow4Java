@@ -21,6 +21,7 @@
 		    var CurPage = "${boardInfo.page}";
 		    var totalPage = "${boardInfo.totalPage}";
 		    var strListInfo = "";
+		    var strBoardListInfo = "";
 		    var Access_FG = "${boardInfo.access_FG}";
 			var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
 		    var ListView_FG = "${boardInfo.listView_FG}";
@@ -302,6 +303,11 @@
 		                PagingHTML += strtext;
 		            }
 		        }
+		        
+		        if (MaxNum == 0) {
+		        	PagingHTML += "<span class='on'>" + 1 + "</span>";
+		        }
+		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
@@ -412,7 +418,7 @@
 		        var pLeft = (pwidth - 765) / 2;
 		
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=764,top=" + pTop + ",left=" + pLeft, "");
 		            }           
 		            else {
 	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
@@ -479,34 +485,48 @@
 		    }
 		    var SetReadCheckCnt = 0;
 		    var setReadFlag = false;
-		    function SetRead_onclick() {
+		    //FFFF...의 새게시물 boardID가 아닌, 게시물의 원래 boardID로 한 번 더 읽음표시를 실행한다.
+		    function SetReadNew_onclick() {
 		        if (Read_FG != "true") {
 		            alert(strLang175);
 					return;
 				}
-		        if (strListInfo == "") {
+		        if (strListInfo == "" || strBoardListInfo == "") {
 		            alert(strLang177);
 					return;
 				}
 		        var ret = confirm(strLang178);
 				if (ret) {
+					 //게시물의  Item ID
 				    var arrList = new Array();
 				    var strItemList = "";
 				    var i = 0;
 				    arrList = strListInfo.split(";");
 				    for (i = 0; i < arrList.length - 1; i++) {
-				        SetReadCheckCnt++;
+				    	SetReadCheckCnt++;
 				        strItemList += arrList[i].split(",")[0] + ";";
 				    }
-				    arrList = null;
+				    
+				    //게시물의 기존 Board ID
+				    var arrList2 = new Array();
+				    var strBoardList = "";
+				    var j = 0;
+				    arrList2 = strBoardListInfo.split(";");
+				    for (j = 0; j < arrList2.length - 1; j++) {
+				        strBoardList += arrList2[j].split(",")[0] + ";";
+				    }
+				    
+				    arrList = null;   
+				    arrList2 = null;
 				    var xmlhttp = createXMLHttpRequest();
-				    xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
+				    xmlhttp.open("POST", "/ezBoard/setReadNew.do?boardID=" + pBoardID + "&pBoardIDList=" + strBoardList + "&itemIDList=" + strItemList, false);		    
 				    xmlhttp.send();
 				    xmlhttp = null;
 				    setReadFlag = true;
 				    refresh_onclick();
 				}
 			}
+		    
 			function MemberInfo_onclick(pUserID) {
 				if (gubun == "2") return;
 				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -519,32 +539,38 @@
 			function window_reload() {
 				window.location.href = window.location.href;
 			}
-		
-			function checkBox_checkAll(obj) {
-		
-			    var SelList = new ListView();
-			    SelList.LoadFromID("BoardList");
-			    var oArrRows = SelList.GetSelectedRows();
-			    if (obj.checked) {
-			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
-			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-			            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-			        }
-			    }
-			    else {
-			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
-			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-			            strListInfo = "";
-			        }
-			    }
-			}
+			//체크박스 모두선택 함수. js파일에서 이 함수명이 HeaderAllCheckBox와 연결됨
+ 			function event_HeaderCheckBoxClick(obj) {
+ 			    var SelList = new ListView();
+ 			    SelList.LoadFromID("BoardListDiv");
+
+ 			    if (obj.checked) {
+ 			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+ 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+ 			            SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
+ 			            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+ 			            strBoardListInfo += SelList.GetDataRows()[i].getAttribute("DATA1") + "," +  SelList.GetDataRows()[i].getAttribute("DATA2") + ";";
+ 			        }
+ 			    }
+ 			    else {
+ 			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+ 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+ 			            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+ 			            strListInfo = "";
+ 			            strBoardListInfo = "";
+ 			        }
+ 			    }
+ 			}
 		
 			function chk_onselect(obj)
 			{
 			    if (obj.checked) {
 			        strListInfo += obj.id;
+			      //같은 게시판에 속한 게시물의 정보가 지워지지 않도록, BoardID와 ItemID의 쌍으로 구분한다.
+			        strBoardListInfo += obj.parentNode.parentNode.getAttribute("DATA1") + ","+obj.parentNode.parentNode.getAttribute("DATA2")+";";			        
 			    } else {
 			        strListInfo = ReplaceText(strListInfo, obj.id, "");
+			        strBoardListInfo = ReplaceText(strBoardListInfo, obj.parentNode.parentNode.getAttribute("DATA1") + ","+obj.parentNode.parentNode.getAttribute("DATA2")+";", "");        
 			    }
 			    listEventCheckbox = true;
 			}
@@ -574,7 +600,7 @@
 			        var TD = TRs[i].childNodes[writeindex];
 			        TD.innerHTML = "<div><img style ='vertical-align:middle' src='/images/Presence/unknown.gif' id ='" + GetGUID() + ",type=smtp' onload='PresenceControl(\"" + pSIPUriList[i] + "\", this);'/><span style='vertical-align:middle;'> " + TD.innerHTML + "</span></div>";
 			    }
-			    pSIPUriList = null;;
+			    pSIPUriList = null;
 			}
 		</script>
 		<style type="text/css">
@@ -631,12 +657,12 @@
 		</c:if>
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<script type="text/javascript">
-			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
+			    parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 			</script>
 			<br />
 			<div id="mainmenu">
 			  <ul>
-			    <li><span onclick="SetRead_onclick()"><spring:message code="ezBoard.t204"/></span></li>
+			    <li><span onclick="SetReadNew_onclick()"><spring:message code="ezBoard.t204"/></span></li>
 				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 			    <li><span onClick="refresh_onclick()"><spring:message code="ezBoard.t205"/></span></li>
 			    <li><span onClick="ReservationItem_onclick()"><spring:message code="ezBoard.t276"/></span></li>  
@@ -654,7 +680,7 @@
 		</c:if>	
 		<c:if test="${boardInfo.buttonHidden != N}">
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
 		</c:if>
 		    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">

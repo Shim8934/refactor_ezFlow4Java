@@ -1,4 +1,6 @@
-﻿function MailToMe_Onclick() {
+﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+var emailFlag=false;
+function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
     var msgDiv = document.getElementById('MsgToGot');
 
@@ -822,7 +824,9 @@ function checkMailStatusAndSave(savemode) {
         setTimeout(function() {
             checkMailStatusAndSave(savemode);
         }, 1000);
-    }               
+    }     
+    
+    dadiframe.updateItemUid();
 }
 
 function Save_onClick(savemode) {
@@ -854,14 +858,14 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "MAILCMD", g_cmd);
             createNodeAndInsertText(xmlDoc, rootNode, "ORGMAILCMD", gg_cmd);
             createNodeAndInsertText(xmlDoc, rootNode, "AUTHOR", g_szAuthor);
-            createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject);
+            createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject.replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
             createNodeAndInsertText(xmlDoc, rootNode, "CC", GetAddrFormatForSend(MsgCCGot));
             createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
             if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
                 createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
             else
-                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n"));
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n").replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
@@ -1255,12 +1259,35 @@ function GetMailAddresses(name) {
         createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + EmaaddrFormatExt(name));
     }
     else {
+    	/* 2018-04-26 이소담 - 메일쓰기에서 받는사람에 메일 주소를 직접 입력하였을때 도메인이 내부도메인일 경우 계정이 존재하는지 확인 후 존재하지않으면 입력되지않도록 개선*/
+        $.ajax({
+        	type	: "GET",
+        	data	: {name: name},
+        	contentType : "application/json",
+        	url		: "/ezEmail/mailCheck.do",
+        	async	: false,
+        	success	: function(result) {
+        		var info = result;
+        		if (info != name) {
+        			emailFlag=true; 
+        			if (document.getElementById("MsgTo").value != ""){
+        				document.getElementById("MsgTo").value = "";
+        			} else if (document.getElementById("MsgCC").value != "") {
+        				document.getElementById("MsgCC").value = "";
+        			} else {
+        				document.getElementById("MsgBCC").value = "";
+        			}
+    			}
+    		},
+        	error	: function(error) {
+        		console.log(error);
+        	}
+        })
         createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "mail::" + EmaaddrFormatExt(name));
     }
-
     createNodeAndInsertText(xmlDOM, objNode, "DLGSEARCH", "displayname::" + name);
     createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName");
-    createNodeAndInsertText(xmlDOM, objNode, "ORGPROP", "company;description;title;mail;extensionAttribute3");
+    createNodeAndInsertText(xmlDOM, objNode, "ORGPROP", "company;description;title;mail;extensionAttribute3;displayName2");
     createNodeAndInsertText(xmlDOM, objNode, "DLPROP", "mail");
     createNodeAndInsertText(xmlDOM, objNode, "ORGTYPE", "all");
     createNodeAndInsertText(xmlDOM, objNode, "DLTYPE", "group");
@@ -1268,6 +1295,7 @@ function GetMailAddresses(name) {
     createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
     xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
     xmlHTTP.send(xmlDOM);
+
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
     var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
@@ -1450,6 +1478,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
 	    mailName = TrimText(mailArr[i]);
+	    
 	    if (mailName == "") {
 	        if (iType == 0)
 	            CompletToCnt++;
@@ -1492,7 +1521,13 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        if (result != null) {
 	            newElem = PrepareMailTag(iType, result["type"], result["name"], result["email"], result["href"]);
 	        } else {
-	            newElem = PrepareMailTag(iType, "email", mailName, mailName, "");
+	        	if (emailFlag){
+	        		alert(strLang198);
+	        		emailFlag = false;
+	        		return;
+	        	} else {
+	        		newElem = PrepareMailTag(iType, "email", mailName, mailName, "");
+	        	}
 	        }
 	
 	        var IsInsert = CheckMailReceiver(newElem);
@@ -1534,9 +1569,9 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	            	szFromName += ";";
 	            }
 	        }
-	        
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
+	        return false;
 	    } else {
 	        rgParams = new Array();
 	        rgParams["recipientTDData"] = null;
@@ -1568,6 +1603,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        }    
 	        
 	        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+	        return false;
 	    }
     }
     
@@ -1670,12 +1706,12 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
             if (DocHref.toLowerCase().indexOf(".mht") > -1) {
                 var fullPath = encodeURIComponent(DocHref);
                 var tempXML = createXmlDom();
-                var XmlBodyATT = createXmlDom();
+//                var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
                 tempStr = ConvertMHTtoHTML(fullPath);
                 tempXML = loadXMLString(tempStr);
-                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                 var htmlData = getNodeText(XmlBodyDATA);
                 document.getElementById('docContent').innerHTML = htmlData;
@@ -1816,13 +1852,13 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
         var fullPath = Rurl;
         var tempXML = createXmlDom();
-        var XmlBodyATT = createXmlDom();
+//        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
         tempStr = ConvertMHTtoHTML(fullPath);
 
         tempXML = loadXMLString(tempStr);
-        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
         XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
         var htmlData = getNodeText(XmlBodyDATA);
 
@@ -1920,12 +1956,12 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
         var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
         var fullPath = Rurl;
         var tempXML = createXmlDom();
-        var XmlBodyATT = createXmlDom();
+//        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
         tempStr = ConvertMHTtoHTML(fullPath);
         tempXML = loadXMLString(tempStr);
-        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
         XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
         var htmlData = getNodeText(XmlBodyDATA);
         
@@ -2204,13 +2240,17 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                 if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
                     var strTarget = "target='_blank'";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
+                    FileName = replaceAll(FileName, "&", "&amp;");
                     var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
+                    var fileLocation = getNodeText(GetChildNodes(nodes[i])[4]);
+                    var fileDate = fileLocation.split("|!|")[0];
                     var strFileExt = FileName.substr(FileName.lastIndexOf('.'));
                     strFileExt = strFileExt.toLowerCase();
+                    
                     if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
+                    		strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+                    		strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+                    		strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
                     }
                     
@@ -2227,7 +2267,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                         fileSize = fileSize + "B";
                     }
                     
-                    var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + folderDate + "&tid=" + tid;
+                    var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + fileDate + "&tid=" + tid;
                     TempText += "<tr>" +
                                 "<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
                                 "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;' border='0'/></a>" +
@@ -2324,7 +2364,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         BodyHTMLContent = ReplaceText(BodyHTMLContent, "\\]\\]>", "");
     } catch (e) { }
     
-    bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent);
+    bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent.replace(regex, " "));
 
     // 사용되지 않는 부분으로 판단되어 제거함.
     /*
@@ -2334,7 +2374,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "<P>", ";crlf;");
     } catch (e) { }
 
-    bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML);
+    bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML.replace(regex, " "));
     */
 }
 
@@ -3083,12 +3123,12 @@ function getEmailAddressList(ReceiverList) {
         receiverPart = receiver.split(" <");
         var pName = receiverPart[0];
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
-		
+        
         if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail)
-                continue;
+            if (pEmail == g_myemail) 
+            	continue;
         }
-
+        
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
         
         if (receiverPart[1].indexOf('@') > 0) {
@@ -3533,5 +3573,9 @@ function getEmailAddressList2(ReceiverList, pollSendType) {
     }
 
     return retVal;
+}
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }
 //end

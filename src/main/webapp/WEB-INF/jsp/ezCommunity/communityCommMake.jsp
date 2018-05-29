@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>comm_make</title>
+		<title><spring:message code='ezCommunity.t1011' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
@@ -13,8 +13,9 @@
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-
-		<script type="text/javascript">			
+		<script type="text/javascript">
+		
+			/* 2018-05-15 홍승비 - 커뮤니티 만들기 팝업창으로 수정 */
 			function check() {
 		        var newID = "{" + GetGUID().toUpperCase() + "}";
 		        var new_subID = "{" + GetGUID().toUpperCase() + "}";
@@ -24,33 +25,25 @@
 
 		        if (document.make.clubName.value == "" || trim_Cross(document.make.clubName.value) == "") {
 		            alert("<spring:message code='ezCommunity.t2' />");
-
 	                document.make.clubName.focus();
-
 	                return;
 	            }
 
 	            if (document.make.clubName.value.length > 50) {
 	                alert("<spring:message code='ezCommunity.t3' />");
-
 	                document.make.clubName.focus();
-
 	                return;
 	            }
 
 	            if (document.make.clubName2.value.length > 50) {
 	                alert("<spring:message code='ezCommunity.t3' />");
-
 	                document.make.clubName2.focus();
-
 	                return;
 	            }
 
 	            if (document.make.intro.value.length > 2000) {
 	                alert("<spring:message code='ezCommunity.t1009' />");
-
 	                document.make.intro.focus();
-
 	                return;
 	            }
 
@@ -61,15 +54,12 @@
 	            if (selA == 0 && selB == 0 && selC == 0) {
 	                alert("<spring:message code='ezCommunity.t4' />");
 	                make.cCateA.focus();
-
 	                return;
 	            }
 
 	            if (document.make.intro.value == "") {
 	                alert("<spring:message code='ezCommunity.t1010' />");
-
 	                document.make.intro.focus();
-
 	                return;
 	            }
 
@@ -87,17 +77,20 @@
 	        }
 			
 			function back() {
-	            if ("${flag}" == '1'){
-	                window.open("/ezCommunity/mainPage.do", "right");
-	            }else{
-	                history.back(-1);
-	            }
-	        }
+				/* 18-04-30 김민성 - 커뮤니티 만들기 취소시 메인화면으로 이동 하도록 수정 */
+				window.open("/ezCommunity/mainPage.do", "right");
+				
+				/* if("${flag}" == '1'){
+		        	   window.open("/ezCommunity/mainPage.do", "right");
+		        }else{ 
+		               history.back(-1);
+		       }   */
+			}
 			
 	        function btn_AttachSelect_onclick(num) {
 	            if (num == "1"){
 	                document.getElementById("file1").click();
-	            }else{
+	            }else if (num == "2"){
 	                document.getElementById("file2").click();
 	            }
 	        }
@@ -109,7 +102,7 @@
 		            var printspanid = "";
 		            if (fileid == "file1"){
 		                printspanid = "filename";
-		            }else{
+		            }else if (fileid == "file2"){
 		                printspanid = "filename2";
 		            }
 		            if (fileval != "") {
@@ -164,8 +157,8 @@
 		                mode = "logo";
 		                document.getElementById("filename").innerText = fileName;
 		            }
-		            else {
-		                mode = "banner";
+		            else if(num == 2){
+		                mode = "thumb";
 		                document.getElementById("filename2").innerText = fileName;
 		            }
 		            
@@ -184,19 +177,23 @@
 		            });
 		        }
 			</c:if>
-	        
-	        
+	                
 		</script>
 	</head>
-	<body class="mainbody">
-		<h1><spring:message code='ezCommunity.t1011' /></h1>
-	    <div id="mainmenu" style="margin-bottom:10px">
+	<body class="popup">
+	    <div id="menu" style="margin-bottom:10px">
 	        <ul>
-	            <li><span id="btnDraft" onclick="javascript:check();"><spring:message code='ezCommunity.t1011' /></span></li>
-	            <li><span id="btnDraft" onclick="javascript:back();"><spring:message code='ezCommunity.t109' /></span></li>
+	            <li><span id="btnDraft" onclick="check()"><spring:message code='ezCommunity.t1011' /></span></li>
 	        </ul>
 	    </div>
-		<form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data">
+	    <div id="close">
+	    	<ul>
+	    		<li><span onclick="window.close()"><spring:message code='ezCommunity.t21' /></span></li>
+	    	</ul>
+	    </div>
+	    <%-- 2018-05-16 홍승비 - 경고메세지 처리를 jsp 내부에서 보이도록 하기 위해 수정 --%>
+	    <iframe name="ifrm" src="about:blank" style="display:none;"></iframe>
+		<form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data" target="ifrm">
 			<input type="hidden" name="makeID" value="<c:out value='${userInfo.id }' />">
             <input type="hidden" name="hiddenClubName">
             <input type="hidden" name="hiddenClubName2">
@@ -204,7 +201,7 @@
             <input type="hidden" name="sNewID">
             <input type="hidden" name="sNewSubID">
             
-	    	<table class="content" style="width:100%">
+	    	<table class="content" style="width:100%; margin-top:16px;">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1012' /></th>
 	                <td colspan="2">
@@ -270,47 +267,51 @@
 	                	<div><spring:message code='ezCommunity.t459' /></div>
 	                    <div style="margin-top:3px"><spring:message code='ezCommunity.t1022' /></div>
 	                </td>
-	            </tr>
+	            </tr>	            
+	            <%--상단 이미지(기존:로고 이미지) 894 * 100 --%>	            
 	            <tr>
-	                <th><spring:message code='ezCommunity.t1023' /></th>
+	                <th><spring:message code='ezCommunity.jjh03' /></th>
 	                <td style="border-right:0px;padding-left:5px">
 	                	<c:if test="${isCrossBrowser == true}">
 		                    <span style="vertical-align:middle">
 		                        <a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick(1)"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id="filename" style="vertical-align:middle;padding:3px"></span>
+		                        <span id="filename" style="vertical-align:middle; padding:3px;display: inline-block;"></span>
 		                        <input type="file" id="file1" name="logo" onchange="btn_AttachAdd_onclick(this)" style="display:none">
 		                    </span>
 		                </c:if>
 		                
 		                <c:if test="${isCrossBrowser == false}">
 		                	<div style="display:inline-block;font-size:15px;vertical-align:middle">
-		                        <a class="imgbtn" style="padding:3px" onclick="return btn_AttachAdd_onclick(1)"><span id="btn_AttachAdd_logo"><spring:message code='ezCommunity.t1177' /></span></a>
+		                        <a class="imgbtn" style="padding:3px;" onclick="return btn_AttachAdd_onclick(1)"><span id="btn_AttachAdd_logo"><spring:message code='ezCommunity.t1177' /></span></a>
 		                        <span id ="filename"></span>
 		                    </div>
 		                </c:if>
 	                </td>
-	                <td style="padding: 5px;white-space:nowrap;border-left:0px"><spring:message code='ezCommunity.t1024' /></td>
+	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
+	                	★ <spring:message code='ezCommunity.jjh03' /> : 894px * 100px
+	                </td>
 	            </tr>
-<!-- 				2016-05-02 이효진 사용하지 않는 부분 -->
-	            <tr style="display:none;">
-	                <th><spring:message code='ezCommunity.t1025' /></th>
-	                <td>
+	            <tr>
+	                <th><spring:message code='ezCommunity.jjh02' /></th>
+	                <td style="border-right:0px;padding-left:5px">
 	                	<c:if test="${isCrossBrowser == true}">
 		                    <span style="vertical-align:middle">
 		                        <a class="imgbtn"><span id="btn_AttachAdd_banner" onclick="return btn_AttachSelect_onclick(2)"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id="filename2" style="vertical-align:middle"></span>
-		                        <input type="file" id="file2" name="banner" onchange="btn_AttachAdd_onclick(this)" style="display:none;">
+		                        <span id="filename2" style="vertical-align:middle; padding:3px; display:inline-block;"></span>
+		                        <input type="file" id="file2" name="thumb" onchange="btn_AttachAdd_onclick(this)" style="display:none;">
 		                    </span>
 		                </c:if>
 		                
 		                <c:if test="${isCrossBrowser == false}">
 		                	<div style="display:inline-block;font-size:15px;vertical-align:middle">
-		                        <a class="imgbtn" onclick="return btn_AttachAdd_onclick(2)"><span id="btn_AttachAdd_banner"><spring:message code='ezCommunity.t1177' /></span></a>
+		                        <a class="imgbtn" style="padding:3px;" onclick="return btn_AttachAdd_onclick(2)"><span id="btn_AttachAdd_banner"><spring:message code='ezCommunity.t1177' /></span></a>
 		                        <span id ="filename2"></span>
 		                    </div>
 		                </c:if>
 	                </td>
-	                <td style="padding: 5px;white-space:nowrap"><spring:message code='ezCommunity.t1026' /></td>
+	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
+	                	★ <spring:message code='ezCommunity.jjh02' /> : 198px * 140px
+	                </td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /></th>
@@ -321,7 +322,8 @@
 			</table> 
 	    </form>	    
 	    <script type="text/javascript">
-            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+            selToggleList(document.getElementById("menu"), "ul", "li", "0");
+            selToggleList(document.getElementById("close"), "ul", "li", "0");
         </script>
 	</body>
 </html>

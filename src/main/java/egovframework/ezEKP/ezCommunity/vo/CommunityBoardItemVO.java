@@ -73,6 +73,9 @@ public class CommunityBoardItemVO {
 	String gubun;
 	/** 읽음표시*/
 	int readFlag;
+	/** 댓글갯수  //2018-05-04 홍승비 댓글갯수 표출 */
+	int oneLineCnt;
+	
 	public String getItemID() {
 		return itemID;
 	}
@@ -288,6 +291,12 @@ public class CommunityBoardItemVO {
 	}
 	public void setReadFlag(int readFlag) {
 		this.readFlag = readFlag;
+	}
+	public int getOneLineCnt() {
+		return oneLineCnt;
+	}
+	public void setOneLineCnt(int oneLineCnt) {
+		this.oneLineCnt = oneLineCnt;
 	}
 	
 }

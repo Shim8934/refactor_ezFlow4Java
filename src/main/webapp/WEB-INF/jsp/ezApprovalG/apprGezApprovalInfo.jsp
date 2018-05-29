@@ -164,7 +164,7 @@
 	        var pItemName2 = "";
 	        var APRLINE = "";
 	        var vSecurity, vAprUrgency, vSummery, vAprSecurity;
-	        var vdocdisplay, vPublicFlag, vtreatment, vPageNum;
+	        var vdocdisplay, vPublicFlag, vPublicFlag2 , vtreatment, vPageNum;
 	        var chkReporter = false;
 	        var chkSuggester = false;
 	        var SummaryFlag;
@@ -383,6 +383,7 @@
 // 	            vAprSecurity = trim(RetValue[38]);
 	            vAprSecurity = RetValue[38];
 	            SummaryFlag = RetValue[39];
+	            vPublicFlag2 = RetValue[45];
 	
 	            if (pSuSinFlag == "N") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
@@ -918,6 +919,7 @@
 			                ret[11] = getPublicFlag();
 			                ret[12] = txtLimitRange.value;
 			                ret[13] = txtPageNum.value;
+			                ret[21] = getPublicFlag2();
 		                } else {
 		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
 		                	ret[12] = "";
@@ -1220,6 +1222,10 @@
 		            setPublicFlag(vPublicFlag);
 		        else
 		            rdoSecType_onclick("1");
+		        
+		        if (vPublicFlag2.trim() != "") 
+		            setPublicFlag2(vPublicFlag2);
+		        
 		        if (vAprSecurity.trim() != "") {
 		            document.getElementById("AprSecurity").checked = true;
 		            
@@ -1904,7 +1910,7 @@
 		                                        <span id="trCreateCab">
 		                                        	<c:if test="${initFlag == '1'}">
 			                                            <a class="imgbtn" style="margin-top: 3px"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-			                                            <a class="imgbtn" style="margin-top: 3px"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
+			                                            <a class="imgbtn" style="margin-top: 3px; display:none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
@@ -2053,7 +2059,7 @@
 		                </td>
 		            </tr>
 		            <tr>
-		                <th><spring:message code='ezApprovalG.t109'/></th>
+		                <th><spring:message code='ezApprovalG.kes06'/></th>
 		                <td>
 		                    <div style="padding-left: 3px; padding-top: 5px; padding-bottom: 5px;">
 		                        <spring:message code='ezApprovalG.t10029'/><br />
@@ -2105,6 +2111,15 @@
 		                    <input readonly="readonly" id='idDatepicker' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 		                </td>
 		            </tr>
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t109'/></th>
+		                <td>
+		                    <div style="padding-left: 3px; padding-bottom: 5px;">
+		                        <input type="radio" name="rdoSecType2" value="Y" checked onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t47'/></span>&nbsp;
+		                        <input type="radio" name="rdoSecType2" value="N" onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
+		                    </div>
+		                </td>
+		           </tr>
 		        </table>
 		        <h2 style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
 		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 182px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>

@@ -19,33 +19,40 @@
 .emoticon:hover {
     background-size: 100px;
 }
+.emoticonPanel{display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #ddd; position: absolute;}
 
+/* portal area */
 .poll_list1 {margin:0px; padding:0px; font-size:12px;}
 .poll_list1 .graphbar1{margin:3px 0px 10px 0px; padding:0px; border:1px solid #eee; height:7px; background-color:#f8f8fa;}
 .poll_list1 .graphbar1 .gx_bar11 {background:rgb(245, 117, 120); height:7px; margin:0px; padding:0px; border:1px solid rgb(225, 97, 100); margin-top:-1px}
-
+.Pt_QstOptTitleDiv{float:left; display: block; width: 120px; overflow-x: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.Pt_QstInfoDiv{float:right; display: block;}
+.Pt_QstInfoDivOff{float:right; display: none;}
+.Pt_QstInfoVotes{color:#333; letter-spacing: -1px;}
+.Pt_QstInfoPercent{color:rgb(245, 117, 120); letter-spacing: -1px; padding-left: 2px;}
 /* 20171115 */
 .voteInfo{height:68px;}
 .voteTextTest{line-height:20px; margin:1px 8px;}
 
 
 .vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343;}
-.vote_listTd .graph01{background:#efa1a1; border:none;}
+.vote_listTd .graph01{background:#efa1a1; border:none; border-radius:4px;}
+
+._imageTag{height: 20px; width: 20px; display: block; vertical-align: middle; margin: 0 auto; cursor: pointer}
 
 
 
 
 
 
-
-
-.vote_attachedFile .txt{height:50px; line-height:50px; padding:0px 10px 0px 46px; background:#f4f9ff; border-bottom:1px solid #e1ebf7;}
-.vote_attachedFile .attach_img{position:absolute; top:13px; left:15px; hegith:20px; width:20px;}
-.vote_attachedFile .all_save{position:absolute; top:13px; left:230px; float: left;}
+.vote_attachedFile .txt{height:40px; line-height:40px; padding:0px 10px 0px 46px; background:#f4f9ff; border-bottom:1px solid #e1ebf7;}
+.vote_attachedFile .attach_img{position:absolute; top:9px; left:15px; hegith:20px; width:20px;}
+.vote_attachedFile .all_save{position:absolute; top:9px; left:230px; float: left;}
 
 .voteComment #sendBttn:active{background:#00346d;}
-.voteCancelBttn{cursor: pointer; width:56px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#004896; border:none; border-radius:3px;}
-.voteSaveBttn{cursor: pointer; width:46px; height:24px; color:#FFF; background:#004896; border:none; border-radius:3px;}
+.voteComment .sendBttn{display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;}
+.voteCancelBttn{cursor: pointer; width:46px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
+.voteSaveBttn{cursor: pointer; width:46px; height:24px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
 
 
 /* 20171214 */
@@ -62,8 +69,8 @@
 .voteTextTest span.questionFontS{color:#aaa9a9; padding:6px 0px 0px 0px;}
 
 #titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px;}
-#titleAndContent .baonkTest{ font-size:16px; color:#004896; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:bold;}
-.questionTitle{display:inline-block;float:left; width:100%; height:39px; line-height:39px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:18px;}
+#titleAndContent .baonkTest{ font-size:16px; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:bold; display:inline-block; max-width:78%; margin: 9px 0px 1px 10px;}
+.questionTitle{line-height: 30px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:18px;}
 
 /* #_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}
 #_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; overflow:hidden; font-size:14px;} */
@@ -72,46 +79,109 @@
 .voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
 /* .voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:14px; display:inline-block; cursor:pointer;}
 .voteBtn span{font-size:16px; color:#004896; margin-left:3px;} */
-#_finish{height:45px; margin:0px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:14px;display:inline-block;}
+#_finish{margin:0px 8px; display:none;}
+.voteBtnFooterInner{height:45px;background:#0470e4; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:14px;display:inline-block;}
 
-.userName{display: block; color:#004896; font-size:14px; padding:7px 0px 0px 20px;}
+.userName{display: block; color:#004896; font-size:14px; padding:10px 0px 0px 20px;}
+.userNameNewCmt{display: block; color:#0470e4; font-size:14px; padding:10px 0px 0px 20px;}
 
-.voteComment{width:100%; height:79px !important; background:#f9f9f9; border:1px solid #DDD; border-top:0px; margin:0px 0px 0px 0px; padding:0px; overflow:hidden;}
+.voteComment{width:100%; height:79px !important; background:#f9f9f9; border:1px solid #DDD; border-bottom:0px; margin:20px 0px 0px 0px; padding:0px; overflow:hidden;}
 .sendComment_layout{ height:58px; overflow:hidden; margin:10px; background:#fff; border:1px solid #ddd;}
 .send_attach{ float:left; overflow:hidden; margin:0px 0px 0px 0px; padding:15px 0px 0px 15px;}
+.send_attach .cmtAddFile{cursor:pointer;}
 #_stickerArea{ float:left; overflow:hidden; margin:0px; padding:15px 15px 0px 0px;}
+._addEmoticon{display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;}
 
 .comment_input_layout{float:left; display:block; width:74%; border-left:1px solid #DDD; margin:16px 0px; padding:0px 0px; height:27px;}
 #comment_input{ height:27px !important; line-height:27px; padding:0px 0px 0px 10px; outline: none; border:none; resize:none; overflow:hidden; font-size:12px;}
 .commentBtn{ float:right; display:block; width: 96px; height:45px; border:none; margin:0px; padding:6px 6px 0px 0px;}
+.commentAreaDiv{border:1px solid #DDD; margin:0px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;}
+
+.uploadedFile{display:none; border:1px solid #ddd; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute}
+.uploadedFile .cancelImg{float:right; display: block; cursor: pointer; z-index: 2000; height:20px; width:20px;}
+.uploadedFile .previewImage{display: block; padding-left: 20px; padding-right: 20px; height:60px; width:60px;}
 
 #sendComment{min-width: 800px}
 .voteFileInput{width: 0px; height: 0px; display: none;}
 
 #ballotSystemBody{min-width: 800px}
 
-#commentArea table tbody tr [id *= toolCmt]{margin-left: 11px}
+#commentArea tr [id *= toolCmt]{display: block; float: left; margin-left: 11px;}
+#commentArea tr [id *= toolCmt] .cmtAddFile{float:left; display:block; height:25px; width:25px; cursor: pointer; padding-left: 10px;}
+#commentArea tr [id *= toolCmt] .cmtAddEmoticon{display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;}
+#commentArea table tr{border-bottom: 1px dotted #ddd;}
+.userPhotoImg{padding-top: 10px; height: 38px; width:38px; cursor: pointer;}
+.userPhotoTd{padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top;}
+.div2cmt{display: inline-block; height: auto; padding:7px 0px 10px 20px; width: 100%;}
+.cmtArea{margin-top: 0px;margin-bottom: 0px; word-break: break-all; width: 98%;}
+.descriptCmt{display: none; padding-left: 10px; position: relative; clear: both;}
+.cmtEditBtnDiv{padding: 5px 0px 5px 20px; clear: both;}
+.cmtTdRight{width: 145px; position: relative;}
+.cmtTdRight .cmtCreateTime{position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;}
+.cmtTdRight .editCmtBtnImg{margin:30px 10px 0px 0px; cursor: pointer; height: 25px; width: 25px; position: absolute; top: 0px; right: 0px;}
+.cmtTdRight .editComt{float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; top: 30px; right: 28px; width: 120px;}
+.cmtTdRight .editComt ._eCmt{border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;}
+.cmtTdRight .editComt ._dCmt{text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;}
 
 .voterNumber{float:left; display:block; font-size:16px; margin:-2px 10px 0px 10px;}
 ._resultPercentage{padding-bottom: 3px; padding-left: 20px; font-weight:bold;}
 
 /* vote popup css */
 
-#menu1{width: 88%}
-#menu1 h1{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+#menu1{width: 100%}
+#menu1 h1{overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 85%;}
 
 /* vote icon img */
-.voteIconDiv{margin:0 20px 0 20px; float:right;}
-.voteIcon_ul{position:relative; float: left; width: 70px; height: 68px; /* overflow: hidden; */ margin: 0; padding: 0px 0 0 0; list-style: none;}
+.voteIconDiv{float:right; margin-right:2px;}
+.voteFuncIconDiv{float:right; margin-right:16px;}
+.voteIcon_ul{position:relative; float: left; width: 62px; height: 68px; /* overflow: hidden; */ margin: 0; padding: 0px 0 0 0px; list-style: none;}
 .voteIcon_ul .icon_title{clear: both; display:block; text-align: center;height: 20px;line-height: 19px;overflow: hidden;vertical-align: top;font-size: 12px;color: #000;}
-.voteIcon_ul .img_description{position: absolute;right: -5px;top: -2px;z-index: 5;}
+.voteIcon_ul .img_description{position: absolute;right: -10px;top: -2px;z-index: 5;}
 .voteIcon_ul .img_description div{display:inline-block; line-height:190%; color:#fff; padding:0px 0 0 8px; font-size:11px; background: url(../../images/kr/main/count_l.png) no-repeat left;}
 .voteIcon_ul .img_description div span{display: inline-block;color: #fff;padding: 2px 10px 0 0px;font-size: 11px;background: url(../../images/kr/main/count_r.gif) no-repeat right;font-weight: bold;}
-/* .voteIcon_ul .icon_title{display:none;} */
+.voteInfoDiv{display: block; float: right; margin: 10px 15px 0px 0px; cursor:default; position:relative;}
+.voteInfoDiv ul{display: none; float: right; padding: 0px 7px 3px 0px; position: absolute; top: 45px; right: -9px; width: 220px; background: white; border-radius: 10px; border: 1px solid #cccccc;}
+.voteInfoDiv ul:before{content: '';position: absolute;border-bottom: 14px solid #fff;border-right: 8px solid transparent;border-left: 8px solid transparent;top: -10px;right: 15px;z-index: 2;}
+.voteInfoDiv ul:after{content: '';position: absolute;border-style: solid;border-width: 0px 7px 12px 7px;border-color: #ccc transparent;display: block;width: 0;z-index: 1;top: -12px;right: 16px;}
+.voteFuncIconDiv:last-child .voteIconImg_li{width:63px;}
+.voteFuncIconDiv .voteIconImg_li_innerDiv{border-right:1px solid #ddd;}
+#dateConfirmBtn{font-size: 20px; color: #8d8d8d; cursor: pointer; margin: 0px 0px 0px 26px;}
+#dateConfirmBtn:hover{color: #8d8d8dcf;}
+
+#unvotedUserImg:hover, #seenVoteUserImg:hover, #editVoteImg:hover, #reuseVoteImg:hover, #endDate:hover{background-color:#def;}
+
 .voteIconImg_li{width:45px; float:left;}
-.voteIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:11px 0px 0px 17px; overflow: hidden;}
-.voteIconDiv ul li.icon.nosecret{cursor:pointer;}
-.voteIconImg{vertical-align: top;}
+.voteIconImg_li.endDate{position:relative;}
+.voteIconImg_li_info{float:left; list-style:none; width: 200px; padding: 0px 10px; margin: 7px 0px 0px 0px;}
+.voteIconImg_li_info span{width: 150px; color: #0470e4;}
+.voteIconDiv ul li.icon, .voteFuncIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:11px 0px 0px 17px; overflow: hidden;}
+/* .voteIconDiv ul li.icon.nosecret{cursor:pointer;} */
+.voteIconDiv ul li img.voteIconImg.nosecret, .voteFuncIconDiv ul li img.voteIconImg.nosecret{cursor:pointer;}
+.voteIconImg{vertical-align: top; border: 1px solid #ddd; border-radius: 15px; width:45px;}
+.voteIconImg_info{vertical-align: top; width:30px; margin: 0px 10px;}
 
 /* vote graph area */
-.voterNumber_ {float:left;display:none;width:100% ;font-weight:bold;}
+.voterNumber_ {float:left;display:none;width:100% ;}
+.selectAnsImg{width: 13px;vertical-align: middle;margin-bottom: 2px;}
+
+/* vote thumbnail*/
+.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; zoom: 1; cursor:pointer;}
+.imgPopupMagnify{position: relative; float: left; cursor: pointer;}
+.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
+.imgPopupBoxMagnify{width: 800px;height: 800px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
+.imgPopupDivMagnify{width: 700px; max-width:700px; height:700px; overflow:auto; margin:0px auto;}
+.imgPopupDiv{width:400px; height:400px; margin:0px auto;}
+.imgPopupBoxOff, .imgPopupOff{display: none;}
+.thumbnail{width:40px; display:block; height: 40px; vertical-align: middle; margin: 0 auto; border:1px dotted #666; cursor:pointer;}
+.imgNotAttached{vertical-align: middle; margin: 0px auto; display: block; border: 1px dotted #cfcfcf; width: 33px; padding: 5px 2px 2px 5px;}
+.iPBInnerDiv_Top{display:inline-block; float:right; width:40px; margin-top: 15px;}
+.iPBInnerDiv_Top i{font-size:25px; color:black; cursor:pointer;}
+.iPBInnerDiv_TopOff{display:none; float:right; width:40px;}
+.iPBInnerDiv{height:50px; padding-right: 15px}
+
+.vote_listTd._imgOption{width:54px; border:1px solid #DDD; background:white;}
+/* floating stop Button area*/
+.stopButtonDiv{display: block; float: right; cursor: pointer; position: relative; color: red; font-size: 33px; margin: 8px 10px 0px 0px;}
+.stopButton{position: absolute; right: 30px; color: red; font-size: 80px; background: rgba(255,255,255,0.8); border-radius: 25px; cursor:pointer; border:1px solid #ddd;}
+.stopButton:hover{background-color:rgba(221, 238, 255, 0.8);}
+.stopBtnToggle{position: absolute;width: 13px;height: 13px;background: red;right: 30px;border-radius: 23px;z-index:1; cursor:pointer;}

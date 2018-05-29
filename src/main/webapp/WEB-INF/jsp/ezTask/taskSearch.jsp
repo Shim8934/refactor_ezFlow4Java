@@ -524,13 +524,13 @@
 					<span style="vertical-align:middle"><a class="imgbtn" style="vertical-align:middle"><span onClick="search()"><spring:message code='ezTask.t183' /></span></a></span>
 				</td>
 			</tr>
-			<tr height="55px">
+			<tr>
 				<th style="height:auto"><spring:message code='ezTask.t184' /></th>
 				<td>
 					<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezTask.t185' /></label>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-	          		<div style="margin-top:9px">&nbsp;<spring:message code='ezTask.t188'/></div> 
+	          		<span>&nbsp;<spring:message code='ezTask.t188'/></span> 
 				</td>
 			</tr>
 		</table>
@@ -561,7 +561,7 @@
 			<col style ="width:100px;">
 			<tr>
 				<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-				<th ><spring:message code='ezTask.t156' /></th>
+				<th style="text-align:center"><img src="/images/ImgIcon/view-importance.gif"></th>
 				<th ><img src="/images/newAttach.gif"></th>
 				<th ><spring:message code='ezTask.t2005' /></th>
 				<th ><spring:message code='ezTask.t118' /></th>
@@ -577,6 +577,7 @@
 				<th style="text-align:center;"><spring:message code='ezTask.t121' /></th>
 				<th style="text-align:center;"><spring:message code='ezTask.t9002' /></th>
 			</tr>
+			<!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
 			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
 				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
@@ -590,7 +591,7 @@
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 			</tr>
-			<tr id="tr_ing" style="text-align:center">
+			<tr id="tr_ing" style="text-align:center; display: none;">
 				<td colspan="11" style="height:25px;background-color:white;text-align:center"><spring:message code='ezTask.t192' /></td>
 			</tr>
 		</table>

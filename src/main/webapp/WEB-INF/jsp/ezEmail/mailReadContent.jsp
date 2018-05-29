@@ -15,41 +15,48 @@
 			    var g_rejectWord = "${rejectKeyWord}";
 			    var g_paramURL = "${url}";
 			    var objLink = document.all("BigSizeFileLink");
-				if( objLink != null )
-				{
-					if( typeof(objLink.length) == "undefined" )
-					{
+				
+			    if (objLink != null) {
+					
+			    	if (typeof(objLink.length) == "undefined") {
 						objLink.target = "";
-					}
-					else
-					{
-						for( var n = 0 ; n < objLink.length ; n++ )
-						{
+					} else {
+						
+						for ( var n = 0 ; n < objLink.length ; n++ )	{
 							objLink(n).target = "";
 						}
 					}
 				}
 				
-				function window_onload()
-				{
+				function window_onload() {
 				    if (window.parent.pContentClass == "IPM.Schedule.Meeting.Request") {
 				        ContentClassbtn.style.display = "";
 				    }
-				    if (typeof(window.parent.g_rejectWord) == "string")
-				    {
+				    
+				    if (typeof(window.parent.g_rejectWord) == "string") {
 				        window.parent.g_rejectWord = g_rejectWord;
 				    }
+
+					sizeBtnAppend();
 				}
 				
-				function btnPrint_onClick()
-				{
+				function sizeBtnAppend() {
+					var minusBtn = "<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor: pointer; display:inline;'/>";
+					var plusBtn = "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; display:inline;'/>";
+					
+					$("body").prepend(plusBtn);
+					$("body").prepend(minusBtn);
+				}
+				
+				function btnPrint_onClick() {
 			        window.self.focus();	
 			        window.self.print();
 				}
-				window.onbeforeprint = function()
-				{
+				
+				window.onbeforeprint = function() {
 				    printScreen.style.display = "";
 				    normalScreen.style.display = "none";
+				    
 				    if (window.parent.tb_PrevShow) {
 				        printMsgFrom.innerHTML = window.parent.div_SndName.innerHTML;
 				        printMsgTo.innerHTML = window.parent.div_RcvName.innerHTML;
@@ -60,75 +67,122 @@
 				    } else {
 				        printMsgFrom.innerHTML = window.parent.MsgToPut.innerHTML;
 				        printMsgTo.innerHTML = window.parent.MsgToGot.innerHTML;
+				        
 				        if (window.parent.MsgCCGot != null) {
 				            printMsgCC.innerHTML = window.parent.MsgCCGot.innerHTML;
-				        }
-				        else {
+				        } else {
 				            document.getElementById('printMsgCC').parentNode.parentNode.style.display = "none"
 				        }
+				        
 				        printSubject.innerHTML = window.parent.mailSubject.innerHTML;
 				        printDate.innerHTML = window.parent.g_date;
+				        
 				        if (window.parent.attachedfileDIV != null) {
 				            printInsertFile.innerHTML = window.parent.attachedfileDIV.innerHTML;
-				        }
-				        else {
+				        } else {
 				            document.getElementById('printInsertFile').parentNode.parentNode.style.display = "none"
 				        }
 				    }
+				    
 				    printDocument.innerHTML = normalScreen.innerHTML;
 			
 				    var checks = printInsertFile.all.tags("input");
-				    for (var i=0; i<checks.length; i++)
+				    
+				    for (var i=0; i<checks.length; i++) {
 				        checks.item(i).style.display = "none";
-			
+				    }
+				    
 				    var tableColl = printDocument.all.tags("TABLE");
-				    for (var i=0; i<tableColl.length; i++)
-				    {
-				        if (String(tableColl.item(i).borderColorDark).toLowerCase() == "#ffffff")
-				        {
+				    
+				    for (var i=0; i<tableColl.length; i++) {
+				        
+				    	if (String(tableColl.item(i).borderColorDark).toLowerCase() == "#ffffff") {
 				        	tableColl.item(i).style.borderCollapse = "collapse";
 				            tableColl.item(i).borderColorDark = "black";
 				        }
 				    }
 				}
-				window.onafterprint = function()
-				{
+				
+				window.onafterprint = function() {
 				    printScreen.style.display = "none";
 				    normalScreen.style.display = "";
 				}
+				
 			    function AttachDetail_view(obj) {
-			        if (obj.className == "icon_graydown") {
+			        
+			    	if (obj.className == "icon_graydown") {
 			            obj.className = "icon_grayup"
 			            document.getElementById("PreviewAttachList").style.display = "";
-			        }
-			        else {
+			        } else {
 			            obj.className = "icon_graydown"
 			            document.getElementById("PreviewAttachList").style.display = "none";
 			        }
+			    
 			    }
+			    
 			    function DownloadAttach(DownloadUrl) {
 			        AttachDownFrame.location.href = DownloadUrl;
 			    }
+			    
+			    // 메일읽기창에서 "모두저장" 클릭시 압축파일로 내보내는 메서드
 			    var suffix = 0;
 			    function AttachAllDownload() {
-			        if (suffix < document.getElementsByName("MailAttachDownloadItems").length)
-			            setTimeout(function () { FileDownload(document.getElementsByName("MailAttachDownloadItems").item(suffix++).getAttribute("_filehref")) }, 2000);
-			        else {
-			            suffix = 0;
-			            return;
-			        }
+			    	
+			    	var url = "/ezEmail/downloadAttachAll.do";
+			    	var fileLen = document.getElementsByName("MailAttachDownloadItems").length;
+			    	var params = "";
+			    	var folderPath = "";
+			    	var uid = "";
+			    	
+			    	if (suffix < fileLen) {
+			    		
+			    		for (var i = 0; i < fileLen; i++) {
+				    		var fileHref = document.getElementsByName("MailAttachDownloadItems").item(suffix++).getAttribute("_filehref");
+				    		var strArr = fileHref.split('?');
+				    		strArr = strArr[1].split('&'); 
+	
+				    		if (i < 1) {
+					    		var tmpStr = strArr[1].split('=');
+					    		folderPath = tmpStr[1];
+					    		
+					    		tmpStr = strArr[2].split('=');
+					    		uid = tmpStr[1];
+					    		
+					    		params = strArr[3] + "&" + strArr[4]; 
+							} else {
+					    		params += "&" + strArr[3] + "&" + strArr[4]; 
+							}
+				    		
+			    		}
+			    		
+			    	}
+			    	
+		    		suffix = 0;
+
+		    		var $frm = $("<form></form>");
+			    	$frm.attr('action', url);
+			    	$frm.attr('method', 'post');
+			    	$frm.appendTo('body');
+
+			    	params = $('<input type="hidden" value="' + params + '" name="params" />');
+			    	folderPath = $('<input type="hidden" value="' + decodeURIComponent(folderPath) + '" name="folderPath" />');
+			    	uid = $('<input type="hidden" value="' + uid + '" name="uid" />');
+			    	
+			    	$frm.append(params).append(folderPath).append(uid);
+			    	$frm.submit();
 			    }
+			    
 			    function FileDownload(pFileUrl) {
-			        if (pFileUrl != null) {
+
+			    	if (pFileUrl != null) {
 			            location.href = pFileUrl;
-			            AttachAllDownload();
-			        }
-			        else {
+			        } else {
 			            suffix = 0;
 			            return;
 			        }
 			
 			    }
+			    
 			    function DownloadPC(obj) {
 			        var param = { "href": new Array(), "filesize": new Array(), "name": new Array(), "folderpath": new String() };
 			        var count = 0;
@@ -139,6 +193,7 @@
 			        var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 			        ezUtil.UseUTF8 = true;
 			        var folderpath = ezUtil.BrowseFolder();
+			        
 			        if (folderpath != "") {
 			            param["folderpath"] = folderpath;
 			            var feature = "dialogWidth:430px; dialogHeight:150px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
@@ -146,11 +201,13 @@
 			            window.showModalDialog("htm/attachdownload.aspx", param, feature);
 			        }
 			    }
+			    
 			    function AttachFile_Delete(obj) {
 			
-			        if (!confirm("<spring:message code='ezEmail.t99000005' />"))
+			        if (!confirm("<spring:message code='ezEmail.t99000005' />")) {
 			            return;
-			
+			        }
+			        
 			        var count = 0;
 			        var param = new Array();
 			        var ArrayDel = new Array();
@@ -168,76 +225,108 @@
 			        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 			            var oRoot = xmlHTTP.responseXML.documentElement;
 			            var ret = oRoot.childNodes[0].nodeValue;
+			           
 			            if (ret != "FAIL" && ret != "") {
 			            	window.parent.reloadReadContent(ret);
-			            }
-			            else {
+			            } else {
 			                alert(strLang183);
 			            }
 			        }
 			    }
-			        var nowZoom = 100;
-			        var maxZoom = 200;
-			        var minZoom = 80;
-			
-			        var MozNowZoom = 1;
-			        var MozMaxZoom = 2;
-			        var MozMinZoom = 0.8;
-			        function Bigger() {
-			            if (navigator.userAgent.indexOf('Firefox') != -1) {
-			                if (MozNowZoom < MozMaxZoom) {
-			                    MozNowZoom += 0.1;
-			                } else {
-			                    return;
-			                }
-			                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
-			                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
-			                document.getElementById("ifrmPreViewRayer").style.MozTransform = "scale(" + MozNowZoom + ")";
-			                document.getElementById("ifrmPreViewRayer").style.MozTransformOrigin = "0 0";
-			            }
-			            else {
-			                if (nowZoom < maxZoom) {
-			                    nowZoom += 10;
-			                } else {
-			                    return;
-			                }
-			                document.getElementById("normalScreen").style.zoom = nowZoom + "%";
-			                document.getElementById("ifrmPreViewRayer").style.zoom = nowZoom + "%";
-			            }
-			        }
-			        function Smaller() {
-			            if (navigator.userAgent.indexOf('Firefox') != -1) {
-			                if (MozNowZoom > MozMinZoom) {
-			                    MozNowZoom -= 0.1;
-			                } else {
-			                    return;
-			                }
-			                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
-			                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
-			                document.getElementById("ifrmPreViewRayer").style.MozTransform = "scale(" + MozNowZoom + ")";
-			                document.getElementById("ifrmPreViewRayer").style.MozTransformOrigin = "0 0";
-			
-			            }
-			            else {
-			                if (nowZoom > minZoom) {
-			                    nowZoom -= 10;
-			                } else {
-			                    return;
-			                }
-			                document.getElementById("normalScreen").style.zoom = nowZoom + "%";
-			                document.getElementById("ifrmPreViewRayer").style.zoom = nowZoom + "%";
-			            }
-			        }
-			        function Schedule_btn(pGubun) {
-			            parent.mtg_onClick(pGubun);
-			        }
-
-
+			    
+		        var nowZoom = 100;
+		        var maxZoom = 200;
+		        var minZoom = 80;
+		        var MozNowZoom = 1;
+		        var MozMaxZoom = 2;
+		        var MozMinZoom = 0.8;
+		        
+		        function Bigger() {
+		            
+		        	if (navigator.userAgent.indexOf('Firefox') != -1) {
+		                
+		        		if (MozNowZoom < MozMaxZoom) {
+		                    MozNowZoom += 0.1;
+		                } else {
+		                    return;
+		                }
+		        		
+		                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
+		                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
+		                document.getElementById("ifrmPreViewRayer").style.MozTransform = "scale(" + MozNowZoom + ")";
+		                document.getElementById("ifrmPreViewRayer").style.MozTransformOrigin = "0 0";
+		            } else {
+		                
+		            	if (nowZoom < maxZoom) {
+		                    nowZoom += 10;
+		                } else {
+		                    return;
+		                }
+		            	
+		                document.getElementById("normalScreen").style.zoom = nowZoom + "%";
+		                document.getElementById("ifrmPreViewRayer").style.zoom = nowZoom + "%";
+		            }
+		        }
+		        
+		        function Smaller() {
+		           
+		        	if (navigator.userAgent.indexOf('Firefox') != -1) {
+		                
+		        		if (MozNowZoom > MozMinZoom) {
+		                    MozNowZoom -= 0.1;
+		                } else {
+		                    return;
+		                }
+		        		
+		                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
+		                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
+		                document.getElementById("ifrmPreViewRayer").style.MozTransform = "scale(" + MozNowZoom + ")";
+		                document.getElementById("ifrmPreViewRayer").style.MozTransformOrigin = "0 0";
+		
+		            } else {
+		                
+		            	if (nowZoom > minZoom) {
+		                    nowZoom -= 10;
+		                } else {
+		                    return;
+		                }
+		            	
+		                document.getElementById("normalScreen").style.zoom = nowZoom + "%";
+		                document.getElementById("ifrmPreViewRayer").style.zoom = nowZoom + "%";
+		            }
+		        }
+		        
+		        function Schedule_btn(pGubun) {
+		            parent.mtg_onClick(pGubun);
+		        }
+		        
+		        function journalMailLink(journalId,mine){
+		        	$.ajax({
+		        		type : "post",
+		        		data : {
+		        			"journalId" : journalId
+		        		},
+		        		url : "/ezJournal/checkToMailJournal.do",
+		        		success: function(result){
+		        			if (result.isLive!="N" ) {
+		        				if (result.checkSusin != "N" || mine==1) {
+		        					var feature = GetOpenPosition(820, 850);
+		        					window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
+		        							"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
+		        							+ feature);
+		        				} else {
+		        					alert("<spring:message code='ezJournal.t172'/>");
+		        				}
+		        			} else {
+		        				alert("<spring:message code='ezJournal.t171'/>");
+		        			}
+		        		}
+		        	});
+		        }
+		        
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
-		<img src='/images/minus.png' title="<spring:message code='ezEmail.t99000065' />" onclick='Smaller()' style='cursor: pointer;' />
-		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<span id="ContentClassbtn" style="float:right;display:none;" >
 			<img src='/images/mtgrsp-accept.gif' width="20" height="20" title="<spring:message code='ezEmail.t901' />" onclick="Schedule_btn('ACCEPT');" style='cursor:pointer;' />
 			<img src='/images/mtgrsp-tent.gif' width="20" height="20" title="<spring:message code='ezEmail.t903' />" onclick="Schedule_btn('TENT');" style='cursor:pointer;' />
