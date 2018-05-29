@@ -2107,7 +2107,7 @@
 	    		TBL_ATTITUDE_CONF
 	    			(COMPANY_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, CLOSED_DAY, ATTITUDE_MOD_APPL, CLOSED_DATE_ATTITUDE, CONF_SET_DATE)
 	    	VALUES
-	    			(#companyID#, #tenantID#, '09:00', '18:00', '1,0,0,0,0,0,1', '1', '1', #nowDate#)
+	    			(#companyID#, #tenantID#, '00:00', '09:00', '1,0,0,0,0,0,1', '1', '1', #nowDate#)
 	    ]]>
     </insert>
     
