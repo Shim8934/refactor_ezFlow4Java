@@ -535,19 +535,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeTypeConfig(String typeConfigList, String companyId,
-			int tenantId) throws Exception {
+	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("updateAttitudeTypeConfig started");
+		LOGGER.debug("typeConfigList = " + typeConfigList);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
 		for (String typeInfoList : typeConfigList.split(";")) {
 			String[] typeInfo = typeInfoList.split(",");
-			
-			LOGGER.debug("typeId = " + typeInfo[0]);
 			
 			map.put("typeId", typeInfo[0]);
 			map.put("isuse", typeInfo[1]);
@@ -593,18 +590,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId,
-			String typeId) throws Exception {
+	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception {
 		LOGGER.debug("getAttitudeTypeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("typeId", typeId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
+		AttitudeTypeVO result = ezAttitudeDAO.getAttitudeTypeInfo(map);
+		
 		LOGGER.debug("getAttitudeTypeInfo ended");
-		return ezAttitudeDAO.getAttitudeTypeInfo(map);
+		
+		return result;
 	}
 
 	@Override
