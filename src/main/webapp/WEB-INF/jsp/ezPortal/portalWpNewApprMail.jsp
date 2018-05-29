@@ -170,13 +170,13 @@
 		    }
 	
 		    function change_article(flag) {
+		    	document.getElementById("mailquatersize").innerHTML = "";
+		    	
 		        if (flag == "appr") {
-		        	document.getElementById("mailquatersize").innerHTML = "";
 		            document.getElementById("appr_article").style.display = "";
 		            document.getElementById("mail_article").style.display = "none";
 		            getApprGraph();
 		        } else {
-		        	document.getElementById("mailquatersize").innerHTML = "";
 		            document.getElementById("appr_article").style.display = "none";
 		            document.getElementById("mail_article").style.display = "";
 		            getMailGraph();
