@@ -646,6 +646,7 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
+		
 		return result;
 	}
 	
@@ -653,39 +654,39 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [PUT] 근태규율설정정보 수정
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudereg", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject updateAttitudeConf(@PathVariable String companyId, @RequestBody JSONObject jsonParam, HttpServletRequest request) {
+	public JSONObject updateAttitudeConf(@PathVariable String companyId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+			
+			String workStartTime = request.getParameter("workStartTime");
+			String workEndTime = request.getParameter("workEndTime");
+			String closedDay = request.getParameter("closedDay");
+			String attitudeModAppl = request.getParameter("attitudeModAppl");
+			String closedDateAttitude = request.getParameter("closedDateAttitude");
+			
+			String confSetDate =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			//테넌트아이디
-			jsonParam.put("tenantId", info.getTenantId());
-			
-			//오늘일자로 근태규율 설정일자
-			String confSetDate =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			jsonParam.put("confSetDate", confSetDate);
-			
 			//시간 셋팅
-			if (jsonParam.get("workStartTime").toString().length() == 4) {
-				jsonParam.put("workStartTime", "0" + jsonParam.get("workStartTime").toString());
+			if (workStartTime.length() == 4) {
+				workStartTime = "0" + workStartTime;
 			}
-			if (jsonParam.get("workEndTime").toString().length() == 4) {
-				jsonParam.put("workEndTime", "0" + jsonParam.get("workEndTime").toString());
+			if (workEndTime.length() == 4) {
+				workEndTime = "0" + workEndTime;
 			}
-			String startDate = commonUtil.getDateStringInUTC(confSetDate + " " + jsonParam.get("workStartTime").toString(), info.getOffSet(), true);
-			String endDate = commonUtil.getDateStringInUTC(confSetDate + " " + jsonParam.get("workEndTime").toString(), info.getOffSet(), true);
 			
-			int startIdx = startDate.indexOf(" ");
-			int endIdx = endDate.indexOf(" ");
+			String startDate = commonUtil.getDateStringInUTC(confSetDate + " " + workStartTime, info.getOffSet(), true);
+			String endDate = commonUtil.getDateStringInUTC(confSetDate + " " + workEndTime, info.getOffSet(), true);
 			
-			jsonParam.put("workStartTime", startDate.substring(startIdx + 1));
-			jsonParam.put("workEndTime", endDate.substring(endIdx + 1));
+			workStartTime = startDate.substring(startDate.indexOf(" ") + 1);
+			workEndTime = endDate.substring(endDate.indexOf(" ") + 1);
 			
-			ezAttitudeService.updateAttitudeConfig(jsonParam);
+			ezAttitudeService.updateAttitudeConfig(workStartTime, workEndTime, closedDay, attitudeModAppl, closedDateAttitude, confSetDate, companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

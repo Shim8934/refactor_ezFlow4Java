@@ -105,20 +105,20 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeConfig" parameterClass="Map" resultMap="attitudeConfig">
 		<![CDATA[
 			SELECT
-				COMPANY_ID,
-				TENANT_ID,
-				WORK_STARTTIME,
-				WORK_ENDTIME,
-				CLOSED_DAY,
-				ATTITUDE_MOD_APPL,
-				CLOSED_DATE_ATTITUDE,
-				date_format(CONF_SET_DATE, '%Y-%m-%d') as CONF_SET_DATE
+				company_id,
+				tenant_id,
+				work_starttime,
+				work_endtime,
+				closed_day,
+				attitude_mod_appl,
+				closed_date_attitude,
+				DATE_FORMAT(conf_set_date, '%Y-%m-%d') AS conf_set_date
 			FROM
 				TBL_ATTITUDE_CONF
 			WHERE
-				COMPANY_ID = #companyId#
+				tenant_id = #tenantId#
 			AND
-				TENANT_ID = #tenantId#
+				company_id = #companyId#
 		]]>
 	</select>
 	
@@ -126,16 +126,16 @@
 		<![CDATA[
 			UPDATE TBL_ATTITUDE_CONF
 			SET
-				WORK_STARTTIME = #workStartTime#,
-				WORK_ENDTIME = #workEndTime#,
-				CLOSED_DAY = #closedDay#,
-				ATTITUDE_MOD_APPL = #attitudeModAppl#,
-				CLOSED_DATE_ATTITUDE = #closedDateAttitude#,
-				CONF_SET_DATE = str_to_date(#confSetDate#, '%Y-%m-%d') 
+				work_starttime = #workStartTime#,
+				work_endtime = #workEndTime#,
+				closed_day = #closedDay#,
+				attitude_mod_appl = #attitudeModAppl#,
+				closed_date_attitude = #closedDateAttitude#,
+				conf_set_date = str_to_date(#confSetDate#, '%Y-%m-%d') 
 			WHERE
-				COMPANY_ID = #companyId#
+				tenant_id = #tenantId#
 			AND
-				TENANT_ID = #tenantId#
+				company_id = #companyId#
 		]]>
 	</update>
 

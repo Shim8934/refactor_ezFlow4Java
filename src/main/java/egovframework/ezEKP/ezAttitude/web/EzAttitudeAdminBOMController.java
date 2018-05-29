@@ -75,7 +75,6 @@ public class EzAttitudeAdminBOMController {
 	
 	/**
 	 * 관리자 근태규율관리 화면 호출 함수
-	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeConfig.do")
 	public String attitudeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -112,8 +111,8 @@ public class EzAttitudeAdminBOMController {
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
 		String adminCompany = "";
-		if (status.equals("ok")) {
 		
+		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
 			adminCompany = (String) data.get("adminCompany");
@@ -128,7 +127,6 @@ public class EzAttitudeAdminBOMController {
 	}
 	/**
 	 * 관리자 근태규율관리 회사별 설정 호출 함수
-	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeConfigInfo.do")
 	@ResponseBody
@@ -178,6 +176,12 @@ public class EzAttitudeAdminBOMController {
 	public String updateAttitudeConfInfo(AttitudeConfigVO attitudeConfigVO, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("updateAttitudeConfInfo started.");
 		
+		String workStartTime = request.getParameter("workStartTime");
+		String workEndTime = request.getParameter("workEndTime");
+		String closedDay = request.getParameter("closedDay");
+		String attitudeModAppl = request.getParameter("attitudeModAppl");
+		String closedDateAttitude = request.getParameter("closedDateAttitude");
+		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");		
@@ -187,13 +191,15 @@ public class EzAttitudeAdminBOMController {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		Gson gson = new Gson();
-		JSONObject jsonParam = gson.fromJson(gson.toJson(attitudeConfigVO), JSONObject.class);
-		
-		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
+				.queryParam("userId", userInfo.getId())
+				.queryParam("workStartTime", workStartTime)
+				.queryParam("workEndTime", workEndTime)
+				.queryParam("closedDay", closedDay)
+				.queryParam("attitudeModAppl", attitudeModAppl)
+				.queryParam("closedDateAttitude", closedDateAttitude);
 		
 		RestTemplate rest = new RestTemplate();
 		
