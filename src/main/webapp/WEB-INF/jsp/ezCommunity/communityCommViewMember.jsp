@@ -35,11 +35,10 @@
 		    var totalCount = "<c:out value = '${keywordCount}' />";
 		    var code = "<c:out value = '${code}' />"
 		    document.onselectstart = function () { return false; };
-		     
+		    
 		    window.onload =function () {		        
 			    makePageSelPage();
 			}
-			
 			
 			function openinfo1(a,b,c) {
 			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=440";
