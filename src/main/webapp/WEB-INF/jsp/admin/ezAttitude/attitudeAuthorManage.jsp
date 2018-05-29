@@ -40,7 +40,7 @@
 	            	type : "GET",
 	            	url : "/admin/ezAttitude/attitudeAuthList.do",
 	            	dataType : "json",
-	            	data : {companyId : encodeURI($("#ListCompany").val())},
+	            	data : {companyId : encodeURIComponent($("#ListCompany").val())},
 	            	success : function(result) {
 	            		attitudeAuthListSet(result);
 	            	},
@@ -88,12 +88,11 @@
 	        		alert("<spring:message code = 'ezAttitude.t52' />");
 	        		return;
 	        	}
+	        	
 				var userId = selectedUserId;
-				var url = "/admin/ezAttitude/saveAttitudeAuth.do";
-				var companyId = encodeURI($("#ListCompany").val());
-				url+="?companyId="+companyId;
+				var url = "/admin/ezAttitude/saveAttitudeAuth.do&companyId=" + encodeURIComponent($("#ListCompany").val()) + "&userId=" + userId + "&userName=" + selectedUserName;
+				
 				if (userId) {
-					url+="&userId="+userId+"&userName="+selectedUserName;
 					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 				} else {
 					alert("<spring:message code = 'ezAttitude.t191' />");
@@ -113,7 +112,7 @@
 						dataType : "text",
 						data : {
 							selectUserId : selectedUserId,
-							companyId : encodeURI($("#ListCompany").val())
+							companyId : encodeURIComponent($("#ListCompany").val())
 						},
 		            	success : function(resultStatus) {
 		            		if (resultStatus == "success") {
@@ -131,9 +130,7 @@
 	        
 	        //권한추가
 	        function author_add() {
-	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do";
-				var companyId = $("#ListCompany").val();
-				url+="?companyId="+companyId;
+	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do&companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 	        }
 	        

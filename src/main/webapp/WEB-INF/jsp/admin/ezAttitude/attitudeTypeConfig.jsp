@@ -36,7 +36,7 @@
 	            	type : "GET",
 	            	url : "/admin/ezAttitude/attitudeTypeConfigInfo.do",
 	            	dataType : "json",
-	            	data : {companyId : encodeURI($("#ListCompany").val())},
+	            	data : {companyId : encodeURIComponent($("#ListCompany").val())},
 	            	success : function(result) {
 	            		//리스트 셋팅
 	            		listSet(result);
@@ -54,11 +54,13 @@
                 if (result.length != null && result.length != 0) {
 	                for (var i = 0; i < result.length; i++) {
 	                    var gubun = "";
+	                    
 	                    if (result[i].isAdd == "0") {
 	                    	gubun = "<spring:message code='ezAttitude.t179' />";
 	                    } else {
 	                    	gubun = "<spring:message code='ezAttitude.t180' />";
 	                    }
+	                    
 	                    html += "<tr id='" + result[i].typeId + "' onclick='listClick(this);' ondblclick='dbclick(this);' style='cursor:pointer;' isAdd='" + result[i].isAdd + "'>";
 	                    html += "<td style='width:110px;color:gray;border-left:1px solid #e2e2e1;padding-left:15px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;' title='" + result[i].typeName + "'>" + result[i].typeName + "</td>";
 	                    html += "<td style='width:110px;color:gray;text-align:center;border-left:1px solid rgb(239, 239, 239);'>" + gubun + "</td>";
@@ -69,6 +71,7 @@
                 } else {
     	    		html = "<tr><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
                 }
+                
                 $("table.mainlist tbody").html(html);
 	        }
 	        
@@ -82,14 +85,16 @@
 	        function save_config() {
 	        	var length = $('table input[name^=useRadio]').length / 2;
 	        	var list = [];
+	        	
 	        	for (var i = 0; i < length; i++) {
 	        		var typeId = $('table input[name=useRadio' + i + ']').closest('tr').attr('id');
 	        		var isuse = $('table input[name=useRadio' + i + ']:checked').val();
-	        		var obj = '';
-	        		obj += typeId + ',' + isuse + ";";
+	        		var obj = typeId + ',' + isuse + ";";
+	        		
 	        		if (i == (length-1)) {
 	        			obj.slice(0, -1);
 	        		}
+	        		
 	        		list.push(obj);
 	        	}
 	        	
@@ -101,7 +106,7 @@
 	            	dataType : "text",
 	            	data : {
 	            		"typelist" : typestr,
-	            		"companyId" : encodeURI($("#ListCompany").val())
+	            		"companyId" : encodeURIComponent($("#ListCompany").val())
 	            	},
 	            	success : function(resultStatus) {
 	            		if (resultStatus == "success") {
@@ -114,33 +119,18 @@
 	            		alert("<spring:message code='ezAttitude.t175' />");
 	            	}
 	            });
-	            
 	        }
 	        
 	        var saveType_dialogArguments = new Array();
 	        //유형 추가
 	        function add_type() {
 	        	if ($("#contentlist .mainlist tbody tr").length < 15) {
-	        		var url = "/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val();
+	        		var url = "/admin/ezAttitude/addAttitudeType.do?companyId=" + encodeURIComponent($("#ListCompany").val());
 					
 					window.open(url, "saveAttitudeType", GetOpenWindowfeature(525, 170));
 	        	} else {
 	        		alert("추가유형은 최대 5개까지 등록할 수 있습니다.");
 	        	}
-	        	
-// 	            if (CrossYN()) {
-// 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
-//                     var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
-                    
-//                     try { OpenWin.focus(); } catch (e) { }
-// 	            } else {
-//                 	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
-//                         "dialogHeight:155px;dialogwidth:540px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
-	                
-// 	                if (typeof (rtnValue) != "undefined") {
-// 	                    company_change();
-// 	                }
-// 	            }
 	        }
 	        //유형 삭제
 	        function del_type() {
@@ -161,7 +151,7 @@
 						dataType : "text",
 						data : {
 							typeId : selectTypeId,
-							companyId : encodeURI($("#ListCompany").val())
+							companyId : encodeURIComponent($("#ListCompany").val())
 						},
 						success : function(result) {
 							if (result == "false") {
@@ -173,7 +163,7 @@
 						error : function() {
 							alert("<spring:message code='ezAttitude.t175' />");
 						}
-					})
+					});
 	        	}
 	        }
 	        
@@ -183,17 +173,10 @@
 	        		alert("<spring:message code='ezAttitude.t181' />");
 	        		return;
 	        	}
-// 	        	if (isAdd == 0) {
-// 	        		alert("기본유형은 수정할 수 없습니다.");
-// 	        		return;
-// 	        	}
 
-	        	var url = "/admin/ezAttitude/showAttitudeType.do";
-				url += "?companyId=" + $("#ListCompany").val();
-				url += "&typeId=" + selectTypeId;
-				window.open(url, "showAttitudeType", GetOpenWindowfeature(525, 170));
+	        	var url = "/admin/ezAttitude/showAttitudeType.do?companyId=" + encodeURIComponent($("#ListCompany").val()) + "&typeId=" + selectTypeId;
 				
-// 	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + selectTypeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
+				window.open(url, "showAttitudeType", GetOpenWindowfeature(525, 170));
 	        }
 	        
 	        function listClick(elem) {
@@ -203,15 +186,8 @@
 	        
 	        //유형 상세보기(수정창)
 	        function dbclick(elem) {
-// 	        	saveType_dialogArguments[0] = $("#ListCompany").val();
-//             	var typeId = elem.id;
-// 	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
+	        	var url = "/admin/ezAttitude/showAttitudeType.do?companyId=" + encodeURIComponent($("#ListCompany").val()) + "&typeId=" + elem.id;
 	        	
-// 	        	try { OpenWin.focus(); } catch (e) { }
-
-	        	var url = "/admin/ezAttitude/showAttitudeType.do";
-				url += "?companyId=" + $("#ListCompany").val();
-				url += "&typeId=" + elem.id;
 				window.open(url, "showAttitudeType", GetOpenWindowfeature(525, 170));
 	        }
 		    
@@ -222,14 +198,14 @@
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;">
-				<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
+					<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
 				</li>
 				<li>
-				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-					<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-	      		</select>
+					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+						<c:forEach var="item" items="${list}">
+							<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+						</c:forEach>
+		      		</select>
 	      		</li>
 	      	</ul>
 	      	<ul>
@@ -241,26 +217,22 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-<!--         <div style="border: 1px solid #dededd; border-top:0px; border-bottom:0px; width: 450px; height: 503px;"> -->
-<!--         <div style="border: 1px solid #e2e2e1; border-top:0px; border-bottom:0px; width: 450px; max-height: 503px;"> -->
-            <table class="mainlist" style="width: 450px; max-height:500px;">
-            	<thead>
-                 <tr>
-                     <th style="width: 110px;padding-left:15px;border-left:1px solid #e2e2e1;"><span><spring:message code='ezAttitude.t35' /></span></th>
-                     <th style="width: 110px;text-align: center;"><span><spring:message code='ezAttitude.t185' /></span></th>
-                     <th style="width: 90px;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
-                     <th style="text-align: center;border-right:1px solid #e2e2e1;"><span><spring:message code='ezAttitude.t37' /></span></th>
-                 </tr>
-                </thead>
-                <tbody id="contentlist">
-                 <tr>
-                     <td style="text-align: center;">
-                         <img src="/images/email/progress_img.gif"/>
-                     </td>
-                 </tr>
-                </tbody>
-            </table>
-<!--         </div> -->
+		<table class="mainlist" style="width: 450px; max-height:500px;">
+			<thead>
+			<tr>
+				<th style="width: 110px;padding-left:15px;border-left:1px solid #e2e2e1;"><span><spring:message code='ezAttitude.t35' /></span></th>
+				<th style="width: 110px;text-align: center;"><span><spring:message code='ezAttitude.t185' /></span></th>
+				<th style="width: 90px;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
+				<th style="text-align: center;border-right:1px solid #e2e2e1;"><span><spring:message code='ezAttitude.t37' /></span></th>
+		 	</tr>
+			</thead>
+			<tbody id="contentlist">
+		 		<tr>
+					<td style="text-align: center;"><img src="/images/email/progress_img.gif"/></td>
+				</tr>
+			</tbody>
+		</table>
+		
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>

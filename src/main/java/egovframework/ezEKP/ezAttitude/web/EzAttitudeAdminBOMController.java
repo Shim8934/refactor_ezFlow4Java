@@ -255,7 +255,6 @@ public class EzAttitudeAdminBOMController {
 		JSONObject data = new JSONObject();
 		String adminCompany = "";
 		if (status.equals("ok")) {
-		
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
 			adminCompany = (String) data.get("adminCompany");
@@ -475,7 +474,6 @@ public class EzAttitudeAdminBOMController {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
 		}
 		
-		//등록, 수정시 오류처리 alert로 구분해야함 지금 등록안해도 무조건 등록됫다고 alert 뜨는중임
 		//insert시  count27개 넘으면 status failed로 리턴하게 해놓음
 		
 		JSONObject resultBody = (JSONObject) result.getBody();

@@ -48,7 +48,7 @@
 	            	type : "GET",
 	            	url : "/admin/ezAttitude/attitudeConfigInfo.do",
 	            	dataType : "json",
-	            	data : {companyId : encodeURI($("#ListCompany").val())},
+	            	data : {companyId : encodeURIComponent($("#ListCompany").val())},
 	            	success : function(result) {
 	            		attitudeConfigSet(result);
 	            	},
@@ -109,7 +109,7 @@
 	            	url : "/admin/ezAttitude/updateAttitudeConfInfo.do",
 	            	dataType : "text",
 	            	data : {
-	            			companyId : encodeURI($("#ListCompany").val()),
+	            			companyId : encodeURIComponent($("#ListCompany").val()),
 	            			workStartTime : $("#startTime").val(),
 	            			workEndTime : $("#endTime").val(),
 	            			closedDay : closedDays.slice(0, -1),
