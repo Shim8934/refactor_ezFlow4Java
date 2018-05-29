@@ -19,6 +19,10 @@
 			.modal p {
 				background:none;
 			}
+			.spanMsg {
+				color:orangered;
+				font-family : "맑은고딕", Malgun Gothic, "굴림", Gullim,"돋움", Dotum, verdana, Arial, sans-serif;
+			}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -258,12 +262,12 @@
 		</div>
 		
 		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
-		<div id="exDiv2" style="display:none;max-width:580px;height:230px;padding-top:20px;">
+		<div id="exDiv2" style="display:none;max-width:580px;height:230px;padding-top:25px;">
 			<div style="height:150px;border:1px solid rgb(0, 72, 149);margin:5px;border-radius:10px">
-				<div style="color:rgb(0, 72, 149);width:440px;padding:18px 0px 10px 20px;font-size:12px;white-space: pre-wrap;">▒ ${message}
+				<div style="color:rgb(0, 72, 149);width:440px;padding:18px 0px 10px 20px;font-size:12px;white-space: pre-wrap;">▒ ${message1}<span class="spanMsg">${message2}</span>${message3}
 				</div>
 			</div>		
-			<div class="btnposition" style="margin:10px;">
+			<div class="btnposition" style="margin-top:0px;">
 			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t4' /></span></a>
 			</div>	
 		</div>
