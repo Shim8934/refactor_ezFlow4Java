@@ -23,3 +23,4 @@ var strLang22 = "リストのIDが指定されていません。";
 var strLang23 = "データが指定されていません。";
 var strLang24 = "前へ";
 var strLang25 = "次へ";
+var strLang26 = "작성자에게 의견을 남겨주세요.";

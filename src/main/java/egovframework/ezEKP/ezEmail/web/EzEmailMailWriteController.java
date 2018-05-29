@@ -3412,7 +3412,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								}
 								
 								// multipart/related 안에 첨부파일이 들어 있는 메일이 코린도에서 수신되어
-								// 해당 메일이 인라인 이미지도 포함한 경우의 처리를 위해 추가함
+								// 해당 메일이 인라인 이미지도 포함한 경우의 처리를 위해 추가함.
+								// 이 경우엔 전체 메시지를 multipart/related로 구성하고
+								// 그 안에 인라인 이미지와 첨부 파일이 들어 있는 형태로 메시지를 구성한다.
 								if (oldMessage.isMimeType("multipart/related")) {
 									logger.debug("hasAttach=" + hasAttach + ",hasRelated=" + hasRelated
 													+ ",hasInlineImage=" + hasInlineImage);
@@ -3870,11 +3872,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+				    		        	
 				    		        }
 				    		        else {
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 				    		        }
+			    		        	// 전달, 회신 테스트
+			    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
 			    		        }
 			    		        
 			    		        orgMsgFolder.close(true);
