@@ -80,7 +80,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ProjectMemberVO> getProjectMemberList(HashMap<String, Object> map) {
+	public List<ProjectMemberVO> getProjectMemberList(Map<String, Object> map) {
 		return (List<ProjectMemberVO>) list("EzPMSDAO.getProjectMember", map);
 	}
 

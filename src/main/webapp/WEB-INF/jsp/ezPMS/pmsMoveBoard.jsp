@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <!DOCTYPE>
 <html>
 <head>
@@ -12,28 +14,17 @@
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
+
 	var treeData = JSON.parse('${data}');
+	
 	$(document).ready(function() {
 		getProjectTaskTree("taskTree", treeData, false);
 		
 		$("#taskTree").on("dblclick", ".jstree-anchor", function(evt) {
 			evt.preventDefault();
 			evt.stopPropagation();
-			register();
 		});
 	});
-	
-	function register() {
-		var chosenTask = $("a.jstree-clicked");	
-		parent.document.getElementById("taskName").innerHTML = chosenTask.text();
-		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
-			parent.groupId = chosenTask.parents("li").eq(1).attr("id");
-			parent.taskId = chosenTask.parent().attr("id").substr(1);		
-		} else {
-			parent.groupId = chosenTask.parent().attr("id");
-		}	
-		popupClose();
-	}	
 </script>
 <style>
 .tree {
@@ -47,7 +38,7 @@
 	<h1>작업 목록</h1>
 	<div id="close">
 		<ul>
-			<li><span onclick="register()">등록</span></li>
+			<li><span onclick="moveBoard()">이동</span></li>
 			<li><span onclick="popupClose()">닫기</span></li>
 		</ul>
 	</div>

@@ -95,7 +95,7 @@ public class EzPMSGWController3 {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
 			ezPMSService.deleteBoard(info.getTenantId(), jsonParam);
 			
 			result.put("status", "ok");

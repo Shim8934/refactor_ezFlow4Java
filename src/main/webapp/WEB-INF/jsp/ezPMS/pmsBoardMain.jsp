@@ -85,10 +85,11 @@
 		getBoardList();
 	}
 	
-	function deleteBoardAction(itemIds) {
-		
+	// 메인에서 체크박스로 선택 후 삭제할 때
+	function deleteBoardsAction(itemIds) {
 		data = {
-			itemIds : itemIds
+			itemIds : itemIds,
+			projectId : projectId
 		}
 		
 		$.ajax({
@@ -98,13 +99,137 @@
 			contentType : "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
 			success : function(result) {
-				alert("삭제되었습니다.");
-				getBoardList();
+				if(result.data == 'success') {
+					alert("삭제되었습니다.");
+					getBoardList();
+				} else {
+					alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
+				}	
 			},
 			error : function() {
 				alert("삭제에 실패했습니다.");
 			}
 		})
+	}
+	
+	// 조회 화면에서 삭제할 때
+	function deleteBoardAction(itemIds) {
+		data = {
+			itemIds : itemIds,
+			projectId : projectId
+		}
+		
+		$.ajax({
+			type : "DELETE",
+			url : "/ezPMS/deleteBoard.do",
+			dataType : "json",
+			contentType : "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(result) {
+				if(result.data == 'success') {
+					boardDetail.alert("삭제되었습니다.");
+					boardDetail.close();
+					getBoardList();
+				} else {
+					boardDetail.alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
+				}
+			},
+			error : function() {
+				alert("삭제에 실패했습니다.");
+			}
+		})
+	}
+</script>
+
+<script>
+	var boardDetail;
+	
+	$(function() {
+		$("#divList").css("height", (currentHeight - 100) + "px");
+		
+		$("tbody tr td:not(.checkbox)").on("click", function(evt) {
+			var checkbox = $(this).parent().children("td:eq(0)").children();
+			$('input:checkbox[name="boardCheckbox"]').each(function() {
+				$(this).removeProp("checked","true");
+				$(this).parent().parent().removeClass("selectedTR");
+			});
+			
+			checkbox.prop("checked", "true");
+			selectTR(checkbox);
+		});
+		
+		$("tbody tr").on("dblclick", function() {
+			goBoardDetail(this);
+		});
+		
+		$(".mainlist th:not(.checkboxHeader)").on("click", function() {
+			
+		});
+	})
+	
+	// 체크박스 전체선택 혹은 해제
+	function selectAllTR(elem) {
+		if($(elem).is(":checked")) {
+			 $('input:checkbox[name="boardCheckbox"]').each(function() {
+				 $(this).prop("checked","true");
+				 $(this).parent().parent().addClass("selectedTR");
+			 });
+		} else {
+			 $('input:checkbox[name="boardCheckbox"]').each(function() {
+				 $(this).removeProp("checked","true");
+				 $(this).parent().parent().removeClass("selectedTR");
+			 });
+		}
+	}
+	
+	function selectTR(elem) {
+		if($(elem).is(":checked")) {
+			$(elem).parent().parent().addClass("selectedTR");
+		} else {
+			$(elem).parent().parent().removeClass("selectedTR");
+		}
+	}
+	
+	// 게시판 상세 화면
+	function goBoardDetail(elem) {
+		var itemId = $(elem).attr("data-itemId");
+		$(elem).removeClass("noView");
+		var feature = GetOpenPosition(790, 800);
+		boardDetail = window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", 
+								  "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
+	}
+	
+	function deleteBoards() {
+		var checkBoxes = $('input:checked[name="boardCheckbox"]');
+		if(!checkBoxes.length) {
+			alert("삭제할 글을 선택하세요.");
+			return;
+		}
+		
+		if(confirm("정말 삭제하시겠습니까?") == true) {
+			var itemIds = new Array();
+			checkBoxes.each(function() {
+				var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
+				itemIds.push(itemId);		
+			});
+			deleteBoardsAction(itemIds);
+		}	
+	}
+	
+	function moveBoards() {
+		var checkBoxes = $('input:checked[name="boardCheckbox"]');
+		if(!checkBoxes.length) {
+			alert("이동할 글을 선택하세요.");
+			return;
+		}
+		var itemIdsURI = "";
+		
+		checkBoxes.each(function() {
+			var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
+			itemIdsURI += ("&itemIds=" + itemId);	
+		});
+		
+		DivPopUpShow(320, 320, "/ezPMS/goMoveBoard.do?projectId=" + projectId + "&onlyGroup=false" + itemIdsURI);
 	}
 </script>
 

@@ -1356,7 +1356,8 @@
 			SELECT 
 				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
 				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
-				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		IFNULL(F.file_cnt, 0) AS FILE_CNT,								B.write_content
+				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		
+				IFNULL(F.file_cnt, 0) AS FILE_CNT,				B.write_content
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
@@ -1382,7 +1383,13 @@
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
 			AND B.del_status = 0
-			ORDER BY B.write_type ASC, B.item_id DESC
+			ORDER BY 
+			CASE B.write_type 
+			WHEN 1 THEN 2 
+			WHEN 3 THEN 4 
+			ELSE B.write_type 
+			END ASC, 
+			B.item_id DESC
 			LIMIT #startRow#, #limit#
 	</select>
 	

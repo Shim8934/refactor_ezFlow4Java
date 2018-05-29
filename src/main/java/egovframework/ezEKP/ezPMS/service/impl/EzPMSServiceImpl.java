@@ -1229,17 +1229,30 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
-	public void deleteBoard(int tenantId, JSONObject jsonParam) {
+	public void deleteBoard(int tenantId, JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] deleteBoard started");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
 		
 		ArrayList<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
+		String userId = (String) jsonParam.get("userId");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("projectId", jsonParam.get("projectId"));
+		map.put("roleId", 1);
+		
+		List<ProjectMemberVO> memberList = ezPMSDAO.getProjectMemberList(map);
+		String headManagerId = memberList.get(0).getUserId();
+		
 		for(String itemId : itemIds) {
 			map.put("itemId", itemId);
-			ezPMSDAO.deleteBoard(map);
+			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
+			if(boardVO.getWriterId().equals(userId) || headManagerId.equals(userId)) {
+				ezPMSDAO.deleteBoard(map);
+			} else {
+				Exception e = new Exception("Only project Manager and Writer are authorized to delete article");
+				throw e;
+			}
 		}
-		
 		LOGGER.debug("[SERVICE] deleteBoard ended");
 	}
 	
