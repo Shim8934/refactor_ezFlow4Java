@@ -3,78 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<script>
-	var boardDetail;
-	
-	$(function() {
-		$("#divList").css("height", (currentHeight - 100) + "px");
-		
-		$("tbody tr td:not(.checkbox)").on("click", function(evt) {
-			var checkbox = $(this).parent().children("td:eq(0)").children();
-			$('input:checkbox[name="boardCheckbox"]').each(function() {
-				$(this).removeProp("checked","true");
-				$(this).parent().parent().removeClass("selectedTR");
-			});
-			
-			checkbox.prop("checked", "true");
-			selectTR(checkbox);
-		});
-		
-		$("tbody tr").on("dblclick", function() {
-			goBoardDetail(this);
-		});
-	})
-	
-	// 체크박스 전체선택 혹은 해제
-	function selectAllTR(elem) {
-		if($(elem).is(":checked")) {
-			 $('input:checkbox[name="boardCheckbox"]').each(function() {
-				 $(this).prop("checked","true");
-				 $(this).parent().parent().addClass("selectedTR");
-			 });
-		} else {
-			 $('input:checkbox[name="boardCheckbox"]').each(function() {
-				 $(this).removeProp("checked","true");
-				 $(this).parent().parent().removeClass("selectedTR");
-			 });
-		}
-	}
-	
-	function selectTR(elem) {
-		if($(elem).is(":checked")) {
-			$(elem).parent().parent().addClass("selectedTR");
-		} else {
-			$(elem).parent().parent().removeClass("selectedTR");
-		}
-	}
-	
-	// 게시판 상세 화면
-	function goBoardDetail(elem) {
-		var itemId = $(elem).attr("data-itemId");
-		$(elem).removeClass("noView");
-		var feature = GetOpenPosition(790, 800);
-		boardDetail = window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", 
-								  "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
-	}
-	
-	function deleteBoards() {
-		var checkBoxes = $('input:checked[name="boardCheckbox"]');
-		if(!checkBoxes.length) {
-			alert("삭제할 글을 선택하세요.");
-			return;
-		}
-		
-		if(confirm("정말 삭제하시겠습니까?") == true) {
-			var itemIds = new Array();
-			checkBoxes.each(function() {
-				var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
-				itemIds.push(itemId);		
-			});
-			deleteBoardAction(itemIds);
-		}	
-	}
-</script>
-	
+
 <style>
 	.selectedTR {
 		background-color: rgb(233, 241, 255);
@@ -97,7 +26,7 @@
 		<ul class="on">
 			<li class="off"><span onclick="goAddBoard()">등록</span></li>
 			<li class="off"><span onclick="deleteBoards()">삭제</span></li>
-			<li class="off"><span onclick="">이동</span></li>
+			<li class="off"><span onclick="moveBoards()">이동</span></li>
 			<li class="off"><span onclick="">새로고침</span></li>
 			<li class="off"><span onclick="">검색</span></li>
 		</ul>
@@ -105,7 +34,7 @@
 	<table class="mainlist" style="width: 100%;">
 		<thead>
 			<tr style="height: 37px;">
-				<th><input type="checkbox" onchange="selectAllTR(this);"></th>
+				<th class="checkboxHeader"><input type="checkbox" onchange="selectAllTR(this);"></th>
 				<th>No</th>
 				<th><img src="/images/newAttach.gif"></th>
 				<th>제목</th>
@@ -234,3 +163,8 @@
 		</div>
 	</c:otherwise>
 </c:choose>
+<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
+<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+</div>
+<div id="asdf"></div>

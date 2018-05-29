@@ -52,7 +52,6 @@
 				var items = new Array();
 				items.push('${board.itemId}');
 				opener.deleteBoardAction(items);
-				window.close();
 			}	
 		}
 	</script>

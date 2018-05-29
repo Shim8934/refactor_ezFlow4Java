@@ -108,6 +108,7 @@
 			success : function(result) {
 				alert("성공");
 				doubleSubmitFlag = false;
+				opener.currentPage = 1;
 				opener.getBoardList();
 				window.close();
 			},

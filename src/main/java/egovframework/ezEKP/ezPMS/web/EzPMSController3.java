@@ -1,12 +1,13 @@
 package egovframework.ezEKP.ezPMS.web;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -148,14 +149,15 @@ public class EzPMSController3 {
 		return "json";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/deleteBoard.do")
 	public String deleteBoard(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("ezPMS deleteBoard started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());
+		Map<String, Object> param = null;
+		jsonParam.put("userId", userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "delete", jsonParam);
 		String status = resultBody.get("status").toString();
@@ -473,5 +475,35 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS getBoardDetail ended");
 		
 		return "ezPMS/pmsBoardDetail";
+	}
+	
+	@RequestMapping(value = "/ezPMS/goMoveBoard.do")
+	public String goMoveBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {		
+		LOGGER.debug("ezPMS goMoveBoard started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String projectId = request.getParameter("projectId");
+		String onlyGroup = request.getParameter("onlyGroup");
+		List<String> itemIds = Arrays.asList(request.getParameterValues("itemIds"));
+		Iterator<String> iterator = itemIds.iterator();
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("onlyGroup", onlyGroup);
+		param.put("location", "board");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray treeData = (JSONArray) resultBody.get("data");
+			model.addAttribute("data", treeData);
+		}
+		
+		model.addAttribute("itemIds", iterator);
+		
+		LOGGER.debug("ezPMS goMoveBoard ended");
+		
+		return "/ezPMS/pmsMoveBoard";
 	}
 }
