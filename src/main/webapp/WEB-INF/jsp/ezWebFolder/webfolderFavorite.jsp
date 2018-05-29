@@ -341,8 +341,9 @@
 				"searchEndDate": searchRequirement.endDate
 			},
 			success: function(result) {
+				var data = result.data;
+				
 				hideProgress();
-				result = result.data;
 				
 				if (result.status == "error") {
 					if (result.code == 1) {
@@ -357,13 +358,13 @@
 					}
 				}
 				
-				pagination.setListSize(result.listCount);
-				pagination.setAmount(result.totalRows);
+				pagination.setListSize(data.listCount);
+				pagination.setAmount(data.totalRows);
 				pagination.build();
 				
 				var dragDropArea = dom.dragDropArea;
 				
-				if (result.folderUpp == "root") {
+				if (data.folderUpp == "root") {
 					dom.upload.setAttribute("hidden", "");
 					dragDropArea.ondragenter = null;
 					dragDropArea.ondragover = null;
@@ -381,9 +382,9 @@
 					};
 				}
 				
-				renderList(result.fileList, true);
-				setNamePath(result.folderPath, result.originalPath);
-				setMailBoxInfo(result.fldCnt, result.fileCnt);
+				renderList(data.fileList, true);
+				setNamePath(data.folderPath, data.originalPath);
+				setMailBoxInfo(data.fldCnt, data.fileCnt);
 			},
 			error: function(error) {
 				hideProgress();
@@ -399,15 +400,16 @@
 	// originalPath 는 한글 path
 	// folderPath 는 숫자 
 	function setNamePath(folderPath, originalPath) {
-		var nameTag = document.createElement("span");
+		var nameTag = document.createElement("div");
 		var originPath;
 		var pathes;
 		
 		// for statement using
-		var detailName;
+		var detailName, divName, divSeparator;
 		var imgElmt;
 		var length;
 		
+		nameTag.setAttribute("class", "mainPath");
 		folderPath = folderPath.substring(1, folderPath.length - 1);
 		originPath = folderPath.split("|");
 		pathes = originalPath.split("/");
@@ -417,7 +419,8 @@
 		length = pathes.length - 1;
 		
 		for (var i = 0; i < length; i++) {
-			detailName = document.createElement("span");
+			detailName = document.createElement("div");
+			divName = document.createElement("div");
 			
 			detailName.className = "aName";
 			detailName.id = originPath[i];
@@ -428,17 +431,23 @@
 				context.setList(this.id);
 			};
 
-			detailName.textContent = pathes[i] ;
+			divName.textContent = pathes[i] ;
+			divName.setAttribute("title", pathes[i]);
 			/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
-			detailName.setAttribute("style", "font-size:15px; ");
+			divName.setAttribute("style", "font-size:15px; ");
+			detailName.appendChild(divName);
 			nameTag.appendChild(detailName);
 			
 			if(length == 1) {
-				detailName = document.createElement("span");
+				// detailName = document.createElement("span");
 				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
-				detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-				detailName.setAttribute("style", "font-size:15px;");
-				nameTag.appendChild(detailName);
+				// detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+				// detailName.setAttribute("style", "font-size:15px;");
+				// nameTag.appendChild(detailName);
+				divSeparator = document.createElement("div");
+				divSeparator.setAttribute("class", "separator");
+				divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+				nameTag.appendChild(divSeparator);
 			}
 			
 			/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
@@ -447,10 +456,14 @@
 			imgElmt.src = "/images/webfolder/arrow2.png"; */
 			
 			if (i != length - 1) {
-				detailName = document.createElement("span");
+				/* detailName = document.createElement("span");
 				detailName.textContent = " > ";
-				nameTag.appendChild(detailName);
-			}	
+				nameTag.appendChild(detailName); */
+				divSeparator = document.createElement("div");
+				divSeparator.textContent = " > ";
+				divSeparator.setAttribute("class", "separator");
+				nameTag.appendChild(divSeparator);
+			}
 		}
 	}
 
@@ -824,7 +837,7 @@
 	</h1>
 	<div id="pageArea">
 		<div id="originalPathWrapper" style="height:40px;">
-			<span id="originalPath" style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;"></span>
+			<span id="originalPath" style="font-size: 24px; font-weight: bold; font-weight: bold; padding: 8px 0px;"></span>
 		</div>
 		<div id="mainmenu">
 			<ul>
