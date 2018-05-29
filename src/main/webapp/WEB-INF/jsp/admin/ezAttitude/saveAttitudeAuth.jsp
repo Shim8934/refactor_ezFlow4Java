@@ -69,8 +69,7 @@
 	    	
 	    	//사원선택
 	    	function select_person() {
-	    		var url = "/admin/ezAttitude/selectAttitudeAuthor.do";
-				url+="?companyId="+companyId;
+	    		var url = "/admin/ezAttitude/selectAttitudeAuthor.do?companyId=" + companyId;
 				window.open(url, "author", GetOpenWindowfeature(705, 575));
 	    	}
 	    	
@@ -90,8 +89,7 @@
 	    		
 	    		ezattitude_dialogArguments[0] = para;
 	    		
-	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do";
-				url+="?companyId="+companyId+"&userId="+selectedUser;
+	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do?companyId=" + companyId + "&userId=" + selectedUser;
 				var SelectTarget = window.open(url, "authorDept", GetOpenWindowfeature(500, 540));
 				try { SelectTarget.focus(); } catch (e) {
 	            }
@@ -224,20 +222,6 @@
 	            <td style="height: 60px; width: 400px;">
 	                <textarea rows="3" id="txtdept" type="text" style="height: 43px; margin-top:2px; width:77%; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea>
 	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.t199' /></span></a>                
-<!-- 	                <table style="width: 400px;"> -->
-<!-- 	                	<tr> -->
-<!-- 	                		<td> -->
-<!-- 				                <div style="margin: auto;"> -->
-<!-- 					                <textarea rows="3" id="txtdept" type="text" style="height: 43px; width:77%; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea> -->
-<!-- 				                </div> -->
-<!-- 	                		</td> -->
-<!-- 	                		<td> -->
-<!-- 				                <div style="margin: auto;"> -->
-<%-- 					                <a href="#" class="imgbtn"><span onclick="selectDept()">지정</span></a>                 --%>
-<!-- 				                </div> -->
-<!-- 	                		</td> -->
-<!-- 	                	</tr> -->
-<!-- 	                </table> -->
 	            </td>
 	        </tr>
 	    </table>

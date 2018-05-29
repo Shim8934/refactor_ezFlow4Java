@@ -175,14 +175,13 @@ public class EzAttitudeAdminBOMController {
 	public String updateAttitudeConfInfo(AttitudeConfigVO attitudeConfigVO, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("updateAttitudeConfInfo started.");
 		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String workStartTime = request.getParameter("workStartTime");
 		String workEndTime = request.getParameter("workEndTime");
 		String closedDay = request.getParameter("closedDay");
 		String attitudeModAppl = request.getParameter("attitudeModAppl");
 		String closedDateAttitude = request.getParameter("closedDateAttitude");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");		
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudereg";
 									
@@ -322,9 +321,8 @@ public class EzAttitudeAdminBOMController {
 	public String saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("saveAttitudeTypeConfig started.");
 		
-		String typeConfigList = request.getParameter("typeList");
-		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String typeConfigList = request.getParameter("typeList");
 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";
@@ -367,7 +365,12 @@ public class EzAttitudeAdminBOMController {
 	public String addAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("addAttitudeType started.");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId");
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 		model.addAttribute("companyId", companyId);
 		
@@ -383,11 +386,14 @@ public class EzAttitudeAdminBOMController {
 	public String  showAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("showAttitudeType started.");
 				
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String attitudetypeId = request.getParameter("typeId");
 		String companyId = request.getParameter("companyId");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId;
 									
@@ -433,7 +439,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("saveAttutideType started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
 		String companyId = request.getParameter("companyId");
 		String typeId = request.getParameter("typeId");
 		String typeName = request.getParameter("typeName");
@@ -468,14 +473,12 @@ public class EzAttitudeAdminBOMController {
 		} else {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
 		}
-		
 		//insert시  count27개 넘으면 status failed로 리턴하게 해놓음
-		
 		JSONObject resultBody = (JSONObject) result.getBody();
 		
 		String status = resultBody.get("status").toString();
-		
 		String resultStatus = "";
+		
 		if (status.equals("ok")) {
 			resultStatus = "success";
 		} else if (status.equals("failed")) {
@@ -490,19 +493,13 @@ public class EzAttitudeAdminBOMController {
 	}
 	/**
 	 * 근태유형 삭제
-	 * @param loginCookie
-	 * @param request
-	 * @param model
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeType.do")
 	@ResponseBody
 	public String deleteAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		
 		LOGGER.debug("saveAttutideType started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
 		String companyId = request.getParameter("companyId");
 		String typeId = request.getParameter("typeId");
 		
@@ -667,10 +664,13 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf started");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String selectedUserIdList = request.getParameter("selectedUserIdList");
 		String companyId = request.getParameter("companyId");
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 		LOGGER.debug("selectedUserIdList = " + selectedUserIdList);
 		
@@ -737,7 +737,6 @@ public class EzAttitudeAdminBOMController {
 		resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		status = resultBody.get("status").toString();
-		
 		LOGGER.debug("status : " + status);
 		
 		jObject = new JSONObject();
@@ -879,7 +878,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/admin/ezAttitude/attitudeCheckList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
@@ -960,7 +958,6 @@ public class EzAttitudeAdminBOMController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		
 		cal = Calendar.getInstance();
 		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
@@ -1018,7 +1015,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String companyId = request.getParameter("companyId");
@@ -1076,6 +1072,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("status : " + status);
 		
 		JSONObject jObject = new JSONObject();
+		
 		if(status.equals("ok")){
 			jObject = (JSONObject) resultBody.get("data");
 		}
@@ -1093,7 +1090,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("excelFileExport started."); 
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie); 
-		
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
@@ -1317,7 +1313,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("absentedListSendMail started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String companyId = request.getParameter("companyId");
@@ -1377,11 +1372,6 @@ public class EzAttitudeAdminBOMController {
 	
 	/**
 	 * 관리자 근태권한관리 화면 호출 함수
-	 * @param loginCookie
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorManage.do")
 	public String attitudeAuthorManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -1435,10 +1425,6 @@ public class EzAttitudeAdminBOMController {
 	
 	/**
 	 * 관리자 근태권한관리 리스트 조회하는 함수
-	 * @param loginCookie
-	 * @param request
-	 * @return
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthList.do")
 	@ResponseBody
@@ -1446,7 +1432,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
 		String companyId = request.getParameter("companyId");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -1493,9 +1478,6 @@ public class EzAttitudeAdminBOMController {
 	
 	/**
 	 * 관리자 근태권한관리 권한삭제 함수
-	 * @param loginCookie
-	 * @param request
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeAuth.do")
 	@ResponseBody
@@ -1503,7 +1485,6 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
 		String selectUserId = request.getParameter("selectUserId");
 		String companyId = request.getParameter("companyId");
 		
@@ -1544,21 +1525,17 @@ public class EzAttitudeAdminBOMController {
 	
 	/**
 	 * 근태권한관리 권한추가 화면
-	 * @return
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuth.do")
 	public String saveAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("saveAttitudeAuth started.");
+		
 		String userId = request.getParameter("userId");
+		String userName = request.getParameter("userName");
 		String companyId = request.getParameter("companyId");
 		String isAllDept = "";
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-
 		if (userId != null) {
-			
-			model.addAttribute("selectedUser", userId);
-			model.addAttribute("selectedUserName", request.getParameter("userName"));
-			
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitude-auth";
 			
@@ -1571,7 +1548,6 @@ public class EzAttitudeAdminBOMController {
 					.queryParam("companyId", companyId)
 					.queryParam("isAllDept", isAllDept)
 					.queryParam("userId", userId);
-			
 			
 			RestTemplate rest = new RestTemplate();
 			
@@ -1588,37 +1564,27 @@ public class EzAttitudeAdminBOMController {
 				
 				model.addAttribute("deptList", authorDeptList);
 			}
+			
+			model.addAttribute("selectedUser", userId);
+			model.addAttribute("selectedUserName", userName);
 		}
 		
-		model.addAttribute("companyId",request.getParameter("companyId"));
+		model.addAttribute("companyId", companyId);
+		
+		LOGGER.debug("saveAttitudeAuth ended.");
 
 		return "/admin/ezAttitude/saveAttitudeAuth";
 	}
 	
 	/**
 	 * 근태권한관리 권한추가 권한자 지정시(조직도)
-	 * @param loginCookie
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthor.do")
 	public String selectAttitudeAuthor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		
 		LOGGER.debug("/admin/ezAttitude/selectAttitudeAuthor started");
 
-		String companyId = request.getParameter("companyId");
-		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String userId = null;
-		if (request.getParameter("userId") != null) {
-			userId = request.getParameter("userId");
-			model.addAttribute("selectedUser",userId.trim());
-		}else{
-			userId = userInfo.getId();
-		}
+		String companyId = request.getParameter("companyId");
 		
 		//조직도 회사,부서 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");

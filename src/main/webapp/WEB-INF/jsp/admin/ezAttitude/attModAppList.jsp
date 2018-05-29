@@ -950,7 +950,7 @@
 				    },
 				    success : function(json){
 				    	get_att_list(currentPage);
-						alert("<spring:message code='ezAttitude.t175'/>");
+						alert("<spring:message code='ezAttitude.t214'/>");
 				    },
 					complete : function() {
 						HiddenAttProgress();
