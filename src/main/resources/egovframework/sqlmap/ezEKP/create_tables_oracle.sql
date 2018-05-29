@@ -422,6 +422,11 @@
 
    CREATE SEQUENCE  "EZEKP2017"."TT_SQ_TMPCLASSINFO_SN"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
+--  DDL for Sequence SEQ_TALK_TBLNOTIFICATION
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TALK_TBLNOTIFICATION"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 21 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
 --  DDL for Table JAMES_DOMAIN
 --------------------------------------------------------
 

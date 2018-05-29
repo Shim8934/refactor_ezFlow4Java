@@ -333,18 +333,16 @@
 
 		     	// 전달, 회신 시 보낸 시간
 		        function sentDateView(msg) {
-				    if ($.isFunction(window.parent.sentDateReturn)) {
-				    	var sentDateStr = window.parent.sentDateReturn();
+				    if (typeof window.parent.sentDateMsg != "undefined") {
+				    	var sentDateMsg = window.parent.sentDateMsg;
 				    	
-				    	if (sentDateStr != ""){
-					    	$("body").prepend("<div class='sentDateStr'>" + sentDateStr + "</div>");
-					    	$(".sentDateStr").css({
-					    		"padding" : "5px 0",
-						        "margin-bottom" : "10px",
-						        "font-size" : "14px",
-						        "background" : "rgba(255,250,205,0.5)"
-					    	});
-				    	}
+				    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+				    	$(".sentDateStr").css({
+				    		"padding" : "5px 0",
+					        "margin-bottom" : "10px",
+					        "font-size" : "14px",
+					        "background" : "rgba(255,250,205,0.5)"
+				    	});
 				    }
 		        }
 			</script> 
