@@ -193,7 +193,7 @@
 	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
-	    				alert('리스트를 가져오는중 오류 발생');
+	    				alert("<spring:message code='ezAttitude.t59'/>");
 	    			}
 	    		});
 	    	}
@@ -302,7 +302,7 @@
 			//엑셀 다운로드
 			function exportExcel() {
 				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
-					alert('출력할 내용이 없습니다');
+					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
 				

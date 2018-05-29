@@ -129,7 +129,7 @@
 					
 					window.open(url, "saveAttitudeType", GetOpenWindowfeature(525, 170));
 	        	} else {
-	        		alert("추가유형은 최대 5개까지 등록할 수 있습니다.");
+	        		alert("<spring:message code='ezAttitude.t223'/>");
 	        	}
 	        }
 	        //유형 삭제
