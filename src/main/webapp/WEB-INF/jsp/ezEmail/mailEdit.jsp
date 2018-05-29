@@ -198,10 +198,6 @@
 		        	document.getElementById("SelMailSign").disabled = true;
 				}
 		        
-		        if (isSecureMail == "true") {
-		        	document.getElementById("chkSecureMail").checked = true;
-		        }
-		        
 		        <c:if test="${useFromAddress == 'YES'}">
 		            var selectTarget = $('.selectbox select'); 
 		            selectTarget.change(function(){ 
