@@ -801,75 +801,6 @@ public class EzAttitudeBHSController {
 				model.addAttribute("attitudeInfo", attitudeVO);
 			}
 		} 
-
-//		String adminFlag = "";
-//		String isAllDept = "";
-//		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
-//		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
-//			adminFlag = "true";
-//			isAllDept = "Y";
-//		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
-//			adminFlag = "true";
-//		}
-//		
-//		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
-//		
-//		headers = new HttpHeaders();
-//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-//		headers.set("x-user-host", request.getServerName());
-//		
-//		entity = new HttpEntity<>(headers);
-//		
-//		builder = UriComponentsBuilder.fromHttpUrl(url)
-//				.queryParam("companyId", userInfo.getCompanyID())
-//				.queryParam("isAllDept", isAllDept)
-//				.queryParam("userId", userInfo.getId());
-//		
-//		rest = new RestTemplate();
-//		
-//		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-//		
-//		jp = new JSONParser();
-//		
-//		resultBody = (JSONObject) jp.parse(result.getBody());
-//		
-//		status = resultBody.get("status").toString();
-//		
-//		JSONArray deptList = new JSONArray();
-//		
-//		if(status.equals("ok")){
-//			deptList = (JSONArray) resultBody.get("data");
-//		}
-//		
-//		if (deptList.size() > 1) {
-//			adminFlag = "true";
-//		}
-//		LOGGER.debug("dpetList : " + deptList.toJSONString());
-//		int myDeptCount = 0;
-//		String authType = "R";
-//		JSONObject dept = new JSONObject();
-//		
-//		for(int i = 0; i < deptList.size(); i++) {
-//			dept = (JSONObject) deptList.get(i);
-//			if (dept.get("deptId").equals(userInfo.getDeptID())) {
-//				myDeptCount++;
-//			}
-//			if (dept.get("deptId").equals(attitudeVO.get("deptId"))) {
-//				authType = (String) dept.get("authType");  
-//			}
-//		}
-//		
-//		if (myDeptCount == 1) {
-//			for(int i = 0; i < deptList.size(); i++) {
-//				dept = (JSONObject) deptList.get(i);
-//				if (dept.get("deptId").equals(userInfo.getDeptID())) {
-//					dept.put("mine", "no");
-//				}
-//			}
-//		}
-//		
-//		model.addAttribute("deptList", deptList);
-//		model.addAttribute("authType", authType);
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("font", font);
 		
@@ -922,47 +853,6 @@ public class EzAttitudeBHSController {
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem ended");
 		
 		return resultStatus;
-	}
-	
-	/**
-	 * 사원이 속한 회사의 근태규율을 가져오는 메소드
-	 */
-	@RequestMapping(value = "/ezAttitude/getAttitudeConf.do")
-	@ResponseBody
-	public JSONObject getAttitudeConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/ezAttitude/getAttitudeConf started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String userId = userInfo.getId();
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userId);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		
-		JSONObject attitudeConfigVO = new JSONObject();
-		if (status.equals("ok")) {
-			attitudeConfigVO = (JSONObject) resultBody.get("data");
-		}
-		LOGGER.debug("/ezAttitude/getAttitudeConf ended");
-		return attitudeConfigVO;
 	}
 	
 	/**
