@@ -549,54 +549,6 @@ public class EzAttitudeAdminBOMController {
 		
 		return isUse;
 	}
-	
-	/**
-	 * 사원리스트(조직도)
-	 */
-	@RequestMapping(value = "/admin/ezAttitude/deptUserList.do")
-	public String deptUserList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model){
-		LOGGER.debug("userList started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		String key = request.getParameter("key");
-		map.put("key",key );
-		map.put("value", request.getParameter("value"));
-		map.put("userId", userInfo.getId());
-		LOGGER.debug(request.getParameter("key"));
-		LOGGER.debug(request.getParameter("value"));
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezattitude/organtree/users", map, request,"get",null);
-//		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", map, request,"get",null);
-		
-		String status = resultBody.get("status").toString();
-		if (status.equals("ok")) {		
-			JSONArray userList = (JSONArray) resultBody.get("data");
-			
-			model.addAttribute("userList", userList);
-			
-			String keyword = "";
-			if (key.equals("DEPARTMENT") && userList.size()!=0) {
-				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
-			} else{
-				keyword = "검색";
-			}
-			LOGGER.debug("keyword : "+keyword);
-			int userCount = 0;
-			if (userList.size()==0) {
-				keyword = "결과없음";
-			} else {
-				userCount = userList.size();
-			}
-			model.addAttribute("keyword",keyword);
-			model.addAttribute("userCount",userCount);
-		}
-		
-		LOGGER.debug("userList ended");
-		return "admin/ezAttitude/deptUserList";
-	}
 
 	/**
 	 * 관리자 근무시간관리 화면조회
@@ -1907,115 +1859,6 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 근태수정관리 근태관리 화면 출력 함수
-	 */
-	@RequestMapping(value = "/ezAttitude/attitudeHistory.do")
-	public String attitudeHistory(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/ezAttitude/attitudeHistory.do");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String offset = userInfo.getOffset();
-		String adminCompany = userInfo.getCompanyID();
-		String adminFlag = "false";
-		String isAllDept = "";
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-
-		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
-			adminFlag = "true";
-			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
-			adminFlag = "true";
-		}
-		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("isAllDept", isAllDept)
-				.queryParam("userId", userInfo.getId());
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		
-		JSONArray deptList = new JSONArray();
-		
-		if(status.equals("ok")){
-			deptList = (JSONArray) resultBody.get("data");
-		}
-		
-		if (deptList.size() > 1) {
-			adminFlag = "true";
-		}
-		
-		if (adminFlag.equals("false")) {
-			return "cmm/error/accessDenied";
-		}
-		
-		int myDeptCount = 0;
-		JSONObject dept = new JSONObject();
-		
-		for(int i = 0; i < deptList.size(); i++) {
-			dept = (JSONObject) deptList.get(i);
-			if (dept.get("deptId").equals(userInfo.getDeptID())) {
-				myDeptCount++;
-			}
-		}
-		
-		if (myDeptCount == 1) {
-			for(int i = 0; i < deptList.size(); i++) {
-				dept = (JSONObject) deptList.get(i);
-				if (dept.get("deptId").equals(userInfo.getDeptID())) {
-					dept.put("mine", "no");
-				}
-			}
-		}
-		model.addAttribute("deptList", deptList);
-		model.addAttribute("selectedDept", userInfo.getDeptID());
-		
-		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		
-		String searchStartDate = localDate + " 00:00:00";
-		String searchEndDate = localDate + " 23:59:59";
-		
-		Date startDate = sdf.parse(searchStartDate);
-		
-		cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		cal.add(Calendar.DAY_OF_MONTH, -7);
-		
-		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
-		
-		model.addAttribute("adminCompany", adminCompany);
-		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
-		model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
-		
-		LOGGER.debug("/ezAttitude/attitudeHistory.do");
-		
-		return "/ezAttitude/attitudeHistory";
-	}
-	
-	/**
 	 * 관리내역 리스트 가져오는 함수
 	 * @return 
 	 */
@@ -2149,6 +1992,5 @@ public class EzAttitudeAdminBOMController {
 		
 		return totalAtt;
 	}
-	
 	
 }

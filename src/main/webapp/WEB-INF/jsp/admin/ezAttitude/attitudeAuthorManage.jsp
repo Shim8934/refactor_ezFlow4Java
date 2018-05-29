@@ -90,7 +90,7 @@
 	        	}
 	        	
 				var userId = selectedUserId;
-				var url = "/admin/ezAttitude/saveAttitudeAuth.do&companyId=" + encodeURIComponent($("#ListCompany").val()) + "&userId=" + userId + "&userName=" + selectedUserName;
+				var url = "/admin/ezAttitude/saveAttitudeAuth.do?companyId=" + encodeURIComponent($("#ListCompany").val()) + "&userId=" + userId + "&userName=" + selectedUserName;
 				
 				if (userId) {
 					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
@@ -130,7 +130,7 @@
 	        
 	        //권한추가
 	        function author_add() {
-	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do&companyId=" + encodeURIComponent($("#ListCompany").val());
+	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do?companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 	        }
 	        
