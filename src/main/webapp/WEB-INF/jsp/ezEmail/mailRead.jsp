@@ -51,8 +51,7 @@
 		    var pNoneActiveX = "${NoneActiveX}";
 		    var isSecureMail = "${isSecureMail}";
 		    var useReSend = "${useReSend}";
-		    var sentDate = "${sentDate}"; // 전달, 회신 시 보낸 시간
-		    var contentClass = "${contentClass}";
+		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    
 		    window.onresize = window_onresize;
 		    
@@ -427,16 +426,6 @@
 		        newwin.focus();
 		    }
 		    
-		 	// 전달, 회신 시 보낸 시간 메시지 리턴 
-		    function sentDateReturn() {
-		    	var sentDateStr = "";
-		    	if (sentDate != "") {
-			    	var sentMsg = contentClass == "FORWARD" ? "<spring:message code='ezEmail.ksa02' />" : "<spring:message code='ezEmail.ksa01' />";
-			    	sentDateStr = sentDate + sentMsg;
-			    }
-		    	
-		    	return sentDateStr;
-		    }
 		</script>
 	</head>
 
