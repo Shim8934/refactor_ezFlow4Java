@@ -25,6 +25,12 @@
 			evt.stopPropagation();
 		});
 	});
+	
+	function moveBoard() {
+		for(var index in parent.itemIds) {
+			console.log(parent.itemIds[index]);
+		}
+	}
 </script>
 <style>
 .tree {

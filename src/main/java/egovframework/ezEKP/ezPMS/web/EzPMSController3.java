@@ -484,8 +484,6 @@ public class EzPMSController3 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
 		String onlyGroup = request.getParameter("onlyGroup");
-		List<String> itemIds = Arrays.asList(request.getParameterValues("itemIds"));
-		Iterator<String> iterator = itemIds.iterator();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
@@ -499,9 +497,7 @@ public class EzPMSController3 {
 			JSONArray treeData = (JSONArray) resultBody.get("data");
 			model.addAttribute("data", treeData);
 		}
-		
-		model.addAttribute("itemIds", iterator);
-		
+
 		LOGGER.debug("ezPMS goMoveBoard ended");
 		
 		return "/ezPMS/pmsMoveBoard";

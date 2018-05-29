@@ -80,7 +80,7 @@
 							<td><img src="/images/newAttach.gif"></td>
 						</c:otherwise>
 					</c:choose>	
-						<td id="asdf">${projectBoardVO.title}</td>
+						<td>${projectBoardVO.title}</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.taskName eq null}">
 							<td>${projectBoardVO.groupName}</td>
@@ -167,4 +167,3 @@
 <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 </div>
-<div id="asdf"></div>

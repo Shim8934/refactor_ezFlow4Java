@@ -19,7 +19,8 @@
 	var taskName = null;
 	var currentPage = 1;
 	var treeData = JSON.parse('${data}');
-		
+	var itemIds;
+	
 	$(document).ready(function() {
 		
 		currentHeight = $(window).height()-100;
@@ -207,7 +208,7 @@
 		}
 		
 		if(confirm("정말 삭제하시겠습니까?") == true) {
-			var itemIds = new Array();
+			itemIds = new Array();
 			checkBoxes.each(function() {
 				var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
 				itemIds.push(itemId);		
@@ -222,14 +223,14 @@
 			alert("이동할 글을 선택하세요.");
 			return;
 		}
-		var itemIdsURI = "";
-		
+	
+		itemIds = new Array();
 		checkBoxes.each(function() {
 			var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
-			itemIdsURI += ("&itemIds=" + itemId);	
+			itemIds.push(itemId);	
 		});
 		
-		DivPopUpShow(320, 320, "/ezPMS/goMoveBoard.do?projectId=" + projectId + "&onlyGroup=false" + itemIdsURI);
+		DivPopUpShow(320, 320, "/ezPMS/goMoveBoard.do?projectId=" + projectId + "&onlyGroup=false");
 	}
 </script>
 
