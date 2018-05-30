@@ -837,7 +837,7 @@
 	</h1>
 	<div id="pageArea">
 		<div id="originalPathWrapper" style="height:40px;">
-			<span id="originalPath" style="font-size: 24px; font-weight: bold; font-weight: bold; padding: 8px 0px;"></span>
+			<div id="originalPath" style="font-size: 24px; font-weight: bold; padding: 8px 0px;"></div>
 		</div>
 		<div id="mainmenu">
 			<ul>
