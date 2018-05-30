@@ -79,7 +79,7 @@ $(function(){
 </script>
 </head>
 <body>
-	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;">
+	
 		<div style="width: 100%;" id="divList">
 			<div id="lvBoardList">
 				<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0"
@@ -269,7 +269,6 @@ $(function(){
 					</c:otherwise>
 				</c:choose>
 
-			</span>
 
 </body>
 </html>

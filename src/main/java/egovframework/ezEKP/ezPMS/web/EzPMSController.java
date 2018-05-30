@@ -162,7 +162,13 @@ public class EzPMSController {
 					param.put("currentPage", currentPage);
 					//프로젝트 총 개수
 					param.put("listCount", projectListCount);
-					param.put("startCount", paging.getStartCount());
+					
+					if (viewType.equals("Board")) {
+						param.put("startCount", paging.getStartCount());
+					} else {
+						param.put("startCount", param.get("startRow"));
+					}
+					
 					
 					//header 정렬 프로젝트 순서
 					if (param.get("orderWhat") == null || param.get("orderWhat").equals("")) {

@@ -728,10 +728,8 @@
 			ORDER BY 
 				$projectSort$
 		</isEqual>
-		<isEqual property="viewType" compareValue="1">
 			limit 
 				#startCount#, #listNumber# 
-		</isEqual>
 	</select>
 	
 	<insert id="EzPMSDAO.addTask" parameterClass="ProjectTaskVO">
