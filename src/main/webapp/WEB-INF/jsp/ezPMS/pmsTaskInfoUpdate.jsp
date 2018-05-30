@@ -13,13 +13,6 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
-<!-- date picker -->
-<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 
 <style type="text/css">
 .textInput {
@@ -57,6 +50,7 @@ var groupId = "";
 var groupName = "";
 var taskDetails = {};
 var writerId= "";
+var weightData = ${weightData};
 
  $(function() {
 	 taskDetails = ${taskDetails};

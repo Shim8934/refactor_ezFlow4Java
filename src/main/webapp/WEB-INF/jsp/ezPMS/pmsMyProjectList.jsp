@@ -5,9 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>프로젝트 목록</title>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript"
@@ -18,69 +16,25 @@
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css"
 	type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+<title>My Task List</title>
 <script type="text/javascript">
-var CurrentHeight = document.documentElement.clientHeight - 110;
-setTotalCount("${projectListCount}");
-var progressColor = "${progressColor}";
-var completeColor = "${completeColor}";
-var overdueColor = "${overdueColor}";
-var holdColor = "${holdColor}";
+var CurrentHeight = document.documentElement.clientHeight - 100;
 
-$(function(){
-	var projectList = new Array();
-		
-	<c:forEach items="${projectList}" var="project">
-		var json = new Object();
-		json.projectId = "${project.projectId}";
-		json.progress = "${project.progress}";
-		json.totalTaskCount = "${project.totalTaskCount}";
-		json.completeTaskCount = "${project.completeTaskCount}";
-		json.lateTaskCount = "${project.lateTaskCount}";
-		projectList.push(json);
-	</c:forEach>
-	
-	for (var i = 0; i < projectList.length; i++) {
-		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
-		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
-		
-		if (isNaN(completeTaskPercent)) {
-			completeTaskPercent = 0;
-		}
-		
-		if (isNaN(lateTaskPercent)) {
-			lateTaskPercent = 0;
-		}
-		
-		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
-			fillBackgroundColor : progressColor,
-			height : '15px',
-			radius : '15px',
-			width : '68%'
-		});
-		
-		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : completeTaskPercent,
-			fillBackgroundColor : completeColor,
-			height : '15px',
-			radius : '15px',
-			width : '68%'
-		});
-		
-		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : lateTaskPercent,
-			fillBackgroundColor : overdueColor,
-			height : '15px',
-			radius : '15px',
-			width : '68%'
-		});
-	}
+$(function() {
+	CurrentHeight = $(window).height()-100;
+	$("MailListRayer").css("height", CurrentHeight + "px");
+	$("#divList").css("height", (CurrentHeight - 100) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 170) + "px");
+	$("#projectContent").css("height", CurrentHeight + "px");
+	$("#contentList").css("height", (CurrentHeight - 65) + "px");
+	$("#divList").css("overflow", "auto");
+
+	$("#totalCount").text("${projectListCount}");
 });
 </script>
 </head>
 <body>
-	
-		<div style="width: 100%;" id="divList">
+	<div style="width: 100%;" id="divList">
 			<div id="lvBoardList">
 				<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0"
 							class="mainlist" style="overflow:hidden">
@@ -91,29 +45,23 @@ $(function(){
 								<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
 									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 							</th>
-							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: left; overflow: hidden; white-space: nowrap; 
+							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
 								text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">프로젝트명</th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
 								class="h5_center">총괄 담당자</th>
-							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">전체 진행률</th>
-							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="COMPLETE_TASK"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">완료된 업무</th>
-							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="LATE_TASK"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">기한 지난 업무</th>
-							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="REST_DUEDAY"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
-								class="h5_center">남은 기간</th>
-							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="PLAN_START_DATE"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
-								class="h5_center">프로젝트 기간</th>
-							<th id="BoardList_TH_8" onclick="setListOrder(this)" order="STATUS"
+							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PLAN_START_DATE"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
+								class="h5_center">시작일</th>
+							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="PLAN_END_DATE"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
+								class="h5_center">종료일</th>
+							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="STATUS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px;"
 								class="h5_center">상태</th>
+							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PROGRESS"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
+								class="h5_center">진행률</th>
 							</tr>
 							</thead>
 						</table>
@@ -141,41 +89,19 @@ $(function(){
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><c:out
 												value="${project.headManagerName }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
-												name="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
-											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.progress }" />
-											</div></td>
-										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
-												complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
-											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.completeTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
-											</div></td>
-										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
-												overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
-											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
-											</div></td>
-										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px">D
-											<c:choose>
-												<c:when test="${project.restDueday ge 0 }">- <c:out
-														value="${project.restDueday }" />
-												</c:when>
-												<c:otherwise>+ <c:out
-														value="${-project.restDueday }" />
-												</c:otherwise>
-											</c:choose>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">
+												<c:out value="${project.planStartDate }" />
 										</td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 10%"><c:out
-												value="${project.planStartDate }" /> ~ <c:out
-												value="${project.planEndDate }" /></td>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">
+												<c:out value="${project.planEndDate }" />
+										</td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
 												value="${project.status }" /></td>
+										<td onclick="selectedTR(this);"
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px"><c:out
+												value="${project.progress }" /></td>
 									</tr>
 								</c:forEach>
 									</c:otherwise>
@@ -268,7 +194,5 @@ $(function(){
 						</div>
 					</c:otherwise>
 				</c:choose>
-
-
 </body>
 </html>

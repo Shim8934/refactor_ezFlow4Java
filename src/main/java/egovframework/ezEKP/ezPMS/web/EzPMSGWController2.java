@@ -70,7 +70,6 @@ public class EzPMSGWController2 {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String isMyTask = request.getParameter("isMyTask") == null ? "A" : request.getParameter("isMyTask");
 			int tenantId = info.getTenantId();
-			String offset = info.getOffSet();
 			int limit = 0; 
 			int startRow = 0;
 			String orderWhat = request.getParameter("orderWhat");
@@ -100,26 +99,21 @@ public class EzPMSGWController2 {
 			 }
 			
 			search.setMemberId(request.getParameter("headManagerName"));
-			search.setIsMyTask(request.getParameter("isMyTask"));
+			search.setIsMyTask(isMyTask);
 			search.setTenantId(tenantId);
 			
 			//추가
-			search.setProjectName(request.getParameter("searchByName"));
+			search.setTaskName(request.getParameter("searchByTaskName"));
 			search.setMemberName(request.getParameter("searchByUser"));
 			search.setPlanStartDate(request.getParameter("searchByStartDate"));
 			search.setPlanEndDate(request.getParameter("searchByEndDate"));
-			search.setUpperGroupName(request.getParameter("searchByGroupName"));
+			search.setUpperGroupName(request.getParameter("searchByUpperGroupName"));
 			search.setOverview(request.getParameter("searchByOverview"));
+			search.setProjectName(request.getParameter("searchByProjectName"));
 			
 			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
-			if (isMyTask.equals("M")) {
-				String status  =request.getParameter("status");
-				taskList = ezPMSService.getMyTasks(projectId, status, tenantId, userId, offset, lang, limit, startRow);
-			} else {
-				taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow);
-			}
+			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow);
 			 
-			
 			for(int i = 0; i < taskList.size(); i++ ){
 				taskList.get(i).setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
 			}
@@ -317,9 +311,9 @@ public class EzPMSGWController2 {
 	 * 프로젝트관리 그룹 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/group-list/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/groups/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getGroupList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/group-list/" + projectId + "/users/" + userId + "] started.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -327,22 +321,40 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String orderWhat = request.getParameter("orderWhat");
+			String orderHow = request.getParameter("orderHow");
+			int startRow = Integer.parseInt(request.getParameter("startRow") != null ? request.getParameter("startRow") : "-1" );
+			int limit = Integer.parseInt(request.getParameter("limit") != null ? request.getParameter("limit") : "-1" ); 
+			
+			if (orderWhat == null || orderWhat.equals("")) {
+				orderWhat = "init";
+			}
+			
 			SearchVO search = new SearchVO();
 			search.setTenantId(info.getTenantId());
 			search.setProjectId(Long.parseLong(projectId));
+			search.setUpperGroupName(request.getParameter("searchByUpperGroupName"));
+			search.setMemberName(request.getParameter("searchByUser"));
+			search.setPlanStartDate(request.getParameter("searchByStartDate"));
+			search.setPlanEndDate(request.getParameter("searchByEndDate"));
+			search.setGroupName(request.getParameter("searchByGroupName"));
+			search.setOverview(request.getParameter("searchByOverview"));
+			search.setProjectName(request.getParameter("searchByProjectName"));
+			search.setMemberId(userId);
 			
-			List<ProjectGroupVO> taskList = ezPMSService.getGroupList(search);
+			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", taskList);		
+			result.put("data", groupList);		
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");		
 		}
 		
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/group-list/" + projectId + "/users/" + userId + "] ended.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId + "] ended.");
 		return result;
 	}
 	
@@ -608,5 +620,44 @@ public class EzPMSGWController2 {
 		return result;
 	}
 		
-	
+	/**
+	 * 프로젝트관리 업무 상태 수정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId}/status", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateTaskStatus(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+			projectTaskVO.setTenantId(tenantId);
+			projectTaskVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
+			projectTaskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
+			projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+			projectTaskVO.setRealStartDate(request.getParameter("realStartDate"));
+			projectTaskVO.setRealEndDate(request.getParameter("realEndDate"));
+			projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+			projectTaskVO.setStatus(request.getParameter("status"));
+			
+			ezPMSService.updateTaskStatus(projectTaskVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
+		return result;
+	}
 }

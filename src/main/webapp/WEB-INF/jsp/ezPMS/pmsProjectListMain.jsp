@@ -34,6 +34,7 @@ var completeColor = "${completeColor}";
 var overdueColor = "${overdueColor}";
 var holdColor = "${holdColor}";
 var listNumber = "${listNumber}";
+var initListNumber = "${listNumber}";
 var listProjectStatus = "${listProjectStatus}";
 var currentPage = 1;
 var orderWhat; 
@@ -41,8 +42,10 @@ var orderHow;
 var CurrentHeight = document.documentElement.clientHeight - 110;
 var projectTotalCount = 0;
 var checkedVal = "";
+var startRow = 0;
+
 //검색을 위한 변수
-var searchByNmae = "";
+var searchByProjectName = "";
 var searchByUser = "";
 var searchByStartDate = "";
 var searchByEndDate = "";
@@ -144,7 +147,11 @@ function projectListScroll(){
 }
 
 $(function(){
-	setProjectList();
+	if (viewType == 0) {
+		listNumber = 20;
+	}
+	
+	setProjectList("new");
 	getDatePicker();
 
 	if(viewType == 0) {
@@ -284,9 +291,13 @@ function MailOptionHiddenOutside(e) {
 
 function changeMemoStyle() {
 	viewType = 0;
+	listNumber = 20;
+	startRow = 0;
+	console.log($("#memoStyleDiv").scrollTop());
+	$("#projectList").scrollTop(0);
 	
 	changeMainSetting();
-	setProjectList();
+	setProjectList("new");
 	
 	$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
 	$("#boardStyle").attr("src", "/images/kr/cm/btn_bottomframe.gif");
@@ -295,9 +306,10 @@ function changeMemoStyle() {
 
 function changeBoardStyle() {
 	viewType = 1;
+	listNumber = initListNumber;
 	
 	changeMainSetting();
-	setProjectList();
+	setProjectList("new");
 	
 	$("#memoStyle").attr("src", "/images/kr/cm/btn_noframe.gif");
 	$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
@@ -306,8 +318,11 @@ function changeBoardStyle() {
 }
 
 function changeMainSetting() {
+	if (viewType == 0) {
+		listNumber = initListNumber;
+	}
 	
-	data = {
+	var data = {
 		projectSort : projectSort,
 		viewType : viewType,
 		progressColor : progressColor,
@@ -330,9 +345,10 @@ function changeMainSetting() {
 
 function ListCount(listCountNum) {
 	listNumber = listCountNum;
+	initListNumber = listCountNum;
 	
 	changeMainSetting();
-	setProjectList();
+	setProjectList("new");
 }
 
 function ChangeProjectSort(sortType) {
@@ -340,14 +356,14 @@ function ChangeProjectSort(sortType) {
 	orderHow = "";
 	orderWhat = "";
 	changeMainSetting();
-	setProjectList();
+	setProjectList("new");
 	
 }
 
 //페이지 번호에 의한 셋팅
 function goToPageByNum(page){
 	currentPage = page;
-	setProjectList();
+	setProjectList("new");
 }
 
 
@@ -364,7 +380,7 @@ function setListOrder(elem){
 		orderHow='asc';
 	}
 	
-	setProjectList();
+	setProjectList("new");
 }
 
 function setInitOrder(){
@@ -381,7 +397,7 @@ function setInitOrder(){
 	});
 
 	//검색 초기화
-	$("#searchByName").val("");
+	$("#searchByProjectName").val("");
 	$("#searchByUser").val("");
 	$("#Sdatepicker").val("");
 	$("#Edatepicker").val("");
@@ -390,7 +406,11 @@ function setInitOrder(){
 	projectListScroll();
 }
 
-function setProjectList() {	
+function setProjectList(mode) {
+	if (viewType == 0) {
+		listNumber = 20;
+	}
+	
 	var param = {
 		projectSort : projectSort,
 		viewType : viewType,
@@ -399,6 +419,7 @@ function setProjectList() {
 		overdueColor  : overdueColor,
 		holdColor     : holdColor,
 		listNumber : listNumber,
+		startRow : startRow,
 		listProjectStatus : listProjectStatus,
 		currentPage : currentPage,
 		projectTotalCount : projectTotalCount,
@@ -406,7 +427,7 @@ function setProjectList() {
 		orderWhat : orderWhat,
 		orderHow : orderHow,
 		//프로젝트 검색
-		searchByName : searchByName,
+		searchByProjectName : searchByProjectName,
 		searchByUser :	searchByUser,
 		searchByStartDate : searchByStartDate,
 		searchByEndDate : searchByEndDate,
@@ -420,10 +441,39 @@ function setProjectList() {
 		data : JSON.stringify(param),
 		url : "/ezPMS/getProjectList.do",
 		success : function(projectList) {
-			$("#prjectList").html(projectList);
+			if (listProjectStatus == "A") {
+				$("#changeProjectStatus").css("display", "none");
+			} else {
+				$("#changeProjectStatus").css("display", "");
+			}
+			
+			if (viewType == 1) {
+				$("#MailListRayer").html(projectList);
+				$("#MailListRayer").css("display", "");
+				$("#memoStyleDiv").css("display", "none");
+			} else {
+				
+				if (mode == "moreBtn") {
+					$("#memoStyleDiv").append(projectList);
+				} else {
+					$("#memoStyleDiv").html(projectList);
+				}
+				
+				$("#MailListRayer").css("display", "none");
+				$("#memoStyleDiv").css("display", "");
+			}
+			
 			setInitOrder();
 		}	
 	});
+}
+
+function moreProjectList() {
+	listNumber = 20;
+	startRow = $("#memoStyleDiv").find(".projectList").length;
+	$("#memoStyleDiv").find(".moreBtn").remove();
+	
+	setProjectList("moreBtn");
 }
 
 //tr선택시 - 메모지용
@@ -544,7 +594,7 @@ function viewListByStatus(status) {
 		$("#deleteProject").text("삭제");
 	}
 	
-	setProjectList();
+	setProjectList("new");
 }
 
 function deleteProject() {
@@ -575,7 +625,12 @@ function deleteProject() {
 					if (result == "permitted") {
 						alert("상태가 변경되었습니다.");
 						checkedVal = "";
-						setProjectList();
+						
+						if (viewType != 1) {
+							listNumber = 20;
+						}
+						
+						setProjectList("new");
 					} else {
 						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
 						return;
@@ -610,7 +665,7 @@ function deleteProject() {
 					if (result == "permitted") {
 						alert("프로젝트가 영구삭제 되었습니다.");
 						checkedVal = "";
-						setProjectList();
+						setProjectList("new");
 					} else {
 						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
 						return;
@@ -658,8 +713,8 @@ function deleteFavoriteMemo(projectId) {
 	if (response == true) {
 		
 		data = {
-				status : "F",
-				projectList : projectId
+			status : "F",
+			projectList : projectId
 		}
 		
 		$.ajax({
@@ -673,7 +728,7 @@ function deleteFavoriteMemo(projectId) {
 				$("#"+projectId).find("img").attr("onclick", "addFavoriteMemo(this)");
 				
 				if (listProjectStatus == "F") {
-					setProjectList();
+					setProjectList("new");
 				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
@@ -707,7 +762,7 @@ function addFavorite() {
 			success : function() {
 				if (result == "0") {
 					checkedVal = "";
-					setProjectList(); 
+					setProjectList("new"); 
 					alert("프로젝트가 즐겨찾기 되었습니다.");
 				} else {
 					alert("이미 추가된 프로젝트 입니다.");
@@ -767,7 +822,7 @@ function deleteFavorite() {
 			success : function() {
 				alert("프로젝트가 즐겨찾기가 해제되었습니다.");
 				checkedVal = "";
-				setProjectList(); 
+				setProjectList("new"); 
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 			}
@@ -823,13 +878,8 @@ function searchProject() {
 	searchByEndDate = $("#Edatepicker").val();
 	searchByOverview = $("#searchByOverview").val();
 	
-	setProjectList();
+	setProjectList("new");
 }
-
-function emptyDate(elem){
-	$(elem).siblings('input').val("");
-}
-
 
 </script>
 <style type="text/css">
@@ -989,7 +1039,7 @@ function emptyDate(elem){
 			<tbody>
 				<tr>
 					<th>프로젝트명 </th>
-					<td style="width:50%"><input type="text" id="searchByName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
+					<td style="width:50%"><input type="text" id="searchByProjectName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
 					<th>담당자</th>
 					<td><input type="text" id="searchByUser"></td>
 				</tr>
@@ -1007,7 +1057,10 @@ function emptyDate(elem){
 		</table>
 		<a class="imgbtn" onclick="searchProject()" style="margin-left:40%;"><span>검색</span></a>
 	</div>
-	<div id = "prjectList"></div>
+	<div id = "prjectList">
+		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;"></span>
+		<div id="memoStyleDiv" style="height: 80%; width: 100%; overflow: auto; display: none;"></div>
+	</div>
 	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>

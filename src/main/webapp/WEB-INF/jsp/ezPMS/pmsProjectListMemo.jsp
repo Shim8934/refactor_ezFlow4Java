@@ -25,6 +25,7 @@ var progressColor = "${progressColor}";
 var completeColor = "${completeColor}";
 var overdueColor = "${overdueColor}";
 var holdColor = "${holdColor}";
+var projectList = '${projectList}';
 
 $(function(){
 	var projectList = new Array();
@@ -101,6 +102,10 @@ $(function(){
 		document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
 
 	}
+	
+	if (projectList.length >= 20) {
+		$("#memoStyleDiv").append("<div class='moreBtn' onclick='moreProjectList()' style='border:1px solid #d1d1d1; background-color:white; text-align:center; clear:both; cursor:pointer; height:33px; margin-left:3%; line-height:30px;'><span>더보기</span></div>");
+	}
 
 });
 
@@ -116,80 +121,78 @@ $(function(){
 }
 </style>
 <body>
-	<div id="memoStyleDiv" style="height: 80%; width: 100%; overflow: auto; display: none;">
-		<c:choose>
-			<c:when test="${empty projectList}">
-				<table style="width:100%; height:100%">
-					<tr>
-						<td style="text-align:center; font-size:15px;">프로젝트가 없습니다.</td>
-					</tr>
-				</table>
-			</c:when>
-			<c:otherwise>
-			<c:forEach items="${projectList }" var="project">
-			<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px gray; clear: none; width: 360px; left: 2%; cursor:pointer;" ondblclick="goProjectDetails(this)">
+	<c:choose>
+		<c:when test="${empty projectList}">
+			<table style="width:100%; height:100%">
 				<tr>
-					<th colspan="2" style="height: 30px; font-size: 15px;">
-						<input type="checkbox" onchange="checkedCheckboxMemo(this);" name="memoCheckbox" style="margin-top: 7px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float: left">
-							<span style="margin-top:7px;"><c:out value="${project.projectName }" /></span>
-							<c:choose>
-								<c:when test="${project.isFavorite eq 0}">
-									<img class="star" style="cursor: pointer; float: right; margin-top:7px;" draggable="false" src="/images/ImgIcon/view-flag.gif"
-									onclick="addFavoriteMemo(${project.projectId })">
-								</c:when>
-								<c:otherwise>
-									<img class="star" style="cursor: pointer; float: right; margin-top:7px;" draggable="false" src="/images/ImgIcon/icon-flag.gif"
-									onclick="deleteFavoriteMemo(${project.projectId })">
-								</c:otherwise>
-							</c:choose>
-					</th>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td colspan="2" style="height:29px;">&nbsp;&nbsp;<span class="statusSpan" style="font-size:13px; padding:4px;"><c:out value="${project.status }" /></span></td>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td colspan="2" style="text-align: center; font-size: 20px;" class="restDueday">D 
-					<c:choose>
-							<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
-					</c:choose>
-					</td>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td colspan="2" style="text-align: center">(<c:out value="${project.planStartDate }" /> ~ <c:out value="${project.planEndDate }" />)</td>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td colspan="2" style="height:22px;">&nbsp;</td>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td class="memoTd">&nbsp;&nbsp;총괄 담당자</td>
-					<td><c:out value="${project.headManagerName }" /></td>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td class="memoTd">&nbsp;&nbsp;전체 진행률</td>
-					<td><div name="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;<div style="margin-top: 5px; display: inline-block;">
-						<c:out value="${project.progress }" /></div>
-					</td>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td class="memoTd">&nbsp;&nbsp;완료된 업무</td>
-					<td><div complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
-						<div style="margin-top: 5px; display: inline-block;">
-						<c:out value="${project.completeTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
-						</div>
-					</td>
-				</tr>
-				<tr onclick="selectedMemoTR(this);">
-					<td class="memoTd">&nbsp;&nbsp;지연된 업무</td>
-					<td><div overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
-						<div style="margin-top: 5px; display: inline-block;">
-						<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
-						</div>
-					</td>
+					<td style="text-align:center; font-size:15px;">프로젝트가 없습니다.</td>
 				</tr>
 			</table>
+		</c:when>
+		<c:otherwise>
+		<c:forEach items="${projectList }" var="project">
+		<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px #d1d1d1; clear: none; width: 360px; left: 2%; cursor:pointer;" ondblclick="goProjectDetails(this)">
+			<tr>
+				<th colspan="2" style="height: 30px; font-size: 15px;">
+					<input type="checkbox" onchange="checkedCheckboxMemo(this);" name="memoCheckbox" style="margin-top: 7px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float: left">
+						<span style="margin-top:7px;"><c:out value="${project.projectName }" /></span>
+						<c:choose>
+							<c:when test="${project.isFavorite eq 0}">
+								<img class="star" style="cursor: pointer; float: right; margin-top:7px;" draggable="false" src="/images/ImgIcon/view-flag.gif"
+								onclick="addFavoriteMemo(${project.projectId })">
+							</c:when>
+							<c:otherwise>
+								<img class="star" style="cursor: pointer; float: right; margin-top:7px;" draggable="false" src="/images/ImgIcon/icon-flag.gif"
+								onclick="deleteFavoriteMemo(${project.projectId })">
+							</c:otherwise>
+						</c:choose>
+				</th>
+			</tr>
+			<tr onclick="selectedMemoTR(this);">
+				<td colspan="2" style="height:29px;">&nbsp;&nbsp;<span class="statusSpan" style="font-size:13px; padding:4px;"><c:out value="${project.status }" /></span></td>
+			</tr>
+			<tr onclick="selectedMemoTR(this);">
+				<td colspan="2" style="text-align: center; font-size: 20px;" class="restDueday">D 
+				<c:choose>
+						<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
+				</c:choose>
+				</td>
+			</tr>
+			<tr onclick="selectedMemoTR(this);">
+				<td colspan="2" style="text-align: center">(<c:out value="${project.planStartDate }" /> ~ <c:out value="${project.planEndDate }" />)</td>
+			</tr>
+			<tr onclick="selectedMemoTR(this);">
+				<td colspan="2" style="height:22px;">&nbsp;</td>
+			</tr>
+			<tr onclick="selectedMemoTR(this);">
+				<td class="memoTd">&nbsp;&nbsp;총괄 담당자</td>
+				<td><c:out value="${project.headManagerName }" /></td>
+				</tr>
+			<tr onclick="selectedMemoTR(this);">
+			<td class="memoTd">&nbsp;&nbsp;전체 진행률</td>
+					<td><div name="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;<div style="margin-top: 5px; display: inline-block;">
+					<c:out value="${project.progress }" /></div>
+				</td>
+			</tr>
+			<tr onclick="selectedMemoTR(this);">
+				<td class="memoTd">&nbsp;&nbsp;완료된 업무</td>
+				<td><div complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
+					<div style="margin-top: 5px; display: inline-block;">
+					<c:out value="${project.completeTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
+					</div>
+				</td>
+			</tr>
+			<tr onclick="selectedMemoTR(this);">
+				<td class="memoTd">&nbsp;&nbsp;지연된 업무</td>
+					<td><div overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
+					<div style="margin-top: 5px; display: inline-block;">
+					<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
+					</div>
+				</td>
+			</tr>
+		</table>
 		</c:forEach>
 	</c:otherwise>
 	</c:choose>
-	</div>
 </body>
 </html>

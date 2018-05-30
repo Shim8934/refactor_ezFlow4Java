@@ -78,7 +78,7 @@ function popupClose() {
 	parent.DivPopUpHidden();
 }
  
-function showSearchDiv() {
+function showSearchDiv() {	
 	if ($("#searchDiv").css("display") == "none") {
 		$(".searchViewIcon").attr("src", "/images/etc/view-sortdown.gif");
 		$("#searchDiv").slideDown();
@@ -162,4 +162,9 @@ function getCheckedVal() {
 	}
 	
 	return 1;
+}
+
+//검색 - 날짜 초기화 버튼
+function emptyDate(elem){
+	$(elem).siblings('input').val("");
 }
