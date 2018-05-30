@@ -561,14 +561,18 @@ public class EzPMSController2 {
 		param.put("limit", 10);
 		param.put("groupId", groupId);
 		
-		String boardUrl = "/rest/ezPMS/boards/list/" + projectId + "/users/" + userId;
-		JSONObject boardResult = commonUtil.getJsonFromRestApi(boardUrl, param, request, "get", null);
-		String boardStatus = boardResult.get("status").toString();
-		
-		if(boardStatus.equals("ok")) {
-			JSONArray boardList = (JSONArray) boardResult.get("data");
-			model.addAttribute("boardList", boardList);
-		}
+//		String boardUrl = "/rest/ezPMS/boards/list/" + projectId + "/users/" + userId;
+//		JSONObject boardResult = commonUtil.getJsonFromRestApi(boardUrl, param, request, "get", null);
+//		String boardStatus = boardResult.get("status").toString();
+//		
+//		if(boardStatus.equals("ok")) {
+//			JSONArray boardList = (JSONArray) boardResult.get("data");
+//			model.addAttribute("boardList", boardList);
+//			model.addAttribute("groupId", groupId);
+//			model.addAttribute("taskId", taskId);
+//		}
+		model.addAttribute("groupId", groupId);
+		model.addAttribute("taskId", taskId);
 		
 		LOGGER.debug("ezPMS getBoardListTab ended");
 		
