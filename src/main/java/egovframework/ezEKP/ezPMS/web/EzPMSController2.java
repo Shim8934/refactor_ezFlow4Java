@@ -29,6 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
 
+import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -597,6 +598,11 @@ public class EzPMSController2 {
 		String projectId = request.getParameter("projectId");
 		String userId = userInfo.getId();
 		String groupId = request.getParameter("groupId");
+		String onlyGroup = request.getParameter("onlyGroup");
+		String orderWhat = request.getParameter("orderWhat") != null ? request.getParameter("orderWhat") : null;
+		String orderHow = request.getParameter("orderHow") != null ? request.getParameter("orderHow") : null;
+		String searchByContent = request.getParameter("searchByContent") != null ? request.getParameter("searchByContent") : null;
+		String searchByStatus = request.getParameter("searchByStatus") != null ? request.getParameter("searchByStatus") : null;
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("taskId", taskId);
@@ -605,19 +611,143 @@ public class EzPMSController2 {
 		param.put("groupId", groupId);
 		param.put("userId", userId);
 		param.put("orderWhat", "init");
-		
+		param.put("onlyGroup", false);
+		param.put("orderWhat", orderWhat);
+		param.put("orderHow", orderHow);
+		param.put("searchByContent", searchByContent);
+		param.put("searchByStatus", searchByStatus);
+//		
+//		if(logStatus.equals("ok")) {
+//			JSONArray logList = (JSONArray) logResult.get("data");
+//			model.addAttribute("logList", logList);
+//			model.addAttribute("taskId", taskId);
+//			model.addAttribute("groupId", groupId);
+//			model.addAttribute("logCount", logList.size());
+//		}
 		String url = "/rest/ezPMS/projects/" + projectId + "/logs";
-		JSONObject logResult = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
-		String logStatus = logResult.get("status").toString();
+		String countUrl = "/rest/ezPMS/projects/" + projectId + "/logs/count";
 		
-		if(logStatus.equals("ok")) {
-			JSONArray logList = (JSONArray) logResult.get("data");
-			model.addAttribute("logList", logList);
+		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+		String countStatus = countResult.get("status").toString();
+		int logListCount = 0;
+		int listNumber = Integer.parseInt(param.get("listNumber").toString());
+		int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		
+		if (countStatus.equals("ok")) {
+			JSONObject countJson = (JSONObject) countResult.get("data");
+			
+			if (countJson.get("taskLogListCount").toString() != null) {
+				logListCount = Integer.parseInt(countJson.get("taskLogListCount").toString());
+				model.addAttribute("taskLogListCount", logListCount);
+				model.addAttribute("contentTitle", projectId);
+				ProjectPagination paging = new ProjectPagination(logListCount, listNumber, 10, currentPage);
+				model.addAttribute("paging", paging);
+				
+				if (logListCount != 0) {
+					//현재 페이지
+					param.put("currentPage", currentPage);
+					//한 페이지에 보여질 개수
+					param.put("listNumber", listNumber);
+					//프로젝트 총 개수
+					param.put("listCount", logListCount);
+					param.put("startCount", paging.getStartCount());
+					
+					//header 정렬 프로젝트 순서
+					if (param.get("orderWhat") == null || param.get("orderWhat").equals("")) {
+						param.put("orderWhat", "init");
+					}
+					
+					if (param.get("orderHow") == null || param.get("orderHow").equals("")) {
+						param.put("orderHow", "asc");
+					}
+					
+					JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+					String status = result.get("status").toString();
+		
+					if (status.equals("ok")) {
+						JSONArray logList = (JSONArray) result.get("data");
+						model.addAttribute("logList", logList);
+						model.addAttribute("projectId", projectId);
+						model.addAttribute("taskId", taskId);
+						model.addAttribute("groupId", groupId);
+					}
+				}
+			}
 		}
 		
 		LOGGER.debug("ezPMS getLogListTab ended");
 		
 		return "/ezPMS/pmsTaskLogListTab";
+	}
+	
+	/**
+	 * 새 그룹 추가 팝업 호출.
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/goAddGroup.do")
+	public String goAddGroup(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS goAddGroup started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+//		String taskId = (String)param.get("taskId");
+//		
+//		JSONObject jsonList = new JSONObject();
+//		jsonList.put("managerList", param.get("managerList"));
+//		
+//		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "put", jsonList);
+//		String status = resultBody.get("status").toString();
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("userName", userInfo.getDisplayName());
+		
+		LOGGER.debug("ezPMS goAddGroup ended");
+		
+		return "/ezPMS/pmsAddGroup";
+	}
+	
+	/**
+	 * 그룹 추가
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/addGroup.do")
+	public String addGroup(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS addGroup started");
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			String projectId = (String) param.get("projectId");
+			String url = "/rest/ezPMS/groups/"+ projectId +"/users/" + userInfo.getId();
+			String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+			
+			param.put("createDate", today);
+			param.put("userId", userInfo.getId());
+			
+			JSONObject jsonList = new JSONObject();
+			jsonList.put("managerList", param.get("managerList"));
+			jsonList.put("participantList", param.get("participantList"));
+			jsonList.put("viewerList", param.get("viewerList"));
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
+			String status = resultBody.get("status").toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		LOGGER.debug("ezPMS addGroup ended");
+		
+		return "json";
 	}
 	
 }

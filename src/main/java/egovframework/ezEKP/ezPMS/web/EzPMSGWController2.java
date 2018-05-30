@@ -373,12 +373,52 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-//			Gson gson = new Gson();
-//			ProjectGroupVO vo = new ProjectGroupVO();
-//			vo = gson.fromJson(jsonParam.toJSONString(), ProjectGroupVO.class);
-//			vo.setTenantId(info.getTenantId());
-//			
-//			ezPMSService.addGroup(vo);
+			Map<String, Object> project = new HashMap<String, Object>();
+			project.put("planStartDate", request.getParameter("planStartDate"));
+			project.put("planEndDate", request.getParameter("planEndDate"));
+			project.put("overview", request.getParameter("overview"));
+			project.put("headManagerId", request.getParameter("headManagerId"));
+			project.put("creatorId", userId);
+			project.put("creatorName", info.getUserName());
+			project.put("creatorName2", info.getUserName2());
+			project.put("creatorDeptname", info.getDeptName());
+			project.put("creatorDeptname2", info.getDeptName2());
+			project.put("createDate", request.getParameter("createDate"));
+			project.put("tenantId", info.getTenantId());
+			
+			project.put("treeDepth", request.getParameter("treeDepth"));
+			project.put("ancestorGroup", "0");
+			project.put("sortOrder", 1);
+			project.put("status", "W");
+			project.put("upperGroupId", request.getParameter("upperGroupId"));
+			
+			//수정해야함.
+			project.put("progress", "0");
+			
+			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) jsonParam.get("managerList");
+//			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
+//			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("viewerList"));
+			
+			project.put("projectId", projectId);
+			project.put("memberCount", projectMemberList.size());
+			
+			//그룹 생성
+			project.put("groupName", request.getParameter("groupName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
+			ezPMSService.addGroup(project);
+			
+			//프로젝트 멤버 테이블에 추가
+			for (int i = 0; i < projectMemberList.size(); i++) {
+				String memberId = projectMemberList.get(i).get("userId").toString();
+				int tenantId = info.getTenantId();
+				String userIdType = projectMemberList.get(i).get("userIdType").toString();
+				
+				ProjectMemberVO member = ezPMSService.getUserInfo(memberId, tenantId, userIdType);
+				member.setMemberRoleId((int)projectMemberList.get(i).get("memberRoleId"));
+				member.setProjectId(Long.parseLong(projectId));
+				member.setUserIdType(userIdType);
+				
+				ezPMSService.addProjectMember(member, tenantId);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
