@@ -898,7 +898,8 @@
 				<td style="height: 20px">
 					<div id="menu">
 						<ul>
-							<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t155' /></span></li>
+							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCommunity.t155 => t20 -->
+							<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t20' /></span></li>
 							<!-- 2017-12-27 장진혁 - 미리보기가 필요하지 않아 보임 주석처리함 -->
 							<%-- <li><span onclick="PreviewItem();"><spring:message code='ezCommunity.t1167' /></span></li> --%>
 						</ul>

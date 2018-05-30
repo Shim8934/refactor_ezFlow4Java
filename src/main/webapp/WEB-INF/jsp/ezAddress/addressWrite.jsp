@@ -445,7 +445,8 @@
 		<form method="post" runat="server">
 		  <div id="menu">
 		    <ul>
-		      <li><span onClick="insert_address()"><spring:message code='ezAddress.t339' /></span></li>
+		      <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
+		      <li><span onClick="insert_address()"><spring:message code='ezAddress.t300' /></span></li>
 		        <select id ="selectfolder" style="display:none;margin-left:4px;margin-top:2px" onchange ="changetype()">
 		            ${rootAddressSelection}
 		        </select>
