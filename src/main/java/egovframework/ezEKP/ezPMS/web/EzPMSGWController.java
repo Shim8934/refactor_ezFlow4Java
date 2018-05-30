@@ -70,24 +70,24 @@ public class EzPMSGWController {
 			String status = request.getParameter("status");
 			String deptId = info.getDeptId();
 			
-			String searchByName = "";
+			String searchByName = request.getParameter("searchByProjectName").toString();
 			String searchByUser = request.getParameter("searchByUser").toString();
 			String searchByOverview = request.getParameter("searchByOverview").toString();
 			
-			if (!request.getParameter("searchByName").equals("{}")) {
+			if (searchByName != null  && !searchByName.equals("")) {
 				searchByName = request.getParameter("searchByName").toString();
 				searchByName = searchByName.replace("\\","\\\\");
 				searchByName = searchByName.replace("%", "\\%");
 				searchByName = searchByName.replace("_", "\\_");
 			}
 			
-			if (searchByUser != null) {
+			if (searchByUser != null && !searchByUser.equals("")) {
 				searchByUser = searchByUser.replace("\\","\\\\");
 				searchByUser = searchByUser.replace("%", "\\%");
 				searchByUser = searchByUser.replace("_", "\\_");
 			}
 			
-			if (searchByOverview != null) {
+			if (searchByOverview != null && !searchByOverview.equals("")) {
 				searchByOverview = searchByOverview.replace("\\","\\\\");
 				searchByOverview = searchByOverview.replace("%", "\\%");
 				searchByOverview = searchByOverview.replace("_", "\\_");
@@ -114,7 +114,7 @@ public class EzPMSGWController {
 			search.put("searchByOverview", request.getParameter("searchByOverview"));
 			
 			//프로젝트 리스트 가져오기
-			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, lang);
+			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, lang, request.getParameter("position"));
 			
 			LOGGER.debug("projectList Count : " + projectList.size());
 			
@@ -788,24 +788,24 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 
-			String searchByName = "";
+			String searchByName = request.getParameter("searchByProjectName").toString();
 			String searchByUser = request.getParameter("searchByUser").toString();
 			String searchByOverview = request.getParameter("searchByOverview").toString();
 			
-			if (!request.getParameter("searchByName").equals("{}")) {
+			if (searchByName != null && !searchByName.equals("")) {
 				searchByName = request.getParameter("searchByName").toString();
 				searchByName = searchByName.replace("\\","\\\\");
 				searchByName = searchByName.replace("%", "\\%");
 				searchByName = searchByName.replace("_", "\\_");
 			}
 			
-			if (searchByUser != null) {
+			if (searchByUser != null && !searchByUser.equals("")) {
 				searchByUser = searchByUser.replace("\\","\\\\");
 				searchByUser = searchByUser.replace("%", "\\%");
 				searchByUser = searchByUser.replace("_", "\\_");
 			}
 			
-			if (searchByOverview != null) {
+			if (searchByOverview != null && !searchByOverview.equals("")) {
 				searchByOverview = searchByOverview.replace("\\","\\\\");
 				searchByOverview = searchByOverview.replace("%", "\\%");
 				searchByOverview = searchByOverview.replace("_", "\\_");
@@ -822,7 +822,7 @@ public class EzPMSGWController {
 			String deptId = request.getParameter("deptId");
 			
 			LOGGER.debug("status : " + project.getStatus() + ", deptId : " + deptId);
-			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId, lang);
+			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId, lang, request.getParameter("position"));
 			
 			LOGGER.debug("projectListCount : " + projectListCount);
 			
@@ -833,6 +833,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

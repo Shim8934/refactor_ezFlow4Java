@@ -215,7 +215,7 @@ function initKanbanList() {
 				setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new", true);
 			}
 			
-			for (var i = 0; i < kanbanOrderArr.length; i++) {
+/* 			for (var i = 0; i < kanbanOrderArr.length; i++) {
 				if (kanbanOrderArr[i].includes("P") || kanbanOrderArr[i].includes("W") || kanbanOrderArr[i].includes("C")) {
 					$("#kanban" + (i + 1)).find(".cardArea").addClass("cardSortable");
 					$("#kanban" + (i + 1)).find(".cardArea").addClass("connectedSortable");
@@ -246,7 +246,7 @@ function initKanbanList() {
 						}
 					}
 				}
-			}).disableSelection();
+			}).disableSelection(); */
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 		}
@@ -298,7 +298,7 @@ function initKanbanList() {
 }
 
 
-function updateTaskStatus(targetTaskId, afterStatus) {
+/* function updateTaskStatus(targetTaskId, afterStatus) {
 	var targetId = targetTaskId.subString(targetTaskId.lastIndexOf("n") + 1);
 	console.log(targetId);
 	
@@ -326,7 +326,7 @@ function updateTaskStatus(targetTaskId, afterStatus) {
 	
 		
 	});
-}
+} */
 
 function moveToPage(target) {
 	if (target == "comment") {

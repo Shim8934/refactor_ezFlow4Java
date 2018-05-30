@@ -132,7 +132,7 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="26"/>
     	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
     	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
-    	<result property="groupName"						column="GROUP_NAME"					columnIndex="29"/>
+    	<result property="groupName"						column="UPPER_GROUP_NAME"			columnIndex="29"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
     </resultMap>
     
@@ -677,20 +677,11 @@
 			AND
 				A.TENANT_ID = F.TENANT_ID	
 		</isEqual>	
-		<isNotEmpty property="searchByUser">
-			JOIN	
-				tbl_pms_member M
-			ON
-				A.PROJECT_ID = M.PROJECT_ID
-			AND A.TENANT_ID = M.TENANT_ID
-			
 			WHERE	
-				M.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+		<isNotEmpty property="searchByUser">
+				B.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
 			AND
 		</isNotEmpty>
-		<isEmpty property="searchByUser">
-			WHERE
-		</isEmpty>
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
@@ -724,6 +715,10 @@
 		<isNotEmpty property="searchByOverview">
 			AND
 				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="position">
+			AND
+				B.MEMBER_ROLE_ID = 1
 		</isNotEmpty>
 		<isNotEqual property="orderWhat" compareValue="init">
 			ORDER BY	
@@ -1006,7 +1001,7 @@
 				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
 				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
 				A.DEL_STATUS,
-				D.GROUP_NAME,
+				D.GROUP_NAME AS UPPER_GROUP_NAME,
 				B.PROJECT_NAME
 		]]>
 		<![CDATA[
@@ -1637,12 +1632,16 @@
 					A.OVERVIEW LIKE CONCAT('%', #searchByOverview#, '%')	
 			</isNotEmpty>
 			<isNotEmpty property="searchByStartDate">
+			<![CDATA[
 				AND 
-					A.PLAN_START_DATE LIKE CONCAT('%', #searchByStartDate#, '%')	
+					A.PLAN_START_DATE >= #searchByStartDate#	
+			]]>
 			</isNotEmpty>
 			<isNotEmpty property="searchByEndDate">
+			<![CDATA[
 				AND 
-					A.PLAN_END_DATE LIKE CONCAT('%', #searchByEndDate#, '%')	
+					A.PLAN_END_DATE <= #searchByEndDate#	
+			]]>
 			</isNotEmpty>
 			<isEqual property="orderWhat" compareValue="init">
 				ORDER BY
@@ -2096,12 +2095,16 @@
 			A.OVERVIEW LIKE CONCAT('%', #searchByOverview#, '%')	
 	</isNotEmpty>
 	<isNotEmpty property="searchByStartDate">
+	<![CDATA[
 		AND 
-			A.PLAN_START_DATE LIKE CONCAT('%', #searchByStartDate#, '%')	
+			A.PLAN_START_DATE >= #searchByStartDate#	
+	]]>
 	</isNotEmpty>
 	<isNotEmpty property="searchByEndDate">
+	<![CDATA[
 		AND 
-			A.PLAN_END_DATE LIKE CONCAT('%', #searchByEndDate#, '%')	
+			A.PLAN_END_DATE <= #searchByEndDate#	
+	]]>
 	</isNotEmpty>
 	</select>
 

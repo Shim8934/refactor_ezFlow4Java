@@ -42,7 +42,7 @@ var CurrentHeight = document.documentElement.clientHeight - 110;
 var projectTotalCount = 0;
 var checkedVal = "";
 //검색을 위한 변수
-var searchByNmae = "";
+var searchByProjectName = "";
 var searchByUser = "";
 var searchByStartDate = "";
 var searchByEndDate = "";
@@ -381,7 +381,7 @@ function setInitOrder(){
 	});
 
 	//검색 초기화
-	$("#searchByName").val("");
+	$("#searchByProjectName").val("");
 	$("#searchByUser").val("");
 	$("#Sdatepicker").val("");
 	$("#Edatepicker").val("");
@@ -406,7 +406,7 @@ function setProjectList() {
 		orderWhat : orderWhat,
 		orderHow : orderHow,
 		//프로젝트 검색
-		searchByName : searchByName,
+		searchByProjectName : searchByProjectName,
 		searchByUser :	searchByUser,
 		searchByStartDate : searchByStartDate,
 		searchByEndDate : searchByEndDate,
@@ -984,7 +984,7 @@ function searchProject() {
 			<tbody>
 				<tr>
 					<th>프로젝트명 </th>
-					<td style="width:50%"><input type="text" id="searchByName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
+					<td style="width:50%"><input type="text" id="searchByProjectName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
 					<th>담당자</th>
 					<td><input type="text" id="searchByUser"></td>
 				</tr>

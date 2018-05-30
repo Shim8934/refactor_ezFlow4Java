@@ -66,14 +66,19 @@ $(function() {
 							<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
 								style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 						</th>
-						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="TASK_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-							text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">
 							<c:choose>
-								<c:when test="${position eq 'group' }">그룹  이름</c:when>
-								<c:otherwise>업무 이름</c:otherwise>
+								<c:when test="${position eq 'group' }">
+								<th id="BoardList_TH_1" onclick="setListOrder(this)" order="GROUP_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
+									text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">그룹  이름
+								</th>
+								</c:when>
+								<c:otherwise>
+								<th id="BoardList_TH_1" onclick="setListOrder(this)" order="TASK_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
+									text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">업무  이름
+								</th>
+								</c:otherwise>
 							</c:choose>
-							</th>
-						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="GROUP_NAME"
+						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="UPPER_GROUP_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px;"
 							class="h5_center">상위 그룹 이름</th>
 						<c:if test="${position eq 'task' || position eq 'group'}">

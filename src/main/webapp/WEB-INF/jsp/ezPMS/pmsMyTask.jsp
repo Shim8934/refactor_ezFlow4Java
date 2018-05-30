@@ -60,6 +60,12 @@ $(function() {
 		$("#searchByGroupName").attr("id", "searchByTaskName");
 		$("#mainmenu").find("div").css("display", "");
 		orderWhat = "";
+		
+		if ($("#searchDiv").css("display") != "none") {
+			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
+			$("#searchDiv").hide();
+		}
+		
 		setMyTaskList("task");
 	});
 	
@@ -74,9 +80,13 @@ $(function() {
 		$("#searchByTaskName").attr("id", "searchByGroupName");
 		$("#mainmenu").find("div").css("display", "none");
 		orderWhat = "";
+		
+		if ($("#searchDiv").css("display") != "none") {
+			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
+			$("#searchDiv").hide();
+		}
+		
 		setMyTaskList("group");
-		
-		
 	});
 	
 	$("#1tab2").click(function(){
@@ -87,6 +97,12 @@ $(function() {
 		//담당 프로젝트
 		nowPosition = "project";
 		orderWhat = "";
+		
+		if ($("#searchDiv").css("display") != "none") {
+			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
+			$("#searchDiv").hide();
+		}
+		
 		setMyTaskList("project")
 	});
 	
@@ -223,7 +239,6 @@ function setMyTaskList(position) {
 		searchByUser : searchByUser,
 		searchByStartDate : searchByPlanStartDate,
 		searchByEndDate : searchByPlanEndDate,
-		searchByGroupName : searchByGroupName,
 		searchByOverview : searchByOverview,
 		searchByProjectName : searchByProjectName,
 		searchByUpperGroupName : searchByUpperGroupName
@@ -237,6 +252,7 @@ function setMyTaskList(position) {
 		url : url,
 		success : function(contentList) {
 			$("#contentList").html(contentList);
+			console.log(contentList);
 			//빈값으로 만들기
 			searchByTaskName = "";
 			searchByUser = "";
@@ -245,6 +261,7 @@ function setMyTaskList(position) {
 			searchByGroupName = "";
 			searchByProjectName = "";
 			searchByUpperGroupName = "";
+			searchByOverview = "";
 			
 			$("#searchByTaskName").val("");
 			$("#searchByUser").val("");
@@ -354,7 +371,7 @@ function setListOrder(elem) {
 	} else if (orderHow == 'desc') {
 		orderHow = 'asc';
 	}
-
+	
 	setMyTaskList(nowPosition);
 }
 
@@ -367,6 +384,7 @@ function searchContent() {
 	searchByGroupName = $("#searchByGroupName").val();
 	searchByProjectName = $("#searchByProjectName").val();
 	searchByOverview = $("#searchByOverview").val();
+	searchByUpperGroupName = $("#searchByUpperGroupName").val();
 	
 	setMyTaskList(nowPosition);
 }
@@ -442,7 +460,7 @@ function searchContent() {
 				</tr>
 				<tr>
 					<th>상위그룹 </th>
-					<td style="width:50%"><input type="text" style="width:100%" id="seachByUpperGroupName"></td>
+					<td style="width:50%"><input type="text" style="width:100%" id="searchByUpperGroupName"></td>
 					<th>프로젝트 이름</th>
 					<td><input type="text" style="width:100%" id="searchByProjectName"></td>
 				</tr>

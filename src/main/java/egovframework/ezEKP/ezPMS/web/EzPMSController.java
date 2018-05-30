@@ -1161,7 +1161,7 @@ public class EzPMSController {
 		param.put("startCount", 1);
 		param.put("orderWhat", "init");
 		param.put("orderHow","");
-		param.put("searchByName", "");
+		param.put("searchByProjectName", "");
 		param.put("searchByUser", "");
 		param.put("searchByEndDate", "");
 		param.put("searchByOverview", "");
@@ -1447,4 +1447,77 @@ public class EzPMSController {
 		return "ezPMS/pmsTaskList";
 	}
 	
+	/**
+	 * 나의 업무 : 담당프로젝트 리스트 호출
+	 * @param param
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/getMyProjectList.do")
+	public String getMyProjectList(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getMyProjectList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		int currentPage = (int) param.remove("currentPage");
+		int listNumber = Integer.parseInt(param.get("listNumber").toString());
+		String deptId = userInfo.getDeptID();
+
+		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
+		String url = "/rest/ezPMS/projects/userId/" + userId;
+		
+		param.put("viewType", 1);
+		param.put("userIdType", "user");
+		param.put("deptId", deptId);
+		param.put("projectSort", "0");
+		param.put("listProjectStatus", param.get("status"));
+		
+		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+		String countStatus = countResult.get("status").toString();
+		
+		int projectListCount = 0;
+		JSONArray projectList = new JSONArray();
+		
+		if (countStatus.equals("ok")) {
+			JSONObject countJson = (JSONObject) countResult.get("data");
+			
+			if (countJson.get("projectListCount").toString() != null) {
+				projectListCount = Integer.parseInt(countJson.get("projectListCount").toString());
+				model.addAttribute("projectListCount", projectListCount);
+				
+				ProjectPagination paging = new ProjectPagination(projectListCount,listNumber, 10, currentPage);
+				model.addAttribute("paging", paging);
+				
+				if (projectListCount != 0) {
+					//현재 페이지
+					param.put("currentPage", currentPage);
+					//한 페이지에 보여질 개수
+					param.put("listNumber", listNumber);
+					//프로젝트 총 개수
+					param.put("listCount", projectListCount);
+					param.put("startCount", paging.getStartCount());
+					
+					//header 정렬 프로젝트 순서
+					if (param.get("orderWhat") == null || param.get("orderWhat").equals("")) {
+						param.put("orderWhat", "init");
+					}
+					
+					JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+					String status = result.get("status").toString();
+					
+					if (status.equals("ok")) {		
+						projectList = (JSONArray) result.get("data");
+					}
+				}
+			}
+			
+			model.addAttribute("projectList", projectList);
+			model.addAttribute("projectListCount", projectListCount);
+		}
+		
+		LOGGER.debug("ezPMS getMyProjectList ended");
+		return "ezPMS/pmsMyProjectList";
+	}
 }

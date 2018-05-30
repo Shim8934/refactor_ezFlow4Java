@@ -17,10 +17,25 @@
 	type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 <title>My Task List</title>
+<script type="text/javascript">
+var CurrentHeight = document.documentElement.clientHeight - 100;
+
+$(function() {
+	CurrentHeight = $(window).height()-100;
+	$("MailListRayer").css("height", CurrentHeight + "px");
+	$("#divList").css("height", (CurrentHeight - 100) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 170) + "px");
+	$("#projectContent").css("height", CurrentHeight + "px");
+	$("#contentList").css("height", (CurrentHeight - 65) + "px");
+	$("#divList").css("overflow", "auto");
+
+	$("#totalCount").text("${projectListCount}");
+
+});
+</script>
 </head>
 <body>
-<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;">
-		<div style="width: 100%;" id="divList">
+	<div style="width: 100%;" id="divList">
 			<div id="lvBoardList">
 				<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0"
 							class="mainlist" style="overflow:hidden">
@@ -38,22 +53,16 @@
 								class="h5_center">총괄 담당자</th>
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">전체 진행률</th>
+								class="h5_center">시작일</th>
 							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="COMPLETE_TASK"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">완료된 업무</th>
-							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="LATE_TASK"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">기한 지난 업무</th>
-							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="REST_DUEDAY"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
-								class="h5_center">남은 기간</th>
-							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="PLAN_START_DATE"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
-								class="h5_center">프로젝트 기간</th>
-							<th id="BoardList_TH_8" onclick="setListOrder(this)" order="STATUS"
+								class="h5_center">종료일</th>
+							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="STATUS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px;"
 								class="h5_center">상태</th>
+							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_START_DATE"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								class="h5_center">진행률</th>
 							</tr>
 							</thead>
 						</table>
@@ -81,41 +90,19 @@
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><c:out
 												value="${project.headManagerName }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
-												name="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
-											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.progress }" />
-											</div></td>
-										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
-												complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
-											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.completeTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
-											</div></td>
-										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
-												overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
-											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
-											</div></td>
-										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px">D
-											<c:choose>
-												<c:when test="${project.restDueday ge 0 }">- <c:out
-														value="${project.restDueday }" />
-												</c:when>
-												<c:otherwise>+ <c:out
-														value="${-project.restDueday }" />
-												</c:otherwise>
-											</c:choose>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px">
+												<c:out value="${project.planStartDate }" />
 										</td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 10%"><c:out
-												value="${project.planStartDate }" /> ~ <c:out
-												value="${project.planEndDate }" /></td>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px">
+												<c:out value="${project.planEndDate }" />
+										</td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
 												value="${project.status }" /></td>
+										<td onclick="selectedTR(this);"
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 10%"><c:out
+												value="${project.progress }" /></td>
 									</tr>
 								</c:forEach>
 									</c:otherwise>
@@ -208,7 +195,5 @@
 						</div>
 					</c:otherwise>
 				</c:choose>
-
-			</span>
 </body>
 </html>

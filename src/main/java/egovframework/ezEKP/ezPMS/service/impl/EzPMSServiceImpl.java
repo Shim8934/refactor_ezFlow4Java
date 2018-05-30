@@ -56,7 +56,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status,
-			Map<String, Object> search, String lang) {
+			Map<String, Object> search, String lang, String position) {
 		LOGGER.debug("[SERVICE] getProjectList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -64,6 +64,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("userId", userId);
 		map.put("lang", lang);
 		map.put("deptId", deptId);
+		map.put("position", position);
 		
 		if (search.get("projectSort").equals("1")) {
 			map.put("projectSort", "PLAN_START_DATE");
@@ -467,7 +468,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang) {
+	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang, String position) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", project.getStatus());
 		map.put("searchByName", project.getProjectName());
@@ -479,6 +480,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("deptId", deptId);
+		map.put("position", position);
 		
 		int projectListCount = ezPMSDAO.getProjectListCount(map);		
 		

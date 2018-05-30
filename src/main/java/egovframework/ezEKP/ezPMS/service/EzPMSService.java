@@ -22,7 +22,7 @@ import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 
 public interface EzPMSService {
 
-	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String lang);
+	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String lang, String position);
 	
 	public Long addNewProject(Map<String, Object> map);
 	
@@ -48,7 +48,7 @@ public interface EzPMSService {
 	
 	public List<TaskLogListVO> getTaskLogList(Long taskId, Map<String, Object> map, String offset, String lang, int tenantId) throws Exception ;
 	
-	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang);
+	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang, String position);
 	
 	public int getTaskListCount(SearchVO search, String userId);
 	
