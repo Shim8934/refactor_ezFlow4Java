@@ -165,6 +165,7 @@
 				if (returnValue == 0) {
 					addAttitude(obj);
 				} else {
+					alert("<spring:message code='ezAttitude.t169'/>");
 					getAttitudeList();
 	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 				}
