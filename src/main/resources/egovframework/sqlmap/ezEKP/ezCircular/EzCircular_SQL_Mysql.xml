@@ -10,6 +10,7 @@
     <typeAlias alias="CircularFolderVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularFolderVO"/>
     <typeAlias alias="CircularCommentVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularCommentVO"/>
     <typeAlias alias="CircularListHeaderVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO"/>
+	<typeAlias alias="CircularConfirmVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularConfirmVO"/>
 	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 	   <![CDATA[
@@ -1724,6 +1725,55 @@
 				memberid = #memberID#
 			AND
 				tenantid = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getConfirmMember" resultClass="CircularConfirmVO" >
+		<![CDATA[
+			SELECT 
+				A.memberid, B.displayname, B.description, B.company, B.title, 
+				IFNULL(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), '') AS confirmdate
+			FROM 
+				TBL_CIRCULAR_USER A
+			RIGHT JOIN 
+				TBL_USERMASTER B
+			ON 
+				A.memberid = B.cn
+			WHERE 
+				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+			AND
+				a.memberid <> ( SELECT 
+												memberId 
+										FROM 
+											TBL_CIRCULAR 
+										WHERE 
+											circularId = #circularID# )
+			ORDER BY 
+			 	A.confirmdate desc
+			 LIMIT
+			 	#start#, #perCount#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getConfirmMemberCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				count(memberid)
+			FROM 
+				TBL_CIRCULAR_USER A
+			RIGHT JOIN 
+				TBL_USERMASTER B
+			ON 
+				A.memberid = B.cn
+			WHERE 
+				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+			AND
+				 a.memberid <> ( SELECT 
+											memberId 
+										FROM 
+											TBL_CIRCULAR 
+										WHERE 
+											circularId = #circularID# )
 		]]>
 	</select>
 
