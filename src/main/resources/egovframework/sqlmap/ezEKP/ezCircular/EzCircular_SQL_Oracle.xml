@@ -1523,6 +1523,11 @@
 						circularcomment LIKE '%'||#searchValue#||'%'
 					]]>
 				</isEqual>
+				<isEqual property="searchType" compareValue="userID" prepend="AND">
+					<![CDATA[
+						membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
 			</isNotEqual>
 		</isEqual>
 		

@@ -19949,7 +19949,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        if (xmlDom.getElementsByTagName("SEPATTACH").getLength() > 0) {
 	        	for (int k = 0; k < xmlDom.getElementsByTagName("SEPATTACH").getLength(); k++) {
 	        		int tempValue = k + 1;
-	        		subSQL = registerSepAttachEx(recordID, xmlDom.getElementsByTagName("CABINETID").item(k).getTextContent(), xmlDom.getElementsByTagName("TITLE").item(k).getTextContent(), xmlDom.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), xmlDom.getElementsByTagName("REGTYPE").item(k).getTextContent(), xmlDom.getElementsByTagName("SUMMARY").item(k).getTextContent(), xmlDom.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID, locale);
+	        		subSQL = registerSepAttachEx(recordID, xmlDom.getElementsByTagName("CABINETID").item(k).getTextContent(), xmlDom.getElementsByTagName("TITLE").item(tempValue).getTextContent(), xmlDom.getElementsByTagName("NUMOFPAGE").item(tempValue).getTextContent(), xmlDom.getElementsByTagName("REGTYPE").item(k).getTextContent(), xmlDom.getElementsByTagName("SUMMARY").item(k).getTextContent(), xmlDom.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID, locale);
 	        		
 	        		if (subSQL.equals("FALSE")) {
 	        			return "<RESULT>FALSE</RESULT>";
@@ -24687,8 +24687,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTemp = objXML.getDocumentElement().toString();
              strResult = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
              strResult = strResult + strTemp.replace("&amp;", "&");
-
-             File ackFile = new File(config.getProperty("relay_root") + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName);
+             
+             File ackFile = new File(config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName);
              
          	if( ackFile.exists()) {
          		ackFile.delete();

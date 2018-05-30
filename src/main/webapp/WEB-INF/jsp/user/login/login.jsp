@@ -15,7 +15,16 @@
 		<style>
 			.blocker {
 				text-align: center;
-			} 
+			}
+			.modal p {
+				background:none;
+			}
+			.spanMsg {
+				position:relative;
+				top:-1px;
+				color:orangered;
+				font-family : "맑은고딕", Malgun Gothic, "굴림", Gullim,"돋움", Dotum, verdana, Arial, sans-serif;
+			}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -32,7 +41,7 @@
 			    } else if (document.loginForm.password.value =="") {
 			        alert("<spring:message code='main.jjs01'/>");
 			        return;
-			    } else {		    	
+			    } else {
 			    	var frm = document.loginForm;
 			    	var rsa = new RSAKey();
 					rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
@@ -92,10 +101,13 @@
 			    // 로그인 페이지가 로드된 프레임이 Top 프레임이 아니면 Top 프레임으로 로드시킨다.
                 if (top != self) {
                     top.location.href = self.location.href;
-                }			    		                 
+                }
 			    
-			    var message = document.loginForm.message.value;	    
-			    if (message != "") {
+			    var message = document.loginForm.message.value;
+			    if ("${isWrongPass}" == "Y") {
+			    	$("#exDiv2").modal();
+			    }
+			    else if (message != "") {
 			        alert(message);
 			    }
 			    getid(document.loginForm);
@@ -104,7 +116,7 @@
 					$("#exDiv").modal();
 					$("#exDiv").show(function() {						
 						$("#txtOldPassword").focus();
-					});													
+					});
 			    }				
 			}
 			
@@ -250,5 +262,17 @@
 			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>			
 		</div>
+		
+		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
+		<div id="exDiv2" style="display:none;max-width:580px;height:230px;padding-top:25px;">
+			<div style="height:150px;border:1px solid rgb(0, 72, 149);margin:5px;border-radius:10px">
+				<div style="color:rgb(0, 72, 149);padding:18px 0px 10px 20px;font-size:12px;white-space: pre-wrap;">▒ ${message1}<span class="spanMsg">${message2}</span>${message3}
+				</div>
+			</div>		
+			<div class="btnposition" style="margin-top:0px;">
+			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t4' /></span></a>
+			</div>	
+		</div>
+		
 	</body>
 </html>

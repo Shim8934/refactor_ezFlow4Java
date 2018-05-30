@@ -36,7 +36,7 @@
 		    // Setdata 후 실행 함수.
 		    CKEDITOR.on( 'afterSetData', function( ev ) {
 		    });
-			
+		    
 			// 에디터 커맨드 실행
 			function ExecuteCommand(commandName) {
 				var oEditor = CKEDITOR.instances.editor1;
@@ -223,6 +223,9 @@
 	            }
 	        }
 	        
+	        function GetEditorBody() {
+	        	return CKEDITOR.instances.editor1.document.$.body;
+	        }
 		</script> 
 	</head>
 	<body style="margin: 0px; padding: 0px;">

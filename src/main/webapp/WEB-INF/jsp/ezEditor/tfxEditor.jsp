@@ -128,7 +128,11 @@
 	            } catch (e) {
 	            }
 	        }
-			
+
+	        function GetEditorBody() {
+	        	return xfe.getDom().body;
+	        }
+	        
 			window.onresize = function () {
 	            try {
 	                xfe.setWidth("100%");

@@ -40,7 +40,7 @@
 		<style type="text/css">
 		 	div {
 				margin: auto;
-		        padding-top:10px;
+				padding-top: 10px;
 		    }
 		</style>
 		<script type="text/javascript">

@@ -38,6 +38,7 @@
 				    }
 
 					sizeBtnAppend();
+					sentDateView();
 				}
 				
 				function sizeBtnAppend() {
@@ -324,6 +325,20 @@
 		        	});
 		        }
 		        
+		     	// 전달, 회신 시 보낸 시간
+		        function sentDateView(msg) {
+				    if (typeof window.parent.sentDateMsg != "undefined") {
+				    	var sentDateMsg = window.parent.sentDateMsg;
+				    	
+				    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+				    	$(".sentDateStr").css({
+				    		"padding" : "5px 0",
+					        "margin-bottom" : "10px",
+					        "font-size" : "14px",
+					        "background" : "rgba(255,250,205,0.5)"
+				    	});
+				    }
+		        }
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">

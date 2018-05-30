@@ -904,13 +904,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		//첨부파일 정보 추출
 		        		if (_cmd.equals("FORWARD")) {
 							if (attachedFileList.size() > 0) {
+								List<Map<String, String>> attachedFileListInReply = new ArrayList<Map<String, String>>();	
+								
+								// replyMessage의 첨부 파일 구성이 orgMessage와 다르게 될 수 있기 때문에 다시 첨부파일 정보를 구하도록 한다.
+								ezEmailUtil.getBodyInfo(replyMessage, folderPath, uid, -1, attachedFileListInReply, false, false, locale, null, null);					
+								
 				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
 
-				                multipartFirstIdx = attachedFileList.get(0).get("index");
+				                multipartFirstIdx = attachedFileListInReply.get(0).get("index");
 				                logger.debug("FORWARD multipartFirstIdx=" + multipartFirstIdx);
 				                
-								for (int i = 0; i < attachedFileList.size(); i++) {
-									Map<String, String> fileInfo = attachedFileList.get(i);
+								for (int i = 0; i < attachedFileListInReply.size(); i++) {
+									Map<String, String> fileInfo = attachedFileListInReply.get(i);
 									
 					                attachXmlList.append("<NODE>");
 					                //TODO : <PUPLOADSN>" + (i + 1) + "</PUPLOADSN> 으로 수정(인덱스로 파일 지울 때)
@@ -3407,7 +3412,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								}
 								
 								// multipart/related 안에 첨부파일이 들어 있는 메일이 코린도에서 수신되어
-								// 해당 메일이 인라인 이미지도 포함한 경우의 처리를 위해 추가함
+								// 해당 메일이 인라인 이미지도 포함한 경우의 처리를 위해 추가함.
+								// 이 경우엔 전체 메시지를 multipart/related로 구성하고
+								// 그 안에 인라인 이미지와 첨부 파일이 들어 있는 형태로 메시지를 구성한다.
 								if (oldMessage.isMimeType("multipart/related")) {
 									logger.debug("hasAttach=" + hasAttach + ",hasRelated=" + hasRelated
 													+ ",hasInlineImage=" + hasInlineImage);
@@ -3865,11 +3872,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+				    		        	
 				    		        }
 				    		        else {
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 				    		        }
+			    		        	// 전달, 회신 테스트
+			    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
 			    		        }
 			    		        
 			    		        orgMsgFolder.close(true);

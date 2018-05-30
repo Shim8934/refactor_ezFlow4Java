@@ -50,6 +50,7 @@
 		
 		        var objRoot;
 		        createNodeInsert(xmlDom, objRoot, "DATA");
+		        createNodeAndInsertText(xmlDom, objRoot, "CN", null);
 		        createNodeAndInsertText(xmlDom, objRoot, "COMPID", document.all("ListCompany").value);
 		
 		        xmlHTTP.open("POST", "/admin/ezEmail/mailGetDistribution.do", false);
