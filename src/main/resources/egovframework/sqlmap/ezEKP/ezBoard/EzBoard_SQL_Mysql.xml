@@ -2062,17 +2062,11 @@
 				  	FROM
 				  		TBL_BOARD_BOARDMANAGE
 				  	WHERE
-				  		( BOARDADMIN_FG = 'true'
+				  	   	 ACCESS_ = '1'
 				  	AND
 				  		( ACCESSID = #v_pCompanyID#
 				  	     OR ACCESSID = #v_pDeptID#
 				  	     OR ACCESSID = #v_PUSERID#))
-				  	OR
-				  	   	 ( ACCESS_ = '1'
-				  	AND
-				  		( ACCESSID = #v_pCompanyID#
-				  	     OR ACCESSID = #v_pDeptID#
-				  	     OR ACCESSID = #v_PUSERID#)))
 				  $v_PSUBQUERY$ 
  				  ORDER BY 
  				  	$iv_PORDERBYSUB$

@@ -60,14 +60,7 @@
 			var OrderCell = "";
 			var pBoardType = "N";
 			var SQLPARADATA = "";
-			
 			var pAdminType = "";
-			//var pButtonHidden = "N"; //N 설정
-			//var gubun = "${boardInfo.guBun}";
-			//var Access_FG = "${boardInfo.access_FG}";
-			//var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
-			//var ListView_FG = "${boardInfo.listView_FG}";
-			
 			var previewType = "TEXT";
 			var clickPreviweType = "TEXT";
 			var CurrentHeight = 0;
@@ -139,14 +132,20 @@
 			$(document).ready(function() {
 				$("input:checkbox[id='chkSearchAll']").on('click', function() {
 					if($(this).prop('checked')) {
-						document.getElementById("selectedBoardName").innerHTML = "전체 게시판";
+						//console.log(document.getElementById("selectedBoardName").value);
+				
+						document.getElementById("selectedBoardName").innerHTML = "<spring:message code='ezBoard.khj5' />";
+						
 					}else{
+						
 						if(document.getElementById("selectedBoardName").value == undefined) {
 							document.getElementById("selectedBoardName").innerHTML = "";
-						}
+						} 
 					}
 				});
-			});	
+				
+			});				
+			
 			var Save_unloadSave = false;
 			function Window_onunload() {
 		        if (window_onunload_Event && !Save_unloadSave) {
