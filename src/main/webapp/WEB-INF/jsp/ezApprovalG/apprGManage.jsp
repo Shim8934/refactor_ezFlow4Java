@@ -1282,20 +1282,23 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>", "", "OPEN");
 		            return;
 		        }
-		        else
+		        else {
 		            pDocID = tr[0].getAttribute("DATA1");
+		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        }
 				
 		        //직인의뢰함에서 타입을 END로 주기위해
 		        var url;
 		        if (pListTypeValue == 7 || pListTypeValue == 8 || pListTypeValue == 9) {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;	
 		        } else {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID;
 		        }
 		        
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";

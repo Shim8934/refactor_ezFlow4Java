@@ -4083,8 +4083,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String type = request.getParameter("type");
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
 		model.addAttribute("docID", docID);
 		model.addAttribute("type", type);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("totalSaveFileInfo ended.");
 		
@@ -4103,6 +4106,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getTotalDownload(docID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("getTotalDoc ended.");

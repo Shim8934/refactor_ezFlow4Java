@@ -1099,15 +1099,18 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
 		            return;
 		        }
-		        else
+		        else{
 		            pDocID = tr[0].getAttribute("DATA1");
+		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        }
 		
-		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
+		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
 		        feature = feature + GetOpenPosition(580, 450);
 		        window.open(url, "", feature);
