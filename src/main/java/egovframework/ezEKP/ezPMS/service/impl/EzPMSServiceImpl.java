@@ -1315,15 +1315,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", jsonParam.get("projectId"));
-		map.put("roleId", 1);
+		map.put("userId", userId);
+		map.put("deptId", jsonParam.get("deptId"));
 		
-		List<ProjectMemberVO> memberList = ezPMSDAO.getProjectMemberList(map);
-		String headManagerId = memberList.get(0).getUserId();
+		int authority = ezPMSDAO.getUserProjectRole(map);
 		
 		for(String itemId : itemIds) {
 			map.put("itemId", itemId);
 			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
-			if(boardVO.getWriterId().equals(userId) || headManagerId.equals(userId)) {
+			if(boardVO.getWriterId().equals(userId) || authority == 1) {
 				ezPMSDAO.deleteBoard(map);
 			} else {
 				Exception e = new Exception("Only project Manager and Writer are authorized to delete article");

@@ -160,7 +160,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update("EzPMSDAO.updateMainSetting", map);
 	}
 
-	public int getUserProjectRole(HashMap<String, Object> map) {
+	public int getUserProjectRole(Map<String, Object> map) {
 		return (int) select ("EzPMSDAO.getUserProjectRole", map);
 	}
 

@@ -3,15 +3,29 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Insert title here</title>
+	<title>게시물 읽기</title>
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 	<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript">
+		
+		var itemId = '${board.itemId}';
+		var userId = '${userId}';
+		var writerId = '${board.writerId}';
+		var authority = '${authority}'
+		var projectId = '${board.projectId}';
+		$(function() {
+			// 게시자이거나 담당자(authority = 1)인 경우만 수정/삭제 버튼이 보임
+			if(userId != writerId && authority != '1') {
+				$("#modifyBtn").css("display", "none");
+				$("#deleteBtn").css("display", "none");
+			}
+		})
 		// 첨부파일 모두 선택
 		function attach_SelectAll() {
 			var checkboxes = document.getElementById('lstAttachLink').getElementsByTagName("input");
@@ -50,9 +64,13 @@
 		function deleteBoard() {
 			if(confirm("정말 삭제하시겠습니까?") == true) {
 				var items = new Array();
-				items.push('${board.itemId}');
+				items.push(itemId);
 				opener.deleteBoardAction(items);
 			}	
+		}
+		
+		function modifyBoard() {
+			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=modify';
 		}
 	</script>
 </head>
@@ -63,8 +81,8 @@
 				<div id="menu">
 					<ul>
 						<li><span>답변</span></li>
-						<li><span>수정</span></li>
-						<li><span onclick="deleteBoard()">삭제</span></li>
+						<li id="modifyBtn"><span onclick="modifyBoard()">수정</span></li>
+						<li id="deleteBtn"><span onclick="deleteBoard()">삭제</span></li>
 						<li><span>복사</span></li>
 						<li><span>이동</span></li>
 						<li><span>메일로 발송</span></li>
@@ -101,8 +119,7 @@
 								<c:otherwise>
 									${board.groupName}
 								</c:otherwise>
-							</c:choose>
-						
+							</c:choose>						
 						</td>
 						<th>게시일</th>
 						<td>${fn:substring(board.writeDate, 0, 19)}</td>

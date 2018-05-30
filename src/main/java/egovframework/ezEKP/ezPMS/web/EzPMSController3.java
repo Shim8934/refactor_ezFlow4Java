@@ -2,12 +2,12 @@ package egovframework.ezEKP.ezPMS.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.Arrays;
+import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -63,8 +63,8 @@ public class EzPMSController3 {
 	private Properties config;
 	
 	@RequestMapping(value="/ezPMS/getBoardMain.do")
-	public String getProjectBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getProjectBoard started");		
+	public String getBoardMain(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getBoardMain started");		
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
@@ -86,22 +86,57 @@ public class EzPMSController3 {
 		
 		model.addAttribute("projectId", projectId);
 		
-		LOGGER.debug("ezPMS getProjectBoard ended");
+		LOGGER.debug("ezPMS getBoardMain ended");
 		
 		return "/ezPMS/pmsBoardMain";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/goAddBoard.do")
-	public String goAddBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {		
+	public String goAddBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {		
 		LOGGER.debug("ezPMS goAddBoard started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String writerId = userInfo.getId();
+		String userId = userInfo.getId();
 		String writerName = userInfo.getDisplayName();
-		String writerDeptName = userInfo.getDeptName();	
+		String writerDeptName = userInfo.getDeptName();
+		String mode = request.getParameter("mode");
 		
-		model.addAttribute("writerId", writerId);
+		if(mode.equals("modify")) {
+			String itemId = request.getParameter("itemId");
+			String projectId = request.getParameter("projectId");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userId);
+			param.put("itemId", itemId);
+			param.put("projectId", projectId);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONObject board = (JSONObject) resultBody.get("data");
+				model.addAttribute("board", board);
+				model.addAttribute("writeContent", board.get("writeContent").toString().replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " "));
+				JSONArray fileList = (JSONArray) board.get("fileList");
+				
+				if (fileList != null && fileList.size() > 0) {
+					for (int i = 0; i < fileList.size(); i++) {
+						JSONObject file = (JSONObject) fileList.get(i);
+						file.put("pFileName", file.get("fileName"));
+						String filePath = file.get("filePath").toString();
+						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
+						file.put("pUploadSN", filePath);
+						file.put("resultUpload", "true");
+						fileList.set(i, file);
+					}
+					model.addAttribute("fileList", URLEncoder.encode(fileList.toString(), "UTF-8").replaceAll("\\+", "%20"));
+				}
+			}
+		}
+		
+		model.addAttribute("writerId", userId);
 		model.addAttribute("writerName", writerName);
 		model.addAttribute("writerDeptName", writerDeptName);
 		
@@ -111,7 +146,7 @@ public class EzPMSController3 {
 			String parameterName = parameterNames.nextElement();
 			model.addAttribute(parameterName, request.getParameter(parameterName));
 		}
-	
+		
 		LOGGER.debug("ezPMS goAddBoard ended");
 		
 		return "/ezPMS/pmsAddBoard";
@@ -158,6 +193,7 @@ public class EzPMSController3 {
 		
 		Map<String, Object> param = null;
 		jsonParam.put("userId", userInfo.getId());
+		jsonParam.put("deptId", userInfo.getDeptID());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "delete", jsonParam);
 		String status = resultBody.get("status").toString();
@@ -453,15 +489,18 @@ public class EzPMSController3 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
 		String itemId = request.getParameter("itemId");
+		String userId = userInfo.getId();
+		String deptId = userInfo.getDeptID();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("userId", userInfo.getId());
+		param.put("userId", userId);
 		param.put("userName", userInfo.getDisplayName());
 		param.put("userName2", userInfo.getDisplayName2());
 		param.put("userDeptName", userInfo.getDeptName());
 		param.put("userDeptName2", userInfo.getDeptName2());
 		param.put("projectId", projectId);
+		param.put("deptId", deptId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
 		
@@ -470,8 +509,10 @@ public class EzPMSController3 {
 		if (status.equals("ok")) {			
 			JSONObject board = (JSONObject) resultBody.get("data");
 			model.addAttribute("board", board);
+			Long authority = (Long) resultBody.get("authority");
+			model.addAttribute("authority", authority);
 		}
-		
+		model.addAttribute("userId", userId);
 		LOGGER.debug("ezPMS getBoardDetail ended");
 		
 		return "ezPMS/pmsBoardDetail";
@@ -501,5 +542,27 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS goMoveBoard ended");
 		
 		return "/ezPMS/pmsMoveBoard";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/moveBoard.do")
+	public String moveBoard(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS moveBoard started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		Map<String, Object> param = null;
+		jsonParam.put("userId", userInfo.getId());
+		
+		// 수정을 먼저 구현해서 하나의 REST를 쓰는 게 더 나을듯
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("", param, request, "put", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("data", "success");
+		}
+		LOGGER.debug("ezPMS moveBoard ended");
+		
+		return "json";
 	}
 }

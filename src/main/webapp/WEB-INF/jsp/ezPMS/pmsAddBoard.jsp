@@ -2,11 +2,17 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Insert title here</title>
+	<title>
+		<c:choose>
+			<c:when test="${mode eq 'modify'}">게시물 수정</c:when>
+			<c:otherwise>새 게시물 작성</c:otherwise>
+		</c:choose>
+	</title>
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 	<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -19,10 +25,18 @@
 	var writerId = "${writerId}";
 	var writerName = "${writerName}";
 	var writerDeptName = "${writerDeptName}";
-	var writeType = null;
-	var projectId = "${projectId}"
+	
+	var title = '${board.title}';
+	var writeOverview = '${board.writeOverview}';
+	var writeType = "${board.writeType}";
+	var writeContent = '${writeContent.trim()}';
+	var mode = "${mode}";
+	var taskName;
+	
 	var groupId = "${groupId}";
+	if(groupId == "") {groupId = "${board.groupId}";}
 	var taskId = "${taskId}";
+	if(taskId == "") {taskId = "${board.taskId}";}
 	
 	// 첨부파일 최대용량
 	var AttachLimit = 10;
@@ -30,11 +44,55 @@
 	// 버튼 중복클릭 방지
     var doubleSubmitFlag = false;
     
-	$(function() {
+	window.onload = function() {
+		
 		$(window).unload(function() {
 			cancelAddBoard();
 		});
-	});
+		
+		// 수정 시 기존의 게시물 내용을 화면에 적용
+		if(mode == 'modify') {
+			var notice = $("#notice");
+			var emergency = $("#emergency");
+			switch(writeType) {
+			case '1':
+				notice.prop("checked","true");
+				emergency.prop("checked","true");
+				break;
+			case '2':
+				notice.prop("checked","true");
+				break;
+			case '3':
+				emergency.prop("checked","true");
+				break;
+			}
+			
+			$('#title').val(title);
+			$('#writeOverview').val(writeOverview);
+			
+			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
+		} else {
+			taskName = '${taskName}';
+		}
+		
+		$('#taskName').text(taskName);		
+		
+		var fileList = '${fileList}';
+		if (fileList != null && fileList != "") {
+			fileList = decodeURIComponent(fileList);
+			dadiframe.setAttachFileInfo(fileList);
+		}
+	};
+	
+	function getTaskSelectionTree() {
+		DivPopUpShow(320, 320, "/ezPMS/getTaskSelectionTree.do?projectId=" + projectId + "&onlyGroup=false");
+	}
+	
+	function Editor_Complete() {
+		if(mode == 'modify') {
+			message.SetEditorContent(writeContent);
+		}
+	}
 	
 	function addBoard() {
 	
@@ -119,10 +177,6 @@
 		})
 	}
 	
-	function getTaskSelectionTree() {
-		DivPopUpShow(320, 320, "/ezPMS/getTaskSelectionTree.do?projectId=" + projectId + "&onlyGroup=false");
-	}
-	
 	// 파일을 첨부한 후 등록을 누르지 않고 닫기 버튼을 눌렀을 대 tempUploadFile폴더에 업로드된 파일들이 다시 삭제됨
 	function cancelAddBoard() {
 		var filecnt = dadiframe.document.getElementById("filelist").childNodes.length;
@@ -173,13 +227,18 @@
 				<table class="content" style="width:100%;">
 					<tr>
 						<th>프로젝트명</th>
-						<td style="width: 50%">${projectName}</td>
+						<td style="width: 50%">
+							<c:choose>
+								<c:when test="${projectName eq null}">${board.projectName}</c:when>
+								<c:otherwise>${projectName}</c:otherwise>
+							</c:choose>		
+						</td>
 						<th>게시종류</th>
 						<td><input type="checkbox" id="emergency"/> 긴급게시 <input type="checkbox" id="notice"/> 공지사항</td>
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="getTaskSelectionTree()" style="margin-top: 2px;"><span>작업이름</span></a></th>
-						<td style="width: 50%" id="taskName">${taskName}</td>
+						<td style="width: 50%" id="taskName"></td>
 						<th>등록자</th>
 						<td>${writerName}(${writerDeptName})</td>
 					</tr>

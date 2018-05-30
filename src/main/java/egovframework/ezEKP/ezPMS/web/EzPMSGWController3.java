@@ -459,6 +459,7 @@ public class EzPMSGWController3 {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			Long projectId = Long.parseLong(request.getParameter("projectId"));
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
@@ -476,7 +477,10 @@ public class EzPMSGWController3 {
 			
 			ProjectBoardVO boardVO = ezPMSService.getBoardDetail(info.getTenantId(), param);
 			
-			result.put("data", boardVO);
+			int authority = ezPMSService.getUserProjectRole(userId, info.getTenantId(), projectId, request.getParameter("deptId"));
+			
+			result.put("authority", authority);
+			result.put("data", boardVO);	
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {

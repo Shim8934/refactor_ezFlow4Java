@@ -27,9 +27,41 @@
 	});
 	
 	function moveBoard() {
-		for(var index in parent.itemIds) {
-			console.log(parent.itemIds[index]);
+		var groupId = 0;
+		var taskId = 0;
+		var chosenTask = $("a.jstree-clicked");	
+		
+		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
+			groupId = chosenTask.parents("li").eq(1).attr("id");
+			taskId  = chosenTask.parent().attr("id").substr(1);		
+		} else {
+			groupId = chosenTask.parent().attr("id");
 		}
+		
+		data = {
+			itemIds : parent.itemIds,
+			groupId : groupId,
+			taskId  : taskId
+		}
+		
+		$.ajax({
+			type : "PUT",
+			url : "/ezPMS/moveBoard.do",
+			dataType : "json",
+			contentType : "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(result) {
+				if(result.data == 'success') {
+					alert("이동에 성공했습니다.");
+					getBoardList();
+				} else {
+					alert('수정은 프로젝트 담당자나 게시자만 할 수 있습니다.');
+				}	
+			},
+			error : function() {
+				alert("수정에 실패했습니다.");
+			}
+		})
 	}
 </script>
 <style>

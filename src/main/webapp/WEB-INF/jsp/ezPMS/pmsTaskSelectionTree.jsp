@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
-<link rel="stylesheet" href="/css/default_kr.css" type="text/css">
+<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
@@ -24,11 +25,18 @@
 	});
 	
 	function register() {
-		var chosenTask = $("a.jstree-clicked");	
-		parent.document.getElementById("taskName").innerHTML = chosenTask.text();
+		var chosenTask = $("a.jstree-clicked");
+		var taskName = chosenTask.text();
+		
+		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
+		if(taskName.indexOf('(') != -1) {
+			taskName = taskName.substr(0, taskName.indexOf('('));
+		}
+		parent.document.getElementById("taskName").innerHTML = taskName;
+		
 		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
 			parent.groupId = chosenTask.parents("li").eq(1).attr("id");
-			parent.taskId = chosenTask.parent().attr("id").substr(1);		
+			parent.taskId  = chosenTask.parent().attr("id").substr(1);		
 		} else {
 			parent.groupId = chosenTask.parent().attr("id");
 		}	

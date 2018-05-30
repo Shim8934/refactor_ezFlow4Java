@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
-<link rel="stylesheet" href="/css/default_kr.css" type="text/css">
+<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
@@ -33,6 +34,10 @@
 		
 		$("#taskTree").on("click", ".jstree-anchor", function() {
 			taskName = $(this).text();
+			// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
+			if(taskName.indexOf('(') != -1) {
+				taskName = taskName.substr(0, taskName.indexOf('('));
+			}
 			if($(this).parent().attr("id").charAt(0) == 't') { 
 				groupId = $(this).parents("li").eq(1).attr("id");
 				taskId = $(this).parent().attr("id").substr(1);
@@ -49,6 +54,9 @@
 			var project = $("li[role='treeitem'][aria-level='1']");
 			groupId = project.attr("id");
 			projectName = project.children("a").text();
+			if(projectName.indexOf('(') != -1) {
+				projectName = projectName.substr(0, projectName.indexOf('('));
+			}
 			taskName = projectName;
 		}, 100);
 	});
@@ -139,98 +147,6 @@
 				alert("삭제에 실패했습니다.");
 			}
 		})
-	}
-</script>
-
-<script>
-	var boardDetail;
-	
-	$(function() {
-		$("#divList").css("height", (currentHeight - 100) + "px");
-		
-		$("tbody tr td:not(.checkbox)").on("click", function(evt) {
-			var checkbox = $(this).parent().children("td:eq(0)").children();
-			$('input:checkbox[name="boardCheckbox"]').each(function() {
-				$(this).removeProp("checked","true");
-				$(this).parent().parent().removeClass("selectedTR");
-			});
-			
-			checkbox.prop("checked", "true");
-			selectTR(checkbox);
-		});
-		
-		$("tbody tr").on("dblclick", function() {
-			goBoardDetail(this);
-		});
-		
-		$(".mainlist th:not(.checkboxHeader)").on("click", function() {
-			
-		});
-	})
-	
-	// 체크박스 전체선택 혹은 해제
-	function selectAllTR(elem) {
-		if($(elem).is(":checked")) {
-			 $('input:checkbox[name="boardCheckbox"]').each(function() {
-				 $(this).prop("checked","true");
-				 $(this).parent().parent().addClass("selectedTR");
-			 });
-		} else {
-			 $('input:checkbox[name="boardCheckbox"]').each(function() {
-				 $(this).removeProp("checked","true");
-				 $(this).parent().parent().removeClass("selectedTR");
-			 });
-		}
-	}
-	
-	function selectTR(elem) {
-		if($(elem).is(":checked")) {
-			$(elem).parent().parent().addClass("selectedTR");
-		} else {
-			$(elem).parent().parent().removeClass("selectedTR");
-		}
-	}
-	
-	// 게시판 상세 화면
-	function goBoardDetail(elem) {
-		var itemId = $(elem).attr("data-itemId");
-		$(elem).removeClass("noView");
-		var feature = GetOpenPosition(790, 800);
-		boardDetail = window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", 
-								  "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
-	}
-	
-	function deleteBoards() {
-		var checkBoxes = $('input:checked[name="boardCheckbox"]');
-		if(!checkBoxes.length) {
-			alert("삭제할 글을 선택하세요.");
-			return;
-		}
-		
-		if(confirm("정말 삭제하시겠습니까?") == true) {
-			itemIds = new Array();
-			checkBoxes.each(function() {
-				var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
-				itemIds.push(itemId);		
-			});
-			deleteBoardsAction(itemIds);
-		}	
-	}
-	
-	function moveBoards() {
-		var checkBoxes = $('input:checked[name="boardCheckbox"]');
-		if(!checkBoxes.length) {
-			alert("이동할 글을 선택하세요.");
-			return;
-		}
-	
-		itemIds = new Array();
-		checkBoxes.each(function() {
-			var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
-			itemIds.push(itemId);	
-		});
-		
-		DivPopUpShow(320, 320, "/ezPMS/goMoveBoard.do?projectId=" + projectId + "&onlyGroup=false");
 	}
 </script>
 

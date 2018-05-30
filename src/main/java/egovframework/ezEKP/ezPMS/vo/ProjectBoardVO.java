@@ -40,6 +40,9 @@ public class ProjectBoardVO {
 	// 그룹 아이디
 	private Long groupId;
 	
+	// 프로젝트 아이디
+	private Long projectId;
+	
 	// 게시자 명
 	private String writerName;
 	
@@ -64,6 +67,9 @@ public class ProjectBoardVO {
 	// 그룹 명
 	private String groupName;
 	
+	// 프로젝트 명
+	private String projectName;
+	
 	// 핸드폰 번호
 	private String mobileNumber;
 	
@@ -78,6 +84,7 @@ public class ProjectBoardVO {
 	
 	//이미지 첨부파일 경로
 	private String imageFilePath;
+
 	
 	public int getItemId() {
 		return itemId;
@@ -277,5 +284,21 @@ public class ProjectBoardVO {
 
 	public void setImageFilePath(String imageFilePath) {
 		this.imageFilePath = imageFilePath;
-	}	
-}
+	}
+
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+}	
