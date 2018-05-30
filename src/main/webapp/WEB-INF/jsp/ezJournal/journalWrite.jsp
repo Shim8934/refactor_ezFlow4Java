@@ -618,7 +618,8 @@
 			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
+	                    			<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezJournal.t73 => t26 -->
+			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
 			                        <li><span onclick="btn_TempSave('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>

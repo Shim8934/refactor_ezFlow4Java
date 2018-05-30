@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularConfirmVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
@@ -2556,5 +2557,40 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("restoreCircularList ended.");
 		
 		return "json";
+	}
+	
+	/**
+	 * 18-05-28 김민성 - 회람판 회람글 확인완료한 사람 정보 조회
+	 */
+	@RequestMapping(value = "/ezCircular/circularConfirmList.do")
+	public String circularConfirmList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("circularConfirmList started.");
+		
+		/*LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String circularID = request.getParameter("circularID");
+		
+		List<CircularConfirmVO> circularConfirmList = ezCircularService.getConfirmMember(circularID, userInfo.getTenantId(), userInfo.getOffset());
+		
+		model.addAttribute("list", circularConfirmList); */
+		
+		String circularID = request.getParameter("circularID");
+		model.addAttribute("circularID", circularID);
+		
+		logger.debug("circularConfirmList ended.");
+		
+		return "ezCircular/circularConfirmList";
+	}
+	
+	@RequestMapping(value = "/ezCircular/circularConfirmPagingList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String circularID, int pageNum, int perCount) throws Exception {
+		logger.debug("circularConfirmPagingList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		StringBuffer resultXML = ezCircularService.getConfirmMemberList(circularID, userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+
+		logger.debug("circularConfirmPagingList ended");
+		return resultXML.toString();
 	}
 }

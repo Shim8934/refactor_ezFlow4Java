@@ -422,7 +422,7 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                            <ul id="menuTable">	
-	                                <li><span onclick="checkupload()"><spring:message code='ezSchedule.t358'/></span></li>
+	                                <li><span onclick="checkupload()"><spring:message code='ezSchedule.t157'/></span></li>
 	                                <c:if test="${scheduleId == ''}">
 	                                	<li><span onclick="check_name()"><spring:message code='ezSchedule.t53'/></span></li>
 									</c:if>
