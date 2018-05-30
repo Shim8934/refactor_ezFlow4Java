@@ -79,6 +79,9 @@ public class EzAttitudeKMSController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	@Resource(name = "MOptionService")
+	private MOptionService mOptionService;
+	
 	/**
 	 * 근태수정관리 전체근태관리 화면조회
 	 */

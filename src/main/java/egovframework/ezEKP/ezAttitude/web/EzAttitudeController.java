@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -32,8 +33,13 @@ public class EzAttitudeController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	@Resource(name = "MOptionService")
+	private MOptionService mOptionService;
+	
 	//내꺼
 	
 	/////////////////////////////////////////
 	//니꺼
+	
+	
 }
