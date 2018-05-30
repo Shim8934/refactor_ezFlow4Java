@@ -153,6 +153,9 @@
 					case "CircularEnv":
 				        window.parent.frames.right.document.location.href = "/ezCircular/circularConfig.do";
 				        break;
+					case "journalEnv":
+				        window.parent.frames.right.document.location.href = "/ezJournal/journalConfig.do";
+				        break;
 					default: 
 						break;
 				}
@@ -212,6 +215,7 @@
 	    			<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
 	    		</c:if>
             </c:if>
+   			<h2><span id="journalEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezJournal.t150' /></span></h2><ul></ul>
 			<h2><span id="TimeZone" name="TimeZone" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900010' /></span><ul></ul></h2>
 		</div>
 	</body>
