@@ -83,107 +83,6 @@ public class EzAttitudeKMSController {
 	private MOptionService mOptionService;
 	
 	/**
-	 * 근태수정관리 전체근태관리 화면조회
-	 */
-	@RequestMapping(value="/ezAttitude/attitudeManage.do")
-	public String attitudeManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("attitudeManage started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String offset = userInfo.getOffset();
-		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		
-		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar cal = Calendar.getInstance();
-		
-		cal = Calendar.getInstance();
-		cal.setTime(sdf.parse(localDate));
-		cal.add(Calendar.DAY_OF_MONTH, -7);
-		
-		String searchStartDate = sdf.format(cal.getTime());
-		String searchEndDate = localDate;
-		
-		//부서셀렉트박스
-		String adminFlag = "false";
-		String isAllDept = "";
-
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
-			adminFlag = "true";
-			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
-			adminFlag = "true";
-		}
-		
-		String url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("isAllDept", isAllDept)
-				.queryParam("userId", userInfo.getId());
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		
-		JSONArray deptList = new JSONArray();
-		
-		if(status.equals("ok")){
-			deptList = (JSONArray) resultBody.get("data");
-		}
-
-		if (deptList.size() < 1 && adminFlag.equals("false")) {
-			return "cmm/error/accessDenied";
-		}
-		
-		int myDeptCount = 0;
-		String manageFlag = "N";
-		JSONObject dept = new JSONObject();
-		
-		for(int i = 0; i < deptList.size(); i++) {
-			dept = (JSONObject) deptList.get(i);
-			if (dept.get("deptId").equals(userInfo.getDeptID())) {
-				myDeptCount++;
-			}
-			if (dept.get("authType").equals("M")) {
-				manageFlag = "M";
-			}
-		}
-		
-		if (myDeptCount == 1) {
-			for(int i = 0; i < deptList.size(); i++) {
-				dept = (JSONObject) deptList.get(i);
-				if (dept.get("deptId").equals(userInfo.getDeptID())) {
-					dept.put("mine", "no");
-				}
-			}
-		}
-		
-		model.addAttribute("deptList", deptList);
-		model.addAttribute("manageFlag", manageFlag);
-		model.addAttribute("companyId", userInfo.getCompanyID());
-		model.addAttribute("selectedDeptID", userInfo.getDeptID());
-		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
-		model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
-		
-		LOGGER.debug("attitudeManage ended.");
-		
-		return "/ezAttitude/attitudeManage";
-	}
-	
-	/**
 	 * 근태 수정 신청 현황
 	 */
 	@RequestMapping(value="/ezAttitude/attModAppList.do")
@@ -1947,7 +1846,7 @@ public class EzAttitudeKMSController {
 	/**
 	 * 근태입력조회, 근태미입력조회 엑셀 출력
 	 */
-	@RequestMapping(value = "/ezAttitude/adminManageExcel.do")
+	@RequestMapping(value = {"/ezAttitude/excelAttitudeListExport.do", "/ezAttitude/excelAbsentedListExport.do", "ezAttitude/excelHistoryListExport.do"})
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		
@@ -1966,7 +1865,6 @@ public class EzAttitudeKMSController {
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String duplicated = request.getParameter("duplicated");
-		String reqType = request.getParameter("reqType");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
@@ -1978,20 +1876,20 @@ public class EzAttitudeKMSController {
 		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchDeptId = " + searchDeptId
 				+ " || searchStartDate = " + searchStartDate + " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType
-				+ " || pageNum = " + pageNum + " || listSize = " + listSize + " || orderCell = " + orderCell + "orderOption = " + orderOption + "||reqType = " + reqType);
+				+ " || pageNum = " + pageNum + " || listSize = " + listSize + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || requestURL = " + requestURL);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
+		String reqType = "";
 		
-		if (reqType.equals("modify")) {
-//			근태조회엑셀
-			LOGGER.debug("근태조회");
+		if (requestURL.indexOf("excelAttitudeListExport.do") > -1) {
+			reqType = "check";
 			url = gwServerUrl + "/rest/ezattitude/attitudes/check";
-		} else if (reqType.equals("absent")) {
-//			미입력자엑셀
+		} else if (requestURL.indexOf("excelAbsentedListExport.do") > -1) {
+			reqType = "absent";
 			url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
-		} else if (reqType.equals("history")) {
-			//kms-todo
+		} else if (requestURL.indexOf("excelHistoryListExport.do") > -1) {
+			reqType = "history";
 			url = gwServerUrl + "/rest/ezattitude/attitudes/manageHistories";
 		}
 		
@@ -2071,7 +1969,7 @@ public class EzAttitudeKMSController {
 		
 		String pFileName = "";
 		
-		if (reqType.equals("modify")) {
+		if (reqType.equals("check")) {
 //			근태조회엑셀
 			pFileName = EgovDateUtil.getToday("-") +"_attitudeReport.xls";
 			
@@ -2139,13 +2037,13 @@ public class EzAttitudeKMSController {
 			//header
 			row.createCell(0).setCellValue("NO");
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("이름");
+			row.createCell(1).setCellValue("날짜");
 			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("직위");
+			row.createCell(2).setCellValue("이름");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("부서");
+			row.createCell(3).setCellValue("직위");
 			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("날짜");
+			row.createCell(4).setCellValue("부서");
 			row.getCell(4).setCellStyle(headerStyle);
 			
 			//body
