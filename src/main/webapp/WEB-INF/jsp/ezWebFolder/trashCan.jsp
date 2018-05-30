@@ -29,7 +29,6 @@
 	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/jquery.backDetect.min.js"></script>
 	<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
    		var lang = ${userInfo.lang};
