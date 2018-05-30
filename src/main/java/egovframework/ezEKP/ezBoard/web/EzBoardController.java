@@ -62,6 +62,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -2583,13 +2584,6 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA20>" + "true" + "</DATA20>");
 					} else{ 
 						logger.debug("FG3");
-						/*resultXML.append("<DATA14>" + boardSearchList.get(j).get("BOARDADMIN_FG") + "</DATA14>");
-						resultXML.append("<DATA15>" + boardSearchList.get(j).get("READ_FG") + "</DATA15>");
-						resultXML.append("<DATA16>" + boardSearchList.get(j).get("WRITE_FG") + "</DATA16>");
-						resultXML.append("<DATA17>" + boardSearchList.get(j).get("REPLY_FG") + "</DATA17>");
-						resultXML.append("<DATA18>" + boardSearchList.get(j).get("DELETE_FG") + "</DATA18>");
-						resultXML.append("<DATA19>" + "NO" + "</DATA19>");
-						resultXML.append("<DATA20>" + boardSearchList.get(j).get("LISTVIEW_FG") + "</DATA20>");*/
 						
 						List<HashMap<String, Object>> boardManageList = 
 								ezBoardService.CheckBoardManage(userInfo, boardSearchList.get(j).get("BOARDID").toString());
@@ -7279,19 +7273,45 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 2018-04-27 김혜정 게시판 검색
 	 */
 	@RequestMapping(value="/ezBoard/boardSearchView.do")
-	public String BoardSearchView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String BoardSearchView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO, Model model) throws Exception {
 		logger.debug("boardSearchView started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		boardVO.setBoardType("N");
+		boardVO.setLang(userInfo.getLang());
+		boardVO.setTenantID(userInfo.getTenantId());
+		
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
+		
+		StringBuffer resultXML = new StringBuffer();
+
+		resultXML.append("<DOCLIST>");
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+        
+        for (BoardListHeaderVO vo : headerList) {
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
+
+        resultXML.append("</HEADERS>");
+        resultXML.append("<ROWS>");
+        resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+        resultXML.append("</DOCLIST>");
+		
+		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
-		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("use_Editor", use_Editor);
+		model.addAttribute("listHeader", resultXML);
 		
 		logger.debug("boardSearchView ended");
 		return "/ezBoard/boardSearchView";

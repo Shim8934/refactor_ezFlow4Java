@@ -92,7 +92,7 @@
    		opener.document.getElementById("selectedBoardName").innerHTML = selectedBoardName;
    		opener.document.getElementById("selectedBoardtype").innerHTML = selectedBoardtype;
    		opener.document.getElementById("selectedBoardParentBoardID").value = selectedBoardParentBoardID;
-   		console.log(selectedBoardParentBoardID);
+   		//console.log(selectedBoardParentBoardID);
    		window.close();
    	}
 </script>

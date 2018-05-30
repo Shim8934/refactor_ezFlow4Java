@@ -47,31 +47,26 @@
 				}
 		</style>
 		<script type="text/javascript">
-			var pBoardID = "<c:out value='${boardID}'/>";
+			var pBoardID = "";
 			var SSUserID = "${userInfo.id}";
 			var SSUserName = "${userInfo.name}";
+			var USE_OCS = "${use_ocs}";				
+			var pUse_Editor = "${use_Editor}";
 			var CurPage = "";
 			var totalPage = "";
 			var strListInfo = "";
-			var pBoardType = "N"; // "1"
-			var USE_OCS = "${use_ocs}";
-			var useRunTime = "${useRunTime}"				
+			var Use_OneLineCount = "";
 			var OrderOption = "";
 			var OrderCell = "";
-			
-			var pUse_Editor = "${use_Editor}";
-			var Use_OneLineCount = "${use_oneLineCount}";
+			var pBoardType = "N";
 			var SQLPARADATA = "";
 			
-			var clickPreviweType = "TEXT";
-			
-			var pAdminType = "${boardInfo.adminType}";
-			var pButtonHidden = "N"; //N 설정
-			var gubun = "${boardInfo.guBun}";
-			
-			var Access_FG = "${boardInfo.access_FG}";
-			var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
-			var ListView_FG = "${boardInfo.listView_FG}";
+			var pAdminType = "";
+			//var pButtonHidden = "N"; //N 설정
+			//var gubun = "${boardInfo.guBun}";
+			//var Access_FG = "${boardInfo.access_FG}";
+			//var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
+			//var ListView_FG = "${boardInfo.listView_FG}";
 			
 			var previewType = "TEXT";
 			var clickPreviweType = "TEXT";
@@ -93,10 +88,7 @@
 			var PreviewW_Move = false;
 			var g_bPrevShow = false;
 			var pMode = "new";
-			var starttime;
-			var endtime;			
-			
-			
+					
 			var ShowAdjacent = "";
 			
 			var readFgList = [];
@@ -110,6 +102,7 @@
 			
 			window.onunload = Window_onunload;
 			var window_onunload_Event = false;
+			
 			window.onresize = function ()
 			{
 			    document.onselectstart = function () { return false; };
@@ -121,10 +114,7 @@
 			
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
-				if (useRunTime != "YES") {
-					$("#runtime").css("display", "none");
-				}
-				
+
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
 			        document.body.style.WebkitUserSelect = 'none';
@@ -135,57 +125,71 @@
 				
 				var height = parseInt(document.documentElement.clientHeight - 320);
 				
+				getBoardList_after(loadXMLString("${listHeader}"));
+				
+				if(document.getElementById("BoardList_TR_noItems") != null) {
+                	document.getElementById("BoardList_TR_noItems").outerHTML = "";
+                }
+				
+				document.getElementById("mailBoxInfo").innerHTML = "";
+				
 				window_onunload_Event = true;
+				
 			};
 			$(document).ready(function() {
 				$("input:checkbox[id='chkSearchAll']").on('click', function() {
 					if($(this).prop('checked')) {
-						document.getElementById("selectedBoardName").style.display = "none"; 
+						document.getElementById("selectedBoardName").innerHTML = "전체 게시판";
 					}else{
-						document.getElementById("selectedBoardName").style.display = ""; 
+						if(document.getElementById("selectedBoardName").value == undefined) {
+							document.getElementById("selectedBoardName").innerHTML = "";
+						}
 					}
 				});
 			});	
 			var Save_unloadSave = false;
 			function Window_onunload() {
-				var divStyle;
-			    var listCount = 0;
-			    
-			    if (document.getElementById("listcount") != null){
-			    	listCount = document.getElementById("listcount").value;
-			    } else {
-			    	listCount = 20;
-			    }
-			    
-			    if (pPreviewShow_HOW == "W") {
-			        divStyle = Math.round(pMailListDiv);
-			    } else if (pPreviewShow_HOW == "H") {
-			        divStyle = Math.round(pMailListDiv_H);
-			    } else {
-			        divStyle = 0;
-			    }
-			    
-			    if (divStyle < 24) {
-			        divStyle = 24;
-			    }
-			
-			    $.ajax({
-					type : "POST",
-					dataType : "json",
-					async : false,
-					url : "/ezBoard/boardGeneralListSave2.do",
-					data : { userID 	 : SSUserID, 
-							 listCount 	 : listCount, 
-							 previewMode : pPreviewShow_HOW,
-							 list 		 : divStyle,
-							 content 	 : (100 - divStyle)
-							},
-					success: function(){
-					}        			
-				});
-			    
-			    Save_unloadSave = true;
-			}
+		        if (window_onunload_Event && !Save_unloadSave) {
+		        	var divStyle;
+		            var listCount = 0;
+		            var pPreviewShow_HOW = "OFF";
+		            
+		            if (document.getElementById("listcount") != null){
+		            	listCount = 20;
+		            } else {
+		            	listCount = 20;
+		            }
+		            
+		            if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H);
+		            } else {
+		                divStyle = 0;
+		            }
+		            
+		            if (divStyle < 24) {
+		                divStyle = 24;
+		            }
+					
+		            $.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezBoard/boardGeneralListSave2.do",
+						data : { userID 	 : SSUserID, 
+								 listCount 	 : listCount, 
+								 previewMode : pPreviewShow_HOW,
+								 list 		 : divStyle,
+								 content 	 : (100 - divStyle)
+								},
+						success: function(){
+						}        			
+					});
+		            
+				    Save_unloadSave = true;
+		        }
+		    }
 			$(function () {
 			    $("#Sdatepicker").datepicker({
 			        changeMonth: true,
@@ -238,12 +242,10 @@
 			    $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 			});
 			
-			var viewtypeChangeFlag = false;
 			function getBoardList(type) {
 			    if (type == "1") {
 			        SQLPARADATA = "";
 			        CurPage = 1;
-			        viewtypeChangeFlag = true;
 			    }
 			    if (SQLPARADATA != ""){
 			    	url = "/ezBoard/getSearchBoardList.do";
@@ -335,11 +337,9 @@
 			        if (tempno.length > 4) {
 			            document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 22 + "px"; // +  tempno.length * 3 + 20
 			        }
-			       	/* if (USE_OCS == "YES" && lstCnt > 0 && gubun != 2) {
-			            check_presence();
-			        } */
+			       	
 			        if (!firstFlag) {
-			            PreviewRayerChange(pPreviewShow_HOW);
+			            PreviewRayerChange("OFF");
 			            if (CrossYN()) {
 			                if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
 			                    ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
@@ -357,45 +357,6 @@
 			            }
 			            firstFlag = true;
 			        } 
-			        //viewtype(기본보기, 안읽은게시물, 만료된게시물)이 바뀔때마다 실행되는 조건
-			        if (viewtypeChangeFlag) {
-			        	document.getElementById("Preview_HeaderW").style.display = "none"; 
-			    		document.getElementById("ifrmPreViewW").src = "<spring:message code='main.kms4' />";
-			    		document.getElementById("ifrmPreViewW").onload = function(){
-			    			if (CrossYN()) {
-			                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
-			                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
-			                    }
-			                } else {
-			                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
-			                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-			                    }
-			                }
-			    		}
-			    		document.getElementById("Preview_HeaderH").style.display = "none"; 
-			    		document.getElementById("ifrmPreViewH").src = "<spring:message code='main.kms4' />";
-			    		document.getElementById("ifrmPreViewH").onload = function(){
-			    			if (CrossYN()) {
-			                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
-			                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-			                    }
-			                } else {
-			                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
-			                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-			                    }
-			                }
-			    		}
-			    		//preview를 컨트롤하는 변수들 초기화
-			        	viewtypeChangeFlag = false;
-			        	selobj = null;
-			        	onclickFlag = false;
-			        }
-			        endtime = new Date().getTime();
-			        document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
-			    /* }
-			    catch (e) {
-			        alert("getBoardList_after : " + e.description);
-			    } */
 			}
 			function selectBoard() {
 				if (CrossYN()) {
@@ -447,12 +408,7 @@
 			            return;
 			        }
 			    }
-			    else if (type == "quick") {
-			        if (document.getElementById("txt_keyword").value == "") {
-			            alert("<spring:message code='ezBoard.t192' />");
-			            return;
-			        }
-			    }
+			    
 			    CurPage = "1";
 			    MakeSubCondition();
 			    getBoardList();
@@ -898,6 +854,11 @@
 					}
 				 });
 				
+				if(readFgList.length == 0) {
+					alert("<spring:message code='ezBoard.t194' />");
+					return;
+				}
+				
 				for(var i = 0; i < readFgList.length ; i++) { 
 					if (readFgList[i] != "true") {
 						
@@ -966,7 +927,7 @@
 			<script type="text/javascript">
 			    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
-	<table class="content" style="width:80%;">
+	<table class="content" style="width:100%;">
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t185' /></th>
 			<td style="text-align: left" colspan="4">
@@ -1002,11 +963,10 @@
 		</tr>
 	</table>
 	<br>
-	<table style="width:700px;">
+	<table style="width:100%;">
 	<tr>
 		<td style="text-align:center;">
 		<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
-		<%-- <a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a> --%>
 		</td>
 	</tr>
 	</table>
@@ -1030,15 +990,6 @@
 								<option value="30">30</option>
 								<option value="40">40</option>
 								<option value="50">50</option>
-						</select></td>
-					</tr>
-					<tr>
-						<th><spring:message code="ezEmail.t99000035" /></th>
-						<td>
-							<select id="viewtype" onchange="getBoardList('1')">
-								<option value="1"><spring:message code='ezBoard.t4001' /></option>
-								<option value="2"><spring:message code='ezBoard.t4002' /></option>
-								<option value="3"><spring:message code='ezBoard.t4003' /></option>
 							</select>
 						</td>
 					</tr>
