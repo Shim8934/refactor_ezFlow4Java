@@ -198,7 +198,8 @@
 				}
 
 				if (document.getElementById("keyword").value != "") {
-					filter = document.getElementById("keyword").value;					
+					filter = document.getElementById("keyword").value;			
+					filter = MakeXMLString(filter);
 				}
 
 				if (filter.indexOf("%") != -1) {
