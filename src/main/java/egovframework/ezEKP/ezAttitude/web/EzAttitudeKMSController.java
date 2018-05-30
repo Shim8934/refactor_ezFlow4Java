@@ -1947,7 +1947,7 @@ public class EzAttitudeKMSController {
 	/**
 	 * 근태입력조회, 근태미입력조회 엑셀 출력
 	 */
-	@RequestMapping(value = "/ezAttitude/adminManageExcel.do")
+	@RequestMapping(value = {"/ezAttitude/excelAttitudeListExport.do", "/ezAttitude/excelAbsentedListExport.do", "ezAttitude/excelHistoryListExport.do"})
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		
@@ -1966,7 +1966,6 @@ public class EzAttitudeKMSController {
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String duplicated = request.getParameter("duplicated");
-		String reqType = request.getParameter("reqType");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
@@ -1978,20 +1977,20 @@ public class EzAttitudeKMSController {
 		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchDeptId = " + searchDeptId
 				+ " || searchStartDate = " + searchStartDate + " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType
-				+ " || pageNum = " + pageNum + " || listSize = " + listSize + " || orderCell = " + orderCell + "orderOption = " + orderOption + "||reqType = " + reqType);
+				+ " || pageNum = " + pageNum + " || listSize = " + listSize + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || requestURL = " + requestURL);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
+		String reqType = "";
 		
-		if (reqType.equals("modify")) {
-//			근태조회엑셀
-			LOGGER.debug("근태조회");
+		if (requestURL.indexOf("excelAttitudeListExport.do") > -1) {
+			reqType = "check";
 			url = gwServerUrl + "/rest/ezattitude/attitudes/check";
-		} else if (reqType.equals("absent")) {
-//			미입력자엑셀
+		} else if (requestURL.indexOf("excelAbsentedListExport.do") > -1) {
+			reqType = "absent";
 			url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
-		} else if (reqType.equals("history")) {
-			//kms-todo
+		} else if (requestURL.indexOf("excelHistoryListExport.do") > -1) {
+			reqType = "history";
 			url = gwServerUrl + "/rest/ezattitude/attitudes/manageHistories";
 		}
 		
@@ -2071,7 +2070,7 @@ public class EzAttitudeKMSController {
 		
 		String pFileName = "";
 		
-		if (reqType.equals("modify")) {
+		if (reqType.equals("check")) {
 //			근태조회엑셀
 			pFileName = EgovDateUtil.getToday("-") +"_attitudeReport.xls";
 			
@@ -2139,13 +2138,13 @@ public class EzAttitudeKMSController {
 			//header
 			row.createCell(0).setCellValue("NO");
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("이름");
+			row.createCell(1).setCellValue("날짜");
 			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("직위");
+			row.createCell(2).setCellValue("이름");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("부서");
+			row.createCell(3).setCellValue("직위");
 			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("날짜");
+			row.createCell(4).setCellValue("부서");
 			row.getCell(4).setCellStyle(headerStyle);
 			
 			//body

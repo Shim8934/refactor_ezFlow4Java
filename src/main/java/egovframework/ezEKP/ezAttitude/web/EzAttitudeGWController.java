@@ -51,9 +51,6 @@ public class EzAttitudeGWController {
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	@Autowired
-	private Properties config;
-	
 	@Resource(name="crypto")
 	private EgovFileScrty egovFileScrty;
 	

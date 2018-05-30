@@ -710,8 +710,20 @@
 					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
+	    		
+	    		switch (Tab1_SelectID) {
+	    		case "modify":
+	    			url = "/ezAttitude/excelAttitudeListExport.do";
+	    			break;
+	    		case "absent":
+	    			url = "/ezAttitude/excelAbsentedListExport.do";
+	    			break;
+	    		case "history":
+	    			url = "ezAttitude/excelHistoryListExport.do";
+	    			break;
+	    		}
 				
-		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId 
+		    	exportExcelframe.location.href=url + "?companyId=" + companyId 
 		    			+ "&userName=" + searchUserName 
 		    			+ "&title=" + searchTitle 
 		    			+ "&deptId="+ $('#ListDept').val()
@@ -720,7 +732,7 @@
 		    			+ "&orderCell=" + orderCell 
 		    			+ "&orderOption=" + orderOption 
 		    			+ "&attitudeType=" + searchAttitudeType
-		    			+ "&duplicated=duplicated&reqType="+Tab1_SelectID;
+		    			+ "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
 	        

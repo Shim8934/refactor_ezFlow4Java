@@ -31,4 +31,9 @@ public class EzAttitudeController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	//내꺼
+	
+	/////////////////////////////////////////
+	//니꺼
 }
