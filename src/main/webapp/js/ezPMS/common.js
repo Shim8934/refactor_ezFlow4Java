@@ -78,7 +78,7 @@ function popupClose() {
 	parent.DivPopUpHidden();
 }
  
-function showSearchDiv() {
+function showSearchDiv() {	
 	if ($("#searchDiv").css("display") == "none") {
 		$(".searchViewIcon").attr("src", "/images/etc/view-sortdown.gif");
 		$("#searchDiv").slideDown();

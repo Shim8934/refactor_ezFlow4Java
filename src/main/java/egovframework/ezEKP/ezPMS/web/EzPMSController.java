@@ -129,18 +129,16 @@ public class EzPMSController {
 		
 		String url = "/rest/ezPMS/projects/userId/"+userId;
 		
-
-			if(viewType.equals("1")) {
-				viewType = "Board";
-			} else {
-				viewType = "Memo";
-			}
+		if(viewType.equals("1")) {
+			viewType = "Board";
+		} else {
+			viewType = "Memo";
+		}
 			
 		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
 		param.put("userIdType", "user");
 		param.put("projectSort", projectSort);
-		param.put("viewType", viewType);
 		param.put("deptId", deptId);
 		
 		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
@@ -162,11 +160,10 @@ public class EzPMSController {
 				if (projectListCount != 0) {
 					//현재 페이지
 					param.put("currentPage", currentPage);
-					//한 페이지에 보여질 개수
-					param.put("listNumber", listNumber);
 					//프로젝트 총 개수
 					param.put("listCount", projectListCount);
 					param.put("startCount", paging.getStartCount());
+					
 					//header 정렬 프로젝트 순서
 					if (param.get("orderWhat") == null || param.get("orderWhat").equals("")) {
 						param.put("orderWhat", "init");
@@ -1513,6 +1510,7 @@ public class EzPMSController {
 				}
 			}
 			
+			model.addAttribute("position", param.get("position"));
 			model.addAttribute("projectList", projectList);
 			model.addAttribute("projectListCount", projectListCount);
 		}

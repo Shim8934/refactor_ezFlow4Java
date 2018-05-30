@@ -75,7 +75,7 @@ public class EzPMSGWController {
 			String searchByOverview = request.getParameter("searchByOverview").toString();
 			
 			if (searchByName != null  && !searchByName.equals("")) {
-				searchByName = request.getParameter("searchByName").toString();
+				searchByName = request.getParameter("searchByProjectName").toString();
 				searchByName = searchByName.replace("\\","\\\\");
 				searchByName = searchByName.replace("%", "\\%");
 				searchByName = searchByName.replace("_", "\\_");
@@ -793,7 +793,7 @@ public class EzPMSGWController {
 			String searchByOverview = request.getParameter("searchByOverview").toString();
 			
 			if (searchByName != null && !searchByName.equals("")) {
-				searchByName = request.getParameter("searchByName").toString();
+				searchByName = request.getParameter("searchByProjectName").toString();
 				searchByName = searchByName.replace("\\","\\\\");
 				searchByName = searchByName.replace("%", "\\%");
 				searchByName = searchByName.replace("_", "\\_");

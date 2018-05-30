@@ -43,10 +43,10 @@ $(function() {
 	} else { 
 		CurrentHeight = $(window).height()-100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#divList").css("height", (CurrentHeight - 100) + "px");
+		$("#divList").css("height", (CurrentHeight - 120) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 170) + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 65) + "px");
+		$("#contentList").css("height", (CurrentHeight - 78) + "px");
 		$("#divList").css("overflow", "auto");
 		
 		$("#totalCount").text("${taskListCount}");

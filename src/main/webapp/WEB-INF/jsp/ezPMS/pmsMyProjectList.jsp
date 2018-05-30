@@ -30,7 +30,6 @@ $(function() {
 	$("#divList").css("overflow", "auto");
 
 	$("#totalCount").text("${projectListCount}");
-
 });
 </script>
 </head>
@@ -46,22 +45,22 @@ $(function() {
 								<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
 									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 							</th>
-							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: left; overflow: hidden; white-space: nowrap; 
+							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
 								text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">프로젝트명</th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
 								class="h5_center">총괄 담당자</th>
-							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
+							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PLAN_START_DATE"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
 								class="h5_center">시작일</th>
-							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="COMPLETE_TASK"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
+							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="PLAN_END_DATE"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
 								class="h5_center">종료일</th>
 							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="STATUS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px;"
 								class="h5_center">상태</th>
-							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_START_DATE"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PROGRESS"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
 								class="h5_center">진행률</th>
 							</tr>
 							</thead>
@@ -90,18 +89,18 @@ $(function() {
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><c:out
 												value="${project.headManagerName }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px">
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">
 												<c:out value="${project.planStartDate }" />
 										</td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px">
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">
 												<c:out value="${project.planEndDate }" />
 										</td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
 												value="${project.status }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 10%"><c:out
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px"><c:out
 												value="${project.progress }" /></td>
 									</tr>
 								</c:forEach>

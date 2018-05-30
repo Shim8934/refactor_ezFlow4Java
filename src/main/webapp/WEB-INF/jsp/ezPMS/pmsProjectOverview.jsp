@@ -65,8 +65,6 @@ $(function() {
 			updateOrderStatus();
 		}
 	}).disableSelection();
-	
-
 
 });
 

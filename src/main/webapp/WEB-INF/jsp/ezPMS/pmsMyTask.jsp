@@ -46,19 +46,23 @@ var searchByUpperGroupName = "";
 $(function() {
 	setMyTaskList("task");
 	nowPosition = "task";
-	getDatePicker();
 	
+	$("#taskSearch").css("display", "");
+	$("#projectSearch").css("display", "none");
 	$("#1tab0").addClass("tabon");
 	
 	$("#1tab0").click(function(){
 		var clickTabId = $(this).attr("id");
 		var nowTabAttr = $(".tabon").attr("id");
 		changeTab(clickTabId, nowTabAttr);
+		
 		//담당 업무
 		nowPosition = "task";
 		$("#taskName").text("업무명");
 		$("#searchByGroupName").attr("id", "searchByTaskName");
 		$("#mainmenu").find("div").css("display", "");
+		$("#taskSearch").css("display", "");
+		$("#projectSearch").css("display", "none");
 		orderWhat = "";
 		
 		if ($("#searchDiv").css("display") != "none") {
@@ -76,10 +80,10 @@ $(function() {
 		
 		//담당 그룹
 		nowPosition = "group";
-		$("#taskName").text("그룹명");
-		$("#searchByTaskName").attr("id", "searchByGroupName");
 		$("#mainmenu").find("div").css("display", "none");
 		orderWhat = "";
+		$("#taskSearch").css("display", "");
+		$("#projectSearch").css("display", "none");
 		
 		if ($("#searchDiv").css("display") != "none") {
 			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
@@ -97,6 +101,9 @@ $(function() {
 		//담당 프로젝트
 		nowPosition = "project";
 		orderWhat = "";
+		$("#mainmenu").find("div").css("display", "");
+		$("#taskSearch").css("display", "none");
+		$("#projectSearch").css("display", "");
 		
 		if ($("#searchDiv").css("display") != "none") {
 			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
@@ -116,22 +123,23 @@ $(function() {
 });
 
 $(document).ready(function(){
+	getDatePicker();
+	
 	$(window).resize(function() {
 		CurrentHeight = $(window).height()-100;
 
-		$("#MailListRayer").css("display", "inline-block");
 		$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
 	
-		document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+		$("MailListRayer").css("height", CurrentHeight + "px");
+		$("#divList").css("height", (CurrentHeight - 120) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 170) + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 65) + "px");
-		document.getElementById("divList").style.height = (CurrentHeight - 100) + "px";
-		document.getElementById("projectListBody").style.height = (CurrentHeight - 170) + "px";
+		$("#contentList").css("height", (CurrentHeight - 78) + "px");
 	});
 });
 
 function getDatePicker() {
-	$("#Sdatepicker").datepicker({
+	$(".Sdatepicker").datepicker({
 		changeMonth: true,
 		changeYear: true,
 		autoSize: true,
@@ -146,7 +154,7 @@ function getDatePicker() {
 		}
 	});
 
-	$("#Edatepicker").datepicker({
+	$(".Edatepicker").datepicker({
 		changeMonth: true,
 		changeYear: true,
 		autoSize: true,
@@ -163,12 +171,12 @@ function getDatePicker() {
 	
 	var SDate = new Date();
 	var EDate = new Date();
-
-	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	$("#Sdatepicker").datepicker('setDate', "");
 	
-	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	$("#Edatepicker").datepicker('setDate', "");
+	$(".Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$(".Sdatepicker").datepicker('setDate', "");
+	
+	$(".Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$(".Edatepicker").datepicker('setDate', "");
 	
 	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
 			closeText: "<spring:message code='main.t3' />",
@@ -252,7 +260,7 @@ function setMyTaskList(position) {
 		url : url,
 		success : function(contentList) {
 			$("#contentList").html(contentList);
-			console.log(contentList);
+			
 			//빈값으로 만들기
 			searchByTaskName = "";
 			searchByUser = "";
@@ -271,6 +279,8 @@ function setMyTaskList(position) {
 			$("#searchByProjectName").val("");
 			$("#searchByOverview").val("");
 			$("#searchByUpperGroupName").val("");
+			$("#PSdatepicker").val("");
+			$("#PEdatepicker").val("");
 			
 			setInitOrder();
 		}
@@ -377,17 +387,35 @@ function setListOrder(elem) {
 
 function searchContent() {
 	currentPage = 1;
-	searchByTaskName = $("#searchByTaskName").val();
-	searchByUser = $("#searchByUser").val();
-	searchByPlanStartDate = $("#Sdatepicker").val();
-	searchByPlanEndDate = $("#Edatepicker").val();
-	searchByGroupName = $("#searchByGroupName").val();
-	searchByProjectName = $("#searchByProjectName").val();
-	searchByOverview = $("#searchByOverview").val();
-	searchByUpperGroupName = $("#searchByUpperGroupName").val();
+	
+	if (nowPosition == "project") {
+		searchByUser = $("#PsearchByUser").val();
+		searchByProjectName = $("#PsearchByProjectName").val();
+		searchByPlanStartDate = $("#PSdatepicker").val();
+		searchByPlanEndDate = $("#PEdatepicker").val();
+		searchByOverview = $("#PsearchByOverview").val();
+	} else {
+		searchByTaskName = $("#searchByTaskName").val();
+		searchByUser = $("#searchByUser").val();
+		searchByPlanStartDate = $("#Sdatepicker").val();
+		searchByPlanEndDate = $("#Edatepicker").val();
+		searchByGroupName = $("#searchByGroupName").val();
+		searchByProjectName = $("#searchByProjectName").val();
+		searchByOverview = $("#searchByOverview").val();
+		searchByUpperGroupName = $("#searchByUpperGroupName").val();
+	}
 	
 	setMyTaskList(nowPosition);
 }
+
+function getSearchProject() {
+	addProjectPopup(20, 30, 400, 300, "/ezPMS/getProjectNameList.do");
+}
+
+function goProjectDetails(elem) {
+	
+}
+
 </script>
 <style type="text/css">
 #mainmenu div{
@@ -415,7 +443,7 @@ function searchContent() {
 
 #contentArea {
 	width : 100%;
-	height : 88%;
+	height : 91%;
 }
 </style>
 </head>
@@ -444,32 +472,50 @@ function searchContent() {
 		</div>
 	</div>
 	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
-		<table class="content" style="width:80%; margin-bottom:5px;">
-			<tbody>
+	<table class="content" style="width:80%; margin-bottom:5px;">
+		<tbody id="taskSearch">
+			<tr>
+				<th id="taskName">업무명 </th>
+				<td style="width:50%"><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
+				<th>담당자</th>
+				<td><input type="text" style="width:100%" id="searchByUser"></td>
+			</tr>
+			<tr>
+				<th>시작일 </th>
+				<td style="width:50%"><input type="text" class="Sdatepicker" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+				<th>종료일</th>
+				<td><input type="text" class="Edatepicker" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+			</tr>
+			<tr>
+				<th>상위그룹 </th>
+				<td style="width:50%"><input type="text" style="width:100%" id="searchByUpperGroupName"></td>
+				<th>프로젝트 이름</th>
+				<td><input type="text" style="width:70%; margin-right : 5px;" id="searchByProjectName"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
+			</tr>
+			<tr>
+				<th>업무개요</th>
+				<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
+			</tr>
+		</tbody>
+		<tbody id="projectSearch">
 				<tr>
-					<th id="taskName">업무명 </th>
-					<td style="width:50%"><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
+					<th>프로젝트명 </th>
+					<td style="width:50%"><input type="text" id="PsearchByProjectName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
 					<th>담당자</th>
-					<td><input type="text" style="width:100%" id="searchByUser"></td>
+					<td><input type="text" id="PsearchByUser"></td>
 				</tr>
 				<tr>
 					<th>시작일 </th>
-					<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+					<td style="width:50%"><input type="text" class="Sdatepicker" id="PSdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
 					<th>종료일</th>
-					<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+					<td><input type="text" class="Edatepicker" id="PEdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
 				</tr>
 				<tr>
-					<th>상위그룹 </th>
-					<td style="width:50%"><input type="text" style="width:100%" id="searchByUpperGroupName"></td>
-					<th>프로젝트 이름</th>
-					<td><input type="text" style="width:100%" id="searchByProjectName"></td>
-				</tr>
-				<tr>
-					<th>업무개요</th>
-					<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
+					<th>개요</th>
+					<td colspan="3"><input type="text" style="width:100%" id="PsearchByOverview"></td>
 				</tr>
 			</tbody>
-		</table>
+	</table>
 		<a class="imgbtn" onclick="searchContent()" style="margin-left:40%;"><span>검색</span></a>
 	</div>
 	<div id="contentList"></div>
