@@ -292,6 +292,9 @@ function MailOptionHiddenOutside(e) {
 function changeMemoStyle() {
 	viewType = 0;
 	listNumber = 20;
+	startRow = 0;
+	console.log($("#memoStyleDiv").scrollTop());
+	$("#projectList").scrollTop(0);
 	
 	changeMainSetting();
 	setProjectList("new");
@@ -438,6 +441,12 @@ function setProjectList(mode) {
 		data : JSON.stringify(param),
 		url : "/ezPMS/getProjectList.do",
 		success : function(projectList) {
+			if (listProjectStatus == "A") {
+				$("#changeProjectStatus").css("display", "none");
+			} else {
+				$("#changeProjectStatus").css("display", "");
+			}
+			
 			if (viewType == 1) {
 				$("#MailListRayer").html(projectList);
 				$("#MailListRayer").css("display", "");

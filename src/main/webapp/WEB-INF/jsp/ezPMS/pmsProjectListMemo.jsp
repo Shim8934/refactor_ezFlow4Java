@@ -104,7 +104,7 @@ $(function(){
 	}
 	
 	if (projectList.length >= 20) {
-		$("#memoStyleDiv").append("<div class='moreBtn' onclick='moreProjectList()' style='border:1px solid black; background-color:white; text-align:center; clear:both; cursor:pointer; height:33px; margin-left:3%; line-height:30px;'><span>더보기</span></div>");
+		$("#memoStyleDiv").append("<div class='moreBtn' onclick='moreProjectList()' style='border:1px solid #d1d1d1; background-color:white; text-align:center; clear:both; cursor:pointer; height:33px; margin-left:3%; line-height:30px;'><span>더보기</span></div>");
 	}
 
 });
@@ -131,7 +131,7 @@ $(function(){
 		</c:when>
 		<c:otherwise>
 		<c:forEach items="${projectList }" var="project">
-		<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px gray; clear: none; width: 360px; left: 2%; cursor:pointer;" ondblclick="goProjectDetails(this)">
+		<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px #d1d1d1; clear: none; width: 360px; left: 2%; cursor:pointer;" ondblclick="goProjectDetails(this)">
 			<tr>
 				<th colspan="2" style="height: 30px; font-size: 15px;">
 					<input type="checkbox" onchange="checkedCheckboxMemo(this);" name="memoCheckbox" style="margin-top: 7px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float: left">
