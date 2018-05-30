@@ -324,8 +324,8 @@ public class EzPMSGWController2 {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String orderWhat = request.getParameter("orderWhat");
 			String orderHow = request.getParameter("orderHow");
-			int startRow = Integer.parseInt(request.getParameter("startRow"));
-			int limit = Integer.parseInt(request.getParameter("limit")); 
+			int startRow = Integer.parseInt(request.getParameter("startRow") != null ? request.getParameter("startRow") : "-1" );
+			int limit = Integer.parseInt(request.getParameter("limit") != null ? request.getParameter("limit") : "-1" ); 
 			
 			if (orderWhat == null || orderWhat.equals("")) {
 				orderWhat = "init";
@@ -343,11 +343,11 @@ public class EzPMSGWController2 {
 			search.setProjectName(request.getParameter("searchByProjectName"));
 			search.setMemberId(userId);
 			
-			List<ProjectGroupVO> taskList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang);
+			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", taskList);		
+			result.put("data", groupList);		
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

@@ -1651,8 +1651,10 @@
 				ORDER BY
 					$orderWhat$ $orderHow$
 			</isNotEqual>
+			<isNotEqual property="limit" compareValue="-1">
 				limit
 					#startRow#, #limit#
+			</isNotEqual>
 		</select>
 	
 	<select id="EzPMSDAO.getTaskDetails" parameterClass="map" resultMap="projectTaskVO">
@@ -1686,13 +1688,18 @@
 				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
 				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
 				A.DEL_STATUS,
-				B.GROUP_NAME
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				P.PROJECT_NAME
 			FROM 
 				tbl_pms_task A
 			JOIN
 				tbl_pms_group B
 			ON
 				A.GROUP_ID = B.GROUP_ID
+			JOIN	
+				TBL_PMS_PROJECT P
+			ON	
+				A.PROJECT_ID = P.PROJECT_ID
 			WHERE
 				A.TASK_ID = #taskId#
 			AND
