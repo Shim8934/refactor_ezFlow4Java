@@ -783,9 +783,7 @@
 				<ul>
 		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
 		      		<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
-		      		<c:if test="${manageFlag == 'M' }">
-		      			<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
-		      		</c:if>
+	      			<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
 		      		<li>
 		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 		      		</li>
@@ -794,11 +792,7 @@
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 							<c:forEach var = "dept" items="${deptList}">
-								<c:if test="${dept.mine ne 'yes' }">
-									<c:if test="${dept.authType == 'M'}">
 										<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
-									</c:if>
-								</c:if>
 							</c:forEach>
 			      		</select>
 		      		</li>
