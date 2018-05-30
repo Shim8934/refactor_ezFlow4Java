@@ -1466,11 +1466,11 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 근태조회 --임시
+	 * G/W 근태관리 [GET] 근태조회
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudes/bombom", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitudes/check", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList2(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/check] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1534,7 +1534,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/check] ended.");
 		return result;
 	}
 	

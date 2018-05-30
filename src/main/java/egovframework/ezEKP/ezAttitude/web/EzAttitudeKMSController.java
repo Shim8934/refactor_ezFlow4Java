@@ -1341,7 +1341,7 @@ public class EzAttitudeKMSController {
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/check"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1986,7 +1986,7 @@ public class EzAttitudeKMSController {
 		if (reqType.equals("modify")) {
 //			근태조회엑셀
 			LOGGER.debug("근태조회");
-			url = gwServerUrl + "/rest/ezattitude/attitudes/bombom";
+			url = gwServerUrl + "/rest/ezattitude/attitudes/check";
 		} else if (reqType.equals("absent")) {
 //			미입력자엑셀
 			url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
