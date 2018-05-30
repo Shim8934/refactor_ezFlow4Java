@@ -104,13 +104,13 @@
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 	    	
-	    	function company_change(){
+	    	function company_change() {
 	    		pCompanyId = $("select[name=ListCompany]").val();
 	    		
 	    		getUserConfList();
 	    	}
 	    	
-	    	function getUserConfList(){
+	    	function getUserConfList() {
 	    		if (!checkPattern()) {
 	    			alert("<spring:message code= 'ezAttitude.t117' />")
 	    			return;
@@ -147,7 +147,7 @@
 	    		});
 	    	}
 	    	
-	    	function getUserConfList_after(result){
+	    	function getUserConfList_after(result) {
 	    		var resultHtml = "";
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
@@ -168,7 +168,7 @@
 	    		makePageSelPageAtti();
 	    	}
 	    	
-	    	function searchUserConfList(searchType){
+	    	function searchUserConfList(searchType) {
 	    		if (searchType == "search") {
 	    			searchUserName = $("#searchUserName").val();
 	    			searchDeptName = $("#searchDeptName").val();
@@ -202,7 +202,7 @@
 	    	}
 	    	
 	    	//페이지 이동 함수
-	    	function goToPageByNum(pCurPage){
+	    	function goToPageByNum(pCurPage) {
 	    		if (pCurPage == 0 || totalPage < pCurPage) {
 	    			return;
 	    		} else {
@@ -242,14 +242,6 @@
 	    		}
 	    	}
 	    	
-	    	//근무시간 수정 시 리스트 흔들려서 서버에서 받는게 아니라 스크립트로 글자만 수정시켜줌
-	    	/* function changeUserConfList(workStartTime, workEndTime, gubun, userIdList) {
-	    		userIdList.split(", ").forEach(function(id, index) {
-	    			$("tr[userid = '" + id + "'] td:nth-child(5)").html(workStartTime + " ~ " + workEndTime);
-	    			$("tr[userid = '" + id + "'] td:nth-child(6)").html(gubun == "0" ? "<spring:message code='ezAttitude.t118' />" : "<spring:message code='ezAttitude.t119' />");
-	    		});
-	    	} */
-	    	
 	    	function userDbClick() {
 	    		editUserConf($(this).attr('userid'));
 	    	}
@@ -283,7 +275,6 @@
 		            	searchUserConfList('search');
 		        }
 		    }
-	    	
 	    </script>
 	</head>
 	

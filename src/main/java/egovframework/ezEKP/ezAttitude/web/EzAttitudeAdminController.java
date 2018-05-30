@@ -722,7 +722,6 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
@@ -783,12 +782,12 @@ public class EzAttitudeAdminController {
 		
 		return jObject;
 	}
+	
 	/**
 	 * 근무시간 수정화면 조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConf.do")
 	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		
 		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -824,14 +823,6 @@ public class EzAttitudeAdminController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
-		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		status = resultBody.get("status").toString();
-		
-		LOGGER.debug("status : " + status);
-		
 		JSONObject jObject = new JSONObject();
 		
 		if(status.equals("ok")){
@@ -854,13 +845,6 @@ public class EzAttitudeAdminController {
 		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
 		jp = new JSONParser();
-		resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		
-		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
 		resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		status = resultBody.get("status").toString();
@@ -946,7 +930,6 @@ public class EzAttitudeAdminController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		
 		cal = Calendar.getInstance();
 		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
@@ -1024,7 +1007,7 @@ public class EzAttitudeAdminController {
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; //
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/check"; //
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1216,7 +1199,8 @@ public class EzAttitudeAdminController {
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie); 
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Locale locale = userInfo.getLocale();
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
@@ -1233,7 +1217,6 @@ public class EzAttitudeAdminController {
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
-		Locale locale = userInfo.getLocale();
 		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchDeptId = " + searchDeptId
 				+ " || searchStartDate = " + searchStartDate + " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType
@@ -1244,7 +1227,7 @@ public class EzAttitudeAdminController {
 		
 		if (requestURL.indexOf("excelAttitudeListExport.do") > -1) {
 //			근태조회엑셀
-			url = gwServerUrl + "/rest/ezattitude/attitudes/bombom";
+			url = gwServerUrl + "/rest/ezattitude/attitudes/check";
 		} else if (requestURL.indexOf("excelAbsentedListExport.do") > -1) {
 //			미입력자엑셀
 			url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
