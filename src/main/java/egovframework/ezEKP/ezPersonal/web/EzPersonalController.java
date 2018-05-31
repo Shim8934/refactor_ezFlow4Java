@@ -63,6 +63,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
+import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -119,6 +120,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	@Resource(name="EzPortalAdminService")
 	private EzPortalAdminService ezPortalAdminService;
+	
+	@Resource(name="EzPortalService")
+	private EzPortalService ezPortalService;
 	
 	@Autowired
     private LocaleResolver localeResolver;
@@ -806,6 +810,22 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (useCircular == null || useCircular.equals("")) {
 			useCircular = "NO";
 		}
+		
+		String isScheduleUsed = ezPortalService.getMainMenuItemUID(ezPortalService.getAccessList(userInfo), "/ezSchedule/scheduleIndex.do?funCode=2", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String isApprUsed = ezPortalService.getMainMenuItemUID(ezPortalService.getAccessList(userInfo), "/ezApprovalG/apprGMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String isBoardUsed = ezPortalService.getMainMenuItemUID(ezPortalService.getAccessList(userInfo), "/ezBoard/boardMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String isCommunityUsed = ezPortalService.getMainMenuItemUID(ezPortalService.getAccessList(userInfo), "/ezCommunity/communityMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String isResUsed = ezPortalService.getMainMenuItemUID(ezPortalService.getAccessList(userInfo), "/ezResource/resMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String isCircularUsed = ezPortalService.getMainMenuItemUID(ezPortalService.getAccessList(userInfo), "/ezCircular/circularIndex.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String isJournalUsed = ezPortalService.getMainMenuItemUID(ezPortalService.getAccessList(userInfo), "/ezJournal/journalMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("isScheduleUsed : " + isScheduleUsed);
+		logger.debug("isApprUsed : " + isApprUsed);
+		logger.debug("isBoardUsed : " + isBoardUsed);
+		logger.debug("isCommunityUsed : " + isCommunityUsed);
+		logger.debug("isResUsed : " + isResUsed);
+		logger.debug("isCircularUsed : " + isCircularUsed);
+		logger.debug("isJournalUsed : " + isJournalUsed);
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);

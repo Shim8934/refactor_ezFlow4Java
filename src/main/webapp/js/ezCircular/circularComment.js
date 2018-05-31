@@ -84,12 +84,13 @@ function getCircularComment() {
 					}
 				});
 				
-				// 2018-05-29 김민성 - 작성자에게 달린 의견이 없는 경우 의견창 활성화 & placeholder 추가
-				var circularUser = $(".circularUser");
-				if(circularUser[0].nextSibling.className != "circularComment") {
-					showEdit(circularUser[0]);
-					var circularComment = $(".circularCommentEdit");
-					circularComment.find("textarea")[0].placeholder = strLang26;
+				
+				// 2018-05-31 김민성 - 작성자 의견창 활성화 & placeholder 추가
+				if(status == 0 && (option == 1 || option == 3)) {
+					var writer = $(".circularUser:first");
+					showEdit(writer);
+					//var circularComment = $(".circularCommentEdit");
+					//circularComment.find("textarea")[0].placeholder = strLang26;
 				}
 				
 				//2018-04-11 김보미 검색결과가 없을경우
@@ -161,6 +162,14 @@ function showEdit(obj) {
 		circularEdit += "</tr>";
 		
 		$(obj).closest("tr").after(circularEdit);
+		
+		// 2018-05-31 김민성 - 회람 상세정보 > 의견목록 작성자 의견 클릭시 placeholder 추가
+		var writer = $(".circularUser:first").attr("circularuserid");
+		
+		if(writer == circularUserID) {
+			var circularComment = $(".circularCommentEdit");
+			circularComment.find("textarea")[0].placeholder = strLang26;
+		}
 	}
 }
 

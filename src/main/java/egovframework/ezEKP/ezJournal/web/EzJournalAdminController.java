@@ -634,6 +634,7 @@ public class EzJournalAdminController {
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
 			JSONArray userList = (JSONArray) resultBody.get("data");
+			model.addAttribute("listType", request.getParameter("listType"));
 			model.addAttribute("userList", userList);
 			
 			String keyword = "";
