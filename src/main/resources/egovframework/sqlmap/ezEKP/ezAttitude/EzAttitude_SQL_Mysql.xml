@@ -142,10 +142,9 @@
 		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
 		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
-		<result  property="typeName2"			column="TYPE_NAME2"				columnIndex="17"/>
-		<result  property="imgPath"				column="IMG_PATH"				columnIndex="18"/>
-		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="19"/>
-		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="20"/>
+		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
+		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
+		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
 	</resultMap>
 	
 	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
@@ -1050,11 +1049,10 @@
 			A.IP,
 			A.DATE_TYPE,
 			A.TYPE_ID,
-			B.TYPE_NAME,
-			B.TYPE_NAME2,
+			CASE WHEN #primary# = 1 THEN B.TYPE_NAME ELSE B.TYPE_NAME2 END AS TYPE_NAME,
 			B.IMG_PATH,
-		    C.DISPLAYNAME,
-		    C.DESCRIPTION
+		    CASE WHEN #primary# = 1 THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END AS DISPLAYNAME,
+		    CASE WHEN #primary# = 1 THEN C.DESCRIPTION ELSE C.DESCRIPTION2 END AS DESCRIPTION
 		FROM   
 			tbl_attitude A 
 		INNER JOIN

@@ -61,12 +61,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private EzOrganDAO ezOrganDAO;
 	
 	@Override
-	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, int tenantId) throws Exception {
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String primary, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("attitudeId", attitudeId);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
 		map.put("tenantId", tenantId);
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
