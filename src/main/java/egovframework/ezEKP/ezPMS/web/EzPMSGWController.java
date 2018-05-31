@@ -1322,4 +1322,33 @@ public class EzPMSGWController {
 			LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/items/" + itemId + "/files] ended.");
 			return result;
 		}
+	
+	
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/users/{userId}/role", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+		public JSONObject getUserProjectRole(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/role] started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try {
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+				int tenantId = info.getTenantId();
+				
+				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", userRole);
+			} catch (Exception e) {
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+			}
+			
+			
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/role] ended.");
+			return result;
+		}
 }

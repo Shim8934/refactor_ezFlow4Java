@@ -150,7 +150,7 @@ function editProjectInfo() {
 }
 
 function kanbanSetting() {
-	addProjectPopup(18, 29, 500, 386, "/ezPMS/kanbanSetting.do?projectId=" + projectId);
+	addProjectPopup(18, 29, 500, 350, "/ezPMS/kanbanSetting.do?projectId=" + projectId);
 }
 
 function initKanbanList() {
@@ -285,9 +285,9 @@ function initKanbanList() {
 			break;
 		}
 		
-		if (kanbanOrderArr[i].indexOf("M") == -1 && kanbanOrderArr[i].indexOf("B") == -1) {
+		if (kanbanOrderArr[i].indexOf("M") == -1 && kanbanOrderArr[i].indexOf("B") == -1 && userRole != 3) {
 			$("#kanban" + (i + 1)).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"M" + kanbanOrderArr[i] + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'>MY!</span>");	
-		} else if (kanbanOrderArr[i].indexOf("M") != -1 && kanbanOrderArr[i].indexOf("B") == -1) {
+		} else if (kanbanOrderArr[i].indexOf("M") != -1 && kanbanOrderArr[i].indexOf("B") == -1 && userRole != 3) {
 			$("#kanban" + (i + 1)).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"" + kanbanOrderArr[i].slice(-1) + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'>MY!</span>");
 		} else {
 			$("#kanban" + (i + 1)).find("h1").html(title);

@@ -120,13 +120,6 @@ public class EzPMSController {
 		}
 		
 		String url = "/rest/ezPMS/projects/userId/"+userId;
-		
-		if(viewType.equals("1")) {
-			viewType = "Board";
-		} else {
-			viewType = "Memo";
-		}
-			
 		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
 		param.put("userIdType", "user");
@@ -146,7 +139,7 @@ public class EzPMSController {
 				projectListCount = Integer.parseInt(countJson.get("projectListCount").toString());
 				model.addAttribute("projectListCount", projectListCount);
 				
-				ProjectPagination paging = new ProjectPagination(projectListCount,listNumber, 10, currentPage);
+				ProjectPagination paging = new ProjectPagination(projectListCount, listNumber, 10, currentPage);
 				model.addAttribute("paging", paging);
 				
 				if (projectListCount != 0) {
@@ -155,19 +148,15 @@ public class EzPMSController {
 					//프로젝트 총 개수
 					param.put("listCount", projectListCount);
 					
-					if (viewType.equals("Board")) {
+					if (viewType.equals("1")) {
 						param.put("startCount", paging.getStartCount());
 					} else {
 						param.put("startCount", param.get("startRow"));
 					}
 					
-					
 					//header 정렬 프로젝트 순서
 					if (param.get("orderWhat") == null || param.get("orderWhat").equals("")) {
 						param.put("orderWhat", "init");
-					}
-					if (param.get("orderHow") == null || param.get("orderHow").equals("")) {
-						param.put("orderHow", "asc");
 					}
 					
 					JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
@@ -184,6 +173,12 @@ public class EzPMSController {
 			model.addAttribute("listProjectStatus", listProjectStatus);
 			model.addAttribute("projectList", projectList);
 			model.addAttribute("projectListCount", projectListCount);
+			
+			if(viewType.equals("1")) {
+				viewType = "Board";
+			} else {
+				viewType = "Memo";
+			}
 		}
 		
 		LOGGER.debug("[result] projectSort : " + projectSort + ", projectLsitCount : " + projectListCount + ", currentPage : " + currentPage + ", listNumber : " + listNumber);
@@ -195,8 +190,6 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/pmsMyTask.do")
 	public String myTaskPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS MyTask page started");
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		LOGGER.debug("ezPMS MyTask page ended");
 		return "ezPMS/pmsMyTask";
 	}
@@ -263,7 +256,6 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userName = userInfo.getDisplayName1();
 		String userId = userInfo.getId();
-		String offset = userInfo.getOffset();
 		String mode = request.getParameter("mode");
 		
 		String planStartDate = "";
@@ -271,17 +263,15 @@ public class EzPMSController {
 		long projectId = 0;
 		
 		if (mode.equals("new")) {
-			String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
-			planStartDate = nowDate.substring(0, 10);
-			
-			planEndDate = nowDate.substring(0, 10);
+			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			planStartDate = nowDate;
+			planEndDate = nowDate;
 		} else if (mode.equals("edit")) {
 			projectId = Long.parseLong(request.getParameter("projectId"));
 			
 			String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId; 
 
 			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("userId", userId);
 			param.put("mode", mode);
 			
 			JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
@@ -318,7 +308,7 @@ public class EzPMSController {
 		try{
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			String url = "/rest/ezPMS/projects";
-			String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+			String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
 			
 			param.put("createDate", today);
 			param.put("userId", userInfo.getId());
@@ -1311,6 +1301,7 @@ public class EzPMSController {
 		LOGGER.debug("ezPMS taskListMain started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
 		
 		String projectId = request.getParameter("projectId");
 		String onlyGroup = request.getParameter("onlyGroup");
@@ -1319,7 +1310,7 @@ public class EzPMSController {
 		
 		param.put("onlyGroup", onlyGroup);
 		param.put("location", "taskList");
-		param.put("userId", userInfo.getId());
+		param.put("userId", userId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -1341,7 +1332,17 @@ public class EzPMSController {
 				model.addAttribute("taskListCount", taskListCount);
 			}
 		}
-				
+		
+		String roleUrl = "/rest/ezPMS/projects/" + projectId + "/users/" + userId + "/role";
+		JSONObject roleResult = commonUtil.getJsonFromRestApi(roleUrl, param, request, "get", null);
+		String roleStatus = roleResult.get("status").toString();
+		
+		if (roleStatus.equals("ok")) {
+			int userRole = Integer.parseInt(roleResult.get("data").toString());
+			model.addAttribute("userRole", userRole);
+		}
+		
+		
 		model.addAttribute("projectId", request.getParameter("projectId"));
 		
 		LOGGER.debug("ezPMS taskListMain ended");
