@@ -39,6 +39,7 @@
 			parent.taskId  = chosenTask.parent().attr("id").substr(1);		
 		} else {
 			parent.groupId = chosenTask.parent().attr("id");
+			parent.taskId  = null;
 		}	
 		popupClose();
 	}	

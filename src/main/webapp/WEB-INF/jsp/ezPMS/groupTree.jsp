@@ -82,7 +82,7 @@
 		treeDepth = obj.parentNode.getAttribute("aria-level");
 		if(treeDepth > 2){
 			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.")
-			return;
+			return false;
 		}
 		parent.treeDepth = treeDepth;
 	}
@@ -99,7 +99,7 @@
 </style>
 
 </head>
-<body class="popup" style="overflow: hidden;"> 
+<body class="popup" style="overflow-y: auto; overflow-x: hidden"> 
 	<h1 style="height: 20px;">상위 그룹</h1>
     <div id="close">
         <ul>

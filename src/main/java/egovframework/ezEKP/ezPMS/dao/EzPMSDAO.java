@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.FileVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
@@ -212,12 +213,20 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (String) select("EzPMSDAO.getKanbanOrder", map);
 	}
 	
-	public void addTaskGroup(Map<String, Object> map) {
-		insert ("EzPMSDAO.addTaskGroup", map);
+	public Long addTaskGroup(Map<String, Object> map) {
+		return (Long)insert ("EzPMSDAO.addTaskGroup", map);
 	}
 	
 	public Integer addBoard(ProjectBoardVO vo) {
 		return (Integer) insert ("EzPMSDAO.addBoard", vo);
+	}
+	
+	public void updateBoard(Map<String, Object> map) {
+		update ("EzPMSDAO.updateBoard", map);
+	}
+	
+	public void moveBoard(Map<String, Object> map) {
+		update ("EzPMSDAO.moveBoard", map);
 	}
 	
 	public void deleteBoard(Map<String, Object> map) {
@@ -305,6 +314,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		insert("EzPMSDAO.insertProjectAttach", map);
 	}
 	
+	public void deleteProjectAttach(Map<String, Object> map) {
+		delete("EzPMSDAO.deleteProjectAttach", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<FileVO> getBoardAttach(Map<String, Object> map) {
 		return (List<FileVO>) list("EzPMSDAO.getBoardAttach", map);
@@ -347,5 +360,14 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	public void updateTaskStatus(ProjectTaskVO vo) {
 		update ("EzPMSDAO.updateTaskStatus", vo);
+	}
+	
+	public void addTaskGroupMember(List<ProjectGroupMemberVO> groupMember) {
+		insert ("EzPMSDAO.addTaskGroupMember", groupMember);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ProjectGroupMemberVO> getUserInfoForGroup(HashMap<String, Object> map) {
+		return (List<ProjectGroupMemberVO>) list("EzPMSDAO.getUserInfoForGroup", map);
 	}
 }
