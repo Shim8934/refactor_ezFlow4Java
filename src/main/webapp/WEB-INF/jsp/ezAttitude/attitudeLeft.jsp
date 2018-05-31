@@ -255,7 +255,7 @@
 	    		case 2:
 	    			window.open("/ezAttitude/attitudeDeptMain.do", "right");
 	    			break;
-	    		case 3: // 신청현황
+	    		case 3: // 나의수정신청
 	    			window.open("/ezAttitude/attModAppList.do", "right");
 	    			break;
 	    		case 4:	// 신청관리현황

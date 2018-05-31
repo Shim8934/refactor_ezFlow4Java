@@ -61,7 +61,6 @@
 		        }
 				select_memorialDays(uselang);
 				setHoliday();
-				//checkOutCom();
 				setTypeName();
 				setInputValue();
 			}
@@ -514,27 +513,6 @@
 			    }
 			    
 			    return true;
-			}
-			
-			var outComFlag = false; // 퇴근이 등록된 경우 조퇴를 등록할 수 없게 하기 위한 변수
-			function checkOutCom() {
-				$.ajax({
-		    		type : "POST",
-		    		dataType : "json",
-		    		async : false,
-		    		url : "/ezAttitude/getAttitudeList.do",
-		    		data : {
-		    			startDate : startDate.substring(0,10)
-		    		},
-		    		success : function(result) {
-		    			outComFlag = false;
-		    			for (var i = 0; i < result.length; i++) {
-		    				if (result[i].typeId == "A03") {
-		    					outComFlag = true;
-		    				}
-		    			}
-		    		}
-		    	})
 			}
 			
 			function editorResize() {
