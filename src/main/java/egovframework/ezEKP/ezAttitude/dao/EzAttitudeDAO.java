@@ -127,7 +127,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AttitudeAuthorVO> getDeptUserList(HashMap<String, String> map) throws Exception {
+	public List<AttitudeAuthorVO> getDeptUserList(Map<String, String> map) throws Exception {
 		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
 
@@ -144,7 +144,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<DeptViewVO> getDeptViewList(HashMap<String, String> map) throws Exception {
+	public List<DeptViewVO> getDeptViewList(Map<String, String> map) throws Exception {
 		 return (List<DeptViewVO>) list("ezAttitudeAdminDAO.selectDeptList",map);
 	}
 
