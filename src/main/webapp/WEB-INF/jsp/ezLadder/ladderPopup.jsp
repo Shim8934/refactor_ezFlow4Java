@@ -13,7 +13,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
+		<script type="text/javascript" src="/js/ezLadder/ladder.min.js"></script>
 		
 		<script type="text/javascript">
 			var retVal;
@@ -182,7 +182,7 @@
 				<c:when test="${popupType == 'overlapOnlyName'}">
 					<h1 id="h1Title"><spring:message code="ezLadder.t036" /></h1>
 					<span>▒ <spring:message code="ezLadder.t084" /></span>
-					<p id="userInfo"><span class="spanWrap" style="background: #f8f8fa;"><span class="o_name">이름</span><span class="o_dept">부서</span><span class="o_id">아이디</span></span></p>
+					<p id="userInfo"><span class="spanWrap" style="background: #f8f8fa;"><span class="o_name"><spring:message code="ezLadder.t029" /></span><span class="o_dept"><spring:message code="ezLadder.t028" /></span><span class="o_id">ID</span></span></p>
 				</c:when>
 				<c:when test="${popupType == 'cmtdelete'}">
 					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t062" /> <spring:message code="ezLadder.t053" /></h1>

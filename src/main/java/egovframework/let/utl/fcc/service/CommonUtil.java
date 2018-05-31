@@ -686,6 +686,8 @@ public class CommonUtil {
 			} else {
 				pattern = "yyyy-MM-dd";
 			}
+		} else if (dateStr.length() == 14) {
+			pattern = "yyyyMMddHHmmss";
 		} else if (dateStr.length() == 16) {
 			if (dateStr.indexOf("/") > -1) {
 				pattern = "yyyy/MM/dd HH:mm";

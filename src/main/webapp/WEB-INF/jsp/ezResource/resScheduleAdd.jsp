@@ -473,7 +473,8 @@
         					<c:choose>
         						<c:when test="${typeVal ne 'Readonly'}">
         							<div id="menuTable1" >
-          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
+        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezResource.t185 => t114 -->
+          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
           							<li><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>
           							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
           							

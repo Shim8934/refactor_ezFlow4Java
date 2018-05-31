@@ -1543,7 +1543,7 @@
 	                            <spring:message code='ezEmail.t546' /></span></li>
 	                        <!-- <li><span onclick="LoadFormat_onClick()">
 	                            <spring:message code='ezEmail.t824' /></span></li> -->
-	                        <li><span onclick="NameCertify_onClick()">
+	                        <li style="display:none;"><span onclick="NameCertify_onClick()">
 	                            <spring:message code='ezEmail.t331' /></span></li>
 	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
@@ -1580,15 +1580,15 @@
 	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif"></li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
-	                            <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
+	                            <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
 	                            	<option value="0">HTML</option>
-	                            	<option value="1">Plain Text</option>
+	                            	<option value="1">PlainText</option>
 	                            </select>
 	                        </li>
 	                        <c:if test="${useOnlyInnerMail != 'YES'}">
 	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
 	                        	<li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
-		                            <select style="vertical-align:top;width:120px;" onchange="ChangeSenderName(this);">
+		                            <select style="vertical-align:top;" onchange="ChangeSenderName(this);">
 		                            ${mailSendObject}
 		                            </select>
 		                        </li>

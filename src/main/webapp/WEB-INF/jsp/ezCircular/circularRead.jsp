@@ -169,6 +169,19 @@
 	            }
 	        }
 		    
+		    /* 18-05-25 김민성 - 확인자 조회 */
+	        function circularConfirmList(currentPage) {
+		    	if (!currentPage) {
+					currentPage = "";
+				}
+		        var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 500) / 2;
+		        var top = (heigth - 300) / 2;
+		        var szHref = url = "/ezCircular/circularConfirmList.do?circularID=" + circularID; 
+	            DivPopUpShow(600, 415, szHref);
+		    }
+		    
 	        var ezprtquestion_cross_dialogArguments = new Array();
 
 	        //인쇄버튼 클릭시
@@ -435,7 +448,7 @@
 	</style>
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
- 	<!-- 18-05-25 김민성 - 회람판 조회 상단 부분 수정 및 확인자정보 추가 -->
+ 	<!-- 18-05-25 김민성 - 회람판 조회 상단 부분 수정-->
 	<body id="mainbodytag" class="popup">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -453,7 +466,8 @@
                 	    	
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
 	                        
-	                        <!-- <li><span id=checkList">확인자정보</span></li> -->
+	                        <!-- 18-05-28 김민성 - 확인자 정보 버튼 추가 -->
+	                        <li><span onclick="circularConfirmList()"><spring:message code='ezCircular.kmsc01' /></span></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
 		                        <li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
