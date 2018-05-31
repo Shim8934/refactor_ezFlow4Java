@@ -87,6 +87,37 @@ public class EzPMSGWController3 {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/boards", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject modifyBoard(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/boards] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String realPath = commonUtil.getRealPath(request);
+			
+			// 메인 화면에서 게시물을 다른 작업으로 이동 시, 여러 개를 선택할 수 있다. 그 때만 itemIds가 넘어옴
+			if(jsonParam.get("itemIds") != null) {
+				ezPMSService.moveBoard(jsonParam);
+			} else {
+				ezPMSService.modifyBoard(jsonParam, realPath);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/boards] ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/boards", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject deleteBoard(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
 		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/boards] started");
@@ -129,7 +160,7 @@ public class EzPMSGWController3 {
 			if(request.getParameter("groupId")!= null && !request.getParameter("groupId").equals("")) {
 				groupId = Long.parseLong(request.getParameter("groupId"));	
 			} 
-			if(request.getParameter("taskId")!= null && !request.getParameter("taskId").equals("")) {
+			if(request.getParameter("taskId")!= null && !request.getParameter("taskId").equals("") && !request.getParameter("taskId").equals("null")) {
 				taskId = Long.parseLong(request.getParameter("taskId"));	
 			}
 			

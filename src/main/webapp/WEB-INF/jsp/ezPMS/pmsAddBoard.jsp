@@ -34,9 +34,15 @@
 	var taskName;
 	
 	var groupId = "${groupId}";
-	if(groupId == "") {groupId = "${board.groupId}";}
+	if(groupId == "") {
+		groupId = "${board.groupId}";
+	}
 	var taskId = "${taskId}";
-	if(taskId == "") {taskId = "${board.taskId}";}
+	if(taskId == "") {
+		taskId = ("${board.taskId}" != "") ? "${board.taskId}" : null;
+	}
+	
+	var itemId = "${param.itemId}";
 	
 	// 첨부파일 최대용량
 	var AttachLimit = 10;
@@ -154,27 +160,42 @@
 			groupId : groupId,
 			taskId : taskId,
 			writeOverview : writeOverview,
-			fileList : fileList
+			fileList : fileList,
+			mode : mode,
+			itemId : itemId
 		}
 	
+		
 		$.ajax({
 			type : "POST",
 			url : "/ezPMS/addBoard.do",
 			dataType : "json",
 			contentType : "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
-			success : function(result) {
-				alert("성공");
-				doubleSubmitFlag = false;
-				opener.currentPage = 1;
-				opener.getBoardList();
-				window.close();
+			success : function(result) {			
+				if(result.data == 'new' || result.data == 'modify') {
+					alert("성공");
+					doubleSubmitFlag = false;
+					if(result.data == 'new') {
+						if(taskId == "null") {
+							taskId = null;
+						}
+						opener.taskId  = taskId;
+						opener.groupId = groupId;
+						opener.currentPage = 1;
+					} 				
+					opener.getBoardList();
+					window.close();
+				} else {
+					alert("실패");
+					doubleSubmitFlag = false;
+				}	
 			},
 			error : function() {
 				alert("실패");
 				doubleSubmitFlag = false;
 			}
-		})
+		});
 	}
 	
 	// 파일을 첨부한 후 등록을 누르지 않고 닫기 버튼을 눌렀을 대 tempUploadFile폴더에 업로드된 파일들이 다시 삭제됨

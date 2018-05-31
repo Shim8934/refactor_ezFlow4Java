@@ -26,7 +26,7 @@
 		});
 	});
 	
-	function moveBoard() {
+	function moveBoards() {
 		var groupId = 0;
 		var taskId = 0;
 		var chosenTask = $("a.jstree-clicked");	
@@ -36,24 +36,27 @@
 			taskId  = chosenTask.parent().attr("id").substr(1);		
 		} else {
 			groupId = chosenTask.parent().attr("id");
+			taskId  = null;
 		}
 		
 		data = {
 			itemIds : parent.itemIds,
+			projectId : parent.projectId,
 			groupId : groupId,
 			taskId  : taskId
 		}
 		
 		$.ajax({
 			type : "PUT",
-			url : "/ezPMS/moveBoard.do",
+			url : "/ezPMS/moveBoards.do",
 			dataType : "json",
 			contentType : "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
 			success : function(result) {
 				if(result.data == 'success') {
 					alert("이동에 성공했습니다.");
-					getBoardList();
+					popupClose();
+					parent.getBoardList();
 				} else {
 					alert('수정은 프로젝트 담당자나 게시자만 할 수 있습니다.');
 				}	
@@ -76,7 +79,7 @@
 	<h1>작업 목록</h1>
 	<div id="close">
 		<ul>
-			<li><span onclick="moveBoard()">이동</span></li>
+			<li><span onclick="moveBoards()">이동</span></li>
 			<li><span onclick="popupClose()">닫기</span></li>
 		</ul>
 	</div>

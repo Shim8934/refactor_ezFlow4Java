@@ -79,7 +79,7 @@
 		}	
 	}
 	
-	function moveBoards() {
+	function goMoveBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
 		if(!checkBoxes.length) {
 			alert("이동할 글을 선택하세요.");
@@ -92,7 +92,7 @@
 			itemIds.push(itemId);	
 		});
 		
-		DivPopUpShow(320, 320, "/ezPMS/goMoveBoard.do?projectId=" + projectId + "&onlyGroup=false");
+		DivPopUpShow(320, 320, "/ezPMS/goMoveBoards.do?projectId=" + projectId + "&onlyGroup=false");
 	}
 </script>
 
@@ -118,7 +118,7 @@
 		<ul class="on">
 			<li class="off"><span onclick="goAddBoard()">등록</span></li>
 			<li class="off"><span onclick="deleteBoards()">삭제</span></li>
-			<li class="off"><span onclick="moveBoards()">이동</span></li>
+			<li class="off"><span onclick="goMoveBoards()">이동</span></li>
 			<li class="off"><span onclick="">새로고침</span></li>
 			<li class="off"><span onclick="">검색</span></li>
 		</ul>

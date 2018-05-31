@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -1209,13 +1210,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		} 
 		
 		ezPMSDAO.completeAllTasks(map);
-		LOGGER.debug("[SERVICE] completeAllTasks Started");
+		LOGGER.debug("[SERVICE] completeAllTasks Ended");
 	}
 
 	@Override
 	@Transactional
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception {
-		LOGGER.debug("[SERVICE] addBoard Started");
+		LOGGER.debug("[SERVICE] addBoard started");
 		
 		int tenantId = (int)jsonParam.get("tenantId");
 		int projectId = Integer.parseInt((String) jsonParam.get("projectId"));
@@ -1233,7 +1234,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setWriteType((int) jsonParam.get("writeType"));
 		vo.setReadCount(0);
 		vo.setGroupId(Long.parseLong((String) jsonParam.get("groupId")));
-		if(!jsonParam.get("taskId").equals("null")) {
+		if(jsonParam.get("taskId")!=null && !jsonParam.get("taskId").equals("null")) {
 			vo.setTaskId(Long.parseLong((String) jsonParam.get("taskId")));
 		}
 		vo.setWriterPosition((String) jsonParam.get("writerPosition"));
@@ -1287,16 +1288,124 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				
 				ezPMSDAO.insertProjectAttach(attachMap);
 				
-				try {
-					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
+				
+				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
 			}
 		}
-		LOGGER.debug("[SERVICE] addBoard Ended");
+		LOGGER.debug("[SERVICE] addBoard ended");
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void modifyBoard(JSONObject jsonParam, String realPath) throws Exception {
+		LOGGER.debug("[SERVICE] modifyBoard started");
+		
+		int tenantId = (int)jsonParam.get("tenantId");
+		int projectId = Integer.parseInt((String) jsonParam.get("projectId"));
+		int itemId = Integer.parseInt((String)jsonParam.get("itemId"));
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Iterator<String> keysItr = jsonParam.keySet().iterator();
+		
+		while(keysItr.hasNext()) {
+			String key = keysItr.next();
+			Object value = jsonParam.get(key);
+			
+			map.put(key, value);
+		}
+	
+		ezPMSDAO.updateBoard(map);
+		
+		// 첨부파일 전부 삭제 후 다시 저장
+		ezPMSDAO.deleteProjectAttach(map);
+		
+		String fileList = jsonParam.get("fileList").toString();
+		
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		String pDirPath = "";
+		
+		if (fileList != null && !fileList.equals("")) {
+			
+			pDirPath = commonUtil.getUploadPath("upload_project.ROOT", tenantId);
+			pDirPath = realPath + pDirPath;
+			
+			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+				pDirPath = pDirPath + commonUtil.separator;
+			}
+			
+			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile");
+			
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			
+			String[] attach = fileList.split("/");
+			
+			attachMap.put("tenantId", tenantId);
+			
+			for (int i = 0; i < attach.length; i++) {
+				String[] files = attach[i].split(":");
+				String filePath = files[0];
+				String fileName = files[1];
+				String fileSize = files[2];
+				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+				
+				LOGGER.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
+				
+				String uploadFilePath = commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+			
+				attachMap.put("last_insert_id", itemId);
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", uploadFilePath);
+				
+				ezPMSDAO.insertProjectAttach(attachMap);
+				
+				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+			}
+		}
+		
+		LOGGER.debug("[SERVICE] modifyBoard ended");
+	}
+	
+	@Transactional
+	@SuppressWarnings("unchecked")
+	@Override
+	public void moveBoard(JSONObject jsonParam) throws Exception {
+		LOGGER.debug("[SERVICE] moveBoard started");
+		
+		ArrayList<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
+		String userId = (String) jsonParam.get("userId");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Iterator<String> keysItr = jsonParam.keySet().iterator();
+		
+		while(keysItr.hasNext()) {
+			String key = keysItr.next();
+			Object value = jsonParam.get(key);
+			
+			map.put(key, value);
+		}
+		
+		int authority = ezPMSDAO.getUserProjectRole(map);
+		
+		for(String itemId : itemIds) {
+			map.put("itemId", itemId);
+			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
+			if(boardVO.getWriterId().equals(userId) || authority == 1) {
+				ezPMSDAO.moveBoard(map);
+			} else {
+				Exception e = new Exception("Only project Manager and Writer are authorized to modify article");
+				throw e;
+			}
+		}	
+		LOGGER.debug("[SERVICE] moveBoard ended");
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
@@ -1402,7 +1511,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	// 파일 이동 함수
-	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
+	private void fileMove(String beforeFilePath, String afterFilePath) {
 		LOGGER.debug("fileMove started.");
 		LOGGER.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 		
@@ -1419,6 +1528,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 							"' after copy to '" + destFile + "'");
 				}
 			}
+		} catch (FileNotFoundException e) {
+			// 수정 시, 이미 업로드되어있는 파일들은 upload폴더에 옮겨져있기 때문에 tempUpload폴더에서 찾을 수 없다. 따라서 Exception 발생하지만 문제되지 않음
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
