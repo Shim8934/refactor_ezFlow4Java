@@ -96,10 +96,10 @@ public class EzAttitudeGWController {
 
 			String offset = info.getOffSet();
 			if (deptFlag.equals("false")) {
-				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
+				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, info.getPrimary(), deptFlag, info.getTenantId());
 			} else {
 				// 관리하고 있는 전체 부서 목록을 받아서 dept in iterate를 돌린다.
-				resultList = ezAttitudeService.getAttitudeList("", selectedDeptID, "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
+				resultList = ezAttitudeService.getAttitudeList("", selectedDeptID, "", typeId, startDate, endDate, offset, info.getPrimary(), deptFlag, info.getTenantId());
 			}
 			
 			//imgPath 셋팅

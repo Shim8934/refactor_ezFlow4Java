@@ -159,7 +159,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh,
-		String typeId, String startDate, String endDate, String offset, int tenantId, String deptFlag) throws Exception {
+		String typeId, String startDate, String endDate, String offset, String primary, String deptFlag, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList started");
 		Map<String, Object> map = new HashMap<String,Object>();
 		//if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
@@ -186,6 +186,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
+		map.put("primary", primary);
 		map.put("offsetMin", offsetMin);
 		
 		if (!typeId.trim().equals("")){
