@@ -318,6 +318,15 @@
 					return;
 				}
 				
+				//조퇴 등록시 출근여부 확인
+				if (selectType == 'A08') {
+					var returnValue = getIsAttitude('A01');
+					if (returnValue == 0) {
+						alert("<spring:message code='ezAttitude.t224'/>");
+						return;
+					}
+				}
+				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",
@@ -609,6 +618,26 @@
 					return true;
 				}
 			}
+			
+		    function getIsAttitude(typeId) {
+				var isAttitudeReturn = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezAttitude/getIsAttitude.do",
+		    		data : {
+		    			typeId : typeId
+		    		},
+		    		success : function(result) {
+		    			isAttitudeReturn = result;
+		    		},
+		    		complete : function() {
+		    			
+		    		}
+		    	})
+		    	return isAttitudeReturn;
+		    }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">

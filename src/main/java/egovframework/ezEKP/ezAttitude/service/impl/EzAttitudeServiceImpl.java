@@ -1,13 +1,11 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +37,6 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
@@ -66,21 +63,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("attitudeId", attitudeId);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantId);
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
 		
-//		attitudeVO.setTypeName(commonUtil.cleanValue(attitudeVO.getTypeName()));
-//		attitudeVO.setContent(commonUtil.cleanValue(attitudeVO.getContent()));
-//		attitudeVO.setRegion(commonUtil.cleanValue(attitudeVO.getRegion()));
-//		attitudeVO.setMobile(commonUtil.cleanValue(attitudeVO.getMobile()));
-//		attitudeVO.setBizSub(commonUtil.cleanValue(attitudeVO.getBizSub()));
-		
 		LOGGER.debug("getAttitudeInfo ended");
+		
 		return attitudeVO;
 	}
 
@@ -89,12 +81,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String endDate, String region, String mobile, String bizsub, String content,
 			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId) throws Exception {
 		LOGGER.debug("insertAttitude started");
-		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if (mode == null) {
 			mode = "";
 		}
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -102,6 +94,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (typeId.equals("A01") || typeId.equals("A03")) {
 			if (!mode.equals("admin")) {
 				startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+				
 				if (typeId.equals("A01")) {
 					//사용자별 근태설정이 있는 지 검사
 					String isValue = ezAttitudeDAO.getIsAttitudeUserConf(map);
@@ -148,11 +141,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (mode.equals("admin")) {
 			map.put("adminId", adminId);
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
+			
 			ezAttitudeDAO.insertAdminAttHistory(map);
+			
 			if (typeId.equals("A01") || typeId.equals("A02")) {
 				map.put("applDate", commonUtil.getTodayUTCTime(""));
 				map.put("originDate", startDate);
 				map.put("changeDate", startDate);
+				
 				ezAttitudeDAO.adminAttSaveAppMod(map);
 			}
 		}
@@ -190,6 +186,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
 		map.put("offsetMin", offsetMin);
+		
 		if (!typeId.trim().equals("")){
 			map.put("typeId", typeId);
 		}
@@ -207,7 +204,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			resultList.get(i).setMobile(commonUtil.cleanValue(resultList.get(i).getMobile()));
 			resultList.get(i).setRegion(commonUtil.cleanValue(resultList.get(i).getRegion()));
 		}
+		
 		LOGGER.debug("getAttitudeList ended");
+		
 		return resultList;
 	}
 
@@ -260,12 +259,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getFormBody started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("typeId", typeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
 		LOGGER.debug("getFormBody ended");
+		
 		return ezAttitudeDAO.getFormBody(map);
 	}
 
@@ -302,8 +301,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("attVO", attVO);
 			map.put("adminId", adminId);
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
-			ezAttitudeDAO.insertAdminAttHistory2(map);
 			
+			ezAttitudeDAO.insertAdminAttHistory2(map);
 			
 			/**관리자가 수정한 것 중에 기존 타입이 A02인 경우
 			 * 지각 수정신청까지 신경써줘야한다.
@@ -325,6 +324,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 						map.put("ids", attitudeId);
 						map.put("changeStatus", "ret");
 						map.put("apprDate", commonUtil.getTodayUTCTime(""));
+						
 						ezAttitudeDAO.adminChangeUsersModAtt(map);
 					}
 				}
@@ -332,9 +332,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				map.put("applDate", commonUtil.getTodayUTCTime(""));
 				map.put("originDate", attVO.getStartDate());
 				map.put("changeDate", startDate);
+				
 				ezAttitudeDAO.adminAttSaveAppMod(map);
 			}
 		}
+		
 		LOGGER.debug("updateAttitude ended");
 	}
 
@@ -346,7 +348,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("attitudeId", attitudeId);
 		map.put("tenantId", tenantId);
 		
@@ -357,12 +358,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("adminId", userId);
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
 			map.put("offsetMin", offsetMin);
+			
 			ezAttitudeDAO.insertAdminAttHistory3(map);
 		}
 		
 		ezAttitudeDAO.deleteAttitude(map);
-		LOGGER.debug("deleteAttitude ended");
 		
+		LOGGER.debug("deleteAttitude ended");
 	}
 
 	@Override
@@ -507,11 +509,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeConfig started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
 		LOGGER.debug("getAttitudeConfig ended");
+		
 		return ezAttitudeDAO.getAttitudeConfig(map);
 	}
 
@@ -572,6 +574,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (list.size() < 15) {
 			String MaxTypeId = getAttitudeTypeMaxTypeId(companyId, tenantId);
 			String typeId = "";
+			
 			if (MaxTypeId.length() == 1) {
 				typeId = "A0" + MaxTypeId;
 			} else {
@@ -611,7 +614,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("typeId", typeId);
 		map.put("typeName", typeName);
 		map.put("typeName2", typeName2);
@@ -731,7 +733,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getUsersModiyAtt started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
@@ -752,6 +753,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
 		map.put("type", type);
+		
 		if (order !=null) {
 			map.put("order", order.trim());
 		}
@@ -759,6 +761,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
 		
 		LOGGER.debug("getUsersModiyAtt ended");
+		
 		return attAppList;
 	}
 	
@@ -768,7 +771,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeTypeMaxTypeId started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 
@@ -782,7 +784,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeFormList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("tenantId", tenantId);
 
 		LOGGER.debug("getAttitudeFormList ended");
@@ -829,7 +830,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getHolidayList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("isRest", isRest);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -837,6 +837,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<HolidayVO> holidayList = ezAttitudeDAO.getHolidayList(map);
 		
 		LOGGER.debug("getHolidayList ended");
+		
 		return holidayList;
 	}
 
@@ -846,8 +847,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String value) throws Exception {
 		LOGGER.debug("getDeptUserList started");
 		
-		HashMap<String, String> map = new HashMap<String, String>();
-		
+		Map<String, String> map = new HashMap<String, String>();
 		map.put("tenantId", tenantId);
 		map.put("key", key);
 		map.put("value", value);
@@ -898,7 +898,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String tenantId) throws Exception {
 		LOGGER.debug("getDeptViewList started");
 		
-	    HashMap<String, String> map = new HashMap<String, String>();
+	    Map<String, String> map = new HashMap<String, String>();
 	    
 	    map.put("tenantId", tenantId);
 	    map.put("userId", userId);
