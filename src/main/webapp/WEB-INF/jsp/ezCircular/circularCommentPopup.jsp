@@ -204,8 +204,11 @@
 		</c:if>
 		
 		<script type="text/javascript" >
-   			selToggleList(document.getElementById("close"), "ul", "li", "0");
-   			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			var myCommentCount = "${myCommentCount}";
+			if(myCommentCount != 0) {
+				selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			} 
+			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>
 </html>
