@@ -543,7 +543,7 @@
 		<h1><spring:message code='ezWebFolder.t126' /></h1>
 		<div style="margin-left:5px">
 			<div id="companySelect" style="margin: 10px 0px;">
-				<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b>회사 선택: </b></span>
+				<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
 				<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
 					<c:forEach var="item" items="${list}">
 						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
