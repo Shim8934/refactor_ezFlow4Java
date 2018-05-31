@@ -1,6 +1,6 @@
 ﻿var strLang1 = "削除に失敗しました。";
 var strLang2 = "コメントリスト";
-var strLang3 = "コメント作成";
+var strLang3 = "保存";
 var strLang4 = "非公開";
 var strLang5 = "コメントを入力してください。";
 var strLang6 = "コメントを削除しました。";
@@ -23,4 +23,4 @@ var strLang22 = "リストのIDが指定されていません。";
 var strLang23 = "データが指定されていません。";
 var strLang24 = "前へ";
 var strLang25 = "次へ";
-var strLang26 = "작성자에게 의견을 남겨주세요.";
+var strLang26 = "作成者にコメントを書いてください。";
