@@ -293,8 +293,8 @@ function changeMemoStyle() {
 	viewType = 0;
 	listNumber = 20;
 	startRow = 0;
-	console.log($("#memoStyleDiv").scrollTop());
-	$("#projectList").scrollTop(0);
+	currentPage = 1;
+	
 	
 	changeMainSetting();
 	setProjectList("new");
@@ -307,6 +307,7 @@ function changeMemoStyle() {
 function changeBoardStyle() {
 	viewType = 1;
 	listNumber = initListNumber;
+	currentPage = 1;
 	
 	changeMainSetting();
 	setProjectList("new");
