@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
-	<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
+	<script type="text/javascript" src="/js/ezLadder/ladder.min.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript">
 	
