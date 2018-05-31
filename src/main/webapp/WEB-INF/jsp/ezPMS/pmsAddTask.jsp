@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>새 업무 추가 페이지</title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -44,6 +44,7 @@ var groupId = "";
 var groupName = "";
 var remainingWeight = "${remainingWeight}";
 var weightInput = "${weightInput}";
+var treeDepth = 0;
 
  $(function() {
 	 $("#Sdatepicker").datepicker({
@@ -259,7 +260,8 @@ function addTask() {
 			headManagerId : headManagerId,
 			managerList : managerList,
 			weight : weight,
-			writerId : writerId
+			writerId : writerId,
+			treeDepth : treeDepth
 	}
 	
 	console.log(taskName);

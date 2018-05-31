@@ -32,7 +32,7 @@
 		
 	$(document).ready(function() {
 		setInitData();
-		currentHeight = $(window).height()-100;
+		currentHeight = $(window).height();
 		$("#projectContent").css("height", currentHeight + "px");
 		$("#contentList").css("height", (currentHeight - 50) + "px");
 		

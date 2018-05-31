@@ -189,6 +189,7 @@ public class EzPMSGWController2 {
 			projectTaskVO.setWriterName2(request.getParameter("writerName2"));
 			projectTaskVO.setWriterDeptname(request.getParameter("writerDeptname"));
 			projectTaskVO.setWriterDeptname2(request.getParameter("writerDeptname2"));
+			projectTaskVO.setTreeDepth(Integer.parseInt(request.getParameter("treeDepth")));
 			
 			int taskId = ezPMSService.addTask(projectTaskVO, taskMemberList2);
 			
@@ -411,7 +412,6 @@ public class EzPMSGWController2 {
 			Long groupId = ezPMSService.addGroup(project);
 			
 			//프로젝트 멤버 테이블에 추가
-			List<ProjectGroupMemberVO> groupMemberList = new ArrayList<ProjectGroupMemberVO>();
 			HashMap<String, Object> userMap = new HashMap<String, Object>();
 			HashMap<String, Object> deptUserMap = new HashMap<String, Object>();
 			List<String> userIdArr = new ArrayList<String>();
@@ -450,31 +450,6 @@ public class EzPMSGWController2 {
 				member.get(i).setMemberRoleId((int)(projectMemberList.get(i).get("memberRoleId")));
 			}
 			
-//			for (int i = 0; i < projectMemberList.size(); i++) {
-//				String memberId = projectMemberList.get(i).get("userId").toString();
-//				int tenantId = info.getTenantId();
-//				String userIdType = projectMemberList.get(i).get("userIdType").toString();
-//				int memberRoleId = (int)projectMemberList.get(i).get("memberRoleId");
-//				
-//				ProjectMemberVO member = ezPMSService.getUserInfo(memberId, tenantId, userIdType);
-//				member.setMemberRoleId(memberRoleId);
-//				member.setProjectId(Long.parseLong(projectId));
-//				member.setUserIdType(userIdType);
-//				
-//				ProjectGroupMemberVO groupMember = new ProjectGroupMemberVO();
-//				groupMember.setGroupId(groupId);
-//				groupMember.setTenantId(tenantId);
-//				groupMember.setMemberRoleId(memberRoleId);
-//				groupMember.setUserId(userId);
-//				groupMember.setUserName(member.getUserName());
-//				groupMember.setUserName2(member.getUserName2());
-//				groupMember.setUserDeptname(member.getUserDeptname());
-//				groupMember.setUserDeptname2(member.getUserDeptname2());
-//				
-//				
-////				ezPMSService.addProjectMember(member, tenantId);
-//				groupMemberList.add(groupMember);
-//			}
 			ezPMSService.addGroupMember(member);
 			
 			result.put("status", "ok");

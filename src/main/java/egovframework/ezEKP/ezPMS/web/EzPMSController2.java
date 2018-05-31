@@ -750,4 +750,39 @@ public class EzPMSController2 {
 		return "json";
 	}
 	
+	/**
+	 * 그룹 삭제
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/deleteGroup.do")
+	public String deleteGroup(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS deleteGroup started");
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			String projectId = (String) param.get("projectId");
+			String url = "/rest/ezPMS/groups/"+ projectId +"/users/" + userInfo.getId();
+			String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+			
+			param.put("createDate", today);
+			param.put("userId", userInfo.getId());
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+			String status = resultBody.get("status").toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		LOGGER.debug("ezPMS deleteGroup ended");
+		
+		return "json";
+	}
+	
 }

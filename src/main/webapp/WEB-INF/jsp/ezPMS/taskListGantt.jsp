@@ -262,6 +262,80 @@
 	   			
 	   		}
 	   		
+	   		function eventSetting(){
+	   			document.getElementById("pmsGanttRowDelBtn").onclick = delTask;
+		   		document.getElementById("pmsGanttRowNewBtn").onclick = addTask;
+		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
+		   		document.getElementById("pmsGanttAddGroup").onclick = addGroup;
+		   	}
+	   		
+	   		function delTask(){
+	   			var selectType = "";
+	   			
+	   			//선택한 작업이 업무/그룹/프로젝트 인지 구분.
+	   			if(ge.currentTask.id && ge.currentTask.id.indexOf("_t") !== -1){
+	   				selectType = "task";
+	   			}
+	   			else if(ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1){
+	   				selectType = "group";
+	   			}
+	   			else if(ge.currentTask.id){
+	   				selectType = "project";
+	   			}
+	   			
+	   			if(confirm("선택한 " + selectType + "을 삭제하시겠습니까?")){
+					delTaskFunc(selectType);
+	   			}
+	   			else{
+	   				alert("안지워요");
+	   			}
+	   		}
+	   		
+	   		function delTaskFunc(selectType){
+	   			var url = "";
+	   			var groupId = "";
+	   			var taskId = "";
+	   			var data = {};
+	   			
+	   			if(selectType === "project"){
+	   				url = "/ezPMS/deleteProject.do";
+	   			}
+	   			else if(selectType === "group"){
+		   			groupId = ge.currentTask.id.match(/g(\d+)/)[1];
+	   				url = "/ezPMS/deleteGroup.do";
+	   			}
+	   			else{
+		   			taskId = ge.currentTask.id.match(/t(\d+)/)[1];
+	   				url = "/ezPMS/deleteTask.do?projectId=" + projectId + "&taskId=" + taskId;
+	   			}
+	   			
+	   			data = {
+	   					projectId : projectId,
+	   					groupId : groupId,
+	   					taskId : taskId
+	   			}
+	   			
+	   			$.ajax({
+	   				type : "POST",
+	   				url : url,
+	   				dataType : "json",
+	   				contentType: "application/json; charset=UTF-8",
+	   				data : JSON.stringify(data),
+	   				success : function(data) {
+	   					if (result == "permitted") {
+							alert("삭제되었습니다.");
+						} else {
+							alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+							return;
+						}
+	   					location.reload();
+	   				},
+	   				error : function(jqXHR, textStatus, errorThrown) {
+	   					alert("error2");
+	   				}
+	   			});
+	   		}
+	   		
 	   		(function(){
 		   		initValues();
 		   		ganttChartAddFunc();
@@ -271,12 +345,7 @@
 	   		})();
 	   		
 	   		window.onload = function(){
-		   		document.getElementById("pmsGanttRowDelBtn").onclick = function(){
-		   				$('#workSpace').trigger('deleteFocused.gantt');return false;
-		   		}
-		   		document.getElementById("pmsGanttRowNewBtn").onclick = addTask;
-		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
-		   		document.getElementById("pmsGanttAddGroup").onclick = addGroup;
+	   			eventSetting();
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
 
@@ -374,8 +443,9 @@
 			
 			function getGanttProject(){
 				ret = ganttData;	
-			    //actualize data
-			    var offset = new Date().getTime() - ret.tasks[0].start;
+			    //전체 업무 날짜에 offset을 더해줌.
+// 			    var offset = new Date().getTime() - ret.tasks[0].start;
+			    var offset = 0;
 			    for (var i = 0; i < ret.tasks.length; i++) {
 			      ret.tasks[i].start = ret.tasks[i].start + offset;
 			    }

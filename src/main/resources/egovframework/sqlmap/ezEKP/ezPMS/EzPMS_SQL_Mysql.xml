@@ -755,17 +755,17 @@
 		<![CDATA[
     		INSERT INTO tbl_pms_task(
     			tenant_id, 				project_id, 			group_id, 		task_name,			status,			plan_start_date,			plan_end_date, 
-    			real_progress,			weight,				overview	,		member_count,
+    			real_progress,			weight,					overview	,		member_count,
     			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
     			writer_id,				write_date, 			writer_name, 			writer_name2, 			writer_deptname, 		writer_deptname2, 
-    			sort_order, 			workingday
+    			sort_order, 			workingday,				tree_depth
     		) 
     		VALUES ( 
     			#tenantId#, 			#projectId#, 			#groupId#, 				#taskName#,				#status#,			#planStartDate#,			#planEndDate#, 
     			#realProgress#,			#weight#,				#overview#,				#memberCount#,
     			#headManagerId#, 		#headManagerName#,		#headManagerName2#, 	#headManagerDeptname#,	#headManagerDeptname2#, 
     			#writerId#,				#writeDate#, 			#writerName#, 			#writerName2#, 			#writerDeptname#, 		#writerDeptname2#, 
-    			#sortOrder#, 			#workingday#
+    			#sortOrder#, 			#workingday#,			#treeDepth#
     		)
     	]]>
     	<selectKey keyProperty="taskId" resultClass="long">
@@ -774,16 +774,21 @@
     	</selectKey>
 	</insert>
 	
-	<insert id="EzPMSDAO.addTaskMember" parameterClass="ProjectTaskMemberVO">
+	<insert id="EzPMSDAO.addTaskMember" parameterClass="list">
 		<![CDATA[
 			INSERT INTO tbl_pms_taskmember (
 				tenant_id,			task_id,			user_id,		user_name,
 				user_name2,			user_deptname,		user_deptname2,		pctinput
-			) VALUES (
-				#tenantId#,			#taskId#,		#userId#,		#userName#,
-				#userName2#,		#userDeptname#,		#userDeptname2#,	#pctinput#
-			)
+			) VALUES
 		]]>
+		<iterate conjunction=", ">
+   		<![CDATA[
+   		(
+   			#[].tenantId#, 		#[].taskId#, 		#[].userId#, 				#[].userName#, 
+   			#[].userName2#, 	#[].userDeptname#, 	#[].userDeptname2#, 		#[].pctinput#
+   		)
+   		]]>
+		</iterate>
 	</insert>
 	
 	<update id="EzPMSDAO.updateProjectWorkingday" parameterClass="Map">

@@ -654,14 +654,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			taskVO.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
 			
 			taskId = ezPMSDAO.addTask(taskVO);
-			
+
 			for(int i=0;i<taskMemberList.size();i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
-				taskMemberVO.setTaskId(taskId);
+				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
-				ezPMSDAO.addTaskMember(taskMemberVO);
 			}
-			
+			ezPMSDAO.addTaskMember(taskMemberList);
+
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
 			
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
@@ -761,10 +761,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			for(int i=0;i<taskMemberList.size();i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
-				taskMemberVO.setTaskId(taskId);
+				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
-				ezPMSDAO.addTaskMember(taskMemberVO);
 			}
+			ezPMSDAO.addTaskMember(taskMemberList);
 			
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
 			
@@ -1595,10 +1595,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			for(int i=0;i<taskMemberList.size();i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
-				taskMemberVO.setTaskId(taskId);
+				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
-				ezPMSDAO.addTaskMember(taskMemberVO);
 			}
+			ezPMSDAO.addTaskMember(taskMemberList);
 			
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
 			

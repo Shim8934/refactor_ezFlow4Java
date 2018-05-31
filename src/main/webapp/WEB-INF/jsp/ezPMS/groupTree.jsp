@@ -80,10 +80,11 @@
 	
 	function getTreeDepth(obj){
 		treeDepth = obj.parentNode.getAttribute("aria-level");
-		if(treeDepth > 2){
-			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.")
-			return false;
-		}
+		/* 추후 수정하거나 삭제 필요*/
+// 		if(treeDepth > 2){
+// 			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.")
+// 			return false;
+// 		}
 		parent.treeDepth = treeDepth;
 	}
 	
