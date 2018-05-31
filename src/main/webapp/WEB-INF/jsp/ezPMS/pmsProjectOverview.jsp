@@ -734,10 +734,10 @@ function getBoardDetails(elem) {
 }
 
 .icon {
-	width:40px;
-	height:40px;
-	border:2px solid blue;
-	display:inline-block;
+	width : 40px;
+	height : 40px;
+	border : 1px solid #d1d1d1;
+	display : inline-block;
 	float : right;
 }
 
@@ -751,7 +751,7 @@ function getBoardDetails(elem) {
 }
 
 .selectTR {
-	background-color: rgb(233, 241, 255);
+	background-color : rgb(233, 241, 255);
 }
 </style>
 </head>

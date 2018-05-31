@@ -96,15 +96,7 @@ public class EzPMSController {
 	
 		if(settingStatus.equals("ok")) {
 			JSONObject listSetting = (JSONObject) settingResult.get("data");
-			
-			model.addAttribute("viewType", listSetting.get("viewType"));
-			model.addAttribute("progressColor", listSetting.get("progressColor"));
-			model.addAttribute("completeColor", listSetting.get("completeColor"));
-			model.addAttribute("overdueColor", listSetting.get("overdueColor"));
-			model.addAttribute("holdColor", listSetting.get("holdColor"));
-			model.addAttribute("projectSort", listSetting.get("projectSort"));
-			model.addAttribute("listNumber", listSetting.get("listNumber"));
-			model.addAttribute("listProjectStatus", listSetting.get("listProjectStatus"));
+			model.addAttribute("listSetting", listSetting);
 		}
 		
 		LOGGER.debug("ezPMS projectList ended");
@@ -219,6 +211,23 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/pmsSetting.do")
 	public String pmsSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS Setting started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		String url = "/rest/ezPMS/users/" + userId + "/setting";
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userIdType", "user");
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject setting = (JSONObject) result.get("data");
+			
+			model.addAttribute("setting", setting);
+		}
+		
 		LOGGER.debug("ezPMS Setting started");
 		return "ezPMS/pmsSetting";
 	}
@@ -327,8 +336,6 @@ public class EzPMSController {
 			
 			if (param.get("mode").equals("new")) {
 				result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
-				System.out.println(result.get("data").getClass().getName());
-				System.out.println(result.get("data"));
 				projectId = Long.parseLong(result.get("data").toString());
 				
 			} else if (param.get("mode").equals("edit")) {
@@ -392,15 +399,6 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPMS/users/" + userId + "/setting";
-
-		param.put("viewType", param.get("viewType"));
-		param.put("progressColor", param.get("progressColor"));
-		param.put("completeColor", param.get("completeColor"));
-		param.put("overdueColor", param.get("overdueColor"));
-		param.put("holdColor", param.get("holdColor"));
-		param.put("projectSort", param.get("projectSort"));
-		param.put("listNumber", param.get("listNumber"));
-		param.put("listProjectStatus", param.get("listProjectStatus"));
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
 		String status = result.get("status").toString();
@@ -1524,4 +1522,13 @@ public class EzPMSController {
 		LOGGER.debug("ezPMS getMyProjectList ended");
 		return "ezPMS/pmsMyProjectList";
 	}
+	
+	/**
+	 * 프로젝트 관리 상태 색상변경 팝업 호출
+	 */
+	@RequestMapping(value="/ezPMS/getColorPicker.do")
+	public String getColorPicker() {
+		return "ezPMS/pmsStatusColor";
+	}
+	
 }

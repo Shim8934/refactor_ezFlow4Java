@@ -923,10 +923,18 @@
 		UPDATE 
 			tbl_pms_setting 
 		SET
-			VIEW_TYPE = #viewType#, PROGRESS_COLOR = #progressColor#, 
-			COMPLETE_COLOR = #completeColor#, OVERDUE_COLOR = #overdueColor#,
-			HOLD_COLOR = #holdColor#, PROJECT_SORT = #projectSort#, 
+			VIEW_TYPE = #viewType#,
+			PROGRESS_COLOR = #progressColor#, 
+			COMPLETE_COLOR = #completeColor#,
+			OVERDUE_COLOR = #overdueColor#,
+			HOLD_COLOR = #holdColor#,
+			PROJECT_SORT = #projectSort#, 
 			LIST_NUMBER = #listNumber#
+	]]>
+	<isNotEmpty property="listProjectStatus">
+			, LIST_PROJECT_STATUS = #listProjectStatus#
+	</isNotEmpty>
+	<![CDATA[
 		WHERE
 			USER_ID = #userId# 
 		AND

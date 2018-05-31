@@ -389,6 +389,11 @@
 	margin-top: 5px;
 }
 
+#contentList {
+	width : 98%;
+	margin-left : 1%;
+}
+
 #icons {
 	margin-top: 21px;
 }

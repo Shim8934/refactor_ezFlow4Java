@@ -27,15 +27,15 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
 
-var viewType = "${viewType}";
-var projectSort = "${projectSort}";
-var progressColor = "${progressColor}";
-var completeColor = "${completeColor}";
-var overdueColor = "${overdueColor}";
-var holdColor = "${holdColor}";
-var listNumber = "${listNumber}";
-var initListNumber = "${listNumber}";
-var listProjectStatus = "${listProjectStatus}";
+var viewType = "${listSetting.viewType}";
+var projectSort = "${listSetting.projectSort}";
+var progressColor = "${listSetting.progressColor}";
+var completeColor = "${listSetting.completeColor}";
+var overdueColor = "${listSetting.overdueColor}";
+var holdColor = "${listSetting.holdColor}";
+var listNumber = "${listSetting.listNumber}";
+var initListNumber = "${listSetting.listNumber}";
+var listProjectStatus = "${listSetting.listProjectStatus}";
 var currentPage = 1;
 var orderWhat; 
 var orderHow;
@@ -162,6 +162,7 @@ $(function(){
 	
 	if (listProjectStatus != "F") {
 		$("#deleteFavorite").css("display", "none");
+		$("#addFavorite").css("display", "");
 	} else {
 		$("#deleteFavorite").css("display", "");
 		$("#addFavorite").css("display", "none");
@@ -170,7 +171,6 @@ $(function(){
 	$("#listSort option[value='"+ projectSort +"']").attr("selected", true);
 	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
 	$("#listByStatus option[value='" + listProjectStatus + "']").attr("selected", true);
-	$("#deleteFavorite").css("display", "none");
 	
 });
 
