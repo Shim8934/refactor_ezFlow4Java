@@ -1,22 +1,13 @@
 package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -38,19 +29,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -1503,20 +1490,21 @@ public class EzAttitudeAdminController {
 			
 			for (int i = 0; i < deptList.size(); i++) {
 				JSONObject dept =  (JSONObject) deptList.get(i);
-				if (dept.get("isComp").equals("comp") || dept.get("isComp").equals("COMP")) {
+				if (dept.get("isComp").equals("COMP")) {
 					dept.put("icon", "icon-company");
 				} else{
 					dept.put("icon", "icon-dept");
 				}
 				
 				//만약 자신의 부서가 있다면 해당 부서의 내용으로 넣는다.
-				if (dept.get("myDept").equals("yes") || dept.get("myDept").equals("YES")) {
+				if (dept.get("myDept").equals("YES")) {
 					JSONObject state = new JSONObject();
 					state.put("opened", "true");
 					state.put("selected", "true");
 					dept.put("state", state);
 				}
 			}
+			
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("companyId", companyId);
 		}
@@ -1528,23 +1516,14 @@ public class EzAttitudeAdminController {
 	
 	/**
 	 * 관리자 근태권한관리 권한부서 선택하기 (부서리스트)
-	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do")
-	public String selectAttitudeAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception{
+	public String selectAttitudeAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
 		LOGGER.debug("selectAttitudeAuthorDept started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String companyId = request.getParameter("companyId");
-		String userId =null;
-		
-		if (request.getParameter("userId")!=null) {
-			userId = request.getParameter("userId");
-			model.addAttribute("selectedUser",userId.trim());
-		}else{
-			userId = userInfo.getId();
-		}
+		String userId = request.getParameter("userId");
 		
 		//조직도 회사,부서 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -1574,22 +1553,25 @@ public class EzAttitudeAdminController {
 			
 			for (int i = 0; i < deptList.size(); i++) {
 				JSONObject dept =  (JSONObject) deptList.get(i);
-				if (dept.get("isComp").equals("comp") || dept.get("isComp").equals("COMP")) {
+				if (dept.get("isComp").equals("COMP")) {
 					dept.put("icon", "icon-company");
 				} else{
 					dept.put("icon", "icon-dept");
 				}
 				
 				//만약 자신의 부서가 있다면 해당 부서의 내용으로 넣는다.
-				if (dept.get("myDept").equals("yes") || dept.get("myDept").equals("YES")) {
+				if (dept.get("myDept").equals("YES")) {
 					JSONObject state = new JSONObject();
 					state.put("opened", "true");
 					state.put("selected", "true");
 					dept.put("state", state);
 				}
 			}
+			
 			model.addAttribute("deptList", deptList);
 		}
+		
+		model.addAttribute("selectedUser",userId);
 		
 		LOGGER.debug("selectAttitudeAuthorDept ended");
 		
@@ -1598,17 +1580,15 @@ public class EzAttitudeAdminController {
 	
 	/**
 	 * 해당사원이 열람 할 수 있는 부서 리스트
-	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorDeptList.do")
 	@ResponseBody
-	public JSONArray attitudeAuthorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception{
+	public JSONArray attitudeAuthorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("attitudeAuthorDeptList started");
+		
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
 		String isAllDept = "";
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitude-auth";
@@ -1639,25 +1619,19 @@ public class EzAttitudeAdminController {
 		}
 		
 		LOGGER.debug("attitudeAuthorDeptList ended");
+		
 		return authorDeptList;
 	}
 	
 	/**
 	 * 권한 저장
-	 * @param request
-	 * @param model
-	 * @param loginCookie
-	 * @param response
-	 * @throws IOException 
-	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuthor.do")
 	@ResponseBody
-	public String saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception{
+	public String saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception {
 		LOGGER.debug("saveAttitudeAuthor started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
 		String selectedUser = request.getParameter("selectedUser");
 		String companyId = request.getParameter("companyId");
 		String deptIds = request.getParameter("deptIds");
@@ -1710,7 +1684,6 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
@@ -1782,16 +1755,16 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/ezAttitude/getTotalAttCount.do")
 	@ResponseBody
 	public String getTotalAttCount(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getTotalAttCount started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String isAllDept = "";
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);			
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/modifyattitudes/count";
 		
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -1831,6 +1804,8 @@ public class EzAttitudeAdminController {
 		if (status.equals("ok")) {
 			totalAtt = resultBody.get("data").toString();
 		}
+		
+		LOGGER.debug("getTotalAttCount ended.");
 		
 		return totalAtt;
 	}
