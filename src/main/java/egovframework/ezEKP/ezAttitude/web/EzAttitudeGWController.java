@@ -96,10 +96,10 @@ public class EzAttitudeGWController {
 
 			String offset = info.getOffSet();
 			if (deptFlag.equals("false")) {
-				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
+				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, info.getPrimary(), deptFlag, info.getTenantId());
 			} else {
 				// 관리하고 있는 전체 부서 목록을 받아서 dept in iterate를 돌린다.
-				resultList = ezAttitudeService.getAttitudeList("", selectedDeptID, "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
+				resultList = ezAttitudeService.getAttitudeList("", selectedDeptID, "", typeId, startDate, endDate, offset, info.getPrimary(), deptFlag, info.getTenantId());
 			}
 			
 			//imgPath 셋팅
@@ -1090,7 +1090,6 @@ public class EzAttitudeGWController {
 			@RequestParam(value="apprUserName", required=false) String apprUserName,
 			@RequestParam(value="writerName", required=false) String writerName,
 			@RequestParam(value="writerDeptName", required=false) String writerDeptName,
-			@RequestParam(value="sysLang", required=false) String sysLang,
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="startPoint", required=false) String startPoint,
 			@RequestParam(value="endPoint", required=false) String endPoint,
@@ -1156,7 +1155,7 @@ public class EzAttitudeGWController {
 				deptid = "";
 			}
 			
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptid, deptIdList);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, info.getPrimary(), offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptid, deptIdList);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -1187,7 +1186,6 @@ public class EzAttitudeGWController {
 			@RequestParam(value="apprUserName", required=false) String apprUserName,
 			@RequestParam(value="writerName", required=false) String writerName,
 			@RequestParam(value="writerDeptName", required=false) String writerDeptName,
-			@RequestParam(value="sysLang", required=false) String sysLang,
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="type", required=false) String type,
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
@@ -1234,7 +1232,7 @@ public class EzAttitudeGWController {
 				deptid = "";
 			}
 			
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, deptid, deptIdList, adminFlag, checkAdmin);
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, info.getPrimary(), offset, type, deptid, deptIdList, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
 			result.put("code", 0);

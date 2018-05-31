@@ -135,16 +135,12 @@ public class EzAttitudeKMSController {
 		}
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (companyId == null || companyId.equals("")) {
 			companyId = userInfo.getCompanyID();
 		}
 		
 		
-		if (userInfo.getLang().equals(sysLang))  {
-			sysLang = "primary";
-		}
 		
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -166,7 +162,6 @@ public class EzAttitudeKMSController {
 				.queryParam("writerDeptName", writerDeptName)
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
-				.queryParam("sysLang", sysLang)
 				.queryParam("offset", offsetMin)
 				.queryParam("pageNum", pageNum)
 				.queryParam("type", type)
@@ -234,7 +229,6 @@ public class EzAttitudeKMSController {
 					.queryParam("writerDeptName", writerDeptName)
 					.queryParam("startDate", startDate)
 					.queryParam("endDate", endDate)
-					.queryParam("sysLang", sysLang)
 					.queryParam("offset", offsetMin)
 					.queryParam("type", type)
 					.queryParam("orderCell", orderCell)
@@ -252,7 +246,6 @@ public class EzAttitudeKMSController {
 					.queryParam("writerDeptName", writerDeptName)
 					.queryParam("startDate", startDate)
 					.queryParam("endDate", endDate)
-					.queryParam("sysLang", sysLang)
 					.queryParam("offset", offsetMin)
 					.queryParam("startPoint", startPoint)
 					.queryParam("endPoint", endPoint)
