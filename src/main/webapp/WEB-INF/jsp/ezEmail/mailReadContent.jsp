@@ -327,7 +327,7 @@
 		        
 		     	// 전달, 회신 시 보낸 시간
 		        function sentDateView(msg) {
-				    if (typeof window.parent.sentDateMsg != "undefined") {
+				    if (window.parent.sentDateMsg != "") {
 				    	var sentDateMsg = window.parent.sentDateMsg;
 				    	
 				    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");

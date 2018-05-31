@@ -6,25 +6,21 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.CookieValue;
-
-import com.ibm.icu.util.Calendar;
-
+import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
@@ -43,7 +39,6 @@ import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -55,9 +50,6 @@ public class EzAttitudeGWController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
 	
 	@Resource(name="crypto")
 	private EgovFileScrty egovFileScrty;
@@ -261,13 +253,13 @@ public class EzAttitudeGWController {
 			//2. 똑같은 attitudeVO를 가져와서 비교할 수 는 없어 시작일 변경??
 			// ==> typeId와 startDate를 비교하면
 			if (typeId.equals("A08")) {
-				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+				checkAttitude = ezAttitudeService.getIsAttitude(typeId, attitudeVO.getWriterId(), startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
 			}
 			
 			if (!checkAttitude.equals("") && !checkAttitude.equals("0") && !(typeId.equals(attitudeVO.getTypeId()) && startDate.split(" ")[0].equals(attitudeVO.getStartDate().split(" ")[0]))) {
 				checkAttitude = "dupl";
 			} else {
-				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId(), info.getCompanyId());
+				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, attitudeVO.getWriterId(), info.getTenantId(), info.getCompanyId());
 			}
 			
 			//관리자에서 수정 했을 경우 테이블에 기록을 남긴다.
@@ -1471,11 +1463,11 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 근태조회 --임시
+	 * G/W 근태관리 [GET] 근태조회
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudes/bombom", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitudes/check", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList2(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/check] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1539,7 +1531,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/check] ended.");
 		return result;
 	}
 	

@@ -34,7 +34,7 @@
 	        var CurPage = "1";
 	        var strSearch = "<c:out value='${pSearchString}' />";
 	        var RetValue;
-	        var ReturnFunction;
+	        var ReturnFunction;	        
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -1246,7 +1246,6 @@
 					},
    					success : function(text) {
    						xmlRtn = text;
-
    						for (var i = 0 ; i < SelectNodes(xmlRtn, "DATA/ROW").length ; i++) {
    				            pparsingXML2 = "";
    				            pparsingXML = "";
@@ -1269,9 +1268,12 @@
 
    				            var MaxID = 0;
    				            var InitTr = listview.GetDataRows();
-
-   				            if (getNodeText(xmlRtn.getElementsByTagName("CN")[i]) == "<c:out value='${userInfo.id}' />")
+							
+   				            
+   							/* 2018-05-29 구해안 continue 넘어오는 값 userinfo.id -> userID로 수정*/
+   							if (getNodeText(xmlRtn.getElementsByTagName("CN")[i]) == "<c:out value='${userID}' />")
    				                continue;
+   				           
    				            if (listview.ExistRow("DATA1", getNodeText(xmlRtn.getElementsByTagName("CN")[i])))
    				                continue;
 

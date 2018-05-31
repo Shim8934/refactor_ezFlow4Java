@@ -64,7 +64,6 @@
 		        	data : {
 		        		companyId : companyId,
 		        		typeId : typeId,
-		        		saveMode : saveMode,
 		        		typeName : typeName,
 		        		typeName2 : typeName2
 		        	},

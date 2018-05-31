@@ -231,8 +231,8 @@
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
 					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
-					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
-					resultHtml += "<th style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.t134' /></th></tr>";
+					resultHtml += "<th style='width: 450px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
+					resultHtml += "<th style='width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.t134' /></th></tr>";
 	    			break;
 	    		case "absent":
 	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
@@ -710,8 +710,20 @@
 					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
+	    		
+	    		switch (Tab1_SelectID) {
+	    		case "modify":
+	    			url = "/ezAttitude/excelAttitudeListExport.do";
+	    			break;
+	    		case "absent":
+	    			url = "/ezAttitude/excelAbsentedListExport.do";
+	    			break;
+	    		case "history":
+	    			url = "ezAttitude/excelHistoryListExport.do";
+	    			break;
+	    		}
 				
-		    	exportExcelframe.location.href="/ezAttitude/adminManageExcel.do?companyId=" + companyId 
+		    	exportExcelframe.location.href=url + "?companyId=" + companyId 
 		    			+ "&userName=" + searchUserName 
 		    			+ "&title=" + searchTitle 
 		    			+ "&deptId="+ $('#ListDept').val()
@@ -720,7 +732,7 @@
 		    			+ "&orderCell=" + orderCell 
 		    			+ "&orderOption=" + orderOption 
 		    			+ "&attitudeType=" + searchAttitudeType
-		    			+ "&duplicated=duplicated&reqType="+Tab1_SelectID;
+		    			+ "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
 	        
@@ -771,9 +783,7 @@
 				<ul>
 		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
 		      		<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
-		      		<c:if test="${manageFlag == 'M' }">
-		      			<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
-		      		</c:if>
+	      			<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
 		      		<li>
 		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 		      		</li>
@@ -782,11 +792,7 @@
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 							<c:forEach var = "dept" items="${deptList}">
-								<c:if test="${dept.mine ne 'yes' }">
-									<c:if test="${dept.authType == 'M'}">
 										<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
-									</c:if>
-								</c:if>
 							</c:forEach>
 			      		</select>
 		      		</li>

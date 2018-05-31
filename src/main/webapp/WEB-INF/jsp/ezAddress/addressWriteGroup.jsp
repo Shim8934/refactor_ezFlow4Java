@@ -1874,7 +1874,8 @@
 	    <form id="Form_address_writegroup" name="Form_address_writegroup" method="post">
 	        <div id="menu">
 	            <ul>
-	                <li><span onclick="add()"><spring:message code='ezAddress.t339' /></span></li>
+	            <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
+	                <li><span onclick="add()"><spring:message code='ezAddress.t300' /></span></li>
 	            </ul>
 	        </div>
 	        <div id="close">
