@@ -179,11 +179,11 @@ public class EzPMSGWController {
 			
 			// 이슈리스트 그룹 생성
 			project.put("groupName", "이슈 리스트");
-			ezPMSService.addGroup(project);
+			ezPMSService.addGroup(project, "Y");
 			
 			//그룹 생성
 			project.put("groupName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
-			ezPMSService.addGroup(project);
+			ezPMSService.addGroup(project, "N");
 			
 			//프로젝트 멤버 테이블에 추가
 			for (int i = 0; i < projectMemberList.size(); i++) {

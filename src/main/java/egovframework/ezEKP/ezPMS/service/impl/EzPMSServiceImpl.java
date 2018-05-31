@@ -813,7 +813,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public Long addGroup(Map<String, Object> map) {
+	public Long addGroup(Map<String, Object> map, String isIssue) {
 		LOGGER.debug("[SERVICE] addGroup started.");
 		map.put("delStatus", 0);
 		
@@ -834,6 +834,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						
 			map.put("workingDay", workingDays);
 			map.put("restDueday", workingDays);
+			map.put("isIssue", isIssue);
 			
 			//프로젝트 총괄담당자 정보 불러오기
 			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(), Integer.parseInt(map.get("tenantId").toString()), "user");
@@ -904,6 +905,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("project_Id", projectId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
+		map.put("location", location);
 		
 		List<ProjectTaskTreeVO> list = ezPMSDAO.getProjectGroupTree(map);
 		

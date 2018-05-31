@@ -409,7 +409,7 @@ public class EzPMSGWController2 {
 			
 			//그룹 생성
 			project.put("groupName", request.getParameter("groupName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
-			Long groupId = ezPMSService.addGroup(project);
+			Long groupId = ezPMSService.addGroup(project, "N");
 			
 			//프로젝트 멤버 테이블에 추가
 			HashMap<String, Object> userMap = new HashMap<String, Object>();

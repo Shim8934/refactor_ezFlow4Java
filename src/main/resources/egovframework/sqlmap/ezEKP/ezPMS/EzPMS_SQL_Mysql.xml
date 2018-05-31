@@ -439,6 +439,10 @@
 				AND
 					DEL_STATUS = 0
 			]]>
+			<isNotEqual property="location" compareValue="board">
+				AND
+					ISSUEYN = 'N'
+			</isNotEqual>
 	</select>
 	
 	<select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
@@ -1346,7 +1350,7 @@
 				REAL_PROGRESS,		OVERVIEW,			MEMBER_COUNT,			HEAD_MANAGER_ID,
 				HEAD_MANAGER_NAME,	HEAD_MANAGER_NAME2,	HEAD_MANAGER_DEPTNAME,	HEAD_MANAGER_DEPTNAME2,	
 				TREE_DEPTH,			ANCESTER_GROUP,		SORT_ORDER,				DEL_STATUS,			
-				WORKINGDAY,			REST_DUEDAY
+				WORKINGDAY,			REST_DUEDAY,		ISSUEYN
 			)
 			VALUES	(
 				#tenantId#,			#projectId#,		#groupName#,			#upperGroupId#,
@@ -1355,7 +1359,7 @@
 				#progress#,			#overview#,			#memberCount#,			#headManagerId#,
 				#headManagerName#,	#headManagerName2#,	#headManagerDeptname#,	#headManagerDeptname2#,
 				#treeDepth#,		#ancestorGroup#,	#sortOrder#,			#delStatus#,
-				#workingDay#,		#restDueday#
+				#workingDay#,		#restDueday#,		#isIssue#
 			)
 		]]>
 		<selectKey keyProperty="groupId" resultClass="long">

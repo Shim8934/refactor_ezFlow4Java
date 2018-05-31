@@ -80,7 +80,7 @@ public interface EzPMSService {
 
 	public void updateTaskStatus(ProjectTaskVO task);
 	
-	public Long addGroup(Map<String, Object> map);
+	public Long addGroup(Map<String, Object> map, String isIssue);
 	
 	public ProjectGroupVO getGroupDetails(Long groupId);
 	
