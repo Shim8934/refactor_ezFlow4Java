@@ -24,10 +24,6 @@
 		$("tbody tr").on("dblclick", function() {
 			goBoardDetail(this);
 		});
-		
-		$(".mainlist th:not(.checkboxHeader)").on("click", function() {
-			
-		});
 	})
 	
 	// 체크박스 전체선택 혹은 해제
@@ -159,9 +155,7 @@
 							<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
 								<img src="/images/i_notice.gif" alt="NOTICE" />
 							</c:when>
-							<c:otherwise>
-								${projectBoardVO.itemId}
-							</c:otherwise>
+							<c:otherwise>${projectBoardVO.itemId}</c:otherwise>
 						</c:choose>
 					</td>
 					<c:choose>
@@ -172,13 +166,13 @@
 							<td><img src="/images/newAttach.gif"></td>
 						</c:otherwise>
 					</c:choose>	
-						<td>${projectBoardVO.title}</td>
+						<td class="boardTitle">${projectBoardVO.title}</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.taskName eq null}">
-							<td>${projectBoardVO.groupName}</td>
+							<td class="taskName">${projectBoardVO.groupName}</td>
 						</c:when>
 						<c:otherwise>
-							<td>${projectBoardVO.taskName}</td>
+							<td class="taskName">${projectBoardVO.taskName}</td>
 						</c:otherwise>
 					</c:choose>
 					<td>${projectBoardVO.writerDeptName}</td>

@@ -22,6 +22,10 @@
 		var writerId = '${board.writerId}';
 		var authority = '${authority}'
 		var projectId = '${board.projectId}';	
+		var groupId = '${board.groupId}';	
+		var taskId = '${board.taskId}';	
+		var title = '${board.title}';
+		var taskName = '${board.taskName ne null ? board.taskName : board.groupName}';
 		var itemIds = new Array(itemId); // 메인화면에서 여러개의 게시물을 한 번에 이동하는 함수를 재사용하기 위함
 		
 		$(function() {
@@ -31,6 +35,8 @@
 				$("#deleteBtn").css("display", "none");
 				$("#moveBtn").css("display", "none");
 			}
+			
+			$("#taskName").text(taskName);
 		})
 		// 첨부파일 모두 선택
 		function attach_SelectAll() {
@@ -71,6 +77,7 @@
 			if(confirm("정말 삭제하시겠습니까?") == true) {
 				var items = new Array();
 				items.push(itemId);
+				addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다.");
 				opener.deleteBoardAction(items);
 			}	
 		}
@@ -118,16 +125,7 @@
 					</tr>
 					<tr>
 						<th>작업이름</th>
-						<td style="width: 50%">
-							<c:choose>
-								<c:when test="${board.taskName ne null}">
-									${board.taskName}
-								</c:when>
-								<c:otherwise>
-									${board.groupName}
-								</c:otherwise>
-							</c:choose>						
-						</td>
+						<td id="taskName" style="width: 50%"></td>
 						<th>게시일</th>
 						<td>${fn:substring(board.writeDate, 0, 19)}</td>
 						

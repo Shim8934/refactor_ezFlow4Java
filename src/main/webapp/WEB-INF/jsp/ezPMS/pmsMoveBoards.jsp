@@ -30,6 +30,12 @@
 		var groupId = 0;
 		var taskId = 0;
 		var chosenTask = $("a.jstree-clicked");	
+		var taskName = chosenTask.text();
+		
+		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
+		if(taskName.indexOf('(') != -1) {
+			taskName = taskName.substr(0, taskName.indexOf('('));
+		}
 		
 		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
 			groupId = chosenTask.parents("li").eq(1).attr("id");
@@ -57,6 +63,7 @@
 					alert("이동에 성공했습니다.");
 					popupClose();
 					
+					addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName + "](으)로 " + "[" + parent.title + "] 게시물을 이동하였습니다.");
 					// 메인화면에서 이동할 때
 					if(typeof parent.getBoardList == 'function') {
 						parent.getBoardList();

@@ -33,6 +33,7 @@
 			taskName = taskName.substr(0, taskName.indexOf('('));
 		}
 		parent.document.getElementById("taskName").innerHTML = taskName;
+		parent.taskName = taskName;
 		
 		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
 			parent.groupId = chosenTask.parents("li").eq(1).attr("id");

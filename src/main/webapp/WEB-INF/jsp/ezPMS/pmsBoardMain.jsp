@@ -50,17 +50,19 @@
 		});
 		
 		// 트리가 모두 로드된 다음 실행
-		$("#taskTree").on("ready.jstree", function() {
-			var project = $("li[role='treeitem'][aria-level='1']").eq(1);
+	 	$("#taskTree").on("ready.jstree", function() {
+			var project = $("li[role='treeitem'][aria-level='1']").last();
 			
 			groupId = project.attr("id");
 			projectName = project.children("a").text();
 			project.children("a").click();
+			
 			if(projectName.indexOf('(') != -1) {
 				projectName = projectName.substr(0, projectName.indexOf('('));
 			}
+			
 			taskName = projectName;
-		})
+		});
 	});
 	
 	function goAddBoard() {
@@ -141,6 +143,15 @@
 					boardDetail.alert("삭제되었습니다.");
 					boardDetail.close();
 					getBoardList();
+					
+					for(i in itemIds) {
+						var deletedTR = $("tr[data-itemid = " + itemIds[i] + "]");
+						var title = deletedTR.children("td.boardTitle").text();
+						var taskName = deletedTR.children("td.taskName").text();
+						
+						// groupId와 taskId를 어떻게 남기지-_- DB에서 List로 읽어올 때 일일히 다 가져와야겠네ㅠㅠㅠ
+						/* addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다."); */
+					}
 				} else {
 					boardDetail.alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
 				}

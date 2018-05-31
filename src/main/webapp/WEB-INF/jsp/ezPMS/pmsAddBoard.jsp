@@ -34,10 +34,12 @@
 	var taskName;
 	
 	var groupId = "${groupId}";
+	
 	if(groupId == "") {
 		groupId = "${board.groupId}";
 	}
 	var taskId = "${taskId}";
+	
 	if(taskId == "") {
 		taskId = ("${board.taskId}" != "") ? "${board.taskId}" : null;
 	}
@@ -84,6 +86,7 @@
 		$('#taskName').text(taskName);		
 		
 		var fileList = '${fileList}';
+		
 		if (fileList != null && fileList != "") {
 			fileList = decodeURIComponent(fileList);
 			dadiframe.setAttachFileInfo(fileList);
@@ -95,6 +98,7 @@
 	}
 	
 	function Editor_Complete() {
+		
 		if(mode == 'modify') {
 			message.SetEditorContent(writeContent);
 		}
@@ -113,12 +117,14 @@
 		
 		// 긴급 게시 / 공지 사항 여부
 		if($("#notice").is(":checked") == true) {
+			
 			if($("#emergency").is(":checked") == true) {
 				writeType = 1; // 공지사항 O, 긴급게시 O
 			} else {
 				writeType = 2; // 공지사항 O, 긴급게시 X
 			}
 		} else {
+			
 			if($("#emergency").is(":checked") == true) {
 				writeType = 3; // 공지사항 X, 긴급게시 O
 			} else {
@@ -141,7 +147,8 @@
 		var filelist = GetChildNodes(listtable);
 		var fileList = "";
 		
-		for (var i = 0; i < filelist.length - 1; i++) {	    
+		for (var i = 0; i < filelist.length - 1; i++) {	
+			
 			if (i == 0) {
 				fileList = GetAttribute(filelist[i + 1], "fileinfo");
 			} else {
@@ -172,18 +179,27 @@
 			dataType : "json",
 			contentType : "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
-			success : function(result) {			
+			success : function(result) {
+				
 				if(result.data == 'new' || result.data == 'modify') {
 					alert("성공");
 					doubleSubmitFlag = false;
+					
 					if(result.data == 'new') {
+						
 						if(taskId == "null") {
 							taskId = null;
 						}
+						
 						opener.taskId  = taskId;
 						opener.groupId = groupId;
 						opener.currentPage = 1;
-					} 				
+						
+						addTaskLog(projectId, 1, groupId, taskId, "[" + taskName + "](으)로 " + "[" + title + "] 게시물이 등록되었습니다.");
+					} else {
+						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "](으)로 " + "[" + title + "] 게시물이 수정되었습니다.");
+					}
+					
 					opener.getBoardList();
 					window.close();
 				} else {
