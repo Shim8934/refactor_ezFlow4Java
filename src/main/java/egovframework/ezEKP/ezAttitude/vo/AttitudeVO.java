@@ -168,6 +168,12 @@ public class AttitudeVO {
 	public void setTypeId(String typeId) {
 		this.typeId = typeId;
 	}
+	public String getTypeName2() {
+		return typeName2;
+	}
+	public void setTypeName2(String typeName2) {
+		this.typeName2 = typeName2;
+	}
 	public String getWriterDeptName() {
 		return writerDeptName;
 	}
