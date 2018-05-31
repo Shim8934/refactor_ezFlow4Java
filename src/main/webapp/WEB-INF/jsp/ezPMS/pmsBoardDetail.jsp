@@ -9,21 +9,27 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>게시물 읽기</title>
+	<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-	<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	<script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
+	<script type="text/javascript" src="/js/ezPMS/common.js"></script>
 	<script type="text/javascript">
 		
 		var itemId = '${board.itemId}';
 		var userId = '${userId}';
 		var writerId = '${board.writerId}';
 		var authority = '${authority}'
-		var projectId = '${board.projectId}';
+		var projectId = '${board.projectId}';	
+		var itemIds = new Array(itemId); // 메인화면에서 여러개의 게시물을 한 번에 이동하는 함수를 재사용하기 위함
+		
 		$(function() {
-			// 게시자이거나 담당자(authority = 1)인 경우만 수정/삭제 버튼이 보임
+			// 게시자이거나 담당자(authority = 1)인 경우만 수정/삭제/이동 버튼이 보임
 			if(userId != writerId && authority != '1') {
 				$("#modifyBtn").css("display", "none");
 				$("#deleteBtn").css("display", "none");
+				$("#moveBtn").css("display", "none");
 			}
 		})
 		// 첨부파일 모두 선택
@@ -72,6 +78,10 @@
 		function modifyBoard() {
 			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=modify';
 		}
+		
+		function goMoveBoard() {
+			DivPopUpShow(320, 320, "/ezPMS/goMoveBoards.do?projectId=" + projectId + "&onlyGroup=false");
+		}
 	</script>
 </head>
 <body class="popup" style="height: 99%;">
@@ -83,12 +93,9 @@
 						<li><span>답변</span></li>
 						<li id="modifyBtn"><span onclick="modifyBoard()">수정</span></li>
 						<li id="deleteBtn"><span onclick="deleteBoard()">삭제</span></li>
-						<li><span>복사</span></li>
-						<li><span>이동</span></li>
+						<li id="moveBtn"><span onclick="goMoveBoard()">이동</span></li>
 						<li><span>메일로 발송</span></li>
 						<li><span>조회자 정보</span></li>
-						<li><span>인쇄</span></li>
-						<li><span>재전송</span></li>
 						<li style="float: right;"><span onclick="window.close()">닫기</span></li>
 					</ul>
 				</div>
@@ -166,5 +173,10 @@
 			</td>
 		</tr>
 	</table>
+	
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 </body>
 </html>

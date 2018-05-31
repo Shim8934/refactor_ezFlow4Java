@@ -49,16 +49,18 @@
 			getBoardList();
 		});
 		
-		// 여기 다른 방법으로 할 순 없을지 고민해봐야함. 근데 아무리 해도 모르겠음
-		setTimeout(function() {
-			var project = $("li[role='treeitem'][aria-level='1']");
+		// 트리가 모두 로드된 다음 실행
+		$("#taskTree").on("ready.jstree", function() {
+			var project = $("li[role='treeitem'][aria-level='1']").eq(1);
+			
 			groupId = project.attr("id");
 			projectName = project.children("a").text();
+			project.children("a").click();
 			if(projectName.indexOf('(') != -1) {
 				projectName = projectName.substr(0, projectName.indexOf('('));
 			}
 			taskName = projectName;
-		}, 100);
+		})
 	});
 	
 	function goAddBoard() {

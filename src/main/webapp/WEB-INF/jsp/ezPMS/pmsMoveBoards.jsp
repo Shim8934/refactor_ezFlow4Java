@@ -56,7 +56,14 @@
 				if(result.data == 'success') {
 					alert("이동에 성공했습니다.");
 					popupClose();
-					parent.getBoardList();
+					
+					// 메인화면에서 이동할 때
+					if(typeof parent.getBoardList == 'function') {
+						parent.getBoardList();
+					} else {
+						parent.location.reload();
+					}
+					
 				} else {
 					alert('수정은 프로젝트 담당자나 게시자만 할 수 있습니다.');
 				}	

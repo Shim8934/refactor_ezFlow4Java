@@ -119,7 +119,7 @@
 			<li class="off"><span onclick="goAddBoard()">등록</span></li>
 			<li class="off"><span onclick="deleteBoards()">삭제</span></li>
 			<li class="off"><span onclick="goMoveBoards()">이동</span></li>
-			<li class="off"><span onclick="">새로고침</span></li>
+			<li class="off"><span onclick="location.reload()">새로고침</span></li>
 			<li class="off"><span onclick="">검색</span></li>
 		</ul>
 	</div>
