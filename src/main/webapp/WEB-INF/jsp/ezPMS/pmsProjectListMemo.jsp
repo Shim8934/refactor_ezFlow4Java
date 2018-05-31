@@ -21,11 +21,6 @@
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 110;
 setTotalCount("${projectListCount}");
-var progressColor = "${progressColor}";
-var completeColor = "${completeColor}";
-var overdueColor = "${overdueColor}";
-var holdColor = "${holdColor}";
-var projectList = '${projectList}';
 
 $(function(){
 	var projectList = new Array();
@@ -42,13 +37,13 @@ $(function(){
 	</c:forEach>
 	
 	for (var i = 0; i < projectList.length; i++) {
-		if (projectList[i].status == "진행") {
+		if (projectList[i].status == "P") {
 		 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
-		} else if (projectList[i].status == "완료") {
+		} else if (projectList[i].status == "C") {
 			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", completeColor);
-		} else if (projectList[i].status == "보류") {
+		} else if (projectList[i].status == "S") {
 			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", holdColor);
-		} else if (projectList[i].status == "지연") {
+		} else if (projectList[i].status == "L") {
 			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", overdueColor);
 		} else {
 			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#d1d1d1");
@@ -149,7 +144,16 @@ $(function(){
 				</th>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
-				<td colspan="2" style="height:29px;">&nbsp;&nbsp;<span class="statusSpan" style="font-size:13px; padding:4px;"><c:out value="${project.status }" /></span></td>
+				<td colspan="2" style="height:29px;">&nbsp;&nbsp;
+					<span class="statusSpan" style="font-size:13px; padding:4px;"><c:choose>
+						<c:when test="${project.status eq 'C'}">완료</c:when>
+						<c:when test="${project.status eq 'P'}">진행</c:when>
+						<c:when test="${project.status eq 'L'}">지연</c:when>
+						<c:when test="${project.status eq 'W'}">대기</c:when>
+						<c:when test="${project.status eq 'D'}">삭제</c:when>
+						<c:when test="${project.status eq 'S'}">보류</c:when>
+					</c:choose></span>
+				</td>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
 				<td colspan="2" style="text-align: center; font-size: 20px;" class="restDueday">D 

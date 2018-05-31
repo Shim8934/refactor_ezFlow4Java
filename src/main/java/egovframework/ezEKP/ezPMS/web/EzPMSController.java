@@ -184,10 +184,6 @@ public class EzPMSController {
 			model.addAttribute("listProjectStatus", listProjectStatus);
 			model.addAttribute("projectList", projectList);
 			model.addAttribute("projectListCount", projectListCount);
-			model.addAttribute("progressColor", param.get("progressColor"));
-			model.addAttribute("completeColor", param.get("completeColor"));
-			model.addAttribute("overdueColor", param.get("overdueColor"));
-			model.addAttribute("holdColor", param.get("holdColor"));
 		}
 		
 		LOGGER.debug("[result] projectSort : " + projectSort + ", projectLsitCount : " + projectListCount + ", currentPage : " + currentPage + ", listNumber : " + listNumber);
@@ -1156,16 +1152,7 @@ public class EzPMSController {
 		param.put("listProjectStatus", status);
 		param.put("viewType", viewType);
 		param.put("projectSort", projectSort);
-		param.put("listNumber", 0);
-		param.put("listCount", 0);
-		param.put("currentPage", 1);
-		param.put("startCount", 1);
 		param.put("orderWhat", "init");
-		param.put("orderHow","");
-		param.put("searchByProjectName", "");
-		param.put("searchByUser", "");
-		param.put("searchByEndDate", "");
-		param.put("searchByOverview", "");
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String jsonStatus = result.get("status").toString();

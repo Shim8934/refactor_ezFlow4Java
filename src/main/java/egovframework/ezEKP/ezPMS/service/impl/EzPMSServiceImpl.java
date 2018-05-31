@@ -95,20 +95,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						projectList.get(i).setRestDueday(restDueday);
 					}
 					
-					if (project.getStatus().equals("W")) {
-						projectList.get(i).setStatus("대기");
-					} else if (project.getStatus().equals("L")) {
-						projectList.get(i).setStatus("지연");
-					} else if (project.getStatus().equals("P")) {
-						projectList.get(i).setStatus("진행");
-					} else if (project.getStatus().equals("C")) {
-						projectList.get(i).setStatus("완료");
-					} else if (project.getStatus().equals("S")) {
-						projectList.get(i).setStatus("보류");
-					} else if (project.getStatus().equals("D")) {
-						projectList.get(i).setStatus("삭제");
-					}
-					
 					map.put("projectId", projectList.get(i).getProjectId());
 					
 					List<Map<String, Object>> statusCount = ezPMSDAO.getStatusCount(map);
@@ -560,7 +546,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow) {
+	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location) {
 		LOGGER.debug("[SERVICE] getTaskList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -579,9 +565,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("startRow", startRow);
 		param.put("groupId", search.getGroupId());
 		param.put("isMyTask", search.getIsMyTask());
+		
 		//정렬
 		param.put("orderWhat", orderWhat);
 		param.put("orderHow", orderHow);
+		param.put("location", location);
+		
 		//검색
 		param.put("searchByOverview", search.getOverview());
 		param.put("searchByUser", search.getMemberName());

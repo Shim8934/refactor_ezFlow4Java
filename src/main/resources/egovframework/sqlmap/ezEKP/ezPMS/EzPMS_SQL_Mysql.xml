@@ -745,8 +745,10 @@
 			ORDER BY 
 				$projectSort$
 		</isEqual>
+		<isNotEmpty property="startCount">
 			limit 
 				#startCount#, #listNumber# 
+		</isNotEmpty>
 	</select>
 	
 	<insert id="EzPMSDAO.addTask" parameterClass="ProjectTaskVO">
@@ -1026,8 +1028,6 @@
 				A.DEL_STATUS,
 				D.GROUP_NAME AS UPPER_GROUP_NAME,
 				B.PROJECT_NAME
-		]]>
-		<![CDATA[
 			FROM 
 				tbl_pms_task A
 			JOIN 
@@ -1068,7 +1068,7 @@
 				AND
 				A.STATUS LIKE CONCAT('%',#status#,'%')
 			</isNotEqual>
-			</isNotNull>
+		</isNotNull>
 		<isNotEmpty property="taskName">
 			AND
 				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
@@ -1121,8 +1121,21 @@
 				$orderWhat$ $orderHow$
 		</isNotEqual>
 		<isEqual property="orderWhat" compareValue="init">
+		<isEmpty property="location">
 			ORDER BY 
 				PLAN_END_DATE
+		</isEmpty>
+		<isNotEmpty property="location">
+			ORDER BY(
+				CASE A.STATUS
+				WHEN 'P' THEN 1
+				WHEN 'W' THEN 2
+				WHEN 'L' THEN 3
+				WHEN 'S' THEN 4
+				WHEN 'C' THEN 5
+				END
+			), PLAN_START_DATE
+		</isNotEmpty>
 		</isEqual>
 		<isNotEqual property="limit" compareValue="0">
 			LIMIT 

@@ -60,7 +60,7 @@ public interface EzPMSService {
 	
 	public List<String> getProjectNameList(String userId, int tenantId);
 	
-	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow);
+	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location);
 	
 	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang);
 	

@@ -36,7 +36,7 @@ var logData = JSON.parse('${data}');
 $(document).ready(function(){
 	$(window).resize(function() {
 		CurrentHeight = $(window).height()-100;
-		$("#taskTree").css("height", CurrentHeight + "px");
+		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
 		$("#divList").css("height", (CurrentHeight - 160) + "px");
@@ -50,7 +50,7 @@ $(function(){
 	
 	CurrentHeight = $(window).height()-100;
 	$("MailListRayer").css("height", CurrentHeight + "px");
-	$("#taskTree").css("height", CurrentHeight + "px");
+	$("#taskTree").css("height", CurrentHeight + 10 + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
 	$("#contentList").css("height", (CurrentHeight - 100) + "px");
 	$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
@@ -168,7 +168,7 @@ function setContentTitle(taskName, totalCount) {
 		totalCount = 0;
 	}
 	
-	contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:18px; font-weight:bold;'>" + taskName + "<span id='totalCount'> - [총 " + totalCount + " 개]</span></span>";
+	contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> - [총 <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span>개]</span>";
 	
 	$("#taskName").html(contentTitle);
 }

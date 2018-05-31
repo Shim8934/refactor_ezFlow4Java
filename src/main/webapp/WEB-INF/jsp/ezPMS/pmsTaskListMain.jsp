@@ -58,7 +58,7 @@
 
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + "px");
+		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
@@ -68,7 +68,7 @@
 	$(document).ready(function() {
 		$(window).resize(function() {
 			CurrentHeight = $(window).height() - 100;
-			$("#taskTree").css("height", CurrentHeight + "px");
+			$("#taskTree").css("height", CurrentHeight + 10 + "px");
 			$("#projectContent").css("height", CurrentHeight + "px");
 			$("#contentList").css("height", (CurrentHeight - 100) + "px");
 			$("#divList").css("height", (CurrentHeight - 150) + "px");
@@ -231,7 +231,7 @@
 			totalCount = contentCount;
 		}
 
-		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:18px; font-weight:bold;'>" + taskName + "<span id='totalCount'> - [총 " + totalCount + " 개]</span></span>";
+		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> - [총 <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span>개]</span>";
 
 		$("#taskName").html(contentTitle);
 	}

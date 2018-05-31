@@ -344,21 +344,22 @@ function changeMainSetting() {
 	});
 }
 
-function ListCount(listCountNum) {
+function changelistCount(listCountNum) {
 	listNumber = listCountNum;
 	initListNumber = listCountNum;
 	
 	changeMainSetting();
 	setProjectList("new");
+	MailOptionHidden();
 }
 
-function ChangeProjectSort(sortType) {
+function changeProjectSort(sortType) {
 	projectSort = sortType;
 	orderHow = "";
 	orderWhat = "";
 	changeMainSetting();
 	setProjectList("new");
-	
+	MailOptionHidden();
 }
 
 //페이지 번호에 의한 셋팅
@@ -696,7 +697,7 @@ function addFavoriteMemo(projectId) {
 					alert("프로젝트가 즐겨찾기 되었습니다.");
 					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
 					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
-				
+					location.reload();
 				} else {
 					alert("이미 추가된 프로젝트 입니다.");
 					return;
@@ -731,6 +732,8 @@ function deleteFavoriteMemo(projectId) {
 				if (listProjectStatus == "F") {
 					setProjectList("new");
 				}
+				
+				location.reload();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 			}
@@ -1011,7 +1014,7 @@ function searchProject() {
 		                    <tr>
 		                        <th>리스트 설정</th>
 		                        <td>
-		                            <select id="listSort" style="WIDTH: 82px; height: 20px;" onchange="ChangeProjectSort(this.value);">
+		                            <select id="listSort" style="WIDTH: 82px; height: 20px;" onchange="changeProjectSort(this.value);">
 		                                <option value="0">완료일 순</option>
 		                                <option value="1">시작일 순</option>
 		                            </select>    
@@ -1020,7 +1023,7 @@ function searchProject() {
 		                    <tr id="listcountTR">
 		                        <th><spring:message code='ezBoard.t10021' /></th>
 		                        <td>
-		                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
+		                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="changelistCount(this.value);">
 		                                <option value="10">10</option>
 		                                <option value="20">20</option>
 		                                <option value="30">30</option>

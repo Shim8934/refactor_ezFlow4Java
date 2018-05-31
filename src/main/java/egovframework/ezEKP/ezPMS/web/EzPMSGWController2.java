@@ -74,6 +74,7 @@ public class EzPMSGWController2 {
 			int startRow = 0;
 			String orderWhat = request.getParameter("orderWhat");
 			String orderHow = request.getParameter("orderHow");
+			String position = request.getParameter("position");
 			
 			if (orderWhat == null) {
 				orderWhat = "init";
@@ -111,8 +112,9 @@ public class EzPMSGWController2 {
 			search.setOverview(request.getParameter("searchByOverview"));
 			search.setProjectName(request.getParameter("searchByProjectName"));
 			
+			
 			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
-			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow);
+			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position);
 			 
 			for(int i = 0; i < taskList.size(); i++ ){
 				taskList.get(i).setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
@@ -122,6 +124,7 @@ public class EzPMSGWController2 {
 			result.put("code", 0);
 			result.put("data", taskList);		
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");		
