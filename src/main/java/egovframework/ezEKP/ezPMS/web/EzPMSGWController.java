@@ -70,12 +70,11 @@ public class EzPMSGWController {
 			String status = request.getParameter("status");
 			String deptId = info.getDeptId();
 			
-			String searchByName = request.getParameter("searchByProjectName").toString();
-			String searchByUser = request.getParameter("searchByUser").toString();
-			String searchByOverview = request.getParameter("searchByOverview").toString();
+			String searchByName = request.getParameter("searchByProjectName");
+			String searchByUser = request.getParameter("searchByUser");
+			String searchByOverview = request.getParameter("searchByOverview");
 			
 			if (searchByName != null  && !searchByName.equals("")) {
-				searchByName = request.getParameter("searchByProjectName").toString();
 				searchByName = searchByName.replace("\\","\\\\");
 				searchByName = searchByName.replace("%", "\\%");
 				searchByName = searchByName.replace("_", "\\_");
@@ -91,7 +90,6 @@ public class EzPMSGWController {
 				searchByOverview = searchByOverview.replace("\\","\\\\");
 				searchByOverview = searchByOverview.replace("%", "\\%");
 				searchByOverview = searchByOverview.replace("_", "\\_");
-				
 			}
 			
 			//검색 및 환경설정 세팅
@@ -122,6 +120,8 @@ public class EzPMSGWController {
 			result.put("code", 0);			
 			result.put("data", projectList);
 		} catch (Exception e) {
+			e.printStackTrace();
+
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", e.getMessage());
@@ -179,11 +179,11 @@ public class EzPMSGWController {
 			
 			// 이슈리스트 그룹 생성
 			project.put("groupName", "이슈 리스트");
-			ezPMSService.addGroup(project);
+			ezPMSService.addGroup(project, "Y");
 			
 			//그룹 생성
 			project.put("groupName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
-			ezPMSService.addGroup(project);
+			ezPMSService.addGroup(project, "N");
 			
 			//프로젝트 멤버 테이블에 추가
 			for (int i = 0; i < projectMemberList.size(); i++) {
@@ -327,6 +327,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -441,6 +442,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1318,6 +1320,35 @@ public class EzPMSGWController {
 			}
 			
 			LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/items/" + itemId + "/files] ended.");
+			return result;
+		}
+	
+	
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/users/{userId}/role", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+		public JSONObject getUserProjectRole(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/role] started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try {
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+				int tenantId = info.getTenantId();
+				
+				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", userRole);
+			} catch (Exception e) {
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+			}
+			
+			
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/role] ended.");
 			return result;
 		}
 }

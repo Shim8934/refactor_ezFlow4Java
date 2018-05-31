@@ -57,13 +57,14 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//담당 업무
-		nowPosition = "task";
+		nowPosition = "task";;
+		orderWhat = "";
+		currentPage = 1;
 		$("#taskName").text("업무명");
 		$("#searchByGroupName").attr("id", "searchByTaskName");
 		$("#mainmenu").find("div").css("display", "");
 		$("#taskSearch").css("display", "");
-		$("#projectSearch").css("display", "none");
-		orderWhat = "";
+		$("#projectSearch").css("display", "none")
 		
 		if ($("#searchDiv").css("display") != "none") {
 			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
@@ -82,6 +83,7 @@ $(function() {
 		nowPosition = "group";
 		$("#mainmenu").find("div").css("display", "none");
 		orderWhat = "";
+		currentPage = 1;
 		$("#taskSearch").css("display", "");
 		$("#projectSearch").css("display", "none");
 		
@@ -101,6 +103,7 @@ $(function() {
 		//담당 프로젝트
 		nowPosition = "project";
 		orderWhat = "";
+		currentPage = 1;
 		$("#mainmenu").find("div").css("display", "");
 		$("#taskSearch").css("display", "none");
 		$("#projectSearch").css("display", "");

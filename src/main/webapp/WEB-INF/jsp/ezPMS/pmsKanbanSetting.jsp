@@ -29,35 +29,20 @@ $(function(){
 	selStatus = kanbanOrderArr;
 	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
-		console.log(kanbanOrderArr[i]);
-		if (kanbanOrderArr[i].indexOf("MA") != -1) {
-			strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='selMA'>";
-			strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white;' >";
-			strHTML += $("#MA").val();
-			strHTML += "</td></tr>";
-
-			$("#MA").prop("checked", true);
-		} else {
-			$("#" + kanbanOrderArr[i].slice(-1)).prop("checked", true);	
+		$("#" + kanbanOrderArr[i].slice(-1)).prop("checked", true);	
 			
-			strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + kanbanOrderArr[i].slice(-1) + "'>";
-			strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white;'>";
-			strHTML += $("#" + kanbanOrderArr[i].slice(-1)).val();
-			strHTML += "</td></tr>";
-		}
+		strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + kanbanOrderArr[i].slice(-1) + "'>";
+		strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white;'>";
+		strHTML += $("#" + kanbanOrderArr[i].slice(-1)).val();
+		strHTML += "</td></tr>";
 	}
 
 	strHTML += "</tbody></table>";
 	$("#kanbanList").html(strHTML);
 	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
-		if (kanbanOrderArr[i].indexOf("MA") != -1) {
-			$("#selMA").attr("onclick", "selectOneStatus('MA')");
-			$("#selMA").attr("ondblclick", "selectStatus('MA')");
-		} else {
-			$("#sel" + kanbanOrderArr[i].slice(-1)).attr("onclick", "selectOneStatus('" + kanbanOrderArr[i].slice(-1) + "')");
-			$("#sel" + kanbanOrderArr[i].slice(-1)).attr("ondblclick", "selectStatus('" + kanbanOrderArr[i].slice(-1) + "')");
-		}
+		$("#sel" + kanbanOrderArr[i].slice(-1)).attr("onclick", "selectOneStatus('" + kanbanOrderArr[i].slice(-1) + "')");
+		$("#sel" + kanbanOrderArr[i].slice(-1)).attr("ondblclick", "selectStatus('" + kanbanOrderArr[i].slice(-1) + "')");
 	}
 	
 	 getDragAndSwap();
@@ -225,9 +210,6 @@ body {
 				<tr>
 				     <td>
 						<table border=1 style="width : 100%; border-color: grey;" id="kanbanStatus" class="kanbanStatus">
-							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('MA')" onclick="selectOneStatus('MA')">
-								<td><input type="checkbox" id="MA" name="kanbanStatus" value="나의 전체 업무" onchange="selectStatus('MA')">나의 전체 업무</td>
-							</tr>
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('A')" onclick="selectOneStatus('A')">
 								<td><input type="checkbox" id="A" name="kanbanStatus" value="전체 업무" onchange="selectStatus('A')">전체 업무</td>
 							</tr>

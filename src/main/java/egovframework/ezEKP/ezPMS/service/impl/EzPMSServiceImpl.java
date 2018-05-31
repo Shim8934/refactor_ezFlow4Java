@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
@@ -94,20 +95,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						
 						int restDueday = getWorkinDays(now, endDate);
 						projectList.get(i).setRestDueday(restDueday);
-					}
-					
-					if (project.getStatus().equals("W")) {
-						projectList.get(i).setStatus("대기");
-					} else if (project.getStatus().equals("L")) {
-						projectList.get(i).setStatus("지연");
-					} else if (project.getStatus().equals("P")) {
-						projectList.get(i).setStatus("진행");
-					} else if (project.getStatus().equals("C")) {
-						projectList.get(i).setStatus("완료");
-					} else if (project.getStatus().equals("S")) {
-						projectList.get(i).setStatus("보류");
-					} else if (project.getStatus().equals("D")) {
-						projectList.get(i).setStatus("삭제");
 					}
 					
 					map.put("projectId", projectList.get(i).getProjectId());
@@ -561,7 +548,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow) {
+	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location) {
 		LOGGER.debug("[SERVICE] getTaskList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -580,9 +567,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("startRow", startRow);
 		param.put("groupId", search.getGroupId());
 		param.put("isMyTask", search.getIsMyTask());
+		
 		//정렬
 		param.put("orderWhat", orderWhat);
 		param.put("orderHow", orderHow);
+		param.put("location", location);
+		
 		//검색
 		param.put("searchByOverview", search.getOverview());
 		param.put("searchByUser", search.getMemberName());
@@ -664,14 +654,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			taskVO.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
 			
 			taskId = ezPMSDAO.addTask(taskVO);
-			
+
 			for(int i=0;i<taskMemberList.size();i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
-				taskMemberVO.setTaskId(taskId);
+				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
-				ezPMSDAO.addTaskMember(taskMemberVO);
 			}
-			
+			ezPMSDAO.addTaskMember(taskMemberList);
+
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
 			
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
@@ -771,10 +761,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			for(int i=0;i<taskMemberList.size();i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
-				taskMemberVO.setTaskId(taskId);
+				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
-				ezPMSDAO.addTaskMember(taskMemberVO);
 			}
+			ezPMSDAO.addTaskMember(taskMemberList);
 			
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
 			
@@ -823,7 +813,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addGroup(Map<String, Object> map) {
+	public Long addGroup(Map<String, Object> map, String isIssue) {
 		LOGGER.debug("[SERVICE] addGroup started.");
 		map.put("delStatus", 0);
 		
@@ -844,6 +834,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						
 			map.put("workingDay", workingDays);
 			map.put("restDueday", workingDays);
+			map.put("isIssue", isIssue);
 			
 			//프로젝트 총괄담당자 정보 불러오기
 			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(), Integer.parseInt(map.get("tenantId").toString()), "user");
@@ -854,8 +845,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage() + " " + e.getStackTrace());
 		}
-		ezPMSDAO.addTaskGroup(map);
+		Long groupId = ezPMSDAO.addTaskGroup(map);
 		LOGGER.debug("[SERVICE] addGroup ended.");
+		return groupId;
 	}
 
 	@Override
@@ -913,6 +905,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("project_Id", projectId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
+		map.put("location", location);
 		
 		List<ProjectTaskTreeVO> list = ezPMSDAO.getProjectGroupTree(map);
 		
@@ -1612,10 +1605,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			for(int i=0;i<taskMemberList.size();i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
-				taskMemberVO.setTaskId(taskId);
+				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
-				ezPMSDAO.addTaskMember(taskMemberVO);
 			}
+			ezPMSDAO.addTaskMember(taskMemberList);
 			
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
 			
@@ -1682,7 +1675,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	public void updateTaskStatus(ProjectTaskVO task) {
-		LOGGER.debug("updateTaskStatus started.");
+		LOGGER.debug("[SERVICE] updateTaskStatus started.");
 		
 		try {
 			if (task.getStatus().equals("P")) {
@@ -1705,6 +1698,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
 		
-		LOGGER.debug("updateTaskStatus ended.");
+		LOGGER.debug("[SERVICE] updateTaskStatus ended.");
+	}
+
+	@Override
+	public void addGroupMember(List<ProjectGroupMemberVO> groupMember) {
+		LOGGER.debug("[SERVICE] addGroupMember started.");
+		
+		ezPMSDAO.addTaskGroupMember(groupMember);
+		
+		LOGGER.debug("[SERVICE] addGroupMember ended.");
+	}
+
+	@Override
+	public List<ProjectGroupMemberVO> getUserInfoForGroup(HashMap<String, Object> map) {
+		return ezPMSDAO.getUserInfoForGroup(map);
 	}
 }

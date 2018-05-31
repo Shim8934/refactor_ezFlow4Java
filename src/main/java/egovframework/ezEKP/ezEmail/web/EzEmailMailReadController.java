@@ -461,8 +461,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						sentDateFlag = sentDateFlag.split("-")[1];
 						logger.debug("sentDateFlag=" + sentDateFlag);
 						
-						String sentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(Long.parseLong(sentDateFlag)));
-						logger.debug("sentDate=" + sentDate);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+						String receivedDateStr = sdf.format(new Date(Long.parseLong(sentDateFlag)));
+						String sentDate = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+						logger.debug("receivedDateStr=" + receivedDateStr);
 						
 						String msg = contentClass.equals("REPLY") ? "ezEmail.ksa01" : "ezEmail.ksa02";
 						String sentDateStr = egovMessageSource.getMessage(msg, locale);
@@ -1652,9 +1655,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     							sentDateFlag = sentDateFlag.split("-")[1];
     							logger.debug("sentDateFlag=" + sentDateFlag);
     							
-    							String sentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(Long.parseLong(sentDateFlag)));
-    							logger.debug("sentDate=" + sentDate);
-    							
+    							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+								sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+								String receivedDateStr = sdf.format(new Date(Long.parseLong(sentDateFlag)));
+								String sentDate = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+								logger.debug("receivedDateStr=" + receivedDateStr);
+								
     							String msg = contentClass.equals("REPLY") ? "ezEmail.ksa01" : "ezEmail.ksa02";
     							String sentDateStr = egovMessageSource.getMessage(msg, locale);
     							sentDateMsg = String.format(sentDateStr, sentDate);

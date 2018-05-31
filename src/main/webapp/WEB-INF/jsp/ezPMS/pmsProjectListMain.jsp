@@ -27,15 +27,15 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
 
-var viewType = "${viewType}";
-var projectSort = "${projectSort}";
-var progressColor = "${progressColor}";
-var completeColor = "${completeColor}";
-var overdueColor = "${overdueColor}";
-var holdColor = "${holdColor}";
-var listNumber = "${listNumber}";
-var initListNumber = "${listNumber}";
-var listProjectStatus = "${listProjectStatus}";
+var viewType = "${listSetting.viewType}";
+var projectSort = "${listSetting.projectSort}";
+var progressColor = "${listSetting.progressColor}";
+var completeColor = "${listSetting.completeColor}";
+var overdueColor = "${listSetting.overdueColor}";
+var holdColor = "${listSetting.holdColor}";
+var listNumber = "${listSetting.listNumber}";
+var initListNumber = "${listSetting.listNumber}";
+var listProjectStatus = "${listSetting.listProjectStatus}";
 var currentPage = 1;
 var orderWhat; 
 var orderHow;
@@ -162,6 +162,7 @@ $(function(){
 	
 	if (listProjectStatus != "F") {
 		$("#deleteFavorite").css("display", "none");
+		$("#addFavorite").css("display", "");
 	} else {
 		$("#deleteFavorite").css("display", "");
 		$("#addFavorite").css("display", "none");
@@ -170,7 +171,6 @@ $(function(){
 	$("#listSort option[value='"+ projectSort +"']").attr("selected", true);
 	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
 	$("#listByStatus option[value='" + listProjectStatus + "']").attr("selected", true);
-	$("#deleteFavorite").css("display", "none");
 	
 });
 
@@ -293,8 +293,8 @@ function changeMemoStyle() {
 	viewType = 0;
 	listNumber = 20;
 	startRow = 0;
-	console.log($("#memoStyleDiv").scrollTop());
-	$("#projectList").scrollTop(0);
+	currentPage = 1;
+	
 	
 	changeMainSetting();
 	setProjectList("new");
@@ -307,6 +307,7 @@ function changeMemoStyle() {
 function changeBoardStyle() {
 	viewType = 1;
 	listNumber = initListNumber;
+	currentPage = 1;
 	
 	changeMainSetting();
 	setProjectList("new");
@@ -343,21 +344,22 @@ function changeMainSetting() {
 	});
 }
 
-function ListCount(listCountNum) {
+function changelistCount(listCountNum) {
 	listNumber = listCountNum;
 	initListNumber = listCountNum;
 	
 	changeMainSetting();
 	setProjectList("new");
+	MailOptionHidden();
 }
 
-function ChangeProjectSort(sortType) {
+function changeProjectSort(sortType) {
 	projectSort = sortType;
 	orderHow = "";
 	orderWhat = "";
 	changeMainSetting();
 	setProjectList("new");
-	
+	MailOptionHidden();
 }
 
 //페이지 번호에 의한 셋팅
@@ -695,7 +697,7 @@ function addFavoriteMemo(projectId) {
 					alert("프로젝트가 즐겨찾기 되었습니다.");
 					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
 					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
-				
+					location.reload();
 				} else {
 					alert("이미 추가된 프로젝트 입니다.");
 					return;
@@ -730,6 +732,8 @@ function deleteFavoriteMemo(projectId) {
 				if (listProjectStatus == "F") {
 					setProjectList("new");
 				}
+				
+				location.reload();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 			}
@@ -984,7 +988,6 @@ function searchProject() {
 				<option value="F">자주가는 프로젝트</option>
 			</select>
 		</li>
-		<li><span id="1" onclick="goProjectDetails(this)">project(임시)</span></li>
 		<li><span id="newProject" onclick="addNewProject()">새 프로젝트</span></li>
 		<li><span id="deleteProject" onclick="deleteProject()">삭제</span></li>
 		<li><span id="changeProjectStatus" onclick="changeProjectStatus()">프로젝트 상태 변경</span></li>
@@ -1010,7 +1013,7 @@ function searchProject() {
 		                    <tr>
 		                        <th>리스트 설정</th>
 		                        <td>
-		                            <select id="listSort" style="WIDTH: 82px; height: 20px;" onchange="ChangeProjectSort(this.value);">
+		                            <select id="listSort" style="WIDTH: 82px; height: 20px;" onchange="changeProjectSort(this.value);">
 		                                <option value="0">완료일 순</option>
 		                                <option value="1">시작일 순</option>
 		                            </select>    
@@ -1019,7 +1022,7 @@ function searchProject() {
 		                    <tr id="listcountTR">
 		                        <th><spring:message code='ezBoard.t10021' /></th>
 		                        <td>
-		                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
+		                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="changelistCount(this.value);">
 		                                <option value="10">10</option>
 		                                <option value="20">20</option>
 		                                <option value="30">30</option>

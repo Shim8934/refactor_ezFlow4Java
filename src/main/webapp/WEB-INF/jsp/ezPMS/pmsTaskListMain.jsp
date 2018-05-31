@@ -34,6 +34,7 @@
 	var orderHow = "";
 	var checkedVal = "";
 	var viewType = "1";
+	var userRole = "${userRole}";
 	
 	//검색을 위한 variables
 	var searchByStatus = "";
@@ -58,7 +59,7 @@
 
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + "px");
+		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
@@ -68,7 +69,7 @@
 	$(document).ready(function() {
 		$(window).resize(function() {
 			CurrentHeight = $(window).height() - 100;
-			$("#taskTree").css("height", CurrentHeight + "px");
+			$("#taskTree").css("height", CurrentHeight + 10 + "px");
 			$("#projectContent").css("height", CurrentHeight + "px");
 			$("#contentList").css("height", (CurrentHeight - 100) + "px");
 			$("#divList").css("height", (CurrentHeight - 150) + "px");
@@ -231,7 +232,7 @@
 			totalCount = contentCount;
 		}
 
-		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:18px; font-weight:bold;'>" + taskName + "<span id='totalCount'> - [총 " + totalCount + " 개]</span></span>";
+		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> - [총 <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span>개]</span>";
 
 		$("#taskName").html(contentTitle);
 	}
@@ -389,6 +390,11 @@
 	margin-top: 5px;
 }
 
+#contentList {
+	width : 98%;
+	margin-left : 1%;
+}
+
 #icons {
 	margin-top: 21px;
 }
@@ -430,10 +436,14 @@
 	<div id="iconLine">
 		<div id="taskName"></div>
 		<div id="icons">
-			<a class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
-				style="margin-left: 1px; margin-top: 1px;"><span>새업무 추가</span></a> <a
-				class="imgbtn" id="addTaskBtn" onclick="deleteTask()"
-				style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a> <a
+			<c:choose>
+				<c:when test="${userRole ne 3}">
+					<a class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
+					style="margin-left: 1px; margin-top: 1px;"><span>새업무 추가</span></a> <a
+					class="imgbtn" id="addTaskBtn" onclick="deleteTask()"
+					style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a>
+				</c:when>
+			</c:choose> <a
 				class="imgbtn" id="addTaskBtn" onclick="showSearchDiv()"
 				style="margin-left: 1px; margin-top: 1px;"><span>검색 <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></a>
 				<div>

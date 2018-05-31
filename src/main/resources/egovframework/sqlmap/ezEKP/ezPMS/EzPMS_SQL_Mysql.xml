@@ -439,6 +439,10 @@
 				AND
 					DEL_STATUS = 0
 			]]>
+			<isNotEqual property="location" compareValue="board">
+				AND
+					ISSUEYN = 'N'
+			</isNotEqual>
 	</select>
 	
 	<select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
@@ -604,10 +608,10 @@
 				u.tenant_id as TENANT_ID,
 				p.user_id as USER_ID,
 				IFNULL(p.view_type,0) as VIEW_TYPE,
-				IFNULL(p.progress_color,'##66c2ff') as PROGRESS_COLOR,
-				IFNULL(p.complete_color,'##8DFF1B') as COMPLETE_COLOR,
-				IFNULL(p.overdue_color,'##FF1B1B') as OVERDUE_COLOR,
-				IFNULL(p.hold_color,'##ffff66') as HOLD_COLOR,
+				IFNULL(p.progress_color,'##14C8FF') as PROGRESS_COLOR,
+				IFNULL(p.complete_color,'##7AFF65') as COMPLETE_COLOR,
+				IFNULL(p.overdue_color,'##FF4B14') as OVERDUE_COLOR,
+				IFNULL(p.hold_color,'##FFF998') as HOLD_COLOR,
 				IFNULL(p.project_sort,0) as PROJECT_SORT,
 				IFNULL(p.list_number,10) as LIST_NUMBER,
 				IFNULL(p.list_project_status, "P") as LIST_PROJECT_STATUS,
@@ -745,25 +749,27 @@
 			ORDER BY 
 				$projectSort$
 		</isEqual>
+		<isNotEmpty property="startCount">
 			limit 
 				#startCount#, #listNumber# 
+		</isNotEmpty>
 	</select>
 	
 	<insert id="EzPMSDAO.addTask" parameterClass="ProjectTaskVO">
 		<![CDATA[
     		INSERT INTO tbl_pms_task(
     			tenant_id, 				project_id, 			group_id, 		task_name,			status,			plan_start_date,			plan_end_date, 
-    			real_progress,			weight,				overview	,		member_count,
+    			real_progress,			weight,					overview	,		member_count,
     			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
     			writer_id,				write_date, 			writer_name, 			writer_name2, 			writer_deptname, 		writer_deptname2, 
-    			sort_order, 			workingday
+    			sort_order, 			workingday,				tree_depth
     		) 
     		VALUES ( 
     			#tenantId#, 			#projectId#, 			#groupId#, 				#taskName#,				#status#,			#planStartDate#,			#planEndDate#, 
     			#realProgress#,			#weight#,				#overview#,				#memberCount#,
     			#headManagerId#, 		#headManagerName#,		#headManagerName2#, 	#headManagerDeptname#,	#headManagerDeptname2#, 
     			#writerId#,				#writeDate#, 			#writerName#, 			#writerName2#, 			#writerDeptname#, 		#writerDeptname2#, 
-    			#sortOrder#, 			#workingday#
+    			#sortOrder#, 			#workingday#,			#treeDepth#
     		)
     	]]>
     	<selectKey keyProperty="taskId" resultClass="long">
@@ -772,16 +778,21 @@
     	</selectKey>
 	</insert>
 	
-	<insert id="EzPMSDAO.addTaskMember" parameterClass="ProjectTaskMemberVO">
+	<insert id="EzPMSDAO.addTaskMember" parameterClass="list">
 		<![CDATA[
 			INSERT INTO tbl_pms_taskmember (
 				tenant_id,			task_id,			user_id,		user_name,
 				user_name2,			user_deptname,		user_deptname2,		pctinput
-			) VALUES (
-				#tenantId#,			#taskId#,		#userId#,		#userName#,
-				#userName2#,		#userDeptname#,		#userDeptname2#,	#pctinput#
-			)
+			) VALUES
 		]]>
+		<iterate conjunction=", ">
+   		<![CDATA[
+   		(
+   			#[].tenantId#, 		#[].taskId#, 		#[].userId#, 				#[].userName#, 
+   			#[].userName2#, 	#[].userDeptname#, 	#[].userDeptname2#, 		#[].pctinput#
+   		)
+   		]]>
+		</iterate>
 	</insert>
 	
 	<update id="EzPMSDAO.updateProjectWorkingday" parameterClass="Map">
@@ -923,10 +934,18 @@
 		UPDATE 
 			tbl_pms_setting 
 		SET
-			VIEW_TYPE = #viewType#, PROGRESS_COLOR = #progressColor#, 
-			COMPLETE_COLOR = #completeColor#, OVERDUE_COLOR = #overdueColor#,
-			HOLD_COLOR = #holdColor#, PROJECT_SORT = #projectSort#, 
+			VIEW_TYPE = #viewType#,
+			PROGRESS_COLOR = #progressColor#, 
+			COMPLETE_COLOR = #completeColor#,
+			OVERDUE_COLOR = #overdueColor#,
+			HOLD_COLOR = #holdColor#,
+			PROJECT_SORT = #projectSort#, 
 			LIST_NUMBER = #listNumber#
+	]]>
+	<isNotEmpty property="listProjectStatus">
+			, LIST_PROJECT_STATUS = #listProjectStatus#
+	</isNotEmpty>
+	<![CDATA[
 		WHERE
 			USER_ID = #userId# 
 		AND
@@ -1018,8 +1037,6 @@
 				A.DEL_STATUS,
 				D.GROUP_NAME AS UPPER_GROUP_NAME,
 				B.PROJECT_NAME
-		]]>
-		<![CDATA[
 			FROM 
 				tbl_pms_task A
 			JOIN 
@@ -1060,7 +1077,7 @@
 				AND
 				A.STATUS LIKE CONCAT('%',#status#,'%')
 			</isNotEqual>
-			</isNotNull>
+		</isNotNull>
 		<isNotEmpty property="taskName">
 			AND
 				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
@@ -1113,8 +1130,21 @@
 				$orderWhat$ $orderHow$
 		</isNotEqual>
 		<isEqual property="orderWhat" compareValue="init">
+		<isEmpty property="location">
 			ORDER BY 
 				PLAN_END_DATE
+		</isEmpty>
+		<isNotEmpty property="location">
+			ORDER BY(
+				CASE A.STATUS
+				WHEN 'P' THEN 1
+				WHEN 'W' THEN 2
+				WHEN 'L' THEN 3
+				WHEN 'S' THEN 4
+				WHEN 'C' THEN 5
+				END
+			), PLAN_START_DATE
+		</isNotEmpty>
 		</isEqual>
 		<isNotEqual property="limit" compareValue="0">
 			LIMIT 
@@ -1320,7 +1350,7 @@
 				REAL_PROGRESS,		OVERVIEW,			MEMBER_COUNT,			HEAD_MANAGER_ID,
 				HEAD_MANAGER_NAME,	HEAD_MANAGER_NAME2,	HEAD_MANAGER_DEPTNAME,	HEAD_MANAGER_DEPTNAME2,	
 				TREE_DEPTH,			ANCESTER_GROUP,		SORT_ORDER,				DEL_STATUS,			
-				WORKINGDAY,			REST_DUEDAY
+				WORKINGDAY,			REST_DUEDAY,		ISSUEYN
 			)
 			VALUES	(
 				#tenantId#,			#projectId#,		#groupName#,			#upperGroupId#,
@@ -1329,10 +1359,15 @@
 				#progress#,			#overview#,			#memberCount#,			#headManagerId#,
 				#headManagerName#,	#headManagerName2#,	#headManagerDeptname#,	#headManagerDeptname2#,
 				#treeDepth#,		#ancestorGroup#,	#sortOrder#,			#delStatus#,
-				#workingDay#,		#restDueday#
+				#workingDay#,		#restDueday#,		#isIssue#
 			)
 		]]>
+		<selectKey keyProperty="groupId" resultClass="long">
+    		SELECT
+    			last_insert_id()
+    	</selectKey>
 	</insert>
+	
 	
 	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoardVO">
 		<![CDATA[
@@ -1847,7 +1882,7 @@
 			AND 
 				(A.GROUP_ID = #groupId# 
 				OR D.UPPER_GROUP_ID = #groupId#
-				OR D.UPPER_GROUP_ID = (
+				OR D.UPPER_GROUP_ID IN (
 							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
 				)
 			)
@@ -2192,4 +2227,80 @@
 			TENANT_ID = #tenantId#
 	]]>
 	</update>
+	
+	<insert id="EzPMSDAO.addTaskGroupMember" parameterClass="list">
+    	<![CDATA[
+    		INSERT INTO tbl_pms_groupmember(
+    			TENANT_ID, 				GROUP_ID, 				USER_ID, 					USER_NAME, 
+    			USER_NAME2, 			USER_DEPTNAME, 			USER_DEPTNAME2, 			MEMBER_ROLE_ID
+    		) 
+    		VALUES
+    	]]>
+		<iterate conjunction=", ">
+   		<![CDATA[
+   		(
+   			#[].tenantId#, 		#[].groupId#, 		#[].userId#, 				#[].userName#, 
+   			#[].userName2#, 	#[].userDeptname#, 	#[].userDeptname2#, 		#[].memberRoleId#
+   		)
+   		]]>
+		</iterate>
+    </insert>
+    
+    <select id="EzPMSDAO.getUserInfoForGroup" parameterClass="Map" resultClass="ProjectGroupMemberVO">
+		<isEqual property="userIdType" compareValue="user">
+			<![CDATA[
+			SELECT 
+				0 AS memberId,
+				A.CN AS userId, 
+				A.DISPLAYNAME AS userName, 
+				A.DISPLAYNAME2 AS userName2,
+				B.DISPLAYNAME AS userDeptname, 
+				B.DISPLAYNAME2 AS userDeptname2,
+				A.tenant_id AS tenantId,
+				$groupId$ AS groupId,
+				$memberRoleId$ AS memberRoleId
+			FROM 
+				tbl_usermaster A 
+			LEFT JOIN 
+				tbl_deptmaster B 
+			ON 
+				A.department = B.CN
+			AND 
+				A.tenant_id = B.tenant_id 
+			WHERE 
+				A.tenant_id = #tenantId# 
+			AND 
+				A.CN IN (
+			]]>
+				<iterate property="userId" conjunction=",">
+				#userId[]#
+				</iterate>
+				)
+		</isEqual>
+		<isNotEqual property="userIdType" compareValue="user">
+		<![CDATA[
+			SELECT 
+				0 AS memberId,
+				CN AS userId,
+				DISPLAYNAME	AS userName,
+				DISPLAYNAME2 AS userName2,
+				DISPLAYNAME AS userDeptname, 
+				DISPLAYNAME2 AS userDeptname2,
+				tenant_id as tenantId,
+				$groupId$ as groupId,
+				$memberRoleId$ as memberRoleId
+			FROM
+				tbl_deptmaster 
+			WHERE 
+				tenant_id = #tenantId# 
+			AND
+				CN IN (
+			]]>
+				<iterate property="userId" conjunction=",">
+				#userId[]#
+				</iterate>
+				)
+		</isNotEqual>
+		
+	</select>
 </sqlMap>

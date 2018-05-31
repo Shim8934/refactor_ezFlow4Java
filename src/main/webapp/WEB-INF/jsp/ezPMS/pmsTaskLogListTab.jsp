@@ -38,7 +38,7 @@ var orderWhat = "";
 var orderHow = "";
 var searchContent = "";
 var searchStatus = "";
-var logData = ${logList};
+var logData = '${logList}';
 var taskData = {};
 
 $(document).ready(function(){
@@ -53,7 +53,9 @@ $(document).ready(function(){
 });
 
 $(function(){
-// 	getProjectTaskTree("taskTree", logData, "taskLog");
+	if(logData !== ""){
+		logData = JSON.parse(logData);
+	}
 	taskData = JSON.parse(parent.document.querySelector("[name='frameParamTaskDetails']").value);
 	taskName = taskData.taskName;
 	contentTitle = taskName;
