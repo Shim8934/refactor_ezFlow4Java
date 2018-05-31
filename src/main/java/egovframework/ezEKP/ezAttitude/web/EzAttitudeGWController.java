@@ -208,7 +208,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
+			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -246,25 +246,19 @@ public class EzAttitudeGWController {
 			String checkAttitude = "";
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			
-			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
+			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getTenantId());
 			
 			//1. startDate로 attitudeID 끌어와서 기존에 있던건지 검사를 먼저
 			//2. 똑같은 attitudeVO를 가져와서 비교할 수 는 없어 시작일 변경??
 			// ==> typeId와 startDate를 비교하면
 			if (typeId.equals("A08")) {
-				checkAttitude = ezAttitudeService.getIsAttitude(typeId, attitudeVO.getWriterId(), startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+				checkAttitude = ezAttitudeService.getIsAttitude(typeId, attitudeVO.getWriterId(), startDate, info.getOffSet(), attitudeVO.getCompanyId(), info.getTenantId());
 			}
 			
 			if (!checkAttitude.equals("") && !checkAttitude.equals("0") && !(typeId.equals(attitudeVO.getTypeId()) && startDate.split(" ")[0].equals(attitudeVO.getStartDate().split(" ")[0]))) {
 				checkAttitude = "dupl";
 			} else {
-				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, attitudeVO.getWriterId(), info.getTenantId(), info.getCompanyId());
-			}
-			
-			//관리자에서 수정 했을 경우 테이블에 기록을 남긴다.
-			if (mode.equals("admin")) {
-				//userId 수정한 사람 아이디
+				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, attitudeVO.getWriterId(), info.getTenantId(), attitudeVO.getCompanyId());
 			}
 			
 			result.put("status", "ok");
@@ -299,7 +293,7 @@ public class EzAttitudeGWController {
 			LOGGER.debug("!(%(!#$%!#*%*!$#%(!#$(%!(#$% mode : " + mode);
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
+			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getTenantId());
 			
 			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, userId, info.getOffSet());
 			
