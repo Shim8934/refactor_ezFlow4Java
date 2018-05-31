@@ -165,7 +165,7 @@
 	   			ganttData.selectedRow = 0;
 	   			ganttData.deletedTaskIds = [];
 // 	   			ganttData.canAdd = true;
-	   			
+	   			preProcess();
 	   		}
 	   		
 	   		//테이블 헤더 넓이를 내용에 맞춤
@@ -187,6 +187,10 @@
 	   			goAddTask();
 	   		}
 	   		
+	   		function addGroup(){
+	   			goAddGroup();
+	   		}
+	   		
 	   		//업무 추가
 	   		function goAddTask(){
    				var top = ($(window).height() - $(this).outerHeight()) / 2;
@@ -194,6 +198,15 @@
    				var feature = GetOpenPosition(top, left);
    			 
    				DivPopUpShow(845, 555, "/ezPMS/goAddTask.do?projectId=" + projectId);
+	   		}
+	   		
+	   		//그룹 추가
+	   		function goAddGroup(){
+   				var top = ($(window).height() - $(this).outerHeight()) / 2;
+   			    var left = ($(window).width() - $(this).outerWidth()) / 2;
+   				var feature = GetOpenPosition(top, left);
+   			 
+   				DivPopUpShow(684, 384, "/ezPMS/goAddGroup.do?projectId=" + projectId);
 	   		}
 	   		
 	   		function taskDetails(){
@@ -225,8 +238,33 @@
 	   			$(targetFrame).append(htmlText);
 	   		}
 	   		
+	   		function ganttChartAddFunc(){
+	   			Ganttalendar.prototype.zoomReset = function(){
+	   				var curLevel = "1M";
+	   				var centerMillis = this.getCenterMillis();
+	   				
+	   				this.gridChanged=true;
+	   			    this.zoom = curLevel;
+
+	   			    this.storeZoomLevel();
+	   			    this.redraw();
+	   			    this.goToMillis(centerMillis);
+	   			}
+	   		}
+	   		
+	   		function preProcess(){
+	   			//간트 차트 테이블 날짜 형식 세팅. i18nJs.js 의 내용에 덮어 씌움.
+	   			Date.defaultFormat = "yyyy/M/d";
+	   			Date.monthNames = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+	   			Date.monthAbbreviations = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+	   			Date.dayNames =["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
+	   			Date.dayAbbreviations =["일","월","화","수","목","금","토"];
+	   			
+	   		}
+	   		
 	   		(function(){
 		   		initValues();
+		   		ganttChartAddFunc();
 		   		
 // 		   		ge = new GanttMaster();
 // 		   		ge.init($("#workSpace"));
@@ -238,6 +276,7 @@
 		   		}
 		   		document.getElementById("pmsGanttRowNewBtn").onclick = addTask;
 		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
+		   		document.getElementById("pmsGanttAddGroup").onclick = addGroup;
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
 
@@ -272,7 +311,7 @@
 		        <li id="pmsGanttRowSaveBtn" class="pmsGanttMenuLi">save</li>
 		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi">delete</li>
 		        <li id="pmsGanttTaskDetails" class="pmsGanttMenuLi">details</li>
-		        <li class="pmsGanttMenuLi">temp2</li>
+		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi">new group</li>
 		    </ul>
 		</div>
 		
@@ -657,8 +696,6 @@
 			<div class="__template__" type="GANTBUTTONS"><!--
 			  <div class="ganttButtonBar noprint">
 			    <div class="buttons">
-			      <a href="https://gantt.twproject.com/"><img src="/images/ezPMS/res/twGanttLogo.png" alt="Twproject" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
-			
 			      <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite" title="undo"><span class="teamworkIcon">&#39;</span></button>
 			      <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite" title="redo"><span class="teamworkIcon">&middot;</span></button>
 			      <span class="ganttButtonSeparator requireCanWrite requireCanAdd"></span>

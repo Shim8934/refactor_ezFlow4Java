@@ -117,20 +117,23 @@
 		$("#1tab2").click(function(){
 			var clickTabId = $(this).attr("id");
 			var nowTabAttr = $(".tabon").attr("id");
+			var currentPage = 1;
 			changeTab(clickTabId, nowTabAttr);
 			
 			//작업이력 탭
-			$("#FBoard_ifrm").attr("src", "/ezPMS/getLogListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
+			$("#FBoard_ifrm").attr("src", "/ezPMS/getLogListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId + "&currentPage=" + currentPage);
 		});
 		
-// 		$("#1tab3").click(function(){
-// 			var clickTabId = $(this).attr("id");
-// 			var nowTabAttr = $(".tabon").attr("id");
-// 			changeTab(clickTabId, nowTabAttr);
+		$("#1tab3").click(function(){
+			alert("미구현");
+			return;
+			var clickTabId = $(this).attr("id");
+			var nowTabAttr = $(".tabon").attr("id");
+			changeTab(clickTabId, nowTabAttr);
 			
-// 			//게시판으로 가는 부분 url 수정하기
-// 			$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
-// 		});
+			//의견 탭
+			$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
+		});
 		
 // 		$("#1tab4").click(function(){
 // 			var clickTabId = $(this).attr("id");
@@ -170,6 +173,10 @@
 		DivPopUpShow(760, 500, "/ezPMS/goUpdateTaskInfo.do?taskId=" + taskId);
 	}
 	
+	function addBoard(){
+		//구현해야함.
+	}
+	
 	function taskStatusUpdate(){
 		DivPopUpShow(500, 370, "/ezPMS/goUpdateTaskStatus.do");
 		
@@ -197,12 +204,12 @@ button.PHBtn {
 #closeBtn{
 	float:right;
 }
-.detailsTable{border-collapse:collapse;border-spacing:0;width:659px;height:167px;}
+.detailsTable{border-collapse:collapse;border-spacing:0;width:652px;height:167px;}
 .detailsTable td{padding:5px 5px;border:1px solid #ccc;overflow:hidden;}
 .detailsTable th{border:1px solid #ccc;overflow:hidden;}
 .detailsTable .detailsTable-th{background-color:#f8f8fa;}
 .detailsTable .dateTd{width:180px}
-.mainBodyTop{margin-top:8px;width:825px;}
+.mainBodyTop{margin-top:8px;width:818px;}
 .mainBodyMid{height:320px;}
 .statusDivBrd{width:165px;height:168px;float:left;border: 1px solid #ccc;border-right:0px;}
 .statusChgBtn{float:left;margin:3px 25px;border:1px solid #ddd;border-radius:5px; padding:0px 7px; cursor:pointer;}

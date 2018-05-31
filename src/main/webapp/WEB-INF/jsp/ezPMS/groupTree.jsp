@@ -17,6 +17,8 @@
 	var projectId = "${projectId}";
 	var containerId = "test";
 	var onlyGroup = true;
+	var treeDepth = 0;
+	var originTreeDepth = parent.treeDepth;
 
 	$(document).ready(function() {
 		$.ajax({
@@ -59,6 +61,9 @@
 				alert("code : " + request.status + "\nerror : " + error);
 			}
 		});
+		$(document).on("click", "a.jstree-anchor", function(e){
+			getTreeDepth(e.target);
+		})
 	});
 	
 	function ok_Click() {
@@ -68,8 +73,18 @@
 	
 	function close_Click(){
 		parent.groupId = "";
+		parent.treeDepth = originTreeDepth;
 		parent.setUpperGroup();
 		parent.DivPopUpHidden();
+	}
+	
+	function getTreeDepth(obj){
+		treeDepth = obj.parentNode.getAttribute("aria-level");
+		if(treeDepth > 2){
+			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.")
+			return;
+		}
+		parent.treeDepth = treeDepth;
 	}
 	
 </script>

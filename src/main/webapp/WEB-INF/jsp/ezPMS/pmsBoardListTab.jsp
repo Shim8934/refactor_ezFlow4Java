@@ -28,9 +28,10 @@
 	var taskId = Number("${taskId}");
 	var taskName = null;
 	var currentPage = 1;
+	var taskDetails = {};
 		
 	$(document).ready(function() {
-		
+		setInitData();
 		currentHeight = $(window).height()-100;
 		$("#projectContent").css("height", currentHeight + "px");
 		$("#contentList").css("height", (currentHeight - 50) + "px");
@@ -124,6 +125,27 @@
 				alert("삭제에 실패했습니다.");
 			}
 		})
+	}
+	
+	// 체크박스 전체선택 혹은 해제
+	function selectAllTR(elem) {
+		if($(elem).is(":checked")) {
+			 $('input:checkbox[name="boardCheckbox"]').each(function() {
+				 $(this).prop("checked","true");
+				 $(this).parent().parent().addClass("selectedTR");
+			 });
+		} else {
+			 $('input:checkbox[name="boardCheckbox"]').each(function() {
+				 $(this).removeProp("checked","true");
+				 $(this).parent().parent().removeClass("selectedTR");
+			 });
+		}
+	}
+	
+	function setInitData(){
+		taskDetails = JSON.parse(parent.document.querySelector("[name='frameParamTaskDetails']").value);
+		projectName = taskDetails.projectName;
+		taskName = taskDetails.taskName;
 	}
 </script>
 <style type="text/css">

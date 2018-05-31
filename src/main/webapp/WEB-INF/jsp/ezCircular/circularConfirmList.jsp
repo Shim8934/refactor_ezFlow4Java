@@ -1,3 +1,5 @@
+<!-- 2018-05-28 김민성 - 회람판 확인자 조회 -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -10,6 +12,7 @@
 	<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>" type="text/css">
 </head>
 	<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
+	<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 	<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -19,13 +22,11 @@
 	
 	<script>
 	
-		var CurPage = ""
-		var circularID = "${circularID}";
-	    //var pBoardID = "${boardID}";
-	    //var itemID = "${itemID}";
-	    var perCount = 10;
-	    var BlockSize = 1;
-	    var totalPage = "";
+		var CurPage = ""	;					// 현재 페이지			
+		var circularID = "${circularID}";	// 회람글 ID
+	    var perCount = 10;					// 페이지당 확인자 수
+	    var BlockSize = 10;					// 페이지 표시 갯수
+	    var totalPage = "";					// 전체 페이지 수
     
 		window.onload = function () {
 	    	try {
@@ -56,7 +57,7 @@
 				type : "POST",
 				dataType : "text",
 				async : true,
-				url : "/ezCircular/circularConfirmPagingList.do.do",
+				url : "/ezCircular/circularConfirmPagingList.do",
 				data : { 
 						 circularID 	 : circularID,
 						 pageNum 	 : CurPage,
@@ -86,6 +87,7 @@
 		            totalPage = pageCnt;
 		            
 		            makePageSelPageReader();
+		            
 		            var xmlDoc;
 		            if (CrossYN()) {
 		                var xmlLIST = createXmlDom();
@@ -144,7 +146,7 @@
 		            
 		            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8fa");
 	            } else {
-	            	var msg = "<spring:message code='ezBoard.kbm01'/>";
+	            	var msg = "<spring:message code='ezCircular.kmsc02'/>";
 	            	var htmlContent = "<tr><td style='text-align:center'>" + msg +"</td></tr>";
 	            	$("#lvBoardList").html(htmlContent);
 	            	
@@ -211,10 +213,6 @@
 	            CurPage = newPage;
 	            getBoardList();
 	        }
-	    }
-	    
-	    function td_Create1(strtext) {
-	        document.getElementById("tblPageRayer").innerHTML = strtext;
 	    }
 	    
         function makePageSelPageReader() {
@@ -296,6 +294,10 @@
 	        td_Create1(PagingHTML);
 	    }
         
+	    function td_Create1(strtext) {
+	        document.getElementById("tblPageRayer").innerHTML = strtext;
+	    }
+        
      </script>
 
 	<body class="popup">
@@ -307,16 +309,7 @@
 		    </ul>
 		  </div>
 		        <div style="width:100%; height:305px" id="divList">
-		            <table class="popuplist" style="width:100%">
-		            	<%-- <c:forEach items="${list }" var="viewer" varStatus="status">
-							<tr userid="${viewer.memberID}" style="background-color: rgb(255, 255, 255);">
-								<td align="left" style="width: 130px; text-align: center; cursor: pointer;"><c:out value='${viewer.displayName }'/></td>
-								<td align="left" style="width: 120px; text-align: center; cursor: pointer;"><c:out value='${viewer.description }'/></td>
-								<td align="left" style="width: 80px; text-align: center; cursor: pointer;"><c:out value='${viewer.title }'/></td>
-								<td align="left" style="width: 150px; text-align: center; cursor: pointer;"><c:out value='${fn:substring(viewer.confirmDate, 0, 20) }'/></td>
-							</tr>
-				        </c:forEach> --%>
-				     </table>
+		            <table id="lvBoardList" class="popuplist" style="width:100%"></table>
 		        </div>
 		        <div id='runtime' style="color:#666;padding-top:5px"></div>
 		        <div id="tblPageRayer" style="width:470px; height:24px; margin:6px auto; font-size:0"></div>
@@ -324,10 +317,5 @@
 	</body>
 	<script>
 		selToggleList(document.getElementById("close"), "ul", "li", "0");
-		
-		$("#divList tr").on("click", function () {
-	    	userID = $(this).closest("tr").attr("userid");
-	    	show_info(userID);
-	    }); 
 	</script>
 </html>
