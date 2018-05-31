@@ -220,6 +220,14 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Integer) insert ("EzPMSDAO.addBoard", vo);
 	}
 	
+	public void updateBoard(Map<String, Object> map) {
+		update ("EzPMSDAO.updateBoard", map);
+	}
+	
+	public void moveBoard(Map<String, Object> map) {
+		update ("EzPMSDAO.moveBoard", map);
+	}
+	
 	public void deleteBoard(Map<String, Object> map) {
 		update ("EzPMSDAO.deleteBoard", map);
 	}
@@ -303,6 +311,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	public void insertProjectAttach(Map<String, Object> map) {
 		insert("EzPMSDAO.insertProjectAttach", map);
+	}
+	
+	public void deleteProjectAttach(Map<String, Object> map) {
+		delete("EzPMSDAO.deleteProjectAttach", map);
 	}
 	
 	@SuppressWarnings("unchecked")

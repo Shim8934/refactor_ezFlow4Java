@@ -1341,6 +1341,32 @@
     	</selectKey>
 	</insert>
 	
+	<update id="EzPMSDAO.updateBoard" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_item_list 
+			SET 
+				title = #title#, 					write_overview = #writeOverview#, 					write_type = #writeType#, 
+				write_content = #writeContent#,		write_update_date = #writeUpdateDate#,				task_id = #taskId#,
+				group_id = #groupId#
+			WHERE 
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.moveBoard" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_item_list 
+			SET 
+				task_id = #taskId#,			group_id = #groupId#
+			WHERE 
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
 	<update id="EzPMSDAO.deleteBoard" parameterClass="map">
 		<![CDATA[
 			UPDATE tbl_pms_item_list
@@ -1362,6 +1388,16 @@
 			)
 		]]>
 	</insert>
+	
+	<delete id="EzPMSDAO.deleteProjectAttach" parameterClass="map">
+		<![CDATA[
+			DELETE FROM tbl_pms_item_attachment
+			WHERE
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</delete>
 	
 	<select id="EzPMSDAO.getBoardAttach" parameterClass="map" resultMap="fileVO">
 		<![CDATA[
@@ -1399,7 +1435,7 @@
 			<isEqual property="taskId" compareValue="0">
 				WHERE (B.group_id = #groupId# 
 				OR G.upper_group_id = #groupId#
-				OR G.upper_group_id = (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
 			</isEqual>
 			<isNotEqual property="taskId" compareValue="0">
 				WHERE B.task_id = #taskId#
@@ -1431,7 +1467,7 @@
 			<isEqual property="taskId" compareValue="0">
 				WHERE (B.group_id = #groupId# 
 				OR G.upper_group_id = #groupId#
-				OR G.upper_group_id = (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
 			</isEqual>
 			<isNotEqual property="taskId" compareValue="0">
 				WHERE B.task_id = #taskId#

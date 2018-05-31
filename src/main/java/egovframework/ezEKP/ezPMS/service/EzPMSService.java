@@ -122,6 +122,10 @@ public interface EzPMSService {
 
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception;
 	
+	public void modifyBoard(JSONObject jsonParam, String realPath) throws Exception;
+	
+	public void moveBoard(JSONObject jsonParam) throws Exception;
+	
 	public void deleteBoard(int tenantId, JSONObject jsonParam) throws Exception;
 	
 	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang);
@@ -137,4 +141,6 @@ public interface EzPMSService {
 	List<Map<String, Object>> getFilePath(long itemId, int tenantId);
 
 	public int getGroupCount(SearchVO search, int tenantId, String userId);
+
+	
 }
