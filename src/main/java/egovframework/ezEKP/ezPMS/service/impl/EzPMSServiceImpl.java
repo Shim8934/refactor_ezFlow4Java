@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
@@ -822,7 +823,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addGroup(Map<String, Object> map) {
+	public Long addGroup(Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] addGroup started.");
 		map.put("delStatus", 0);
 		
@@ -853,8 +854,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage() + " " + e.getStackTrace());
 		}
-		ezPMSDAO.addTaskGroup(map);
+		Long groupId = ezPMSDAO.addTaskGroup(map);
 		LOGGER.debug("[SERVICE] addGroup ended.");
+		return groupId;
 	}
 
 	@Override
@@ -1563,7 +1565,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	public void updateTaskStatus(ProjectTaskVO task) {
-		LOGGER.debug("updateTaskStatus started.");
+		LOGGER.debug("[SERVICE] updateTaskStatus started.");
 		
 		try {
 			if (task.getStatus().equals("P")) {
@@ -1586,6 +1588,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
 		
-		LOGGER.debug("updateTaskStatus ended.");
+		LOGGER.debug("[SERVICE] updateTaskStatus ended.");
+	}
+
+	@Override
+	public void addGroupMember(List<ProjectGroupMemberVO> groupMember) {
+		LOGGER.debug("[SERVICE] addGroupMember started.");
+		
+		ezPMSDAO.addTaskGroupMember(groupMember);
+		
+		LOGGER.debug("[SERVICE] addGroupMember ended.");
+	}
+
+	@Override
+	public List<ProjectGroupMemberVO> getUserInfoForGroup(HashMap<String, Object> map) {
+		return ezPMSDAO.getUserInfoForGroup(map);
 	}
 }

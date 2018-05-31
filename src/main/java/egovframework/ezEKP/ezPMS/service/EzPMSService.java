@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPMS.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.json.simple.JSONObject;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
@@ -78,7 +80,7 @@ public interface EzPMSService {
 
 	public void updateTaskStatus(ProjectTaskVO task);
 	
-	public void addGroup(Map<String, Object> map);
+	public Long addGroup(Map<String, Object> map);
 	
 	public ProjectGroupVO getGroupDetails(Long groupId);
 	
@@ -137,4 +139,8 @@ public interface EzPMSService {
 	List<Map<String, Object>> getFilePath(long itemId, int tenantId);
 
 	public int getGroupCount(SearchVO search, int tenantId, String userId);
+
+	public void addGroupMember(List<ProjectGroupMemberVO> groupMemberList);
+	
+	public List<ProjectGroupMemberVO> getUserInfoForGroup(HashMap<String, Object> map);
 }

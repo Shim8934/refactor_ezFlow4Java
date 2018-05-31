@@ -1332,7 +1332,12 @@
 				#workingDay#,		#restDueday#
 			)
 		]]>
+		<selectKey keyProperty="groupId" resultClass="long">
+    		SELECT
+    			last_insert_id()
+    	</selectKey>
 	</insert>
+	
 	
 	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoardVO">
 		<![CDATA[
@@ -1811,7 +1816,7 @@
 			AND 
 				(A.GROUP_ID = #groupId# 
 				OR D.UPPER_GROUP_ID = #groupId#
-				OR D.UPPER_GROUP_ID = (
+				OR D.UPPER_GROUP_ID IN (
 							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
 				)
 			)
@@ -2156,4 +2161,80 @@
 			TENANT_ID = #tenantId#
 	]]>
 	</update>
+	
+	<insert id="EzPMSDAO.addTaskGroupMember" parameterClass="list">
+    	<![CDATA[
+    		INSERT INTO tbl_pms_groupmember(
+    			TENANT_ID, 				GROUP_ID, 				USER_ID, 					USER_NAME, 
+    			USER_NAME2, 			USER_DEPTNAME, 			USER_DEPTNAME2, 			MEMBER_ROLE_ID
+    		) 
+    		VALUES
+    	]]>
+		<iterate conjunction=", ">
+   		<![CDATA[
+   		(
+   			#[].tenantId#, 		#[].groupId#, 		#[].userId#, 				#[].userName#, 
+   			#[].userName2#, 	#[].userDeptname#, 	#[].userDeptname2#, 		#[].memberRoleId#
+   		)
+   		]]>
+		</iterate>
+    </insert>
+    
+    <select id="EzPMSDAO.getUserInfoForGroup" parameterClass="Map" resultClass="ProjectGroupMemberVO">
+		<isEqual property="userIdType" compareValue="user">
+			<![CDATA[
+			SELECT 
+				0 AS memberId,
+				A.CN AS userId, 
+				A.DISPLAYNAME AS userName, 
+				A.DISPLAYNAME2 AS userName2,
+				B.DISPLAYNAME AS userDeptname, 
+				B.DISPLAYNAME2 AS userDeptname2,
+				A.tenant_id AS tenantId,
+				$groupId$ AS groupId,
+				$memberRoleId$ AS memberRoleId
+			FROM 
+				tbl_usermaster A 
+			LEFT JOIN 
+				tbl_deptmaster B 
+			ON 
+				A.department = B.CN
+			AND 
+				A.tenant_id = B.tenant_id 
+			WHERE 
+				A.tenant_id = #tenantId# 
+			AND 
+				A.CN IN (
+			]]>
+				<iterate property="userId" conjunction=",">
+				#userId[]#
+				</iterate>
+				)
+		</isEqual>
+		<isNotEqual property="userIdType" compareValue="user">
+		<![CDATA[
+			SELECT 
+				0 AS memberId,
+				CN AS userId,
+				DISPLAYNAME	AS userName,
+				DISPLAYNAME2 AS userName2,
+				DISPLAYNAME AS userDeptname, 
+				DISPLAYNAME2 AS userDeptname2,
+				tenant_id as tenantId,
+				$groupId$ as groupId,
+				$memberRoleId$ as memberRoleId
+			FROM
+				tbl_deptmaster 
+			WHERE 
+				tenant_id = #tenantId# 
+			AND
+				CN IN (
+			]]>
+				<iterate property="userId" conjunction=",">
+				#userId[]#
+				</iterate>
+				)
+		</isNotEqual>
+		
+	</select>
 </sqlMap>
