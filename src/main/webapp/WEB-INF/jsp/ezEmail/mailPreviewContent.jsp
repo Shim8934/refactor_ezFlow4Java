@@ -17,6 +17,7 @@
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
 	        var pNoneActiveX = "${NoneActiveX}";
+		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    
 	        function window_onload() {}
 		    
@@ -36,6 +37,8 @@
 	        			}
 	        		}
 	        	})
+	        	
+			    sentDateView();
 	        });
 		    
 		    function AttachDetail_view(obj) {
@@ -286,6 +289,19 @@
 	        	});
 	        }
 	        
+	     	// 전달, 회신 시 보낸 시간
+	        function sentDateView(msg) {
+			    if (sentDateMsg != "") {
+			    	
+			    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+			    	$(".sentDateStr").css({
+			    		"padding" : "5px 0",
+				        "margin-bottom" : "10px",
+				        "font-size" : "14px",
+				        "background" : "rgba(255,250,205,0.5)"
+			    	});
+			    }
+	        }
 	    </script> 
 	</head>
 
