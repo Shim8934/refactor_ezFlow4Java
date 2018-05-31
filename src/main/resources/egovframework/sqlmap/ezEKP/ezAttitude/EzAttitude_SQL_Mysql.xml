@@ -410,30 +410,30 @@
 		</iterate>
 		<isNotEmpty property="apprUserName" prepend="and">
 			<isNotEmpty property="apprUserName" >
-				<isEqual property="sysLang" compareValue="primary" >
+				<isEqual property="primary" compareValue="1" >
 						A.APPR_USER_NAME LIKE CONCAT('%', #apprUserName#,'%')
 				</isEqual>
-				<isNotEqual property="sysLang" compareValue="primary">
+				<isNotEqual property="primary" compareValue="1">
 						A.APPR_USER_NAME2 LIKE CONCAT('%', #apprUserName#,'%')
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerName" prepend="and">
 			<isNotEmpty property="writerName" >
-				<isEqual property="sysLang" compareValue="primary" >
+				<isEqual property="primary" compareValue="1" >
 						A.WRITER_NAME LIKE CONCAT('%', #writerName#,'%')
 				</isEqual>
-				<isNotEqual property="sysLang" compareValue="primary">
+				<isNotEqual property="primary" compareValue="1">
 						A.WRITER_NAME2 LIKE CONCAT('%', #writerName#,'%')
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerDeptName" prepend="and">
 			<isNotEmpty property="writerDeptName" >
-				<isEqual property="sysLang" compareValue="primary" >
+				<isEqual property="primary" compareValue="1" >
 						A.WRITER_DEPT_NAME LIKE CONCAT('%', #writerDeptName#,'%')
 				</isEqual>
-				<isNotEqual property="sysLang" compareValue="primary">
+				<isNotEqual property="primary" compareValue="1">
 						A.WRITER_DEPT_NAME2 LIKE CONCAT('%', #writerDeptName#,'%')
 				</isNotEqual>
 			</isNotEmpty>
@@ -477,11 +477,11 @@
 			SELECT
 					a.attitude_id as ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-					a.appr_user_name as APPR_USER_NAME,
+					CASE WHEN #primary# = 1 THEN a.appr_user_name ELSE a.appr_user_name$primary$ END as APPR_USER_NAME,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS,
-					a.writer_name as WRITER_NAME,
-					a.writer_dept_name as WRITER_DEPT_NAME,
+					CASE WHEN #primary# = 1 THEN a.writer_name ELSE a.writer_name$primary$ END as WRITER_NAME,
+					CASE WHEN #primary# = 1 THEN a.writer_dept_name ELSE a.writer_dept_name$primary$ END as WRITER_DEPT_NAME,
 					APPL_CNT,
 					a.writer_id as WRITER_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.appl_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') as APPL_DATE
