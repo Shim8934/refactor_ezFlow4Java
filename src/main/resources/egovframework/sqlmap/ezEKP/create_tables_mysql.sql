@@ -490,7 +490,7 @@ DROP TABLE IF EXISTS `jmocha_letterbox`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_letterbox` (
-  `letterbox_no` int(11) NOT NULL,
+  `letterbox_no` int(11) NOT NULL AUTO_INCREMENT,
   `parent_letterbox_no` int(11) DEFAULT NULL,
   `displayname` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
   `displayname2` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -2169,6 +2169,212 @@ CREATE TABLE `tbl_attendant` (
   `RESPONSEDATE` datetime NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`SCHEDULEID`,`ATTENDANTID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude` (
+  `ATTITUDE_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WRITER_ID` varchar(80) NOT NULL,
+  `DEPT_ID` varchar(80) NOT NULL,
+  `START_DATE` datetime DEFAULT NULL,
+  `END_DATE` datetime DEFAULT NULL,
+  `MODAPPL` char(1) DEFAULT '0',
+  `REGION` varchar(200) DEFAULT NULL,
+  `MOBILE` varchar(50) DEFAULT NULL,
+  `BIZSUB` varchar(120) DEFAULT NULL,
+  `CONTENT` varchar(3000) DEFAULT NULL,
+  `IP` varchar(60) DEFAULT NULL,
+  `DATE_TYPE` char(1) NOT NULL,
+  `TYPE_ID` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`ATTITUDE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_auth`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_auth` (
+  `user_id` varchar(80) NOT NULL,
+  `tenant_id` mediumint(5) NOT NULL,
+  `auth_dept_id` varchar(80) NOT NULL,
+  `company_id` varchar(80) DEFAULT NULL,
+  `auth_type` varchar(10) NOT NULL DEFAULT 'R',
+  PRIMARY KEY (`user_id`,`tenant_id`,`auth_dept_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_conf`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_conf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_conf` (
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WORK_STARTTIME` varchar(40) NOT NULL DEFAULT '09:00',
+  `WORK_ENDTIME` varchar(40) NOT NULL DEFAULT '18:00',
+  `CLOSED_DAY` varchar(30) NOT NULL DEFAULT '1,0,0,0,0,0,1',
+  `ATTITUDE_MOD_APPL` char(1) NOT NULL DEFAULT '1',
+  `CLOSED_DATE_ATTITUDE` char(1) NOT NULL DEFAULT '1',
+  `CONF_SET_DATE` date NOT NULL,
+  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_form`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_form`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_form` (
+  `FORM_ID` int(11) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `FORM_NAME` varchar(80) DEFAULT NULL,
+  `FORM_NAME2` varchar(80) DEFAULT NULL,
+  `FORM_HTML` varchar(3000) DEFAULT NULL,
+  PRIMARY KEY (`FORM_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_modappl`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_modappl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_modappl` (
+  `ATTITUDE_ID` bigint(20) NOT NULL,
+  `APPL_CNT` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WRITER_ID` varchar(80) NOT NULL,
+  `WRITER_NAME` varchar(100) DEFAULT NULL,
+  `WRITER_NAME2` varchar(100) DEFAULT NULL,
+  `WRITER_TITLE` varchar(200) DEFAULT NULL,
+  `WRITER_TITLE2` varchar(200) DEFAULT NULL,
+  `WRITER_DEPT_ID` varchar(80) NOT NULL,
+  `WRITER_DEPT_NAME` varchar(100) DEFAULT NULL,
+  `WRITER_DEPT_NAME2` varchar(100) DEFAULT NULL,
+  `ORIGIN_DATE` datetime NOT NULL,
+  `CHANGE_DATE` datetime NOT NULL,
+  `DELFLAG` char(1) DEFAULT '0',
+  `APPR_USER_ID` varchar(80) DEFAULT NULL,
+  `APPR_DATE` datetime DEFAULT NULL,
+  `APPR_STATUS` char(1) DEFAULT '0',
+  `CONTENT` varchar(3000) DEFAULT NULL,
+  `APPR_USER_NAME` varchar(100) DEFAULT NULL,
+  `APPR_USER_NAME2` varchar(100) DEFAULT NULL,
+  `APPL_DATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`ATTITUDE_ID`,`APPL_CNT`,`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_modappl_history`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_modappl_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_modappl_history` (
+  `ATTITUDE_ID` bigint(20) DEFAULT NULL,
+  `MOD_CNT` int(11) NOT NULL AUTO_INCREMENT,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WRITER_ID` varchar(80) NOT NULL,
+  `WRITER_NAME` varchar(100) DEFAULT NULL,
+  `WRITER_NAME2` varchar(100) DEFAULT NULL,
+  `WRITER_TITLE` varchar(200) DEFAULT NULL,
+  `WRITER_TITLE2` varchar(200) DEFAULT NULL,
+  `WRITER_DEPT_ID` varchar(80) NOT NULL,
+  `WRITER_DEPT_NAME` varchar(100) DEFAULT NULL,
+  `WRITER_DEPT_NAME2` varchar(100) DEFAULT NULL,
+  `ORIGIN_STARTDATE` datetime DEFAULT NULL,
+  `ORIGIN_ENDDATE` datetime DEFAULT NULL,
+  `CHANGE_STARTDATE` datetime DEFAULT NULL,
+  `CHANGE_ENDDATE` datetime DEFAULT NULL,
+  `APPR_USER_ID` varchar(80) NOT NULL,
+  `APPR_USER_NAME` varchar(100) DEFAULT NULL,
+  `APPR_USER_NAME2` varchar(100) DEFAULT NULL,
+  `APPR_DATE` datetime DEFAULT NULL,
+  `ORIGIN_CONTENT` varchar(3000) DEFAULT NULL,
+  `CHANGE_CONTENT` varchar(3000) DEFAULT NULL,
+  `ORIGIN_REGION` varchar(200) DEFAULT NULL,
+  `ORIGIN_MOBILE` varchar(50) DEFAULT NULL,
+  `ORIGIN_BIZSUB` varchar(120) DEFAULT NULL,
+  `ORIGIN_IP` varchar(60) DEFAULT NULL,
+  `ORIGIN_TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `CHANGE_REGION` varchar(200) DEFAULT NULL,
+  `CHANGE_MOBILE` varchar(50) DEFAULT NULL,
+  `CHANGE_BIZSUB` varchar(120) DEFAULT NULL,
+  `CHANGE_IP` varchar(60) DEFAULT NULL,
+  `CHANGE_TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `ORIGIN_TYPE_NAME` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `ORIGIN_TYPE_NAME2` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `CHANGE_TYPE_NAME` varchar(45) DEFAULT NULL,
+  `CHANGE_TYPE_NAME2` varchar(45) DEFAULT NULL,
+  `ORIGIN_DATE_TYPE` varchar(45) DEFAULT NULL,
+  `CHANGE_DATE_TYPE` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`MOD_CNT`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_type`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_type` (
+  `TYPE_ID` varchar(30) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `TYPE_NAME` varchar(120) NOT NULL,
+  `TYPE_NAME2` varchar(120) NOT NULL,
+  `ISUSE` char(1) NOT NULL DEFAULT '1',
+  `IMG_PATH` varchar(400) DEFAULT NULL,
+  `PARENT_ID` varchar(30) DEFAULT NULL,
+  `FORM_ID` int(11) NOT NULL,
+  `ISADD` char(1) NOT NULL DEFAULT '0',
+  `ISDEL` char(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`TYPE_ID`,`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_user_conf`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_user_conf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_user_conf` (
+  `USER_ID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `WORK_STARTTIME` varchar(40) NOT NULL,
+  `WORK_ENDTIME` varchar(40) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `DEPT_ID` varchar(80) NOT NULL,
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4938,7 +5144,7 @@ CREATE TABLE `tbl_journal_form` (
   `form_content` text COMMENT '양식 내용',
   `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
   `form_date` datetime NOT NULL COMMENT '양식 일',
-  `form_writer` varchar(200) COMMENT '양식 작성자',
+  `form_writer` varchar(200) DEFAULT NULL COMMENT '양식 작성자',
   `form_info` varchar(4000) DEFAULT NULL COMMENT '양식 설명',
   `form_status` varchar(45) DEFAULT NULL COMMENT '양식 상태',
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
@@ -8686,7 +8892,7 @@ CREATE TABLE `tbl_vote_user_and_question` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_vote_user_and_question`
+-- Table structure for table `tbl_vote_users`
 --
 
 DROP TABLE IF EXISTS `tbl_vote_users`;
@@ -8697,13 +8903,263 @@ CREATE TABLE `tbl_vote_users` (
   `QST_ID` int(11) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
   `USER_NAME` varchar(120) NOT NULL,
-  `USER_NAME2` varchar(120),
-  `DEPT_ID` varchar(80),
-  `DEPT_NAME` varchar(200),
-  `DEPT_NAME2` varchar(200),
+  `USER_NAME2` varchar(120) DEFAULT NULL,
+  `DEPT_ID` varchar(80) DEFAULT NULL,
+  `DEPT_NAME` varchar(200) DEFAULT NULL,
+  `DEPT_NAME2` varchar(200) DEFAULT NULL,
   `USER_STATUS` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`QST_ID`,`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_config`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_config` (
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `COMPANY_ID` varchar(100) NOT NULL COMMENT '회사 아이디',
+  `UPLOAD_LIMIT` varchar(100) DEFAULT NULL COMMENT '1회 업로드 제한량',
+  `TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '총 업로드 용량',
+  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 기본설정';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_env`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_env`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_env` (
+  `CN` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `ENV_TYPE` varchar(100) NOT NULL COMMENT '환경설정 타입: 부서: D, 페이지: P ',
+  `ENV_VALUE` varchar(100) DEFAULT NULL COMMENT '부서명 ; 페이지 카운트: 10,20,30,40,50',
+  `TENANT_ID` bigint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`CN`,`ENV_TYPE`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='사용자 환경설정';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_favor`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_favor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_favor` (
+  `TARGET_ID` varchar(100) NOT NULL COMMENT '대상 아이디(폴더 또는 파일)',
+  `USER_ID` varchar(80) NOT NULL COMMENT '사용자 아이디',
+  `TARGET_TYPE` varchar(50) NOT NULL COMMENT '유형 폴더:FOLDER, 파일:FILE',
+  `CREATE_DATE` datetime NOT NULL COMMENT '생성일',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`TENANT_ID`,`TARGET_ID`,`TARGET_TYPE`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 즐겨찾기';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_file`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_file` (
+  `FILE_ID` varchar(100) NOT NULL COMMENT '파일 아이디',
+  `FILE_NAME` varchar(250) NOT NULL COMMENT '파일 이름',
+  `FILE_PATH` varchar(250) NOT NULL COMMENT '파일 경로',
+  `FILE_SIZE` varchar(100) NOT NULL COMMENT '파일 크기',
+  `TYPE_ID` varchar(100) NOT NULL COMMENT '파일 유형 아이디',
+  `DOWN_COUNT` bigint(20) NOT NULL DEFAULT '0' COMMENT '다운로드 카운트',
+  `FILE_EXT` varchar(10) NOT NULL COMMENT '파일 확장자명',
+  `FOLDER_ID` varchar(50) NOT NULL COMMENT '상위 폴더 아이디',
+  `USE_STATUS` varchar(250) NOT NULL COMMENT '사용여부 사용:Y , 미사용: N, 휴지통: T',
+  `CREATE_ID` varchar(80) NOT NULL COMMENT '생성자 아이디',
+  `CREATE_NAME1` varchar(120) NOT NULL COMMENT '생성자 이름',
+  `CREATE_NAME2` varchar(120) NOT NULL COMMENT '생성자 이름 2',
+  `CREATE_DATE` datetime NOT NULL COMMENT '생성일',
+  `UPDATE_ID` varchar(80) NOT NULL COMMENT '수정자 아이디',
+  `UPDATE_DATE` datetime NOT NULL COMMENT '수정일',
+  `DELETER_ID` varchar(100) DEFAULT NULL COMMENT '삭제한 사람',
+  `TENANT_ID` mediumint(5) unsigned NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`FILE_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 파일';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_filetype`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_filetype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_filetype` (
+  `TYPE_ID` varchar(100) NOT NULL COMMENT '유형아이디',
+  `TYPE_NAME` varchar(80) NOT NULL COMMENT '파일확장자',
+  `TYPE_NAME2` varchar(80) NOT NULL,
+  `FILE_EXT` varchar(80) NOT NULL COMMENT '파일유형 문서:DOCU, 음악:MUSIC, 영상:VIDEO, 그림:PHOTO, 폴더:FOLDER, 압축파일:ZIP',
+  `TYPE_ICON` varchar(100) DEFAULT NULL COMMENT '파일 아이콘 경로',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`TYPE_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='파일확장자 유형';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_folder`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_folder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_folder` (
+  `FOLDER_ID` varchar(100) NOT NULL COMMENT '폴더아이디',
+  `FOLDER_NAME1` varchar(200) NOT NULL COMMENT '폴더이름',
+  `FOLDER_NAME2` varchar(200) DEFAULT NULL COMMENT '폴더이름2',
+  `FOLDER_TYPE` varchar(50) NOT NULL COMMENT '폴더유형 회사:C, 부서: D, 개인: U',
+  `FOLDER_PATH` varchar(200) DEFAULT NULL COMMENT '폴더경로',
+  `FOLDER_STEP` bigint(10) NOT NULL COMMENT '폴더트리스텝',
+  `FOLDER_LEVEL` bigint(10) NOT NULL COMMENT '폴더트리레벨',
+  `FOLDER_UPPER` varchar(50) DEFAULT NULL COMMENT '상위폴더 아이디',
+  `USE_STATUS` varchar(5) DEFAULT NULL COMMENT '사용여부 사용:Y, 미사용:N, 휴지통:T',
+  `OWNER_ID` varchar(100) DEFAULT NULL COMMENT '소유자 아이디 (사원아이디,부서아이디,회사아이디)',
+  `CREATE_ID` varchar(100) NOT NULL COMMENT '생성자 아이디',
+  `CREATE_DATE` datetime NOT NULL COMMENT '생성일',
+  `CREATE_NAME1` varchar(100) NOT NULL COMMENT '생성자 이름',
+  `CREATE_NAME2` varchar(100) NOT NULL COMMENT '생성자 이름2',
+  `UPDATE_ID` varchar(100) DEFAULT NULL COMMENT '수정자 아이디',
+  `UPDATE_DATE` datetime DEFAULT NULL COMMENT '수정일',
+  `COMPANY_ID` varchar(100) NOT NULL COMMENT '회사 아이디',
+  `DELETER_ID` varchar(100) DEFAULT NULL COMMENT '삭제한 사람',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`TENANT_ID`,`FOLDER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 폴더';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_folderuser`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_folderuser`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_folderuser` (
+  `SEQ_ID` varchar(100) NOT NULL COMMENT '생성 순번',
+  `USER_ID` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `USER_TYPE` varchar(50) NOT NULL COMMENT '사용자 타입 부서: DEPT, 사원:USER ',
+  `FOLDER_ID` varchar(100) NOT NULL COMMENT '폴더 아이디',
+  `CREATE_ID` varchar(100) NOT NULL COMMENT '생성자 아이디',
+  `CREATE_DATE` datetime NOT NULL COMMENT '생성일',
+  `COMPANY_ID` varchar(50) NOT NULL COMMENT '회사 아이디',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`SEQ_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 폴더 사용자';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_log`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_log` (
+  `LOG_ID` varchar(200) NOT NULL COMMENT '로그 순번',
+  `FILE_TYPE` varchar(200) DEFAULT NULL COMMENT '파일유형',
+  `FILE_NAME` varchar(200) DEFAULT NULL COMMENT '파일이름',
+  `FILE_SIZE` varchar(200) DEFAULT NULL COMMENT '파일크기',
+  `FILE_EXT` varchar(10) DEFAULT NULL COMMENT '파일확장자',
+  `LOG_TYPE` varchar(200) DEFAULT NULL COMMENT '수행사항(업로드:C, 다운로드:D, 수정:U, 삭제: R, 영구삭제:P)',
+  `CREATE_ID` varchar(200) DEFAULT NULL COMMENT '생성자 아이디',
+  `CREATE_NAME1` varchar(200) DEFAULT NULL COMMENT '생성자 이름',
+  `CREATE_NAME2` varchar(200) DEFAULT NULL COMMENT '생성자 이름2',
+  `CREATE_DATE` datetime DEFAULT NULL COMMENT '생성일',
+  `COMPANY_ID` varchar(200) DEFAULT NULL COMMENT '회사 아이디',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`LOG_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용 로그';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_share`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_share`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_share` (
+  `SHARE_ID` bigint(20) NOT NULL,
+  `SHARER_ID` varchar(80) NOT NULL,
+  `SHARER_NAME1` varchar(120) NOT NULL,
+  `SHARER_NAME2` varchar(120) NOT NULL,
+  `FOLDERFILE_ID` varchar(100) NOT NULL,
+  `FOLDERFILE_TYPE` varchar(5) NOT NULL,
+  `USER_NAME_LIST` varchar(300) DEFAULT NULL,
+  `SHARE_DATE` datetime NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`SHARE_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_share_hide`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_share_hide`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_share_hide` (
+  `SEQ_ID` bigint(20) NOT NULL,
+  `SHARE_ID` bigint(20) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `USER_NAME1` varchar(120) NOT NULL,
+  `USER_NAME2` varchar(120) NOT NULL,
+  `HIDE_DATE` datetime NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`SEQ_ID`,`TENANT_ID`),
+  KEY `tbl_webfolder_share_del_fk_idx` (`SHARE_ID`,`TENANT_ID`),
+  CONSTRAINT `fk_webfolder_share_hide` FOREIGN KEY (`SHARE_ID`, `TENANT_ID`) REFERENCES `tbl_webfolder_share` (`SHARE_ID`, `TENANT_ID`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_share_sub`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_share_sub`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_share_sub` (
+  `SEQ_ID` bigint(20) NOT NULL,
+  `SHARE_ID` bigint(20) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `USER_NAME1` varchar(120) NOT NULL,
+  `USER_NAME2` varchar(120) NOT NULL,
+  `USER_TYPE` varchar(5) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`SEQ_ID`,`TENANT_ID`),
+  KEY `tbl_webfolder_share_fk_idx` (`SHARE_ID`,`TENANT_ID`),
+  CONSTRAINT `tbl_webfolder_share_sub_fk` FOREIGN KEY (`SHARE_ID`, `TENANT_ID`) REFERENCES `tbl_webfolder_share` (`SHARE_ID`, `TENANT_ID`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_user`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_user` (
+  `CN` varchar(80) NOT NULL COMMENT '사용자 아이디',
+  `TOTAL_CAPACITY` varchar(250) DEFAULT NULL COMMENT '총용량',
+  `COMPANY_ID` varchar(50) NOT NULL COMMENT '회사 아이디',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`CN`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
