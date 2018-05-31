@@ -42,7 +42,7 @@
 		<script type="text/javascript">
 		var pCompanyId = ""; //현재 선택된 회사의 아이디
 		var totalAtt 		  = "";
-		var currentPage		  = "";
+		var currentPage		  = ${currentPage};
 		var totalPages 		  = "";
 	    var blockSize 		  = 10;
 	    var orderCell = ""; // 정렬 명
@@ -199,7 +199,7 @@
 		
 	    function windowResize() {
         	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
-        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+        	document.getElementById("contentlist").style.height = (height - 155) + "px";
         	document.getElementById("contentlist").style.overflow = "auto";
         }
 		
@@ -1240,7 +1240,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:650px;width:100%;overflow-y:auto;" onblur>
+		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:600px;width:100%;overflow-y:auto;" onblur>
 			<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
 				<tr>
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
