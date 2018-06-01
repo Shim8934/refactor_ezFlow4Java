@@ -108,20 +108,18 @@ public class EzAttitudeBHSController {
 		String userId = userInfo.getId();
 		String startDate = request.getParameter("startDate");
 		String endDate =request.getParameter("endDate");
-		String deptFlag = "false";
-		String typeId = "";
-		String selectedDeptID = "";
+		String deptFlag = request.getParameter("deptFlag");
+		String typeId = request.getParameter("typeId");
+		String selectedDeptID = request.getParameter("selectedDeptID");
 		
-		if (request.getParameter("deptFlag") != null && !request.getParameter("deptFlag").equals("")) {
-			deptFlag = request.getParameter("deptFlag");
+		if (deptFlag == null) {
+			deptFlag = "false";
 		}
-		
-		if (request.getParameter("typeId") != null && !request.getParameter("typeId").equals("")) {
-			typeId = request.getParameter("typeId");
+		if (typeId == null) {
+			typeId = "";
 		}
-		
-		if (request.getParameter("selectedDeptID") != null && !request.getParameter("selectedDeptID").equals("")) {
-			selectedDeptID = request.getParameter("selectedDeptID");
+		if (selectedDeptID == null) {
+			selectedDeptID = "";
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
