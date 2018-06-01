@@ -392,7 +392,7 @@ public class EzPMSGWController2 {
 			project.put("tenantId", info.getTenantId());
 			
 			project.put("treeDepth", request.getParameter("treeDepth"));
-			project.put("ancestorGroup", "0");
+			project.put("ancesterGroup", "0");
 			project.put("sortOrder", 1);
 			project.put("status", "W");
 			

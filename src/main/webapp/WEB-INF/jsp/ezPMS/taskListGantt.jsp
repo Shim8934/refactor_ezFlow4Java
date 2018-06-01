@@ -344,7 +344,7 @@
 	   		}
 	   		
 	   		function test(){
-	   			alert("ttttttttttttttttt");
+// 	   			alert("ttttttttttttttttt");
 	   		}
 	   		
 	   		function preProcess(){
