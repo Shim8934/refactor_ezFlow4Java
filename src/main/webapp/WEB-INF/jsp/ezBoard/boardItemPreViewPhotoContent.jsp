@@ -546,7 +546,7 @@
 	            }
 	        }
 	
-	        function imageonmouse(reslut) {
+	        function imageonmouse(result) {
 	            for (var i = 0; i < ImageCount; i++) {
 	                document.getElementById("image" + i).style.border = "";
 	                document.getElementById("image" + i).style.margin = "0px 4px";
@@ -558,14 +558,14 @@
 	                    document.getElementById("image" + i).style.filter = "Alpha(Opacity=35)";
 	            }
 	
-	            document.getElementById(reslut).style.border = "#2e71ff 3px solid";
-	            document.getElementById(reslut).style.margin = "0px 4px";
-	            document.getElementById(reslut).style.width = imgWidth;
-	            document.getElementById(reslut).style.height = imgHeight;
+	            document.getElementById(result).style.border = "#888 1px solid";
+	            document.getElementById(result).style.margin = "0px 4px";
+	            document.getElementById(result).style.width = imgWidth;
+	            document.getElementById(result).style.height = imgHeight;
 	            if (CrossYN())
-	                document.getElementById(reslut).style.opacity = "1";
+	                document.getElementById(result).style.opacity = "1";
 	            else
-	                document.getElementById(reslut).style.filter = "Alpha(Opacity=100)";
+	                document.getElementById(result).style.filter = "Alpha(Opacity=100)";
 	        }
 	
 	        function imagemouseover(image) {
@@ -575,7 +575,7 @@
 	                image.style.opacity = "1";
 	            else
 	                image.style.filter = "Alpha(Opacity=100)";
-	            image.style.border = "#2e71ff 3px solid";
+	            image.style.border = "#888 1px solid";
 	            image.style.margin = "0px 4px";
 	        }
 	        function imagemouseout(image) {
