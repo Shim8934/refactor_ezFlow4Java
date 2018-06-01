@@ -119,7 +119,7 @@ function addTaskLog(projectId, logStatus, groupId, taskId, logContent) {
 		url : "/ezPMS/addTaskLog.do",
 		contentType: "application/json; charset=UTF-8",
 		data : JSON.stringify(data),
-		success : function(data) {
+		success : function() {
 			
 		},
 		error : function(request, status, error) {

@@ -138,6 +138,8 @@ public class EzPMSGWController {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects] started.");
 		
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
 		try{
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
@@ -183,7 +185,10 @@ public class EzPMSGWController {
 			
 			//그룹 생성
 			project.put("groupName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
-			ezPMSService.addGroup(project, "N");
+			long groupId = ezPMSService.addGroup(project, "N");
+			
+			data.put("projectId", projectId);
+			data.put("groupid", groupId);
 			
 			//프로젝트 멤버 테이블에 추가
 			for (int i = 0; i < projectMemberList.size(); i++) {
@@ -673,7 +678,7 @@ public class EzPMSGWController {
 	//작업 이력 추가
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/logs", method = RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject addTaskLog(@PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject addTaskLog(@PathVariable long projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId + "/logs] started.");
 		
 		JSONObject result = new JSONObject();

@@ -44,7 +44,8 @@
     	<result property="workingday"						column="WORKINGDAY"					columnIndex="19"/>
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="20"/>
     	<result property="alamMailStatus"					column="ALAM_MAIL_STATUS"			columnIndex="21"/>
-    	<result property="isFavorite"						column="ISFAVORITE"					columnIndex="22"/>    	
+    	<result property="isFavorite"						column="ISFAVORITE"					columnIndex="22"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="23"/>    	
     </resultMap>
     
     <resultMap id="projectGroupVO" class="ProjectGroupVO">
@@ -674,7 +675,8 @@
 				A.WORKINGDAY AS WORKINGDAY, 
 				A.REST_DUEDAY AS REST_DUEDAY, 
 				A.ALAM_MAIL_STATUS AS ALAM_MAIL_STATUS,
-				IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE  
+				IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE,
+				0 AS GROUP_ID
 			FROM 
 				tbl_pms_project A
 			JOIN 
@@ -682,7 +684,7 @@
 			ON
 				A.PROJECT_ID = B.PROJECT_ID
 			AND
-				A.TENANT_ID = B.TENANT_ID 
+				A.TENANT_ID = B.TENANT_ID
 		]]> 
 		<isNotEqual property="listProjectStatus" compareValue="F">
 			LEFT JOIN 
@@ -712,7 +714,7 @@
 			AND 
 				A.TENANT_ID = #tenantId#
 			AND 
-				DEL_STATUS = 0
+				A.DEL_STATUS = 0
 		<isNotEqual property="listProjectStatus" compareValue="F">
 			<isNotEqual property="listProjectStatus" compareValue="A">
 				AND  
@@ -979,7 +981,8 @@
 			A.WORKINGDAY, 
 			A.REST_DUEDAY, 
 			A.ALAM_MAIL_STATUS,
-			IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE
+			IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE,
+			G.GROUP_ID
 		FROM 
 			tbl_pms_project	A
 		JOIN 
@@ -993,7 +996,13 @@
 			ON
 				A.PROJECT_ID = F.PROJECT_ID 
 			AND
-				A.TENANT_ID = F.TENANT_ID	
+				A.TENANT_ID = F.TENANT_ID
+		LEFT JOIN	
+			TBL_PMS_GROUP G
+		ON
+			A.PROJECT_ID = G.PROJECT_ID
+		AND
+			G.UPPER_GROUP_ID = 0
 		WHERE 
 			A.TENANT_ID = #tenantId#
 		AND
@@ -1928,7 +1937,7 @@
 		WHERE 
 			(L.GROUP_ID = #groupId# 
 				OR G.UPPER_GROUP_ID = #groupId#
-				OR G.UPPER_GROUP_ID = (
+				OR G.UPPER_GROUP_ID IN (
 							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
 				)
 			)
@@ -1991,7 +2000,7 @@
 		AND 
 			(L.GROUP_ID = #groupId# 
 				OR G.UPPER_GROUP_ID = #groupId#
-				OR G.UPPER_GROUP_ID = (
+				OR G.UPPER_GROUP_ID IN (
 							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
 				)
 			)

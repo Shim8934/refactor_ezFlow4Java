@@ -44,6 +44,7 @@ var projectId = "${project.projectId}";
 var beforeManagerList = [];
 var beforeParticipantList = [];
 var beforeViewerList = [];
+var groupId = "${groupId}";
 
  $(function() {	
 	getDatePicker();
@@ -266,29 +267,30 @@ var beforeViewerList = [];
 			headManagerId : headManagerId,
 			managerList : managerList,
 			participantList : participantList,
-			viewerList : viewerList
+			viewerList : viewerList,
+			groupId : groupId
 	}
 	
 	$.ajax({
 		type : "POST",
 		url : "/ezPMS/addNewProject.do",
-		dataType : "text",
+		dataType : "json",
 		contentType: "application/json; charset=UTF-8",
 		data :JSON.stringify(data),
 		success : function(result) {
-			try { 
+		 	try { 
 				
 				if (mode == "edit") {
-					sendNotiMail(result, projectName);
+					sendNotiMail(projectId, projectName);
 					var logContent = "[" + projectName + "]의 정보가 수정되었습니다."
-					addTaskLog(result, 2, null, null, logContent);
+					addTaskLog(projectId, 2, groupId, null, logContent);
 					alert ("프로젝트가 수정되었습니다.");
 					parent.projectId = projectId;
 					parent.window.location.reload();
 				} else {
-					sendNotiMail(result, projectName);
+					sendNotiMail(result.projectId, projectName);
 					var logContent = "[" + projectName + "](이)가 생성되었습니다."
-					addTaskLog(result, 1, null, null, logContent);
+					addTaskLog(result.projectId, 1, result.groupId, null, logContent);
 					alert("새프로젝트가 추가되었습니다.");
 					parent.setProjectList(); 
 				}
@@ -297,7 +299,7 @@ var beforeViewerList = [];
 			} catch (e) {
 				alert("error 발생");
 				return;
-			}
+			} 
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("error");

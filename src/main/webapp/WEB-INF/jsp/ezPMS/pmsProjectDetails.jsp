@@ -15,6 +15,7 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript">
 var projectId = "${project.projectId}";
+var groupId = "${project.groupId}";
 
 $(function() {
 	$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do?projectId="+projectId);
