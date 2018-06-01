@@ -330,6 +330,22 @@
 	   			}
 	   		}
 	   		
+	   		function ganttChartModifyFunc(){
+	   			GanttMaster.prototype.taskIsChanged = function () {
+	   			  var master = this;
+	   			  this.element.stopTime("gnnttaskIsChanged");
+	   			  this.element.oneTime(50, "gnnttaskIsChanged", function () {
+	   			    master.redraw();
+	   			    master.element.trigger("gantt.redrawCompleted");
+	   			  });
+	   			  test();
+	   			};
+	   		}
+	   		
+	   		function test(){
+	   			alert("ttttttttttttttttt");
+	   		}
+	   		
 	   		function preProcess(){
 	   			//간트 차트 테이블 날짜 형식 세팅. i18nJs.js 의 내용에 덮어 씌움.
 	   			Date.defaultFormat = "yyyy/M/d";
@@ -427,6 +443,7 @@
 	   			};
 		   		initValues();
 		   		ganttChartAddFunc();
+		   		ganttChartModifyFunc();
 		   		
 // 		   		ge = new GanttMaster();
 // 		   		ge.init($("#workSpace"));
