@@ -26,7 +26,8 @@
 			dataType : "json",
 			url : "/ezPMS/projectTaskTree.do",
 			data : {
-				"projectId" : projectId, "onlyGroup" : onlyGroup
+				"projectId" : projectId, 
+				"onlyGroup" : onlyGroup
 			},
 			success : function(data) {
 				$("#"+containerId).on('changed.jstree', function (e, data) {

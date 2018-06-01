@@ -331,7 +331,8 @@
 	   					location.reload();
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert("error2");
+	   					alert("에러 : updateTaskWDNW 쿼리 구현하면 에러 안남");
+	   					location.reload();
 	   				}
 	   			});
 	   		}
