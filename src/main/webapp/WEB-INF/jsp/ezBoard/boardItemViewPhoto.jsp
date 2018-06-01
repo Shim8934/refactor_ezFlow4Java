@@ -1262,7 +1262,7 @@
 		            <td style="width:100px; padding-left:50px; text-align:center">
 		                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
 		            </td>
-		            <td style="padding-left:15px">
+		            <td style="padding-left:20px">
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
 		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">
