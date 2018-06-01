@@ -1491,8 +1491,26 @@
 				IFNULL(#ipAddress#, ''),
 				#dateType#,
 				#typeId#,
-				a.type_name,
-				a.type_name2,
+				(select 
+					type_name
+				from 
+					tbl_attitude_type
+				where
+					type_id = #typeId#
+				and
+					company_id = #attVO.companyId#
+				and
+					tenant_id = #tenantId#),
+				(select 
+					type_name2
+				from 
+					tbl_attitude_type
+				where
+					type_id = #typeId#
+				and
+					company_id = #attVO.companyId#
+				and
+					tenant_id = #tenantId#),
 				#adminId#,
 				c.displayname,
 				c.displayname2,
@@ -1541,7 +1559,7 @@
 				where
 					cn = #adminId#
 				and
-					PHYSICALDELIVERYOFFICENAME = #attVO.companyId#
+					PHYSICALDELIVERYOFFICENAME = #adminCompanyId#
 				and
 					tenant_id = #tenantId#					
 				) c

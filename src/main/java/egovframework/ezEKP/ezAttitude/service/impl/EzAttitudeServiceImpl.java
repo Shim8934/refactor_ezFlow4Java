@@ -271,9 +271,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitude(String attitudeId, String startDate,
-			String endDate, String region, String mobile, String bizSub, String content, 
-			String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, int tenantId, String companyId) throws Exception {
+	public void updateAttitude(String attitudeId, String startDate, String endDate, String region,
+			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, int tenantId, String companyId) throws Exception{
 		LOGGER.debug("updateAttitude started");
 		
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
@@ -291,7 +290,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("typeId", typeId);
 		map.put("dateType", dateType);
 		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
+		map.put("companyId", attVO.getCompanyId());
 		
 		if (mode.equals("admin")) {
 			map.put("modappl", "3");
@@ -302,6 +301,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (mode.equals("admin")) {
 			map.put("attVO", attVO);
 			map.put("adminId", adminId);
+			map.put("adminCompanyId", companyId);
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
 			
 			ezAttitudeDAO.insertAdminAttHistory2(map);

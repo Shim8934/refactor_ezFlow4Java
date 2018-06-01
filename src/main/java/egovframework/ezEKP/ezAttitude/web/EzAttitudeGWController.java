@@ -258,7 +258,7 @@ public class EzAttitudeGWController {
 			if (!checkAttitude.equals("") && !checkAttitude.equals("0") && !(typeId.equals(attitudeVO.getTypeId()) && startDate.split(" ")[0].equals(attitudeVO.getStartDate().split(" ")[0]))) {
 				checkAttitude = "dupl";
 			} else {
-				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, attitudeVO.getWriterId(), info.getTenantId(), attitudeVO.getCompanyId());
+				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId(), info.getCompanyId());
 			}
 			
 			result.put("status", "ok");
