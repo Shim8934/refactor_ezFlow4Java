@@ -466,7 +466,7 @@
 		<isNotEmpty property="startPoint" prepend="limit">
 			<isNotEmpty property="endPoint">
 				<![CDATA[
-					#startPoint#, #endPoint#
+					$startPoint$, $endPoint$
 				]]>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -477,11 +477,11 @@
 			SELECT
 					a.attitude_id as ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-					CASE WHEN #primary# = 1 THEN a.appr_user_name ELSE a.appr_user_name$primary$ END as APPR_USER_NAME,
+					CASE WHEN #primary# = 1 THEN a.appr_user_name ELSE a.appr_user_name2 END as APPR_USER_NAME,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS,
-					CASE WHEN #primary# = 1 THEN a.writer_name ELSE a.writer_name$primary$ END as WRITER_NAME,
-					CASE WHEN #primary# = 1 THEN a.writer_dept_name ELSE a.writer_dept_name$primary$ END as WRITER_DEPT_NAME,
+					CASE WHEN #primary# = 1 THEN a.writer_name ELSE a.writer_name2 END as WRITER_NAME,
+					CASE WHEN #primary# = 1 THEN a.writer_dept_name ELSE a.writer_dept_name2 END as WRITER_DEPT_NAME,
 					APPL_CNT,
 					a.writer_id as WRITER_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.appl_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') as APPL_DATE
