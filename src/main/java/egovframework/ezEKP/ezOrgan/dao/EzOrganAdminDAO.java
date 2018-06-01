@@ -741,6 +741,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }
 	}
 		
+	public void updateDBData_userPermission(OrganUserVO vo) throws Exception {
+        update("EzOrganAdminDAO.updateDBData_userPermission", vo);		
+	}
+	
     private void updatePropertyForLocal(Map<String, Object> map) throws Exception{
         update("EzOrganAdminDAO.updateProperty", map);
     }

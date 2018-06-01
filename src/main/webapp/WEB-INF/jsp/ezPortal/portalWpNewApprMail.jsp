@@ -170,8 +170,6 @@
 		    }
 	
 		    function change_article(flag) {
-		    	document.getElementById("mailquatersize").innerHTML = "";
-		    	
 		        if (flag == "appr") {
 		            document.getElementById("appr_article").style.display = "";
 		            document.getElementById("mail_article").style.display = "none";
@@ -577,6 +575,7 @@
 		        if (xmlhttp_getMailGraph_NewApprMail == null || xmlhttp_getMailGraph_NewApprMail.readyState != 4) return;
 		        
 		        /* 2018-05-25 홍승비 - 메일 용량 표시 변경 */
+		        document.getElementById("mailquatersize").innerHTML = "";
 		    	MailQuater = new JustGage({
 		            id: "mailquatersize",
 		            value: 0,
@@ -624,7 +623,7 @@
 		        }
 		    }
 	
-		    function open_mail(url) {        
+		    function open_mail(url) {
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;

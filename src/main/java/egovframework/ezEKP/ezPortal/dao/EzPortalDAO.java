@@ -488,4 +488,3 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.getMainMenuItemUID", map);
 	}
 }
-

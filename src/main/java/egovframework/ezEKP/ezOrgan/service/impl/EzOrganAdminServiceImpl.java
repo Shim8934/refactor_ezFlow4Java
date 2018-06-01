@@ -804,6 +804,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     }   
 	
 	@Override
+    public void updateDBData_userPermission(OrganUserVO vo) throws Exception {
+        logger.debug("updateDBData_userPermission started");
+        logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn());
+                        
+        ezOrganAdminDao.updateDBData_userPermission(vo);
+        
+        logger.debug("updateDBData_userPermission ended");
+    }   
+    
+	@Override
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception {
 	    logger.debug("updateDBData_dept started");
         logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn() + ",displayName=" + vo.getDisplayName()

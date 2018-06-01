@@ -319,6 +319,9 @@ form{display:inline;margin:0}
 .left_copadmin{background:url(/images/comm/admin_left.jpg) repeat #184c8b;height: 40px;}
 .left_webdisk{background:url(/images/left/left_webdisk.jpg) repeat #184c8b;height: 40px;}
 .left_ezprocess{background:url(/images/left/left_ezprocess.jpg) repeat #184c8b;height: 40px;}
+
+.left_webfolder{height:52px; background:#0470e4;}
+.left_webfolder span{background:url(/images/webfolder/left_webfolder.png) no-repeat left center ;display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
 .left_env{height:52px; background:#0470e4;}
 .left_env span{background:url(/images/kr/left/left_env.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
 
@@ -528,6 +531,7 @@ form{display:inline;margin:0}
 #close{position:absolute;right:10px; top:10px;height:35px; }
 #close ul {margin: 0; padding: 0;}
 #taskChangeMode {float: left; padding-top: 8px; color: black; font-size: 16px; font-weight: bold;}
+
 #menu ul li, #close ul li {
 	display: block;
 	float:left;
@@ -538,6 +542,7 @@ form{display:inline;margin:0}
 	cursor:pointer;
 	vertical-align:middle
 }
+
 #menu span, #close span {display:inline-block; background:white; border:1px solid rgba(188, 211, 224, 1); height:25px;padding:0px 8px 0px 8px; border-radius:3px; line-height:25px;font-size:12px;color:#333;}
 #menu ul li.on, #close ul li.on { color:#666;}
 #menu li.on span, #close ul li.on span { color:#2058a6; background:white; border:1px solid #6793d8;}	
@@ -623,6 +628,7 @@ form{display:inline;margin:0}
 	font-weight:normal;
     
 }
+
 .content{border:1px solid #ddd;margin:0;}
 .content td, .file td, .file2 td, .popuplist td {
 	padding:0px 2px 0px 2px;
@@ -646,6 +652,7 @@ form{display:inline;margin:0}
 	height:23px;
 	font-weight:normal;
 }
+
 .content2{border:1px solid #ddd;margin:0;}
 .content2 td{
 	padding:0 2px;
@@ -675,6 +682,7 @@ form{display:inline;margin:0}
 .file2 div {OVERFLOW:auto;}
 
 .primary th{border-top:none;border-left:none}
+
 .popup .primary td, .mainbody .primary td{border-bottom:1px solid #ddd}
 .secondary_dis{display:none}
 .secondary th, .secondary_dis th{border-left:none;border-bottom:none}
@@ -687,6 +695,7 @@ form{display:inline;margin:0}
 .box{border:1px solid #ddd; padding:1px 0px 1px 1px; background-color:#fff;}
 .box1{border:1px solid #ddd; padding:2px 2px;background-color:#fff; width:60px;}
 .box2{border:1px solid #ddd;  background-color:#fff; font-size:12px;}
+
 .nobox{border:none}
 .viewbox{
 	border:0;
@@ -1006,7 +1015,6 @@ form{display:inline;margin:0}
 .pl8{padding-left:8px;}
 .pl9{padding-left:9px;}
 .pl10{padding-left:10px;}
-
 
 .tstyle1 {border:1px  solid #ddd; width:100%; font-size:12px; font-family: 'gulim', 'arial', 'verdana';} 
 .tstyle1 th {

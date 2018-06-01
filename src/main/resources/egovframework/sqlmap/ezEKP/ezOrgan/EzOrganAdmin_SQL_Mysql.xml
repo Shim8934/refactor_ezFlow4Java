@@ -3004,6 +3004,19 @@
       	]]>		
 	</update>
 	
+	<update id="EzOrganAdminDAO.updateDBData_userPermission" parameterClass="OrganUserVO">
+		<![CDATA[
+			UPDATE
+				TBL_USERMASTER
+     		SET
+     			extensionAttribute1 = #extensionAttribute1#
+      		WHERE
+      			cn = #cn#
+      		AND
+      			tenant_id = #tenantId#	
+      	]]>		
+	</update>
+		
 	<update id="EzOrganAdminDAO.setUserMail" parameterClass="Map">
 		<![CDATA[
 			UPDATE

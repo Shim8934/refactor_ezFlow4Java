@@ -9,6 +9,10 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
 			function window_onload(){
+				process();
+			}
+			
+			function process() {
 			    <c:if test="${packageType != 'standard' || firstScreen_Mail == 'YES'}">
 			    	window.open("/admin/ezOrgan/organMain.do", "bottom");
 			    </c:if>
