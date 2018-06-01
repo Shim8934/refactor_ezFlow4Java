@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.FileVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
@@ -248,6 +249,15 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	public void insertReadBoardLog(Map<String, Object> map) {
 		insert("EzPMSDAO.insertReadBoardLog", map);
+	}
+	
+	public int getBoardViewerCount(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.getBoardViewerCount", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardViewerVO> getBoardViewerList(Map<String, Object> map) {
+		return (List<BoardViewerVO>) list("EzPMSDAO.getBoardViewerList", map);
 	}
 	
 	public void updateBoardReadCount(int itemId) {

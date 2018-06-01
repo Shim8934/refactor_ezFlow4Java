@@ -117,12 +117,17 @@
 			DivPopUpShow(320, 320, "/ezPMS/goMoveBoards.do?projectId=" + projectId + "&onlyGroup=false");
 		}
 		
-		function boardViewerList() {
+		function boardViewerList(currentPage) {
+			
+			if (!currentPage) {
+				currentPage = "";
+			}
+			
 			var heigth = window.screen.availHeight;
 	        var width = window.screen.availWidth;
 	        var left = (width - 500) / 2;
 	        var top = (heigth - 300) / 2;
-	        DivPopUpShow(600, 415, "/ezPMS/getBoardViewerList.do?itemId=" + itemId);
+	        DivPopUpShow(600, 415, "/ezPMS/getBoardViewerList.do?itemId=" + itemId + "&currentPage=" + currentPage);
 		}
 	</script>
 </head>

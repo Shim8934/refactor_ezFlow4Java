@@ -28,6 +28,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
+import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
@@ -1739,4 +1740,34 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getUserGroupRole ended.");
 		return userGroupRole;
 	}
+
+	@Override
+	public int getBoardViewerCount(int tenantId, String itemId, String userId) {
+		LOGGER.debug("[SERVICE] getBoardViewerCount started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("itemId", itemId);
+		map.put("userId", userId);
+		
+		LOGGER.debug("[SERVICE] getBoardViewerCount ended.");
+		
+		return ezPMSDAO.getBoardViewerCount(map);	
+	}
+
+	@Override
+	public List<BoardViewerVO> getBoardViewerList(int tenantId, String itemId, String userId) {
+		LOGGER.debug("[SERVICE] getBoardViewerList started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("itemId", itemId);
+		map.put("userId", userId);
+		
+		LOGGER.debug("[SERVICE] getBoardViewerList ended.");
+		
+		return ezPMSDAO.getBoardViewerList(map);
+	}
+	
+	
 }

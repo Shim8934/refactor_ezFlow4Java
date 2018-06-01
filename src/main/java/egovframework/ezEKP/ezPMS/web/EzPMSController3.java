@@ -357,7 +357,7 @@ public class EzPMSController3 {
 		model.addAttribute("projectId", projectId);
 		LOGGER.debug("ezPMS projectDragAndDrop ended");
 		
-		return "ezPMS/pmsDragAndDrop";
+		return "/ezPMS/pmsDragAndDrop";
 	}
 	
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -582,6 +582,55 @@ public class EzPMSController3 {
 		
 		LOGGER.debug("ezPMS getBoardDetail ended");
 		
-		return "ezPMS/pmsBoardDetail";
+		return "/ezPMS/pmsBoardDetail";
+	}
+	
+	@RequestMapping(value = "/ezPMS/getBoardViewerList.do")
+	public String getBoardViewerList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getBoardViewerList started");
+		
+		int totalCount = 0;
+		int currentPage = 1;
+		int listCnt = 10;
+		int countPage = 10;
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String itemId = request.getParameter("itemId");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId + "/viewer-count", param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			totalCount = Integer.parseInt((String) resultBody.get("data"));
+		}
+		
+		String currentPageStr = request.getParameter("currentPage");
+		
+		if(currentPageStr != null && !currentPageStr.equals("")) {
+			currentPage = Integer.parseInt(currentPageStr);
+		}
+		
+		ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
+		model.addAttribute("paging", paging);
+		
+		param.put("startRow", paging.getStartCount());
+		param.put("limit", listCnt);
+		
+		if(totalCount > 0) {
+			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId + "/viewers/", param, request, "get", null);
+			status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONArray viewerList = (JSONArray) resultBody.get("data");
+				model.addAttribute("viewerList", viewerList);
+			} 
+		}
+		
+		LOGGER.debug("ezPMS getBoardViewerList ended");
+		
+		return "/ezPMS/pmsBoardViewerList";
 	}
 }
