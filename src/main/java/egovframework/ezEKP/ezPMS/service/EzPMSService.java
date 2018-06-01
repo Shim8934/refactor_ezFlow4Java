@@ -86,7 +86,7 @@ public interface EzPMSService {
 	
 	public int updateGroup(ProjectGroupVO group);
 	
-	public int deleteGroup(Long groupId);
+	public void deleteGroup(long projectId, long groupId, int tenantId);
 	
 	public String getUserRole(String userId, Long projectId, int tenantId);
 	
@@ -139,7 +139,7 @@ public interface EzPMSService {
 	List<ProjectInfoVO> getProgressProject(String status) throws Exception;
 
 	public String getUserTaskRole(String userId, int tenantId, long taskId);
-
+	
 	List<Map<String, Object>> getFilePath(long itemId, int tenantId);
 
 	public int getGroupCount(SearchVO search, int tenantId, String userId);
@@ -147,4 +147,6 @@ public interface EzPMSService {
 	public void addGroupMember(List<ProjectGroupMemberVO> groupMemberList);
 	
 	public List<ProjectGroupMemberVO> getUserInfoForGroup(HashMap<String, Object> map);
+
+	public int getUserGroupRole(String userId, int tenantId, long projectId, long groupId);
 }

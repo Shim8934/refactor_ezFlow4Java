@@ -2303,6 +2303,20 @@
 				</iterate>
 				)
 		</isNotEqual>
-		
+	</select>
+	
+	<select id="EzPMSDAO.getUserGroupRole" parameterClass="map" resultClass="Integer">
+		SELECT 
+			MIN(USER_ROLE_ID)
+		FROM
+			TBL_PMS_GROUP
+		WHERE
+			USER_ID = #userId#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			GROUP_ID = #groupId#
+		AND
+			TENANT_ID = #tenantId#
 	</select>
 </sqlMap>

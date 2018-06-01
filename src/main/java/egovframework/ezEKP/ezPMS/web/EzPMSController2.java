@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -757,28 +758,23 @@ public class EzPMSController2 {
 	 * @return
 	 */
 	@RequestMapping(value="/ezPMS/deleteGroup.do")
+	@ResponseBody
 	public String deleteGroup(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
 		
 		LOGGER.debug("ezPMS deleteGroup started");
-		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			long projectId = Long.parseLong(param.get("projectId").toString());
+			long groupId = Long.parseLong(param.get("groupId").toString());
+			String userId = userInfo.getId();
 			
-			String projectId = (String) param.get("projectId");
-			String url = "/rest/ezPMS/groups/"+ projectId +"/users/" + userInfo.getId();
-			String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+			param.put("userId", userId);
+			String url = "/rest/ezPMS/projects/" + projectId + "groups/"+ groupId;
 			
-			param.put("createDate", today);
-			param.put("userId", userInfo.getId());
-			
-			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
-			String status = resultBody.get("status").toString();
+			commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 		LOGGER.debug("ezPMS deleteGroup ended");
 		
 		return "json";
