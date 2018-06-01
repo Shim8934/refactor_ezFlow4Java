@@ -12,8 +12,8 @@
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-	<link rel="stylesheet" href="/js/jsTree/dist/themes/default/style.css"/>
-	<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
+	<link rel="stylesheet" href="/js/ezWebFolder/jsTree/dist/themes/default/style.css"/>
+	<script type="text/javascript" src="/js/ezWebFolder/jsTree/dist/jstree.js"></script>
 	<script type="text/javascript">
 		var primary = "<c:out value='${primary}'/>";
 		var folderId = "";
