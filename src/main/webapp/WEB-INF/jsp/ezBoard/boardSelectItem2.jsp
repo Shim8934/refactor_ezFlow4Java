@@ -83,16 +83,23 @@
     }
    	function Select() {
    		board_alertArguments[1] = DivPopUpHidden;
+
    		if (selectedBoard == "") {
-   			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("게시판을 선택해 주십시오.") + "&MESSAGE=" + encodeURIComponent("게시판을 선택해 주십시오.") + "&BUTTONNAMES=" + encodeURIComponent("확인");
+    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t138' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t138'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 			DivPopUpShow(330, 205, pUrl);
-			return;
-   		}
+            return;
+        }
    		opener.document.getElementById("selectedBoard").value = selectedBoard;
    		opener.document.getElementById("selectedBoardName").innerHTML = selectedBoardName;
    		opener.document.getElementById("selectedBoardtype").innerHTML = selectedBoardtype;
    		opener.document.getElementById("selectedBoardParentBoardID").value = selectedBoardParentBoardID;
    		//console.log(selectedBoardParentBoardID);
+   		window.close();
+   	}
+   	
+   	function AllSelect() {
+   		opener.document.getElementById("selectedBoard").value = "all";
+   		opener.document.getElementById("selectedBoardName").innerHTML = "<spring:message code='ezBoard.khj5' />";
    		window.close();
    	}
 </script>
@@ -101,9 +108,11 @@
 	<h1><spring:message code='ezBoard.khj1'/></h1>
 	<div class="box" style="width: auto;height:485px;overflow:auto;overflow-x:hidden;margin-left:5px;margin-rignt:5px; padding: 10px;" id=TopBoardsList></div>
 	<div class="btnposition btnpositionNew">
+		<a class="imgbtn" onclick="AllSelect()"><span><spring:message code='ezBoard.khj3'/></span></a>
 		<a class="imgbtn" name="Submit"  onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
 		<a class="imgbtn" name="Submit"  onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
 	</div>
+	
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>

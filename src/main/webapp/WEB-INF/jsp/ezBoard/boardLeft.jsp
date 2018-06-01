@@ -754,11 +754,9 @@
 			</div>
 			<ul></ul>
 
-			<ul>
-				<li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px">
+			<h3>
 				<span onclick="boardSearch()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.khj1" /></span>
-				</li>
-			</ul>
+			</h3>
 	        
 			<h3>
 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
