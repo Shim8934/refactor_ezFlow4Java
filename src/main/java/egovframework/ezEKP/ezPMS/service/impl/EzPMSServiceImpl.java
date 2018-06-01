@@ -923,15 +923,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			int taskGroupCount = 0;
 			
-			if (location.equals("taskLog")) {
-				taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
-			} else if (location.equals("taskList")) {
-				taskGroupCount = ezPMSDAO.getTaskListCount(map);
-			} else if(location.equals("board")) {
-				int boardCount = ezPMSDAO.getBoardListCount(map);
-				
-				if(boardCount > 0) {
-					vo.setText(vo.getText() + "(" + boardCount + ")");
+			if(location != null){
+				if (location.equals("taskLog")) {
+					taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
+				} else if (location.equals("taskList")) {
+					taskGroupCount = ezPMSDAO.getTaskListCount(map);
+				} else if(location.equals("board")) {
+					int boardCount = ezPMSDAO.getBoardListCount(map);
+					
+					if(boardCount > 0) {
+						vo.setText(vo.getText() + "(" + boardCount + ")");
+					}
 				}
 			}
 
