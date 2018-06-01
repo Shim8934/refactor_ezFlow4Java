@@ -118,7 +118,7 @@
 	   			/*-------------------------프로젝트 데이터 가공 완료 -------	----------------*/
 	   			
 	   			//그룹 리스트 가공부분.
-// 	   			for(var i = 0; i < tl.length; i++){
+// 	   			for(var i = 0; i < gl.length; i++){
 // 	   				ganttData.tasks[i + 1] = {};
 // 		   			ganttData.tasks[i + 1].id = "p" + tl[i].projectId + "_t" + tl[i].taskId;
 // 		   			ganttData.tasks[i + 1].name = tl[i].taskName;
@@ -161,7 +161,7 @@
 	   			/*-------------------------그룹 데이터 가공 완료 -----------------------*/
 	   			//업무 리스트 가공부분.
 	   			if(tl.length > 0){
-		   			for(var i = 0; i < gl.length; i++){
+		   			for(var i = 0; i < tl.length; i++){
 		   				ganttData.tasks[i + 1] = {};
 			   			ganttData.tasks[i + 1].id = "p" + tl[i].projectId + "_t" + tl[i].taskId;
 			   			ganttData.tasks[i + 1].name = tl[i].taskName;
