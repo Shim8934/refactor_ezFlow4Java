@@ -100,16 +100,20 @@
 		background-color: rgb(233, 241, 255);
 	}
 	
-	tbody tr {
-		cursor: pointer;
-	}
-	
 	tr.noView td {
 		font-weight: bold;
 	}
 	
 	tr.emergency td {
 		color: red;
+	}
+	
+	table.mainlist th, td {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		cursor: pointer;
+		text-align: center;
 	}
 </style>
 <div id="divList" style="width: 100%;">
@@ -123,20 +127,20 @@
 		</ul>
 	</div>
 	<table class="mainlist" style="width: 100%;">
-		<thead>
-			<tr style="height: 37px;">
-				<th class="checkboxHeader"><input type="checkbox" onchange="selectAllTR(this);"></th>
-				<th>No</th>
-				<th><img src="/images/newAttach.gif"></th>
-				<th>제목</th>
-				<th>작업이름</th>
-				<th>부서</th>
-				<th>게시자</th>
-				<th>게시일</th>
-				<th>조회수</th>
+		<thead id="tableHeader">
+			<tr style="height: 37px;" id="BoardList_TH">
+				<th class="checkboxHeader" width="3%"><input type="checkbox" onchange="selectAllTR(this);"></th>
+				<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%">No</th>
+				<th onclick="setListOrder(this)" data-order='FILE' width="3%"><img src="/images/newAttach.gif"></th>
+				<th onclick="setListOrder(this)" data-order='TITLE'>제목</th>
+				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
+				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%">부서</th>
+				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">게시자</th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">게시일</th>
+				<th onclick="setListOrder(this)" data-order='READ_COUNT' width="5%">조회수</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="tableBody">
 			<c:forEach items="${data}" var="projectBoardVO">
 				<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
 					data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
@@ -157,7 +161,7 @@
 							<td><img src="/images/newAttach.gif"></td>
 						</c:otherwise>
 					</c:choose>	
-						<td class="boardTitle">${projectBoardVO.title}</td>
+						<td class="boardTitle" style="text-align: left;">${projectBoardVO.title}</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.taskName eq null}">
 							<td class="taskName">${projectBoardVO.groupName}</td>

@@ -1442,7 +1442,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position) {
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position, String orderWhat, String orderHow) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1454,6 +1454,27 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("limit", limit);
 		map.put("lang", lang);
 		map.put("position", position);
+		map.put("orderHow", orderHow);
+		
+		if(orderWhat.equals("ITEM_ID")) {
+			orderWhat = "B.item_id";
+		} else if(orderWhat.equals("FILE")) {
+			orderWhat = "file_cnt";
+		} else if(orderWhat.equals("TITLE")) {
+			orderWhat = "B.title";
+		} else if(orderWhat.equals("TASK_NAME")) {
+			orderWhat = "T.task_name";
+		} else if(orderWhat.equals("DEPT_NAME")) {
+			orderWhat = "writer_deptname";
+		} else if(orderWhat.equals("WRITER_NAME")) {
+			orderWhat = "writer_name";
+		} else if(orderWhat.equals("WRITE_DATE")) {
+			orderWhat = "B.write_date";
+		} else if(orderWhat.equals("READ_COUNT")) {
+			orderWhat = "B.read_count";
+		} 
+		
+		map.put("orderWhat", orderWhat);
 		
 		List<ProjectBoardVO> boardList = ezPMSDAO.getBoardList(map);
 		

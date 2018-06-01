@@ -1528,9 +1528,14 @@
 				WHEN 1 THEN 2 
 				WHEN 3 THEN 4 
 				ELSE B.write_type 
-				END ASC,
+			END ASC, 
 		</isEmpty>
-			B.item_id DESC
+			<isNotEmpty property="orderWhat">  
+				$orderWhat$ $orderHow$
+			</isNotEmpty>
+			<isEmpty property="orderWhat">
+				B.item_id DESC
+			</isEmpty>   
 			LIMIT #startRow#, #limit#
 	</select>
 	

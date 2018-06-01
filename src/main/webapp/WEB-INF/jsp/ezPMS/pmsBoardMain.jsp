@@ -21,6 +21,8 @@
 	var currentPage = 1;
 	var treeData = JSON.parse('${data}');
 	var itemIds;
+	var orderWhat = "";
+	var orderHow = "";
 	
 	$(document).ready(function() {
 		
@@ -30,7 +32,6 @@
 		$("#contentList").css("height", (currentHeight - 50) + "px");
 		
 		getProjectTaskTree("taskTree", treeData, false);
-		getBoardList();
 		
 		$("#taskTree").on("click", ".jstree-anchor", function() {
 			taskName = $(this).text();
@@ -74,10 +75,14 @@
 	
 	function getBoardList() {
 		var data = {
+			//기본 setting
 			projectId : projectId,
 			groupId : groupId,
 			taskId : taskId,
-			currentPage : currentPage
+			currentPage : currentPage,
+			//내용 header 정렬
+			orderWhat : orderWhat,
+			orderHow : orderHow
 		}
 		
 		$.ajax({
@@ -88,6 +93,8 @@
 			url : "/ezPMS/getBoardList.do",
 			success : function(contentList) {
 				$("#contentList").html(contentList);
+				
+				setInitOrder();
 			}	
 		});
 	}
@@ -134,6 +141,46 @@
 				alert("삭제에 실패했습니다.");
 			}
 		})
+	}
+	
+	function setInitOrder() {
+		$("table.mainlist th").each(function() {
+			if (orderWhat == $(this).attr("data-order")) {
+				if (orderHow == 'asc') {
+					$(this).attr("data-sort", "asc");
+					$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
+				} else if (orderHow == 'desc') {
+					$(this).attr("data-sort", "desc");
+					$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
+				}
+			}
+		});
+
+		boardListScroll();
+	}
+	
+	function boardListScroll() {
+		var thWidth = document.getElementById("tableHeader").clientWidth
+				- document.getElementById("tableBody").clientWidth;
+		if (thWidth > 0) {
+			$("#BoardList_TH").append('<th style=width:2px;></th>');
+		}
+	}
+	
+	//헤더 리스트 셋팅
+	function setListOrder(elem){
+		orderWhat = $(elem).attr("data-order");
+		orderHow = $(elem).attr("data-sort");
+		
+		if(orderHow == null){
+			orderHow='asc';
+		} else if(orderHow == 'asc'){
+			orderHow='desc';
+		} else if(orderHow == 'desc'){
+			orderHow='asc';
+		}
+		
+		getBoardList();
 	}
 </script>
 
