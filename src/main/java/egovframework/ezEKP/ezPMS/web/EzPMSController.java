@@ -418,7 +418,7 @@ public class EzPMSController {
 		LOGGER.debug("ezPMS updateProjectStatus started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String changeDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String changeDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
 		
 		String projectIdList = param.get("projectList").toString();
 		String url = "/rest/ezPMS/projects/" + projectIdList + "/status";
@@ -840,7 +840,7 @@ public class EzPMSController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/pmsSelectAuth.do")
-	public String selectAuth(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, Model model) {
+	public String selectAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		LOGGER.debug("selectAuth started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -893,8 +893,10 @@ public class EzPMSController {
 		param.put("key",key );
 		param.put("value", request.getParameter("value"));
 		param.put("userId", userInfo.getId());
+		
 		LOGGER.debug(request.getParameter("key"));
 		LOGGER.debug(request.getParameter("value"));
+		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/users", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
@@ -928,7 +930,8 @@ public class EzPMSController {
 	 */
 	@RequestMapping(value="/ezPMS/selectHeadManager.do")
 	public String selectHeadManager(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
-		
+		LOGGER.debug("selectHeadManager started");
+		LOGGER.debug("selectHeadManager ended");
 		return "ezPMS/selectHeadManager";
 	}
 	

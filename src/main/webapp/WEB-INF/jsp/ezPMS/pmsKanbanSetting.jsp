@@ -42,7 +42,7 @@ $(function(){
 	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
 		$("#sel" + kanbanOrderArr[i].slice(-1)).attr("onclick", "selectOneStatus('" + kanbanOrderArr[i].slice(-1) + "')");
-		$("#sel" + kanbanOrderArr[i].slice(-1)).attr("ondblclick", "selectStatus('" + kanbanOrderArr[i].slice(-1) + "')");
+		$("#sel" + kanbanOrderArr[i].slice(-1)).attr("ondblclick", "selectStatus('" + kanbanOrderArr[i].slice(-1) + "', 'tr')");
 	}
 	
 	 getDragAndSwap();
@@ -53,14 +53,15 @@ function getDragAndSwap() {
 	$("#kanbanOrder").disableSelection();
 }
 
-function selectStatus(status) {
-	if ($("#" + status).prop("checked") == true) {
+function selectStatus(status, location) {
+	if (($("#" + status).prop("checked") == false && location == "checkbox") || ($("#" + status).prop("checked") == true && location == "tr")) {
 		selStatus.splice(selStatus.indexOf(status), 1);
 		$("#" + status).prop("checked", false);
 		$("#sel"+status).remove();
 	} else {
 		if (selStatus.length >= 4) {
 			alert("4개 까지만 선택 가능합니다.");
+			$("#" + status).prop("checked", false);
 			return;
 		} else {
 			$("#" + status).prop("checked", true);
@@ -76,7 +77,7 @@ function selectStatus(status) {
 			$("#kanbanOrder").append(strHTML);
 			
 			$("#sel" + selectStatus).attr("onclick", "selectOneStatus('" + selectStatus + "')");
-			$("#sel" + selectStatus).attr("ondblclick", "selectStatus('" + selectStatus + "')");
+			$("#sel" + selectStatus).attr("ondblclick", "selectStatus('" + selectStatus + "', 'tr')");
 		}
 	}
 	
@@ -122,6 +123,8 @@ function updateKanbanStatus() {
 
 function selectOneStatus(status) {
 	selOne = status;
+	$("#kanbanStatus tr").removeClass("selectTR");
+	$("#" + status).parent().parent().addClass("selectTR");
 }
 
 function addStatus() {
@@ -161,9 +164,8 @@ function deleteStatus() {
 
 </script>
 <style type="text/css">
-tr.hover:not (.selectTR ):hover {
-	background: #eee;
-	color: #fff;
+.white:hover {
+	background-color: rgb(233, 241, 255);
 }
 
 .selectTR {
@@ -183,7 +185,6 @@ tr.hover:not (.selectTR ):hover {
 	max-width: 250px;
  	width: 221px;
  	height: 36px;
- 	background-color : white;
 }
 
 #instruction {
@@ -210,23 +211,23 @@ body {
 				<tr>
 				     <td>
 						<table border=1 style="width : 100%; border-color: grey;" id="kanbanStatus" class="kanbanStatus">
-							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('A')" onclick="selectOneStatus('A')">
-								<td><input type="checkbox" id="A" name="kanbanStatus" value="전체 업무" onchange="selectStatus('A')">전체 업무</td>
+							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('A', 'tr')" onclick="selectOneStatus('A')">
+								<td><input type="checkbox" id="A" name="kanbanStatus" value="전체 업무" onchange="selectStatus('A', 'checkbox')">전체 업무</td>
 							</tr>
-							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('P')" onclick="selectOneStatus('P')">
-								<td><input type="checkbox" id="P" name="kanbanStatus" value="진행 중인 업무" onchange="selectStatus('P')">진행 중인 업무</td>
+							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('P', 'tr')" onclick="selectOneStatus('P')">
+								<td><input type="checkbox" id="P" name="kanbanStatus" value="진행 중인 업무" onchange="selectStatus('P', 'checkbox')">진행 중인 업무</td>
 							</tr>
-							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('C')" onclick="selectOneStatus('C')">
-								<td><input type="checkbox" id="C" name="kanbanStatus" value="완료된 업무" onchange="selectStatus('C')">완료된 업무</td>
+							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('C', 'tr')" onclick="selectOneStatus('C')">
+								<td><input type="checkbox" id="C" name="kanbanStatus" value="완료된 업무" onchange="selectStatus('C', 'checkbox')">완료된 업무</td>
 							</tr>
-							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('L')" onclick="selectOneStatus('L')">
-								<td><input type="checkbox"  id="L" name="kanbanStatus" value="기한이 지난 업무" onchange="selectStatus('L')">기한이 지난 업무</td>
+							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('L', 'tr')" onclick="selectOneStatus('L')">
+								<td><input type="checkbox"  id="L" name="kanbanStatus" value="기한이 지난 업무" onchange="selectStatus('L', 'checkbox')">기한이 지난 업무</td>
 							</tr>
-							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('W')" onclick="selectOneStatus('W')">
-								<td><input type="checkbox" id="W" name="kanbanStatus" value="대기 중인 업무" onchange="selectStatus('W')">대기 중인 업무</td>
+							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('W', 'tr')" onclick="selectOneStatus('W')">
+								<td><input type="checkbox" id="W" name="kanbanStatus" value="대기 중인 업무" onchange="selectStatus('W', 'checkbox')">대기 중인 업무</td>
 							</tr>
-							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('B')" onclick="selectOneStatus('B')">									
-								<td><input type="checkbox" id="B" name="kanbanStatus" value="게시판" onchange="selectStatus('B')">게시판</td>
+							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('B', 'tr')" onclick="selectOneStatus('B')">									
+								<td><input type="checkbox" id="B" name="kanbanStatus" value="게시판" onchange="selectStatus('B', 'checkbox')">게시판</td>
 							</tr>
 						</table>
 					</td>
