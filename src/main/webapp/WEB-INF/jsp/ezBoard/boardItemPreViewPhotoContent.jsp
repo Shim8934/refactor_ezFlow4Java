@@ -350,6 +350,30 @@
 		            }
 		            
 		            document.getElementById("mainimages").style.display = "";
+		            
+		            /* 2018-06-01 홍승비 - 미리보기 이미지 사이즈 계산 수정 */
+		            var maxWidth = 400;
+		            var maxHeight = 280;
+		            var ratio = 0;
+	
+		            if (we > maxWidth) {
+		                ratio = maxWidth / we;
+		                document.getElementById("mainimages").width = maxWidth;
+		                document.getElementById("mainimages").height = he * ratio;
+		
+		                if (document.getElementById("mainimages").height > maxHeight) {
+		                    ratio = maxHeight / document.getElementById("mainimages").height;
+		                    document.getElementById("mainimages").height = maxHeight;
+		                    document.getElementById("mainimages").width = document.getElementById("mainimages").width * ratio;
+		                }
+		            }
+		            else {
+		                if (he > maxHeight) {
+		                    ratio = maxHeight / he;
+		                    document.getElementById("mainimages").height = maxHeight;
+		                    document.getElementById("mainimages").width = we * ratio;
+		                }
+		            }	            
 		        }
 	        }
 	
@@ -612,7 +636,7 @@
 			            <td style="padding-left:15px">
 			                <table id="imagetable" style="text-align:center; border:0px;">
 			                    <tr>  
-			                        <td style="width:400px;height:300px; min-height:300px; border:8px solid #e3e1e2; text-align:center" id="imageTD">
+			                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center" id="imageTD">
 			                            <img id="mainimages" onclick="window.open(this.src)" style="background-color:#ffffff;cursor:pointer;" src=""/>            
 			                        </td>
 			                    </tr>
@@ -638,7 +662,7 @@
 		    </tr>
 		    <tr>
 		        <td>
-					<div style="background:#e5e5e5; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
+					<div style="background:#f8f8fa; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
 		            <table border="0">
 		                <tr>
 		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
