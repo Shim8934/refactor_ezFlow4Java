@@ -2109,14 +2109,22 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 			
 			/* 2018-05-24 장진혁 홈 메뉴 pass */
-			if (result.get(i).getLinkURL().equals("/ezPortal/myPortal.do")) {
+			String menuitemLinkURL = result.get(i).getLinkURL();
+			
+			if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
 				continue;
+			}
+			
+			//Baonk 2018-05-31
+			if (menuitemLinkURL.equals("/ezWebFolder/webfolderMain.do")) {
+				if (!ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+					continue;
+				}
 			}
 			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
 			/*String menuitemImageUID = result.get(i).getImageUId();*/
-			String menuitemLinkURL = result.get(i).getLinkURL();
 			/*String menuitemLinkLocation = result.get(i).getLinkLocation();*/
 			String menuitemWindowOption = result.get(i).getWindowOption();
 			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
@@ -3662,5 +3670,26 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("ezCkAdminACL ended");
 		
 		return "OK";
+	}
+
+	@Override
+	public String getMainMenuItemUID(String accessID, String linkURL, String userLang, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String returnValue = "Y";
+		
+		map.put("linkURL", linkURL);
+		map.put("tenantID", tenantID);
+		map.put("parentUID", "203"); //메인메뉴영역
+		map.put("companyID", companyID);
+		map.put("lang", userLang);
+		
+		String menuItemUID = ezPortalDAO.getMainMenuItemUID(map);
+		if (checkViewRightBln(menuItemUID, accessID, tenantID)) {
+			returnValue = "Y";
+		} else {
+			returnValue = "N";
+		}
+		return returnValue;
 	}
 }
