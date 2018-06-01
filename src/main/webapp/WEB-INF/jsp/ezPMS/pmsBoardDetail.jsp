@@ -116,6 +116,14 @@
 		function goMoveBoard() {
 			DivPopUpShow(320, 320, "/ezPMS/goMoveBoards.do?projectId=" + projectId + "&onlyGroup=false");
 		}
+		
+		function boardViewerList() {
+			var heigth = window.screen.availHeight;
+	        var width = window.screen.availWidth;
+	        var left = (width - 500) / 2;
+	        var top = (heigth - 300) / 2;
+	        DivPopUpShow(600, 415, "/ezPMS/getBoardViewerList.do?itemId=" + itemId);
+		}
 	</script>
 </head>
 <body class="popup" style="height: 99%;">
@@ -129,7 +137,7 @@
 						<li id="deleteBtn"><span onclick="deleteBoard()">삭제</span></li>
 						<li id="moveBtn"><span onclick="goMoveBoard()">이동</span></li>
 						<li><span>메일로 발송</span></li>
-						<li><span>조회자 정보</span></li>
+						<li><span onclick="boardViewerList()">조회자 정보</span></li>
 						<li style="float: right;"><span onclick="window.close()">닫기</span></li>
 					</ul>
 				</div>
