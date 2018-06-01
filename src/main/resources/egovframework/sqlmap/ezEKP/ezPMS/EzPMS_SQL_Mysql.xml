@@ -2310,13 +2310,11 @@
 	
 	<select id="EzPMSDAO.getUserGroupRole" parameterClass="map" resultClass="Integer">
 		SELECT 
-			MIN(USER_ROLE_ID)
+			MIN(MEMBER_ROLE_ID)
 		FROM
-			TBL_PMS_GROUP
+			TBL_PMS_GROUPMEMBER
 		WHERE
 			USER_ID = #userId#
-		AND
-			PROJECT_ID = #projectId#
 		AND
 			GROUP_ID = #groupId#
 		AND
