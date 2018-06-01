@@ -865,6 +865,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public void deleteGroup(long projectId, long groupId, int tenantId) {
 		LOGGER.debug("[SERVICE] deleteGroup started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.deleteGroup(map);
 		
 		LOGGER.debug("[SERVICE] deleteGroup ended.");
 	}

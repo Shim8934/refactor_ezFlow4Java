@@ -2322,4 +2322,17 @@
 		AND
 			TENANT_ID = #tenantId#
 	</select>
+	
+	<update id="EzPMSDAO.deleteGroup">
+		UPDATE
+			TBL_PMS_GROUP
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			GROUP_ID = #groupId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
 </sqlMap>
