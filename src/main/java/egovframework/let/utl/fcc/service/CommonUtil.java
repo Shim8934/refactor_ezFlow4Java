@@ -686,6 +686,8 @@ public class CommonUtil {
 			} else {
 				pattern = "yyyy-MM-dd";
 			}
+		} else if (dateStr.length() == 14) {
+			pattern = "yyyyMMddHHmmss";
 		} else if (dateStr.length() == 16) {
 			if (dateStr.indexOf("/") > -1) {
 				pattern = "yyyy/MM/dd HH:mm";
@@ -946,7 +948,7 @@ public class CommonUtil {
 		}
 		return xmlDoc;
 	}
-	
+
 	/**
 	 * globals.properties에 있는 
 	 * DataBaseType을 반환
@@ -1122,5 +1124,98 @@ public class CommonUtil {
 		logger.debug("nfcFilename=" + nfcFilename);
 		logger.debug("normalizeFileName ended");
 		return nfcFilename;
+	}
+	
+	
+	//Baonk: Get user's infor from parameters
+	public LoginVO getUserForGw(String userId, String serverName, String lang, String timezone) {
+		try{
+			int tenantId  = loginService.getTenantId(serverName);
+			LoginVO login = new LoginVO();
+			login.setId(userId);
+			login.setDn("NOPASSWORD");
+			login.setTenantId(tenantId);
+			
+			LoginVO user = loginService.selectUser(login);
+			
+			if (!lang.equals("")) {
+				if (user.getPrimary().equals(lang)) {
+					user.setPrimary("1");
+				} else {
+					user.setPrimary("2");
+				}
+			}
+			
+			if (!timezone.equals("")) {
+				user.setOffset(timezone);
+			}
+			
+			return user;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getJsonFromWebFolderRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		logger.debug("getJsonFromWebFolderRestApi started");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = new RestTemplate();
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = null;
+		
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+		logger.debug("getJsonFromWebFolderRestApi ended");
+		return resultBody;
 	}
 }
