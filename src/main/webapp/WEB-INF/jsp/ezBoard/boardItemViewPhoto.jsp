@@ -1255,7 +1255,7 @@
 		    <td style="width:100%;  text-align:center; vertical-align:top;padding-top:10px;" >
 		        <table style="width:100%; border:1px solid #ddd;  ">
 				  <tr>
-		        	<td style="height:50px;" colspan="3">
+		        	<td style="height:55px;" colspan="3">
 		            </td>
 		        </tr>
 		        <tr>
@@ -1276,8 +1276,8 @@
 		            </td>
 		        </tr>
 		        <tr>
-		        	<td style="padding:10px 0px; height:88px; text-align:center" colspan="3">
-		            	<div id="MainContent" style="height:70px; padding-left:23%; padding-right:24%; overflow-y:auto;"></div>
+		        	<td style="padding:10px 0px; height:83px; text-align:center" colspan="3">
+		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;"></div>
 		            </td>
 		        </tr>
 		        </table>
