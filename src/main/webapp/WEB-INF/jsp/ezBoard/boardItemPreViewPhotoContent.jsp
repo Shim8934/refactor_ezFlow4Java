@@ -474,6 +474,8 @@
 						ImageViewTable(result);
 					}        			
 				});
+	            
+	            pageimageout();
 	        }
 	
 	        function imageViewInit() {
@@ -568,41 +570,44 @@
 	                document.getElementById(result).style.filter = "Alpha(Opacity=100)";
 	        }
 	
+	        /* 2018-06-01 홍승비 - 포토/썸네일게시물 미리보기 하단 UI 수정 */
 	        function imagemouseover(image) {
-	            if (document.getElementById("mainimages").name == image.name)
-	                return;
-	            if (CrossYN())
-	                image.style.opacity = "1";
-	            else
-	                image.style.filter = "Alpha(Opacity=100)";
+	            if (document.getElementById("mainimages").name == image.name) {
+	            	return;
+	            }
+	            if (CrossYN()) {
+	            	image.style.opacity = "1";
+	            } else {
+	            	image.style.filter = "Alpha(Opacity=100)";
+	            }
+	            
 	            image.style.border = "#888 1px solid";
 	            image.style.margin = "0px 4px";
 	        }
 	        function imagemouseout(image) {
-	            if (document.getElementById("mainimages").name == image.name)
+	            if (document.getElementById("mainimages").name == image.name) {
 	                return;
-	
-	            if (CrossYN())
+	            }
+	            if (CrossYN()) {
 	                image.style.opacity = "0.35";
-	            else
+	            } else {
 	                image.style.filter = "Alpha(Opacity=35)";
-	            image.style.border = "1px solid #ffffff";
+	            }
+	            
+	            image.style.border = "none";
 	            image.style.margin = "0px 4px";
 	        }
-	
+	        
+	        /* 2018-06-01 홍승비 - 페이징 코드 수정, 도달 불가능 코드 삭제 */
 	        function pageimageover() {
 	            var endpage = pPage * 10;
-	            if (imagetotalcount >= endpage && pPage == 1) {
+	            
+	            if (imagetotalcount > endpage && pPage == 1) {
 	                document.getElementById("SmallImageNext").style.display = "";
-	
 	            }
-	            else if (pPage == 1 && imagetotalcount < 10) {
+	            else if (pPage == 1 && imagetotalcount <= 10) {
 	                document.getElementById("SmallImagePrev").style.display = "none";
 	                document.getElementById("SmallImageNext").style.display = "none";
-	            }
-	            else if (pPage == 1 && endpage > 10) {
-	                document.getElementById("SmallImagePrev").style.display = "none";
-	                document.getElementById("SmallImageNext").style.display = "";
 	            }
 	            else if (pPage != 1 && imagetotalcount <= endpage) {
 	                document.getElementById("SmallImagePrev").style.display = "";
@@ -631,9 +636,9 @@
 			        </tr>
 			        <tr id="trheight">
 			            <td style="width:100px; padding-left:50px; text-align:center">
-			                <img src="/images/etc/btn_005.gif" style="border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
+			                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
 			            </td>
-			            <td style="padding-left:15px">
+			            <td style="padding-left:20px">
 			                <table id="imagetable" style="text-align:center; border:0px;">
 			                    <tr>  
 			                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center" id="imageTD">
@@ -644,7 +649,7 @@
 			            </table>
 			            </td>
 			            <td style="width:100px; padding-right:50px; text-align:center">
-			                <img src="/images/etc/btn_006.gif" style="border:0;cursor:pointer;" onclick="Pagenationimage('nextPage');" />
+			                <img src="/images/next.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('nextPage');" />
 			            </td>
 			        </tr>
 			        <tr>
@@ -665,14 +670,14 @@
 					<div style="background:#f8f8fa; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
 		            <table border="0">
 		                <tr>
-		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/etc/btn_001.gif" id="SmallImagePrev" style="border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
+		                    <td style="width:30px; padding-left:14px;padding-right:2px;padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
+		                        <img src="/images/previous1.png" id="SmallImagePrev" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
 		                    </td>
 		                    <td onmouseover="pageimageover()" onmouseout="pageimageout()">
 		                        <div class="content" id="viewBox" style="width:100%; border:0;" ></div>
 		                    </td>
 		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:right" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/etc/btn_002.gif" id="SmallImageNext" style="border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
+		                        <img src="/images/next1.png" id="SmallImageNext" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
 		                    </td>
 		                </tr>
 		            </table>
