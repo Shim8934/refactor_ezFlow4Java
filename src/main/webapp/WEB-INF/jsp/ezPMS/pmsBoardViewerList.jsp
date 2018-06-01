@@ -12,8 +12,20 @@
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezPMS/common.js"></script>
+	<script type="text/javascript">
+		selToggleList(document.getElementById("close"), "ul", "li", "0");
+	</script>
 </head>
 <body class="popup">
-
+	<form method="post" >
+		<h1><spring:message code='ezBoard.t320'/></h1>
+		<div id="close">
+			<ul>
+				<li onClick="close_onclick()"><span><spring:message code='ezBoard.t12'/></span></li>
+		    </ul>
+		</div>
+		
+	</form>
+	 
 </body>
 </html>

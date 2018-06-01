@@ -740,7 +740,7 @@ public class EzPMSController {
 		
 		LOGGER.debug("ezPMS addTaskLog ended");
 		
-		return null;
+		return "json";
 	}
 	
 	/**

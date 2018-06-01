@@ -21,6 +21,7 @@
 	<typeAlias 	alias="ProjectTaskMemberVO" 				type="egovframework.ezEKP.ezPMS.vo.TaskMemberVO"/>
 	<typeAlias 	alias="ProjectBoardVO" 						type="egovframework.ezEKP.ezPMS.vo.ProjectBoardVO"/>
 	<typeAlias 	alias="FileVO" 								type="egovframework.ezEKP.ezPMS.vo.FileVO"/>
+	<typeAlias 	alias="BoardViewerVO" 						type="egovframework.ezEKP.ezPMS.vo.BoardViewerVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
