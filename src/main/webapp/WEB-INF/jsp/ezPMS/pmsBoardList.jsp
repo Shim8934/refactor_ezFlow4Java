@@ -24,6 +24,8 @@
 		$("tbody tr").on("dblclick", function() {
 			goBoardDetail(this);
 		});
+		
+		$("tr[data-writetype=1]").addClass("emergency");
 	})
 	
 	// 체크박스 전체선택 혹은 해제
@@ -135,20 +137,8 @@
 		</thead>
 		<tbody>
 			<c:forEach items="${data}" var="projectBoardVO">
-				<c:choose>
-					<c:when test="${projectBoardVO.readOrNot eq false && (projectBoardVO.writeType == 1 || projectBoardVO.writeType == 3)}">
-						<tr class="noView emergency" data-itemid="${projectBoardVO.itemId}">
-					</c:when>
-					<c:when test="${projectBoardVO.readOrNot eq true && (projectBoardVO.writeType == 1 || projectBoardVO.writeType == 3)}">
-						<tr class="emergency" data-itemid="${projectBoardVO.itemId}">
-					</c:when>
-					<c:when test="${projectBoardVO.readOrNot eq false && (projectBoardVO.writeType != 1 && projectBoardVO.writeType != 3)}">
-						<tr class="noView" data-itemid="${projectBoardVO.itemId}">
-					</c:when>
-					<c:otherwise>
-						<tr data-itemid="${projectBoardVO.itemId}">
-					</c:otherwise>
-				</c:choose>
+				<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
+					data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
 					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
 					<td>
 						<c:choose>
