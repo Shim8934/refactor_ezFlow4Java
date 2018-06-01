@@ -1756,17 +1756,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<BoardViewerVO> getBoardViewerList(int tenantId, String itemId, String userId) {
+	public List<BoardViewerVO> getBoardViewerList(int tenantId, Map<String, Object> param) {
 		LOGGER.debug("[SERVICE] getBoardViewerList started.");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
-		map.put("itemId", itemId);
-		map.put("userId", userId);
+		param.put("tenantId", tenantId);
 		
 		LOGGER.debug("[SERVICE] getBoardViewerList ended.");
 		
-		return ezPMSDAO.getBoardViewerList(map);
+		return ezPMSDAO.getBoardViewerList(param);
 	}
 	
 	

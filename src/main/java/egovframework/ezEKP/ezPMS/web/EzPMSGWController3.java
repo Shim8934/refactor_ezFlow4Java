@@ -601,7 +601,7 @@ public class EzPMSGWController3 {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", viewerCount);
+			result.put("data", viewerCount + "");
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
@@ -622,13 +622,23 @@ public class EzPMSGWController3 {
 		
 		try {
 			String userId = request.getParameter("userId");
-			String startRow = request.getParameter("startRow");
-			String limit = request.getParameter("limit");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<BoardViewerVO> viewerList = ezPMSService.getBoardViewerList(info.getTenantId(), itemId, userId);
+			Map<String, Object> param = new HashMap<String, Object>();
+			
+			param.put("lang", lang);
+			param.put("itemId", itemId);
+			
+			Enumeration<String> parameterNames = request.getParameterNames();
+			
+			while(parameterNames.hasMoreElements()) {
+				String parameterName = parameterNames.nextElement();
+				param.put(parameterName, request.getParameter(parameterName));
+			}
+			
+			List<BoardViewerVO> viewerList = ezPMSService.getBoardViewerList(info.getTenantId(), param);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -607,6 +607,8 @@ public class EzPMSController3 {
 			totalCount = Integer.parseInt((String) resultBody.get("data"));
 		}
 		
+		LOGGER.debug("totalCount : " + totalCount);
+		
 		String currentPageStr = request.getParameter("currentPage");
 		
 		if(currentPageStr != null && !currentPageStr.equals("")) {
