@@ -339,11 +339,12 @@
 	   			    master.element.trigger("gantt.redrawCompleted");
 	   			  });
 	   			  test();
+	   			  console.log(this);
 	   			};
 	   		}
 	   		
 	   		function test(){
-	   			alert("ttttttttttttttttt");
+// 	   			alert("ttttttttttttttttt");
 	   		}
 	   		
 	   		function preProcess(){

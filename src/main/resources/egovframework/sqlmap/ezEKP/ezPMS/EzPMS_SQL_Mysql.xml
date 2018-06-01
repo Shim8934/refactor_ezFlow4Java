@@ -1372,6 +1372,11 @@
 	</select>
 	
 	<insert id="EzPMSDAO.addTaskGroup" parameterClass="map">
+		<selectKey keyProperty="groupId" resultClass="long">
+		<![CDATA[
+		SELECT IFNULL(MAX(group_id) , 0) + 1 FROM TBL_PMS_GROUP
+		]]>
+		</selectKey>
 		<![CDATA[
 			INSERT INTO	TBL_PMS_GROUP (
 				TENANT_ID,			PROJECT_ID,			GROUP_NAME,				UPPER_GROUP_ID,	
@@ -1388,14 +1393,17 @@
 				#creatorName2#,		#creatorId#,		#creatorDeptname#,		#creatorDeptname2#,
 				#progress#,			#overview#,			#memberCount#,			#headManagerId#,
 				#headManagerName#,	#headManagerName2#,	#headManagerDeptname#,	#headManagerDeptname2#,
-				#treeDepth#,		#ancestorGroup#,	#sortOrder#,			#delStatus#,
+				#treeDepth#,
+		]]>
+		<isNotEqual property="upperGroupId" compareValue="0">
+				CONCAT((SELECT ANCESTER_GROUP FROM TBL_PMS_GROUP AA WHERE group_id=#upperGroupId# AND TENANT_ID=#tenantId#),',',#groupId#),
+		</isNotEqual>
+		<isEqual property="upperGroupId" compareValue="0">
+				#groupId#,
+		</isEqual>
+				#sortOrder#,			#delStatus#,
 				#workingDay#,		#restDueday#,		#isIssue#
 			)
-		]]>
-		<selectKey keyProperty="groupId" resultClass="long">
-    		SELECT
-    			last_insert_id()
-    	</selectKey>
 	</insert>
 	
 	
