@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
@@ -149,4 +150,8 @@ public interface EzPMSService {
 	public List<ProjectGroupMemberVO> getUserInfoForGroup(HashMap<String, Object> map);
 
 	public int getUserGroupRole(String userId, int tenantId, long projectId, long groupId);
+
+	public int getBoardViewerCount(int tenantId, String itemId, String userId);
+
+	public List<BoardViewerVO> getBoardViewerList(int tenantId, Map<String, Object> param);
 }

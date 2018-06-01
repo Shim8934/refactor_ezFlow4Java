@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
+import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -582,5 +583,74 @@ public class EzPMSGWController3 {
 		    }
 		}
 		LOGGER.debug("ezPMS uploadFile ended.");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/boards/{itemId}/viewer-count", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getBoardViewerCount(@PathVariable String itemId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "/viewer-count] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			int viewerCount= ezPMSService.getBoardViewerCount(info.getTenantId(), itemId, userId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", viewerCount + "");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "/viewer-count] ended.");
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/boards/{itemId}/viewers", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getBoardViewerList(@PathVariable String itemId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "/viewers] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			
+			param.put("lang", lang);
+			param.put("itemId", itemId);
+			
+			Enumeration<String> parameterNames = request.getParameterNames();
+			
+			while(parameterNames.hasMoreElements()) {
+				String parameterName = parameterNames.nextElement();
+				param.put(parameterName, request.getParameter(parameterName));
+			}
+			
+			List<BoardViewerVO> viewerList = ezPMSService.getBoardViewerList(info.getTenantId(), param);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", viewerList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "/viewers] ended.");
+		
+		return result;
 	}
 }
