@@ -531,20 +531,50 @@ public class EzPMSGWController2 {
 	
 	
 	/**
-	 * 프로젝트관리 그룹 수정
+	 * 프로젝트관리 그룹 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/groups/{groupId}/users/{userId}", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public JSONObject deleteGroup(@PathVariable String groupId, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/groups/" + groupId + "/users/" + userId + "] started.");
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/groups/{groupId}", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteGroup(@PathVariable long projectId, @PathVariable long groupId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "/groups/" + groupId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
 			
-			ezPMSService.deleteGroup(Long.parseLong(groupId));
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			//권한 체크
+			String roleCheck = "";
+			
+			//권한 체크
+			//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
+			int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+			if (userProjectRole == 1) {
+				roleCheck = "permitted";
+			} else if (userProjectRole == 3) {
+				//프로젝트 조회자는 열람권한밖에 없음
+				roleCheck = "rejected";
+			} else {
+				//2. group의 담당자인지 확인
+				int userGroupRole = ezPMSService.getUserGroupRole(userId, tenantId, projectId, groupId);
+				
+				if (userGroupRole != 1) {
+					roleCheck = "rejected";
+				} else {
+					roleCheck = "permitted";
+				}
+			}
+			
+			LOGGER.debug("DELETEGROUP ROLECHECK : " + roleCheck);
+			
+			if (roleCheck.equals("permitted")) {
+				ezPMSService.deleteGroup(projectId, groupId, tenantId);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -555,7 +585,7 @@ public class EzPMSGWController2 {
 			result.put("data", "");		
 		}
 		
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/groups/" + groupId + "/users/" + userId + "] ended.");
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "/groups/" + groupId + "] ended.");
 		return result;
 	}
 	

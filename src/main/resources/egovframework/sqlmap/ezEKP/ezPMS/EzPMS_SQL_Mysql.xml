@@ -2306,6 +2306,31 @@
 				</iterate>
 				)
 		</isNotEqual>
-		
 	</select>
+	
+	<select id="EzPMSDAO.getUserGroupRole" parameterClass="map" resultClass="Integer">
+		SELECT 
+			MIN(MEMBER_ROLE_ID)
+		FROM
+			TBL_PMS_GROUPMEMBER
+		WHERE
+			USER_ID = #userId#
+		AND
+			GROUP_ID = #groupId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="EzPMSDAO.deleteGroup">
+		UPDATE
+			TBL_PMS_GROUP
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			GROUP_ID = #groupId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
 </sqlMap>

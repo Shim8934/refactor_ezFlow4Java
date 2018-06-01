@@ -41,6 +41,7 @@
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttZoom.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttGridEditor.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttMaster.js"></script>
+		<script type="text/javascript" src="/js/ezPMS/common.js"></script>
 		
 	   	<script type="text/javascript">
 	   		// 프로젝트 아이디
@@ -164,6 +165,8 @@
 	   			ganttData.canWriteOnParent = true;
 	   			ganttData.selectedRow = 0;
 	   			ganttData.deletedTaskIds = [];
+	   			//간트 줌 설정
+	   			ganttData.zoom = "1M";
 // 	   			ganttData.canAdd = true;
 	   			preProcess();
 	   		}
@@ -207,6 +210,35 @@
    				var feature = GetOpenPosition(top, left);
    			 
    				DivPopUpShow(684, 384, "/ezPMS/goAddGroup.do?projectId=" + projectId);
+	   		}
+	   		
+	   		//그룹 삭제
+	   		function delGroup(){
+	   			//projectId = 전역
+	   			var groupId = document.getElementById("groupDelTest").value.trim(); //수정해주세요.
+	   			
+	   			data = {
+	   					projectId : projectId,
+	   					groupId : groupId
+	   			}
+	   			
+	   			$.ajax({
+	   				type : "POST",
+	   				url : "/ezPMS/deleteGroup.do",
+	   				dataType : "json",
+	   				contentType: "application/json; charset=UTF-8",
+	   				data : JSON.stringify(data),
+	   				success : function(data) {
+						alert("그룹이 삭제되었습니다.");
+	   				},
+	   				error : function(jqXHR, textStatus, errorThrown) {
+	   					alert("에러 : 그룹 삭제 에러");
+	   				},
+	   				complete : function(){
+	   					var logContent = "[그룹 삭제 테스트 로그 입니다.]";
+	   					addTaskLog(projectId, 3, null, null, logContent);
+	   				}
+	   			});
 	   		}
 	   		
 	   		function taskDetails(){
@@ -267,6 +299,7 @@
 		   		document.getElementById("pmsGanttRowNewBtn").onclick = addTask;
 		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
 		   		document.getElementById("pmsGanttAddGroup").onclick = addGroup;
+		   		document.getElementById("pmsGanttDelGroup").onclick = delGroup;
 		   	}
 	   		
 	   		function delTask(){
@@ -333,6 +366,10 @@
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert("에러 : updateTaskWDNW 쿼리 구현하면 에러 안남");
 	   					location.reload();
+	   				},
+	   				complete : function(){
+	   					var logContent = "[업무 삭제 테스트 로그 입니다.]";
+	   					addTaskLog(projectId, 3, null, null, logContent);
 	   				}
 	   			});
 	   		}
@@ -382,6 +419,8 @@
 		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi">delete</li>
 		        <li id="pmsGanttTaskDetails" class="pmsGanttMenuLi">details</li>
 		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi">new group</li>
+		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi">del group</li>
+		        <input style="height:23px;width:114px;border:1px solid black;font-size:12px;" id="groupDelTest" placeholder="그룹아이디 입력"/>
 		    </ul>
 		</div>
 		

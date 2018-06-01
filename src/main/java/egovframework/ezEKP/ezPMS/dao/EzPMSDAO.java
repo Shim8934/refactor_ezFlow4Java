@@ -370,4 +370,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectGroupMemberVO> getUserInfoForGroup(HashMap<String, Object> map) {
 		return (List<ProjectGroupMemberVO>) list("EzPMSDAO.getUserInfoForGroup", map);
 	}
+
+	public int getUserGroupRole(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.getUserGroupRole", map);
+	}
+
+	public void deleteGroup(Map<String, Object> map) {
+		update("EzPMSDAO.deleteGroup", map);		
+	}
 }

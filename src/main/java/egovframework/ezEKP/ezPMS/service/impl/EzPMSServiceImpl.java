@@ -863,9 +863,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int deleteGroup(Long groupId) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void deleteGroup(long projectId, long groupId, int tenantId) {
+		LOGGER.debug("[SERVICE] deleteGroup started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.deleteGroup(map);
+		
+		LOGGER.debug("[SERVICE] deleteGroup ended.");
 	}
 
 	@Override
@@ -1716,5 +1723,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public List<ProjectGroupMemberVO> getUserInfoForGroup(HashMap<String, Object> map) {
 		return ezPMSDAO.getUserInfoForGroup(map);
+	}
+
+	@Override
+	public int getUserGroupRole(String userId, int tenantId, long projectId, long groupId) {
+		LOGGER.debug("[SERVICE] getUserGroupRole started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		
+		int userGroupRole = ezPMSDAO.getUserGroupRole(map);
+		
+		LOGGER.debug("[SERVICE] getUserGroupRole ended.");
+		return userGroupRole;
 	}
 }
