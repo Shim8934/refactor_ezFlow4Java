@@ -769,7 +769,8 @@ public class EzPMSController2 {
 			String userId = userInfo.getId();
 			
 			param.put("userId", userId);
-			String url = "/rest/ezPMS/projects/" + projectId + "groups/"+ groupId;
+			
+			String url = "/rest/ezPMS/projects/" + projectId + "/groups/"+ groupId;
 			
 			commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
 		} catch (Exception e) {

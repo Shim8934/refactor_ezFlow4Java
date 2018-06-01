@@ -34,6 +34,7 @@ var holdColor = "${mainSetting.holdColor}";
 var startCount = 0;
 var listNumber = 5;
 var position = "overview";
+var groupId = "${project.groupId}";
 
 //내가 담당인 업무 완료/보류/진행 시키기 위한 변수
 var beforePosition = "";
@@ -146,7 +147,7 @@ function ableToChangeStatus() {
 }
 
 function editProjectInfo() {
-	addProjectPopup(5, 20, 845, 480, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId);
+	addProjectPopup(5, 20, 845, 480, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId + "&groupId=" + groupId);
 }
 
 function kanbanSetting() {
