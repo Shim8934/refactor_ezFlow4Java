@@ -727,8 +727,9 @@ public class EzPMSController {
 		
 		commonUtil.getJsonFromRestApi(url, param, request, "post", null);
 		
-		LOGGER.debug("ezPMS addTaskLog ended");				
-		return null;
+		LOGGER.debug("ezPMS addTaskLog ended");
+		
+		return "json";
 	}
 	
 	/**

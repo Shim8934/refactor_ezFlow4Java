@@ -25,9 +25,8 @@
 			goBoardDetail(this);
 		});
 		
-		$(".mainlist th:not(.checkboxHeader)").on("click", function() {
-			
-		});
+		$("tr[data-writetype=1], tr[data-writetype=3]").addClass("emergency");
+		$("tr[data-readornot='false']").addClass("noView");
 	})
 	
 	// 체크박스 전체선택 혹은 해제
@@ -119,7 +118,7 @@
 			<li class="off"><span onclick="goAddBoard()">등록</span></li>
 			<li class="off"><span onclick="deleteBoards()">삭제</span></li>
 			<li class="off"><span onclick="goMoveBoards()">이동</span></li>
-			<li class="off"><span onclick="">새로고침</span></li>
+			<li class="off"><span onclick="location.reload()">새로고침</span></li>
 			<li class="off"><span onclick="">검색</span></li>
 		</ul>
 	</div>
@@ -139,29 +138,15 @@
 		</thead>
 		<tbody>
 			<c:forEach items="${data}" var="projectBoardVO">
-				<c:choose>
-					<c:when test="${projectBoardVO.readOrNot eq false && (projectBoardVO.writeType == 1 || projectBoardVO.writeType == 3)}">
-						<tr class="noView emergency" data-itemid="${projectBoardVO.itemId}">
-					</c:when>
-					<c:when test="${projectBoardVO.readOrNot eq true && (projectBoardVO.writeType == 1 || projectBoardVO.writeType == 3)}">
-						<tr class="emergency" data-itemid="${projectBoardVO.itemId}">
-					</c:when>
-					<c:when test="${projectBoardVO.readOrNot eq false && (projectBoardVO.writeType != 1 && projectBoardVO.writeType != 3)}">
-						<tr class="noView" data-itemid="${projectBoardVO.itemId}">
-					</c:when>
-					<c:otherwise>
-						<tr data-itemid="${projectBoardVO.itemId}">
-					</c:otherwise>
-				</c:choose>
+				<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
+					data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
 					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
 					<td>
 						<c:choose>
 							<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
 								<img src="/images/i_notice.gif" alt="NOTICE" />
 							</c:when>
-							<c:otherwise>
-								${projectBoardVO.itemId}
-							</c:otherwise>
+							<c:otherwise>${projectBoardVO.itemId}</c:otherwise>
 						</c:choose>
 					</td>
 					<c:choose>
@@ -172,13 +157,13 @@
 							<td><img src="/images/newAttach.gif"></td>
 						</c:otherwise>
 					</c:choose>	
-						<td>${projectBoardVO.title}</td>
+						<td class="boardTitle">${projectBoardVO.title}</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.taskName eq null}">
-							<td>${projectBoardVO.groupName}</td>
+							<td class="taskName">${projectBoardVO.groupName}</td>
 						</c:when>
 						<c:otherwise>
-							<td>${projectBoardVO.taskName}</td>
+							<td class="taskName">${projectBoardVO.taskName}</td>
 						</c:otherwise>
 					</c:choose>
 					<td>${projectBoardVO.writerDeptName}</td>

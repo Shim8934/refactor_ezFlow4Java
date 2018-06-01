@@ -1228,9 +1228,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setWriteType((int) jsonParam.get("writeType"));
 		vo.setReadCount(0);
 		vo.setGroupId(Long.parseLong((String) jsonParam.get("groupId")));
+		
 		if(jsonParam.get("taskId")!=null && !jsonParam.get("taskId").equals("null")) {
 			vo.setTaskId(Long.parseLong((String) jsonParam.get("taskId")));
 		}
+		
 		vo.setWriterPosition((String) jsonParam.get("writerPosition"));
 		vo.setWriterPosition2((String) jsonParam.get("writerPosition2"));
 		vo.setWriteOverview((String) jsonParam.get("writeOverview"));
@@ -1390,6 +1392,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		for(String itemId : itemIds) {
 			map.put("itemId", itemId);
 			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
+			
 			if(boardVO.getWriterId().equals(userId) || authority == 1) {
 				ezPMSDAO.moveBoard(map);
 			} else {
@@ -1420,6 +1423,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		for(String itemId : itemIds) {
 			map.put("itemId", itemId);
 			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
+			
 			if(boardVO.getWriterId().equals(userId) || authority == 1) {
 				ezPMSDAO.deleteBoard(map);
 			} else {
@@ -1433,6 +1437,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
@@ -1483,10 +1488,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		if(ezPMSDAO.checkReadBoardOrNot(map) == -1) {
 			ezPMSDAO.insertReadBoardLog(map);
+			
 			if(!boardVO.getWriterId().equals(map.get("userId"))) {
 				ezPMSDAO.updateBoardReadCount((int) map.get("itemId"));
 			}
 		}
+		
 		boardVO.setFileList(ezPMSDAO.getBoardAttach(map));
 		
 		LOGGER.debug("[SERVICE] getBoardDetail ended");
@@ -1517,6 +1524,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			boolean rename = srcFile.renameTo(destFile);
 			if (!rename) {
 				FileUtils.copyFile(srcFile, destFile);
+				
 				if (!srcFile.delete()) {
 					FileUtils.deleteQuietly(destFile);
 					throw new IOException("Failed to delete original file '" + srcFile +

@@ -2,13 +2,11 @@ package egovframework.ezEKP.ezPMS.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -123,6 +121,7 @@ public class EzPMSController3 {
 				JSONArray fileList = (JSONArray) board.get("fileList");
 				
 				if (fileList != null && fileList.size() > 0) {
+					
 					for (int i = 0; i < fileList.size(); i++) {
 						JSONObject file = (JSONObject) fileList.get(i);
 						file.put("pFileName", file.get("fileName"));
@@ -132,6 +131,7 @@ public class EzPMSController3 {
 						file.put("resultUpload", "true");
 						fileList.set(i, file);
 					}
+					
 					model.addAttribute("fileList", URLEncoder.encode(fileList.toString(), "UTF-8").replaceAll("\\+", "%20"));
 				}
 			}
@@ -146,9 +146,6 @@ public class EzPMSController3 {
 		while(parameterNames.hasMoreElements()) {
 			String parameterName = parameterNames.nextElement();
 			model.addAttribute(parameterName, request.getParameter(parameterName));
-			////
-			System.out.println(parameterName + " : " + request.getParameter(parameterName));
-			////
 		}
 		
 		LOGGER.debug("ezPMS goAddBoard ended");
@@ -171,8 +168,7 @@ public class EzPMSController3 {
 		JSONObject resultBody = null;
 		
 		if(mode.equals("modify")) {
-			jsonParam.put("writeUpdateDate", today);
-			
+			jsonParam.put("writeUpdateDate", today);		
 			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "put", jsonParam);
 		} else {
 			jsonParam.put("writeDate", today);
@@ -185,11 +181,13 @@ public class EzPMSController3 {
 			
 			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "post", jsonParam);
 		}
+		
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
 			model.addAttribute("data", mode); // mode(new/modify)에 따라 currentPage = 1로 reset할지의 여부를 결정하기 위함
 		}
+		
 		LOGGER.debug("ezPMS addBoard ended");
 		
 		return "json";
@@ -239,6 +237,7 @@ public class EzPMSController3 {
 		if(status.equals("ok")) {
 			model.addAttribute("data", "success");
 		}
+		
 		LOGGER.debug("ezPMS moveBoards ended");
 		
 		return "json";
@@ -261,6 +260,7 @@ public class EzPMSController3 {
 		if(status.equals("ok")) {
 			model.addAttribute("data", "success");
 		}
+		
 		LOGGER.debug("ezPMS deleteBoard ended");
 		
 		return "json";
@@ -346,6 +346,7 @@ public class EzPMSController3 {
 		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
 			mode = request.getParameter("mode");
 		}
+		
 		if (request.getParameter("projectId") != null && !request.getParameter("projectId").equals("")) {
 			projectId = request.getParameter("projectId");
 		}
@@ -391,6 +392,7 @@ public class EzPMSController3 {
 		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
 			mode = request.getParameter("mode");
 		}
+		
 		if (request.getParameter("projectId") != null && !request.getParameter("projectId").equals("")) {
 			projectId = request.getParameter("projectId");		
 		}
@@ -407,7 +409,8 @@ public class EzPMSController3 {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		if (StringUtils.isNotEmpty(files.get(0).getOriginalFilename()) && StringUtils.isNotBlank(files.get(0).getOriginalFilename()) && cnt > 0) {        	
+		if (StringUtils.isNotEmpty(files.get(0).getOriginalFilename()) && StringUtils.isNotBlank(files.get(0).getOriginalFilename()) && cnt > 0) {   
+			
             for (int i = 0; i < cnt; i++) {
             	JSONObject fileJson = new JSONObject();
             	
@@ -421,6 +424,7 @@ public class EzPMSController3 {
                 jsonArray.add(fileJson);
             }
         }
+		
         jsonObject.put("fileArray", jsonArray);
 		jsonObject.put("cnt", cnt);
 		jsonObject.put("maxSize", maxSize);
@@ -539,6 +543,7 @@ public class EzPMSController3 {
 			response.getWriter().close();
 			
 		}	
+		
 		LOGGER.debug("ezPMS downloadFile ended");
 	}
 	
@@ -572,7 +577,9 @@ public class EzPMSController3 {
 			Long authority = (Long) resultBody.get("authority");
 			model.addAttribute("authority", authority);
 		}
+		
 		model.addAttribute("userId", userId);
+		
 		LOGGER.debug("ezPMS getBoardDetail ended");
 		
 		return "ezPMS/pmsBoardDetail";
