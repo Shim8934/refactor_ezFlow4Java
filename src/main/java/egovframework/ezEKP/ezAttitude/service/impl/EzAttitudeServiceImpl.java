@@ -161,13 +161,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh,
 		String typeId, String startDate, String endDate, String offset, String primary, String deptFlag, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList started");
+		
 		Map<String, Object> map = new HashMap<String,Object>();
-		//if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
-		//일단 하루치를 가져오는 것 부터
-		//true면 UTC false면 local
-		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
 		//startDate와 endDate가 없는 경우 당일의 근태를  출력
-		LOGGER.debug("typeId :" + typeId);
 		if (startDate.equals("") && endDate.equals("")) {
 			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
 			startDate = localDate + " 00:00:00";
@@ -180,23 +177,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			endDate = endDate + " 23:59:59";
 		}
 		
-		String[] pidListArr = pidList.split(",");
-		String[] deptIdArr = deptIdList.split(",");
-		
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
 		map.put("primary", primary);
-		map.put("offsetMin", offsetMin);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		if (!typeId.trim().equals("")){
 			map.put("typeId", typeId);
 		}
 		if (!pidList.trim().equals("")){
-			map.put("pidListArr", pidListArr);
+			map.put("pidListArr", pidList.split(","));
 		}
 		if (!deptIdList.trim().equals("")){
-			map.put("deptIdArr", deptIdArr);
+			map.put("deptIdArr", deptIdList.split(","));
 		}
 	
 		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList(map);

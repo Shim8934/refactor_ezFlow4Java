@@ -101,15 +101,6 @@ public class EzAttitudeGWController {
 				// 관리하고 있는 전체 부서 목록을 받아서 dept in iterate를 돌린다.
 				resultList = ezAttitudeService.getAttitudeList("", selectedDeptID, "", typeId, startDate, endDate, offset, info.getPrimary(), deptFlag, info.getTenantId());
 			}
-			
-			//imgPath 셋팅
-//			for (int i = 0; i < resultList.size(); i++) {
-//				String imgPath = resultList.get(i).getImgPath();
-//				if (imgPath != null && !imgPath.equals("")) {
-//					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-//					resultList.get(i).setImgPath(imgPath);
-//				}
-//			}
 	         
 			result.put("status", "ok");
 			result.put("code", 0);

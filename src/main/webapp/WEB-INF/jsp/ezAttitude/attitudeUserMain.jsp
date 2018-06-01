@@ -166,28 +166,6 @@
 					attitudeItemView(this);
 				});
 				
-				/*
-				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02],[typeid=A01]', function(){
-					//근태수정신청은 개인근태현황에서만 가능
-					var typeid = $(this).attr('typeid');
-					var modappl = $(this).attr('modappl');
-					var attitudeid = $(this).attr('attitudeid');
-					if (deptFlag != "true") {
-						if (modappl == 0 && typeid == 'A02') {
-							attitudeModItem(this);	
-						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
-							mod_detail(attitudeid);
-						}
-					} else {
-						if (modappl == 0 && typeid == 'A02') {
-							console.log(this);
-						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4){
-							mod_detail(attitudeid);
-						}
-					}
-				});
-				*/
-				
 				$(window).on("resize", function(){
 					var popupX = parent.document.body.clientWidth/2 - (883/2) - 220;
 					var popupDayX = parent.document.body.clientWidth/2 - (883/2) - 220;
@@ -293,7 +271,6 @@
 					var calendarHeight = $("#attiCalendar").css("height");
 					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
 					
-// 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.t171'/>")));
 					for (var i = 0; i < result.length; i++) {
 						
