@@ -134,7 +134,7 @@ public class EzConnController {
 						organUserVO.setExtensionAttribute1("c=0;k=0;g=0;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
 					}
 					
-					ezOrganAdminService.updateDBData_user(organUserVO);
+					ezOrganAdminService.updateDBData_userPermission(organUserVO);
 				}
 				
 				if (params.length > 4) {
