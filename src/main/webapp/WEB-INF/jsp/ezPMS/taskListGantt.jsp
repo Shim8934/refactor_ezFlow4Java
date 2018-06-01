@@ -118,7 +118,7 @@
 	   			/*-------------------------프로젝트 데이터 가공 완료 -------	----------------*/
 	   			
 	   			//그룹 리스트 가공부분.
-// 	   			for(var i = 0; i < tl.length; i++){
+// 	   			for(var i = 0; i < gl.length; i++){
 // 	   				ganttData.tasks[i + 1] = {};
 // 		   			ganttData.tasks[i + 1].id = "p" + tl[i].projectId + "_t" + tl[i].taskId;
 // 		   			ganttData.tasks[i + 1].name = tl[i].taskName;
@@ -161,7 +161,7 @@
 	   			/*-------------------------그룹 데이터 가공 완료 -----------------------*/
 	   			//업무 리스트 가공부분.
 	   			if(tl.length > 0){
-		   			for(var i = 0; i < gl.length; i++){
+		   			for(var i = 0; i < tl.length; i++){
 		   				ganttData.tasks[i + 1] = {};
 			   			ganttData.tasks[i + 1].id = "p" + tl[i].projectId + "_t" + tl[i].taskId;
 			   			ganttData.tasks[i + 1].name = tl[i].taskName;
@@ -330,6 +330,22 @@
 	   			}
 	   		}
 	   		
+	   		function ganttChartModifyFunc(){
+	   			GanttMaster.prototype.taskIsChanged = function () {
+	   			  var master = this;
+	   			  this.element.stopTime("gnnttaskIsChanged");
+	   			  this.element.oneTime(50, "gnnttaskIsChanged", function () {
+	   			    master.redraw();
+	   			    master.element.trigger("gantt.redrawCompleted");
+	   			  });
+	   			  test();
+	   			};
+	   		}
+	   		
+	   		function test(){
+	   			alert("ttttttttttttttttt");
+	   		}
+	   		
 	   		function preProcess(){
 	   			//간트 차트 테이블 날짜 형식 세팅. i18nJs.js 의 내용에 덮어 씌움.
 	   			Date.defaultFormat = "yyyy/M/d";
@@ -427,6 +443,7 @@
 	   			};
 		   		initValues();
 		   		ganttChartAddFunc();
+		   		ganttChartModifyFunc();
 		   		
 // 		   		ge = new GanttMaster();
 // 		   		ge.init($("#workSpace"));
