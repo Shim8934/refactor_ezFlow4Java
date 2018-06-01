@@ -264,6 +264,8 @@
 		<result property="groupName"				column="group_name"/>
 		<result property="fileCNT"					column="file_cnt"/>
 		<result property="writeContent"				column="WRITE_CONTENT"/>
+		<result property="taskId"					column="task_id"/>
+		<result property="groupId"					column="group_id"/>
 	</resultMap>
 	
 	<resultMap class="FileVO" id="fileVO">
@@ -1465,7 +1467,8 @@
 				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
 				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
 				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		
-				IFNULL(F.file_cnt, 0) AS FILE_CNT,				B.write_content
+				IFNULL(F.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.task_id,
+				B.group_id
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
@@ -2303,6 +2306,31 @@
 				</iterate>
 				)
 		</isNotEqual>
-		
 	</select>
+	
+	<select id="EzPMSDAO.getUserGroupRole" parameterClass="map" resultClass="Integer">
+		SELECT 
+			MIN(MEMBER_ROLE_ID)
+		FROM
+			TBL_PMS_GROUPMEMBER
+		WHERE
+			USER_ID = #userId#
+		AND
+			GROUP_ID = #groupId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="EzPMSDAO.deleteGroup">
+		UPDATE
+			TBL_PMS_GROUP
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			GROUP_ID = #groupId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
 </sqlMap>

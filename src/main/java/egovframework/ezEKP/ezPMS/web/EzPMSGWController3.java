@@ -157,9 +157,11 @@ public class EzPMSGWController3 {
 			
 			Long groupId = 0L;
 			Long taskId = 0L;
+			
 			if(request.getParameter("groupId")!= null && !request.getParameter("groupId").equals("")) {
 				groupId = Long.parseLong(request.getParameter("groupId"));	
 			} 
+			
 			if(request.getParameter("taskId")!= null && !request.getParameter("taskId").equals("") && !request.getParameter("taskId").equals("null")) {
 				taskId = Long.parseLong(request.getParameter("taskId"));	
 			}
@@ -204,6 +206,7 @@ public class EzPMSGWController3 {
 			result.put("data", "");
 			e.printStackTrace();
 		}
+		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId +"/users/" + userId + "] ended");
 		return result;
 	}
@@ -220,9 +223,11 @@ public class EzPMSGWController3 {
 			
 			Long groupId = 0L;
 			Long taskId = 0L;
+			
 			if(request.getParameter("groupId")!=null && !request.getParameter("groupId").equals("")) {
 				groupId = Long.parseLong(request.getParameter("groupId"));	
 			} 
+			
 			if(request.getParameter("taskId")!=null && !request.getParameter("taskId").equals("")) {
 				taskId = Long.parseLong(request.getParameter("taskId"));	
 			}
@@ -265,12 +270,15 @@ public class EzPMSGWController3 {
 			if (jsonParam.get("fileArray") != null) {
 				fileArray = (JSONArray) jsonParam.get("fileArray");
 			}	
+			
 			if (jsonParam.get("cnt") != null) {
 				cnt =  ((Long) jsonParam.get("cnt")).intValue();
 			}	
+			
 			if (jsonParam.get("maxSize") != null) {
 				maxSize =  ((Long) jsonParam.get("maxSize")).intValue();
-			}		
+			}	
+			
 			if (jsonParam.get("userId") != null) {
 				userId = (String) jsonParam.get("userId");
 			}
@@ -404,7 +412,7 @@ public class EzPMSGWController3 {
 			if (fileList.length() != 0) {
 				String[] data = fileList.split("/"); 
 				
-				for (int i=0; i<data.length; i++) {
+				for (int i = 0; i < data.length; i++) {
 					String sGUID = data[i].split(":")[0];
 					String fileName = data[i].split(":")[1];
 					String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -545,6 +553,7 @@ public class EzPMSGWController3 {
 	
 		    if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdirs();
+				
 				if (!_flag) {
 				    throw new IOException("Directory creation Failed ");
 				}
@@ -562,7 +571,9 @@ public class EzPMSGWController3 {
 		} catch (Exception e) {
 			LOGGER.debug("e: {}", e);
 		} finally {
+			
 		    if (bos != null) {
+		    	
 				try {
 				    bos.close();
 				} catch (Exception ignore) {

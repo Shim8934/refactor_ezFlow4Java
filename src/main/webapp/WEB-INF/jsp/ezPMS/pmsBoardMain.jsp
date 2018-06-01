@@ -49,16 +49,20 @@
 			getBoardList();
 		});
 		
-		// 여기 다른 방법으로 할 순 없을지 고민해봐야함. 근데 아무리 해도 모르겠음
-		setTimeout(function() {
-			var project = $("li[role='treeitem'][aria-level='1']");
+		// 트리가 모두 로드된 다음 실행
+	 	$("#taskTree").on("ready.jstree", function() {
+			var project = $("li[role='treeitem'][aria-level='1']").last();
+			
 			groupId = project.attr("id");
 			projectName = project.children("a").text();
+			project.children("a").click();
+			
 			if(projectName.indexOf('(') != -1) {
 				projectName = projectName.substr(0, projectName.indexOf('('));
 			}
+			
 			taskName = projectName;
-		}, 100);
+		});
 	});
 	
 	function goAddBoard() {
@@ -110,38 +114,21 @@
 			success : function(result) {
 				if(result.data == 'success') {
 					alert("삭제되었습니다.");
+					
+					for(i in itemIds) {
+						var deletedTR = $("tr[data-itemid = " + itemIds[i] + "]");
+						var title = deletedTR.children("td.boardTitle").text();
+						var taskName = deletedTR.children("td.taskName").text();
+						var groupId = deletedTR.attr("data-groupId");
+						var taskId = deletedTR.attr("data-taskId");
+						
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다.");
+					}
+					
 					getBoardList();
 				} else {
 					alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
 				}	
-			},
-			error : function() {
-				alert("삭제에 실패했습니다.");
-			}
-		})
-	}
-	
-	// 조회 화면에서 삭제할 때
-	function deleteBoardAction(itemIds) {
-		data = {
-			itemIds : itemIds,
-			projectId : projectId
-		}
-		
-		$.ajax({
-			type : "DELETE",
-			url : "/ezPMS/deleteBoard.do",
-			dataType : "json",
-			contentType : "application/json; charset=UTF-8",
-			data : JSON.stringify(data),
-			success : function(result) {
-				if(result.data == 'success') {
-					boardDetail.alert("삭제되었습니다.");
-					boardDetail.close();
-					getBoardList();
-				} else {
-					boardDetail.alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
-				}
 			},
 			error : function() {
 				alert("삭제에 실패했습니다.");

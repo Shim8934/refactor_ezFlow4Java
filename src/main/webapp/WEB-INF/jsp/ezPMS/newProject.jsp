@@ -277,7 +277,7 @@ var beforeViewerList = [];
 		data :JSON.stringify(data),
 		success : function(result) {
 			try { 
-				console.log(result);
+				
 				if (mode == "edit") {
 					sendNotiMail(result, projectName);
 					var logContent = "[" + projectName + "]의 정보가 수정되었습니다."

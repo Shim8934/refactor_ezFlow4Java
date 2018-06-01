@@ -30,6 +30,12 @@
 		var groupId = 0;
 		var taskId = 0;
 		var chosenTask = $("a.jstree-clicked");	
+		var taskName = chosenTask.text();
+		
+		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
+		if(taskName.indexOf('(') != -1) {
+			taskName = taskName.substr(0, taskName.indexOf('('));
+		}
 		
 		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
 			groupId = chosenTask.parents("li").eq(1).attr("id");
@@ -56,7 +62,25 @@
 				if(result.data == 'success') {
 					alert("이동에 성공했습니다.");
 					popupClose();
-					parent.getBoardList();
+					
+					if(typeof parent.getBoardList == 'function') {
+						
+						for(i in parent.itemIds) {
+							var deletedTR = parent.$("tr[data-itemid = " + parent.itemIds[i] + "]");
+							var title = deletedTR.children("td.boardTitle").text();
+							var taskName = deletedTR.children("td.taskName").text();
+							var groupId = deletedTR.attr("data-groupId");
+							var taskId = deletedTR.attr("data-taskId");
+							
+							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물을 이동하였습니다.");
+						}
+						
+						parent.getBoardList();
+					} else {
+						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName + "](으)로 " + "[" + parent.title + "] 게시물을 이동하였습니다.");
+						parent.location.reload();
+					}
+					
 				} else {
 					alert('수정은 프로젝트 담당자나 게시자만 할 수 있습니다.');
 				}	

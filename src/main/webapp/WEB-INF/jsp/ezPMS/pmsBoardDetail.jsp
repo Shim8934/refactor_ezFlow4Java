@@ -9,22 +9,34 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>게시물 읽기</title>
+	<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-	<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	<script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
+	<script type="text/javascript" src="/js/ezPMS/common.js"></script>
 	<script type="text/javascript">
 		
 		var itemId = '${board.itemId}';
 		var userId = '${userId}';
 		var writerId = '${board.writerId}';
 		var authority = '${authority}'
-		var projectId = '${board.projectId}';
+		var projectId = '${board.projectId}';	
+		var groupId = '${board.groupId}';	
+		var taskId = '${board.taskId}';	
+		var title = '${board.title}';
+		var taskName = '${board.taskName ne null ? board.taskName : board.groupName}';
+		var itemIds = new Array(itemId); // 메인화면에서 여러개의 게시물을 한 번에 이동하는 함수를 재사용하기 위함
+		
 		$(function() {
-			// 게시자이거나 담당자(authority = 1)인 경우만 수정/삭제 버튼이 보임
+			// 게시자이거나 담당자(authority = 1)인 경우만 수정/삭제/이동 버튼이 보임
 			if(userId != writerId && authority != '1') {
 				$("#modifyBtn").css("display", "none");
 				$("#deleteBtn").css("display", "none");
+				$("#moveBtn").css("display", "none");
 			}
+			
+			$("#taskName").text(taskName);
 		})
 		// 첨부파일 모두 선택
 		function attach_SelectAll() {
@@ -65,12 +77,44 @@
 			if(confirm("정말 삭제하시겠습니까?") == true) {
 				var items = new Array();
 				items.push(itemId);
-				opener.deleteBoardAction(items);
+				deleteBoardAction(items);
 			}	
+		}
+		
+		function deleteBoardAction(itemIds) {
+			data = {
+				itemIds : itemIds,
+				projectId : projectId
+			}
+			
+			$.ajax({
+				type : "DELETE",
+				url : "/ezPMS/deleteBoard.do",
+				dataType : "json",
+				contentType : "application/json; charset=UTF-8",
+				data : JSON.stringify(data),
+				success : function(result) {
+					if(result.data == 'success') {
+						alert("삭제되었습니다.");
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다.");
+						window.close();
+						opener.getBoardList();
+					} else {
+						alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
+					}
+				},
+				error : function() {
+					alert("삭제에 실패했습니다.");
+				}
+			})
 		}
 		
 		function modifyBoard() {
 			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=modify';
+		}
+		
+		function goMoveBoard() {
+			DivPopUpShow(320, 320, "/ezPMS/goMoveBoards.do?projectId=" + projectId + "&onlyGroup=false");
 		}
 	</script>
 </head>
@@ -83,12 +127,9 @@
 						<li><span>답변</span></li>
 						<li id="modifyBtn"><span onclick="modifyBoard()">수정</span></li>
 						<li id="deleteBtn"><span onclick="deleteBoard()">삭제</span></li>
-						<li><span>복사</span></li>
-						<li><span>이동</span></li>
+						<li id="moveBtn"><span onclick="goMoveBoard()">이동</span></li>
 						<li><span>메일로 발송</span></li>
 						<li><span>조회자 정보</span></li>
-						<li><span>인쇄</span></li>
-						<li><span>재전송</span></li>
 						<li style="float: right;"><span onclick="window.close()">닫기</span></li>
 					</ul>
 				</div>
@@ -111,16 +152,7 @@
 					</tr>
 					<tr>
 						<th>작업이름</th>
-						<td style="width: 50%">
-							<c:choose>
-								<c:when test="${board.taskName ne null}">
-									${board.taskName}
-								</c:when>
-								<c:otherwise>
-									${board.groupName}
-								</c:otherwise>
-							</c:choose>						
-						</td>
+						<td id="taskName" style="width: 50%"></td>
 						<th>게시일</th>
 						<td>${fn:substring(board.writeDate, 0, 19)}</td>
 						
@@ -166,5 +198,10 @@
 			</td>
 		</tr>
 	</table>
+	
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 </body>
 </html>

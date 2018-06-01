@@ -44,6 +44,7 @@ public class FileVO {
 			unit = "B";
 			break;
 		}
+		
 		this.fileTransSize = Math.round(size * 10)/10.0 + unit;
 	}
 	public String getFileName() {
@@ -54,6 +55,7 @@ public class FileVO {
 		
 		// 화면에서의 아이콘 종류를 위한 파라미터
 		String extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+		
 		if(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("bmp") || extension.equals("gif") || extension.equals("png") ||
 		   extension.equals("tif") || extension.equals("tiff")) {
 			extension = "image";
