@@ -25,7 +25,8 @@
 			goBoardDetail(this);
 		});
 		
-		$("tr[data-writetype=1]").addClass("emergency");
+		$("tr[data-writetype=1], tr[data-writetype=3]").addClass("emergency");
+		$("tr[data-readornot='false']").addClass("noView");
 	})
 	
 	// 체크박스 전체선택 혹은 해제

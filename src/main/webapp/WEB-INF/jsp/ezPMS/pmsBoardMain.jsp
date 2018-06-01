@@ -114,47 +114,21 @@
 			success : function(result) {
 				if(result.data == 'success') {
 					alert("삭제되었습니다.");
-					getBoardList();
-				} else {
-					alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
-				}	
-			},
-			error : function() {
-				alert("삭제에 실패했습니다.");
-			}
-		})
-	}
-	
-	// 조회 화면에서 삭제할 때
-	function deleteBoardAction(itemIds) {
-		data = {
-			itemIds : itemIds,
-			projectId : projectId
-		}
-		
-		$.ajax({
-			type : "DELETE",
-			url : "/ezPMS/deleteBoard.do",
-			dataType : "json",
-			contentType : "application/json; charset=UTF-8",
-			data : JSON.stringify(data),
-			success : function(result) {
-				if(result.data == 'success') {
-					boardDetail.alert("삭제되었습니다.");
-					boardDetail.close();
-					getBoardList();
 					
 					for(i in itemIds) {
 						var deletedTR = $("tr[data-itemid = " + itemIds[i] + "]");
 						var title = deletedTR.children("td.boardTitle").text();
 						var taskName = deletedTR.children("td.taskName").text();
+						var groupId = deletedTR.attr("data-groupId");
+						var taskId = deletedTR.attr("data-taskId");
 						
-						// groupId와 taskId를 어떻게 남기지-_- DB에서 List로 읽어올 때 일일히 다 가져와야겠네ㅠㅠㅠ
-						/* addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다."); */
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다.");
 					}
+					
+					getBoardList();
 				} else {
-					boardDetail.alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
-				}
+					alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
+				}	
 			},
 			error : function() {
 				alert("삭제에 실패했습니다.");

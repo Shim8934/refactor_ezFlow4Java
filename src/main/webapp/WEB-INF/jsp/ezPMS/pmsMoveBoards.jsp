@@ -63,11 +63,21 @@
 					alert("이동에 성공했습니다.");
 					popupClose();
 					
-					addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName + "](으)로 " + "[" + parent.title + "] 게시물을 이동하였습니다.");
-					// 메인화면에서 이동할 때
 					if(typeof parent.getBoardList == 'function') {
+						
+						for(i in parent.itemIds) {
+							var deletedTR = parent.$("tr[data-itemid = " + parent.itemIds[i] + "]");
+							var title = deletedTR.children("td.boardTitle").text();
+							var taskName = deletedTR.children("td.taskName").text();
+							var groupId = deletedTR.attr("data-groupId");
+							var taskId = deletedTR.attr("data-taskId");
+							
+							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물을 이동하였습니다.");
+						}
+						
 						parent.getBoardList();
 					} else {
+						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName + "](으)로 " + "[" + parent.title + "] 게시물을 이동하였습니다.");
 						parent.location.reload();
 					}
 					

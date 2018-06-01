@@ -77,9 +77,36 @@
 			if(confirm("정말 삭제하시겠습니까?") == true) {
 				var items = new Array();
 				items.push(itemId);
-				addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다.");
-				opener.deleteBoardAction(items);
+				deleteBoardAction(items);
 			}	
+		}
+		
+		function deleteBoardAction(itemIds) {
+			data = {
+				itemIds : itemIds,
+				projectId : projectId
+			}
+			
+			$.ajax({
+				type : "DELETE",
+				url : "/ezPMS/deleteBoard.do",
+				dataType : "json",
+				contentType : "application/json; charset=UTF-8",
+				data : JSON.stringify(data),
+				success : function(result) {
+					if(result.data == 'success') {
+						alert("삭제되었습니다.");
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다.");
+						window.close();
+						opener.getBoardList();
+					} else {
+						alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
+					}
+				},
+				error : function() {
+					alert("삭제에 실패했습니다.");
+				}
+			})
 		}
 		
 		function modifyBoard() {
