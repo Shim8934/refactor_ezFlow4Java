@@ -1432,7 +1432,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang) {
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1443,6 +1443,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("startRow", startRow);
 		map.put("limit", limit);
 		map.put("lang", lang);
+		map.put("position", position);
 		
 		List<ProjectBoardVO> boardList = ezPMSDAO.getBoardList(map);
 		

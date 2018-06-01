@@ -1495,11 +1495,13 @@
 			AND B.tenant_id = #tenantId#
 			AND B.del_status = 0
 			ORDER BY 
+		<isEmpty property="position">
 			CASE B.write_type 
-			WHEN 1 THEN 2 
-			WHEN 3 THEN 4 
-			ELSE B.write_type 
-			END ASC, 
+				WHEN 1 THEN 2 
+				WHEN 3 THEN 4 
+				ELSE B.write_type 
+				END ASC,
+		</isEmpty>
 			B.item_id DESC
 			LIMIT #startRow#, #limit#
 	</select>
