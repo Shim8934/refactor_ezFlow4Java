@@ -268,6 +268,7 @@ public class EzPMSController {
 			planEndDate = nowDate;
 		} else if (mode.equals("edit")) {
 			projectId = Long.parseLong(request.getParameter("projectId"));
+			long groupId = Long.parseLong(request.getParameter("groupId"));
 			
 			String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId; 
 
@@ -282,6 +283,7 @@ public class EzPMSController {
 				JSONObject project = (JSONObject) resultJson.get("project");
 				
 				model.addAttribute("project", project);
+				model.addAttribute("groupId", groupId);
 			}
 			
 		}
@@ -301,10 +303,13 @@ public class EzPMSController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/addNewProject.do")
 	@ResponseBody
-	public long addNewProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	public JSONObject addNewProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS addNewProject started");
-		
+
 		long projectId = 0;
+		long groupId = 0;
+		JSONObject json = new JSONObject();
+		
 		try{
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			String url = "/rest/ezPMS/projects";
@@ -322,21 +327,27 @@ public class EzPMSController {
 			
 			if (param.get("mode").equals("new")) {
 				result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
-				projectId = Long.parseLong(result.get("data").toString());
+				JSONObject resultValue = (JSONObject) result.get("data");
+				projectId = Long.parseLong(resultValue.get("projectId").toString());
+				groupId = Long.parseLong(resultValue.get("groupId").toString());
 				
 			} else if (param.get("mode").equals("edit")) {
 				projectId = Long.parseLong(param.get("projectId").toString());
+				groupId = Long.parseLong(param.get("groupId").toString());
 				url += "/" + projectId;
 				result = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
 			}
 			
-			LOGGER.debug("projectId : " + projectId);
+			json.put("projectId", projectId);
+			json.put("groupId", groupId);
+			
+			LOGGER.debug("projectId : " + projectId + ", groupId : " + groupId);
 		} catch(Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
 		
 		LOGGER.debug("ezPMS addNewProject ended");
-		return projectId;
+		return json;
 	}
 	
 	/**
@@ -716,7 +727,7 @@ public class EzPMSController {
 	public String addTaskLog(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS addTaskLog started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String projectId = param.get("projectId").toString();
+		long projectId = Long.parseLong(param.get("projectId").toString());
 		String userId = userInfo.getId();
 		
 		param.put("userId", userId);

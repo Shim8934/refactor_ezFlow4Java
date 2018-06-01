@@ -96,6 +96,9 @@ public class ProjectInfoVO {
 	    //완료된 task 개수
 	    private int completeTaskCount;
 	    
+	    //프로젝트의 그룹 아이디
+	    private long groupId;
+	    
 	    public int getTotalTaskCount() {
 			return totalTaskCount;
 		}
@@ -334,6 +337,14 @@ public class ProjectInfoVO {
 
 		public void setIsFavorite(int isFavorite) {
 			this.isFavorite = isFavorite;
+		}
+
+		public long getGroupId() {
+			return groupId;
+		}
+
+		public void setGroupId(long groupId) {
+			this.groupId = groupId;
 		}
 
 }

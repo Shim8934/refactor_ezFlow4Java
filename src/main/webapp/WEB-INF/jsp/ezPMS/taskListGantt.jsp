@@ -225,18 +225,18 @@
 	   			$.ajax({
 	   				type : "POST",
 	   				url : "/ezPMS/deleteGroup.do",
-	   				dataType : "json",
+	   				dataType : "text",
 	   				contentType: "application/json; charset=UTF-8",
 	   				data : JSON.stringify(data),
 	   				success : function(data) {
 						alert("그룹이 삭제되었습니다.");
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert("에러 : 그룹 삭제 에러");
+	   					alert("에러 : 그룹 삭제 에러" + textStatus + errorThrown + jqXHR);
 	   				},
 	   				complete : function(){
 	   					var logContent = "[그룹 삭제 테스트 로그 입니다.]";
-	   					addTaskLog(projectId, 3, null, null, logContent);
+	   					addTaskLog(projectId, 3, groupId, null, logContent);
 	   				}
 	   			});
 	   		}
