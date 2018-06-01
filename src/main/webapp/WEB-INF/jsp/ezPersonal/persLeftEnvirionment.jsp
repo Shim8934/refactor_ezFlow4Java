@@ -153,6 +153,9 @@
 					case "CircularEnv":
 				        window.parent.frames.right.document.location.href = "/ezCircular/circularConfig.do";
 				        break;
+					case "journalEnv":
+				        window.parent.frames.right.document.location.href = "/ezJournal/journalConfig.do";
+				        break;
 					default: 
 						break;
 				}
@@ -200,18 +203,30 @@
             </c:if>
 			
 			<h2><span id="UserInfo" name="UserInfo" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t172' /></span><ul></ul></h2>
-			<h2><span  id="MailEnv" name="MailEnv" onClick="mail_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900006' /></span></h2><ul></ul>
-            
+			<c:if test="${isMailUsed == 'Y'}">
+				<h2><span  id="MailEnv" name="MailEnv" onClick="mail_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900006' /></span></h2><ul></ul>
+            </c:if>
             <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
-            	<h2><span  id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()" style="width:100%;display:inline-block" ><spring:message code='ezPersonal.t999900007' /></span></h2><ul></ul>
+            	<c:if test="${isScheduleUsed == 'Y'}">
+            		<h2><span  id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()" style="width:100%;display:inline-block" ><spring:message code='ezPersonal.t999900007' /></span></h2><ul></ul>
+            	</c:if>
 	            <c:if test="${packageType == 'standard'}">
-					<h2><span id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900008' /></span></h2><ul></ul>
+	            	<c:if test="${isApprUsed == 'Y'}">
+						<h2><span id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900008' /></span></h2><ul></ul>
+					</c:if>
 	            </c:if>
-	    		<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>
+	            <c:if test="${isBoardUsed == 'Y'}">
+	    			<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>
+	    		</c:if>
 	    		<c:if test="${USE_CIRCULAR == 'YES'}">
-	    			<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
+	    			<c:if test="${isCircularUsed == 'Y'}">
+	    				<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
+	    			</c:if>
 	    		</c:if>
             </c:if>
+            <c:if test="${isJournalUsed == 'Y'}">
+   				<h2><span id="journalEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezJournal.t150' /></span></h2><ul></ul>
+   			</c:if>
 			<h2><span id="TimeZone" name="TimeZone" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900010' /></span><ul></ul></h2>
 		</div>
 	</body>

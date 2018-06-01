@@ -2368,12 +2368,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	        }
 	
 	        xmlDom.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
-	        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true));
+	        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 	
 	        String strXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
 	        strXML = strXML + commonUtil.convertDocumentToString(xmlDom); //.Replace("&amp;", "&");
 	
-	        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), true);
+	        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), false);
 	     
 	        String result = ezApprovalGService.getFileName(commonUtil.getRealPath(request), sendID + arrReceiveID[arrReceiveID.length - 1].toString() + strTime, "sendtemp", strXML, userInfo.getTenantId());
 	        logger.debug("sendMsg ended");

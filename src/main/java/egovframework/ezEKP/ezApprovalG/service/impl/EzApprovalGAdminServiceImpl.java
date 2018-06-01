@@ -1474,7 +1474,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		sb.append("<ROWS>");
 		
-		for(ApprGSealInfoVO vo : list) {
+		for (ApprGSealInfoVO vo : list) {
 			sb.append("<ROW>");
 			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getSealName()) + "</VALUE>");
 			sb.append("<DATA1>" + vo.getSealNum() + "</DATA1>");
@@ -1497,6 +1497,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getDelDate().substring(0, 10), offset, false) + "</VALUE></CELL>");
 			}
 			
+			if (!file.exists()) {
+				sb.insert(sb.indexOf("</DATA3>") + 8, "<DATA4>false</DATA4>");
+			}
 			
 			sb.append("<CELL><VALUE>" + vo.getRegUserName() + "</VALUE></CELL>");
 			sb.append("</ROW>");
@@ -1588,7 +1591,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		sb.append("<ROWS>");
 		
-		for(ApprGSealInfoVO vo : list) {
+		for (ApprGSealInfoVO vo : list) {
 			sb.append("<ROW>");
 			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getSealName()) + "</VALUE>");
 			sb.append("<DATA1>" + vo.getSealNum() + "</DATA1>");
@@ -1598,6 +1601,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<CELL><VALUE>" + vo.getSealHeight() + "</VALUE></CELL>");
 			// substring을 통해 날짜까지만 표시
 			sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate().substring(0, 10), offset, false) + "</VALUE></CELL>");
+			
 			if (vo.getDelDate() == null) {
 				sb.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
 			} else {
@@ -1609,14 +1613,18 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			} else {
 				sb.append("<CELL><VALUE>" + vo.getRegUserName2() + "</VALUE></CELL>");
 			}
+			
 			File file = new File(realPath + vo.getSealPath());
-			if ( !file.exists() ) {
-				sb.append(sb.insert(sb.indexOf("</DATA3>")+8, "<DATA4>false</DATA4>"));
+			
+			if (!file.exists()) {
+				sb.insert(sb.indexOf("</DATA3>") + 8, "<DATA4>false</DATA4>");
 			}
+			
 			sb.append("</ROW>");
 		}
 		
 		sb.append("</ROWS>");
+		
 		logger.debug("getSealDeptList ended.");
 		
 		return sb.toString();

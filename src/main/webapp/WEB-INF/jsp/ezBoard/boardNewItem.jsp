@@ -2001,10 +2001,11 @@
 	                    <ul>
 	                    	<c:choose>
 	                    		<c:when test="${mode == 'temp'}">
-			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t321' /></span></li>
+	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t321 => t98 -->
+			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t321' /></span></li>
+			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    	<c:if test="${boardInfo.guBun != '3'}">

@@ -197,8 +197,10 @@
 		            return;
 				}
 
+				/* 2018-05-30 김민성 - 업무 검색 특수문자 태그 검색 수정 */
 				if (document.getElementById("keyword").value != "") {
-					filter = document.getElementById("keyword").value;					
+					filter = document.getElementById("keyword").value;			
+					filter = MakeXMLString(filter);
 				}
 
 				if (filter.indexOf("%") != -1) {

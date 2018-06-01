@@ -9,8 +9,12 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
 			function window_onload(){
+				process();
+			}
+			
+			function process() {
 			    <c:if test="${packageType != 'standard' || firstScreen_Mail == 'YES'}">
-			    	window.open("/admin/ezOrgan/organMain.do", "bottom");
+		    	window.open("/admin/ezOrgan/organMain.do", "bottom");
 			    </c:if>
 			    <c:if test="${packageType == 'standard' && firstScreen_Mail == 'NO'}">
 				//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
@@ -83,7 +87,7 @@
 				    case "menu20":
 				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;
-					//20120725 모바일 기기 관리자 메뉴 추가	end				
+					//20120725 모바일 기기 관리자 메뉴 추가	end	
 				}
 			}
 			
@@ -105,7 +109,7 @@
 		<form method="post">
 			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>
 			<div id="adminmenu">
-		    	<ul>		    		
+		    	<ul>
                     <c:if test="${firstScreen_Mail == 'YES'}">
                     	<li><span id="menu10" onClick="menu_change(70, event)"><spring:message code="main.t22" /></span></li>
                     	<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li> 

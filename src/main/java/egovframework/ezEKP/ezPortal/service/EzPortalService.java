@@ -237,4 +237,5 @@ public interface EzPortalService {
 	
 	public void updateTBLPortalACL (String pResult, String pAccessID, int tenantID) throws Exception;
 	
+	public String getMainMenuItemUID(String pAccessID, String linkURL, String userLang, String companyID, int tenantID) throws Exception;
 }

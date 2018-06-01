@@ -275,7 +275,7 @@
                 DeleteFileAtServer_true(pDeleteFile[i]);
             }
             
-            parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
+            parent.setAttachInfo(pDocID, "APR_RECORD", parent.lstAttachLink);
             parent.DivPopUpHidden();
         } else {
             CheckHistory(0);
