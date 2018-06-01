@@ -339,6 +339,7 @@
 	   			    master.element.trigger("gantt.redrawCompleted");
 	   			  });
 	   			  test();
+	   			  console.log(this);
 	   			};
 	   		}
 	   		

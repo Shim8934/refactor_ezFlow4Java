@@ -395,7 +395,13 @@ public class EzPMSGWController2 {
 			project.put("ancestorGroup", "0");
 			project.put("sortOrder", 1);
 			project.put("status", "W");
-			project.put("upperGroupId", request.getParameter("upperGroupId"));
+			
+			if (request.getParameter("upperGroupId") == null) {
+				project.put("upperGroupId", 0);
+			} else {
+				project.put("upperGroupId", request.getParameter("upperGroupId"));
+			}
+			
 			
 			//수정해야함.
 			project.put("progress", "0");
