@@ -157,7 +157,6 @@ public class EzWebFolderGWController {
 		String searchStr  = request.getParameter("searchStr")   != null ? request.getParameter("searchStr")                     : "";
 		String searchOpt  = request.getParameter("searchOpt")   != null ? request.getParameter("searchOpt")                     : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
-		String lang       = request.getParameter("lang")        != null ? request.getParameter("lang")                          : "";
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		JSONObject result = new JSONObject();
@@ -178,9 +177,9 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo                      = commonUtil.getUserForGw(userId, serverName, lang, "");
-			int tenantId                          = userInfo.getTenantId();
-			String primary                        = userInfo.getPrimary();
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId     = userInfo.getTenantId();
+			String primary   = userInfo.getPrimary();
 			
 			if (!column.equals("") && !order.equals("")) {
 				switch(column) {
@@ -307,7 +306,6 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolder/capacity/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserCapacity(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("UserId: " + userId + " || serverName: " + serverName);
@@ -321,9 +319,9 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo                      = commonUtil.getUserForGw(userId, serverName, lang, "");
-			int tenantId                          = userInfo.getTenantId();
-			String primary                        = userInfo.getPrimary();
+			LoginVO userInfo            = commonUtil.getUserForGw(userId, serverName);
+			int tenantId                = userInfo.getTenantId();
+			String primary              = userInfo.getPrimary();
 			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, tenantId);
 			
 			if (userCapacity.getTotalUsed().equals("0") || userCapacity.getTotalCapacity().equals("0")) {
@@ -352,8 +350,6 @@ public class EzWebFolderGWController {
 	public JSONObject getFileHistory(HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
-		String offset     = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
-		String lang       = request.getParameter("lang")        != null ? request.getParameter("lang")                          : "";
 		String companyId  = request.getParameter("companyId")   != null ? request.getParameter("companyId")                     : "";
 		String startDate  = request.getParameter("startDate")   != null ? request.getParameter("startDate")                     : "";
 		String endDate    = request.getParameter("endDate")     != null ? request.getParameter("endDate")                       : "";
@@ -378,7 +374,7 @@ public class EzWebFolderGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		if (serverName.equals("") || offset.equals("") || companyId.equals("") || fileType.equals("") || userId.equals("")) {
+		if (serverName.equals("") || companyId.equals("") || fileType.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -388,9 +384,10 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, "");
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId     = userInfo.getTenantId();
 			String primary   = userInfo.getPrimary();
+			String offset    = userInfo.getOffset();
 			
 			if (!column.equals("") && !order.equals("")) {
 				switch(column) {
@@ -447,7 +444,6 @@ public class EzWebFolderGWController {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
 		String offset     = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
-		String lang       = request.getParameter("lang")        != null ? request.getParameter("lang")                          : "";
 		String companyId  = request.getParameter("companyId")   != null ? request.getParameter("companyId")                     : "";
 		String startDate  = request.getParameter("startDate")   != null ? request.getParameter("startDate")                     : "";
 		String endDate    = request.getParameter("endDate")     != null ? request.getParameter("endDate")                       : "";
@@ -476,7 +472,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, "");
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId     = userInfo.getTenantId();
 			String primary   = userInfo.getPrimary();
 			
@@ -544,9 +540,7 @@ public class EzWebFolderGWController {
 		
 		JSONArray nameArray    = jsonObject.get("nameArray")    != null ? (JSONArray) jsonObject.get("nameArray") : null;
 		String serverName      = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
-		String offset          = jsonObject.get("offset")       != null ? (String) jsonObject.get("offset")       : "";
 		String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")       : "";
-		String lang            = jsonObject.get("lang")         != null ? (String) jsonObject.get("lang")         : "";
 		String folderId        = jsonObject.get("folderId")     != null ? (String) jsonObject.get("folderId")     : "";
 		JSONObject result      = new JSONObject();
 		
@@ -569,8 +563,9 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName);
 			String primary    = userInfo.getPrimary();
+			String offset     = userInfo.getOffset();
 			
 			if (!isWebfolderAdmin(userInfo)){
 				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, null, userInfo.getTenantId());
@@ -641,18 +636,16 @@ public class EzWebFolderGWController {
 
 	@RequestMapping(value = "/rest/ezwebfolder/filemanage/file-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String offset       = request.getParameter("offset")     != null ? request.getParameter("offset")     : "";
 		String listFileId   = request.getParameter("fileList")   != null ? request.getParameter("fileList")   : "";
 		String listFolderId = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
 		String userId       = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
 		String serverName   = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String lang         = request.getParameter("lang")       != null ? request.getParameter("lang")       : "";
 		String userAgent    = request.getParameter("userAgent")  != null ? request.getParameter("userAgent")  : "";
 		
 		String[] fileIDList = listFileId.equals("")   ? new String[0] : listFileId.split(",");
 		String[] folderList = listFolderId.equals("") ? new String[0] : listFolderId.split(",");
 		
-		logger.debug("serverName: " + serverName + " || Lang: " + lang + " || listFileId: " + listFileId + " || listFolderId: " + listFolderId + " || Offset: " + offset + " || UserId: " + userId);
+		logger.debug("serverName: " + serverName + " ||  listFileId: " + listFileId + " || listFolderId: " + listFolderId + " || UserId: " + userId);
 		
 		if ((fileIDList.length == 0 && folderList.length == 0) || serverName.equals("") || userId.equals("")) {
 			logger.debug("downloadAttach illegal arguments!");
@@ -661,7 +654,7 @@ public class EzWebFolderGWController {
 		
 		//Get absolute path of the application
 		String realPath  = request.getServletContext().getRealPath("");
-		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 		ezWebFolderService.getDownloadedFiles(folderList, fileIDList, realPath, userInfo, userAgent, request, response);
 		
 		logger.debug("File Download Finish!");
@@ -670,11 +663,9 @@ public class EzWebFolderGWController {
 
 	@RequestMapping(value = "/rest/ezwebfolder/file-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject delFileDelete(Locale locale, HttpServletRequest request) {
-		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
 		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
 		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
-		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
 		String[] fileIDList = listFileId.split(",");
 		JSONObject result   = new JSONObject();
 		
@@ -687,7 +678,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			if (!isWebfolderAdmin(userInfo)){
 				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), null, listFileId, userInfo.getTenantId());
@@ -713,10 +704,8 @@ public class EzWebFolderGWController {
 
 	@RequestMapping(value="/rest/ezwebfolder/file-rename/fileid/{fileid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putFileRename(@PathVariable(value="fileid") String fileId, HttpServletRequest request) {
-		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")  : "";
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")  : "";
 		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")  : "";
-		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")    : "";
 		String newName      = request.getParameter("newName")  != null ? request.getParameter("newName") : "";
 		JSONObject result   = new JSONObject();
 		
@@ -728,11 +717,12 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String userName1 = userInfo.getDisplayName1();
 			String userName2 = userInfo.getDisplayName2();
 			String companyId = userInfo.getCompanyID();
 			int tenantId     = userInfo.getTenantId();
+			String offset    = userInfo.getOffset();
 			
 			if (!isWebfolderAdmin(userInfo)){
 				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), null, fileId, userInfo.getTenantId());
@@ -764,11 +754,9 @@ public class EzWebFolderGWController {
 
 	@RequestMapping(value="/rest/ezwebfolder/filemove/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putFileMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
-		String offset       = request.getParameter("offset")     != null ? request.getParameter("offset")     : "";
 		String fileList     = request.getParameter("fileList")   != null ? request.getParameter("fileList")   : "";
 		String userId       = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
 		String serverName   = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String lang         = request.getParameter("lang")       != null ? request.getParameter("lang")       : "";
 		String folderId     = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
 		String privileges   = request.getParameter("privileges") != null ? request.getParameter("privileges") : "";
 		JSONObject result   = new JSONObject();
@@ -781,7 +769,7 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 		
 		if (!isWebfolderAdmin(userInfo)){
 			JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, fileList, userInfo.getTenantId());
@@ -800,7 +788,6 @@ public class EzWebFolderGWController {
 	public JSONObject getWebfolderAdminList(HttpServletRequest request) {
 		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")                     : "";
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
-		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")                       : "";
 		int pageNum         = request.getParameter("pageNum")  != null ? Integer.parseInt(request.getParameter("pageNum"))  : -1;
 		int pageSize        = request.getParameter("pageSize") != null ? Integer.parseInt(request.getParameter("pageSize")) : -1;
 		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
@@ -816,7 +803,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName, lang, "");
+			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
 			int tenantId           = userInfo.getTenantId();
 			String primary         = userInfo.getPrimary();
 			int startRow           = (pageSize * (pageNum - 1)) + 1;
@@ -858,7 +845,6 @@ public class EzWebFolderGWController {
 	public JSONObject postWebfolderAdminInsert(HttpServletRequest request) throws Exception {
 		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId") : "";
-		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")   : "";
 		JSONObject result   = new JSONObject();
 		
 		if (userId.equals("") || serverName.equals("")) {
@@ -868,8 +854,8 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("UserID: " + userId + " || lang: " + lang + " || serverName: " + serverName);
-		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, "");
+		logger.debug("UserID: " + userId + " || serverName: " + serverName);
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 		int tenantId     = userInfo.getTenantId();
 		String primary   = userInfo.getPrimary();
 		
@@ -923,7 +909,6 @@ public class EzWebFolderGWController {
 	public JSONObject deleteWebfolderAdminDelete(@PathVariable String userid, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		
 		JSONObject result = new JSONObject();
 		
@@ -934,9 +919,9 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("UserID: " + userid + " || lang: " + lang + " || serverName: " + serverName);
+		logger.debug("UserID: " + userid + " || serverName: " + serverName);
 		
-		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, "");
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 		int tenantId     = userInfo.getTenantId();
 		String primary   = userInfo.getPrimary();
 		OrganUserVO vo   = ezOrganAdminService.getUserInfo(userid, primary, tenantId);
@@ -1019,9 +1004,7 @@ public class EzWebFolderGWController {
 		JSONParser parser  = new JSONParser();
 		jsonObject         = (JSONObject) parser.parse(jsonObject.toJSONString());
 		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")       : "";
-		String offset      = jsonObject.get("offset")       != null ? (String) jsonObject.get("offset")    : "";
 		String userId      = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")    : "";
-		String lang        = jsonObject.get("lang")         != null ? (String) jsonObject.get("lang")      : "";
 		String pFolderId   = jsonObject.get("pFolderId")    != null ? (String) jsonObject.get("pFolderId") : "";
 		String folderName  = jsonObject.get("fName")        != null ? (String) jsonObject.get("fName")     : "";
 		String folderName2 = jsonObject.get("fName2")       != null ? (String) jsonObject.get("fName2")    : "";
@@ -1039,7 +1022,7 @@ public class EzWebFolderGWController {
 		logger.debug("serverName: " + serverName + " || folderName: " + folderName + " || ParentFolderID: " + pFolderId);
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			ezWebFolderAdminService.addCompanyFolder(pFolderId, folderUsers, folderName, folderName2, userInfo);
 			
 			result.put("status", "ok");
@@ -1098,8 +1081,6 @@ public class EzWebFolderGWController {
 
 	@RequestMapping(value="/rest/ezwebfolder/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFolderTree(HttpServletRequest request) {
-		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
-		String lang       = request.getParameter("lang")      != null ? request.getParameter("lang")      : "";
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
@@ -1107,17 +1088,17 @@ public class EzWebFolderGWController {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		JSONObject result = new JSONObject();
 		
-		if (offset.equals("") || serverName.equals("") || type.equals("") || companyId.equals("")) {
+		if (serverName.equals("") || type.equals("") || companyId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
 			return result;
 		}
 		
-		logger.debug("Type: " + type + " || folderId: " + folderId + " || companyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
+		logger.debug("Type: " + type + " || folderId: " + folderId + " || companyId: " + companyId + " || serverName: " + serverName);
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId     = userInfo.getTenantId();
 			
 			if (!isWebfolderAdmin(userInfo)) {
@@ -1163,7 +1144,6 @@ public class EzWebFolderGWController {
 		String companyId  = request.getParameter("companyId")!= null ? request.getParameter("companyId") : "";
 		String deptId     = request.getParameter("deptId")   != null ? request.getParameter("deptId")    : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")    : "";
-		String lang       = request.getParameter("lang")     != null ? request.getParameter("lang")      : "";
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")    : "";
 		JSONObject result = new JSONObject();
 		
@@ -1174,10 +1154,10 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Lang: " + lang);
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
 		
 		try {
-			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName, lang, "");
+			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName);
 			String primary        = userInfo.getPrimary();
 			int tenantId          = userInfo.getTenantId();
 			deptId                = deptId.equals("") ? userInfo.getDeptID() : deptId;
@@ -1214,7 +1194,6 @@ public class EzWebFolderGWController {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")                  : "";
 		int level         = request.getParameter("level")  != null ? Integer.parseInt(request.getParameter("level")) : -1;
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId")                  : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")                    : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("deptId: " + deptId + " || level: " + level + " || serverName: " + serverName + " || User Id: " + userId);
@@ -1227,7 +1206,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo   = commonUtil.getUserForGw(userId, serverName, lang, "");
+			LoginVO userInfo   = commonUtil.getUserForGw(userId, serverName);
 			int tenantId       = userInfo.getTenantId();
 			String primary     = userInfo.getPrimary();
 			SimpleDeptVO sDept = ezWebFolderService.getAllDepts(deptId, level, primary, tenantId);
@@ -1249,7 +1228,6 @@ public class EzWebFolderGWController {
 	public JSONObject getAllDeptMembers(@PathVariable(value="deptid") String deptId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("deptId: " + deptId + " || serverName: " + serverName);
@@ -1262,7 +1240,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName, lang, "");
+			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName);
 			int tenantId                   = userInfo.getTenantId();
 			String primary                 = userInfo.getPrimary();
 			List<SimpleUserVO> listMembers = ezWebFolderService.getDeptMemberList(deptId, primary, tenantId);
@@ -1284,8 +1262,6 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/foldersTree/dept", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getDeptFolderTree(HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
-		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
-		String lang       = request.getParameter("lang")      != null ? request.getParameter("lang")      : "";
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
@@ -1298,11 +1274,12 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
 		
 		try {
-			LoginVO userInfo                 = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo                 = commonUtil.getUserForGw(userId, serverName);
 			int tenantId                     = userInfo.getTenantId();
+			String offset                    = userInfo.getOffset();
 			List<FolderSimpleVO> listFolders = ezWebFolderService.getAllSimpleDeptFolder(companyId, userInfo);
 			
 			if (!folderId.equals("")) {
@@ -1336,9 +1313,7 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/foldersTree/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyFolderTree(HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
-		String lang       = request.getParameter("lang")      != null ? request.getParameter("lang")      : "";
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
-		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
 		JSONObject result = new JSONObject();
@@ -1350,12 +1325,13 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
 		
 		try {
-			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName);
 			int tenantId      = userInfo.getTenantId();
 			String primary    = userInfo.getPrimary();
+			String offset     = userInfo.getOffset();
 			FolderVO folderVO = ezWebFolderService.getRootFolderId(companyId, "C", offset, tenantId);
 			
 			if (folderVO == null) {
@@ -1433,7 +1409,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName, "", "");
+			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName);
 			int tenantId          = userInfo.getTenantId();
 			FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, tenantId);
 			if (mode.equals("1") && folder.getFolderLevel() == 0) {
@@ -1509,8 +1485,6 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delCompanyFolder(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
-		String offset     = request.getParameter("offset") != null ? request.getParameter("offset") : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
 		JSONObject result = new JSONObject();
 		
@@ -1525,7 +1499,8 @@ public class EzWebFolderGWController {
 		logger.debug("FolderId: " + folderId + " || serverName: " + serverName);
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String offset    = userInfo.getOffset();
 			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
 			ezWebFolderService.updateFolderUseStatus(folder, userInfo);
 			
@@ -1545,13 +1520,11 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}/modes/{mode}/folder-move", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putCompanyFolderMove(@PathVariable(value="folderid") String folderId, @PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
-		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
-		String lang         = request.getParameter("lang")      != null ? request.getParameter("lang")      : "";
 		String userId       = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
 		String destFolderId = request.getParameter("parentFld") != null ? request.getParameter("parentFld") : "";
 		JSONObject result   = new JSONObject();
 		
-		logger.debug("FolderID: " + folderId + " || serverName: " + serverName + " || destination: " + destFolderId + " || offset: " + offset + " || mode: " + mode);
+		logger.debug("FolderID: " + folderId + " || serverName: " + serverName + " || destination: " + destFolderId + " || mode: " + mode);
 		
 		if (folderId.equals("") || serverName.equals("") || destFolderId.equals("") || mode.equals("")) {
 			logger.debug("Parameter error!");
@@ -1562,8 +1535,9 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo    = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo    = commonUtil.getUserForGw(userId, serverName);
 			int tenantId        = userInfo.getTenantId();
+			String offset       = userInfo.getOffset();
 			FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			FolderVO destFolder = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
 			
@@ -1604,8 +1578,6 @@ public class EzWebFolderGWController {
 	public JSONObject getFileList(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")    : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")    : "";
-		String offset     = request.getParameter("offset")      != null ? request.getParameter("offset")    : "";
-		String lang       = request.getParameter("lang")        != null ? request.getParameter("lang")      : "";
 		String startDate  = request.getParameter("startDate")   != null ? request.getParameter("startDate") : "";
 		String endDate    = request.getParameter("endDate")     != null ? request.getParameter("endDate")   : "";
 		String fileExt    = request.getParameter("fileExt")     != null ? request.getParameter("fileExt")   : "";
@@ -1636,9 +1608,10 @@ public class EzWebFolderGWController {
 		logger.debug("FolderId: " + folderId + " || serverName: " + serverName + " || Current Page: " + currPage);
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId     = userInfo.getTenantId();
 			String primary   = userInfo.getPrimary();
+			String offset    = userInfo.getOffset();
 			
 			if (!column.equals("") && !order.equals("")) {
 				switch(column) {
@@ -1754,10 +1727,8 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/company-id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyId(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
-		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
-		String lang       = request.getParameter("lang")     != null ? request.getParameter("lang")   : "";
 		JSONObject result = new JSONObject();
-		logger.debug("serverName: " + serverName + " || Offset: " + offset + " || Lang: " + lang);
+		logger.debug("serverName: " + serverName);
 		
 		if (serverName.equals("")) {
 			logger.debug("Parameter error!");
@@ -1769,7 +1740,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			result.put("data", userInfo.getCompanyID());
 			result.put("status", "ok");
@@ -1789,11 +1760,9 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/company-list/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyList(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
-		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
-		String lang       = request.getParameter("lang")     != null ? request.getParameter("lang")   : "";
 		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")   : "";
 		JSONObject result = new JSONObject();
-		logger.debug("serverName: " + serverName + " || Offset: " + offset + " || Lang: " + lang);
+		logger.debug("serverName: " + serverName);
 		
 		if (serverName.equals("")) {
 			logger.debug("Parameter error!");
@@ -1805,7 +1774,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			//Get list of companies
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -1839,9 +1808,7 @@ public class EzWebFolderGWController {
 		JSONParser parser      = new JSONParser();
 		jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
 		String serverName      = request.getHeader("host-name") != null ? request.getHeader("host-name")       : "";
-		String offset          = jsonObject.get("offset")       != null ? (String) jsonObject.get("offset")    : "";
 		String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")    : "";
-		String lang            = jsonObject.get("lang")         != null ? (String) jsonObject.get("lang")      : "";
 		String pFolderId       = jsonObject.get("pFolderId")    != null ? (String) jsonObject.get("pFolderId") : "";
 		String folderName      = jsonObject.get("fName")        != null ? (String) jsonObject.get("fName")     : "";
 		String folderName2     = jsonObject.get("fName2")       != null ? (String) jsonObject.get("fName2")    : "";
@@ -1857,10 +1824,11 @@ public class EzWebFolderGWController {
 		logger.debug("serverName: " + serverName + " || folderName: " + folderName + " || ParentFolderID: " + pFolderId);
 		
 		try {
-			LoginVO userInfo           = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo           = commonUtil.getUserForGw(userId, serverName);
 			String userName1           = userInfo.getDisplayName1();
 			String userName2           = userInfo.getDisplayName2();
 			int tenantId               = userInfo.getTenantId();
+			String offset              = userInfo.getOffset();
 			FolderVO parentFolder      = ezWebFolderService.getFolderByFolderId(pFolderId, offset, tenantId);
 			FolderVO folder            = new FolderVO();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1952,14 +1920,12 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/company-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postMakeCompanyFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request, Locale locale) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
-		String offset     = request.getParameter("offset") != null ? request.getParameter("offset") : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("serverName: " + serverName + " || offset: " + offset + " || companyId: " + companyId);
+		logger.debug("serverName: " + serverName + " || companyId: " + companyId);
 		
-		if (serverName.equals("") || offset.equals("") || companyId.equals("")) {
+		if (serverName.equals("") || companyId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
@@ -1968,9 +1934,10 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo           = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo           = commonUtil.getUserForGw(userId, serverName);
 			int tenantId               = userInfo.getTenantId();
 			String primary             = userInfo.getPrimary();
+			String offset              = userInfo.getOffset();
 			OrganDeptVO company        = ezOrganService.getDeptInfo(companyId, primary, tenantId);
 			FolderVO folder            = new FolderVO();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -2015,12 +1982,10 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/dept-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postMakeDepartmentFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request, Locale locale) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
-		String offset     = request.getParameter("offset") != null ? request.getParameter("offset") : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("serverName: " + serverName + " || offset: " + offset + " || companyId: " + companyId);
+		logger.debug("serverName: " + serverName + " || || companyId: " + companyId);
 		
 		if (serverName.equals("") || companyId.equals("")) {
 			logger.debug("Parameter error!");
@@ -2031,7 +1996,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			ezWebFolderAdminService.addDeptFolders(companyId, userInfo);
 			
 			result.put("status", "ok");
@@ -2049,8 +2014,6 @@ public class EzWebFolderGWController {
 	
 	@RequestMapping(value="/rest/ezwebfolder/foldersTree/file", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileFolderTree(HttpServletRequest request) {
-		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
-		String lang       = request.getParameter("lang")      != null ? request.getParameter("lang")      : "";
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
 		String fileList   = request.getParameter("fileList")  != null ? request.getParameter("fileList")  : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
@@ -2067,10 +2030,10 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("Mode: " + mode + " || fileList: " + fileList + " || type: " + type + " || companyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
+		logger.debug("Mode: " + mode + " || fileList: " + fileList + " || type: " + type + " || companyId: " + companyId + " || serverName: " + serverName);
 		
 		try {
-			LoginVO userInfo     = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo     = commonUtil.getUserForGw(userId, serverName);
 			int tenantId         = userInfo.getTenantId();
 			List<String> fileIds = Arrays.asList(fileArr);
 			List<String> folders = ezWebFolderService.getFolderListFromFileId(fileIds, tenantId);
@@ -2247,7 +2210,6 @@ public class EzWebFolderGWController {
 	
 	@RequestMapping(value="/rest/ezwebfolder/depart-tree/chief/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getDeptTree(@PathVariable(value="userid") String userId, HttpServletRequest request) {
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
 		
@@ -2258,10 +2220,10 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("userId: " + userId + " || serverName: " + serverName + " || Lang: " + lang);
+		logger.debug("userId: " + userId + " || serverName: " + serverName);
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, "");
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId     = userInfo.getTenantId();
 			String primary   = userInfo.getPrimary();
 			boolean check    = ezWebFolderService.checkDepartChief(userId, tenantId);
@@ -2294,7 +2256,6 @@ public class EzWebFolderGWController {
 	
 	@RequestMapping(value="/rest/ezwebfolder/selected-dept/chief/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSelectedDepts(@PathVariable(value="userid") String userId, HttpServletRequest request) {
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
 		
@@ -2305,10 +2266,10 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("userId: " + userId + " || serverName: " + serverName + " || Lang: " + lang);
+		logger.debug("userId: " + userId + " || serverName: " + serverName);
 		
 		try {
-			LoginVO userInfo                     = commonUtil.getUserForGw(userId, serverName, lang, "");
+			LoginVO userInfo                     = commonUtil.getUserForGw(userId, serverName);
 			int tenantId                         = userInfo.getTenantId();
 			String primary                       = userInfo.getPrimary();
 			List<SimpleDeptVO> listSelectedDepts = ezWebFolderService.getSelectedDeptsForChief(userId, 0, primary, tenantId);
@@ -2331,11 +2292,9 @@ public class EzWebFolderGWController {
 	public JSONObject updateEnvDeptList(@RequestParam("deptList") List<String> deptsList, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		String offset     = request.getParameter("offset") != null ? request.getParameter("offset") : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || userId: " + userId + " || offset: " + offset + " || lang: " + lang);
+		logger.debug("ServerName: " + serverName + " || userId: " + userId);
 		
 		if (serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
@@ -2346,7 +2305,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			ezWebFolderAdminService.updateSelectedDeptsForChief(deptsList, userInfo);
 			
 			result.put("data", "");
@@ -2412,13 +2371,11 @@ public class EzWebFolderGWController {
 	public JSONObject getCheckValidDept(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		String offset     = request.getParameter("offset") != null ? request.getParameter("offset") : "";
-		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("serverName: " + serverName + " || offset: " + offset + " || folderId: " + folderId);
+		logger.debug("serverName: " + serverName + " || folderId: " + folderId);
 		
-		if (serverName.equals("") || offset.equals("") || folderId.equals("")) {
+		if (serverName.equals("") || folderId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
@@ -2427,9 +2384,10 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId     = userInfo.getTenantId();
 			String primary   = userInfo.getPrimary();
+			String offset    = userInfo.getOffset();
 			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			OrganDeptVO dept = ezOrganService.getDeptInfo(folder.getOwnerId(), primary, tenantId);
 			
@@ -2492,7 +2450,7 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, "", "");
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			boolean check = isWebfolderAdmin(userInfo);
 			
 			if (check == true) {

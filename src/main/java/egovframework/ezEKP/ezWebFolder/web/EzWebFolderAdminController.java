@@ -83,9 +83,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -160,9 +158,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("mode", "admin")
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+										.queryParam("mode", "admin");
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -200,9 +196,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -236,9 +230,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -272,9 +264,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -313,9 +303,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -357,9 +345,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -397,9 +383,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -519,7 +503,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang())
 										.queryParam("userId", user.getId())
 										.queryParam("searchStr", searchStr)
 										.queryParam("searchOpt", searchOpt)
@@ -655,8 +638,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset())
 										.queryParam("companyId", companyId)
 										.queryParam("startDate", startDate)
 										.queryParam("fileExt", fileExt)
@@ -717,7 +698,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
 										.queryParam("companyId", companyID)
 										.queryParam("pageNum", pageNum)
 										.queryParam("pageSize", pageSize);
@@ -755,9 +735,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
-										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset());
+										.queryParam("userId", user.getId());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -790,9 +768,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
-										.queryParam("lang", user.getLang())
-										.queryParam("userId", user.getId())
-										.queryParam("offset", user.getOffset());
+										.queryParam("userId", user.getId());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -824,8 +800,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("mode", mode)
-										.queryParam("offset", user.getOffset());
+										.queryParam("mode", mode);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -863,8 +838,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("mode", mode)
-										.queryParam("offset", user.getOffset());
+										.queryParam("mode", mode);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -903,9 +877,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url             = gwServerUrl + "/rest/ezwebfolderadmin/folders/comp";
 		JSONObject jsonObject  = new JSONObject();
 		
-		jsonObject.put("offset", userInfo.getOffset());
 		jsonObject.put("userId", userInfo.getId());
-		jsonObject.put("lang", userInfo.getLang());
 		jsonObject.put("pFolderId", folderId);
 		jsonObject.put("fName", folderName);
 		jsonObject.put("fName2", folderName2);
@@ -952,7 +924,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url            = gwServerUrl + "/rest/ezwebfolderadmin/folders/" + folderId + "/comp";
 		JSONObject jsonObject = new JSONObject();
 		
-		jsonObject.put("offset", user.getOffset());
 		jsonObject.put("userId", user.getId());
 		jsonObject.put("fName", folderName);
 		jsonObject.put("fName2", folderName2);
@@ -1000,9 +971,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset());
+										.queryParam("userId", user.getId());
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
 		JSONParser jp                 = new JSONParser();
@@ -1051,8 +1020,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset())
 										.queryParam("startDate", startDate)
 										.queryParam("fileExt", fileExt)
 										.queryParam("fileName", fileName)
@@ -1104,8 +1071,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/folders/" + folderId + "/modes/" + mode+ "/folder-move";
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("parentFld", parentFld);
 		
@@ -1165,9 +1130,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -1204,9 +1167,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url             = gwServerUrl + "/rest/ezwebfolderadmin/folders/dept";
 		JSONObject jsonObject  = new JSONObject();
 		
-		jsonObject.put("offset", userInfo.getOffset());
 		jsonObject.put("userId", userInfo.getId());
-		jsonObject.put("lang", userInfo.getLang());
 		jsonObject.put("pFolderId", folderId);
 		jsonObject.put("fName", folderName);
 		jsonObject.put("fName2", folderName2);
@@ -1251,7 +1212,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url            = gwServerUrl + "/rest/ezwebfolderadmin/folders/" + folderId + "/dept";
 		JSONObject jsonObject = new JSONObject();
 		
-		jsonObject.put("offset", user.getOffset());
 		jsonObject.put("userId", user.getId());
 		jsonObject.put("fName", folderName);
 		jsonObject.put("fName2", folderName2);
@@ -1293,10 +1253,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/company-folder/" + companyId;
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset())
-										.queryParam("userId", user.getId());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1335,10 +1292,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/dept-folder/" + companyId;
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset())
-										.queryParam("userId", user.getId());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1377,10 +1331,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/dept-check/" + folderId;
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset())
-										.queryParam("userId", user.getId());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1471,8 +1422,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset())
 										.queryParam("companyId", companyId)
 										.queryParam("startDate", startDate)
 										.queryParam("fileExt", fileExt)
