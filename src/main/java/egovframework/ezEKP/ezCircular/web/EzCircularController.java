@@ -1934,7 +1934,10 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String circularIDList = request.getParameter("circularIDList");
 		
-		ezCircularService.circularClose(circularIDList, userInfo.getTenantId());
+		// 2018-06-04 김민성 - 회람판 종료일 관련 변수 추가
+		String endDate = commonUtil.getTodayUTCTime("");
+		
+		ezCircularService.circularClose(circularIDList, userInfo.getTenantId(), endDate);
 		
 		logger.debug("circularClose ended");
 		

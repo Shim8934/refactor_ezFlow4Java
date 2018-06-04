@@ -492,15 +492,20 @@
 		
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 800) / 2;
-		        var pLeft = (pwidth - 765) / 2;
+		        var pTop = (pheight - 789) / 2;
+		        var pLeft = (pwidth - 764) / 2;
+	    	    if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+	    	    	var height = 789;
+	    	    } else {
+	    	    	var height = 785;
+	    	    }
 		
 		        if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
 		            document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
 		       // document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
 		        }
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=793,width=764,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
 		    function NoticeRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {

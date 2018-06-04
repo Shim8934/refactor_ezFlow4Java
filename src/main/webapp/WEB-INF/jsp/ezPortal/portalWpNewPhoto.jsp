@@ -106,15 +106,18 @@
 		                var BoardID = getNodeText(GetChildNodes(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[0])[1]);
 		                var ImgTitle = getNodeText(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[2]);
 
+		                /* 2018-06-04 홍승비 - 포토게시판 포틀릿 표출 썸네일 4개로 수정 */
 	    	            var _li = document.createElement("li");
 	        	        var _span1 = document.createElement("span");
+	        	        _li.style.marginLeft = "16.5px";
+	        	        _li.style.marginRight = "24px";
 	            	    _span1.className = "photo";
 						
 	            	    //2016-08-18 urc 수정
 	                	//var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + escape(BoardID) + "&FILENAME=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
 						var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(BoardID) + "&fileName=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
 
-	                	_span1.innerHTML = "<img src=\"" + imgSrc + "\" width=\"80\" height=\"80\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + BoardID + "\" DATA2=\"" + ItemID + "\">";
+	                	_span1.innerHTML = "<img src='" + imgSrc + "' width='107px' height='75px' onclick='ItemRead_onclick(this)' DATA1='" + BoardID + "' DATA2='" + ItemID + "'>";
 
 		                var _span2 = document.createElement("span");
 		                
@@ -167,15 +170,20 @@
 	        	getBoardList_NewPhoto();
 	    	}
 		    
+		    /* 2018-06-04 홍승비 - 포탈메인 포토게시판 포틀릿 > 게시물 읽기 창 사이즈 수정 */
 	    	function ItemRead_onclick(obj) {
 		        var ShowAdjacent = "";
 		        var pheight = window.screen.availHeight;
 	    	    var pwidth = window.screen.availWidth;
-	        	//var pTop = (pheight - 780) / 3;
-	        	var pTop = (pheight - 970) / 3;
+	        	var pTop = (pheight - 789) / 2;
 	        	var pLeft = (pwidth - 765) / 2;
+	    	    if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+	    	    	var height = 789;
+	    	    } else {
+	    	    	var height = 785;
+	    	    }
 
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 	    	
 	    	function Boardmore_btnClick() {
