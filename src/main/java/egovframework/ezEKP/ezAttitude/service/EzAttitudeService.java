@@ -88,7 +88,7 @@ public interface EzAttitudeService {
 	
 	public AttitudeApplicationVO attModAppDetail(String attModId, String offset, String applCnt, String lang, String companyId, int tenantId) throws Exception;
 	
-	public List<AttitudeApplicationVO> attModGetHistory(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
+	public List<AttitudeApplicationVO> attModGetHistory(String attModId, String userId, String offset, String lang, String companyId, int tenantId) throws Exception;
 			
 	public int attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;
 

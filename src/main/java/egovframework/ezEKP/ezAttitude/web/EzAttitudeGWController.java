@@ -1628,7 +1628,10 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			List<AttitudeApplicationVO> data = ezAttitudeService.attModGetHistory(companyId, tenantId, userId, attModId, offset);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<AttitudeApplicationVO> data = ezAttitudeService.attModGetHistory(attModId, userId, offset, info.getPrimary(), companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

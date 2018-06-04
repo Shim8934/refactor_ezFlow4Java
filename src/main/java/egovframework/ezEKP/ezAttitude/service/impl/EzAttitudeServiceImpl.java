@@ -1498,9 +1498,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<AttitudeApplicationVO> attModGetHistory(String companyId,
-			int tenantId, String userId, String attModId, String offset)
-			throws Exception {
+	public List<AttitudeApplicationVO> attModGetHistory(String attModId, String userId, String offset, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("attModGetHistory started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -1509,6 +1507,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userId", userId);
 		map.put("attModId", attModId);
 		map.put("offset", offset);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.attModGetHistory(map); 
 		
