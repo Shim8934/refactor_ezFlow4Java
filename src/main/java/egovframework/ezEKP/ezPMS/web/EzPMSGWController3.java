@@ -179,11 +179,40 @@ public class EzPMSGWController3 {
 			String searchByTitle = request.getParameter("searchByTitle");
 			String searchByOverview = request.getParameter("searchByOverview");
 			String searchByContent = request.getParameter("searchByContent");
-			String searchByChildren = request.getParameter("searchByChildren");
 			
+			if (searchByTaskName != null  && !searchByTaskName.equals("")) {
+				searchByTaskName = searchByTaskName.replace("\\","\\\\");
+				searchByTaskName = searchByTaskName.replace("%", "\\%");
+				searchByTaskName = searchByTaskName.replace("_", "\\_");
+			}
+			
+			if (searchByUser != null && !searchByUser.equals("")) {
+				searchByUser = searchByUser.replace("\\","\\\\");
+				searchByUser = searchByUser.replace("%", "\\%");
+				searchByUser = searchByUser.replace("_", "\\_");
+			}
+			
+			if (searchByTitle != null && !searchByTitle.equals("")) {
+				searchByTitle = searchByTitle.replace("\\","\\\\");
+				searchByTitle = searchByTitle.replace("%", "\\%");
+				searchByTitle = searchByTitle.replace("_", "\\_");
+			}
+			
+			if (searchByOverview != null && !searchByOverview.equals("")) {
+				searchByOverview = searchByOverview.replace("\\","\\\\");
+				searchByOverview = searchByOverview.replace("%", "\\%");
+				searchByOverview = searchByOverview.replace("_", "\\_");
+			}
+			
+			if (searchByContent != null && !searchByContent.equals("")) {
+				searchByContent = searchByContent.replace("\\","\\\\");
+				searchByContent = searchByContent.replace("%", "\\%");
+				searchByContent = searchByContent.replace("_", "\\_");
+			}
+
 			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, 
 																	   startRow, limit, lang, position, orderWhat, orderHow,
-																	   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent, searchByChildren);
+																	   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
 			String imageFileType = "PNG,JPEG,BMP,GIF,JPG";
 			
 			for (int i = 0; i < boardList.size(); i++) {
@@ -252,10 +281,39 @@ public class EzPMSGWController3 {
 			String searchByTitle = request.getParameter("searchByTitle");
 			String searchByOverview = request.getParameter("searchByOverview");
 			String searchByContent = request.getParameter("searchByContent");
-			String searchByChildren = request.getParameter("searchByChildren");
+			
+			if (searchByTaskName != null  && !searchByTaskName.equals("")) {
+				searchByTaskName = searchByTaskName.replace("\\","\\\\");
+				searchByTaskName = searchByTaskName.replace("%", "\\%");
+				searchByTaskName = searchByTaskName.replace("_", "\\_");
+			}
+			
+			if (searchByUser != null && !searchByUser.equals("")) {
+				searchByUser = searchByUser.replace("\\","\\\\");
+				searchByUser = searchByUser.replace("%", "\\%");
+				searchByUser = searchByUser.replace("_", "\\_");
+			}
+			
+			if (searchByTitle != null && !searchByTitle.equals("")) {
+				searchByTitle = searchByTitle.replace("\\","\\\\");
+				searchByTitle = searchByTitle.replace("%", "\\%");
+				searchByTitle = searchByTitle.replace("_", "\\_");
+			}
+			
+			if (searchByOverview != null && !searchByOverview.equals("")) {
+				searchByOverview = searchByOverview.replace("\\","\\\\");
+				searchByOverview = searchByOverview.replace("%", "\\%");
+				searchByOverview = searchByOverview.replace("_", "\\_");
+			}
+			
+			if (searchByContent != null && !searchByContent.equals("")) {
+				searchByContent = searchByContent.replace("\\","\\\\");
+				searchByContent = searchByContent.replace("%", "\\%");
+				searchByContent = searchByContent.replace("_", "\\_");
+			}
 			
 			int totalCount = ezPMSService.getBoardListCount(info.getTenantId(), Long.parseLong(projectId), groupId, taskId,
-															searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent, searchByChildren);
+															searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
 			
 			result.put("data", totalCount + "");	// JSON으로 넘기면 숫자가 Long으로 바뀌는데 Long에서 int로 cast할 때의 오류를 피하기 위해서 String으로 바꾼 후에 파싱한다
 			result.put("status", "ok");
