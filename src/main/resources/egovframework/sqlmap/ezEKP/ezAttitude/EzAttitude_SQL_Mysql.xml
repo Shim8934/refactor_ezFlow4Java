@@ -502,34 +502,6 @@
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationVO">
-		<![CDATA[
-			SELECT
-					a.attitude_id as ATTITUDE_ID,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-					a.appr_user_name as APPR_USER_NAME,
-					b.start_date as START_DATE,
-					a.appr_status as APPR_STATUS,
-					a.writer_name as WRITER_NAME,
-					a.writer_dept_name as WRITER_DEPT_NAME,
-					APPL_CNT,
-					a.writer_id as WRITER_ID,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.appl_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') as APPL_DATE
-			FROM 
-				jmocha.tbl_attitude_modappl a 
-			inner 
-				join tbl_attitude b 
-			on 
-				a.ATTITUDE_ID = b.ATTITUDE_ID
-			where 
-				a.COMPANY_ID = #companyId#
-			and 
-				a.TENANT_ID = #tenantId#
-			and
-				a.ATTITUDE_ID = #attModId#
-		]]>
-	</select>
-	
 	<select id="ezAttitudeDAO.attDetail" parameterClass="Map" resultMap="simpleAtt">
 		<![CDATA[
 			SELECT
