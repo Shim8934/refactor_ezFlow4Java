@@ -10,6 +10,7 @@
 	<title>
 		<c:choose>
 			<c:when test="${mode eq 'modify'}">게시물 수정</c:when>
+			<c:when test="${mode eq 'reply'}">게시물 답변</c:when>
 			<c:otherwise>새 게시물 작성</c:otherwise>
 		</c:choose>
 	</title>
@@ -33,11 +34,16 @@
 	var mode = "${mode}";
 	var taskName;
 	
+	// 답변 달 때만 넘어오는 파라미터
+	var rootItemId = "${rootItemId}";
+	var itemLevel = "${itemLevel}";
+	
 	var groupId = "${groupId}";
 	
 	if(groupId == "") {
 		groupId = "${board.groupId}";
 	}
+	
 	var taskId = "${taskId}";
 	
 	if(taskId == "") {
@@ -81,6 +87,11 @@
 			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
 		} else {
 			taskName = '${taskName}';
+		}
+		
+		if(mode == 'reply') {
+			$("#taskSelection").attr("onclick", "");
+			$("#taskSelection").css("cursor", "default");
 		}
 		
 		$('#taskName').text(taskName);		
@@ -169,7 +180,9 @@
 			writeOverview : writeOverview,
 			fileList : fileList,
 			mode : mode,
-			itemId : itemId
+			itemId : itemId,
+			rootItemId : rootItemId,
+			itemLevel : itemLevel
 		}
 	
 		
@@ -181,7 +194,7 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				
-				if(result.data == 'new' || result.data == 'modify') {
+				if(result.data == 'new' || result.data == 'modify' || result.data == 'reply') {
 					alert("성공");
 					doubleSubmitFlag = false;
 					
@@ -274,7 +287,7 @@
 						<td><input type="checkbox" id="emergency"/> 긴급게시 <input type="checkbox" id="notice"/> 공지사항</td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" onclick="getTaskSelectionTree()" style="margin-top: 2px;"><span>작업이름</span></a></th>
+						<th><a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;"><span>작업이름</span></a></th>
 						<td style="width: 50%" id="taskName"></td>
 						<th>등록자</th>
 						<td>${writerName}(${writerDeptName})</td>

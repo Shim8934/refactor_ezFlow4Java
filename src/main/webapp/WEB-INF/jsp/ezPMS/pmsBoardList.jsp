@@ -248,7 +248,10 @@
 								<td><img src="/images/newAttach.gif"></td>
 							</c:otherwise>
 						</c:choose>	
-							<td class="boardTitle" style="text-align: left;">${projectBoardVO.title}</td>
+							<td class="boardTitle" style="text-align: left;">
+								<c:forEach begin='0' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;</c:forEach>
+								<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> ${projectBoardVO.title}
+							</td>
 						<c:choose>
 							<c:when test="${projectBoardVO.taskName eq null}">
 								<td class="taskName">${projectBoardVO.groupName}</td>

@@ -135,7 +135,7 @@ public class EzPMSController3 {
 					model.addAttribute("fileList", URLEncoder.encode(fileList.toString(), "UTF-8").replaceAll("\\+", "%20"));
 				}
 			}
-		}
+		} 
 		
 		model.addAttribute("writerId", userId);
 		model.addAttribute("writerName", writerName);

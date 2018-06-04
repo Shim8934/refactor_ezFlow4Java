@@ -18,6 +18,8 @@
 	<script type="text/javascript">
 		
 		var itemId = '${board.itemId}';
+		var rootItemId = '${board.rootItemId}';
+		var itemLevel = '${board.itemLevel}';
 		var userId = '${userId}';
 		var writerId = '${board.writerId}';
 		var authority = '${authority}'
@@ -26,6 +28,7 @@
 		var taskId = '${board.taskId}';	
 		var title = '${board.title}';
 		var taskName = '${board.taskName ne null ? board.taskName : board.groupName}';
+		var projectName = '${board.projectName}';
 		var itemIds = new Array(itemId); // 메인화면에서 여러개의 게시물을 한 번에 이동하는 함수를 재사용하기 위함
 		
 		$(function() {
@@ -140,6 +143,15 @@
 	        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	        window.close();
 		}
+		
+		function goAddBoardReply() {
+			console.log(rootItemId);
+			var feature = GetOpenPosition(790, 800);
+			window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&groupId=" + groupId 
+											 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=reply"
+											 + "&rootItemId=" + rootItemId + "&itemLevel=" + itemLevel, 
+						"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
+		}
 	</script>
 </head>
 <body class="popup" style="height: 99%;">
@@ -148,7 +160,7 @@
 			<td style="height: 20px">
 				<div id="menu">
 					<ul>
-						<li><span>답변</span></li>
+						<li><span onclick="goAddBoardReply()">답변</span></li>
 						<li id="modifyBtn"><span onclick="modifyBoard()">수정</span></li>
 						<li id="deleteBtn"><span onclick="deleteBoard()">삭제</span></li>
 						<li id="moveBtn"><span onclick="goMoveBoard()">이동</span></li>

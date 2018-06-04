@@ -250,6 +250,8 @@
 		<result property="groupId"					column="group_id"/>
 		<result property="projectId"				column="project_id"/>
 		<result property="projectName"				column="project_name"/>
+		<result property="rootItemId"				column="root_item_id"/>
+		<result property="itemLevel"				column="item_level"/>
 	</resultMap>
 	
 	<resultMap class="ProjectBoardVO" id="projectBoardVOForList">
@@ -268,6 +270,8 @@
 		<result property="writeContent"				column="WRITE_CONTENT"/>
 		<result property="taskId"					column="task_id"/>
 		<result property="groupId"					column="group_id"/>
+		<result property="rootItemId"				column="root_item_id"/>
+		<result property="itemLevel"				column="item_level"/>
 	</resultMap>
 	
 	<resultMap class="FileVO" id="fileVO">
@@ -1413,13 +1417,33 @@
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
 				write_content,		write_date,			write_update_date,	read_count,				task_id,
 				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
-				writer_position,	writer_position2
+				writer_position,	writer_position2,	root_item_id
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
 				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
-				#writerPosition#,	#writerPosition2#
+				#writerPosition#,	#writerPosition2#,	LAST_INSERT_ID()
+			)
+		]]>
+		<selectKey keyProperty="itemId" resultClass="Integer">
+    		SELECT LAST_INSERT_ID()
+    	</selectKey>
+	</insert>
+	
+	<insert id="EzPMSDAO.addBoardReply" parameterClass="ProjectBoardVO">
+		<![CDATA[
+			INSERT INTO tbl_pms_item_list (
+				tenant_id,			writer_id,			title,				write_overview,			write_type,
+				write_content,		write_date,			write_update_date,	read_count,				task_id,
+				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
+				writer_position,	writer_position2,	root_item_id,		item_level
+			)
+			VALUES (
+				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
+				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
+				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
+				#writerPosition#,	#writerPosition2#,	#rootItemId#,		#itemLevel#
 			)
 		]]>
 		<selectKey keyProperty="itemId" resultClass="Integer">
@@ -1504,7 +1528,7 @@
 				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
 				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		
 				IFNULL(F.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.task_id,
-				B.group_id
+				B.group_id,			B.root_item_id,				B.item_level
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
@@ -1565,11 +1589,12 @@
 			END ASC, 
 		</isEmpty>
 			<isNotEmpty property="orderWhat">  
-				$orderWhat$ $orderHow$
+				$orderWhat$ $orderHow$,
 			</isNotEmpty>
-			<isEmpty property="orderWhat">
-				B.item_id DESC
-			</isEmpty>   
+			B.root_item_id DESC, 
+			B.item_level ASC,
+			B.item_id DESC
+			
 			LIMIT #startRow#, #limit#
 	</select>
 	
@@ -1631,7 +1656,8 @@
 				B.write_content,		B.write_date,			B.write_update_date,	B.read_count,		
 				B.writer_name$lang$ AS writer_name,				B.writer_deptname$lang$ AS writer_deptname,		
 				B.writer_position$lang$ AS writer_position,		T.task_name,  			G.group_name,			M.mobile,
-				B.group_id,				B.task_id,				P.project_id,			P.project_name
+				B.group_id,				B.task_id,				P.project_id,			P.project_name,			B.root_item_id,
+				B.item_level
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id

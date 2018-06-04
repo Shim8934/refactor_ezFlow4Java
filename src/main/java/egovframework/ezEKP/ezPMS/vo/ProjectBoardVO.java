@@ -84,8 +84,30 @@ public class ProjectBoardVO {
 	
 	//이미지 첨부파일 경로
 	private String imageFilePath;
-
 	
+	// 루트 아이템 아이디
+	private int rootItemId;
+	
+	// 아이템 레벨
+	private int itemLevel;
+
+
+	public int getRootItemId() {
+		return rootItemId;
+	}
+
+	public void setRootItemId(int rootItemId) {
+		this.rootItemId = rootItemId;
+	}
+
+	public int getItemLevel() {
+		return itemLevel;
+	}
+
+	public void setItemLevel(int itemLevel) {
+		this.itemLevel = itemLevel;
+	}
+
 	public int getItemId() {
 		return itemId;
 	}

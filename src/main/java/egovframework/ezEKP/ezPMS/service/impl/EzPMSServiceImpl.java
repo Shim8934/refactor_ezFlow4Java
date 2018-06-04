@@ -1221,6 +1221,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		int tenantId = (int)jsonParam.get("tenantId");
 		int projectId = Integer.parseInt((String) jsonParam.get("projectId"));
+		int lastInsertId;
+		
+		String mode = (String) jsonParam.get("mode");
 		
 		ProjectBoardVO vo = new ProjectBoardVO();
 		vo.setTenantId(tenantId);
@@ -1244,7 +1247,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setWriterPosition2((String) jsonParam.get("writerPosition2"));
 		vo.setWriteOverview((String) jsonParam.get("writeOverview"));
 		
-		int last_insert_id = ezPMSDAO.addBoard(vo);
+		
+		if(mode.equals("reply")) {
+			vo.setRootItemId(Integer.parseInt((String) jsonParam.get("rootItemId")));
+			// 답변을 쓰는 글의 level보다 1이 증가
+			vo.setItemLevel(Integer.parseInt((String) jsonParam.get("itemLevel")) + 1);
+			lastInsertId = ezPMSDAO.addBoardReplay(vo);
+		} else {
+			lastInsertId = ezPMSDAO.addBoard(vo);
+		}
+		
 		
 		String fileList = jsonParam.get("fileList").toString();
 		
@@ -1284,7 +1296,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
 				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
 			
-				attachMap.put("last_insert_id", last_insert_id);
+				attachMap.put("last_insert_id", lastInsertId);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
