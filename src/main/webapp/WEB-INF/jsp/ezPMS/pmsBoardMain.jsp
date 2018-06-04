@@ -22,6 +22,7 @@
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script>
  	var projectId = ${projectId};
+ 	var CurrentHeight = document.documentElement.clientHeight - 100;
  	var projectName = null;
 	var groupId = null;
 	var taskId = null;
@@ -40,23 +41,33 @@
 	var searchByTitle = "";
 	var searchByOverview = "";
 	var searchByContent = "";
-	var searchByChildren = "";
 	
 	$(document).ready(function() {
 		
-		currentHeight = $(window).height()-100;
-		$("#taskTree").css("height", currentHeight + "px");
-		$("#projectContent").css("height", currentHeight + "px");
-		$("#contentList").css("height", (currentHeight - 50) + "px");
+		CurrentHeight = $(window).height() - 100;
+		$("MailListRayer").css("height", CurrentHeight + "px");
+		$("#taskTree").css("height", CurrentHeight + 10 + "px");
+		$("#projectContent").css("height", CurrentHeight + "px");
+		$("#contentList").css("height", (CurrentHeight - 100) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
+		$("#divList").css("height", (CurrentHeight - 150) + "px");
 		
 		getProjectTaskTree("taskTree", treeData, false);
 		
 		$("#taskTree").on("click", ".jstree-anchor", function() {
 			taskName = $(this).text();
+			var contentCount = 0;
+			var contentTitle = "";
+			
 			// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
 			if(taskName.indexOf('(') != -1) {
-				taskName = taskName.substr(0, taskName.indexOf('('));
+				contentCount = taskName.substring(taskName.indexOf('(') + 1, taskName.indexOf(')'));
+				taskName = taskName.substring(0, taskName.indexOf('('));
 			}
+			
+			contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> - [총 <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span>개]</span>";
+			$("#taskName").html(contentTitle);
+			
 			if($(this).parent().attr("id").charAt(0) == 't') { 
 				groupId = $(this).parents("li").eq(1).attr("id");
 				taskId = $(this).parent().attr("id").substr(1);
@@ -74,7 +85,6 @@
 			searchByTitle = "";
 			searchByOverview = "";
 			searchByContent = "";
-			searchByChildren = "";
 			
 			getBoardList();
 		});
@@ -120,7 +130,6 @@
 			searchByTitle : searchByTitle,
 			searchByOverview : searchByOverview,
 			searchByContent : searchByContent,
-			searchByChildren : searchByChildren
 		}
 		
 		$.ajax({
@@ -131,16 +140,6 @@
 			url : "/ezPMS/getBoardList.do",
 			success : function(contentList) {
 				$("#contentList").html(contentList);
-				
-				//찾아 준 후 초기화
-				$("#searchByTaskName").val("");
-				$("#searchByUser").val("");
-				$("#Sdatepicker").val("");
-				$("#Edatepicker").val("");
-				$("#searchByTitle").val("");
-				$("#searchByOverview").val("");
-				$("#searchByContent").val("");
-				$("#searchByChildren").removeProp("checked","true");
 				
 				setInitOrder();
 			}	
@@ -242,24 +241,94 @@
 		display : inline-block
 	}
 	
-	#projectContent {
+	#taskName {
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	
+	#projectArea {
 		width : 83%;
 		overflow : auto;
 		border : 1px solid #d1d1d1;
 	}
 	
+	#projectContent {
+		min-width : 1070px;
+	}
+	
+	#iconLine {
+		height: 72px;
+		margin-left: 10px;
+		margin-top: 5px;
+	}
+	
 	#contentList {
 		width : 98%;
 		margin-left : 1%;
-		margin-top : 15px;
+	}
+	
+	#icons {
+		margin-top: 21px;
+	}
+	
+	#searchDiv {
+		margin-left : 11px;
 	}
 </style>
 
 </head>
 <body>
 	<div id="taskTree"></div>
-	<div id="projectContent">
-		<div id="contentList"></div>
+	<div id="projectArea">
+		<div id="projectContent">
+			<div id="iconLine">
+				<div id="taskName"></div>
+				<div id="icons">
+					<a class="imgbtn" onclick="goAddBoard()" style="margin-left: 1px; margin-top: 1px;"><span>등록</span></a>
+					<a class="imgbtn" onclick="deleteBoards()" style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a>
+					<a class="imgbtn" onclick="goMoveBoards()" style="margin-left: 1px; margin-top: 1px;"><span>이동</span></a>
+					<a class="imgbtn" onclick="location.reload()" style="margin-left: 1px; margin-top: 1px;"><span>새로고침</span></a>
+					<a class="imgbtn" onclick="showSearchDiv()" style="margin-left: 1px; margin-top: 1px;"><span>검색 <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></a>
+				</div>
+			</div>
+			<div id = "searchDiv" style="display:none; margin-bottom:10px;">
+				<table class="content" style="width:80%; margin-bottom:5px;">
+					<tbody>
+						<tr>
+							<th>업무명 </th>
+							<td style="width:50%">
+								<input type="text" id="searchByTaskName" style="width:50%; margin-right:5px;">
+							</td>
+							<th>게시자</th>
+							<td><input type="text" style="width:100%" id="searchByUser"></td>
+						</tr>
+						<tr>
+							<th>제 목 </th>
+							<td style="width:50%"><input type="text" style="width:100%" id="searchByTitle"></td>
+							<th>내 용</th>
+							<td style="width:50%"><input type="text" style="width:100%" id="searchByContent"></td>
+						</tr>
+						<tr>
+							<th>게시개요</th>
+							<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
+						</tr>
+						<tr>
+							<th>검색기간 </th>
+							<td colspan="3">
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+								<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<a class="imgbtn" onclick="searchBoard()" style="margin-left:40%;"><span>검색</span></a>
+			</div>
+			<div id="contentList" style="overflow: auto">
+				<span id="MailListRayer"
+					style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+				</span>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

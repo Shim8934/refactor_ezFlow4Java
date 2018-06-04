@@ -8,7 +8,6 @@
 	var boardDetail;
 	
 	$(function() {
-		$("#divList").css("height", (currentHeight - 100) + "px");
 		
 		$(".mainlist tbody tr td:not(.checkbox)").on("click", function(evt) {
 			var checkbox = $(this).parent().children("td:eq(0)").children();
@@ -179,12 +178,6 @@
 		searchByOverview = $("#searchByOverview").val();
 		searchByContent = $("#searchByContent").val();
 		
-		if($("#searchByChildren").is(":checked")) {
-			searchByChildren = true;
-		} else {
-			searchByChildren = "";
-		}
-
 		// 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
 		taskId = "";
 		groupId = "";
@@ -197,7 +190,7 @@
 	.selectedTR {
 		background-color: rgb(233, 241, 255);
 	}
-	
+
 	tr.noView td {
 		font-weight: bold;
 	}
@@ -215,104 +208,68 @@
 	}
 </style>
 <div id="divList" style="width: 100%;">
-	<div id="mainmenu">
-		<ul class="on">
-			<li class="off"><span onclick="goAddBoard()">등록</span></li>
-			<li class="off"><span onclick="deleteBoards()">삭제</span></li>
-			<li class="off"><span onclick="goMoveBoards()">이동</span></li>
-			<li class="off"><span onclick="location.reload()">새로고침</span></li>
-			<li class="off"><span onclick="showSearchDiv()">검색 <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></li>
-		</ul>
+	<div id="lvBoardList">
+		<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
+			<thead id="BoardList_THEAD">
+				<tr style="height: 37px;" id="BoardList_TH">
+					<th class="checkboxHeader" width="3%"><input type="checkbox" onchange="selectAllTR(this);"></th>
+					<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%">No</th>
+					<th onclick="setListOrder(this)" data-order='FILE' width="3%"><img src="/images/newAttach.gif"></th>
+					<th onclick="setListOrder(this)" data-order='TITLE'>제목</th>
+					<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
+					<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%">부서</th>
+					<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">게시자</th>
+					<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">게시일</th>
+					<th onclick="setListOrder(this)" data-order='READ_COUNT' width="5%">조회수</th>
+				</tr>
+			</thead>
+		</table>
 	</div>
-	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
-		<table class="content" style="width:80%; margin-bottom:5px;">
-			<tbody>
-				<tr>
-					<th>업무명 </th>
-					<td style="width:50%">
-						<input type="text" id="searchByTaskName" style="width:50%; margin-right:5px;">
-						<input type="checkbox" id="searchByChildren" /><span>하위 작업 검색</span>
-					</td>
-					<th>게시자</th>
-					<td><input type="text" style="width:100%" id="searchByUser"></td>
-				</tr>
-				<tr>
-					<th>제 목 </th>
-					<td style="width:50%"><input type="text" style="width:100%" id="searchByTitle"></td>
-					<th>내 용</th>
-					<td style="width:50%"><input type="text" style="width:100%" id="searchByContent"></td>
-				</tr>
-				<tr>
-					<th>게시개요</th>
-					<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
-				</tr>
-				<tr>
-					<th>검색기간 </th>
-					<td colspan="3">
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-						<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
-					</td>
-				</tr>
+	<div id="projectListBody" multiselectable="false" useocs="false" style="overflow:auto; min-width: 469px; height: 456px;">
+		<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" width="100%" border="0" class="mainlist" style="">
+			<tbody style="background-color: rgb(255, 255, 255);">
+				<c:forEach items="${data}" var="projectBoardVO">
+					<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
+						data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
+						<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
+						<td>
+							<c:choose>
+								<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
+									<img src="/images/i_notice.gif" alt="NOTICE" />
+								</c:when>
+								<c:otherwise>${projectBoardVO.itemId}</c:otherwise>
+							</c:choose>
+						</td>
+						<c:choose>
+							<c:when test="${projectBoardVO.fileCNT eq 0}">
+								<td></td>
+							</c:when>
+							<c:otherwise>
+								<td><img src="/images/newAttach.gif"></td>
+							</c:otherwise>
+						</c:choose>	
+							<td class="boardTitle" style="text-align: left;">${projectBoardVO.title}</td>
+						<c:choose>
+							<c:when test="${projectBoardVO.taskName eq null}">
+								<td class="taskName">${projectBoardVO.groupName}</td>
+							</c:when>
+							<c:otherwise>
+								<td class="taskName">${projectBoardVO.taskName}</td>
+							</c:otherwise>
+						</c:choose>
+						<td>${projectBoardVO.writerDeptName}</td>
+						<td>${projectBoardVO.writerName}</td>
+						<td>${fn:substring(projectBoardVO.writeDate, 0, 19)}</td>
+						<td>${projectBoardVO.readCount}</td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
-		<a class="imgbtn" onclick="searchBoard()" style="margin-left:40%;"><span>검색</span></a>
 	</div>
-	<table class="mainlist" style="width: 100%;">
-		<thead id="tableHeader">
-			<tr style="height: 37px;" id="BoardList_TH">
-				<th class="checkboxHeader" width="3%"><input type="checkbox" onchange="selectAllTR(this);"></th>
-				<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%">No</th>
-				<th onclick="setListOrder(this)" data-order='FILE' width="3%"><img src="/images/newAttach.gif"></th>
-				<th onclick="setListOrder(this)" data-order='TITLE'>제목</th>
-				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
-				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%">부서</th>
-				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">게시자</th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">게시일</th>
-				<th onclick="setListOrder(this)" data-order='READ_COUNT' width="5%">조회수</th>
-			</tr>
-		</thead>
-		<tbody id="tableBody">
-			<c:forEach items="${data}" var="projectBoardVO">
-				<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
-					data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
-					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
-					<td>
-						<c:choose>
-							<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
-								<img src="/images/i_notice.gif" alt="NOTICE" />
-							</c:when>
-							<c:otherwise>${projectBoardVO.itemId}</c:otherwise>
-						</c:choose>
-					</td>
-					<c:choose>
-						<c:when test="${projectBoardVO.fileCNT eq 0}">
-							<td></td>
-						</c:when>
-						<c:otherwise>
-							<td><img src="/images/newAttach.gif"></td>
-						</c:otherwise>
-					</c:choose>	
-						<td class="boardTitle" style="text-align: left;">${projectBoardVO.title}</td>
-					<c:choose>
-						<c:when test="${projectBoardVO.taskName eq null}">
-							<td class="taskName">${projectBoardVO.groupName}</td>
-						</c:when>
-						<c:otherwise>
-							<td class="taskName">${projectBoardVO.taskName}</td>
-						</c:otherwise>
-					</c:choose>
-					<td>${projectBoardVO.writerDeptName}</td>
-					<td>${projectBoardVO.writerName}</td>
-					<td>${fn:substring(projectBoardVO.writeDate, 0, 19)}</td>
-					<td>${projectBoardVO.readCount}</td>
-				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
 </div>
 <c:choose>
 	<c:when test="${paging.endPage>0 }">
-		<div style="width:470px; margin:6px auto; font-size:0">
+		<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 			<div class="pagenavi">
 				<c:choose>
 					<c:when test="${paging.currentPage gt 1}">
@@ -362,7 +319,7 @@
 		</div>
 	</c:when>
 	<c:otherwise>
-		<div style="width:470px; margin:6px auto; font-size:0">
+		<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 			<div class="pagenavi">  
 				<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
 				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
