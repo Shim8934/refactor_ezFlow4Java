@@ -17,21 +17,22 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
 		<script type="text/javascript">
-			var currPage = ${currPage};
+			var change = "dddsdfsdfsdf";
+			var currPage = <c:out value="${currPage}" />;
 			var pageChange = 1;
-			var totalPage = ${totalPage};
-			var totalLadder = ${totalLadder};
+			var totalPage = <c:out value="${totalPage}" />;
+			var totalLadder = <c:out value="${totalLadder}" />;
 			var blockSize = 10;
 			var mode = "";
-			var modeCheck = "${mode}";
-			var searchSelect = "${searchSelect}";
-			var searchInput = "${searchInput}";
+			var modeCheck = "<c:out value='${mode}' />";
+			var searchSelect = "<c:out value='${searchSelect}' />";
+			var searchInput = "<c:out value='${searchInput}' />";
 			var searchOption = "off";
 			var allData = [];
-			var id = "${id}";
+			var id = "<c:out value='${id}' />";
 			var back = "none";
-			var sort = "${sort}";
-			var sortFlag = "${sortFlag}";
+			var sort = "<c:out value='${sort}' />";
+			var sortFlag = "<c:out value='${sortFlag}' />";
 			
 			$(function() {
 				mouseCursor();
@@ -134,16 +135,16 @@
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
 			<table class="mainlist" style="width:100%; overflow: auto"> 
 		 		<c:forEach items="${list }" var="vo">
-					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
+					<tr class="black" style="height=30px;" onClick="getLadderGame(<c:out value="${vo.ladderId}" />)">
 						<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>
 					
 						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
 							<c:if test="${vo.newFlag == 1 }"><img src="/images/i_new.gif">&nbsp;</c:if>
 							<c:out value ="${vo.title }" />
-							<c:if test="${vo.cmt>0 }"><span id="cmt">[${vo.cmt}]</span></c:if>
+							<c:if test="${vo.cmt>0 }"><span id="cmt">[<c:out value="${vo.cmt}" />]</span></c:if>
 						</td>
-						<td style="text-align: left;" width="100px"><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${vo.writerId}', event)">${vo.writerName }</a></td>
-						<td style="text-align: left;" width="140px">${vo.writeDate.substring(0,16) }</td>
+						<td style="text-align: left;" width="100px"><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('<c:out value='${vo.writerId}' />', event)"><c:out value="${vo.writerName }" /></a></td>
+						<td style="text-align: left;" width="140px"><c:out value="${vo.writeDate.substring(0,16) }" /></td>
 						
 						<c:choose>
 							<c:when test="${vo.status eq 0 }">
@@ -165,7 +166,7 @@
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t053'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t053'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(<c:out value="${vo.ladderId}" />, event);" /></td>
 							</c:when>
 							<c:otherwise>
 								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t078'/>" src ='/images/ezLadder/icon_imposDelete_thirty.png' /></td>

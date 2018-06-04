@@ -76,7 +76,7 @@
 						tooltip.css("display", "none");
 					});
 				
-				ladderId = "${ladderId}";
+				ladderId = "<c:out value='${ladderId}' />";
 				ladderSetInitVar(ladderId);
 				ladderSetInitView();
 				

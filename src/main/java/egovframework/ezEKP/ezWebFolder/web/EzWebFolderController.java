@@ -2,11 +2,8 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,9 +217,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		jsonObject.put("nameArray", jsonArray);
-		jsonObject.put("offset", userInfo.getOffset());
 		jsonObject.put("userId", userInfo.getId());
-		jsonObject.put("lang", userInfo.getLang());
 		jsonObject.put("folderId", folderId);
 		
 		map.add("data", jsonObject);
@@ -266,9 +261,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userAgent", request.getHeader("User-Agent"))
-				.queryParam("offset", user.getOffset())
 				.queryParam("userId", user.getId())
-				.queryParam("lang", user.getLang())
 				.queryParam("folderList", listFolderId)
 				.queryParam("fileList", listFileId);
 		
@@ -327,9 +320,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
-										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
 										.queryParam("fileList", listFileId);
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -383,9 +374,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenantId", user.getTenantId())
-				.queryParam("offset", user.getOffset())
 				.queryParam("userId", user.getId())
-				.queryParam("lang", user.getLang())
 				.queryParam("newName", newName);
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -427,10 +416,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("mode", mode)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url).queryParam("mode", mode);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -470,9 +456,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
 										.queryParam("fileList", fileList)
-										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
 										.queryParam("privileges", privileges)
 										.queryParam("folderId", folderId);
 		
@@ -517,9 +501,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("userId", user.getId())
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
-										.queryParam("type", type)
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset());
+										.queryParam("type", type);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -564,7 +546,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
 										.queryParam("deptId", deptId)
 										.queryParam("companyId", companyId);
 		
@@ -602,7 +583,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
 										.queryParam("level", level);
 		
 		RestTemplate rest             = new RestTemplate();
@@ -632,9 +612,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -672,9 +650,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("companyId", companyId)
 										.queryParam("fileList", fileList)
 										.queryParam("type", type)
-										.queryParam("mode", mode)
-										.queryParam("lang", user.getLang())
-										.queryParam("offset", user.getOffset());
+										.queryParam("mode", mode);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -717,8 +693,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
@@ -748,8 +723,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -781,8 +755,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -812,8 +785,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("deptList", String.join(",", deptsList))
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang())
 										.queryParam("userId", user.getId());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -848,7 +819,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("fileList", fileList)
-										.queryParam("offset", user.getOffset())
 										.queryParam("fileId", fileId);
 		
 		RestTemplate rest             = new RestTemplate();
@@ -877,8 +847,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -893,80 +862,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		return "json";
-	}
-	
-	@SuppressWarnings("unchecked")
-	private JSONObject checkWfAdmin(HttpServletRequest request, String userId) throws ParseException {
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userId;
-		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		JSONObject resultObj          =  new JSONObject();
-		
-		if (status.equals("ok")) {
-			if (resultBody.get("data").toString().equals("1")) {
-				resultObj.put("result", "ok");
-				
-			}
-			else {
-				resultObj.put("result", "notok");
-				resultObj.put("reason", resultBody.get("reason").toString());
-			}
-		}
-		else {
-			resultObj.put("result", "notok");
-			resultObj.put("reason", resultBody.get("reason").toString());
-		}
-		
-		return resultObj;
-	}
-	
-	private JSONObject checkPermission(HttpServletRequest request, String userId, String fileList, String folderList) {
-		Map<String, Object> checkPermission = new HashMap<>();
-		List<Map<String, Object>> checkList = new ArrayList<>();
-		Map<String, Object> map;
-		
-		String[] fileArray = fileList.split(",");
-		String[] folderArray = folderList.split(",");
-		
-		for (String fileId : fileArray) {
-			if (fileId.isEmpty()) {
-				continue;
-			}
-			
-			map = new HashMap<>();
-			map.put("checkId", fileId);
-			map.put("checkType", "F");
-			
-			checkList.add(map);
-		}
-		
-		for (String folderId : folderArray) {
-			if (folderId.isEmpty()) {
-				continue;
-			}
-			
-			map = new HashMap<>();
-			map.put("checkId", folderId);
-			map.put("checkType", "D");
-			
-			checkList.add(map);
-		}
-		
-		checkPermission.put("checkList"	, checkList);
-		
-		return commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userId + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
 	}
 	
 	private class MultipartFileResource extends InputStreamResource {

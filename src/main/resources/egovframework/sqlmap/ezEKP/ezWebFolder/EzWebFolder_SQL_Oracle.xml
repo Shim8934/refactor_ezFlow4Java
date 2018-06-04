@@ -1080,8 +1080,6 @@
 			WHERE
 				extensionattribute2  = #companyId#
 			AND
-				extensionattribute1 != 'Top'
-			AND
 				useflag              = 'Y'
 			AND
 				tenant_id            = #tenantId#

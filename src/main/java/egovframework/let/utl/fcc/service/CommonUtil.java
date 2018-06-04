@@ -1128,7 +1128,7 @@ public class CommonUtil {
 	
 	
 	//Baonk: Get user's infor from parameters
-	public LoginVO getUserForGw(String userId, String serverName, String lang, String timezone) {
+	public LoginVO getUserForGw(String userId, String serverName) {
 		try{
 			int tenantId  = loginService.getTenantId(serverName);
 			LoginVO login = new LoginVO();
@@ -1136,18 +1136,18 @@ public class CommonUtil {
 			login.setDn("NOPASSWORD");
 			login.setTenantId(tenantId);
 			
-			LoginVO user = loginService.selectUser(login);
+			LoginVO user    = loginService.selectUser(login);
+			String userLang = ezCommonService.selectUserGetLang(userId, tenantId);
+			String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
+			user.setOffset(timeZone);
 			
-			if (!lang.equals("")) {
-				if (user.getPrimary().equals(lang)) {
+			if (userLang != null) {
+				if (user.getPrimary().equals(userLang)) {
 					user.setPrimary("1");
-				} else {
+				}
+				else {
 					user.setPrimary("2");
 				}
-			}
-			
-			if (!timezone.equals("")) {
-				user.setOffset(timezone);
 			}
 			
 			return user;
