@@ -230,15 +230,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, int tenantId) throws Exception {
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, int tenantId, String primary) throws Exception {
 		LOGGER.debug("getAttitudeTypeList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("isuse", isuse);
 		map.put("isAdmin", isAdmin);
 		map.put("statistics", statistics);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 		
 		LOGGER.debug("getAttitudeTypeList ended");
 		
@@ -444,7 +449,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public boolean insertAttitudeType(String typeName, String typeName2, int tenantId, String companyId) throws Exception {
+	public boolean insertAttitudeType(String typeName, String typeName2, int tenantId, String companyId, String primary) throws Exception {
 		LOGGER.debug("insertAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -453,7 +458,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "1", "", tenantId);
+		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "1", "", tenantId, primary);
 		
 		boolean result = false;
 		

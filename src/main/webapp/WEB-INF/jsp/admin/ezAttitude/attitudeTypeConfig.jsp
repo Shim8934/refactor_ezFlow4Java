@@ -203,7 +203,14 @@
 				<li>
 					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
 						<c:forEach var="item" items="${list}">
-							<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+							<option value="<c:out value='${item.cn}'/>">
+								<c:if test="${!empty item.displayName}">
+									<c:out value='${item.displayName}'/>
+								</c:if>
+								<c:if test="${empty item.displayName}">
+									<c:out value='${item.displayName2}'/>
+								</c:if>
+							</option>
 						</c:forEach>
 		      		</select>
 	      		</li>
