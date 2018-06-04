@@ -304,9 +304,9 @@
 						</tr>
 						<tr>
 							<th>제 목 </th>
-							<td style="width:50%"><input type="text" style="width:100%" id="searchByTitle"></td>
-							<th>내 용</th>
-							<td style="width:50%"><input type="text" style="width:100%" id="searchByContent"></td>
+							<td style="width:50%" colspan="3"><input type="text" style="width:100%" id="searchByTitle"></td>
+						<!-- 	<th>내 용</th>
+							<td style="width:50%"><input type="text" style="width:100%" id="searchByContent"></td> -->
 						</tr>
 						<tr>
 							<th>게시개요</th>

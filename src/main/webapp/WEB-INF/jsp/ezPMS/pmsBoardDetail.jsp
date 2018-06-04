@@ -129,6 +129,17 @@
 	        var top = (heigth - 300) / 2;
 	        DivPopUpShow(600, 415, "/ezPMS/getBoardViewerList.do?itemId=" + itemId + "&currentPage=" + currentPage);
 		}
+		
+		function fromPMSBoardToMail() {
+			var pheight = window.screen.availHeight;
+	        var conHeight = pheight * 0.8;
+	        var pwidth = window.screen.availWidth;
+	        var pTop = (pheight - conHeight) / 2;
+	        var pLeft = (pwidth - 890) / 2;
+	        var szUrl = "/ezEmail/mailWrite.do?journalId=" + journalId+ "&cmd=journal";
+	        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+	        window.close();
+		}
 	</script>
 </head>
 <body class="popup" style="height: 99%;">
@@ -141,7 +152,7 @@
 						<li id="modifyBtn"><span onclick="modifyBoard()">수정</span></li>
 						<li id="deleteBtn"><span onclick="deleteBoard()">삭제</span></li>
 						<li id="moveBtn"><span onclick="goMoveBoard()">이동</span></li>
-						<li><span>메일로 발송</span></li>
+						<li><span onclick="fromPMSBoardToMail()">메일로 발송</span></li>
 						<li><span onclick="boardViewerList()">조회자 정보</span></li>
 						<li style="float: right;"><span onclick="window.close()">닫기</span></li>
 					</ul>
