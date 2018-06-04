@@ -1808,6 +1808,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		return ezPMSDAO.getBoardViewerList(param);
 	}
+
+	@Override
+	public void addPreTaskRel(long taskId, int rowIndexId, long projectId, int tenantId) {
+		LOGGER.debug("[SERVICE] addPreTaskRel started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskId", taskId);
+		map.put("rowIndexId", rowIndexId);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.addPreTaskRel(map);
+		LOGGER.debug("[SERVICE] addPreTaskRel ended.");
+	}
 	
 	
 }

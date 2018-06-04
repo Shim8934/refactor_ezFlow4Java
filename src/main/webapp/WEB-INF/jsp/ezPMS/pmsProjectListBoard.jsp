@@ -21,10 +21,6 @@
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 110;
 setTotalCount("${projectListCount}");
-var progressColor = "${progressColor}";
-var completeColor = "${completeColor}";
-var overdueColor = "${overdueColor}";
-var holdColor = "${holdColor}";
 
 $(function(){
 	var projectList = new Array();
@@ -174,8 +170,16 @@ $(function(){
 												value="${project.planStartDate }" /> ~ <c:out
 												value="${project.planEndDate }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
-												value="${project.status }" /></td>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px">
+											<c:choose>
+												<c:when test="${project.status eq 'P' }"><c:out value="진행" /></c:when>
+												<c:when test="${project.status eq 'W' }"><c:out value="대기" /></c:when>
+												<c:when test="${project.status eq 'C' }"><c:out value="완료" /></c:when>
+												<c:when test="${project.status eq 'L' }"><c:out value="지연" /></c:when>
+												<c:when test="${project.status eq 'D' }"><c:out value="삭제" /></c:when>
+												<c:when test="${project.status eq 'S' }"><c:out value="보류" /></c:when>
+											</c:choose>
+											</td>
 									</tr>
 								</c:forEach>
 									</c:otherwise>

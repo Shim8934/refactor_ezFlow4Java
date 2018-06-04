@@ -2448,7 +2448,7 @@
 			TENANT_ID = #tenantId#
 	</select>
 	
-	<update id="EzPMSDAO.deleteGroup">
+	<update id="EzPMSDAO.deleteGroup" parameterClass="map">
 		UPDATE
 			TBL_PMS_GROUP
 		SET
@@ -2460,4 +2460,14 @@
 		AND
 			TENANT_ID = #tenantId#
 	</update>
+	
+	<insert id="EzPMSDAO.addPreTaskRel" parameterClass="map">
+	<![CDATA[
+		INSERT INTO TBL_PMS_PRETASKREL (
+			PRETASK, TASK_ID, TENANT_ID, PROJECT_ID
+		) VALUES (
+			#rowIndexId#, #taskId#, #tenantId#, #projectId#
+		)				
+	]]>
+	</insert>
 </sqlMap>

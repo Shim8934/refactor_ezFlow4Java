@@ -368,9 +368,49 @@
 	   			
 	   			//선행작업 지정
 	   			GanttMaster.prototype.changeTaskDeps = function (task) {
-	   			  console.log("changeTaskDeps", task);
+	   			  console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
+	   			  var preTask = ge.tasks[task.depends - 1];	   			  
+	   			  
+	   			  var startDate = dateToYYYYMMDD(new Date(preTask.end + (1 * 24 * 60 * 60 * 1000)));
+	   			  var endDate = dateToYYYYMMDD(new Date(preTask.end + (task.duration * 24 * 60 * 60 * 1000)));
+	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
+	   			  var preTaskRowIndex = task.depends;
+	   			  var progress = task.progress;
+	   			var projectId = task.id.substring(1, task.id.indexOf("_"));
+	   			
+	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress);
+	   			  
 	   			  return task.moveTo(task.start,false,true);
 	   			};
+	   		}
+	   		
+	   		function addPreTaskRel (projectId, taskId, preTaskRowIndex, startDate, endDate, progress) {
+	   			var data = {
+	   					projectId : projectId,
+	   					taskId : taskId,
+	   					preTaskRowIndex : preTaskRowIndex,
+	   					planStartDate : startDate,
+	   					planEndDate : endDate,
+	   					realProgress : progress
+	   			}
+	   			
+	   			$.ajax({
+	   				type : "POST",
+	   				dataType: "text",
+	   				contentType: "application/json; charset=UTF-8",
+	   				url : "/ezPMS/addPreTaskRel.do",
+	   				data :JSON.stringify(data),
+	   				success : function(result) {
+	   					if (result == "permitted") {
+	   						alert("상태가 변경되었습니다.");
+	   					} else {
+	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
+	   					}
+	   				},
+	   				error : function(jqXHR, textStatus, errorThrown) {
+	   					alert ("에러발생 \n" + textStatus);
+	   				}
+	   				});
 	   		}
 	   		
 	   		function changeDate(fullId, taskId, projectId, startDate, endDate, progress) {

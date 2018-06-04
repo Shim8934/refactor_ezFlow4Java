@@ -1535,7 +1535,7 @@ public class EzPMSController {
 	}
 	
 	/**
-	 * 간트차트에서의 상태 변경
+	 * 간트차트에서의 날짜 변경
 	 */
 	@RequestMapping(value="/ezPMS/updateTaskDate.do")
 	@ResponseBody
@@ -1555,6 +1555,31 @@ public class EzPMSController {
 		}
 		
 		LOGGER.debug("ezPMS updateTaskDate ended");
+		return roleCheck;
+	}
+	
+	/**
+	 * 간트차트에서의 상태 변경
+	 */
+	@RequestMapping(value="/ezPMS/addPreTaskRel.do")
+	@ResponseBody
+	public String addPreTaskRel(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS addPreTaskRel started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		String url = "/rest/ezPMS/tasks/" + param.get("taskId") + "/preTasks/" + param.get("preTaskRowIndex");
+		param.put("userId", userId);
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", null);
+		String status = result.get("status").toString();
+		String roleCheck = "";
+		
+		if (status.equals("ok")) {
+			roleCheck = result.get("data").toString();
+		}
+		
+		LOGGER.debug("ezPMS addPreTaskRel ended");
 		return roleCheck;
 	}
 }

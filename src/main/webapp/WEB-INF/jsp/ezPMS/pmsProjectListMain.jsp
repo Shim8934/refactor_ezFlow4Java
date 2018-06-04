@@ -412,7 +412,7 @@ function setProjectList(mode) {
 	if (viewType == 0) {
 		listNumber = 20;
 	}
-	
+	console.log(progressColor);
 	var param = {
 		projectSort : projectSort,
 		viewType : viewType,
