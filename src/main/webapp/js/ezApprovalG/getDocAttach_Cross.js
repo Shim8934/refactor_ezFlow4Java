@@ -44,7 +44,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     
 	var result = "";
 	
-	if (INGFlag != "TMP" && INGFlag != "END_RECORD" && INGFlag != "APR_RECORD") {
+	if (INGFlag != "TMP" && INGFlag != "END_RECORD" && INGFlag != "APR_RECORD" && INGFlag != "END") {
     	   $.ajax({
     			type : "POST",
     			dataType : "text",

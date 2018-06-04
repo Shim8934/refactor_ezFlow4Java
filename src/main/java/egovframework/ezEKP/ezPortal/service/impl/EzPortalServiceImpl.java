@@ -2109,14 +2109,22 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 			
 			/* 2018-05-24 장진혁 홈 메뉴 pass */
-			if (result.get(i).getLinkURL().equals("/ezPortal/myPortal.do")) {
+			String menuitemLinkURL = result.get(i).getLinkURL();
+			
+			if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
 				continue;
+			}
+			
+			//Baonk 2018-05-31
+			if (menuitemLinkURL.equals("/ezWebFolder/webfolderMain.do")) {
+				if (!ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+					continue;
+				}
 			}
 			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
 			/*String menuitemImageUID = result.get(i).getImageUId();*/
-			String menuitemLinkURL = result.get(i).getLinkURL();
 			/*String menuitemLinkLocation = result.get(i).getLinkLocation();*/
 			String menuitemWindowOption = result.get(i).getWindowOption();
 			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
@@ -3062,79 +3070,54 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("addBestTable started");
 
 		StringBuilder strData = new StringBuilder();
-		
-		boolean firstFlag = true;
-		int val = 0;
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
 		
-		for (int i=0; i<list.size(); i++) {
+		/* 2018-06-04 홍승비 - 포탈 메일 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
+		for (int i=0; i<2; i++) {
 			
-			if (val == 3) {
-				return "";
+			if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
+				strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
 			}
-			
-			if (firstFlag) {
+			else {
 				strData.append("<dl class='listtype_photo'>");
-				strData.append("<dt class='tit' style='cursor:pointer'");
-				
-				if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
-					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
-				} else {
-					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
-				}
-				
-				strData.append("<strong>");
-				strData.append(list.get(i).getC_ClubName());
-				strData.append("</strong></dt>");
-				strData.append("<dd class='photo'>");
-				
-				String bannerSrc = "";
-				
-				if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-					bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
-				} else {
-					bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
-				}
-				
-				logger.debug("bannerSrc="+bannerSrc);
-				
-				strData.append("<img src='" + bannerSrc + "' width='86' height='61' alt=''>");
-				strData.append("<span class='iconbest'></span>");
-				strData.append("</dd'>");
-				strData.append("<dd  class='txt'>");
-				strData.append(list.get(i).getC_ClubDesc());
-				strData.append("</dd>");
-				strData.append("</dl>");
-				 
-                firstFlag = false;
-                
-			} else {
-				strData.append("<dl class='listtype_dttxt'>");
-                strData.append("<dt style='cursor:pointer'");
-                
-                if (list.get(i).getGubun() != null && list.get(i).getGubun().equals("3")) {
-                	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
-                } else {
-                	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
-                }
-                
-                strData.append("<strong>");
-				strData.append(list.get(i).getC_ClubName());
-				strData.append("</strong></dt>");
-				strData.append("<dd>");
-				strData.append(list.get(i).getC_ClubDesc());
-				strData.append("</dd>");
-				strData.append("</dl>");
-                
 			}
-			val++;
+			
+			strData.append("<dt class='tit' style='cursor:pointer'");
+			
+			if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
+				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
+			} else {
+				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
+			}
+			
+			strData.append("<strong>");
+			strData.append(list.get(i).getC_ClubName());
+			strData.append("</strong></dt>");
+			strData.append("<dd class='photo'>");
+			
+			String bannerSrc = "";
+			
+			if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+				bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
+			} else {
+				bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
+			}
+			
+			logger.debug("bannerSrc="+bannerSrc);
+			
+			strData.append("<img src='" + bannerSrc + "' width='86' height='61'>");
+			strData.append("<span class='iconbest'></span>");
+			strData.append("</dd'>");
+			strData.append("<dd  class='txt'>");
+			strData.append(list.get(i).getC_ClubDesc());
+			strData.append("</dd>");
+			strData.append("</dl>");
+			
 		}
-		
 		return strData.toString();
 	}
 	
@@ -3662,5 +3645,26 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("ezCkAdminACL ended");
 		
 		return "OK";
+	}
+
+	@Override
+	public String getMainMenuItemUID(String accessID, String linkURL, String userLang, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String returnValue = "Y";
+		
+		map.put("linkURL", linkURL);
+		map.put("tenantID", tenantID);
+		map.put("parentUID", "203"); //메인메뉴영역
+		map.put("companyID", companyID);
+		map.put("lang", userLang);
+		
+		String menuItemUID = ezPortalDAO.getMainMenuItemUID(map);
+		if (checkViewRightBln(menuItemUID, accessID, tenantID)) {
+			returnValue = "Y";
+		} else {
+			returnValue = "N";
+		}
+		return returnValue;
 	}
 }

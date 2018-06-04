@@ -1557,7 +1557,6 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/otherJournalList.do")
 	public String getOtherJournalList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getOtherJournalList started");
@@ -1577,12 +1576,14 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {			
 			JSONArray journalList=  (JSONArray) resultBody.get("data");
+			/*
 			for (Object journalObject : journalList) {
 				JSONObject journal = (JSONObject) journalObject;
 				String journalDate = (String) journal.get("journalDate");
 				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
 				journal.put("journalDate", journalDate);
 			}
+			*/
 			model.addAttribute("journalList", journalList);
 		}
 		

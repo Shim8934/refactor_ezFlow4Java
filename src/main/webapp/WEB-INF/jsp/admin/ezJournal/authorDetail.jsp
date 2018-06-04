@@ -67,12 +67,27 @@
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
-	   		function setUserList(key,value,deptName){
+	   		function setUserList(key, value, deptName) {
+	   			var listType = getOrganListType();
+	   			function getOrganListType() {
+		        	var organListType = "TXT";
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		url : "/ezOrgan/getListType.do",
+		        		async : false,
+		        		success : function(result) {
+		        			organListType = result;
+		        		}
+		        	})
+		        	return organListType;
+		        }
+	   			
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value, "deptName":deptName, "companyId":companyId},
+	   				data:{"key":key, "value":value, "deptName":deptName, "companyId":companyId, "listType" : listType},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length == 0 && key != "DEPARTMENT"){
@@ -95,11 +110,13 @@
 	   				url:"/admin/ezJournal/authorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
+	   					console.log(result);
 	   					lpDepts = [];
 	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
-	   					var deptList = $("#authorDeptList tr");
-	   					if(deptList.length == 1){
+	   					var deptList = $("#authorDeptList tr").length;
+	   					var mineList = $("tr[mine]").length;
+	   					if(deptList - mineList == 0) {
 	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezApprovalG.t431"/></td></tr>');
 		   					$("#authorDeptList tr").each(function(){
 		   						if($(this).attr("mine") == 'Y'){
