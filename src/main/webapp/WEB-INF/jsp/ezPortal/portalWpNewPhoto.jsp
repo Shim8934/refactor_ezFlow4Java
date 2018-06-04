@@ -32,6 +32,22 @@
 		</section>
 		
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+		<style>
+			.photocont ul li {
+				margin-left: 16.5px;
+    			margin-right: 24px;
+			}
+			.photocont ul li .ptxt {
+				margin-left:10px;
+				width:87px;
+			}
+			.photocont ul .btn_next {
+				right:9px;
+			}
+			.photocont ul .btn_area img {
+				left:9px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
@@ -109,8 +125,6 @@
 		                /* 2018-06-04 홍승비 - 포토게시판 포틀릿 표출 썸네일 4개로 수정 */
 	    	            var _li = document.createElement("li");
 	        	        var _span1 = document.createElement("span");
-	        	        _li.style.marginLeft = "16.5px";
-	        	        _li.style.marginRight = "24px";
 	            	    _span1.className = "photo";
 						
 	            	    //2016-08-18 urc 수정
