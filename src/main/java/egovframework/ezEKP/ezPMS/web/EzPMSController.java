@@ -1534,4 +1534,27 @@ public class EzPMSController {
 		return "ezPMS/pmsStatusColor";
 	}
 	
+	/**
+	 * 간트차트에서의 상태 변경
+	 */
+	@RequestMapping(value="/ezPMS/updateTaskDate.do")
+	@ResponseBody
+	public String updateTaskDate(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS updateTaskDate started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		String url = "/rest/ezPMS/tasks/" + param.get("taskId") + "/users/" + userId + "/status";
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+		String status = result.get("status").toString();
+		String roleCheck = "";
+		
+		if (status.equals("ok")) {
+			roleCheck = result.get("data").toString();
+		}
+		
+		LOGGER.debug("ezPMS updateTaskDate ended");
+		return roleCheck;
+	}
 }

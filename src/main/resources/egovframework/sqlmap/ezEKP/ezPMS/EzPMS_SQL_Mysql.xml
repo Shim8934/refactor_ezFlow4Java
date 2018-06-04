@@ -2286,10 +2286,12 @@
 		UPDATE 
 			tbl_pms_task
 		SET	
-			STATUS = #status#,
 			PLAN_START_DATE = #planStartDate#,
 			PLAN_END_DATE = #planEndDate#,
 	]]>
+	<isNotEmpty property="status">
+			STATUS = #status#,
+	</isNotEmpty>
 	<isNotEmpty property="realStartDate">
 			REAL_START_DATE = #realStartDate#,
 	</isNotEmpty>

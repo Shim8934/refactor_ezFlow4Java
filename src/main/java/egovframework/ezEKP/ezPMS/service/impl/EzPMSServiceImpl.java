@@ -1712,18 +1712,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] updateTaskStatus started.");
 		
 		try {
-			if (task.getStatus().equals("P")) {
-				//날짜 차이 계산
-				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
-				Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getRealStartDate());
-				
-				int createAndEndDateComp = createDate.compareTo(endDate);
-				
-				if(createAndEndDateComp > 0) {
-					task.setStatus("L");
-				} else {
-					task.setStatus("P");
-				}
+			if (task.getStatus() != null) {
+				if (task.getStatus().equals("P")) {
+					//날짜 차이 계산
+					Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
+					Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getRealStartDate());
+					
+					int createAndEndDateComp = createDate.compareTo(endDate);
+					
+					if(createAndEndDateComp > 0) {
+						task.setStatus("L");
+					} else {
+						task.setStatus("P");
+					}
+				}				
 			}
 			
 			ezPMSDAO.updateTaskStatus(task);
