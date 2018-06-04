@@ -61,7 +61,7 @@
 		<![CDATA[
 			SELECT 
 				D.CN,
-				D.DISPLAYNAME$lang$
+				D.DISPLAYNAME$lang$ AS DISPLAYNAME
 			FROM 
 				TBL_DEPTMASTER D
 			LEFT JOIN
@@ -256,7 +256,7 @@
 				TYPE_ID AS typeId,
 				COMPANY_ID AS companyId,
 				TENANT_ID AS tenantId,
-				TYPE_NAME$primary$ AS typeName$primary$,
+				TYPE_NAME$primary$ AS typeName,
 				ISUSE AS isuse,
 				IFNULL(PARENT_ID,'') AS parentId,
 				FORM_ID AS formId,
