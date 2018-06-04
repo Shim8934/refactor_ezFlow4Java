@@ -66,7 +66,7 @@
 		        QuitWindow();
 		    }
 		    else {
-		        setAttachInfo(pDocID, "END", lstAttachLink);
+		        setAttachInfo(pDocID, "END_RECORD", lstAttachLink);
 		    }
 		}
 		function GetRecInfo()

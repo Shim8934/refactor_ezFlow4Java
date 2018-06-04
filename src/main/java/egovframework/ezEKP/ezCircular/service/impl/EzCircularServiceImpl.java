@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularConfirmVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
@@ -1045,10 +1046,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularClose(String circularIDList, int tenantID) throws Exception {
+	public void circularClose(String circularIDList, int tenantID, String endDate) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantID", tenantID);
+		map.put("endDate", endDate);
 		
 		for (String circularID : circularIDList.split(";")) {
 			map.put("circularID", circularID);
@@ -1755,6 +1757,69 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("checkFolder ended.");
 
 		return deleteListCount;
+	}
+	
+	/* 18-05-28 김민성 - 확인자 목록 조회 */
+	@Override
+	public StringBuffer getConfirmMemberList(String circularID, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+		logger.debug("getConfirmMemberList started");
+    	if(pageNum == 0){
+    		pageNum = 1;
+    	}
+    	
+    	int startRowNum = ((pageNum - 1) * perCount);
+    	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		map.put("start", startRowNum);
+		map.put("perCount", perCount);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		
+		List<CircularConfirmVO> list = ezCircularDAO.getConfirmMember(map);
+		
+		StringBuffer resultXML = new StringBuffer();
+		
+		resultXML.append("<DOCLIST>");
+		
+		int totalCount = ezCircularDAO.getConfirmMemberCount(map);
+		int totalPage = (int) Math.floor(totalCount / perCount);
+		if(totalCount % 10 != 0){
+			totalPage = totalPage + 1;
+		}
+		
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<PAGECNT>" + totalPage + "</PAGECNT>");
+		resultXML.append("<PERSONALCNT>" + perCount + "</PERSONALCNT>");
+    	resultXML.append("<LISTVIEWDATA>");
+    	
+		resultXML.append("<ROWS>");
+		for (CircularConfirmVO vo : list) {
+			String userTitle = "";		// 직책
+			String userDeptName = "";	// 부서
+			
+			if(vo.getTitle()!= null){
+				userTitle = vo.getTitle();
+			}
+			if( vo.getDescription() != null){
+				userDeptName =  vo.getDescription();
+			}
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getMemberID() + "]]></USERID><VALUE><![CDATA[" + vo.getDisplayName()+ "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getConfirmDate(), offset, false) + "]]></VALUE></CELL>");			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		logger.debug(resultXML.toString());
+		
+		logger.debug("getConfirmMemberList ended");
+		return resultXML;
 	}
 
 }

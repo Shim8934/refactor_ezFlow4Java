@@ -656,7 +656,8 @@
 				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
 				
 				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
-					<li><span onClick="NewItem_onclick()"><spring:message code='ezCommunity.t910' /></span></li>
+				<!-- 2018-05-30 구해안 게시하기 동사형을 '등록'으로 변경 -->
+					<li><span onClick="NewItem_onclick()"><spring:message code='ezCommunity.t958' /></span></li>
 					<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 					<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208' /></span></li>
 				</c:if>

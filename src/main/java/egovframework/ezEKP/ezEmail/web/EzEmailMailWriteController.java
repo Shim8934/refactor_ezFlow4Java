@@ -265,6 +265,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		logger.debug("useLetter=" + useLetter);
 		
+		// 쓰기창에서 수신인 자동완성 기능 사용 유무
+		String useMailAddrAutoComplete = ezCommonService.getTenantConfig("useMailAddrAutoComplete", loginInfo.getTenantId());
+		
 		// set serverName
 		String serverName = loginInfo.getServerName();
 		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", loginInfo.getTenantId());
@@ -1130,6 +1133,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
 		model.addAttribute("drafts", ezEmailUtil.getDraftsFolderId(locale)); // 임시보관함 스트링 추가 (윤진) 
 		model.addAttribute("multipartFirstIdx", multipartFirstIdx);
+		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
@@ -3876,11 +3880,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+				    		        	
 				    		        }
 				    		        else {
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 				    		        }
+			    		        	// 전달, 회신 테스트
+			    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
 			    		        }
 			    		        
 			    		        orgMsgFolder.close(true);
@@ -4876,6 +4883,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
             
             StringBuilder sb = new StringBuilder();
+            sb.append("<LISTVIEWDATA><ROWS>");
             
             for (AddressVO addressInfo : addressInfoList) {
             	sb.append("<ROW>");
@@ -4890,6 +4898,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             	sb.append("</ROW>");
             }
             
+            sb.append("</ROWS></LISTVIEWDATA>");
             returnValue = sb.toString();
         } catch (Exception e) {
         	e.printStackTrace();
@@ -5028,6 +5037,77 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     			fos.close();
     		}
     	}
+	}
+	
+	/**
+	 * 받는사람, 참조, 숨은참조 등 자동완성 기능
+	 */
+	@RequestMapping(value = "/ezEmail/autoCompleteList.do", produces = "text/xml; charset=utf-8")
+	public String autoCompleteList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
+			HttpServletRequest request) throws Exception {
+		logger.debug("autoCompleteList started.");
+
+		String searchValue = request.getParameter("value");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String pOrganSearchList = "displayname::" + searchValue;
+		String pOrganCellList = "displayname";
+		String pOrganPropList = "company;description;title;mail;extensionAttribute3";
+		String pOrganListType = "all";
+		String pDLSearchList = "displayname::" + searchValue;
+		String pAddressFilter = searchValue;
+
+		try {
+			Document organXML = commonUtil.convertStringToDocument(
+					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo));
+			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));
+			Document addressXML = commonUtil.convertStringToDocument(getAddressSearch(pAddressFilter, userInfo));
+
+			HashMap<String, Object> jsonObject = null;
+			List<Object> jsonList = new ArrayList<Object>();
+
+			NodeList organRow = organXML.getElementsByTagName("ROW");
+			for (int i = 0; i < organRow.getLength(); i++) {
+				Element row = (Element) organRow.item(i);
+				NodeList organList = row.getElementsByTagName("CELL");
+				Element organCell = (Element) organList.item(0);
+				jsonObject = new HashMap<String, Object>();
+				jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
+				jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
+				jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
+				jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+				jsonList.add(jsonObject);
+			}
+
+			NodeList dlRow = dlXML.getElementsByTagName("ROW");
+			for (int i = 0; i < dlRow.getLength(); i++) {
+				Element row = (Element) dlRow.item(i);
+				NodeList dlList = row.getElementsByTagName("CELL");
+				Element dlCell = (Element) dlList.item(0);
+				jsonObject = new HashMap<String, Object>();
+				jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
+				jsonObject.put("title", "");
+				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
+				jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+				jsonList.add(jsonObject);
+			}
+
+			NodeList addressRow = addressXML.getElementsByTagName("ROW");
+			for (int i = 0; i < addressRow.getLength(); i++) {
+				jsonObject = new HashMap<String, Object>();
+				jsonObject.put("name", addressXML.getElementsByTagName("SNAME").item(0).getTextContent());
+				jsonObject.put("title", "");
+				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
+				jsonObject.put("mail", addressXML.getElementsByTagName("SEMAIL").item(0).getTextContent());
+				jsonList.add(jsonObject);
+			}
+			model.addAttribute("susinList", jsonList);
+		} catch (Exception e) {
+
+		}
+
+		logger.debug("autoCompleteList ended.");
+		return "json";
 	}
 	
 	/**

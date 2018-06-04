@@ -197,6 +197,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String pIsCCFg = "Y";
 		boolean isSecureMail = false;
 		IMAPAccess ia = null;
+		String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -216,6 +217,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
 				} else {
+					
 					FetchProfile fp = new FetchProfile();
 					
 					fp.add(FetchProfile.Item.ENVELOPE);
@@ -451,6 +453,27 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						logger.debug("Message's seen flag changed to true.");
 					}
 				}
+				
+				// 전달, 회신 시 보낸 시간
+				if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
+					if (ezEmailUtil.hasSentDateFlag(message)) {
+						String sentDateFlag = ezEmailUtil.getSentDateFlag(message);
+						sentDateFlag = sentDateFlag.split("-")[1];
+						logger.debug("sentDateFlag=" + sentDateFlag);
+						
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+						String receivedDateStr = sdf.format(new Date(Long.parseLong(sentDateFlag)));
+						String sentDate = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+						logger.debug("receivedDateStr=" + receivedDateStr);
+						
+						String msg = contentClass.equals("REPLY") ? "ezEmail.ksa01" : "ezEmail.ksa02";
+						String sentDateStr = egovMessageSource.getMessage(msg, locale);
+						sentDateMsg = String.format(sentDateStr, sentDate);
+						logger.debug("sentDateMsg=" + sentDateMsg);
+					}
+				}
+				
 				f.close(true);
 			}
 		} catch (MessagingException e) {
@@ -486,6 +509,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useReSend", useReSend);
+		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
 		
 		logger.debug("readMail ended.");
 		
@@ -1561,7 +1585,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
         boolean retryFlag = false;
         int retryCount = 1; // 메일 읽기 실패 시 재시도 횟수		
-		
+        String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
+        String contentClass = "";
+        
         do {
     		try {
     			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1615,6 +1641,33 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     							logger.debug("MDNSentFlag is set");
     						}				
     					}
+    					
+    					if (message.isSet(Flags.Flag.ANSWERED)) {
+    						contentClass = "REPLY"; 
+    					} else if (ezEmailUtil.hasForwardedFlag(message)) {
+    						contentClass = "FORWARD";
+    					}
+    					
+    					// 전달, 회신 시 보낸 시간
+    					if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
+    						if (ezEmailUtil.hasSentDateFlag(message)) {
+    							String sentDateFlag = ezEmailUtil.getSentDateFlag(message);
+    							sentDateFlag = sentDateFlag.split("-")[1];
+    							logger.debug("sentDateFlag=" + sentDateFlag);
+    							
+    							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+								sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+								String receivedDateStr = sdf.format(new Date(Long.parseLong(sentDateFlag)));
+								String sentDate = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+								logger.debug("receivedDateStr=" + receivedDateStr);
+								
+    							String msg = contentClass.equals("REPLY") ? "ezEmail.ksa01" : "ezEmail.ksa02";
+    							String sentDateStr = egovMessageSource.getMessage(msg, locale);
+    							sentDateMsg = String.format(sentDateStr, sentDate);
+    							logger.debug("sentDateMsg=" + sentDateMsg);
+    						}
+    					}
+    					
     				}
     			}
     		} catch (Exception e) {
@@ -1642,6 +1695,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));
+		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
 		
 		logger.debug("previewContent ended.");
 		
