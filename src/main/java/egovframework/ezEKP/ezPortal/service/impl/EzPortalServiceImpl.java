@@ -3667,4 +3667,29 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 		return returnValue;
 	}
+	
+	@Override
+	public Map<String, String> getMainMenuItemUIDList(String accessID, Map<String, String> moduleList, String userLang, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, String> resultMap = new HashMap<String, String>();
+		
+		map.put("tenantID", tenantID);
+		map.put("parentUID", "203"); //메인메뉴영역
+		map.put("companyID", companyID);
+		map.put("lang", userLang);
+		
+		/*top 메뉴에 있는 UID와 LINK URL*/
+		
+		List<PortalUseTopMenuID2VO> menuItemUID = ezPortalDAO.getMainMenuItemUIDList(map);
+		for (int i = 0; i < menuItemUID.size(); i++) {
+			//접근 권한 확인
+			String moduleName = moduleList.get(menuItemUID.get(i).getLinkURL());
+			if (checkViewRightBln(menuItemUID.get(i).getuID_(), accessID, tenantID)) {
+				resultMap.put(moduleName, "Y");
+			} else {
+				resultMap.put(moduleName, "N");
+			}
+		}
+		return resultMap;
+	}
 }
