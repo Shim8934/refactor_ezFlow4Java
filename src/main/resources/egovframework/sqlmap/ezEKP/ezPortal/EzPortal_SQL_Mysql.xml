@@ -2558,6 +2558,8 @@
 		and
 			a.companyid = #companyID#
 		and
+			a.UID_ = #topMenuID#			
+		and
 			a.lang = #lang#
 		and
 			b.parentuid = #parentUID#

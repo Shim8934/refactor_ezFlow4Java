@@ -239,5 +239,5 @@ public interface EzPortalService {
 	
 	public String getMainMenuItemUID(String pAccessID, String linkURL, String userLang, String companyID, int tenantID) throws Exception;
 	
-	public Map<String, String> getMainMenuItemUIDList(String pAccessID, Map<String, String> linkURL, String userLang, String companyID, int tenantID) throws Exception;
+	public Map<String, String> getMainMenuItemUIDList(String pAccessID, Map<String, String> linkURL, String userLang, String companyID, int tenantID, String topMenuID) throws Exception;
 }

@@ -779,15 +779,20 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPersonal/leftEnvironment.do")
 	public String leftEnvironment(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("leftEnvironment started");
-
 		userInfo = commonUtil.userInfo(loginCookie);
 		String funCode = "";
+		String topMenuID = "";
 		String ezInfoSSL = "";
 		String SSL = "";
 		
 		if (req.getParameter("funCode") != null && !req.getParameter("funCode").equals("")) {
 			funCode = req.getParameter("funCode");
 		}
+		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").trim().equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
 		if (config.getProperty("config.ezInfoSSL") != null && !config.getProperty("config.ezInfoSSL").equals("")) {
 			ezInfoSSL = config.getProperty("config.ezInfoSSL");
 		}
@@ -798,8 +803,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		//초기화면 메일만 사용하고 싶을 때 YES
 		String	firstScreen_Mail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
-		//회람판 사용여부
-		String	useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", userInfo.getTenantId());
 		//마이포탈설정 0:보이게,1:마이포탈페이지만,2:초기화면설정만
 		String portalEnv = ezCommonService.getTenantConfig("portalEnv", userInfo.getTenantId());
 		
@@ -808,9 +811,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		if (firstScreen_Mail == null || firstScreen_Mail.equals("")) {
 			firstScreen_Mail = "NO";
-		}
-		if (useCircular == null || useCircular.equals("")) {
-			useCircular = "NO";
 		}
 
 		String accessList = ezPortalService.getAccessList(userInfo);
@@ -831,7 +831,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 		moduleList.put("/ezJournal/journalMain.do", "journal");
 		
-		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
 		
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
@@ -850,7 +850,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
 		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
-		model.addAttribute("USE_CIRCULAR", useCircular);
         model.addAttribute("packageType", packageType);
         model.addAttribute("portalEnv", portalEnv);
         

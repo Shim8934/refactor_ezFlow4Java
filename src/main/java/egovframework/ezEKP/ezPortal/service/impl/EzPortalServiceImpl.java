@@ -1431,8 +1431,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append("</TR>\n");
 			} else { 
 				if (menuItemMenuItemType.equals("0")) {
+					System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {
+					System.out.println("######################################### " + sb.toString());
 					sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));
 				}
 			}
@@ -3669,7 +3671,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public Map<String, String> getMainMenuItemUIDList(String accessID, Map<String, String> moduleList, String userLang, String companyID, int tenantID) throws Exception {
+	public Map<String, String> getMainMenuItemUIDList(String accessID, Map<String, String> moduleList, String userLang, String companyID, int tenantID, String topMenuID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, String> resultMap = new HashMap<String, String>();
 		
@@ -3677,6 +3679,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("parentUID", "203"); //메인메뉴영역
 		map.put("companyID", companyID);
 		map.put("lang", userLang);
+		map.put("topMenuID",topMenuID);
 		
 		/*top 메뉴에 있는 UID와 LINK URL*/
 		
