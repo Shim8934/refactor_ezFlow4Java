@@ -635,4 +635,36 @@ public class EzPMSController3 {
 		
 		return "/ezPMS/pmsBoardViewerList";
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/ezPMS/boardDetailJSON.do")
+	public JSONObject getboardJSON(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getboardJSON started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("projectId", request.getParameter("projectId"));
+		
+		String itemId = request.getParameter("itemId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject board = null;
+		
+		if (status.equals("ok")) {			
+			board = (JSONObject) resultBody.get("data");
+			String boardContent = ((String) board.get("writeContent")).replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+			board.put("boardContent", boardContent);
+		}
+		
+		LOGGER.debug("ezPMS getboardJSON ended");
+		
+		return board;
+	}
 }

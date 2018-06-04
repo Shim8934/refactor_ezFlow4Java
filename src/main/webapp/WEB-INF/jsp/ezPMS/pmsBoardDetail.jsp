@@ -136,7 +136,7 @@
 	        var pwidth = window.screen.availWidth;
 	        var pTop = (pheight - conHeight) / 2;
 	        var pLeft = (pwidth - 890) / 2;
-	        var szUrl = "/ezEmail/mailWrite.do?journalId=" + journalId+ "&cmd=journal";
+	        var szUrl = "/ezEmail/mailWrite.do?ezPMSProjectId=" + projectId + "&ezPMSBoardId=" + itemId + "&cmd=ezPMSBoard";
 	        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	        window.close();
 		}
