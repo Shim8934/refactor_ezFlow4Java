@@ -212,7 +212,7 @@
             WHERE 
                 cn = #id# 
             AND 
-                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
             AND 
             	tenant_id = #tenantId#
         ]]>
@@ -251,7 +251,7 @@
             WHERE 
                 (DEPARTMENT = #id# OR EXTENSIONATTRIBUTE4 LIKE CONCAT('%',#id#, '%'))
             AND 
-                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
             AND  
             	tenant_id = #tenantId#
         ]]>
@@ -290,7 +290,7 @@
             WHERE 
                 PHYSICALDELIVERYOFFICENAME = #company_id#
             AND 
-                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)           
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)           
             AND
 				tenant_id = #tenantId#
         ]]>

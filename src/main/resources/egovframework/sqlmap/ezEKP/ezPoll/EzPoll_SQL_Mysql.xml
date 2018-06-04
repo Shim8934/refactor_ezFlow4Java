@@ -1252,7 +1252,7 @@
 					WHERE 
 						tenant_id = #tenant_id#
 					AND 
-               			cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+               			cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
 					union all
 					SELECT 
 						cn,  
@@ -1429,7 +1429,7 @@
 					WHERE 
 						tenant_id = #tenant_id#
 					AND 
-                		cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+                		cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
 				UNION ALL
 					SELECT 
 						cn,  
