@@ -1034,6 +1034,14 @@
 			            </CELL>
 			        </ROW>   
                     </c:if>
+                    <c:if test="${webfolderFlag == 'YES'}">
+                    <ROW>
+			            <CELL>            
+			                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
+			                <DATA1>wf</DATA1>
+			            </CELL>
+			        </ROW>
+			         </c:if>
 				</ROWS>
 			</LISTVIEWDATA>
 		</xml>
