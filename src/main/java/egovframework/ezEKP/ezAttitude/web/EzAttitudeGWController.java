@@ -695,16 +695,7 @@ public class EzAttitudeGWController {
 			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics");
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
-			
-//			//imgPath 셋팅
-//			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
-//				String imgPath = typeInfo.getImgPath();
-//				if (!imgPath.equals("")) {
-//					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-//					typeInfo.setImgPath(imgPath);
-//				}
-//			}
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId(), info.getPrimary());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -765,7 +756,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			if (ezAttitudeService.insertAttitudeType(typeName, typeName2, info.getTenantId(), companyId)) {
+			if (ezAttitudeService.insertAttitudeType(typeName, typeName2, info.getTenantId(), companyId, info.getPrimary())) {
 				result.put("status", "ok");
 			} else {
 				result.put("status", "failed");
@@ -1043,29 +1034,6 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users" + userId + "/add-authority] ended.");
-		return result;
-	}
-	
-	/**
-	 * G/W 근태관리 [GET] 엑셀다운로드
-	 */
-	@RequestMapping(value = "/rest/ezattitude/exceldown", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject exceldown(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/exceldown] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/exceldown] ended.");
 		return result;
 	}
 	
@@ -1500,7 +1468,7 @@ public class EzAttitudeGWController {
 			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantId, searchDeptId, deptIdList);
 			
 			//구분 리스트
-			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, "", statistics, info.getTenantId());
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, "", statistics, info.getTenantId(), info.getPrimary());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -1848,7 +1816,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{selectUserId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeUserCount(@PathVariable String selectUserId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + selectUserId + "/attitudetypes/" + attitudetypeId + "/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
@@ -1874,7 +1842,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + selectUserId + "/attitudetypes/" + attitudetypeId + "/attitude-count] ended.");
 		return result;
 	}
 	
@@ -1883,7 +1851,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/depts/{deptId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeDeptCount(@PathVariable String deptId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/{attitudetypeId}/attitude-count] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/" + attitudetypeId + "/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
@@ -1904,7 +1872,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/{attitudetypeId}/attitude-count] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/" + attitudetypeId + "/attitude-count] ended.");
 		return result;
 	}
 	
@@ -1941,7 +1909,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/manageHistories", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeHistoryList(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/manageHistories] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1987,7 +1955,7 @@ public class EzAttitudeGWController {
 			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList);
 		
 			//구분 리스트
-			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId(), info.getPrimary());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -2002,7 +1970,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/manageHistories] ended.");
 		return result;
 	}
 	
@@ -2106,7 +2074,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/checkIsAttitude", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCheckIsAttitude(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/checkIsAttitude] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2128,7 +2096,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/checkIsAttitude] ended.");
 		return result;
 	}
 }

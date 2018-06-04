@@ -25,19 +25,6 @@
 		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="8"/>
 	</resultMap>
 	
-	<resultMap id="attitudeType" class="AttitudeTypeVO">
-		<result property="typeId"					column="TYPE_ID"				columnIndex="1"/>
-		<result property="companyId"				column="COMPANY_ID"				columnIndex="2"/>
-		<result property="tenantId"					column="TENANT_ID"				columnIndex="3"/>
-		<result property="typeName"					column="TYPE_NAME"				columnIndex="4"/>
-		<result property="typeName2"				column="TYPE_NAME2"				columnIndex="5"/>
-		<result property="isuse"					column="ISUSE"					columnIndex="6"/>
-		<result property="imgPath"					column="IMG_PATH"				columnIndex="7"/>
-		<result property="parentId"					column="PARENT_ID"				columnIndex="8"/>
-		<result property="formId"					column="FORM_ID"				columnIndex="9"/>
-		<result property="isAdd"					column="ISADD"					columnIndex="10"/>
-	</resultMap>
-	
 	<resultMap id="attitudeForm" class="AttitudeFormVO">
 		<result property="formId"					column="FORM_ID"				columnIndex="1"/>
 		<result property="tenantId"					column="TENANT_ID"				columnIndex="2"/>
@@ -262,20 +249,18 @@
 			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') = #searchGubun#
 		</isNotEmpty>
 	</select>
-	
-	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultMap="attitudeType">
+
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultClass="AttitudeTypeVO">
 		<![CDATA[
 			SELECT
-				TYPE_ID,
-				COMPANY_ID,
-				TENANT_ID,
-				TYPE_NAME,
-				TYPE_NAME2,
-				ISUSE,
-				IFNULL(IMG_PATH,'') AS IMG_PATH,
-				IFNULL(PARENT_ID,'') AS PARENT_ID,
-				FORM_ID,
-				ISADD
+				TYPE_ID AS typeId,
+				COMPANY_ID AS companyId,
+				TENANT_ID AS tenantId,
+				TYPE_NAME$primary$ AS typeName$primary$,
+				ISUSE AS isuse,
+				IFNULL(PARENT_ID,'') AS parentId,
+				FORM_ID AS formId,
+				ISADD AS isAdd
 			FROM
 				TBL_ATTITUDE_TYPE
 			WHERE
@@ -316,27 +301,26 @@
 		]]>
 	</update>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeTypeInfo" parameterClass="Map" resultMap="attitudeType">
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeInfo" parameterClass="Map" resultClass="AttitudeTypeVO">
 		<![CDATA[
 			SELECT
-				type_id,
-				company_id,
-				tenant_id,
-				type_name,
-				type_name2,
-				isuse,
-				IFNULL(img_path,'') AS img_path,
-				IFNULL(parent_id,'') AS parent_id,
-				form_id,
-				isadd
+				TYPE_ID AS typeId,
+				COMPANY_ID AS companyId,
+				TENANT_ID AS tenantId,
+				TYPE_NAME AS typeName,
+				TYPE_NAME2 AS typeName2,
+				ISUSE AS isuse,
+				IFNULL(PARENT_ID,'') AS parentId,
+				FORM_ID AS formId,
+				ISADD AS isAdd
 			FROM
 				TBL_ATTITUDE_TYPE
 			WHERE
-				tenant_id = #tenantId#
+				TENANT_ID = #tenantId#
 			AND
-				company_id = #companyId#
+				COMPANY_ID = #companyId#
 			AND
-				type_id = #typeId#
+				TYPE_ID = #typeId#
 		]]>
 	</select>
 	
