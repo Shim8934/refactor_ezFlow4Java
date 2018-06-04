@@ -197,8 +197,10 @@
 		            return;
 				}
 
+				/* 2018-05-30 김민성 - 업무 검색 특수문자 태그 검색 수정 */
 				if (document.getElementById("keyword").value != "") {
-					filter = document.getElementById("keyword").value;					
+					filter = document.getElementById("keyword").value;			
+					filter = MakeXMLString(filter);
 				}
 
 				if (filter.indexOf("%") != -1) {
@@ -561,7 +563,7 @@
 			<col style ="width:100px;">
 			<tr>
 				<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-				<th ><spring:message code='ezTask.t156' /></th>
+				<th style="text-align:center"><img src="/images/ImgIcon/view-importance.gif"></th>
 				<th ><img src="/images/newAttach.gif"></th>
 				<th ><spring:message code='ezTask.t2005' /></th>
 				<th ><spring:message code='ezTask.t118' /></th>
@@ -577,6 +579,7 @@
 				<th style="text-align:center;"><spring:message code='ezTask.t121' /></th>
 				<th style="text-align:center;"><spring:message code='ezTask.t9002' /></th>
 			</tr>
+			<!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
 			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
 				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>

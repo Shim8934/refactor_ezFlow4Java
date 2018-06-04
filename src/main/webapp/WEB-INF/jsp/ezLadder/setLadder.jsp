@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-		<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
+		<script type="text/javascript" src="/js/ezLadder/ladder.min.js"></script>
 		
 		<script type="text/javascript">
 			var ladderId;
@@ -964,7 +964,46 @@
 				}
 				$("#ladMakeForm").submit();
 			} 
+	
+			function DivPopUpPosition(popUpW, popUpH) {
+			    var ReturnValue = new Array();
+			    var heigth = document.documentElement.clientHeight;
+			    if (heigth == 0)
+			        heigth = document.body.clientHeight;
 
+			    var width = document.documentElement.clientWidth;
+			    if (width == 0)
+			        width = document.body.clientWidth;
+				var tWidth = parent.document.documentElement.clientWidth;
+				
+				tWidth = tWidth - width;
+				width = width - tWidth;
+			   
+			    var pleftpos;
+			    pleftpos = parseInt(width) - popUpW;
+			    heigth = parseInt(heigth) - popUpH;
+			   
+			    if (heigth < (popUpH + 50))
+			        ReturnValue[0] = (heigth / 2);
+			    else
+			        ReturnValue[0] = (heigth / 2) - 50;
+			    ReturnValue[1] = pleftpos / 2;
+			    return ReturnValue
+			}
+			
+			function DivPopUpShow(popUpW, popUpH, URL) {
+			    try {
+			        var Position = DivPopUpPosition(popUpW, popUpH);
+			        document.getElementById("iFrameLayer").src = URL;
+			        document.getElementById("iFramePanel").style.top = Position[0] + "px";
+			        document.getElementById("iFramePanel").style.left = Position[1] + "px";
+			        document.getElementById("iFramePanel").style.height = popUpH + "px";
+			        document.getElementById("iFrameLayer").style.width = popUpW + "px";
+			        document.getElementById("iFrameLayer").style.height = popUpH + "px";
+			        document.getElementById("mailPanel").style.display = "";
+			        document.getElementById("iFramePanel").style.display = "";
+			    } catch (e) {}
+			}
 		</script>
 		<style type="text/css">
 			input[type=text]::-ms-clear {
@@ -1090,8 +1129,8 @@
 								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" />
 								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px; padding-right: 45px;" placeholder="<spring:message code='ezLadder.t071' />"/>
 								<div id="addAttendant" title="<spring:message code='ezLadder.t080'/>">
-									<img src="/images/ezLadder/icon_addAttendant.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: inline;" />
-									<img src="/images/ezLadder/icon_addAttendant_hover.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: none;" />
+									<img src="/images/ezLadder/icon_addAtt_default.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: inline;" />
+									<img src="/images/ezLadder/icon_addAtt_hover.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: none;" />
 								</div>
 							</div>
 							<div id="ladderSecret" style="position: absolute; right: 5px;">

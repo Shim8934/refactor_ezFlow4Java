@@ -437,7 +437,7 @@
 							alert("<spring:message code='ezOrgan.t269' />");
 					    }, 100);
 					}
-				});		        
+				});
 		    }
 		    function trim(str) {
 		        while (str && str.indexOf(" ") == 0)

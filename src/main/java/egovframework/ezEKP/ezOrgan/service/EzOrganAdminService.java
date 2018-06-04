@@ -68,6 +68,8 @@ public interface EzOrganAdminService {
 
 	public void updateDBData_user(OrganUserVO vo) throws Exception;
 
+	public void updateDBData_userPermission(OrganUserVO vo) throws Exception;
+	
 	public void insertDBData_user(OrganUserVO vo, String oriPass) throws Exception;
 
 	public void addJob(String userID, String titleInfo, int tenantID) throws Exception;
@@ -83,4 +85,14 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getUserList(int tenantID, int startPage, int endPage, int maxItemPerPage, String keycode,String keyword) throws Exception;
 	
 	public int getUserCount(int tenantID,String keycode,String keyword) throws Exception;
+	
+	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
+	
+	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
+	
+	public String getDistributionUserName (int tenantID, String groupName) throws Exception;
+
+	public String mailDelDistributionList(int tenantID, String cn) throws Exception;
+	
+	public String deleteTargetAddressUser (int tenantID, String groupName, String memberID, String companyID) throws Exception;
 }

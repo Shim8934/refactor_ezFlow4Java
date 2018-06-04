@@ -51,6 +51,7 @@
 		    var pNoneActiveX = "${NoneActiveX}";
 		    var isSecureMail = "${isSecureMail}";
 		    var useReSend = "${useReSend}";
+		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    
 		    window.onresize = window_onresize;
 		    
@@ -106,7 +107,7 @@
 		            }
 		        } 
 			    catch (e) { }
-		
+			    
 			}
 		    function btnPrint_onClick()
 		    {
@@ -424,7 +425,7 @@
 		        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
 		        newwin.focus();
 		    }
-		 
+		    
 		</script>
 	</head>
 

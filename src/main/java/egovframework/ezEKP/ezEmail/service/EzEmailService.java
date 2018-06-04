@@ -73,5 +73,5 @@ public interface EzEmailService {
 	public MailSecureVO getSecureMailInfoWithPassword(String secureId) throws Exception;
 	public MailSecureVO getSecureMailInfoWithPassword(String userId, int tenantId, String url) throws Exception;
 	public List<MailSecureReaderVO> getSecureMailReaderInfo(String secureId) throws Exception;
-
+	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception;
 }

@@ -8,6 +8,8 @@
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="/css/jquery-ui.css" type="text/css" />
+		<link rel="stylesheet" href="/css/jquery.ui.all.css" type="text/css" />
 		<c:if test="${useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
@@ -42,11 +44,14 @@
 			
 			#menu > ul:nth-child(2) > li {
 				margin: 0 2px !important;
-			}		
+			}
+			.ui-autocomplete { height: 200px; overflow-y: scroll; overflow-x: hidden;}
 		</style>
 		
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
@@ -324,7 +329,15 @@
             	// 현재 스크롤 위치를 저장
             	currentScrollPos = jqueryElement.scrollTop();
             	domElement.previousScrollPos = currentScrollPos;
-            });            
+            });
+            
+         // 쓰기창에서 수신인 자동완성 기능 사용 유무
+            <c:if test="${useMailAddrAutoComplete == 'NO'}">
+            	$( "#MsgTo" ).autocomplete("disable");
+            	$( "#MsgCC" ).autocomplete("disable");
+            	$( "#MsgBCC" ).autocomplete("disable");
+        	</c:if>
+            
 		}
 	    
 		var isAutoSave = false;
@@ -341,6 +354,9 @@
         	} else {
         		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
         	}
+        	
+        	// resize시 autoComplete창이 계속 유지되어서 display 처리
+        	$(".ui-autocomplete").css('display', 'none');
 	    }
 	    function KeEventControl(obj) {
 	        useragt = navigator.userAgent.toUpperCase();
@@ -573,12 +589,15 @@
 	        var sign = "";
 	        var signcom = "";
         	var indexSignValue = message.GetEditorContent().indexOf("id=\"MailSign\"");
+			var mailSignDiv = "<DIV id='MailSign'></DIV>";
+	        mailSignDiv = editorPtagChk() + mailSignDiv;
+	        
             if (indexSignValue == -1) {
                 if (gg_cmd == "REPLY" || gg_cmd == "REPLYALL" || gg_cmd == "FORWARD") {
-                    message.SetEditorContent("<DIV id='MailSign'></DIV>" + message.GetEditorContent());
+                    message.SetEditorContent(mailSignDiv + message.GetEditorContent());
                 }
                 else {
-                    message.SetEditorContent(message.GetEditorContent() + "<DIV id='MailSign'></DIV>");
+                    message.SetEditorContent(message.GetEditorContent() + mailSignDiv);
                 }
             }
 	        switch (SelMailSign.value) {
@@ -917,6 +936,21 @@
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
+	        
+	        mailSignInnerHtml();
+	    }
+
+		// 180517 : 메일 mailsign div에 메일을 작성 후 서명 등록 또는 변경 시 본문 사라지는 현상 수정
+	    function mailSignInnerHtml() {
+			if (mailsel == 0) {
+				if (pUse_Editor == "KUKUDOCS") {
+					setTimeout(function() {
+							message.EditorElementSetHtml("MailSign", "");
+					}, 300);
+				} else {
+					message.EditorElementSetHtml("MailSign", "");
+				}
+			}
 	    }
 	
 	    function getJournalToMail(){
@@ -1467,6 +1501,7 @@
 	            }
 	            eSubject.value = strLang121 + eSubject.value;
 	            Subject_ReApply();
+	            
 	        }
 	    }
 	    
@@ -1474,6 +1509,223 @@
 	    function Letter_onClick() {
 	    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
 	    }
+	    
+	    function editorPtagChk() {
+	    	var editorBody = message.GetEditorBody();
+	    	var editorBodyChild = editorBody.childNodes;
+	    	var appPtag = "";
+	    	
+	    	for (var i = 0; i < editorBodyChild.length; i++) {
+            	if ( editorBodyChild[i].tagName.toLowerCase() == "p" && message.GetEditorContent() != ""){
+            		break;
+            	}
+            	
+            	if (i + 1 == editorBodyChild.length) {
+            		appPtag = "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>";
+            	}
+            }
+	    	
+	    	return appPtag;
+	    }
+	    /* 
+	    $(document).on("click", "#MailSign", function() {
+	    	if (mailsel == 0) {
+				message.EditorElementSetHtml("MailSign", "");
+			}
+	    }) */
+
+	    var IsInsert_MsgTo = false;
+		$(function() {
+			$("#MsgTo").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						autoFocus:true,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgTo = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgTo) {
+								MsgToGot.appendChild(newElem);
+								document.getElementById("MsgTo").value = "";
+								IsInsert_MsgTo = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgTo)
+								document.getElementById("MsgTo").value = "";
+							IsInsert_MsgTo = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+			var IsInsert_MsgCC = false;
+			$("#MsgCC").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgCC = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgCC) {
+								MsgCCGot.appendChild(newElem);
+								document.getElementById("MsgCC").value = "";
+								IsInsert_MsgCC = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgCC)
+								document.getElementById("MsgCC").value = "";
+							IsInsert_MsgCC = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+			var IsInsert_MsgBCC = false;
+			$("#MsgBCC").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgBCC = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgBCC) {
+								MsgBCCGot.appendChild(newElem);
+								document.getElementById("MsgBCC").value = "";
+								IsInsert_MsgBCC = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgBCC)
+								document.getElementById("MsgBCC").value = "";
+							IsInsert_MsgBCC = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+		})
 	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
@@ -1502,7 +1754,7 @@
 	                            <spring:message code='ezEmail.t546' /></span></li>
 	                        <!-- <li><span onclick="LoadFormat_onClick()">
 	                            <spring:message code='ezEmail.t824' /></span></li> -->
-	                        <li><span onclick="NameCertify_onClick()">
+	                        <li style="display:none;"><span onclick="NameCertify_onClick()">
 	                            <spring:message code='ezEmail.t331' /></span></li>
 	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
@@ -1539,15 +1791,15 @@
 	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif"></li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
-	                            <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
+	                            <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
 	                            	<option value="0">HTML</option>
-	                            	<option value="1">Plain Text</option>
+	                            	<option value="1">PlainText</option>
 	                            </select>
 	                        </li>
 	                        <c:if test="${useOnlyInnerMail != 'YES'}">
 	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
 	                        	<li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
-		                            <select style="vertical-align:top;width:120px;" onchange="ChangeSenderName(this);">
+		                            <select style="vertical-align:top;" onchange="ChangeSenderName(this);">
 		                            ${mailSendObject}
 		                            </select>
 		                        </li>
@@ -1598,8 +1850,8 @@
 	                            <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgTo" id="MsgTo" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
-	                                ime-mode: active;">
+	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" tabindex="1" style="width: 100%;
+	                                ime-mode: active;"/>
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
 	                            <select id="SelectToAddress" style="width: 106px" onchange="simple_select('TO',this)">
@@ -1626,7 +1878,7 @@
 	                            </div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgCC" id="MsgCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
+	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" tabindex="2" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectCcAddress" style="width: 106px" onchange="simple_select('CC',this)">
@@ -1650,7 +1902,7 @@
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
-	                            <input type="text" name="MsgBCC" id="MsgBCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
+	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" tabindex="3" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectBCCAddress" style="width: 106px" onchange="simple_select('BCC',this)">
@@ -1754,6 +2006,7 @@
             </tr>            
             </c:if>
 	    </table>
+	    <div id="AutoCompleteResults"></div>
 	    <div id="sendScreen" style="display:none;">
 	      <table width="100%" cellspacing="0" cellpadding="0" class="message" style="background-image:url(/images/email/mailsendnoti.gif)">
 	        <tr>

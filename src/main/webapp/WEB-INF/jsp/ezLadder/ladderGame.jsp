@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
-	<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
+	<script type="text/javascript" src="/js/ezLadder/ladder.min.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript">
 	
@@ -870,12 +870,12 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:12px" /></a>
+											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #f2f2f2">
-											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
+										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #e8e8ef">
+											<span style="font-size: large; color: palevioletred; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
 									</c:otherwise>
@@ -909,7 +909,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 398px;background: #fafafa; position: absolute;left: -50px;right: 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
+									<div id="blackBox" style="height: 398px;background: #f9f9fc; position: absolute;left: -50px;right: 0;border-top:1px solid #dde;border-bottom:1px solid #dde">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
