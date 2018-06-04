@@ -511,9 +511,9 @@
 		        ELSE 'NO'
 		    END AS MYDEPT
 		    FROM
-		        TBL_DEPTMASTER D 
+		        TBL_DEPTMASTER D
 		    LEFT JOIN 
-		        TBL_USERMASTER U 
+		        TBL_USERMASTER U
 		    ON 
 		       	D.TENANT_ID = U.TENANT_ID
 		    WHERE 
@@ -524,7 +524,7 @@
 		       	U.TENANT_ID = #tenantId#
 		    AND 
 		       (
-					((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0 
+					((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0
 				AND 
 		       		D.extensionattribute2 = U.PHYSICALDELIVERYOFFICENAME))
 				OR
@@ -765,13 +765,12 @@
 		<![CDATA[
 			SELECT 
 				A.USER_ID AS userId,
-			    B.DISPLAYNAME AS userName,
-			    B.TITLE AS jikwi,
-			    B.DESCRIPTION AS deptName,
-			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME) AS authDeptId,
-			    group_concat(C.DISPLAYNAME order by C.DISPLAYNAME) AS authDeptName,
-    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME) AS authType
-
+			    B.DISPLAYNAME$primary$ AS userName,
+			    B.TITLE$primary$ AS jikwi,
+			    B.DESCRIPTION$primary$ AS deptName,
+			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME$primary$) AS authDeptId,
+			    group_concat(C.DISPLAYNAME$primary$ order by C.DISPLAYNAME$primary$) AS authDeptName,
+    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME$primary$) AS authType
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -793,7 +792,7 @@
 			GROUP BY 
 				A.USER_ID
 			ORDER BY
-				USERNAME
+				userName
 		]]>
 	</select>
 	

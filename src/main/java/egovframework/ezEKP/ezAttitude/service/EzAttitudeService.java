@@ -103,7 +103,7 @@ public interface EzAttitudeService {
 	
 	public void changeUsersModifyAtt(String companyId, int tenantId, String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception;
 
-	public List<AttitudeAuthorVO> getAttitudeAuthList(int tenantId,	String companyId) throws Exception;
+	public List<AttitudeAuthorVO> getAttitudeAuthList(int tenantId,	String companyId, String primary) throws Exception;
 
 	public void deleteAttitudeAuth(String selectUserId, int tenantId, String companyId) throws Exception;
 

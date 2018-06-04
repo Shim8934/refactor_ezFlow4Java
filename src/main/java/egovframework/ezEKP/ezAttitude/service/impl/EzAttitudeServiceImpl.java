@@ -1476,11 +1476,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeAuthorVO> getAttitudeAuthList(int tenantId,
-			String companyId) throws Exception {
+			String companyId, String primary) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 		
 		return ezAttitudeDAO.getAttitudeAuthList(map);
 	}

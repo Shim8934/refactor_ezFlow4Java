@@ -1661,7 +1661,7 @@ public class EzAttitudeGWController {
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<AttitudeAuthorVO> authorlist = ezAttitudeService.getAttitudeAuthList(info.getTenantId(), companyId);
+			List<AttitudeAuthorVO> authorlist = ezAttitudeService.getAttitudeAuthList(info.getTenantId(), companyId, info.getPrimary());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
