@@ -42,29 +42,6 @@ public interface EzAttitudeService {
 	
 	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String userId, String offset) throws Exception;
 	
-	//메일로 발송하는 부분.... 전자결재 부분보고 알아보자 AND 상세부분
-	
-	public void insertAttitudeApplication(String attitudeId, String writerId, String writerName, String writerName2, String writerTitle,
-			String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2, String changeDate, String changeTime,
-			String content, String companyId, int tenantId) throws Exception;
-	
-	public String getAttitudeApplStatus(String attitudeId, int tenantId) throws Exception;
-	
-	public void updateAttitudeApplication(String attitudeId, String changeTime, String content, String companyId, int tenantId) throws Exception;
-	
-	public void updateAttitudeApplicationApproval(String attitudeId, String apprUserId, String apprUserName, String apprUserName2, String apprStatus, 
-			int tenantId) throws Exception;
-	
-	public List<Map<String, String>> getDeptAttitudeList(String pidList, int tenantId) throws Exception;
-	
-	public AttitudeApplicationVO getAttitudeApplicationInfo(int tenantId, String companyId, String attitudeId) throws Exception;
-	
-	public void deleteAttitudeApplication(String attitudeId, int tenantId) throws Exception;
-	
-	public List<AttitudeApplicationVO> getUserAttitudeApplicationList(String userId, int tenantId, String writeName, String apprUserName, String startDate, String endDate, String statusType) throws Exception;
-
-	public List<AttitudeApplicationVO> getAttitudeApplicationList(int tenantId, String writeName, String apprUserName, String deptName, String startDate, String endDate, String statusType) throws Exception;
-	
 	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId) throws Exception;
 	
 	public void updateAttitudeConfig(String workStartTime, String workEndTime, String closedDay, String attitudeModAppl, String closedDateAttitude, String confSetDate, String companyId, int tenantId) throws Exception;

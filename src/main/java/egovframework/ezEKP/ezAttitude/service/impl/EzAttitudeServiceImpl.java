@@ -65,6 +65,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("attitudeId", attitudeId);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
@@ -88,6 +89,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -106,8 +108,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					String compareDate = startDate.substring(11);
 					String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offset, false).substring(11);
 					
-					LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
-					//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
 					SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
 					
 					Date userConfTime = f.parse(resultConfDate);
@@ -212,21 +212,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeStatisticsList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		String offsetMin = commonUtil.getMinuteUTC(offset);
-		String[] pidListArr = pidList.split(",");
-		String[] deptIdArr = deptIdList.split(",");
 
-		map.put("offsetMin", offsetMin);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
 		
 		if (!pidList.trim().equals("")){
-			map.put("pidListArr", pidListArr);
+			map.put("pidListArr", pidList.split(","));
 		}
 		if (!deptIdList.trim().equals("")){
-			map.put("deptIdArr", deptIdArr);
+			map.put("deptIdArr", deptIdList.split(","));
 		}
 		
 		LOGGER.debug("getAttitudeStatisticsList ended");
@@ -364,73 +360,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void insertAttitudeApplication(String attitudeId, String writerId,
-			String writerName, String writerName2, String writerTitle,
-			String writerTitle2, String writerDeptId, String writerDeptName,
-			String writerDeptName2, String changeDate, String changeTime,
-			String content, String companyId, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		LOGGER.debug("insertAttitudeApplication started");
-		
-//		Map<String, Object> map = new HashMap<String, Object>();
-		
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-//		map.put("", );
-		
-		LOGGER.debug("insertAttitudeApplication ended");
-	}
-
-	@Override
-	public String getAttitudeApplStatus(String attitudeId, int tenantId)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateAttitudeApplicationApproval(String attitudeId,
-			String apprUserId, String apprUserName, String apprUserName2,
-			String apprStatus, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public List<Map<String, String>> getDeptAttitudeList(String pidList,
-			int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	@Override
-//	public void updateAttitudeUserConfig(int tenantID, String userID,
-//			String workStartTime, String workEndTime) throws Exception {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void insertAttitudeUserConfig(int tenantID, String companyID,
-//			String userID, String workStartTime, String workEndTime)
-//			throws Exception {
-//		// TODO Auto-generated method stub
-//		
-//	}
-	
-	@Override
 	public void editAttitudeUserConfig(String selectedUserIdList, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("editAttitudeUserConfig started");
 		LOGGER.debug("selectedUserIdList = " + selectedUserIdList + " || workStartTime = " + workStartTime + " || workEndTime = " + workEndTime + " || gubun = " + gubun);
@@ -458,45 +387,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		LOGGER.debug("saveAttitudeUserConfig ended");
-	}
-
-	@Override
-	public void updateAttitudeApplication(String attitudeId, String changeTime,
-			String content, String companyId, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public AttitudeApplicationVO getAttitudeApplicationInfo(int tenantId,
-			String companyId, String attitudeId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteAttitudeApplication(String attitudeId, int tenantId)
-			throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public List<AttitudeApplicationVO> getUserAttitudeApplicationList(
-			String userId, int tenantId, String writeName, String apprUserName,
-			String startDate, String endDate, String statusType)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<AttitudeApplicationVO> getAttitudeApplicationList(int tenantId,
-			String writeName, String apprUserName, String deptName,
-			String startDate, String endDate, String statusType)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -731,12 +621,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		
-		if (adminFlag.equals("false")){
-			//신청현황에서는 본인의 ID로만 쿼리를 한다.
-			map.put("userId", userId);
-		}
-		
 		map.put("searchDeptId", deptId);
 		map.put("deptIdList", deptIdList);
 		map.put("startDate", startDate);
@@ -750,6 +634,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("endPoint", endPoint);
 		map.put("type", type);
 		
+		if (adminFlag.equals("false")){
+			map.put("userId", userId);
+		}
 		if (order !=null) {
 			map.put("order", order.trim());
 		}
@@ -800,11 +687,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		
-		if (adminFlag.equals("false")) {
-			map.put("userId", userId);
-		}
-		
 		map.put("searchDeptId", deptId);
 		map.put("deptIdList", deptIdList);
 		map.put("startDate", startDate);
@@ -815,6 +697,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("primary", primary);
 		map.put("offset", offset);
 		map.put("type", type);
+		
+		if (adminFlag.equals("false")) {
+			map.put("userId", userId);
+		}
 		
 		int attAppListCount = ezAttitudeDAO.getUsersModiyAttCount(map);
 		
