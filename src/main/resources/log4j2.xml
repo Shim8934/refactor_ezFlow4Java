@@ -6,7 +6,6 @@
         </Console>
     </Appenders>
     <Loggers>
-    
         <Logger name="java.sql" level="INFO" additivity="false">
             <AppenderRef ref="console" />
         </Logger>

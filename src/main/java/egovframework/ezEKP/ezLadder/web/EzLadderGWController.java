@@ -83,9 +83,9 @@ public class EzLadderGWController {
 		return  pages;
 	}
 	
-	@RequestMapping(value = "/ladder/ladder-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
+	@RequestMapping(value = "/rest/ladder/ladder-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
 	public JSONObject gwladderList(@PathVariable String userId, LadderVO vo, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [GET /ladder/ladder-list/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/ladder-list/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		int page = Integer.parseInt(request.getParameter("currPage"));
@@ -142,7 +142,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/ladder-list/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/ladder-list/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -151,7 +151,7 @@ public class EzLadderGWController {
 	 * 참여자 이름 검색으로 바로 추가 
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ladder/ladders/writers/{writerId}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/ladders/writers/{writerId}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, int tenant_id, String lang, HttpServletRequest request) {
 		
 		JSONObject result = new JSONObject();
@@ -168,7 +168,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/ladders/writers/" + writerId + "/searchUser] ended.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/ladders/writers/" + writerId + "/searchUser] ended.");
 		
 		return result;
 	}
@@ -177,9 +177,9 @@ public class EzLadderGWController {
 	 * 사다리 게임 추가
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ladder/ladders/writers/{writerId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/ladders/writers/{writerId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwInsertLadder(@PathVariable String writerId, @RequestBody JSONObject jsonBodys, LadderVO ladVO, LadderLineVO ladLineVO, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [POST /ladder/ladders/writers/" + writerId + "] started.");
+		logger.debug("web G/W LADDER [POST /rest/ladder/ladders/writers/" + writerId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -225,7 +225,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [POST /ladder/ladders/writers/" + writerId + "] ended.");
+		logger.debug("web G/W LADDER [POST /rest/ladder/ladders/writers/" + writerId + "] ended.");
 		
 		return result;
 	}
@@ -234,9 +234,9 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 조회
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ladder/BMs/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/BMs/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectBMGroup(@PathVariable String userId, LadderBmVO bmGroupVO, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [GET /ladder/BMs/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/BMs/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -252,7 +252,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/BMs/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/BMs/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -261,9 +261,9 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 유저 조회
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectBMUser(@PathVariable String userId, @PathVariable int ladderBmId, LadderBmUserVO bmUserVO, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [GET /ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -279,7 +279,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -288,9 +288,9 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 추가
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ladder/BMs/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/BMs/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwInsertBMGroup(@PathVariable String userId, LadderBmVO bmGroupVO, LadderBmUserVO bmUsersVO, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [POST /ladder/BMs/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [POST /rest/ladder/BMs/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -307,7 +307,7 @@ public class EzLadderGWController {
 			e.printStackTrace();
 		}
 		
-		logger.debug("web G/W LADDER [POST /ladder/BMs/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [POST /rest/ladder/BMs/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -316,9 +316,9 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 수정
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwUpdateBMGroup(@PathVariable String userId, @PathVariable int ladderBmId, LadderBmVO bmGroupVO, LadderBmUserVO bmUsersVO, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [PUT /ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -334,7 +334,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [PUT /ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -343,9 +343,9 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 삭제
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject gwDeleteBMGroup(@PathVariable String userId, @PathVariable int ladderBmId, LadderBmVO bmGroupVO, LadderBmUserVO bmUsersVO, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [DELETE /ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [DELETE /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -361,7 +361,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [DELETE /ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [DELETE /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -370,9 +370,9 @@ public class EzLadderGWController {
 	 * 댓글 조회
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [GET /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -389,7 +389,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
 		
 		return result;
 	}	
@@ -397,9 +397,9 @@ public class EzLadderGWController {
 	/**
 	 * 댓글 추가
 	 * */
-	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwInsertComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [POST /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [POST /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -432,7 +432,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [POST /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [POST /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -440,9 +440,9 @@ public class EzLadderGWController {
 	/**
 	 * 댓글 수정
 	 * */
-	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwUpdateComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO) {
-		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -460,7 +460,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -468,9 +468,9 @@ public class EzLadderGWController {
 	/**
 	 * 댓글 삭제
 	 * */
-	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject gwDeleteComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO) {
-		logger.debug("web G/W LADDER [DELETE /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [DELETE /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -487,7 +487,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [DELETE /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [DELETE /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -495,9 +495,9 @@ public class EzLadderGWController {
 	/**
 	 * 이전 사다리 목록 순서 바꾸기
 	 * */
-	@RequestMapping(value = "/ladder/ladder-list/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/ladder-list/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwChangePreLadderList(@PathVariable String userId, LadderOrderVO ladOrderVO, LadderVO vo, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [PUT /ladder/ladder-list/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/ladder-list/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		int page = Integer.parseInt(request.getParameter("currPage"));
@@ -537,7 +537,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [PUT /ladder/ladder-list/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/ladder-list/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -548,9 +548,9 @@ public class EzLadderGWController {
 	/**
 	 * 사디리 게임 조회 
 	 */
-	@RequestMapping(value = "ladder/ladderGame/{ladderId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "/rest/ladder/ladderGame/{ladderId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
 	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO, LadderCommentVO cmtVO) {
-		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [Get /rest/ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		String mode = request.getParameter("mode");
@@ -572,7 +572,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId + "/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [Get /rest/ladder/ladders/" + ladderId + "/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -580,9 +580,9 @@ public class EzLadderGWController {
 	/**
 	 * 사디리 삭제 
 	 */
-	@RequestMapping(value = "ladder/ladders/delete/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "/rest/ladder/ladders/delete/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
 	public JSONObject gwDeleteLadderList(@PathVariable String userId,  HttpServletRequest request) {
-		logger.debug("web G/W LADDER [GET /ladder/delete/" + userId + "] started.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/delete/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		String tenant_Id = request.getParameter("tenant_Id");
@@ -600,7 +600,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/delete/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /rest/ladder/delete/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -608,9 +608,9 @@ public class EzLadderGWController {
 	/**
 	 * 참여자 순서 바꾸기
 	 */
-	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
 	public JSONObject gwSetUserOrder(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO) {
-		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
 		String mode = "all";
 		String back = "back";
 		JSONObject result = new JSONObject();
@@ -633,7 +633,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -641,9 +641,9 @@ public class EzLadderGWController {
 	/**
 	 * 사다리게임 시작
 	 */
-	@RequestMapping(value = "ladder/start/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "/rest/ladder/start/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
 	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [PUT /ladder/start/" + ladderId+ "/users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/start/" + ladderId+ "/users/" + userId + "] started.");
 	
 		JSONObject result = new JSONObject();
 	
@@ -665,7 +665,7 @@ public class EzLadderGWController {
 			e.printStackTrace();
 		}
 		
-		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
 		
 		return result;
 	}

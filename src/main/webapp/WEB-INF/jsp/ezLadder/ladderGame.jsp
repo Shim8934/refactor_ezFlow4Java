@@ -805,20 +805,20 @@
 		<div class="fullwidth">
 			<div style="height:50px">
 				<div style="float:left;margin-top:3px;margin-bottom:10px">
-					<p class="pic" style="float:left;margin:5px 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${vo.writerId}')" > 
+					<p class="pic" style="float:left;margin:5px 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('<c:out value="${vo.writerId}" />')" > 
 						<c:choose>
 							<c:when test="${empty vo.pic}">
 								<img src="/images/poll/default_pic_vote.gif" width="48px" height="48px" style="position: relative;">
 							</c:when>
 							<c:otherwise>
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${vo.pic}" width="48px" height="48px" style="position: relative; border-radius: 25px;">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=<c:out value="${vo.pic}" />" width="48px" height="48px" style="position: relative; border-radius: 25px;">
 							</c:otherwise>
 						</c:choose>
 					</p>
 					<div style="float:left;margin:1px 8px">
-						<span class="name" style="float:left">${vo.writerName}</span>
-						<span class="team" style="float:left">${vo.deptName}</span>
-						<span class="date" style="float:left">${vo.writeDate}</span>
+						<span class="name" style="float:left"><c:out value="${vo.writerName}" /></span>
+						<span class="team" style="float:left"><c:out value="${vo.deptName}" /></span>
+						<span class="date" style="float:left"><c:out value="${vo.writeDate}" /></span>
 					</div>
 				</div>	
 				<div class="ladderGame_info" style="float:right">
@@ -837,7 +837,7 @@
 					<ul class="edit">
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_list.png" width="45px;" height="45px;" id="toList" onmouseover="this.src='/images/ezLadder/icon_list_hover.png'" onmouseout="this.src='/images/ezLadder/icon_list.png'" title="<spring:message code='ezLadder.t083'/>"></li>
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" onmouseover="this.src='/images/ezLadder/icon_reuse_hover.png'" onmouseout="this.src='/images/ezLadder/icon_reuse.png'" title="<spring:message code='ezLadder.t082'/>"></li>
-						<c:if test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" onmouseover="this.src='/images/ezLadder/icon_posDelete_hover.png'" onmouseout="this.src='/images/ezLadder/icon_posDelete.png'" title="<spring:message code='ezLadder.t053'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:if>
+						<c:if test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" onmouseover="this.src='/images/ezLadder/icon_posDelete_hover.png'" onmouseout="this.src='/images/ezLadder/icon_posDelete.png'" title="<spring:message code='ezLadder.t053'/>" width="45px;" height="45px;" onclick="deleteLadder(<c:out value="${vo.ladderId}" />)"></li></c:if>
 					</ul>
 				</div>
 			</div>
@@ -870,7 +870,7 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
+											<a href="#" onclick="start(<c:out value="${vo.ladderId}" />); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>
@@ -920,7 +920,7 @@
 									<c:forEach var="line" items="${list}">
 										<li>
 											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
-												<span style="white-space: nowrap;">${line.item}</span>
+												<span style="white-space: nowrap;"><c:out value="${line.item}" /></span>
 											</div>
 										</li>
 									</c:forEach>

@@ -2152,6 +2152,7 @@
 				TBL_CIRCULAR
 			SET
 				status = '1'
+				endDate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
 			WHERE 
 				circularid = #circularID#
 			AND

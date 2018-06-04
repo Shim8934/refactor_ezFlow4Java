@@ -2541,5 +2541,28 @@
 			b.parentuid = #parentUID#
 	</select>
 	
+	<select id="EzPortalDAO.getMainMenuItemUIDList" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
+		select
+			b.UID_,
+			b.LINKURL
+		from
+			tbl_topmenu_general a
+		join
+			tbl_menuitem_items_menuitems b
+		on
+			a.tenant_id = b.tenant_id
+		and
+			a.UID_ = b.OWNERPAGEID
+		where
+			a.tenant_id = #tenantID#
+		and
+			a.companyid = #companyID#
+		and
+			a.UID_ = #topMenuID#			
+		and
+			a.lang = #lang#
+		and
+			b.parentuid = #parentUID#
+	</select>
 </sqlMap>
 

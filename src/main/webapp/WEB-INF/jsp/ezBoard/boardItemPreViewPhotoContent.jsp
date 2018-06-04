@@ -638,7 +638,7 @@
 			            <td style="width:100px; padding-left:50px; text-align:center">
 			                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
 			            </td>
-			            <td style="padding-left:20px">
+			            <td style="padding-left:22px">
 			                <table id="imagetable" style="text-align:center; border:0px;">
 			                    <tr>  
 			                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center" id="imageTD">
@@ -667,7 +667,7 @@
 		    </tr>
 		    <tr>
 		        <td>
-					<div style="background:#f8f8fa; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
+					<div style="background:#f8f8fa; border:1px solid #ddd; border-left:0px; border-top:0px; height:70px; text-align:center; padding-top:27px;">
 		            <table border="0">
 		                <tr>
 		                    <td style="width:30px; padding-left:14px;padding-right:2px;padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
