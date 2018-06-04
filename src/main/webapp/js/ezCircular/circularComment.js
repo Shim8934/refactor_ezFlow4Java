@@ -89,8 +89,6 @@ function getCircularComment() {
 				if(status == 0 && (option == 1 || option == 3)) {
 					var writer = $(".circularUser:first");
 					showEdit(writer);
-					//var circularComment = $(".circularCommentEdit");
-					//circularComment.find("textarea")[0].placeholder = strLang26;
 				}
 				
 				//2018-04-11 김보미 검색결과가 없을경우
@@ -156,19 +154,23 @@ function showEdit(obj) {
 	} else {
 		$(".circularCommentEdit").remove();
 		
-		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='border:1px solid #e2e2e2; padding:10px'>";
-		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:105%;height:35px;resize:none;overflow:auto;'></textarea></td>";
+		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='border:0px solid #e2e2e2; padding:10px'>";
+		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:105%;height:35px;resize:none;overflow:auto;vertical-align:middle;'></textarea></td>";
 		circularEdit += "<td style='background-color:#ececec; text-align:center;'><a class='imgbtn' style='margin-left:47px;padding-left:2px;'>&nbsp;<span onclick='editCircularComment(this);' style='padding-right:3px;'>" + strLang3 + "</span>&nbsp;</a><br/><div style='margin-left:35px;'><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></div></td>";
 		circularEdit += "</tr>";
 		
 		$(obj).closest("tr").after(circularEdit);
 		
-		// 2018-05-31 김민성 - 회람 상세정보 > 의견목록 작성자 의견 클릭시 placeholder 추가
+		// 2018-05-31 김민성 - 회람 상세정보 > 의견목록 의견 클릭시 placeholder 추가
 		var writer = $(".circularUser:first").attr("circularuserid");
 		
 		if(writer == circularUserID) {
 			var circularComment = $(".circularCommentEdit");
 			circularComment.find("textarea")[0].placeholder = strLang26;
+		}
+		else {
+			var circularComment = $(".circularCommentEdit");
+			circularComment.find("textarea")[0].placeholder = strLang27;
 		}
 	}
 }
