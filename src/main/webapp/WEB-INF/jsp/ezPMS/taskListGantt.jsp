@@ -331,21 +331,124 @@
 	   		}
 	   		
 	   		function ganttChartModifyFunc(){
-	   			GanttMaster.prototype.taskIsChanged = function () {
-	   			  var master = this;
-	   			  this.element.stopTime("gnnttaskIsChanged");
-	   			  this.element.oneTime(50, "gnnttaskIsChanged", function () {
-	   			    master.redraw();
-	   			    master.element.trigger("gantt.redrawCompleted");
-	   			  });
-	   			  test();
-	   			  console.log(this);
+	   			//기간 변경
+	   			GanttMaster.prototype.changeTaskDates = function (task, start, end) {
+	   			  var startDate = dateToYYYYMMDD(start);
+	   			  var endDate = dateToYYYYMMDD(end);
+	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
+	   			  var projectId = task.id.substring(1, task.id.indexOf("_"));
+	   			  var progress = task.progress;
+	   			  var fullId = task.id;
+	   			  
+	   			  if (end.getDay() == 6) {
+	   				var time = new Date(end.getTime() + (2 * 24 * 60 * 60 * 1000));
+					endDate = dateToYYYYMMDD(time);
+					
+	   			  } else if (end.getDay() == 0) {
+		   			var time = new Date(end.getTime() + (1 * 24 * 60 * 60 * 1000));
+		   			endDate = dateToYYYYMMDD(time);	
+	   			  }
+	   			  
+	   			  changeDate(fullId, taskId, projectId, startDate, endDate, progress);
+	   			  return task.setPeriod(start, end);
+	   			};
+	   			
+	   			//기간은 그대로, 날짜만 이동
+	   			GanttMaster.prototype.moveTask = function (task, newStart) {
+	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
+	   			  var projectId = task.id.substring(1, task.id.indexOf("_"));
+	   			  var startDate = dateToYYYYMMDD(newStart);
+	   			  
+	   			  var time = new Date(newStart.getTime() + ((task.duration - 1) * 24 * 60 * 60 * 1000));
+	   			  var endDate = dateToYYYYMMDD(time);
+	   			  
+	   			  changeDate(task.id, taskId, projectId, startDate, endDate, task.progress);
+	   			  return task.moveTo(newStart, true,true);
+	   			};
+	   			
+	   			//선행작업 지정
+	   			GanttMaster.prototype.changeTaskDeps = function (task) {
+	   			  console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
+	   			  var preTask = ge.tasks[task.depends - 1];	   			  
+	   			  
+	   			  var startDate = dateToYYYYMMDD(new Date(preTask.end + (1 * 24 * 60 * 60 * 1000)));
+	   			  var endDate = dateToYYYYMMDD(new Date(preTask.end + (task.duration * 24 * 60 * 60 * 1000)));
+	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
+	   			  var preTaskRowIndex = task.depends;
+	   			  var progress = task.progress;
+	   			var projectId = task.id.substring(1, task.id.indexOf("_"));
+	   			
+	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress);
+	   			  
+	   			  return task.moveTo(task.start,false,true);
 	   			};
 	   		}
 	   		
-	   		function test(){
-// 	   			alert("ttttttttttttttttt");
+	   		function addPreTaskRel (projectId, taskId, preTaskRowIndex, startDate, endDate, progress) {
+	   			var data = {
+	   					projectId : projectId,
+	   					taskId : taskId,
+	   					preTaskRowIndex : preTaskRowIndex,
+	   					planStartDate : startDate,
+	   					planEndDate : endDate,
+	   					realProgress : progress
+	   			}
+	   			
+	   			$.ajax({
+	   				type : "POST",
+	   				dataType: "text",
+	   				contentType: "application/json; charset=UTF-8",
+	   				url : "/ezPMS/addPreTaskRel.do",
+	   				data :JSON.stringify(data),
+	   				success : function(result) {
+	   					if (result == "permitted") {
+	   						alert("상태가 변경되었습니다.");
+	   					} else {
+	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
+	   					}
+	   				},
+	   				error : function(jqXHR, textStatus, errorThrown) {
+	   					alert ("에러발생 \n" + textStatus);
+	   				}
+	   				});
 	   		}
+	   		
+	   		function changeDate(fullId, taskId, projectId, startDate, endDate, progress) {
+	   			var data = {
+	   					  taskId : taskId,
+	   					  projectId : projectId,
+	   					  planStartDate : startDate,
+	   					  planEndDate : endDate,
+	   					  realProgress : progress
+	   			  } 
+	   			  
+	   			$.ajax({
+	   				type : "POST",
+	   				dataType: "text",
+	   				contentType: "application/json; charset=UTF-8",
+	   				url : "/ezPMS/updateTaskDate.do",
+	   				data :JSON.stringify(data),
+	   				success : function(result) {
+	   					if (result == "permitted") {
+	   						alert("상태가 변경되었습니다.");
+	   					} else {
+	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
+	   					}
+	   				},
+	   				error : function(jqXHR, textStatus, errorThrown) {
+	   					alert ("에러발생 \n" + textStatus);
+	   				}
+	   				});
+	   		}
+	   		
+	   		function dateToYYYYMMDD(date){
+	   		    function pad(num) {
+	   		        num = num + '';
+	   		        return num.length < 2 ? '0' + num : num;
+	   		    }
+	   		    return date.getFullYear() + '-' + pad(date.getMonth()+1) + '-' + pad(date.getDate());
+	   		}
+
 	   		
 	   		function preProcess(){
 	   			//간트 차트 테이블 날짜 형식 세팅. i18nJs.js 의 내용에 덮어 씌움.

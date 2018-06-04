@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
@@ -1328,7 +1329,7 @@ public class EzPMSGWController {
 			return result;
 		}
 	
-	
+		//사용자의 프로젝트 권한 체크
 		@SuppressWarnings("unchecked")
 		@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/users/{userId}/role", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 		public JSONObject getUserProjectRole(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
@@ -1354,6 +1355,70 @@ public class EzPMSGWController {
 			
 			
 			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/role] ended.");
+			return result;
+		}
+		
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/preTasks/{rowIndexId}")
+		public JSONObject addPreTaskRel(@PathVariable long taskId, @PathVariable int rowIndexId, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/preTasks/" + rowIndexId + "] started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try {
+				String userId = request.getParameter("userId");
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+				int tenantId = info.getTenantId();
+				String roleCheck = "";
+				long projectId = Long.parseLong(request.getParameter("projectId"));
+				
+				//권한 체크
+				//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
+				int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+				if (userProjectRole == 1) {
+					roleCheck = "permitted";
+				} else if (userProjectRole == 3) {
+					//프로젝트 조회자는 열람권한밖에 없음
+					roleCheck = "rejected";
+				} else {
+					//2. task의 담당자인지 확인
+					String userTaskRole = ezPMSService.getUserTaskRole(userId, tenantId, taskId);
+							
+					if (userTaskRole == null) {
+						roleCheck = "rejected";
+					} else {
+						roleCheck = "permitted";
+					}
+				}
+				
+				if (roleCheck.equals("permitted")) {
+					//프로젝트 task 시작날짜와 끝날짜 update
+					ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+					projectTaskVO.setTenantId(tenantId);
+					projectTaskVO.setTaskId(taskId);
+					projectTaskVO.setProjectId(projectId);
+					projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
+					projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+					projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+					
+					ezPMSService.updateTaskStatus(projectTaskVO);
+					
+					//preTaskRel 테이블에 데이터 추가
+					ezPMSService.addPreTaskRel(taskId, rowIndexId, projectId, tenantId);
+				}
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", roleCheck);
+			} catch (Exception e) {
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+			}
+			
+			
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/preTasks/" + rowIndexId + "] ended.");
 			return result;
 		}
 }

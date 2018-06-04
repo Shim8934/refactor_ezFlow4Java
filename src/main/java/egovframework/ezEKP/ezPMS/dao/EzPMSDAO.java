@@ -388,4 +388,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void deleteGroup(Map<String, Object> map) {
 		update("EzPMSDAO.deleteGroup", map);		
 	}
+
+	public void addPreTaskRel(Map<String, Object> map) {
+		insert ("EzPMSDAO.addPreTaskRel", map);
+		
+	}
 }

@@ -733,7 +733,7 @@ public class EzPMSGWController2 {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId}/status", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject updateTaskStatus(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject updateTaskStatus(@PathVariable long taskId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -742,23 +742,46 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
+			String roleCheck = "";
+			long projectId = Long.parseLong(request.getParameter("projectId"));
 			
-			ProjectTaskVO projectTaskVO = new ProjectTaskVO();
-			projectTaskVO.setTenantId(tenantId);
-			projectTaskVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
-			projectTaskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
-			projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
-			projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
-			projectTaskVO.setRealStartDate(request.getParameter("realStartDate"));
-			projectTaskVO.setRealEndDate(request.getParameter("realEndDate"));
-			projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
-			projectTaskVO.setStatus(request.getParameter("status"));
+			//권한 체크
+			//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
+			int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+			if (userProjectRole == 1) {
+				roleCheck = "permitted";
+			} else if (userProjectRole == 3) {
+				//프로젝트 조회자는 열람권한밖에 없음
+				roleCheck = "rejected";
+			} else {
+				//2. task의 담당자인지 확인
+				String userTaskRole = ezPMSService.getUserTaskRole(userId, tenantId, taskId);
+						
+				if (userTaskRole == null) {
+					roleCheck = "rejected";
+				} else {
+					roleCheck = "permitted";
+				}
+			}
 			
-			ezPMSService.updateTaskStatus(projectTaskVO);
+			if (roleCheck.equals("permitted")) {
+				ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+				projectTaskVO.setTenantId(tenantId);
+				projectTaskVO.setTaskId(taskId);
+				projectTaskVO.setProjectId(projectId);
+				projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
+				projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+				projectTaskVO.setRealStartDate(request.getParameter("realStartDate"));
+				projectTaskVO.setRealEndDate(request.getParameter("realEndDate"));
+				projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+				projectTaskVO.setStatus(request.getParameter("status"));
+				
+				ezPMSService.updateTaskStatus(projectTaskVO);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");		
+			result.put("data", roleCheck);		
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

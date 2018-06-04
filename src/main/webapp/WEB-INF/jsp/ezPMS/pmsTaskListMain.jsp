@@ -112,14 +112,14 @@
 			success : function(contentList) {
 				$("#contentList").html(contentList);
 				//찾아 준 후 초기화
-				$("#searchByName").val("");
+				$("#searchByTaskName").val("");
 				$("#searchByUser").val("");
 				$("#Sdatepicker").val("");
 				$("#Edatepicker").val("");
 				$("#searchByGroupName").val("");
 				$("#searchByOverview").val("");
 				
-				searchByName = "";
+				searchByTaskName = "";
 				searchByUser = "";
 				searchByPlanStartDate = "";
 				searchByPlanEndDate = "";
@@ -317,7 +317,7 @@
 	}
 	
 	function searchTask() {
-		searchByName = $("#searchByName").val();
+		searchByTaskName = $("#searchByTaskName").val();
 		searchByUser = $("#searchByUser").val();
 		searchByPlanStartDate = $("#Sdatepicker").val();
 		searchByPlanEndDate = $("#Edatepicker").val();

@@ -27,7 +27,7 @@
 }
 </style>
 <script>
-var projectName = "${project.projectName}";
+var projectName = "<c:out value='${project.projectName}'/>";
 var writerName = "${userName}";
 var weightInput = "${project.weightInput}";
 var planStartDate = "${project.planStartDate}";
