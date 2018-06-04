@@ -15,18 +15,18 @@
 		<script type="text/javascript" src="/js/ezLadder/ladderList.js"></script>
 		
 		<script type="text/javascript">
-			var currPage = ${currPage};
+			var currPage = <c:out value="${currPage}" />;
 			var pageChange = 1;
-			var totalPage = ${totalPage};
-			var totalLadder = ${totalLadder};
+			var totalPage = <c:out value="${totalPage}" />;
+			var totalLadder = <c:out value="${totalLadder}" />;
 			var blockSize = 5;
 			var mode = "";
-			var modeCheck = "${mode}";
-			var searchSelect = "${searchSelect}";
-			var searchInput = "${searchInput}";
+			var modeCheck = "<c:out value='${mode}' />";
+			var searchSelect = "<c:out value='${searchSelect}' />";
+			var searchInput = "<c:out value='${searchInput}' />";
 			var searchOption = "off";
 			var allData = [];
-			var id = "${id}";
+			var id = "<c:out value='${id}' />";
 			var back = "none";
 			var retVal;
 			var retFunc;
