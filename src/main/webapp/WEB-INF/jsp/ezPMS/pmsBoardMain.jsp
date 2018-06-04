@@ -12,6 +12,14 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
+
+<!-- time picker-->
+<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script>
  	var projectId = ${projectId};
  	var projectName = null;
@@ -23,6 +31,16 @@
 	var itemIds;
 	var orderWhat = "";
 	var orderHow = "";
+	
+	//검색을 위한 variables
+	var searchByTaskName = "";
+	var searchByUser = "";
+	var searchByStartDate = "";
+	var searchByEndDate = "";
+	var searchByTitle = "";
+	var searchByOverview = "";
+	var searchByContent = "";
+	var searchByChildren = "";
 	
 	$(document).ready(function() {
 		
@@ -47,6 +65,17 @@
 				taskId = null;
 			}
 			currentPage = 1;
+			
+			// 트리 클릭 시, 검색 조건 초기 화
+			searchByTaskName = "";
+			searchByUser = "";
+			searchByStartDate = ""; 
+			searchByEndDate = "";
+			searchByTitle = "";
+			searchByOverview = "";
+			searchByContent = "";
+			searchByChildren = "";
+			
 			getBoardList();
 		});
 		
@@ -82,7 +111,16 @@
 			currentPage : currentPage,
 			//내용 header 정렬
 			orderWhat : orderWhat,
-			orderHow : orderHow
+			orderHow : orderHow,
+			//검색
+			searchByTaskName : searchByTaskName,
+			searchByUser : searchByUser,
+			searchByStartDate : searchByStartDate,
+			searchByEndDate : searchByEndDate,
+			searchByTitle : searchByTitle,
+			searchByOverview : searchByOverview,
+			searchByContent : searchByContent,
+			searchByChildren : searchByChildren
 		}
 		
 		$.ajax({
@@ -93,6 +131,16 @@
 			url : "/ezPMS/getBoardList.do",
 			success : function(contentList) {
 				$("#contentList").html(contentList);
+				
+				//찾아 준 후 초기화
+				$("#searchByTaskName").val("");
+				$("#searchByUser").val("");
+				$("#Sdatepicker").val("");
+				$("#Edatepicker").val("");
+				$("#searchByTitle").val("");
+				$("#searchByOverview").val("");
+				$("#searchByContent").val("");
+				$("#searchByChildren").removeProp("checked","true");
 				
 				setInitOrder();
 			}	

@@ -131,9 +131,9 @@ public interface EzPMSService {
 	
 	public void deleteBoard(int tenantId, JSONObject jsonParam) throws Exception;
 	
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position, String orderWhat, String orderHow);
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position, String orderWhat, String orderHow, String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, String searchByContent, String searchByChildren);
 	
-	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId);
+	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId, String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, String searchByContent, String searchByChildren);
 	
 	public ProjectBoardVO getBoardDetail(int tenantId, Map<String, Object> param);
 

@@ -1442,7 +1442,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position, String orderWhat, String orderHow) {
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position, String orderWhat, String orderHow, String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, String searchByContent, String searchByChildren) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1455,6 +1455,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("lang", lang);
 		map.put("position", position);
 		map.put("orderHow", orderHow);
+		
+		map.put("searchByTaskName", searchByTaskName);
+		map.put("searchByUser", searchByUser);
+		map.put("searchByStartDate", searchByStartDate);
+		map.put("searchByEndDate", searchByEndDate);
+		map.put("searchByTitle", searchByTitle);
+		map.put("searchByOverview", searchByOverview);
+		map.put("searchByContent", searchByContent);
+		map.put("searchByChildren", searchByChildren);
 		
 		if (orderWhat != null) {
 			if(orderWhat.equals("ITEM_ID")) {
@@ -1495,7 +1504,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId) {
+	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId, String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, String searchByContent, String searchByChildren) {
 		LOGGER.debug("[SERVICE] getBoardListCount Started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1503,6 +1512,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
 		map.put("taskId", taskId);
+		
+		map.put("searchByTaskName", searchByTaskName);
+		map.put("searchByUser", searchByUser);
+		map.put("searchByStartDate", searchByStartDate);
+		map.put("searchByEndDate", searchByEndDate);
+		map.put("searchByTitle", searchByTitle);
+		map.put("searchByOverview", searchByOverview);
+		map.put("searchByContent", searchByContent);
+		map.put("searchByChildren", searchByChildren);
 		
 		LOGGER.debug("[SERVICE] getBoardListCount Ended");
 		return ezPMSDAO.getBoardListCount(map);

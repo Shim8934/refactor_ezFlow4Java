@@ -1530,6 +1530,32 @@
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
 			AND B.del_status = 0
+		<isNotEmpty property="searchByTaskName">
+			AND IFNULL(T.task_name, G.group_name) LIKE CONCAT('%',#searchByTaskName#,'%') 
+		</isNotEmpty>
+		<isNotEmpty property="searchByUser">
+			AND B.writer_name$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByTitle">
+			AND B.title LIKE CONCAT('%',#searchByTitle#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND B.write_overview LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND B.write_date >= #searchByStartDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND B.write_date <= #searchByEndDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByContent">
+			AND B.write_content LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+		
 			ORDER BY 
 		<isEmpty property="position">
 			CASE B.write_type 
@@ -1553,6 +1579,8 @@
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id
+			LEFT JOIN tbl_pms_task T
+			ON B.task_id = T.task_id
 		]]>
 		<isEqual property="groupId" compareValue="0">	
 			WHERE G.project_id = #projectId#
@@ -1569,6 +1597,31 @@
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
 			AND B.del_status = 0
+		<isNotEmpty property="searchByTaskName">
+			AND IFNULL(T.task_name, G.group_name) LIKE CONCAT('%',#searchByTaskName#,'%') 
+		</isNotEmpty>
+		<isNotEmpty property="searchByUser">
+			AND B.writer_name LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByTitle">
+			AND B.title LIKE CONCAT('%',#searchByTitle#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND B.write_overview LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND B.write_date >= #searchByStartDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND B.write_date <= #searchByEndDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByContent">
+			AND B.write_content LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
 	</select>
 
 	<select id="EzPMSDAO.getBoardDetail" parameterClass="map" resultMap="projectBoardVOForDetail">
