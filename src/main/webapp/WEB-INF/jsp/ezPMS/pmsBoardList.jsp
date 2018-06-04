@@ -10,7 +10,7 @@
 	$(function() {
 		$("#divList").css("height", (currentHeight - 100) + "px");
 		
-		$("tbody tr td:not(.checkbox)").on("click", function(evt) {
+		$(".mainlist tbody tr td:not(.checkbox)").on("click", function(evt) {
 			var checkbox = $(this).parent().children("td:eq(0)").children();
 			$('input:checkbox[name="boardCheckbox"]').each(function() {
 				$(this).removeProp("checked","true");
@@ -21,12 +21,14 @@
 			selectTR(checkbox);
 		});
 		
-		$("tbody tr").on("dblclick", function() {
+		$(".mainlist tbody tr").on("dblclick", function() {
 			goBoardDetail(this);
 		});
 		
 		$("tr[data-writetype=1], tr[data-writetype=3]").addClass("emergency");
 		$("tr[data-readornot='false']").addClass("noView");
+		
+		getDatePicker();
 	})
 	
 	// 체크박스 전체선택 혹은 해제
@@ -93,6 +95,102 @@
 		
 		DivPopUpShow(320, 320, "/ezPMS/goMoveBoards.do?projectId=" + projectId + "&onlyGroup=false");
 	}
+	
+	function getDatePicker() {
+		$("#Sdatepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true,
+			beforeShow: function (input) {
+				var i_offset = $(input).offset();
+				setTimeout(function () {
+					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+				})
+			}
+		});
+
+		$("#Edatepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true,
+			beforeShow: function (input) {
+				var i_offset = $(input).offset();
+				setTimeout(function () {
+					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+				})
+			}
+		});
+		
+		var SDate = new Date();
+		var EDate = new Date();
+
+		$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		$("#Sdatepicker").datepicker('setDate', "");
+		
+		$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		$("#Edatepicker").datepicker('setDate', "");
+		
+		$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+				closeText: "<spring:message code='main.t3' />",
+				prevText: "<spring:message code='main.t0604' />",
+				nextText: "<spring:message code='main.t0605' />",
+				currentText: "<spring:message code='main.t0606' />",
+				monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+				             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+				             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+				             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+				monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+				                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+				                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+				                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+				dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+				           "<spring:message code='main.t0627' />"],
+				dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				                "<spring:message code='main.t0627' />"],
+				dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				              "<spring:message code='main.t0627' />"],
+				weekHeader: "Wk",
+				dateFormat: "yy-mm-dd",
+				firstDay: 0,
+				isRTL: false,
+				duration: 200,
+				showAnim: "show",
+				showMonthAfterYear: true
+		  };
+		  
+		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+	}
+	
+	function searchBoard() {
+		searchByTaskName = $("#searchByTaskName").val();
+		searchByUser = $("#searchByUser").val();
+		searchByStartDate = $("#Sdatepicker").val();
+		searchByEndDate = $("#Edatepicker").val();
+		searchByTitle = $("#searchByTitle").val();
+		searchByOverview = $("#searchByOverview").val();
+		searchByContent = $("#searchByContent").val();
+		
+		if($("#searchByChildren").is(":checked")) {
+			searchByChildren = true;
+		} else {
+			searchByChildren = "";
+		}
+
+		// 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
+		taskId = "";
+		groupId = "";
+		
+		getBoardList();
+	}
 </script>
 
 <style>
@@ -108,7 +206,7 @@
 		color: red;
 	}
 	
-	table.mainlist th, td {
+	table.mainlist th, table.mainlist td {
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
@@ -123,8 +221,41 @@
 			<li class="off"><span onclick="deleteBoards()">삭제</span></li>
 			<li class="off"><span onclick="goMoveBoards()">이동</span></li>
 			<li class="off"><span onclick="location.reload()">새로고침</span></li>
-			<li class="off"><span onclick="">검색</span></li>
+			<li class="off"><span onclick="showSearchDiv()">검색 <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></li>
 		</ul>
+	</div>
+	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
+		<table class="content" style="width:80%; margin-bottom:5px;">
+			<tbody>
+				<tr>
+					<th>업무명 </th>
+					<td style="width:50%">
+						<input type="text" id="searchByTaskName" style="width:50%; margin-right:5px;">
+						<input type="checkbox" id="searchByChildren" /><span>하위 작업 검색</span>
+					</td>
+					<th>게시자</th>
+					<td><input type="text" style="width:100%" id="searchByUser"></td>
+				</tr>
+				<tr>
+					<th>제 목 </th>
+					<td style="width:50%"><input type="text" style="width:100%" id="searchByTitle"></td>
+					<th>내 용</th>
+					<td style="width:50%"><input type="text" style="width:100%" id="searchByContent"></td>
+				</tr>
+				<tr>
+					<th>게시개요</th>
+					<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
+				</tr>
+				<tr>
+					<th>검색기간 </th>
+					<td colspan="3">
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+						<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<a class="imgbtn" onclick="searchBoard()" style="margin-left:40%;"><span>검색</span></a>
 	</div>
 	<table class="mainlist" style="width: 100%;">
 		<thead id="tableHeader">
