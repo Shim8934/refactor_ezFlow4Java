@@ -172,10 +172,10 @@
 				A.IP,
 				A.DATE_TYPE,
 				A.TYPE_ID,
-				CASE WHEN #primary# = 1 THEN B.TYPE_NAME ELSE B.TYPE_NAME2 END AS TYPE_NAME,
+				B.TYPE_NAME$lang$ AS TYPE_NAME,
 				B.IMG_PATH,
-				CASE WHEN #primary# = 1 THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END AS WRITER_NAME,
-				CASE WHEN #primary# = 1 THEN C.DESCRIPTION ELSE C.DESCRIPTION2 END AS WRITER_DEPT_NAME
+				C.DISPLAYNAME$lang$ AS WRITER_NAME,
+				C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
 			FROM   
 				tbl_attitude A 
 			INNER JOIN 
@@ -409,32 +409,17 @@
 		</iterate>
 		<isNotEmpty property="apprUserName" prepend="and">
 			<isNotEmpty property="apprUserName" >
-				<isEqual property="primary" compareValue="1" >
-						A.APPR_USER_NAME LIKE CONCAT('%', #apprUserName#,'%')
-				</isEqual>
-				<isNotEqual property="primary" compareValue="1">
-						A.APPR_USER_NAME2 LIKE CONCAT('%', #apprUserName#,'%')
-				</isNotEqual>
+				A.APPR_USER_NAME$lang$ LIKE CONCAT('%', #apprUserName#,'%')
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerName" prepend="and">
 			<isNotEmpty property="writerName" >
-				<isEqual property="primary" compareValue="1" >
-						A.WRITER_NAME LIKE CONCAT('%', #writerName#,'%')
-				</isEqual>
-				<isNotEqual property="primary" compareValue="1">
-						A.WRITER_NAME2 LIKE CONCAT('%', #writerName#,'%')
-				</isNotEqual>
+				A.WRITER_NAME$lang$ LIKE CONCAT('%', #writerName#,'%')
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerDeptName" prepend="and">
 			<isNotEmpty property="writerDeptName" >
-				<isEqual property="primary" compareValue="1" >
-						A.WRITER_DEPT_NAME LIKE CONCAT('%', #writerDeptName#,'%')
-				</isEqual>
-				<isNotEqual property="primary" compareValue="1">
-						A.WRITER_DEPT_NAME2 LIKE CONCAT('%', #writerDeptName#,'%')
-				</isNotEqual>
+				A.WRITER_DEPT_NAME$lang$ LIKE CONCAT('%', #writerDeptName#,'%')
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
@@ -476,12 +461,12 @@
 			SELECT
 					a.attitude_id as ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-					CASE WHEN #primary# = 1 THEN a.appr_user_name ELSE a.appr_user_name2 END as APPR_USER_NAME,
+					a.appr_user_name$lang$ as APPR_USER_NAME,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS,
-					CASE WHEN #primary# = 1 THEN a.writer_name ELSE a.writer_name2 END as WRITER_NAME,
-					CASE WHEN #primary# = 1 THEN a.writer_dept_name ELSE a.writer_dept_name2 END as WRITER_DEPT_NAME,
-					APPL_CNT,
+					a.writer_name$lang$ as WRITER_NAME,
+					a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
+					a.appl_cnt AS APPL_CNT,
 					a.writer_id as WRITER_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.appl_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') as APPL_DATE
 			FROM 
@@ -500,34 +485,6 @@
 				a.TENANT_ID = #tenantId#
 		]]>
 		<include refid="ezAttitudeDAO.searchQuery"/>
-	</select>
-	
-	<select id="ezAttitudeAdminDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationVO">
-		<![CDATA[
-			SELECT
-					a.attitude_id as ATTITUDE_ID,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-					a.appr_user_name as APPR_USER_NAME,
-					b.start_date as START_DATE,
-					a.appr_status as APPR_STATUS,
-					a.writer_name as WRITER_NAME,
-					a.writer_dept_name as WRITER_DEPT_NAME,
-					APPL_CNT,
-					a.writer_id as WRITER_ID,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.appl_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') as APPL_DATE
-			FROM 
-				jmocha.tbl_attitude_modappl a 
-			inner 
-				join tbl_attitude b 
-			on 
-				a.ATTITUDE_ID = b.ATTITUDE_ID
-			where 
-				a.COMPANY_ID = #companyId#
-			and 
-				a.TENANT_ID = #tenantId#
-			and
-				a.ATTITUDE_ID = #attModId#
-		]]>
 	</select>
 	
 	<select id="ezAttitudeDAO.attDetail" parameterClass="Map" resultMap="simpleAtt">
@@ -551,17 +508,17 @@
 			SELECT
 					a.attitude_id AS ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-					CASE WHEN #primary# = 1 THEN a.appr_user_name ELSE a.appr_user_name2 END AS APPR_USER_NAME,
+					a.appr_user_name$lang$ AS APPR_USER_NAME,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status AS APPR_STATUS,
 					c.type_id AS TYPE_ID,
-					CASE WHEN #primary# = 1 THEN c.type_name ELSE c.type_name2 END AS TYPE_NAME,
+					c.type_name$lang$ AS TYPE_NAME,
 					a.content AS CONTENT,
 					a.writer_id AS WRITER_ID,
 					a.writer_dept_id AS WRITER_DEPT_ID,
-					CASE WHEN #primary# = 1 THEN a.writer_name ELSE a.writer_name2 END AS WRITER_NAME,
-					CASE WHEN #primary# = 1 THEN a.writer_title ELSE a.writer_title2 END AS WRITER_TITLE,
-					CASE WHEN #primary# = 1 THEN a.writer_dept_name ELSE a.writer_dept_name2 END AS WRITER_DEPT_NAME
+					a.writer_name$lang$ AS WRITER_NAME,
+					a.writer_title$lang$ AS WRITER_TITLE,
+					a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
 			FROM 
 				jmocha.tbl_attitude_modappl a
 			inner 
@@ -659,7 +616,7 @@
 	<select id="ezAttitudeDAO.getUsersModiyAttCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-					count(*)
+				count(*)
 			FROM 
 				jmocha.tbl_attitude_modappl a 
 			inner 
@@ -1047,10 +1004,10 @@
 			A.IP,
 			A.DATE_TYPE,
 			A.TYPE_ID,
-			CASE WHEN #primary# = 1 THEN B.TYPE_NAME ELSE B.TYPE_NAME2 END AS TYPE_NAME,
+			B.TYPE_NAME$lang$ AS TYPE_NAME,
 			B.IMG_PATH,
-		    CASE WHEN #primary# = 1 THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END AS DISPLAYNAME,
-		    CASE WHEN #primary# = 1 THEN C.DESCRIPTION ELSE C.DESCRIPTION2 END AS DESCRIPTION
+		    C.DISPLAYNAME$lang$ AS DISPLAYNAME,
+		    C.DESCRIPTION$lang$ AS DESCRIPTION
 		FROM   
 			tbl_attitude A 
 		INNER JOIN

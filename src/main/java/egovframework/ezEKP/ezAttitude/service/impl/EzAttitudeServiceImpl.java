@@ -61,14 +61,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private EzOrganDAO ezOrganDAO;
 	
 	@Override
-	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String primary, int tenantId) throws Exception {
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("attitudeId", attitudeId);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
-		map.put("primary", primary);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
 		map.put("tenantId", tenantId);
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
@@ -159,7 +162,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh,
-		String typeId, String startDate, String endDate, String offset, String primary, String deptFlag, int tenantId) throws Exception {
+		String typeId, String startDate, String endDate, String offset, String deptFlag, String lang, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList started");
 		
 		Map<String, Object> map = new HashMap<String,Object>();
@@ -180,7 +183,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
-		map.put("primary", primary);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		if (!typeId.trim().equals("")){
@@ -619,7 +625,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
-			String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String primary, 
+			String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String lang, 
 			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String deptId, List<String> deptIdList) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
@@ -633,7 +639,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("apprUserName", apprUserName);
 		map.put("writerName", writerName);
 		map.put("writerDeptName", writerDeptName);
-		map.put("primary", primary);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
 		map.put("offset", offset);
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
@@ -680,10 +689,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public int getUsersModiyAttCount(String companyId, int tenantId,
-			String userId, String startDate, String endDate,
-			String apprUserName, String writerName , String writerDeptName,String primary, String offset, String type, String deptId, List<String> deptIdList,String adminFlag, String checkAdmin)
-			throws Exception {
+	public int getUsersModiyAttCount(String companyId, int tenantId, String userId, String startDate, String endDate,
+			String apprUserName, String writerName , String writerDeptName, String lang, String offset, String type, String deptId, List<String> deptIdList,String adminFlag, String checkAdmin) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -699,7 +706,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("apprUserName", apprUserName);
 		map.put("writerName", writerName);
 		map.put("writerDeptName", writerDeptName);
-		map.put("primary", primary);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
 		map.put("offset", offset);
 		map.put("type", type);
 		
@@ -798,7 +808,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public AttitudeApplicationVO attModAppDetail(String attModId, String offset, String applCnt, String primary, String companyId, int tenantId) throws Exception {
+	public AttitudeApplicationVO attModAppDetail(String attModId, String offset, String applCnt, String lang, String companyId, int tenantId) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -807,6 +817,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("attModId", attModId);
 		map.put("offset", offset);
 		map.put("applCnt", applCnt);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
 		
 		return ezAttitudeDAO.attModAppDetail(map);
 	}
