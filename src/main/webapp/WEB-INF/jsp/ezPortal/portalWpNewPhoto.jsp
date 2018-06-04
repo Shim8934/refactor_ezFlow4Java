@@ -167,15 +167,20 @@
 	        	getBoardList_NewPhoto();
 	    	}
 		    
+		    /* 2018-06-04 홍승비 - 포탈메인 포토게시판 포틀릿 > 게시물 읽기 창 사이즈 수정 */
 	    	function ItemRead_onclick(obj) {
 		        var ShowAdjacent = "";
 		        var pheight = window.screen.availHeight;
 	    	    var pwidth = window.screen.availWidth;
-	        	//var pTop = (pheight - 780) / 3;
-	        	var pTop = (pheight - 970) / 3;
+	        	var pTop = (pheight - 789) / 2;
 	        	var pLeft = (pwidth - 765) / 2;
+	    	    if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+	    	    	var height = 789;
+	    	    } else {
+	    	    	var height = 785;
+	    	    }
 
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 	    	
 	    	function Boardmore_btnClick() {
