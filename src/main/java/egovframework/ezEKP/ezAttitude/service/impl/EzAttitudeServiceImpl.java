@@ -306,10 +306,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				map.put("attModId", attitudeId);
 				map.put("offset", commonUtil.getMinuteUTC(offset));
 				
-				AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+				String apprStatus = ezAttitudeDAO.checkModApplStatus(map);
 				//가장 마지막에 신청한 근태수정신청내역이 신청 상태가 아닐 경우
-				if (aav != null) {
-					if (!aav.getApprStatus().equals("0")) {
+				if (apprStatus != null) {
+					if (!apprStatus.equals("0")) {
 						
 					} else {
 						//마지막에 신청한 근태수정신청이 신청상태인 경우
@@ -760,8 +760,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			} else if (modAppl == 2) {
 				map.put("modappl", "3");
 			}
-			AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
-			if (!aav.getApprStatus().equals("0")) {
+			String apprStatus = ezAttitudeDAO.checkModApplStatus(map);
+			if (!apprStatus.equals("0")) {
 				data = 0;
 				continue;
 			} else {
@@ -825,9 +825,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("changeDate", changeDate);
 		map.put("applDate", commonUtil.getTodayUTCTime(""));
 		
-		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+		String apprStatus = ezAttitudeDAO.checkModApplStatus(map);
 		
-		if (aav.getApprStatus().equals("0")) {
+		if (apprStatus.equals("0")) {
 			return ezAttitudeDAO.attModAppModify(map);
 		} else {
 			return 0;
@@ -877,12 +877,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		//신청된 항목이 존재 할 때
 		if (modAppl == 1 || modAppl == 2) {
-			//map.put("attModId", attitudeId);
-			//AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
-			//신청된 항목의 상태가 신청 상태 일 때는 추가 신청을 받지 않는다
-			//if (aav.getApprStatus().equals("0")) {
 			return "fail";
-			//}
 		}
 		
 		/*근태수정신청 저장*/
@@ -1403,9 +1398,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String typeId = "A01";
 		//승인, 반려 기록
 		
-		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+		String apprStatus = ezAttitudeDAO.checkModApplStatus(map);
 		
-		if (!aav.getApprStatus().equals("0")) {
+		if (!apprStatus.equals("0")) {
 			return;
 		}
 		
@@ -1595,13 +1590,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
 		String startTime = "-01 00:00:00";
 		
 		map.put("userId", userId);
 		map.put("deptId", deptId);
-		map.put("offsetMin", offsetMin);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("year", year);
 		map.put("startTime", startTime);
 		map.put("typeId", typeId);
@@ -1673,7 +1666,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
 		LOGGER.debug("getAttitudeHistoryList started");
 		
-		String offsetMin = commonUtil.getMinuteUTC(offset);
 		int limit = 0;
 		
 		if (pageNum != null && !pageNum.equals("")) {
@@ -1693,7 +1685,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("listSize", listSize);
-		map.put("offsetMin", offsetMin);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
@@ -1711,8 +1703,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String searchEndDate, String offset, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
 		LOGGER.debug("getAttitudeHistoryCount started.");
 		
-		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
 		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		
@@ -1723,7 +1713,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
 		map.put("deptId", deptId);
-		map.put("offsetMin", offsetMin);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("deptIdList", deptIdList);
@@ -1742,8 +1732,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String dateType, String offset, String companyId, int tenantId,
 			String adminId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		boolean isDefaultAtti = false;
 		
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
@@ -2239,13 +2227,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     		typeId = "A03,A08";
     	}
     	
-    	String[] typeIdArr = typeId.split(",");
     	if (startDate.equals("")) {
 			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
     	}
     	
     	Map<String,Object> map = new HashMap<String, Object>();
-    	map.put("typeIdArr", typeIdArr);
+    	map.put("typeIdArr", typeId.split(","));
     	map.put("writerId", writerId);
     	map.put("offsetMin", commonUtil.getMinuteUTC(offset));
     	map.put("companyId", companyId);

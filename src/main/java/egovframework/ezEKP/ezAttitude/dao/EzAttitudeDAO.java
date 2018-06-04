@@ -323,12 +323,16 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     }
 	
     @SuppressWarnings("unchecked")
-    private List<OrganDeptVO> attOrganSearchListForLocal(Map<String, Object> map) throws Exception{
+    private List<OrganDeptVO> attOrganSearchListForLocal(Map<String, Object> map) throws Exception {
         return (List<OrganDeptVO>) list("ezAttitudeDAO.attOrganSearchList", map);
     }
     
-    public List<OrganDeptVO> attOrganSearchList(Map<String, Object> map) throws Exception{
+    public List<OrganDeptVO> attOrganSearchList(Map<String, Object> map) throws Exception {
         return attOrganSearchListForLocal(map);
     }
 	
+    public String checkModApplStatus(Map<String, Object> map) throws Exception {
+    	return (String) select("ezAttitudeDAO.checkModApplStatus", map);
+    }
+    
 }

@@ -1832,4 +1832,30 @@
 			]]>
 	      </isEqual>
 	</select>
+	
+	<select id="ezAttitudeDAO.checkModApplStatus" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				appr_status as APPR_STATUS
+			FROM 
+				jmocha.tbl_attitude_modappl
+			where 
+				COMPANY_ID = #companyId#
+			and 
+				TENANT_ID = #tenantId#
+			and
+				ATTITUDE_ID = #attModId#
+		]]>
+		<!-- applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<isNotEmpty property="applCnt">
+			and
+				APPL_CNT = #applCnt#
+		</isNotEmpty>
+		<isEmpty property="applCnt">
+			order by
+				APPL_CNT DESC
+			limit 
+				1
+		</isEmpty>
+	</select>
 </sqlMap>
