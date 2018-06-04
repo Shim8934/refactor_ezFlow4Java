@@ -96,10 +96,10 @@ public class EzAttitudeGWController {
 
 			String offset = info.getOffSet();
 			if (deptFlag.equals("false")) {
-				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, info.getPrimary(), deptFlag, info.getTenantId());
+				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, deptFlag, info.getPrimary(), info.getTenantId());
 			} else {
 				// 관리하고 있는 전체 부서 목록을 받아서 dept in iterate를 돌린다.
-				resultList = ezAttitudeService.getAttitudeList("", selectedDeptID, "", typeId, startDate, endDate, offset, info.getPrimary(), deptFlag, info.getTenantId());
+				resultList = ezAttitudeService.getAttitudeList("", selectedDeptID, "", typeId, startDate, endDate, offset, deptFlag, info.getPrimary(), info.getTenantId());
 			}
 	         
 			result.put("status", "ok");
@@ -1628,7 +1628,10 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			List<AttitudeApplicationVO> data = ezAttitudeService.attModGetHistory(companyId, tenantId, userId, attModId, offset);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<AttitudeApplicationVO> data = ezAttitudeService.attModGetHistory(attModId, userId, offset, info.getPrimary(), companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

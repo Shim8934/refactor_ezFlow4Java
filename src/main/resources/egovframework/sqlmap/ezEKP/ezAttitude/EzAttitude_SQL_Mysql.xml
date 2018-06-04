@@ -506,19 +506,19 @@
 	<select id="ezAttitudeDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
 		<![CDATA[
 			SELECT
-					a.attitude_id AS ATTITUDE_ID,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-					a.appr_user_name$lang$ AS APPR_USER_NAME,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
-					a.appr_status AS APPR_STATUS,
-					c.type_id AS TYPE_ID,
-					c.type_name$lang$ AS TYPE_NAME,
-					a.content AS CONTENT,
-					a.writer_id AS WRITER_ID,
-					a.writer_dept_id AS WRITER_DEPT_ID,
-					a.writer_name$lang$ AS WRITER_NAME,
-					a.writer_title$lang$ AS WRITER_TITLE,
-					a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
+				a.attitude_id AS ATTITUDE_ID,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
+				a.appr_user_name$lang$ AS APPR_USER_NAME,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+				a.appr_status AS APPR_STATUS,
+				c.type_id AS TYPE_ID,
+				c.type_name$lang$ AS TYPE_NAME,
+				a.content AS CONTENT,
+				a.writer_id AS WRITER_ID,
+				a.writer_dept_id AS WRITER_DEPT_ID,
+				a.writer_name$lang$ AS WRITER_NAME,
+				a.writer_title$lang$ AS WRITER_TITLE,
+				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
 			FROM 
 				jmocha.tbl_attitude_modappl a
 			inner 
@@ -638,7 +638,7 @@
 	<select id="ezAttitudeDAO.getAttsModAttCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-					count(*)
+				count(*)
 			FROM 
 				jmocha.tbl_attitude_modappl a 
 			inner 
@@ -1358,19 +1358,19 @@
 			SELECT
 				A.ATTITUDE_ID,
 				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.APPR_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS APPR_DATE,
-				A.APPR_USER_NAME,
+				A.APPR_USER_NAME$lang$,
 				A.APPR_STATUS,
 				A.CONTENT,
 				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.ORIGIN_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS ORIGIN_DATE,
 				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-				B.TITLE AS TITLE,
-				B.DESCRIPTION AS DESCRIPTION
+				B.TITLE$lang$ AS TITLE,
+				B.DESCRIPTION$lang$ AS DESCRIPTION
 			FROM 
 				TBL_ATTITUDE_MODAPPL A
 			INNER JOIN
 				TBL_USERMASTER B
 			ON
-				 A.APPR_USER_ID = B.CN
+				A.APPR_USER_ID = B.CN
 			AND
 				A.TENANT_ID = B.TENANT_ID
 			AND
