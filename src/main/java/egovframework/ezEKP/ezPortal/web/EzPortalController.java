@@ -476,7 +476,6 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
 				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
 				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
-
 			}
 		}
 		
@@ -545,6 +544,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 			//스킨정보
 			strHTML = strHTML.replace("table-layout:fixed;", "");
+			strHTML = strHTML.replace("/ezPortal/environmentMain.do", "/ezPortal/environmentMain.do?topMenuID=" + pageID);
 			
 			if (!mode.equals("edit") || !mode.equals("view")) {
 				mode = "view";
@@ -2685,6 +2685,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String usePortal = "";
 		String url = "";
 		String funCode = "";
+		String topMenuID = "";
 		
 		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
@@ -2692,14 +2693,19 @@ public class EzPortalController extends EgovFileMngUtil {
 			funCode = req.getParameter("funCode");
 		}
 		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
 		if (funCode.equals("1")) {
-			url = "/ezPersonal/leftEnvironment.do?funCode=1";
+			url = "/ezPersonal/leftEnvironment.do?funCode=1&topMenuID="+topMenuID;
 		} else {
-			url = "/ezPersonal/leftEnvironment.do";
+			url = "/ezPersonal/leftEnvironment.do?topMenuID="+topMenuID;
 		}
 		
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("url", url);
+		model.addAttribute("topMenuID", topMenuID);
 
 		logger.debug("environmentMain ended");
 		return "/ezPortal/portalEnvironmentMain";

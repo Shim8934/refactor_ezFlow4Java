@@ -1245,7 +1245,7 @@
 		            <tr>
 		                <th><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="3" style="padding-right:0px">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; height:55px;WIDTH: 100%; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>
@@ -1262,7 +1262,7 @@
 		            <td style="width:100px; padding-left:50px; text-align:center">
 		                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
 		            </td>
-		            <td style="padding-left:15px">
+		            <td style="padding-left:20px">
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
 		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">

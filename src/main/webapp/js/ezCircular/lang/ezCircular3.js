@@ -24,3 +24,4 @@ var strLang23 = "データが指定されていません。";
 var strLang24 = "前へ";
 var strLang25 = "次へ";
 var strLang26 = "作成者にコメントを書いてください。";
+var strLang27 = "コメントを書いてください。";

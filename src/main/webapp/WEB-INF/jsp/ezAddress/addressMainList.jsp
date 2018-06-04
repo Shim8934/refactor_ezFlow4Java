@@ -1001,6 +1001,7 @@
 							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=outlookCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
 						</td>
 					</tr>
+					<!-- 
 					<tr>
 						<td style="width:70%;border-right-width:0px;">
 							<input type="radio" name="importFormat" id="importThunderbirdCSV" checked="checked" value="thunderbirdCSV" />
@@ -1019,6 +1020,7 @@
 							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=googleCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
 						</td>
 					</tr>
+					-->
 				</table>
 				<br />
 				<table style="width:100%">
@@ -1044,6 +1046,7 @@
 							<label for="exportOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
 						</td>
 					</tr>
+					<!-- 
 					<tr>
 						<td>
 							<input type="radio" name="exportFormat" id="exportThunderbirdCSV" checked="checked" value="thunderbirdCSV" />
@@ -1056,6 +1059,7 @@
 							<label for="exportGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
 						</td>
 					</tr>
+					 -->
 				</table>
 				<br />
 				<table style="width:100%">

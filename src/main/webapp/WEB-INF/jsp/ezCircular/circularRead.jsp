@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -439,6 +440,27 @@
 	            feature = feature + GetOpenPosition(420, 438);
 	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID, "", feature);
 	        }
+			
+			function CircularClose_onclick() {
+				if(confirm("<spring:message code='ezCircular.t170'/>")) {
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezCircular/circularClose.do",
+						data : {
+							circularIDList : circularID
+						},
+						success: function(){
+							window.location.reload();
+							window.opener.getLeftCount();
+							window.opener.refresh_onclick();
+						}, error: function() {
+							alert("<spring:message code='ezCircular.t102'/>");
+						}
+		        	});	
+				}
+			}
 		</script>
 	</head>
 	<style>
@@ -459,18 +481,27 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                	    	<c:if test="${result.confirmStatus == '0' && result.status == '0'}">
+                	    	<!-- 2018-06-04 김민성 - 회람 상세정보 상단 버튼 수정 -->
+                	    	<!-- 회람확인이 뜨는 사람 - 회람 작성자 이외의 사람 -->
+                	    	<c:if test="${result.confirmStatus == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t195' /></span></li>
-								<li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" class="off"><img src="/images/i_bar.gif" ></li>
+								<li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li>
                 	    	</c:if>
                 	    	
+                	    	<!-- 회람종료가 뜨는 사람 - 회람 작성자 -->
+                	    	<c:if test="${result.memberID == userInfo.id && result.status == '0'}">
+		                        <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li>
+		                        <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li>
+		                     </c:if>
+
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
 	                        
-	                        <!-- 18-05-28 김민성 - 확인자 정보 버튼 추가 -->
 	                        <li><span onclick="circularConfirmList()"><spring:message code='ezCircular.kmsc01' /></span></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
-		                        <li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
+	                        	<c:if test="${result.status == '0'}">
+		                        	<li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
+		                        </c:if>
 		                        <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
 	                        
@@ -493,7 +524,6 @@
 		  			</script>
             	    
             	    <!-- 18-05-24 김민성 - 회람판 > 회람 본문 작성일 단어 등록일로 수정 -->
-            	    
 					<table class="content" style="width:100%;">
 	                    <tr>
     	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
@@ -556,8 +586,9 @@
 		            		</td>
 		        		</tr>
 		        		<tr>
+		        		<!-- 2018-06-01 김민성 - 종료일 탭 추가 -->
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
+		            		<td class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
 		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
@@ -567,6 +598,10 @@
 		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
 		            				</c:when>
 		            			</c:choose>
+		            		</td>
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
+		            		<td>
+		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 		        		</tr>
 	        		</table>
