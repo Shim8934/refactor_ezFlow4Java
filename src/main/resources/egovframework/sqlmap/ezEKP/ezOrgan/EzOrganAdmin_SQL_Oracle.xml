@@ -4518,6 +4518,76 @@
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	
+	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_USERMASTER_DELETE
+             ( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, DESCRIPTION, DESCRIPTION2, DESCRIPTION3, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, INFO, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE12, EXTENSIONATTRIBUTE13, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, UPDATEDT, MOBILE_ENABLE, MOBILE_NOTUSE, MOBILE_PIN, SIPURI,PASSWORD,
+                      TENANT_ID )
+             ( SELECT
+             		CN ,
+                   DisplayName ,
+                   DisplayName2 ,
+                   mail ,
+                   MAILNICKNAME ,
+                   UPNNAME ,
+                   DEPARTMENT ,
+                   DESCRIPTION ,
+                   DESCRIPTION2 ,
+                   DESCRIPTION3 ,
+                   PHYSICALDELIVERYOFFICENAME ,
+                   COMPANY ,
+                   COMPANY2 ,
+                   TITLE ,
+                   TITLE2 ,
+                   TELEPHONENUMBER ,
+                   HOMEPHONE ,
+                   FACSIMILETELEPHONENUMBER ,
+                   MOBILE ,
+                   POSTALCODE ,
+                   STREETADDRESS ,
+                   INFO ,
+                   EXTENSIONATTRIBUTE1 ,
+                   EXTENSIONATTRIBUTE2 ,
+                   EXTENSIONATTRIBUTE3 ,
+                   NULL ,
+                   EXTENSIONATTRIBUTE5 ,
+                   EXTENSIONATTRIBUTE6 ,
+                   EXTENSIONATTRIBUTE7 ,
+                   EXTENSIONATTRIBUTE8 ,
+                   EXTENSIONATTRIBUTE9 ,
+                   EXTENSIONATTRIBUTE10 ,
+                   EXTENSIONATTRIBUTE102 ,
+                   EXTENSIONATTRIBUTE11 ,
+                   EXTENSIONATTRIBUTE12 ,
+                   EXTENSIONATTRIBUTE13 ,
+                   EXTENSIONATTRIBUTE14 ,
+                   EXTENSIONATTRIBUTE15 ,
+                   ADSPATH ,
+                   to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') ,
+                   MOBILE_ENABLE ,
+                   MOBILE_NOTUSE ,
+                   MOBILE_PIN ,
+                   SIPURI ,
+                   PASSWORD ,
+                   TENANT_ID
+               FROM TBL_USERMASTER 
+               WHERE  CN = #v_CN#
+               AND TENANT_ID = #v_TENANT_ID#
+                )
+	]]>
+	</insert>
+	
+	<delete id="EzOrganAdminDAO.deleteDelUserDBData_I" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_USERMASTER_DELETE
+        WHERE  
+        	CN = #v_CN#
+        AND 
+        	TENANT_ID = #v_TENANT_ID#
+	]]>
+	</delete>
+	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>
