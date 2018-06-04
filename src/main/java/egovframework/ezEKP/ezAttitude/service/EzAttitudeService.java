@@ -86,7 +86,7 @@ public interface EzAttitudeService {
 
 	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String searchDeptId, List<String> deptIdList) throws Exception;
 	
-	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset, String applCnt) throws Exception;
+	public AttitudeApplicationVO attModAppDetail(String attModId, String offset, String applCnt, String primary, String companyId, int tenantId) throws Exception;
 	
 	public List<AttitudeApplicationVO> attModGetHistory(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
 			
