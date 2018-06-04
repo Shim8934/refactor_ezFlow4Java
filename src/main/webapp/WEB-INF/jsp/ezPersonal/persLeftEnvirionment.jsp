@@ -218,11 +218,9 @@
 	            <c:if test="${isBoardUsed == 'Y'}">
 	    			<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>
 	    		</c:if>
-	    		<c:if test="${USE_CIRCULAR == 'YES'}">
-	    			<c:if test="${isCircularUsed == 'Y'}">
-	    				<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
-	    			</c:if>
-	    		</c:if>
+    			<c:if test="${isCircularUsed == 'Y'}">
+    				<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
+    			</c:if>
             </c:if>
             <c:if test="${isJournalUsed == 'Y'}">
    				<h2><span id="journalEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezJournal.t150' /></span></h2><ul></ul>

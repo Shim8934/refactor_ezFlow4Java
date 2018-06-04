@@ -292,7 +292,7 @@
 	        <div id="close">
 	            <ul>
 	                <li><span onclick="Refresh()"><spring:message code='ezEmail.t515' /></span></li>
-	                <li><span onclick="MailCancel('ALL')"><spring:message code='ezEmail.t588' /> <spring:message code='ezEmail.t549' /></span></li>
+	                <li><span onclick="MailCancel('ALL')"><spring:message code='ezEmail.t588' /><spring:message code='ezEmail.t549' /></span></li>
 	                <li><span onclick="MailCancel('EACH')"><spring:message code='ezEmail.t549' /></span></li>
 	                <li><span onclick="Window_Print();"><spring:message code='ezEmail.t546' /></span></li>
 	                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>

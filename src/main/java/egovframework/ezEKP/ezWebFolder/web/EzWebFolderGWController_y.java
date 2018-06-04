@@ -90,9 +90,8 @@ public class EzWebFolderGWController_y {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			List<Map<String, String>> permissionIdList = ezWebFolderService_m.getPermissionIdMapList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
 			service.insertIfNotExistRootForder(userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyID(), permissionIdList, offset, tenantId);
@@ -235,7 +234,6 @@ public class EzWebFolderGWController_y {
 	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) throws Exception  {
 		LOGGER.debug("folderCopy started");
 		String serverName	= request.getHeader("x-user-host")      != null ?	request.getHeader("x-user-host") 		: "";
-		String lang  		= (String) jsonObject.get("lang")   	!= null ?	(String) jsonObject.get("lang") 		: "";
 		String userId		= (String) jsonObject.get("userId") 	!= null ?	(String) jsonObject.get("userId")		: "";
 		String uppId		= (String) jsonObject.get("uppFolderId")!= null ?	(String) jsonObject.get("uppFolderId") 	: "";
 		String resmode  	= "";
@@ -246,10 +244,10 @@ public class EzWebFolderGWController_y {
 			int tenantId = common.getTenantId();
 			String comId = common.getCompanyId();
 			String offset = common.getOffSet();
-			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "lang : " + lang + "userId : "+userId + "tenantId : "+ tenantId
+			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "userId : "+userId + "tenantId : "+ tenantId
 					+ "comId : " + comId + "offset" + offset);
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") ) {
 				LOGGER.debug("Parameter error!");

@@ -639,23 +639,8 @@
 	                document.getElementById(obj).checked = false;
 	        }	        
 	        var xmlHTTP = createXMLHttpRequest();
-	        function crossexport() {
-	            var pURL = "/ezAddress/excelExport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID);
-	            saveExcel.location.href = pURL;
-
-	            setNodeText(document.getElementById("loadtxt"), "<spring:message code='ezAddress.t5001' />");
-	            document.getElementById("Div1").style.display = "";
-	            document.getElementById("loadingLayer").style.display = "";
-	            document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) + "px";
-	            document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
-
-	            setTimeout("event_CrossExport()", 500);
-	        }	        
-	        function event_CrossExport() {
-	        	document.getElementById("Div1").style.display = "none";
-            	document.getElementById("loadingLayer").style.display = "none";
-	        }	        
-	        function crossImport() {
+	        
+	        function clickImport() {
 	        	if (!useAnyoneEdit == "YES") {
 	        		if (deptAdmin != "Y" && pFolderType == "D") {
 		        		alert("<spring:message code='ezAddress.t1' />");
@@ -667,6 +652,55 @@
 		            }
 	        	}
 	        	
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#importPopup").css("left", popupX);
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	
+	        	$("#importPopup").modal();
+	        }
+	        
+			function clickExport() {
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#exportPopup").css("left", popupX);
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	
+	        	$("#exportPopup").modal();
+	        }
+	        
+	        function crossexport() {
+	        	var format = "";
+	        	var formatRadio = document.getElementsByName('exportFormat');
+				
+	        	for (var i = 0; i < formatRadio.length; i++) {
+	        		if (formatRadio[i].checked) {
+	        			format = formatRadio[i].value;
+						break;
+					}
+	        	}
+	        	
+	            var pURL = "/ezAddress/excelExport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID) + "&format=" + encodeURIComponent(format);
+	            saveExcel.location.href = pURL;
+
+	            setNodeText(document.getElementById("loadtxt"), "<spring:message code='ezAddress.t5001' />");
+	            document.getElementById("loadingLayer").style.display = "";
+	            document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) + "px";
+	            document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
+
+	            setTimeout("event_CrossExport()", 500);
+	            SearchOptionHidden();
+	        }	        
+	        function event_CrossExport() {
+            	document.getElementById("loadingLayer").style.display = "none";
+	        }	        
+	        function crossImport() {
 	            document.getElementById("file1").click();
 	        }	        
 	        function btn_AttachAdd_onclick() {
@@ -684,22 +718,33 @@
 	            }
 				
 	            setNodeText(document.getElementById("loadtxt"), "<spring:message code='ezAddress.t5000' />");
-	            document.getElementById("Div1").style.display = "";
 	            document.getElementById("loadingLayer").style.display = "";
 	            document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) + "px";
 	            document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
 	            
+	            var format = "";
+	        	var formatRadio = document.getElementsByName('importFormat');
+				
+	        	for (var i = 0; i < formatRadio.length; i++) {
+	        		if (formatRadio[i].checked) {
+	        			format = formatRadio[i].value;
+						break;
+					}
+	        	}
+	            
 		        var frm = document.getElementById('form');
-		        frm.action = "/ezAddress/excelImport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID);
+		        frm.action = "/ezAddress/excelImport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID) + "&format=" + encodeURIComponent(format);
 		        frm.submit();
+		        SearchOptionHidden();
 	        }	        
 	        function UploadComplete(result) {
 	        	document.form.file1.value = "";
-	        	document.getElementById("Div1").style.display = "none";
 		        document.getElementById("loadingLayer").style.display = "none";
 		        
 		        if (result == "OK") {
 		        	alert("<spring:message code='ezAddress.t178' />");
+		        } else if (result == "FORMAT_ERROR") {
+		        	alert("<spring:message code='ezAddress.lhm1' />");
 		        } else {
 		        	alert("<spring:message code='ezAddress.t181' />");
 		        }		        
@@ -724,8 +769,8 @@
 				<li><span  onClick="new_group()"><spring:message code='ezAddress.t237' /></span></li>
 				<li id="importaddress"><span  onClick="address_inout(1)"><spring:message code='ezAddress.t210' /></span></li>
 				<li id="exportaddress"><span  onClick="address_inout(0)"><spring:message code='ezAddress.t143' /></span></li>
-				<li id="importaddress_Cross"><span onclick="crossImport()"><spring:message code='ezAddress.t210' /></span></li>
-        			<li id="exportaddress_Cross"><span onclick="crossexport()"><spring:message code='ezAddress.t143' /></span></li>
+				<li id="importaddress_Cross"><span onclick="clickImport()"><spring:message code='ezAddress.t210' /></span></li>
+        		<li id="exportaddress_Cross"><span onclick="clickExport()"><spring:message code='ezAddress.t143' /></span></li>
 				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
 				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span id="SearchOption" mode="off" onClick="doLayerPopup()"><spring:message code='ezAddress.t142' /></span></li>
@@ -940,11 +985,99 @@
 				</table>
 			</div>
 		</div>
+		
+		<div id="importPopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px;vertical-align:middle">
+			<div class="popupwrap3">
+				<table class="content" style="width:100%;margin-top:10px;">
+					<tr>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t309' /></th>
+					</tr>
+					<tr>
+						<td style="width:70%;border-right-width:0px;">
+							<input type="radio" name="importFormat" id="importOutlookCSV" checked="checked" value="outlookCSV" />
+							<label for="importOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
+						</td>
+						<td style="width:30%;text-align:center;border-left-width:0px;">
+							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=outlookCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
+						</td>
+					</tr>
+					<!-- 
+					<tr>
+						<td style="width:70%;border-right-width:0px;">
+							<input type="radio" name="importFormat" id="importThunderbirdCSV" checked="checked" value="thunderbirdCSV" />
+							<label for="importThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
+						</td>
+						<td style="width:30%;text-align:center;border-left-width:0px;">
+							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=thunderbirdCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
+						</td>
+					</tr>
+					<tr>
+						<td style="width:70%;border-right-width:0px;">
+							<input type="radio" name="importFormat" id="importGoogleCSV" checked="checked" value="googleCSV" />
+							<label for="importGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
+						</td>
+						<td style="width:30%;text-align:center;border-left-width:0px;">
+							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=googleCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
+						</td>
+					</tr>
+					-->
+				</table>
+				<br />
+				<table style="width:100%">
+					<tr>
+						<td style="text-align:center;">
+							<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezAddress.t25' /></span></a>
+							<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div id="exportPopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px;vertical-align:middle">
+			<div class="popupwrap3">
+				<table class="content" style="width:100%;margin-top:10px;">
+					<tr>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t31' /></th>
+					</tr>
+					<tr>
+						<td>
+							<input type="radio" name="exportFormat" id="exportOutlookCSV" checked="checked" value="outlookCSV" />
+							<label for="exportOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
+						</td>
+					</tr>
+					<!-- 
+					<tr>
+						<td>
+							<input type="radio" name="exportFormat" id="exportThunderbirdCSV" checked="checked" value="thunderbirdCSV" />
+							<label for="exportThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="radio" name="exportFormat" id="exportGoogleCSV" checked="checked" value="googleCSV" />
+							<label for="exportGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
+						</td>
+					</tr>
+					 -->
+				</table>
+				<br />
+				<table style="width:100%">
+					<tr>
+						<td style="text-align:center;">
+							<a class="imgbtn"><span onClick="crossexport()"><spring:message code='ezAddress.t25' /></span></a>
+							<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
 		<div class="shadow"></div>		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="Div1">&nbsp;</div>
+		
 	    <span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="loadtxt"><spring:message code='ezAddress.t5000' /></span></span></span>
 	    <iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>

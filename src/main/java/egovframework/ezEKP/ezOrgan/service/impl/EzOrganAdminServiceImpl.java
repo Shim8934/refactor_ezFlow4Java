@@ -1464,7 +1464,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public String deleteTargetAddressUser(int tenantID, String groupName, String memberID, String companyID) throws Exception {
 		logger.debug("deleteTargetAddressUser started.");
-		logger.debug("tenantID=" + groupName + ",groupName=" + groupName);
+		logger.debug("tenantID=" + tenantID + ",groupName=" + groupName);
 
 		String userName = getDistributionUserName(tenantID, groupName);
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);

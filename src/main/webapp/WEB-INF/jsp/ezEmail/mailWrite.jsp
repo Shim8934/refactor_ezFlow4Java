@@ -8,6 +8,8 @@
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="/css/jquery-ui.css" type="text/css" />
+		<link rel="stylesheet" href="/css/jquery.ui.all.css" type="text/css" />
 		<c:if test="${useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
@@ -42,11 +44,14 @@
 			
 			#menu > ul:nth-child(2) > li {
 				margin: 0 2px !important;
-			}		
+			}
+			.ui-autocomplete { height: 200px; overflow-y: scroll; overflow-x: hidden;}
 		</style>
 		
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
@@ -155,11 +160,6 @@
 
 	    //업무일지 아이디
 	    var journalId = "${journalId}";
-	    //근태관리
-	    var attitudeId = "${attitudeId}";
-	    var attitudeIncludeMe = false; 
-	    var searchStartDate = "${searchStartDate}";
-	    var searchEndDate = "${searchEndDate}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -197,12 +197,6 @@
 	        m_rgParams4PostOption["bodyType"] = g_bodyType;
 	        m_rgParams4PostOption["EachMail"] = iseachMail;
 	        m_rgParams4PostOption["SecurityMail"] = pSecurity;
-	        
-	        var moduleType = "${moduleType}";
-	        
-	        if (moduleType == "attitudeAbsented") {
-	        	getAttitudeAbsentedList("distinct");
-	        }
 	        
 	        if (xmpTo.innerHTML != "") {
 	        	var moduleType = "<c:out value='${moduleType}'/>";
@@ -337,10 +331,13 @@
             	domElement.previousScrollPos = currentScrollPos;
             });
             
-            if (attitudeIncludeMe) {
-            	document.getElementById('toMe').checked = 'checked';
-	            MailToMe_Onclick();
-            }
+         // 쓰기창에서 수신인 자동완성 기능 사용 유무
+            <c:if test="${useMailAddrAutoComplete == 'NO'}">
+            	$( "#MsgTo" ).autocomplete("disable");
+            	$( "#MsgCC" ).autocomplete("disable");
+            	$( "#MsgBCC" ).autocomplete("disable");
+        	</c:if>
+            
 		}
 	    
 		var isAutoSave = false;
@@ -357,6 +354,9 @@
         	} else {
         		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
         	}
+        	
+        	// resize시 autoComplete창이 계속 유지되어서 display 처리
+        	$(".ui-autocomplete").css('display', 'none');
 	    }
 	    function KeEventControl(obj) {
 	        useragt = navigator.userAgent.toUpperCase();
@@ -926,14 +926,6 @@
 	            	getJournalToMail();
 	            	return;
 	            }
-	            else if (Org_cmd == "attitude") {
-	            	getAttitudeToMail();
-	            	return;
-	            }
-	            else if (Org_cmd == "attitudeAbsented") {
-	            	getAttitudeAbsentedList("duplicated");
-	            	return;
-	            }
 	            
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
@@ -1032,61 +1024,6 @@
 			            	dadiframe.fileupload2(pAttachListXml,"/ezEmail/mailInterUploadCopyXCKFromJournal.do");
 			            }
 			        }
-				}
-			});
-	    }
-	    
-	    function getAttitudeToMail() {
-	    	$.ajax ({
-				type : "POST",
-				async : false,
-				url : "/ezAttitude/getAttitudeItem.do",
-				data : {
-					attitudeId : attitudeId
-				},
-				success : function(result) {
-					var titleDate = "";
-					var objDiv = $("<div></div>");
-					var objTable = $("<table></table>").css({"clear":"both", "margin":"0px", "border-collapse":"collapse", "empty-cells":"show"});
-					var objTr = $("<tr></tr>").append($("<th></th>").text("구분")).append($("<td></td>").text(result.attitudeVO.typeName));
-					
-					objTable.append(objTr);
-					objTable.append(result.formVO.formHtml);
-					objTable.find("input").remove();
-					objTable.find("th").css({"border" : "1px solid #d2d2d2", "padding" : "0px", "width" : "100px", "height" : "29px", "background-color" : "#f8f8fa"});
-					objTable.find("td").css({"border" : "1px solid #d2d2d2", "padding" : "0px", "width" : "730px", "padding-left":"10px"});
-					
-					//objTable.append($("<tr></tr>").append($("<td></td>").attr("colspan", 2).css({"border":"0px", "height":"10px"})));
-					objTable.append($("<tr></tr>").append($("<td></td>").attr({"colspan" : 2, "id" : "content"}).css({"border" : "1px solid #ddd", "padding" : "10px", "width" : "100px", "height" : "300px", "vertical-align" : "top"})));
-					objDiv.append(objTable);
-					
-					var dateType = result.attitudeVO.dateType;
-					if (dateType == 5) {
-						objTable.find("#periodblock").text(result.attitudeVO.startDate.substring(0,16) + " ~ " + result.attitudeVO.endDate.substring(0,16));
-						titleDate = result.attitudeVO.startDate.split(" ")[0] + (result.attitudeVO.startDate.split(" ")[0] == result.attitudeVO.endDate.split(" ")[0] ? "" : " ~ " + result.attitudeVO.endDate.split(" ")[0]);
-					} else if (dateType == 4) {
-						objTable.find("#periodblock").text(result.attitudeVO.startDate.split(" ")[0] + " ~ " + result.attitudeVO.endDate.split(" ")[0]);
-						titleDate = result.attitudeVO.startDate.split(" ")[0] + (result.attitudeVO.startDate.split(" ")[0] == result.attitudeVO.endDate.split(" ")[0] ? "" : " ~ " + result.attitudeVO.endDate.split(" ")[0]);
-					} else if (dateType == 3) {
-						objTable.find("#periodblock").text(result.attitudeVO.startDate.substring(0,16) + " ~ " + result.attitudeVO.endDate.substring(11,16));
-						titleDate = result.attitudeVO.startDate.split(" ")[0];
-					} else if (dateType == 2) {
-						objTable.find("#periodblock").text(result.attitudeVO.startDate.substring(0,16));
-						titleDate = result.attitudeVO.startDate.split(" ")[0];
-					} else {
-						objTable.find("#periodblock").text(result.attitudeVO.startDate.split(" ")[0]);
-						titleDate = result.attitudeVO.startDate.split(" ")[0];
-					}
-					
-					$("#eSubject").val("[근태보고] " + result.attitudeVO.typeName + "/ " + result.attitudeVO.writerDeptName + " " + result.attitudeVO.writerName + "/ " + titleDate + (result.attitudeVO.region != "" ? "/ " + result.attitudeVO.region : ""));
-					
-					objTable.find("#periodblock");
-					objTable.find("#writerName").text(result.attitudeVO.writerName);
-					objTable.find("#mobile").text(result.attitudeVO.mobile);
-					objTable.find("#bizsub").text(result.attitudeVO.bizSub);
-					objTable.find("#region").length == 0 ? "" : objTable.find("#region").text(result.attitudeVO.region);
-					objTable.find("#content").html(result.attitudeVO.content);
-					message.SetEditorContent("<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
 				}
 			});
 	    }
@@ -1564,6 +1501,7 @@
 	            }
 	            eSubject.value = strLang121 + eSubject.value;
 	            Subject_ReApply();
+	            
 	        }
 	    }
 	    
@@ -1572,68 +1510,6 @@
 	    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
 	    }
 	    
-	    //근태관리 미입력메일발송
-	    function getAttitudeAbsentedList(gubun) {
-	    	//본문내용추가
-	    	$.ajax({
-				type : "post",
-				dastaType : "json",
-				async : false,
-				url : "/admin/ezAttitude/getAttitudeAbsentedList.do",
-				data : {
-					companyId : "${companyId}",
-   					userName : "${searchUserName}",
-   					deptName : "${searchDeptName}",
-   					title : "${searchTitle}",
-   					deptId : "${searchDeptId}",
-   					startDate : searchStartDate,
-   					endDate : searchEndDate,
-   					pageNum : "",
-   					listSize : "",
-   					orderCell : "",
-   					orderOption : "",
-   					duplicated : gubun
-				},
-				success : function(result) {
-					if (gubun == "distinct") {
-						var resultHtml = "";
-						
-						result.list.forEach(function(vo, index) {
-			    			resultHtml += "\"" + vo.userName + "\"";
-			    			resultHtml += " <" + vo.userEmail + ">, ";
-			    		});
-						
-						resultHtml = resultHtml.slice(0, -2);
-						
-						xmpTo.innerHTML = resultHtml;
-					} else {
-						var resultHtml = "<p>해당 메일을 받은 사원은 " + searchStartDate + "&nbsp;~&nbsp;" + searchEndDate + " 중 근태를 미입력한 사원입니다.</p><p>확인 후 근태를 등록해주시기 바랍니다.</p><p></p><hr>";
-						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;근태미입력자</strong></span></p><p></p>";
-						resultHtml += "<table style='border-collapse:collapse; width:800px;'>";
-						resultHtml += "<thead><tr>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>날짜</th>" ;
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>이름</th>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>직위</th>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>부서</th>";
-						resultHtml += "</thead><tbody>";
-						
-						result.list.forEach(function(vo, index) {
-			    			resultHtml += "<tr><td style='border:1px solid #666'>" + vo.startDate+ " </td>";
-			    			resultHtml += "<td style='border:1px solid #666'>" + vo.userName + "</td>";
-			    			resultHtml += "<td style='border:1px solid #666'>" + vo.userTitle + "</td>";
-			    			resultHtml += "<td style='border:1px solid #666'>" + vo.deptName + "</td></tr>";
-			    		});
-						
-						resultHtml += "</tbody></table>";
-						
-						$("#eSubject").val("[근태미입력공지] " + searchStartDate + " ~ " + searchEndDate);
-						
-						message.SetEditorContent(resultHtml);
-					}
-				}
-			});
-	    }
-
 	    function editorPtagChk() {
 	    	var editorBody = message.GetEditorBody();
 	    	var editorBodyChild = editorBody.childNodes;
@@ -1657,6 +1533,200 @@
 				message.EditorElementSetHtml("MailSign", "");
 			}
 	    }) */
+
+	    var IsInsert_MsgTo = false;
+		$(function() {
+			$("#MsgTo").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						autoFocus:true,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgTo = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgTo) {
+								MsgToGot.appendChild(newElem);
+								document.getElementById("MsgTo").value = "";
+								IsInsert_MsgTo = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgTo)
+								document.getElementById("MsgTo").value = "";
+							IsInsert_MsgTo = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+			var IsInsert_MsgCC = false;
+			$("#MsgCC").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgCC = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgCC) {
+								MsgCCGot.appendChild(newElem);
+								document.getElementById("MsgCC").value = "";
+								IsInsert_MsgCC = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgCC)
+								document.getElementById("MsgCC").value = "";
+							IsInsert_MsgCC = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+			var IsInsert_MsgBCC = false;
+			$("#MsgBCC").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgBCC = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgBCC) {
+								MsgBCCGot.appendChild(newElem);
+								document.getElementById("MsgBCC").value = "";
+								IsInsert_MsgBCC = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgBCC)
+								document.getElementById("MsgBCC").value = "";
+							IsInsert_MsgBCC = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+		})
+	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -1780,8 +1850,8 @@
 	                            <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgTo" id="MsgTo" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
-	                                ime-mode: active;">
+	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" tabindex="1" style="width: 100%;
+	                                ime-mode: active;"/>
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
 	                            <select id="SelectToAddress" style="width: 106px" onchange="simple_select('TO',this)">
@@ -1808,7 +1878,7 @@
 	                            </div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgCC" id="MsgCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
+	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" tabindex="2" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectCcAddress" style="width: 106px" onchange="simple_select('CC',this)">
@@ -1832,7 +1902,7 @@
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
-	                            <input type="text" name="MsgBCC" id="MsgBCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
+	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" tabindex="3" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectBCCAddress" style="width: 106px" onchange="simple_select('BCC',this)">
@@ -1936,6 +2006,7 @@
             </tr>            
             </c:if>
 	    </table>
+	    <div id="AutoCompleteResults"></div>
 	    <div id="sendScreen" style="display:none;">
 	      <table width="100%" cellspacing="0" cellpadding="0" class="message" style="background-image:url(/images/email/mailsendnoti.gif)">
 	        <tr>
