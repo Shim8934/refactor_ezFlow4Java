@@ -793,14 +793,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public AttitudeApplicationVO attModAppDetail(String companyId,
-			int tenantId, String userId, String attModId, String offset, String applCnt) throws Exception {
+	public AttitudeApplicationVO attModAppDetail(String attModId, String offset, String applCnt, String primary, String companyId, int tenantId) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("userId", userId);
 		map.put("attModId", attModId);
 		map.put("offset", offset);
 		map.put("applCnt", applCnt);

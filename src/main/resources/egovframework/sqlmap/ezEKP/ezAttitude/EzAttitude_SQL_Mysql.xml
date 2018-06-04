@@ -93,13 +93,12 @@
 		<result property="apprStatus"		column="APPR_STATUS" 		columnIndex="5"/>
 		<result property="typeId"			column="TYPE_ID" 			columnIndex="6"/>
 		<result property="typeName"			column="TYPE_NAME" 			columnIndex="7"/> 		
-		<result property="typeName2"		column="TYPE_NAME2" 		columnIndex="8"/>
-		<result property="content"			column="CONTENT" 			columnIndex="9"/>
-		<result property="writerId"			column="WRITER_ID" 			columnIndex="10"/>
-		<result property="writerDeptId"		column="WRITER_DEPT_ID"		columnIndex="11"/>
-		<result property="writerName"		column="WRITER_NAME"		columnIndex="12"/>
-		<result property="writerTitle"		column="WRITER_TITLE"		columnIndex="13"/>
-		<result property="writerDeptName"	column="WRITER_DEPT_NAME"	columnIndex="14"/>
+		<result property="content"			column="CONTENT" 			columnIndex="8"/>
+		<result property="writerId"			column="WRITER_ID" 			columnIndex="9"/>
+		<result property="writerDeptId"		column="WRITER_DEPT_ID"		columnIndex="10"/>
+		<result property="writerName"		column="WRITER_NAME"		columnIndex="11"/>
+		<result property="writerTitle"		column="WRITER_TITLE"		columnIndex="12"/>
+		<result property="writerDeptName"	column="WRITER_DEPT_NAME"	columnIndex="13"/>
 	</resultMap>
 	
 	<resultMap id="simpleAtt" class="AttitudeApplicationVO">
@@ -550,20 +549,19 @@
 	<select id="ezAttitudeDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
 		<![CDATA[
 			SELECT
-					a.attitude_id as ATTITUDE_ID,
+					a.attitude_id AS ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
-					a.appr_user_name as APPR_USER_NAME,
+					CASE WHEN #primary# = 1 THEN a.appr_user_name ELSE a.appr_user_name2 END AS APPR_USER_NAME,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
-					a.appr_status as APPR_STATUS,
-					c.type_id as TYPE_ID,
-					c.type_name as TYPE_NAME,
-					c.type_name2 as TYPE_NAME2,
-					a.content as CONTENT,
-					a.writer_id as WRITER_ID,
-					a.writer_dept_id as WRITER_DEPT_ID,
-					a.writer_name as WRITER_NAME,
-					a.writer_title as WRITER_TITLE,
-					a.writer_dept_name as WRITER_DEPT_NAME
+					a.appr_status AS APPR_STATUS,
+					c.type_id AS TYPE_ID,
+					CASE WHEN #primary# = 1 THEN c.type_name ELSE c.type_name2 END AS TYPE_NAME,
+					a.content AS CONTENT,
+					a.writer_id AS WRITER_ID,
+					a.writer_dept_id AS WRITER_DEPT_ID,
+					CASE WHEN #primary# = 1 THEN a.writer_name ELSE a.writer_name2 END AS WRITER_NAME,
+					CASE WHEN #primary# = 1 THEN a.writer_title ELSE a.writer_title2 END AS WRITER_TITLE,
+					CASE WHEN #primary# = 1 THEN a.writer_dept_name ELSE a.writer_dept_name2 END AS WRITER_DEPT_NAME
 			FROM 
 				jmocha.tbl_attitude_modappl a
 			inner 

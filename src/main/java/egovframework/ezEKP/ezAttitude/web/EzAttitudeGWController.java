@@ -1401,7 +1401,10 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
 		JSONObject result = new JSONObject();
 		try {
-			AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId, offset, applCnt);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(attModId, offset, applCnt, info.getPrimary(), companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
