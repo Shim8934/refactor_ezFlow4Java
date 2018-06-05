@@ -2966,6 +2966,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			if (!recevGroupXML.equals("")) {
 				map = new HashMap<String, Object>();
+				map.put("v_PFORMID", formID);
 				map.put("companyID", companyID);
 				map.put("tenantID", userInfo.getTenantId());
 				map.put("approvalFlag", approvalFlag);
