@@ -99,7 +99,7 @@ function initProgressBar() {
 	$(".progress_graph").circleProgress({
 		value: 0.4,
 		fill : {color : circleColor},
-		size : 134
+		size : 120
 	}).on('circle-animation-progress', function(event, progress) {
 		$(this).find('strong').html(40 + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 	});
@@ -409,7 +409,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 					break;
 				case "W" :
 					taskStatus = "대기";
-					statusColor = "grey";
+					statusColor = "#d1d1d1";
 					break;
 				case "L" :
 					taskStatus = "지연";
@@ -649,7 +649,7 @@ function setOverviewContent() {
 					 
 					 logHTML += "<div style='clear:both; margin-bottom:1px; border-bottom:1px;'>";
 					 logHTML += "<div style='width:16%; float:left; font-weight:bold;'>" + logList[i].logStatus + "</div>";
-					 logHTML += "<div style='font-size:13px;'>" + logList[i].logContent + "</div>";
+					 logHTML += "<div style='font-size:13px; height:21px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap'>" + logList[i].logContent + "</div>";
 					 logHTML += "</div>";
 				 }
 				 
@@ -667,6 +667,12 @@ function getBoardDetails(elem) {
 }
 </script>
 <style type="text/css">
+.circle {
+ margin : 6px 6px 34px;
+ top : 14px;
+ height : 120px;
+}
+
 #kanbanArea {
 	float : left;
 	width : 78%;
@@ -754,48 +760,62 @@ function getBoardDetails(elem) {
 .selectTR {
 	background-color : rgb(233, 241, 255);
 }
+
+hr {
+	text-align : center;
+	margin : 8px 0px;
+	border-bottom : 0px; 
+	width : 95%;
+}
+
 </style>
 </head>
 <body>
 <div id="kanbanArea" class="overview"><div id="kanbanDraw" class="overview"></div></div>
 
 <div id="iconArea" class="rightPart">
-		<div id="printReport" class="icon">출력</div>
+		<!-- <div id="printReport" class="icon">출력</div> -->
 		<c:if test="${userRole eq 1 }">
 			<div id="editProjectInfo" class="icon" onclick="editProjectInfo()" style="cursor:pointer;"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
 		</c:if>
 		<div id="setting" class="icon" style="cursor:pointer;" onclick="kanbanSetting()">환경설정</div>
 	</div>
 <div id="overviewArea" class="overview rightPart">
-	<div class="circle progress_graph" style="width:95%; top:15px;">
-		<strong style="top:30px;"></strong>
+	<div class="circle progress_graph">
+		<strong style="top:25px;"></strong>
 	</div>
-	<div style="text-align:center; font-size:30px; font-weight:bold;">D 
+	<div style="text-align:center;">
+	<div style="font-size:31px; font-weight:bold; margin-top:41px;">D 
 		<c:choose>
 				<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
 		</c:choose>
 	</div>
-	<div style="text-align:center;">${project.planStartDate } ~ ${project.planEndDate }</div>
-	<div id="changeStatus" style="text-align:center;"></div>
+		<div>
+		<span style="border:1px solid black">start</span>${project.planStartDate }
+		</div>
+		<div>
+		<span style="border:1px solid black">end</span>${project.planStartDate }
+		</div>
+		</div>
+	<div id="changeStatus" style="text-align:center; clear : both;"></div>
 	<div id="overview" style="width:95%; padding:5px; border:1px solid gray; margin:5px 0">${project.overview }</div>
-	<table style="width:95%; height:17%">
+	<table style="width:95%; height:13%">
 		<tr>
-			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px;" align="middle"><span>${project.headManagerName }</span></td>
-			<td onclick="getProjectMember('1')" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 담당자보기 </td>
+			<td class="memberList"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px;" align="middle"><span>${project.headManagerName }</span></td>
+			<td onclick="getProjectMember('1')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 담당자보기 </td>
 		</tr>
 		<tr>
-			<td onclick="getProjectMember('2')" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 참여자보기 </td>
-			<td onclick="getProjectMember('3')" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 조회자보기 </td>
+			<td onclick="getProjectMember('2')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 참여자보기 </td>
+			<td onclick="getProjectMember('3')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 조회자보기 </td>
 		</tr>
 	</table>
-	<br>
 	<div id="commentDiv">
 		의견<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('comment')">+</span>
-		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
+		<hr>
 	</div>
 	<div id="logDiv">
 		작업이력<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
-		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
+		<hr>
 		<div id="logContentArea"></div>
 	</div>
 </div>

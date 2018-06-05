@@ -96,9 +96,6 @@ function setContentList() {
 		url : "/ezPMS/getTaskLogList.do",
 		success : function(contentList) {
 			$("#contentList").html(contentList);
-			//찾아 준 후 초기화
-			searchContent = "";
-			$("#searchByContent").val("");
 			searchStatus = "";
 			setInitOrder();
 		}	
@@ -184,10 +181,10 @@ function selectedTR(elem){
 #taskTree {
 	margin-right : 5px;
 	width : 16%;
-	overflow : auto;
+	overflow-y : auto;
+	overflow-x : hidden;
 	border : 1px solid #d1d1d1;
 	float : left;
-	display : inline-block
 }
 
 #projectArea {
@@ -197,7 +194,14 @@ function selectedTR(elem){
 }
 
 #projectContent {
-	min-width : 1070px;
+	min-width : 1057px;
+}
+
+.jstree-node > a {
+    /* 100% - (the width of the presentation node : the line - the left padding of the <a> node - the right padding of the <a> node)*/
+    width: calc(100% - (55px + 1px + 4px));
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 #searchArea {
