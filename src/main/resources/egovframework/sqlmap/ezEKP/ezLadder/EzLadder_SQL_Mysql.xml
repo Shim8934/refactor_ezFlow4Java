@@ -984,12 +984,16 @@
 				FROM
 					TBL_USERMASTER
 				WHERE
+					TENANT_ID = #tenantId#
+				AND
 					CN
 				NOT IN(
 					SELECT
 						CN
 					FROM
 						TBL_USERMASTER_RETIRE
+					WHERE
+						TENANT_ID = #tenantId#
 					)
 				) U
 			ON
@@ -1017,11 +1021,13 @@
 			DISPLAYNAME$lang$
 		NOT IN (
 			SELECT
-				DISPLAYNAME
+				DISPLAYNAME$lang$
 			FROM
 				TBL_USERMASTER_RETIRE
 			WHERE 
 				DISPLAYNAME$lang$ = #name#
+			AND
+				TENANT_ID = #tenant_id#
 			)
 	</select>
 	
@@ -1145,12 +1151,16 @@
 			FROM
 				TBL_USERMASTER
 			WHERE
+				TENANT_ID = #tenant_id#
+			AND
 				CN
 			NOT IN(
 				SELECT
 					CN
 				FROM
 					TBL_USERMASTER_RETIRE
+				WHERE
+					TENANT_ID = #tenant_id#
 				)
 			) U
 		ON
@@ -1247,8 +1257,24 @@
 			B.ID, B.LADDERBMID, B.USERID, B.USERNAME, B.USERNAME2, U.COMPANY, U.DESCRIPTION, U.MAIL, EXTENSIONATTRIBUTE2 AS PIC
 		FROM 
 			TBL_LADDER_BMUSER B
-		LEFT JOIN 
-			TBL_USERMASTER U
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenant_id#
+			AND 
+				CN
+			NOT IN (
+				SELECT 
+					CN
+				FROM
+					TBL_USERMASTER_RETIRE
+				WHERE
+					TENANT_ID = #tenant_id#
+				)
+			) U
 		ON 
 			B.TENANT_ID = U.TENANT_ID
 		AND 
@@ -1348,12 +1374,16 @@
 			FROM
 				TBL_USERMASTER
 			WHERE
+				TENANT_ID = #tenantId#
+			AND
 				CN
 			NOT IN (
 				SELECT
 					CN
 				FROM
 					TBL_USERMASTER_RETIRE
+				WHERE
+					TENANT_ID = #tenantId#
 				)
 			) U
 		ON
