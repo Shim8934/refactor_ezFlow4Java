@@ -349,7 +349,7 @@
 				if (folderPath == null) {
 					detailName = document.createElement("span");
 					detailName.className = "aName";
-					detailName.textContent = "공유받은목록";
+					detailName.textContent = "<spring:message code='ezWebFolder.t214'/>";
 					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
 						isShareMode = true;

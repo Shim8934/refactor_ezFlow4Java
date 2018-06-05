@@ -334,7 +334,7 @@
 				if (folderPath == null) {
 					detailName = document.createElement("span");
 					detailName.className = "aName";
-					detailName.textContent = "공유한목록";
+					detailName.textContent = "<spring:message code='ezWebFolder.t267'/>";
 					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
 						isShareMode = true;
