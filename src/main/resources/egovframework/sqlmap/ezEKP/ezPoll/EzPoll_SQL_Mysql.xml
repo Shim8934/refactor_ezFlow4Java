@@ -376,14 +376,35 @@
 		]]>			
     </select> 
      
-    <select id="EzPollDAO.getQuestionsTest" resultMap="pollQuestion">   
+    <select id="EzPollDAO.getQuestionsTest" resultClass="PollQuestionVO">   
 		<![CDATA[
 			SELECT 
-				*
+				a.ID AS qstid,
+				a.TENANT_ID AS tenantid,
+				a.CONTENT AS content,
+				a.MULTI_SELECT AS multiselect,
+				a.CREATE_DATE AS createdate,
+				a.START_DATE AS startdate,
+				a.END_DATE AS enddate,
+				a.TARGET AS target,
+				a.TITLE AS title,
+				a.SECRET_VOTE AS secretvote,
+				a.CREATOR AS creator,
+				a.CREATOR_NAME1 AS creatorname1,
+				a.CREATOR_NAME2 AS creatorname2,
+				a.FILE_PATH AS filepath,
+				a.RESULT_FIRST AS resultfirst,
+				a.IS_MODIFYING AS ismodifying,
+				a.SET_DATE AS setdate,
+				a.IS_SORTING AS inssorting,
+				a.IS_SELONLYONCE AS isselonlyonce,
+				a.SENDPOSTNOTICE AS sendpostnotice,
+				a.OPENTOALL AS opentoall,
+				((SELECT COUNT(ID) FROM TBL_VOTE_COMMENT WHERE QST_ID = a.ID and TENANT_ID = a.TENANT_ID)) AS CMTCNT
 			FROM 
-				TBL_VOTE_QUESTION
+				TBL_VOTE_QUESTION a
 			WHERE  
-				ID
+				a.ID
 			IN
 				(
 					SELECT 
@@ -392,19 +413,19 @@
 						TBL_VOTE_USER_AND_QUESTION
 					WHERE
 						(
-								USER_TYPE = "user"
+								USER_TYPE = 'user'
 							AND
 								USER_ID   = #user_id#
 						)	
 					OR
 						(
-								USER_TYPE = "company"
+								USER_TYPE = 'company'
 							AND
 								USER_ID   = #company_id#
 						) 
 					OR
 						(
-								USER_TYPE = "dept"
+								USER_TYPE = 'dept'
 							AND
 								USER_ID 
 								IN
@@ -417,7 +438,7 @@
 											(												
 												FIND_IN_SET	(CN, #v_deptPath#)		
 												OR 
-													CN = "Top"											
+													CN = 'Top'									
 											)
 										AND
 											TENANT_ID = #tenant_id#
@@ -427,53 +448,74 @@
 						TENANT_ID = #tenant_id#
 				)
 			AND
-				TENANT_ID = #tenant_id#								
+				a.TENANT_ID = #tenant_id#								
 		]]>	
 		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
-				TITLE LIKE CONCAT('%', #search_str#, '%')				
+				a.TITLE LIKE CONCAT('%', #search_str#, '%')				
 			]]>
 		</isEqual>	
 		<isEqual property="mode" compareValue="wri" prepend="AND">
 			<isEqual property="primary" compareValue="1" >
 				<![CDATA[
-					CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
+					a.CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
 				]]>
 			</isEqual>	
 			<isNotEqual property="primary" compareValue="1">
 				<![CDATA[
-	        		CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
+	        		a.CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
 		        ]]>
 			 </isNotEqual>
-		</isEqual>			
+		</isEqual>	
     </select> 
     
-    <select id="EzPollDAO.getAllQuestions" resultMap="pollQuestion">   
+    <select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">
 		<![CDATA[
 			SELECT 
-				*
+				a.ID AS qstid,
+				a.TENANT_ID AS tenantid,
+				a.CONTENT AS content,
+				a.MULTI_SELECT AS multiselect,
+				a.CREATE_DATE AS createdate,
+				a.START_DATE AS startdate,
+				a.END_DATE AS enddate,
+				a.TARGET AS target,
+				a.TITLE AS title,
+				a.SECRET_VOTE AS secretvote,
+				a.CREATOR AS creator,
+				a.CREATOR_NAME1 AS creatorname1,
+				a.CREATOR_NAME2 AS creatorname2,
+				a.FILE_PATH AS filepath,
+				a.RESULT_FIRST AS resultfirst,
+				a.IS_MODIFYING AS ismodifying,
+				a.SET_DATE AS setdate,
+				a.IS_SORTING AS inssorting,
+				a.IS_SELONLYONCE AS isselonlyonce,
+				a.SENDPOSTNOTICE AS sendpostnotice,
+				a.OPENTOALL AS opentoall,
+				((SELECT COUNT(ID) FROM TBL_VOTE_COMMENT WHERE QST_ID = a.ID and TENANT_ID = a.TENANT_ID)) AS CMTCNT
 			FROM 
-				TBL_VOTE_QUESTION
+				TBL_VOTE_QUESTION a
 			WHERE 
-				TENANT_ID = #tenant_id#											
+				TENANT_ID = #tenant_id#
 		]]>	
 		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
-				TITLE LIKE CONCAT('%', #search_str#, '%')				
+				a.TITLE LIKE CONCAT('%', #search_str#, '%')				
 			]]>
 		</isEqual>	
 		<isEqual property="mode" compareValue="wri" prepend="AND">
 			<isEqual property="primary" compareValue="1" >
 				<![CDATA[
-					CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
+					a.CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
 				]]>
 			</isEqual>	
 			<isNotEqual property="primary" compareValue="1">
 				<![CDATA[
-	        		CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
+	        		a.CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
 		        ]]>
 			 </isNotEqual>
-		</isEqual>			
+		</isEqual>
     </select>     
     
     <select id="EzPollDAO.getOwnQuestions" resultMap="pollQuestion">   
