@@ -3679,7 +3679,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("parentUID", "203"); //메인메뉴영역
 		map.put("companyID", companyID);
 		map.put("lang", userLang);
-		map.put("topMenuID",topMenuID);
+		
+		if (topMenuID != null && !topMenuID.equals("")); {
+			map.put("topMenuID",topMenuID);
+		}
 		
 		/*top 메뉴에 있는 UID와 LINK URL*/
 		

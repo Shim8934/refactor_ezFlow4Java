@@ -378,9 +378,6 @@ public class EzWebFolderController_m {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		
-		param.put("tenantId", user.getTenantId());
-		param.put("offset", user.getOffset());
 		param.put("currPage", Integer.parseInt(orElse(request.getParameter("currPage"), "1")));
 		param.put("listCount", Integer.parseInt(orElse(request.getParameter("listCount"), "0")));
 		param.put("searchExt", orElse(request.getParameter("searchExt"), "" ));
@@ -443,10 +440,7 @@ public class EzWebFolderController_m {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("tenantId", user.getTenantId());
-		param.put("offset", user.getOffset());
 		param.put("userId", user.getId());                 
-		param.put("lang", user.getLang());
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);     
 		
@@ -482,8 +476,6 @@ public class EzWebFolderController_m {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("tenantId", user.getTenantId());
-		param.put("offset", user.getOffset());
 		param.put("userId", user.getId());                 
 		param.put("companyId", user.getCompanyID());
 		param.put("fileList", fileList);               
@@ -603,10 +595,7 @@ public class EzWebFolderController_m {
 	
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("tenantId", user.getTenantId());
-		param.put("offset", user.getOffset());
 		param.put("userId", user.getId());                 
-		param.put("lang", user.getLang());
 		param.put("folderId", orElse(request.getParameter("folderId"), ""));               
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);               

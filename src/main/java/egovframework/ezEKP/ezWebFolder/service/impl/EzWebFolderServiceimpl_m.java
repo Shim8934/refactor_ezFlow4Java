@@ -857,7 +857,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		for (String folder : folderIDList) {
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
-			
+			deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
+
 			if (folderVO != null) {
 				List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
 				
@@ -944,17 +945,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderPath", folderVO.getFolderPath());
+		map.put("folderPath", folderVO.getFolderId());
 		map.put("tenantId", folderVO.getTenantId());
 		
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
 		
 		for (String file : searchFiles) {
 			map.put("fileId", file);
+			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 			int result = ezWebFolderDAO.deleteFile(map);
 			
 			if (result > 0) {
-				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				realFileDelete(fileVO, realPath, userInfo, userName1, userName2);
 				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 				deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
