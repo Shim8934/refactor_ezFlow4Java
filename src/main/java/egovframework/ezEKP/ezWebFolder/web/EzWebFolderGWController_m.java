@@ -1020,8 +1020,6 @@ public class EzWebFolderGWController_m {
 	
 	@RequestMapping(value="/rest/ezwebfolder/{userId}/getTrashCanList", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request, Locale locale) {
-		String offset =  orElse(request.getParameter("offset"), "");
-		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 		String serverName =  orElse(request.getHeader("x-user-host"), "");
 		
 		int listCount 	        = Integer.parseInt(orElse(request.getParameter("listCount"), "10"));
@@ -1051,7 +1049,7 @@ public class EzWebFolderGWController_m {
 		}
 
 		logger.debug("getTrashCanList Started.");
-		logger.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId + ",serverName=" + serverName);
+		logger.debug("userId=" + userId +  ",serverName=" + serverName);
 		logger.debug("currPage=" + currPage);
 		logger.debug("listCount=" + listCount);
 		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
@@ -1060,7 +1058,7 @@ public class EzWebFolderGWController_m {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		
-		if (userId.equals("") || offset.equals("") || userId.equals("") || serverName.equals("")) {
+		if (userId.equals("")  || userId.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1082,6 +1080,10 @@ public class EzWebFolderGWController_m {
 		logger.debug("Column: " + realColumn + " || order: " + order);
 		
 		try {
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId  = common.getTenantId();
+			String offset = common.getOffSet();
+			
 			List<TrashCanVO> trashCanList = null;
 			JSONObject resultList = ezWebFolderService_m.getTrashCanList(realColumn, order.toUpperCase(), userId, offset, tenantId, currPage, listCount,
 										searchExt, searchFileName, searchCreateName, searchFileType, enrollStartDate, enrollEndDate, delStartDate, delEndDate, mode);
@@ -1152,7 +1154,8 @@ public class EzWebFolderGWController_m {
 		
 		logger.debug("filePermanetDelete Started.");
 		logger.debug("userId=" + userId  + ",serverName=" + serverName);
-		logger.debug("fileList=" + fileList + ",folderList=" + folderList);
+		logger.debug("fileList=" + fileList);
+		logger.debug("folderList=" + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
@@ -1194,8 +1197,6 @@ public class EzWebFolderGWController_m {
 	
 	@RequestMapping(value="/rest/ezwebfolder/restore-trashCan", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject restoreTrashCan(Locale locale, HttpServletRequest request) {
-		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
-		String offset= orElse(request.getParameter("offset"), "");
 		String companyId = orElse(request.getParameter("companyId"), "");
 		String userId = orElse(request.getParameter("userId"), "");
 		String serverName   = orElse(request.getHeader("x-user-host"), "");
@@ -1203,16 +1204,14 @@ public class EzWebFolderGWController_m {
 		String folderList = orElse(request.getParameter("folderList"), "");
 
 		logger.debug("restoreTrashCan Started.");
-		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",serverName=" + serverName);
-		logger.debug("offset=" + offset + ",companyId=" + companyId);
+		logger.debug("userId=" + userId + ",serverName=" + serverName + ",companyId=" + companyId);
+		logger.debug("fileList=" + fileList);
+		logger.debug("folderList=" + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
 		JSONObject result = new JSONObject();
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date                  = new Date();
-		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		
 		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
@@ -1222,8 +1221,14 @@ public class EzWebFolderGWController_m {
 		}
 		
 		try {
-			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId  = common.getTenantId();
+			String offset = common.getOffSet();
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			
 			if (!isWebfolderAdmin(userInfo)) {
 				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderList, fileList, userInfo.getTenantId());
@@ -1259,9 +1264,6 @@ public class EzWebFolderGWController_m {
 	
 	@RequestMapping(value="/rest/ezwebfolder/move-TrashCan", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject moveTrashCan(Locale locale, HttpServletRequest request) {
-		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
-		String offset= orElse(request.getParameter("offset"), "");
-		String lang = orElse(request.getParameter("lang"), "");
 		String userId = orElse(request.getParameter("userId"), "");
 		String folderId = orElse(request.getParameter("folderId"), "");
 		String serverName   = orElse(request.getHeader("x-user-host"), "");
@@ -1269,13 +1271,9 @@ public class EzWebFolderGWController_m {
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
 		logger.debug("moveTrashCan Started.");
-		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",folderId=" + folderId);
-		logger.debug("serverName=" + serverName + ",offset=" + offset + ",companyId=" + lang);
-		logger.debug("fileList=" + fileList + ",folderList=" + folderList);
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date                  = new Date();
-		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		logger.debug("userId=" + userId + ",folderId=" + folderId + ",serverName=" + serverName);
+		logger.debug("fileList=" + fileList);
+		logger.debug("folderList=" + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
@@ -1289,8 +1287,17 @@ public class EzWebFolderGWController_m {
 		}
 		
 		try {
-			MCommonVO user = mOptionService.commonInfoWeb(serverName, userId);
 			
+			MCommonVO user = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId  = common.getTenantId();
+			String offset = common.getOffSet();
+			String lang = common.getLang();
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
 			if (!isWebfolderAdmin(user.getRollInfo())) {
 				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, user.getDeptId(), user.getCompanyId(), folderList, fileList, tenantId);
 				
