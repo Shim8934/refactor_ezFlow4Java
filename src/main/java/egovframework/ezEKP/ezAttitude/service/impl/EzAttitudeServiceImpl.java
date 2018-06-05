@@ -792,14 +792,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<DeptViewVO> getDeptViewList(String userId, String companyId,
-			String tenantId) throws Exception {
+			int tenantId, String primary) throws Exception {
 		LOGGER.debug("getDeptViewList started");
 		
-	    Map<String, String> map = new HashMap<String, String>();
+	    Map<String, Object> map = new HashMap<String, Object>();
 	    
 	    map.put("tenantId", tenantId);
 	    map.put("userId", userId);
 	    map.put("companyId", companyId);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+	    map.put("primary", primary);
 	    
 	    List<DeptViewVO> deptList = ezAttitudeDAO.getDeptViewList(map);
 	    
@@ -1549,7 +1553,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId,
-			String userId, String isAllDept) throws Exception {
+			String userId, String isAllDept, String primary) throws Exception {
 		List<AttitudeAuthorVO> list = new ArrayList<AttitudeAuthorVO>();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1557,6 +1561,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 		
 		if (!isAllDept.equals("Y")) {
 			list = ezAttitudeDAO.getAttitudeAuthDeptList(map);

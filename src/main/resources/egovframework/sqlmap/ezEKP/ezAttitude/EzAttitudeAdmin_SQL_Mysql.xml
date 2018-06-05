@@ -501,7 +501,7 @@
 		 <![CDATA[
 		 	,'##',D.EXTENSIONATTRIBUTE1) AS PARENT,
 		 	D.EXTENSIONATTRIBUTE2 AS COMPANYID,
-		    D.DISPLAYNAME AS TEXT,
+		    D.DISPLAYNAME$primary$ AS TEXT,
 		    CASE D.CN
 		    	WHEN D.EXTENSIONATTRIBUTE2 THEN 'COMP'
 		        ELSE 'DEPT'
@@ -810,7 +810,7 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<![CDATA[
 			SELECT
-				D.DISPLAYNAME AS deptName,
+				D.DISPLAYNAME$primary$ AS deptName,
 				D.CN AS deptId,
 				'no' AS mine,
 				A.AUTH_TYPE AS authType
@@ -828,7 +828,7 @@
 				A.TENANT_ID = #tenantId#
 			UNION
 			SELECT
-				D.DISPLAYNAME AS deptName,
+				D.DISPLAYNAME$primary$ AS deptName,
 				D.CN AS deptId,
 				'yes' AS mine,
 				'' AS authType
@@ -1100,7 +1100,7 @@
 		<![CDATA[
 			SELECT 
 				CN AS deptId,
-				DISPLAYNAME AS deptName
+				DISPLAYNAME$primary$ AS deptName
 		]]>
 		<isNotEmpty prepend="," property="isAllDept">
 			'M' AS authType

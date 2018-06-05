@@ -473,7 +473,7 @@ public class EzAttitudeGWController {
 	         if (companyId ==null||companyId.equals("")) {
 	            companyId = info.getCompanyId();
 	         }
-	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId() + "");
+	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), info.getPrimary());
 	         
 	         result.put("status", "ok");
 	         result.put("code", 0);
@@ -830,7 +830,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] ended.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] ended.");
 		
 		return result;
 	}
@@ -862,7 +862,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] ended.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] ended.");
 		
 		return result;
 	}
@@ -1058,7 +1058,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
 			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
 			@RequestParam(value="deptid", required=false) String deptid) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1100,7 +1100,7 @@ public class EzAttitudeGWController {
 			
 			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
 				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
-					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
 						if (vo.getAuthType().equals("M")) {
@@ -1129,7 +1129,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
 		return result;
 	}
 	
@@ -1150,7 +1150,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
 			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
 			@RequestParam(value="deptid", required=false) String deptid) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes/count] started.");
 
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1177,7 +1177,7 @@ public class EzAttitudeGWController {
 			
 			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
 				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
-					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
 						if (vo.getAuthType().equals("M")) {
@@ -1202,7 +1202,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes/count] ended.");
 		return result;
 	}
 	
@@ -1244,7 +1244,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="idList", required=false) String idList) {
 			
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] started.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1280,7 +1280,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
 		return result;
 	}
 	
@@ -1294,7 +1294,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="idList", required=true) String idList,
 			@RequestParam(value="changeStatus", required=true) String changeStatus) {
 			
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/{userId}/modifyattitudes] started.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1322,7 +1322,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "fail");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
 		return result;
 	}
 	
@@ -1331,7 +1331,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFormBody(@PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/"+attitudetypeId+"/forms/form] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1353,7 +1353,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/"+attitudetypeId+"/forms/form] ended.");
 		
 		return result;
 	}
@@ -1366,7 +1366,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset,
 			@RequestParam(value="applCnt", required=false) String applCnt) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] started.");
 		JSONObject result = new JSONObject();
 		try {
 			String serverName = request.getHeader("x-user-host");
@@ -1384,7 +1384,7 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
 		return result;
 	}
 	
@@ -1397,7 +1397,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=true) String offset,
 			@RequestParam(value="content", required=true) String content,
 			@RequestParam(value="changeDate", required=true) String changeDate) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] started.");
 		JSONObject result = new JSONObject();
 		int update = 0;
 		try {
@@ -1412,7 +1412,7 @@ public class EzAttitudeGWController {
 			result.put("data", update);
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
 		return result;
 	}
 	
@@ -1452,7 +1452,7 @@ public class EzAttitudeGWController {
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
 				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
-					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
 						deptIdList.add(vo.getDeptId());
@@ -1521,7 +1521,7 @@ public class EzAttitudeGWController {
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
 				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
-					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
 						deptIdList.add(vo.getDeptId());
@@ -1580,7 +1580,7 @@ public class EzAttitudeGWController {
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
 				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
-					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
 						deptIdList.add(vo.getDeptId());
@@ -1764,7 +1764,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept, info.getPrimary());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1942,7 +1942,7 @@ public class EzAttitudeGWController {
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
 				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
-					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "");
+					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
 						deptIdList.add(vo.getDeptId());

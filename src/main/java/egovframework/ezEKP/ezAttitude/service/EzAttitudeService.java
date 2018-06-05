@@ -82,7 +82,7 @@ public interface EzAttitudeService {
 
 	public int delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception;
 
-	public List<DeptViewVO> getDeptViewList(String userId, String companyId, String tenantId) throws Exception;
+	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String primary) throws Exception;
 
 	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String searchDeptId, List<String> deptIdList) throws Exception;
 	
@@ -109,7 +109,7 @@ public interface EzAttitudeService {
 
 	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds, String authTypes) throws Exception;
 
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept) throws Exception;
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept, String primary) throws Exception;
 	
 	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag) throws Exception;
 	
