@@ -1148,16 +1148,16 @@
 		<![CDATA[
 			SELECT
 				attitude_id AS attitudeId,
-			    writer_name AS writerName,
-			    writer_title AS writerTitle,
-			    writer_dept_name AS writerDeptName,
+			    writer_name$primary$ AS writerName,
+			    writer_title$primary$ AS writerTitle,
+			    writer_dept_name$primary$ AS writerDeptName,
 			    DATE_FORMAT(DATE_ADD(origin_startdate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS originstartdate,
 			    DATE_FORMAT(DATE_ADD(origin_enddate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS originenddate,
 			    IFNULL(DATE_FORMAT(DATE_ADD(change_startdate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') AS changestartdate,
 			    IFNULL(DATE_FORMAT(DATE_ADD(change_enddate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') AS changeenddate,
-			    origin_type_name AS origintypename,
-			    IFNULL(change_type_name, '') AS changetypename,
-			    appr_user_name AS apprusername,
+			    origin_type_name$primary$ AS origintypename,
+			    IFNULL(change_type_name$primary$, '') AS changetypename,
+			    appr_user_name$primary$ AS apprusername,
 			    DATE_FORMAT(DATE_ADD(appr_date, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS apprdate
 			FROM
 				TBL_ATTITUDE_MODAPPL_HISTORY
@@ -1172,12 +1172,12 @@
 		]]>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			<![CDATA[
-				writer_name LIKE CONCAT('%', #searchUserName#, '%')
+				writer_name$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
 			<![CDATA[
-				writer_title LIKE CONCAT('%', #searchTitle#, '%')
+				writer_title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="deptId">
@@ -1196,7 +1196,7 @@
 			<![CDATA[
 				ORDER BY
 					changestartdate DESC,
-					writername
+					writerName
 			]]>
 		</isEmpty>
 		<isNotEmpty property="listSize">

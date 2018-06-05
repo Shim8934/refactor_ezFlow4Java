@@ -1706,7 +1706,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
+	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList, String primary) throws Exception {
 		LOGGER.debug("getAttitudeHistoryList started");
 		
 		int limit = 0;
@@ -1733,6 +1733,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 		map.put("deptIdList", deptIdList);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 
 		List<ModApplHistoryVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
 

@@ -1955,7 +1955,7 @@ public class EzAttitudeGWController {
 			}
 			
 			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID, searchDeptId, deptIdList);
-			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList);
+			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList, info.getPrimary());
 		
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId(), info.getPrimary());
