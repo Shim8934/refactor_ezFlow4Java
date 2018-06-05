@@ -414,4 +414,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void addComment(CommentVO vo) {
 		insert("EzPMSDAO.addComment", vo);
 	}
+
+	public void deleteComment(Map<String, Object> map) {
+		update("EzPMSDAO.deleteComment", map);
+	}
+	
+	public void updateComment(Map<String, Object> map) {
+		update("EzPMSDAO.updateComment", map);
+	}
 }

@@ -181,7 +181,7 @@
 					
 					getBoardList();
 				} else {
-					alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
+					alert('삭제는 프로젝트 담당자나 작성자만 할 수 있습니다.');
 				}	
 			},
 			error : function() {

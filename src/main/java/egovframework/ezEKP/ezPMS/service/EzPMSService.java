@@ -163,4 +163,8 @@ public interface EzPMSService {
 	public int getCommentListCount(Map<String, Object> param);
 	
 	public void addComment(JSONObject jsonParam);
+
+	public void deleteComment(int tenantId, JSONObject jsonParam) throws Exception;
+	
+	public void modifyComment(JSONObject jsonParam) throws Exception;
 }

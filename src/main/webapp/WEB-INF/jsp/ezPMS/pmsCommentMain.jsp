@@ -275,7 +275,13 @@
 	#projectContent {
 		min-width : 1070px;
 	}
-		
+	
+	#iconLine {
+		height: 72px;
+		margin-left: 10px;
+		margin-top: 5px;
+	}
+	
 	#contentList {
 		width : 98%;
 		margin-left : 1%;

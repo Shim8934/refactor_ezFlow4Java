@@ -2543,6 +2543,8 @@
 		</isEmpty>
 		AND
 			C.tenant_id = #tenantId#
+		AND 
+			C.del_status = 0
 		<isNotEmpty property="searchByUser">
 			AND C.writer_name$lang$ LIKE CONCAT('%',#searchByUser#,'%')
 		</isNotEmpty>
@@ -2595,6 +2597,8 @@
 		</isEqual>
 		AND
 			C.tenant_id = #tenantId#
+		AND 
+			C.del_status = 0
 	</select>
 	
 	<insert id="EzPMSDAO.addComment" parameterClass="CommentVO">
@@ -2611,4 +2615,28 @@
 			)
 		]]>
 	</insert>
+	
+	<update id="EzPMSDAO.deleteComment" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_comment
+			SET del_status = 1
+			WHERE
+				comment_id = #commentId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateComment" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_comment
+			SET 
+				update_date = now(),
+				comment_content = #commentContent#
+			WHERE
+				comment_id = #commentId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
 </sqlMap>

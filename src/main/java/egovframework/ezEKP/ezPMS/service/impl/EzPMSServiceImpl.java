@@ -1885,4 +1885,62 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] addComment ended.");		
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void deleteComment(int tenantId, JSONObject jsonParam) throws Exception {
+		LOGGER.debug("[SERVICE] deleteComment started");
+		
+		String commentId = (String) jsonParam.get("commentId");
+		String userId = (String) jsonParam.get("userId");
+		String writerId = (String) jsonParam.get("writerId");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("projectId", jsonParam.get("projectId"));
+		map.put("userId", userId);
+		map.put("deptId", jsonParam.get("deptId"));
+		
+		int authority = ezPMSDAO.getUserProjectRole(map);
+		
+		map.put("commentId", commentId);
+		
+		if(writerId.equals(userId) || authority == 1) {
+			ezPMSDAO.deleteComment(map);
+		} else {
+			Exception e = new Exception("Only project Manager and Writer are authorized to delete article");
+			throw e;
+		}
+		
+		LOGGER.debug("[SERVICE] deleteComment ended");
+	}
+
+	@Override
+	public void modifyComment(JSONObject jsonParam) throws Exception {
+		LOGGER.debug("[SERVICE] modifyComment started");
+		
+		String commentId = (String) jsonParam.get("commentId");
+		String userId = (String) jsonParam.get("userId");
+		String writerId = (String) jsonParam.get("writerId");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", jsonParam.get("tenantId"));
+		map.put("projectId", jsonParam.get("projectId"));
+		map.put("userId", userId);
+		map.put("deptId", jsonParam.get("deptId"));
+		
+		int authority = ezPMSDAO.getUserProjectRole(map);
+		
+		map.put("commentId", commentId);
+		map.put("commentContent", jsonParam.get("commentContent"));
+		
+		if(writerId.equals(userId) || authority == 1) {
+			ezPMSDAO.updateComment(map);
+		} else {
+			Exception e = new Exception("Only project Manager and Writer are authorized to modify article");
+			throw e;
+		}
+		
+		LOGGER.debug("[SERVICE] modifyComment ended");
+	}
 }

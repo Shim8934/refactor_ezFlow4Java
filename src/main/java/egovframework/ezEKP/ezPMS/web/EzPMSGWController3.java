@@ -868,4 +868,30 @@ public class EzPMSGWController3 {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/comments] ended");
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/comments", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteComment(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
+			ezPMSService.deleteComment(info.getTenantId(), jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] ended");
+		return result;
+	}
 }

@@ -787,4 +787,27 @@ public class EzPMSController3 {
 		
 		return "json";
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/deleteComment.do")
+	public String deleteComment(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS deleteComment started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		Map<String, Object> param = null;
+		jsonParam.put("userId", userInfo.getId());
+		jsonParam.put("deptId", userInfo.getDeptID());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments", param, request, "delete", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("data", "success");
+		}
+		
+		LOGGER.debug("ezPMS deleteComment ended");
+		
+		return "json";
+	}
 }

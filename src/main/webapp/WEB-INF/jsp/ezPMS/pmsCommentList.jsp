@@ -45,7 +45,7 @@
 					searchByEndDate = "";
 					searchByContent = "";
 					
-					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName + "](으)로 의견이 등록되었습니다.");
+					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "](으)로 [" + commentContent.trim() +"] 의견이 등록되었습니다.");
 					getCommentList();
 				} else {
 					alert("실패");
@@ -58,6 +58,64 @@
 			}
 		});
 	}
+	
+	function deleteComment(elem) {
+		if(confirm("정말 삭제하시겠습니까?") == true) {
+			var selectedTR = $(elem).parent().parent();
+			var commentId = selectedTR.attr("data-commentId");
+			var writerId = selectedTR.attr("data-writerId");
+			
+			data = {
+				commentId : commentId,
+				projectId : projectId,
+				writerId  : writerId
+			}
+			
+			$.ajax({
+				type : "DELETE",
+				url : "/ezPMS/deleteComment.do",
+				dataType : "json",
+				contentType : "application/json; charset=UTF-8",
+				data : JSON.stringify(data),
+				success : function(result) {
+					if(result.data == 'success') {
+						alert("삭제되었습니다.");
+						
+						var content = selectedTR.children("td.content").text();
+						var taskName = selectedTR.children("td.taskName").text();
+						var groupId = selectedTR.attr("data-groupId");
+						var taskId = selectedTR.attr("data-taskId");
+							
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + content.trim() + "] 의견이 삭제되었습니다.");
+							
+						getCommentList();
+					} else {
+						alert('삭제는 프로젝트 담당자나 작성자만 할 수 있습니다.');
+					}	
+				},
+				error : function() {
+					alert("삭제에 실패했습니다.");
+				}
+			})
+		}
+	}
+	
+	function modifyComment(elem) {
+		$(".originalContent").css("display", "");
+		$(".modifiedContent").css("display", "none");
+		$(".saveBtn").css("display", "none");
+		$(".modifyBtn").css("display", "");
+		
+		var contentTD = $(elem).parent().siblings(".content");
+		contentTD.children(".originalContent").css("display", "none");
+		contentTD.children(".modifiedContent").css("display", "");
+		$(elem).siblings(".saveBtn").css("display", "");
+		$(elem).css("display", "none");
+	}
+	
+	function saveComment(elem) {
+		
+	}
 </script>
 
 <div id="divList" style="width: 100%;">
@@ -66,21 +124,26 @@
 			<tr style="height: 37px;" id="BoardList_TH">
 				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">작성자</th>
 				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
-				<th onclick="setListOrder(this)" data-order='CONTENT'>내용</th>
+				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'>내용</th>
 				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">작성일시</th>
 				<th width="15%">수정/삭제</th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
 			<c:forEach items="${data}" var="commentVO">
-				<tr data-commentId="${commentVO.commentId}" data-groupId="${commentVO.groupId}" data-taskId="${commentVO.taskId}">
+				<tr data-commentId="${commentVO.commentId}" data-groupId="${commentVO.groupId}" 
+					data-taskId="${commentVO.taskId}" data-writerId="${commentVO.writerId}">
 					<td>${commentVO.writerName}</td>
-					<td>${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}</td>
-					<td style="text-align: left;">${commentVO.commentContent}</td>
+					<td class="taskName">${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}</td>
+					<td class="content" style="text-align: left;">
+						<span class="originalContent">${commentVO.commentContent}</span>
+						<textarea class="modifiedContent" style="display: none;"  rows="" cols="">${commentVO.commentContent}</textarea>
+					</td>
 					<td>${commentVO.writeDate}</td>
 					<td>
-						<span><img src="/images/ezLadder/icon_game03_no.png" height="25"/></span>
-						<span><img src="/images/ezLadder/icon_imposDelete_thirty.png" height="25"/></span>
+						<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezLadder/icon_game03_no.png" height="25"/></span>
+						<span onclick="saveComment(this)"   class="saveBtn"   style="cursor: pointer; display: none;"><img src="" alt="저장" height="25"/></span>
+						<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezLadder/icon_imposDelete_thirty.png" height="25"/></span>
 					</td>
 				</tr>
 			</c:forEach>
