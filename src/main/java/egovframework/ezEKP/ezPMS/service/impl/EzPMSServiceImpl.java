@@ -29,6 +29,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
+import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
@@ -937,11 +938,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				} else if (location.equals("taskList")) {
 					taskGroupCount = ezPMSDAO.getTaskListCount(map);
 				} else if(location.equals("board")) {
-					int boardCount = ezPMSDAO.getBoardListCount(map);
-					
-					if(boardCount > 0) {
-						vo.setText(vo.getText() + "(" + boardCount + ")");
-					}
+					taskGroupCount = ezPMSDAO.getBoardListCount(map);
+				} else if(location.equals("comment")) {
+					taskGroupCount = ezPMSDAO.getCommentListCount(map);
+					System.out.println("======================================" + taskGroupCount);
 				}
 			}
 
@@ -975,9 +975,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					map.put("taskId", vo.getTaskId());
 					map.put("groupId", vo.getGroupId());
 					
-					int boardCount = ezPMSDAO.getBoardListCount(map);
-					if(boardCount > 0) {
-						vo.setText(vo.getText() + "(" + boardCount + ")");
+					int taskGroupCount = ezPMSDAO.getBoardListCount(map);
+					if(taskGroupCount > 0) {
+						vo.setText(vo.getText() + "(" + taskGroupCount + ")");
+					}
+					
+					map.remove("taskId");
+					map.remove("groupId");
+				} else if(location.equals("comment")) {
+					map.put("taskId", vo.getTaskId());
+					map.put("groupId", vo.getGroupId());
+					
+					int taskGroupCount = ezPMSDAO.getCommentListCount(map);
+					if(taskGroupCount > 0) {
+						vo.setText(vo.getText() + "(" + taskGroupCount + ")");
 					}
 					
 					map.remove("taskId");
@@ -1832,6 +1843,46 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.addPreTaskRel(map);
 		LOGGER.debug("[SERVICE] addPreTaskRel ended.");
 	}
-	
-	
+
+	@Override
+	public List<CommentVO> getCommentList(Map<String, Object> param) {
+		LOGGER.debug("[SERVICE] getCommentList started.");
+		
+		LOGGER.debug("[SERVICE] getCommentList ended.");
+		return ezPMSDAO.getCommentList(param);
+	}
+
+	@Override
+	public int getCommentListCount(Map<String, Object> param) {
+		LOGGER.debug("[SERVICE] getCommentListCount started.");
+		
+		LOGGER.debug("[SERVICE] getCommentListCount ended.");
+		return ezPMSDAO.getCommentListCount(param);
+	}
+
+	@Override
+	public void addComment(JSONObject jsonParam) {
+		LOGGER.debug("[SERVICE] addComment started.");
+		
+		CommentVO vo = new CommentVO();
+		
+		if(jsonParam.get("taskId") != null && !((String)jsonParam.get("taskId")).equals("")) {
+			vo.setTaskId(Long.parseLong((String) jsonParam.get("taskId")));
+		}
+		
+		vo.setTenantId((int) jsonParam.get("tenantId"));
+		vo.setGroupId(Long.parseLong((String) jsonParam.get("groupId")));
+		vo.setUpdateDate((String) jsonParam.get("updateDate"));
+		vo.setCommentContent((String) jsonParam.get("commentContent"));
+		vo.setWriterId((String) jsonParam.get("writerId"));
+		vo.setWriteDate((String) jsonParam.get("writeDate"));
+		vo.setWriterName((String) jsonParam.get("writerName"));
+		vo.setWriterName2((String) jsonParam.get("writerName2"));
+		vo.setWriterDeptName((String) jsonParam.get("writerDeptName"));
+		vo.setWriterDeptName2((String) jsonParam.get("writerDeptName2"));
+		
+		ezPMSDAO.addComment(vo);
+		
+		LOGGER.debug("[SERVICE] addComment ended.");		
+	}
 }

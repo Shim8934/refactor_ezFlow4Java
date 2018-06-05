@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -179,8 +178,7 @@
 		searchByContent = $("#searchByContent").val();
 		
 		// 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
-		taskId = "";
-		groupId = "";
+		$("li[role='treeitem'][aria-level='1']").last().click();
 		
 		getBoardList();
 	}

@@ -327,19 +327,21 @@ public class EzPMSController3 {
 			totalCount = Integer.parseInt((String) resultBody.get("data"));
 		}
 		
-		ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
-		model.addAttribute("paging", paging);
-		
-		param.put("startRow", paging.getStartCount());
-		param.put("limit", listCnt);
-		
-		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
-		status = resultBody.get("status").toString();
-		
-		if(status.equals("ok")) {
-			JSONArray boardList = (JSONArray) resultBody.get("data");
-			model.addAttribute("data", boardList);
-		} 
+		if(totalCount > 0) {
+			ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
+			model.addAttribute("paging", paging);
+			
+			param.put("startRow", paging.getStartCount());
+			param.put("limit", listCnt);
+			
+			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+			status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONArray boardList = (JSONArray) resultBody.get("data");
+				model.addAttribute("data", boardList);
+			} 
+		}
 		
 		LOGGER.debug("ezPMS getBoardList ended");
 		
@@ -683,5 +685,106 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS getboardJSON ended");
 		
 		return board;
+	}
+	
+	/**
+	 * 프로젝트 의견 화면 호출
+	 */
+	@RequestMapping(value = "/ezPMS/getCommentMain.do")
+	public String getCommentMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS getCommentMain started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String projectId = request.getParameter("projectId");
+		String onlyGroup = request.getParameter("onlyGroup");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("onlyGroup", onlyGroup);
+		param.put("location", "comment");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray treeData = (JSONArray) resultBody.get("data");
+			model.addAttribute("data", treeData);
+		}
+		
+		model.addAttribute("projectId", projectId);
+		
+		LOGGER.debug("ezPMS getCommentMain ended");		
+		return "ezPMS/pmsCommentMain";
+	}
+	
+	@RequestMapping(value="/ezPMS/getCommentList.do")
+	public String getCommentList(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) throws Exception {	
+		LOGGER.debug("ezPMS getCommentList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		int totalCount = 0;
+		int listCnt = 10;
+		int countPage = 10;
+		int currentPage = (int) param.get("currentPage");
+		String projectId = (String) param.get("projectId");
+	
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments/list-count/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			totalCount = Integer.parseInt((String) resultBody.get("data"));
+		}
+		
+		if (totalCount > 0) {
+			ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
+			model.addAttribute("paging", paging);
+			
+			param.put("startRow", paging.getStartCount());
+			param.put("limit", listCnt);
+			
+			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+			status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONArray commentList = (JSONArray) resultBody.get("data");
+				model.addAttribute("data", commentList);
+			} 
+		}
+		
+		LOGGER.debug("ezPMS getCommentList ended");
+		
+		return "/ezPMS/pmsCommentList";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/addComment.do")
+	public String addComment(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) throws Exception {		
+		LOGGER.debug("ezPMS addComment started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
+		Map<String, Object> param = null;
+		
+		jsonParam.put("tenantId", userInfo.getTenantId());
+		jsonParam.put("updateDate", today);
+		jsonParam.put("writerId", userInfo.getId());
+		jsonParam.put("writeDate", today);
+		jsonParam.put("writerName", userInfo.getDisplayName());
+		jsonParam.put("writerName2", userInfo.getDisplayName2());
+		jsonParam.put("writerDeptName", userInfo.getDeptName());
+		jsonParam.put("writerDeptName2", userInfo.getDeptName2());
+	
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments", param, request, "post", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("data", "success"); // mode(new/modify)에 따라 currentPage = 1로 reset할지의 여부를 결정하기 위함
+		}
+		
+		LOGGER.debug("ezPMS addComment ended");
+		
+		return "json";
 	}
 }

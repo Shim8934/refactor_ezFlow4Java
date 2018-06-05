@@ -22,6 +22,7 @@
 	<typeAlias 	alias="ProjectBoardVO" 						type="egovframework.ezEKP.ezPMS.vo.ProjectBoardVO"/>
 	<typeAlias 	alias="FileVO" 								type="egovframework.ezEKP.ezPMS.vo.FileVO"/>
 	<typeAlias 	alias="BoardViewerVO" 						type="egovframework.ezEKP.ezPMS.vo.BoardViewerVO"/>
+	<typeAlias 	alias="CommentVO" 							type="egovframework.ezEKP.ezPMS.vo.CommentVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -303,6 +304,20 @@
     	<result property="position"							column="position"/>
     	<result property="userDeptName"						column="user_deptname"/>
     	<result property="readDate"							column="read_date"/>
+    </resultMap>
+    
+    <resultMap class="CommentVO" id="commentVO">
+    	<result property="commentId"						column="comment_id"/>
+    	<result property="updateDate"						column="update_date"/>
+    	<result property="commentContent"					column="comment_content"/>
+    	<result property="writerId"							column="writer_id"/>
+    	<result property="writeDate"						column="write_date"/>
+    	<result property="writerName"						column="writer_name"/>
+    	<result property="writerDeptName"					column="writer_deptname"/>
+    	<result property="taskName"							column="task_name"/>
+    	<result property="taskId"							column="task_id"/>
+    	<result property="groupId"							column="group_id"/>
+    	<result property="groupName"						column="group_name"/>
     </resultMap>
 	
     <!-- 조직도 만들기 위한 쿼리 -->
@@ -1596,14 +1611,14 @@
 				ELSE B.write_type 
 			END ASC, 
 		</isEmpty>
-			<isNotEmpty property="orderWhat">  
-				$orderWhat$ $orderHow$,
-			</isNotEmpty>
-			B.root_item_id DESC, 
-			B.item_level ASC,
-			B.item_id DESC
-			
-			LIMIT #startRow#, #limit#
+		<isNotEmpty property="orderWhat">  
+			$orderWhat$ $orderHow$,
+		</isNotEmpty>
+		B.root_item_id DESC, 
+		B.item_level ASC,
+		B.item_id DESC
+		
+		LIMIT #startRow#, #limit#
 	</select>
 	
 	<select id="EzPMSDAO.getBoardListCount" parameterClass="map" resultClass="Integer">
@@ -2503,5 +2518,97 @@
 			#rowIndexId#, #taskId#, #tenantId#, #projectId#
 		)				
 	]]>
+	</insert>
+	
+	<select id="EzPMSDAO.getCommentList" parameterClass="map" resultMap="commentVO">
+		<![CDATA[
+			SELECT 
+				C.comment_id, 		C.update_date, 		C.comment_content,		C.writer_id,			C.write_date,		
+				C.writer_name$lang$ AS writer_name,		C.writer_deptname$lang$ AS writer_deptname,		T.task_name,			
+				C.task_id,			C.group_id,			G.group_name
+    		FROM tbl_pms_comment C
+    		LEFT JOIN tbl_pms_task T
+			ON C.task_id = T.task_id
+			JOIN tbl_pms_group G
+			ON C.group_id = G.group_id
+    		WHERE
+		]]>
+		<isNotEmpty property="taskId">
+			C.task_id = #taskId#
+		</isNotEmpty>
+		<isEmpty property="taskId">
+			(C.group_id = #groupId# 
+			 OR G.upper_group_id = #groupId#
+			 OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+		</isEmpty>
+		AND
+			C.tenant_id = #tenantId#
+		<isNotEmpty property="searchByUser">
+			AND C.writer_name$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND C.write_date >= #searchByStartDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND C.write_date <= #searchByEndDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByContent">
+			AND C.comment_content LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+		
+			ORDER BY 
+		<isNotEmpty property="orderWhat">  
+			$orderWhat$ $orderHow$,
+		</isNotEmpty>
+			C.comment_id DESC
+			
+			LIMIT #startRow#, #limit#
+	</select>
+	
+	<select id="EzPMSDAO.getCommentListCount" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				count(comment_id) 		
+    		FROM tbl_pms_comment C
+    		JOIN tbl_pms_group G
+			ON C.group_id = G.group_id
+    		WHERE
+		]]>
+		<isNotEmpty property="taskId">
+			<isNotEqual property="taskId" compareValue="0">
+			C.task_id = #taskId#
+			</isNotEqual>
+		</isNotEmpty>
+		<isEmpty property="taskId">
+			(C.group_id = #groupId# 
+			 OR G.upper_group_id = #groupId#
+			 OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+		</isEmpty>
+		<isEqual property="taskId" compareValue="0">
+			(C.group_id = #groupId# 
+			 OR G.upper_group_id = #groupId#
+			 OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+		</isEqual>
+		AND
+			C.tenant_id = #tenantId#
+	</select>
+	
+	<insert id="EzPMSDAO.addComment" parameterClass="CommentVO">
+		<![CDATA[
+			INSERT INTO tbl_pms_comment (
+				tenant_id,			task_id,			group_id,			update_date,			comment_content,		
+				writer_id,			write_date,			writer_name,		writer_name2,			writer_deptname,		
+				writer_deptname2
+			)
+			VALUES (
+				#tenantId#,			#taskId#,			#groupId#,			#updateDate#,			#commentContent#,		
+				#writerId#,			#writeDate#,		#writerName#,		#writerName2#,			#writerDeptName#,		
+				#writerDeptName2#
+			)
+		]]>
 	</insert>
 </sqlMap>

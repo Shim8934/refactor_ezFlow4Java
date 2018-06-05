@@ -72,12 +72,12 @@
 							var groupId = deletedTR.attr("data-groupId");
 							var taskId = deletedTR.attr("data-taskId");
 							
-							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물을 이동하였습니다.");
+							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + title.trim() + "] 게시물을 이동하였습니다.");
 						}
 						
 						parent.getBoardList();
 					} else {
-						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName + "](으)로 " + "[" + parent.title + "] 게시물을 이동하였습니다.");
+						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName.trim() + "](으)로 " + "[" + parent.title.trim() + "] 게시물을 이동하였습니다.");
 						parent.location.reload();
 					}
 					

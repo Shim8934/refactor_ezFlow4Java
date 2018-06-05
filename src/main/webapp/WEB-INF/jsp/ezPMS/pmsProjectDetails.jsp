@@ -71,7 +71,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//의견으로 가는 부분 url 수정하기
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getComment.do");
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getCommentMain.do?projectId=" + projectId + "&onlyGroup=false");
 	});
 	$(".tab").hover(function(){
 		$(this).addClass("tabover");

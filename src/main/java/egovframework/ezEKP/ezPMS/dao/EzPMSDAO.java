@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
+import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.FileVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
@@ -399,6 +400,18 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	public void addPreTaskRel(Map<String, Object> map) {
 		insert ("EzPMSDAO.addPreTaskRel", map);
-		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommentVO> getCommentList(Map<String, Object> map) {
+		return (List<CommentVO>) list("EzPMSDAO.getCommentList", map);
+	}
+	
+	public int getCommentListCount(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.getCommentListCount", map);
+	}
+	
+	public void addComment(CommentVO vo) {
+		insert("EzPMSDAO.addComment", vo);
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
+import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
@@ -156,4 +157,10 @@ public interface EzPMSService {
 	public List<BoardViewerVO> getBoardViewerList(int tenantId, Map<String, Object> param);
 
 	public void addPreTaskRel(long taskId, int rowIndexId, long projectId, int tenantId);
+	
+	public List<CommentVO> getCommentList(Map<String, Object> param);
+	
+	public int getCommentListCount(Map<String, Object> param);
+	
+	public void addComment(JSONObject jsonParam);
 }

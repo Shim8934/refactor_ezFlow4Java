@@ -492,16 +492,6 @@ public class EzPMSController {
 	}
 	
 	/**
-	 * 프로젝트 의견 화면 호출
-	 */
-	@RequestMapping(value = "/ezPMS/getComment.do")
-	public String getComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getComment started");
-		LOGGER.debug("ezPMS getComment ended");		
-		return "ezPMS/pmsComments";
-	}
-	
-	/**
 	 * 프로젝트 참여 멤버 조회
 	 * @param loginCookie
 	 * @param request
