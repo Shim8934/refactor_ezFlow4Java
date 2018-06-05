@@ -89,7 +89,7 @@ public class EzLadderController {
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladder-list/users/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/ladder-list/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -211,7 +211,7 @@ public class EzLadderController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId() + "/searchUser";
+		String url = gwServerUrl + "/rest/ladder/ladders/writers/" + userInfo.getId() + "/searchUser";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -258,7 +258,7 @@ public class EzLadderController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/ladders/writers/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -313,9 +313,9 @@ public class EzLadderController {
 		String url = "";
 		
 		if(ladderBmId == null || ladderBmId.equals("")) {
-			url = gwServerUrl + "/ladder/BMs/users/" + userInfo.getId();
+			url = gwServerUrl + "/rest/ladder/BMs/users/" + userInfo.getId();
 		} else {
-			url = gwServerUrl + "/ladder/BMs/" + ladderBmId + "/users/" + userInfo.getId();
+			url = gwServerUrl + "/rest/ladder/BMs/" + ladderBmId + "/users/" + userInfo.getId();
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -381,9 +381,9 @@ public class EzLadderController {
 		String url = "";
 		
 		if(flag.equals("add")) {
-			url = gwServerUrl + "/ladder/BMs/users/" + userInfo.getId();
+			url = gwServerUrl + "/rest/ladder/BMs/users/" + userInfo.getId();
 		} else {
-			url = gwServerUrl + "/ladder/BMs/" + BMVO.getLadderBmId() + "/users/" + userInfo.getId();
+			url = gwServerUrl + "/rest/ladder/BMs/" + BMVO.getLadderBmId() + "/users/" + userInfo.getId();
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -441,7 +441,7 @@ public class EzLadderController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie); 
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "/comment/users/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/ladders/" + ladderId + "/comment/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -487,7 +487,7 @@ public class EzLadderController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "/comment/users/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/ladders/" + ladderId + "/comment/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -554,7 +554,7 @@ public class EzLadderController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladder-list/users/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/ladder-list/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -614,7 +614,7 @@ public class EzLadderController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladderGame/" +ladderId + "/users/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/ladderGame/" +ladderId + "/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -678,7 +678,7 @@ public class EzLadderController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/delete/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/ladders/delete/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -731,7 +731,7 @@ public class EzLadderController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "/users/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/ladders/" + ladderId + "/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -791,7 +791,7 @@ public class EzLadderController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/start/" + allData[0] + "/users/" + userInfo.getId();
+		String url = gwServerUrl + "/rest/ladder/start/" + allData[0] + "/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

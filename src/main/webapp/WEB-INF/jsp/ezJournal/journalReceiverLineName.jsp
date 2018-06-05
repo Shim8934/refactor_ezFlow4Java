@@ -91,7 +91,7 @@
 		<h1><spring:message code='ezJournal.t93'/></h1>
 		<span>▒ <spring:message code='ezJournal.t94'/></span>
 		<div class="nobox" style="margin-top:10px">
-		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="receiverFavoriteName" name="receiverFavoriteName" onkeypress="checkEnterKey()" maxlength="7">
+		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="receiverFavoriteName" name="receiverFavoriteName" onkeypress="checkEnterKey()" maxlength="20">
 		</div>		
 			
 		<div class="btnposition btnpositionNew">
