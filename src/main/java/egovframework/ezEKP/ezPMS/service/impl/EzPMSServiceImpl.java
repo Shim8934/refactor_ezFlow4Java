@@ -1961,4 +1961,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] modifyComment ended");
 	}
+	
+	@Override
+	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId) {
+		LOGGER.debug("[SERVICE] getGroupMemberList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getGroupMemberList ended.");
+		return ezPMSDAO.getGroupMemberList(map);
+	}
 }

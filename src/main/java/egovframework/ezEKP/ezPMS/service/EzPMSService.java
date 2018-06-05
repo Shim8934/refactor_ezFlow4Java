@@ -169,4 +169,7 @@ public interface EzPMSService {
 	public void deleteComment(int tenantId, JSONObject jsonParam) throws Exception;
 	
 	public void modifyComment(JSONObject jsonParam) throws Exception;
+	
+	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId);
+
 }

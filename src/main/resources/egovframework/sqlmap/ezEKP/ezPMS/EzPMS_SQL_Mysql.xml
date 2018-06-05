@@ -2674,4 +2674,29 @@
 				tenant_id = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getGroupMemberList" parameterClass="map" resultMap="projectGroupMemberVO">
+		<![CDATA[
+			SELECT
+				gm.GROUP_MEMBER_ID,
+				gm.USER_ID,
+				gm.USER_NAME,
+				gm.USER_NAME2,
+				gm.USER_DEPTNAME,
+				gm.USER_DEPTNAME2,
+				gm.MEMBER_ROLE_ID,
+				gm.TENANT_ID,
+				gm.GROUP_ID
+			FROM
+				TBL_PMS_GROUPMEMBER gm
+			JOIN
+				TBL_PMS_GROUP g
+			ON
+				gm.GROUP_ID = g.GROUP_ID
+			AND
+				gm.TENANT_ID = #tenantId#
+			WHERE
+				g.PROJECT_ID = #projectId#
+		]]>
+	</select>
 </sqlMap>

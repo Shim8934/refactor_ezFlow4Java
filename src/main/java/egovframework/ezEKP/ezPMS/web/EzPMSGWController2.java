@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -844,6 +845,73 @@ public class EzPMSGWController2 {
 		}
 		
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 그룹 리스트(간트차트 용)
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/groups/users/{userId}/gantt", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getGroupMemberList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String orderWhat = request.getParameter("orderWhat");
+			String orderHow = request.getParameter("orderHow");
+			int startRow = Integer.parseInt(request.getParameter("startRow") != null ? request.getParameter("startRow") : "-1" );
+			int limit = Integer.parseInt(request.getParameter("limit") != null ? request.getParameter("limit") : "-1" ); 
+			
+			if (orderWhat == null || orderWhat.equals("")) {
+				orderWhat = "init";
+			}
+			
+			SearchVO search = new SearchVO();
+			search.setTenantId(info.getTenantId());
+			search.setProjectId(Long.parseLong(projectId));
+			search.setUpperGroupName(request.getParameter("searchByUpperGroupName"));
+			search.setMemberName(request.getParameter("searchByUser"));
+			search.setPlanStartDate(request.getParameter("searchByStartDate"));
+			search.setPlanEndDate(request.getParameter("searchByEndDate"));
+			search.setGroupName(request.getParameter("searchByGroupName"));
+			search.setOverview(request.getParameter("searchByOverview"));
+			search.setProjectName(request.getParameter("searchByProjectName"));
+			search.setMemberId(userId);
+			
+			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang);
+			List<ProjectGroupMemberVO> groupMemberList = ezPMSService.getGroupMemberList(Long.parseLong(projectId), info.getTenantId());
+			
+			for(int i = 0; i < groupList.size(); i++){
+				Long groupId = groupList.get(i).getGroupId();
+				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();
+				List<ProjectGroupMemberVO> groupMemberListTemp = new ArrayList<ProjectGroupMemberVO>();
+				while(iter.hasNext()){
+					ProjectGroupMemberVO groupMember = iter.next();
+					if(groupId == groupMember.getGroupId()){
+						groupMemberListTemp.add(groupMember);
+						groupMemberList.remove(groupMember);
+					}
+				}
+				groupList.get(i).setGroupMember(groupMemberListTemp);
+			}
+			
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", groupList);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"] ended.");
 		return result;
 	}
 }
