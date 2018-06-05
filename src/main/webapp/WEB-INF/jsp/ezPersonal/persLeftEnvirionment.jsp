@@ -11,18 +11,20 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-		 window.onload = function () {
+		 	window.onload = function () {
 			 	if ("${portalEnv}" == "1") {
-		            document.getElementById("Portal_sub1").parentNode.onclick()
+		            //document.getElementById("Portal_sub1").parentNode.onclick()
 		            document.getElementById("Portal_sub1").onclick();
 		        } else if ("${portalEnv}" == "2") {
-		        	document.getElementById("Portal_sub4").parentNode.onclick()
+		        	//document.getElementById("Portal_sub4").parentNode.onclick()
 		            document.getElementById("Portal_sub4").onclick();
-		        }	
+		        } else {
+		        	document.getElementById("Portal_sub1").onclick();
+		        }
 			 
 			 
 		        if ("${funCode}" == "1" || "${packageType}" != "standard" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
-		            document.getElementById("UserInfo").parentNode.onclick()
+		            //document.getElementById("UserInfo").parentNode.onclick()
 		            document.getElementById("UserInfo").onclick();
 		        }
 		        
