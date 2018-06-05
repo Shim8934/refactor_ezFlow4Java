@@ -145,12 +145,7 @@
 		}
 		
 		function goAddBoardReply() {
-			console.log(rootItemId);
-			var feature = GetOpenPosition(790, 800);
-			window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&groupId=" + groupId 
-											 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=reply"
-											 + "&rootItemId=" + rootItemId + "&itemLevel=" + itemLevel, 
-						"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
+			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=reply' + '&rootItemId=' + rootItemId + '&itemLevel=' + itemLevel;
 		}
 	</script>
 </head>

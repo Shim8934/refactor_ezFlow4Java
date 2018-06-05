@@ -208,67 +208,61 @@
 	}
 </style>
 <div id="divList" style="width: 100%;">
-	<div id="lvBoardList">
-		<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
-			<thead id="BoardList_THEAD">
-				<tr style="height: 37px;" id="BoardList_TH">
-					<th class="checkboxHeader" width="3%"><input type="checkbox" onchange="selectAllTR(this);"></th>
-					<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%">No</th>
-					<th onclick="setListOrder(this)" data-order='FILE' width="3%"><img src="/images/newAttach.gif"></th>
-					<th onclick="setListOrder(this)" data-order='TITLE'>제목</th>
-					<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
-					<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%">부서</th>
-					<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">게시자</th>
-					<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">게시일</th>
-					<th onclick="setListOrder(this)" data-order='READ_COUNT' width="5%">조회수</th>
-				</tr>
-			</thead>
-		</table>
-	</div>
-	<div id="projectListBody" multiselectable="false" useocs="false" style="overflow:auto; min-width: 469px; height: 456px;">
-		<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" width="100%" border="0" class="mainlist" style="">
-			<tbody style="background-color: rgb(255, 255, 255);">
-				<c:forEach items="${data}" var="projectBoardVO">
-					<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
-						data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
-						<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
-						<td>
-							<c:choose>
-								<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
-									<img src="/images/i_notice.gif" alt="NOTICE" />
-								</c:when>
-								<c:otherwise>${projectBoardVO.itemId}</c:otherwise>
-							</c:choose>
-						</td>
+	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
+		<thead id="tableHeader">
+			<tr style="height: 37px;" id="BoardList_TH">
+				<th class="checkboxHeader" width="3%"><input type="checkbox" onchange="selectAllTR(this);"></th>
+				<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%">No</th>
+				<th onclick="setListOrder(this)" data-order='FILE' width="3%"><img src="/images/newAttach.gif"></th>
+				<th onclick="setListOrder(this)" data-order='TITLE'>제목</th>
+				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
+				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%">부서</th>
+				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">게시자</th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">게시일</th>
+				<th onclick="setListOrder(this)" data-order='READ_COUNT' width="5%">조회수</th>
+			</tr>
+		</thead>
+		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
+			<c:forEach items="${data}" var="projectBoardVO">
+				<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
+					data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
+					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
+					<td>
 						<c:choose>
-							<c:when test="${projectBoardVO.fileCNT eq 0}">
-								<td></td>
+							<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
+								<img src="/images/i_notice.gif" alt="NOTICE" />
 							</c:when>
-							<c:otherwise>
-								<td><img src="/images/newAttach.gif"></td>
-							</c:otherwise>
-						</c:choose>	
-							<td class="boardTitle" style="text-align: left;">
-								<c:forEach begin='0' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;</c:forEach>
-								<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> ${projectBoardVO.title}
-							</td>
-						<c:choose>
-							<c:when test="${projectBoardVO.taskName eq null}">
-								<td class="taskName">${projectBoardVO.groupName}</td>
-							</c:when>
-							<c:otherwise>
-								<td class="taskName">${projectBoardVO.taskName}</td>
-							</c:otherwise>
+							<c:otherwise>${projectBoardVO.itemId}</c:otherwise>
 						</c:choose>
-						<td>${projectBoardVO.writerDeptName}</td>
-						<td>${projectBoardVO.writerName}</td>
-						<td>${fn:substring(projectBoardVO.writeDate, 0, 19)}</td>
-						<td>${projectBoardVO.readCount}</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-	</div>
+					</td>
+					<c:choose>
+						<c:when test="${projectBoardVO.fileCNT eq 0}">
+							<td></td>
+						</c:when>
+						<c:otherwise>
+							<td><img src="/images/newAttach.gif"></td>
+						</c:otherwise>
+					</c:choose>	
+						<td class="boardTitle" style="text-align: left;">
+							<c:forEach begin='0' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;</c:forEach>
+							<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> ${projectBoardVO.title}
+						</td>
+					<c:choose>
+						<c:when test="${projectBoardVO.taskName eq null}">
+							<td class="taskName">${projectBoardVO.groupName}</td>
+						</c:when>
+						<c:otherwise>
+							<td class="taskName">${projectBoardVO.taskName}</td>
+						</c:otherwise>
+					</c:choose>
+					<td>${projectBoardVO.writerDeptName}</td>
+					<td>${projectBoardVO.writerName}</td>
+					<td>${fn:substring(projectBoardVO.writeDate, 0, 19)}</td>
+					<td>${projectBoardVO.readCount}</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>	
 </div>
 <c:choose>
 	<c:when test="${paging.endPage>0 }">

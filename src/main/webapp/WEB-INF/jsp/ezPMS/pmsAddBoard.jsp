@@ -28,6 +28,7 @@
 	var writerDeptName = "${writerDeptName}";
 	
 	var title = '${board.title}';
+	
 	var writeOverview = '${board.writeOverview}';
 	var writeType = "${board.writeType}";
 	var writeContent = '${writeContent.trim()}';
@@ -85,13 +86,19 @@
 			$('#writeOverview').val(writeOverview);
 			
 			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
-		} else {
+		} else if(mode == 'new') {
+			
 			taskName = '${taskName}';
-		}
-		
-		if(mode == 'reply') {
+			
+		} else if(mode == 'reply') {
+			
+			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
+			
+			// 답변 작성 시에는 작업을 변경할 수 없다.
 			$("#taskSelection").attr("onclick", "");
 			$("#taskSelection").css("cursor", "default");
+			
+			$('#title').val(title);
 		}
 		
 		$('#taskName').text(taskName);		
@@ -111,6 +118,18 @@
 	function Editor_Complete() {
 		
 		if(mode == 'modify') {
+			message.SetEditorContent(writeContent);
+		} else if(mode == 'reply') {
+			writeContent = ReplaceText(writeContent, "class=&quot;FIELD&quot;", "");
+			writeContent = ReplaceText(writeContent, "class=FIELD", "");
+			writeContent = ReplaceText(writeContent, "&amp;", "&");
+			writeContent = ReplaceText(writeContent, "&lt;", "<");
+			writeContent = ReplaceText(writeContent, "&gt;", ">");
+			
+			writeContent = "<body free>" + writeContent + "</body>";
+			
+			writeContent = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + "${board.writeDate}" + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + "${board.writerName}" + "(" + "${board.writerPosition}" + "," + "${board.writerDeptName}" + ")<br><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + "<c:out value = '${boardListVO.title}' />" + "<br><br>" + writeContent;
+			
 			message.SetEditorContent(writeContent);
 		}
 	}
@@ -198,7 +217,7 @@
 					alert("성공");
 					doubleSubmitFlag = false;
 					
-					if(result.data == 'new') {
+					if(result.data == 'new' || result.data == 'reply') {
 						
 						if(taskId == "null") {
 							taskId = null;

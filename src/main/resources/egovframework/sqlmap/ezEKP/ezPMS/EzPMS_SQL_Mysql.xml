@@ -1417,19 +1417,27 @@
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
 				write_content,		write_date,			write_update_date,	read_count,				task_id,
 				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
-				writer_position,	writer_position2,	root_item_id
+				writer_position,	writer_position2
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
 				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
-				#writerPosition#,	#writerPosition2#,	LAST_INSERT_ID()
+				#writerPosition#,	#writerPosition2#
 			)
 		]]>
 		<selectKey keyProperty="itemId" resultClass="Integer">
     		SELECT LAST_INSERT_ID()
     	</selectKey>
 	</insert>
+	
+	<update id="EzPMSDAO.updateRootItemId" parameterClass="Integer">
+		<![CDATA[
+			UPDATE tbl_pms_item_list 
+			SET root_item_id = #itemId# 
+			WHERE item_id = #itemId#
+		]]>
+	</update>
 	
 	<insert id="EzPMSDAO.addBoardReply" parameterClass="ProjectBoardVO">
 		<![CDATA[

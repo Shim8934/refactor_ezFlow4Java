@@ -222,6 +222,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Integer) insert ("EzPMSDAO.addBoard", vo);
 	}
 	
+	public void updateRootItemId(int itemId) {
+		update("EzPMSDAO.updateRootItemId", itemId);
+	}
+	
 	public Integer addBoardReplay(ProjectBoardVO vo) {
 		return (Integer) insert ("EzPMSDAO.addBoardReply", vo);
 	}

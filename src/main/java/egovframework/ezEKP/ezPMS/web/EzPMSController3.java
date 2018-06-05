@@ -135,7 +135,24 @@ public class EzPMSController3 {
 					model.addAttribute("fileList", URLEncoder.encode(fileList.toString(), "UTF-8").replaceAll("\\+", "%20"));
 				}
 			}
-		} 
+		} else if(mode.equals("reply")) {
+			String itemId = request.getParameter("itemId");
+			String projectId = request.getParameter("projectId");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userId);
+			param.put("itemId", itemId);
+			param.put("projectId", projectId);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONObject board = (JSONObject) resultBody.get("data");
+				model.addAttribute("board", board);
+				model.addAttribute("writeContent", board.get("writeContent").toString().replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " "));
+			}
+		}
 		
 		model.addAttribute("writerId", userId);
 		model.addAttribute("writerName", writerName);

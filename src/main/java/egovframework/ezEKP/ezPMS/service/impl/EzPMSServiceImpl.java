@@ -1255,6 +1255,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			lastInsertId = ezPMSDAO.addBoardReplay(vo);
 		} else {
 			lastInsertId = ezPMSDAO.addBoard(vo);
+			ezPMSDAO.updateRootItemId(lastInsertId);
 		}
 		
 		
