@@ -34,15 +34,9 @@ public interface EzWebFolderService_y {
 	// folderUser 테이블에 데이터 생성
 	LoginVO getUserInfo(int tenantId , String comId, String userId ) throws Exception;
 	
-	// 부서폴더 리스트 가져오는 메서드
-	List<Map<String, Object>> getDeptFolder(int tenantId, String userId ,String deptId , String comId, String folderType) throws Exception;
-	
 	// 겸직자인지 판단하는 메서드 
 	List<String> getAddJobList(int tenantId, String userId) throws Exception;
 	
-	// 첫 로그인 후 폴더가 존재하는지 판단하는 메서드 
-	int existFolderChk(String userId, String deptId, String comId, String folderType, int tenantId, String primary);
-
 	// 폴더 수정
 	void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2 , String timeUTC);
 	

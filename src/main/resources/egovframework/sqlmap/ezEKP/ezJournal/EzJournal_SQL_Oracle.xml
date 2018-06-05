@@ -565,7 +565,7 @@
 				and
 					PHYSICALDELIVERYOFFICENAME = #companyId#
 				and
-				    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE) 
+				    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
 				<isNotEqual property="key" compareValue="DEPARTMENT">
 					and 
 						$key$ like '%'||#value#||'%'
