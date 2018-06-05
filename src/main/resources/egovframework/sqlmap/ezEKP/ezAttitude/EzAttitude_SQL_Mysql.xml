@@ -1256,70 +1256,6 @@
 		</iterate>
 	</insert>
 	
-	<insert id="ezAttitudeAdminDAO.addUsersModifyAttHistoryFirst" parameterClass="Map">
-		INSERT INTO tbl_attitude_modappl_history(
-			ATTITUDE_ID,
-			APPL_CNT,
-			MOD_CNT,
-			COMPANY_ID,
-			TENANT_ID,
-			WRITER_ID,
-			WRITER_NAME,
-			WRITER_NAME2,
-			WRITER_TITLE,
-			WRITER_TITLE2,
-			WRITER_DEPT_ID,
-			WRITER_DEPT_NAME,
-			WRITER_DEPT_NAME2,
-			CHANGE_DATE,
-			DELFLAG,
-			APPR_USER_ID,
-			APPR_USER_NAME,
-			APPR_USER_NAME2,
-			APPR_DATE,
-			APPR_STATUS,
-			CONTENT
-			)
-		SELECT
-			A.ATTITUDE_ID,
-			APPL_CNT,
-			0,
-			A.COMPANY_ID,
-			A.TENANT_ID,
-			A.WRITER_ID,
-			A.WRITER_NAME,
-			A.WRITER_NAME2,
-			A.WRITER_TITLE,
-			A.WRITER_TITLE2,
-			A.WRITER_DEPT_ID,
-			A.WRITER_DEPT_NAME,
-			A.WRITER_DEPT_NAME2,
-			B.START_DATE,
-			A.DELFLAG,
-			A.APPR_USER_ID,
-			A.APPR_USER_NAME,
-			A.APPR_USER_NAME2,
-			A.APPR_DATE,
-			0,
-			A.CONTENT
-		FROM 
-			tbl_attitude_modappl A 
-		INNER JOIN
-			tbl_attitude B
-		ON 
-			A.ATTITUDE_ID = B.ATTITUDE_ID
-		AND 
-			A.TENANT_ID = B.TENANT_ID
-		AND
-			A.COMPANY_ID = B.COMPANY_ID
-		WHERE
-			A.TENANT_ID = #tenantId#
-        AND
-        	A.COMPANY_ID = #companyId#
-        AND
-			A.ATTITUDE_ID = #attitudeId#
-	</insert>
-	
 	<delete id="ezAttitude.deleteAttitude" parameterClass="Map">
 		DELETE FROM
 			tbl_attitude
@@ -1358,7 +1294,7 @@
 			SELECT
 				A.ATTITUDE_ID,
 				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.APPR_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS APPR_DATE,
-				A.APPR_USER_NAME$lang$,
+				A.APPR_USER_NAME$lang$ AS APPR_USER_NAME,
 				A.APPR_STATUS,
 				A.CONTENT,
 				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.ORIGIN_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS ORIGIN_DATE,
@@ -1386,7 +1322,7 @@
 		]]>
 	</select>
 	
-	<insert id="ezAttitude.insertAdminAttHistory2" parameterClass="Map">
+	<insert id="ezAttitudeDAO.insertAdminAttHistory2" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
 			COMPANY_ID,
 			TENANT_ID,
@@ -1426,17 +1362,18 @@
 			ORIGIN_DATE_TYPE,
 			APPR_DATE
 			)
-			SELECT
+			VALUES
+			(
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
-				b.displayname,
-				b.displayname2,
-				b.title,
-				b.title2,
+				#userInfo.userName#,
+				#userInfo.userName2#,
+				#userInfo.title#,
+				#userInfo.title2#,
 				#attVO.deptId#,
-				b.DESCRIPTION,
-				b.DESCRIPTION2,
+				#userInfo.deptName#,
+				#userInfo.deptName2#,
 				IF(#startDate# = '', null, date_add(#startDate#, INTERVAL -#offsetMin# minute)),
 				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
 				IFNULL(#region#, ''),
@@ -1467,8 +1404,8 @@
 				and
 					tenant_id = #tenantId#),
 				#adminId#,
-				c.displayname,
-				c.displayname2,
+				#adminInfo.userName#,
+				#adminInfo.userName2#,
 				#attitudeId#,
 				date_add(#attVO.startDate#, INTERVAL -#offsetMin# minute),
 				IF(#attVO.endDate# = '', null, date_add(#attVO.endDate#, INTERVAL -#offsetMin# minute)),
@@ -1482,87 +1419,53 @@
 				#attVO.typeName2#,
 				#attVO.dateType#,
 				#apprDate#
-			FROM
-				(select 
-					*
-				from 
-					tbl_attitude_type
-				where
-					type_id = #typeId#
-				and
-					company_id = #attVO.companyId#
-				and
-					tenant_id = #tenantId#					
-				) a
-				,
-				(select 
-					*
-				from 
-					tbl_usermaster
-				where
-					cn = #attVO.writerId#
-				and
-					PHYSICALDELIVERYOFFICENAME = #attVO.companyId#
-				and
-					tenant_id = #tenantId#					
-				) b
-				,
-				(select 
-					*
-				from 
-					tbl_usermaster
-				where
-					cn = #adminId#
-				and
-					PHYSICALDELIVERYOFFICENAME = #adminCompanyId#
-				and
-					tenant_id = #tenantId#					
-				) c
+			)
 	</insert>
 	
-	<insert id="ezAttitude.insertAdminAttHistory3" parameterClass="Map">
+	<insert id="ezAttitudeDAO.insertAdminAttHistory3" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
-			COMPANY_ID,
-			TENANT_ID,
-			WRITER_ID,
-			WRITER_NAME,
-			WRITER_NAME2,
-			WRITER_TITLE,
-			WRITER_TITLE2,
-			WRITER_DEPT_ID,
-			WRITER_DEPT_NAME,
-			WRITER_DEPT_NAME2,
-			APPR_USER_ID,
-			APPR_USER_NAME,
-			APPR_USER_NAME2,
-			ATTITUDE_ID,
-			ORIGIN_STARTDATE,
-			ORIGIN_ENDDATE,
-			ORIGIN_CONTENT,
-			ORIGIN_REGION,
-			ORIGIN_MOBILE,
-			ORIGIN_BIZSUB,
-			ORIGIN_IP,
-			ORIGIN_TYPE_ID,
-			ORIGIN_TYPE_NAME,
-			ORIGIN_TYPE_NAME2,
-			ORIGIN_DATE_TYPE,
-			APPR_DATE
+				COMPANY_ID,
+				TENANT_ID,
+				WRITER_ID,
+				WRITER_NAME,
+				WRITER_NAME2,
+				WRITER_TITLE,
+				WRITER_TITLE2,
+				WRITER_DEPT_ID,
+				WRITER_DEPT_NAME,
+				WRITER_DEPT_NAME2,
+				APPR_USER_ID,
+				APPR_USER_NAME,
+				APPR_USER_NAME2,
+				ATTITUDE_ID,
+				ORIGIN_STARTDATE,
+				ORIGIN_ENDDATE,
+				ORIGIN_CONTENT,
+				ORIGIN_REGION,
+				ORIGIN_MOBILE,
+				ORIGIN_BIZSUB,
+				ORIGIN_IP,
+				ORIGIN_TYPE_ID,
+				ORIGIN_TYPE_NAME,
+				ORIGIN_TYPE_NAME2,
+				ORIGIN_DATE_TYPE,
+				APPR_DATE
 			)
-			SELECT
+			VALUES
+			(
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
-				b.displayname,
-				b.displayname2,
-				b.title,
-				b.title2,
+				#userInfo.userName#,
+				#userInfo.userName2#,
+				#userInfo.title#,
+				#userInfo.title2#,
 				#attVO.deptId#,
-				b.DESCRIPTION,
-				b.DESCRIPTION2,
+				#userInfo.deptName#,
+				#userInfo.deptName2#,
 				#adminId#,
-				c.displayname,
-				c.displayname2,
+				#adminInfo.userName#,
+				#adminInfo.userName2#,
 				#attitudeId#,
 				date_add(#attVO.startDate#, INTERVAL -#offsetMin# minute),
 				IF(#attVO.endDate# = '', null, date_add(#attVO.endDate#, INTERVAL -#offsetMin# minute)),
@@ -1576,30 +1479,7 @@
 				#attVO.typeName2#,
 				#attVO.dateType#,
 				#apprDate#
-			FROM
-				(select 
-					*
-				from 
-					tbl_usermaster
-				where
-					cn = #attVO.writerId#
-				and
-					PHYSICALDELIVERYOFFICENAME = #attVO.companyId#
-				and
-					tenant_id = #tenantId#					
-				) b
-				,
-				(select 
-					*
-				from 
-					tbl_usermaster
-				where
-					cn = #adminId#
-				and
-					PHYSICALDELIVERYOFFICENAME = #attVO.companyId#
-				and
-					tenant_id = #tenantId#					
-				) c
+			)
 	</insert>
 	
 	<select id="ezAttitudeDAO.getIsAttitude" parameterClass="Map" resultClass="String">

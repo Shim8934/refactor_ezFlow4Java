@@ -249,7 +249,8 @@ public class EzAttitudeGWController {
 			if (!checkAttitude.equals("") && !checkAttitude.equals("0") && !(typeId.equals(attitudeVO.getTypeId()) && startDate.split(" ")[0].equals(attitudeVO.getStartDate().split(" ")[0]))) {
 				checkAttitude = "dupl";
 			} else {
-				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId(), info.getCompanyId());
+				MCommonVO userInfo = mOptionService.commonInfoWeb(serverName, attitudeVO.getWriterId());
+				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info, userInfo, info.getTenantId(), info.getCompanyId());
 			}
 			
 			result.put("status", "ok");
@@ -281,12 +282,11 @@ public class EzAttitudeGWController {
 			if (mode == null) {
 				mode = "";
 			}
-			LOGGER.debug("!(%(!#$%!#*%*!$#%(!#$(%!(#$% mode : " + mode);
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
 			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getTenantId());
+			MCommonVO userInfo = mOptionService.commonInfoWeb(serverName, attitudeVO.getWriterId()); 
 			
-			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, userId, info.getOffSet());
+			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, info.getOffSet(), info, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezAttitude.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -15,10 +14,10 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
-import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
+import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface EzAttitudeService {
 	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, int tenantId) throws Exception;
@@ -38,9 +37,9 @@ public interface EzAttitudeService {
 	public AttitudeFormVO getFormBody(String typeId, String companyId, int tenantId) throws Exception;
 	
 	public void updateAttitude(String attitudeId, String startDate, String endDate, String region,
-			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, int tenantId, String companyId) throws Exception;
+			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, MCommonVO info, MCommonVO userInfo, int tenantId, String companyId) throws Exception;
 	
-	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String userId, String offset) throws Exception;
+	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String offset, MCommonVO info, MCommonVO userInfo) throws Exception;
 	
 	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId) throws Exception;
 	

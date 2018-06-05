@@ -747,6 +747,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("authFlag", authFlag);
 		model.addAttribute("deptFlag", deptFlag);
 		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("companyId", companyId);
 		
 		LOGGER.debug("attModAppDetail ended");
 		

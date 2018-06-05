@@ -41,6 +41,7 @@ import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
@@ -273,7 +274,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void updateAttitude(String attitudeId, String startDate, String endDate, String region,
-			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, int tenantId, String companyId) throws Exception{
+			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, MCommonVO info, MCommonVO userInfo, int tenantId, String companyId) throws Exception{
 		LOGGER.debug("updateAttitude started");
 		
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
@@ -304,6 +305,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("adminId", adminId);
 			map.put("adminCompanyId", companyId);
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
+			map.put("userInfo", userInfo);
+			map.put("adminInfo", info);
 			
 			ezAttitudeDAO.insertAdminAttHistory2(map);
 			
@@ -312,7 +315,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			 * 신청 상태의 신청내역은 반려로 바꾸고 지금 반영된 부분은
 			 * 신청내역에 승인으로 기록한다.
 			 */
-			
 			if (attVO.getTypeId().equals("A02") || (attVO.getTypeId().equals("A01") && !attVO.getModAppl().equals("0"))) {
 				map.put("attModId", attitudeId);
 				map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -344,11 +346,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String userId, String offset)
+	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String offset, MCommonVO info, MCommonVO userInfo)
 			throws Exception {
 		LOGGER.debug("deleteAttitude started");
-		
-		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("attitudeId", attitudeId);
@@ -358,10 +358,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			LOGGER.debug("admin history write");
 			//정보 읽어와서 히스토리에 삭제라고 기록할거
 			map.put("attVO", attitudeVO);
-			map.put("adminId", userId);
+			map.put("adminId", info.getUserId());
 			map.put("apprDate", commonUtil.getTodayUTCTime(""));
-			map.put("offsetMin", offsetMin);
-			
+			map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+			map.put("adminInfo", info);
+			map.put("userInfo", userInfo);
 			ezAttitudeDAO.insertAdminAttHistory3(map);
 		}
 		
@@ -776,7 +777,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				map.put("modappl", "3");
 			}
 			String apprStatus = ezAttitudeDAO.checkModApplStatus(map);
-			if (!apprStatus.equals("0")) {
+			if (apprStatus != null && !apprStatus.equals("0")) {
 				data = 0;
 				continue;
 			} else {
@@ -848,7 +849,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String apprStatus = ezAttitudeDAO.checkModApplStatus(map);
 		
-		if (apprStatus.equals("0")) {
+		if (apprStatus != null && apprStatus.equals("0")) {
 			return ezAttitudeDAO.attModAppModify(map);
 		} else {
 			return 0;
@@ -1421,7 +1422,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String apprStatus = ezAttitudeDAO.checkModApplStatus(map);
 		
-		if (!apprStatus.equals("0")) {
+		if (apprStatus != null && !apprStatus.equals("0")) {
 			return;
 		}
 		

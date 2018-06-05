@@ -36,7 +36,7 @@
 	        var endDateStringOrgin = "<c:out value='${endDateStringOrgin}'/>";
 	        var pageFrom = "<c:out value='${pageFrom}'/>";
 	        var timecheckstring = "<spring:message code='ezSchedule.t60' />";
-	        var companyID = "<c:out value='${companyID}'/>";
+	        var companyID = "<c:out value='${companyId}'/>";
 	        var deptName = "<c:out value='${deptName}'/>";
 	        var deptID = "<c:out value='${deptID}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
