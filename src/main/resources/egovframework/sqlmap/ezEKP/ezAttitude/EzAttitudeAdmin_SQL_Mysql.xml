@@ -132,9 +132,9 @@
 				TBL_USERMASTER.cn AS userid,
 				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) AS workstarttime,
 				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) AS workendtime,
-				TBL_USERMASTER.title AS usertitle,
-				TBL_USERMASTER.displayname AS userName,
-				TBL_USERMASTER.description AS deptName,
+				TBL_USERMASTER.title$primary$ AS usertitle,
+				TBL_USERMASTER.displayname$primary$ AS userName,
+				TBL_USERMASTER.description$primary$ AS deptName,
 				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') AS gubun
 			FROM
 				TBL_USERMASTER
@@ -162,13 +162,13 @@
 			TBL_USERMASTER.physicaldeliveryofficename = #companyId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
+			TBL_USERMASTER.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			TBL_USERMASTER.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+			TBL_USERMASTER.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchStartTime">
 			<![CDATA[
@@ -187,10 +187,10 @@
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
-				TBL_USERMASTER.displayname
+				TBL_USERMASTER.displayname$primary$
 		</isNotEmpty>
 		<isEmpty property="orderCell">
-			ORDER BY TBL_USERMASTER.displayname
+			ORDER BY TBL_USERMASTER.displayname$primary$
 		</isEmpty>
 		
 		<![CDATA[
@@ -538,7 +538,7 @@
 		]]>
 		</isNotEmpty>
 		<![CDATA[
-		    ORDER BY lpad(ifnull(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME			
+		    ORDER BY lpad(ifnull(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME$primary$			
 		]]>
    </select>
    

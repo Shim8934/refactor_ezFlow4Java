@@ -54,7 +54,7 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeType(String typeId, String typeName, String typeName2, int tenantId, String companyId) throws Exception;
 	
-	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchGubun, String pageNum, String listSize, String orderCell, String orderOption, String offsetMin) throws Exception;
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchGubun, String pageNum, String listSize, String orderCell, String orderOption, String offsetMin, String primary) throws Exception;
 	
 	public AttitudeUserConfigVO getAttitudeUserConfigInfo(String selectedUserIdList, String offsetMin, String companyId, int tenantId) throws Exception;
 	

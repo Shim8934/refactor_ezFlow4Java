@@ -928,7 +928,7 @@ public class EzAttitudeGWController {
 			int tenantId = info.getTenantId();
 			
 			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchGubun, offsetMin);
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchGubun, pageNum, listSize, orderCell, orderOption, offsetMin);
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchGubun, pageNum, listSize, orderCell, orderOption, offsetMin, info.getPrimary());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);

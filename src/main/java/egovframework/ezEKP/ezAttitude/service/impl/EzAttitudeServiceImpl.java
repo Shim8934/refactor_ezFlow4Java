@@ -526,7 +526,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId,
 			String searchUserName, String searchDeptName, String searchTitle, String searchStartTime,
 			String searchEndTime, String searchGubun, String pageNum, String listSize,
-			String orderCell, String orderOption, String offsetMin) throws Exception {
+			String orderCell, String orderOption, String offsetMin, String primary) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		
 		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
@@ -545,6 +545,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 		
 		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
 		
