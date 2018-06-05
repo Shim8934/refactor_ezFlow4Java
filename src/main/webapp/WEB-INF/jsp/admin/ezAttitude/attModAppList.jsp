@@ -10,7 +10,7 @@
 <head>
 		<title><spring:message code='ezAttitude.t165' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
@@ -198,8 +198,11 @@
         });
 		
 	    function windowResize() {
-        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
-        	document.getElementById("contentlist").style.height = (height - 155) + "px";
+	    	// 155정도 빼는게 리스트 바로 아래에 페이징이 있어서 좋은데,,다른부분도 보고 결정하자.
+//         	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
+//         	document.getElementById("contentlist").style.height = (height - 155) + "px";
+        	var height = document.documentElement.clientHeight - 105 - document.getElementById("mainmenu").clientHeight;
+        	document.getElementById("contentlist").style.height = (height - 105) + "px";
         	document.getElementById("contentlist").style.overflow = "auto";
         }
 		

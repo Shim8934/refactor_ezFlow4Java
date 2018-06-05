@@ -132,9 +132,9 @@
 				TBL_USERMASTER.cn AS userid,
 				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) AS workstarttime,
 				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) AS workendtime,
-				TBL_USERMASTER.title AS usertitle,
-				TBL_USERMASTER.displayname AS userName,
-				TBL_USERMASTER.description AS deptName,
+				TBL_USERMASTER.title$primary$ AS usertitle,
+				TBL_USERMASTER.displayname$primary$ AS userName,
+				TBL_USERMASTER.description$primary$ AS deptName,
 				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') AS gubun
 			FROM
 				TBL_USERMASTER
@@ -162,13 +162,13 @@
 			TBL_USERMASTER.physicaldeliveryofficename = #companyId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
+			TBL_USERMASTER.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			TBL_USERMASTER.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+			TBL_USERMASTER.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchStartTime">
 			<![CDATA[
@@ -187,10 +187,10 @@
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
-				TBL_USERMASTER.displayname
+				TBL_USERMASTER.displayname$primary$
 		</isNotEmpty>
 		<isEmpty property="orderCell">
-			ORDER BY TBL_USERMASTER.displayname
+			ORDER BY TBL_USERMASTER.displayname$primary$
 		</isEmpty>
 		
 		<![CDATA[
@@ -538,7 +538,7 @@
 		]]>
 		</isNotEmpty>
 		<![CDATA[
-		    ORDER BY lpad(ifnull(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME			
+		    ORDER BY lpad(ifnull(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME$primary$			
 		]]>
    </select>
    
@@ -572,10 +572,10 @@
 				A.ip,
 				A.date_type AS datetype,
 				A.type_id AS typeid,
-				B.type_name AS typename,
-				C.displayname AS username,
-                C.description AS deptname,
-                C.title AS usertitle
+				B.type_name$primary$ AS typename,
+				C.displayname$primary$ AS username,
+                C.description$primary$ AS deptname,
+                C.title$primary$ AS usertitle
 			FROM
 				TBL_ATTITUDE A
 			JOIN
@@ -615,13 +615,13 @@
 			C.department = #searchDeptId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+			C.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			C.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			C.title LIKE CONCAT('%', #searchTitle#, '%')
+			C.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
 			#deptIdList[]#
@@ -708,9 +708,9 @@
 		<![CDATA[
 			SELECT
 				A.cn AS writerid,
-				A.displayname AS username,
-                A.description AS deptname,
-                A.title AS usertitle,
+				A.displayname$primary$ AS username,
+                A.description$primary$ AS deptname,
+                A.title$primary$ AS usertitle,
                 A.mail AS useremail,
                 SUBSTR(DATE_ADD(#searchStartDate#, INTERVAL #offsetMin# minute), 1, 10) as startdate
 			FROM
@@ -745,13 +745,13 @@
 		]]>
 			
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title LIKE CONCAT('%', #searchTitle#, '%')
+			A.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			A.department = #searchDeptId#
@@ -1148,16 +1148,16 @@
 		<![CDATA[
 			SELECT
 				attitude_id AS attitudeId,
-			    writer_name AS writerName,
-			    writer_title AS writerTitle,
-			    writer_dept_name AS writerDeptName,
+			    writer_name$primary$ AS writerName,
+			    writer_title$primary$ AS writerTitle,
+			    writer_dept_name$primary$ AS writerDeptName,
 			    DATE_FORMAT(DATE_ADD(origin_startdate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS originstartdate,
 			    DATE_FORMAT(DATE_ADD(origin_enddate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS originenddate,
 			    IFNULL(DATE_FORMAT(DATE_ADD(change_startdate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') AS changestartdate,
 			    IFNULL(DATE_FORMAT(DATE_ADD(change_enddate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') AS changeenddate,
-			    origin_type_name AS origintypename,
-			    IFNULL(change_type_name, '') AS changetypename,
-			    appr_user_name AS apprusername,
+			    origin_type_name$primary$ AS origintypename,
+			    IFNULL(change_type_name$primary$, '') AS changetypename,
+			    appr_user_name$primary$ AS apprusername,
 			    DATE_FORMAT(DATE_ADD(appr_date, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS apprdate
 			FROM
 				TBL_ATTITUDE_MODAPPL_HISTORY
@@ -1172,12 +1172,12 @@
 		]]>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			<![CDATA[
-				writer_name LIKE CONCAT('%', #searchUserName#, '%')
+				writer_name$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
 			<![CDATA[
-				writer_title LIKE CONCAT('%', #searchTitle#, '%')
+				writer_title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="deptId">
@@ -1196,7 +1196,7 @@
 			<![CDATA[
 				ORDER BY
 					changestartdate DESC,
-					writername
+					writerName
 			]]>
 		</isEmpty>
 		<isNotEmpty property="listSize">

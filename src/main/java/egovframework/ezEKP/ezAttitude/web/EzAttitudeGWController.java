@@ -928,7 +928,7 @@ public class EzAttitudeGWController {
 			int tenantId = info.getTenantId();
 			
 			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchGubun, offsetMin);
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchGubun, pageNum, listSize, orderCell, orderOption, offsetMin);
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchGubun, pageNum, listSize, orderCell, orderOption, offsetMin, info.getPrimary());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -1465,7 +1465,7 @@ public class EzAttitudeGWController {
 			}
 			
 			String totalCount = ezAttitudeService.getAttitudeCount2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantId, searchDeptId, deptIdList);
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantId, searchDeptId, deptIdList);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantId, searchDeptId, deptIdList, info.getPrimary());
 			
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, "", statistics, info.getTenantId(), info.getPrimary());
@@ -1533,7 +1533,7 @@ public class EzAttitudeGWController {
 				searchDeptId = "";
 			}
 			
-			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, pageNum, listSize, orderCell, orderOption, duplicated, info.getLang(), info.getOffSet(), companyId, info.getTenantId(), deptIdList);
+			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, pageNum, listSize, orderCell, orderOption, duplicated, info.getLang(), info.getOffSet(), companyId, info.getTenantId(), deptIdList, info.getPrimary());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1592,8 +1592,8 @@ public class EzAttitudeGWController {
 				searchDeptId = "";
 			}
 			
-			JSONObject duplicatedData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "", userLang, offset, companyId, tenantID, deptIdList);
-			JSONObject distinctData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "distinct", userLang, offset, companyId, tenantID, deptIdList);
+			JSONObject duplicatedData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "", userLang, offset, companyId, tenantID, deptIdList, info.getPrimary());
+			JSONObject distinctData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "distinct", userLang, offset, companyId, tenantID, deptIdList, info.getPrimary());
 			
 			List<AdminAttitudeVO> duplicatedList = (List<AdminAttitudeVO>) duplicatedData.get("list");
 			List<AdminAttitudeVO> distinctList = (List<AdminAttitudeVO>) distinctData.get("list");
@@ -1955,7 +1955,7 @@ public class EzAttitudeGWController {
 			}
 			
 			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID, searchDeptId, deptIdList);
-			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList);
+			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList, info.getPrimary());
 		
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId(), info.getPrimary());

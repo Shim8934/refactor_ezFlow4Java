@@ -527,7 +527,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId,
 			String searchUserName, String searchDeptName, String searchTitle, String searchStartTime,
 			String searchEndTime, String searchGubun, String pageNum, String listSize,
-			String orderCell, String orderOption, String offsetMin) throws Exception {
+			String orderCell, String orderOption, String offsetMin, String primary) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		
 		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
@@ -546,6 +546,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 		
 		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
 		
@@ -911,7 +915,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String searchDeptId, List<String> deptIdList) throws Exception {
+	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String searchDeptId, List<String> deptIdList, String primary) throws Exception {
 		LOGGER.debug("getAttitudeList2 started");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -940,6 +944,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 		map.put("deptIdList", deptIdList);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 
 		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeList2(map);
 
@@ -979,7 +987,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchDeptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId, List<String> deptIdList) throws Exception {
+	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchDeptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId, List<String> deptIdList, String primary) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -993,6 +1001,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("deptIdList", deptIdList);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
@@ -1695,7 +1707,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList) throws Exception {
+	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList, String primary) throws Exception {
 		LOGGER.debug("getAttitudeHistoryList started");
 		
 		int limit = 0;
@@ -1722,6 +1734,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 		map.put("deptIdList", deptIdList);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 
 		List<ModApplHistoryVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
 
