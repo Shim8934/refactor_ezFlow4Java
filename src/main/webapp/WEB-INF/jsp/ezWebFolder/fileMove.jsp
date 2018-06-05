@@ -47,7 +47,7 @@
 					var result     = data.folderTree;
 					currentFolders = data.currentFolders;
 					
-					renderData(result, type == "dept" ? "0" : "1");
+					renderData(result, (type == "dept" || type == "share") ? "0" : "1");
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -69,19 +69,17 @@
 			
 			if (mode == "1") {
 				var divDept  = document.createElement("div");
-				displaySubFolder(divTree, divDept, result);
+				displaySubFolder(divTree, divDept, result, 0);
 			}
 			else {
 				for (var i = 0; i < result.length; i++) {
 					var divDept  = document.createElement("div");
-					displaySubFolder(divTree, divDept, result[i]);
+					displaySubFolder(divTree, divDept, result[i], 0);
 				}
 			}
 		}
 		
-		function displaySubFolder(divTree, divElmt, list) {
-			var level = list["folderLevel"];
-			
+		function displaySubFolder(divTree, divElmt, list, level) {
 			if (level > 0) {
 				for (var j = 0; j < level; j++) {
 					var imgTag = document.createElement("img");
@@ -93,6 +91,7 @@
 			
 			var imgElmt = document.createElement("img");
 			imgElmt.setAttribute("id" , list["folderId"]);
+			imgElmt.setAttribute("level" , level);
 			
 			var imgElmt2 = document.createElement("img");
 			imgElmt2.setAttribute("class", "webfolderImg");
@@ -139,7 +138,7 @@
 				
 				for (var i = 0; i < len; i++) {
 					var subDivElmt = document.createElement("div");
-					displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i]);
+					displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i], level + 1);
 				}
 			}
 		}
@@ -166,6 +165,7 @@
 		function getDetailTree(obj, mode) {
 			//Check if already in arrSubFolder
 			var uniqueId = obj.getAttribute("id");
+			var level = obj.getAttribute("level");
 			
 			if (arrSubFolder.indexOf(uniqueId) != -1) {
 				var childElmt = obj.parentElement.lastElementChild;
@@ -196,7 +196,7 @@
 					async: true,
 					success: function(data) {
 						var result = data.subTree;
-						displaySubTree(result, obj.parentElement);
+						displaySubTree(result, obj.parentElement, Number(level) + 1);
 						arrSubFolder.push(uniqueId);
 					},
 					error: function (xhr, status, e){
@@ -206,7 +206,7 @@
 			}
 		}
 		
-		function displaySubTree(result, divElmt) {
+		function displaySubTree(result, divElmt, level) {
 			if (result["listSubFolders"] == null) {
 				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
@@ -218,7 +218,7 @@
 			
 			for (var i = 0; i < len; i++) {
 				var subDiv = document.createElement("div");
-				displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i]);
+				displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i], level);
 			}
 		}
 		
@@ -233,12 +233,14 @@
 		}
 		
 		function fileCopy() {
+			var type = document.querySelector('input[name=treeType]:checked').value;
+			
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
-			if (selectedLevel == '0') {
+			if (type != "share" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -276,12 +278,14 @@
 		}
 		
 		function fileMove() {
+			var type = document.querySelector('input[name=treeType]:checked').value;
+			
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
-			if (selectedLevel == '0') {
+			if (type != "share" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -338,6 +342,7 @@
 			<input name="treeType" id="radio2" type="radio" value="dept" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
 			<c:if test="${mode == 'normal'}">
 				<input name="treeType" id="radio3" type="radio" value="user" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio3"><span> <spring:message code="ezWebFolder.t235"/></span></label>
+				<input name="treeType" id="radio4" type="radio" value="share" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio4"><span> <spring:message code="ezWebFolder.t266"/></span></label>
 			</c:if>
 		</div>
 	</div>

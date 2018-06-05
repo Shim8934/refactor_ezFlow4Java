@@ -1532,4 +1532,42 @@
 		WHERE
 			F1.TENANT_ID = #tenantId#
 	</select>
+	
+	<select id="EzWebFolderDAO.getAllSimpleShareFolder" parameterClass="Map" resultMap="folderSimpleVO">
+		SELECT
+			FOLDER_ID,
+		    FOLDER_NAME1 AS FOLDER_NAME,
+		    FOLDER_NAME2 AS FOLDER_NAME2,
+		    CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER A WHERE A.FOLDER_UPPER = D.FOLDER_ID AND A.USE_STATUS = 'Y' AND A.TENANT_ID = #tenantId#) = 0 
+		    	THEN 0 
+		    	ELSE 1 
+		    END AS HAS_SUB,
+		    FOLDER_LEVEL,
+		    OWNER_ID
+		FROM TBL_WEBFOLDER_FOLDER D
+	    JOIN (
+	        SELECT DISTINCT
+	            S.FOLDERFILE_ID,
+	            S.TENANT_ID
+	        FROM TBL_WEBFOLDER_SHARE S
+	        JOIN TBL_WEBFOLDER_SHARE_SUB SS
+	        ON S.SHARE_ID = SS.SHARE_ID
+	        AND S.TENANT_ID = SS.TENANT_ID
+	        LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
+	        ON S.SHARE_ID = SH.SHARE_ID
+	        AND S.TENANT_ID = SH.TENANT_ID
+	        AND SH.USER_ID = #userId#
+	        WHERE SS.USER_ID IN 
+	        <iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[].id#
+			</iterate>
+	        AND S. FOLDERFILE_TYPE = 'D'
+	        AND SH.USER_ID IS NULL ) SD
+	    ON D.FOLDER_ID = SD.FOLDERFILE_ID
+	    AND D.TENANT_ID = SD.TENANT_ID
+	    WHERE D.TENANT_ID = #tenantId#
+	    AND D.COMPANY_ID = #compId#
+		AND D.USE_STATUS = 'Y'
+		ORDER BY FOLDER_NAME1
+	</select>
 </sqlMap>
