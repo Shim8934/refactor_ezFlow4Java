@@ -96,14 +96,6 @@
 			}
 		});
 		
-		$(".mainlist tbody tr td").on("click", function() {
-			$('.mainlist tbody tr').each(function() {
-				$(this).removeClass("selectedTR");
-			});
-			
-			$(this).parent("tr").addClass("selectedTR");
-		});
-		
 		getDatePicker();
 	});
 	
@@ -283,32 +275,21 @@
 	#projectContent {
 		min-width : 1070px;
 	}
-	
-	#iconLine {
-		height: 72px;
-		margin-left: 10px;
-		margin-top: 5px;
-	}
-	
+		
 	#contentList {
 		width : 98%;
 		margin-left : 1%;
-	}
-	
-	#icons {
-		margin-top: 21px;
-	}
-	
-	.selectedTR {
-		background-color: rgb(233, 241, 255);
 	}
 	
 	table.mainlist th, table.mainlist td {
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		cursor: pointer;
 		text-align: center;
+	}
+	
+	table.mainlist th {
+		cursor: pointer;
 	}
 </style>
 
