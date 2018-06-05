@@ -572,10 +572,10 @@
 				A.ip,
 				A.date_type AS datetype,
 				A.type_id AS typeid,
-				B.type_name AS typename,
-				C.displayname AS username,
-                C.description AS deptname,
-                C.title AS usertitle
+				B.type_name$primary$ AS typename,
+				C.displayname$primary$ AS username,
+                C.description$primary$ AS deptname,
+                C.title$primary$ AS usertitle
 			FROM
 				TBL_ATTITUDE A
 			JOIN
@@ -615,13 +615,13 @@
 			C.department = #searchDeptId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+			C.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			C.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			C.title LIKE CONCAT('%', #searchTitle#, '%')
+			C.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
 			#deptIdList[]#
