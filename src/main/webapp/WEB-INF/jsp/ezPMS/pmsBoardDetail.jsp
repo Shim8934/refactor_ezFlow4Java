@@ -99,7 +99,7 @@
 				success : function(result) {
 					if(result.data == 'success') {
 						alert("삭제되었습니다.");
-						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName + "]의 " + "[" + title + "] 게시물이 삭제되었습니다.");
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + title.trim() + "] 게시물이 삭제되었습니다.");
 						window.close();
 						opener.getBoardList();
 					} else {

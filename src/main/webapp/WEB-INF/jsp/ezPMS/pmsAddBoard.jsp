@@ -227,9 +227,18 @@
 						opener.groupId = groupId;
 						opener.currentPage = 1;
 						
-						addTaskLog(projectId, 1, groupId, taskId, "[" + taskName + "](으)로 " + "[" + title + "] 게시물이 등록되었습니다.");
+						// 검색 후 새 글을 등록했을 때 검색 조건을 초기화한다.
+						opener.searchByTaskName = "";
+						opener.searchByUser = "";
+						opener.searchByStartDate = ""; 
+						opener.searchByEndDate = "";
+						opener.searchByTitle = "";
+						opener.searchByOverview = "";
+						opener.searchByContent = "";
+						
+						addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "](으)로 " + "[" + title.trim() + "] 게시물이 등록되었습니다.");
 					} else {
-						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "](으)로 " + "[" + title + "] 게시물이 수정되었습니다.");
+						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "](으)로 " + "[" + title.trim() + "] 게시물이 수정되었습니다.");
 					}
 					
 					opener.getBoardList();

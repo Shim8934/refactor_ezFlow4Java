@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
+import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -731,6 +732,166 @@ public class EzPMSGWController3 {
 		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "/viewers] ended.");
 		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/comments/list/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCommentList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/comments/list/" + projectId +"/users/" + userId + "] started");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+	
+			String searchByUser = request.getParameter("searchByUser");
+			String searchByContent = request.getParameter("searchByContent");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			
+			param.put("lang", lang);
+			param.put("tenantId", info.getTenantId());
+			
+			Enumeration<String> parameterNames = request.getParameterNames();
+			
+			while(parameterNames.hasMoreElements()) {
+				String parameterName = parameterNames.nextElement();
+				param.put(parameterName, request.getParameter(parameterName));
+			}
+			
+			if (searchByUser != null && !searchByUser.equals("")) {
+				searchByUser = searchByUser.replace("\\","\\\\");
+				searchByUser = searchByUser.replace("%", "\\%");
+				searchByUser = searchByUser.replace("_", "\\_");
+				param.put("searchByUser", searchByUser);
+			}
+			
+			if (searchByContent != null && !searchByContent.equals("")) {
+				searchByContent = searchByContent.replace("\\","\\\\");
+				searchByContent = searchByContent.replace("%", "\\%");
+				searchByContent = searchByContent.replace("_", "\\_");
+				param.put("searchByContent", searchByContent);
+			}
+
+			List<CommentVO> commentList = ezPMSService.getCommentList(param); 
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", commentList);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/comments/list/" + projectId +"/users/" + userId + "] ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/comments/list-count/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCommentListCount(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/comments/list-count/" + projectId + "/users/" +  userId+ "] started");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+	
+			String searchByUser = request.getParameter("searchByUser");
+			String searchByContent = request.getParameter("searchByContent");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			
+			param.put("tenantId", info.getTenantId());
+			
+			Enumeration<String> parameterNames = request.getParameterNames();
+			
+			while(parameterNames.hasMoreElements()) {
+				String parameterName = parameterNames.nextElement();
+				param.put(parameterName, request.getParameter(parameterName));
+			}
+			
+			if (searchByUser != null && !searchByUser.equals("")) {
+				searchByUser = searchByUser.replace("\\","\\\\");
+				searchByUser = searchByUser.replace("%", "\\%");
+				searchByUser = searchByUser.replace("_", "\\_");
+				param.put("searchByUser", searchByUser);
+			}
+			
+			if (searchByContent != null && !searchByContent.equals("")) {
+				searchByContent = searchByContent.replace("\\","\\\\");
+				searchByContent = searchByContent.replace("%", "\\%");
+				searchByContent = searchByContent.replace("_", "\\_");
+				param.put("searchByContent", searchByContent);
+			}
+			
+			int totalCount = ezPMSService.getCommentListCount(param);
+			
+			result.put("data", totalCount + "");	// JSON으로 넘기면 숫자가 Long으로 바뀌는데 Long에서 int로 cast할 때의 오류를 피하기 위해서 String으로 바꾼 후에 파싱한다
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 1);
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/comments/list-count/" + projectId + "/users/" +  userId+ "] ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/comments", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject addComment(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/comments] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			ezPMSService.addComment(jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/comments] ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/comments", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteComment(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
+			ezPMSService.deleteComment(info.getTenantId(), jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] ended");
 		return result;
 	}
 }
