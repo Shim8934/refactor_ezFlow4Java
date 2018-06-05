@@ -1292,11 +1292,9 @@
 				<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 					<c:forEach var="dept" items="${deptList}">
-						<c:if test="${dept.mine ne 'yes' }">
-							<c:if test="${dept.authType == 'M'}">
-								<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
-							</c:if>
-						</c:if>										
+						<c:if test="${dept.authType == 'M'}">
+							<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+						</c:if>
 					</c:forEach>
 				</select>
 			</li>

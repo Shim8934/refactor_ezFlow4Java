@@ -224,7 +224,7 @@ public class EzAttitudeController {
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
 		}
-		
+
 		if (deptList.size() < 1) {
 			return "cmm/error/accessDenied";
 		}
