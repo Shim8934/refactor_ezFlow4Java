@@ -1294,7 +1294,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
     			String cn = vo.getCn();
 
-        		if (useRankMail.equals("YES")) {//직위,직책별 메일 발송 여부
+        		if (useRankMail != null && useRankMail.equals("YES")) {//직위,직책별 메일 발송 여부
         			String jobTile = vo.getTitle() == null ? "" : vo.getTitle(); 
 					String jobPostion = vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10();
 					useRankMailUser = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), tenantID);
@@ -1416,7 +1416,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							String useRankMail = ezCommonService.getTenantConfig("useRankMail", tenantID);
 							
-							if (useRankMail.equals("YES")) {//직위,직책별 메일 발송 여부
+							if (useRankMail != null && useRankMail.equals("YES")) {//직위,직책별 메일 발송 여부
 								
 								String jobTile = vo.getTitle() == null ? "" : vo.getTitle(); 
 								String jobPostion = vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10();
