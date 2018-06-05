@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 			var retVal;
 			var retFunc;
-			var poptype = "${popupType}";
+			var poptype = "<c:out value='${popupType}' />";
 			
 			// event
 			function mouseHover(obj, event) {

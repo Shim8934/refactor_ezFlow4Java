@@ -2325,7 +2325,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		int boardCount = ezBoardDAO.getPhotoCount(myFavoriteVO);
 		//BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
 		//int personalCount = boardConfigVO.getListCount();
-		int personalCount = 5;
+		/* 2018-06-04 홍승비 - 포토게시판 포틀릿 표출 썸네일 4개로 수정 */
+		int personalCount = 4;
 		
 		sb.append("<DOCLIST>");
 		sb.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");

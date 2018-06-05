@@ -130,7 +130,7 @@
 	            	var xmlHTTP = createXMLHttpRequest();
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
-	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
+	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${deptID}' />");
 	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
@@ -1334,6 +1334,8 @@
 		    /** msgtolist 의 유저 rtn에 추가 */
 		    var rtn = [];
 		    function save_userlist() {
+		    	rtn = [];
+		    	
 		    	var listid = "MsgToList"; 
 		    	var selList = new ListView();
 		        selList.LoadFromID(listid);

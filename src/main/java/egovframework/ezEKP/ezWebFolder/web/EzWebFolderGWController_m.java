@@ -5,10 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
@@ -54,9 +50,6 @@ public class EzWebFolderGWController_m {
 	
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
-	
-	@Autowired
-	private EzWebFolderAdminService ezWebFolderAdminService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -104,9 +97,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
@@ -195,9 +187,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
 			
@@ -253,9 +244,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
 			
@@ -333,9 +323,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
@@ -428,9 +417,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
 			
@@ -489,9 +477,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
 			
@@ -616,9 +603,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
@@ -683,9 +669,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderListStr, fileListStr, userInfo.getTenantId());
 			
@@ -755,9 +740,8 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			String lang   = common.getLang();
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderListStr, fileListStr, userInfo.getTenantId());
 			
@@ -1161,15 +1145,13 @@ public class EzWebFolderGWController_m {
 	
 	@RequestMapping(value = "/rest/ezwebfolder/file-permanent-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject filePermanetDelete(Locale locale, HttpServletRequest request) {
-		String offset       = orElse(request.getParameter("offset"), "");
 		String fileList     = orElse(request.getParameter("fileList"), "");
 		String folderList   = orElse(request.getParameter("folderList"), "");
 		String userId       = orElse(request.getParameter("userId"), "");
 		String serverName   = orElse(request.getHeader("x-user-host"), "");
-		String lang         = orElse(request.getParameter("lang"), "");
 		
 		logger.debug("filePermanetDelete Started.");
-		logger.debug("userId=" + userId  + ",offset=" + offset + ",lang=" + lang + ",offset=" + offset + ",serverName=" + serverName);
+		logger.debug("userId=" + userId  + ",serverName=" + serverName);
 		logger.debug("fileList=" + fileList + ",folderList=" + folderList);
 		
 		String[] fileIDList = fileList.split(",");
@@ -1177,7 +1159,7 @@ public class EzWebFolderGWController_m {
 		String realPath = request.getServletContext().getRealPath("");
 		JSONObject result   = new JSONObject();
 		
-		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
+		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1185,7 +1167,7 @@ public class EzWebFolderGWController_m {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			if (!isWebfolderAdmin(userInfo)) {
 				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderList, fileList, userInfo.getTenantId());
@@ -1241,8 +1223,7 @@ public class EzWebFolderGWController_m {
 		
 		try {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-			String lang   = common.getLang();
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			if (!isWebfolderAdmin(userInfo)) {
 				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderList, fileList, userInfo.getTenantId());

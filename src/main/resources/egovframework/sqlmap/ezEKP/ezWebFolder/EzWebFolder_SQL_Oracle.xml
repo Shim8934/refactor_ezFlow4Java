@@ -980,7 +980,7 @@
 			AND
 				CN != 'masteradmin'
 			AND
-				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TENANT_ID = #tenantId#
 				
@@ -1079,8 +1079,6 @@
 				TBL_DEPTMASTER
 			WHERE
 				extensionattribute2  = #companyId#
-			AND
-				extensionattribute1 != 'Top'
 			AND
 				useflag              = 'Y'
 			AND

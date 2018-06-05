@@ -844,7 +844,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("journalIdS", journalIdS);
 		
 		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
-			
+		try {	
 		for (JournalVO journal : journalList) {
 			String journalContent = journal.getJournalContent();
 			Elements thisElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").children();
@@ -894,7 +894,10 @@ public class EzJournalServiceImpl implements EzJournalService {
 		formThis.append(formThisHtml.toString());
 		formNext.append(formNextHtml.toString());
 		form.setFormContent(formDoc.toString());
-		
+		} catch (Exception e) {
+			logger.debug("journal sum is fail");
+			form.setFormInfo("fail");
+		}
 		logger.debug("getJournalDivideThisNext ended.");
 		return form;
 	}

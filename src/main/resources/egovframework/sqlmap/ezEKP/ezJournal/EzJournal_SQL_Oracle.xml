@@ -20,7 +20,6 @@
 	<resultMap class="journalAuthCheckVO" id="journalAuthCheckMap">
 		<result property="isLive" 			column="is_live" />
 		<result property="checkSusin" 		column="check_susin" />
-		<result property="count" 			column="count" />
 	</resultMap>
 	
 	<resultMap class="journalReplyVO" id="journalReplyMap">
@@ -33,14 +32,14 @@
 	</resultMap>
 	
 	<resultMap class="journalVO" id="journalContentMap">
-		<result property="journalContent" 	column="journal_content"/>
+		<result property="journalContent" 	column="journal_content"		jdbcType="CLOB" 	javaType="String"/>
 		<result property="journalTitle" 	column="journal_title"/>
 	</resultMap>
 	
 	<resultMap class="journalVO" id="journalMap" groupBy="journalId">
 		<result property="journalId" 		column="journal_id"/>
 		<result property="journalTitle" 	column="journal_title"/>
-		<result property="journalContent" 	column="journal_content"/>
+		<result property="journalContent" 	column="journal_content"		jdbcType="CLOB" 	javaType="String"/>
 		<result property="journalDate" 		column="journal_date"/>
 		<result property="deptShare" 		column="dept_share"/>
 		<result property="writerName" 		column="writer_name"/>
@@ -82,7 +81,7 @@
 		<result property="mine"	 			column="mine" />
 	</resultMap>
 
-	<resultMap class="journalEnvVO" 	id="journalEnvMap">
+	<resultMap class="journalEnvVO" id="journalEnvMap">
 		<result property="listCnt" 			column="list_cnt" />
 		<result property="viewenv" 			column="viewenv" />
 		<result property="recvAlert" 		column="recv_alert" />
@@ -111,28 +110,28 @@
 	</resultMap>
 
 	<resultMap class="journalAuthorVO" id="userMap">
-		<result property="userName"				column="user_name" />
-		<result property="userId" 				column="user_id" />
-		<result property="jikwi" 				column="jikwi" />
-		<result property="mail" 				column="mail" />
-		<result property="deptId" 			column="dept_id" />
-		<result property="deptName" 			column="dept_name" />
-		<result property="userImg" 				column="user_img" />
-		<result property="extensionAttribute15" column="extensionAttribute15"	/>
+		<result property="userName"					column="user_name" />
+		<result property="userId" 					column="user_id" />
+		<result property="jikwi" 					column="jikwi" />
+		<result property="mail" 					column="mail" />
+		<result property="deptId" 					column="dept_id" />
+		<result property="deptName" 				column="dept_name" />
+		<result property="userImg" 					column="user_img" />
+		<result property="extensionAttribute15" 	column="extensionAttribute15" />
 	</resultMap>
 
-	<resultMap class="journalAuthorVO" 		id="deptMap">
+	<resultMap class="journalAuthorVO" id="deptMap">
 		<result property="deptName" 		column="dept_name" />
 		<result property="deptId" 			column="dept_id" />
 		<result property="mine" 			column="mine" />
 	</resultMap>
 
-	<resultMap class="JournaltypeVO" 		id="JournaltypeMap">
+	<resultMap class="JournaltypeVO" id="JournaltypeMap">
 		<result property="journaltypeId" 	column="type_id" 	columnIndex="1" />
 		<result property="journalUse" 		column="used" 		columnIndex="2" />
 	</resultMap>
 
-	<resultMap class="JournalFormInfoVO" 	id="JournalFormInfo" groupBy="formId">
+	<resultMap class="JournalFormInfoVO" id="JournalFormInfo" 	groupBy="formId">
 		<result property="formId" 			column="form_id" />
 		<result property="formName" 		column="form_name" />
 		<result property="formInfo" 		column="form_info" />
@@ -154,7 +153,7 @@
 		<result property="formId" 			column="form_id" />
 		<result property="formName" 		column="form_name" />
 		<result property="formInfo" 		column="form_info" />
-		<result property="formContent" 		column="form_content" />
+		<result property="formContent" 		column="form_content" 			jdbcType="CLOB" 	javaType="String"/>
 		<result property="formStatus" 		column="form_status" />
 	</resultMap>
 
@@ -182,7 +181,7 @@
 		<result property="userName"			column="user_name"/>			
 		<result property="deptName"			column="dept_name"/>
 		<result property="jikwi"			column="jikwi"/>
-		<result property="date"				column="date"/>
+		<result property="date"				column="receive_date"/>
 	</resultMap>
 
 	<!-- 양식함 리스트 세럭트 -->
@@ -213,14 +212,14 @@
 	<!-- 회사 생성시 기본양식 생성 -->
 	<insert id="insertJournalBasicForm" parameterClass="map">
 		insert into tbl_journal_form (
-			type_id, 	company_id, 	tenant_id	,	
+			form_id,						type_id, 	company_id, 	tenant_id	,	
 			form_content	,	
 			form_name	,	
 			form_info	,	
 			form_status	,	
 			form_date
 		) values (
-			#typeId#,	#companyId#,	#tenantId#	,
+			SEQ_TBL_JOURNAL_FORM.NEXTVAL,	#typeId#,	#companyId#,	#tenantId#	,
 			(
 			select f.form_content from
             (select * from tbl_journal_form
@@ -253,7 +252,7 @@
 			and type_id = #typeId#	
 			and form_status = 'basic') f
 			)	,
-			UTC_TIMESTAMP()
+			SYS_EXTRACT_UTC(SYSTIMESTAMP)
 		)
 	</insert>
 
@@ -272,7 +271,7 @@
 		update
 			tbl_journal_form_type
 		set
-			used=#used#
+			used = #used#
 		where
 			type_id = #typeId#
 		and
@@ -288,12 +287,12 @@
 				a.form_id,
 				a.form_name,
 				a.form_info,
-				DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
+				TO_CHAR(a.form_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as form_date,
 				a.form_writer,
 				a.form_status,
 				a.type_id,
 				b.dept_id,
-				ifnull(d.DISPLAYNAME$lang$,(select DISPLAYNAME$lang$ from tbl_deptmaster dd where dd.CN=#companyId# and dd.tenant_id=#tenantId#)) as dept_name
+				nvl(d.DISPLAYNAME$lang$, (select DISPLAYNAME$lang$ from tbl_deptmaster dd where dd.CN = #companyId# and dd.tenant_id = #tenantId#)) as dept_name
 			from 
 				tbl_journal_form a 
 			left join 
@@ -374,18 +373,20 @@
 			b.tenant_id = #tenantId#
 		and 
 			b.dept_id in (select CN from tbl_deptmaster)
-		order by dept_name asc
+		order by a.DISPLAYNAME$lang$ asc	
 	</select>
 
 	<!-- 양식 등록 하기 -->
 	<insert id="insertJournalForm" parameterClass="map">
 		insert into tbl_journal_form (
-			tenant_id,	form_name,	form_content,	type_id,	form_date,	 form_writer,	form_info,		company_id
+			form_id,						tenant_id,			form_name,		form_content,		type_id,	
+			form_date,	 										form_writer,	form_info,			company_id
 		) values (
-			#tenantId#, #formName#, #formContent#, 	#typeId#, 	#writeDate#, #formWriter#,	#formDescript#, #companyId#
+			SEQ_TBL_JOURNAL_FORM.NEXTVAL,	#tenantId#, 		#formName#, 	#formContent#, 		#typeId#, 	
+			TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS'), 		#formWriter#,	#formDescript#, 	#companyId#
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
-			select last_insert_id()
+			SELECT max(form_id) from tbl_journal_form
 		</selectKey>
 	</insert>
 
@@ -402,19 +403,22 @@
 	<select id="selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select 
 			d.CN as id,
-			IF(d.extensionattribute1 = null
-			<isNotEmpty property="companyId">
-				or d.CN=#companyId#
-			</isNotEmpty>
-			,'##', d.EXTENSIONATTRIBUTE1) as parent,
+			case 
+				when d.extensionattribute1 = null
+				<isNotEmpty property="companyId">
+					or d.CN = #companyId#
+				</isNotEmpty>
+					then N'##'
+				else d.EXTENSIONATTRIBUTE1 
+			end as parent,
 			d.extensionattribute2 as companyId,
 			d.DISPLAYNAME$lang$ as text,
-			case d.CN
-				when d.extensionattribute2 then 'comp'
+			case 
+				when d.CN = d.extensionattribute2 then 'comp'
 				else 'dept'
 			end as isComp,
-			case d.CN
-				when u.DEPARTMENT then 'yes'
+			case 
+				when d.CN = u.DEPARTMENT then 'yes'
 				else 'no'
 			end as myDept
 		from
@@ -441,7 +445,7 @@
 			and 
 				d.EXTENSIONATTRIBUTE2 = #companyId#
 			</isNotEmpty>
-		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+		ORDER BY lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
 	</select>
 
 	<!-- 회사 리스트를 가져오는 쿼리 -->
@@ -449,8 +453,8 @@
 		select 
 			d.CN as companyId,
 			d.DISPLAYNAME$lang$ as companyName,
-			case d.CN
-				when #companyId# then 'selected'
+			case 
+				when d.CN = #companyId# then 'selected'
 				else 'no'
 			end as selected
 		from 
@@ -473,7 +477,7 @@
 			)
 		and 
 			d.extensionattribute2 = d.CN
-		order by lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+		order by lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
 	</select>
 
 	<!-- 권한자 목록 세럭트 -->
@@ -483,7 +487,7 @@
 			u.DISPLAYNAME$lang$ as user_name,
 			u.title$lang$ as jikwi,
 			du.DISPLAYNAME$lang$ as dept_name,
-			group_concat(d.DISPLAYNAME$lang$ order by 1 separator '%') as auth_dept
+			LISTAGG(cast(d.DISPLAYNAME$lang$ as varchar2(2000)), '%') within group (order by 1) as auth_dept 
 		from 
 			tbl_usermaster u 
 		inner join
@@ -496,7 +500,7 @@
 			a.tenant_id = #tenantId#
 		and
 			d.EXTENSIONATTRIBUTE2 = #companyId#
-		group by user_id
+		group by user_id, a.user_id, u.DISPLAYNAME, u.title, du.DISPLAYNAME  
 	</select>
 
 	<!-- 권한자의 권한 부서 리스트 -->
@@ -545,58 +549,58 @@
 	<!-- 해당부서의 사원리스트 -->
 	<select id="selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
 		select * from 
-		(	select
-				DISPLAYNAME$lang$ as user_name,
-				CN as user_id,
-				TITLE$lang$ as jikwi,
-				MAIL as mail,
-				DEPARTMENT as dept_id,
-				DESCRIPTION$lang$ as dept_name,
-				EXTENSIONATTRIBUTE2 as user_img,
-				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
-			from 
-				tbl_usermaster
-			where
-				TENANT_ID = #tenantId#
-			and
-				PHYSICALDELIVERYOFFICENAME = #companyId#
-			and
-			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
-			<isNotEqual property="key" compareValue="DEPARTMENT">
-				and 
-					$key$ like concat('%', #value#, '%')
-			</isNotEqual>
-			<isEqual property="key" compareValue="DEPARTMENT">
-				and 
-					$key$ = #value#
-			</isEqual>
-		union all 
-			select
-	        	A.DISPLAYNAME$lang$ as user_name,
-				A.CN as user_id,
-				B.TITLE$lang$ as jikwi,
-				A.MAIL as mail,
-				B.DEPTID as dept_id,
-				C.DISPLAYNAME$lang$ as dept_name,
-				A.EXTENSIONATTRIBUTE2 as user_img,
-				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15               	
-			from
-				tbl_addjobmaster B
-			join
-				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
-			join
-				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
-			where
-				B.TENANT_ID = #tenantId#
-			<isNotEqual property="key" compareValue="DEPARTMENT">
-				and 
-					A.$key$ like concat('%', #value#, '%')
-			</isNotEqual>
-			<isEqual property="key" compareValue="DEPARTMENT">
-				and 
-					B.DEPTID = #value#
-			</isEqual>
-		) AA
+			(	select
+					DISPLAYNAME$lang$ as user_name,
+					CN as user_id,
+					TITLE$lang$ as jikwi,
+					MAIL as mail,
+					DEPARTMENT as dept_id,
+					DESCRIPTION$lang$ as dept_name,
+					EXTENSIONATTRIBUTE2 as user_img,
+					SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15
+				from 
+					tbl_usermaster
+				where
+					TENANT_ID = #tenantId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				and
+				    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
+				<isNotEqual property="key" compareValue="DEPARTMENT">
+					and 
+						$key$ like '%'||#value#||'%'
+				</isNotEqual>
+				<isEqual property="key" compareValue="DEPARTMENT">
+					and 
+						$key$ = #value#
+				</isEqual>
+			union all 
+				select
+		        	A.DISPLAYNAME$lang$ as user_name,
+					A.CN as user_id,
+					B.TITLE$lang$ as jikwi,
+					A.MAIL as mail,
+					B.DEPTID as dept_id,
+					C.DISPLAYNAME$lang$ as dept_name,
+					A.EXTENSIONATTRIBUTE2 as user_img,
+					SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.EXTENSIONATTRIBUTE15, '0'))) || NVL(A.EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15
+				from
+					tbl_addjobmaster B
+				join
+					tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+				join
+					tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+				where
+					B.TENANT_ID = #tenantId#
+				<isNotEqual property="key" compareValue="DEPARTMENT">
+					and 
+						A.$key$ like '%'||#value#||'%'
+				</isNotEqual>
+				<isEqual property="key" compareValue="DEPARTMENT">
+					and 
+						B.DEPTID = #value#
+				</isEqual>
+			) AA
 		ORDER BY 8 ASC, 1 ASC
 	</select>
 
@@ -694,19 +698,20 @@
 			count(j.journal_id)
 		from 
 			tbl_journal_recv r
-		inner join tbl_journal j on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
+		inner join 
+			tbl_journal j on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
 		where 
 			r.user_id = #userId#
 		and 
 			r.TENANT_ID = #tenantId#
 		and 
-			r.recv_status='Y'
+			r.recv_status = 'Y'
 		and 
 			j.journal_writer in (select CN from tbl_usermaster)
 		and
-			isnull(r.recieve_date)
+			r.recieve_date is null
 		and 
-			NULLIF(j.journal_status ,'') is null
+			NULLIF(j.journal_status, null) is null
 	</select>
 
 	<!-- 일지 리스트 글수! -->
@@ -746,35 +751,39 @@
 			and j.journal_status = #status#
 		</isNotEmpty>
 		<isEmpty property="status">
-			and NULLIF(j.journal_status,'') is null
+			and NULLIF(j.journal_status, null) is null
 		</isEmpty>
 		<isNotEmpty property="formId">
 			and f.form_id = #formId#
 		</isNotEmpty>
 		<isNotEmpty property="writerName">
-			and u.DISPLAYNAME$lang$ like concat('%', #writerName#, '%')
+			and u.DISPLAYNAME$lang$ like '%'||#writerName#||'%'
 		</isNotEmpty>
 		<isNotEmpty property="journalTitle">
-			and j.journal_title like concat('%', #journalTitle#, '%')
+			and j.journal_title like '%'||#journalTitle#||'%'
 		</isNotEmpty>
 		<isNotEmpty property="journalText">
-			and j.journal_text like concat('%', #journalText#, '%')
+			and j.journal_text like '%'||#journalText#||'%'
 		</isNotEmpty>
 		<isNotEmpty property="formName">
-			and f.form_name like concat('%', #formName#, '%')
+			and f.form_name like '%'||#formName#||'%'
 		</isNotEmpty>
 		<isNotEmpty property="startDate">
 			<isNotEmpty property="endDate">
-				and (date(j.journal_date) between
-				#startDate# and #endDate#)
+				and (j.journal_date between TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60)
+				 		and TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') + 0.99999 - #offset# / (24 * 60))
 			</isNotEmpty>
 			<isEmpty property="endDate">
-				and (date(j.journal_date) like #startDate#)
+			<![CDATA[
+				and (j.journal_date >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60))
+			]]>
 			</isEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="endDate">
 			<isEmpty property="startDate">
-				and (date(j.journal_date) like #endDate#)
+			<![CDATA[
+				and (j.journal_date < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') + 0.99999 - #offset# / (24 * 60) )
+			]]>
 			</isEmpty>
 		</isNotEmpty>
 		<isEqual property="listType" compareValue="department">
@@ -783,11 +792,16 @@
 	</select>
 
 	<!-- 일지 리스트 가져오기 -->
-	<select id="selectJournalList" parameterClass="Map" resultMap="journalListMap">
-		select 
+	<select id="selectJournalList" parameterClass="Map" resultMap="journalListMap" remapResults="true">
+		SELECT
+		    *
+		FROM
+		(SELECT AAA.*, rownum as rNum from
+		(select journal_id, journal_title, journal_date, dept_share, writer_name, dept_name, form_name, type_id, reply_count, file_count, view_count, total_recv, check_recv, is_view, form_status, journal_sum, mine from
+		(select 
 			j.journal_id as journal_id,
 			j.journal_title as journal_title,
-			DATE_ADD(DATE_FORMAT(j.journal_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as journal_date,
+			TO_CHAR(j.journal_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')  AS journal_date,
 			j.dept_share as dept_share,
 			u.DISPLAYNAME$lang$ as writer_name,
 			d.DISPLAYNAME$lang$ as dept_name,
@@ -797,13 +811,14 @@
 				count(jr.reply_id) 
 			from 
 				tbl_journal_reply jr 
-			where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id and jr.reply_writer in (select CN from tbl_usermaster)) as reply_count,
+			where 
+				jr.journal_id = j.journal_id and jr.tenant_id=j.tenant_id and jr.reply_writer in (select CN from tbl_usermaster)) as reply_count,
 			(select 
 				count(jf.file_id) 
 			from 
 				tbl_journal_file jf 
 			where
-				jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id) as file_count,
+				jf.journal_id = j.journal_id and jf.tenant_id = j.tenant_id) as file_count,
 			(select 
 				count(v.user_id) 
 			from 
@@ -818,9 +833,9 @@
 					tbl_journal_recv 
 				where 
 					recieve_date is not null) v
-			where
+			where 
 				v.user_id in (select CN from tbl_usermaster)
-			and	 
+			and
 				not(v.user_id = j.journal_writer) and v.journal_id = j.journal_id and v.tenant_id = j.tenant_id) as view_count,
 			(select 
 				count(r.user_id) 
@@ -834,41 +849,41 @@
 				tbl_journal_recv r 
 			where
 				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as check_recv,
-			ifnull(
+			nvl(
 				(select 
-					recieve_date as is_view
+					to_char(recieve_date) as is_view
 				from 
 					tbl_journal_recv 
 				where 
 					user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id
 				union 
 				select 
-					view_date as is_view
+					to_char(view_date) as is_view
 				from 
 					tbl_journal_view 
 				where 
 					user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id
-				),
-			'noView') as is_view ,
+				), 
+			'noView') as is_view,
 			f.form_status as form_status,
 			j.journal_sum as journal_sum,
-			if(j.journal_writer = #userId#, 'Y', 'N') as mine
+			decode(j.journal_writer, #userId#, 'Y', 'N') as mine
 		from 
 			tbl_journal j
 		inner join 
 			tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
 		inner join 
-			tbl_journal_form_type ft on (f.type_id = ft.type_id and f.tenant_id=ft.tenant_id)
+			tbl_journal_form_type ft on (f.type_id = ft.type_id and f.tenant_id = ft.tenant_id)
 		inner join 
 			tbl_deptmaster d on (j.journal_dept = d.CN and d.TENANT_ID = j.tenant_id)
 		inner join 
-			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID=j.tenant_id)
+			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID = j.tenant_id)
 		<isNotEmpty property="recvUser">
 			left join 
 				tbl_journal_recv r on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
 		</isNotEmpty>
 		where 
-			j.tenant_id = #tenantId# and ft.company_id = #companyId#
+			j.tenant_id = #tenantId# and ft.company_id = #companyId# and j.journal_writer in (select CN from tbl_usermaster)
 		<isNotEmpty property="typeId">
 			and ft.type_id = #typeId#
 		</isNotEmpty>
@@ -886,40 +901,45 @@
 			and j.journal_status = #status#
 		</isNotEmpty>
 		<isEmpty property="status">
-			and NULLIF(j.journal_status,'') is null
+			and NULLIF(j.journal_status, null) is null
 		</isEmpty>
 		<isNotEmpty property="formId">
 			and f.form_id = #formId#
 		</isNotEmpty>
 		<isNotEmpty property="writerName">
-			and u.DISPLAYNAME$lang$ like concat('%',#writerName#,'%')
+			and u.DISPLAYNAME$lang$ like '%'||#writerName#||'%'
 		</isNotEmpty>
 		<isNotEmpty property="journalTitle">
-			and j.journal_title like concat('%',#journalTitle#,'%')
+			and j.journal_title like '%'||#journalTitle#||'%'
 		</isNotEmpty>
 		<isNotEmpty property="journalText">
-			and j.journal_text like concat('%',#journalText#,'%')
+			and j.journal_text like '%'||#journalText#||'%'
 		</isNotEmpty>
 		<isNotEmpty property="formName">
-			and f.form_name like concat('%',#formName#,'%')
+			and f.form_name like '%'||#formName#||'%'
 		</isNotEmpty>
 		<isNotEmpty property="startDate">
 			<isNotEmpty property="endDate">
-				and (date(j.journal_date) between #startDate# and #endDate#)
+				and (j.journal_date between TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60)
+				 		and TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') + 0.99999 - #offset# / (24 * 60))
 			</isNotEmpty>
 			<isEmpty property="endDate">
-				and (date(j.journal_date) like #startDate#)
+			<![CDATA[
+				and (j.journal_date >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60))
+			]]>
 			</isEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="endDate">
 			<isEmpty property="startDate">
-				and (date(j.journal_date) like #endDate#)
+			<![CDATA[
+				and (j.journal_date < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') + 0.99999 - #offset# / (24 * 60) )
+			]]>
 			</isEmpty>
 		</isNotEmpty>
 		<isEqual property="listType" compareValue="department">
 			and dept_share = 'Y'
 		</isEqual>
-		group by 1,2,3,4,5,6,7,8,14,15,16,17
+		) group by journal_id, journal_title, journal_date, dept_share, writer_name, dept_name, form_name, type_id, reply_count, file_count, view_count, total_recv, check_recv, is_view, form_status, journal_sum, mine 
 		<isEmpty property="orderNum">
 			<isEmpty property="orderHow">
 			order by 3 desc
@@ -930,19 +950,24 @@
 			order by $orderNum$ $orderHow$
 			</isNotEmpty>
 		</isNotEmpty>
-		limit
-		#startCount#,#listCnt#
+		<![CDATA[
+			)AAA
+			where
+				rownum <= (#startCount# + #listCnt#)
+			) where
+				rNum >= (#startCount# + 1)
+        ]]> 
 	</select>
 
 	<!-- 수신자 즐겨찾기 추가 -->
 	<insert id="saveReceiverFavorite" parameterClass="map">
 		insert into tbl_journal_recv_favorite (
-			tenant_id, 	user_id, 	favorite_name, 	favorite_date
+			favorite_id,								tenant_id, 	user_id, 	favorite_name, 	favorite_date
 		) values (
-			#tenantId#, #userId#, 	#favoriteName#, #nowDate#
+			SEQ_TBL_JOURNAL_RECV_FAVORITE.NEXTVAL,		#tenantId#, #userId#, 	#favoriteName#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
-			select last_insert_id()
+			SELECT max(favorite_id) from tbl_journal_recv_favorite
 		</selectKey>
 	</insert>
 
@@ -960,7 +985,7 @@
 		select
 			favorite_id,
 			favorite_name,
-			DATE_ADD(DATE_FORMAT(favorite_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as favorite_date
+			TO_CHAR(favorite_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as favorite_date
 		from
 			tbl_journal_recv_favorite
 		where
@@ -1026,19 +1051,19 @@
 
 	<!-- 환경설정을 가져오기 -->
 	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
-		select  
-			ifnull(e.list_cnt,20) as list_cnt,
-			ifnull(e.viewenv,'NONE') as viewenv,
-			ifnull(e.recv_alert,'Y') as recv_alert,
-			ifnull(e.reply_alert,'Y') as reply_alert,
-			ifnull(e.preview_wcontent,'50') as preview_wcontent,
-			ifnull(e.preview_hcontent,'50') as preview_hcontent,
+		select 
+			NVL(e.list_cnt, 20) as list_cnt,
+			NVL(e.viewenv, 'NONE') as viewenv,
+			NVL(e.recv_alert, 'Y') as recv_alert,
+			NVL(e.reply_alert, 'Y') as reply_alert,
+			NVL(e.preview_wcontent, 50) as preview_wcontent,
+			NVL(e.preview_hcontent, 50) as preview_hcontent,
 			u.mail as mail,
 			u.DISPLAYNAME$lang$ as name
 		from 
 			tbl_usermaster u
 		left join 
-			tbl_journal_env e on (u.CN = e.user_id and u.tenant_id = e.tenant_id)
+			tbl_journal_env e on(u.CN = e.user_id and u.tenant_id = e.tenant_id)
 		where 
 			u.CN = #userId#
 		and 
@@ -1047,87 +1072,97 @@
 
 	<!-- 환경설정 저장하기 -->
 	<insert id="insertUpdateJournalEnv" parameterClass="map">
-		INSERT INTO tbl_journal_env
-		(user_id,
-		tenant_id
-		<isNotEmpty property="listCnt">
-			,list_cnt
-		</isNotEmpty>
-		<isNotEmpty property="viewenv">
-			,viewenv
-		</isNotEmpty>
-		<isNotEmpty property="replyAlert">
-			,reply_alert
-		</isNotEmpty>
-		<isNotEmpty property="recvAlert">
-			,recv_alert
-		</isNotEmpty>
-		<isNotEmpty property="previewWcontent">
-			,preview_wcontent
-		</isNotEmpty>
-		<isNotEmpty property="previewHcontent">
-			,preview_hcontent
-		</isNotEmpty>
-		)
-		VALUES
-		(#userId#,
-		#tenantId#
-		<isNotEmpty property="listCnt">
-			,#listCnt#
-		</isNotEmpty>
-		<isNotEmpty property="viewenv">
-			,#viewenv#
-		</isNotEmpty>
-		<isNotEmpty property="replyAlert">
-			,#replyAlert#
-		</isNotEmpty>
-		<isNotEmpty property="recvAlert">
-			,#recvAlert#
-		</isNotEmpty>
-		<isNotEmpty property="previewWcontent">
-			,#previewWcontent#
-		</isNotEmpty>
-		<isNotEmpty property="previewHcontent">
-			,#previewHcontent#
-		</isNotEmpty>
-		)
-		ON DUPLICATE KEY UPDATE
-		user_id = #userId#
-		<isNotEmpty property="listCnt">
-			,list_cnt = #listCnt#
-		</isNotEmpty>
-		<isNotEmpty property="viewenv">
-			,viewenv = #viewenv#
-		</isNotEmpty>
-		<isNotEmpty property="replyAlert">
-			,reply_alert = #replyAlert#
-		</isNotEmpty>
-		<isNotEmpty property="recvAlert">
-			,recv_alert = #recvAlert#
-		</isNotEmpty>
-		<isNotEmpty property="previewWcontent">
-			,preview_wcontent = #previewWcontent#
-		</isNotEmpty>
-		<isNotEmpty property="previewHcontent">
-			,preview_hcontent = #previewHcontent#
-		</isNotEmpty>
+		MERGE INTO tbl_journal_env   
+			USING DUAL
+			ON (user_id = #userId#)
+		WHEN MATCHED THEN
+			UPDATE SET
+				tenant_id = #tenantId#
+				<isNotEmpty property="listCnt">
+					, list_cnt = TO_NUMBER(#listCnt#)
+				</isNotEmpty>
+				<isNotEmpty property="viewenv">
+					, viewenv = #viewenv#
+				</isNotEmpty>
+				<isNotEmpty property="replyAlert">
+					, reply_alert = #replyAlert#
+				</isNotEmpty>
+				<isNotEmpty property="recvAlert">
+					, recv_alert = #recvAlert#
+				</isNotEmpty>
+				<isNotEmpty property="previewWcontent">
+					, preview_wcontent = TO_NUMBER(#previewWcontent#)
+				</isNotEmpty>
+				<isNotEmpty property="previewHcontent">
+					, preview_hcontent = TO_NUMBER(#previewHcontent#)
+				</isNotEmpty>
+		WHEN NOT MATCHED THEN
+			INSERT
+				(user_id,   
+				tenant_id        
+				<isNotEmpty property="listCnt">
+					,list_cnt
+				</isNotEmpty>
+				<isNotEmpty property="viewenv">
+					,viewenv
+				</isNotEmpty>
+				<isNotEmpty property="replyAlert">
+					,reply_alert
+				</isNotEmpty>
+				<isNotEmpty property="recvAlert">
+					,recv_alert
+				</isNotEmpty>
+				<isNotEmpty property="previewWcontent">
+					,preview_wcontent
+				</isNotEmpty>
+				<isNotEmpty property="previewHcontent">
+					,preview_hcontent
+				</isNotEmpty>
+				)
+			VALUES
+				(#userId#,
+				#tenantId#
+				<isNotEmpty property="listCnt">
+					,#listCnt#
+				</isNotEmpty>
+				<isNotEmpty property="viewenv">
+					,#viewenv#
+				</isNotEmpty>
+				<isNotEmpty property="replyAlert">
+					,#replyAlert#
+				</isNotEmpty>
+				<isNotEmpty property="recvAlert">
+					,#recvAlert#
+				</isNotEmpty>
+				<isNotEmpty property="previewWcontent">
+					,#previewWcontent#
+				</isNotEmpty>
+				<isNotEmpty property="previewHcontent">
+					,#previewHcontent#
+				</isNotEmpty>
+				)
 	</insert>
 
 	<!-- 최근사용양식 아이디 가져오기 -->
 	<select id="getJournalLastFormId" parameterClass="map" resultClass="String">
 		select
-			a.form_id
+			*
 		from
-			tbl_journal a join tbl_journal_form b
-		on
-			(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+			(select 
+				a.form_id 
+			from 
+				tbl_journal a join tbl_journal_form b
+			on
+				(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+			where
+				a.journal_writer = #userId#
+			and
+				b.type_id = #typeId#
+			and
+				a.tenant_id = #tenantId#
+			order by a.journal_id desc)
 		where
-			a.journal_writer = #userId#
-		and
-			b.type_id = #typeId#
-		and
-			a.tenant_id = #tenantId#
-		order by a.journal_id desc limit 1
+			ROWNUM = 1
 	</select>
 
 	<!-- 일지 뷰 정보 저장 -->
@@ -1145,25 +1180,31 @@
 				user_id = #userId#
 		</selectKey>
 		<isEmpty property="isUser">
-			insert into tbl_journal_view 
-				(user_id,	tenant_id,	journal_id, 	view_date)
-			values
-				(#userId#,	#tenantId#,	#journalId#,	#viewDate#)
-			on duplicate key update tenant_id = #tenantId# 
+			merge into tbl_journal_view
+				using dual
+				on (user_id = #userId# and journal_id = #journalId#)
+			when matched then
+				update set
+				tenant_id = #tenantId#
+			when not matched then
+				insert
+					(user_id,		tenant_id,		journal_id,		view_date)
+				values
+					(#userId#,		#tenantId#,		#journalId#,	TO_DATE(#viewDate#, 'YYYY-MM-DD HH24:MI:SS'))
 		</isEmpty>
 		<isNotEmpty property="isUser">
-				update 
-					tbl_journal_recv
-				set
-					recieve_date = #viewDate#
-				where 
-					journal_id = #journalId#
-				and
-					tenant_id = #tenantId#
-				and 
-					user_id = #userId#
-				and 
-					recieve_date is null
+			update 
+				tbl_journal_recv
+			set
+				recieve_date = TO_DATE(#viewDate#, 'YYYY-MM-DD HH24:MI:SS')
+			where 
+				journal_id = #journalId#
+			and
+				tenant_id = #tenantId#
+			and 
+				user_id = #userId#
+			and
+				recieve_date is null
 		</isNotEmpty>
 	</insert>
 
@@ -1173,7 +1214,7 @@
 			j.journal_id as journal_id, 
 			j.journal_title as journal_title, 
 			j.journal_content as journal_content, 
-			DATE_ADD(DATE_FORMAT(j.journal_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as journal_date,
+			TO_CHAR(j.journal_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')  as journal_date,
 			u.DISPLAYNAME$lang$ as writer_name, 
 			f.form_name as form_name, 
 			f.type_id as type_id,
@@ -1186,8 +1227,8 @@
 			jf.file_path as file_path,
             jf.file_size as file_size,
             jf.file_name as file_name,
-            case u.CN
-				when #userId# then 'yes'
+            case 
+				when u.CN = #userId# then 'yes'
 				else 'no'
 			end as mine,
 			u.CN as writer_id
@@ -1196,7 +1237,7 @@
 		inner join	
 			tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
 		inner join 
-			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID = j.tenant_id)
+			tbl_usermaster u on(j.journal_writer = u.CN and u.TENANT_ID = j.tenant_id)
 		left join 
 			tbl_journal_file jf on (jf.journal_id = j.journal_id and jf.tenant_id = j.tenant_id)
 		where 
@@ -1208,29 +1249,29 @@
 	<!-- 업무일지 등록 하기 -->
 	<insert id="insertJournal" parameterClass="map">
 		insert into tbl_journal (
-			tenant_id, 	journal_title, 	journal_content, 	journal_date, 	journal_writer,
-			form_id, 	dept_share, 	journal_dept,		journal_text,	journal_sum
+			journal_id,					tenant_id, 			journal_title, 			journal_content, 	journal_date, 	
+			journal_writer,				form_id, 			dept_share, 			journal_dept,		journal_text,			journal_sum
 			<isNotEmpty property="journalStatus">
 				, journal_status
 			</isNotEmpty>
 		) values (
-			#tenantId#,	 #title#, 		#content#, 			#writeDate#, 	#writerId#, 
-			#formId#, 	 #deptShare#,	#deptId#,			#journalText#,	#isSum#
+			SEQ_TBL_JOURNAL.NEXTVAL,	#tenantId#,	 		#title#, 				#content#, 			TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS'), 	 
+			#writerId#,					#formId#, 			#deptShare#,			#deptId#,			#journalText#,			#isSum#
 			<isEqual property="journalStatus" compareValue="temp">
 				, #journalStatus#
 			</isEqual>
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
-			select last_insert_id()
+			SELECT max(journal_id) from tbl_journal
 		</selectKey>
 	</insert>
 
 	<!-- 일지 등록시 첨부파일 정보 등록 -->
 	<insert id="insertJournalAttach" parameterClass="map">
 		insert into tbl_journal_file (
-			journal_id, 	file_path, 		file_size, 		file_name, 		tenant_id
+			file_id,						journal_id, 	file_path, 		file_size, 		file_name, 		tenant_id
 		) values (
-			#journalId#, 	#filePath#, 	#fileSize#, 	#fileName#, 	#tenantId#
+			SEQ_TBL_JOURNAL_FILE.NEXTVAL,	#journalId#, 	#filePath#, 	#fileSize#, 	#fileName#, 	#tenantId#
 		)
 	</insert>
 
@@ -1253,11 +1294,11 @@
 			dept_share = #deptShare#,
 			journal_content = #content#
 			<isEqual property="isTemp" compareValue="N">
-			,journal_status = ""
-			,journal_date = #writeDate# 
+			,journal_status = ''
+			,journal_date = TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS') 
 			</isEqual>
 			<isEqual property="isTemp" compareValue="Y">
-			,journal_date = #writeDate# 
+			,journal_date = TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS') 
 			</isEqual>
 		where
 			journal_id = #journalId#
@@ -1314,11 +1355,11 @@
 		select 
 			r.reply_id as reply_id,
 			r.reply_content as reply_content,
-			DATE_ADD(DATE_FORMAT(r.reply_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as reply_date,
+			TO_CHAR(r.reply_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as reply_date,
 			u.DISPLAYNAME$lang$ as reply_writer_name,
 			u.CN as reply_writer,
-			case u.CN
-				when #userId# then 'Y' 
+			case 
+				when u.CN = #userId# then 'Y' 
 				else 'N'
 			end as mine
 		from 
@@ -1332,9 +1373,9 @@
 	<!-- 댓글입력 -->
 	<insert id="insertJournalReply" parameterClass="map">
 		insert into tbl_journal_reply(
-			tenant_id,	reply_content,	journal_id,		reply_date,		reply_writer
+			reply_id,						tenant_id,	reply_content,	journal_id,		reply_date,										reply_writer
 		) values(
-			#tenantId#,	#replyContent#,	#journalId#,	#replyDate#,	#userId#
+			SEQ_TBL_JOURNAL_REPLY.NEXTVAL,	#tenantId#,	#replyContent#,	#journalId#,	TO_DATE(#replyDate#, 'YYYY-MM-DD HH24:MI:SS'),	#userId#
 		)
 		<selectKey resultClass="String">
 			select 
@@ -1380,12 +1421,20 @@
 	
 	<!-- 수신자 리스트 가져오기 -->
 	<select id="getReceiverList" parameterClass="map" resultMap="receiverVO">
+		<isNotEmpty property="startCount">
+			<isNotEmpty property="listCnt">
+				SELECT
+				    *
+				FROM
+				(SELECT AAA.*, rownum as rNum from (
+			</isNotEmpty>
+		</isNotEmpty>
 		select
 			b.user_id as user_id,
 			a.DISPLAYNAME$lang$ as user_name,
 			a.DESCRIPTION$lang$ as dept_name,
 			a.TITLE$lang$ as jikwi,
-			ifnull(DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '-') as date
+			nvl(TO_CHAR(b.recieve_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), '-') as receive_date
 		from 
 			tbl_usermaster a join tbl_journal_recv b 
 		on 
@@ -1396,11 +1445,16 @@
 			a.tenant_id = #tenantId#
 		and
 			b.user_id in (select CN from tbl_usermaster)
-		order by lpad(ifnull(a.EXTENSIONATTRIBUTE15,0),6,0) ,a.DISPLAYNAME$lang$
+		order by lpad(nvl(a.EXTENSIONATTRIBUTE15, 0), 6, 0), a.DISPLAYNAME$lang$
 		<isNotEmpty property="startCount">
 			<isNotEmpty property="listCnt">
-				limit
-				#startCount#, #listCnt#
+			<![CDATA[
+				)AAA
+				where
+					rownum <= (#startCount# + #listCnt#)
+				) where
+					rNum >= (#startCount# + 1)
+       		]]> 
 			</isNotEmpty>
 		</isNotEmpty>
 	</select>
@@ -1415,19 +1469,22 @@
 			from 
 				tbl_journal_view v
 			inner join 
-				tbl_usermaster u on(v.tenant_id = u.TENANT_ID and u.CN = v.user_id)
+				tbl_usermaster u on (v.tenant_id = u.TENANT_ID and u.CN = v.user_id)
 			where 
 				v.journal_id = #journalId#
-			and v.tenant_id = #tenantId#
+			and 
+				v.tenant_id = #tenantId#
 			and 
 				not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
+			and
+				v.user_id in (select CN from tbl_usermaster)
 			union
 			select
 				b.user_id as user_id
 			from 
-				tbl_usermaster a 
-			inner join 
-				tbl_journal_recv b on (a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
+				tbl_usermaster a inner join tbl_journal_recv b 
+			on 
+				(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
 			where 
 				b.journal_id = #journalId#
 			and
@@ -1440,12 +1497,16 @@
 	
 	<!-- 조회자 리스트 가져오기 -->
 	<select id="getViewerList" parameterClass="map" resultMap="receiverVO">
+		SELECT
+		    *
+		FROM
+		(SELECT AAA.*, rownum as rNum from (
 		(select
 			b.user_id as user_id,
 			a.DISPLAYNAME$lang$ as user_name,
 			a.DESCRIPTION$lang$ as dept_name,
 			a.TITLE$lang$ as jikwi,
-			DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date
+			nvl(TO_CHAR(b.recieve_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), '-') as receive_date
 		from 
 			tbl_usermaster a join tbl_journal_recv b 
 		on 
@@ -1464,7 +1525,7 @@
 			u.DISPLAYNAME$lang$ as user_name,
 			u.DESCRIPTION$lang$ as dept_name,
 			u.TITLE$lang$ as jikwi,
-			DATE_ADD(DATE_FORMAT(v.view_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date
+			TO_CHAR(v.view_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as receive_date
 		from 
 			tbl_journal_view v
 		inner join 
@@ -1476,17 +1537,21 @@
 		and
 			v.user_id in (select CN from tbl_usermaster)
 		and 
-			not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
+			not(v.user_id = (select journal_writer from tbl_journal where journal_id =#journalId# and tenant_id = #tenantId#))
 		)
 		order by 5 desc
-		limit
-			#startCount#, #listCnt#
+		<![CDATA[
+			)AAA
+			where
+				rownum <= (#startCount# + #listCnt#)
+			) where
+				rNum >= (#startCount# + 1)
+        ]]> 
 	</select>
 	
 	<!-- 일지 조회가능 유무 체크 -->
 	<select id="checkJournalAuth" parameterClass="map" resultMap="journalAuthCheckMap">
 		select 
-			count(r.user_id) as count,
 			case 
 				when j.journal_id = #journalId# and j.journal_writer in (select CN from tbl_usermaster) then 'Y'
 				else 'N'
@@ -1498,8 +1563,9 @@
 		from 
 			tbl_journal j
 		left join 
-			tbl_journal_recv r on(j.journal_id = r.journal_id and j.tenant_id = r.tenant_id)
-		where
+			tbl_journal_recv r on (j.journal_id = r.journal_id and j.tenant_id = r.tenant_id)
+		right outer join dual 
+		on
 			j.journal_id = #journalId#
 		and 
 			j.tenant_id = #tenantId#
@@ -1523,52 +1589,50 @@
 	<!-- 내가 부서장인 부서 리스트 -->
 	<select id="selectCheifBossList" parameterClass="map" resultMap="deptViewMap">
 		select 
-		d.CN as id,
-		'##' as parent,
-		d.extensionattribute2 as companyId,
-		d.DISPLAYNAME$lang$ as text,
-		case d.CN
-			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id=#userId# and dept_id = d.CN)
-			then 'Y'
-			else 'N'
-		end as isComp,
-		case d.CN
-			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn = #userId#) then 'yes'
-			when (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn = #userId# and deptid = d.CN) then 'add'
-			else 'no'
-		end as myDept
+			d.CN as id,
+			'##' as parent,
+			d.extensionattribute2 as companyId,
+			d.DISPLAYNAME$lang$ as text,
+			case 
+				when d.CN = (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id = #userId# and dept_id = d.CN) then 'Y'
+				else 'N'
+			end as isComp,
+			case 
+				when d.CN = (select department from tbl_usermaster where tenant_id = #tenantId# and cn = #userId#) then 'yes'
+				when d.CN = (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn = #userId# and deptid = d.CN) then 'add'
+				else 'no'
+			end as myDept
 		from
 			tbl_deptmaster d 
 		where 
 			d.tenant_id = #tenantId#
 		and 	
 			d.EXTENSIONATTRIBUTE9 = #userId#
-		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME
+		ORDER BY lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
 	</select>
 	
 	<!-- 내가 부서장인 부서의 하위 부서 리스트 -->
 	<select id="selectCheifBoss" parameterClass="map" resultMap="deptViewMap">
 		select 
-		d.CN as id,
-		d.extensionattribute1 as parent,
-		d.extensionattribute2 as companyId,
-		d.DISPLAYNAME$lang$ as text,
-		case d.CN
-			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id=#userId# and dept_id = d.CN)
-			then 'Y'
-			else 'N'
-		end as isComp,
-		case d.CN
-			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn=#userId#) then 'yes'
-			when (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn=#userId# and deptid=d.CN) then 'add'
-			else 'no'
-		end as myDept
+			d.CN as id,
+			d.extensionattribute1 as parent,
+			d.extensionattribute2 as companyId,
+			d.DISPLAYNAME$lang$ as text,
+			case 
+				when d.CN = (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id = #userId# and dept_id = d.CN) then 'Y'
+				else 'N'
+			end as isComp,
+			case 
+				when d.CN = (select department from tbl_usermaster where tenant_id = #tenantId# and cn = #userId#) then 'yes'
+				when d.CN = (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn = #userId# and deptid = d.CN) then 'add'
+				else 'no'
+			end as myDept
 		from
 			tbl_deptmaster d 
 		where 
 			d.tenant_id = #tenantId#
-		and DEPT_CD_PATH like concat('%,', #deptId#, ',%') 
-		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME
+		and DEPT_CD_PATH like '%,'||#deptId#||',%'
+		ORDER BY lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
 	</select>
 	
 	<!-- 권한 부서 한개 삭제 -->
