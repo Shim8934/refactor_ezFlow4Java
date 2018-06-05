@@ -6,12 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
-<<<<<<< HEAD
-    
         <Logger name="java.sql" level="INFO" additivity="false">
-=======
-        <Logger name="java.sql" level="INFO" additivity="false">
->>>>>>> 23dcf3c4b03366eebd99656d48d80fa6de3a65ac
             <AppenderRef ref="console" />
         </Logger>
         <Logger name="egovframework" level="DEBUG" additivity="false">
