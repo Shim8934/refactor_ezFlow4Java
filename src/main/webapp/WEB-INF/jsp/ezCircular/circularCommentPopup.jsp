@@ -194,7 +194,7 @@
 		</div> --%>
 		
 		<c:if test="${myCommentCount != 0 }">
-			<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px; background-color:rgba(229, 239, 255, 1);">
+			<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;">
 				<div id="menu" style="margin-top:8px; margin-left:45%; position:relative">
 			        <ul>
 			            <li><span onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
