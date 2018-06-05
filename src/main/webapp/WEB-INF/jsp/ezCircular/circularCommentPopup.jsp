@@ -57,6 +57,9 @@
 			.commentConfirmDiv ul li.off {
 				 background:url(/images/kr/cm/btn_default_offleft.gif) no-repeat top left; 
 			}  */
+			textarea {
+				border: 0px solid white;
+			}
 			
 			textarea::placeholder {
  				 color: #b4b4b4;
@@ -194,10 +197,10 @@
 		</div> --%>
 		
 		<c:if test="${myCommentCount != 0 }">
-			<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;">
-				<div id="menu" style="margin-top:8px; margin-left:45%; position:relative">
+			<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;background-color:#f8f8fa;">
+				<div id="menu" style="margin-top:8px; margin-left:45%; position:relative;">
 			        <ul>
-			            <li><span onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
+			            <li><span style="border: 1px solid rgb(102, 102, 102); border-image: none;" onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
 			        </ul>
 			    </div>
 			</div>
