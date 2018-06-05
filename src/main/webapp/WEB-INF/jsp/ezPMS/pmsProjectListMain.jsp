@@ -397,13 +397,6 @@ function setInitOrder(){
 			}
 		}
 	});
-
-	//검색 초기화
-	$("#searchByProjectName").val("");
-	$("#searchByUser").val("");
-	$("#Sdatepicker").val("");
-	$("#Edatepicker").val("");
-	$("#searchByOverview").val("");
 	
 	projectListScroll();
 }
