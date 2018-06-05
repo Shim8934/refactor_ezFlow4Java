@@ -264,35 +264,41 @@
 			* 통계바 메소드
 			*/
 			function getAttiTypeList_After(result) {
-					var objTable = $("<table style='table-layout:fixed;'></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%", "height":$("#attiCalendar").css("height")});
-					var objTbody = $("<tbody></tbody>");
-					var objTr = "";
-					var objTd = "";
-					var calendarHeight = $("#attiCalendar").css("height");
-					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
+				//, "height":$("#attiCalendar").css("height")
+				var objTable = $("<table style='table-layout:fixed;' id='statisTB'></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%", "height":parseInt($("#attiCalendar").css("height"),10)});
+				var objTbody = $("<tbody></tbody>");
+				var objTr = "";
+				var objTd = "";
+				var calendarHeight = $("#attiCalendar").css("height");
+// 				var tdHeight = (parseInt(document.documentElement.clientHeight, 10)) / (result.length);
+// 				var tdHeight = (parseInt(calendarHeight.substr(0, calendarHeight.length - 2) , 10)/(result.length));
+				
+				objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.t171'/>")));
+				for (var i = 0; i < result.length; i++) {
 					
-					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.t171'/>")));
-					for (var i = 0; i < result.length; i++) {
-						
-						if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
-							continue;
-						}
-						objTr = $("<tr></tr>").append($("<th style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").html(result[i].typeName));
-						objTd = $("<td nowrap></td>").css({"width" : "80px", "cursor" : "pointer"})
-						.attr("id",result[i].typeId).text("0" + "<spring:message code='ezAttitude.t21'/>")
-						.attr("parentId",result[i].parentId)
-						.attr("onmouseover","this.style.color='#164aad'")
-						.attr("onmouseout","this.style.color='#666'")
-						.click(function() {
-							searchByTypeId(this);
-						});	
-						objTr.append(objTd);
-						objTbody.append(objTr);
+					if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
+						continue;
 					}
-					
-					objTable.append(objTbody);
-					$("#attiStatis").append(objTable);
-					
+					//  height : " + tdHeight + "
+					objTr = $("<tr></tr>").append($("<th style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal;' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").html(result[i].typeName));
+					objTd = $("<td nowrap></td>").css({"width" : "80px", "cursor" : "pointer"})
+					.attr("id",result[i].typeId).text("0" + "<spring:message code='ezAttitude.t21'/>")
+					.attr("parentId",result[i].parentId)
+					.attr("onmouseover","this.style.color='#164aad'")
+					.attr("onmouseout","this.style.color='#666'")
+					.click(function() {
+						searchByTypeId(this);
+					});	
+					objTr.append(objTd);
+					objTbody.append(objTr);
+				}
+				
+				objTable.append(objTbody);
+				$("#attiStatis").append(objTable);
+				
+				window.onresize = function () {
+			        $("#statisTB").css("height",$("#attiCalendar").css("height"));
+			    }
 			}
 			
 			/**
@@ -1055,7 +1061,7 @@
 				</td>
 				<td style="vertical-align:top; width:10px;">&nbsp;</td>
 				<td style="vertical-align:top; width:9%; margin-left:5px;">
-					<div style="vertical-align:top; height:696px;" id="attiStatis">
+					<div style="vertical-align:top;" id="attiStatis">
 					</div>
 				</td>
 			</tr>

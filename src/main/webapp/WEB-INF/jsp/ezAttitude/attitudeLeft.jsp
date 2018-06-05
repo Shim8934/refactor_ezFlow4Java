@@ -385,18 +385,6 @@
 	</head>
 <body class="leftbody">
 	<div class="left_pims" title="<spring:message code='ezAttitude.t1'/>"><span><spring:message code='ezAttitude.t1'/></span></div>
-<!-- 	<article class="time"> -->
-<%-- 		<p class="title"><spring:message code='main.t00023' /></p> --%>
-<!-- 		<div style=" margin-left:52px ;width:110px; height:67px; border:2px solid grey; border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);"> -->
-<!-- 			<p id="timeinput" style="margin:21px 0px 0px 2px;"></p> -->
-<!-- 		</div> -->
-<!-- 			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; overflow:hidden;"> -->
-<!-- 			<p id="inAttiClock" style="margin:5px 0px 0px 0px; font-size:13px;">출근 : 00:00:00</p> -->
-<!-- 			<p id="outAttiClock" style="margin:5px 0px 8px 0px;  font-size:13px;">퇴근 : 00:00:00</p> -->
-<!-- 			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)" style="margin-left:0px;">출근</span> -->
-<!-- 			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span> -->
-<!-- 		</div> -->
-<!-- 	</article> -->
 	<div id="left" style="border-top:1px solid #dedede">
 		<div style="display: block;">
 			<article class="time">
@@ -406,8 +394,8 @@
 					</div>
 				</div>
 				<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
-					<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:14px; text-align: left; margin-left:50px; padding-left:22px;"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p>
-					<p id="outAttiClock" style="margin:5px 0px 30px 8px;  font-size:14px; text-align: left; margin-left:50px; padding-left:22px"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p>
+					<p id="inAttiClock" style="margin:3px 0px 0px 7px; font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p>
+					<p id="outAttiClock" style="margin:7px 0px 30px 8px;  font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p>
 					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span>
 					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px"><spring:message code='ezAttitude.t65'/></span>
 				</div>
