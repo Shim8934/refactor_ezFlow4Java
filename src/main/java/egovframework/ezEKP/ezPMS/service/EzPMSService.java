@@ -156,4 +156,6 @@ public interface EzPMSService {
 	public List<BoardViewerVO> getBoardViewerList(int tenantId, Map<String, Object> param);
 
 	public void addPreTaskRel(long taskId, int rowIndexId, long projectId, int tenantId);
+
+	public List<Long> getPreTaskRel(int rowIndex, int tenantId, long projectId);
 }

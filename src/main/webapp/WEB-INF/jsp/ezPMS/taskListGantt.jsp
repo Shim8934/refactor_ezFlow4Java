@@ -86,7 +86,7 @@
 	   			ganttData.tasks[0].status = ganttStatus[pd.status];
 	   			ganttData.tasks[0].start = new Date(pd.planStartDate).getTime();
 	   			ganttData.tasks[0].end = new Date(pd.planEndDate).getTime();
-	   			ganttData.tasks[0].duration = pd.restDueday;
+	   			ganttData.tasks[0].duration = pd.workingday;
 	   			ganttData.tasks[0].startIsMilestone = "";
 	   			ganttData.tasks[0].endIsMilestone = "";
 	   			ganttData.tasks[0].assigs = [];
@@ -170,7 +170,7 @@
 			   			ganttData.tasks[i + 1].status = ganttStatus[tl[i].status];
 			   			ganttData.tasks[i + 1].start = new Date(tl[i].planStartDate).getTime();
 			   			ganttData.tasks[i + 1].end = new Date(tl[i].planEndDate).getTime();
-			   			ganttData.tasks[i + 1].duration = tl[i].restDueday;
+			   			ganttData.tasks[i + 1].duration = tl[i].realWorkingday;
 			   			ganttData.tasks[i + 1].weight = tl[i].weight;
 			   			ganttData.tasks[i + 1].startIsMilestone = "";
 			   			ganttData.tasks[i + 1].endIsMilestone = "";
@@ -196,7 +196,7 @@
 			   				ganttData.roles.push(role);
 			   			}
 			   			
-			   			ganttData.tasks[i + 1].depends = "";
+			   			ganttData.tasks[i + 1].depends = tl[i].pretask;
 			   			ganttData.tasks[i + 1].description = tl[i].overview;
 			   			ganttData.tasks[i + 1].progress = tl[i].realProgress;
 			   			ganttData.tasks[i + 1].hasChild = "";
@@ -300,7 +300,7 @@
 	   			}
 	   			
 // 	   			makeLayerPopup();
-				var top = ($(window).height() - $(this).outerHeight()) / 2;
+	   			var top = ($(window).height() - $(this).outerHeight()) / 2;
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
@@ -333,36 +333,56 @@
 	   		function ganttChartModifyFunc(){
 	   			//기간 변경
 	   			GanttMaster.prototype.changeTaskDates = function (task, start, end) {
+	   			  if (typeof(start) == "number") {
+	   				  start = new Date(start);
+	   			  }
+	   			  
+	   			  if (typeof(end) == "number") {
+	   				  end = new Date(end);
+	   			  }
+	   			  
 	   			  var startDate = dateToYYYYMMDD(start);
 	   			  var endDate = dateToYYYYMMDD(end);
 	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
 	   			  var projectId = task.id.substring(1, task.id.indexOf("_"));
 	   			  var progress = task.progress;
 	   			  var fullId = task.id;
+	   			  var endTime = end.getTime();
+	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
+	   			  var newEndTime = end.getTime();
 	   			  
-	   			  if (end.getDay() == 6) {
-	   				var time = new Date(end.getTime() + (2 * 24 * 60 * 60 * 1000));
-					endDate = dateToYYYYMMDD(time);
-					
+	   			  if (end.getDay() == 6) { 
+	   				newEndTime = end.getTime() + (2 * 24 * 60 * 60 * 1000);
+	   				endTime = new Date(newEndTime);
+					endDate = dateToYYYYMMDD(endTime);
 	   			  } else if (end.getDay() == 0) {
-		   			var time = new Date(end.getTime() + (1 * 24 * 60 * 60 * 1000));
-		   			endDate = dateToYYYYMMDD(time);	
+	   				newEndTime = end.getTime() + (1 * 24 * 60 * 60 * 1000);
+	   				endTime = new Date(newEndTime);
+		   			endDate = dateToYYYYMMDD(endTime);	
 	   			  }
 	   			  
-	   			  changeDate(fullId, taskId, projectId, startDate, endDate, progress);
+	   			  changeDate(fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex);
 	   			  return task.setPeriod(start, end);
 	   			};
 	   			
 	   			//기간은 그대로, 날짜만 이동
 	   			GanttMaster.prototype.moveTask = function (task, newStart) {
+		   		  if (typeof(newStart) == "number") {
+		   			newStart = new Date(newStart);
+		   		  }
+		   		  
 	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
 	   			  var projectId = task.id.substring(1, task.id.indexOf("_"));
 	   			  var startDate = dateToYYYYMMDD(newStart);
+	   			  var newEndTime = newStart.getTime() + ((task.duration - 1) * 24 * 60 * 60 * 1000);
 	   			  
-	   			  var time = new Date(newStart.getTime() + ((task.duration - 1) * 24 * 60 * 60 * 1000));
-	   			  var endDate = dateToYYYYMMDD(time);
+	   			  var endTime = new Date(newEndTime);
+	   			  var endDate = dateToYYYYMMDD(endTime);
 	   			  
-	   			  changeDate(task.id, taskId, projectId, startDate, endDate, task.progress);
+	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
+	   			  console.log($("#tid_" + task.id).find(".taskRowIndex").text());
+	   			  console.log(task);
+	   			  changeDate(task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex);
 	   			  return task.moveTo(newStart, true,true);
 	   			};
 	   			
@@ -376,7 +396,7 @@
 	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
 	   			  var preTaskRowIndex = task.depends;
 	   			  var progress = task.progress;
-	   			var projectId = task.id.substring(1, task.id.indexOf("_"));
+	   			  var projectId = task.id.substring(1, task.id.indexOf("_"));
 	   			
 	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress);
 	   			  
@@ -413,13 +433,15 @@
 	   				});
 	   		}
 	   		
-	   		function changeDate(fullId, taskId, projectId, startDate, endDate, progress) {
+	   		function changeDate(fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex) {
 	   			var data = {
 	   					  taskId : taskId,
 	   					  projectId : projectId,
 	   					  planStartDate : startDate,
 	   					  planEndDate : endDate,
-	   					  realProgress : progress
+	   					  realProgress : progress,
+	   					  endTime : endTime,
+	   					  rowIndex : rowIndex
 	   			  } 
 	   			  
 	   			$.ajax({
@@ -557,6 +579,27 @@
 	   			eventSetting();
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
+	   		
+	   		$(document).ready(function(){
+	   			GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
+	   			  var self = this;
+
+	   			  if (!self.master.permissions.canSeePopEdit) {
+	   				return;  
+	   			  }
+	   			  
+	   			  var taskRow=task.rowElement;
+	   			  var taskId = taskRow.attr("taskId");
+	   			  var onlyTaskId = taskId.substring(task.id.indexOf("_") + 2);
+	   			  var projectId = taskId.substring(1, task.id.indexOf("_"));
+	   				
+	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
+	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;
+	   		      var feature = GetOpenPosition(0, 0);
+	   				
+	   			  DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user");
+	   			};
+	   		})
 
 	   		
 		</script>

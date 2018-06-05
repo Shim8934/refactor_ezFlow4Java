@@ -116,6 +116,9 @@ public class ProjectTaskVO {
     //프로젝트 이름
     private String projectName;
     
+    //순수 task workingday
+    private int realWorkingday;
+    
     public Long getTaskId() {
         return taskId;
     }
@@ -410,6 +413,14 @@ public class ProjectTaskVO {
 
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
+	}
+
+	public int getRealWorkingday() {
+		return realWorkingday;
+	}
+
+	public void setRealWorkingday(int realWorkingday) {
+		this.realWorkingday = realWorkingday;
 	}
     
 }

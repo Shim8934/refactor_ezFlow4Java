@@ -137,6 +137,9 @@
     	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
     	<result property="groupName"						column="UPPER_GROUP_NAME"			columnIndex="29"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
+    	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
+    	<result property="pregroup"							column="PREGROUP"					columnIndex="33"/>
     </resultMap>
     
     <resultMap id="projectTaskMemberVO" class="ProjectTaskMemberVO">
@@ -787,14 +790,14 @@
     			real_progress,			weight,					overview	,		member_count,
     			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
     			writer_id,				write_date, 			writer_name, 			writer_name2, 			writer_deptname, 		writer_deptname2, 
-    			sort_order, 			workingday,				tree_depth
+    			sort_order, 			workingday,				tree_depth,		real_workingday
     		) 
     		VALUES ( 
     			#tenantId#, 			#projectId#, 			#groupId#, 				#taskName#,				#status#,			#planStartDate#,			#planEndDate#, 
     			#realProgress#,			#weight#,				#overview#,				#memberCount#,
     			#headManagerId#, 		#headManagerName#,		#headManagerName2#, 	#headManagerDeptname#,	#headManagerDeptname2#, 
     			#writerId#,				#writeDate#, 			#writerName#, 			#writerName2#, 			#writerDeptname#, 		#writerDeptname2#, 
-    			#sortOrder#, 			#workingday#,			#treeDepth#
+    			#sortOrder#, 			#workingday#,			#treeDepth#,	#realWorkingday#
     		)
     	]]>
     	<selectKey keyProperty="taskId" resultClass="long">
@@ -1070,7 +1073,10 @@
 				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
 				A.DEL_STATUS,
 				D.GROUP_NAME AS UPPER_GROUP_NAME,
-				B.PROJECT_NAME
+				B.PROJECT_NAME,
+				A.REAL_WORKINGDAY,
+				R.PRETASK,
+				R.PREGROUP
 			FROM 
 				tbl_pms_task A
 			JOIN 
@@ -1091,6 +1097,12 @@
 				tbl_pms_taskmember E
 			ON
 				A.TASK_ID = E.TASK_ID
+			LEFT JOIN
+				TBL_PMS_PRETASKREL R
+			ON
+				A.PROJECT_ID = R.PROJECT_ID
+			AND
+				A.TASK_ID = R.TASK_ID
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND
@@ -1942,7 +1954,10 @@
 				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
 				A.DEL_STATUS,
 				B.GROUP_NAME AS UPPER_GROUP_NAME,
-				P.PROJECT_NAME
+				P.PROJECT_NAME,
+				A.REAL_WORKINGDAY,
+				R.PRETASK,
+				R.PREGROUP
 			FROM 
 				tbl_pms_task A
 			JOIN
@@ -1953,6 +1968,12 @@
 				TBL_PMS_PROJECT P
 			ON	
 				A.PROJECT_ID = P.PROJECT_ID
+			LEFT JOIN
+				TBL_PMS_PRETASKREL R
+			ON
+				A.PROJECT_ID = R.PROJECT_ID
+			AND
+				A.TASK_ID = R.TASK_ID
 			WHERE
 				A.TASK_ID = #taskId#
 			AND
@@ -2375,6 +2396,7 @@
 		SET	
 			PLAN_START_DATE = #planStartDate#,
 			PLAN_END_DATE = #planEndDate#,
+			REAL_WORKINGDAY = #realWorkingday#,
 	]]>
 	<isNotEmpty property="status">
 			STATUS = #status#,
@@ -2504,4 +2526,17 @@
 		)				
 	]]>
 	</insert>
+	
+	<select id="EzPMSDAO.getPreTaskRel" parameterClass="map" resultClass="Long">
+		SELECT
+			TASK_ID
+		FROM 
+			TBL_PMS_PRETASKREL
+		WHERE
+			PRETASK = #rowIndex#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
 </sqlMap>

@@ -401,4 +401,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		insert ("EzPMSDAO.addPreTaskRel", map);
 		
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Long> getPreTaskRel(Map<String, Object> map) {
+		return (List<Long>) list("EzPMSDAO.getPreTaskRel", map);
+	}
 }
