@@ -275,7 +275,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 
 /*------------ list_type_photo ------------*/
-.listtype_photo {overflow:hidden;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0px 0px 10px 0px; padding:0px 0px 10px 0px; border-bottom:1px dotted #b4b4b4;}
+.listtype_photo {overflow:hidden;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0px 0px 12px 0px; padding:0px 0px 12px 0px; border-bottom:1px dotted #b4b4b4;}
 .listtype_photo dt{padding:5px 0;font-size:12px}
 .listtype_photo dt.tit{margin-left:98px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;color:#333}
 .listtype_photo dd.photo{position:relative;display:inline;float:left;margin:-23px 10px 0 0;color:#fff;text-align:center; border:1px solid white;}
