@@ -147,6 +147,7 @@ public class EzPollServiceImpl implements EzPollService{
 	@Override
 	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary, String mode) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();	
+		String[] deptArr = deptPath.split(",");
 		map.put("user_id", userID);
 		map.put("v_deptPath", deptPath);
 		map.put("company_id", companyID);
@@ -154,6 +155,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("search_str", searchStr);	
 		map.put("primary", primary);
 		map.put("mode", mode);
+		map.put("deptArr", deptArr);
 		return ezPollDAO.getQuestionsTest(map);		
 
 	}
