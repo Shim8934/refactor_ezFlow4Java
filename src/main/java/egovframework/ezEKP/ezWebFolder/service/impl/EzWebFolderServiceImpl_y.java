@@ -491,6 +491,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		map.put("userId", userId);
 		map.put("deptId", deptId);
+		map.put("comId", comId);
 		map.put("tenantId", tenantId);
 		
 		FolderVO folderVO = null;
