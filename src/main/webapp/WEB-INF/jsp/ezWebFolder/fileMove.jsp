@@ -310,7 +310,7 @@
 					}
 				},
 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					alert("<spring:message code='ezWebFolder.t134'/>");
 				}
 			});
 		}
