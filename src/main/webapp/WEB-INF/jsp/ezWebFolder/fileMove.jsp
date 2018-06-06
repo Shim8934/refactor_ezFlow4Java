@@ -62,11 +62,6 @@
 				divTree.removeChild(divTree.lastChild);
 			}
 			
-			if (!result || (result.length == 0 && mode != "1")) {
-				alert("<spring:message code='ezWebFolder.t325'/>");
-				return;
-			}
-			
 			if (mode == "1") {
 				var divDept  = document.createElement("div");
 				displaySubFolder(divTree, divDept, result, 0);
