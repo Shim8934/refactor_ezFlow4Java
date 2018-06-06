@@ -264,7 +264,7 @@
 					}
 				},
 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
+					alert("<spring:message code='ezWebFolder.t134'/>");
 				}
 			});
 		}
