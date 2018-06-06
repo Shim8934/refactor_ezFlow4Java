@@ -144,15 +144,12 @@
 		}
 		
 		function getSelected(obj) {
-			var previousElmt = document.getElementsByName(selectedFolder)[0];
+			var previousElmtList = document.getElementsByName(selectedFolder);
 			
-			if (previousElmt != null) {
-				if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
-					previousElmt.style.color      = "";
-					previousElmt.style.fontWeight = "normal";
-				}
-				else {
-					return;
+			for (var i = 0; i < previousElmtList.length; i++) {
+				if (previousElmtList[i] != null) {
+					previousElmtList[i].style.color = "";
+					previousElmtList[i].style.fontWeight = "normal";
 				}
 			}
 			
