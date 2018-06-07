@@ -290,9 +290,7 @@
 	   		
 	   		//기본 옵션 세팅
 	   		function setDefOption(ganttMasterObj){
-	   			localStorage.TWPGanttGridState = {
-	   					"colSizes":[35,25,204,119,17,80,17,80,50,50,20,50,1000,35,25,204,204,17,80,17,80,50,50,20,50,1000,50,1000]
-	   			};
+	   			localStorage.TWPGanttGridState = '{"colSizes":"[35,25,204,119,17,80,17,80,50,50,20,50,1000,35,25,204,119,17,80,17,80,50,50,20,50,1000]"}';
 	   		}
 	   		
 	   		function addTask(){
@@ -585,8 +583,7 @@
 	   				url = "/ezPMS/deleteProject.do";
 	   			}
 	   			else if(selectType === "group"){
-		   			groupId = ge.currentTask.id.match(/g(\d+)/)[1];
-	   				url = "/ezPMS/deleteGroup.do";
+		   			delGroup();
 	   			}
 	   			else{
 		   			taskId = ge.currentTask.id.match(/t(\d+)/)[1];
