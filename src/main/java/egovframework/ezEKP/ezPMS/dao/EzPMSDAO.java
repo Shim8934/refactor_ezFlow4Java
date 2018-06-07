@@ -422,4 +422,14 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateComment(Map<String, Object> map) {
 		update("EzPMSDAO.updateComment", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Long> getPreTaskRel(Map<String, Object> map) {
+		return (List<Long>) list("EzPMSDAO.getPreTaskRel", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ProjectGroupMemberVO> getGroupMemberList(Map<String, Object> map) {
+		return (List<ProjectGroupMemberVO>) list("EzPMSDAO.getGroupMemberList", map);
+	}
 }

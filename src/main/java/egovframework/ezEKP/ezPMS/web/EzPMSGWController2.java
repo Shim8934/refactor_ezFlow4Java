@@ -1,7 +1,12 @@
 package egovframework.ezEKP.ezPMS.web;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
+import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
@@ -744,6 +750,7 @@ public class EzPMSGWController2 {
 			int tenantId = info.getTenantId();
 			String roleCheck = "";
 			long projectId = Long.parseLong(request.getParameter("projectId"));
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			//권한 체크
 			//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
@@ -777,18 +784,134 @@ public class EzPMSGWController2 {
 				projectTaskVO.setStatus(request.getParameter("status"));
 				
 				ezPMSService.updateTaskStatus(projectTaskVO);
+				
+//				if (request.getParameter("endTime") != null) {
+//					long endTime = Long.parseLong(request.getParameter("endTime"));
+//					int rowIndex = Integer.parseInt(request.getParameter("rowIndex"));
+//					
+//					List<Long> preTaskList = ezPMSService.getPreTaskRel(rowIndex, tenantId, projectId);
+//					
+//					if (preTaskList != null && preTaskList.size() != 0) {
+//						Date postTaskEndTime = new Date(endTime);
+//						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//						
+//						for (int i = 0; i < preTaskList.size(); i++) {
+//							ProjectTaskVO postTask = ezPMSService.getTaskDetails(preTaskList.get(i), tenantId, lang);
+//							Date postPlanStartDate = dateFormat.parse(postTask.getPlanStartDate());
+//							Date postPlanEndDate = dateFormat.parse(postTask.getPlanEndDate());
+//							long diff = postPlanEndDate.getTime() - postPlanStartDate.getTime();
+//							int diffDays = (int) diff / (24 * 60 * 60 * 1000);
+//							
+//							Calendar cal = Calendar.getInstance();
+//						    cal.setTime(postTaskEndTime);
+//						    cal.add(Calendar.DATE, 1);
+//						    
+//						    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+//						    if (dayNum == 7) {
+//						    	cal.add(Calendar.DATE, 2);
+//						    } else if (dayNum == 1) {
+//						    	cal.add(Calendar.DATE, 1);
+//						    }
+//						    
+//						    Calendar cal2 = Calendar.getInstance();
+//						    cal2.setTime(cal.getTime());
+//						    cal2.add(Calendar.DATE, diffDays);
+//						    int dayNum2 = cal2.get(Calendar.DAY_OF_WEEK);
+//						    
+//						    if (dayNum2 == 7) {
+//						    	cal2.add(Calendar.DATE, -1);
+//						    } else if (dayNum2 == 1) {
+//						    	cal2.add(Calendar.DATE, -2);
+//						    }
+//						    
+//							postTask.setPlanStartDate(dateFormat.format(cal.getTime()));
+//							postTask.setPlanEndDate(dateFormat.format(cal2.getTime()));
+//							ezPMSService.updateTaskStatus(postTask);
+//						}
+//						
+//					}
+//					
+//				}
 			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", roleCheck);		
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");		
 		}
 		
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 그룹 리스트(간트차트 용)
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/groups/users/{userId}/gantt", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getGroupMemberList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String orderWhat = request.getParameter("orderWhat");
+			String orderHow = request.getParameter("orderHow");
+			int startRow = Integer.parseInt(request.getParameter("startRow") != null ? request.getParameter("startRow") : "-1" );
+			int limit = Integer.parseInt(request.getParameter("limit") != null ? request.getParameter("limit") : "-1" ); 
+			
+			if (orderWhat == null || orderWhat.equals("")) {
+				orderWhat = "init";
+			}
+			
+			SearchVO search = new SearchVO();
+			search.setTenantId(info.getTenantId());
+			search.setProjectId(Long.parseLong(projectId));
+			search.setUpperGroupName(request.getParameter("searchByUpperGroupName"));
+			search.setMemberName(request.getParameter("searchByUser"));
+			search.setPlanStartDate(request.getParameter("searchByStartDate"));
+			search.setPlanEndDate(request.getParameter("searchByEndDate"));
+			search.setGroupName(request.getParameter("searchByGroupName"));
+			search.setOverview(request.getParameter("searchByOverview"));
+			search.setProjectName(request.getParameter("searchByProjectName"));
+			search.setMemberId(userId);
+			
+			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang);
+			List<ProjectGroupMemberVO> groupMemberList = ezPMSService.getGroupMemberList(Long.parseLong(projectId), info.getTenantId());
+			
+			for(int i = 0; i < groupList.size(); i++){
+				Long groupId = groupList.get(i).getGroupId();
+				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();
+				List<ProjectGroupMemberVO> groupMemberListTemp = new ArrayList<ProjectGroupMemberVO>();
+				while(iter.hasNext()){
+					ProjectGroupMemberVO groupMember = iter.next();
+					if(groupId == groupMember.getGroupId()){
+						groupMemberListTemp.add(groupMember);
+						groupMemberList.remove(groupMember);
+					}
+				}
+				groupList.get(i).setGroupMember(groupMemberListTemp);
+			}
+			
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", groupList);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"] ended.");
 		return result;
 	}
 }

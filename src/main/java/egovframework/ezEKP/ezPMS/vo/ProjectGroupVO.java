@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPMS.vo;
 
 import java.sql.Date;
+import java.util.List;
 
 public class ProjectGroupVO {
 	// 그룹 아이디 
@@ -95,6 +96,9 @@ public class ProjectGroupVO {
     
     //상위 그룹 이름
     private String upperGroupName;
+    
+    //그룹 멤버 리스트
+    private List<ProjectGroupMemberVO> groupMember;
     
     public String getProjectName() {
 		return projectName;
@@ -342,6 +346,14 @@ public class ProjectGroupVO {
 
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
+	}
+
+	public List<ProjectGroupMemberVO> getGroupMember() {
+		return groupMember;
+	}
+
+	public void setGroupMember(List<ProjectGroupMemberVO> groupMember) {
+		this.groupMember = groupMember;
 	}
 
 }

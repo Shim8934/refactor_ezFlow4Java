@@ -669,6 +669,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
+			map1.put("realWorkingday", calWorkingDays);
 			ezPMSDAO.updateProjectWorkingday(map1);
 			
 			HashMap<String, Object> map2 = new HashMap<String, Object>();
@@ -1752,12 +1753,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] updateTaskStatus started.");
 		
 		try {
+			//날짜 차이 계산
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
+			
+			int calWorkingDays = getWorkinDays(startDate, endDate);
+			task.setRealWorkingday(calWorkingDays);
+			
 			if (task.getStatus() != null) {
 				if (task.getStatus().equals("P")) {
-					//날짜 차이 계산
-					Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
 					Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getRealStartDate());
-					
 					int createAndEndDateComp = createDate.compareTo(endDate);
 					
 					if(createAndEndDateComp > 0) {
@@ -1844,6 +1849,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] addPreTaskRel ended.");
 	}
 
+	@Override
+	public List<Long> getPreTaskRel(int rowIndex, int tenantId, long projectId) {
+		LOGGER.debug("[SERVICE] getPreTaskRel started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rowIndex", rowIndex);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		List<Long> postTaskList = ezPMSDAO.getPreTaskRel(map);
+		LOGGER.debug("[SERVICE] getPreTaskRel ended.");
+		return postTaskList;
+	}
+	
 	@Override
 	public List<CommentVO> getCommentList(Map<String, Object> param) {
 		LOGGER.debug("[SERVICE] getCommentList started.");
@@ -1940,5 +1958,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		}
 		
 		LOGGER.debug("[SERVICE] modifyComment ended");
+	}
+	
+	@Override
+	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId) {
+		LOGGER.debug("[SERVICE] getGroupMemberList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getGroupMemberList ended.");
+		return ezPMSDAO.getGroupMemberList(map);
 	}
 }

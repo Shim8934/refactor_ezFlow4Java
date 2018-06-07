@@ -323,7 +323,7 @@ public class EzPMSController2 {
 			model.addAttribute("projectDetail", resultBodyProject.get("data"));
 		}
 		
-		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId(), param, request, "get", null);
+		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
 		status = resultBodyGroup.get("status").toString();
 		
 		if(status.equals("ok")) {

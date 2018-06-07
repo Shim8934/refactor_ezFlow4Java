@@ -70,7 +70,8 @@
 	   					"C": "STATUS_DONE",
 	   					"L": "STATUS_FAILED",
 	   					"W": "STATUS_WAITING",
-	   					"D": "STATUS_UNDEFINED"
+	   					"D": "STATUS_UNDEFINED",
+	   					"G": "GROUP_STATUS"
 	   			}
 	   			
 	   			
@@ -86,7 +87,7 @@
 	   			ganttData.tasks[0].status = ganttStatus[pd.status];
 	   			ganttData.tasks[0].start = new Date(pd.planStartDate).getTime();
 	   			ganttData.tasks[0].end = new Date(pd.planEndDate).getTime();
-	   			ganttData.tasks[0].duration = pd.restDueday;
+	   			ganttData.tasks[0].duration = pd.workingday;
 	   			ganttData.tasks[0].startIsMilestone = "";
 	   			ganttData.tasks[0].endIsMilestone = "";
 	   			ganttData.tasks[0].assigs = [];
@@ -118,63 +119,68 @@
 	   			/*-------------------------프로젝트 데이터 가공 완료 -------	----------------*/
 	   			
 	   			//그룹 리스트 가공부분.
-// 	   			for(var i = 0; i < gl.length; i++){
-// 	   				ganttData.tasks[i + 1] = {};
-// 		   			ganttData.tasks[i + 1].id = "p" + tl[i].projectId + "_t" + tl[i].taskId;
-// 		   			ganttData.tasks[i + 1].name = tl[i].taskName;
-// 		   			ganttData.tasks[i + 1].code = "";
-// 		   			ganttData.tasks[i + 1].level = 1;
-// 		   			ganttData.tasks[i + 1].status = ganttStatus[tl[i].status];
-// 		   			ganttData.tasks[i + 1].start = new Date(tl[i].planStartDate).getTime();
-// 		   			ganttData.tasks[i + 1].end = new Date(tl[i].planEndDate).getTime();
-// 		   			ganttData.tasks[i + 1].duration = tl[i].restDueday;
-// 		   			ganttData.tasks[i + 1].weight = tl[i].weight;
-// 		   			ganttData.tasks[i + 1].startIsMilestone = "";
-// 		   			ganttData.tasks[i + 1].endIsMilestone = "";
-// 		   			ganttData.tasks[i + 1].assigs = [];
+	   			var tmpStr = "미완성";
+	   			if(tmpStr !== "미완성"){
+	   			for(var i = 0; i < gl.length; i++){
+	   				var tempTask = {};
+		   			tempTask.id = "p" + pd.projectId + "_g" + gl[i].groupId;
+		   			tempTask.name = gl[i].groupName;
+		   			tempTask.code = "";
+		   			tempTask.level = gl[i].treeDepth;
+		   			tempTask.status = ganttStatus["G"];
+		   			tempTask.start = new Date(gl[i].planStartDate).getTime();
+		   			tempTask.end = new Date(gl[i].planEndDate).getTime();
+		   			tempTask.duration = gl[i].realWorkingday;
+// 		   			tempTask.weight = tl[i].weight;
+		   			tempTask.startIsMilestone = "";
+		   			tempTask.endIsMilestone = "";
+		   			tempTask.assigs = [];
 		   			
-// 		   			for(var j = 0; j < tl[i].taskMember.length; j++){
-// 		   				var assig = {}, resource = {}, role = {};
+		   			for(var j = 0; j < gl[i].groupMember.length; j++){
+		   				var assig = {}, resource = {}, role = {};
 			   			
-// 		   				assig.resourceId = tl[i].taskMember[j].userId;
-// 		   				assig.id = tl[i].taskMember[j].userId;
-// 		   				assig.roleId = 1;
-// 		   				assig.effort = "";
+		   				assig.resourceId = gl[i].groupMember[j].userId;
+		   				assig.id = gl[i].groupMember[j].userId;
+		   				assig.roleId = 1;
+		   				assig.effort = "";
 		   				
-// 		   				ganttData.tasks[i + 1].assigs.push(assig);
+		   				tempTask.assigs.push(assig);
 		   				
-// 		   				//인력, 역할 부분
-// 		   			 	resource.id = tl[i].taskMember[j].userId;
-// 		   				role.id = tl[i].taskMember[j].userId;
-// 		   				resource.name = tl[i].taskMember[j].userName;
-// 		   				role.name = 1;
+		   				//인력, 역할 부분
+		   			 	resource.id = gl[i].groupMember[j].userId;
+		   				role.id = gl[i].groupMember[j].userId;
+		   				resource.name = gl[i].groupMember[j].userName;
+		   				role.name = 1;
 		   				
-// 		   				ganttData.resources.push(resource);
-// 		   				ganttData.roles.push(role);
-// 		   			}
+		   				ganttData.resources.push(resource);
+		   				ganttData.roles.push(role);
+		   			}
 		   			
-// 		   			ganttData.tasks[i + 1].depends = "";
-// 		   			ganttData.tasks[i + 1].description = tl[i].overview;
-// 		   			ganttData.tasks[i + 1].progress = tl[i].realProgress;
-// 		   			ganttData.tasks[i + 1].hasChild = "";
-// 	   			}
+		   			tempTask.depends = "";
+		   			tempTask.description = gl[i].overview;
+		   			tempTask.progress = gl[i].realProgress;
+		   			tempTask.hasChild = "";
+	   				ganttData.tasks.push(tempTask);
+	   			}
+	   			}
 	   			/*-------------------------그룹 데이터 가공 완료 -----------------------*/
 	   			//업무 리스트 가공부분.
 	   			if(tl.length > 0){
 		   			for(var i = 0; i < tl.length; i++){
-		   				ganttData.tasks[i + 1] = {};
-			   			ganttData.tasks[i + 1].id = "p" + tl[i].projectId + "_t" + tl[i].taskId;
-			   			ganttData.tasks[i + 1].name = tl[i].taskName;
-			   			ganttData.tasks[i + 1].code = "";
-			   			ganttData.tasks[i + 1].level = 1;
-			   			ganttData.tasks[i + 1].status = ganttStatus[tl[i].status];
-			   			ganttData.tasks[i + 1].start = new Date(tl[i].planStartDate).getTime();
-			   			ganttData.tasks[i + 1].end = new Date(tl[i].planEndDate).getTime();
-			   			ganttData.tasks[i + 1].duration = tl[i].restDueday;
-			   			ganttData.tasks[i + 1].weight = tl[i].weight;
-			   			ganttData.tasks[i + 1].startIsMilestone = "";
-			   			ganttData.tasks[i + 1].endIsMilestone = "";
-			   			ganttData.tasks[i + 1].assigs = [];
+		   				var tempTask = {};
+		   				tempTask = {};
+			   			tempTask.id = "p" + tl[i].projectId + "_t" + tl[i].taskId;
+			   			tempTask.name = tl[i].taskName;
+			   			tempTask.code = "";
+			   			tempTask.level = 1;
+			   			tempTask.status = ganttStatus[tl[i].status];
+			   			tempTask.start = new Date(tl[i].planStartDate).getTime();
+			   			tempTask.end = new Date(tl[i].planEndDate).getTime();
+			   			tempTask.duration = tl[i].realWorkingday;
+			   			tempTask.weight = tl[i].weight;
+			   			tempTask.startIsMilestone = "";
+			   			tempTask.endIsMilestone = "";
+			   			tempTask.assigs = [];
 			   			
 			   			for(var j = 0; j < tl[i].taskMember.length; j++){
 			   				var assig = {}, resource = {}, role = {};
@@ -184,7 +190,7 @@
 			   				assig.roleId = 1;
 			   				assig.effort = "";
 			   				
-			   				ganttData.tasks[i + 1].assigs.push(assig);
+			   				tempTask.assigs.push(assig);
 			   				
 			   				//인력, 역할 부분
 			   			 	resource.id = tl[i].taskMember[j].userId;
@@ -196,10 +202,11 @@
 			   				ganttData.roles.push(role);
 			   			}
 			   			
-			   			ganttData.tasks[i + 1].depends = "";
-			   			ganttData.tasks[i + 1].description = tl[i].overview;
-			   			ganttData.tasks[i + 1].progress = tl[i].realProgress;
-			   			ganttData.tasks[i + 1].hasChild = "";
+			   			tempTask.depends = tl[i].pretask;
+			   			tempTask.description = tl[i].overview;
+			   			tempTask.progress = tl[i].realProgress;
+			   			tempTask.hasChild = "";
+			   			ganttData.tasks.push(tempTask);
 		   			}
 	   			}
 	   			/*-------------------------태스크 데이터 가공 완료 -------	----------------*/
@@ -300,7 +307,7 @@
 	   			}
 	   			
 // 	   			makeLayerPopup();
-				var top = ($(window).height() - $(this).outerHeight()) / 2;
+	   			var top = ($(window).height() - $(this).outerHeight()) / 2;
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
@@ -333,36 +340,56 @@
 	   		function ganttChartModifyFunc(){
 	   			//기간 변경
 	   			GanttMaster.prototype.changeTaskDates = function (task, start, end) {
+	   			  if (typeof(start) == "number") {
+	   				  start = new Date(start);
+	   			  }
+	   			  
+	   			  if (typeof(end) == "number") {
+	   				  end = new Date(end);
+	   			  }
+	   			  
 	   			  var startDate = dateToYYYYMMDD(start);
 	   			  var endDate = dateToYYYYMMDD(end);
 	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
 	   			  var projectId = task.id.substring(1, task.id.indexOf("_"));
 	   			  var progress = task.progress;
 	   			  var fullId = task.id;
+	   			  var endTime = end.getTime();
+	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
+	   			  var newEndTime = end.getTime();
 	   			  
-	   			  if (end.getDay() == 6) {
-	   				var time = new Date(end.getTime() + (2 * 24 * 60 * 60 * 1000));
-					endDate = dateToYYYYMMDD(time);
-					
+	   			  if (end.getDay() == 6) { 
+	   				newEndTime = end.getTime() + (2 * 24 * 60 * 60 * 1000);
+	   				endTime = new Date(newEndTime);
+					endDate = dateToYYYYMMDD(endTime);
 	   			  } else if (end.getDay() == 0) {
-		   			var time = new Date(end.getTime() + (1 * 24 * 60 * 60 * 1000));
-		   			endDate = dateToYYYYMMDD(time);	
+	   				newEndTime = end.getTime() + (1 * 24 * 60 * 60 * 1000);
+	   				endTime = new Date(newEndTime);
+		   			endDate = dateToYYYYMMDD(endTime);	
 	   			  }
 	   			  
-	   			  changeDate(fullId, taskId, projectId, startDate, endDate, progress);
+	   			  changeDate(fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex);
 	   			  return task.setPeriod(start, end);
 	   			};
 	   			
 	   			//기간은 그대로, 날짜만 이동
 	   			GanttMaster.prototype.moveTask = function (task, newStart) {
+		   		  if (typeof(newStart) == "number") {
+		   			newStart = new Date(newStart);
+		   		  }
+		   		  
 	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
 	   			  var projectId = task.id.substring(1, task.id.indexOf("_"));
 	   			  var startDate = dateToYYYYMMDD(newStart);
+	   			  var newEndTime = newStart.getTime() + ((task.duration - 1) * 24 * 60 * 60 * 1000);
 	   			  
-	   			  var time = new Date(newStart.getTime() + ((task.duration - 1) * 24 * 60 * 60 * 1000));
-	   			  var endDate = dateToYYYYMMDD(time);
+	   			  var endTime = new Date(newEndTime);
+	   			  var endDate = dateToYYYYMMDD(endTime);
 	   			  
-	   			  changeDate(task.id, taskId, projectId, startDate, endDate, task.progress);
+	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
+	   			  console.log($("#tid_" + task.id).find(".taskRowIndex").text());
+	   			  console.log(task);
+	   			  changeDate(task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex);
 	   			  return task.moveTo(newStart, true,true);
 	   			};
 	   			
@@ -376,7 +403,7 @@
 	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
 	   			  var preTaskRowIndex = task.depends;
 	   			  var progress = task.progress;
-	   			var projectId = task.id.substring(1, task.id.indexOf("_"));
+	   			  var projectId = task.id.substring(1, task.id.indexOf("_"));
 	   			
 	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress);
 	   			  
@@ -413,13 +440,15 @@
 	   				});
 	   		}
 	   		
-	   		function changeDate(fullId, taskId, projectId, startDate, endDate, progress) {
+	   		function changeDate(fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex) {
 	   			var data = {
 	   					  taskId : taskId,
 	   					  projectId : projectId,
 	   					  planStartDate : startDate,
 	   					  planEndDate : endDate,
-	   					  realProgress : progress
+	   					  realProgress : progress,
+	   					  endTime : endTime,
+	   					  rowIndex : rowIndex
 	   			  } 
 	   			  
 	   			$.ajax({
@@ -557,6 +586,27 @@
 	   			eventSetting();
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
+	   		
+	   		$(document).ready(function(){
+	   			GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
+	   			  var self = this;
+
+	   			  if (!self.master.permissions.canSeePopEdit) {
+	   				return;  
+	   			  }
+	   			  
+	   			  var taskRow=task.rowElement;
+	   			  var taskId = taskRow.attr("taskId");
+	   			  var onlyTaskId = taskId.substring(task.id.indexOf("_") + 2);
+	   			  var projectId = taskId.substring(1, task.id.indexOf("_"));
+	   				
+	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
+	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;
+	   		      var feature = GetOpenPosition(0, 0);
+	   				
+	   			  DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user");
+	   			};
+	   		})
 
 	   		
 		</script>

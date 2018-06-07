@@ -158,6 +158,8 @@ public interface EzPMSService {
 
 	public void addPreTaskRel(long taskId, int rowIndexId, long projectId, int tenantId);
 	
+	public List<Long> getPreTaskRel(int rowIndex, int tenantId, long projectId);
+	
 	public List<CommentVO> getCommentList(Map<String, Object> param);
 	
 	public int getCommentListCount(Map<String, Object> param);
@@ -167,4 +169,7 @@ public interface EzPMSService {
 	public void deleteComment(int tenantId, JSONObject jsonParam) throws Exception;
 	
 	public void modifyComment(JSONObject jsonParam) throws Exception;
+	
+	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId);
+
 }
