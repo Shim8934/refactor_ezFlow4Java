@@ -743,38 +743,42 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		String userId    = userInfo.getId();
 		
 		for (String file : fileIDList ) {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
-			
-			if (fileVO != null) {
-				int isFileDeleted = deleteFile(file, tenantId);
+			if (!file.equals("")) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				
-				if (isFileDeleted > 0) {
-					realFileDelete(fileVO, realPath, userInfo, userName1,  userName2);
-					deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
-					deleteShareWithSub(fileVO.getFileId(), "F", tenantId);
+				if (fileVO != null) {
+					int isFileDeleted = deleteFile(file, tenantId);
+					
+					if (isFileDeleted > 0) {
+						realFileDelete(fileVO, realPath, userInfo, userName1,  userName2);
+						deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
+						deleteShareWithSub(fileVO.getFileId(), "F", tenantId);
+					}
 				}
 			}
 		}
 		
 		for (String folder : folderIDList) {
-			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
-			deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
-
-			if (folderVO != null) {
-				List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
+			if (!folder.equals("")) {
+				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 				
-				for (String lowerFolder : lowerFolders) {
-					FolderVO lowerFolderVO = ezWebFolderService.getFolderByFolderId(lowerFolder, offset, tenantId);
+				if (folderVO != null) {
+					deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
 					
-					int isFolderDeleted = deleteFolder(lowerFolderVO);
-					deleteFavoritesInFolder(folderVO.getFolderId(), tenantId);
-					deleteShareWithSub(folderVO.getFolderId(), "D", tenantId);
+					List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
 					
-					if (isFolderDeleted > 0) {
-						deleteAllFilesInFolder(lowerFolderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
+					for (String lowerFolder : lowerFolders) {
+						FolderVO lowerFolderVO = ezWebFolderService.getFolderByFolderId(lowerFolder, offset, tenantId);
+						
+						int isFolderDeleted = deleteFolder(lowerFolderVO);
+						deleteFavoritesInFolder(folderVO.getFolderId(), tenantId);
+						deleteShareWithSub(folderVO.getFolderId(), "D", tenantId);
+						
+						if (isFolderDeleted > 0) {
+							deleteAllFilesInFolder(lowerFolderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
+						}
 					}
 				}
-				
 			}
 		}
 	}
@@ -846,7 +850,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderPath", folderVO.getFolderId());
+		map.put("folderId", folderVO.getFolderId());
 		map.put("tenantId", folderVO.getTenantId());
 		
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
