@@ -311,7 +311,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 
 	@Override					
 	public String insertFolder(int tenantId, String comId, String deptId, String userId,String folderType, String newFolderName1,
-			String newFolderName2, FolderVO uppFolder , String timeUTC)  {
+			String newFolderName2, FolderVO uppFolder , String timeUTC) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		LoginVO loginvo =  getUserInfo(tenantId,comId,userId);
@@ -383,7 +383,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	}
 	
 	@Override
-	public void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2, String timeUTC) {
+	public void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2, String timeUTC) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
@@ -460,7 +460,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	}
 
 	@Override
-	public int getUsrListCount(int tenantId, String userId) {
+	public int getUsrListCount(int tenantId, String userId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
@@ -472,7 +472,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	}
 
 	@Override
-	public void insertEnv(String userId, int tenantId, int listCount) {
+	public void insertEnv(String userId, int tenantId, int listCount) throws Exception {
 		LOGGER.debug("insertEnv Start");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -491,6 +491,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		map.put("userId", userId);
 		map.put("deptId", deptId);
+		map.put("comId", comId);
 		map.put("tenantId", tenantId);
 		
 		FolderVO folderVO = null;

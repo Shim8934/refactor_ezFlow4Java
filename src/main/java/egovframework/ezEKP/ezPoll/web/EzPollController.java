@@ -347,6 +347,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String mode1 = (request.getParameter("mode1") != null) ? request.getParameter("mode1") : mode;
 		String listQst = (request.getParameter("listQst") != null) ? request.getParameter("listQst") : "";
 		
+		//현재 listQst에 값을 넣어주는 메소드를 호출 하는 부분이 없어 타지 않는 조건문임 2018-06-05 홍대표
 		if (!listQst.equals("")) {
 			String [] questionIDs = listQst.split(",");			
 			
@@ -358,6 +359,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();		
 		
+		//사용자의 권한을 체크함.
 		if (loginVO.getRollInfo().indexOf("c=1") == -1 && loginVO.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
 			adminPrivilege = 0;
@@ -399,6 +401,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Save hidden questions to database
+		//현재 listQst에 값을 넣어주는 메소드를 호출 하는 부분이 없어 타지 않는 조건문임 2018-06-05 홍대표
 		if (!hideQstList.equals("")) {
 			saveHiddenQuestion(hideQstList, loginVO);
 		}

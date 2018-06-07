@@ -13,10 +13,19 @@
 	    <script src="/js/dist/jstree.min.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
+	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    
 	</head>
+	
+	<style>
+		.jstree-container-ul {
+			margin:2px;
+		}
+	</style>
+	
 	<body style="height: 95%; overflow:hidden;">
-	    <h5 style="padding: 10px 1px;"><spring:message code='ezEmail.letter21'/></h5>
+	    <%-- <h5 style="padding: 10px 1px;"><spring:message code='ezEmail.letter21'/></h5> --%>
+	    <h1 style="padding: 5px"> </h1>
 	    <div id="mainmenu">
 		    <ul class="on">
 		        <li><span onclick="addLetterBox()">&nbsp;&nbsp;+ <spring:message code='ezEmail.letter17'/>&nbsp;&nbsp;</span></li>
@@ -45,12 +54,19 @@
 				<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
 				<input type="hidden" id="company_id" name="companyID" value="${companyId}">
 				
-				<div class="divInputBtn">
+				<%-- <div class="divInputBtn">
 					<input type="button" id="submitBtn" onclick="submitClick()" value="<spring:message code="ezEmail.t38"/>">
-				</div>
+				</div> --%>
+				<div id="mainmenu" style="margin-top:70%;margin-left:87%; position:relative; width:100%;">
+			        <ul>
+			            <li><span onClick="submitClick()">&nbsp;<spring:message code="ezEmail.t38"/>&nbsp;</span></li>
+			        </ul>
+			    </div>
 			</form>
 		</div>
-		
+		<script>
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
 		<script type="text/javascript">
 			var pageType = "${pageType}";
 	    	var returnCompany = '${companyId}';

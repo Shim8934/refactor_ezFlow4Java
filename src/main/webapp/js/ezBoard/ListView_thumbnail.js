@@ -700,14 +700,14 @@ function ListView() {
 
                     var tr = document.createElement("TR");
 
-                    var NewCell = document.createElement("TD");
+                    /*var NewCell = document.createElement("TD");
                     NewCell.setAttribute("style", "text-align:left; border-bottom:0px;");
                     
                     if (getNodeText(oDatas[3]) == "Y") {
                     	 var NewElement = document.createElement("IMG");
                          NewElement.src = "/images/i_new.gif";
                          NewCell.appendChild(NewElement);
-                    }
+                    }*/
                     
                     var ImgElement = document.createElement("IMG");
                     //ImgElement.src = "/Upload_BoardSTD/" + getNodeText(oDatas[4]);
@@ -729,7 +729,7 @@ function ListView() {
                     var Contenttr2 = document.createElement("TR");
 
                     var ContentNewCell1 = document.createElement("TD");
-                    ContentNewCell1.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;");
+                    ContentNewCell1.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px; padding-left:10px");
 
                     var TextCell1 = document.createElement("SPAN");
                     TextCell1.id = "spn_title" + i;
@@ -740,10 +740,15 @@ function ListView() {
 
                     //var Text1 = document.createTextNode(strValue);
                     //TextCell1.appendChild(Text1);
+                    
+                    if (getNodeText(oDatas[3]) == "Y") {
+                    	TextCell1.innerHTML += "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px' />";
+                    }
+                    
                     TextCell1.innerHTML += MakeXMLString(strValue);
 
                     var TitleImage = document.createElement("IMG");
-                    TitleImage.setAttribute("style", "padding-bottom:3px;");
+                    TitleImage.setAttribute("style", "padding-bottom:3px;vertical-align:middle;");
                     TitleImage.src = "/images/dot_photoTitle.gif";
 
                     ContentNewCell1.appendChild(TitleImage);
@@ -757,7 +762,7 @@ function ListView() {
                     }
 
                     var ContentNewCell2 = document.createElement("TD");
-                    ContentNewCell2.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;");
+                    ContentNewCell2.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;padding-left:10px");
 
                     var TextCell2 = document.createElement("SPAN");
                     TextCell2.id = "spn_content" + i;
@@ -767,6 +772,7 @@ function ListView() {
                     //TextCell2.innerHTML = ReplaceText(getNodeText(oDatas[5]), "<br>", "&nbsp;");
                     
                     //ContentNewCell2.appendChild(TextCell2);
+                    
                     ContentNewCell2.innerHTML += MakeXMLString(getNodeText(oDatas[5]));
                     
                     Contenttr1.appendChild(ContentNewCell1);
@@ -779,7 +785,7 @@ function ListView() {
                     ContentCell.setAttribute("style", "border-bottom-width: 0px; width:100%;");
                     ContentCell.appendChild(ContentTable);
 
-                    tr.appendChild(NewCell);
+                    //tr.appendChild(NewCell);
                     tr.appendChild(imgCell);
                     tr.appendChild(ContentCell);
                     Tbody.appendChild(tr);

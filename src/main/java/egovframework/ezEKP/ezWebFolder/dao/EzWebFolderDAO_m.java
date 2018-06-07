@@ -28,20 +28,12 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (List<ShareVO>) list("EzWebFolderDAO_m.getSharedList", map);
 	}
 	
-	public List<ShareVO> getFolderFileList(Map<String, Object> map) {
-		return (List<ShareVO>) list("EzWebFolderDAO_m.getFolderFileList", map);
-	}
-	
 	public List<Map<String, Object>> getSharingCount(Map<String, Object> map) {
 		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getSharingCount", map);
 	}
 	
 	public List<Map<String, Object>> getSharedCount(Map<String, Object> map) {
 		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getSharedCount", map);
-	}
-	
-	public List<Map<String, Object>> getFolderFileCount(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getFolderFileCount", map);
 	}
 	
 	public List<SimpleShareVO> getShareInfo(Map<String, Object> map) {
