@@ -785,53 +785,53 @@ public class EzPMSGWController2 {
 				
 				ezPMSService.updateTaskStatus(projectTaskVO);
 				
-//				if (request.getParameter("endTime") != null) {
-//					long endTime = Long.parseLong(request.getParameter("endTime"));
-//					int rowIndex = Integer.parseInt(request.getParameter("rowIndex"));
-//					
-//					List<Long> preTaskList = ezPMSService.getPreTaskRel(rowIndex, tenantId, projectId);
-//					
-//					if (preTaskList != null && preTaskList.size() != 0) {
-//						Date postTaskEndTime = new Date(endTime);
-//						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//						
-//						for (int i = 0; i < preTaskList.size(); i++) {
-//							ProjectTaskVO postTask = ezPMSService.getTaskDetails(preTaskList.get(i), tenantId, lang);
-//							Date postPlanStartDate = dateFormat.parse(postTask.getPlanStartDate());
-//							Date postPlanEndDate = dateFormat.parse(postTask.getPlanEndDate());
-//							long diff = postPlanEndDate.getTime() - postPlanStartDate.getTime();
-//							int diffDays = (int) diff / (24 * 60 * 60 * 1000);
-//							
-//							Calendar cal = Calendar.getInstance();
-//						    cal.setTime(postTaskEndTime);
-//						    cal.add(Calendar.DATE, 1);
-//						    
-//						    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-//						    if (dayNum == 7) {
-//						    	cal.add(Calendar.DATE, 2);
-//						    } else if (dayNum == 1) {
-//						    	cal.add(Calendar.DATE, 1);
-//						    }
-//						    
-//						    Calendar cal2 = Calendar.getInstance();
-//						    cal2.setTime(cal.getTime());
-//						    cal2.add(Calendar.DATE, diffDays);
-//						    int dayNum2 = cal2.get(Calendar.DAY_OF_WEEK);
-//						    
-//						    if (dayNum2 == 7) {
-//						    	cal2.add(Calendar.DATE, -1);
-//						    } else if (dayNum2 == 1) {
-//						    	cal2.add(Calendar.DATE, -2);
-//						    }
-//						    
-//							postTask.setPlanStartDate(dateFormat.format(cal.getTime()));
-//							postTask.setPlanEndDate(dateFormat.format(cal2.getTime()));
-//							ezPMSService.updateTaskStatus(postTask);
-//						}
-//						
-//					}
-//					
-//				}
+				if (request.getParameter("endTime") != null) {
+					long endTime = Long.parseLong(request.getParameter("endTime"));
+					int rowIndex = Integer.parseInt(request.getParameter("rowIndex"));
+					
+					List<Long> preTaskList = ezPMSService.getPreTaskRel(rowIndex, tenantId, projectId);
+					
+					if (preTaskList != null && preTaskList.size() != 0) {
+						Date postTaskEndTime = new Date(endTime);
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						
+						for (int i = 0; i < preTaskList.size(); i++) {
+							ProjectTaskVO postTask = ezPMSService.getTaskDetails(preTaskList.get(i), tenantId, lang);
+							Date postPlanStartDate = dateFormat.parse(postTask.getPlanStartDate());
+							Date postPlanEndDate = dateFormat.parse(postTask.getPlanEndDate());
+							long diff = postPlanEndDate.getTime() - postPlanStartDate.getTime();
+							int diffDays = (int) diff / (24 * 60 * 60 * 1000);
+							
+							Calendar cal = Calendar.getInstance();
+						    cal.setTime(postTaskEndTime);
+						    cal.add(Calendar.DATE, 1);
+						    
+						    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+						    if (dayNum == 7) {
+						    	cal.add(Calendar.DATE, 2);
+						    } else if (dayNum == 1) {
+						    	cal.add(Calendar.DATE, 1);
+						    }
+						    
+						    Calendar cal2 = Calendar.getInstance();
+						    cal2.setTime(cal.getTime());
+						    cal2.add(Calendar.DATE, diffDays);
+						    int dayNum2 = cal2.get(Calendar.DAY_OF_WEEK);
+						    
+						    if (dayNum2 == 7) {
+						    	cal2.add(Calendar.DATE, -1);
+						    } else if (dayNum2 == 1) {
+						    	cal2.add(Calendar.DATE, -2);
+						    }
+						    
+							postTask.setPlanStartDate(dateFormat.format(cal.getTime()));
+							postTask.setPlanEndDate(dateFormat.format(cal2.getTime()));
+							ezPMSService.updateTaskStatus(postTask);
+						}
+						
+					}
+					
+				}
 			}
 			
 			result.put("status", "ok");
