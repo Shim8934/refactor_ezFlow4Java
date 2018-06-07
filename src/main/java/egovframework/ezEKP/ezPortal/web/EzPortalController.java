@@ -1107,6 +1107,38 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//근태관리 사용에 따른 시계 사용 유무 로직
 		isUseAttMenuItem = ezPortalService.getMainMenuItemUID(accessID, attitudeLinkURL, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String accessList = ezPortalService.getAccessList(userInfo);
+		
+		/*
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
+		 */
+		
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+//		moduleList.put("/ezEmail/mailMain.do", "mail");
+//		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+//		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+//		moduleList.put("/ezBoard/boardMain.do", "board");
+//		moduleList.put("/ezCommunity/communityMain.do", "community");
+//		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+//		moduleList.put("/ezJournal/journalMain.do", "journal");
+		
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
+		
+		/*
+		 * moduleList에 추가해준 모듈의 이름으로 확인 
+		 */
+		
+//		model.addAttribute("isMailUsed", usedList.get("mail"));
+//		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
+//		model.addAttribute("isApprUsed", usedList.get("appr"));
+//		model.addAttribute("isBoardUsed", usedList.get("board"));
+//		model.addAttribute("isCommunityUsed", usedList.get("community"));
+//		model.addAttribute("isResUsed", usedList.get("res"));
+		model.addAttribute("isCircularUsed", usedList.get("circular"));
+//		model.addAttribute("isJournalUsed", usedList.get("journal"));
 		
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("department", department);

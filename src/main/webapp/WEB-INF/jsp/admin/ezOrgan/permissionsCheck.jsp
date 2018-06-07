@@ -37,6 +37,7 @@
 		    var xmlHTTP = createXMLHttpRequest();
 		    var xmlHTTP2 = createXMLHttpRequest();
 		    var ReturnFunction;
+		    var isfirst = true;
 			
 		    $(document).ready(function(){
 		    	try {
@@ -107,6 +108,7 @@
 		                treeView.DataBind("TreeView");
 
 		                xmlHTTP = null;
+		                isfirst = false;
 		            } else {
 		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.statusText);
 		                xmlHTTP = null;
@@ -156,7 +158,8 @@
 		        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + nodeIdx.GetNodeData("VALUE");
 		        SelectDeptNM.setAttribute("countinfo", "")
 
-		        if (cn != "") {
+		        //if (cn != "") {
+		        if (isfirst && cn != "") {
 		            document.getElementById('search_type').selectedIndex = 1;
 		            document.getElementById('keyword').value = cn;
 		            

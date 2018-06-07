@@ -29,7 +29,7 @@ public interface EzWebFolderService_y {
 	
 	// 폴더 생성
 	String insertFolder(int tenantId, String comId,String deptId, String userId, String folderType, 
-			String newFolderName1,String newFolderName2, FolderVO uppFolder, String timeUTC);
+			String newFolderName1,String newFolderName2, FolderVO uppFolder, String timeUTC) throws Exception;
 	
 	// folderUser 테이블에 데이터 생성
 	LoginVO getUserInfo(int tenantId , String comId, String userId ) throws Exception;
@@ -38,7 +38,7 @@ public interface EzWebFolderService_y {
 	List<String> getAddJobList(int tenantId, String userId) throws Exception;
 	
 	// 폴더 수정
-	void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2 , String timeUTC);
+	void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2 , String timeUTC) throws Exception;
 	
 	// 폴더 삭제
 	int deleteSubFldAFile(String folderId, int tenantId, String comId , String userId , String timeUTC) throws Exception;
@@ -48,10 +48,10 @@ public interface EzWebFolderService_y {
 	int checkCreater(String folderId , int tenantId, String comId, String userId ) throws Exception;
 	
 	// 본인이 환경설정에서 설정해놓은 listCount를 출력
-	int getUsrListCount(int tenantId, String userId );
+	int getUsrListCount(int tenantId, String userId ) throws Exception;
 
 	// listCount 수정시 insert
-	void insertEnv(String userId, int tenantId, int listCount);
+	void insertEnv(String userId, int tenantId, int listCount) throws Exception;
 	
 	// folderFileId : targetId, folderFileType : 'D','F'
 	String checkPermission(String userId, String deptId, String comId, String folderFileId, String folderFileType, int tenantId) throws Exception;
