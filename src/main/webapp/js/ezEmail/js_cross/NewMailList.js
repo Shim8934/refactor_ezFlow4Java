@@ -205,9 +205,12 @@ function MakeListInfoHTML(ConentObject) {
             var p_TotalCnt = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
             var szRangeHeader = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
             GetListInfo_ContentObject.innerHTML = "";
-            if (p_ListorderValue != "GROUPSUBLIST") {
-                document.getElementById("contentlist").scrollTop = "0";
-            }
+            
+            // 삭제 혹은 이동 시 스크롤바가 맨 위로 이동하지 않도록 하기 위해 주석 처리함
+//            if (p_ListorderValue != "GROUPSUBLIST") {
+//                document.getElementById("contentlist").scrollTop = "0";
+//            }
+            
             for (var Cnt = 0; Cnt < XmlRows.length; Cnt++) {
                 var p_Href = SelectSingleNodeValue(XmlRows[Cnt], "href");
                 var p_Importance = SelectSingleNodeValue(XmlRows[Cnt], "importance");

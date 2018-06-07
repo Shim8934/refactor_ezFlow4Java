@@ -1268,7 +1268,7 @@ function GetMailAddresses(name) {
         	async	: false,
         	success	: function(result) {
         		var info = result;
-        		if (info != name) {
+        		if (info === "") {
         			emailFlag=true; 
         			if (document.getElementById("MsgTo").value != ""){
         				document.getElementById("MsgTo").value = "";

@@ -2089,6 +2089,12 @@ public class EzWebFolderGWController {
 					
 					result.put("data", personalFolder);
 					break;
+				case "share":
+					//Get share folder tree
+					List<FolderSimpleVO> shareFolders = new ArrayList<FolderSimpleVO>();
+					shareFolders = ezWebFolderService.getAllSimpleShareFolder(userId, userInfo.getDeptID(), companyId, tenantId);
+					result.put("data", shareFolders);
+					break;
 			}
 			
 			result.put("currentFolders", folders);

@@ -1319,7 +1319,11 @@
 				    			html += "<td id='data3' style='width:20%'>" + user.description + "</td>";
 				    			html += "<td id='data5' style='width:16%'>" + user.userName + "</td>";
 				    			html += "<td id='data6' style='width:41%'>" + user.mail + "</td>";
-				    			html += "<td id='data7' style='display:none'>" + user.userId + "</td>";
+				    			if(user.userId.substring(0, 14) != "anonyAttendant" && !user.mail) {
+				    				html += "<td id='data7' style='display:none'>anonyAttendant" + index + "</td>";
+				    			} else {
+					    			html += "<td id='data7' style='display:none'>" + user.userId + "</td>";
+				    			}
 				    			html += "<td id='data8' style='display:none'>" + user.userName2 + "</td>";
 				    			html += "<td id='data9' style='display:none'>" + user.pic + "</td>";
 				    			html += "</tr>";

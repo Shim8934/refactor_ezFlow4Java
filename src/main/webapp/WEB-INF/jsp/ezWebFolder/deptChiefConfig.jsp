@@ -32,7 +32,7 @@
 			getDataForChief();
 		}
 		
-		function Cancel_Click() {
+		function cancel_Click() {
 			getSelectedDeptsForChief();
 		}
 		
@@ -88,7 +88,7 @@
  	<br/>
 	<div style="width:623px;text-align:center;">      
 		<a class="webfolderBttn" onclick="changeClick()"><span><spring:message code="ezWebFolder.t133" /></span></a>
-		<a class="webfolderBttn" onclick="changeClick()"><span><spring:message code="ezWebFolder.t112" /></span></a>
+		<a class="webfolderBttn" onclick="cancel_Click()"><span><spring:message code="ezWebFolder.t112" /></span></a>
 	</div>
 </body>
 </html>
