@@ -810,4 +810,27 @@ public class EzPMSController3 {
 		
 		return "json";
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/modifyComment.do")
+	public String modifyComment(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS modifyComment started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		Map<String, Object> param = null;
+		jsonParam.put("userId", userInfo.getId());
+		jsonParam.put("deptId", userInfo.getDeptID());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments", param, request, "put", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("data", "success");
+		}
+		
+		LOGGER.debug("ezPMS modifyComment ended");
+		
+		return "json";
+	}
 }

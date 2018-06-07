@@ -1891,7 +1891,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public void deleteComment(int tenantId, JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] deleteComment started");
 		
-		String commentId = (String) jsonParam.get("commentId");
 		String userId = (String) jsonParam.get("userId");
 		String writerId = (String) jsonParam.get("writerId");
 		
@@ -1903,7 +1902,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		int authority = ezPMSDAO.getUserProjectRole(map);
 		
-		map.put("commentId", commentId);
+		map.put("commentId", jsonParam.get("commentId"));
 		
 		if(writerId.equals(userId) || authority == 1) {
 			ezPMSDAO.deleteComment(map);
@@ -1919,7 +1918,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public void modifyComment(JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] modifyComment started");
 		
-		String commentId = (String) jsonParam.get("commentId");
 		String userId = (String) jsonParam.get("userId");
 		String writerId = (String) jsonParam.get("writerId");
 		
@@ -1931,7 +1929,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		int authority = ezPMSDAO.getUserProjectRole(map);
 		
-		map.put("commentId", commentId);
+		map.put("commentId", jsonParam.get("commentId"));
 		map.put("commentContent", jsonParam.get("commentContent"));
 		
 		if(writerId.equals(userId) || authority == 1) {

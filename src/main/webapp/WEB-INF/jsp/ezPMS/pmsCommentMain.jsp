@@ -249,9 +249,51 @@
 		  
 		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	}
+	
+	function searchComment() {
+		
+		// 이전 검색을 통해 남아있을 수 있는 값들을 초기화
+		searchByUser = "";
+		searchByStartDate = "";
+		searchByEndDate = "";
+		searchByContent = "";
+		
+		var searchCondition = $("#searchCondition option:selected").val();
+		var searchKeyword = $("#searchKeyword").val();
+		
+		if(searchCondition == 'searchByUser') {
+			searchByUser = searchKeyword;
+		} else if (searchCondition == 'searchByContent') {
+			searchByContent = searchKeyword;
+		} else if (searchCondition == 'searchByWriteDate') {
+			searchByStartDate = $("#Sdatepicker").val();
+			searchByEndDate   = $("#Edatepicker").val();
+		}
+		
+		getCommentList();
+	}
+	
+	function setSearchInput() {
+		var searchCondition = $("#searchCondition option:selected").val();
+		if(searchCondition == 'searchByWriteDate') {
+			$("#searchKeyword").css("display", "none");
+			$("#searchDate").css("display", "");
+		} else {
+			$("#searchKeyword").css("display", "");
+			$("#searchDate").css("display", "none");
+		}
+	}
 </script>
 
 <style>
+
+	.jstree-node > a {
+    /* 100% - (the width of the presentation node : the line - the left padding of the <a> node - the right padding of the <a> node)*/
+    width: calc(100% - (68px + 1px + 4px));
+    text-overflow: ellipsis;
+    overflow: hidden;
+	}
+	
 	#taskTree {
 		margin-right : 5px;
 		width : 16%;
@@ -273,13 +315,14 @@
 	}
 	
 	#projectContent {
-		min-width : 1070px;
+		min-width : 1057px;
 	}
 	
 	#iconLine {
 		height: 72px;
 		margin-left: 10px;
 		margin-top: 5px;
+		margin-right: 20px;
 	}
 	
 	#contentList {
@@ -306,6 +349,20 @@
 		<div id="projectContent">
 			<div id="iconLine">
 				<div id="taskName"></div>
+				<div style="float: right;">
+					<select id="searchCondition" onchange="setSearchInput()">
+						<option value="searchByUser">작성자</option>
+						<option value="searchByContent">내용</option>
+						<option value="searchByWriteDate">작성일시</option>
+					</select>
+					<input id="searchKeyword" type="text"/>
+					<span id="searchDate" style="display: none;">
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+						<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
+					</span>
+					<span onclick="searchComment()" style="cursor: pointer;"><img src="/images/sub/bsearch.gif"/></span>
+				</div>
 			</div>
 			<div id="contentList" style="overflow: auto">
 				<span id="MailListRayer"

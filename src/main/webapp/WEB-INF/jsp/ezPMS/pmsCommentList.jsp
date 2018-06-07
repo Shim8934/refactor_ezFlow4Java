@@ -114,7 +114,43 @@
 	}
 	
 	function saveComment(elem) {
+		var selectedTR = $(elem).parent().parent();
+		var commentId = selectedTR.attr("data-commentId");
+		var writerId = selectedTR.attr("data-writerId");
+		var commentContent = selectedTR.find("textarea").val();
 		
+		data = {
+			commentId : commentId,
+			projectId : projectId,
+			writerId  : writerId,
+			commentContent : commentContent
+		}
+		
+		$.ajax({
+			type : "PUT",
+			url : "/ezPMS/modifyComment.do",
+			dataType : "json",
+			contentType : "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(result) {
+				if(result.data == 'success') {
+					
+					var content = selectedTR.children("td.content").text();
+					var taskName = selectedTR.children("td.taskName").text();
+					var groupId = selectedTR.attr("data-groupId");
+					var taskId = selectedTR.attr("data-taskId");
+						
+					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + content.trim() + "] 의견이 [" + commentContent.trim() +  "](으)로 수정되었습니다.");
+						
+					getCommentList();
+				} else {
+					alert('수정은 프로젝트 담당자나 작성자만 할 수 있습니다.');
+				}	
+			},
+			error : function() {
+				alert("수정에 실패했습니다.");
+			}
+		})
 	}
 </script>
 
@@ -126,7 +162,7 @@
 				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
 				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'>내용</th>
 				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">작성일시</th>
-				<th width="15%">수정/삭제</th>
+				<th style="cursor: default;" width="15%">수정/삭제</th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
@@ -137,7 +173,7 @@
 					<td class="taskName">${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}</td>
 					<td class="content" style="text-align: left;">
 						<span class="originalContent">${commentVO.commentContent}</span>
-						<textarea class="modifiedContent" style="display: none;"  rows="" cols="">${commentVO.commentContent}</textarea>
+						<textarea class="modifiedContent" style="display: none; resize: none;"  rows="" cols="">${commentVO.commentContent}</textarea>
 					</td>
 					<td>${commentVO.writeDate}</td>
 					<td>
@@ -152,17 +188,15 @@
 </div>
 
 <div style="margin-top: 20px;">
-	<table>
+	<table style="width: 100%;">
 		<tr>
-			<th>의견등록</th>
+			<th width="20%">의견등록</th>
 			<td>
-				<textarea id="commentContent" rows="" cols="" style="resize: none;"></textarea>
-			</td>
-			<td>
-				<a class="imgbtn" onclick="addComment()"><span>저장</span></a>
+				<textarea id="commentContent" style="resize: none;"></textarea>
 			</td>
 		</tr>
-	</table>	
+	</table>
+	<a class="imgbtn" onclick="addComment()" style="margin: 10px auto;"><span>저장</span></a>	
 </div>
 <c:choose>
 	<c:when test="${paging.endPage>0 }">

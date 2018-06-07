@@ -2599,6 +2599,22 @@
 			C.tenant_id = #tenantId#
 		AND 
 			C.del_status = 0
+		<isNotEmpty property="searchByUser">
+			AND C.writer_name$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND C.write_date >= #searchByStartDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND C.write_date <= #searchByEndDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByContent">
+			AND C.comment_content LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
 	</select>
 	
 	<insert id="EzPMSDAO.addComment" parameterClass="CommentVO">
