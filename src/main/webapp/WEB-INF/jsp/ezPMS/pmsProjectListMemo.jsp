@@ -187,7 +187,7 @@ $(function(){
 				</td>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
-				<td class="memoTd">&nbsp;&nbsp;지연된 업무</td>
+				<td class="memoTd">&nbsp;&nbsp;기한 지난 업무</td>
 					<td><div overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 					<div style="margin-top: 5px; display: inline-block;">
 					<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>

@@ -274,17 +274,6 @@ function setMyTaskList(position) {
 			searchByUpperGroupName = "";
 			searchByOverview = "";
 			
-			$("#searchByTaskName").val("");
-			$("#searchByUser").val("");
-			$("#Sdatepicker").val("");
-			$("#Edatepicker").val("");
-			$("#searchByGroupName").val("");
-			$("#searchByProjectName").val("");
-			$("#searchByOverview").val("");
-			$("#searchByUpperGroupName").val("");
-			$("#PSdatepicker").val("");
-			$("#PEdatepicker").val("");
-			
 			setInitOrder();
 		}
 	});

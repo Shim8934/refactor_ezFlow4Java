@@ -1527,9 +1527,10 @@ public class EzPMSController {
 	/**
 	 * 간트차트에서의 날짜 변경
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/updateTaskDate.do")
 	@ResponseBody
-	public String updateTaskDate(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+	public JSONObject updateTaskDate(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("ezPMS updateTaskDate started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1538,14 +1539,19 @@ public class EzPMSController {
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
 		String status = result.get("status").toString();
-		String roleCheck = "";
+		JSONObject json = new JSONObject();
 		
 		if (status.equals("ok")) {
-			roleCheck = result.get("data").toString();
+			JSONObject data = (JSONObject) result.get("data");
+			String roleCheck = data.get("roleCheck").toString();
+			String endDate = data.get("endDate").toString();
+			
+			json.put("roleCheck", roleCheck);
+			json.put("endDate", endDate);
 		}
 		
 		LOGGER.debug("ezPMS updateTaskDate ended");
-		return roleCheck;
+		return json;
 	}
 	
 	/**

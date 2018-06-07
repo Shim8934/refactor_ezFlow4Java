@@ -75,11 +75,11 @@ $(function(){
 	// by mslim start
 	var i = 0;
 	
-	var progressBar = setInterval(setProgressBar, 100);
+	var progressBar = setInterval(setProgressBar, 300);
 	
 	function setProgressBar() {
 		
-		for(var j = 0; j < 10 && i < projectList.length; j++, i++) {
+		for(var j = 0; j < 5 && i < projectList.length; j++, i++) {
 			
 			var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 			var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
