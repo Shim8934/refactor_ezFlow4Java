@@ -204,7 +204,7 @@
 		    
 			$(document).ready(function(){
 				if (isCircularUsed != 'Y') {
-					$(".personal_content a ul").width("24%");
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
 					$(".personal_content a ul:last").attr("class","last");
 					$(".personal_content").show();
 				}
