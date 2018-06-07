@@ -73,55 +73,54 @@ $(function(){
 	} */
 	
 	// by mslim start
-	
 	var i = 0;
 	
 	var progressBar = setInterval(setProgressBar, 100);
 	
 	function setProgressBar() {
 		
-		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
-		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
-		
-		if (isNaN(completeTaskPercent)) {
-			completeTaskPercent = 0;
+		for(var j = 0; j < 10 && i < projectList.length; j++, i++) {
+			
+			var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
+			var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
+			
+			if (isNaN(completeTaskPercent)) {
+				completeTaskPercent = 0;
+			}
+			
+			if (isNaN(lateTaskPercent)) {
+				lateTaskPercent = 0;
+			}
+			
+			$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
+				percentage : projectList[i].progress,
+				fillBackgroundColor : progressColor,
+				height : '15px',
+				radius : '15px',
+				width : '68%'
+			});
+			
+			$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
+				percentage : completeTaskPercent,
+				fillBackgroundColor : completeColor,
+				height : '15px',
+				radius : '15px',
+				width : '68%'
+			});
+			
+			$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
+				percentage : lateTaskPercent,
+				fillBackgroundColor : overdueColor,
+				height : '15px',
+				radius : '15px',
+				width : '68%'
+			});
 		}
-		
-		if (isNaN(lateTaskPercent)) {
-			lateTaskPercent = 0;
-		}
-		
-		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
-			fillBackgroundColor : progressColor,
-			height : '15px',
-			radius : '15px',
-			width : '68%'
-		});
-		
-		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : completeTaskPercent,
-			fillBackgroundColor : completeColor,
-			height : '15px',
-			radius : '15px',
-			width : '68%'
-		});
-		
-		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : lateTaskPercent,
-			fillBackgroundColor : overdueColor,
-			height : '15px',
-			radius : '15px',
-			width : '68%'
-		});
-		
-		i++;
 		
 		if(i >= projectList.length) {
 			clearInterval(progressBar);
 		}
 	}
-	
 	// by mslim end
 });
 </script>
