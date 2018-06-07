@@ -1196,6 +1196,11 @@
 				PLAN_END_DATE
 		</isEmpty>
 		<isNotEmpty property="location">
+		<isEqual property="location" compareValue="gantt">
+			ORDER BY
+				GROUP_ID, SORT_ORDER
+		</isEqual>
+		<isNotEqual property="location" compareValue="gantt">
 			ORDER BY(
 				CASE A.STATUS
 				WHEN 'P' THEN 1
@@ -1204,7 +1209,8 @@
 				WHEN 'S' THEN 4
 				WHEN 'C' THEN 5
 				END
-			), PLAN_START_DATE
+			), PLAN_END_DATE
+		</isNotEqual>
 		</isNotEmpty>
 		</isEqual>
 		<isNotEqual property="limit" compareValue="0">
@@ -1418,7 +1424,7 @@
 				TREE_DEPTH,			ANCESTER_GROUP,		SORT_ORDER,				DEL_STATUS,			
 				WORKINGDAY,			REST_DUEDAY,		ISSUEYN
 			)
-			VALUES	(
+			SELECT
 				#tenantId#,			#projectId#,		#groupName#,			#upperGroupId#,
 				#planStartDate#,	#planEndDate#,		#createDate#,			#creatorName#,
 				#creatorName2#,		#creatorId#,		#creatorDeptname#,		#creatorDeptname2#,
@@ -1432,9 +1438,9 @@
 		<isEqual property="upperGroupId" compareValue="0">
 				#groupId#,
 		</isEqual>
-				#sortOrder#,			#delStatus#,
+				(SELECT IFNULL(MAX(sort_order) , 0) + 1 FROM TBL_PMS_GROUP WHERE PROJECT_ID = #projectId#),	#delStatus#,
 				#workingDay#,		#restDueday#,		#isIssue#
-			)
+			
 	</insert>
 	
 	
@@ -1925,7 +1931,7 @@
 			</isNotEmpty>
 			<isEqual property="orderWhat" compareValue="init">
 				ORDER BY
-					A.PLAN_END_DATE
+					A.SORT_ORDER
 			</isEqual>
 			<isNotEqual property="orderWhat" compareValue="init">
 				ORDER BY

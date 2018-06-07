@@ -1215,6 +1215,14 @@ public class EzPMSController {
 		
 		
 		//의견 불러오기
+		String commentUrl = "/rest/ezPMS/comments/list/" + projectId + "/users/" + userId;
+		JSONObject commentResult = commonUtil.getJsonFromRestApi(commentUrl, param, request, "get", null);
+		String commentStatus = commentResult.get("status").toString();
+		
+		if (commentStatus.equals("ok")) {
+			JSONArray commentData = (JSONArray) commentResult.get("data");
+			overviewContent.put("commentList", commentData);
+		}
 		
 		LOGGER.debug("getOverviewContent ended");
 		return overviewContent;

@@ -654,6 +654,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			taskVO.setHeadManagerName2(headManagerInfo.getUserName2());
 			taskVO.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
 			taskVO.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
+			taskVO.setRealWorkingday(calWorkingDays + 1);
 			
 			taskId = ezPMSDAO.addTask(taskVO);
 

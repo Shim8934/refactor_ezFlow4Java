@@ -660,17 +660,22 @@
 	   				return;  
 	   			  }
 	   			  
-	   			  var taskRow=task.rowElement;
+	   			  var taskRow = task.rowElement;
 	   			  var taskId = taskRow.attr("taskId");
-	   			  var onlyTaskId = taskId.substring(task.id.indexOf("_") + 2);
+	   			  var onlyTaskId = taskId.substring(task.id.lastIndexOf("_") + 2);
 	   			  var projectId = taskId.substring(1, task.id.indexOf("_"));
 	   				
+	   			  console.log(onlyTaskId);
+	   			  console.log(projectId);
+	   			  
+	   			  console.log(task.id.substring(1).indexOf("t"));
+	   			  if (task.id.substring(1).indexOf("t") != -1) {
+	   				var feature = GetOpenPosition(0, 0);
+		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user");
+	   			  }
 	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
 	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;
-	   		      var feature = GetOpenPosition(0, 0);
-	   				
-	   			  DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user");
-	   			};
+	   		     };
 	   		})
 
 	   		
