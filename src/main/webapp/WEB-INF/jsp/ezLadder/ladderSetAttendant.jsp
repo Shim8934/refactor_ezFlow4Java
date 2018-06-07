@@ -130,7 +130,7 @@
 	            	var xmlHTTP = createXMLHttpRequest();
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
-	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
+	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${deptID}' />");
 	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
@@ -1319,7 +1319,11 @@
 				    			html += "<td id='data3' style='width:20%'>" + user.description + "</td>";
 				    			html += "<td id='data5' style='width:16%'>" + user.userName + "</td>";
 				    			html += "<td id='data6' style='width:41%'>" + user.mail + "</td>";
-				    			html += "<td id='data7' style='display:none'>" + user.userId + "</td>";
+				    			if(user.userId.substring(0, 14) != "anonyAttendant" && !user.mail) {
+				    				html += "<td id='data7' style='display:none'>anonyAttendant" + index + "</td>";
+				    			} else {
+					    			html += "<td id='data7' style='display:none'>" + user.userId + "</td>";
+				    			}
 				    			html += "<td id='data8' style='display:none'>" + user.userName2 + "</td>";
 				    			html += "<td id='data9' style='display:none'>" + user.pic + "</td>";
 				    			html += "</tr>";
@@ -1334,6 +1338,8 @@
 		    /** msgtolist 의 유저 rtn에 추가 */
 		    var rtn = [];
 		    function save_userlist() {
+		    	rtn = [];
+		    	
 		    	var listid = "MsgToList"; 
 		    	var selList = new ListView();
 		        selList.LoadFromID(listid);

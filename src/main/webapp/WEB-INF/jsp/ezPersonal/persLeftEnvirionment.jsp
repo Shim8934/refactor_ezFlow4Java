@@ -11,18 +11,20 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-		 window.onload = function () {
+		 	window.onload = function () {
 			 	if ("${portalEnv}" == "1") {
-		            document.getElementById("Portal_sub1").parentNode.onclick()
+		            //document.getElementById("Portal_sub1").parentNode.onclick()
 		            document.getElementById("Portal_sub1").onclick();
 		        } else if ("${portalEnv}" == "2") {
-		        	document.getElementById("Portal_sub4").parentNode.onclick()
+		        	//document.getElementById("Portal_sub4").parentNode.onclick()
 		            document.getElementById("Portal_sub4").onclick();
-		        }	
+		        } else {
+		        	document.getElementById("Portal_sub1").onclick();
+		        }
 			 
 			 
 		        if ("${funCode}" == "1" || "${packageType}" != "standard" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
-		            document.getElementById("UserInfo").parentNode.onclick()
+		            //document.getElementById("UserInfo").parentNode.onclick()
 		            document.getElementById("UserInfo").onclick();
 		        }
 		        
@@ -218,11 +220,9 @@
 	            <c:if test="${isBoardUsed == 'Y'}">
 	    			<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>
 	    		</c:if>
-	    		<c:if test="${USE_CIRCULAR == 'YES'}">
-	    			<c:if test="${isCircularUsed == 'Y'}">
-	    				<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
-	    			</c:if>
-	    		</c:if>
+    			<c:if test="${isCircularUsed == 'Y'}">
+    				<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
+    			</c:if>
             </c:if>
             <c:if test="${isJournalUsed == 'Y'}">
    				<h2><span id="journalEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezJournal.t150' /></span></h2><ul></ul>

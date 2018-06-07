@@ -10,7 +10,7 @@ import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
-import egovframework.ezEKP.ezPoll.vo.PollUsersVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPollService {	
@@ -116,21 +116,15 @@ public interface EzPollService {
 	
 	public OrganUserVO getRetireEntryInfo(String cn, String lang, int tenantID) throws Exception;
 	
-	public void insertQstUsers(PollUsersVO user) throws Exception;
-	
-	public void insertQstUsers(PollQuestionVO pollQuestionVO) throws Exception;
-	
 	public void getAllMemberOfDept(List<LoginVO> list, String deptId, int tenantID) throws Exception;
 	
-	public PollUsersVO getQstUsers(PollUsersVO user) throws Exception;
-	
-	public void updateQstUsersStatus(int tenantId, int qstId, String userId, int userStatus) throws Exception;
-	
-	public void deleteUsersForQst(int tenantId, int qstId) throws Exception;
-	
-	public List<PollUsersVO> getAllUsersForQst(int tenantId, int qstId) throws Exception;
+	public List<PollUserVO> getAllUsersForQst(int tenantId, int qstId) throws Exception;
 	
 	public List<LoginVO> getQstAllUsers(int tenantId, int qstId) throws Exception;
 	
 	public List<LoginVO> getInfoOfSeenUsers(int tenantId, int qstId) throws Exception;
+	
+	public List<LoginVO> getAllUsersInfoForQstM(int tenantId, int qstId) throws Exception;
+	
+	public List<LoginVO> getAllUsersInfoForQstMRD(int tenantId, int qstId) throws Exception;
 }

@@ -229,6 +229,7 @@
                 A.title,
                 A.memberid,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                DATE_ADD(DATE_FORMAT(A.enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS enddate,
                 A.option,
                 A.content,
                 A.memberName,
@@ -2045,11 +2046,12 @@
 			UPDATE
 				TBL_CIRCULAR
 			SET
-				status = '1'
+				status = '1',
+				endDate = utc_timestamp()
 			WHERE 
 				circularid = #circularID#
 			AND
-				tenantid = #tenantID#      
+				tenantid = #tenantID#  
         ]]>
     </update>
     

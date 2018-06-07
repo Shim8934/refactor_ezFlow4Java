@@ -798,6 +798,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("updateDBData_user ended");
     }   
 	
+    @Override
+    public void updateDBData_userPermission(OrganUserVO vo) throws Exception {
+        logger.debug("updateDBData_userPermission started");
+        logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn());
+                        
+        ezOrganAdminDao.updateDBData_userPermission(vo);
+        
+        logger.debug("updateDBData_userPermission ended");
+    }   
+    
 	@Override
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception {
 	    logger.debug("updateDBData_dept started");
@@ -868,6 +878,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		    	ezOrganAdminDao.deleteDeptInAD(ctx, cn);
 		    }			        
 	    } else {
+	    	//삭제 테이블에 중복된 아이디를 제거하기 위헤 제거부터 수행. 2018-06-04 홍대표
+	    	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date());
+			
+			map.put("nowDate", nowDate);
+	    	ezOrganAdminDao.deleteDelUserDBData_I(map);
+	    	//사용자를 삭제 할 때, 대상의 정보를 저장한다. 2018-06-04 홍대표
+	    	ezOrganAdminDao.insertDelUserDBData_I(map);
+	    	
 	        ezOrganAdminDao.deleteDBDataForJMocha(map);
      
 	        ezOrganAdminDao.deleteDBData_D1(map);
@@ -1449,7 +1469,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public String deleteTargetAddressUser(int tenantID, String groupName, String memberID, String companyID) throws Exception {
 		logger.debug("deleteTargetAddressUser started.");
-		logger.debug("tenantID=" + groupName + ",groupName=" + groupName);
+		logger.debug("tenantID=" + tenantID + ",groupName=" + groupName);
 
 		String userName = getDistributionUserName(tenantID, groupName);
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
