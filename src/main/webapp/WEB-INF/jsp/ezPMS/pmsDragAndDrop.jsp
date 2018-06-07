@@ -68,7 +68,7 @@
 	        
 	        for (var i = 0; i < filelist.length; i++) {
 	            if (filelist[i].size / 1024 / 1024 > window.parent.AttachLimit) {
-	                alert("첨부파일은 크기가" + window.parent.AttachLimit + "MB를 넘을 수 없습니다.");
+	                alert("첨부파일은 크기가 " + window.parent.AttachLimit + "MB를 넘을 수 없습니다.");
 	                return;
 	            }
 	            else {

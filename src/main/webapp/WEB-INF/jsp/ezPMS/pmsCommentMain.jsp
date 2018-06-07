@@ -273,9 +273,8 @@
 		getCommentList();
 	}
 	
-	function setSearchInput() {
-		var searchCondition = $("#searchCondition option:selected").val();
-		if(searchCondition == 'searchByWriteDate') {
+	function setSearchInput(elem) {
+		if(elem == 'searchByWriteDate') {
 			$("#searchKeyword").css("display", "none");
 			$("#searchDate").css("display", "");
 		} else {
@@ -350,7 +349,7 @@
 			<div id="iconLine">
 				<div id="taskName"></div>
 				<div style="float: right;">
-					<select id="searchCondition" onchange="setSearchInput()">
+					<select id="searchCondition" onchange="setSearchInput(this.value)">
 						<option value="searchByUser">작성자</option>
 						<option value="searchByContent">내용</option>
 						<option value="searchByWriteDate">작성일시</option>

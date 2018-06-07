@@ -88,6 +88,11 @@
 				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;
 					//20120725 모바일 기기 관리자 메뉴 추가	end	
+					
+					// ezPMS 관리자페이지 추가
+				    case "menu21":
+				    	parent.frames["bottom"].location.href = "/admin/ezPMS/pmsMain.do";
+				    	break;
 				}
 			}
 			
@@ -158,6 +163,8 @@
 		      			</c:if>
 <!-- 		      			업무일지 -->
 		      			<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
+		      			<!-- ezPMS -->
+		      			<li><span id="menu21" onClick="menu_change(690, event)">프로젝트 관리</span></li>
                     </c:if>
                     <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>

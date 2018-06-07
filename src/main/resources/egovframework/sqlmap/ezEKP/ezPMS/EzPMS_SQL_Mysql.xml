@@ -746,11 +746,14 @@
 				B.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
 			AND
 		</isNotEmpty>
+		<isNotEmpty property="userId">
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
 				)
 			AND 
+		</isNotEmpty>
+		
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0
@@ -922,11 +925,14 @@
 		<isEmpty property="searchByUser">
 			WHERE
 		</isEmpty>
+		<isNotEmpty property="userId">
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
 				)
-			AND
+			AND 
+		</isNotEmpty>
+		
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0

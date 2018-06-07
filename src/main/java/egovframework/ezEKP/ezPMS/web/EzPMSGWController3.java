@@ -38,6 +38,8 @@ import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -58,6 +60,9 @@ public class EzPMSGWController3 {
 	
 	@Resource(name="EzPMSService")
 	private EzPMSService ezPMSService;
+	
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
@@ -919,6 +924,35 @@ public class EzPMSGWController3 {
 		}
 		
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/comments] ended");
+		return result;
+	}
+	
+	// tbl_tenant_config에서 SysParam을 가져오는 함수. 사실 이 패키지가 아닌 ezSystem에 있어야할 듯
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/sysParams/{userId}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject getSysParam(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/sysParams/" + userId + "] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<SysParamVO> configList = ezSystemAdminService.getSysParam(info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", configList);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/sysParams/" + userId + "] ended");
+		
 		return result;
 	}
 }
