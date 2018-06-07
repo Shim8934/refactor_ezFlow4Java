@@ -347,7 +347,7 @@
 	   			  if (typeof(end) == "number") {
 	   				  end = new Date(end);
 	   			  }
-	   			  
+		   			 
 	   			  var startDate = dateToYYYYMMDD(start);
 	   			  var endDate = dateToYYYYMMDD(end);
 	   			  var taskId = task.id.substring(task.id.indexOf("_") + 2);
@@ -368,8 +368,11 @@
 		   			endDate = dateToYYYYMMDD(endTime);	
 	   			  }
 	   			  
-	   			  changeDate(fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex);
-	   			  return task.setPeriod(start, end);
+	   			  
+	   			  ge.taskIsChanged();
+	   			  changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex);
+	   			  
+	   			  return task.setPeriod(start, endTime);
 	   			};
 	   			
 	   			//기간은 그대로, 날짜만 이동
@@ -387,9 +390,8 @@
 	   			  var endDate = dateToYYYYMMDD(endTime);
 	   			  
 	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
-	   			  console.log($("#tid_" + task.id).find(".taskRowIndex").text());
-	   			  console.log(task);
-	   			  changeDate(task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex);
+	   			  
+	   			  changeDate(task, task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex);
 	   			  return task.moveTo(newStart, true,true);
 	   			};
 	   			
@@ -428,7 +430,7 @@
 	   				url : "/ezPMS/addPreTaskRel.do",
 	   				data :JSON.stringify(data),
 	   				success : function(result) {
-	   					if (result == "permitted") {
+	   					if (roleCheck == "permitted") {
 	   						alert("상태가 변경되었습니다.");
 	   					} else {
 	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
@@ -440,7 +442,7 @@
 	   				});
 	   		}
 	   		
-	   		function changeDate(fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex) {
+	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex) {
 	   			var data = {
 	   					  taskId : taskId,
 	   					  projectId : projectId,
@@ -453,12 +455,13 @@
 	   			  
 	   			$.ajax({
 	   				type : "POST",
-	   				dataType: "text",
+	   				dataType: "json",
 	   				contentType: "application/json; charset=UTF-8",
 	   				url : "/ezPMS/updateTaskDate.do",
 	   				data :JSON.stringify(data),
 	   				success : function(result) {
-	   					if (result == "permitted") {
+	   					if (result.roleCheck == "permitted") {
+	   						console.log(result.endDate);
 	   						alert("상태가 변경되었습니다.");
 	   					} else {
 	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
@@ -495,6 +498,12 @@
 		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
 		   		document.getElementById("pmsGanttAddGroup").onclick = addGroup;
 		   		document.getElementById("pmsGanttDelGroup").onclick = delGroup;
+
+		   		$(".gdfTable tbody").sortable({
+		   			update : function(event, ui) {
+		   				ge.taskIsChanged();
+		   			}
+		   		}).disableSelection();
 		   	}
 	   		
 	   		function delTask(){
@@ -577,7 +586,6 @@
 		   		initValues();
 		   		ganttChartAddFunc();
 		   		ganttChartModifyFunc();
-		   		
 // 		   		ge = new GanttMaster();
 // 		   		ge.init($("#workSpace"));
 	   		})();
