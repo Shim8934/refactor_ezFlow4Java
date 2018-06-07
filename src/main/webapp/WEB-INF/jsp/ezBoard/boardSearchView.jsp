@@ -307,8 +307,8 @@
 			    	TYPE += "SEARCHALLBOARD;";
 			    } else if(document.getElementById('selectedBoardParentBoardID').value == "top") { //SearchGroupBoard  
 			    	TYPE += "SEARCHGROBOARD;";
-			    } else { 																		  //하위검색default
-			    	TYPE += "SEARCHSUBBOARD;";
+			    } else { 																		  //SearchSubSubBoad (하위검색default)
+			    	TYPE += "SEARCHSUBSUBBOARD;";
 			    }
 			   
 			        if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -462,8 +462,8 @@
 			<input type ="text" id="selectedBoard" style="width: 65%;display:none;" value="">
 			<input type ="text" id="selectedBoardtype" style="width: 65%;display:none;" value="">
 			<input type ="text" id="selectedBoardParentBoardID" style="width: 65%;display:none;" value="">
-			<a class="imgbtn"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
-			<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+			<a class="imgbtn" style="vertical-align:middle"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
+			<a class="imgbtn" style="vertical-align:middle"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
 			
 			</td>
 		</tr>
