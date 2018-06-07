@@ -14,26 +14,30 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
 	</head>
-	
+	<style>
+		.lmtitle {
+			font-weight:normal;
+		}
+	</style>
 	<body>
 		<div id="lmTop">
 			<div class="lmleft">
 				<!-- 편지지함 목록 -->
 				<div class="lmLetterBox">
 					<div class="lmtitle lmLetterBoxTitle">
-						<div><spring:message code='ezEmail.letter1'/></div>
+						<div style="border-top:0px"><spring:message code='ezEmail.letter1'/></div>
 						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();">
 						<button id="lmSearch" onclick="letterSearch()"><spring:message code='ezBoard.t188'/></button>
 						<button id="lmSearchReset" onclick="inputReset()"><spring:message code='ezBoard.t999035'/></button>
 					</div>	
 					<div id="divTree" class="lmLetterBoxList"></div>
-				</div>
+				</div>  
 				<!-- 편지지 목록 -->
 				<div class="lmLetter">
 					<div class="lmtitle lmLetterTitle">
 						<spring:message code='ezEmail.letter2'/>
 					</div> 
-					<div class="lmLetterList boxNo" data-boxNo=""> <!-- boxNo -->
+					<div class="lmLetterList boxNo" data-boxNo="" > <!-- boxNo -->
 						<ul class="lmLetterListUl lmLetterListWrap"></ul>
 					</div>
 				</div>
@@ -50,10 +54,10 @@
 				</div>
 			</div>
 			
-			<div class="lmright">
+			<div class="lmright" style="width:564px; height:564px">
 				<div class="lmPreview">
-					<div class="lmPreViewTxt"style='text-align:center; position:relative; top:50%; tansform:translateY(-50%);'><spring:message code='ezBoard.t431'/></div>
-					<iframe src="" class="lmPreViewIframe lmPre" id="lmPreViewIframe" onload="onloadPreview(this)" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
+					<div class="lmPreViewTxt"style='text-align:center; position:relative; top:49%; transform:translateY(-50%);'><spring:message code='ezBoard.t431'/></div>
+					<iframe src="" class="lmPreViewIframe lmPre" id="lmPreViewIframe" onload="onloadPreview(this)" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%; "></iframe>
 				</div>
 			</div>			
 		</div>
