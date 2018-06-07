@@ -1294,13 +1294,13 @@
 		            <table border="0">
 		                <tr>
 		                    <td style="width:30px; padding-left:15px;padding-right:1px;padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/previous1.png" id="SmallImagePrev" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
+		                        <img src="/images/previous.png" id="SmallImagePrev" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
 		                    </td>
 		                    <td onmouseover="pageimageover()" onmouseout="pageimageout()">
 		                        <div class="content" id="viewBox" style="width:100%; border:0;" ></div>
 		                    </td>
 		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:right" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/next1.png" id="SmallImageNext" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
+		                        <img src="/images/next.png" id="SmallImageNext" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
 		                    </td>
 		                </tr>
 		            </table>
