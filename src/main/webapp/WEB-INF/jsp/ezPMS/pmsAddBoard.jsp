@@ -54,7 +54,7 @@
 	var itemId = "${param.itemId}";
 	
 	// 첨부파일 최대용량
-	var AttachLimit = 10;
+	var AttachLimit = "${attachLimit}";
 	
 	// 버튼 중복클릭 방지
     var doubleSubmitFlag = false;
@@ -164,11 +164,6 @@
 		
 		if(title == "") {
 			alert("제목을 입력해주세요.");
-			return;
-		}
-		
-		if(writeContent == "") {
-			alert("내용을 입력해주세요.");
 			return;
 		}
 		

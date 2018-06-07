@@ -175,7 +175,7 @@
 						<span class="originalContent">${commentVO.commentContent}</span>
 						<textarea class="modifiedContent" style="display: none; resize: none;"  rows="" cols="">${commentVO.commentContent}</textarea>
 					</td>
-					<td>${commentVO.writeDate}</td>
+					<td>${fn:substring(commentVO.writeDate, 0, 19)}</td>
 					<td>
 						<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezLadder/icon_game03_no.png" height="25"/></span>
 						<span onclick="saveComment(this)"   class="saveBtn"   style="cursor: pointer; display: none;"><img src="" alt="저장" height="25"/></span>

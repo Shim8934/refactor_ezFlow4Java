@@ -746,11 +746,14 @@
 				B.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
 			AND
 		</isNotEmpty>
+		<isNotEmpty property="userId">
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
 				)
 			AND 
+		</isNotEmpty>
+		
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0
@@ -858,7 +861,7 @@
 			project_id = #projectId#
 	</select>
 	
-	<update id="uEzPMSDAO.pdateTaskWDNW" parameterClass="Map">
+	<update id="EzPMSDAO.updateTaskWDNW" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				tbl_pms_task
@@ -866,7 +869,9 @@
 				workingday = #workingday#,
 				weight = #weight#
 			WHERE
-				task_id = #taskId#			
+				task_id = #taskId#		
+			AND
+				TENANT_ID = #tenantId#	
 		]]>
 	</update>
 	
@@ -922,11 +927,14 @@
 		<isEmpty property="searchByUser">
 			WHERE
 		</isEmpty>
+		<isNotEmpty property="userId">
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
 				)
-			AND
+			AND 
+		</isNotEmpty>
+		
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0
@@ -2724,4 +2732,5 @@
 				g.PROJECT_ID = #projectId#
 		]]>
 	</select>
+	
 </sqlMap>

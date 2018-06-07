@@ -68,6 +68,12 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
+			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 바꿔서 모든 프로젝트 검색이 가능하도록 한다.
+			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
+				userId = "";
+			}
+						
 			String status = request.getParameter("status");
 			String deptId = info.getDeptId();
 			
@@ -795,7 +801,12 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-
+			
+			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 바꿔서 모든 프로젝트 검색이 가능하도록 한다.
+			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
+				userId = "";
+			}
+			
 			String searchByName = request.getParameter("searchByProjectName").toString();
 			String searchByUser = request.getParameter("searchByUser").toString();
 			String searchByOverview = request.getParameter("searchByOverview").toString();

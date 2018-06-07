@@ -46,8 +46,8 @@ var weight = null;
 var managerList = null;
 var overview = null;
 var headManagerId = "";
-var groupId = "";
-var groupName = "";
+var groupId = "${taskDetails.groupId}";
+var groupName = "${taskDetails.groupName}";
 var taskDetails = {};
 var writerId= "";
 var weightData = ${weightData};
@@ -212,7 +212,7 @@ function updateTaskInfo() {
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
-				<td style="height:30px;" id="upperGroup">${taskDetails.ancesterGroup == null ? "-" : taskDetails.ancesterGroup}</td>
+				<td style="height:30px;" id="upperGroup">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openPreTaskTree()"><span>선행작업</span></a></th>

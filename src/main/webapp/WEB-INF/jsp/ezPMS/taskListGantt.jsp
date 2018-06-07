@@ -8,12 +8,12 @@
 		<title>gantt Chart</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
-		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/platform.css" type="text/css">
 		<link rel="stylesheet" href="/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/gantt.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/ganttPrint.css" type="text/css" media="print">
+		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
 		
 		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -85,8 +85,8 @@
 	   			ganttData.canWriteOnParent = true;
 	   			ganttData.selectedRow = 0;
 	   			ganttData.deletedTaskIds = [];
-	   			//간트 줌 설정
-	   			ganttData.zoom = "1M";
+	   			//간트 줌 설정 3d, 1w, 1M, 1Q, 2Q, 1y, 2y
+	   			ganttData.zoom = "3d";
 // 	   			ganttData.canAdd = true;
 	   			preProcess();
 	   			/*-------------------------기타 세팅 -----------------------*/
@@ -111,6 +111,7 @@
 		   			tempTask.start = new Date(pd.planStartDate).getTime();
 		   			tempTask.end = new Date(pd.planEndDate).getTime();
 		   			tempTask.duration = pd.workingday;
+		   			tempTask.weight = 100;
 		   			tempTask.startIsMilestone = "";
 		   			tempTask.endIsMilestone = "";
 		   			tempTask.assigs = [];
@@ -291,9 +292,7 @@
 	   		
 	   		//기본 옵션 세팅
 	   		function setDefOption(ganttMasterObj){
-	   			localStorage.TWPGanttGridState = {
-	   					"colSizes":[35,25,204,119,17,80,17,80,50,50,20,50,1000,35,25,204,204,17,80,17,80,50,50,20,50,1000,50,1000]
-	   			};
+	   			localStorage.TWPGanttGridState = '{"colSizes":"[35,25,204,119,17,80,17,80,50,50,60,50,1000,35,25,204,119,17,80,17,80,50,50,60,50,1000]"}';
 	   		}
 	   		
 	   		function addTask(){
@@ -392,6 +391,18 @@
 	   			    this.redraw();
 	   			    this.goToMillis(centerMillis);
 	   			}
+	   			
+	   			Ganttalendar.prototype.zoomChange = function(zoom){
+	   				var curLevel = zoom;
+	   				var centerMillis = this.getCenterMillis();
+	   				
+	   				this.gridChanged=true;
+	   			    this.zoom = curLevel;
+
+	   			    this.storeZoomLevel();
+	   			    this.redraw();
+	   			    this.goToMillis(centerMillis);
+	   			}
 	   		}
 	   		
 	   		function ganttChartModifyFunc(){
@@ -445,6 +456,16 @@
 	   			  
 	   			  var endTime = new Date(newEndTime);
 	   			  var endDate = dateToYYYYMMDD(endTime);
+	   			  
+	   			  if (endTime.getDay() == 6) { 
+	   				newEndTime = endTime.getTime() + (2 * 24 * 60 * 60 * 1000);
+	   				endTime = new Date(newEndTime);
+					endDate = dateToYYYYMMDD(endTime);
+	   			  } else if (endTime.getDay() == 0) {
+	   				newEndTime = endTime.getTime() + (1 * 24 * 60 * 60 * 1000);
+	   				endTime = new Date(newEndTime);
+		   			endDate = dateToYYYYMMDD(endTime);	
+	   			  }
 	   			  
 	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
 	   			  
@@ -520,6 +541,10 @@
 	   					if (result.roleCheck == "permitted") {
 	   						console.log(result.endDate);
 	   						alert("상태가 변경되었습니다.");
+	   						ge.tasks.filter(function(task){
+	   							return task.id == fullId
+	   						})[0].end = endTime;
+	   						ge.redraw();
 	   					} else {
 	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
 	   					}
@@ -562,6 +587,10 @@
 		   				changeGanttOrder();
 		   			}
 		   		}).disableSelection();
+		   		
+		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
+		   		$("input[name='weight']").on("change",function(){ updateWeight(); });
+		   		$("input[name='progress']").on("change",function(){ updateProgress(); });
 		   	}
 	   		
 	   		function changeGanttOrder() {
@@ -639,8 +668,7 @@
 	   				url = "/ezPMS/deleteProject.do";
 	   			}
 	   			else if(selectType === "group"){
-		   			groupId = ge.currentTask.id.match(/g(\d+)/)[1];
-	   				url = "/ezPMS/deleteGroup.do";
+		   			delGroup();
 	   			}
 	   			else{
 		   			taskId = ge.currentTask.id.match(/t(\d+)/)[1];
@@ -677,6 +705,14 @@
 	   					addTaskLog(projectId, 3, null, null, logContent);
 	   				}
 	   			});
+	   		}
+	   		
+	   		function updateWeight(){
+	   			alert("가중치 값 변했냐");
+	   		}
+	   		
+	   		function updateProgress(){
+	   			alert("진행률 값 변했냐");
 	   		}
 	   		
 	   		
@@ -742,6 +778,18 @@
 		    padding: 3px;
 		  }
 		  
+		  li.pmsGanttZoomBtn {
+		  	float: right;
+		  	list-style: none;
+		  }
+		  
+		  .gdfCell {
+		    overflow: hidden;
+		    padding: 0px;
+		    border-bottom: 1px solid #eee;
+		    border-right: 1px solid #eee;
+	      }
+		  
 		  #ndo{
 		  	display:none;
 		  }
@@ -756,6 +804,27 @@
 		        <li id="pmsGanttTaskDetails" class="pmsGanttMenuLi">details</li>
 		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi">new group</li>
 		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi">del group</li>
+		        <li id="pmsGanttZoomBtn" class="pmsGanttZoomBtn">
+					<select>
+						<option value="3d">일단위보기</option>
+						<option value="1w">주단위보기</option>
+						<option value="1M">월단위보기</option>
+						<option value="1Q">분기단위보기</option>
+						<option value="1y">연단위보기</option>
+					</select>
+		        </li>
+		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
+		       		<span>보기설정</span>
+					<select>
+						
+						<option value="3d">전체</option>
+						<option value="3d">대기</option>
+						<option value="1w">진행</option>
+						<option value="1M">완료</option>
+						<option value="1Q">보류</option>
+						<option value="1y">지연</option>
+					</select>
+		        </li>
 		        <input style="height:23px;width:114px;border:1px solid black;font-size:12px;" id="groupDelTest" placeholder="그룹아이디 입력"/>
 		    </ul>
 		</div>
@@ -1197,7 +1266,7 @@
 			      <th class="gdfColHeader gdfResizable" style="width:80px;">완료일</th>
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">남은기간</th>
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
-			      <th class="gdfColHeader gdfResizable" style="width:20px;">%</th>
+			      <th class="gdfColHeader gdfResizable" style="width:60px;">진행률</th>
 			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">depe.</th>
 			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">담당자</th>
 			    </tr>
@@ -1207,7 +1276,7 @@
 			
 			<div class="__template__" type="TASKROW"><!--
 			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#)" level="(#=level#)">
-			    <th class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> <span class="teamworkIcon" style="font-size:12px;" >e</span></th>
+			    <th class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </th>
 			    <td class="gdfCell noClip" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+18#)px;">
 			      <div class="exp-controller" align="center"></div>
@@ -1425,6 +1494,7 @@
 			
 			
 			  function loadI18n(){
+				// 메시지 영역
 			    GanttMaster.messages = {
 			      "CANNOT_WRITE":"No permission to change the following task:",
 			      "CHANGE_OUT_OF_SCOPE":"Project update not possible as you lack rights for updating a parent project.",
@@ -1447,8 +1517,8 @@
 			      "GANTT_SEMESTER_SHORT":"s.",
 			      "GANTT_QUARTER":"Quarter",
 			      "GANTT_QUARTER_SHORT":"q.",
-			      "GANTT_WEEK":"Week",
-			      "GANTT_WEEK_SHORT":"w."
+			      "GANTT_WEEK":"<spring:message code='ezCommunity.t591' />",
+			      "GANTT_WEEK_SHORT":"<spring:message code='ezCommunity.t591' />"
 			    };
 			  }
 			

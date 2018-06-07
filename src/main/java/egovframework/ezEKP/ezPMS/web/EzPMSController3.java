@@ -40,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
+import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -102,17 +103,33 @@ public class EzPMSController3 {
 		String writerDeptName = userInfo.getDeptName();
 		String mode = request.getParameter("mode");
 		
+		Map<String, Object> param = new HashMap<String, Object>();
+		/*JSONObject resultBody = null;
+		String status = null;*/
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/sysParams/" + userId, param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray configList = (JSONArray) resultBody.get("data");
+			for(Object configVO : configList) {
+				JSONObject configItem = (JSONObject) configVO;
+				if(configItem.get("name").equals("MailAttachLimit")) {
+					model.addAttribute("attachLimit", configItem.get("value"));
+				}
+			}
+		}
+		
 		if(mode.equals("modify")) {
 			String itemId = request.getParameter("itemId");
 			String projectId = request.getParameter("projectId");
 			
-			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userId);
 			param.put("itemId", itemId);
 			param.put("projectId", projectId);
 			
-			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
-			String status = resultBody.get("status").toString();
+			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
+			status = resultBody.get("status").toString();
 			
 			if(status.equals("ok")) {
 				JSONObject board = (JSONObject) resultBody.get("data");
@@ -139,13 +156,12 @@ public class EzPMSController3 {
 			String itemId = request.getParameter("itemId");
 			String projectId = request.getParameter("projectId");
 			
-			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userId);
 			param.put("itemId", itemId);
 			param.put("projectId", projectId);
 			
-			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
-			String status = resultBody.get("status").toString();
+			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
+			status = resultBody.get("status").toString();
 			
 			if(status.equals("ok")) {
 				JSONObject board = (JSONObject) resultBody.get("data");

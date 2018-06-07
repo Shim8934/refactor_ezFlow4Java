@@ -73,7 +73,7 @@
 	}
 	
 	function close_Click(){
-		parent.groupId = "";
+// 		parent.groupId = "";
 		parent.treeDepth = originTreeDepth;
 		parent.setUpperGroup();
 		parent.DivPopUpHidden();

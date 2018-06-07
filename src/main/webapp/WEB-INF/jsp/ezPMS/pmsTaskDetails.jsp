@@ -81,11 +81,11 @@
 		$("td.detailsTable-td[name='statusTd']").text(strStatus);
 		
 		$(".progress_graph").circleProgress({
-			value: 0.4,
+			value: taskDetails.realProgress / 100,
 			fill : {color : circleColor},
 			size : 134
 		}).on('circle-animation-progress', function(event, progress) {
-			$(this).find('strong').html(40 + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+			$(this).find('strong').html(taskDetails.realProgress + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 		});
 	}
 	
@@ -135,22 +135,6 @@
 			$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
 		});
 		
-// 		$("#1tab4").click(function(){
-// 			var clickTabId = $(this).attr("id");
-// 			var nowTabAttr = $(".tabon").attr("id");
-// 			changeTab(clickTabId, nowTabAttr);
-			
-// 			$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskLogMain.do?projectId=" + projectId + "&onlyGroup=false");
-// 		});
-		
-// 		$("#1tab5").click(function(){
-// 			var clickTabId = $(this).attr("id");
-// 			var nowTabAttr = $(".tabon").attr("id");
-// 			changeTab(clickTabId, nowTabAttr);
-			
-// 			//의견으로 가는 부분 url 수정하기
-// 			$("#FBoard_ifrm").attr("src", "/ezPMS/getComment.do");
-// 		});
 		$(".tab").hover(function(){
 			$(this).addClass("tabover");
 		},
@@ -166,6 +150,7 @@
 	
 	function popupClose() {
 		parent.DivPopUpHidden();
+		parent.location.reload();
 	}
 	
 	function taskUpdate(){

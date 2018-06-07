@@ -673,21 +673,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("realWorkingday", calWorkingDays);
 			ezPMSDAO.updateProjectWorkingday(map1);
 			
-			HashMap<String, Object> map2 = new HashMap<String, Object>();
-			
-			// 가중치 계산
-			if(taskVO.getWeight() == -1) {
-				int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
-				float calWeight = (taskWorkingday / projectWorkingday) * 100;
-				System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
-				map2.put("weight", calWeight);
-			} else {
-				map2.put("weight", taskVO.getWeight());
-			}
-			map2.put("taskId", taskId);
-			map2.put("workingday", taskWorkingday);
-			
-			ezPMSDAO.updateTaskWDNW(map2);
+			//가중치 계산
+			updateTaskWDNW(taskVO, taskWorkingday);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -777,21 +764,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("workingday", taskWorkingday);
 			ezPMSDAO.updateProjectWorkingday(map1);
 			
-			HashMap<String, Object> map2 = new HashMap<String, Object>();
-			
-			// 가중치 계산
-			if(task.getWeight() == -1) {
-				int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
-				float calWeight = (taskWorkingday / projectWorkingday) * 100;
-				System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
-				map2.put("weight", calWeight);
-			} else {
-				map2.put("weight", task.getWeight());
-			}
-			map2.put("taskId", taskId);
-			map2.put("workingday", taskWorkingday);
-			
-			ezPMSDAO.updateTaskWDNW(map2);
+			//가중치 계산
+			updateTaskWDNW(task, taskWorkingday);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1693,22 +1667,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("workingday", taskWorkingday);
 			ezPMSDAO.updateProjectWorkingday(map1);
 			
-			HashMap<String, Object> map2 = new HashMap<String, Object>();
-			
-			// 가중치 계산
-			if(task.getWeight() == -1) {
-				int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
-				float calWeight = (taskWorkingday / projectWorkingday) * 100;
-				System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
-				map2.put("weight", calWeight);
-			} else {
-				map2.put("weight", task.getWeight());
-			}
-			map2.put("taskId", taskId);
-			map2.put("workingday", taskWorkingday);
-			
-			ezPMSDAO.updateTaskWDNW(map2);
-			
+			//가중치 계산
+			updateTaskWDNW(task, taskWorkingday);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1970,5 +1930,26 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] getGroupMemberList ended.");
 		return ezPMSDAO.getGroupMemberList(map);
+	}
+	
+	public void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday){
+		HashMap<String, Object> map2 = new HashMap<String, Object>();
+		// 가중치 계산
+		String projectId = taskVO.getProjectId().toString();
+		Long taskId = taskVO.getTaskId();
+		
+		if(taskVO.getWeight() == -1) {
+			int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
+			float calWeight = (taskWorkingday / projectWorkingday) * 100;
+			System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
+			map2.put("weight", calWeight);
+		} else {
+			map2.put("weight", taskVO.getWeight());
+		}
+		map2.put("taskId", taskId);
+		map2.put("workingday", taskWorkingday);
+		map2.put("tenantId", taskVO.getTenantId());
+		
+		ezPMSDAO.updateTaskWDNW(map2);
 	}
 }

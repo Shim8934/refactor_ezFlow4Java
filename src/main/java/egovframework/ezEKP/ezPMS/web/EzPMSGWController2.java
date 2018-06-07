@@ -786,7 +786,7 @@ public class EzPMSGWController2 {
 				projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 				projectTaskVO.setStatus(request.getParameter("status"));
 				
-				//ezPMSService.updateTaskStatus(projectTaskVO);
+				ezPMSService.updateTaskStatus(projectTaskVO);
 				
 				if (request.getParameter("endTime") != null) {
 					long endTime = Long.parseLong(request.getParameter("endTime"));
@@ -799,7 +799,7 @@ public class EzPMSGWController2 {
 					if (preTaskList != null && preTaskList.size() != 0) {
 						Date postTaskEndTime = new Date(endTime);
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						System.out.println(dateFormat.format(postTaskEndTime));
+						
 						for (int i = 0; i < preTaskList.size(); i++) {
 							ProjectTaskVO postTask = ezPMSService.getTaskDetails(preTaskList.get(i), tenantId, lang);
 							Date postPlanStartDate = dateFormat.parse(postTask.getPlanStartDate());
@@ -813,6 +813,7 @@ public class EzPMSGWController2 {
 						    
 						    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
 						    System.out.println(dayNum);
+						    
 						    if (dayNum == 7) {
 						    	cal.add(Calendar.DATE, 2);
 						    } else if (dayNum == 1) {
@@ -830,11 +831,9 @@ public class EzPMSGWController2 {
 						    	cal2.add(Calendar.DATE, -2);
 						    }
 						    
-						    System.out.println("start : " + dateFormat.format(cal.getTime()));
-						    System.out.println("end : "  + dateFormat.format(cal2.getTime()));
 							postTask.setPlanStartDate(dateFormat.format(cal.getTime()));
 							postTask.setPlanEndDate(dateFormat.format(cal2.getTime()));
-							//ezPMSService.updateTaskStatus(postTask);
+							ezPMSService.updateTaskStatus(postTask);
 						}
 						
 					}
