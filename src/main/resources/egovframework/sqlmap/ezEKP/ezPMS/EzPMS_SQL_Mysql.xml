@@ -861,7 +861,7 @@
 			project_id = #projectId#
 	</select>
 	
-	<update id="uEzPMSDAO.pdateTaskWDNW" parameterClass="Map">
+	<update id="EzPMSDAO.updateTaskWDNW" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				tbl_pms_task
