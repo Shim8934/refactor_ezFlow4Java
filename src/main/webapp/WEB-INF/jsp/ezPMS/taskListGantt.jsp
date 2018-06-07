@@ -291,7 +291,7 @@
 	   		
 	   		//기본 옵션 세팅
 	   		function setDefOption(ganttMasterObj){
-	   			localStorage.TWPGanttGridState = '{"colSizes":"[35,25,204,119,17,80,17,80,50,50,20,50,1000,35,25,204,119,17,80,17,80,50,50,20,50,1000]"}';
+	   			localStorage.TWPGanttGridState = '{"colSizes":"[35,25,204,119,17,80,17,80,50,50,60,50,1000,35,25,204,119,17,80,17,80,50,50,60,50,1000]"}';
 	   		}
 	   		
 	   		function addTask(){
@@ -577,6 +577,8 @@
 		   		document.getElementById("pmsGanttAddGroup").onclick = addGroup;
 		   		document.getElementById("pmsGanttDelGroup").onclick = delGroup;
 		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
+		   		$("input[name='weight']").on("change",function(){ updateWeight(); });
+		   		$("input[name='progress']").on("change",function(){ updateProgress(); });
 		   	}
 	   		
 	   		function delTask(){
@@ -650,6 +652,14 @@
 	   			});
 	   		}
 	   		
+	   		function updateWeight(){
+	   			alert("가중치 값 변했냐");
+	   		}
+	   		
+	   		function updateProgress(){
+	   			alert("진행률 값 변했냐");
+	   		}
+	   		
 	   		
 	   		(function(){
 	   			//임시 크기 조절
@@ -713,6 +723,13 @@
 		  	float: right;
 		  	list-style: none;
 		  }
+		  
+		  .gdfCell {
+		    overflow: hidden;
+		    padding: 0px;
+		    border-bottom: 1px solid #eee;
+		    border-right: 1px solid #eee;
+	      }
 		  
 		  #ndo{
 		  	display:none;
@@ -1190,7 +1207,7 @@
 			      <th class="gdfColHeader gdfResizable" style="width:80px;">완료일</th>
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">남은기간</th>
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
-			      <th class="gdfColHeader gdfResizable" style="width:20px;">%</th>
+			      <th class="gdfColHeader gdfResizable" style="width:60px;">진행률</th>
 			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">depe.</th>
 			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">담당자</th>
 			    </tr>
@@ -1200,7 +1217,7 @@
 			
 			<div class="__template__" type="TASKROW"><!--
 			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#)" level="(#=level#)">
-			    <th class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> <span class="teamworkIcon" style="font-size:12px;" >e</span></th>
+			    <th class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </th>
 			    <td class="gdfCell noClip" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+18#)px;">
 			      <div class="exp-controller" align="center"></div>

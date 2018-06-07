@@ -869,7 +869,9 @@
 				workingday = #workingday#,
 				weight = #weight#
 			WHERE
-				task_id = #taskId#			
+				task_id = #taskId#		
+			AND
+				TENANT_ID = #tenantId#	
 		]]>
 	</update>
 	
@@ -2721,4 +2723,5 @@
 				g.PROJECT_ID = #projectId#
 		]]>
 	</select>
+	
 </sqlMap>

@@ -150,6 +150,7 @@
 	
 	function popupClose() {
 		parent.DivPopUpHidden();
+		parent.location.reload();
 	}
 	
 	function taskUpdate(){
