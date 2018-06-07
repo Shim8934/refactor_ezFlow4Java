@@ -1042,7 +1042,15 @@
 			            </CELL>
 			        </ROW>
 			         </c:if>
-				</ROWS>
+					<c:if test="${cabinetFlag == 'YES'}">
+						<ROW>
+					<CELL>
+						<VALUE><spring:message code='ezOrgan.t305'/></VALUE>
+							<DATA1>cb</DATA1>
+						</CELL>
+					</ROW>
+					 </c:if>
+					</ROWS>
 			</LISTVIEWDATA>
 		</xml>
 	    <div id="menu">

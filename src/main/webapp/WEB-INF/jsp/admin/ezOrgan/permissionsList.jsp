@@ -494,9 +494,12 @@
 	                <c:if test="${approvalForDoc == 'Y'}">
 	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	                </c:if>
-	                <c:if test="${webfolderFlag == 'YES'}">
-	                	<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
-	                </c:if>
+					<c:if test="${webfolderFlag == 'YES'}">
+						<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+					</c:if>
+					<c:if test="${cabinetFlag == 'YES'}">
+						<p id="Permission_sub12"><span divname="cb" id="1tab12"><spring:message code='ezOrgan.t305' /></span></p>
+					</c:if>
 		        </div>
 		    </div>
 		

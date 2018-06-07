@@ -1,0 +1,15 @@
+.left_cabinet span {background: url(/images/webfolder/left_webfolder.png) no-repeat left center; display: inline-block; height: 50px; line-height: 48px; font-weight: normal; color: #fff; margin: 0px 0px 0px 16px; padding: 0px 0px 0px 33px; text-align: center; font-family: Malgun Gothic; font-size: 20px;}
+.left_cabinet {height: 52px; background: #0470e4;}
+
+.leftbody ul li:last-child {border-bottom: none;}
+#left {overflow: hidden;}
+#left h3 {border-top: none; border-bottom: none;}
+#left >ul >li {padding: 0px; list-style-type: none;}
+
+.volumeDiv {border:1px solid #ddd; border-radius:3px; margin:10px 10px 2px; background-color: white;}
+.volumeDiv >div:first-child {margin-left:20px; margin-top: 10px;}
+.volumeDiv .volumeBar {width: 80%;}
+.volumeDiv .volumes {text-align:center; margin-top:10px; margin-bottom:5px; font-weight: bold; font-family: dotum;}
+.adminPanel {width:100%; padding:9px 16px 15px; font-weight: bold;}
+.adminPanel img {vertical-align: middle; margin-top: -2px; width: 20px;}
+.adminPanel span {margin-left: 10px; font-size: 18px; padding-top: 3px; color: #333; font-family: Malgun Gothic, Meiryo UI;}
