@@ -35,7 +35,7 @@ $(function(){
 		projectList.push(json);
 	</c:forEach>
 	
-	for (var i = 0; i < projectList.length; i++) {
+	/* for (var i = 0; i < projectList.length; i++) {
 		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
 		
@@ -70,7 +70,59 @@ $(function(){
 			radius : '15px',
 			width : '68%'
 		});
+	} */
+	
+	// by mslim start
+	
+	var i = 0;
+	
+	var progressBar = setInterval(setProgressBar, 100);
+	
+	function setProgressBar() {
+		
+		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
+		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
+		
+		if (isNaN(completeTaskPercent)) {
+			completeTaskPercent = 0;
+		}
+		
+		if (isNaN(lateTaskPercent)) {
+			lateTaskPercent = 0;
+		}
+		
+		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
+			percentage : projectList[i].progress,
+			fillBackgroundColor : progressColor,
+			height : '15px',
+			radius : '15px',
+			width : '68%'
+		});
+		
+		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
+			percentage : completeTaskPercent,
+			fillBackgroundColor : completeColor,
+			height : '15px',
+			radius : '15px',
+			width : '68%'
+		});
+		
+		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
+			percentage : lateTaskPercent,
+			fillBackgroundColor : overdueColor,
+			height : '15px',
+			radius : '15px',
+			width : '68%'
+		});
+		
+		i++;
+		
+		if(i >= projectList.length) {
+			clearInterval(progressBar);
+		}
 	}
+	
+	// by mslim end
 });
 </script>
 </head>
