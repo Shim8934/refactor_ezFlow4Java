@@ -212,9 +212,6 @@
 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t176' /></span></li>
 	      		<li><span onclick="mod_type()"><spring:message code='ezAttitude.t177' /></span></li>
 	      		<li><span onclick="del_type()"><spring:message code='ezAttitude.t178' /></span></li>
-	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
-	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
 		<table class="mainlist" style="width: 450px; max-height:500px;">
@@ -232,7 +229,16 @@
 				</tr>
 			</tbody>
 		</table>
-		
+		<table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; width: 450px;">
+	        <tbody>
+	        	<tr>
+		            <td style="height: 50px; text-align: center;">
+		                <a class="imgbtn"><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></a>
+		                <a class="imgbtn"><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></a>
+		            </td>
+		        </tr>
+	    	</tbody>
+	    </table>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
