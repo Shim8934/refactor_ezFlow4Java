@@ -666,20 +666,18 @@ function setOverviewContent() {
 			 commentHTML += "<div id='mainComment'>";	 
 			 
 			 if (commentList == null || commentList.length == 0) {
-				 
 				 commentHTML += "<div style='font-size:13px; margin-left:11%'>" + "의견이 존재하지 않습니다." + "</div>";
-				 
 			 } else {
 				 for (var i = 0; i < commentList.length; i++) {					 
 					 commentHTML += "<div style='clear:both; margin-bottom:1px; border-bottom:1px;'>";
-					 commentHTML += "<div style='width:16%; float:left; font-weight:bold;'>" + commentList[i].commentContent + "</div>";
-					 commentHTML += "<div style='font-size:13px; height:21px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap'>" + logList[i].logContent + "</div>";
+					 commentHTML += "<div style='width:16%; float:left;font-size:13px;'>" + commentList[i].writerName + "</div>";
+					 commentHTML += "<div style='font-size:13px; height:21px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap'>" + commentList[i].commentContent + "</div>";
 					 commentHTML += "</div>";
 				 }
 				 
 				 commentHTML += "</div>";
 			 }
-			 
+			  
 			 $("#commentContentArea").html(commentHTML);
 		}
 	})

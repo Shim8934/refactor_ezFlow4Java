@@ -2605,8 +2605,10 @@
 		</isNotEmpty>
 		
 			ORDER BY 
-		<isNotEmpty property="orderWhat">  
-			$orderWhat$ $orderHow$,
+		<isNotEmpty property="orderWhat"> 
+			<isNotEqual property="orderWhat" compareValue="init">
+			 $orderWhat$ $orderHow$,
+			</isNotEqual> 
 		</isNotEmpty>
 			C.comment_id DESC
 			

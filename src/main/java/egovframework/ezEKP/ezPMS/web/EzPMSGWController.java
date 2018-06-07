@@ -1421,4 +1421,33 @@ public class EzPMSGWController {
 			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/preTasks/" + rowIndexId + "] ended.");
 			return result;
 		}
+		
+		//요기서부터 하기
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/rest/ezPMS/project/{projectId}/gantt/order")
+		public JSONObject changeGanttOrder(@PathVariable long projectId, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try {
+				String userId = request.getParameter("userId");
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+				int tenantId = info.getTenantId();
+				String roleCheck = "";
+				
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", roleCheck);
+			} catch (Exception e) {
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+			}
+			
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] ended.");
+			return result;
+		}
 }

@@ -55,6 +55,7 @@
 	   			ganttData = {},
 	   			groupList = {},
 	   			ge = "";
+	   		var projectGroupId = "${projectDetail.groupId}";
 	   		
 	   		function initValues(){
 	   			taskList = ${taskList};
@@ -558,9 +559,53 @@
 		   		$(".gdfTable tbody").sortable({
 		   			update : function(event, ui) {
 		   				ge.taskIsChanged();
+		   				changeGanttOrder();
 		   			}
 		   		}).disableSelection();
 		   	}
+	   		
+	   		function changeGanttOrder() {
+	   			var groupArr = [];
+	   			var taskArr = [];
+	   			
+	   			$(".isParent").each(function(index, element){
+	   				if (index != 0) {
+	   					groupArr.push({"projectId" : element.id.substring(5, element.id.lastIndexOf("_")), "groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "order" : index});
+		   				
+	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
+		   					taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx});
+		   				});
+	   				} else if (index == 0) {
+						groupArr.push({"projectId" : element.id.substring(5), "groupId" : projectGroupId, "order" : index});
+		   				
+	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
+		   					taskArr.push({"groupId" : projectGroupId, "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx});
+		   				});
+	   				}
+	   				
+	   			});
+	   			
+	   			 var data = {
+	   				groupArr : groupArr,
+	   				taskArr : taskArr
+	   			}
+	   			
+	   			$.ajax({
+	   				type:"post",
+	   				dataType:"html",
+	   				url:"/ezPMS/changeGanttOrder.do",
+	   				data:JSON.stringify(data),
+	   				success: function(result){
+	   					if (roleCheck == "rejected") {
+	   						alert("프로젝트 담당자나 그룹의 담당자만 변경할 수 있습니다.");
+	   						return;
+	   					}
+	   				},
+	   				error : function(jqXHR, textStatus, errorThrown) {
+	   					alert("에러가 발생했습니다.");
+	   				}
+	   			}); 
+	   		}
 	   		
 	   		function delTask(){
 	   			var selectType = "";
