@@ -346,6 +346,11 @@
             	domElement.previousScrollPos = currentScrollPos;
             });
             
+            if (attitudeIncludeMe) {
+ 	         	document.getElementById('toMe').checked = 'checked';
+    	        MailToMe_Onclick();
+            }
+            
          // 쓰기창에서 수신인 자동완성 기능 사용 유무
             <c:if test="${useMailAddrAutoComplete == 'NO'}">
             	$( "#MsgTo" ).autocomplete("disable");

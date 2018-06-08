@@ -526,7 +526,7 @@
 			function setTypeName() {
 				$('#subSelectAtti option').each(function(){
 					var typeName = $(this).text();
-					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&#039", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
 					$(this).text(typeName);
 				})
 			}
@@ -534,15 +534,15 @@
 			//연락처, 외근지, 업무대리 특수문자
 			function setInputValue() {
 				if (mobile != "") {
-					mobile = ReplaceText(ReplaceText(ReplaceText(ReplaceText(mobile, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+					mobile = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(mobile, "&#039", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
 					$("input[name=mobile]").val(mobile);
 				}
 				if (region != "") {
-					region = ReplaceText(ReplaceText(ReplaceText(ReplaceText(region, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+					region = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(region, "&#039", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
 					$("input[name=region]").val(region);
 				}
 				if (bizSub != "") {
-					bizSub = ReplaceText(ReplaceText(ReplaceText(ReplaceText(bizSub, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+					bizSub = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(bizSub, "&#039", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
 					$("input[name=bizSub]").val(bizSub);
 				}
 			}

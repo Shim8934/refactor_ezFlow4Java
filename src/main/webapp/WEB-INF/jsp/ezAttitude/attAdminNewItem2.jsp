@@ -577,7 +577,7 @@
 			function setTypeName() {
 				$('#subSelectAtti option').each(function(){
 					var typeName = $(this).text();
-					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&#039", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
 					$(this).text(typeName);
 				})
 			}
