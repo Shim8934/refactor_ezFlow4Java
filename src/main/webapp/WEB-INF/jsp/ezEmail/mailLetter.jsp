@@ -61,7 +61,7 @@
 				height: 370px; 
 				width: 550px; 
 				margin: 7px 7px; 
-				border: 1px solid #cbcbcb;
+				border: 1px solid #ddd;
 			}
 			
 			input::-webkit-input-placeholder{

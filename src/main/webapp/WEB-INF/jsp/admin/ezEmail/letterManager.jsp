@@ -89,8 +89,7 @@
 		<table>
 			<tr>
 				<td>
-					<div class="lmright"
-						style="width: 578px; height: 578px">
+					<div class="lmright" style="width: 578px; height: 578px">
 						<div class="lmPreview">
 							<div class="lmPreViewTxt"
 								style='text-align: center; position: relative; top: 49%; transform: translateY(-50%);'>
