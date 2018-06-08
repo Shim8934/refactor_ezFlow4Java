@@ -96,7 +96,7 @@
 					},
 					success : function(result) {
 						getAbsentedList_after(result.list);
-						$("#mailBoxInfo").html(" - [총<span style='color:#017BEC;'> " + result.totalCount + " </span>개]");
+						$("#mailBoxInfo").html(" - [<spring:message code='ezAttitude.t76'/><span style='color:#017BEC;'> " + result.totalCount + " </span><spring:message code='ezAttitude.t78'/>]");
 					}
 				});
 	    	}
