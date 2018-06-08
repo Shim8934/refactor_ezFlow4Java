@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +17,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
@@ -64,9 +66,6 @@ public class EzWebFolderGWController_m {
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 		String pageNum = orElse(request.getParameter("pageNum"), "1");
 		String pageSize = orElse(request.getParameter("pageSize"), "0");
-		// root폴더에서 하위의 파일만 모두 가져와야하는 문제때문에, 특정폴더 하위 리스트 가져오는 기능은 다른쪽 호출하여 처리하였음.
-		String folderId = "";
-//		String folderId = orElse(request.getParameter("folderId"), "");
 		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
 		SearchVO searchInfo = new SearchVO();
@@ -114,34 +113,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = null;
-			Map<String, Long> countInfo = null;
-			
-			if (folderId.equals("")) {
-				list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-				countInfo = ezWebFolderService_m.getSharingCount(subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
-			} else {
-				String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
-				
-				if (!permissionResult.equals("ok")) {
-					result.put("status", "error");
-					result.put("code", 3);
-					
-					logger.debug("checkPermission fail.");
-					logger.debug("getSharingList ended.");
-					return result;
-				}
-				
-				list = ezWebFolderService_m.getFolderFileList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-				countInfo = ezWebFolderService_m.getFolderFileCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
-				
-				FolderVO folderInfo = ezWebFolderService_y.getFolderDetail(folderId, userId, tenantId, userInfo.getCompanyID());
-				String folderPath = folderInfo.getFolderPath();
-				String folderPath2 = ezWebFolderService.getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
-				
-				data.put("folderPath", folderPath);
-				data.put("folderPath2", folderPath2);
-			}
+			List<ShareVO> list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -290,9 +263,6 @@ public class EzWebFolderGWController_m {
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 		String pageNum = orElse(request.getParameter("pageNum"), "1");
 		String pageSize = orElse(request.getParameter("pageSize"), "0");
-		// root폴더에서 하위의 파일만 모두 가져와야하는 문제때문에, 특정폴더 하위 리스트 가져오는 기능은 다른쪽 호출하여 처리하였음.
-		String folderId = "";
-//		String folderId = orElse(request.getParameter("folderId"), "");
 		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
 		SearchVO searchInfo = new SearchVO();
@@ -340,34 +310,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = null;
-			Map<String, Long> countInfo = null;
-			
-			if (folderId.equals("")) {
-				list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-				countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
-			} else {
-				String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
-				
-				if (!permissionResult.equals("ok")) {
-					result.put("status", "error");
-					result.put("code", 3);
-					
-					logger.debug("checkPermission fail.");
-					logger.debug("getSharedList ended.");
-					return result;
-				}
-				
-				list = ezWebFolderService_m.getFolderFileList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-				countInfo = ezWebFolderService_m.getFolderFileCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
-				
-				FolderVO folderInfo = ezWebFolderService_y.getFolderDetail(folderId, userId, tenantId, userInfo.getCompanyID());
-				String folderPath = folderInfo.getFolderPath();
-				String folderPath2 = ezWebFolderService.getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
-				
-				data.put("folderPath", folderPath);
-				data.put("folderPath2", folderPath2);
-			}
+			List<ShareVO> list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);

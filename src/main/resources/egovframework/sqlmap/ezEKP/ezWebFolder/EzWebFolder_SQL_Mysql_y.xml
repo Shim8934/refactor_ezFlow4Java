@@ -675,8 +675,8 @@
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
+					(DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
 				]]>
 			</isNotEqual>
 		</isNotEqual>

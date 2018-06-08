@@ -25,7 +25,7 @@
     				</dl>
     				<div class="bottom"></div>
     			</div>
-    			<div class="personal_content">
+    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
 					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="count">
@@ -95,6 +95,7 @@
                     		</c:choose>
 						</ul>						
 					</a>
+					<c:if test="${isCircularUsed == 'Y'}">
 					<a id="Circular" onClick="btnSumming_click(this)">
 						<ul class="last">
 							<li class="count">
@@ -112,6 +113,7 @@
                     		</c:choose>                  		
 						</ul>
 					</a>			
+					</c:if>			
 				</div>
 			</article>
       		<div class="blue_bar"></div>
@@ -252,6 +254,15 @@
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "YES";
+			var isCircularUsed = "${isCircularUsed}";
+		    
+			$(document).ready(function(){
+				if (isCircularUsed != 'Y') {
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
+					$(".personal_content a ul:last").attr("class","last");
+					$(".personal_content").show();
+				}
+			});
 		    
 		    var year = sDate.getFullYear();
 		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);

@@ -36,7 +36,15 @@
 							renderData(result.data);
 							changeShareInfo(0);
 						} else {
-							alert(messages.strLang7 + " code: " + result.code);
+							if (result.code == 1) {
+								alert("<spring:message code='ezWebFolder.t306'/>");
+							} else if (result.code == 2) {
+								alert("<spring:message code='ezWebFolder.t305'/>");
+							} else if (result.code == 3) {
+								alert("<spring:message code='ezWebFolder.t300'/>");
+							} else {
+								alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+							}
 						}
 					},
 					error : function(error) {
