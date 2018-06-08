@@ -2878,4 +2878,18 @@
 			TENANT_ID = #tenantId#
 	]]>
 	</update>
+	
+	<update id="EzPMSDAO.updateTaskWeight" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				WEIGHT = #weight#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
 </sqlMap>

@@ -181,6 +181,7 @@
 	 		   			tempTask.weight = gl[i].weight;
 			   			tempTask.startIsMilestone = "";
 			   			tempTask.endIsMilestone = "";
+			   			tempTask.headManager = gl[i].headManagerId;
 			   			tempTask.assigs = [];
 			   			
 			   			for(var j = 0; j < gl[i].groupMember.length; j++){
@@ -253,6 +254,7 @@
 			   			tempTask.weight = tl[i].weight;
 			   			tempTask.startIsMilestone = "";
 			   			tempTask.endIsMilestone = "";
+			   			tempTask.headManager = tl[i].headManagerId;
 			   			tempTask.assigs = [];
 			   			
 			   			for(var j = 0; j < tl[i].taskMember.length; j++){
@@ -597,7 +599,7 @@
 		   		}).disableSelection();
 		   		
 		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
-		   		$("input[name='weight']").on("change",function(){ updateWeight(); });
+		   		$("input[name='weight']").on("change",function(){ updateWeight(this); });
 		   		$("input[name='progress']").on("change",function(){ updateProgress(); });
 		   		
 		   	}
@@ -732,8 +734,61 @@
 	   			});
 	   		}
 	   		
-	   		function updateWeight(){
-	   			alert("가중치 값 변했냐");
+	   		function updateWeight(obj){
+	   			var curTask = ge.currentTask;
+	   			var newWeight = obj.value;
+	   			var validFlag = false;
+	   			var taskId = 0;
+	   			var groupId = 0;
+	   			
+	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
+	   			if(taskId === ""){
+	   				alert("업무를 선택해주세요.");
+	   			}
+	   			// 가중치 검사
+	   			else if(newWeight == ""){
+   					alert("가중치를 입력해 주십시오.");
+   				}
+   				else if(isNaN(newWeight)) {
+   					alert("가중치는 숫자만 입력 가능합니다.");
+   				}
+   				else{
+   					validFlag = true;
+   				}
+	   			
+	   			if(!validFlag){
+	   				//화면 새로 고침안하고 되돌릴 수 있는 방법 찾아볼것.
+	   				location.reload();
+	   				return;
+	   			}
+//    				if(Number(newWeight) > remainingWeight) {
+//    					alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
+//    					return;
+//    				}
+
+				data = {
+						taskName : curTask.name,
+						taskId : taskId,
+						projectId : projectId,
+						groupId : groupId,
+						weight : newWeight
+				}
+				
+				$.ajax({
+					type : "POST",
+					url : "/ezPMS/updateTaskWeight.do",
+					dataType : "json",
+					contentType: "application/json; charset=UTF-8",
+					data : JSON.stringify(data),
+					success : function(data) {
+						alert("업무 정보를 변경하였습니다.");
+						
+						location.reload();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("error2");
+					}
+				});
 	   		}
 	   		
 	   		function updateProgress(){

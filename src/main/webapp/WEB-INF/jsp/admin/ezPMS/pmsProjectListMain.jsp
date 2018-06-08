@@ -148,7 +148,7 @@
 	function getProjectGeneralInfo(projectId) {
 		var feature = GetOpenPosition(790, 800);
 		window.open("/admin/ezPMS/getProjectGeneralInfo.do?projectId=" + projectId, "", 
-					"width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
+					"width=650, height=300, resizable=no, scrollbars=no, status=no" + feature);
 	}
 </script>
 </head>

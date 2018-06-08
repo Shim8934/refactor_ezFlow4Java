@@ -39,7 +39,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @RestController
 public class EzPMSGWController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MCommonGWController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -245,12 +245,15 @@ public class EzPMSGWController {
 			String[] projectIdList = projectId.split("_");
 			String roleCheck = "";
 			
-			for (int i = 0; i < projectIdList.length; i++) {
-				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectIdList[i]), deptId);
-				LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
-				
-				if (userRole != 1) {
-					roleCheck = "reject";
+			// admin 파라미터는 관리자모드에서만 넘어온다. 값이 넘어오지 않을 때만 roleCheck를 시행한다.
+			if(request.getParameter("admin") == null || !request.getParameter("admin").equals("true")) {
+				for (int i = 0; i < projectIdList.length; i++) {
+					int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectIdList[i]), deptId);
+					LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
+					
+					if (userRole != 1) {
+						roleCheck = "reject";
+					}
 				}
 			}
 			

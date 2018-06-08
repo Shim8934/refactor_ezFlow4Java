@@ -56,7 +56,6 @@ var headManagerName = "${taskDetails.headManagerName}";
 var groupId = 0;
 
  $(function() {
-	 console.log(headManagerName);
 	 if (target == "task") {
 		 managerList = '${taskDetails.taskMember}';
 		 groupId = "${taskDetails.groupId}";

@@ -945,9 +945,9 @@ public class EzPMSGWController2 {
 					ProjectGroupMemberVO groupMember = iter.next();
 					if(groupId.equals(groupMember.getGroupId())){
 						groupMemberListTemp.add(groupMember);
+						iter.remove();
 					}
 				}
-				groupMemberList.removeAll(groupMemberListTemp);
 				groupList.get(i).setGroupMember(groupMemberListTemp);
 			}
 			
@@ -963,6 +963,40 @@ public class EzPMSGWController2 {
 		}
 		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"] ended.");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 업무 가중치 수정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/weight", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateTaskWeight(@PathVariable String taskId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			ProjectTaskVO taskVO = new ProjectTaskVO();
+			taskVO.setTaskId(Long.parseLong(taskId));
+			taskVO.setTenantId(info.getTenantId());
+			taskVO.setWeight(Float.parseFloat(request.getParameter("weight")));
+			
+			ezPMSService.updateTaskWeight(taskVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "] ended.");
 		return result;
 	}
 }
