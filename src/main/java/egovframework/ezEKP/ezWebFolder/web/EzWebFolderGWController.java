@@ -771,7 +771,7 @@ public class EzWebFolderGWController {
 		
 		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 		
-		if (!isWebfolderAdmin(userInfo)){
+		if (!isWebfolderAdmin(userInfo)) {
 			JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, fileList, userInfo.getTenantId());
 			
 			if ("error".equals(permissionResult.get("status"))) {
