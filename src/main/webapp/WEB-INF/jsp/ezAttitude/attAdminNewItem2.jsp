@@ -570,9 +570,7 @@
 	
 	        function addReceiver(strId, strName, strDeptName) {
 	            $("#forId").text(strId);
-	            $("#forName").text("")
-	             .append($("<span></span>").css({"display":"inline-block", "padding-top":"5px", "margin-right":"4px"}).text(strDeptName + " " + strName))
-	             .append('<a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 64px; text-align: center;">' + "<spring:message code='ezAttitude.t220'/>" + '</span></a>');
+	            $("#forName").text("").append($("<span></span>").css({"display":"inline-block", "margin-right":"4px"}).text(strDeptName + " " + strName));
 	        }
 	        
 	      	//특수문자
@@ -606,8 +604,8 @@
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content">
 	                        	<tr id="userName" fixed="fix">
-	                        		<th><spring:message code='ezAttitude.t219'/></th>
-	                        		<td id="forName"><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 64px; text-align: center;">대상자 선택</span></a></td>
+	                        		<th><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 35px; text-align: center;"><spring:message code='ezAttitude.t219'/></span></a></th>
+	                        		<td id="forName"></td>
 	                        	</tr>
 	                        	<tr id="userId" fixed="fix" style="display:none;">
 	                        		<th>ID</a>
