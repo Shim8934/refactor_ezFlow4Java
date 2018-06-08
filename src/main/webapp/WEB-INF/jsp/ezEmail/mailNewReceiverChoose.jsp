@@ -68,6 +68,9 @@
 	        var strSearch = "";
 	        var ua = navigator.userAgent;
 	        var tabSel = "";
+	        var moveRecipients = false; //to, cc, bcc 간의 이동중인지 체크
+	        var prevListId = "";
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -247,10 +250,16 @@
 	            }
 	            
 	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	            $("#listType1 tr").each(function(){
+	            /* $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
-	            });
-
+	            }); */
+	            
+	            // 재은 수정중
+	            /* $("#listType1 td").each(function(){
+	            	alert("ee");
+	            }); */
+	            
+	            ChangeListView_onClick(getOrganListType());
 	        }
 		    function recevieListview(pID, pListView) {
 		        var listview = new ListView();
@@ -752,6 +761,7 @@
 	            }
 	        }
 	        function InsertReceiver(pListView) {
+	        	var moveDel = false;
 	            try {
 	                if (inputTabButton.getAttribute("class") == "on") {
 	                    inputAddress();
@@ -998,9 +1008,18 @@
 	                else {
 	                    if (listContentArry != "") {
 	                        for (var i = 0; i < listContentArry.length; i++) {
-	                            var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+	                        	
+	                        	var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+	                            
+	                            // 재은 수정중
+	                        	if (moveRecipients) {
+	                        		strName = document.getElementById(listContentArry[i]).getAttribute("data1");
+	                        		strDeptNM = document.getElementById(listContentArry[i]).getAttribute("data3");
+	                        		strEmail = document.getElementById(listContentArry[i]).getAttribute("data2");
+	                        	} 
+	                            
 	
 	                            var listid = "";
 	
@@ -1016,7 +1035,28 @@
 	                            var getlistview = new ListView();
 	                            getlistview.LoadFromID(listid);
 	                            var IsInsert = CheckMailReceiver(strEmail, "3");
-	
+	                            
+	                            
+	                            // 재은 수정중
+	                            if (moveRecipients) {
+	                            	IsInsert = false;
+	                            	var _listview = new ListView();
+	            	            	_listview.LoadFromID(listid);
+	            	            	var arrRows = _listview.GetDataRows();
+	            		            
+	            		            for (count2 = 0; count2 < arrRows.length; count2++) {
+	            		                if (strEmail == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup") {
+	            		                	IsInsert = true;
+	            		                	moveDel = true;
+	            		                } else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
+	            		                    if (strEmail == arrRows[count2].getAttribute("data4")) {
+	            		                    	IsInsert = true;
+	            		                    	moveDel = true;
+	            		                    }
+	            		                }
+	            		            }
+	            	            }
+	                            
 	                            if (!IsInsert) {
 	                                pparsingXML2 = "";
 	                                pparsingXML = "";
@@ -1055,7 +1095,13 @@
 	                                    document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                    document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                                }
-	
+	                            }
+	                            
+	                            // 복사 한뒤 삭제 => 이동 재은
+	                            if (moveRecipients && !moveDel) {
+	                            	var selList = new ListView();
+	                	            selList.LoadFromID(prevListId);
+	                	            selList.DeleteRow(selectMoveList);
 	                            }
 	                        }
 	
@@ -1124,9 +1170,7 @@
 	                            }
 	                        }
 	                    }
-	
 	                }
-	
 	            }
 	            var listid = "";
 	            if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
@@ -1151,7 +1195,8 @@
 	            var _listview = new ListView();
 	            _listview.LoadFromID("MsgToList");
 	            var arrRows = _listview.GetDataRows();
-	            for (count2 = 0; count2 < arrRows.length; count2++) {
+	            
+	           for (count2 = 0; count2 < arrRows.length; count2++) {
 	                if (email == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup")
 	                    return true;
 	                else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
@@ -1181,11 +1226,10 @@
 	                        return true;
 	                }
 	            }
-	            return rtnValue
+	            return rtnValue;
 	        }
 	
 	        function DeleteReceiver(pListView) {
-	            var listid = "";
 	            var listid = "";
 	            if (pListView.id == "ListViewMsgTo") {
 	                listid = "MsgToList";
@@ -1331,6 +1375,11 @@
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
 		    function event_listMover(obj) {
+		    	//수정중 재은
+		    	var moveState = false;
+		    	if (obj.id.indexOf("MailUserlist") == -1)
+		    		moveState = true;
+		    	
 		        for (var i = 0; i < listContentArry.length; i++) {
 		            if (document.getElementById(listContentArry[i]) == obj) {
 		                return;
@@ -1338,11 +1387,20 @@
 		        }
 		        if (p_ListOrderObject != obj) {
 		            for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
-		                obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorOver;
+		            	if (moveState) {
+		            		obj.parentNode.style.backgroundColor = m_strColorOver;
+		            	} else {
+		            		obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorOver;
+		            	}
+		                
 		            }
 		        }
 		    }
 		    function event_listMout(obj) {
+		    	//수정중 재은
+		    	var moveState = false;
+		    	if (obj.id.indexOf("MailUserlist") == -1)
+		    		moveState = true;
 		
 		        for (var i = 0; i < listContentArry.length; i++) {
 		            if (document.getElementById(listContentArry[i]) == obj) {
@@ -1351,7 +1409,11 @@
 		        }
 		        if (p_ListOrderObject != obj) {
 		            for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
-		                obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+		            	if (moveState) {
+		            		obj.parentNode.style.backgroundColor = m_strColorDefault;
+		            	} else {
+		            		obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+		            	}
 		            }
 		        }
 		    }
@@ -1389,6 +1451,25 @@
 		    var listEventCheckbox = false;
 		    var listSubEventCheckbox = false;
 		    function event_listclick(obj) {
+		    	//to, cc, bcc 간의 이동 재은
+            	if (obj.id.indexOf("MailUserlist") == -1) {
+            		moveRecipients = true;
+            		selectMoveList = obj.id;
+            		prevListId = obj.parentNode.parentNode.parentNode.id;
+            		
+            		if (prevListId == "ListViewMsgTo") {
+            			prevListId = "MsgToList";
+                    }
+                    else if (prevListId == "ListViewMsgCC") {
+                    	prevListId = "MsgCCList";
+                    }
+                    else if (prevListId == "ListViewMsgBCC") {
+                    	prevListId = "MsgBCCList";
+                    }
+            	} else {
+            		moveRecipients = false;
+            	}
+		    	
 		        if (!listEventCheckbox) {
 		            if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
 		                for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
@@ -1468,7 +1549,12 @@
 		                }
 		                if (insertFlag) {
 		                    for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
-		                        p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
+		                    	
+		                    	if (moveRecipients) {
+		                    		p_ListOrderObject.style.backgroundColor = m_strColorSelect;
+		                    	} else {
+		                    		p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
+		                    	}
 		                    }
 		
 		                    listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
@@ -2980,8 +3066,10 @@
                 if (dropelement != "")
                     InsertReceiver(document.getElementById(dropelement));
             }
+            
+            var selectMoveList = "";
             function event_listdragstart(obj) {
-                dropelement = "";
+            	dropelement = "";
                 var islist = false;
                 if (m_selectedTree == AddressListView) {
                     var pListViewDL = new ListView();
@@ -3021,8 +3109,7 @@
             window.ondragover = function () {
                 dropelement = "";
             }
-
-
+            
             var BlockSize2 = 10;
             function td_Create2(strtext) {
                 document.getElementById("tblPageRayer2").innerHTML = strtext;

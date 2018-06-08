@@ -1094,8 +1094,22 @@ function ListView() {
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
             
-            // 수정 수아 재은
-            objTr.draggable = "true";
+            // 재은 수정중
+            objTd.onmouseover = function () { event_listMover(this); };
+            objTd.onmouseout = function () { event_listMout(this); };
+            objTd.onclick = function () { event_listclick(this); };
+            objTd.ondblclick = function () { event_listDBclick(this); };
+            objTd.onselectstart = function () { return false; };
+            objTr.setAttribute("draggable", true);
+            //objTd.setAttribute("draggable", true);
+            if (CrossYN())
+            	objTr.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+            else
+            	objTr.ondragstart = function (event) { event_listdragstart(this); };
+
+            if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
+            	objTr.ondragend = function (event) { event_listdragend(event); };
+            }
             
             objTd = null;
             oText = null;
