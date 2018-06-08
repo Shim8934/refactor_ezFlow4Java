@@ -28,7 +28,7 @@
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
 			<c:forEach items="${projectList}" var="projectVO">
-				<tr>
+				<tr ondblclick="getProjectGeneralInfo(${projectVO.projectId})">
 					<td>${projectVO.projectId}</td>
 					<td>${projectVO.projectName}</td>
 					<td>${projectVO.overview}</td>

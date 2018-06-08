@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPMS.web;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -144,5 +145,38 @@ public class EzPMSAdminController {
 		LOGGER.debug("getProjectList ended");
 		
 		return "/admin/ezPMS/pmsProjectList";
+	}
+	
+	@RequestMapping(value = "/admin/ezPMS/getProjectGeneralInfo.do")
+	public String getProjectGeneralInfo(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
+		LOGGER.debug("getProjectGeneralInfo started");
+		
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		String userId = userInfo.getId();
+		String projectId = request.getParameter("projectId");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		} else {
+			// checkAdmin을 통해 사용자가 관리자임이 확인되었을 때만 admin값을 true로 넘긴다.
+			param.put("admin", true);
+		}
+		
+		String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId;
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject json = (JSONObject) result.get("data");
+			JSONObject project = (JSONObject) json.get("project");
+			
+			model.addAttribute("project", project);
+		}
+		
+		LOGGER.debug("getProjectGeneralInfo ended");
+		
+		return "/admin/ezPMS/pmsProjectGeneralInfo";
 	}
 }
