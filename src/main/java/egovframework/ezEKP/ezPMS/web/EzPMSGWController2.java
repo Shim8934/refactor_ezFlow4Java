@@ -949,6 +949,7 @@ public class EzPMSGWController2 {
 			ProjectTaskVO taskVO = new ProjectTaskVO();
 			taskVO.setTaskId(Long.parseLong(taskId));
 			taskVO.setTenantId(info.getTenantId());
+			taskVO.setWeight(Float.parseFloat(request.getParameter("weight")));
 			
 			ezPMSService.updateTaskWeight(taskVO);
 			
