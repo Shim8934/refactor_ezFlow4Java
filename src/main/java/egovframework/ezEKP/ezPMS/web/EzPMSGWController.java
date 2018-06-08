@@ -67,16 +67,9 @@ public class EzPMSGWController {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			
-			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 바꿔서 모든 프로젝트 검색이 가능하도록 한다.
-			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
-				userId = "";
-			}
-						
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());			
 			String status = request.getParameter("status");
-			String deptId = info.getDeptId();
-			
+			String deptId = info.getDeptId();		
 			String searchByName = request.getParameter("searchByProjectName");
 			String searchByUser = request.getParameter("searchByUser");
 			String searchByOverview = request.getParameter("searchByOverview");
@@ -118,8 +111,15 @@ public class EzPMSGWController {
 			search.put("searchByEndDate", request.getParameter("searchByEndDate"));
 			search.put("searchByOverview", request.getParameter("searchByOverview"));
 			
+			List<ProjectInfoVO> projectList;
+			
 			//프로젝트 리스트 가져오기
-			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, lang, request.getParameter("position"));
+			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 넘겨서 모든 프로젝트 검색이 가능하도록 한다.
+			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
+				projectList = ezPMSService.getProjectList(info.getTenantId(), "", deptId, status, search, lang, request.getParameter("position"));
+			} else {
+				projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, lang, request.getParameter("position"));
+			}
 			
 			LOGGER.debug("projectList Count : " + projectList.size());
 			
@@ -434,21 +434,28 @@ public class EzPMSGWController {
 			String deptId = info.getDeptId();
 			String mode = request.getParameter("mode");
 			
-			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId);
-			String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, tenantId);
-			int userRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, deptId);
-			ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, tenantId, "user");
-			
-			if (kanbanOrder == null || kanbanOrder.equals("")) {
-				//default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
-				kanbanOrder = "MA,P,C,B";
-			}
-			
 			JSONObject data = new JSONObject();
-			data.put("project", project);
-			data.put("kanbanOrder", kanbanOrder);
-			data.put("userRole", userRole);
-			data.put("mainSetting", mainSetting);
+			
+			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 넘겨서 모든 프로젝트 검색이 가능하도록 한다.
+			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
+				ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, "", tenantId, mode, lang, deptId);
+				data.put("project", project);
+			} else {
+				ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId);
+				String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, tenantId);
+				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, deptId);
+				ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, tenantId, "user");
+				
+				if (kanbanOrder == null || kanbanOrder.equals("")) {
+					//default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
+					kanbanOrder = "MA,P,C,B";
+				}
+				
+				data.put("project", project);
+				data.put("kanbanOrder", kanbanOrder);
+				data.put("userRole", userRole);
+				data.put("mainSetting", mainSetting);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -801,12 +808,6 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			
-			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 바꿔서 모든 프로젝트 검색이 가능하도록 한다.
-			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
-				userId = "";
-			}
-			
 			String searchByName = request.getParameter("searchByProjectName").toString();
 			String searchByUser = request.getParameter("searchByUser").toString();
 			String searchByOverview = request.getParameter("searchByOverview").toString();
@@ -841,7 +842,14 @@ public class EzPMSGWController {
 			String deptId = request.getParameter("deptId");
 			
 			LOGGER.debug("status : " + project.getStatus() + ", deptId : " + deptId);
-			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId, lang, request.getParameter("position"));
+			int projectListCount;
+			
+			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 넘겨서 모든 프로젝트 검색이 가능하도록 한다.
+			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
+				projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), "", deptId, lang, request.getParameter("position"));
+			} else {
+				projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId, lang, request.getParameter("position"));
+			}
 			
 			LOGGER.debug("projectListCount : " + projectListCount);
 			

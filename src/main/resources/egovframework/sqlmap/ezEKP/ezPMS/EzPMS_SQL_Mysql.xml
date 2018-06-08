@@ -1055,13 +1055,15 @@
 		WHERE 
 			A.TENANT_ID = #tenantId#
 		AND
-			A.PROJECT_ID = #projectId#	
+			A.PROJECT_ID = #projectId#
+	]]>
+		<isNotEmpty property="userId">
 		AND	
 			(M.USER_ID = #userId#	
 			OR	
 			M.USER_ID = #deptId#
 			)
-	]]>
+		</isNotEmpty>	
 	</select>
 	
 	<select id="EzPMSDAO.getTaskList" parameterClass="Map" resultMap="projectTaskVO">
