@@ -683,8 +683,9 @@ public class EzPMSGWController2 {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			
-			Map<String, Object> data = ezPMSService.getRemainingWeight(projectId);
+			Map<String, Object> data = ezPMSService.getRemainingWeight(projectId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

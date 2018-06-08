@@ -103,10 +103,12 @@ public class EzPMSController2 {
 		String writerId = userInfo.getId();
 		String writerName = userInfo.getDisplayName();
 		String writerDeptName = userInfo.getDeptName();
+		int tenantId = userInfo.getTenantId();
 		
 		String projectId = request.getParameter("projectId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/weight/" + projectId, param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -356,6 +358,7 @@ public class EzPMSController2 {
 		String projectId = request.getParameter("projectId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();

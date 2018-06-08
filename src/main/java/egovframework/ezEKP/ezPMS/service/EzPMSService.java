@@ -108,7 +108,7 @@ public interface EzPMSService {
 
 	public ProjectMemberVO getUserInfo(String userId, int tenantId, String userIdType) throws Exception;
 	
-	public Map<String, Object> getRemainingWeight(String projectId);
+	public Map<String, Object> getRemainingWeight(String projectId, int tenantId);
 
 	public int getUserProjectRole(String userId, int tenantId, Long projectId, String deptId);
 	
