@@ -56,6 +56,8 @@
 	   			groupList = {},
 	   			ge = "";
 	   		var projectGroupId = "${projectDetail.groupId}";
+	   		var selectedPreTask = -1;
+	   		var preTaskIndex = -1;
 	   		
 	   		function initValues(){
 	   			taskList = ${taskList};
@@ -582,15 +584,22 @@
 		   		document.getElementById("pmsGanttDelGroup").onclick = delGroup;
 
 		   		$(".gdfTable tbody").sortable({
+		   			items : 'tr:not(.isParent)',
+		   			activate : function(event, ui) {
+		   				console.log(ui);
+		   				preTaskIndex = $("#" + ui.item[0].id).find(".taskRowIndex").text();
+		   				selectedPreTask = ui.item[0].id;
+		   			},
 		   			update : function(event, ui) {
-		   				ge.taskIsChanged();
 		   				changeGanttOrder();
+		   				ge.taskIsChanged();
 		   			}
 		   		}).disableSelection();
 		   		
 		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
 		   		$("input[name='weight']").on("change",function(){ updateWeight(); });
 		   		$("input[name='progress']").on("change",function(){ updateProgress(); });
+		   		
 		   	}
 	   		
 	   		function changeGanttOrder() {
@@ -602,38 +611,54 @@
 	   					groupArr.push({"projectId" : element.id.substring(5, element.id.lastIndexOf("_")), "groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "order" : index});
 		   				
 	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
-		   					taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx});
+	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
+	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
+	   							
+	   							console.log(newPreTask);
+	   							taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx, "depends" : newPreTask});
+	   						} else {
+	   							taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx, "depends" : -1});
+	   						}
 		   				});
 	   				} else if (index == 0) {
 						groupArr.push({"projectId" : element.id.substring(5), "groupId" : projectGroupId, "order" : index});
 		   				
 	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
-		   					taskArr.push({"groupId" : projectGroupId, "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx});
+	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
+	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
+	   							
+	   							console.log(newPreTask);
+	   							taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx, "depends" : newPreTask});
+	   						} else {
+	   							taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx, "depends" : -1});
+	   						}
 		   				});
 	   				}
 	   				
 	   			});
 	   			
 	   			 var data = {
+	   				projectId : projectId,
 	   				groupArr : groupArr,
 	   				taskArr : taskArr
 	   			}
 	   			
 	   			$.ajax({
 	   				type:"post",
-	   				dataType:"html",
+	   				dataType: "text",
+	   				contentType: "application/json; charset=UTF-8",
 	   				url:"/ezPMS/changeGanttOrder.do",
 	   				data:JSON.stringify(data),
 	   				success: function(result){
-	   					if (roleCheck == "rejected") {
+	   					/* if (roleCheck == "rejected") {
 	   						alert("프로젝트 담당자나 그룹의 담당자만 변경할 수 있습니다.");
 	   						return;
-	   					}
+	   					} */
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert("에러가 발생했습니다.");
 	   				}
-	   			}); 
+	   			});   
 	   		}
 	   		
 	   		function delTask(){
@@ -724,6 +749,8 @@
 		   		initValues();
 		   		ganttChartAddFunc();
 		   		ganttChartModifyFunc();
+		   		
+		   		
 // 		   		ge = new GanttMaster();
 // 		   		ge.init($("#workSpace"));
 	   		})();
@@ -745,15 +772,15 @@
 	   			  var taskId = taskRow.attr("taskId");
 	   			  var onlyTaskId = taskId.substring(task.id.lastIndexOf("_") + 2);
 	   			  var projectId = taskId.substring(1, task.id.indexOf("_"));
-	   				
-	   			  console.log(onlyTaskId);
-	   			  console.log(projectId);
+	   			  var groupId = taskId.substring(task.id.indexOf("_") + 2, task.id.lastIndexOf("_"));
 	   			  
-	   			  console.log(task.id.substring(1).indexOf("t"));
 	   			  if (task.id.substring(1).indexOf("t") != -1) {
 	   				var feature = GetOpenPosition(0, 0);
 		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user");
-	   			  }
+	   			  } else {
+	   				var feature = GetOpenPosition(0, 0);
+		   			DivPopUpShow(845, 600, "/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId);  
+	   			  } 
 	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
 	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;
 	   		     };

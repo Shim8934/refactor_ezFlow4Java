@@ -51,7 +51,12 @@
 	}
 	
 	function initProgressBar() {
-		nowStatus = taskDetails.status;
+		if (taskDetails.status == null) {
+			nowStatus = "P";
+		} else {
+			nowStatus = taskDetails.status;
+		}
+		
 		var strStatus = "";
 		var circleColor = "";
 		

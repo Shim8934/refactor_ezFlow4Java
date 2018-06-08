@@ -829,9 +829,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectGroupVO getGroupDetails(Long groupId) {
-		// TODO Auto-generated method stub
-		return null;
+	public ProjectGroupVO getGroupDetails(long groupId, int tenantId, long projectId) {
+		LOGGER.debug("[SERVICE] getGroupDetails started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		ProjectGroupVO groupInfo = ezPMSDAO.getGroupDetails(map);
+		LOGGER.debug("[SERVICE] getGroupDetails ended.");
+		return groupInfo;
 	}
 
 	@Override
@@ -1922,11 +1929,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId) {
+	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId, Long groupId) {
 		LOGGER.debug("[SERVICE] getGroupMemberList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
+		map.put("groupId", groupId);
 		
 		LOGGER.debug("[SERVICE] getGroupMemberList ended.");
 		return ezPMSDAO.getGroupMemberList(map);
@@ -1951,5 +1959,45 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map2.put("tenantId", taskVO.getTenantId());
 		
 		ezPMSDAO.updateTaskWDNW(map2);
+	}
+
+	@Override
+	public void updateGroupSort(long projectId, long groupId, int sortOrder, int tenantId) {
+		LOGGER.debug("[SERVICE] updateGroupSort started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("sortOrder", sortOrder);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateGroupSort(map);
+		
+		LOGGER.debug("[SERVICE] updateGroupSort started.");
+	}
+
+	@Override
+	public void updateTaskSort(long groupId, long taskId, int sortOrder, int tenantId) {
+		LOGGER.debug("[SERVICE] updateTaskSort started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("taskId", taskId);
+		map.put("sortOrder", sortOrder);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateTaskSort(map);
+		LOGGER.debug("[SERVICE] updateTaskSort ended.");
+	}
+
+	@Override
+	public void updatePreTaskRel(long taskId, int preTaskIndex, int tenantId, long projectId) {
+		LOGGER.debug("[SERVICE] updatePreTaskRel started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskId", taskId);
+		map.put("preTaskIndex", preTaskIndex);
+		map.put("tenantId", tenantId);
+		map.put("projectId", projectId);
+		
+		ezPMSDAO.updatePreTaskRel(map);
+		LOGGER.debug("[SERVICE] updatePreTaskRel ended.");
 	}
 }

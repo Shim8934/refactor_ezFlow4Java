@@ -48,13 +48,20 @@ var overview = null;
 var headManagerId = "";
 var groupId = "${taskDetails.groupId}";
 var groupName = "${taskDetails.groupName}";
-var taskDetails = {};
+var taskDetails = '${taskDetails}';
 var writerId= "";
-var weightData = ${weightData};
+var weightData = '${weightData}';
+var target = "${target}";
+var headManagerName = "${taskDetails.headManagerName}";
 
  $(function() {
-	 taskDetails = ${taskDetails};
-	 managerList = ${taskDetails.taskMember};
+	 console.log(headManagerName);
+	 if (target == "task") {
+		 managerList = '${taskDetails.taskMember}'; 
+	 } else {
+		 managerList = '${taskDetails.groupMember}';
+	 }
+	 
 	 headManagerId = "${taskDetails.headManagerId}";
 	 applyList();
  });
@@ -107,24 +114,6 @@ function setUpperGroup() {
 
 function updateTaskInfo() {
 	 taskName = document.getElementById("taskName").value.trim();
-	 weight = document.getElementById("weight").value.trim();
-	 overview = convertString(document.getElementById("overview").value.trim());
-	 var weightInput = 1; // 수정해야함.
-	 var remainingWeight = ${weightData.remainingWeight};
-	 var projectStartDate = "${taskDetails.planStartDate}";
-	 var projectEndDate = "${projectEndDate}";
-	 var planStartDate = "${taskDetails.planStartDate}";
-	 var planEndDate = "${taskDetails.planEndDate}";
-	 var writeDate = "${taskDetails.writeDate}";
-	 
-	 //업무 이름 길이 제한
-	 if (taskName.length == 0) {
-		 alert("업무명을 입력해주세요.");
-		 return;
-	 } else if (taskName.length > 100) {
-		 alert("업무명은 100자를 초과할 수 없습니다.");
-		 return;
-	 }
 	 
 	// 담당자 검사
 	if(managerList == null) {
@@ -139,67 +128,135 @@ function updateTaskInfo() {
 		return;
 	}
 	
-	// 가중치 검사
-	if(weightInput == 1) {
-		if(weight == ""){
-			alert("가중치를 입력해 주십시오.");
-			return;
-		}
-		if(isNaN(weight)) {
-			alert("가중치는 숫자만 입력 가능합니다.");
-			return;
-		}
-		if(Number(weight) > remainingWeight) {
-			alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
-			return;
-		}
-	} else {
-		weight = -1;
-	}
+	if (target == "task") {		
+		 weight = document.getElementById("weight").value.trim();
+		 overview = convertString(document.getElementById("overview").value.trim());
+		 var weightInput = 1; // 수정해야함.
+		 var remainingWeight = '${weightData.remainingWeight}';
+		 var projectStartDate = "${taskDetails.planStartDate}";
+		 var projectEndDate = "${projectEndDate}";
+		 var planStartDate = "${taskDetails.planStartDate}";
+		 var planEndDate = "${taskDetails.planEndDate}";
+		 var writeDate = "${taskDetails.writeDate}";
 
-	
-	data = {
-			taskName : taskName,
-			taskId : taskDetails.taskId + "",
-			projectId : projectId,
-			groupId : groupId,
-			overview	 : overview,
-			headManagerId : headManagerId,
-			managerList : managerList,
-			planStartDate : planStartDate,
-			planEndDate : planEndDate,
-			writeDate : writeDate,
-			weight : weight
-	}
-	
-	$.ajax({
-		type : "POST",
-		url : "/ezPMS/updateTaskInfo.do",
-		dataType : "json",
-		contentType: "application/json; charset=UTF-8",
-		data : JSON.stringify(data),
-		success : function(data) {
-			alert("업무 정보를 변경하였습니다.");
-			
-			parent.location.reload();
-			popupClose();
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			alert("error2");
+		//업무 이름 길이 제한
+		 if (taskName.length == 0) {
+			 alert("업무명을 입력해주세요.");
+			 return;
+		 } else if (taskName.length > 100) {
+			 alert("업무명은 100자를 초과할 수 없습니다.");
+			 return;
+		 }
+		
+		// 가중치 검사
+		if(weightInput == 1) {
+			if(weight == ""){
+				alert("가중치를 입력해 주십시오.");
+				return;
+			}
+			if(isNaN(weight)) {
+				alert("가중치는 숫자만 입력 가능합니다.");
+				return;
+			}
+			if(Number(weight) > remainingWeight) {
+				alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
+				return;
+			}
+		} else {
+			weight = -1;
 		}
-	});
+
+		
+		data = {
+				taskName : taskName,
+				taskId : taskDetails.taskId + "",
+				projectId : projectId,
+				groupId : groupId,
+				overview	 : overview,
+				headManagerId : headManagerId,
+				managerList : managerList,
+				planStartDate : planStartDate,
+				planEndDate : planEndDate,
+				writeDate : writeDate,
+				weight : weight
+		}
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezPMS/updateTaskInfo.do",
+			dataType : "json",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(data) {
+				alert("업무 정보를 변경하였습니다.");
+				
+				parent.location.reload();
+				popupClose();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("error2");
+			}
+		});
+	} else if (target == "group") {
+		 weight = document.getElementById("weight").value.trim();
+		 overview = convertString(document.getElementById("overview").value.trim());
+		 
+		//업무 이름 길이 제한
+		 if (taskName.length == 0) {
+			 alert("그룹명을 입력해주세요.");
+			 return;
+		 } else if (taskName.length > 100) {
+			 alert("그룹명은 100자를 초과할 수 없습니다.");
+			 return;
+		 }
+		 
+		 data = {
+					groupName : taskName,
+					projectId : projectId,
+					groupId : groupId,
+					overview	 : overview,
+					headManagerId : headManagerId,
+					managerList : managerList
+			}
+			
+			$.ajax({
+				type : "POST",
+				url : "/ezPMS/updateGroupInfo.do",
+				dataType : "json",
+				contentType: "application/json; charset=UTF-8",
+				data : JSON.stringify(data),
+				success : function(data) {
+					alert("그룹 정보를 변경하였습니다.");
+					
+					parent.location.reload();
+					popupClose();
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("error2");
+				}
+			});
+	}
 }
 
 </script>
 </head>
 <body class="popup">
+	<c:choose>
+	<c:when test="${target eq 'task' }">
 	<h1 style="display:inline-block; width:100px;">업무정보수정</h1>
+	</c:when>
+	<c:otherwise>
+	<h1 style="display:inline-block; width:100px;">그룹정보수정</h1>
+	</c:otherwise>
+	</c:choose>
 	<div class="headerDiv">
 		<a class="imgbtn" id="submit" onclick="updateTaskInfo()"><span>저장</span></a>
 		<a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a>
 	</div>
 	<div id="main_body">
 		<table class="content" style="width:100%;">
+			<c:choose>
+			<c:when test="${target eq 'task' }">
 			<tr>
 				<th>업무명</th>
 				<td colspan="3">
@@ -208,11 +265,17 @@ function updateTaskInfo() {
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
-				<td id="managers">${taskDetails.headManagerName}(${taskDetails.headManagerDeptname})</td>
+				<td id="managers">
+					<c:forEach items="${taskDetails.taskMember }" var="member">
+					 ${member.userName}(${member.userDeptname }),
+					</c:forEach>
+				</td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
-				<td style="height:30px;" id="upperGroup">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
+				<td style="height:30px;" id="upperGroup">
+				${taskDetails.groupName == null ? "-" : taskDetails.groupName}
+				</td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openPreTaskTree()"><span>선행작업</span></a></th>
@@ -224,11 +287,42 @@ function updateTaskInfo() {
 <%-- 				<td style="height:30px" id="weight">${taskDetails.weight == null ? "-" : taskDetails.weight}</td> --%>
 			</tr>
 			<tr>
-				<th>업무개요</th>
+				<th>개요</th>
 				<td>
 					<textarea id="overview" placeholder="내용을 입력해주세요">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
 				</td>
 			</tr>
+			</c:when>
+			<c:otherwise>
+			<tr>
+				<th>그룹명</th>
+				<td colspan="3">
+					<input type="text" id="taskName" class="textInput" placeholder="${taskDetails.groupName}" value="${taskDetails.groupName}" maxlength="100">
+				</td>
+			</tr>
+			<tr>
+				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
+				<td id="managers"><c:forEach items="${taskDetails.groupMember }" var="member">
+					 <c:if test="${member.memberRoleId eq 1 }">
+					 ${member.userName}(${member.userDeptname }),
+					 </c:if>
+					</c:forEach>
+				</td>
+			</tr>
+			<tr>
+				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
+				<td style="height:30px;" id="upperGroup">
+				${taskDetails.upperGroupName == null ? "-" : taskDetails.upperGroupName}
+				</td>
+			</tr>
+			<tr>
+				<th>개요</th>
+				<td>
+					<textarea id="overview" placeholder="내용을 입력해주세요">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
+				</td>
+			</tr>
+			</c:otherwise>
+			</c:choose>
 		</table>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
