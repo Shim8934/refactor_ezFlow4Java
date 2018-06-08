@@ -930,6 +930,24 @@ public class EzAttitudeKMSController {
 		
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
+			
+			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userInfo.getId());
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			JSONObject attitudeConfigVO = new JSONObject();
+			if (status.equals("ok")) {
+				attitudeConfigVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("attitudeConfigVO", attitudeConfigVO);
+			}
 		}
 		
 		if (deptList.size() > 1) {
