@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
@@ -515,7 +516,7 @@ public class EzPMSGWController2 {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/groups/{groupId}/users/{userId}", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject updateGroup(@PathVariable String groupId, @PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
+	public JSONObject updateGroup(@PathVariable long groupId, @PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -523,13 +524,46 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
 			
-			Gson gson = new Gson();
-			ProjectGroupVO vo = new ProjectGroupVO();
-			vo = gson.fromJson(jsonParam.toJSONString(), ProjectGroupVO.class);
-			vo.setTenantId(info.getTenantId());
+			List<Map<String, Object>> managerList = (List<Map<String, Object>>) jsonParam.get("managerList");
+			List<ProjectGroupMemberVO> groupManaerList = new ArrayList<ProjectGroupMemberVO>();
 			
-			ezPMSService.updateGroup(vo);
+			for (int i = 0; i < managerList.size(); i++) {
+				String groupMemberId = (String)managerList.get(i).get("userId");
+				
+				ProjectGroupMemberVO groupMember = new ProjectGroupMemberVO();
+				groupMember.setTenantId(tenantId);
+				groupMember.setUserId(groupMemberId);
+				
+				ProjectMemberVO member = ezPMSService.getUserInfo(groupMemberId, tenantId, "user");
+				
+				groupMember.setUserName(member.getUserName());
+				groupMember.setUserName2(member.getUserName2());
+				groupMember.setUserDeptname(member.getUserDeptname());
+				groupMember.setUserDeptname2(member.getUserDeptname2());
+				
+				groupManaerList.add(groupMember);
+			}
+			
+			ProjectGroupVO groupInfo = new ProjectGroupVO();
+			groupInfo.setGroupName(request.getParameter("groupName"));
+			groupInfo.setGroupId(groupId);
+			groupInfo.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			groupInfo.setGroupMember(groupManaerList);
+			groupInfo.setOverview(request.getParameter("overview"));
+			groupInfo.setTenantId(info.getTenantId());
+			groupInfo.setUpperGroupId(Long.parseLong(request.getParameter("upperGroupId")));
+			
+			//총괄담당자 불러오기
+			ProjectMemberVO headManager = ezPMSService.getUserInfo(request.getParameter("headManagerId"), info.getTenantId(), "user");
+			groupInfo.setHeadManagerId(request.getParameter("headManagerId"));
+			groupInfo.setHeadManagerName(headManager.getUserName());
+			groupInfo.setHeadManagerName2(headManager.getUserName2());
+			groupInfo.setHeadManagerDeptname(headManager.getUserDeptname());
+			groupInfo.setHeadManagerDeptname2(headManager.getUserDeptname2());
+			
+			ezPMSService.updateGroup(groupInfo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

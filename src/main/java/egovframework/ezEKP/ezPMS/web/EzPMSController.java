@@ -1622,7 +1622,6 @@ public class EzPMSController {
 	/**
 	 * 그룹 자세히 보기
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/getGroupDetails.do")
 	public String getGroupDetails(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("ezPMS changeGanttOrder started");
@@ -1656,5 +1655,27 @@ public class EzPMSController {
 		model.addAttribute("target", "group");
 		LOGGER.debug("ezPMS changeGanttOrder ended");
 		return "ezPMS/pmsTaskDetails";
+	}
+	
+	/**
+	 * 그룹 수정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/updateGroupInfo.do")
+	@ResponseBody
+	public String updateGroupInfo(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS changeGanttOrder started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		long groupId = Long.parseLong(param.get("groupId").toString());
+		
+
+		JSONObject jsonList = new JSONObject();
+		jsonList.put("managerList", param.get("managerList"));
+		
+		String url = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
+		commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
+		
+		return null;
 	}
 }

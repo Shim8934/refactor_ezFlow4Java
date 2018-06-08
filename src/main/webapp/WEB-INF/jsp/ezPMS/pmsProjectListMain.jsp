@@ -436,7 +436,7 @@ function setProjectList(mode) {
 		data : JSON.stringify(param),
 		url : "/ezPMS/getProjectList.do",
 		success : function(projectList) {
-			if (listProjectStatus == "A") {
+			if (listProjectStatus == "A" || listProjectStatus == "C") {
 				$("#changeProjectStatus").css("display", "none");
 			} else {
 				$("#changeProjectStatus").css("display", "");

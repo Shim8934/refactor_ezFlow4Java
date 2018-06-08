@@ -86,7 +86,7 @@ public interface EzPMSService {
 	
 	public ProjectGroupVO getGroupDetails(long groupId, int tenantId, long projectId);
 	
-	public int updateGroup(ProjectGroupVO group);
+	public void updateGroup(ProjectGroupVO group);
 	
 	public void deleteGroup(long projectId, long groupId, int tenantId);
 	

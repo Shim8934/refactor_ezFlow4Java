@@ -842,9 +842,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int updateGroup(ProjectGroupVO group) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void updateGroup(ProjectGroupVO group) {
+		LOGGER.debug("[SERVICE] updateGroup started.");
+		ezPMSDAO.updateGroupInfo(group);
+		LOGGER.debug("[SERVICE] updateGroup ended.");
 	}
 
 	@Override
