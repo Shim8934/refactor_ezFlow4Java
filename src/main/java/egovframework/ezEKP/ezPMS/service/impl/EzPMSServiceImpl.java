@@ -276,6 +276,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		try {
 			project.setProjectName(project.getProjectName().replaceAll("&quot;", "\"").replaceAll("&#39;", "\'"));
 			
+			//프로젝트 멤버 불러오기
+			List<ProjectMemberVO> member = ezPMSDAO.getProjectMemberList(map);
+			project.setProjectMember(member);
+			
 			if (!project.getStatus().equals("C")) {
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 				Date today = new Date();
@@ -284,11 +288,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				
 				int restDueday = getWorkinDays(now, endDate);
 				project.setRestDueday(restDueday);
-				
-				//프로젝트 멤버 불러오기
-				List<ProjectMemberVO> member = ezPMSDAO.getProjectMemberList(map);
-				project.setProjectMember(member);
-			}
+			}	
+			
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
