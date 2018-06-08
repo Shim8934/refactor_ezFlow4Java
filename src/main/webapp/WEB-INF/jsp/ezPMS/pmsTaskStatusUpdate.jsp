@@ -387,7 +387,7 @@ button.PHBtn {
 			    <td class="realTd">
 			    	<input type="text" id="RSDatepicker" style="width:80px;text-align:center" readonly >
 			    </td>
-			    <td class="sDiff"></td>
+			    <td id="sDiff" class="sDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="midTh">종료일</th>
@@ -398,7 +398,7 @@ button.PHBtn {
 			    <td class="realTd">
 			    	<input type="text" id="REDatepicker" style="width:80px;text-align:center" readonly >
 			    </td>
-			    <td class="eDiff"></td>
+			    <td id="eDiff" class="eDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="midTh">진행률(%)</th>
