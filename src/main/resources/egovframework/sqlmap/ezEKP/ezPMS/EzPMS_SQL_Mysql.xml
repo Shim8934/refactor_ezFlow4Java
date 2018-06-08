@@ -2735,4 +2735,28 @@
 		]]>
 	</select>
 	
+	<select id="EzPMSDAO.getGroupWeight" parameterClass="map" resultClass="float">
+		<![CDATA[
+			SELECT
+				sum(weight)
+			FROM
+				tbl_pms_task a
+			JOIN
+				(
+					SELECT group_id
+					FROM TBL_PMS_GROUP
+					where
+						tenant_id = #tenantId#
+					and
+						del_status = 0
+					and
+						group_id = #groupId# or ancester_group like concat('%\,',#groupId#,',%') or ancester_group like concat(#groupId#,',%')
+				) b
+			on
+				a.group_id = b.group_id
+			and
+				a.tenant_id = #tenantId#
+		]]>
+	</select>
+	
 </sqlMap>

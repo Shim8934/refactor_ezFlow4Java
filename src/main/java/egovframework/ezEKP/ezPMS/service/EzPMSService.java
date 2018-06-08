@@ -171,5 +171,7 @@ public interface EzPMSService {
 	public void modifyComment(JSONObject jsonParam) throws Exception;
 	
 	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId);
+	
+	public Float getGroupWeight(Long groupId, int tenantId) throws Exception;
 
 }

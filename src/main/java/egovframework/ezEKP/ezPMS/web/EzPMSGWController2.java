@@ -896,6 +896,12 @@ public class EzPMSGWController2 {
 			
 			for(int i = 0; i < groupList.size(); i++){
 				Long groupId = groupList.get(i).getGroupId();
+				
+				//그룹 가중치를 얻어옴.
+				Float weight = ezPMSService.getGroupWeight(groupId, info.getTenantId());
+				groupList.get(i).setWeight(weight);
+				
+				//그룹 멤버를 얻어옴.
 				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();
 				List<ProjectGroupMemberVO> groupMemberListTemp = new ArrayList<ProjectGroupMemberVO>();
 				while(iter.hasNext()){

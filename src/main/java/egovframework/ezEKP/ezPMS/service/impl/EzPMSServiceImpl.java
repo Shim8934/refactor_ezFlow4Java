@@ -1952,4 +1952,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		ezPMSDAO.updateTaskWDNW(map2);
 	}
+	
+	@Override
+	public Float getGroupWeight(Long groupId, int tenantId) {
+		LOGGER.debug("[SERVICE] getGroupWeight started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getGroupWeight ended.");
+		return ezPMSDAO.getGroupWeight(map);
+	}
 }
