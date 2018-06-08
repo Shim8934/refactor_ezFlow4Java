@@ -198,11 +198,8 @@
         });
 		
 	    function windowResize() {
-	    	// 155정도 빼는게 리스트 바로 아래에 페이징이 있어서 좋은데,,다른부분도 보고 결정하자.
-//         	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
-//         	document.getElementById("contentlist").style.height = (height - 155) + "px";
-        	var height = document.documentElement.clientHeight - 105 - document.getElementById("mainmenu").clientHeight;
-        	document.getElementById("contentlist").style.height = (height - 105) + "px";
+        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
+        	document.getElementById("contentlist").style.height = (height - 80) + "px";
         	document.getElementById("contentlist").style.overflow = "auto";
         }
 		

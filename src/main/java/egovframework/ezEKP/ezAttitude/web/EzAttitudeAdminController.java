@@ -1523,7 +1523,14 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId");
-		String userId = request.getParameter("userId");
+		
+		String userId = null;
+		if (request.getParameter("userId") != null) {
+			userId = request.getParameter("userId");
+			model.addAttribute("selectedUser",userId.trim());
+		} else {
+			userId = userInfo.getId();
+		}
 		
 		//조직도 회사,부서 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -1536,7 +1543,7 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userInfo.getId());
+				.queryParam("userId", userId);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1570,8 +1577,6 @@ public class EzAttitudeAdminController {
 			
 			model.addAttribute("deptList", deptList);
 		}
-		
-		model.addAttribute("selectedUser",userId);
 		
 		LOGGER.debug("selectAttitudeAuthorDept ended");
 		
