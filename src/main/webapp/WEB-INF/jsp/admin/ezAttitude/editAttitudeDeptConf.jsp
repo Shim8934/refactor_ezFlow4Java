@@ -5,15 +5,17 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.t200' /></title>
+		<title>부서근무시간수정</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	   	<script type="text/javascript">
 			//트리조직도 JSON
 	   		var treeContent;
@@ -35,14 +37,35 @@
 	   		var userDeptId;
 	   		//회사 id
 	   		var companyId = "${companyId}";
+	   		//회사 출/퇴근 시간
+			var companyStartTime = "${companyStartTime}";
+			var companyEndTime = "${companyEndTime}";
 	   	
 	   		function close_Click(){
 	   			window.close();
 	   		}
 	   		
 	   		$(document).ready(function() {
+	   			//조직도 리스트
 	   			treeContent = ${deptList};
 		   		setDeptList();
+		   		
+		   		//timepicker셋팅
+		   		$('#workStartTime').timepicker({ 'timeFormat': 'H:i' });
+        		$('#workEndTime').timepicker({ 'timeFormat': 'H:i' });
+        		
+        		//근무시간설정 회사 따르기 여부
+    			$("#gubun").on('change', function() {
+    				if($("#gubun").is(":checked") == true) {
+    					$("#workStartTime").val(companyStartTime);
+    					$("#workEndTime").val(companyEndTime);
+    					$("#workStartTime").prop('readonly', true);
+    					$("#workEndTime").prop('readonly', true);
+    				} else {
+    					$("#workStartTime").prop('readonly', false);
+    					$("#workEndTime").prop('readonly', false);
+    				}
+    			});
    			});
 	   		
 	   		//조직도 뿌리는 펑션
@@ -56,8 +79,6 @@
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				}).on('ready.jstree', function(e, data) {
-// 					var offset = $(".jstree-clicked").offset();
-// 		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
 					var offset = $(".jstree-wholerow-clicked").offset();
 		   	    	var jstree = document.getElementById("treeview");
 		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
@@ -89,7 +110,7 @@
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
-	   				url:"/admin/ezJournal/userList.do",
+	   				url:"/admin/ezAttitude/userList.do",
 	   				data:{"key":key, "value":value,"deptName":deptName,"companyId":companyId, "listType" : listType},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
@@ -100,36 +121,6 @@
 	   					}
 	   				}
 	   			});
-	   		}
-	   		
-	   		//선택된 사원의 권한 부서
-	   		function setUserAuthorDept(elem) {
-	   			selectedUser = $(elem).attr("id");
-	   			selectedUserName = $(elem).attr("name");
-	   			$("*").removeClass("selectTR");
-	   			$(elem).addClass("selectTR");
-	   		
-	   			$.ajax({
-	   				type:"post",
-	   				dataType:"json",
-	   				url:"/admin/ezAttitude/attitudeAuthorDeptList.do",
-	   				data:{"userId":$(elem).attr("id"), companyId : companyId},
-	   				success: function(result) {
-	   					lpDepts = [];
-	   					lpDeptNames = [];
-	   					lpAuthTypes = [];
-	   					$.each(result, function(idx, deptInfo){
-	   						if (deptInfo.mine == "yes") {
-	   							userDeptId = deptInfo.deptId;
-	   						} else {
-		   						lpDepts.push(deptInfo.deptId);
-		   						lpDeptNames.push(deptInfo.deptName);
-		   						lpAuthTypes.push(deptInfo.authType);
-	   						}
-	   					})
-	   				}
-	   			});
-	   		
 	   		}
 	   		
 	   		//검색
@@ -143,34 +134,19 @@
 	   			}
 	   		}
 	   		
-	   		//사원선택
-	   		function setAuthorViewUser() {
-	   			var userId = selectedUser;
-				if (userId) {
-					opener.setSelectedUser(userId,selectedUserName);
-		   			opener.setDeptName(lpDepts.toString(), lpDeptNames.toString());
-		   			opener.authRadioSet(lpAuthTypes.toString());
-		   			opener.userDeptId = userDeptId;
-					window.close();
-				} else {
-					alert("<spring:message code='ezAttitude.t52' />");
-				}
-	   		}
-	   		
 		</script>
 		<style>
-			tr.hover:hover{background:#eee; color:#fff;}
+/* 			tr.hover:hover{background:#eee; color:#fff;} */
 			
-			.selectTR{
-				background-color: rgb(233, 241, 255);
-			}
+/* 			.selectTR{ */
+/* 				background-color: rgb(233, 241, 255); */
+/* 			} */
 		</style>
 	</head>
 	<body class="popup"> 
-        <h1><spring:message code='ezAttitude.t200' /></h1>
+        <h1>부서근무시간수정</h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span></li>
 	            <li><span onclick="close_Click()"><spring:message code='ezAttitude.t157' /></span></li>
 	        </ul>
 	    </div>
@@ -204,7 +180,6 @@
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    
-	                                <td></td>
 	                            </tr>
 	                        </table>
 	                    </div>
@@ -219,6 +194,26 @@
 			                </td>    
 			            </tr>
 			        </table>
+			        <table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; width: 650px;">
+				        <tbody>
+				        	<tr>
+				        		<input type="checkbox" id="gubun" name="gubun"/><spring:message code='ezAttitude.t127' />
+				        	</tr>
+				        	<tr>
+				            	<td style="height: 50px; text-align: left; padding-left: 10px;">
+						        	<div style="display: inline-block; vertical-align: middle;">
+					                	근무시간&nbsp;
+						        		<input id="workStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px; text-align:center;"/>
+						        	</div>
+									&nbsp;
+									<div style="display: inline-block; vertical-align: middle;" align="right">
+					            		<a class="imgbtn"><span onclick="">저장</span></a>
+					            		<a class="imgbtn"><span onclick="">취소</span></a>
+					            	</div>
+				            	</td>
+					        </tr>
+					    </tbody>
+				    </table>
 				</td>
 			</tr>
         </table>

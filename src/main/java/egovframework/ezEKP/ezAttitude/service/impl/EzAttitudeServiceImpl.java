@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -2291,4 +2292,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return isAttitude;
     }
+
+	@Override
+	public List<AttitudeAuthorVO> getDeptUserList(int tenantId, String key, String value, String companyId, String lang) throws Exception {
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("key", key);
+		map.put("value", value);
+		map.put("companyId", companyId);
+		map.put("lang", lang);
+		
+		List<AttitudeAuthorVO> userList = ezAttitudeDAO.getDeptUserList(map);
+		
+		LOGGER.debug("getDeptUserList ended");
+		return userList;
+	}
 }

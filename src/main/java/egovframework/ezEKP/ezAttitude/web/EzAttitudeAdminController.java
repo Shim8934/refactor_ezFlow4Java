@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1813,5 +1815,155 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("getTotalAttCount ended.");
 		
 		return totalAtt;
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConf.do")
+	public String editAttitudeDeptConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("/admin/ezAttitude/editAttitudeDeptConf started");
+		
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = request.getParameter("companyId");
+		
+		//조직도 회사,부서 리스트
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/organtree/depts";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+				
+		JSONObject jObject = new JSONObject();
+		if (status.equals("ok")) {
+			JSONArray deptList = (JSONArray) resultBody.get("data");
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				JSONObject dept =  (JSONObject) deptList.get(i);
+				if (dept.get("isComp").equals("COMP")) {
+					dept.put("icon", "icon-company");
+				} else{
+					dept.put("icon", "icon-dept");
+				}
+				
+				//만약 자신의 부서가 있다면 해당 부서의 내용으로 넣는다.
+				if (dept.get("myDept").equals("YES")) {
+					JSONObject state = new JSONObject();
+					state.put("opened", "true");
+					state.put("selected", "true");
+					dept.put("state", state);
+				}
+			}
+			
+			model.addAttribute("deptList", deptList);
+			model.addAttribute("companyId", companyId);
+		}
+		//회사 시작/종료시간
+		url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
+		
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("companyId", companyId);
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("companyStartTime", jObject.get("workStartTime"));
+			model.addAttribute("companyEndTime", jObject.get("workEndTime"));
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/editAttitudeDeptConf ended");
+		
+		return "/admin/ezAttitude/editAttitudeDeptConf";
+	}
+	//조직도 사원리스트
+	// /rest/ezattitude/organtree/users	
+	/**
+	 * 사원리스트
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/userList.do")
+	public String userList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		LOGGER.debug("userList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String key = request.getParameter("key");
+		String value = request.getParameter("value");
+		String companyId = request.getParameter("companyId");
+		
+		//조직도 회사,부서 리스트
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/organtree/users";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("key", key)
+				.queryParam("value", value)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+				
+//		JSONObject jObject = new JSONObject();
+		if (status.equals("ok")) {		
+			JSONArray userList = (JSONArray) resultBody.get("data");
+			model.addAttribute("listType", request.getParameter("listType"));
+			model.addAttribute("userList", userList);
+			
+			String keyword = "";
+			if (key.equals("DEPARTMENT")) {
+				keyword = request.getParameter("deptName");
+			} else{
+				keyword = egovMessageSource.getMessage("ezJournal.t43", userInfo.getLocale());
+			}
+			int userCount = 0;
+			if (userList.size() == 0 && !key.equals("DEPARTMENT")) {
+				keyword = egovMessageSource.getMessage("ezJournal.t170", userInfo.getLocale());
+			} else {
+				userCount = userList.size();
+			}
+			model.addAttribute("keyword",keyword);
+			model.addAttribute("userCount",userCount);
+			model.addAttribute("key", key);
+		}
+		
+		LOGGER.debug("userList ended");
+		return "admin/ezAttitude/userList";
 	}
 }

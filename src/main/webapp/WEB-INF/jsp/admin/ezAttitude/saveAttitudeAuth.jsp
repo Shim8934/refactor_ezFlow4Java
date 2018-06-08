@@ -90,7 +90,7 @@
 	    		ezattitude_dialogArguments[0] = para;
 	    		
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do?companyId=" + companyId + "&userId=" + selectedUser;
-				var SelectTarget = window.open(url, "authorDept", GetOpenWindowfeature(500, 540));
+				var SelectTarget = window.open(url, "authorDept", GetOpenWindowfeature(500, 545));
 				try { SelectTarget.focus(); } catch (e) {
 	            }
 	    	}

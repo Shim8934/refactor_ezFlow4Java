@@ -40,6 +40,7 @@
 		<result property="mail" 					column="MAIL" 					columnIndex="4"/>
 		<result property="deptName" 				column="DEPT_NAME" 				columnIndex="5"/>
 		<result property="userImg" 					column="USER_IMG" 				columnIndex="6"/>
+		<result property="extensionAttribute15" 	column="EXTENSIONATTRIBUTE15" 	columnIndex="7"/>
 	</resultMap>
 	
 	<resultMap class="deptViewVO" id="deptViewMap">
@@ -434,31 +435,60 @@
 	</select>
 	<!-- 조직도 부서별 사원 리스트 -->
 	<select id="ezAttitudeAdminDAO.getDeptUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
-		<![CDATA[
-			SELECT
-				DISPLAYNAME AS USER_NAME,
+		SELECT * FROM 
+		(	SELECT
+				DISPLAYNAME$lang$ AS USER_NAME,
 				CN AS USER_ID,
-				TITLE AS JIKWI,
+				TITLE$lang$ AS JIKWI,
 				MAIL AS MAIL,
-				DESCRIPTION AS DEPT_NAME,
-				EXTENSIONATTRIBUTE2 AS USER_IMG
+				DEPARTMENT AS DEPT_ID,
+				DESCRIPTION$lang$ AS DEPT_NAME,
+				EXTENSIONATTRIBUTE2 AS USER_IMG,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15
 			FROM 
-				TBL_USERMASTER 
+				TBL_USERMASTER
 			WHERE
 				TENANT_ID = #tenantId#
-		]]>
-		<isNotEqual property="key" compareValue="DEPARTMENT">
 			AND
-				$key$ LIKE concat('%',#value#,'%')
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
+				PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND
-				$key$ = #value#
-		</isEqual>
-		<![CDATA[
-			ORDER BY
-				lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
-		]]>
+			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				AND 
+					$key$ like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				AND 
+					$key$ = #value#
+			</isEqual>
+		UNION ALL 
+			SELECT
+	        	A.DISPLAYNAME$lang$ AS USER_NAME,
+				A.CN AS USER_ID,
+				B.TITLE$lang$ AS JIKWI,
+				A.MAIL AS MAIL,
+				B.DEPTID AS DEPT_ID,
+				C.DISPLAYNAME$lang$ AS DEPT_NAME,
+				A.EXTENSIONATTRIBUTE2 AS USER_IMG,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15               	
+			FROM
+				TBL_ADDJOBMASTER B
+			JOIN
+				TBL_USERMASTER A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			JOIN
+				TBL_DEPTMASTEr C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			WHERE
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				AND 
+					A.$key$ like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				AND 
+					B.DEPTID = #value#
+			</isEqual>
+		) AA
+		ORDER BY 8 ASC, 1 ASC
 	</select>
 		
 	<insert id="ezAttitudeAdminDAO.saveAttitudeUserConfig" parameterClass="Map">

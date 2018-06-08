@@ -330,5 +330,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     public String checkModApplStatus(Map<String, Object> map) throws Exception {
     	return (String) select("ezAttitudeDAO.checkModApplStatus", map);
     }
+
+	public List<AttitudeAuthorVO> getDeptUserList(HashMap<String, Object> map) throws Exception {
+		return (List<AttitudeAuthorVO>) select("ezAttitudeAdminDAO.getDeptUserList", map);
+	}
     
 }

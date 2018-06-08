@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -499,10 +500,15 @@ public class EzAttitudeGWController {
 		try {
 			String key = request.getParameter("key");
 			String value = request.getParameter("value");
+			String companyId = request.getParameter("companyId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			if (companyId.equals("") || companyId == null) {
+				companyId = info.getCompanyId();
+			}
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<AttitudeAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId() + "", key, value);
+			List<AttitudeAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId(), key, value, companyId, lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

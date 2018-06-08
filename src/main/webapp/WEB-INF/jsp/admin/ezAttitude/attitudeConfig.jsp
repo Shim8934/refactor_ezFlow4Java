@@ -200,7 +200,7 @@
 	      		</li>
 	      	</ul>
 	  	</div>
-	  	
+	  	<h2 style="font-weight: normal">▒&nbsp;휴무요일 외 휴일은 일정관리메뉴의 기념일관리에서 추가하실 수 있습니다.</h2>
 		<table class="content" style="width:500px">
 			<tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">

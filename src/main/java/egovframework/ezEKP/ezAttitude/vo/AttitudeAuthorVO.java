@@ -24,6 +24,8 @@ public class AttitudeAuthorVO {
 		/** 권한부서명 */
 		private String authDeptName;
 		
+		private String extensionAttribute15;
+		
 		public String getUserId() {
 			return userId;
 		}
@@ -89,5 +91,11 @@ public class AttitudeAuthorVO {
 		}
 		public void setAuthDeptName(String authDeptName) {
 			this.authDeptName = authDeptName;
+		}
+		public String getExtensionAttribute15() {
+			return extensionAttribute15;
+		}
+		public void setExtensionattribute2(String extensionAttribute15) {
+			this.extensionAttribute15 = extensionAttribute15;
 		}
 }
