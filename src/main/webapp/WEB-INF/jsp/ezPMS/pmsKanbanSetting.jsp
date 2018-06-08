@@ -109,7 +109,6 @@ function updateKanbanStatus() {
 		contentType: "application/json; charset=UTF-8",
 		data :JSON.stringify(data),
 		success : function(result) {
-			alert("프로젝트 개요 화면 설정을 완료하였습니다.");
 			parent.kanbanOrder = kanbanOrder;
 			parent.initKanbanList();
 			popupClose(); 

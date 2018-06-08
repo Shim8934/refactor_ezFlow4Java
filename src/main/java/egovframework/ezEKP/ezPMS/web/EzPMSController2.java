@@ -307,6 +307,7 @@ public class EzPMSController2 {
 		String projectId = request.getParameter("projectId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("location", "gantt");
 		
 		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBodyTask.get("status").toString();

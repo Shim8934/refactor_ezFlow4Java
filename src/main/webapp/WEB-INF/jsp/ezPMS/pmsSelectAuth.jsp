@@ -416,7 +416,7 @@
 		</style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
-        <h1 style="height: 20px;">수신자 선택</h1>
+        <h1 style="height: 20px;">담당자, 참여자, 조회자 추가</h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="ok_Click()">확인</span></li>

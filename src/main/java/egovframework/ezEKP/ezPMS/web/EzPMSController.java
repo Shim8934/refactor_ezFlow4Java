@@ -1215,6 +1215,14 @@ public class EzPMSController {
 		
 		
 		//의견 불러오기
+		String commentUrl = "/rest/ezPMS/comments/list/" + projectId + "/users/" + userId;
+		JSONObject commentResult = commonUtil.getJsonFromRestApi(commentUrl, param, request, "get", null);
+		String commentStatus = commentResult.get("status").toString();
+		
+		if (commentStatus.equals("ok")) {
+			JSONArray commentData = (JSONArray) commentResult.get("data");
+			overviewContent.put("commentList", commentData);
+		}
 		
 		LOGGER.debug("getOverviewContent ended");
 		return overviewContent;
@@ -1527,9 +1535,10 @@ public class EzPMSController {
 	/**
 	 * 간트차트에서의 날짜 변경
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/updateTaskDate.do")
 	@ResponseBody
-	public String updateTaskDate(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+	public JSONObject updateTaskDate(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("ezPMS updateTaskDate started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1538,14 +1547,19 @@ public class EzPMSController {
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
 		String status = result.get("status").toString();
-		String roleCheck = "";
+		JSONObject json = new JSONObject();
 		
 		if (status.equals("ok")) {
-			roleCheck = result.get("data").toString();
+			JSONObject data = (JSONObject) result.get("data");
+			String roleCheck = data.get("roleCheck").toString();
+			String endDate = data.get("endDate").toString();
+			
+			json.put("roleCheck", roleCheck);
+			json.put("endDate", endDate);
 		}
 		
 		LOGGER.debug("ezPMS updateTaskDate ended");
-		return roleCheck;
+		return json;
 	}
 	
 	/**
@@ -1570,6 +1584,31 @@ public class EzPMSController {
 		}
 		
 		LOGGER.debug("ezPMS addPreTaskRel ended");
+		return roleCheck;
+	}
+	
+	/**
+	 * 간트차트 그룹 및 업무 순서 변경
+	 */
+	@RequestMapping(value="/ezPMS/changeGanttOrder.do")
+	@ResponseBody
+	public String changeGanttOrder(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS changeGanttOrder started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		String url = "/rest/ezPMS/project/" + param.get("projectId") + "/gantt/order";
+		param.put("userId", userId);
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", null);
+		String status = result.get("status").toString();
+		String roleCheck = "";
+		
+		if (status.equals("ok")) {
+			roleCheck = result.get("data").toString();
+		}
+		
+		LOGGER.debug("ezPMS changeGanttOrder ended");
 		return roleCheck;
 	}
 }

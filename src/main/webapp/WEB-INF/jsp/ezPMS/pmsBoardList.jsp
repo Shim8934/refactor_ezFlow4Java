@@ -64,7 +64,7 @@
 	function deleteBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
 		if(!checkBoxes.length) {
-			alert("삭제할 글을 선택하세요.");
+			alert("게시물을 선택해주세요.");
 			return;
 		}
 		
@@ -81,7 +81,7 @@
 	function goMoveBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
 		if(!checkBoxes.length) {
-			alert("이동할 글을 선택하세요.");
+			alert("게시물을 선택해주세요.");
 			return;
 		}
 	

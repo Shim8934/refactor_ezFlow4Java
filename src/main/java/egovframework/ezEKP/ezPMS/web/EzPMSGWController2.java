@@ -751,6 +751,7 @@ public class EzPMSGWController2 {
 			String roleCheck = "";
 			long projectId = Long.parseLong(request.getParameter("projectId"));
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			JSONObject data = new JSONObject();
 			
 			//권한 체크
 			//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
@@ -771,6 +772,8 @@ public class EzPMSGWController2 {
 				}
 			}
 			
+			data.put("roleCheck", roleCheck);
+			
 			if (roleCheck.equals("permitted")) {
 				ProjectTaskVO projectTaskVO = new ProjectTaskVO();
 				projectTaskVO.setTenantId(tenantId);
@@ -785,58 +788,62 @@ public class EzPMSGWController2 {
 				
 				ezPMSService.updateTaskStatus(projectTaskVO);
 				
-//				if (request.getParameter("endTime") != null) {
-//					long endTime = Long.parseLong(request.getParameter("endTime"));
-//					int rowIndex = Integer.parseInt(request.getParameter("rowIndex"));
-//					
-//					List<Long> preTaskList = ezPMSService.getPreTaskRel(rowIndex, tenantId, projectId);
-//					
-//					if (preTaskList != null && preTaskList.size() != 0) {
-//						Date postTaskEndTime = new Date(endTime);
-//						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//						
-//						for (int i = 0; i < preTaskList.size(); i++) {
-//							ProjectTaskVO postTask = ezPMSService.getTaskDetails(preTaskList.get(i), tenantId, lang);
-//							Date postPlanStartDate = dateFormat.parse(postTask.getPlanStartDate());
-//							Date postPlanEndDate = dateFormat.parse(postTask.getPlanEndDate());
-//							long diff = postPlanEndDate.getTime() - postPlanStartDate.getTime();
-//							int diffDays = (int) diff / (24 * 60 * 60 * 1000);
-//							
-//							Calendar cal = Calendar.getInstance();
-//						    cal.setTime(postTaskEndTime);
-//						    cal.add(Calendar.DATE, 1);
-//						    
-//						    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-//						    if (dayNum == 7) {
-//						    	cal.add(Calendar.DATE, 2);
-//						    } else if (dayNum == 1) {
-//						    	cal.add(Calendar.DATE, 1);
-//						    }
-//						    
-//						    Calendar cal2 = Calendar.getInstance();
-//						    cal2.setTime(cal.getTime());
-//						    cal2.add(Calendar.DATE, diffDays);
-//						    int dayNum2 = cal2.get(Calendar.DAY_OF_WEEK);
-//						    
-//						    if (dayNum2 == 7) {
-//						    	cal2.add(Calendar.DATE, -1);
-//						    } else if (dayNum2 == 1) {
-//						    	cal2.add(Calendar.DATE, -2);
-//						    }
-//						    
-//							postTask.setPlanStartDate(dateFormat.format(cal.getTime()));
-//							postTask.setPlanEndDate(dateFormat.format(cal2.getTime()));
-//							ezPMSService.updateTaskStatus(postTask);
-//						}
-//						
-//					}
-//					
-//				}
+				if (request.getParameter("endTime") != null) {
+					long endTime = Long.parseLong(request.getParameter("endTime"));
+					int rowIndex = Integer.parseInt(request.getParameter("rowIndex"));
+					
+					data.put("endDate", endTime);
+					
+					List<Long> preTaskList = ezPMSService.getPreTaskRel(rowIndex, tenantId, projectId);
+					
+					if (preTaskList != null && preTaskList.size() != 0) {
+						Date postTaskEndTime = new Date(endTime);
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						
+						for (int i = 0; i < preTaskList.size(); i++) {
+							ProjectTaskVO postTask = ezPMSService.getTaskDetails(preTaskList.get(i), tenantId, lang);
+							Date postPlanStartDate = dateFormat.parse(postTask.getPlanStartDate());
+							Date postPlanEndDate = dateFormat.parse(postTask.getPlanEndDate());
+							long diff = postPlanEndDate.getTime() - postPlanStartDate.getTime();
+							int diffDays = (int) diff / (24 * 60 * 60 * 1000);
+							
+							Calendar cal = Calendar.getInstance();
+						    cal.setTime(postTaskEndTime);
+						    cal.add(Calendar.DATE, 1); // 다음날 지정
+						    
+						    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+						    System.out.println(dayNum);
+						    
+						    if (dayNum == 7) {
+						    	cal.add(Calendar.DATE, 2);
+						    } else if (dayNum == 1) {
+						    	cal.add(Calendar.DATE, 1);
+						    }
+						    
+						    Calendar cal2 = Calendar.getInstance();
+						    cal2.setTime(cal.getTime());
+						    cal2.add(Calendar.DATE, diffDays);
+						    int dayNum2 = cal2.get(Calendar.DAY_OF_WEEK);
+						    
+						    if (dayNum2 == 7) {
+						    	cal2.add(Calendar.DATE, -1);
+						    } else if (dayNum2 == 1) {
+						    	cal2.add(Calendar.DATE, -2);
+						    }
+						    
+							postTask.setPlanStartDate(dateFormat.format(cal.getTime()));
+							postTask.setPlanEndDate(dateFormat.format(cal2.getTime()));
+							ezPMSService.updateTaskStatus(postTask);
+						}
+						
+					}
+					
+				}
 			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", roleCheck);		
+			result.put("data", data);		
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
