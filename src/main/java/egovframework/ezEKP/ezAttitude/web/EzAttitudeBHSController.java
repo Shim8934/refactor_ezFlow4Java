@@ -400,6 +400,35 @@ public class EzAttitudeBHSController {
 		LOGGER.debug("/ezAttitude/attitudeUserMain started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String userId = userInfo.getId();
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject attitudeConfigVO = new JSONObject();
+		if (status.equals("ok")) {
+			attitudeConfigVO = (JSONObject) resultBody.get("data");
+			model.addAttribute("attitudeConfigVO", attitudeConfigVO);
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		
 		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
@@ -1007,5 +1036,44 @@ public class EzAttitudeBHSController {
 		}
 		LOGGER.debug("/ezAttitude/getIsAttitude ended");
 		return returnValue;
+	}
+	
+	@RequestMapping(value = "/ezAttitude/getAttitudeReg.do")
+	@ResponseBody
+	public JSONObject getAttitudeReg(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeUserMain started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject attitudeConfigVO = new JSONObject();
+		if (status.equals("ok")) {
+			attitudeConfigVO = (JSONObject) resultBody.get("data");
+		}
+		
+		
+		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
+		return attitudeConfigVO;
 	}
 }

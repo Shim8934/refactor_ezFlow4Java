@@ -70,7 +70,7 @@
 		<script type="text/javascript">
 		var userOffset = "${userOffset}";
 		var uselang = "${uselang}";
-		var closedDay = "";
+		var closedDay = "${attitudeConfigVO.closedDay}";
 		var checkClosedToday = false;
 		var leaveEarlyFlag = false; // 조퇴가 등록되어있는지 체크
 		var serverTime = "${serverTime}";
@@ -80,6 +80,8 @@
 		var overTime = "";
 		
 		window.onload = function(){
+			closedDay = closedDay.split(",");
+			
 			setAttiBtnHover();
 			getAttitudeList();
 			getHolidayList();
@@ -147,7 +149,6 @@
 																	  result.holidayList[i].isRest == 1 ? true : false));
 						}
 					}
-					closedDay = result.attitudeConfigVO.closedDay.split(",");
 				}
 			});
 		}
