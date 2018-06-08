@@ -33,6 +33,8 @@ td.overviewTd{vertical-align:top;}
 </head>
 <body class="taskInfoTabBody">
 	<table class="tg">
+	<c:choose>
+	<c:when test="${target eq 'task' }">
 	  <tr>
 	    <th class="">작성자</th>
 	    <td class="">${taskDetails.writerName}</td>
@@ -41,6 +43,18 @@ td.overviewTd{vertical-align:top;}
 	    <th class="">작성일</th>
 	    <td class="">${taskDetails.writeDate}</td>
 	  </tr>
+	</c:when>
+	<c:otherwise>
+	  <tr>
+	    <th class="">작성자</th>
+	    <td class="">${taskDetails.creatorName}</td>
+	  </tr>
+	  <tr>
+	    <th class="">작성일</th>
+	    <td class="">${taskDetails.createDate}</td>
+	  </tr>
+	</c:otherwise>
+	</c:choose>
 	  <tr>
 	    <th class="">상위그룹</th>
 	    <td class="">${taskDetails.ancesterGroup == null ? "-" : taskDetails.ancesterGroup}</td>

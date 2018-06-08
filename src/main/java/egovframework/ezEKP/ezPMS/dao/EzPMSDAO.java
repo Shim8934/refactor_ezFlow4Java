@@ -432,4 +432,29 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectGroupMemberVO> getGroupMemberList(Map<String, Object> map) {
 		return (List<ProjectGroupMemberVO>) list("EzPMSDAO.getGroupMemberList", map);
 	}
+
+	public void updateGroupSort(Map<String, Object> map) {
+		update ("EzPMSDAO.updateGroupSort", map);
+		
+	}
+
+	public void updateTaskSort(Map<String, Object> map) {
+		update ("EzPMSDAO.updateTaskSort", map);
+	}
+
+	public void updatePreTaskRel(Map<String, Object> map) {
+		update ("EzPMSDAO.updatePreTaskRel", map);
+	}
+
+	public ProjectGroupVO getGroupDetails(Map<String, Object> map) {
+		return (ProjectGroupVO) select ("EzPMSDAO.getGroupDetails", map);
+	}
+	
+	public Float getGroupWeight(Map<String, Object> map) {
+		return (Float) select("EzPMSDAO.getGroupWeight", map);
+	}
+	
+	public void updateTaskWeight(ProjectTaskVO taskVO) {
+		update("EzPMSDAO.updateTaskWeight", taskVO);
+	}
 }

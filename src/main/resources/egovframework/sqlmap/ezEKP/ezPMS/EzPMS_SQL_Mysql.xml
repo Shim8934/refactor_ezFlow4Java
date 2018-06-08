@@ -1955,7 +1955,7 @@
 	
 	<select id="EzPMSDAO.getTaskDetails" parameterClass="map" resultMap="projectTaskVO">
 		<![CDATA[
-			SELECT
+			SELECT DISTINCT
 				A.TASK_ID,
 				A.TENANT_ID,
 				A.PROJECT_ID,
@@ -2733,6 +2733,141 @@
 			WHERE
 				g.PROJECT_ID = #projectId#
 		]]>
+		<isNotEmpty property="groupId">
+			AND
+				gm.GROUP_ID = #groupId#
+		</isNotEmpty>
 	</select>
+	
+	<update id="EzPMSDAO.updateGroupSort" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_GROUP
+			SET
+				SORT_ORDER = #sortOrder#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateTaskSort" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_TASK
+			SET
+				SORT_ORDER = #sortOrder#
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updatePreTaskRel" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_PRETASKREL
+			SET
+				PRETASK = #preTaskIndex#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getGroupDetails" parameterClass="map" resultMap="projectGroupVO">
+	<![CDATA[
+		SELECT	
+				A.GROUP_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_NAME,
+				A.UPPER_GROUP_ID,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.CREATOR_ID,
+				A.CREATE_DATE,
+				A.CREATOR_NAME$lang$ AS CREATOR_NAME,
+				A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
+				A.TREE_DEPTH,
+				A.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				A.DEL_STATUS,
+				A.WORKINGDAY,
+				A.REST_DUEDAY,
+				P.PROJECT_NAME,
+				B.GROUP_NAME AS UPPER_GROUP_NAME
+			FROM
+				TBL_PMS_GROUP A
+			JOIN	
+				TBL_PMS_PROJECT P
+			ON	
+				A.PROJECT_ID = P.PROJECT_ID
+			LEFT JOIN
+				TBL_PMS_GROUP B
+			ON
+				A.UPPER_GROUP_ID = B.GROUP_ID
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND
+				A.PROJECT_ID = #projectId#
+			AND
+				A.GROUP_ID = #groupId#
+	]]>
+	</select>
+
+	<select id="EzPMSDAO.getGroupWeight" parameterClass="map" resultClass="float">
+		<![CDATA[
+			SELECT
+				sum(weight)
+			FROM
+				tbl_pms_task a
+			JOIN
+				(
+					SELECT group_id
+					FROM TBL_PMS_GROUP
+					where
+						tenant_id = #tenantId#
+					and
+						del_status = 0
+					and
+						group_id = #groupId# or ancester_group like concat('%\,',#groupId#,',%') or ancester_group like concat(#groupId#,',%')
+				) b
+			on
+				a.group_id = b.group_id
+			and
+				a.tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateTaskWeight" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				WEIGHT = #weight#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 	
 </sqlMap>

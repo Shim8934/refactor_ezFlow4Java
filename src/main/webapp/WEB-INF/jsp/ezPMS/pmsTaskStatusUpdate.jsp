@@ -51,7 +51,12 @@
 	}
 	
 	function initProgressBar() {
-		nowStatus = taskDetails.status;
+		if (taskDetails.status == null) {
+			nowStatus = "P";
+		} else {
+			nowStatus = taskDetails.status;
+		}
+		
 		var strStatus = "";
 		var circleColor = "";
 		
@@ -81,11 +86,11 @@
 		$("td.detailsTable-td[name='statusTd']").text(strStatus);
 		
 		$(".progress_graph").circleProgress({
-			value: 0.4,
+			value: taskDetails.realProgress / 100,
 			fill : {color : circleColor},
 			size : 134
 		}).on('circle-animation-progress', function(event, progress) {
-			$(this).find('strong').html(40 + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+			$(this).find('strong').html(taskDetails.realProgress + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 		});
 	}
 	
@@ -387,7 +392,7 @@ button.PHBtn {
 			    <td class="realTd">
 			    	<input type="text" id="RSDatepicker" style="width:80px;text-align:center" readonly >
 			    </td>
-			    <td class="sDiff"></td>
+			    <td id="sDiff" class="sDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="midTh">종료일</th>
@@ -398,7 +403,7 @@ button.PHBtn {
 			    <td class="realTd">
 			    	<input type="text" id="REDatepicker" style="width:80px;text-align:center" readonly >
 			    </td>
-			    <td class="eDiff"></td>
+			    <td id="eDiff" class="eDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="midTh">진행률(%)</th>

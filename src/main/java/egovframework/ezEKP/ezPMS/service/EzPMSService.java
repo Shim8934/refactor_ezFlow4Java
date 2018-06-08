@@ -84,7 +84,7 @@ public interface EzPMSService {
 	
 	public Long addGroup(Map<String, Object> map, String isIssue);
 	
-	public ProjectGroupVO getGroupDetails(Long groupId);
+	public ProjectGroupVO getGroupDetails(long groupId, int tenantId, long projectId);
 	
 	public int updateGroup(ProjectGroupVO group);
 	
@@ -108,7 +108,7 @@ public interface EzPMSService {
 
 	public ProjectMemberVO getUserInfo(String userId, int tenantId, String userIdType) throws Exception;
 	
-	public Map<String, Object> getRemainingWeight(String projectId);
+	public Map<String, Object> getRemainingWeight(String projectId, int tenantId);
 
 	public int getUserProjectRole(String userId, int tenantId, Long projectId, String deptId);
 	
@@ -170,6 +170,17 @@ public interface EzPMSService {
 	
 	public void modifyComment(JSONObject jsonParam) throws Exception;
 	
-	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId);
+	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId, Long groupId);
+	
+	public Float getGroupWeight(Long groupId, int tenantId) throws Exception;
+	
+	public void updateTaskWeight(ProjectTaskVO taskVO) throws Exception;
 
+	public void updateGroupSort(long projectId, long groupId, int sortOrder, int tenantId);
+
+	public void updateTaskSort(long groupId, long taskId, int sortOrder, int tenantId);
+
+	public void updatePreTaskRel(long taskId, int preTaskIndex, int tenantId, long projectId);
+
+	void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday);
 }

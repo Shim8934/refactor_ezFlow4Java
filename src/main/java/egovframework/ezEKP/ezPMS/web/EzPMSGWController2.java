@@ -482,7 +482,7 @@ public class EzPMSGWController2 {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/groups/{groupId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getGroupDetail(@PathVariable String groupId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject getGroupDetails(@PathVariable long groupId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/groups/" + groupId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -490,8 +490,11 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			long projectId = Long.parseLong(request.getParameter("projectId"));
 			
-			ProjectGroupVO groupVO = ezPMSService.getGroupDetails(Long.parseLong(groupId));
+			ProjectGroupVO groupVO = ezPMSService.getGroupDetails(groupId, tenantId, projectId);
+			groupVO.setGroupMember(ezPMSService.getGroupMemberList(projectId, tenantId, groupId));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -683,8 +686,9 @@ public class EzPMSGWController2 {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			
-			Map<String, Object> data = ezPMSService.getRemainingWeight(projectId);
+			Map<String, Object> data = ezPMSService.getRemainingWeight(projectId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -812,7 +816,6 @@ public class EzPMSGWController2 {
 						    cal.add(Calendar.DATE, 1); // 다음날 지정
 						    
 						    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-						    System.out.println(dayNum);
 						    
 						    if (dayNum == 7) {
 						    	cal.add(Calendar.DATE, 2);
@@ -892,17 +895,23 @@ public class EzPMSGWController2 {
 			search.setMemberId(userId);
 			
 			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang);
-			List<ProjectGroupMemberVO> groupMemberList = ezPMSService.getGroupMemberList(Long.parseLong(projectId), info.getTenantId());
+			List<ProjectGroupMemberVO> groupMemberList = ezPMSService.getGroupMemberList(Long.parseLong(projectId), info.getTenantId(), null);
 			
 			for(int i = 0; i < groupList.size(); i++){
 				Long groupId = groupList.get(i).getGroupId();
+				
+				//그룹 가중치를 얻어옴.
+				Float weight = ezPMSService.getGroupWeight(groupId, info.getTenantId());
+				groupList.get(i).setWeight(weight);
+				
+				//그룹 멤버를 얻어옴.
 				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();
 				List<ProjectGroupMemberVO> groupMemberListTemp = new ArrayList<ProjectGroupMemberVO>();
 				while(iter.hasNext()){
 					ProjectGroupMemberVO groupMember = iter.next();
-					if(groupId == groupMember.getGroupId()){
+					if(groupId.equals(groupMember.getGroupId())){
 						groupMemberListTemp.add(groupMember);
-						groupMemberList.remove(groupMember);
+						iter.remove();
 					}
 				}
 				groupList.get(i).setGroupMember(groupMemberListTemp);
@@ -913,12 +922,46 @@ public class EzPMSGWController2 {
 			result.put("code", 0);
 			result.put("data", groupList);		
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");		
 		}
 		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"] ended.");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 업무 가중치 수정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/weight", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateTaskWeight(@PathVariable String taskId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			ProjectTaskVO taskVO = new ProjectTaskVO();
+			taskVO.setTaskId(Long.parseLong(taskId));
+			taskVO.setTenantId(info.getTenantId());
+			
+			ezPMSService.updateTaskWeight(taskVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "] ended.");
 		return result;
 	}
 }

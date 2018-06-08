@@ -1598,15 +1598,16 @@ public class EzPMSController {
 		LOGGER.debug("ezPMS changeGanttOrder started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
+		long projectId = Long.parseLong(param.get("projectId").toString());
 		
-		String url = "/rest/ezPMS/project/" + param.get("projectId") + "/gantt/order";
+		String url = "/rest/ezPMS/project/" + projectId + "/gantt/order";
 		param.put("userId", userId);
 		
 		JSONObject jsonList = new JSONObject();
-		jsonList.put("groupList", param.get("groupArr"));
+		jsonList.put("groupList", param.get("Arr"));
 		jsonList.put("taskList", param.get("taskArr"));
 		
-		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
 		String status = result.get("status").toString();
 		String roleCheck = "";
 		
@@ -1616,5 +1617,44 @@ public class EzPMSController {
 		
 		LOGGER.debug("ezPMS changeGanttOrder ended");
 		return roleCheck;
+	}
+	
+	/**
+	 * 그룹 자세히 보기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/getGroupDetails.do")
+	public String getGroupDetails(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS changeGanttOrder started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		long projectId = Long.parseLong(request.getParameter("projectId"));
+		long groupId = Long.parseLong(request.getParameter("groupId"));
+		
+		String url = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("projectId", projectId);
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject taskDetails = (JSONObject) result.get("data");
+			model.addAttribute("taskDetails", taskDetails);
+		}
+		
+		param.put("userIdType", "user");
+		JSONObject resultMS = commonUtil.getJsonFromRestApi("/rest/ezPMS/users/"+ userInfo.getId() +"/setting", param, request, "get", null);
+		status = resultMS.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject mainSetting = (JSONObject) resultMS.get("data");
+			model.addAttribute("mainSetting", mainSetting);
+		}
+		
+		model.addAttribute("target", "group");
+		LOGGER.debug("ezPMS changeGanttOrder ended");
+		return "ezPMS/pmsTaskDetails";
 	}
 }

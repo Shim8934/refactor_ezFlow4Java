@@ -51,6 +51,8 @@ public class SearchVO {
 	//나의 업무인지 아닌지
 	private String isMyTask;
 	
+	//위치
+	private String lcoation;
 
 	public int getTenantId() {
 		return tenantId;
@@ -178,6 +180,14 @@ public class SearchVO {
 
 	public void setIsMyTask(String isMyTask) {
 		this.isMyTask = isMyTask;
+	}
+
+	public String getLcoation() {
+		return lcoation;
+	}
+
+	public void setLcoation(String lcoation) {
+		this.lcoation = lcoation;
 	}
 
 }

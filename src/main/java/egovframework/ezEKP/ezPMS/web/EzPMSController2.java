@@ -103,10 +103,12 @@ public class EzPMSController2 {
 		String writerId = userInfo.getId();
 		String writerName = userInfo.getDisplayName();
 		String writerDeptName = userInfo.getDeptName();
+		int tenantId = userInfo.getTenantId();
 		
 		String projectId = request.getParameter("projectId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/weight/" + projectId, param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -307,7 +309,7 @@ public class EzPMSController2 {
 		String projectId = request.getParameter("projectId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("location", "gantt");
+		param.put("position", "gantt");
 		
 		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBodyTask.get("status").toString();
@@ -356,6 +358,7 @@ public class EzPMSController2 {
 		String projectId = request.getParameter("projectId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -402,16 +405,31 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String taskId = request.getParameter("taskId");
+		String groupId = request.getParameter("groupId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("projectId", request.getParameter("projectId"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
-		String status = resultBody.get("status").toString();
-		
-		if(status.equals("ok")) {
-			JSONObject taskDetails = (JSONObject) resultBody.get("data");
-			model.addAttribute("taskDetails", taskDetails);
+		if (groupId == null || groupId.equals("")) {
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+				model.addAttribute("taskDetails", taskDetails);
+				model.addAttribute("target", "task");
+			}
+		} else {
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/groups/" + Long.parseLong(groupId) + "/users/" + userInfo.getId(), param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+				model.addAttribute("taskDetails", taskDetails);
+				model.addAttribute("target", "group");
+			}
 		}
+		
 		
 		LOGGER.debug("ezPMS getTaskDetailsTab ended");
 		
@@ -434,26 +452,44 @@ public class EzPMSController2 {
 		
 		String taskId = request.getParameter("taskId");
 		long projectId = 0;
+		String target = request.getParameter("target");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
-		String status = resultBody.get("status").toString();
-		
-		if(status.equals("ok")) {
-			JSONObject taskDetails = (JSONObject) resultBody.get("data");
-			model.addAttribute("taskDetails", taskDetails);
-			projectId = Long.parseLong(taskDetails.get("projectId").toString());
+		if (target.equals("task")) {
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+				model.addAttribute("taskDetails", taskDetails);
+				projectId = Long.parseLong(taskDetails.get("projectId").toString());
+			}
+			
+			JSONObject resultBodyWeight = commonUtil.getJsonFromRestApi("/rest/ezPMS/weight/" + projectId, param, request, "get", null);
+			status = resultBodyWeight.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONObject weightData = (JSONObject) resultBodyWeight.get("data");
+				model.addAttribute("weightData", weightData);
+			}
+		} else if (target.equals("group")) {
+			projectId = Long.parseLong(request.getParameter("projectId"));
+			param.put("projectId", projectId);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/groups/" + Long.parseLong(taskId) + "/users/" + userInfo.getId(), param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+				model.addAttribute("taskDetails", taskDetails);
+				LOGGER.debug("Headmanager name : " + taskDetails.get("headManagerName"));
+			}
 		}
 		
+		model.addAttribute("target", request.getParameter("target"));
 		
-		JSONObject resultBodyWeight = commonUtil.getJsonFromRestApi("/rest/ezPMS/weight/" + projectId, param, request, "get", null);
-		status = resultBodyWeight.get("status").toString();
-		
-		if(status.equals("ok")) {
-			JSONObject weightData = (JSONObject) resultBodyWeight.get("data");
-			model.addAttribute("weightData", weightData);
-		}
 		LOGGER.debug("ezPMS goUpdateTaskInfo ended");
 		
 		return "/ezPMS/pmsTaskInfoUpdate";
@@ -778,6 +814,42 @@ public class EzPMSController2 {
 			e.printStackTrace();
 		}
 		LOGGER.debug("ezPMS deleteGroup ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * 업무 가중치 수정.
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/updateTaskWeight.do")
+	public String updateTaskWeight(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS updateTaskWeight started");
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String taskId = (String)param.get("taskId");
+			String userId = userInfo.getId();
+			
+			param.put("userId", userId);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/weight/", param, request, "put", null);
+			String status = resultBody.get("status").toString();
+			
+//			if(status.equals("ok")) {
+//				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+//				model.addAttribute("taskDetails", taskDetails);
+//			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS updateTaskWeight ended");
 		
 		return "json";
 	}

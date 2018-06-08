@@ -35,13 +35,19 @@
 	var completeColor = "${mainSetting.completeColor}";
 	var overdueColor = "${mainSetting.overdueColor}";
 	var holdColor = "${mainSetting.holdColor}";
+	var target = "${target}";
 	
 	$(function(){
 		taskDetails = ${taskDetails};
-		weightData = ${weightData};
+		
+		if (target == null || target != "group") {
+			weightData = '${weightData}';
+		}
+		
 		setFrameParams();
 		initProgressBar();
 		tabFuncSetting();
+		diffSetting();
 		btnEvent();
 		
 	});
@@ -51,7 +57,12 @@
 	}
 	
 	function initProgressBar() {
-		nowStatus = taskDetails.status;
+		if (taskDetails.status == null) {
+			nowStatus = "P";
+		} else {
+			nowStatus = taskDetails.status;
+		}
+		
 		var strStatus = "";
 		var circleColor = "";
 		
@@ -90,50 +101,97 @@
 	}
 	
 	function tabFuncSetting(){
-		var taskId = "${taskDetails.taskId}"
-		var projectId = taskDetails.projectId;
-		var groupId = taskDetails.groupId;
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?taskId=" + taskId);
-		$("#1tab0").addClass("tabon");
-		
-		$("#1tab0").click(function(){
-			var clickTabId = $(this).attr("id");
-			var nowTabAttr = $(".tabon").attr("id");
-			changeTab(clickTabId, nowTabAttr);
-			//업무정보 탭
-			$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?taskId=" + taskId);
+		console.log(target);
+		if (target == null || target != "group") {
+			var taskId = "${taskDetails.taskId}"
+			var projectId = taskDetails.projectId;
+			var groupId = taskDetails.groupId;
+			$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&taskId=" + taskId);
+			$("#1tab0").addClass("tabon");
 			
-		});
-		
-		$("#1tab1").click(function(){
-			var clickTabId = $(this).attr("id");
-			var nowTabAttr = $(".tabon").attr("id");
-			changeTab(clickTabId, nowTabAttr);
+			$("#1tab0").click(function(){
+				var clickTabId = $(this).attr("id");
+				var nowTabAttr = $(".tabon").attr("id");
+				changeTab(clickTabId, nowTabAttr);
+				//업무정보 탭
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&taskId=" + taskId);
+				
+			});
 			
-			//관련 게시물 탭
-			$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
-		});
-		
-		$("#1tab2").click(function(){
-			var clickTabId = $(this).attr("id");
-			var nowTabAttr = $(".tabon").attr("id");
-			var currentPage = 1;
-			changeTab(clickTabId, nowTabAttr);
+			$("#1tab1").click(function(){
+				var clickTabId = $(this).attr("id");
+				var nowTabAttr = $(".tabon").attr("id");
+				changeTab(clickTabId, nowTabAttr);
+				
+				//관련 게시물 탭
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
+			});
 			
-			//작업이력 탭
-			$("#FBoard_ifrm").attr("src", "/ezPMS/getLogListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId + "&currentPage=" + currentPage);
-		});
-		
-		$("#1tab3").click(function(){
-			alert("미구현");
-			return;
-			var clickTabId = $(this).attr("id");
-			var nowTabAttr = $(".tabon").attr("id");
-			changeTab(clickTabId, nowTabAttr);
+			$("#1tab2").click(function(){
+				var clickTabId = $(this).attr("id");
+				var nowTabAttr = $(".tabon").attr("id");
+				var currentPage = 1;
+				changeTab(clickTabId, nowTabAttr);
+				
+				//작업이력 탭
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getLogListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId + "&currentPage=" + currentPage);
+			});
 			
-			//의견 탭
-			$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
-		});
+			$("#1tab3").click(function(){
+				alert("미구현");
+				return;
+				var clickTabId = $(this).attr("id");
+				var nowTabAttr = $(".tabon").attr("id");
+				changeTab(clickTabId, nowTabAttr);
+				
+				//의견 탭
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
+			});
+		} else {
+			var projectId = taskDetails.projectId;
+			var groupId = taskDetails.groupId;
+			$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&groupId=" + groupId);
+			$("#1tab0").addClass("tabon");
+				
+			$("#1tab0").click(function(){
+				var clickTabId = $(this).attr("id");
+				var nowTabAttr = $(".tabon").attr("id");
+				changeTab(clickTabId, nowTabAttr);
+				//업무정보 탭
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&groupId=" + groupId);
+				
+			});
+				
+			$("#1tab1").click(function(){
+				var clickTabId = $(this).attr("id");
+				var nowTabAttr = $(".tabon").attr("id");
+				changeTab(clickTabId, nowTabAttr);
+					
+				//관련 게시물 탭
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardListTab.do?projectId=" + projectId + "&groupId=" + groupId);
+			});
+				
+			$("#1tab2").click(function(){
+				var clickTabId = $(this).attr("id");
+				var nowTabAttr = $(".tabon").attr("id");
+				var currentPage = 1;
+				changeTab(clickTabId, nowTabAttr);
+					
+				//작업이력 탭
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getLogListTab.do?projectId=" + projectId + "&groupId=" + groupId + "&currentPage=" + currentPage);
+			});
+				
+			$("#1tab3").click(function(){
+				alert("미구현");
+				return;
+				var clickTabId = $(this).attr("id");
+				var nowTabAttr = $(".tabon").attr("id");
+				changeTab(clickTabId, nowTabAttr);
+					
+				//의견 탭
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
+			});
+		}
 		
 		$(".tab").hover(function(){
 			$(this).addClass("tabover");
@@ -154,8 +212,17 @@
 	}
 	
 	function taskUpdate(){
-	 	var taskId = "${taskDetails.taskId}";
-		DivPopUpShow(760, 500, "/ezPMS/goUpdateTaskInfo.do?taskId=" + taskId);
+		var taskId = 0;
+		var projectId = taskDetails.projectId;
+		
+		if (target == null || target != "group") {
+			taskId = "${taskDetails.taskId}";
+			target = "task";
+		} else {
+			taskId = "${taskDetails.groupId}";
+		}
+	 	
+		DivPopUpShow(760, 500, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 	}
 	
 	function addBoard(){
@@ -164,18 +231,38 @@
 	
 	function taskStatusUpdate(){
 		DivPopUpShow(500, 370, "/ezPMS/goUpdateTaskStatus.do");
-		
 	}
 	
 	function btnEvent(){
 		document.getElementById("closeBtn").onclick = popupClose;
 		document.getElementById("taskUpdateBtn").onclick = taskUpdate;
-		document.getElementById("statusChgBtn").onclick = taskStatusUpdate;
+		
+		if (target != "group") {
+			document.getElementById("statusChgBtn").onclick = taskStatusUpdate;
+		}
+		
 	}
 	
 	function setFrameParams(){
 		document.querySelector("[name='frameParamTaskDetails']").value = JSON.stringify(taskDetails);
 		document.querySelector("[name='frameParamWeight']").value = JSON.stringify(taskDetails);
+	}
+	
+	function diffSetting(){
+		var PSDate = new Date("${taskDetails.planStartDate}");
+		var PEDate = new Date("${taskDetails.planEndDate}");
+		var RSDate = new Date("${taskDetails.realStartDate}");
+		var REDate = new Date("${taskDetails.realEndDate}");
+		var planProg = "${taskDetails.planProgress}";
+		var realProg = "${taskDetails.realProgress}";
+		
+		var SDateDiff = (PSDate.getTime() - RSDate.getTime()) / (60 * 60 * 24 * 1000);
+		var EDateDiff = (PEDate.getTime() - REDate.getTime()) / (60 * 60 * 24 * 1000);
+		var progDiff = planProg - realProg;
+		
+		document.getElementById("startDiff").innerText = SDateDiff > 0 ? "+" + SDateDiff : SDateDiff < 0 ? SDateDiff : "";
+		document.getElementById("endDiff").innerText = EDateDiff > 0 ? "+" + EDateDiff : EDateDiff < 0 ? EDateDiff : "";
+		document.getElementById("progressDiff").innerText = progDiff > 0 ? "+" + progDiff + "%" : progDiff < 0 ? progDiff + "%" : "";
 	}
 	
 </script>
@@ -212,12 +299,22 @@ button.PHBtn {
 					<div class="circle progress_graph" style="width:150px;margin:6px 6px 0px 6px;">
 						<strong style="top:30px;"></strong>
 					</div>
+					<c:if test="${empty target }">
 					<div id="statusChgBtn" class="statusChgBtn">진행상태변경</div>
+					</c:if>
 			</div>
 			<table class="detailsTable" style="clear:none">
 			  <tr>
+			  <c:choose>
+			  <c:when test="${empty target }">
 			    <th class="detailsTable-th" style="width:60px">업무명</th>
 			    <td class="detailsTable-td" colspan="4">${taskDetails.taskName}</td>
+			  </c:when>
+			  <c:otherwise>
+			    <th class="detailsTable-th" style="width:60px">그룹명</th>
+			    <td class="detailsTable-td" colspan="4">${taskDetails.groupName}</td>
+			  </c:otherwise>
+			  </c:choose>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">담당자</th>
@@ -237,21 +334,21 @@ button.PHBtn {
 			    <td class="detailsTable-td dateTd">${taskDetails.planStartDate}</td>
 			    <th class="detailsTable-th" style="width:60px">시작일</th>
 			    <td class="detailsTable-td dateTd">${taskDetails.realStartDate == null ? "-" : taskDetails.realStartDate}</td>
-			    <td class="detailsTable-td" name="startDiff"></td>
+			    <td id="startDiff" class="detailsTable-td" name="startDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">종료일</th>
 			    <td class="detailsTable-td">${taskDetails.planEndDate}</td>
 			    <th class="detailsTable-th">종료일</th>
 			    <td class="detailsTable-td">${taskDetails.realEndDate == null ? "-" : taskDetails.realEndDate}</td>
-			    <td class="detailsTable-td" name="endDiff"></td>
+			    <td id="endDiff" class="detailsTable-td" name="endDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">진행률</th>
 			    <td class="detailsTable-td">${taskDetails.planProgress}</td>
 			    <th class="detailsTable-th">진행률</th>
 			    <td class="detailsTable-td">${taskDetails.realProgress}</td>
-			    <td class="detailsTable-td" name="realProgressDiff"></td>
+			    <td id="progressDiff" class="detailsTable-td" name="progressDiff"></td>
 			  </tr>
 			</table>
 		</div>

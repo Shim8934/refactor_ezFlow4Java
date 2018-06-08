@@ -1381,7 +1381,7 @@ public class EzPMSGWController {
 		}
 		
 		@SuppressWarnings("unchecked")
-		@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/preTasks/{rowIndexId}")
+		@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/preTasks/{rowIndexId}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
 		public JSONObject addPreTaskRel(@PathVariable long taskId, @PathVariable int rowIndexId, HttpServletRequest request) throws Exception {
 			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/preTasks/" + rowIndexId + "] started.");
 			
@@ -1444,9 +1444,8 @@ public class EzPMSGWController {
 			return result;
 		}
 		
-		//요기서부터 하기
 		@SuppressWarnings("unchecked")
-		@RequestMapping(value = "/rest/ezPMS/project/{projectId}/gantt/order")
+		@RequestMapping(value = "/rest/ezPMS/project/{projectId}/gantt/order", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
 		public JSONObject changeGanttOrder(@PathVariable long projectId, HttpServletRequest request, @RequestBody JSONObject json) throws Exception {
 			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] started.");
 			
@@ -1457,20 +1456,55 @@ public class EzPMSGWController {
 				String serverName = request.getHeader("x-user-host");
 				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 				int tenantId = info.getTenantId();
-				String roleCheck = "";
+				String roleCheck = "permitted";
 				
-				//그룹 순서 변경
-				List<Map<String, Object>> groupList = (List<Map<String, Object>>) json.get("groupList");
-				
-				for (int i = 0; i < groupList.size(); i++) {
-					
+				//권한 체크
+				//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
+				int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+				if (userProjectRole == 1) {
+					roleCheck = "permitted";
+				} else {
+					//프로젝트 조회자는 열람권한밖에 없음
+					//참여자는 간트 조정 불가
+					roleCheck = "rejected";
 				}
 				
+				LOGGER.debug("DELETEGROUP ROLECHECK : " + roleCheck);
+				
+				if (roleCheck.equals("permitted")) {
+					//그룹 순서 변경
+					List<Map<String, Object>> groupList = (List<Map<String, Object>>) json.get("groupList");
+					
+					for (int i = 0; i < groupList.size(); i++) {
+						long groupId = Long.parseLong(groupList.get(i).get("groupId").toString());
+						int sortOrder = Integer.parseInt(groupList.get(i).get("order").toString());
+					
+						ezPMSService.updateGroupSort(projectId, groupId, sortOrder, tenantId);
+					}
+					
+					//task 순서 변경
+					List<Map<String, Object>> taskList = (List<Map<String, Object>>) json.get("taskList");
+					
+					for (int i = 0; i < taskList.size(); i++) {
+						long groupId = Long.parseLong(taskList.get(i).get("groupId").toString());
+						int sortOrder = Integer.parseInt(taskList.get(i).get("order").toString());
+						long taskId = Long.parseLong(taskList.get(i).get("taskId").toString());
+						int preTaskIndex = Integer.parseInt(taskList.get(i).get("depends").toString()); 
+								
+						ezPMSService.updateTaskSort(groupId, taskId, sortOrder, tenantId);
+						
+						if (preTaskIndex != -1) {
+							ezPMSService.updatePreTaskRel(taskId, preTaskIndex, tenantId, projectId);
+						}
+						
+					}
+				}
 				
 				result.put("status", "ok");
 				result.put("code", 0);
 				result.put("data", roleCheck);
 			} catch (Exception e) {
+				e.printStackTrace();
 				result.put("status", "error");
 				result.put("code", 1);			
 				result.put("data", "");
