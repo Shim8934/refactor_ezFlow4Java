@@ -100,6 +100,9 @@ public class ProjectGroupVO {
     //그룹 멤버 리스트
     private List<ProjectGroupMemberVO> groupMember;
     
+    //그룹 가중치
+    private Float weight;
+    
     public String getProjectName() {
 		return projectName;
 	}
@@ -354,6 +357,14 @@ public class ProjectGroupVO {
 
 	public void setGroupMember(List<ProjectGroupMemberVO> groupMember) {
 		this.groupMember = groupMember;
+	}
+
+	public Float getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Float weight) {
+		this.weight = weight;
 	}
 
 }

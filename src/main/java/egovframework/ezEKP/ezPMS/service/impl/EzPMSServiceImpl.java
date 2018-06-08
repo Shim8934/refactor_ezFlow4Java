@@ -1125,7 +1125,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public Map<String, Object> getRemainingWeight(String projectId) {
+	public Map<String, Object> getRemainingWeight(String projectId, int tenantId) {
+		LOGGER.debug("[SERVICE] ezPMS getRemainingWeight Started");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] ezPMS getRemainingWeight Ended");
 		return ezPMSDAO.getRemainingWeight(projectId);
 	}
 
@@ -1940,6 +1946,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return ezPMSDAO.getGroupMemberList(map);
 	}
 	
+	@Override
 	public void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday){
 		HashMap<String, Object> map2 = new HashMap<String, Object>();
 		// 가중치 계산
@@ -1960,7 +1967,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		ezPMSDAO.updateTaskWDNW(map2);
 	}
-
+	
 	@Override
 	public void updateGroupSort(long projectId, long groupId, int sortOrder, int tenantId) {
 		LOGGER.debug("[SERVICE] updateGroupSort started.");
@@ -1999,5 +2006,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		ezPMSDAO.updatePreTaskRel(map);
 		LOGGER.debug("[SERVICE] updatePreTaskRel ended.");
+	}
+	
+	@Override
+	public Float getGroupWeight(Long groupId, int tenantId) {
+		LOGGER.debug("[SERVICE] getGroupWeight started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getGroupWeight ended.");
+		return ezPMSDAO.getGroupWeight(map);
 	}
 }

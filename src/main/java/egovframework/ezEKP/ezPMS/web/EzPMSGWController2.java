@@ -686,8 +686,9 @@ public class EzPMSGWController2 {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			
-			Map<String, Object> data = ezPMSService.getRemainingWeight(projectId);
+			Map<String, Object> data = ezPMSService.getRemainingWeight(projectId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -898,15 +899,21 @@ public class EzPMSGWController2 {
 			
 			for(int i = 0; i < groupList.size(); i++){
 				Long groupId = groupList.get(i).getGroupId();
+				
+				//그룹 가중치를 얻어옴.
+				Float weight = ezPMSService.getGroupWeight(groupId, info.getTenantId());
+				groupList.get(i).setWeight(weight);
+				
+				//그룹 멤버를 얻어옴.
 				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();
 				List<ProjectGroupMemberVO> groupMemberListTemp = new ArrayList<ProjectGroupMemberVO>();
 				while(iter.hasNext()){
 					ProjectGroupMemberVO groupMember = iter.next();
-					if(groupId == groupMember.getGroupId()){
+					if(groupId.equals(groupMember.getGroupId())){
 						groupMemberListTemp.add(groupMember);
-						groupMemberList.remove(groupMember);
 					}
 				}
+				groupMemberList.removeAll(groupMemberListTemp);
 				groupList.get(i).setGroupMember(groupMemberListTemp);
 			}
 			
@@ -915,6 +922,7 @@ public class EzPMSGWController2 {
 			result.put("code", 0);
 			result.put("data", groupList);		
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");		

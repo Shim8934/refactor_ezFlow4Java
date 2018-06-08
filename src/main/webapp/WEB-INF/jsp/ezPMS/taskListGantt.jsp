@@ -172,13 +172,13 @@
 		   				
 			   			tempTask.id = "p" + pd.projectId + "_g" + groupId;
 			   			tempTask.name = gl[i].groupName;
-			   			tempTask.code = "";
+			   			tempTask.code = gl[i].ancesterGroup;
 			   			tempTask.level = groupDepth;
 			   			tempTask.status = ganttStatus["G"];
 			   			tempTask.start = new Date(gl[i].planStartDate).getTime();
 			   			tempTask.end = new Date(gl[i].planEndDate).getTime();
 			   			tempTask.duration = gl[i].workingday;
-//	 		   			tempTask.weight = tl[i].weight;
+	 		   			tempTask.weight = gl[i].weight;
 			   			tempTask.startIsMilestone = "";
 			   			tempTask.endIsMilestone = "";
 			   			tempTask.assigs = [];
@@ -245,7 +245,7 @@
 				   			tempTask.level = 1;
 		   				}
 			   			tempTask.name = tl[i].taskName;
-			   			tempTask.code = "";
+			   			tempTask.code = tl[i].groupId;
 			   			tempTask.status = ganttStatus[tl[i].status];
 			   			tempTask.start = new Date(tl[i].planStartDate).getTime();
 			   			tempTask.end = new Date(tl[i].planEndDate).getTime();
@@ -817,6 +817,10 @@
 		    border-right: 1px solid #eee;
 	      }
 		  
+		  th{
+		  	padding: 0px
+		  }
+		  
 		  #ndo{
 		  	display:none;
 		  }
@@ -1303,7 +1307,7 @@
 			
 			<div class="__template__" type="TASKROW"><!--
 			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#)" level="(#=level#)">
-			    <th class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </th>
+			    <th class="gdfCell edit" align="right" style="cursor:pointer; border: 0px;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </th>
 			    <td class="gdfCell noClip" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+18#)px;">
 			      <div class="exp-controller" align="center"></div>
