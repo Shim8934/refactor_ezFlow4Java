@@ -140,22 +140,23 @@
 			var LunarUse = false;
 			var deptFlag = "${deptFlag}";
 			var adminFlag = "${adminFlag}";
-			var companyHoliday = "";        // 회사 휴무일
-			var closedDateAttitude = true;  // 휴일근태등록 유무
-			var attitudeModAppl = true;     // 근태수정신청 유무
-			var modAttitudeId = "";         // 수정신청 근태ID
-			var modChangeDate = "";         // 수정신청 변경일자
-			var modContent = "";            // 수정신청 내용
+			var companyHoliday = "${attitudeConfigVO.closedDay}"; //회사 휴무일
+			var closedDateAttitude = "${attitudeConfigVO.closedDateAttitude}" == "0" ? false : true; //휴일근태등록 유무
+			var attitudeModAppl = "${attitudeConfigVO.attitudeModAppl}" == "0" ? false : true; //근태수정신청 유무
+			var modAttitudeId = "";         //수정신청 근태ID
+			var modChangeDate = "";         //수정신청 변경일자
+			var modContent = "";            //수정신청 내용
 			var pageInfo = "viewCalendar";
 			
 			$(function(){
+				companyHoliday = companyHoliday.split(",");
 				//개인근태현황에서만 근태 등록 가능
 				if (deptFlag != "true") {
 					$(document).on('dblclick', '.td_day td', function(){
 						pMode = "new";
 						attitudeNewItem(this);
 					});
-				} else { // 부서근태현황에서는 당일의 근태를 조회.
+				} else { //부서근태현황에서는 당일의 근태를 조회.
 					$(document).on('click', '.td_day td', function(){
 						pMode = "new";
 						searchByDay(this);
@@ -338,9 +339,6 @@
 						
 					},
 					success : function(result) {
-						closedDateAttitude = result.attitudeConfigVO.closedDateAttitude == "0" ? false : true;
-						attitudeModAppl = result.attitudeConfigVO.attitudeModAppl == "0" ? false : true;
-						companyHoliday = result.attitudeConfigVO.closedDay.split(",");
 						for (var i = 0; i < result.holidayList.length; i++) {
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
 								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
@@ -1050,7 +1048,9 @@
 	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t112'/></li>
 	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t113'/>,<spring:message code='ezAttitude.t114'/></li>
                 <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #eede23; background:#feee33; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t115'/></li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t213'/></li>
+                <c:if test="${attitudeConfigVO.attitudeModAppl == 1 }">
+                	<li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t213'/></li>
+                </c:if>
 			</ul>
 		</div>
 		

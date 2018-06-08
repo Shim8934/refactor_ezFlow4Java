@@ -1043,6 +1043,19 @@
 				});
 			}
 		    
+		    function getAttitudeReg() {
+		    	$.ajax({
+					type:"POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getAttitudeReg.do",
+					data : {},
+					success : function(result) {
+						closedDay = result.closedDay.split(",");
+					}
+				});
+		    }
+		    
 		    function checkHoliday(obj) {
 				var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
 				var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
