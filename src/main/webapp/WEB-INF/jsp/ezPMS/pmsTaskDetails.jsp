@@ -42,6 +42,7 @@
 		setFrameParams();
 		initProgressBar();
 		tabFuncSetting();
+		diffSetting();
 		btnEvent();
 		
 	});
@@ -178,6 +179,23 @@
 		document.querySelector("[name='frameParamWeight']").value = JSON.stringify(taskDetails);
 	}
 	
+	function diffSetting(){
+		var PSDate = new Date("${taskDetails.planStartDate}");
+		var PEDate = new Date("${taskDetails.planEndDate}");
+		var RSDate = new Date("${taskDetails.realStartDate}");
+		var REDate = new Date("${taskDetails.realEndDate}");
+		var planProg = "${taskDetails.planProgress}";
+		var realProg = "${taskDetails.realProgress}";
+		
+		var SDateDiff = (PSDate.getTime() - RSDate.getTime()) / (60 * 60 * 24 * 1000);
+		var EDateDiff = (PEDate.getTime() - REDate.getTime()) / (60 * 60 * 24 * 1000);
+		var progDiff = planProg - realProg;
+		
+		document.getElementById("startDiff").innerText = SDateDiff > 0 ? "+" + SDateDiff : SDateDiff < 0 ? SDateDiff : "";
+		document.getElementById("endDiff").innerText = EDateDiff > 0 ? "+" + EDateDiff : EDateDiff < 0 ? EDateDiff : "";
+		document.getElementById("progressDiff").innerText = progDiff > 0 ? "+" + progDiff + "%" : progDiff < 0 ? progDiff + "%" : "";
+	}
+	
 </script>
 <style>
 .popupHeader{
@@ -237,21 +255,21 @@ button.PHBtn {
 			    <td class="detailsTable-td dateTd">${taskDetails.planStartDate}</td>
 			    <th class="detailsTable-th" style="width:60px">시작일</th>
 			    <td class="detailsTable-td dateTd">${taskDetails.realStartDate == null ? "-" : taskDetails.realStartDate}</td>
-			    <td class="detailsTable-td" name="startDiff"></td>
+			    <td id="startDiff" class="detailsTable-td" name="startDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">종료일</th>
 			    <td class="detailsTable-td">${taskDetails.planEndDate}</td>
 			    <th class="detailsTable-th">종료일</th>
 			    <td class="detailsTable-td">${taskDetails.realEndDate == null ? "-" : taskDetails.realEndDate}</td>
-			    <td class="detailsTable-td" name="endDiff"></td>
+			    <td id="endDiff" class="detailsTable-td" name="endDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">진행률</th>
 			    <td class="detailsTable-td">${taskDetails.planProgress}</td>
 			    <th class="detailsTable-th">진행률</th>
 			    <td class="detailsTable-td">${taskDetails.realProgress}</td>
-			    <td class="detailsTable-td" name="realProgressDiff"></td>
+			    <td id="progressDiff" class="detailsTable-td" name="progressDiff"></td>
 			  </tr>
 			</table>
 		</div>

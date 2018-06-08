@@ -81,11 +81,11 @@
 		$("td.detailsTable-td[name='statusTd']").text(strStatus);
 		
 		$(".progress_graph").circleProgress({
-			value: 0.4,
+			value: taskDetails.realProgress / 100,
 			fill : {color : circleColor},
 			size : 134
 		}).on('circle-animation-progress', function(event, progress) {
-			$(this).find('strong').html(40 + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+			$(this).find('strong').html(taskDetails.realProgress + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 		});
 	}
 	
