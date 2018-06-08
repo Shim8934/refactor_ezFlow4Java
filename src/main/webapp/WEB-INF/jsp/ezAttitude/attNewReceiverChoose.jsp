@@ -216,17 +216,35 @@
 	            window.close();
 	        }
 	        function confirm_onClick_auto() {
-                if (listContentArry != "") {
-                    var strId = document.getElementById(listContentArry[0]).getAttribute("_data2");
-                    var strName = document.getElementById(listContentArry[0]).getAttribute("_data10");
-                }
-                else {
-                    alert("<spring:message code='ezAttitude.t110'/>");
-                    return;
-                }
-                
+	            if (selTab == "orglistView") {
+	                if (listContentArry != "") {
+	                    var strId = document.getElementById(listContentArry[0]).getAttribute("_data2");
+	                    var strName = document.getElementById(listContentArry[0]).getAttribute("_data10");
+	                    var strDeptName = document.getElementById(listContentArry[0]).getAttribute("_data12");
+	                }
+	                else {
+	                    alert("<spring:message code='ezAttitude.t110'/>");
+	                    return;
+	                }
+	            }
+	            else {
+	                var pListViewDL = new ListView();
+	                pListViewDL.LoadFromID("Address");
+	                var arrRows = pListViewDL.GetSelectedRows();
+	                if (arrRows.length > 0) {
+	                    var strEmail = GetAttribute(arrRows[0], "DATA3");
+	                    if (GetAttribute(arrRows[0], "DATA2") == "mailgroup") {
+	                        alert("<spring:message code='ezEmail.t99000076' />");
+	                        return;
+	                    }
+	                }
+	                else {
+	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    return;
+	                }
+	            }
 	            if (ReturnFunction != null)
-	                ReturnFunction(strId, strName);
+	                ReturnFunction(strId, strName, strDeptName);
 	            
 	            window.close();
 	        }

@@ -568,10 +568,10 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	
-	        function addReceiver(strId, strName) {
+	        function addReceiver(strId, strName, strDeptName) {
 	            $("#forId").text(strId);
 	            $("#forName").text("")
-	             .append($("<span></span>").css({"display":"inline-block", "padding-top":"5px", "margin-right":"4px"}).text(strName))
+	             .append($("<span></span>").css({"display":"inline-block", "padding-top":"5px", "margin-right":"4px"}).text(strDeptName + " " + strName))
 	             .append('<a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 64px; text-align: center;">' + "<spring:message code='ezAttitude.t220'/>" + '</span></a>');
 	        }
 	        
