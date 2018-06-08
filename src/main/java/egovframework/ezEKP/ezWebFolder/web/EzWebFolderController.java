@@ -13,7 +13,6 @@ import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -57,33 +56,14 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 	@RequestMapping(value = "/ezWebFolder/webfolderMain.do")
 	public String webfolderMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder";
-		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", req.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody;
-		try {
-			resultBody = (JSONObject) jp.parse(result.getBody());
-			String status                 = resultBody.get("status").toString();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
+		logger.debug("webfolderMain start");
+		logger.debug("webfolderMain end");
 		return "ezWebFolder/webfolderMain";
 	}
 
 	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
 	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		logger.debug("webfolderLeft start");
 		LoginSimpleVO userInfo    = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
@@ -107,18 +87,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("isWfAdmin", checkResult);
 		}
 		
+		logger.debug("webfolderLeft end");
 		return "ezWebFolder/webfolderLeft";
 	}
 
-	@RequestMapping(value="/ezWebFolder/test.do")
-	public String webfolderTest(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		model.addAttribute("primary", userInfo.getLang());
-		return "ezWebFolder/webfolderTest";
-	}
-
 	@RequestMapping(value="/ezWebFolder/webfolderConfig.do")
-	public String boardConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public String webfolderConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("webfolderConfig start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/dept-chief/" + user.getId();
@@ -141,17 +116,20 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("isChief", checkResult);
 		}
 		
+		logger.debug("webfolderConfig end");
 		return "ezWebFolder/webfolderConfig";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/deptChiefSetting.do")
 	public String deptChiefConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("deptChiefConfig start");
+		logger.debug("deptChiefConfig end");
 		return "ezWebFolder/deptChiefConfig";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/wefolderGeneral.do")
 	public String webfolderGeneral(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
-		logger.debug("webfolderGeneral started");
+		logger.debug("webfolderGeneral start");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
@@ -175,20 +153,21 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("wfListConfig", wfListConfig);
 		}
 		
-		logger.debug("webfolderGeneral ended");
+		logger.debug("webfolderGeneral end");
 		return "ezWebFolder/webfolderGeneral";
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezWebFolder/uploadFile.do", method = RequestMethod.POST)
 	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
-		logger.debug("Upload file is running!");
-		
+		logger.debug("uploadFile start");
 		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
 		String folderId                = request.getParameter("folderId");
 		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
 		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload";
+		
+		logger.debug("Folder Id: " + folderId);
 		
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 		requestFactory.setBufferRequestBody(false);
@@ -244,20 +223,20 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("reason", reason);
 		}
 		
-		logger.debug("Upload file finishes!");
-		
+		logger.debug("uploadFile end");
 		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/downloadAttach.do", produces="application/zip")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("Download attach is running!");
-		
+		logger.debug("downloadAttach start");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String listFileId   = request.getParameter("fileList");
 		String listFolderId = request.getParameter("folderList");
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemanage/file-download";
+		
+		logger.debug("FileId list: " + listFileId + " || FolderId list: " + listFolderId);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userAgent", request.getHeader("User-Agent"))
@@ -289,14 +268,15 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		};
 		
 		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
-	
-		logger.debug("Download attach finishes!");
+		logger.debug("downloadAttach end");
 	}
 
 	@RequestMapping(value="/ezWebFolder/deleteConfirm.do")
 	public String deleteFileConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		logger.debug("Delete File Confirm is running!");
+		logger.debug("deleteFileConfirm start");
 		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		
+		logger.debug("FileId list: " + listFileId);
 		
 		if (listFileId.equals("")) {
 			logger.debug("Delete File Confirm illegal arguments!");
@@ -304,22 +284,23 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("fileList", listFileId);
-		logger.debug("Delete File Confirm finishes!");
+		logger.debug("deleteFileConfirm end");
 		
 		return "/ezWebFolder/fileDelete";
 	}
 
 	@RequestMapping(value="/ezWebFolder/deleteFile.do", method = RequestMethod.POST)
 	public String deleteFile(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("Delete File is running!");
-		
+		logger.debug("deleteFile start");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String listFileId   = request.getParameter("fileList");
+		
+		logger.debug("FileId list: " + listFileId);
+		
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-delete";
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("tenantId", user.getTenantId())
 										.queryParam("userId", user.getId())
 										.queryParam("fileList", listFileId);
 		
@@ -341,15 +322,16 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("Status: " + status);
-		logger.debug("Delete File finishes!");
-		
+		logger.debug("deleteFile end");
 		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/fileRenameConfirm.do")
 	public String fileRenameConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		logger.debug("File Rename Confirm is running!");
+		logger.debug("fileRenameConfirm start");
 		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
+		
+		logger.debug("File Id: " + fileId);
 		
 		if (fileId.equals("")) {
 			logger.debug("File Rename Confirm illegal arguments!");
@@ -357,23 +339,24 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("fileId", fileId);
-		logger.debug("File Rename Confirm finishes!");
-		
+		logger.debug("fileRenameConfirm start");
 		return "/ezWebFolder/fileRename";
 	}
 
 	@RequestMapping(value="/ezWebFolder/renameFile.do", method = RequestMethod.POST)
 	public void renameFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("Rename File is running!");
+		logger.debug("renameFile start");
 		
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String fileId       = request.getParameter("fileId");
 		String newName      = request.getParameter("newName");
+		
+		logger.debug("File Id: " + fileId + " || New name: " + newName);
+		
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-rename/fileid/" + fileId;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", user.getTenantId())
 				.queryParam("userId", user.getId())
 				.queryParam("newName", newName);
 		
@@ -390,18 +373,18 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String status                 = resultBody.get("status").toString();
 		
 		logger.debug("Status: " + status);
-		
-		logger.debug("Rename File finishes!");
+		logger.debug("renameFile end");
 	}
 
 	@RequestMapping(value="/ezWebFolder/fileMoveConfirm.do")
 	public String fileMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		logger.debug("File Move Confirm is running!");
-		
+		logger.debug("fileMoveConfirm start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileIdList  = request.getParameter("fileList")   != null ? request.getParameter("fileList") : "";
 		String mode        = request.getParameter("mode")       != null ? request.getParameter("mode")     : "normal";
 		String type        = request.getParameter("type")       != null ? request.getParameter("type")     : "";
+		
+		logger.debug("FileId list: " +fileIdList + " || mode: " + mode + " || type: " + type);
 		
 		if (fileIdList.equals("")) {
 			logger.debug("File Move Confirm illegal arguments!");
@@ -435,26 +418,26 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("primary", user.getLang());
 		model.addAttribute("mode", mode);
 		model.addAttribute("type", type);
-		logger.debug("File Move Confirm finishes!");
+		logger.debug("fileMoveConfirm end");
 		
 		return "/ezWebFolder/fileMove";
 	}
 
 	@RequestMapping(value="/ezWebFolder/moveFile.do", method = RequestMethod.POST)
 	public String moveFile(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("Move File is running!");
-		
+		logger.debug("moveFile start");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String fileList     = request.getParameter("fileList");
 		String folderId     = request.getParameter("folderId");
 		String mode         = request.getParameter("mode");
 		String privileges   = request.getParameter("privileges");
 		
+		logger.debug("FileId list: " + fileList + " || Folder Id: " + folderId + " || mode: " + mode + " || privileges: " + privileges);
+		
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/modes/" + mode;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("tenantId", user.getTenantId())
 										.queryParam("fileList", fileList)
 										.queryParam("userId", user.getId())
 										.queryParam("privileges", privileges)
@@ -478,20 +461,22 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("Status: " + status);
-		logger.debug("Move File finishes!");
-		
+		logger.debug("moveFile end");
 		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/getFolderTree.do", method = RequestMethod.POST)
 	public String getFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getFolderTree start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String companyId   = request.getParameter("companyId");
 		String folderId    = request.getParameter("folderId");
 		String type        = request.getParameter("type");
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/foldersTree";
 		
+		logger.debug("Company Id: " + companyId + " || Folder Id: " + folderId + " || Type: " + type);
+		
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
+		String url          = gwServerUrl + "/rest/ezwebfolder/foldersTree";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("host-name", request.getServerName());
@@ -528,17 +513,21 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			
 		}
 		
+		logger.debug("getFolderTree end");
 		return "json";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getDeptTree.do", method = RequestMethod.POST)
 	public String getDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getDepartTree start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String companyId   = request.getParameter("companyId");
 		String deptId      = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/depart-tree";
 		
+		logger.debug("Company Id: " + companyId + " || Department Id: " + deptId);
+		
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
+		String url          = gwServerUrl + "/rest/ezwebfolder/depart-tree";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("host-name", request.getServerName());
@@ -565,17 +554,21 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("deptTree", deptTree);
 		}
 		
+		logger.debug("getDepartTree end");
 		return "json";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getSubTree.do", method = RequestMethod.POST)
 	public String getSubDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getSubDepartTree start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String deptId      = request.getParameter("deptId");
 		String level       = request.getParameter("level");
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/sub-tree/" + deptId;
 		
+		logger.debug("Department Id: " + deptId + " || Level: " + level);
+		
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
+		String url          = gwServerUrl + "/rest/ezwebfolder/sub-tree/" + deptId;
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("host-name", request.getServerName());
@@ -597,16 +590,20 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("subTree", deptTree);
 		}
 		
+		logger.debug("getSubDepartTree end");
 		return "json";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getDeptMembers.do", method = RequestMethod.POST)
 	public String getDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getDeptMembers start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String deptId      = request.getParameter("deptId");
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/dept-member/" + deptId;
 		
+		logger.debug("Department Id: " + deptId);
+		
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
+		String url          = gwServerUrl + "/rest/ezwebfolder/dept-member/" + deptId;
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("host-name", request.getServerName());
@@ -626,20 +623,23 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("listMembers", memberList);
 		}
 		
+		logger.debug("getDeptMembers end");
 		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/getFileFolderTree.do", method = RequestMethod.POST)
 	public String getFileFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getFileFolderTree start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileList    = request.getParameter("fileList");
 		String mode        = request.getParameter("mode");
 		String companyId   = request.getParameter("companyId");
 		String type        = request.getParameter("type");
 		
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/foldersTree/file";
+		logger.debug("FileId list: " + fileList + " || mode: " + mode + " || CompanyId: " + companyId + " || type: " + type);
 		
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
+		String url          = gwServerUrl + "/rest/ezwebfolder/foldersTree/file";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("host-name", request.getServerName());
@@ -677,17 +677,20 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			
 		}
 		
+		logger.debug("getFileFolderTree end");
 		return "json";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/saveGeneralList.do", method = RequestMethod.POST)
 	public String saveListSize(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("saveListSize start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String listCount   = request.getParameter("listCount");
 		
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/env/" + listCount + "/update";
+		logger.debug("List count: " + listCount);
 		
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
+		String url          = gwServerUrl + "/rest/ezwebfolder/env/" + listCount + "/update";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("host-name", request.getServerName());
@@ -709,11 +712,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("resultValue", "error");
 		}
 		
+		logger.debug("saveListSize end");
 		return "json";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getDeptTreeForChief.do", method = RequestMethod.POST)
 	public String getDepartTreeForChief(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getDepartTreeForChief start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/depart-tree/chief/" + user.getId();
@@ -735,17 +740,19 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			JSONArray deptTree      = (JSONArray) resultBody.get("data");
 			JSONArray selectedDepts = (JSONArray) resultBody.get("selectedDepts");
-			String     userDept     = (String) resultBody.get("userDept");
+			String userDept         = (String) resultBody.get("userDept");
 			model.addAttribute("userDept", userDept);
 			model.addAttribute("deptTree", deptTree);
 			model.addAttribute("selectedDepts", selectedDepts);
 		}
 		
+		logger.debug("getDepartTreeForChief end");
 		return "json";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getSelectedDeptForChief.do", method = RequestMethod.POST)
 	public String getSelectedDepartsForChief(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getSelectedDepartsForChief start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/selected-dept/chief/" + user.getId();
@@ -769,11 +776,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("selectedDepts", selectedDepts);
 		}
 		
+		logger.debug("getSelectedDepartsForChief end");
 		return "json";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/saveSelectedDeptsForChief.do", method = RequestMethod.POST)
 	public String updateEnvDeptList(@CookieValue("loginCookie") String loginCookie, @RequestParam("deptList") List<String> deptsList, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("updateEnvDeptList start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/env/dept-list";
@@ -801,14 +810,19 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("resultValue", "error");
 		}
 		
+		logger.debug("updateEnvDeptList end");
 		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/checkPermission.do", method = RequestMethod.POST)
 	public String checkPermission(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("checkPermission start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileId      = request.getParameter("fileId");
 		String fileList    = request.getParameter("fileList");
+		
+		logger.debug("File Id: " + fileId + " || FileId list: " + fileList);
+		
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/permission-check/" + user.getId();
 		
@@ -833,11 +847,13 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("resultValue", check);
 		}
 		
+		logger.debug("checkPermission end");
 		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/getUserCapicity.do", method = RequestMethod.POST)
 	public String getUserCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getUserCapacity start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/capacity/" + user.getId();
@@ -847,7 +863,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -861,6 +877,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("userCapacity", userCap);
 		}
 		
+		logger.debug("getUserCapacity end");
 		return "json";
 	}
 	
