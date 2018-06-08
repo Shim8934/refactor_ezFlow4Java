@@ -10,7 +10,7 @@ hr,caption,legend  { display:none; }
 address { font-style:normal; }
 article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,address {  display:block; }
 
-.login_body{margin:0px; padding:0px; background-color: rgba(46, 62, 70, 1);}
+.login_body{margin:0px; padding:0px; background-color: white;}
 .login_wrapper{height:786px; vertical-align:top; background:url(/images/kr/login/login_wrapper_bg.png) repeat-x;}
 .login_layout{width:1140px; height:786px; margin:0px auto; padding:0px; background:url(/images/kr/login/login_layout_bg.png) no-repeat center center;}
 
@@ -50,5 +50,5 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 .help span.icon{margin:0px 5px 0px 0px;}
 .help span.txt{border-bottom:1px solid #a0a0a0;}*/
 
-footer{font-size:12px; color:white;}
+footer{font-size:12px; color:darkolivegreen;}
 footer p{margin:25px 0px 0px 0px; padding:0px; text-align:center;}
