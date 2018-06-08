@@ -195,7 +195,7 @@ public class EzPMSGWController {
 			long groupId = ezPMSService.addGroup(project, "N");
 			
 			data.put("projectId", projectId);
-			data.put("groupid", groupId);
+			data.put("groupId", groupId);
 			
 			//프로젝트 멤버 테이블에 추가
 			for (int i = 0; i < projectMemberList.size(); i++) {
@@ -213,7 +213,7 @@ public class EzPMSGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", projectId);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -1444,7 +1444,7 @@ public class EzPMSGWController {
 		//요기서부터 하기
 		@SuppressWarnings("unchecked")
 		@RequestMapping(value = "/rest/ezPMS/project/{projectId}/gantt/order")
-		public JSONObject changeGanttOrder(@PathVariable long projectId, HttpServletRequest request) throws Exception {
+		public JSONObject changeGanttOrder(@PathVariable long projectId, HttpServletRequest request, @RequestBody JSONObject json) throws Exception {
 			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] started.");
 			
 			JSONObject result = new JSONObject();
@@ -1455,6 +1455,13 @@ public class EzPMSGWController {
 				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 				int tenantId = info.getTenantId();
 				String roleCheck = "";
+				
+				//그룹 순서 변경
+				List<Map<String, Object>> groupList = (List<Map<String, Object>>) json.get("groupList");
+				
+				for (int i = 0; i < groupList.size(); i++) {
+					
+				}
 				
 				
 				result.put("status", "ok");

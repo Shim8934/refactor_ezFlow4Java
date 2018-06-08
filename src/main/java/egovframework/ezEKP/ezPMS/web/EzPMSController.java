@@ -343,6 +343,7 @@ public class EzPMSController {
 			
 			LOGGER.debug("projectId : " + projectId + ", groupId : " + groupId);
 		} catch(Exception e) {
+			e.printStackTrace();
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
 		
@@ -1590,6 +1591,7 @@ public class EzPMSController {
 	/**
 	 * 간트차트 그룹 및 업무 순서 변경
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/changeGanttOrder.do")
 	@ResponseBody
 	public String changeGanttOrder(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
@@ -1600,7 +1602,11 @@ public class EzPMSController {
 		String url = "/rest/ezPMS/project/" + param.get("projectId") + "/gantt/order";
 		param.put("userId", userId);
 		
-		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", null);
+		JSONObject jsonList = new JSONObject();
+		jsonList.put("groupList", param.get("groupArr"));
+		jsonList.put("taskList", param.get("taskArr"));
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 		String status = result.get("status").toString();
 		String roleCheck = "";
 		
