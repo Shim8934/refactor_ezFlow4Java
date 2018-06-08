@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.let.user.login.vo.LoginVO;
@@ -92,9 +93,6 @@ public class EzPMSAdminController {
 		LOGGER.debug("getProjectList started");
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
-		String userId = userInfo.getId();
-		int currentPage = (int) param.remove("currentPage");
-		int listNumber = Integer.parseInt(param.get("listNumber").toString());
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -103,6 +101,9 @@ public class EzPMSAdminController {
 			param.put("admin", true);
 		}
 		
+		String userId = userInfo.getId();
+		int currentPage = (int) param.remove("currentPage");
+		int listNumber = Integer.parseInt(param.get("listNumber").toString());
 		String url = "/rest/ezPMS/projects/userId/" + userId;
 		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
@@ -152,8 +153,6 @@ public class EzPMSAdminController {
 		LOGGER.debug("getProjectGeneralInfo started");
 		
 		userInfo = commonUtil.checkAdmin(loginCookie);
-		String userId = userInfo.getId();
-		String projectId = request.getParameter("projectId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
@@ -164,6 +163,8 @@ public class EzPMSAdminController {
 			param.put("admin", true);
 		}
 		
+		String userId = userInfo.getId();
+		String projectId = request.getParameter("projectId");
 		String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId;
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String status = result.get("status").toString();
@@ -178,5 +179,71 @@ public class EzPMSAdminController {
 		LOGGER.debug("getProjectGeneralInfo ended");
 		
 		return "/admin/ezPMS/pmsProjectGeneralInfo";
+	}
+	
+	@RequestMapping(value = "/admin/ezPMS/deleteProject.do")
+	@ResponseBody
+	public String deleteProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model, LoginVO userInfo) throws Exception {
+		LOGGER.debug("deleteProject started");
+		
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		} else {
+			// checkAdmin을 통해 사용자가 관리자임이 확인되었을 때만 admin값을 true로 넘긴다.
+			param.put("admin", true);
+		}
+		
+		String userId = userInfo.getId();
+		String projectId = (String) param.get("projectId");
+		String url = "/rest/ezPMS/projects/" + projectId;
+		
+		param.put("userId", userId);
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
+		String data = result.get("data").toString();	
+		
+		LOGGER.debug("deleteProject ended");
+		
+		return data;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPMS/modifyProject.do")
+	public String modifyProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model, LoginVO userInfo) throws Exception {
+		LOGGER.debug("modifyProject started");
+		
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		} else {
+			// checkAdmin을 통해 사용자가 관리자임이 확인되었을 때만 admin값을 true로 넘긴다.
+			param.put("admin", true);
+		}
+		
+		String projectId = (String) param.get("projectId");
+		String url = "/rest/ezPMS/projects/" + projectId;
+		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+		
+		param.put("createDate", today);
+		param.put("userId", userInfo.getId());
+		
+		JSONObject jsonList = new JSONObject();
+		jsonList.put("managerList", param.get("managerList"));
+		jsonList.put("participantList", param.get("participantList"));
+		jsonList.put("viewerList", param.get("viewerList"));
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("data", "success");
+		}
+		
+		LOGGER.debug("modifyProject ended");
+		
+		return "json";
 	}
 }
