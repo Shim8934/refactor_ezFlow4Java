@@ -907,11 +907,11 @@ public class EzPMSGWController2 {
 				List<ProjectGroupMemberVO> groupMemberListTemp = new ArrayList<ProjectGroupMemberVO>();
 				while(iter.hasNext()){
 					ProjectGroupMemberVO groupMember = iter.next();
-					if(groupId == groupMember.getGroupId()){
+					if(groupId.equals(groupMember.getGroupId())){
 						groupMemberListTemp.add(groupMember);
-						groupMemberList.remove(groupMember);
 					}
 				}
+				groupMemberList.removeAll(groupMemberListTemp);
 				groupList.get(i).setGroupMember(groupMemberListTemp);
 			}
 			
@@ -920,6 +920,7 @@ public class EzPMSGWController2 {
 			result.put("code", 0);
 			result.put("data", groupList);		
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");		
