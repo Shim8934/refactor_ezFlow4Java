@@ -45,8 +45,9 @@
 	</c:if>
 	--%>
 	
-	
+	<%--
 	<c:if test="${cID != ''}">
+	--%>
 		<c:choose>
 			<%-- 자동 가입 유형의 신청 결과 팝업 --%>
 			<c:when test="${clubVO.c_ClubConfirmType =='1' || clubVO.c_ClubConfirmType == '2'}">
@@ -268,5 +269,6 @@
 					    </div>
 					</body>
 				</html>
-			
+	<%--
 	</c:if>
+	 --%>
