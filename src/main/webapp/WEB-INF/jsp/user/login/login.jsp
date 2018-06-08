@@ -215,9 +215,9 @@
 	                    </fieldset>
 	                    <input type="hidden" name="message" value="${message}" />		                    
 				    </form>
-				    <footer><p style="font-family: Malgun Gothic, Meiryo UI">COPYRIGHT &copy; 2018 KAONI CO., LTD.</p></footer>
 				</div>															
 			</div>
+			<footer><p style="font-family: Malgun Gothic, Meiryo UI">COPYRIGHT &copy; 2018 KAONI CO., LTD. ALL RIGHT RESERVED</p></footer>
 		</div>				
 		<div class="noti_layer" style="position:absolute;top:295px;left:800px;display:none;" id="divCapsLock">
 			<span class="arrow">

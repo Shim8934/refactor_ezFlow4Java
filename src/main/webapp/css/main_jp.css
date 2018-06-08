@@ -299,7 +299,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 /*------------ poll ------------*/
 .pollbox {width:258px; background:#FFF; float:left;}
 .pollcont{position:relative; padding:8px 15px 10px; height:160px; vertical-align:top; overflow-x:hidden; overflow-y:auto}
-.qusetion { margin:0px 0px 10px 0px; padding:0px 0px 3px 0px; height:auto; border-bottom:1px dotted #ccc; overflow:hidden;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size:12px; vertical-align:middle; color:#333;}
+.qusetion { margin:0px 0px 13px 0px; padding:0px 0px 3px 0px; height:auto; border-bottom:1px dotted #ccc; overflow:hidden;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size:12px; vertical-align:middle; color:#333;}
 
 .poll_list { margin:15px 0px; padding:0px; font-size:12px;}
 .poll_list dt { margin:0px; padding:0px ;color:#333; line-height:10px;}
