@@ -100,7 +100,7 @@
 		    
 		    function windowResize() {
 	        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
-	        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+	        	document.getElementById("contentlist").style.height = (height - 80) + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 	    	
@@ -325,7 +325,7 @@
 			</tbody>
 		</table>
 		
-		<div id="contentlist" style="width:100%; height:610px;">
+		<div id="contentlist" style="width:100%; height:590px;">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>

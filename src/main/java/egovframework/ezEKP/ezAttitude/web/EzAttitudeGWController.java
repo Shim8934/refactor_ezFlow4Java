@@ -470,7 +470,7 @@ public class EzAttitudeGWController {
 	         LOGGER.debug("userId : " + userId);
 	         String companyId = request.getParameter("companyId");
 	         
-	         if (companyId ==null||companyId.equals("")) {
+	         if (companyId == null || companyId.equals("")) {
 	            companyId = info.getCompanyId();
 	         }
 	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), info.getPrimary());

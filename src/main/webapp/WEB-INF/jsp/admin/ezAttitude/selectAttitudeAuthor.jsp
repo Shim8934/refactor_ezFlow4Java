@@ -55,18 +55,41 @@
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				}).on('ready.jstree', function(e, data) {
-					var offset = $(".jstree-clicked").offset();
-		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+// 					var offset = $(".jstree-clicked").offset();
+// 		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+					var offset = $(".jstree-wholerow-clicked").offset();
+		   	    	var jstree = document.getElementById("treeview");
+		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
 			    });
+	   		}
+	   		
+	   		function goScroll(){
+				var offset = $("#opensol").offset();
+	   	        $('html, body').animate({scrollTop : offset.top}, 400);
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
 	   		function setUserList(key,value,deptName) {
+	   			var listType = getOrganListType();
+	   			function getOrganListType() {
+		        	var organListType = "TXT";
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		url : "/ezOrgan/getListType.do",
+		        		async : false,
+		        		success : function(result) {
+		        			organListType = result;
+		        		}
+		        	})
+		        	return organListType;
+		        }
+	   			
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value,"deptName":deptName,"companyId":companyId},
+	   				data:{"key":key, "value":value,"deptName":deptName,"companyId":companyId, "listType" : listType},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if (picList.length==0 && key!="DEPARTMENT") {

@@ -22,6 +22,10 @@
 				background-color: #fcfcfc;
 			}
 			#searchTable td {padding: 8px 5px;}
+			#mailBoxInfo {
+				font-weight: normal;
+    			color: #666;
+			}
 		</style>
 		
 		<script type="text/javascript">
@@ -92,6 +96,7 @@
 					},
 					success : function(result) {
 						getAbsentedList_after(result.list);
+						$("#mailBoxInfo").html(" - [총<span style='color:#017BEC;'> " + result.totalCount + " </span>개]");
 					}
 				});
 	    	}
@@ -165,7 +170,7 @@
 	</head>
 	
 	<body class="popup">
-		<h1><spring:message code='ezAttitude.t111'/><c:if test="${searchEndDate != ''}"><img style="float: right; margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()"></c:if></h1>
+		<h1><spring:message code='ezAttitude.t111'/><span id="mailBoxInfo"></span><c:if test="${searchEndDate != ''}"><img style="float: right; margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()"></c:if></h1>
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
