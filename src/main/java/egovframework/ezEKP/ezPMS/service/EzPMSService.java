@@ -173,6 +173,8 @@ public interface EzPMSService {
 	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId, Long groupId);
 	
 	public Float getGroupWeight(Long groupId, int tenantId) throws Exception;
+	
+	public void updateTaskWeight(ProjectTaskVO taskVO) throws Exception;
 
 	public void updateGroupSort(long projectId, long groupId, int sortOrder, int tenantId);
 

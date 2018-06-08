@@ -818,4 +818,40 @@ public class EzPMSController2 {
 		return "json";
 	}
 	
+	/**
+	 * 업무 가중치 수정.
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/updateTaskWeight.do")
+	public String updateTaskWeight(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS updateTaskWeight started");
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String taskId = (String)param.get("taskId");
+			String userId = userInfo.getId();
+			
+			param.put("userId", userId);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/weight/", param, request, "put", null);
+			String status = resultBody.get("status").toString();
+			
+//			if(status.equals("ok")) {
+//				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+//				model.addAttribute("taskDetails", taskDetails);
+//			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS updateTaskWeight ended");
+		
+		return "json";
+	}
+	
 }

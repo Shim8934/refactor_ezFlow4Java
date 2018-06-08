@@ -2018,4 +2018,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getGroupWeight ended.");
 		return ezPMSDAO.getGroupWeight(map);
 	}
+	
+	@Override
+	public void updateTaskWeight(ProjectTaskVO taskVO){
+		LOGGER.debug("[SERVICE] updateTaskWeight started.");
+		
+		ezPMSDAO.updateTaskWeight(taskVO);
+		
+		LOGGER.debug("[SERVICE] updateTaskWeight ended.");
+	}
 }
