@@ -602,6 +602,40 @@
 		   		$("input[name='weight']").on("change",function(){ updateWeight(this); });
 		   		$("input[name='progress']").on("change",function(){ updateProgress(); });
 		   		
+				//툴팁구현중
+		   		$(".taskBox").on("click", function(){
+			   	 alert("Hello!");  
+			   	var titleText = $(this).parent().attr("taskId");
+	   		      $(this).data("tooltip", titleText).removeAttr("title");
+	   		      $(this).after('<span class="tooltipBox">' + titleText +'</span>').fadeIn("slow");
+			   });
+		   		
+		   		 //tooltip 시도!
+		   		 /*  $(".tooltipBox").hide();
+		   		  
+		   		  $(".taskBox").on({
+		   		    "mouseenter" : function(){
+		   		      alert("뜸?");
+		   		      var titleText = $(this).parent().attr("taskId");
+		   		      $(this).data("tooltip", titleText).removeAttr("title");
+		   		      $(this).after('<span class="tooltipBox">' + titleText +'</span>').fadeIn("slow");
+		   		   },
+		   		   "mouseleave" : function(){
+		   			 alert("마우스 나감??");
+		   		     var titleText = $(this).attr("title");
+		   		     $(this).attr("title", $(this).data("tooltip"));
+		   		     $('.tooltipBox').remove();
+		   		   }, 
+		   		   "mousemove" : function(e){
+		   		     var mouseX = e.pageX; 
+		   		     var mouseY = e.pageY; 
+		   		     $(".tooltipBox").css({
+		   		       "left" : mouseX, 
+		   		       "top" : mouseY +20
+		   		     });
+		   		   }
+		   		  }); */
+		   		  
 		   	}
 	   		
 	   		function changeGanttOrder() {
@@ -815,7 +849,7 @@
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
 	   		
-	   		$(document).ready(function(){
+	   		$(document).ready(function(){	   		  
 	   			GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
 	   			  var self = this;
 
