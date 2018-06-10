@@ -278,5 +278,6 @@
 					TENANT_ID = #tenantId#
    			]]>
   	</update>
+  	
 </sqlMap>
 

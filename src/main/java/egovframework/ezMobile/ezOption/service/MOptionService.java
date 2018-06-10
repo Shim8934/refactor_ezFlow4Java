@@ -5,6 +5,7 @@ import java.util.List;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
+import egovframework.let.user.login.vo.LoginDeviceVO;
 
 public interface MOptionService {
 
