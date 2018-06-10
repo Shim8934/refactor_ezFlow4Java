@@ -133,8 +133,8 @@
 		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>
 		      			
 		      			<c:if test="${packageType != 'mail'}">      
-		      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
-		      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
+			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
+			      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
 		      			</c:if>
 		      			
 		      			<%-- 전자결재 --%>
@@ -145,24 +145,24 @@
 		      			</c:if>
 		      				
                     	<c:if test="${packageType == 'standard'}">
+							<%-- 커뮤니티 --%>
 		      				<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
-                    	</c:if>
+							<%-- 자원관리 --%>
+		      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
+							<%-- 업무일지 --%>
+		      				<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
+		      			</c:if>
                     	
 		      			<%-- 시스템 --%>          
 		      			<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
 		      			<%-- 통계 --%>
 		      			<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
-                    	<c:if test="${packageType == 'standard'}">
-		      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
-                    	</c:if>		      		
 		      			<c:if test="${use_ezKMS == 'YES'}">
 		      				<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
 		      			</c:if>
 		      			<c:if test="${use_ezDMS == 'YES'}">
 		      				<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
 		      			</c:if>
-<!-- 		      			업무일지 -->
-		      			<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
 		      			<!-- ezPMS -->
 		      			<li><span id="menu21" onClick="menu_change(690, event)">프로젝트 관리</span></li>
                     </c:if>

@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezWebFolder.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,8 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
-
 import java.text.SimpleDateFormat;
 
 import org.json.simple.JSONObject;
@@ -160,35 +157,43 @@ public class EzWebFolderGWController_y {
 	// 폴더 생성 
 	@SuppressWarnings("unchecked")
 	@RequestMapping ( value="/rest/ezwebfolder/folders" , method= RequestMethod.POST , produces = "application/json;charset=utf-8")
-	public JSONObject folderInsert (HttpServletRequest request,@RequestBody JSONObject jsonObject) throws Exception {
+	public JSONObject folderInsert (HttpServletRequest request,@RequestBody JSONObject jsonObject) {
 		LOGGER.debug("folderInsert started");
 		JSONObject jsonObj = new JSONObject();
 		String serverName 			= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
 		String userId 				= (String) jsonObject.get("userId");
-		
-		MCommonVO common 			= mOptionService.commonInfoWeb(serverName, userId);
-		String folderUppId 			= (String) jsonObject.get("folderUppId");
-		String newFolderName1 		= (String) jsonObject.get("newFolderName1");
-		String newFolderName2 		= (String) jsonObject.get("newFolderName2");
-		int tenantId 				= common.getTenantId();
-		String comId 				= common.getCompanyId();
-		String deptId 				= common.getDeptId();
-		String offset 				= common.getOffSet();
-		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date                  	= new Date();
-		String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-		LOGGER.debug("timeUTC"+ timeUTC);
-		// foldervo 가지고 와서 상위의 폴더의 vo를 추린다. 
-		FolderVO foldervo= service.getFolderDetail(folderUppId, userId ,tenantId,comId);
-		
-		// insert후 return 값 성공 : ok 실패 : fail
-		String result = service.insertFolder(tenantId, comId , deptId, userId, foldervo.getFolderType(),newFolderName1, newFolderName2, foldervo, timeUTC);
-		
-		if (result.equals("ok")) {
-			jsonObj.put("status", "ok");
-			jsonObj.put("code", 0);
-			jsonObj.put("data", result);
-		}else {
+
+		MCommonVO common;
+		try {
+			common = mOptionService.commonInfoWeb(serverName, userId);
+			String folderUppId 			= (String) jsonObject.get("folderUppId");
+			String newFolderName1 		= (String) jsonObject.get("newFolderName1");
+			String newFolderName2 		= (String) jsonObject.get("newFolderName2");
+			int tenantId 				= common.getTenantId();
+			String comId 				= common.getCompanyId();
+			String deptId 				= common.getDeptId();
+			String offset 				= common.getOffSet();
+			SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  	= new Date();
+			String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			LOGGER.debug("timeUTC"+ timeUTC);
+			// foldervo 가지고 와서 상위의 폴더의 vo를 추린다. 
+			FolderVO foldervo= service.getFolderDetail(folderUppId, userId ,tenantId,comId);
+			
+			// insert후 return 값 성공 : ok 실패 : fail
+			String result = service.insertFolder(tenantId, comId , deptId, userId, foldervo.getFolderType(),newFolderName1, newFolderName2, foldervo, timeUTC);
+			
+			if (result.equals("ok")) {
+				jsonObj.put("status", "ok");
+				jsonObj.put("code", 0);
+				jsonObj.put("data", result);
+			}else {
+				jsonObj.put("status", "fail");
+				jsonObj.put("code", 2);
+				jsonObj.put("data", "");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			jsonObj.put("status", "fail");
 			jsonObj.put("code", 2);
 			jsonObj.put("data", "");
@@ -231,7 +236,7 @@ public class EzWebFolderGWController_y {
 	// 폴더 이동, 복사
 	@SuppressWarnings("unchecked")
 	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/{mode}" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
-	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) throws Exception  {
+	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) {
 		LOGGER.debug("folderCopy started");
 		String serverName	= request.getHeader("x-user-host")      != null ?	request.getHeader("x-user-host") 		: "";
 		String userId		= (String) jsonObject.get("userId") 	!= null ?	(String) jsonObject.get("userId")		: "";
@@ -520,7 +525,7 @@ public class EzWebFolderGWController_y {
 			jsonObj.put("code", 2);
 			jsonObj.put("data", "");
 		}
-
+		LOGGER.debug("fileList method start ");
 		return jsonObj;
 	}
 	
