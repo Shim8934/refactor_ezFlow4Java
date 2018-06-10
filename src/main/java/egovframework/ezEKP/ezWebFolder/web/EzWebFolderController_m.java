@@ -57,7 +57,6 @@ public class EzWebFolderController_m {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("pageNum", orElse(request.getParameter("pageNum"), "1"));
 		param.put("pageSize", orElse(request.getParameter("pageSize"), "0"));
-		param.put("folderId", orElse(request.getParameter("folderId"), ""));
 		param.put("subSearchFlag", orElse(request.getParameter("subSearchFlag"), "N"));
 		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));
 		param.put("searchExt", orElse(request.getParameter("searchExt"), ""));
@@ -88,7 +87,6 @@ public class EzWebFolderController_m {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("pageNum", orElse(request.getParameter("pageNum"), "1"));
 		param.put("pageSize", orElse(request.getParameter("pageSize"), "0"));
-		param.put("folderId", orElse(request.getParameter("folderId"), ""));
 		param.put("subSearchFlag", orElse(request.getParameter("subSearchFlag"), "N"));
 		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));
 		param.put("searchExt", orElse(request.getParameter("searchExt"), ""));

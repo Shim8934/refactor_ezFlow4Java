@@ -214,7 +214,7 @@
 	                        </p>	                        	                        
 	                    </fieldset>
 	                    <input type="hidden" name="message" value="${message}" />		                    
-				    </form>				    					
+				    </form>
 				</div>															
 			</div>
 			<footer><p style="font-family: Malgun Gothic, Meiryo UI">COPYRIGHT &copy; 2018 KAONI CO., LTD. ALL RIGHT RESERVED</p></footer>

@@ -662,7 +662,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			JSONArray currFolders = (JSONArray)resultBody.get("currentFolders");
 			
-			if (!type.equals("dept")) {
+			if (!type.equals("dept") && !type.equals("share")) {
 				JSONObject folderTree = (JSONObject) resultBody.get("data");
 				model.addAttribute("folderTree", folderTree);
 			}

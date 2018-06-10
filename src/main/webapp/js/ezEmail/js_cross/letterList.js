@@ -244,7 +244,7 @@ function letterListCss(pageType, searchMode) {
 function onloadPreview(ifr) {
 	var ifrHead = $(ifr).contents().find("head");
 	
-	$(ifrHead).html("<style>p {margin-top: 0; margin-bottom: 0;}</style>");
+	$(ifrHead).html("<style> html { height:520px; } p {margin-top: 0; margin-bottom: 0;}</style>");
 }
 
 // 편지지 선택 (개별 조회 미리보기)

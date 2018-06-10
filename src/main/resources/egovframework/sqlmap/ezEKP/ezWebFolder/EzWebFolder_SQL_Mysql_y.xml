@@ -134,7 +134,7 @@
 				type.TYPE_ICON   		as TYPE_ICON ,
 				folder.FOLDER_PATH	  	as FOLDER_PATH,
 				folder.FOLDER_NAME1    	as FOLDER_NAME1,
-				if(s.user_id = null,'1','0') as FAVORITE_STATUS,
+				IF(S.USER_ID IS NULL, '0', '1') AS FAVORITE_STATUS,
 				CASE WHEN EXISTS(SELECT SHARE_ID FROM TBL_WEBFOLDER_SHARE WHERE FOLDERFILE_ID = f.FILE_ID AND FOLDERFILE_TYPE = 'F' AND TENANT_ID = f.TENANT_ID)
 					THEN 'Y'
 					ELSE 'N'
@@ -166,7 +166,7 @@
 				type.TYPE_ICON		AS TYPE_ICON    ,     
 				folder.FOLDER_PATH  AS FOLDER_PATH  ,     
 				folder.FOLDER_NAME1 AS FOLDER_NAME1 ,    
-				if(s.user_id =null, '1','0') as FAVORITE_STATUS,
+				IF(S.USER_ID IS NULL, '0', '1') AS FAVORITE_STATUS,
                 CASE WHEN EXISTS(SELECT SHARE_ID FROM TBL_WEBFOLDER_SHARE WHERE FOLDERFILE_ID = folder.FOLDER_ID AND FOLDERFILE_TYPE = 'D' AND TENANT_ID = folder.TENANT_ID)
 					THEN 'Y'
 					ELSE 'N'
@@ -675,8 +675,8 @@
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
+					(DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
 				]]>
 			</isNotEqual>
 		</isNotEqual>
