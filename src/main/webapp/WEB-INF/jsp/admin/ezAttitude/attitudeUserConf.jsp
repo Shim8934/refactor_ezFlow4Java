@@ -280,11 +280,11 @@
     			var url = "/admin/ezAttitude/editAttitudeDeptConf.do?companyId=" + pCompanyId;
 	    		
 	    		if (CrossYN()) {
-	    			OpenWin = GetOpenWindow(url, "", "705", "630");
+	    			OpenWin = GetOpenWindow(url, "", "500", "625");
 	    			
 	    			try { OpenWin.focus();} catch (e) { }
 	    		} else {
-	    			showModalDialog(url, null, "dialogWidth:705px; dialogHeight:630px; status:no; help:no; scroll:no; edge:sunken");
+	    			showModalDialog(url, null, "dialogWidth:500px; dialogHeight:625px; status:no; help:no; scroll:no; edge:sunken");
 	    		}
 	    	}
 	    </script>

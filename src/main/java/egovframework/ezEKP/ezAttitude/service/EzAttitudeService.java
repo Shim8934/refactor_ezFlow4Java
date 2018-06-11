@@ -63,7 +63,7 @@ public interface EzAttitudeService {
 	
 	public void editAttitudeUserConfig(String selectUserId, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception;
 
-	public void editAttitudeDeptConfig(String selectDeptId, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception;
+	public void editAttitudeDeptConfig(String selectDeptIds, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception;
 	
 	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId, String userId) throws Exception;
 	

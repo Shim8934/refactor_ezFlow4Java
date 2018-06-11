@@ -5,40 +5,54 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>부서근무시간수정</title>
+		<title><spring:message code='ezAttitude.t201' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	   	<script type="text/javascript">
-			//트리조직도 JSON
+	   		//트리조직도 JSON
 	   		var treeContent;
 	   		//레이어팝업의 부서 정보
-// 	   		var lpDeptId;
-// 	   		var lpDeptName;
-	   		//현재 레이어팝업에 선택된 부서
-	   		var selectDeptId;
+	   		var lpDeptId;
+	   		var lpDeptName;
+	   		//레이어팝업의 오른쪽의 부서정보
+	   		var lpDepts = [];
+	   		var lpDeptNames = [];
+	   		//오른쪽에서 없앨 부서
+	   		var targetDept;
 	   		//회사 id
 	   		var companyId = "${companyId}";
 	   		//회사 출/퇴근 시간
 			var companyStartTime = "${companyStartTime}";
 			var companyEndTime = "${companyEndTime}";
-	   	
-	   		function close_Click(){
-	   			window.close();
-	   		}
 	   		
 	   		$(document).ready(function() {
-	   			//조직도 리스트
 	   			treeContent = ${deptList};
 		   		setDeptList();
-		   		
+		    	
+	   			$(function () {
+		   			$(document).on({
+		   				"dblclick":function(){delTargetDept(this);},
+		   				"click":function(){targetDept = this;
+			   				$("*").removeClass("selectTR");
+				   			$(this).addClass("selectTR");
+		   				}
+	   				},"#lplistView tr");
+	   			});
+	            
+// 		   		for (var i = 0; i < RetValue[0].length; i++) {
+// 	   				lpDeptId = RetValue[0][i];
+// 	   				lpDeptName = RetValue[1][i];
+	   				
+// 	   				addDeptInLP();
+// 				}
+
 		   		//timepicker셋팅
 		   		$('#workStartTime').timepicker({ 'timeFormat': 'H:i' });
         		$('#workEndTime').timepicker({ 'timeFormat': 'H:i' });
@@ -56,76 +70,58 @@
     				}
     			});
    			});
-	   		
+	   	
 	   		//조직도 뿌리는 펑션
 	   		function setDeptList() {
 				$('#treeview').on('changed.jstree', function (e, data) {
-			     	selectDeptId = data.instance.get_node(data.selected).id;
-			     	var deptName = $("#"+selectDeptId+" a:first").text();
-					setUserList("DEPARTMENT", selectDeptId,deptName);
+					lpDeptId = data.instance.get_node(data.selected).id;
+					lpDeptName = data.instance.get_node(data.selected).text;
+				  }).on('dblclick.jstree', function (e, data) {
+						addDeptInLP();
 				}).jstree({ 
-					'core'   : {'data' : treeContent, 'multiple' : false},
+					'core' : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
-					'themes' : {'responsive' : true}
-				})
-				.on('ready.jstree', function(e, data) {
+					 'themes' : {'responsive' : true}
+				}).on('ready.jstree', function(e, data) {
 					var offset = $(".jstree-wholerow-clicked").offset();
 		   	    	var jstree = document.getElementById("treeview");
 		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
-			    })
-			    ;
+			    });
 	   		}
-	   		
-	   		function goScroll(){
-				var offset = $("#opensol").offset();
-	   	        $('html, body').animate({scrollTop : offset.top}, 400);
-	   		}
-	   		
-	   		//사원 리스트 뿌리기
-	   		function setUserList(key,value,deptName) {
-	   			var listType = getOrganListType();
-	   			function getOrganListType() {
-		        	var organListType = "TXT";
-		        	$.ajax({
-		        		type : "POST",
-		        		dataType : "text",
-		        		url : "/ezOrgan/getListType.do",
-		        		async : false,
-		        		success : function(result) {
-		        			organListType = result;
-		        		}
-		        	})
-		        	return organListType;
-		        }
+			
+	   		//부서 리스트에 추가
+	   		function addDeptInLP() {
+	   			var flag = true;
 	   			
-	   			$.ajax({
-	   				type:"post",
-	   				dataType:"html",
-	   				url:"/admin/ezAttitude/userList.do",
-	   				data:{"key":key, "value":value,"deptName":deptName,"companyId":companyId, "listType" : listType},
-	   				success: function(result){
-	   					var picList = $(result).find(".organwrap");
-	   					if (picList.length==0 && key!="DEPARTMENT") {
-	   						alert("<spring:message code='ezCommunity.t1379'/>");
-	   					} else {
-		   					$("#orglistView").html(result);
-	   					}
-	   				}
-	   			});
-	   		}
-	   		
-	   		//검색
-	   		function search_click() {
-	   			var key = $("#search_type").val();
-	   			var value = $("#keyword").val().trim();
-	   			if(value) {
-		   			setUserList(key, value);
-	   			} else {
-	   				alert("<spring:message code='ezAttitude.t202' />");
+	   			for (var i = 0; i < lpDepts.length; i++) {
+					if (lpDepts[i] == lpDeptId) {
+		   				alert("<spring:message code='ezAttitude.t203' />");
+						flag = false;
+					}
+				}
+	   			
+	   			if (flag) {
+		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+		   			lpDepts.push(lpDeptId);
+		   			lpDeptNames.push(lpDeptName);
 	   			}
 	   		}
 	   		
-			function checkPattern() {
+	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
+	   		function delTargetDept(elem) {
+	   			var targetDeptId = $(".selectTR").attr("targetId");
+	   			if (targetDeptId) {
+		   			var targetDeptName = $(".selectTR").attr("targetName");
+		   			
+	   				lpDepts.splice(lpDepts.indexOf(targetDeptId), 1);
+	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName), 1);
+	   				$(".selectTR").remove();
+	   			} else {
+	   				alert("<spring:message code='ezAttitude.t204' />");
+	   			}
+	   		}
+	   		
+	   		function checkPattern() {
 				var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 				
 				if ((timePattern.test($("#workStartTime").val()) && timePattern.test($("#workEndTime").val())) || ($("#workStartTime").val() == "" && $("#workEndTime").val() == "")) {
@@ -160,7 +156,6 @@
 					workEndTime = $("#workEndTime").val();
 					gubun = "1";
 				}
-				
 				$.ajax({
 	   				type:"post",
 	   				dataType:"text",
@@ -168,7 +163,7 @@
 	   				url:"/admin/ezAttitude/editAttitudeDeptConfig.do",
 	   				data:{
 	   					companyId : companyId,
-	   					selectDeptId : selectDeptId,
+	   					selectDeptIds : lpDepts.toString(),
 	   					workStartTime : workStartTime,
 	   					workEndTime : workEndTime,
 	   					gubun : gubun
@@ -190,88 +185,63 @@
 				window.close();
 			}
 		</script>
+		
 		<style>
-/* 			tr.hover:hover{background:#eee; color:#fff;} */
+			tr.hover:hover{background:#eee; color:#fff;}
 			
-/* 			.selectTR{ */
-/* 				background-color: rgb(233, 241, 255); */
-/* 			} */
+			.selectTR{
+				background-color: rgb(233, 241, 255);
+			}
 		</style>
 	</head>
-	<body class="popup"> 
-        <h1>부서근무시간수정</h1>
+	
+	<body class="popup">
+        <h1><spring:message code='ezAttitude.t201' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="close_Click()"><spring:message code='ezAttitude.t157' /></span></li>
+	            <li><span onclick="btncancel_onclick()"><spring:message code='ezOrgan.t143'/></span></li>
 	        </ul>
 	    </div>
-	    <script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-		<table id="TreeViewTD">
-		 	<tr>
-	            <td>
-	                 <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
-	                    <div class="portlet_tabpart03_top" id="tab1">
-	                        <table style="margin-top: 3px; width: 100%;">
-	                            <tr>
-	                                <td>
-	                                </td>
-	                                <td>
-	                                    <div style="float:right; margin-right:5px;">
-	                                        <select id="search_type" style="height:22px;">
-	                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
-					                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
-					                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
-					                            <option value="title"><spring:message code='ezOrgan.t69'/></option>
-					                            <option value="telephonenumber"><spring:message code='ezOrgan.t95'/></option>
-					                            <option value="mobile"><spring:message code='ezOrgan.t96'/></option>
-					                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
-					                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
-					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
-	                                        </select>
-	                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px;" />
-	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
-	                                    </div>
-	                                </td>    
-	                            </tr>
-	                        </table>
-	                    </div>
-	                </div>
-					<table style="margin-top: 4px;">
-			            <tr>
-			                <td class="box" style="border-right: 0px; height: 465px;">
-			                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
-			                </td>
-			                <td></td>
-			                <td class="listview" style="width: 426px" id="orglistView">
-			                </td>    
-			            </tr>
-			        </table>
-			        <table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; width: 650px;">
-				        <tbody>
-				        	<tr>
-				        		<input type="checkbox" id="gubun" name="gubun"/><spring:message code='ezAttitude.t127' />
-				        	</tr>
-				        	<tr>
-				            	<td style="height: 50px; text-align: left; padding-left: 10px;">
-						        	<div style="display: inline-block; vertical-align: middle;">
-					                	근무시간&nbsp;
-						        		<input id="workStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px; text-align:center;"/>
-						        	</div>
-									&nbsp;
-									<div style="display: inline-block; vertical-align: middle;" align="right">
-					            		<a class="imgbtn"><span onclick="btnOk_onclick()"><spring:message code='ezAttitude.t128' /></span></a>
-										<a class="imgbtn"><span onclick="btncancel_onclick()"><spring:message code='ezAttitude.t129' /></span></a>
-					            	</div>
-				            	</td>
-					        </tr>
-					    </tbody>
-				    </table>
-				</td>
-			</tr>
+       	<table>
+            <tr>
+                <td class="box" style="width: 250px; height: 465px;">
+                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                </td>
+                <td style="width: 30px; text-align: center;" rowspan="2">                            
+                	<img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
+                	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
+                </td>
+                <td class="listview" style="width: 200px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
+                	<div style="width: 200px; height: 100%; overflow: auto;">
+	                	<table class="mainlist_free">
+						</table>
+					</div>
+                </td>    
+            </tr>
         </table>
+		<table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; margin-top:15px; width: 450px;">
+	        <tbody>
+	        	<tr>
+	        		<td>
+			        	<div style="display: inline-block; vertical-align: middle;">
+			        		<input type="checkbox" id="gubun" name="gubun"/><span><spring:message code='ezAttitude.t127' /></span>
+			        	</div>
+		        	</td>
+	        	</tr>
+	        	<tr>
+	            	<td style="height: 50px; text-align: left; padding-left: 10px;">
+			        	<div style="display: inline-block; vertical-align: middle;">
+		                	근무시간&nbsp;
+			        		<input id="workStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px; text-align:center;"/>
+			        	</div>
+						&nbsp;
+						<div style="display: inline-block; vertical-align: middle;" align="right">
+		            		<a class="imgbtn"><span onclick="btnOk_onclick()"><spring:message code='ezAttitude.t128' /></span></a>
+							<a class="imgbtn"><span onclick="btncancel_onclick()"><spring:message code='ezAttitude.t129' /></span></a>
+		            	</div>
+	            	</td>
+		        </tr>
+		    </tbody>
+	    </table>
 	</body>
 </html>
-

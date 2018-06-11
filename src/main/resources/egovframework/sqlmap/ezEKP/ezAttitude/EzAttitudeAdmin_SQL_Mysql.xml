@@ -620,9 +620,10 @@
           		tenant_id = #tenantId#
           	AND
           		company_id = #companyId#
-          	AND
-          		dept_id = #selectDeptId#
 		]]>
+		<iterate prepend="AND dept_id IN" property="selectDeptId" open="(" close=")" conjunction=",">
+			#selectDeptId[]#
+		</iterate>
    </delete>
    
    	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultClass="AdminAttitudeVO">

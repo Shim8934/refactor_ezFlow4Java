@@ -1028,7 +1028,7 @@ public class EzAttitudeGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
-			String selectDeptId = request.getParameter("selectDeptId");
+			String selectDeptIds = request.getParameter("selectDeptIds");
 			String workStartTime = request.getParameter("workStartTime");
 			String workEndTime = request.getParameter("workEndTime");
 			String gubun = request.getParameter("gubun");
@@ -1036,7 +1036,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			// insert on duplicate
-			ezAttitudeService.editAttitudeDeptConfig(selectDeptId, workStartTime, workEndTime, gubun, info.getOffSet(), companyId, info.getTenantId());
+			ezAttitudeService.editAttitudeDeptConfig(selectDeptIds, workStartTime, workEndTime, gubun, info.getOffSet(), companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

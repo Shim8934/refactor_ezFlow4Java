@@ -1815,6 +1815,9 @@ public class EzAttitudeAdminController {
 		return totalAtt;
 	}
 	
+	/**
+	 * 근무시간관리 부서근무시간수정 화면
+	 */
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConf.do")
 	public String editAttitudeDeptConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/editAttitudeDeptConf started");
@@ -1897,76 +1900,9 @@ public class EzAttitudeAdminController {
 		
 		return "/admin/ezAttitude/editAttitudeDeptConf";
 	}
-	//조직도 사원리스트
-	// /rest/ezattitude/organtree/users	
+
 	/**
-	 * 사원리스트
-	 * @throws Exception 
-	 */
-	@RequestMapping(value = "/admin/ezAttitude/userList.do")
-	public String userList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception{
-		LOGGER.debug("userList started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String key = request.getParameter("key");
-		String value = request.getParameter("value");
-		String companyId = request.getParameter("companyId");
-		
-		//조직도 회사,부서 리스트
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/organtree/users";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("key", key)
-				.queryParam("value", value)
-				.queryParam("companyId", companyId)
-				.queryParam("userId", userInfo.getId());
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-				
-//		JSONObject jObject = new JSONObject();
-		if (status.equals("ok")) {		
-			JSONArray userList = (JSONArray) resultBody.get("data");
-			model.addAttribute("listType", request.getParameter("listType"));
-			model.addAttribute("userList", userList);
-			
-			String keyword = "";
-			if (key.equals("DEPARTMENT")) {
-				keyword = request.getParameter("deptName");
-			} else{
-				keyword = egovMessageSource.getMessage("ezJournal.t43", userInfo.getLocale());
-			}
-			int userCount = 0;
-			if (userList.size() == 0 && !key.equals("DEPARTMENT")) {
-				keyword = egovMessageSource.getMessage("ezJournal.t170", userInfo.getLocale());
-			} else {
-				userCount = userList.size();
-			}
-			model.addAttribute("keyword",keyword);
-			model.addAttribute("userCount",userCount);
-			model.addAttribute("key", key);
-		}
-		
-		LOGGER.debug("userList ended");
-		return "admin/ezAttitude/userList";
-	}
-	
-	/**
-	 * 근무시간관리 근무시간 수정
+	 * 근무시간관리 부서근무시간 수정
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConfig.do")
 	@ResponseBody
@@ -1975,7 +1911,7 @@ public class EzAttitudeAdminController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
-		String selectDeptId = request.getParameter("selectDeptId");
+		String selectDeptIds = request.getParameter("selectDeptIds");
 		String workStartTime = request.getParameter("workStartTime");
 		String workEndTime = request.getParameter("workEndTime");
 		String gubun = request.getParameter("gubun");
@@ -1991,7 +1927,7 @@ public class EzAttitudeAdminController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectDeptId", selectDeptId)
+				.queryParam("selectDeptIds", selectDeptIds)
 				.queryParam("workStartTime", workStartTime)
 				.queryParam("workEndTime", workEndTime)
 				.queryParam("gubun", gubun);
