@@ -1032,6 +1032,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return deptList;
 	}
 	
+	@Override
 	public int getWorkinDays(Date start, Date end){
 	    //Ignore argument check
 
@@ -2052,5 +2053,27 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] getProjectWeight ended.");
 		return ezPMSDAO.getProjectWeight(map);
+	}
+
+	@Override
+	public float getPlanProgress(Date start, Date end) throws Exception {
+		Date today = new Date();
+		String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+		Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+		
+		int totalWorkingdays = getWorkinDays(start, end);
+		int restDueday = getWorkinDays(now, end);
+		float planProgress = 0;
+		if(totalWorkingdays == 0){
+			totalWorkingdays = 1;
+		}
+		if(restDueday > 0){
+			planProgress = ((float)(totalWorkingdays - restDueday) / totalWorkingdays) * 100;
+		}
+		else{
+			planProgress = 100;
+		}
+		
+		return planProgress;
 	}
 }

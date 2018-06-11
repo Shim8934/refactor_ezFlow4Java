@@ -125,6 +125,15 @@ public class EzPMSGWController2 {
 			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position);
 			 
 			for(int i = 0; i < taskList.size(); i++ ){
+				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanStartDate());
+				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanEndDate());
+				Date today = new Date();
+				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+				
+				int restDueday = ezPMSService.getWorkinDays(now, endDate);
+				taskList.get(i).setRestDueday(restDueday);
+				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate));
 				taskList.get(i).setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
 			}
 			

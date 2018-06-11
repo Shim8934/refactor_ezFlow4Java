@@ -119,6 +119,9 @@ public class ProjectTaskVO {
     //순수 task workingday
     private int realWorkingday;
     
+    // 실제 진행률 
+    private Float planProgress;
+    
     public Long getTaskId() {
         return taskId;
     }
@@ -421,6 +424,14 @@ public class ProjectTaskVO {
 
 	public void setRealWorkingday(int realWorkingday) {
 		this.realWorkingday = realWorkingday;
+	}
+
+	public Float getPlanProgress() {
+		return planProgress;
+	}
+
+	public void setPlanProgress(Float planProgress) {
+		this.planProgress = planProgress;
 	}
     
 }
