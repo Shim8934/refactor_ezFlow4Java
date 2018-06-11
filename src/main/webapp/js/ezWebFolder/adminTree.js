@@ -9,8 +9,23 @@ function getCompanyData(companyId, mode, rootDiv) {
 		dataType: "JSON",
 		async: false,
 		success : function(data) {
-			var result = data.companyTree;
-			renderData(companyId, result, mode, rootDiv);
+			var code = data.code;
+			
+			switch(code) {
+				case 0: 
+					var result = data.companyTree;
+					renderData(companyId, result, mode, rootDiv);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			alert(strMessage);
@@ -168,9 +183,24 @@ function getDetailTree(obj, folderType) {
 			dataType: "JSON",
 			async: false,
 			success: function(data) {
-				var result = data.subTree;
-				displaySubTree(result, obj.parentElement, folderType);
-				arrSubFolder.push(uniqueId);
+				var code = data.code;
+				
+				switch(code) {
+					case 0: 
+						var result = data.subTree;
+						displaySubTree(result, obj.parentElement, folderType);
+						arrSubFolder.push(uniqueId);
+						break;
+					case 1:
+						alert(resultErr1);
+						break;
+					case 2:
+						alert(resultErr2);
+						break;
+					case 3:
+						alert(resultErr3);
+						break;
+				}
 			},
 			error: function (xhr, status, e){
 				alert(strMessage);
@@ -206,8 +236,23 @@ function getDepartmentData(companyId, mode, rootDiv) {
 		dataType: "JSON",
 		async: false,
 		success : function(data) {
-			var result = data.deptTree;
-			renderData2(companyId, result, mode, rootDiv);
+			var code = data.code;
+			
+			switch(code) {
+				case 0: 
+					var result = data.deptTree;
+					renderData2(companyId, result, mode, rootDiv);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			alert(strMessage);

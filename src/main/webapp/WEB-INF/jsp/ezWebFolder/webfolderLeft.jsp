@@ -114,30 +114,45 @@
 					dataType: "JSON",
 					async : true,
 					success : function(data) {
-						var result      = data.userCapacity;
-						var totalVolume = result["totalCapacity"] + "GB";
-						var useVolume   = getFileSize(result["totalUsed"]);
-						var percent     = result["usedRate"];
-						var colorClass  = "myBar_green";
-						var barElmt     = document.getElementById("myBar");
-						var volumeInf   = document.getElementsByClassName("volumes")[0];
+						var code = data.code;
 						
-						if (percent < 100) {
-							barElmt.style.width = percent + "%";
-						} else {
-							barElmt.style.width = "100%";
-						}
-						
-						volumeInf.textContent = useVolume + " / " + totalVolume + " (" + percent + "%)";
-						
-						if (percent > 90) {
-							barElmt.className = "myBar_red";
-						} else if (percent > 70) {
-							barElmt.className = "myBar_orange";
-						} else if (percent > 60) {
-							barElmt.className = "myBar_yellow";
-						} else {
-							barElmt.className = "myBar_green";
+						switch(code) {
+							case 0: 
+								var result      = data.userCapacity;
+								var totalVolume = result["totalCapacity"] + "GB";
+								var useVolume   = getFileSize(result["totalUsed"]);
+								var percent     = result["usedRate"];
+								var colorClass  = "myBar_green";
+								var barElmt     = document.getElementById("myBar");
+								var volumeInf   = document.getElementsByClassName("volumes")[0];
+								
+								if (percent < 100) {
+									barElmt.style.width = percent + "%";
+								} else {
+									barElmt.style.width = "100%";
+								}
+								
+								volumeInf.textContent = useVolume + " / " + totalVolume + " (" + percent + "%)";
+								
+								if (percent > 90) {
+									barElmt.className = "myBar_red";
+								} else if (percent > 70) {
+									barElmt.className = "myBar_orange";
+								} else if (percent > 60) {
+									barElmt.className = "myBar_yellow";
+								} else {
+									barElmt.className = "myBar_green";
+								}
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
 					},
 					error : function(error) {

@@ -1100,7 +1100,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1129,14 +1129,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					logger.debug("Privileges!");
 					result.put("status", "error");
 					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t243", locale));
-					result.put("code", "1");
+					result.put("code", 3);
 					return result;
 				}
 			}
 		}
 		else {
 			//copy files
-			
 			//Check upload conditions
 			double totalUploadSize      = getTotalFilesSize(fileList, tenantId);
 			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
@@ -1148,8 +1147,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				logger.debug("Not enough storage to move/copy these files!");
 				result.put("status", "error");
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
-				result.put("code", 1);
-				result.put("data", "");
+				result.put("code", 4);
 				return result;
 			}
 			

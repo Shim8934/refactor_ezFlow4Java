@@ -105,7 +105,7 @@ public class EzWebFolderGWController {
 			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", webfolderConfig);
+			result.put("config", webfolderConfig);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -212,7 +212,7 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			result.put("data", listUserCapacity);
+			result.put("capacityList", listUserCapacity);
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("totalPages", totalPages);
@@ -252,6 +252,7 @@ public class EzWebFolderGWController {
 			
 			if (Double.parseDouble(newValue) < Double.parseDouble(webfolderConfig.getUploadLimit())) {
 				result.put("status", "error");
+				result.put("code", 4);
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t26", locale));
 				return result;
 			}
@@ -303,7 +304,6 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -346,7 +346,7 @@ public class EzWebFolderGWController {
 				userCapacity.setUsedRate((int)(Double.parseDouble(userCapacity.getTotalUsed())/totalCapByBytes));
 			}
 			
-			result.put("data", userCapacity);
+			result.put("userCapacity", userCapacity);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
@@ -437,7 +437,7 @@ public class EzWebFolderGWController {
 			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, primary, tenantId);
 			totalPages                   = (totalRows + pageSize - 1)/pageSize;
 			
-			result.put("data", listFileLogs);
+			result.put("fileLogList", listFileLogs);
 			result.put("totalPages", totalPages);
 			result.put("totalRows", totalRows);
 			result.put("status", "ok");
@@ -534,7 +534,7 @@ public class EzWebFolderGWController {
 			}
 			
 			result.put("status", "ok");
-			result.put("data", excelPath);
+			result.put("path", excelPath);
 			result.put("code", 0);
 		}
 		catch (Exception e) {
@@ -628,15 +628,13 @@ public class EzWebFolderGWController {
 			
 			if (list == null || list.size() == 0) {
 				result.put("status", "error");
-				result.put("code", 1);
+				result.put("code", 2);
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 			}
 			else {
 				result.put("status", "ok");
 				result.put("code", 0);
-				result.put("data", list);
 			}
-			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -692,7 +690,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -710,13 +708,13 @@ public class EzWebFolderGWController {
 			ezWebFolderService.deleteSelectedFiles(fileIDList, userInfo);
 			
 			result.put("status", "ok");
-			result.put("code", "0");
+			result.put("code", 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-			result.put("code", "2");
+			result.put("code", 2);
 		}
 		
 		logger.debug("delFileDelete end");
@@ -737,7 +735,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -796,7 +794,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -818,7 +816,7 @@ public class EzWebFolderGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-			result.put("code", "2");
+			result.put("code", 2);
 		}
 		
 		logger.debug("putFileMove end");
@@ -843,7 +841,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -873,7 +871,7 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", jsonArray);
+			result.put("listOfUsers", jsonArray);
 			result.put("count", cnt);
 		}
 		catch (Exception e) {
@@ -900,7 +898,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -970,7 +968,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -990,7 +988,7 @@ public class EzWebFolderGWController {
 			logger.debug("Cannot find webfolder admin extension!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-			result.put("code", "2");
+			result.put("code", 2);
 			return result;
 		}
 		
@@ -1036,7 +1034,7 @@ public class EzWebFolderGWController {
 		if (pFolderId.equals("") || userId.equals("") || folderUsers.equals("") || folderName.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
@@ -1076,7 +1074,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1116,7 +1114,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1127,7 +1125,7 @@ public class EzWebFolderGWController {
 			if (!isWebfolderAdmin(userInfo)) {
 				logger.debug("Privileges!");
 				result.put("status", "error");
-				result.put("code", 1);
+				result.put("code", 3);
 				return result;
 			}
 					
@@ -1138,14 +1136,14 @@ public class EzWebFolderGWController {
 					ezWebFolderService.getAllSubDepts(company, tenantId, 2);
 					
 					result.put("currentFolder", "");
-					result.put("data", company);
+					result.put("folderTree", company);
 					break;
 				case "dept":
 					//Get department folder tree
 					List<FolderSimpleVO> listFolders = ezWebFolderService.getAllSimpleDeptFolder(companyId, userInfo);
 					
 					result.put("currentFolder", "");
-					result.put("data", listFolders);
+					result.put("folderTree", listFolders);
 					break;
 			}
 			
@@ -1202,8 +1200,8 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", sCompany);
-			result.put("userDept", deptId);
+			result.put("deptTree", sCompany);
+			result.put("currentDept", deptId);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1241,7 +1239,7 @@ public class EzWebFolderGWController {
 			SimpleDeptVO sDept = ezWebFolderService.getAllDepts(deptId, level, primary, tenantId);
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", sDept);
+			result.put("subTree", sDept);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1267,7 +1265,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1279,7 +1277,7 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", listMembers);
+			result.put("listMembers", listMembers);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1307,7 +1305,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1333,7 +1331,7 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", listFolders);
+			result.put("deptTree", listFolders);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1361,7 +1359,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1418,7 +1416,7 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", company);
+			result.put("companyTree", company);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1445,7 +1443,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1463,7 +1461,7 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", folder);
+			result.put("subTree", folder);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1489,7 +1487,7 @@ public class EzWebFolderGWController {
 		if (folderId.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
@@ -1514,7 +1512,7 @@ public class EzWebFolderGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", listUsers);
+			result.put("folderUsers", listUsers);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1539,7 +1537,7 @@ public class EzWebFolderGWController {
 		if (folderId.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
@@ -1577,7 +1575,7 @@ public class EzWebFolderGWController {
 		if (folderId.equals("") || serverName.equals("") || destFolderId.equals("") || mode.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
@@ -1593,7 +1591,7 @@ public class EzWebFolderGWController {
 			if (folder.getFolderUpper().equals(destFolderId)) {
 				result.put("status", "error");
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t224", locale));
-				result.put("code", 1);
+				result.put("code", 4);
 				return result;
 			}
 			
@@ -1602,7 +1600,7 @@ public class EzWebFolderGWController {
 			if (pos != -1) {
 				result.put("status", "error");
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t245", locale));
-				result.put("code", 6);
+				result.put("code", 5);
 				return result;
 			}
 			
@@ -1651,7 +1649,7 @@ public class EzWebFolderGWController {
 		if (folderId.equals("") || serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
@@ -1756,7 +1754,7 @@ public class EzWebFolderGWController {
 				fileList   = ezWebFolderService.getAllFilesInFolder(realColmn, order.toUpperCase(), folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 			}
 			
-			result.put("data", fileList);
+			result.put("fileList", fileList);
 			result.put("totalPages", totalPages);
 			result.put("totalRows", totalRows);
 			result.put("status", "ok");
@@ -1792,6 +1790,7 @@ public class EzWebFolderGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			result.put("data", userInfo.getCompanyID());
+			result.put("primary", userInfo.getPrimary());
 			result.put("status", "ok");
 			result.put("code", 0);
 		}
@@ -1838,6 +1837,7 @@ public class EzWebFolderGWController {
 			
 			result.put("data", resultList);
 			result.put("userCompany", userInfo.getCompanyID());
+			result.put("primary", userInfo.getPrimary());
 			result.put("status", "ok");
 			result.put("code", 0);
 		}
@@ -1870,7 +1870,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1939,7 +1939,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1985,7 +1985,7 @@ public class EzWebFolderGWController {
 		if (serverName.equals("") || companyId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
@@ -2049,7 +2049,7 @@ public class EzWebFolderGWController {
 		if (serverName.equals("") || companyId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
@@ -2090,7 +2090,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -2121,7 +2121,7 @@ public class EzWebFolderGWController {
 						}
 					}
 					
-					result.put("data", company);
+					result.put("folderTree", company);
 					break;
 				case "dept":
 					//Get department folder tree
@@ -2133,7 +2133,7 @@ public class EzWebFolderGWController {
 						listFolders = ezWebFolderService.getDeptFolderTreeForUser(userId, userInfo.getDeptID(), tenantId);
 					}
 					
-					result.put("data", listFolders);
+					result.put("folderTree", listFolders);
 					
 					break;
 				case "user":
@@ -2146,7 +2146,7 @@ public class EzWebFolderGWController {
 						personalFolder = ezWebFolderService.getUserSimpleFolder(userId, tenantId);
 					}
 					
-					result.put("data", personalFolder);
+					result.put("folderTree", personalFolder);
 					break;
 			}
 			
@@ -2262,7 +2262,6 @@ public class EzWebFolderGWController {
 			int tenantId         = loginService.getTenantId(serverName);
 			ezWebFolderService.updateListCount(userId, listCount, tenantId);
 			
-			result.put("data", "");
 			result.put("status", "ok");
 			result.put("code", 0);
 		}
@@ -2289,7 +2288,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -2303,14 +2302,14 @@ public class EzWebFolderGWController {
 				logger.debug("Privileges!");
 				result.put("status", "error");
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t28", locale));
-				result.put("code", "3");
+				result.put("code", 3);
 				return result;
 			}
 			
 			List<SimpleDeptVO> listDepts           = ezWebFolderService.getAllDeptsForChief(userId, 0, primary, tenantId);
 			List<SimpleDeptVO> listSelectedDepts   = ezWebFolderService.getSelectedDeptsForChief(userId, 0, primary, tenantId);
 			
-			result.put("data", listDepts);
+			result.put("deptTree", listDepts);
 			result.put("selectedDepts", listSelectedDepts);
 			result.put("userDept", userInfo.getDeptID());
 			result.put("status", "ok");
@@ -2339,7 +2338,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -2349,7 +2348,7 @@ public class EzWebFolderGWController {
 			String primary                       = userInfo.getPrimary();
 			List<SimpleDeptVO> listSelectedDepts = ezWebFolderService.getSelectedDeptsForChief(userId, 0, primary, tenantId);
 			
-			result.put("data", listSelectedDepts);
+			result.put("selectedDepts", listSelectedDepts);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}
@@ -2385,7 +2384,6 @@ public class EzWebFolderGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			ezWebFolderAdminService.updateSelectedDeptsForChief(deptsList, userInfo);
 			
-			result.put("data", "");
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
@@ -2425,17 +2423,16 @@ public class EzWebFolderGWController {
 			
 			if (!fileId.equals("")) {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
-				result.put("data", fileVO.getCreateId().equals(userId) ? "ok" : "error");
+				result.put("status", fileVO.getCreateId().equals(userId) ? "ok" : "error");
 			}
 			else {
 				int totalFiles = fileList.split(",").length;
 				fileList       = "'" + fileList + "'";
 				fileList       = fileList.replace(",", "','");
 				int count      = ezWebFolderService.checkFilesOwner(userId, fileList, tenantId);
-				result.put("data", count == totalFiles ? "ok" : "error");
+				result.put("status", count == totalFiles ? "ok" : "error");
 			}
 			
-			result.put("status", "ok");
 			result.put("code", 0);
 		}
 		catch (Exception e) {
@@ -2461,7 +2458,7 @@ public class EzWebFolderGWController {
 		if (serverName.equals("") || folderId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
@@ -2481,7 +2478,7 @@ public class EzWebFolderGWController {
 			else {
 				result.put("status", "error");
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-				result.put("code", 7);
+				result.put("code", 2);
 			}
 		}
 		catch (Exception e) {
@@ -2536,19 +2533,18 @@ public class EzWebFolderGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			boolean check = isWebfolderAdmin(userInfo);
+			boolean check    = isWebfolderAdmin(userInfo);
 			
 			if (check == true) {
+				result.put("status", "ok");
+				result.put("code", 0);
 				result.put("data", "1");
 			}
 			else {
-				result.put("data", "0");
+				result.put("status", "error");
 				result.put("code", 3);
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t28", locale));
 			}
-			
-			result.put("status", "ok");
-			result.put("code", 0);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
