@@ -3841,6 +3841,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("moveOneLineReply ended");
 	}
 
-
+	/* 2018-06-11 홍승비 - 포토/썸네일 이미지 리스트 중에서 가장 큰 IMAGEID 가져오기 */
+	@Override
+	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception {
+		logger.debug("getLastImageID started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getLastImageID ended");
+		return ezBoardDAO.getLastImageID(map);
+	}
 
 }

@@ -793,7 +793,7 @@
 		        function btn_Add_Onclick()
 		        {
 		            var swidth = 500;
-		            var sheight = 580;
+		            var sheight = 525;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
