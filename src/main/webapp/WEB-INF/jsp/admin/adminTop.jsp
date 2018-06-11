@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="<spring:message code='main.e4' />" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
+			var useHWP = "${useHWP}";
 			function window_onload(){
 				process();
 			}
@@ -24,6 +25,18 @@
 				<c:if test="${use_portal != 'YES'}">
 					window.open("/admin/ezPersonal/personalMain.do", "bottom");
 				</c:if>
+				
+				<c:if test="${useHWP == 'YES'}">
+					var userAgent = window.navigator.userAgent;
+					
+					if (!CrossYN()) {
+						if (useHWP == 'YES') {
+							if (userAgent.indexOf("Trident/5.0") > 0 || userAgent.indexOf("Trident/6.0") > 0 || userAgent.indexOf("Trident/7.0") > 0) {
+								GetObject();
+							}
+						}
+					}
+		    	</c:if>
 			}
 			
 			function menu_change(width, e){
@@ -91,6 +104,20 @@
 				}
 			}
 			
+			function GetObject() {
+                i_icd2.SetDocumentDisp(window.document);
+                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/admin/ezApprovalG/componentListTransfer.do?admin=Y";
+                i_icd2.CheckVersion();
+                var nCount = i_icd2.nNeedDownload;
+
+                if (nCount) {
+                    if_Progress.StartOn();
+                }
+                else {
+                    finish_download();
+                }
+            }
+			
 			function finish_download() {
                 OfficeBugPatch();
             }
@@ -106,6 +133,9 @@
 		</script>
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
+		<c:if test="${useHWP == 'YES'}">
+			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,19" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+        </c:if>
 		<form method="post">
 			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>
 			<div id="adminmenu">
@@ -166,6 +196,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("adminmenu"), "ul", "li", "0");
 		</script>
+		<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
 	</body>
 </html>
 
