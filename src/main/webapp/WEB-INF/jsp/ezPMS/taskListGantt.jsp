@@ -141,6 +141,8 @@
 		   			tempTask.depends = "";
 		   			tempTask.description = pd.overview;
 		   			tempTask.progress = pd.progress;
+		   			tempTask.realProgress = pd.progress;
+		   			tempTask.planProgress = pd.planProgress;
 		   			tempTask.hasChild = "";
 		   			
 		   			ganttData.tasks.push(tempTask);
@@ -207,6 +209,8 @@
 			   			tempTask.depends = "";
 			   			tempTask.description = gl[i].overview;
 			   			tempTask.progress = gl[i].realProgress;
+			   			tempTask.realProgress = gl[i].realProgress;
+			   			tempTask.planProgress = gl[i].planProgress;
 			   			tempTask.hasChild = "";
 		   				ganttData.tasks.push(tempTask);
 		   				
@@ -1438,7 +1442,7 @@
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
 			      <th class="gdfColHeader gdfResizable" style="width:60px;">실제진행률</th>
 			      <th class="gdfColHeader gdfResizable" style="width:60px;">목표진행률</th>
-			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">depe.</th>
+			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">선행작업</th>
 			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">담당자</th>
 			    </tr>
 			    </thead>

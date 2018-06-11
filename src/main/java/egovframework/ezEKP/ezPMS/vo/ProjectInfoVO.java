@@ -99,8 +99,11 @@ public class ProjectInfoVO {
 	    //프로젝트의 그룹 아이디
 	    private long groupId;
 	    
-	    //프로젝트의 그룹 아이디
+	    //프로젝트의 가중치
 	    private Float weight;
+	    
+	    // 계획 진행률 
+	    private Float planProgress;
 	    
 	    public int getTotalTaskCount() {
 			return totalTaskCount;
@@ -356,6 +359,14 @@ public class ProjectInfoVO {
 
 		public void setWeight(Float weight) {
 			this.weight = weight;
+		}
+
+		public Float getPlanProgress() {
+			return planProgress;
+		}
+
+		public void setPlanProgress(Float planProgress) {
+			this.planProgress = planProgress;
 		}
 
 }
