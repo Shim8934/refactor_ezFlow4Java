@@ -255,9 +255,26 @@
 	            }); */
 	            
 	            // 재은 수정중
-	            /* $("#listType1 td").each(function(){
-	            	alert("ee");
-	            }); */
+	            $("#listType1 tr").each(function(){
+	            	
+	            	var thisId = this.getAttribute('id');
+	            	if (thisId.indexOf('MsgToList_TR_') > -1 || thisId.indexOf('MsgCCList_TR_') > -1 || thisId.indexOf('MsgBCCList_TR_') > -1) {
+	            		this.onmouseover = function () { event_listMover(this); };
+		            	this.onmouseout = function () { event_listMout(this); };
+		                this.onclick = function () { event_listclick(this); };
+		                this.ondblclick = function () { event_listDBclick(this); };
+		                this.onselectstart = function () { return false; };
+		                this.setAttribute("draggable", true);
+		                if (CrossYN())
+		                	this.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+		                else
+		                	this.ondragstart = function (event) { event_listdragstart(this); };
+
+		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+		                	this.ondragend = function (event) { event_listdragend(event); };
+		                }
+	            	}
+	            });
 	            
 	            ChangeListView_onClick(getOrganListType());
 	        }
@@ -1012,7 +1029,7 @@
 	                        	var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-	                            
+	                      
 	                            // 재은 수정중
 	                        	if (moveRecipients) {
 	                        		strName = document.getElementById(listContentArry[i]).getAttribute("data1");
@@ -1122,7 +1139,7 @@
 	                        }
 	                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
 	                            listid = "MsgBCCList";
-	                        }
+	                        }ㅔ
 	                        var getlistview = new ListView();
 	                        getlistview.LoadFromID(listid);
 	                        var bFlag = getlistview.ExistRow("DATA2", strEmail);
