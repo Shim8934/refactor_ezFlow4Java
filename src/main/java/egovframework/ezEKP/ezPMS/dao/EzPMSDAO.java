@@ -468,4 +468,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public Float getProjectWeight(Map<String, Object> map) {
 		return (Float) select("EzPMSDAO.getProjectWeight", map);
 	}
+	
+	public void updateGroupProgress(Map<String, Object> map){
+		update("EzPMSDAO.updateGroupProgress", map);
+	}
+	
+	public void updateGroupDate(Map<String, Object> map){
+		update("EzPMSDAO.updateGroupDate", map);
+	}
 }

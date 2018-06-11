@@ -918,9 +918,6 @@
 	   				
 	   				$(".tooltipBox").html(infoHTML);
 	                $('.tooltipBox').show();
-// 	            }
-// 	             function () {
-// 	                
 	            }).on("mouseout", ".taskBox", function(event){
 	            	positionTooltip(event);
 	            	$('.tooltipBox').hide();
@@ -999,6 +996,10 @@
 		  
 		  .taskEditRow input, .columnWidthTest {
 		    font-size: 12px;
+		  }
+		  
+		  .pmsGanttZoomBtn{
+		  	margin: 0px 0px 0px 30px;
 		  }
 		  
 		  #ndo{
