@@ -431,7 +431,7 @@
         	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
-        	data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9;extensionAttribute2", prop : "", type : "group"},
+        	data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9;", prop : "", type : "group"},
         	success : function(result){	
         		xmlDom = loadXMLString(result);
                 adCount = xmlDom.getElementsByTagName("ROW").length;
