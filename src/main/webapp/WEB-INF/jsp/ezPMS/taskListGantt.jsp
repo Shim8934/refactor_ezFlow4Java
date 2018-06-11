@@ -279,6 +279,8 @@
 			   			tempTask.depends = tl[i].pretask;
 			   			tempTask.description = tl[i].overview;
 			   			tempTask.progress = tl[i].realProgress;
+			   			tempTask.realProgress = tl[i].realProgress;
+			   			tempTask.planProgress = tl[i].planProgress;
 			   			tempTask.hasChild = "";
 			   			
 			   			ganttData.tasks.push(tempTask);
@@ -296,7 +298,7 @@
 	   		
 	   		//기본 옵션 세팅
 	   		function setDefOption(ganttMasterObj){
-	   			localStorage.TWPGanttGridState = '{"colSizes":"[35,25,204,119,17,80,17,80,50,50,60,50,1000,35,25,204,119,17,80,17,80,50,50,60,50,1000]"}';
+	   			localStorage.TWPGanttGridState = '{"colSizes":[35,25,240,100,22,80,22,80,50,50,60,60,50,1000,35,25,240,100,22,80,22,80,50,50,60,60,50,1000]}';
 	   		}
 	   		
 	   		function addTask(){
@@ -1426,7 +1428,7 @@
 			    <tr style="height:40px">
 			      <th class="gdfColHeader" style="width:35px; border-right: none"></th>
 			      <th class="gdfColHeader" style="width:25px;"></th>
-			      <th class="gdfColHeader gdfResizable" style="width:300px;">업무명</th>
+			      <th class="gdfColHeader gdfResizable" style="width:240px;">업무명</th>
 			      <th class="gdfColHeader gdfResizable" style="width:100px; display:none;">code/short name</th>
 			      <th class="gdfColHeader"  align="center" style="width:17px;" title="Start date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
 			      <th class="gdfColHeader gdfResizable" style="width:80px;">시작일</th>
@@ -1434,7 +1436,8 @@
 			      <th class="gdfColHeader gdfResizable" style="width:80px;">완료일</th>
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">남은기간</th>
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
-			      <th class="gdfColHeader gdfResizable" style="width:60px;">진행률</th>
+			      <th class="gdfColHeader gdfResizable" style="width:60px;">실제진행률</th>
+			      <th class="gdfColHeader gdfResizable" style="width:60px;">목표진행률</th>
 			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">depe.</th>
 			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">담당자</th>
 			    </tr>
@@ -1457,7 +1460,8 @@
 			    <td class="gdfCell"><input type="text" name="end" value="" class="date"></td>
 			    <td class="gdfCell"><input type="text" name="duration" autocomplete="off" value="(#=obj.duration#)"></td>
 			    <td class="gdfCell"><input type="text" name="weight" autocomplete="off" value="(#=obj.weight#)"></td>
-			    <td class="gdfCell"><input type="text" name="progress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.progress?obj.progress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
+			    <td class="gdfCell"><input type="text" name="realProgress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.realProgress?obj.realProgress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
+			    <td class="gdfCell"><input type="text" name="planProgress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.planProgress?obj.planProgress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
 			    <td class="gdfCell requireCanSeeDep"><input type="text" name="depends" autocomplete="off" value="(#=obj.depends#)" (#=obj.hasExternalDep?"readonly":""#)></td>
 			    <td class="gdfCell taskAssigs">(#=obj.getAssigsString()#)</td>
 			  </tr>
@@ -1467,6 +1471,7 @@
 			  <tr class="taskEditRow emptyRow" >
 			    <th class="gdfCell" align="right"></th>
 			    <td class="gdfCell noClip" align="center"></td>
+			    <td class="gdfCell"></td>
 			    <td class="gdfCell"></td>
 			    <td class="gdfCell"></td>
 			    <td class="gdfCell"></td>
