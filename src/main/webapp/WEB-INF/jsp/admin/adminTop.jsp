@@ -88,10 +88,10 @@
 				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;
 					//20120725 모바일 기기 관리자 메뉴 추가	end
+				    //근태관리 관리자 메뉴 추가
 				    case "menu30":
 				    	parent.frames["bottom"].location.href = "/admin/ezAttitude/attitudeMain.do";
 				    	break;
-				    //근태관리 관리자 메뉴 추가
 				}
 			}
 			
@@ -164,6 +164,8 @@
 		      			</c:if>
 <!-- 		      			업무일지 -->
 		      			<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
+		      			<!-- 근태관리 -->
+		      			<li><span id="menu30" onClick="menu_change(690, event)"><spring:message code="ezAttitude.t1" /></span></li>
                     </c:if>
                     <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>
