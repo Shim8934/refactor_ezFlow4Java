@@ -2202,6 +2202,7 @@
 			L.PROJECT_ID = #projectId#
 		AND
 			L.TENANT_ID = #tenantId#
+		<isNotEqual property="location" compareValue="overview">
 		<isNotEmpty property="groupId">
 		<isEqual property="taskId" compareValue="0">
 		AND 
@@ -2227,6 +2228,7 @@
 			</isNotEqual>
 		</isNotEmpty>
 		</isNotEmpty>
+		</isNotEqual>
 		<isNotEqual property="orderWhat" compareValue="init">
 		ORDER BY	
 			$orderWhat$ $orderHow$

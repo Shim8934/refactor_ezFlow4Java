@@ -839,7 +839,6 @@
 	   		})();
 	   		
 	   		window.onload = function(){
-
 	   			var positionTooltip = function(event) {
 	   				var tPosX = event.pageX - 5;
 	   				var tPosY = event.pageY + 15;
