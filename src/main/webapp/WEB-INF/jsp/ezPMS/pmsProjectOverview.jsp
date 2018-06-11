@@ -615,7 +615,8 @@ function setOverviewContent() {
 		startRow : startCount,
 		limit : listNumber,
 		groupId : groupId,
-		orderWhat : "init"
+		orderWhat : "init",
+		location : "overview"
 	}
 	
 	$.ajax({
@@ -790,6 +791,9 @@ hr {
 	width : 95%;
 }
 
+#logDiv {
+	margin-top : 10px;
+}
 </style>
 </head>
 <body>
