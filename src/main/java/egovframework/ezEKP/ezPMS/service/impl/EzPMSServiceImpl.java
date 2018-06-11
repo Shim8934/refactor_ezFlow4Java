@@ -2029,4 +2029,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] updateTaskWeight ended.");
 	}
+
+	@Override
+	public Float getProjectWeight(Long projectId, int tenantId) throws Exception {
+		LOGGER.debug("[SERVICE] getProjectWeight started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getProjectWeight ended.");
+		return ezPMSDAO.getProjectWeight(map);
+	}
 }

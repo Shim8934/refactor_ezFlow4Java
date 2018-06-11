@@ -99,6 +99,9 @@ public class ProjectInfoVO {
 	    //프로젝트의 그룹 아이디
 	    private long groupId;
 	    
+	    //프로젝트의 그룹 아이디
+	    private Float weight;
+	    
 	    public int getTotalTaskCount() {
 			return totalTaskCount;
 		}
@@ -345,6 +348,14 @@ public class ProjectInfoVO {
 
 		public void setGroupId(long groupId) {
 			this.groupId = groupId;
+		}
+
+		public Float getWeight() {
+			return weight;
+		}
+
+		public void setWeight(Float weight) {
+			this.weight = weight;
 		}
 
 }

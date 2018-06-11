@@ -183,4 +183,6 @@ public interface EzPMSService {
 	public void updatePreTaskRel(long taskId, int preTaskIndex, int tenantId, long projectId);
 
 	void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday);
+	
+	public Float getProjectWeight(Long projectId, int tenantId) throws Exception;
 }
