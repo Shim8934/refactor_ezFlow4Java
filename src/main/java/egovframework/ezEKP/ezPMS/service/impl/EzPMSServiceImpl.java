@@ -2029,4 +2029,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] updateTaskWeight ended.");
 	}
+
+	@Override
+	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId) {
+		LOGGER.debug("[SERVICE] updateTaskGroupId started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("targetTaskId", targetTaskId);
+		map.put("changeGroupId", changeGroupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateTaskGroupId(map);
+		LOGGER.debug("[SERVICE] updateTaskGroupId ended.");
+	}
 }

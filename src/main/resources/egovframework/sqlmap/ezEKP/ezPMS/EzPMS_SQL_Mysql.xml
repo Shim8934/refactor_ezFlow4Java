@@ -477,6 +477,8 @@
 				AND
 					ISSUEYN = 'N'
 			</isNotEqual>
+				ORDER BY
+					ISSUEYN, SORT_ORDER
 	</select>
 	
 	<select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
@@ -489,11 +491,14 @@
 					PROJECT_ID,
 					GROUP_ID,
 					TASK_ID
-				FROM TBL_PMS_TASK
+				FROM 
+					TBL_PMS_TASK
 				WHERE
 					PROJECT_ID = #project_Id#
-						AND
+				AND
 					DEL_STATUS = 0
+				ORDER BY
+					GROUP_ID, SORT_ORDER
 			]]>
 	</select>
 	
@@ -2892,4 +2897,18 @@
 		]]>
 	</update>
 	
+	<update id="EzPMSDAO.updateTaskGroupId" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				GROUP_ID = #changeGroupId#
+			WHERE
+				TASK_ID = #targetTaskId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				PROJECT_ID = #projectId#
+		]]>
+	</update>
 </sqlMap>

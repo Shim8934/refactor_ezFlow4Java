@@ -588,12 +588,39 @@
 		   		$(".gdfTable tbody").sortable({
 		   			items : 'tr:not(.isParent)',
 		   			activate : function(event, ui) {
-		   				console.log(ui);
 		   				preTaskIndex = $("#" + ui.item[0].id).find(".taskRowIndex").text();
 		   				selectedPreTask = ui.item[0].id;
 		   			},
 		   			update : function(event, ui) {
-		   				changeGanttOrder();
+		   				var upperTaskId = $("#" + ui.item[0].id).prev("tr").attr("taskId");
+		   				var groupId = -1;
+		   				
+		   				if (upperTaskId.indexOf("_t") != -1) {
+		   					groupId = upperTaskId.substring(0, upperTaskId.indexOf("_t"));
+		   				} else {
+		   					groupId = upperTaskId;
+		   				}
+		   				
+						var selectedTaskId = ui.item[0].id.substring(ui.item[0].id.lastIndexOf("_"));
+						var selectedGroupId = ui.item[0].id.substring(4, ui.item[0].id.lastIndexOf("_"));
+						
+						var targetTaskId = ui.item[0].id.substring(ui.item[0].id.lastIndexOf("_") + 2);
+						var changeGroupId = -1;
+
+						if (groupId != selectedGroupId) {
+							console.log("group Changed!");
+							console.log(targetTaskId);
+							if (groupId.indexOf("_g") != -1) {
+								changeGroupId = groupId.substring(groupId.indexOf("_g") + 2);
+							} else {
+								changeGroupId = projectGroupId;
+							}
+						}
+		   				
+						$("#" + ui.item[0].id).attr("taskid", "" + groupId + selectedTaskId);
+						$("#" + ui.item[0].id).attr("id", "tid_" + groupId + selectedTaskId);
+						
+		   				changeGanttOrder(targetTaskId, changeGroupId);
 		   				ge.taskIsChanged();
 		   			}
 		   		}).disableSelection();
@@ -601,44 +628,9 @@
 		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
 		   		$("input[name='weight']").on("change",function(){ updateWeight(this); });
 		   		$("input[name='progress']").on("change",function(){ updateProgress(); });
-		   		
-				//툴팁구현중
-		   		$(".taskBox").on("click", function(){
-			   	 alert("Hello!");  
-			   	var titleText = $(this).parent().attr("taskId");
-	   		      $(this).data("tooltip", titleText).removeAttr("title");
-	   		      $(this).after('<span class="tooltipBox">' + titleText +'</span>').fadeIn("slow");
-			   });
-		   		
-		   		 //tooltip 시도!
-		   		 /*  $(".tooltipBox").hide();
-		   		  
-		   		  $(".taskBox").on({
-		   		    "mouseenter" : function(){
-		   		      alert("뜸?");
-		   		      var titleText = $(this).parent().attr("taskId");
-		   		      $(this).data("tooltip", titleText).removeAttr("title");
-		   		      $(this).after('<span class="tooltipBox">' + titleText +'</span>').fadeIn("slow");
-		   		   },
-		   		   "mouseleave" : function(){
-		   			 alert("마우스 나감??");
-		   		     var titleText = $(this).attr("title");
-		   		     $(this).attr("title", $(this).data("tooltip"));
-		   		     $('.tooltipBox').remove();
-		   		   }, 
-		   		   "mousemove" : function(e){
-		   		     var mouseX = e.pageX; 
-		   		     var mouseY = e.pageY; 
-		   		     $(".tooltipBox").css({
-		   		       "left" : mouseX, 
-		   		       "top" : mouseY +20
-		   		     });
-		   		   }
-		   		  }); */
-		   		  
 		   	}
 	   		
-	   		function changeGanttOrder() {
+	   		function changeGanttOrder(targetTaskId, changeGroupId) {
 	   			var groupArr = [];
 	   			var taskArr = [];
 	   			
@@ -676,7 +668,9 @@
 	   			 var data = {
 	   				projectId : projectId,
 	   				groupArr : groupArr,
-	   				taskArr : taskArr
+	   				taskArr : taskArr,
+	   				targetTaskId : targetTaskId,
+	   				changeGroupId : changeGroupId
 	   			}
 	   			
 	   			$.ajax({
@@ -686,10 +680,10 @@
 	   				url:"/ezPMS/changeGanttOrder.do",
 	   				data:JSON.stringify(data),
 	   				success: function(result){
-	   					/* if (roleCheck == "rejected") {
+	   					if (result == "rejected") {
 	   						alert("프로젝트 담당자나 그룹의 담당자만 변경할 수 있습니다.");
 	   						return;
-	   					} */
+	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert("에러가 발생했습니다.");
@@ -845,11 +839,59 @@
 	   		})();
 	   		
 	   		window.onload = function(){
+
+	   			var positionTooltip = function(event) {
+	   				var tPosX = event.pageX - 5;
+	   				var tPosY = event.pageY + 15;
+	   				$(".tooltipBox").css({top:tPosY, left : tPosX});
+	   			};
+	   			
+	   			$('.taskBox').hover(function () {
+	   				var taskId = $(this).attr("taskid");
+	   				var isGroup = taskId.substring(taskId.lastIndexOf("_") + 1, taskId.lastIndexOf("_") + 2);
+	   				taskId = taskId.substring(taskId.lastIndexOf("_") + 2);
+	   				var infoHTML = "";
+	   				
+	   				if (isGroup == "g") {
+	   					for (var i = 0; i < groupList.length; i++) {
+	   						if (groupList[i].groupId == taskId) {
+	   							infoHTML += "<div style='background-color:#d1d1d1'>" + groupList[i].groupName + "</div>";
+	   							infoHTML += "<div>";
+	   							infoHTML += "시작일 : " + groupList[i].planStartDate + "<br>";
+	   							infoHTML += "종료일 : " + groupList[i].planEndDate + "<br>";
+	   							infoHTML += "남은기간 : " + groupList[i].restDueday + "<br>";
+	   							infoHTML += "진행률 : " + groupList[i].realProgress + "<br>";
+	   							infoHTML += "</div>";
+	   						}
+	   					}
+	   				} else {
+	   					for (var i = 0; i < taskList.length; i++) {
+	   						if (taskList[i].taskId == taskId) {
+	   							infoHTML += "<div style='background-color:#d1d1d1'>" + taskList[i].taskName + "</div>";
+	   							infoHTML += "<div>";
+	   							infoHTML += "시작일 : " + taskList[i].planStartDate + "<br>";
+	   							infoHTML += "종료일 : " + taskList[i].planEndDate + "<br>";
+	   							infoHTML += "남은기간 : " + taskList[i].restDueday + "<br>";
+	   							infoHTML += "진행률 : " + taskList[i].realProgress + "<br>";
+	   							infoHTML += "</div>";
+	   						}
+	   					}
+	   				}
+	   				
+	   				$(".tooltipBox").html(infoHTML);
+	                $('.tooltipBox').show();
+	            },
+	             function () {
+	                $('.tooltipBox').hide();
+	            }).mouseleave(positionTooltip);
+	   			
 	   			eventSetting();
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
 	   		
-	   		$(document).ready(function(){	   		  
+	   		$(document).ready(function(){
+	   			$(".tooltipBox").hide();
+	   			
 	   			GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
 	   			  var self = this;
 
@@ -913,6 +955,13 @@
 		  #ndo{
 		  	display:none;
 		  }
+		  
+		  .tooltipBox {
+		    position : absolute;
+            background : #fff;
+            border : 1px solid black;
+            width : 200px;
+		  }
 		</style>
 	</head>
 	<body style="background-color: #fff;">
@@ -973,7 +1022,6 @@
 		    font-size: 28px;
 		    margin-left: 10px;
 		  }
-		
 		</style>
 		
 		<form id="gimmeBack" style="display:none;" action="../gimmeBack.jsp" method="post" target="_blank"><input type="hidden" name="prj" id="gimBaPrj"></form>
@@ -1577,6 +1625,8 @@
 			
 			
 			</div>
+			<div class="tooltipBox" style="display:hide;"></div>
+			
 			<script type="text/javascript">
 			  $.JST.loadDecorator("RESOURCE_ROW", function(resTr, res){
 			    resTr.find(".delRes").click(function(){$(this).closest("tr").remove()});

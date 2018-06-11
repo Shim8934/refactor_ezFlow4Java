@@ -461,4 +461,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateTaskWeight(ProjectTaskVO taskVO) {
 		update("EzPMSDAO.updateTaskWeight", taskVO);
 	}
+
+	public void updateTaskGroupId(Map<String, Object> map) {
+		update("EzPMSDAO.updateTaskGroupId", map);
+	}
 }
