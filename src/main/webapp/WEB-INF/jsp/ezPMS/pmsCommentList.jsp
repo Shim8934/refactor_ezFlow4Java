@@ -187,17 +187,20 @@
 	</table>	
 </div>
 
-<div style="margin-top: 20px;">
-	<table style="width: 100%;">
-		<tr>
-			<th width="20%">의견등록</th>
-			<td>
-				<textarea id="commentContent" style="resize: none;"></textarea>
-			</td>
-		</tr>
-	</table>
-	<a class="imgbtn" onclick="addComment()" style="margin: 10px auto;"><span>저장</span></a>	
-</div>
+<c:if test="${userRole ne 3}">
+	<div style="margin-top: 20px;">
+		<table style="width: 100%;">
+			<tr>
+				<th width="20%">의견등록</th>
+				<td>
+					<textarea id="commentContent" style="resize: none;"></textarea>
+				</td>
+			</tr>
+		</table>
+		<a class="imgbtn" onclick="addComment()" style="margin: 10px auto;"><span>저장</span></a>	
+	</div>
+</c:if>
+
 <c:choose>
 	<c:when test="${paging.endPage>0 }">
 		<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">

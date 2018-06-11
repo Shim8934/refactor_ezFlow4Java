@@ -27,7 +27,8 @@
 	var headManagerId = '${project.headManagerId}';
 	var groupId = '${project.groupId}';
 	
-	var projectStatus = '${project.status}';
+	var nowStatus = '${project.status}';
+	var status = '${project.status}';
 	
 	var memberList = JSON.parse('${project.projectMember}');
 	
@@ -67,7 +68,7 @@
 		
 		applyList();
 		
-		$("#status").val(projectStatus);
+		$("#status").val(nowStatus);
 	})
 	
 	function applyList() {
@@ -159,7 +160,10 @@
 			managerList : managerList,
 			participantList : participantList,
 			viewerList : viewerList,
-			groupId : groupId
+			groupId : groupId,
+			
+			status : status,
+			nowStatus : nowStatus
 		}
 		
 		$.ajax({
@@ -169,7 +173,7 @@
 			contentType: "application/json; charset=UTF-8",
 			data :JSON.stringify(data),
 			success : function(result) {
-				if(result.data == 'success') {
+				if(result.memberChange == 'success' && result.statusChange == 'success') {
 					sendNotiMail(projectId, projectName);
 					var logContent = "[" + projectName + "]의 정보가 수정되었습니다."
 					addTaskLog(projectId, 2, groupId, null, logContent);
@@ -186,8 +190,8 @@
 		});
 	}
 	
-	function setProjectStatus(elem) {
-		projectStatus = elem;
+	function setStatus(elem) {
+		status = elem;
 	}
 	
 	function sendNotiMail(projectId, projectName) {
@@ -271,13 +275,37 @@
 					<tr>
 						<th>진행상태</th>
 						<td colspan="3">
-							<select id="status" onchange="setProjectStatus(this.value)">
-								<option value="P">진행</option>
-								<option value="W">대기</option>
-								<option value="C">완료</option>
-								<option value="L">지연</option>
-								<option value="S">보류</option>
-								<option value="D">삭제</option>
+							<select id="status" onchange="setStatus(this.value)">
+								<c:choose>
+									<c:when test="${project.status eq 'P'}">
+										<option value="P">진행</option>
+										<option value="C">완료</option>
+										<option value="S">보류</option>
+									</c:when>
+									<c:when test="${project.status eq 'W'}">
+										<option value="P">진행</option>
+										<option value="W">대기</option>
+										<option value="S">보류</option>
+									</c:when>
+									<c:when test="${project.status eq 'C'}">
+										<option value="C">완료</option>
+									</c:when>
+									<c:when test="${project.status eq 'L'}">
+										<option value="C">완료</option>
+										<option value="L">지연</option>
+										<option value="S">보류</option>
+									</c:when>
+									<c:when test="${project.status eq 'S'}">
+										<option value="P">진행</option>
+										<option value="C">완료</option>
+										<option value="S">보류</option>
+									</c:when>
+									<c:when test="${project.status eq 'D'}">
+										<option value="P">진행</option>
+										<option value="S">보류</option>
+										<option value="D">삭제</option>
+									</c:when>
+								</c:choose>
 							</select>
 							&nbsp;<c:out value="${project.progress}%"/>
 						</td>

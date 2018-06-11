@@ -372,18 +372,24 @@ public class EzPMSGWController {
 			String nowStatus = request.getParameter("nowStatus");
 			String changeDate = request.getParameter("changeDate");
 			
-			LOGGER.debug("nowStatus" + nowStatus + ", status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
+			LOGGER.debug("nowStatus : " + nowStatus + ", status : " + status + ", " + "userId : " + userId + ", tenantId : " + tenantId + ", deptId : " + deptId);
 			
 			String[] projectIdList = projectId.split("_");
 			String roleCheck = "";
 			
-			for (int i = 0; i < projectIdList.length; i++) {
-				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectIdList[i]), deptId);
+			// admin 파라미터는 관리자모드에서만 넘어온다. 값이 넘어오지 않을 때만 roleCheck를 시행한다.
+			if(request.getParameter("admin") == null || !request.getParameter("admin").equals("true")) {
 				
-				LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
-				if (userRole != 1) {
-					roleCheck = "reject";
+				for (int i = 0; i < projectIdList.length; i++) {
+					int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectIdList[i]), deptId);
+					
+					LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
+					if (userRole != 1) {
+						roleCheck = "reject";
+					}
 				}
+			} else {
+				userId = ""; // 관리자 모드에서는 userId를 ""으로 넘겨야 ezPMSService.getProjectDetails()에서 값을 불러올 수 있음
 			}
 			
 			if (roleCheck.equals("")) {
@@ -1361,7 +1367,7 @@ public class EzPMSGWController {
 			
 			try {
 				String serverName = request.getHeader("x-user-host");
-				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 				int tenantId = info.getTenantId();
 				
 				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());

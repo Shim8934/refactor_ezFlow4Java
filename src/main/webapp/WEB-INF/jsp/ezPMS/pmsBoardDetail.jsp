@@ -38,6 +38,11 @@
 				$("#moveBtn").css("display", "none");
 			}
 			
+			// 조회자(authority = 3)인 경우, 답변버튼 사라짐
+			if(authority == '3') {
+				$("#ReplyBtn").css("display", "none");
+			}
+			
 			$("#taskName").text(taskName);
 		})
 		// 첨부파일 모두 선택
@@ -154,7 +159,7 @@
 			<td style="height: 20px">
 				<div id="menu">
 					<ul>
-						<li><span onclick="goAddBoardReply()">답변</span></li>
+						<li id="ReplyBtn"><span onclick="goAddBoardReply()">답변</span></li>
 						<li id="modifyBtn"><span onclick="modifyBoard()">수정</span></li>
 						<li id="deleteBtn"><span onclick="deleteBoard()">삭제</span></li>
 						<li id="moveBtn"><span onclick="goMoveBoard()">이동</span></li>
