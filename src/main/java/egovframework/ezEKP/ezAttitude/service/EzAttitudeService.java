@@ -17,7 +17,6 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface EzAttitudeService {
@@ -63,6 +62,8 @@ public interface EzAttitudeService {
 //	public void insertAttitudeUserConfig(int tenantId, String companyId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
 	public void editAttitudeUserConfig(String selectUserId, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception;
+
+	public void editAttitudeDeptConfig(String selectDeptId, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception;
 	
 	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId, String userId) throws Exception;
 	

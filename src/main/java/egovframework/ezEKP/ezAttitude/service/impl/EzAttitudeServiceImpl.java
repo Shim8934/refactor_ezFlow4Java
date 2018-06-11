@@ -401,6 +401,33 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("saveAttitudeUserConfig ended");
 	}
+	@Override
+	public void editAttitudeDeptConfig(String selectDeptId, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("editAttitudeUserConfig started");
+		LOGGER.debug("selectDeptId = " + selectDeptId + " || workStartTime = " + workStartTime + " || workEndTime = " + workEndTime + " || gubun = " + gubun);
+		
+		String today =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
+		String startDate = commonUtil.getDateStringInUTC(today + " " + workStartTime, offSet, true);
+		String endDate = commonUtil.getDateStringInUTC(today + " " + workEndTime, offSet, true);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("workStartTime", startDate.substring(11));
+		map.put("workEndTime", endDate.substring(11));
+		
+		if (gubun.equals("0")) {
+			map.put("selectDeptId", selectDeptId);
+			
+			ezAttitudeDAO.deleteAttitudeDeptConfig(map);
+		} else {
+			map.put("selectDeptId", selectDeptId);
+			
+			ezAttitudeDAO.saveAttitudeDeptConfig(map);
+		}
+		
+		LOGGER.debug("saveAttitudeUserConfig ended");
+	}
 
 	@Override
 	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId)
@@ -2302,6 +2329,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("key", key);
 		map.put("value", value);
 		map.put("companyId", companyId);
+		if (lang.equals("1")) {//TODO
+			lang = "";
+		}
 		map.put("lang", lang);
 		
 		List<AttitudeAuthorVO> userList = ezAttitudeDAO.getDeptUserList(map);

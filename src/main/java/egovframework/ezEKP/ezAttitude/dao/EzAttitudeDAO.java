@@ -131,8 +131,25 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<DeptViewVO> getDeptViewList(Map<String, Object> map) throws Exception {
+		return (List<DeptViewVO>) list("ezAttitudeAdminDAO.selectDeptList",map);
+	}
+
 	public void saveAttitudeUserConfig(Map<String, Object> map) throws Exception {
 		insert("ezAttitudeAdminDAO.saveAttitudeUserConfig", map);
+	}
+	
+	public void deleteAttitudeUserConfig(Map<String, Object> map) throws Exception {
+		delete("ezAttitudeAdminDAO.deleteAttitudeUserConfig", map);
+	}
+	
+	public void saveAttitudeDeptConfig(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeAdminDAO.saveAttitudeDeptConfig", map);
+	}
+	
+	public void deleteAttitudeDeptConfig(Map<String, Object> map) throws Exception {
+		delete("ezAttitudeAdminDAO.deleteAttitudeDeptConfig", map);
 	}
 	
 	public void delUsersModifyAtt(Map<String, Object> map) throws Exception {
@@ -141,15 +158,6 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	public void delUsersModifyAttHistory(Map<String, Object> map) throws Exception {
 		delete("ezAttitudeDAO.delUsersModifyAttHistory", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<DeptViewVO> getDeptViewList(Map<String, Object> map) throws Exception {
-		 return (List<DeptViewVO>) list("ezAttitudeAdminDAO.selectDeptList",map);
-	}
-
-	public void deleteAttitudeUserConfig(Map<String, Object> map) throws Exception {
-		delete("ezAttitudeAdminDAO.deleteAttitudeUserConfig", map);
 	}
 	
 	public AttitudeApplicationVO attModAppDetail(Map<String, Object> map) throws Exception {
@@ -332,7 +340,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     }
 
 	public List<AttitudeAuthorVO> getDeptUserList(HashMap<String, Object> map) throws Exception {
-		return (List<AttitudeAuthorVO>) select("ezAttitudeAdminDAO.getDeptUserList", map);
+		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
     
 }

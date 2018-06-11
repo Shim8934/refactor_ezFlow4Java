@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1965,5 +1963,50 @@ public class EzAttitudeAdminController {
 		
 		LOGGER.debug("userList ended");
 		return "admin/ezAttitude/userList";
+	}
+	
+	/**
+	 * 근무시간관리 근무시간 수정
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConfig.do")
+	@ResponseBody
+	public String editAttitudeDeptConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("editAttitudeDeptConfig started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId");
+		String selectDeptId = request.getParameter("selectDeptId");
+		String workStartTime = request.getParameter("workStartTime");
+		String workEndTime = request.getParameter("workEndTime");
+		String gubun = request.getParameter("gubun");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/users/ezattitude/dept-attitude-confs";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("selectDeptId", selectDeptId)
+				.queryParam("workStartTime", workStartTime)
+				.queryParam("workEndTime", workEndTime)
+				.queryParam("gubun", gubun);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		LOGGER.debug("editAttitudeDeptConfig ended");
+		
+		return status;
 	}
 }

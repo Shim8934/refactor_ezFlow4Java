@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezAttitude.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +36,6 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -506,9 +504,8 @@ public class EzAttitudeGWController {
 			if (companyId.equals("") || companyId == null) {
 				companyId = info.getCompanyId();
 			}
-			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<AttitudeAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId(), key, value, companyId, lang);
+			List<AttitudeAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId(), key, value, companyId, info.getPrimary());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1017,6 +1014,39 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] ended.");
+		return result;
+	}
+	/**
+	 * G/W 근태관리 [POST] 부서 근무시간 수정
+	 */
+	@RequestMapping(value = "/rest/users/ezattitude/dept-attitude-confs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject insertDeptAttitudeConf(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/dept-attitude-confs] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			String selectDeptId = request.getParameter("selectDeptId");
+			String workStartTime = request.getParameter("workStartTime");
+			String workEndTime = request.getParameter("workEndTime");
+			String gubun = request.getParameter("gubun");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			// insert on duplicate
+			ezAttitudeService.editAttitudeDeptConfig(selectDeptId, workStartTime, workEndTime, gubun, info.getOffSet(), companyId, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/dept-attitude-confs] ended.");
 		return result;
 	}
 	

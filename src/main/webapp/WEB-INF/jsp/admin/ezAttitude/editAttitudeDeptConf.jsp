@@ -19,22 +19,11 @@
 	   	<script type="text/javascript">
 			//트리조직도 JSON
 	   		var treeContent;
-	   		//선택된 사원
-	   		var selectedUser;
-	   		var selectedUserName;
 	   		//레이어팝업의 부서 정보
-	   		var lpDeptId;
-	   		var lpDeptName;
-	   		//레이어팝업의 오른쪽의 부서정보
-	   		var lpDepts=[];
-	   		var lpDeptNames = [];
-	   		var lpAuthTypes = [];
-	   		//오른쪽에서 없앨 부서
-	   		var targetDept;
-	   		//현재 레이어팝업에 선택된 유저
-	   		var updateUserId;
-	   		//선택된 유저의부서
-	   		var userDeptId;
+// 	   		var lpDeptId;
+// 	   		var lpDeptName;
+	   		//현재 레이어팝업에 선택된 부서
+	   		var selectDeptId;
 	   		//회사 id
 	   		var companyId = "${companyId}";
 	   		//회사 출/퇴근 시간
@@ -71,18 +60,20 @@
 	   		//조직도 뿌리는 펑션
 	   		function setDeptList() {
 				$('#treeview').on('changed.jstree', function (e, data) {
-			     	var id = data.instance.get_node(data.selected).id;
-			     	var deptName = $("#"+id+" a:first").text();
-					setUserList("DEPARTMENT", id,deptName);
+			     	selectDeptId = data.instance.get_node(data.selected).id;
+			     	var deptName = $("#"+selectDeptId+" a:first").text();
+					setUserList("DEPARTMENT", selectDeptId,deptName);
 				}).jstree({ 
 					'core'   : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
-				}).on('ready.jstree', function(e, data) {
+				})
+				.on('ready.jstree', function(e, data) {
 					var offset = $(".jstree-wholerow-clicked").offset();
 		   	    	var jstree = document.getElementById("treeview");
 		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
-			    });
+			    })
+			    ;
 	   		}
 	   		
 	   		function goScroll(){
@@ -134,6 +125,70 @@
 	   			}
 	   		}
 	   		
+			function checkPattern() {
+				var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
+				
+				if ((timePattern.test($("#workStartTime").val()) && timePattern.test($("#workEndTime").val())) || ($("#workStartTime").val() == "" && $("#workEndTime").val() == "")) {
+					return true;
+				} else {
+					if (!timePattern.test($("#workStartTime").val())&& !timePattern.test($("workEndTime").val())) {
+						$("#workStartTime").focus();
+						return false;
+					} else if (!timePattern.test($("#workStartTime").val())) {
+						$("#workStartTime").focus();
+						return false;
+					} else if (!timePattern.test($("#workEndTime").val())) {
+						$("#workEndTime").focus();
+						return false;
+					}
+				}
+			}
+	   		
+	   		//확인
+	   		function btnOk_onclick() {
+				if (!checkPattern()) {
+	    			alert("<spring:message code='ezAttitude.t117' />")
+	    			return;
+	    		}
+				
+				if($("#gubun").is(":checked") == true) {
+					workStartTime = companyStartTime;
+					workEndTime = companyEndTime;
+					gubun = "0";
+				} else {
+					workStartTime = $("#workStartTime").val();
+					workEndTime = $("#workEndTime").val();
+					gubun = "1";
+				}
+				
+				$.ajax({
+	   				type:"post",
+	   				dataType:"text",
+	   				async : false,
+	   				url:"/admin/ezAttitude/editAttitudeDeptConfig.do",
+	   				data:{
+	   					companyId : companyId,
+	   					selectDeptId : selectDeptId,
+	   					workStartTime : workStartTime,
+	   					workEndTime : workEndTime,
+	   					gubun : gubun
+	   				},
+	   				success: function(result){
+						if (result == "ok") {
+							alert("저장되었습니다");
+							opener.getUserConfList();
+		   					window.close();
+						} else {
+							alert("<spring:message code='ezAttitude.t125' />");
+		   					window.close();
+						}
+	   				}
+	   			});
+			}
+			//취소
+			function btncancel_onclick() {
+				window.close();
+			}
 		</script>
 		<style>
 /* 			tr.hover:hover{background:#eee; color:#fff;} */
@@ -207,8 +262,8 @@
 						        	</div>
 									&nbsp;
 									<div style="display: inline-block; vertical-align: middle;" align="right">
-					            		<a class="imgbtn"><span onclick="">저장</span></a>
-					            		<a class="imgbtn"><span onclick="">취소</span></a>
+					            		<a class="imgbtn"><span onclick="btnOk_onclick()"><spring:message code='ezAttitude.t128' /></span></a>
+										<a class="imgbtn"><span onclick="btncancel_onclick()"><spring:message code='ezAttitude.t129' /></span></a>
 					            	</div>
 				            	</td>
 					        </tr>
