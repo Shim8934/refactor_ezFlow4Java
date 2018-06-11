@@ -820,7 +820,7 @@ hr {
 		<span style="border:1px solid black">start</span>${project.planStartDate }
 		</div>
 		<div>
-		<span style="border:1px solid black">end</span>${project.planStartDate }
+		<span style="border:1px solid black">end</span>${project.planEndDate }
 		</div>
 		</div>
 	<div id="changeStatus" style="text-align:center; clear : both;"></div>

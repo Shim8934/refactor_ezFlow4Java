@@ -2926,4 +2926,28 @@
 				project_id = #projectId#
 		]]>
 	</select>
+	
+	<select id="EzPMSDAO.getHolidaysCount" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(HOLIDAYID)
+			FROM
+				TBL_HOLIDAYLIST
+			WHERE
+				((HOLIDAYDATE >= #planStartDate# AND HOLIDAYDATE <= #planEndDate#)
+    				OR
+				 ( DATE_FORMAT(HOLIDAYDATE, '%m-%d')  >= #planStartDateShort#
+					AND DATE_FORMAT(HOLIDAYDATE, '%m-%d')  <= #planEndDateShort#
+    				AND ISREPEAT = 1))
+    		 	AND
+					ISREST = 1
+				AND
+					ISUSE = 1
+				AND
+					USERCOMPANY = #companyId#
+				AND
+					TENANT_ID = #tenantId#;		
+				
+		]]>
+	</select>
 </sqlMap>

@@ -1035,7 +1035,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public int getWorkinDays(Date start, Date end){
 	    //Ignore argument check
-
 	    Calendar c1 = GregorianCalendar.getInstance();
 	    c1.setTime(start);
 	    int w1 = c1.get(Calendar.DAY_OF_WEEK);
@@ -1047,8 +1046,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	    c2.add(Calendar.DAY_OF_WEEK, -w2 + 1);
 
 	    //end Saturday to start Saturday 
-	    long days = (c2.getTimeInMillis()-c1.getTimeInMillis())/(1000*60*60*24);
-	    long daysWithoutSunday = days-(days*2/7);
+	    long days = (c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24);
+	    long daysWithoutSunday = days - (days * 2 / 7);
 
 	    if (w1 == Calendar.SUNDAY) {
 	        w1 = Calendar.MONDAY;
@@ -1057,7 +1056,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	        w2 = Calendar.MONDAY;
 	    }
 	    
-	    int workingDays = (int) (daysWithoutSunday-w1+w2);
+	    int workingDays = (int) (daysWithoutSunday - w1 + w2);
 	    return workingDays;
 	}
 	

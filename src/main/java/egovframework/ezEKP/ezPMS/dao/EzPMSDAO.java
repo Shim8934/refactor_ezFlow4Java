@@ -468,4 +468,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public Float getProjectWeight(Map<String, Object> map) {
 		return (Float) select("EzPMSDAO.getProjectWeight", map);
 	}
+	
+	public int getHolidaysCount(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.getHolidaysCount", map);
+	}
 }
