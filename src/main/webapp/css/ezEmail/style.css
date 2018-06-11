@@ -94,7 +94,7 @@ body {
 .lmtitle {
 	height: 30px;
 	background: #f8f8f8;
-	border-bottom: 1px solid #cbcbcb;
+	border-bottom: 1px solid #ddd;
 	font-weight: bold;
 	color: #777;
 	font-size: 12px;
@@ -111,7 +111,7 @@ body {
 
 .lmLetterBox {
 	height: 32%;
-	border: #b6b6b6 1px solid;
+	border: #ddd 1px solid;
 }
 
 .lmLetterBoxList {
@@ -125,14 +125,14 @@ body {
 
 .lmLetterBoxTitle>div {
 	width: 70px;
-	border-right: 1px solid #cbcbcb;
+	border-right: 1px solid #ddd;
 	display: inline-block;
 }
 
 .lmLetterBoxTitle>input {
 	width: 170px;
 	color: #393939;
-	border: 1px solid #cbcbcb;
+	border: 1px solid #ddd;
 }
 
 /* .jstree-clicked {
@@ -141,7 +141,7 @@ body {
 
 .lmLetter {
 	height: 60%;
-	border: #b6b6b6 1px solid;
+	border: #ddd 1px solid;
 	overflow: auto;
 }
 
@@ -155,7 +155,7 @@ body {
 
 .lmright {
 	width: 60%;
-	border: #b6b6b6 1px solid;
+	border: #ddd 1px solid;
 }
 
 .lmLetterListUl {

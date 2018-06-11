@@ -46,23 +46,29 @@ var weight = null;
 var managerList = null;
 var overview = null;
 var headManagerId = "";
-var groupId = "${taskDetails.groupId}";
+var originGroupId = 0;
 var groupName = "${taskDetails.groupName}";
 var taskDetails = '${taskDetails}';
 var writerId= "";
 var weightData = '${weightData}';
 var target = "${target}";
 var headManagerName = "${taskDetails.headManagerName}";
+var groupId = 0;
 
  $(function() {
-	 console.log(headManagerName);
 	 if (target == "task") {
-		 managerList = '${taskDetails.taskMember}'; 
+		 managerList = '${taskDetails.taskMember}';
+		 groupId = "${taskDetails.groupId}";
+		 originGroupId = "${taskDetails.groupId}";
 	 } else {
 		 managerList = '${taskDetails.groupMember}';
+		 groupId = "${taskDetails.upperGroupId}";
+		 originGroupId = "${taskDetails.groupId}";
 	 }
 	 
 	 headManagerId = "${taskDetails.headManagerId}";
+	 
+	 managerList = JSON.parse(managerList);
 	 applyList();
  });
  
@@ -171,7 +177,7 @@ function updateTaskInfo() {
 				taskName : taskName,
 				taskId : taskDetails.taskId + "",
 				projectId : projectId,
-				groupId : groupId,
+				groupId : upperGroupId,
 				overview	 : overview,
 				headManagerId : headManagerId,
 				managerList : managerList,
@@ -198,7 +204,6 @@ function updateTaskInfo() {
 			}
 		});
 	} else if (target == "group") {
-		 weight = document.getElementById("weight").value.trim();
 		 overview = convertString(document.getElementById("overview").value.trim());
 		 
 		//업무 이름 길이 제한
@@ -210,22 +215,23 @@ function updateTaskInfo() {
 			 return;
 		 }
 		 
+		console.log(originGroupId);
 		 data = {
 					groupName : taskName,
 					projectId : projectId,
-					groupId : groupId,
+					groupId : originGroupId,
 					overview	 : overview,
 					headManagerId : headManagerId,
-					managerList : managerList
+					managerList : managerList,
+					upperGroupId : groupId
 			}
 			
 			$.ajax({
 				type : "POST",
 				url : "/ezPMS/updateGroupInfo.do",
-				dataType : "json",
 				contentType: "application/json; charset=UTF-8",
 				data : JSON.stringify(data),
-				success : function(data) {
+				success : function() {
 					alert("그룹 정보를 변경하였습니다.");
 					
 					parent.location.reload();
@@ -265,15 +271,11 @@ function updateTaskInfo() {
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
-				<td id="managers">
-					<c:forEach items="${taskDetails.taskMember }" var="member">
-					 ${member.userName}(${member.userDeptname }),
-					</c:forEach>
-				</td>
+				<td id="managers"></td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
-				<td style="height:30px;" id="upperGroup">
+				<td style="height:30px;" id="upperGroup"> 
 				${taskDetails.groupName == null ? "-" : taskDetails.groupName}
 				</td>
 			</tr>
@@ -302,12 +304,7 @@ function updateTaskInfo() {
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
-				<td id="managers"><c:forEach items="${taskDetails.groupMember }" var="member">
-					 <c:if test="${member.memberRoleId eq 1 }">
-					 ${member.userName}(${member.userDeptname }),
-					 </c:if>
-					</c:forEach>
-				</td>
+				<td id="managers"></td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>

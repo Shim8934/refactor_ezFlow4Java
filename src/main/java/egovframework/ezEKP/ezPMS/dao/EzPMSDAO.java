@@ -454,7 +454,15 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Float) select("EzPMSDAO.getGroupWeight", map);
 	}
 	
+	public void updateGroupInfo(ProjectGroupVO group) {
+		update ("EzPMSDAO.updateGroupInfo", group);
+	}
+	
 	public void updateTaskWeight(ProjectTaskVO taskVO) {
 		update("EzPMSDAO.updateTaskWeight", taskVO);
+	}
+	
+	public Float getProjectWeight(Map<String, Object> map) {
+		return (Float) select("EzPMSDAO.getProjectWeight", map);
 	}
 }

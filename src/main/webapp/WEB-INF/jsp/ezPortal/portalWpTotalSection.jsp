@@ -25,7 +25,7 @@
     				</dl>
     				<div class="bottom"></div>
     			</div>
-    			<div class="personal_content">
+    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
 					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="count">
@@ -95,23 +95,25 @@
                     		</c:choose>
 						</ul>						
 					</a>
-					<a id="Circular" onClick="btnSumming_click(this)">
-						<ul class="last">
-							<li class="count">
-								<div>
-									<span id="circularCnt">0</span>
-								</div>
-							</li>
-                    		<c:choose>
-                    			<c:when test="${userInfo.lang != '3'}">
-                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
-                    			</c:when>
-                    			<c:otherwise>
-                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
-                    			</c:otherwise>
-                    		</c:choose>                  		
-						</ul>
-					</a>			
+					<c:if test="${isCircularUsed == 'Y'}">
+						<a id="Circular" onClick="btnSumming_click(this)">
+							<ul class="last">
+								<li class="count">
+									<div>
+										<span id="circularCnt">0</span>
+									</div>
+								</li>
+	                    		<c:choose>
+	                    			<c:when test="${userInfo.lang != '3'}">
+	                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
+	                    			</c:when>
+	                    			<c:otherwise>
+	                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
+	                    			</c:otherwise>
+	                    		</c:choose>                  		
+							</ul>
+						</a>
+					</c:if>			
 				</div>
 			</article>
       		<div class="blue_bar"></div>
@@ -172,6 +174,14 @@
 		</section>
 			
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+		<style>
+			select {
+				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
+			}
+			select::-ms-expand {
+			    display: none;
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
@@ -198,7 +208,16 @@
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "YES";
-
+			var isCircularUsed = "${isCircularUsed}";
+		    
+			$(document).ready(function(){
+				if (isCircularUsed != 'Y') {
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
+					$(".personal_content a ul:last").attr("class","last");
+					$(".personal_content").show();
+				}
+			});
+		    
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';

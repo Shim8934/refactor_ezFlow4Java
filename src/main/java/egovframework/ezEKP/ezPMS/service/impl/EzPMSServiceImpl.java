@@ -843,9 +843,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int updateGroup(ProjectGroupVO group) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void updateGroup(ProjectGroupVO group) {
+		LOGGER.debug("[SERVICE] updateGroup started.");
+		ezPMSDAO.updateGroupInfo(group);
+		LOGGER.debug("[SERVICE] updateGroup ended.");
 	}
 
 	@Override
@@ -2027,5 +2028,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.updateTaskWeight(taskVO);
 		
 		LOGGER.debug("[SERVICE] updateTaskWeight ended.");
+	}
+
+	@Override
+	public Float getProjectWeight(Long projectId, int tenantId) throws Exception {
+		LOGGER.debug("[SERVICE] getProjectWeight started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getProjectWeight ended.");
+		return ezPMSDAO.getProjectWeight(map);
 	}
 }

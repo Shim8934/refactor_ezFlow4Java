@@ -2857,6 +2857,28 @@
 		]]>
 	</select>
 	
+	<update id="EzPMSDAO.updateGroupInfo" parameterClass="ProjectGroupVO">
+	<![CDATA[
+		UPDATE
+			TBL_PMS_GROUP
+		SET
+			GROUP_NAME = #groupName#,
+			OVERVIEW = #overview#,
+			HEAD_MANAGER_ID = #headManagerId#,
+			HEAD_MANAGER_NAME = #headManagerName#,
+			HEAD_MANAGER_NAME2 = #headManagerName2#,
+			HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
+			HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#,
+			UPPER_GROUP_ID = #upperGroupId#
+		WHERE
+			GROUP_ID = #groupId#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</update>
+	
 	<update id="EzPMSDAO.updateTaskWeight" parameterClass="ProjectTaskVO">
 		<![CDATA[
 			UPDATE
@@ -2869,5 +2891,18 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getProjectWeight" parameterClass="map" resultClass="float">
+		<![CDATA[
+			SELECT
+				sum(weight)
+			FROM
+				tbl_pms_task a
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				project_id = #projectId#
+		]]>
+	</select>
 	
 </sqlMap>

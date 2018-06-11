@@ -113,7 +113,7 @@
 		   			tempTask.start = new Date(pd.planStartDate).getTime();
 		   			tempTask.end = new Date(pd.planEndDate).getTime();
 		   			tempTask.duration = pd.workingday;
-		   			tempTask.weight = 100;
+		   			tempTask.weight = pd.weight;
 		   			tempTask.startIsMilestone = "";
 		   			tempTask.endIsMilestone = "";
 		   			tempTask.assigs = [];
@@ -602,6 +602,40 @@
 		   		$("input[name='weight']").on("change",function(){ updateWeight(this); });
 		   		$("input[name='progress']").on("change",function(){ updateProgress(); });
 		   		
+				//툴팁구현중
+		   		$(".taskBox").on("click", function(){
+			   	 alert("Hello!");  
+			   	var titleText = $(this).parent().attr("taskId");
+	   		      $(this).data("tooltip", titleText).removeAttr("title");
+	   		      $(this).after('<span class="tooltipBox">' + titleText +'</span>').fadeIn("slow");
+			   });
+		   		
+		   		 //tooltip 시도!
+		   		 /*  $(".tooltipBox").hide();
+		   		  
+		   		  $(".taskBox").on({
+		   		    "mouseenter" : function(){
+		   		      alert("뜸?");
+		   		      var titleText = $(this).parent().attr("taskId");
+		   		      $(this).data("tooltip", titleText).removeAttr("title");
+		   		      $(this).after('<span class="tooltipBox">' + titleText +'</span>').fadeIn("slow");
+		   		   },
+		   		   "mouseleave" : function(){
+		   			 alert("마우스 나감??");
+		   		     var titleText = $(this).attr("title");
+		   		     $(this).attr("title", $(this).data("tooltip"));
+		   		     $('.tooltipBox').remove();
+		   		   }, 
+		   		   "mousemove" : function(e){
+		   		     var mouseX = e.pageX; 
+		   		     var mouseY = e.pageY; 
+		   		     $(".tooltipBox").css({
+		   		       "left" : mouseX, 
+		   		       "top" : mouseY +20
+		   		     });
+		   		   }
+		   		  }); */
+		   		  
 		   	}
 	   		
 	   		function changeGanttOrder() {
@@ -737,24 +771,28 @@
 	   		function updateWeight(obj){
 	   			var curTask = ge.currentTask;
 	   			var newWeight = obj.value;
-	   			var validFlag = true;
+	   			var validFlag = false;
 	   			var taskId = 0;
 	   			var groupId = 0;
 	   			
-	   			taskId = curTask.id.match(/t(\d+)/)[1];
-	   			groupId = curTask.id.match(/g(\d+)/)[1];
-	   			
+	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
+	   			if(taskId === ""){
+	   				alert("업무를 선택해주세요.");
+	   			}
 	   			// 가중치 검사
-   				if(newWeight == ""){
+	   			else if(newWeight == ""){
    					alert("가중치를 입력해 주십시오.");
-   					validFlag = false;
    				}
    				else if(isNaN(newWeight)) {
    					alert("가중치는 숫자만 입력 가능합니다.");
-   					validFlag = false;
+   				}
+   				else{
+   					validFlag = true;
    				}
 	   			
 	   			if(!validFlag){
+	   				//화면 새로 고침안하고 되돌릴 수 있는 방법 찾아볼것.
+	   				location.reload();
 	   				return;
 	   			}
 //    				if(Number(newWeight) > remainingWeight) {
@@ -780,7 +818,6 @@
 						alert("업무 정보를 변경하였습니다.");
 						
 						location.reload();
-						popupClose();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("error2");
@@ -812,7 +849,7 @@
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
 	   		
-	   		$(document).ready(function(){
+	   		$(document).ready(function(){	   		  
 	   			GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
 	   			  var self = this;
 
