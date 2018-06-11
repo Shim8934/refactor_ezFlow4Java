@@ -141,6 +141,8 @@
 		   			tempTask.depends = "";
 		   			tempTask.description = pd.overview;
 		   			tempTask.progress = pd.progress;
+		   			tempTask.realProgress = pd.progress;
+		   			tempTask.planProgress = pd.planProgress;
 		   			tempTask.hasChild = "";
 		   			
 		   			ganttData.tasks.push(tempTask);
@@ -207,6 +209,8 @@
 			   			tempTask.depends = "";
 			   			tempTask.description = gl[i].overview;
 			   			tempTask.progress = gl[i].realProgress;
+			   			tempTask.realProgress = gl[i].realProgress;
+			   			tempTask.planProgress = gl[i].planProgress;
 			   			tempTask.hasChild = "";
 		   				ganttData.tasks.push(tempTask);
 		   				
@@ -494,6 +498,39 @@
 	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress);
 	   			  
 	   			  return task.moveTo(task.start,false,true);
+	   			};
+	   			
+	   			//depth에 따른 들여쓰기 조절하기 위해 재정의
+	   			GridEditor.prototype.refreshTaskRow = function (task) {
+	   			  var canWrite=this.master.permissions.canWrite || task.canWrite;
+
+	   			  var row = task.rowElement;
+
+	   			  row.find(".taskRowIndex").html(task.getRow() + 1);
+	   			  row.find(".indentCell").css("padding-left", task.level * 15 + 18);
+	   			  row.find("[name=name]").val(task.name);
+	   			  row.find("[name=code]").val(task.code);
+	   			  row.find("[status]").attr("status", task.status);
+
+	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
+	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true);
+	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
+	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) ); // called on dates only because for other field is called on focus event
+	   			  row.find("[name=endIsMilestone]").prop("checked", task.endIsMilestone);
+	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent).updateOldValue();
+	   			  row.find("[name=depends]").val(task.depends);
+	   			  row.find(".taskAssigs").html(task.getAssigsString());
+
+	   			  //manage collapsed
+	   			  if (task.collapsed)
+	   			    row.addClass("collapsed");
+	   			  else
+	   			    row.removeClass("collapsed");
+
+
+	   			  //Enhancing the function to perform own operations
+	   			  this.master.element.trigger('gantt.task.afterupdate.event', task);
+	   			  //profiler.stop();
 	   			};
 	   		}
 	   		
@@ -847,7 +884,7 @@
 	   				$(".tooltipBox").css({top:tPosY, left : tPosX});
 	   			};
 	   			
-	   			$('.taskBox').hover(function () {
+	   			$(document).on("mouseover", ".taskBox" ,function () {
 	   				var taskId = $(this).attr("taskid");
 	   				var isGroup = taskId.substring(taskId.lastIndexOf("_") + 1, taskId.lastIndexOf("_") + 2);
 	   				taskId = taskId.substring(taskId.lastIndexOf("_") + 2);
@@ -881,10 +918,13 @@
 	   				
 	   				$(".tooltipBox").html(infoHTML);
 	                $('.tooltipBox').show();
-	            },
-	             function () {
-	                $('.tooltipBox').hide();
-	            }).mouseleave(positionTooltip);
+// 	            }
+// 	             function () {
+// 	                
+	            }).on("mouseout", ".taskBox", function(event){
+	            	positionTooltip(event);
+	            	$('.tooltipBox').hide();
+            	});
 	   			
 	   			eventSetting();
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
@@ -951,6 +991,14 @@
 		  
 		  th{
 		  	padding: 0px
+		  }
+		  
+		  .gdfTable td, .gdfTable th {
+		    font-size: 12px;
+		  }
+		  
+		  .taskEditRow input, .columnWidthTest {
+		    font-size: 12px;
 		  }
 		  
 		  #ndo{
@@ -1437,7 +1485,7 @@
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
 			      <th class="gdfColHeader gdfResizable" style="width:60px;">실제진행률</th>
 			      <th class="gdfColHeader gdfResizable" style="width:60px;">목표진행률</th>
-			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">depe.</th>
+			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">선행작업</th>
 			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">담당자</th>
 			    </tr>
 			    </thead>
@@ -1448,7 +1496,7 @@
 			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#)" level="(#=level#)">
 			    <th class="gdfCell edit" align="right" style="cursor:pointer; border: 0px;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </th>
 			    <td class="gdfCell noClip" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
-			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+18#)px;">
+			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+22#)px;">
 			      <div class="exp-controller" align="center"></div>
 			      <input type="text" name="name" value="(#=obj.name#)" placeholder="name">
 			    </td>

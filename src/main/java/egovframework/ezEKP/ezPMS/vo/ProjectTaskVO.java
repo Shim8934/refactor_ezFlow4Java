@@ -119,7 +119,7 @@ public class ProjectTaskVO {
     //순수 task workingday
     private int realWorkingday;
     
-    // 실제 진행률 
+    // 계획 진행률 
     private Float planProgress;
     
     public Long getTaskId() {

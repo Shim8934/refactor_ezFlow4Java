@@ -958,6 +958,17 @@ public class EzPMSGWController2 {
 						iter.remove();
 					}
 				}
+				
+				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(groupList.get(i).getPlanStartDate());
+				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(groupList.get(i).getPlanEndDate());
+				Date today = new Date();
+				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+				
+				int restDueday = ezPMSService.getWorkinDays(now, endDate);
+				groupList.get(i).setRestDueday(restDueday);
+				groupList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate));
+				
 				groupList.get(i).setGroupMember(groupMemberListTemp);
 			}
 			
