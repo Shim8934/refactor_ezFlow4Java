@@ -84,6 +84,13 @@ public class EzPMSController3 {
 			model.addAttribute("data", treeData);
 		}
 		
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId() + "/role", null, request, "get", null);
+		
+		if(status.equals("ok")) {
+			Long userRole = (Long) resultBody.get("data");
+			model.addAttribute("userRole", userRole);
+		}
+		
 		model.addAttribute("projectId", projectId);
 		
 		LOGGER.debug("ezPMS getBoardMain ended");
@@ -104,8 +111,6 @@ public class EzPMSController3 {
 		String mode = request.getParameter("mode");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		/*JSONObject resultBody = null;
-		String status = null;*/
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/sysParams/" + userId, param, request, "post", null);
 		String status = resultBody.get("status").toString();
@@ -766,6 +771,13 @@ public class EzPMSController3 {
 				JSONArray commentList = (JSONArray) resultBody.get("data");
 				model.addAttribute("data", commentList);
 			} 
+		}
+		
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId() + "/role", null, request, "get", null);
+		
+		if(status.equals("ok")) {
+			Long userRole = (Long) resultBody.get("data");
+			model.addAttribute("userRole", userRole);
 		}
 		
 		LOGGER.debug("ezPMS getCommentList ended");

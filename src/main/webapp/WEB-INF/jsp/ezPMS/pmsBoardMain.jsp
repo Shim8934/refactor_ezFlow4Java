@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE>
 <html>
@@ -291,9 +293,11 @@
 			<div id="iconLine">
 				<div id="taskName"></div>
 				<div id="icons">
-					<a class="imgbtn" onclick="goAddBoard()" style="margin-left: 1px; margin-top: 1px;"><span>등록</span></a>
-					<a class="imgbtn" onclick="deleteBoards()" style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a>
-					<a class="imgbtn" onclick="goMoveBoards()" style="margin-left: 1px; margin-top: 1px;"><span>이동</span></a>
+					<c:if test="${userRole ne 3}">
+						<a class="imgbtn" onclick="goAddBoard()" style="margin-left: 1px; margin-top: 1px;"><span>등록</span></a>
+						<a class="imgbtn" onclick="deleteBoards()" style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a>
+						<a class="imgbtn" onclick="goMoveBoards()" style="margin-left: 1px; margin-top: 1px;"><span>이동</span></a>
+					</c:if>
 					<a class="imgbtn" onclick="location.reload()" style="margin-left: 1px; margin-top: 1px;"><span>새로고침</span></a>
 					<a class="imgbtn" onclick="showSearchDiv()" style="margin-left: 1px; margin-top: 1px;"><span>검색 <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></a>
 				</div>

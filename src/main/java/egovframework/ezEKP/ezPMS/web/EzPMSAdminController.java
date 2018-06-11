@@ -209,6 +209,7 @@ public class EzPMSAdminController {
 		return data;
 	}
 	
+	// need to think about transaction
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPMS/modifyProject.do")
 	public String modifyProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model, LoginVO userInfo) throws Exception {
@@ -239,7 +240,18 @@ public class EzPMSAdminController {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			model.addAttribute("data", "success");
+			model.addAttribute("memberChange", "success");
+		}
+		
+		url = "/rest/ezPMS/projects/" + projectId + "/status";
+		
+		param.put("changeDate", today);
+		
+		result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+		status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("statusChange", "success");
 		}
 		
 		LOGGER.debug("modifyProject ended");

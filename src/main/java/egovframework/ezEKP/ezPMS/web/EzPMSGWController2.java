@@ -757,6 +757,7 @@ public class EzPMSGWController2 {
 			//추후 파라미터로 받도록 수정 필요.
 			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang, "");
 			data.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
+			data.setWeight(ezPMSService.getProjectWeight(projectId, info.getTenantId()));
 			
 			result.put("status", "ok");
 			result.put("code", 0);

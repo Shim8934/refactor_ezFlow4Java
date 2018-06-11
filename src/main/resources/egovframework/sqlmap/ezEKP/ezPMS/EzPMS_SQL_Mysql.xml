@@ -2911,4 +2911,17 @@
 				PROJECT_ID = #projectId#
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getProjectWeight" parameterClass="map" resultClass="float">
+		<![CDATA[
+			SELECT
+				sum(weight)
+			FROM
+				tbl_pms_task a
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				project_id = #projectId#
+		]]>
+	</select>
 </sqlMap>

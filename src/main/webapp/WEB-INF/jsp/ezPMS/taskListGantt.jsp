@@ -113,7 +113,7 @@
 		   			tempTask.start = new Date(pd.planStartDate).getTime();
 		   			tempTask.end = new Date(pd.planEndDate).getTime();
 		   			tempTask.duration = pd.workingday;
-		   			tempTask.weight = 100;
+		   			tempTask.weight = pd.weight;
 		   			tempTask.startIsMilestone = "";
 		   			tempTask.endIsMilestone = "";
 		   			tempTask.assigs = [];
