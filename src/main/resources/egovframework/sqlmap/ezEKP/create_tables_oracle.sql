@@ -6012,7 +6012,7 @@
 --------------------------------------------------------
 
   CREATE TABLE "EZEKP2017"."TBL_PHOTO_IMAGEITEM" 
-   (	"IMAGEID" NCHAR(38), 
+   (	"IMAGEID" NCHAR(41), 
 	"ITEMID" NCHAR(38), 
 	"BOARDID" NCHAR(38), 
 	"WRITERID" NVARCHAR2(20), 
