@@ -252,10 +252,11 @@
 	            strXML += "<ITEMID>" + pItemID + "</ITEMID>";
 	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
 	            
+	            /* 2018-06-08 홍승비 - 사진 추가 시 imageID 순서 유지하며 추가 */
 	            if(filecount > 0)
 	            {
 	                for (var i = 0; i < filecount ; i++) {
-	                    imageid += "{" + GetGUID() + "} " + ";";
+	                    imageid += getZeroNum(i) + "{" + GetGUID() + "}" + ";";
 	                }
 	            }
 	            else{
@@ -432,6 +433,14 @@
 	        function GetGUID() {
 	            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 	        }
+	        
+	        /* 2018-06-08 홍승비 - 사진 추가 시 imageID 순서 유지하며 추가 */
+		    function getZeroNum(count){
+	        	var addCnt =  parseInt(count) + parseInt(lastItemID) + 1;
+		    	var zeroNum = "000" + addCnt;
+		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
+		    	return zeroNum;
+		    }
 	
 	        function CustomRandom() {
 	            var now = new Date();

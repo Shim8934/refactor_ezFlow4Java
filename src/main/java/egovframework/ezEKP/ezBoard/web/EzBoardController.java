@@ -5581,11 +5581,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
+		/* 2018-06-11 홍승비 - 사진 추가 시 마지막 imageID 비교를 위해 추가 */
+		String lastItemID = ezBoardService.getLastImageID(boardID, itemID, userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("lastItemID", lastItemID);
 
 		logger.debug("addImageItem ended");
 		return "ezBoard/boardAddImageItem";

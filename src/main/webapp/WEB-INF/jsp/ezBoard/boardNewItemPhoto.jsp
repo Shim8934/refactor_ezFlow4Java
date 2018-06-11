@@ -326,11 +326,14 @@
 	            //20121018_[을지]_포토앨범 : 각사진에 대한 이미지 ID를 부여
 	            var filecount = document.getElementsByName('checkmenuSub').length;
 	            var imageid = "";
-	            for (var i = 0; i < filecount ; i++) {  
-	                var tmpId = "{" + GetGUID() + "}";
-	                if(document.getElementsByName("mainFG")[i].checked)
+	            /* 2018-06-08 홍승비 - 사진 순서 정렬을 위한 이미지ID 조정 (000~999) */
+	            for (var i = 0; i < filecount ; i++) {
+	            	var tmpId = getZeroNum(i);
+	                tmpId += "{" + GetGUID() + "}";
+	                
+	                if (document.getElementsByName("mainFG")[i].checked) {
 	                    mainImageID = tmpId;
-	
+	                }
 	                imageid += tmpId + ";";
 	            }
 	            strXML += "<IMAGE_COUNT>" + filecount + "</IMAGE_COUNT>";
@@ -590,6 +593,13 @@
 		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 		    }
 		
+		    /* 2018-06-08 홍승비 - 사진 순서 정렬을 위한 이미지ID 조정 (000~999)  */
+		    function getZeroNum(count){
+		    	var zeroNum = "000" + count;
+		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
+		    	return zeroNum;
+		    }
+		    
 		    function CustomRandom() {
 		        var now = new Date();
 		        var seed = now.getMilliseconds();
@@ -838,6 +848,8 @@
 	    <th><spring:message code='ezBoard.t209'/></th>
 	    <td style="vertical-align:middle" colspan="2"><input type="text" id="txtAbstract"  style="width:100%;word-break:break-all" value="" maxlength=100></td>
 	  </tr>
+	<%-- 2018-06-08 홍승비 - 사용하지 않는 크로스브라우징 코드 주석처리 --%>
+	<%--  
 	    <tr>
 	    <td style="display:none;">
 	    <c:if test="${!isCrossBrowser}">
@@ -846,6 +858,7 @@
 	    <div id="lstAttachLink">&nbsp;</div>
 	    </td>
 	    </tr>
+	--%>
 	    </table>
 	    <div id="progdiv" class="progarea" style="z-index:6000;position:absolute;top:370px;left:227px;display:none">
 	        <P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
