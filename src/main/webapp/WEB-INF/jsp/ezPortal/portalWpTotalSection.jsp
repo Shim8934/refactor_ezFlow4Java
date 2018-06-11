@@ -174,6 +174,14 @@
 		</section>
 			
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+		<style>
+			select {
+				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
+			}
+			select::-ms-expand {
+			    display: none;
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
