@@ -256,8 +256,9 @@
 	                                HwpCtrl.SetFieldText("_connkey_", _connkey_);
 	                        } catch (e) { }
 	                    }
-	
+	                    
 	                    var rtnVal = ExcuteInfo("INIT", "");
+	                    
 	                    if (!rtnVal) {
 	                        if (OpenInformationUI("<spring:message code='ezApprovalG.t122'/>")) {
 	                            btnClose_onclick();

@@ -103,49 +103,43 @@ function ExcuteInfo(pprocessIdx, currTD) {
     rtnVal = true;
 
     var ConnRootText = GetDocumentElement(HwpCtrl, "CONNROOT");
-    if (ConnRootText == "")
-        return true;
-
-    try {
-        var xmlData = new ActiveXObject("Microsoft.XMLDOM");
-        xmlData.async = false;
-        xmlData.load(document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(ConnRootText));
-    } catch (e) {
+    if (ConnRootText == "") {
         return true;
     }
-    if (xmlData.xml == "")
-        return true;
-
+    
+    xmlData = loadXMLString(ConnRootText);
     findFlag = false;
-    connNodes = xmlData.documentElement.childNodes
-
+    connNodes = GetChildNodes(xmlData.documentElement);
+    
     for (i = 0; i < connNodes.length; i++) {
-        processIdx = GetAttribute(connNodes(i),"processidx")
-        processTime = GetAttribute(connNodes(i),"processtime")
+        processIdx = GetAttribute(connNodes[i],"processidx");
+        processTime = GetAttribute(connNodes[i],"processtime");
 
         if (processIdx == pprocessIdx && processTime == pDraftFlag) {
             findFlag = true;
-            connNode = connNodes(i)
+            connNode = connNodes[i];
             break;
         }
     }
-
+    
     if (findFlag) {
-        connFlag = GetAttribute(connNode.childNodes(0),"flag");
-        connString = getNodeText(connNode.childNodes(0));
-        queryType = GetAttribute(connNode.childNodes(1),"qtype");
-        queryString = getNodeText(connNode.childNodes(1));
+        connFlag = GetAttribute(connNode.childNodes[0],"flag");
+        connString = getNodeText(connNode.childNodes[0]);
+        queryType = GetAttribute(connNode.childNodes[1],"qtype");
+        queryString = getNodeText(connNode.childNodes[1]);
 
         var strItemNames = "SA_DocID";
         var arrItemNames = strItemNames.split(",");
         var objNewItem;
+        
         for (i = 0; i < arrItemNames.length; i++) {
             objNewItem = xmlData.createElement("key");
             objNewItem.setAttribute("kind", "single");
             objNewItem.text = arrItemNames[i];
-            connNode.childNodes(2).appendChild(objNewItem);
+            connNode.childNodes[2].appendChild(objNewItem);
         }
-        keyNodes = connNode.childNodes(2).childNodes;
+        
+        keyNodes = connNode.childNodes[2].childNodes;
 
         switch (queryType) {
             case "Q":
@@ -193,7 +187,7 @@ function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
 
     return loadXMLString(xmlhttp.responseText);
 }
-function callNoneUIASP(pqueryString, pkeyNodes) {
+/*function callNoneUIASP(pqueryString, pkeyNodes) {
     var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 
     var objRoot = makeKeyValue(pkeyNodes, "A")
@@ -203,6 +197,35 @@ function callNoneUIASP(pqueryString, pkeyNodes) {
     xmlhttp.send(xmlpara);
 
     return loadXMLString(xmlhttp.responseText);
+}*/
+function callNoneUIASP(pqueryString, pkeyNodes) {
+	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+	var objRoot = makeKeyValue(pkeyNodes, "A");
+	var resResult = "";
+	
+	var linkageField = $('#message').contents().find(".linkageValue");
+	var linkageValue = linkageField.val();
+	
+	if(!linkageValue) {
+		linkageValue = linkageField.text();
+	}
+	
+    $.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : pqueryString,
+		data : {
+			docID : pDocID,
+			linkageValue : linkageValue
+		},
+		success: function(result){
+		},
+		error: function() {
+		}
+	});
+
+	return "<RESULT>true</RESULT>";
 }
 function callUIASP(pconnString, pqueryString, pkeyNodes) {
     var xmlsend = new ActiveXObject("Microsoft.XMLDOM");
@@ -430,51 +453,53 @@ function makeKeyValue(pkeyNodes, flag) {
     var fieldName, colidx, tblinfoRow, cellValue, listnode
 
     var prowNum = "";
-    if (flag == "A")
+    if (flag == "A") {
         var objRow = xmlpara.createNode(1, "PARAMETER", "");
-    else
+    } else {
         var objRow = xmlpara.createNode(1, "ROW", "");
+    }
 
     for (i = 0; i < pkeyNodes.length; i++) {
-        if (GetAttribute(pkeyNodes(i),"kind") == "single") {
-            customData = xmlpara.createNode(1, getNodeText(pkeyNodes(i)), "");
+        if (GetAttribute(pkeyNodes[i],"kind") == "single") {
+        	//두번째 create때 exception발생 -> 고쳐 (2018-06-11 이효진)
+            customData = xmlpara.createNode(1, getNodeText(pkeyNodes[i]), "");
             objRow.appendChild(customData);
-            fieldVal = getKeyValue(getNodeText(pkeyNodes(i)), prowNum);
+            fieldVal = getKeyValue(getNodeText(pkeyNodes[i]), prowNum);
             customData.text = fieldVal;
         } else {
             if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
                 xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"))
 
-                tblid = GetAttribute(pkeyNodes(i),"tableid")
+                tblid = GetAttribute(pkeyNodes[i],"tableid")
 
                 tblObject = fields.item(tblid).TagObject
 
-                listKeyRow = pkeyNodes(i).childNodes
+                listKeyRow = pkeyNodes[i].childNodes
                 customData = xmlpara.createNode(1, "RECORDROOT", "");
                 objRow.appendChild(customData);
 
                 var TagIdx = 0;
                 for (j = 0; j < tblObject.rows.length; j++) {
-                    if (GetAttribute(tblObject.rows(j),"header") || GetAttribute(tblObject.rows(j),"tail"))
+                    if (GetAttribute(tblObject.rows[j],"header") || GetAttribute(tblObject.rows[j],"tail"))
                         continue;
 
                     listnode = xmlpara.createNode(1, "R" + TagIdx, "");
                     customData.appendChild(listnode);
 
                     for (k = 0; k < listKeyRow.length; k++) {
-                        fieldName = getNodeText(listKeyRow(k))
+                        fieldName = getNodeText(listKeyRow[k])
                         tblinfoRow = xmlTbl.documentElement.selectSingleNode("/TableInfo/" + tblid)
                         var rowCnt;
                         var offset = tblinfoRow.childNodes.length;
                         for (rowCnt = 0; rowCnt < offset; rowCnt++) {
-                            if (GetAttribute(tblinfoRow.childNodes(rowCnt),fieldName)) {
-                                colidx = GetAttribute(tblinfoRow.childNodes(rowCnt),fieldName);
+                            if (GetAttribute(tblinfoRow.childNodes[rowCnt],fieldName)) {
+                                colidx = GetAttribute(tblinfoRow.childNodes[rowCnt],fieldName);
                                 break;
                             }
                         }
 
                         if (!colidx) cellValue = getKeyValue(fieldName, "")
-                        else cellValue = getNodeText(tblObject.rows(j + rowCnt).cells(parseInt(colidx)));
+                        else cellValue = getNodeText(tblObject.rows[j + rowCnt].cells(parseInt(colidx)));
 
                         listnode.setAttribute(fieldName, cellValue);
                     }

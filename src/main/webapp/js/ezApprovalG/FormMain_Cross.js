@@ -337,9 +337,7 @@ function MakeFormConnXML() {
                   
                     if (pCheck) {
                         pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i],"processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i],"processtime");
-                    }
-                    else {
-                        
+                    } else {
                         pDataCheck = false;
                         pErrorMsg = strLang1017;
                         break;
@@ -360,7 +358,6 @@ function MakeFormConnXML() {
                     var str = ""; 
                     for (var j in results) {
                         if (results[j] > 1) {
-                            
                             pDataCheck = false;
                             pErrorMsg = strLang1018;
                             break;
@@ -368,8 +365,7 @@ function MakeFormConnXML() {
                     }
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             pDataCheck = false;
             pErrorMsg = e.message;
         }
