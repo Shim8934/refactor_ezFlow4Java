@@ -116,7 +116,7 @@
 		</table> 
 		
 		<div class="btnposition">
-			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezAttitude.t128' /></span></a>
+			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezAttitude.t16' /></span></a>
 			<a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code='ezAttitude.t129' /></span></a>
 		</div>
 	</body>

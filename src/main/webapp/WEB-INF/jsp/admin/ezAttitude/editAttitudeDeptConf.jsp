@@ -197,11 +197,6 @@
 	
 	<body class="popup">
         <h1><spring:message code='ezAttitude.t201' /></h1>
-	    <div id="close">
-	        <ul>
-	            <li><span onclick="btncancel_onclick()"><spring:message code='ezOrgan.t143'/></span></li>
-	        </ul>
-	    </div>
        	<table>
             <tr>
                 <td class="box" style="width: 250px; height: 465px;">
@@ -219,29 +214,20 @@
                 </td>    
             </tr>
         </table>
-		<table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; margin-top:15px; width: 450px;">
-	        <tbody>
-	        	<tr>
-	        		<td>
-			        	<div style="display: inline-block; vertical-align: middle;">
-			        		<input type="checkbox" id="gubun" name="gubun"/><span><spring:message code='ezAttitude.t127' /></span>
-			        	</div>
-		        	</td>
-	        	</tr>
-	        	<tr>
-	            	<td style="height: 50px; text-align: left; padding-left: 10px;">
-			        	<div style="display: inline-block; vertical-align: middle;">
-		                	근무시간&nbsp;
-			        		<input id="workStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px; text-align:center;"/>
-			        	</div>
-						&nbsp;
-						<div style="display: inline-block; vertical-align: middle;" align="right">
-		            		<a class="imgbtn"><span onclick="btnOk_onclick()"><spring:message code='ezAttitude.t128' /></span></a>
-							<a class="imgbtn"><span onclick="btncancel_onclick()"><spring:message code='ezAttitude.t129' /></span></a>
-		            	</div>
-	            	</td>
-		        </tr>
-		    </tbody>
-	    </table>
+        <table class="content" style="margin-top: 8px;"> 
+			<tr>
+				<th><spring:message code='ezAttitude.t126' /></th>
+				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> /><spring:message code='ezAttitude.t127' /></td>
+			</tr>
+			<tr>
+				<th><spring:message code='ezAttitude.t12' /></th>
+				<td><span><input id="workStartTime" type="text" style="width:50px;" <c:if test="${vo.gubun == '0'}">readonly="true"</c:if> value="${vo.workStartTime }"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px;" <c:if test="${vo.gubun == '0'}">readonly="true"</c:if> value="${vo.workEndTime }"/></span></td>
+			</tr>
+		</table> 
+		
+		<div class="btnposition">
+			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezAttitude.t16' /></span></a>
+			<a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code='ezAttitude.t129' /></span></a>
+		</div>
 	</body>
 </html>
