@@ -437,7 +437,7 @@
                       AND 
                   		BoardID = #v_pBoardID#
                       ORDER BY 
-                  		WriteDate ASC ) T1
+                  		IMAGEID ASC ) T1
                   	)
 				WHERE
                     RN <= #v_pEndRow#
