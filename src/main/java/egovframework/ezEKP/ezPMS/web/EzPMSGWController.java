@@ -1475,9 +1475,17 @@ public class EzPMSGWController {
 					roleCheck = "rejected";
 				}
 				
-				LOGGER.debug("DELETEGROUP ROLECHECK : " + roleCheck);
+				LOGGER.debug("changeganttorder ROLECHECK : " + roleCheck);
 				
 				if (roleCheck.equals("permitted")) {
+					//순서 변경된 taskId의 groupId변경 (groupId가 -1이면 변경 X)
+					long changeGroupId = Long.parseLong(request.getParameter("changeGroupId"));
+					
+					if (changeGroupId != -1) {
+						long targetTaskId = Long.parseLong(request.getParameter("targetTaskId"));
+						ezPMSService.updateTaskGroupId(projectId, targetTaskId, changeGroupId, tenantId);
+					}
+					
 					//그룹 순서 변경
 					List<Map<String, Object>> groupList = (List<Map<String, Object>>) json.get("groupList");
 					

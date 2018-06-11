@@ -281,10 +281,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			project.setProjectMember(member);
 			
 			if (!project.getStatus().equals("C")) {
+				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanStartDate());
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 				Date today = new Date();
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+				
+				project.setPlanProgress(getPlanProgress(startDate, endDate));
 				
 				int restDueday = getWorkinDays(now, endDate);
 				project.setRestDueday(restDueday);
@@ -677,6 +680,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			//가중치 계산
 			updateTaskWDNW(taskVO, taskWorkingday);
 			
+			//업무가 속한 그룹 날짜 업데이트
+			updateGroupDate(taskVO.getProjectId(), taskVO.getGroupId(),taskVO.getTenantId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1032,6 +1037,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return deptList;
 	}
 	
+	@Override
 	public int getWorkinDays(Date start, Date end){
 	    //Ignore argument check
 
@@ -2031,6 +2037,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
+	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId) {
+		LOGGER.debug("[SERVICE] updateTaskGroupId started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("targetTaskId", targetTaskId);
+		map.put("changeGroupId", changeGroupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateTaskGroupId(map);
+		LOGGER.debug("[SERVICE] updateTaskGroupId ended.");
+	}
+	
+	@Override
 	public Float getProjectWeight(Long projectId, int tenantId) throws Exception {
 		LOGGER.debug("[SERVICE] getProjectWeight started.");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2039,5 +2058,51 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] getProjectWeight ended.");
 		return ezPMSDAO.getProjectWeight(map);
+	}
+
+	@Override
+	public float getPlanProgress(Date start, Date end) throws Exception {
+		Date today = new Date();
+		String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+		Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+		
+		int totalWorkingdays = getWorkinDays(start, end);
+		int restDueday = getWorkinDays(now, end);
+		float planProgress = 0;
+		if(totalWorkingdays == 0){
+			totalWorkingdays = 1;
+		}
+		if(restDueday > 0){
+			planProgress = ((float)(totalWorkingdays - restDueday) / totalWorkingdays) * 100;
+		}
+		else{
+			planProgress = 100;
+		}
+		
+		return planProgress;
+	}
+	
+	@Override
+	public void updateGroupProgress(long projectId, long groupId, int tenantId) {
+		LOGGER.debug("[SERVICE] updateGroupProgress started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateGroupProgress(map);
+		LOGGER.debug("[SERVICE] updateGroupProgress ended.");
+	}
+
+	@Override
+	public void updateGroupDate(long projectId, long groupId, int tenantId) throws Exception {
+		LOGGER.debug("[SERVICE] updateGroupDate started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateGroupDate(map);
+		LOGGER.debug("[SERVICE] updateGroupDate ended.");
 	}
 }

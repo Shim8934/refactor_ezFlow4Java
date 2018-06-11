@@ -477,6 +477,8 @@
 				AND
 					ISSUEYN = 'N'
 			</isNotEqual>
+				ORDER BY
+					ISSUEYN DESC, SORT_ORDER
 	</select>
 	
 	<select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
@@ -489,11 +491,14 @@
 					PROJECT_ID,
 					GROUP_ID,
 					TASK_ID
-				FROM TBL_PMS_TASK
+				FROM 
+					TBL_PMS_TASK
 				WHERE
 					PROJECT_ID = #project_Id#
-						AND
+				AND
 					DEL_STATUS = 0
+				ORDER BY
+					GROUP_ID, SORT_ORDER
 			]]>
 	</select>
 	
@@ -2197,6 +2202,7 @@
 			L.PROJECT_ID = #projectId#
 		AND
 			L.TENANT_ID = #tenantId#
+		<isNotEqual property="location" compareValue="overview">
 		<isNotEmpty property="groupId">
 		<isEqual property="taskId" compareValue="0">
 		AND 
@@ -2222,6 +2228,7 @@
 			</isNotEqual>
 		</isNotEmpty>
 		</isNotEmpty>
+		</isNotEqual>
 		<isNotEqual property="orderWhat" compareValue="init">
 		ORDER BY	
 			$orderWhat$ $orderHow$
@@ -2892,6 +2899,21 @@
 		]]>
 	</update>
 	
+	<update id="EzPMSDAO.updateTaskGroupId" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				GROUP_ID = #changeGroupId#
+			WHERE
+				TASK_ID = #targetTaskId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				PROJECT_ID = #projectId#
+		]]>
+	</update>
+	
 	<select id="EzPMSDAO.getProjectWeight" parameterClass="map" resultClass="float">
 		<![CDATA[
 			SELECT
@@ -2905,4 +2927,17 @@
 		]]>
 	</select>
 	
+	<update id="EzPMSDAO.updateGroupDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				PLAN_START_DATE = (SELECT min(plan_start_date) from tbl_pms_task where tenant_id = #tenantId# and group_id = #groupId#),
+				PLAN_END_DATE = (SELECT max(plan_end_date) from tbl_pms_task where tenant_id = #tenantId# and group_id = #groupId#)
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

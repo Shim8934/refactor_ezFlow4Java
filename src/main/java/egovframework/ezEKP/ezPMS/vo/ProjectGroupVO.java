@@ -103,6 +103,9 @@ public class ProjectGroupVO {
     //그룹 가중치
     private Float weight;
     
+    // 계획 진행률 
+    private Float planProgress;
+    
     public String getProjectName() {
 		return projectName;
 	}
@@ -365,6 +368,14 @@ public class ProjectGroupVO {
 
 	public void setWeight(Float weight) {
 		this.weight = weight;
+	}
+
+	public Float getPlanProgress() {
+		return planProgress;
+	}
+
+	public void setPlanProgress(Float planProgress) {
+		this.planProgress = planProgress;
 	}
 
 }

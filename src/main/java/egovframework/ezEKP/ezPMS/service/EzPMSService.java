@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPMS.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,6 +184,16 @@ public interface EzPMSService {
 	public void updatePreTaskRel(long taskId, int preTaskIndex, int tenantId, long projectId);
 
 	void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday);
-	
+
+	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId);
+
 	public Float getProjectWeight(Long projectId, int tenantId) throws Exception;
+	
+	public int getWorkinDays(Date start, Date end) throws Exception;
+	
+	public float getPlanProgress(Date start, Date end ) throws Exception;
+	
+	public void updateGroupProgress(long projectId, long GroupId, int tenantId) throws Exception;
+	
+	public void updateGroupDate(long projectId, long GroupId, int tenantId) throws Exception;
 }

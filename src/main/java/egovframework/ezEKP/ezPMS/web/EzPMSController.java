@@ -1604,7 +1604,7 @@ public class EzPMSController {
 		param.put("userId", userId);
 		
 		JSONObject jsonList = new JSONObject();
-		jsonList.put("groupList", param.get("Arr"));
+		jsonList.put("groupList", param.get("groupArr"));
 		jsonList.put("taskList", param.get("taskArr"));
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
