@@ -934,7 +934,7 @@
 		            }
 		        }
 		
-		        function imageonmouse(reslut)
+		        function imageonmouse(result)
 		        {
 		            for(var i = 0; i < ImageCount; i++)
 		            {
@@ -948,14 +948,14 @@
 		                    document.getElementById("image" + i).style.filter = "Alpha(Opacity=35)";
 		            }
 		
-		            document.getElementById(reslut).style.border = "#888 1px solid";
-					document.getElementById(reslut).style.margin = "0px 4px";
-		            document.getElementById(reslut).style.width = imgWidth;
-		            document.getElementById(reslut).style.height = imgHeight;
+		            document.getElementById(result).style.border = "#888 1px solid";
+					document.getElementById(result).style.margin = "0px 4px";
+		            document.getElementById(result).style.width = imgWidth;
+		            document.getElementById(result).style.height = imgHeight;
 		            if (CrossYN())
-		                document.getElementById(reslut).style.opacity = "1";
+		                document.getElementById(result).style.opacity = "1";
 		            else
-		                document.getElementById(reslut).style.filter = "Alpha(Opacity=100)";
+		                document.getElementById(result).style.filter = "Alpha(Opacity=100)";
 		        }
 		
 		        /* 2018-06-01 홍승비 - 포토/썸네일게시물 하단 UI 수정 */

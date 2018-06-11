@@ -411,15 +411,23 @@
 			SELECT 
 				* 
         	FROM 
-        		( SELECT 
-                    *
+        		(SELECT 
+                    T1.*,
+                     rownum as RN
                	  FROM 
-               	  	( SELECT 
-               	  		IMAGEID ,
-               	  		FILEPATH ,
-               	  		FILECONTENT ,
-               	  		MAIN_FLAG FLAG ,
-               	  		IMAGENAME 
+					(SELECT 
+               	  		IMAGEID,
+						ITEMID,
+						BOARDID,
+						WRITERID,
+						WRITERNAME,
+						WRITERDEPTID,
+						FILEPATH,
+						WRITEDATE,
+						FILECONTENT,
+						IMAGENAME,
+						MAIN_FLAG FLAG,
+						TENANT_ID
                	  	  FROM
                	  		TBL_Photo_ImageItem 
                   	  WHERE  
@@ -430,10 +438,11 @@
                   		BoardID = #v_pBoardID#
                       ORDER BY 
                   		WriteDate ASC ) T1
-                   WHERE
-                     rownum <= #v_pEndRow# ) T2
-       		WHERE  
-       			rownum >= #v_pStartRow#
+                  	)
+				WHERE
+                    RN <= #v_pEndRow#
+				AND
+					RN >= #v_pStartRow#
 		]]>
 	</select>
 		
