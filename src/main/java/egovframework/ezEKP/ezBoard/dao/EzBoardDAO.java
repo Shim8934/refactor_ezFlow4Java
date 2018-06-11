@@ -672,4 +672,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.updateMoveOneLineReply", map);
 	}
 	
+	/* 2018-06-11 홍승비 - 포토/썸네일 이미지 리스트 중에서 가장 큰 IMAGEID 가져오기 */
+	public String getLastImageID(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardDAO.getLastImageID", map);
+	}
+	
 }
