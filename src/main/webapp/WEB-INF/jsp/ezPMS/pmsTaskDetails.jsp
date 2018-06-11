@@ -138,14 +138,12 @@
 			});
 			
 			$("#1tab3").click(function(){
-				alert("미구현");
-				return;
 				var clickTabId = $(this).attr("id");
 				var nowTabAttr = $(".tabon").attr("id");
 				changeTab(clickTabId, nowTabAttr);
 				
 				//의견 탭
-				$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getCommentListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
 			});
 		} else {
 			var projectId = taskDetails.projectId;
@@ -182,14 +180,12 @@
 			});
 				
 			$("#1tab3").click(function(){
-				alert("미구현");
-				return;
 				var clickTabId = $(this).attr("id");
 				var nowTabAttr = $(".tabon").attr("id");
 				changeTab(clickTabId, nowTabAttr);
 					
 				//의견 탭
-				$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardMain.do?projectId=" + projectId + "&onlyGroup=false");
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getCommentListTab.do?projectId=" + projectId + "&groupId=" + groupId);
 			});
 		}
 		

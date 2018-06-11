@@ -1624,7 +1624,7 @@ public class EzPMSController {
 	 */
 	@RequestMapping(value="/ezPMS/getGroupDetails.do")
 	public String getGroupDetails(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS changeGanttOrder started");
+		LOGGER.debug("ezPMS getGroupDetails started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		long projectId = Long.parseLong(request.getParameter("projectId"));
@@ -1653,7 +1653,7 @@ public class EzPMSController {
 		}
 		
 		model.addAttribute("target", "group");
-		LOGGER.debug("ezPMS changeGanttOrder ended");
+		LOGGER.debug("ezPMS getGroupDetails ended");
 		return "ezPMS/pmsTaskDetails";
 	}
 	

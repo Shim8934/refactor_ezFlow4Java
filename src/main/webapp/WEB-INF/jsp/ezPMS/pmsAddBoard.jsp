@@ -163,7 +163,7 @@
 		}
 		
 		if(title == "") {
-			alert("제목을 입력해주세요.");
+			alert("제목을 입력해주십시오.");
 			return;
 		}
 		
@@ -209,7 +209,7 @@
 			success : function(result) {
 				
 				if(result.data == 'new' || result.data == 'modify' || result.data == 'reply') {
-					alert("성공");
+					alert("게시물을 저장하였습니다.");
 					doubleSubmitFlag = false;
 					
 					if(result.data == 'new' || result.data == 'reply') {
@@ -239,12 +239,12 @@
 					opener.getBoardList();
 					window.close();
 				} else {
-					alert("실패");
+					alert("저장에 실패하였습니다.");
 					doubleSubmitFlag = false;
 				}	
 			},
 			error : function() {
-				alert("실패");
+				alert("저장에 실패하였습니다.");
 				doubleSubmitFlag = false;
 			}
 		});
@@ -276,8 +276,8 @@
             success: function() {
             	window.close();
             },
-            error: function() {
-            	alert("<spring:message code='ezCircular.t102'/>");	
+            error: function(jqXHR, textStatus, errorThrown) {
+            	alert("error");	
             }
 		});
 	}
@@ -316,11 +316,11 @@
 						<td>${writerName}(${writerDeptName})</td>
 					</tr>
 					<tr>
-						<th>제목</th>
+						<th>제&nbsp;&nbsp;목</th>
 						<td colspan="3"><input type="text" id="title" style="width: 100%;"/></td>
 					</tr>
 					<tr>
-						<th>게시 개요</th>
+						<th>게시개요</th>
 						<td colspan="3"><input type="text" id="writeOverview" style="width: 100%;"/></td>
 					</tr>
 				</table>

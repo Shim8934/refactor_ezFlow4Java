@@ -40,7 +40,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
-import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -860,5 +859,21 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS modifyComment ended");
 		
 		return "json";
+	}
+	
+	@RequestMapping(value = "/ezPMS/getCommentListTab.do")
+	public String getCommentListTab(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezPMS getCommentListTab started");
+		
+		String projectId = request.getParameter("projectId");
+		String groupId = request.getParameter("groupId");
+		String taskId = request.getParameter("taskId");
+		
+		model.addAttribute("projectId", projectId);
+		model.addAttribute("groupId", groupId);
+		model.addAttribute("taskId", taskId);
+		
+		LOGGER.debug("ezPMS getCommentListTab ended");		
+		return "ezPMS/pmsCommentListTab";
 	}
 }

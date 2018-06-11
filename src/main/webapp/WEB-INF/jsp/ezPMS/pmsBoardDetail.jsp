@@ -81,7 +81,7 @@
 		}
 		
 		function deleteBoard() {
-			if(confirm("정말 삭제하시겠습니까?") == true) {
+			if(confirm("삭제하시겠습니까?") == true) {
 				var items = new Array();
 				items.push(itemId);
 				deleteBoardAction(items);
@@ -102,7 +102,6 @@
 				data : JSON.stringify(data),
 				success : function(result) {
 					if(result.data == 'success') {
-						alert("삭제되었습니다.");
 						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + title.trim() + "] 게시물이 삭제되었습니다.");
 						window.close();
 						opener.getBoardList();
@@ -111,7 +110,7 @@
 					}
 				},
 				error : function() {
-					alert("삭제에 실패했습니다.");
+					alert("삭제에 실패하였습니다.");
 				}
 			})
 		}

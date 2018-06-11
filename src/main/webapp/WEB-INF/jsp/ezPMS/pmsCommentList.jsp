@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 <script>
 	//버튼 중복클릭 방지
 	var doubleSubmitFlag = false;
@@ -14,7 +15,7 @@
     	}
 		doubleSubmitFlag = true;
 		
-		var commentContent = $("#commentContent").val().trim();
+		var commentContent = $("#comment_input").val().trim();
 		
 		if(commentContent == "") {
 			alert("내용을 입력해주세요.");
@@ -35,7 +36,7 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				if(result.data == 'success') {
-					alert("성공");
+					alert("의견이 등록되었습니다.");
 					doubleSubmitFlag = false;
 					currentPage = 1;
 					
@@ -48,19 +49,19 @@
 					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "](으)로 [" + commentContent.trim() +"] 의견이 등록되었습니다.");
 					getCommentList();
 				} else {
-					alert("실패");
+					alert("등록에 실패하였습니다.");
 					doubleSubmitFlag = false;
 				}	
 			},
 			error : function() {
-				alert("실패");
+				alert("등록에 실패하였습니다.");
 				doubleSubmitFlag = false;
 			}
 		});
 	}
 	
 	function deleteComment(elem) {
-		if(confirm("정말 삭제하시겠습니까?") == true) {
+		if(confirm("삭제하시겠습니까?") == true) {
 			var selectedTR = $(elem).parent().parent();
 			var commentId = selectedTR.attr("data-commentId");
 			var writerId = selectedTR.attr("data-writerId");
@@ -79,7 +80,6 @@
 				data : JSON.stringify(data),
 				success : function(result) {
 					if(result.data == 'success') {
-						alert("삭제되었습니다.");
 						
 						var content = selectedTR.children("td.content").text();
 						var taskName = selectedTR.children("td.taskName").text();
@@ -94,7 +94,7 @@
 					}	
 				},
 				error : function() {
-					alert("삭제에 실패했습니다.");
+					alert("삭제에 실패하였습니다.");
 				}
 			})
 		}
@@ -148,10 +148,28 @@
 				}	
 			},
 			error : function() {
-				alert("수정에 실패했습니다.");
+				alert("수정에 실패하였습니다.");
 			}
 		})
 	}
+	
+	function auto_grow(element) {
+		if (element.value == "") {
+			document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
+			document.getElementById("sendBttn").disabled = true;
+		}
+		else {
+			document.getElementById("sendBttn").style.backgroundColor = "#0470e4";
+			document.getElementById("sendBttn").disabled = false;
+		}
+	}
+	
+	function cmtKeyEvent() {
+		if(event.keyCode == 13) {
+			addComment();
+		}
+	}
+	
 </script>
 
 <div id="divList" style="width: 100%;">
@@ -188,16 +206,15 @@
 </div>
 
 <c:if test="${userRole ne 3}">
-	<div style="margin-top: 20px;">
-		<table style="width: 100%;">
-			<tr>
-				<th width="20%">의견등록</th>
-				<td>
-					<textarea id="commentContent" style="resize: none;"></textarea>
-				</td>
-			</tr>
-		</table>
-		<a class="imgbtn" onclick="addComment()" style="margin: 10px auto;"><span>저장</span></a>	
+	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px 0px 0px 0px;">
+		<div class="sendComment_layout">
+			<div class="comment_input_layout" style="border: none; width: 86%;">
+				<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
+			</div>
+			<div class="commentBtn">
+				<button id="sendBttn" onclick="addComment()" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;">등록</button>						
+			</div>
+		</div>
 	</div>
 </c:if>
 

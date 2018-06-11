@@ -110,7 +110,7 @@
 	
 	function deletePermanently() {
 		
-		if(confirm("정말 삭제하시겠습니까?") == true) {
+		if(confirm("삭제하시겠습니까?") == true) {
 			
 			data = {
 				projectId : projectId,
@@ -125,15 +125,15 @@
 				data :JSON.stringify(data),
 				success : function(result) {
 					if (result == "permitted") {
-						alert("프로젝트가 영구삭제 되었습니다.");
 						window.close();
 						opener.getProjectList();
 					} else {
-						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+						alert("error");
 						return;
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
+					alert("error");
 				}
 			});
 		}	
