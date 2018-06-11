@@ -582,12 +582,11 @@
 	   				data :JSON.stringify(data),
 	   				success : function(result) {
 	   					if (result.roleCheck == "permitted") {
-	   						console.log(result.endDate);
-	   						alert("상태가 변경되었습니다.");
 	   						ge.tasks.filter(function(task){
 	   							return task.id == fullId
 	   						})[0].end = endTime;
 	   						ge.redraw();
+	   						toastPopupShow(rowIndex, "날짜가 변경되었습니다.");
 	   					} else {
 	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
 	   					}
@@ -596,6 +595,18 @@
 	   					alert ("에러발생 \n" + textStatus);
 	   				}
 	   				});
+	   		}
+	   		
+	   		//위치 지정해주기
+	   		function toastPopupShow(rowIndex, toastContent) {
+   				var strHTML = "";
+   				strHTML += "<span class='toastPopup'>" + toastContent + "</span>";
+   				$(".toastArea").html(strHTML);
+   				$(".taskBox").eq(rowIndex - 1).append(strHTML);
+   				
+   				setTimeout(function(){
+	   					$(".toastPopup").hide();
+	   			}, 1000);
 	   		}
 	   		
 	   		function dateToYYYYMMDD(date){
@@ -884,7 +895,8 @@
 	   				$(".tooltipBox").css({top:tPosY, left : tPosX});
 	   			};
 	   			
-	   			$(document).on("mouseover", ".taskBox" ,function () {
+	   			$(document).on("mouseover", ".taskBox" ,function (event) {
+	   				positionTooltip(event);
 	   				var taskId = $(this).attr("taskid");
 	   				var isGroup = taskId.substring(taskId.lastIndexOf("_") + 1, taskId.lastIndexOf("_") + 2);
 	   				taskId = taskId.substring(taskId.lastIndexOf("_") + 2);
@@ -932,7 +944,7 @@
 	   		
 	   		$(document).ready(function(){
 	   			$(".tooltipBox").hide();
-	   			
+
 	   			GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
 	   			  var self = this;
 
@@ -1010,6 +1022,13 @@
             background : #fff;
             border : 1px solid black;
             width : 200px;
+		  }
+		  
+		  .toastPopup {
+		  	position : absolute;
+		  	background : yellow;
+		  	border : 1px solid #d1d1d1;
+
 		  }
 		</style>
 	</head>
@@ -1678,7 +1697,7 @@
 			
 			</div>
 			<div class="tooltipBox" style="display:hide;"></div>
-			
+			<div class="toastArea"></div>
 			<script type="text/javascript">
 			  $.JST.loadDecorator("RESOURCE_ROW", function(resTr, res){
 			    resTr.find(".delRes").click(function(){$(this).closest("tr").remove()});

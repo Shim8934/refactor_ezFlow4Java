@@ -83,6 +83,7 @@ public class EzPMSGWController2 {
 			String orderWhat = request.getParameter("orderWhat");
 			String orderHow = request.getParameter("orderHow");
 			String position = request.getParameter("position");
+			String companyId = info.getCompanyId();
 			
 			if (orderWhat == null) {
 				orderWhat = "init";
@@ -131,9 +132,9 @@ public class EzPMSGWController2 {
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 				
-				int restDueday = ezPMSService.getWorkinDays(now, endDate);
+				int restDueday = ezPMSService.getWorkinDays(now, endDate, companyId, tenantId);
 				taskList.get(i).setRestDueday(restDueday);
-				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate));
+				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId));
 				taskList.get(i).setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
 			}
 			
@@ -164,13 +165,14 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			
 			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam.get("managerList");
 			List<TaskMemberVO> taskMemberList2 = new ArrayList<TaskMemberVO>();
 			
 			for (int i = 0; i < taskMemberList1.size(); i++) {
 				String taskMemberId = (String)taskMemberList1.get(i).get("userId");
-				int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 				Float pctinput = Float.parseFloat((String) taskMemberList1.get(i).get("pctinput"));
 				
 				TaskMemberVO taskMemberVO = new TaskMemberVO();
@@ -207,7 +209,7 @@ public class EzPMSGWController2 {
 			projectTaskVO.setWriterDeptname2(request.getParameter("writerDeptname2"));
 			projectTaskVO.setTreeDepth(Integer.parseInt(request.getParameter("treeDepth")));
 			
-			int taskId = ezPMSService.addTask(projectTaskVO, taskMemberList2);
+			int taskId = ezPMSService.addTask(projectTaskVO, taskMemberList2, companyId, tenantId);
 			
 			
 			result.put("status", "ok");
@@ -270,6 +272,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
 			
 			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam.get("managerList");
 			List<TaskMemberVO> taskMemberList2 = new ArrayList<TaskMemberVO>();
@@ -313,7 +316,7 @@ public class EzPMSGWController2 {
 			projectTaskVO.setWriterDeptname2(request.getParameter("writerDeptname2"));
 			projectTaskVO.setTaskMember(taskMemberList2);
 			
-			ezPMSService.updateTaskInfo(projectTaskVO);
+			ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -393,6 +396,8 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
 			
 			Map<String, Object> project = new HashMap<String, Object>();
 			project.put("planStartDate", request.getParameter("planStartDate"));
@@ -431,7 +436,7 @@ public class EzPMSGWController2 {
 			
 			//그룹 생성
 			project.put("groupName", request.getParameter("groupName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
-			Long groupId = ezPMSService.addGroup(project, "N");
+			Long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId);
 			
 			//프로젝트 멤버 테이블에 추가
 			HashMap<String, Object> userMap = new HashMap<String, Object>();
@@ -762,9 +767,10 @@ public class EzPMSGWController2 {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int isGantt = 0;
+			String companyId = info.getCompanyId();
 			
 			//추후 파라미터로 받도록 수정 필요.
-			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang, "");
+			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang, "", companyId);
 			data.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
 			data.setWeight(ezPMSService.getProjectWeight(projectId, info.getTenantId()));
 			
@@ -800,6 +806,7 @@ public class EzPMSGWController2 {
 			long projectId = Long.parseLong(request.getParameter("projectId"));
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			JSONObject data = new JSONObject();
+			String companyId = info.getCompanyId();
 			
 			//권한 체크
 			//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
@@ -834,7 +841,7 @@ public class EzPMSGWController2 {
 				projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 				projectTaskVO.setStatus(request.getParameter("status"));
 				
-				ezPMSService.updateTaskStatus(projectTaskVO);
+				ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
 				
 				if (request.getParameter("endTime") != null) {
 					long endTime = Long.parseLong(request.getParameter("endTime"));
@@ -880,7 +887,7 @@ public class EzPMSGWController2 {
 						    
 							postTask.setPlanStartDate(dateFormat.format(cal.getTime()));
 							postTask.setPlanEndDate(dateFormat.format(cal2.getTime()));
-							ezPMSService.updateTaskStatus(postTask);
+							ezPMSService.updateTaskStatus(postTask, companyId, tenantId);
 						}
 						
 					}
@@ -921,6 +928,8 @@ public class EzPMSGWController2 {
 			String orderHow = request.getParameter("orderHow");
 			int startRow = Integer.parseInt(request.getParameter("startRow") != null ? request.getParameter("startRow") : "-1" );
 			int limit = Integer.parseInt(request.getParameter("limit") != null ? request.getParameter("limit") : "-1" ); 
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
 			
 			if (orderWhat == null || orderWhat.equals("")) {
 				orderWhat = "init";
@@ -965,9 +974,9 @@ public class EzPMSGWController2 {
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 				
-				int restDueday = ezPMSService.getWorkinDays(now, endDate);
+				int restDueday = ezPMSService.getWorkinDays(now, endDate, companyId, tenantId);
 				groupList.get(i).setRestDueday(restDueday);
-				groupList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate));
+				groupList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId));
 				
 				groupList.get(i).setGroupMember(groupMemberListTemp);
 			}

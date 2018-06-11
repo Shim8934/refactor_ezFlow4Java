@@ -73,6 +73,7 @@ public class EzPMSGWController {
 			String searchByName = request.getParameter("searchByProjectName");
 			String searchByUser = request.getParameter("searchByUser");
 			String searchByOverview = request.getParameter("searchByOverview");
+			String companyId = info.getCompanyId();
 			
 			if (searchByName != null  && !searchByName.equals("")) {
 				searchByName = searchByName.replace("\\","\\\\");
@@ -116,9 +117,9 @@ public class EzPMSGWController {
 			//프로젝트 리스트 가져오기
 			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 넘겨서 모든 프로젝트 검색이 가능하도록 한다.
 			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
-				projectList = ezPMSService.getProjectList(info.getTenantId(), "", deptId, status, search, lang, request.getParameter("position"));
+				projectList = ezPMSService.getProjectList(info.getTenantId(), "", deptId, status, search, lang, request.getParameter("position"), companyId);
 			} else {
-				projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, lang, request.getParameter("position"));
+				projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, lang, request.getParameter("position"), companyId);
 			}
 			
 			LOGGER.debug("projectList Count : " + projectList.size());
@@ -151,6 +152,8 @@ public class EzPMSGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
 			
 			Map<String, Object> project = new HashMap<String, Object>();
 			project.put("projectName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
@@ -188,11 +191,11 @@ public class EzPMSGWController {
 			
 			// 이슈리스트 그룹 생성
 			project.put("groupName", "이슈 리스트");
-			ezPMSService.addGroup(project, "Y");
+			ezPMSService.addGroup(project, "Y", companyId, tenantId);
 			
 			//그룹 생성
 			project.put("groupName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
-			long groupId = ezPMSService.addGroup(project, "N");
+			long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId);
 			
 			data.put("projectId", projectId);
 			data.put("groupId", groupId);
@@ -200,7 +203,6 @@ public class EzPMSGWController {
 			//프로젝트 멤버 테이블에 추가
 			for (int i = 0; i < projectMemberList.size(); i++) {
 				String memberId = projectMemberList.get(i).get("userId").toString();
-				int tenantId = info.getTenantId();
 				String userIdType = projectMemberList.get(i).get("userIdType").toString();
 				
 				ProjectMemberVO member = ezPMSService.getUserInfo(memberId, tenantId, userIdType);
@@ -371,6 +373,7 @@ public class EzPMSGWController {
 			String status = request.getParameter("status");
 			String nowStatus = request.getParameter("nowStatus");
 			String changeDate = request.getParameter("changeDate");
+			String companyId = info.getCompanyId();
 			
 			LOGGER.debug("nowStatus : " + nowStatus + ", status : " + status + ", " + "userId : " + userId + ", tenantId : " + tenantId + ", deptId : " + deptId);
 			
@@ -396,18 +399,18 @@ public class EzPMSGWController {
 				roleCheck = "permitted";
 				
 				for (int i = 0; i < projectIdList.length; i++) {
-					ProjectInfoVO project = ezPMSService.getProjectDetails(Long.parseLong(projectIdList[i]), userId, info.getTenantId(), "new", lang, deptId);
+					ProjectInfoVO project = ezPMSService.getProjectDetails(Long.parseLong(projectIdList[i]), userId, info.getTenantId(), "new", lang, deptId, companyId);
 					String planEndDate = project.getPlanEndDate();
 					
 					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(), changeDate, planEndDate);	
 					
 					if (nowStatus.equals("W") && status.equals("P")) {
-						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status, planEndDate);
+						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status, planEndDate, companyId);
 					}
 					
 					if (status.equals("C")) {
-						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status, planEndDate);
-						ezPMSService.completeAllTasks(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, planEndDate);
+						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status, planEndDate, companyId);
+						ezPMSService.completeAllTasks(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, planEndDate, companyId);
 					}
 				}
 			}
@@ -442,15 +445,16 @@ public class EzPMSGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			String deptId = info.getDeptId();
 			String mode = request.getParameter("mode");
+			String companyId = info.getCompanyId();
 			
 			JSONObject data = new JSONObject();
 			
 			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 넘겨서 모든 프로젝트 검색이 가능하도록 한다.
 			if(request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
-				ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, "", tenantId, mode, lang, deptId);
+				ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, "", tenantId, mode, lang, deptId, companyId);
 				data.put("project", project);
 			} else {
-				ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId);
+				ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId, companyId);
 				String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, tenantId);
 				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, deptId);
 				ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, tenantId, "user");
@@ -493,6 +497,7 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
 			
 			ProjectInfoVO project = new ProjectInfoVO();
 			project.setProjectId(projectId);
@@ -505,7 +510,7 @@ public class EzPMSGWController {
 			project.setHeadManagerId(request.getParameter("headManagerId"));			
 			project.setCreateDate(request.getParameter("createDate"));
 			
-			ezPMSService.updateProject(project, tenantId);
+			ezPMSService.updateProject(project, tenantId, companyId);
 			
 			//멤버 삭제 후 다시 넣기
 			ezPMSService.deleteProjectMember(projectId, tenantId);
@@ -1400,6 +1405,7 @@ public class EzPMSGWController {
 				int tenantId = info.getTenantId();
 				String roleCheck = "";
 				long projectId = Long.parseLong(request.getParameter("projectId"));
+				String companyId = info.getCompanyId();
 				
 				//권한 체크
 				//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
@@ -1430,7 +1436,7 @@ public class EzPMSGWController {
 					projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
 					projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 					
-					ezPMSService.updateTaskStatus(projectTaskVO);
+					ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
 					
 					//preTaskRel 테이블에 데이터 추가
 					ezPMSService.addPreTaskRel(taskId, rowIndexId, projectId, tenantId);

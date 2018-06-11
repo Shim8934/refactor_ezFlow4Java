@@ -2927,10 +2927,10 @@
 		]]>
 	</select>
 	
-	<select id="EzPMSDAO.getHolidaysCount" parameterClass="map" resultClass="Integer">
+	<select id="EzPMSDAO.getHolidaysCount" parameterClass="map" resultClass="String">
 		<![CDATA[
 			SELECT
-				COUNT(HOLIDAYID)
+				HOLIDAYDATE
 			FROM
 				TBL_HOLIDAYLIST
 			WHERE
@@ -2944,7 +2944,7 @@
 				AND
 					ISUSE = 1
 				AND
-					USERCOMPANY = #companyId#
+					USECOMPANY = #companyId#
 				AND
 					TENANT_ID = #tenantId#;		
 				

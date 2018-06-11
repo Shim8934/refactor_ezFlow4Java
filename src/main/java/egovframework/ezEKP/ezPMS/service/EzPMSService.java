@@ -27,7 +27,7 @@ import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 
 public interface EzPMSService {
 
-	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String lang, String position);
+	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String lang, String position, String companyId);
 	
 	public Long addNewProject(Map<String, Object> map);
 	
@@ -37,9 +37,9 @@ public interface EzPMSService {
 	
 	public void updateProjectStatus(Long projectId, String status, int tenantId, String realStartDate, String planEndDate);
 	
-	public ProjectInfoVO getProjectDetails(Long projectId, String userId, int tenantId, String mode, String lang, String deptId);
+	public ProjectInfoVO getProjectDetails(Long projectId, String userId, int tenantId, String mode, String lang, String deptId, String comapnyId);
 	
-	public void updateProject(ProjectInfoVO project, int tenantId);
+	public void updateProject(ProjectInfoVO project, int tenantId, String companyId);
 	
 	public List<ProjectMemberVO> getProjectMember(Long projectId, int roleId, String lang);
 
@@ -69,21 +69,21 @@ public interface EzPMSService {
 	
 	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang);
 	
-	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList);
+	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList, String companyId, int tenantId);
 	
 	public List<ProjectMemberScheduleVO> getMemberScheduleList(Long projectId, String startDate, String endDate);
 	
 	public ProjectTaskVO getTaskDetails(Long taskId, int tenantId, String lang);
 	
-	public int updateTask(ProjectTaskVO task);
+	public int updateTask(ProjectTaskVO task, String companyId, int tenantId);
 	
 	public void deleteTask(Long taskId, long projectId, int tenantId);
 
-	public void updateTaskInfo(ProjectTaskVO task);
+	public void updateTaskInfo(ProjectTaskVO task, String companyId, int tenantId);
 
-	public void updateTaskStatus(ProjectTaskVO task);
+	public void updateTaskStatus(ProjectTaskVO task, String companyId, int tenantId);
 	
-	public Long addGroup(Map<String, Object> map, String isIssue);
+	public Long addGroup(Map<String, Object> map, String isIssue, String companyId, int tenantId);
 	
 	public ProjectGroupVO getGroupDetails(long groupId, int tenantId, long projectId);
 	
@@ -119,11 +119,11 @@ public interface EzPMSService {
 	
 	public void deleteTaskMember(Long taskId, int tenantId);
 
-	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status, String planEndDate);
+	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status, String planEndDate, String companyId);
 
 	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
 
-	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate);
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate, String companyId);
 
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception;
 	
@@ -189,7 +189,7 @@ public interface EzPMSService {
 
 	public Float getProjectWeight(Long projectId, int tenantId) throws Exception;
 	
-	public int getWorkinDays(Date start, Date end) throws Exception;
+	public int getWorkinDays(Date start, Date end, String companyId, int tenantId) throws Exception;
 	
-	public float getPlanProgress(Date start, Date end ) throws Exception;
+	public float getPlanProgress(Date start, Date end, String companyId, int tenantId) throws Exception;
 }
