@@ -64,11 +64,11 @@
 	function deleteBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
 		if(!checkBoxes.length) {
-			alert("게시물을 선택해주세요.");
+			alert("삭제할 게시물을 선택해 주세요.");
 			return;
 		}
 		
-		if(confirm("정말 삭제하시겠습니까?") == true) {
+		if(confirm("삭제하시겠습니까?") == true) {
 			itemIds = new Array();
 			checkBoxes.each(function() {
 				var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
@@ -81,7 +81,7 @@
 	function goMoveBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
 		if(!checkBoxes.length) {
-			alert("게시물을 선택해주세요.");
+			alert("이동할 게시물을 선택해 주세요.");
 			return;
 		}
 	

@@ -473,4 +473,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<String> getHolidaysCount(Map<String, Object> map) {
 		return (List<String>) select("EzPMSDAO.getHolidaysCount", map);
 	}
+	
+	public void updateGroupProgress(Map<String, Object> map){
+		update("EzPMSDAO.updateGroupProgress", map);
+	}
+	
+	public void updateGroupDate(Map<String, Object> map){
+		update("EzPMSDAO.updateGroupDate", map);
+	}
 }

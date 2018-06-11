@@ -87,14 +87,13 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				if(result.data == 'success') {
-					alert("삭제되었습니다.");
 					getBoardList();
 				} else {
 					alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
 				}	
 			},
 			error : function() {
-				alert("삭제에 실패했습니다.");
+				alert("삭제에 실패하였습니다.");
 			}
 		})
 	}
@@ -114,7 +113,6 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				if(result.data == 'success') {
-					boardDetail.alert("삭제되었습니다.");
 					boardDetail.close();
 					getBoardList();
 				} else {
@@ -122,7 +120,7 @@
 				}
 			},
 			error : function() {
-				alert("삭제에 실패했습니다.");
+				alert("삭제에 실패하였습니다.");
 			}
 		})
 	}

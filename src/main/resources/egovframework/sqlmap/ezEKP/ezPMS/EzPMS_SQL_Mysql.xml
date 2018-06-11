@@ -2950,4 +2950,18 @@
 				
 		]]>
 	</select>
+	
+	<update id="EzPMSDAO.updateGroupDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				PLAN_START_DATE = (SELECT min(plan_start_date) from tbl_pms_task where tenant_id = #tenantId# and group_id = #groupId#),
+				PLAN_END_DATE = (SELECT max(plan_end_date) from tbl_pms_task where tenant_id = #tenantId# and group_id = #groupId#)
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

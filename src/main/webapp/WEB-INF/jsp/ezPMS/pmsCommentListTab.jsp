@@ -25,11 +25,9 @@
 <script>
  	var projectId = "${projectId}";
  	var CurrentHeight = document.documentElement.clientHeight - 100;
-	var groupId = "";
-	var taskId = "";
-	var taskName = "";
+	var groupId = "${groupId}";
+	var taskId = "${taskId}";
 	var currentPage = 1;
-	var treeData = JSON.parse('${data}');
 	var orderWhat = "";
 	var orderHow = "";
 	
@@ -43,60 +41,14 @@
 		
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
 		$("#divList").css("height", (CurrentHeight - 150) + "px");
-		
-		getProjectTaskTree("taskTree", treeData, false);
-		
-		$("#taskTree").on("click", ".jstree-anchor", function() {
-			taskName = $(this).text();
-			var contentCount = 0;
-			var contentTitle = "";
-			
-			// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
-			if(taskName.indexOf('(') != -1) {
-				contentCount = taskName.substring(taskName.indexOf('(') + 1, taskName.indexOf(')'));
-				taskName = taskName.substring(0, taskName.indexOf('('));
-			}
-			
-			contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> - [총 <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span>개]</span>";
-			$("#taskName").html(contentTitle);
-			
-			if($(this).parent().attr("id").charAt(0) == 't') { 
-				groupId = $(this).parents("li").eq(1).attr("id");
-				taskId = $(this).parent().attr("id").substr(1);
-			} else {
-				groupId = $(this).parent().attr("id");
-				taskId = "";
-			}
-			currentPage = 1;
-			
-			// 트리 클릭 시, 검색 조건 초기 화
-			searchByUser = "";
-			searchByStartDate = ""; 
-			searchByEndDate = "";
-			searchByContent = "";
-			
-			getCommentList();
-		});
-		
-		// 트리가 모두 로드된 다음 실행
-	 	$("#taskTree").on("ready.jstree", function() {
-			var project = $("li[role='treeitem'][aria-level='1']").last();
-			
-			groupId = project.attr("id");
-			taskName = project.children("a").text();
-			project.children("a").click();
-			
-			if(taskName.indexOf('(') != -1) {
-				taskName = taskName.substring(0, projectName.indexOf('('));
-			}
-		});
-		
+
 		getDatePicker();
+		
+		getCommentList();
 	});
 	
 	function getCommentList() {
@@ -292,37 +244,6 @@
 
 <style>
 
-	.jstree-node > a {
-    /* 100% - (the width of the presentation node : the line - the left padding of the <a> node - the right padding of the <a> node)*/
-    width: calc(100% - (68px + 1px + 4px));
-    text-overflow: ellipsis;
-    overflow: hidden;
-	}
-	
-	#taskTree {
-		margin-right : 5px;
-		width : 16%;
-		overflow : auto;
-		border : 1px solid #d1d1d1;
-		float : left;
-		display : inline-block
-	}
-	
-	#taskName {
-		margin-top: 10px;
-		margin-left: 10px;
-	}
-	
-	#projectArea {
-		width : 83%;
-		overflow : auto;
-		border : 1px solid #d1d1d1;
-	}
-	
-	#projectContent {
-		min-width : 1057px;
-	}
-	
 	#iconLine {
 		height: 72px;
 		margin-left: 10px;
@@ -345,36 +266,34 @@
 	table.mainlist th {
 		cursor: pointer;
 	}
+	
+	#sendComment {
+		display: none;
+	}
 </style>
 
 </head>
 <body>
-	<div id="taskTree"></div>
-	<div id="projectArea">
-		<div id="projectContent">
-			<div id="iconLine">
-				<div id="taskName"></div>
-				<div style="float: right;">
-					<select id="searchCondition" onchange="setSearchInput(this.value)">
-						<option value="searchByUser">작성자</option>
-						<option value="searchByContent">내용</option>
-						<option value="searchByWriteDate">작성일</option>
-					</select>
-					<input id="searchKeyword" type="text" onkeydown="searchKeyEvent()"/>
-					<span id="searchDate" style="display: none;">
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-						<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
-					</span>
-					<a class="imgbtn" onclick="searchComment()" style="margin-left:3px;"><span>검색</span></a>
-				</div>
-			</div>
-			<div id="contentList" style="overflow: auto">
-				<span id="MailListRayer"
-					style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-				</span>
-			</div>
+	<div id="iconLine">
+		<div style="float: right;">
+			<select id="searchCondition" onchange="setSearchInput(this.value)">
+				<option value="searchByUser">작성자</option>
+				<option value="searchByContent">내용</option>
+				<option value="searchByWriteDate">작성일</option>
+			</select>
+			<input id="searchKeyword" type="text" onkeydown="searchKeyEvent()"/>
+			<span id="searchDate" style="display: none;">
+				<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
+				<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+				<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
+			</span>
+			<a class="imgbtn" onclick="searchComment()" style="margin-left:3px;"><span>검색</span></a>
 		</div>
+	</div>
+	<div id="contentList" style="overflow: auto">
+		<span id="MailListRayer"
+			style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+		</span>
 	</div>
 </body>
 </html>

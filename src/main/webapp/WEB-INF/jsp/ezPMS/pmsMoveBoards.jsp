@@ -30,11 +30,11 @@
 		var groupId = 0;
 		var taskId = 0;
 		var chosenTask = $("a.jstree-clicked");	
-		var taskName = chosenTask.text();
+		var AfterTaskName = chosenTask.text();
 		
 		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
-		if(taskName.indexOf('(') != -1) {
-			taskName = taskName.substr(0, taskName.indexOf('('));
+		if(AfterTaskName.indexOf('(') != -1) {
+			AfterTaskName = AfterTaskName.substring(0, AfterTaskName.indexOf('('));
 		}
 		
 		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
@@ -72,12 +72,13 @@
 							var groupId = deletedTR.attr("data-groupId");
 							var taskId = deletedTR.attr("data-taskId");
 							
-							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + title.trim() + "] 게시물을 이동하였습니다.");
+							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + title.trim() + "] 게시물을 [" + AfterTaskName.trim() +  "](으)로 이동하였습니다.");
 						}
 						
 						parent.getBoardList();
 					} else {
-						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName.trim() + "](으)로 " + "[" + parent.title.trim() + "] 게시물을 이동하였습니다.");
+						var taskName = parent.taskName;
+						addTaskLog(parent.projectId, 2, parent.groupId, parent.taskId, "[" + taskName.trim() + "]의 " + "[" + parent.title.trim() + "] 게시물을 [" + AfterTaskName.trim() +  "](으)로 이동하였습니다.");
 						parent.location.reload();
 					}
 					
@@ -100,7 +101,7 @@
 </style>
 </head>
 <body class="popup">
-	<h1>작업 목록</h1>
+	<h1>업무 목록</h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="moveBoards()">이동</span></li>

@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title></title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -169,7 +169,6 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				if(result.data == 'success') {
-					alert("삭제되었습니다.");
 					
 					for(i in itemIds) {
 						var deletedTR = $("tr[data-itemid = " + itemIds[i] + "]");
@@ -187,7 +186,7 @@
 				}	
 			},
 			error : function() {
-				alert("삭제에 실패했습니다.");
+				alert("삭제에 실패하였습니다.");
 			}
 		})
 	}
@@ -314,7 +313,7 @@
 							<td><input type="text" style="width:100%" id="searchByUser"></td>
 						</tr>
 						<tr>
-							<th>제 목 </th>
+							<th>제&nbsp;&nbsp;목</th>
 							<td style="width:50%" colspan="3"><input type="text" style="width:100%" id="searchByTitle"></td>
 						<!-- 	<th>내 용</th>
 							<td style="width:50%"><input type="text" style="width:100%" id="searchByContent"></td> -->

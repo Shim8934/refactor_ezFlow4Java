@@ -677,6 +677,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			//가중치 계산
 			updateTaskWDNW(taskVO, taskWorkingday);
 			
+			//업무가 속한 그룹 날짜 업데이트
+			updateGroupDate(taskVO.getProjectId(), taskVO.getGroupId(),taskVO.getTenantId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2091,5 +2093,29 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		}
 		
 		return planProgress;
+	}
+	
+	@Override
+	public void updateGroupProgress(long projectId, long groupId, int tenantId) {
+		LOGGER.debug("[SERVICE] updateGroupProgress started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateGroupProgress(map);
+		LOGGER.debug("[SERVICE] updateGroupProgress ended.");
+	}
+
+	@Override
+	public void updateGroupDate(long projectId, long groupId, int tenantId) throws Exception {
+		LOGGER.debug("[SERVICE] updateGroupDate started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateGroupDate(map);
+		LOGGER.debug("[SERVICE] updateGroupDate ended.");
 	}
 }
