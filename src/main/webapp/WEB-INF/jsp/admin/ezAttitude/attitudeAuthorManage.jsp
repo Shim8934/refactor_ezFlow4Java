@@ -17,6 +17,8 @@
 	    	var selectedUserName = "";
 	    	var userList = [];
 			
+	    	
+	    	
 	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {
 		            alert("<spring:message code = 'ezAttitude.t32' />");
@@ -57,7 +59,12 @@
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userName + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].jikwi + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].deptName + "</td>";
-	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName + " </td>";
+	                    //스크롤바 생성시 밀림현상 방지
+		                if (result.length > 15) {
+		                    html += "<td style='width:40%;color:gray;padding-left:15px;'>" + result[i].authDeptName + " </td>";
+		                } else {
+		                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName + " </td>";
+		                }
 	                    html += "</tr>";
 	                    
 	                    var deptList = [result[i].authDeptId, result[i].authDeptName2, result[i].authType];
@@ -160,7 +167,7 @@
                     <th style="width: 40%;"><span><spring:message code='ezAttitude.t190' /></span></th>
                 </tr>
             </table>
-            <div id="contentlist" name="contentlist" style="height: 630px; overflow-y: auto;">
+            <div id="contentlist" name="contentlist" style="height: 466px; overflow-y: auto;">
                 <table class="mainlist" style="width: 100%;">
                     <tr>
                         <td style="text-align: center;">
