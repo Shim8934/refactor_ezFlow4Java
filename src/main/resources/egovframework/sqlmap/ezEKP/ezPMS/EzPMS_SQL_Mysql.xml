@@ -478,7 +478,7 @@
 					ISSUEYN = 'N'
 			</isNotEqual>
 				ORDER BY
-					ISSUEYN, SORT_ORDER
+					ISSUEYN DESC, SORT_ORDER
 	</select>
 	
 	<select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
