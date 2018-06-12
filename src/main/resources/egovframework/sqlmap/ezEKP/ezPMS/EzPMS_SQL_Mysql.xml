@@ -1859,7 +1859,7 @@
 	
 	<select id="EzPMSDAO.getGroupList" parameterClass="map" resultMap="projectGroupVO">
 		<![CDATA[
-			SELECT	
+			SELECT DISTINCT
 				A.GROUP_ID,
 				A.TENANT_ID,
 				A.PROJECT_ID,
@@ -1902,8 +1902,6 @@
 			ON
 				A.GROUP_ID = M.GROUP_ID
 			WHERE
-				M.USER_ID = #userId#
-			AND
 				A.TENANT_ID = #tenantId#
 			AND
 				M.MEMBER_ROLE_ID = 1

@@ -370,8 +370,12 @@
 	   			if(curTask.id.indexOf("_t") != -1){
 	   				taskId = curTask.id.match(/t(\d+)/)[1];
 	   			}
+	   			else if(ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1){
+		   			ge.editor.openFullEditor(curTask);
+		   			return;
+	   			}
 	   			else{
-	   				alert("업무를 선택해주세요.");
+	   				alert("업무 또는 그룹을 선택해주세요.");
 	   				return false;
 	   			}
 	   			
