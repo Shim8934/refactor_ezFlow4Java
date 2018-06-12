@@ -64,34 +64,41 @@ $(function(){
 
 function changeStatus() {
 	var status = $("input[name='status']:checked").val();
+	var response = true;
 	
-	data = {
-		nowStatus : nowStatus,
-		status : status,
-		projectList : projectList
+	if (status = "C") {
+		response = confirm("프로젝트를 완료하면 하위 작업이 모두 완료됩니다. \n 진행하시곘습니까?");
 	}
 	
-	$.ajax({
-		type : "POST",
-		dataType: "text",
-		contentType: "application/json; charset=UTF-8",
-		url : "/ezPMS/updateProjectStatus.do",
-		data :JSON.stringify(data),
-		success : function(result) {
-			if (result == "permitted") {
-				alert("상태가 변경되었습니다.");
-				parent.checkedVal = "";
-				parent.setProjectList();
-				popupClose();
-			} else {
-				alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
-				popupClose();
-				return;
-			}
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
+	if (response == true) {
+		var data = {
+			nowStatus : nowStatus,
+			status : status,
+			projectList : projectList
 		}
-	});
+		
+		$.ajax({
+			type : "POST",
+			dataType: "text",
+			contentType: "application/json; charset=UTF-8",
+			url : "/ezPMS/updateProjectStatus.do",
+			data :JSON.stringify(data),
+			success : function(result) {
+				if (result == "permitted") {
+					alert("상태가 변경되었습니다.");
+					parent.checkedVal = "";
+					parent.setProjectList();
+					popupClose();
+				} else {
+					alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+					popupClose();
+					return;
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			}
+		});
+	}
 }
 
 function popupClose() {

@@ -147,15 +147,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planStartDate").toString());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planEndDate").toString());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("createDate").toString());
+			System.out.println(map.get("companyId"));
+			System.out.println(Integer.parseInt(map.get("tenantId").toString()));
+			int workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
 			
-			int createAndStartDateComp = createDate.compareTo(startDate);
-			int workingDays = 0;
-			
-			if (createAndStartDateComp <= 0) {
-				workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
-			} else {
-				workingDays = getWorkingDays(createDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
-			}
+			System.out.println(workingDays);
 						
 			map.put("workingDay", workingDays);
 			//map.put("workingDay", 0);
@@ -169,6 +165,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("headManagerName2", headManagerInfo.getUserName2());
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.debug("Error : " + e.getMessage() + " " + e.getStackTrace());
 		}
 		
@@ -1038,6 +1035,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	
 	@Override
 	public int getWorkingDays(Date start, Date end, String companyId, int tenantId){
+		LOGGER.debug("[SERVICE]getWorkingDays started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1075,6 +1073,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 //	    }
 	    
 	    int workingDays = (int) (daysWithoutSunday - w1 + w2 + 1);
+	    LOGGER.debug("WORKINGDAYS : " + workingDays);
+	    LOGGER.debug("[SERVICE]getWorkingDays ended");
 	    return workingDays;
 	}
 	

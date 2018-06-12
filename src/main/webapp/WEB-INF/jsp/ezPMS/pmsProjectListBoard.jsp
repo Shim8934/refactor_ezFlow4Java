@@ -32,6 +32,7 @@ $(function(){
 		json.totalTaskCount = "${project.totalTaskCount}";
 		json.completeTaskCount = "${project.completeTaskCount}";
 		json.lateTaskCount = "${project.lateTaskCount}";
+		json.status = "${project.status}";
 		projectList.push(json);
 	</c:forEach>
 	
@@ -80,6 +81,17 @@ $(function(){
 	function setProgressBar() {
 		
 		for(var j = 0; j < 5 && i < projectList.length; j++, i++) {
+			if (projectList[i].status == "P") {
+			 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
+			} else if (projectList[i].status == "C") {
+				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", completeColor);
+			} else if (projectList[i].status == "S") {
+				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", holdColor);
+			} else if (projectList[i].status == "L") {
+				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", overdueColor);
+			} else {
+				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#d1d1d1");
+			}
 			
 			var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 			var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
@@ -222,6 +234,7 @@ $(function(){
 												value="${project.planEndDate }" /></td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px">
+											<span class="statusSpan" style="padding:4px;">
 											<c:choose>
 												<c:when test="${project.status eq 'P' }"><c:out value="진행" /></c:when>
 												<c:when test="${project.status eq 'W' }"><c:out value="대기" /></c:when>
@@ -230,6 +243,7 @@ $(function(){
 												<c:when test="${project.status eq 'D' }"><c:out value="삭제" /></c:when>
 												<c:when test="${project.status eq 'S' }"><c:out value="보류" /></c:when>
 											</c:choose>
+											</span>
 											</td>
 									</tr>
 								</c:forEach>

@@ -296,7 +296,6 @@ function changeMemoStyle() {
 	startRow = 0;
 	currentPage = 1;
 	
-	
 	changeMainSetting();
 	setProjectList("new");
 	
@@ -406,14 +405,10 @@ function setProjectList(mode) {
 	if (viewType == 0) {
 		listNumber = 20;
 	}
-	console.log(progressColor);
+	
 	var param = {
 		projectSort : projectSort,
 		viewType : viewType,
-		progressColor : progressColor,
-		completeColor : completeColor,
-		overdueColor  : overdueColor,
-		holdColor     : holdColor,
 		listNumber : listNumber,
 		startRow : startRow,
 		listProjectStatus : listProjectStatus,
@@ -962,7 +957,7 @@ function searchProject() {
 }
 
 .listRow:hover {
-	background-color: rgb(233, 241, 255);
+	background-color: rgb(244, 245, 245);
 }
 </style>
 </head>
