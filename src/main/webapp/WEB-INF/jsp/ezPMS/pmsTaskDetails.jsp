@@ -263,6 +263,7 @@
 	
 	function btnEvent(){
 		document.getElementById("closeBtn").onclick = popupClose;
+		document.getElementById("deleteBtn").onclick = delTaskFunc;
 		document.getElementById("taskUpdateBtn").onclick = taskUpdate;
 		document.getElementById("addBoardBtn").onclick = goAddBoard;
 		
@@ -294,6 +295,84 @@
 		document.getElementById("progressDiff").innerText = progDiff > 0 ? "+" + progDiff + "%" : progDiff < 0 ? progDiff + "%" : "";
 	}
 	
+	function delTaskFunc() {
+		
+		var projectId = taskDetails.projectId;
+		var groupId = taskDetails.groupId;
+		var taskId = taskDetails.taskId;
+		
+		var url = "/ezPMS/deleteTask.do?projectId=" + projectId + "&taskId=" + taskId;
+		
+		if(!taskId) {
+			delGroup();
+			return;
+		}
+		
+		var data = {
+				projectId : projectId,
+				groupId : groupId,
+				taskId : taskId	
+		}
+		
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "json",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(data) {
+				
+				if (result == "permitted") {
+					alert("삭제되었습니다.");
+				} else {
+					alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+					return;
+				}
+				
+				location.reload();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("에러 : updateTaskWDNW 쿼리 구현하면 에러 안남");
+				location.reload();
+			},
+			complete : function(){
+				var logContent = "[" + taskId + "업무 삭제 테스트 로그 입니다.]";
+				addTaskLog(projectId, 3, null, null, logContent);
+				opener.location.reload();
+				window.close();
+			}
+		});
+	}
+	
+	function delGroup(){
+		var projectId = taskDetails.projectId;
+		var groupId = taskDetails.groupId;
+		
+		data = {
+				projectId : projectId,
+				groupId : groupId
+		}
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezPMS/deleteGroup.do",
+			dataType : "text",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(data) {
+				alert("그룹이 삭제되었습니다.");
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("에러 : 그룹 삭제 에러" + textStatus + errorThrown + jqXHR);
+			},
+			complete : function(){
+				var logContent = "[그룹 삭제 테스트 로그 입니다.]";
+				addTaskLog(projectId, 3, groupId, null, logContent);
+				opener.location.reload();
+				window.close();
+			}
+		});
+	}
 </script>
 <style>
 .popupHeader{
