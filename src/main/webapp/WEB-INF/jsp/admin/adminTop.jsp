@@ -29,12 +29,8 @@
 				<c:if test="${useHWP == 'YES'}">
 					var userAgent = window.navigator.userAgent;
 					
-					if (!CrossYN()) {
-						if (useHWP == 'YES') {
-							if (userAgent.indexOf("Trident/5.0") > 0 || userAgent.indexOf("Trident/6.0") > 0 || userAgent.indexOf("Trident/7.0") > 0) {
-								GetObject();
-							}
-						}
+					if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
+						GetObject();
 					}
 		    	</c:if>
 			}
