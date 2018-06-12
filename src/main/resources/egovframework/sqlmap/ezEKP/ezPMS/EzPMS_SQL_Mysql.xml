@@ -3001,4 +3001,17 @@
 				
 		]]>
 	</select>
+	
+	<update id="EzPMSDAO.updateTaskProgress" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				REAL_PROGRESS = #realProgress#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

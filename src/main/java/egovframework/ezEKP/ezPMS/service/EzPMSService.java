@@ -198,5 +198,7 @@ public interface EzPMSService {
 	public void updateGroupDate(long groupId, int tenantId, String companyId) throws Exception;
 	
 	public ProjectGroupVO getGroupBoundaryDate(long groupId, int tenantId) throws Exception;
+	
+	public void updateTaskProgress(ProjectTaskVO taskVO) throws Exception;
 
 }

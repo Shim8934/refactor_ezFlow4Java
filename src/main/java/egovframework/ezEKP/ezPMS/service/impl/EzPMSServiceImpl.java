@@ -2145,4 +2145,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getGroupBoundaryDate ended.");
 		return ezPMSDAO.getGroupBoundaryDate(map);
 	}
+
+	@Override
+	public void updateTaskProgress(ProjectTaskVO taskVO) throws Exception {
+		LOGGER.debug("[SERVICE] updateTaskProgress started.");
+		
+		ezPMSDAO.updateTaskProgress(taskVO);
+		
+		LOGGER.debug("[SERVICE] updateTaskProgress ended.");
+	}
 }
