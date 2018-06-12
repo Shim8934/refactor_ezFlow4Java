@@ -32,6 +32,7 @@
 	var treeData = JSON.parse('${data}');
 	var orderWhat = "";
 	var orderHow = "";
+	var listCnt = 10;
 	
 	//검색을 위한 variables
 	var searchByUser = "";
@@ -106,6 +107,7 @@
 			groupId : groupId,
 			taskId : taskId,
 			currentPage : currentPage,
+			listCnt : listCnt,
 			//내용 header 정렬
 			orderWhat : orderWhat,
 			orderHow : orderHow,

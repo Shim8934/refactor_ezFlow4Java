@@ -30,11 +30,11 @@
 		var groupId = 0;
 		var taskId = 0;
 		var chosenTask = $("a.jstree-clicked");	
-		var AfterTaskName = chosenTask.text();
+		var taskName = chosenTask.text();
 		
 		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
-		if(AfterTaskName.indexOf('(') != -1) {
-			AfterTaskName = AfterTaskName.substring(0, AfterTaskName.indexOf('('));
+		if(taskName.indexOf('(') != -1) {
+			taskName = taskName.substring(0, taskName.indexOf('('));
 		}
 		
 		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
@@ -68,17 +68,17 @@
 						for(i in parent.itemIds) {
 							var deletedTR = parent.$("tr[data-itemid = " + parent.itemIds[i] + "]");
 							var title = deletedTR.children("td.boardTitle").text();
-							var taskName = deletedTR.children("td.taskName").text();
-							var groupId = deletedTR.attr("data-groupId");
-							var taskId = deletedTR.attr("data-taskId");
+							var beforeTaskName = deletedTR.children("td.taskName").text();
+							var beforeGroupId = deletedTR.attr("data-groupId");
+							var beforeTaskId = deletedTR.attr("data-taskId");
 							
-							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + title.trim() + "] 게시물을 [" + AfterTaskName.trim() +  "](으)로 이동하였습니다.");
+							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "]의 " + "[" + title.trim() + "] 게시물을 [" + taskName.trim() +  "](으)로 이동하였습니다.");
 						}
 						
 						parent.getBoardList();
 					} else {
-						var taskName = parent.taskName;
-						addTaskLog(parent.projectId, 2, parent.groupId, parent.taskId, "[" + taskName.trim() + "]의 " + "[" + parent.title.trim() + "] 게시물을 [" + AfterTaskName.trim() +  "](으)로 이동하였습니다.");
+						var beforeTaskName = parent.taskName;
+						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "]의 " + "[" + parent.title.trim() + "] 게시물을 [" + taskName.trim() +  "](으)로 이동하였습니다.");
 						parent.location.reload();
 					}
 					

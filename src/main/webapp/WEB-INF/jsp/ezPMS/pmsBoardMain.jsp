@@ -35,6 +35,7 @@
 	var itemIds;
 	var orderWhat = "";
 	var orderHow = "";
+	var limit = 10;
 	
 	//검색을 위한 variables
 	var searchByTaskName = "";
@@ -123,6 +124,7 @@
 			groupId : groupId,
 			taskId : taskId,
 			currentPage : currentPage,
+			limit : limit,
 			//내용 header 정렬
 			orderWhat : orderWhat,
 			orderHow : orderHow,

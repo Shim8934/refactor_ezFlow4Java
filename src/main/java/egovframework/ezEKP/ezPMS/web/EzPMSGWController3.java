@@ -174,7 +174,7 @@ public class EzPMSGWController3 {
 			}
 			
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
-			int limit = Integer.parseInt(request.getParameter("limit"));
+			int listCnt = Integer.parseInt(request.getParameter("limit"));
 			String position = request.getParameter("position");
 			String orderWhat = request.getParameter("orderWhat");
 			String orderHow = request.getParameter("orderHow");
@@ -217,7 +217,7 @@ public class EzPMSGWController3 {
 			}
 
 			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, 
-																	   startRow, limit, lang, position, orderWhat, orderHow,
+																	   startRow, listCnt, lang, position, orderWhat, orderHow,
 																	   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
 			String imageFileType = "PNG,JPEG,BMP,GIF,JPG";
 			

@@ -831,15 +831,24 @@ public class EzPMSGWController2 {
 			
 			if (roleCheck.equals("permitted")) {
 				ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+				
+				String planStartDate = request.getParameter("planStartDate");
+				String planEndDate = request.getParameter("planEndDate");
+				Date start = new SimpleDateFormat("yyyy-MM-dd").parse(planStartDate);
+				Date end = new SimpleDateFormat("yyyy-MM-dd").parse(planEndDate);
+				
 				projectTaskVO.setTenantId(tenantId);
 				projectTaskVO.setTaskId(taskId);
 				projectTaskVO.setProjectId(projectId);
-				projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
-				projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+				projectTaskVO.setPlanStartDate(planStartDate);
+				projectTaskVO.setPlanEndDate(planEndDate);
 				projectTaskVO.setRealStartDate(request.getParameter("realStartDate"));
 				projectTaskVO.setRealEndDate(request.getParameter("realEndDate"));
 				projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 				projectTaskVO.setStatus(request.getParameter("status"));
+				
+				int workingday = ezPMSService.getWorkingDays(start, end, companyId, tenantId);
+				projectTaskVO.setWorkingday(workingday);
 				
 				ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
 				
@@ -885,8 +894,16 @@ public class EzPMSGWController2 {
 						    	cal2.add(Calendar.DATE, -2);
 						    }
 						    
-							postTask.setPlanStartDate(dateFormat.format(cal.getTime()));
-							postTask.setPlanEndDate(dateFormat.format(cal2.getTime()));
+						    String calStartStr = dateFormat.format(cal.getTime());
+						    String calEndStr = dateFormat.format(cal2.getTime());
+						    Date calStart = new SimpleDateFormat("yyyy-MM-dd").parse(calStartStr);
+							Date calEnd = new SimpleDateFormat("yyyy-MM-dd").parse(calEndStr);
+						    
+						    int workingdayPT = ezPMSService.getWorkingDays(calStart, calEnd, companyId, tenantId);
+						    
+							postTask.setPlanStartDate(calStartStr);
+							postTask.setPlanEndDate(calEndStr);
+							postTask.setWorkingday(workingdayPT);
 							ezPMSService.updateTaskStatus(postTask, companyId, tenantId);
 						}
 						
@@ -1002,7 +1019,7 @@ public class EzPMSGWController2 {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/weight", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject updateTaskWeight(@PathVariable String taskId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "] started.");
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/weight] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1026,7 +1043,41 @@ public class EzPMSGWController2 {
 			result.put("data", "");		
 		}
 		
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "] ended.");
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/weight] ended.");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 업무 진행률 수정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/progress", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateTaskProgress(@PathVariable String taskId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/progress] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			ProjectTaskVO taskVO = new ProjectTaskVO();
+			taskVO.setTaskId(Long.parseLong(taskId));
+			taskVO.setTenantId(info.getTenantId());
+			taskVO.setRealProgress(Float.parseFloat(request.getParameter("progress")));
+			
+			ezPMSService.updateTaskProgress(taskVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/progress] ended.");
 		return result;
 	}
 }

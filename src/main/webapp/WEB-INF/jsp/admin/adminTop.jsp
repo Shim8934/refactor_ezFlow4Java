@@ -164,7 +164,7 @@
 		      				<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
 		      			</c:if>
 		      			<!-- ezPMS -->
-		      			<li><span id="menu21" onClick="menu_change(690, event)">프로젝트 관리</span></li>
+		      			<li><span id="menu21" onClick="menu_change(690, event)">프로젝트관리</span></li>
                     </c:if>
                     <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>

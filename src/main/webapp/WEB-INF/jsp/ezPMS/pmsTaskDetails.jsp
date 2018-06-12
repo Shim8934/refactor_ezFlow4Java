@@ -52,10 +52,7 @@
 		
 	});
 	
-	function popupClose() {
-		parent.DivPopUpHidden();
-	}
-	
+
 	function initProgressBar() {
 		if (taskDetails.status == null) {
 			nowStatus = "P";
@@ -113,6 +110,9 @@
 				var clickTabId = $(this).attr("id");
 				var nowTabAttr = $(".tabon").attr("id");
 				changeTab(clickTabId, nowTabAttr);
+				
+				$("#taskUpdateBtn").css("display", "");
+				$("#addBoardBtn").css("display", "none");
 				//업무정보 탭
 				$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&taskId=" + taskId);
 				
@@ -123,6 +123,8 @@
 				var nowTabAttr = $(".tabon").attr("id");
 				changeTab(clickTabId, nowTabAttr);
 				
+				$("#taskUpdateBtn").css("display", "none");
+				$("#addBoardBtn").css("display", "");
 				//관련 게시물 탭
 				$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
 			});
@@ -133,8 +135,10 @@
 				var currentPage = 1;
 				changeTab(clickTabId, nowTabAttr);
 				
+				$("#taskUpdateBtn").css("display", "none");
+				$("#addBoardBtn").css("display", "none");
 				//작업이력 탭
-				$("#FBoard_ifrm").attr("src", "/ezPMS/getLogListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId + "&currentPage=" + currentPage);
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskLogListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
 			});
 			
 			$("#1tab3").click(function(){
@@ -142,6 +146,8 @@
 				var nowTabAttr = $(".tabon").attr("id");
 				changeTab(clickTabId, nowTabAttr);
 				
+				$("#taskUpdateBtn").css("display", "none");
+				$("#addBoardBtn").css("display", "none");
 				//의견 탭
 				$("#FBoard_ifrm").attr("src", "/ezPMS/getCommentListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
 			});
@@ -155,6 +161,9 @@
 				var clickTabId = $(this).attr("id");
 				var nowTabAttr = $(".tabon").attr("id");
 				changeTab(clickTabId, nowTabAttr);
+				
+				$("#taskUpdateBtn").css("display", "");
+				$("#addBoardBtn").css("display", "none");
 				//업무정보 탭
 				$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&groupId=" + groupId);
 				
@@ -165,6 +174,8 @@
 				var nowTabAttr = $(".tabon").attr("id");
 				changeTab(clickTabId, nowTabAttr);
 					
+				$("#taskUpdateBtn").css("display", "none");
+				$("#addBoardBtn").css("display", "");
 				//관련 게시물 탭
 				$("#FBoard_ifrm").attr("src", "/ezPMS/getBoardListTab.do?projectId=" + projectId + "&groupId=" + groupId);
 			});
@@ -174,9 +185,11 @@
 				var nowTabAttr = $(".tabon").attr("id");
 				var currentPage = 1;
 				changeTab(clickTabId, nowTabAttr);
-					
+				
+				$("#taskUpdateBtn").css("display", "none");
+				$("#addBoardBtn").css("display", "none");
 				//작업이력 탭
-				$("#FBoard_ifrm").attr("src", "/ezPMS/getLogListTab.do?projectId=" + projectId + "&groupId=" + groupId + "&currentPage=" + currentPage);
+				$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskLogListTab.do?projectId=" + projectId + "&groupId=" + groupId);
 			});
 				
 			$("#1tab3").click(function(){
@@ -184,6 +197,8 @@
 				var nowTabAttr = $(".tabon").attr("id");
 				changeTab(clickTabId, nowTabAttr);
 					
+				$("#taskUpdateBtn").css("display", "none");
+				$("#addBoardBtn").css("display", "none");
 				//의견 탭
 				$("#FBoard_ifrm").attr("src", "/ezPMS/getCommentListTab.do?projectId=" + projectId + "&groupId=" + groupId);
 			});
@@ -203,8 +218,7 @@
 	}
 	
 	function popupClose() {
-		parent.DivPopUpHidden();
-		parent.location.reload();
+		window.close();
 	}
 	
 	function taskUpdate(){
@@ -221,8 +235,26 @@
 		DivPopUpShow(760, 500, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 	}
 	
-	function addBoard(){
-		//구현해야함.
+	function goAddBoard() {
+		var feature = GetOpenPosition(790, 800);
+		var taskId = taskDetails.taskId;
+		var taskName = taskDetails.taskName;
+
+		if(!taskId) {
+			taskId = "";
+		}
+		
+		if(!taskName) {
+			taskName = taskDetails.groupName;
+		}
+		
+		window.open("/ezPMS/goAddBoard.do?projectName=" + taskDetails.projectName + "&projectId=" + taskDetails.projectId + "&groupId=" + taskDetails.groupId 
+										 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=new", 
+					"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
+	}
+	
+	function getBoardList() {
+		document.getElementById("FBoard_ifrm").contentWindow.getBoardList();
 	}
 	
 	function taskStatusUpdate(){
@@ -231,7 +263,9 @@
 	
 	function btnEvent(){
 		document.getElementById("closeBtn").onclick = popupClose;
+		document.getElementById("deleteBtn").onclick = delTaskFunc;
 		document.getElementById("taskUpdateBtn").onclick = taskUpdate;
+		document.getElementById("addBoardBtn").onclick = goAddBoard;
 		
 		if (target != "group") {
 			document.getElementById("statusChgBtn").onclick = taskStatusUpdate;
@@ -261,6 +295,84 @@
 		document.getElementById("progressDiff").innerText = progDiff > 0 ? "+" + progDiff + "%" : progDiff < 0 ? progDiff + "%" : "";
 	}
 	
+	function delTaskFunc() {
+		
+		var projectId = taskDetails.projectId;
+		var groupId = taskDetails.groupId;
+		var taskId = taskDetails.taskId;
+		
+		var url = "/ezPMS/deleteTask.do?projectId=" + projectId + "&taskId=" + taskId;
+		
+		if(!taskId) {
+			delGroup();
+			return;
+		}
+		
+		var data = {
+				projectId : projectId,
+				groupId : groupId,
+				taskId : taskId	
+		}
+		
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "json",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(data) {
+				
+				if (result == "permitted") {
+					alert("삭제되었습니다.");
+				} else {
+					alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+					return;
+				}
+				
+				location.reload();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("에러 : updateTaskWDNW 쿼리 구현하면 에러 안남");
+				location.reload();
+			},
+			complete : function(){
+				var logContent = "[" + taskId + "업무 삭제 테스트 로그 입니다.]";
+				addTaskLog(projectId, 3, null, null, logContent);
+				opener.location.reload();
+				window.close();
+			}
+		});
+	}
+	
+	function delGroup(){
+		var projectId = taskDetails.projectId;
+		var groupId = taskDetails.groupId;
+		
+		data = {
+				projectId : projectId,
+				groupId : groupId
+		}
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezPMS/deleteGroup.do",
+			dataType : "text",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(data) {
+				alert("그룹이 삭제되었습니다.");
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("에러 : 그룹 삭제 에러" + textStatus + errorThrown + jqXHR);
+			},
+			complete : function(){
+				var logContent = "[그룹 삭제 테스트 로그 입니다.]";
+				addTaskLog(projectId, 3, groupId, null, logContent);
+				opener.location.reload();
+				window.close();
+			}
+		});
+	}
 </script>
 <style>
 .popupHeader{
@@ -350,6 +462,7 @@ button.PHBtn {
 		</div>
 		<div class="mainBodyMid">
 			<div id="taskUpdateBtn" class="taskUpdateBtn">업무정보수정</div>
+			<div id="addBoardBtn" class="taskUpdateBtn" style="display: none;">게시물 등록</div>
 			<div class="portlet_tabpart01" style="margin-bottom: 10px">
 			   <div class="portlet_tabpart01_top" id="tab1">
 			   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">업무정보</span></p>

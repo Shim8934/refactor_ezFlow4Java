@@ -609,6 +609,8 @@ public class EzPMSController2 {
 //			model.addAttribute("groupId", groupId);
 //			model.addAttribute("taskId", taskId);
 //		}
+		
+		model.addAttribute("projectId", projectId);
 		model.addAttribute("groupId", groupId);
 		model.addAttribute("taskId", taskId);
 		
@@ -624,95 +626,20 @@ public class EzPMSController2 {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezPMS/getLogListTab.do")
-	public String getLogListTab(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	@RequestMapping(value="/ezPMS/getTaskLogListTab.do")
+	public String getTaskLogListTab(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		
-		LOGGER.debug("ezPMS getLogListTab started");
+		LOGGER.debug("ezPMS getTaskLogListTab started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String taskId = request.getParameter("taskId");
 		String projectId = request.getParameter("projectId");
-		String userId = userInfo.getId();
 		String groupId = request.getParameter("groupId");
-		String onlyGroup = request.getParameter("onlyGroup");
-		String orderWhat = request.getParameter("orderWhat") != null ? request.getParameter("orderWhat") : null;
-		String orderHow = request.getParameter("orderHow") != null ? request.getParameter("orderHow") : null;
-		String searchByContent = request.getParameter("searchByContent") != null ? request.getParameter("searchByContent") : null;
-		String searchByStatus = request.getParameter("searchByStatus") != null ? request.getParameter("searchByStatus") : null;
+		String taskId = request.getParameter("taskId");
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("taskId", taskId);
-		param.put("listNumber", 10);
-		param.put("startCount", 0);
-		param.put("groupId", groupId);
-		param.put("userId", userId);
-		param.put("orderWhat", "init");
-		param.put("onlyGroup", false);
-		param.put("orderWhat", orderWhat);
-		param.put("orderHow", orderHow);
-		param.put("searchByContent", searchByContent);
-		param.put("searchByStatus", searchByStatus);
-//		
-//		if(logStatus.equals("ok")) {
-//			JSONArray logList = (JSONArray) logResult.get("data");
-//			model.addAttribute("logList", logList);
-//			model.addAttribute("taskId", taskId);
-//			model.addAttribute("groupId", groupId);
-//			model.addAttribute("logCount", logList.size());
-//		}
-		String url = "/rest/ezPMS/projects/" + projectId + "/logs";
-		String countUrl = "/rest/ezPMS/projects/" + projectId + "/logs/count";
+		model.addAttribute("projectId", projectId);
+		model.addAttribute("groupId", groupId);
+		model.addAttribute("taskId", taskId);
 		
-		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
-		String countStatus = countResult.get("status").toString();
-		int logListCount = 0;
-		int listNumber = Integer.parseInt(param.get("listNumber").toString());
-		int currentPage = Integer.parseInt(request.getParameter("currentPage"));
-		
-		if (countStatus.equals("ok")) {
-			JSONObject countJson = (JSONObject) countResult.get("data");
-			
-			if (countJson.get("taskLogListCount").toString() != null) {
-				logListCount = Integer.parseInt(countJson.get("taskLogListCount").toString());
-				model.addAttribute("taskLogListCount", logListCount);
-				model.addAttribute("contentTitle", projectId);
-				ProjectPagination paging = new ProjectPagination(logListCount, listNumber, 10, currentPage);
-				model.addAttribute("paging", paging);
-				
-				if (logListCount != 0) {
-					//현재 페이지
-					param.put("currentPage", currentPage);
-					//한 페이지에 보여질 개수
-					param.put("listNumber", listNumber);
-					//프로젝트 총 개수
-					param.put("listCount", logListCount);
-					param.put("startCount", paging.getStartCount());
-					
-					//header 정렬 프로젝트 순서
-					if (param.get("orderWhat") == null || param.get("orderWhat").equals("")) {
-						param.put("orderWhat", "init");
-					}
-					
-					if (param.get("orderHow") == null || param.get("orderHow").equals("")) {
-						param.put("orderHow", "asc");
-					}
-					
-					JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
-					String status = result.get("status").toString();
-		
-					if (status.equals("ok")) {
-						JSONArray logList = (JSONArray) result.get("data");
-						model.addAttribute("logList", logList);
-						model.addAttribute("projectId", projectId);
-						model.addAttribute("taskId", taskId);
-						model.addAttribute("groupId", groupId);
-					}
-				}
-			}
-		}
-		
-		LOGGER.debug("ezPMS getLogListTab ended");
+		LOGGER.debug("ezPMS getTaskLogListTab ended");
 		
 		return "/ezPMS/pmsTaskLogListTab";
 	}
@@ -850,6 +777,42 @@ public class EzPMSController2 {
 		}
 		
 		LOGGER.debug("ezPMS updateTaskWeight ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * 업무 실제진행률 수정.
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/updateTaskProgress.do")
+	public String updateTaskProgress(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS updateTaskProgress started");
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String taskId = (String)param.get("taskId");
+			String userId = userInfo.getId();
+			
+			param.put("userId", userId);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/progress/", param, request, "put", null);
+			String status = resultBody.get("status").toString();
+			
+//			if(status.equals("ok")) {
+//				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+//				model.addAttribute("taskDetails", taskDetails);
+//			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS updateTaskProgress ended");
 		
 		return "json";
 	}

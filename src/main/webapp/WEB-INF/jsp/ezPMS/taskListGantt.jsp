@@ -113,7 +113,7 @@
 		   			tempTask.start = new Date(pd.planStartDate).getTime();
 		   			tempTask.end = new Date(pd.planEndDate).getTime();
 		   			tempTask.duration = pd.workingday;
-		   			tempTask.weight = pd.weight;
+		   			tempTask.weight = Number(pd.weight).toFixed(1);
 		   			tempTask.startIsMilestone = "";
 		   			tempTask.endIsMilestone = "";
 		   			tempTask.assigs = [];
@@ -140,9 +140,9 @@
 		   			
 		   			tempTask.depends = "";
 		   			tempTask.description = pd.overview;
-		   			tempTask.progress = pd.progress;
+		   			tempTask.progress = Number(pd.progress).toFixed(1);
 		   			tempTask.realProgress = pd.progress;
-		   			tempTask.planProgress = pd.planProgress;
+		   			tempTask.planProgress = Number(pd.planProgress).toFixed(1);
 		   			tempTask.hasChild = "";
 		   			
 		   			ganttData.tasks.push(tempTask);
@@ -180,7 +180,7 @@
 			   			tempTask.start = new Date(gl[i].planStartDate).getTime();
 			   			tempTask.end = new Date(gl[i].planEndDate).getTime();
 			   			tempTask.duration = gl[i].workingday;
-	 		   			tempTask.weight = gl[i].weight;
+	 		   			tempTask.weight = Number(gl[i].weight).toFixed(1);
 			   			tempTask.startIsMilestone = "";
 			   			tempTask.endIsMilestone = "";
 			   			tempTask.headManager = gl[i].headManagerId;
@@ -208,9 +208,9 @@
 			   			
 			   			tempTask.depends = "";
 			   			tempTask.description = gl[i].overview;
-			   			tempTask.progress = gl[i].realProgress;
+			   			tempTask.progress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = gl[i].realProgress;
-			   			tempTask.planProgress = gl[i].planProgress;
+			   			tempTask.planProgress = Number(gl[i].planProgress).toFixed(1);
 			   			tempTask.hasChild = "";
 		   				ganttData.tasks.push(tempTask);
 		   				
@@ -255,7 +255,7 @@
 			   			tempTask.start = new Date(tl[i].planStartDate).getTime();
 			   			tempTask.end = new Date(tl[i].planEndDate).getTime();
 			   			tempTask.duration = tl[i].realWorkingday;
-			   			tempTask.weight = tl[i].weight;
+			   			tempTask.weight = Number(tl[i].weight).toFixed(1);
 			   			tempTask.startIsMilestone = "";
 			   			tempTask.endIsMilestone = "";
 			   			tempTask.headManager = tl[i].headManagerId;
@@ -282,9 +282,9 @@
 			   			}
 			   			tempTask.depends = tl[i].pretask;
 			   			tempTask.description = tl[i].overview;
-			   			tempTask.progress = tl[i].realProgress;
+			   			tempTask.progress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = tl[i].realProgress;
-			   			tempTask.planProgress = tl[i].planProgress;
+			   			tempTask.planProgress = Number(tl[i].planProgress).toFixed(1);
 			   			tempTask.hasChild = "";
 			   			
 			   			ganttData.tasks.push(tempTask);
@@ -698,8 +698,8 @@
 		   		}).disableSelection();
 		   		
 		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
-		   		$("input[name='weight']").on("change",function(){ updateWeight(this); });
-		   		$("input[name='progress']").on("change",function(){ updateProgress(); });
+		   		$("input[name='weight']").on("change", function(){ updateWeight(this); });
+		   		$("input[name='realProgress']").on("change", function(){ updateProgress(this); });
 		   	}
 	   		
 	   		function changeGanttOrder(targetTaskId, changeGroupId) {
@@ -890,8 +890,61 @@
 				});
 	   		}
 	   		
-	   		function updateProgress(){
-	   			alert("진행률 값 변했냐");
+	   		function updateProgress(obj){
+	   			var curTask = ge.currentTask;
+	   			var newProgress = obj.value;
+	   			var validFlag = false;
+	   			var taskId = 0;
+	   			var groupId = 0;
+	   			
+	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
+	   			if(taskId === ""){
+	   				alert("업무를 선택해주세요.");
+	   			}
+	   			// 가중치 검사
+	   			else if(newProgress == ""){
+   					alert("진행률을 입력해 주십시오.");
+   				}
+   				else if(isNaN(newProgress)) {
+   					alert("진행률은 숫자만 입력 가능합니다.");
+   				}
+   				else{
+   					validFlag = true;
+   				}
+	   			
+	   			if(!validFlag){
+	   				//화면 새로 고침안하고 되돌릴 수 있는 방법 찾아볼것.
+	   				location.reload();
+	   				return;
+	   			}
+//    				if(Number(newWeight) > remainingWeight) {
+//    					alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
+//    					return;
+//    				}
+
+				data = {
+						taskName : curTask.name,
+						taskId : taskId,
+						projectId : projectId,
+						groupId : groupId,
+						progress : newProgress
+				}
+				
+				$.ajax({
+					type : "POST",
+					url : "/ezPMS/updateTaskProgress.do",
+					dataType : "json",
+					contentType: "application/json; charset=UTF-8",
+					data : JSON.stringify(data),
+					success : function(data) {
+						alert("업무 정보를 변경하였습니다.");
+						
+						location.reload();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("error2");
+					}
+				});
 	   		}
 	   		
 	   		
@@ -997,11 +1050,17 @@
 	   			  var projectId = taskId.match(/p(\d+)/)[1];
 	   			  
 	   			  if (task.id.substring(1).indexOf("t") != -1) {
-	   				var feature = GetOpenPosition(0, 0);
-		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user");
+	   				var feature = GetOpenPosition(790, 800);
+	   				window.open("/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user",
+								"", "width=835, height=800, resizable=no, scrollbars=no, status=no" + feature);
+	   				/* var feature = GetOpenPosition(0, 0);
+		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user"); */
 	   			  } else {
-	   				var feature = GetOpenPosition(0, 0);
-		   			DivPopUpShow(845, 600, "/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId);  
+	   				var feature = GetOpenPosition(790, 800);
+	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId,
+								"", "width=835, height=800, resizable=no, scrollbars=no, status=no" + feature);
+	   			/* 	var feature = GetOpenPosition(0, 0);
+		   			DivPopUpShow(845, 600, "/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId);   */
 	   			  } 
 	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
 	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;

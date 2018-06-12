@@ -225,8 +225,8 @@
 				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
 				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%">부서</th>
 				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">게시자</th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">게시일</th>
-				<th onclick="setListOrder(this)" data-order='READ_COUNT' width="5%">조회수</th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%">게시일</th>
+				<th onclick="setListOrder(this)" data-order='READ_COUNT' width="7%">조회수</th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">

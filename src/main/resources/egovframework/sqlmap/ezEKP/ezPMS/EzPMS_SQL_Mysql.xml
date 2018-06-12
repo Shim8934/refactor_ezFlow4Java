@@ -1651,7 +1651,7 @@
 		B.item_level ASC,
 		B.item_id DESC
 		
-		LIMIT #startRow#, #limit#
+		LIMIT #startRow#, #listCnt#
 	</select>
 	
 	<select id="EzPMSDAO.getBoardListCount" parameterClass="map" resultClass="Integer">
@@ -2629,7 +2629,7 @@
 		</isNotEmpty>
 			C.comment_id DESC
 			
-			LIMIT #startRow#, #limit#
+			LIMIT #startRow#, #listCnt#
 	</select>
 	
 	<select id="EzPMSDAO.getCommentListCount" parameterClass="map" resultClass="Integer">
@@ -3001,4 +3001,17 @@
 				
 		]]>
 	</select>
+	
+	<update id="EzPMSDAO.updateTaskProgress" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				REAL_PROGRESS = #realProgress#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

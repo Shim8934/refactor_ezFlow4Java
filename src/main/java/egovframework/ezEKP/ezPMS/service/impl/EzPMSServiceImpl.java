@@ -1260,7 +1260,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setReadCount(0);
 		vo.setGroupId(Long.parseLong((String) jsonParam.get("groupId")));
 		
-		if(jsonParam.get("taskId")!=null && !jsonParam.get("taskId").equals("null")) {
+		if(jsonParam.get("taskId")!=null && !jsonParam.get("taskId").equals("null") && !jsonParam.get("taskId").equals("")) {
 			vo.setTaskId(Long.parseLong((String) jsonParam.get("taskId")));
 		}
 		
@@ -1476,7 +1476,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int limit, String lang, String position, String orderWhat, String orderHow, String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, String searchByContent) {
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int listCnt, String lang, String position, String orderWhat, String orderHow, String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, String searchByContent) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1485,7 +1485,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("groupId", groupId);
 		map.put("taskId", taskId);
 		map.put("startRow", startRow);
-		map.put("limit", limit);
+		map.put("listCnt", listCnt);
 		map.put("lang", lang);
 		map.put("position", position);
 		map.put("orderHow", orderHow);
@@ -2144,5 +2144,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] getGroupBoundaryDate ended.");
 		return ezPMSDAO.getGroupBoundaryDate(map);
+	}
+
+	@Override
+	public void updateTaskProgress(ProjectTaskVO taskVO) throws Exception {
+		LOGGER.debug("[SERVICE] updateTaskProgress started.");
+		
+		ezPMSDAO.updateTaskProgress(taskVO);
+		
+		LOGGER.debug("[SERVICE] updateTaskProgress ended.");
 	}
 }
