@@ -30,7 +30,7 @@
 	var currentPage = 1;
 	var orderWhat = "";
 	var orderHow = "";
-	var limit = 5;
+	var limit = 10;
 	
 	var projectName = null;
 	var taskName = null;

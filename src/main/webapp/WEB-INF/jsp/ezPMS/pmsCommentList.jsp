@@ -206,7 +206,7 @@
 </div>
 
 <c:if test="${userRole ne 3}">
-	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px;">
+	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin-top: 20px;">
 		<div class="sendComment_layout">
 			<div class="comment_input_layout" style="border: none; width: 86%;">
 				<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
