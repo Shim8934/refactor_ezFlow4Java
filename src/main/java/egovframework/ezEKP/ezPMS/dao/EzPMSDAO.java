@@ -489,4 +489,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateTaskProgress(ProjectTaskVO taskVO) {
 		update("EzPMSDAO.updateTaskProgress", taskVO);
 	}
+	
+	public String getAncesterGroup(Map<String, Object> map) {
+		return (String) select("EzPMSDAO.getAncesterGroup", map);
+	}
+
+	public void updateProjectProgress(ProjectTaskVO taskVO) {
+		update("EzPMSDAO.updateProjectProgress", taskVO);
+	}
 }

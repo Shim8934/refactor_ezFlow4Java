@@ -110,6 +110,7 @@
 		   			tempTask.code = "";
 		   			tempTask.level = 0;
 		   			tempTask.status = ganttStatus[pd.status];
+		   			tempTask.statusPMS = pd.status;
 		   			tempTask.start = new Date(pd.planStartDate).getTime();
 		   			tempTask.end = new Date(pd.planEndDate).getTime();
 		   			tempTask.duration = pd.workingday;
@@ -141,7 +142,7 @@
 		   			tempTask.depends = "";
 		   			tempTask.description = pd.overview;
 		   			tempTask.progress = Number(pd.progress).toFixed(1);
-		   			tempTask.realProgress = pd.progress;
+		   			tempTask.realProgress = Number(pd.progress).toFixed(1);
 		   			tempTask.planProgress = Number(pd.planProgress).toFixed(1);
 		   			tempTask.hasChild = "";
 		   			
@@ -177,6 +178,7 @@
 			   			tempTask.code = gl[i].ancesterGroup;
 			   			tempTask.level = groupDepth;
 			   			tempTask.status = ganttStatus["G"];
+			   			tempTask.statusPMS = gl[i].status;
 			   			tempTask.start = new Date(gl[i].planStartDate).getTime();
 			   			tempTask.end = new Date(gl[i].planEndDate).getTime();
 			   			tempTask.duration = gl[i].workingday;
@@ -209,7 +211,7 @@
 			   			tempTask.depends = "";
 			   			tempTask.description = gl[i].overview;
 			   			tempTask.progress = Number(gl[i].realProgress).toFixed(1);
-			   			tempTask.realProgress = gl[i].realProgress;
+			   			tempTask.realProgress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.planProgress = Number(gl[i].planProgress).toFixed(1);
 			   			tempTask.hasChild = "";
 		   				ganttData.tasks.push(tempTask);
@@ -252,6 +254,7 @@
 			   			tempTask.name = tl[i].taskName;
 			   			tempTask.code = tl[i].groupId;
 			   			tempTask.status = ganttStatus[tl[i].status];
+			   			tempTask.statusPMS = tl[i].status;
 			   			tempTask.start = new Date(tl[i].planStartDate).getTime();
 			   			tempTask.end = new Date(tl[i].planEndDate).getTime();
 			   			tempTask.duration = tl[i].realWorkingday;
@@ -283,7 +286,7 @@
 			   			tempTask.depends = tl[i].pretask;
 			   			tempTask.description = tl[i].overview;
 			   			tempTask.progress = Number(tl[i].realProgress).toFixed(1);
-			   			tempTask.realProgress = tl[i].realProgress;
+			   			tempTask.realProgress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.planProgress = Number(tl[i].planProgress).toFixed(1);
 			   			tempTask.hasChild = "";
 			   			
@@ -893,11 +896,14 @@
 	   		function updateProgress(obj){
 	   			var curTask = ge.currentTask;
 	   			var newProgress = obj.value;
+	   			var status = curTask.statusPMS;
 	   			var validFlag = false;
 	   			var taskId = 0;
 	   			var groupId = 0;
 	   			
 	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
+	   			groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
+	   			
 	   			if(taskId === ""){
 	   				alert("업무를 선택해주세요.");
 	   			}
@@ -927,7 +933,8 @@
 						taskId : taskId,
 						projectId : projectId,
 						groupId : groupId,
-						progress : newProgress
+						progress : newProgress,
+						status : status
 				}
 				
 				$.ajax({
