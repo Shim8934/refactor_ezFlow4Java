@@ -19,10 +19,7 @@ var contentTitle = $(".jstree-clicked").text();
 var position = "${position}";
 
 $(function() {
-	if (position == null || position == "") {
-		$("#divList").css("height", (CurrentHeight - 150) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
-		
+	if (position == null || position == "") {		
 		if (contentTitle == "") {
 			var treeItemId = $("li[role=treeitem]").attr("id");
 			contentTitle = $("#" + treeItemId + "_anchor").text();
@@ -41,17 +38,19 @@ $(function() {
 			setContentTitle(contentTitle, "${taskListCount}");
 		}
 	} else { 
-		CurrentHeight = $(window).height()-100;
+		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#divList").css("height", (CurrentHeight - 120) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 170) + "px");
+		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 78) + "px");
+		$("#contentList").css("height", (CurrentHeight - 100) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
+		$("#divList").css("height", (CurrentHeight - 150) + "px");
 		$("#divList").css("overflow", "auto");
 		
 		$("#totalCount").text("${taskListCount}");
 	}
 });
+
 </script>
 </head>
 <body>

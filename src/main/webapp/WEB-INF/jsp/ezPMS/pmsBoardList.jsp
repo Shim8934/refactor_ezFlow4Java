@@ -5,8 +5,17 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script>
 	var boardDetail;
+	var CurrentHeight = document.documentElement.clientHeight - 100;
 	
 	$(function() {
+		CurrentHeight = $(window).height()-100;
+		$("MailListRayer").css("height", CurrentHeight + "px");
+		$("#taskTree").css("height", CurrentHeight + 10 + "px");
+		$("#projectContent").css("height", CurrentHeight + "px");
+		$("#contentList").css("height", (CurrentHeight - 100) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+		$("#divList").css("height", (CurrentHeight - 150) + "px");
+		$("#divList").css("overflow", "auto");
 		
 		$(".mainlist tbody tr td:not(.checkbox)").on("click", function(evt) {
 			var checkbox = $(this).parent().children("td:eq(0)").children();
@@ -221,6 +230,13 @@
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
+		<c:choose>
+			<c:when test="${empty data}">
+			<tr>
+				<td colspan="9" style="text-align : center"> 등록된 게시물이 없습니다. </td>
+			</tr>
+			</c:when>
+			<c:otherwise>
 			<c:forEach items="${data}" var="projectBoardVO">
 				<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
 					data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
@@ -259,6 +275,8 @@
 					<td>${projectBoardVO.readCount}</td>
 				</tr>
 			</c:forEach>
+			</c:otherwise>
+			</c:choose>
 		</tbody>
 	</table>	
 </div>

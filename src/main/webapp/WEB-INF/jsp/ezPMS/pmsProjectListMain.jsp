@@ -16,6 +16,7 @@
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 <script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/Common.js"></script>
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -171,7 +172,7 @@ $(function(){
 	$("#listSort option[value='"+ projectSort +"']").attr("selected", true);
 	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
 	$("#listByStatus option[value='" + listProjectStatus + "']").attr("selected", true);
-	
+	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 });
 
 function getDatePicker() {

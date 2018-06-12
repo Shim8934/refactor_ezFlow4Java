@@ -994,7 +994,7 @@
 	   			  var taskRow = task.rowElement;
 	   			  var taskId = taskRow.attr("taskId");
 	   			  var onlyTaskId = taskId.substring(task.id.lastIndexOf("_") + 2);
-	   			  var projectId = taskId.match(/p(\d+)/);
+	   			  var projectId = taskId.match(/p(\d+)/)[1];
 	   			  
 	   			  if (task.id.substring(1).indexOf("t") != -1) {
 	   				var feature = GetOpenPosition(0, 0);

@@ -34,27 +34,28 @@ var searchStatus = "";
 var logData = JSON.parse('${data}');
 
 $(document).ready(function(){
+	CurrentHeight = $(window).height()-100;
+	$("MailListRayer").css("height", CurrentHeight + "px");
+	$("#taskTree").css("height", CurrentHeight + 10 + "px");
+	$("#projectContent").css("height", CurrentHeight + "px");
+	$("#contentList").css("height", (CurrentHeight - 100) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+	$("#divList").css("height", (CurrentHeight - 150) + "px");
+	
 	$(window).resize(function() {
 		CurrentHeight = $(window).height()-100;
+		$("MailListRayer").css("height", CurrentHeight + "px");
 		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#divList").css("height", (CurrentHeight - 160) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 150) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+		$("#divList").css("height", (CurrentHeight - 150) + "px");
 	});
 
 });
 
 $(function(){
 	getProjectTaskTree("taskTree", logData, "taskLog");
-	
-	CurrentHeight = $(window).height()-100;
-	$("MailListRayer").css("height", CurrentHeight + "px");
-	$("#taskTree").css("height", CurrentHeight + 10 + "px");
-	$("#projectContent").css("height", CurrentHeight + "px");
-	$("#contentList").css("height", (CurrentHeight - 100) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
-	$("#divList").css("height", (CurrentHeight - 150) + "px");
 	
 	$("#searchStatus").css("display", "none");
 	
@@ -96,6 +97,7 @@ function setContentList() {
 		url : "/ezPMS/getTaskLogList.do",
 		success : function(contentList) {
 			$("#contentList").html(contentList);
+			viewSetting();
 			searchStatus = "";
 			setInitOrder();
 		}	
@@ -224,7 +226,7 @@ function selectedTR(elem){
 #iconLine {
 	margin-left: 10px;
 	margin-top: 5px;
-	height: 72px;
+	height: 80px;
 }
 
 #contentList {

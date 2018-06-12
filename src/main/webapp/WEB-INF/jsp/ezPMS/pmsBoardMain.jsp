@@ -7,13 +7,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title></title>
+<title>게시판</title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -45,13 +46,14 @@
 	var searchByContent = "";
 	
 	$(document).ready(function() {
+		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
 		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
 		$("#divList").css("height", (CurrentHeight - 150) + "px");
 		
 		getProjectTaskTree("taskTree", treeData, false);
@@ -252,6 +254,7 @@
 	#taskName {
 		margin-top: 10px;
 		margin-left: 10px;
+		margin-bottom : 17px;
 	}
 	
 	#projectArea {
@@ -265,7 +268,7 @@
 	}
 	
 	#iconLine {
-		height: 72px;
+		height: 80px;
 		margin-left: 10px;
 		margin-top: 5px;
 	}
@@ -273,10 +276,6 @@
 	#contentList {
 		width : 98%;
 		margin-left : 1%;
-	}
-	
-	#icons {
-		margin-top: 21px;
 	}
 	
 	#searchDiv {
@@ -291,14 +290,16 @@
 		<div id="projectContent">
 			<div id="iconLine">
 				<div id="taskName"></div>
-				<div id="icons">
+				<div id="mainmenu">
+				<ul>
 					<c:if test="${userRole ne 3}">
-						<a class="imgbtn" onclick="goAddBoard()" style="margin-left: 1px; margin-top: 1px;"><span>등록</span></a>
-						<a class="imgbtn" onclick="deleteBoards()" style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a>
-						<a class="imgbtn" onclick="goMoveBoards()" style="margin-left: 1px; margin-top: 1px;"><span>이동</span></a>
+						<li><span onclick="goAddBoard()">등록</span></li>
+						<li><span onclick="deleteBoards()">삭제</span></li>
+						<li><span onclick="goMoveBoards()">이동</span></li>
 					</c:if>
-					<a class="imgbtn" onclick="location.reload()" style="margin-left: 1px; margin-top: 1px;"><span>새로고침</span></a>
-					<a class="imgbtn" onclick="showSearchDiv()" style="margin-left: 1px; margin-top: 1px;"><span>검색 <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></a>
+					<li><span onclick="location.reload()">새로고침</span></li>
+					<li><span onclick="showSearchDiv()">검색 <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></li>
+				</ul>
 				</div>
 			</div>
 			<div id = "searchDiv" style="display:none; margin-bottom:10px;">

@@ -17,10 +17,7 @@
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var contentTitle = $(".jstree-clicked").text();
 
-$(function() {
-	$("#divList").css("height", (CurrentHeight - 150) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
-	
+$(function() {	
 	if (contentTitle == "") {
 		var treeItemId = $("li[role=treeitem]").attr("id");
 		contentTitle = $("#" + treeItemId + "_anchor").text();

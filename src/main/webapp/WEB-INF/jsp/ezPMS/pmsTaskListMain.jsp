@@ -10,11 +10,12 @@
 <title>작업 이력</title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css"
 	type="text/css" />
-<link rel="stylesheet" href="/css/default_kr.css" type="text/css">
+<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -56,24 +57,14 @@
 	$(function() {
 		getProjectTaskTree("taskTree", taskData, "taskList");
 		getDatePicker();
-
-		CurrentHeight = $(window).height() - 100;
-		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + 10 + "px");
-		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
-		$("#divList").css("height", (CurrentHeight - 150) + "px");
+		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	});
 
 	$(document).ready(function() {
+		viewSetting();
+		
 		$(window).resize(function() {
-			CurrentHeight = $(window).height() - 100;
-			$("#taskTree").css("height", CurrentHeight + 10 + "px");
-			$("#projectContent").css("height", CurrentHeight + "px");
-			$("#contentList").css("height", (CurrentHeight - 100) + "px");
-			$("#divList").css("height", (CurrentHeight - 150) + "px");
-			$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
+			viewSetting();
 		});
 
 	});
@@ -110,7 +101,8 @@
 			data : JSON.stringify(data),
 			url : "/ezPMS/getProjectTaskList.do",
 			success : function(contentList) {
-				$("#contentList").html(contentList);				
+				$("#contentList").html(contentList);
+				viewSetting();
 				setInitOrder();
 			}
 		});
@@ -362,8 +354,9 @@
 }
 
 #taskName {
-	margin-top: 10px;
-	margin-left: 10px;
+	margin-top : 10px;
+	margin-left : 10px;
+	margin-bottom : 17px;
 }
 
 #projectArea {
@@ -377,7 +370,7 @@
 }
 
 #iconLine {
-	height: 72px;
+	height: 80px;
 	margin-left: 10px;
 	margin-top: 5px;
 }
@@ -385,10 +378,6 @@
 #contentList {
 	width : 98%;
 	margin-left : 1%;
-}
-
-#icons {
-	margin-top: 21px;
 }
 
 #MailListRayer tr:not (.selectTR ):hover {
@@ -402,14 +391,14 @@
 .selectTR {
 	background-color: rgb(233, 241, 255);
 }
-#icons div{
+#mainmenu div{
 	float : right;
 	margin-right: 10px;
 	height: 23px;
 	font-size : 12px;
 }
 
-#icons div select {
+#mainmenu div select {
 	width : 66px;
 }
 
@@ -427,17 +416,18 @@
 <div id="projectContent">
 	<div id="iconLine">
 		<div id="taskName"></div>
-		<div id="icons">
+		<div id="mainmenu">
+		<ul>
 			<c:choose>
 				<c:when test="${userRole ne 3}">
-					<a class="imgbtn" id="addTaskBtn" onclick="goAddTask()"
-					style="margin-left: 1px; margin-top: 1px;"><span>새업무 추가</span></a> <a
-					class="imgbtn" id="addTaskBtn" onclick="deleteTask()"
-					style="margin-left: 1px; margin-top: 1px;"><span>삭제</span></a>
+					<li><span id="addTaskBtn" onclick="goAddTask()"
+					style="margin-left: 1px; margin-top: 1px;">새업무 추가</span></li> 
+					<li><span id="addTaskBtn" onclick="deleteTask()"
+					style="margin-left: 1px; margin-top: 1px;">삭제</span></li>
 				</c:when>
-			</c:choose> <a
-				class="imgbtn" id="addTaskBtn" onclick="showSearchDiv()"
-				style="margin-left: 1px; margin-top: 1px;"><span>검색 <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></a>
+			</c:choose> 
+			<li><span id="addTaskBtn" onclick="showSearchDiv()"
+				style="margin-left: 1px; margin-top: 1px;">검색 <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
 				<div>
 				업무 상태별 보기 <select id="searchStatus" onchange="searchStatus(this.value)">
 					<option value="A">전체</option>
@@ -448,6 +438,7 @@
 					<option value="S">보류</option>
 				</select>
 				</div>
+		</ul>
 		</div>
 	</div>
 	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
