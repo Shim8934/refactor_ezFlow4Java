@@ -770,8 +770,8 @@
 		            			swidth = 440;
 			               		sheight = 460;
 		            		} else {
-			            		swidth = 440;
-				                sheight = 480;
+			            		swidth = 460;
+				                sheight = 380;
 		            		}
 		            	} else {
 		               		swidth = 460;
