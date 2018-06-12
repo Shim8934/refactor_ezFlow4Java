@@ -250,15 +250,53 @@
 	            }
 	            
 	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	            /* $("#listType1 tr").each(function(){
+	            $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
-	            }); */
+	            });
 	            
-	            // 재은 수정중
+	            var currentPointer = ''; //mouseenter할때
+	            var prevPointer = ''; //mouseover할때
+	            $( "#ListViewMsgTo" ).mouseenter(function(){
+	            	currentPointer = 'ListViewMsgTo';
+	            	if (currentPointer != prevPointer && prevPointer != '') {
+	            		 $("#MsgToList tbody").sortable('destroy');
+	            	}
+				});
+	            
+	            $( "#ListViewMsgCC" ).mouseenter(function(){
+	            	currentPointer = 'ListViewMsgCC';
+	            	if (currentPointer != prevPointer && prevPointer != '') {
+	            		 $("#MsgCCList tbody").sortable('destroy');
+	            	}
+				});
+	            
+	            $( "#ListViewMsgBCC" ).mouseenter(function(){
+	            	currentPointer = 'ListViewMsgBCC';
+	            	if (currentPointer != prevPointer && prevPointer != '') {
+	            		 $("#MsgBCCList tbody").sortable('destroy');
+	            	}
+				});
+	            
+	            $( "#ListViewMsgTo" ).mouseout(function(){
+	            	prevPointer = 'ListViewMsgTo';
+				});
+	            
+	            $( "#ListViewMsgCC" ).mouseout(function(){
+	            	prevPointer = 'ListViewMsgCC';
+				});
+	            
+	            $( "#ListViewMsgBCC" ).mouseout(function(){
+	            	prevPointer = 'ListViewMsgBCC';
+				});
+	            
+	            
+			    // to, cc, bcc 온로드 시 이벤트 주기 재은
 	            $("#listType1 tr").each(function(){
 	            	
 	            	var thisId = this.getAttribute('id');
 	            	if (thisId.indexOf('MsgToList_TR_') > -1 || thisId.indexOf('MsgCCList_TR_') > -1 || thisId.indexOf('MsgBCCList_TR_') > -1) {
+	            		
+	            		// 여기 수정해야됨
 	            		this.onmouseover = function () { event_listMover(this); };
 		            	this.onmouseout = function () { event_listMout(this); };
 		                this.onclick = function () { event_listclick(this); };
@@ -1139,7 +1177,7 @@
 	                        }
 	                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
 	                            listid = "MsgBCCList";
-	                        }ㅔ
+	                        }
 	                        var getlistview = new ListView();
 	                        getlistview.LoadFromID(listid);
 	                        var bFlag = getlistview.ExistRow("DATA2", strEmail);
@@ -1397,7 +1435,7 @@
 		    	if (obj.id.indexOf("MailUserlist") == -1)
 		    		moveState = true;
 		    	
-		        for (var i = 0; i < listContentArry.length; i++) {
+		    	for (var i = 0; i < listContentArry.length; i++) {
 		            if (document.getElementById(listContentArry[i]) == obj) {
 		                return;
 		            }
@@ -1413,6 +1451,16 @@
 		            }
 		        }
 		    }
+		    
+		    /*$("#listType1 tr").find("table tbody").each(function(){
+		    	if (prevListId == "MsgToList") {
+                }
+                else if (prevListId == "MsgCCList") {
+                }
+                else if (prevListId == "MsgBCCList") {
+                }
+		    }); */
+		    
 		    function event_listMout(obj) {
 		    	//수정중 재은
 		    	var moveState = false;
@@ -1468,7 +1516,12 @@
 		    var listEventCheckbox = false;
 		    var listSubEventCheckbox = false;
 		    function event_listclick(obj) {
+		    	
 		    	//to, cc, bcc 간의 이동 재은
+		    	$("#listType1 tr").each(function(){
+	            	$(this).find("table tbody").sortable();
+	            });
+		    	
             	if (obj.id.indexOf("MailUserlist") == -1) {
             		moveRecipients = true;
             		selectMoveList = obj.id;
