@@ -56,7 +56,7 @@
 	            }
 	            
 	            // imageID 앞쪽에 순서 숫자 붙은 경우에만 substring하여 마지막 imageID 사용
-	            if ("${lastItemID}".substring(0,1) != "{") {
+	            if ("${lastItemID}" != "") {
 	            	lastItemID = "${lastItemID}".substring(0,3);
 	            }
 	        };
