@@ -830,7 +830,7 @@
 	   					location.reload();
 	   				},
 	   				complete : function(){
-	   					var logContent = "[" + taskId + "업무 삭제 테스트 로그 입니다.]";
+	   					var logContent = "[" + taskId + "] 업무가 삭제되었습니다.";
 	   					addTaskLog(projectId, 3, null, null, logContent);
 	   				}
 	   			});

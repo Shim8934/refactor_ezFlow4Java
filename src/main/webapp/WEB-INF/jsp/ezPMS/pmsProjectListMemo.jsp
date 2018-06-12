@@ -36,20 +36,7 @@ $(function(){
 		projectList.push(json);
 	</c:forEach>
 	
-	for (var i = 0; i < projectList.length; i++) {
-		console.log(projectList[i].status);
-		if (projectList[i].status == "P") {
-		 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
-		} else if (projectList[i].status == "C") {
-			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", completeColor);
-		} else if (projectList[i].status == "S") {
-			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", holdColor);
-		} else if (projectList[i].status == "L") {
-			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", overdueColor);
-		} else {
-			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#d1d1d1");
-		}
-		
+	for (var i = 0; i < projectList.length; i++) {		
 		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
 		
@@ -84,6 +71,19 @@ $(function(){
 			radius : '15px',
 			width : '80%'
 		});
+		
+		console.log(progressColor);
+		if (projectList[i].status == "P") {
+		 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
+		} else if (projectList[i].status == "C") {
+			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", completeColor);
+		} else if (projectList[i].status == "S") {
+			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", holdColor);
+		} else if (projectList[i].status == "L") {
+			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", overdueColor);
+		} else {
+			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#d1d1d1");
+		}
 	}
 	
 	if(viewType == 0) {

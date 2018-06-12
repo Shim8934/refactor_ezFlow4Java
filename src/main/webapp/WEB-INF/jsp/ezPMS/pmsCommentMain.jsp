@@ -41,14 +41,23 @@
 	var searchByContent = "";
 	
 	$(document).ready(function() {
-		
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
 		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
-		$("#divList").css("height", (CurrentHeight - 150) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+		$("#divList").css("height", (CurrentHeight - 235) + "px");
+		
+		$(window).resize(function() {
+			CurrentHeight = $(window).height() - 100;
+			$("MailListRayer").css("height", CurrentHeight + "px");
+			$("#taskTree").css("height", CurrentHeight + 10 + "px");
+			$("#projectContent").css("height", CurrentHeight + "px");
+			$("#contentList").css("height", (CurrentHeight - 100) + "px");
+			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+			$("#divList").css("height", (CurrentHeight - 235) + "px");
+		});
 		
 		getProjectTaskTree("taskTree", treeData, false);
 		
@@ -126,6 +135,15 @@
 			url : "/ezPMS/getCommentList.do",
 			success : function(contentList) {
 				$("#contentList").html(contentList);
+				
+				//순서 재조정
+				CurrentHeight = $(window).height() - 100;
+				$("MailListRayer").css("height", CurrentHeight + "px");
+				$("#taskTree").css("height", CurrentHeight + 10 + "px");
+				$("#projectContent").css("height", CurrentHeight + "px");
+				$("#contentList").css("height", (CurrentHeight - 100) + "px");
+				$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+				$("#divList").css("height", (CurrentHeight - 235) + "px");
 				
 				setInitOrder();
 			}	
@@ -313,6 +331,7 @@
 	#taskName {
 		margin-top: 10px;
 		margin-left: 10px;
+		margin-bottom : 17px;
 	}
 	
 	#projectArea {
@@ -326,7 +345,7 @@
 	}
 	
 	#iconLine {
-		height: 72px;
+		height: 80px;
 		margin-left: 10px;
 		margin-top: 5px;
 		margin-right: 20px;
@@ -357,7 +376,7 @@
 			<div id="iconLine">
 				<div id="taskName"></div>
 				<div style="float: right;">
-					<select id="searchCondition" onchange="setSearchInput(this.value)">
+					<select id="searchCondition" onchange="setSearchInput(this.value)" style="height:24px;">
 						<option value="searchByUser">작성자</option>
 						<option value="searchByContent">내용</option>
 						<option value="searchByWriteDate">작성일</option>
@@ -368,7 +387,7 @@
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 						<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
 					</span>
-					<a class="imgbtn" onclick="searchComment()" style="margin-left:3px;"><span>검색</span></a>
+					<a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="searchComment()" style="height:24px; margin-top:1px;"></a>
 				</div>
 			</div>
 			<div id="contentList" style="overflow: auto">

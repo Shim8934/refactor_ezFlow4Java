@@ -267,7 +267,7 @@ function selectedTR(elem){
 				<option value="2">이력 상태</option>
 			</select>
 			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}">
-			<a class="imgbtn" id="searchButton" onclick="searchLogContent()" style="margin-left:1px; margin-top:1px;"><span>검색</span></a>
+			<a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="searchComment()" style="height:24px; margin-top:1px;"></a>
 			<select id="searchStatus" onchange="searchLogStatus(this.value)">
 				<option value="0">전체</option>
 				<option value="1">등록</option>

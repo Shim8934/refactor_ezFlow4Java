@@ -95,7 +95,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 						Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 						
-						int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
+						int restDueday = getWorkingDays(now, endDate, companyId, tenantId) - 1;
 						projectList.get(i).setRestDueday(restDueday);
 					}
 					

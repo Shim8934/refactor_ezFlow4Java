@@ -21,12 +21,13 @@
 var CurrentHeight = document.documentElement.clientHeight - 100;
 
 $(function() {
-	CurrentHeight = $(window).height()-100;
+	CurrentHeight = $(window).height() - 100;
 	$("MailListRayer").css("height", CurrentHeight + "px");
-	$("#divList").css("height", (CurrentHeight - 100) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 170) + "px");
+	$("#taskTree").css("height", CurrentHeight + 10 + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
-	$("#contentList").css("height", (CurrentHeight - 65) + "px");
+	$("#contentList").css("height", (CurrentHeight - 100) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+	$("#divList").css("height", (CurrentHeight - 150) + "px");
 	$("#divList").css("overflow", "auto");
 
 	$("#totalCount").text("${projectListCount}");
@@ -97,8 +98,15 @@ $(function() {
 												<c:out value="${project.planEndDate }" />
 										</td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
-												value="${project.status }" /></td>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px">
+											<c:choose>
+												<c:when test="${project.status eq 'P' }"><c:out value="진행" /></c:when>
+												<c:when test="${project.status eq 'W' }"><c:out value="대기" /></c:when>
+												<c:when test="${project.status eq 'C' }"><c:out value="완료" /></c:when>
+												<c:when test="${project.status eq 'L' }"><c:out value="지연" /></c:when>
+												<c:when test="${project.status eq 'D' }"><c:out value="삭제" /></c:when>
+												<c:when test="${project.status eq 'S' }"><c:out value="보류" /></c:when>
+											</c:choose></td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px"><c:out
 												value="${project.progress }" /></td>
