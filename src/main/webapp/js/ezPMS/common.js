@@ -123,7 +123,6 @@ function addTaskLog(projectId, logStatus, groupId, taskId, logContent) {
 			
 		},
 		error : function(request, status, error) {
-			alert("code : " + request.status + "\nerror : " + error);
 		}
 	});
 }

@@ -179,7 +179,7 @@
 				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">작성자</th>
 				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
 				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'>내용</th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%">작성일시</th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%">작성일시</th>
 				<th style="cursor: default;" width="15%">수정/삭제</th>
 			</tr>
 		</thead>

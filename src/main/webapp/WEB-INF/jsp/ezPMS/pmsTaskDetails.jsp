@@ -28,7 +28,7 @@
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
-	var taskDetails;
+	var taskDetails = ${taskDetails};
 	var nowStatus;
 	var weightData;
 	var progressColor = "${mainSetting.progressColor}";
@@ -37,8 +37,11 @@
 	var holdColor = "${mainSetting.holdColor}";
 	var target = "${target}";
 	
+	var projectId = taskDetails.projectId;
+	var groupId = taskDetails.groupId;
+	var taskId = taskDetails.taskId;
+	
 	$(function(){
-		taskDetails = ${taskDetails};
 		
 		if (target == null || target != "group") {
 			weightData = '${weightData}';
@@ -49,7 +52,6 @@
 		tabFuncSetting();
 		diffSetting();
 		btnEvent();
-		
 	});
 	
 
@@ -101,8 +103,6 @@
 		console.log(target);
 		if (target == null || target != "group") {
 			var taskId = "${taskDetails.taskId}"
-			var projectId = taskDetails.projectId;
-			var groupId = taskDetails.groupId;
 			$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&taskId=" + taskId);
 			$("#1tab0").addClass("tabon");
 			
@@ -152,8 +152,6 @@
 				$("#FBoard_ifrm").attr("src", "/ezPMS/getCommentListTab.do?projectId=" + projectId + "&taskId=" + taskId + "&groupId=" + groupId);
 			});
 		} else {
-			var projectId = taskDetails.projectId;
-			var groupId = taskDetails.groupId;
 			$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&groupId=" + groupId);
 			$("#1tab0").addClass("tabon");
 				
@@ -223,7 +221,6 @@
 	
 	function taskUpdate(){
 		var taskId = 0;
-		var projectId = taskDetails.projectId;
 		
 		if (target == null || target != "group") {
 			taskId = "${taskDetails.taskId}";
@@ -297,10 +294,6 @@
 	
 	function delTaskFunc() {
 		
-		var projectId = taskDetails.projectId;
-		var groupId = taskDetails.groupId;
-		var taskId = taskDetails.taskId;
-		
 		var url = "/ezPMS/deleteTask.do?projectId=" + projectId + "&taskId=" + taskId;
 		
 		if(!taskId) {
@@ -345,12 +338,18 @@
 	}
 	
 	function delGroup(){
-		var projectId = taskDetails.projectId;
-		var groupId = taskDetails.groupId;
-		
+
 		data = {
 				projectId : projectId,
 				groupId : groupId
+		}
+		
+		var taskIdAttr = "p" + projectId + "_g" + groupId + "_t";
+		var hasTaskOrNot = $("[taskid^='" + taskIdAttr + "']", window.opener.document);
+		
+		if(hasTaskOrNot.length) {
+			alert("하위 업무가 존재하는 그룹은 삭제할 수 없습니다.")
+			return;
 		}
 		
 		$.ajax({
