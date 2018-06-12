@@ -846,6 +846,7 @@ public class EzPMSGWController2 {
 				projectTaskVO.setRealEndDate(request.getParameter("realEndDate"));
 				projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 				projectTaskVO.setStatus(request.getParameter("status"));
+				projectTaskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
 				
 				int workingday = ezPMSService.getWorkingDays(start, end, companyId, tenantId);
 				projectTaskVO.setWorkingday(workingday);
