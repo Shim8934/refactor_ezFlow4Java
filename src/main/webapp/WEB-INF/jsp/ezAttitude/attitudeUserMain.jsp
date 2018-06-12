@@ -149,6 +149,7 @@
 			var pageInfo = "viewCalendar";
 			
 			$(function(){
+				authBtn();
 				companyHoliday = companyHoliday.split(",");
 				//개인근태현황에서만 근태 등록 가능
 				if (deptFlag != "true") {
@@ -994,6 +995,7 @@
 				if (authDeptList.value == "")
 					getAttitudeMainList();
 		        else {
+		        	authBtn();
 		        	getAttitudeMainList();
 		        }
 			}
@@ -1009,6 +1011,18 @@
 	    			showModalDialog(url, null, "dialogWidth:600px; dialogHeight:700px; status:no; help:no; scroll:no; edge:sunken");
 	    		}
 	    	}
+			
+			function authBtn() {
+	        	if ($("#authDeptList option:selected").attr("authType") == "" || $("#authDeptList option:selected").attr("authType") == null) {
+	        		$("#btnAbsentedList").css("display","none");
+	        		$("#btnExcelDown").css("display","none");
+	        		$("#divisionBar").css("display","none");
+	        	} else {
+	        		$("#btnAbsentedList").css("display","");
+	        		$("#btnExcelDown").css("display","");
+	        		$("#divisionBar").css("display","");
+	        	}
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
@@ -1021,18 +1035,18 @@
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminFlag == 'true'}">
-		        	<li id="search"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
-		        	<li id="search"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
-					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+		        	<li id="btnAbsentedList"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
+		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
+					<li id="divisionBar" style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>
 						<select id="authDeptList" style="width:100px; margin-top:5px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
 								<c:if test="${dept.mine != 'yes' }">
 									<c:if test="${selectedDeptID == dept.deptId}">
-										<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
+										<option value="<c:out value='${dept.deptId}' />" authType="<c:out value='${dept.authType}' />" selected><c:out value='${dept.deptName}'/></option>
 									</c:if>
 									<c:if test="${selectedDeptID != dept.deptId}">
-										<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+										<option value="<c:out value='${dept.deptId}' />" authType="<c:out value='${dept.authType}' />"><c:out value='${dept.deptName}'/></option>
 									</c:if>
 								</c:if>
 							</c:forEach>
