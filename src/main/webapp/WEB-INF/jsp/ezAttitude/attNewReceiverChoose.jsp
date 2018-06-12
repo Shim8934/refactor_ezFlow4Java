@@ -1119,7 +1119,7 @@
 	                            </div>
 	                            <table style="margin-top: 3px;">
 	                                <tr>
-	                                    <td class="box" style="border-right:0px">
+	                                    <td class="box" style="border-right:0px;padding: 0px;">
 <!-- 	                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div> -->
 	                                        <div style="width: 220px; height: 473px; overflow-x: auto; overflow-y: auto; padding: 0px;" id="TreeView"></div>
 	                                    </td>
