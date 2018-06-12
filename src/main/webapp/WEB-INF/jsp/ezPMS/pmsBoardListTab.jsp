@@ -31,7 +31,7 @@
 	var taskDetails = {};
 	var orderWhat = "";
 	var orderHow = "";
-	var limit = 5;
+	var limit = 10;
 		
 	$(document).ready(function() {
 		setInitData();
@@ -126,7 +126,7 @@
 </script>
 <style>
 #divList {
-	height: 250px !important;
+	height: 400px !important;
 }
 </style>
 </head>

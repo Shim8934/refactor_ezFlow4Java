@@ -47,7 +47,7 @@
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-		$("#divList").css("height", (CurrentHeight - 235) + "px");
+		$("#divList").css("height", (CurrentHeight - 245) + "px");
 		
 		$(window).resize(function() {
 			CurrentHeight = $(window).height() - 100;
@@ -56,7 +56,7 @@
 			$("#projectContent").css("height", CurrentHeight + "px");
 			$("#contentList").css("height", (CurrentHeight - 100) + "px");
 			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-			$("#divList").css("height", (CurrentHeight - 235) + "px");
+			$("#divList").css("height", (CurrentHeight - 245) + "px");
 		});
 		
 		getProjectTaskTree("taskTree", treeData, false);
@@ -143,7 +143,7 @@
 				$("#projectContent").css("height", CurrentHeight + "px");
 				$("#contentList").css("height", (CurrentHeight - 100) + "px");
 				$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-				$("#divList").css("height", (CurrentHeight - 235) + "px");
+				$("#divList").css("height", (CurrentHeight - 245) + "px");
 				
 				setInitOrder();
 			}	

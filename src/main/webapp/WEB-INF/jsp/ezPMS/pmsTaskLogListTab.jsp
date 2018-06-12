@@ -40,6 +40,7 @@ var orderWhat = "";
 var orderHow = "";
 var searchContent = "";
 var searchStatus = "";
+var limit = 10;
 
 $(function(){
 	
@@ -60,7 +61,7 @@ function setContentList() {
 		taskId : taskId,
 		currentPage : currentPage,
 		totalCount : totalCount,
-		listNumber : 5,
+		listNumber : limit,
 		//내용 header 정렬
 		orderWhat : orderWhat,
 		orderHow : orderHow,
@@ -161,11 +162,11 @@ function setContentTitle() {}
 }
 
 #divList {
-	height: 250px !important;
+	height: 400px !important;
 }
 
 #projectListBody {
-	height: 250px !important;
+	height: 400px !important;
 }
 </style>
 </head>

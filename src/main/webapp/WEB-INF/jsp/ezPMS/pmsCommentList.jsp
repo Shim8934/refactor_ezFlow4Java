@@ -187,7 +187,7 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-		$("#divList").css("height", (CurrentHeight - 235) + "px");
+		$("#divList").css("height", (CurrentHeight - 245) + "px");
 		$("#divList").css("overflow", "auto");
 	});
 </script>
@@ -198,7 +198,7 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%" style="text-align:center;">작성자</th>
 				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%" style="text-align:center;">작업이름</th>
 				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'>내용</th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="15%" style="text-align:center;">작성일시</th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%" style="text-align:center;">작성일시</th>
 				<th style="cursor: default; text-align:center;" width="15%">수정/삭제</th>
 			</tr>
 		</thead>
@@ -225,7 +225,7 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 </div>
 
 <c:if test="${userRole ne 3}">
-	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px;">
+	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin-top: 20px;">
 		<div class="sendComment_layout">
 			<div class="comment_input_layout" style="border: none; width: 86%;">
 				<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>

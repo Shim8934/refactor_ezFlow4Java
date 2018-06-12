@@ -24,10 +24,11 @@
 	
 </script>
 <style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;width:100%;}
-.tg td{padding:5px 5px;border:1px solid #ccc;}
-.tg th{padding:5px 5px;border:1px solid #ccc;width:60px;}
-th.overviewTh{height:175px;}
+.tg    {border-collapse:collapse;border-spacing:0;width:100%;}
+.tg tr {height: 30px;}
+.tg td {padding:5px 5px;border:1px solid #ccc;}
+.tg th {padding:5px 5px;border:1px solid #ccc;width:60px;}
+th.overviewTh{height:310px;}
 td.overviewTd{vertical-align:top;}
 </style>
 </head>
