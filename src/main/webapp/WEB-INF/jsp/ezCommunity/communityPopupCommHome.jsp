@@ -495,16 +495,16 @@
 		                    }
 		                    
 		                    var wWeight = "330";
-		                    var wHeight = "170";
+		                    var wHeight = "197";
 		                    var heigth = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
 		                    var left = (width - wWeight) / 2;
 		                    var top = (heigth - wHeight) / 2;
 		                    
 		                    if (newMemberConfirmType == "2") {
-		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    } else if (newMemberConfirmType == "3") {
-		                        window.open("/ezCommunity/join2.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                        window.open("/ezCommunity/join2.do?no=" + code, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    }
 		                    
 		                    break;
@@ -619,16 +619,16 @@
 		                    }
 		                    
 		                    var wWeight = "330";
-		                    var wHeight = "170";
+		                    var wHeight = "197";
 		                    var height = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
 		                    var left = (width - wWeight) / 2;
 		                    var top = (height - wHeight) / 2;
 		                    
 		                    if (newMemberConfirmType == "2") {
-		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    } else if (newMemberConfirmType == "3") {
-		                        window.open("/ezCommunity/join2.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                        window.open("/ezCommunity/join2.do?no=" + code, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    }
 		                    
 		                    break;

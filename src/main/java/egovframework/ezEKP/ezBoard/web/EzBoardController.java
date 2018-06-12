@@ -5603,11 +5603,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
+		/* 2018-06-11 홍승비 - 사진 추가 시 마지막 imageID 비교를 위해 추가 */
+		String lastItemID = ezBoardService.getLastImageID(boardID, itemID, userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("lastItemID", lastItemID);
 
 		logger.debug("addImageItem ended");
 		return "ezBoard/boardAddImageItem";
@@ -5648,8 +5652,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String g_ImageUrl = "";
 		String listImages = "";
 		String mainFg = "";
-		String g_Width = "230";
-		String g_Height = "230";
 		int imageCnt = 10;
 		int pStartRow = (page - 1) * imageCnt + 1;
 		int pEndRow = page * imageCnt;
@@ -5684,8 +5686,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("mainFg", mainFg);
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("guBun", guBun);
-		model.addAttribute("g_Width", g_Width);
-		model.addAttribute("g_Height", g_Height);
 		model.addAttribute("orgImagePath", listImages);
 
 		logger.debug("modifyImageItem ended");

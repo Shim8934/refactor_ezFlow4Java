@@ -283,4 +283,7 @@ public interface EzBoardService {
 	//2018-06-08 김혜정
 	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception;
 
+	//2018-06-11 홍승비
+	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
+	
 }

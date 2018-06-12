@@ -754,7 +754,7 @@
 		                }
 		                else {
 		                    swidth = 440;
-		                    sheight = 500;
+		                    sheight = 520;
 		                    
 		                    pleft = (pwidth - swidth) / 2;
 				            ptop = (pheight - sheight) / 2;
@@ -770,8 +770,8 @@
 		            			swidth = 440;
 			               		sheight = 460;
 		            		} else {
-			            		swidth = 440;
-				                sheight = 480;
+			            		swidth = 460;
+				                sheight = 380;
 		            		}
 		            	} else {
 		               		swidth = 460;
@@ -793,7 +793,7 @@
 		        function btn_Add_Onclick()
 		        {
 		            var swidth = 500;
-		            var sheight = 580;
+		            var sheight = 525;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
@@ -934,7 +934,7 @@
 		            }
 		        }
 		
-		        function imageonmouse(reslut)
+		        function imageonmouse(result)
 		        {
 		            for(var i = 0; i < ImageCount; i++)
 		            {
@@ -948,14 +948,14 @@
 		                    document.getElementById("image" + i).style.filter = "Alpha(Opacity=35)";
 		            }
 		
-		            document.getElementById(reslut).style.border = "#888 1px solid";
-					document.getElementById(reslut).style.margin = "0px 4px";
-		            document.getElementById(reslut).style.width = imgWidth;
-		            document.getElementById(reslut).style.height = imgHeight;
+		            document.getElementById(result).style.border = "#888 1px solid";
+					document.getElementById(result).style.margin = "0px 4px";
+		            document.getElementById(result).style.width = imgWidth;
+		            document.getElementById(result).style.height = imgHeight;
 		            if (CrossYN())
-		                document.getElementById(reslut).style.opacity = "1";
+		                document.getElementById(result).style.opacity = "1";
 		            else
-		                document.getElementById(reslut).style.filter = "Alpha(Opacity=100)";
+		                document.getElementById(result).style.filter = "Alpha(Opacity=100)";
 		        }
 		
 		        /* 2018-06-01 홍승비 - 포토/썸네일게시물 하단 UI 수정 */
@@ -970,7 +970,7 @@
 		                image.style.filter = "Alpha(Opacity=100)";
 		            }
 		            
-		            image.style.border = "#888 1px solid";
+		            image.style.border = "#888 0.015px solid";
 					image.style.margin = "0px 4px";
 		        }
 		        function imagemouseout(image)
