@@ -1031,7 +1031,8 @@
 		    
 		     /* 2018-06-08 김민성 - 게시판 검색 레이어팝업 변경 */ 
 		    function doLayerPopup(obj) {
-		    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);      
+		    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+		    	parent.frames["left"].document.body.style.overflow = "hidden";
 		    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 	        	$("#srarchpopup").css("left", popupX);
 		    	$("#srarchpopup").modal();
@@ -1059,11 +1060,10 @@
 		            BoardSearchOptionHidden();
 		        } */
 		    }
-		    function BoardSearchOptionHidden() {
+		    function BoardSearchOptionHidden() {    	
+		    	parent.frames["left"].document.body.style.overflow = "";
 		        document.getElementById("layer_popup").style.display = "none";
-		        document.getElementById("SearchOption").setAttribute("mode", "off");
-		        
-		        $('.leftbody', parent.frames["left"].document).css("overflow", "auto");
+		        document.getElementById("SearchOption").setAttribute("mode", "off");		        
 		        
 		        $.modal.close();
 		    }
