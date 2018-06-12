@@ -469,11 +469,24 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Float) select("EzPMSDAO.getProjectWeight", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getHolidaysCount(Map<String, Object> map) {
+		return (List<String>) select("EzPMSDAO.getHolidaysCount", map);
+	}
+	
 	public void updateGroupProgress(Map<String, Object> map){
 		update("EzPMSDAO.updateGroupProgress", map);
 	}
 	
 	public void updateGroupDate(Map<String, Object> map){
 		update("EzPMSDAO.updateGroupDate", map);
+	}
+
+	public ProjectGroupVO getGroupBoundaryDate(Map<String, Object> map) {
+		return (ProjectGroupVO) select("EzPMSDAO.getGroupBoundaryDate", map);
+	}
+	
+	public void updateTaskProgress(ProjectTaskVO taskVO) {
+		update("EzPMSDAO.updateTaskProgress", taskVO);
 	}
 }

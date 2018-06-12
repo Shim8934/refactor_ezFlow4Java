@@ -781,4 +781,40 @@ public class EzPMSController2 {
 		return "json";
 	}
 	
+	/**
+	 * 업무 실제진행률 수정.
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/updateTaskProgress.do")
+	public String updateTaskProgress(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS updateTaskProgress started");
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String taskId = (String)param.get("taskId");
+			String userId = userInfo.getId();
+			
+			param.put("userId", userId);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/progress/", param, request, "put", null);
+			String status = resultBody.get("status").toString();
+			
+//			if(status.equals("ok")) {
+//				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+//				model.addAttribute("taskDetails", taskDetails);
+//			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS updateTaskProgress ended");
+		
+		return "json";
+	}
+	
 }

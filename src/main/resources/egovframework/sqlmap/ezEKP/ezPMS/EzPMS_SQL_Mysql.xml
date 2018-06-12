@@ -2331,7 +2331,7 @@
 			TASK_ID = #taskId# 
 		AND
 			TENANT_ID = #tenantId#
-	]]>		
+	]]>	
 	</update>
 	
 	<select id="EzPMSDAO.getFilePath" parameterClass="Map" resultClass="java.util.HashMap">
@@ -2927,15 +2927,89 @@
 		]]>
 	</select>
 	
+	<select id="EzPMSDAO.getHolidaysCount" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT
+				HOLIDAYDATE
+			FROM
+				TBL_HOLIDAYLIST
+			WHERE
+				((HOLIDAYDATE >= #planStartDate# AND HOLIDAYDATE <= #planEndDate#)
+    				OR
+				 ( DATE_FORMAT(HOLIDAYDATE, '%m-%d')  >= #planStartDateShort#
+					AND DATE_FORMAT(HOLIDAYDATE, '%m-%d')  <= #planEndDateShort#
+    				AND ISREPEAT = 1))
+    		 	AND
+					ISREST = 1
+				AND
+					ISUSE = 1
+				AND
+					USECOMPANY = #companyId#
+				AND
+					TENANT_ID = #tenantId#;		
+				
+		]]>
+	</select>
+	
 	<update id="EzPMSDAO.updateGroupDate" parameterClass="map">
 		<![CDATA[
 			UPDATE
 				TBL_PMS_GROUP
 			SET
-				PLAN_START_DATE = (SELECT min(plan_start_date) from tbl_pms_task where tenant_id = #tenantId# and group_id = #groupId#),
-				PLAN_END_DATE = (SELECT max(plan_end_date) from tbl_pms_task where tenant_id = #tenantId# and group_id = #groupId#)
+				PLAN_START_DATE = #planStartDate#,
+				PLAN_END_DATE = #planEndDate#,
+				WORKINGDAY = #workingday#
 			WHERE
 				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getGroupBoundaryDate" parameterClass="map" resultClass="ProjectGroupVO">
+		<![CDATA[
+			select 
+				min(aa.plan_start_date) as planStartDate, 
+			    max(aa.plan_end_date) as planEndDate
+			from
+			(
+				select 
+					a.plan_start_date, 
+					a.plan_end_date
+				from
+					tbl_pms_task a
+				join
+					(
+						select 
+							group_id
+						from
+							tbl_pms_group
+						where
+							group_id IN ( select group_id from tbl_pms_group where group_id = #groupId# OR ancester_group like concat('%,',#groupId#,',%') OR ancester_group like concat(#groupId#,',%') )
+						and
+							tenant_id = #tenantId#
+						and
+							del_status = 0
+					) b
+				on
+					a.group_id = b.group_id
+				and
+					a.tenant_id = #tenantId#
+				and
+					a.del_status = 0
+			) aa
+				
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateTaskProgress" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				REAL_PROGRESS = #realProgress#
+			WHERE
+				TASK_ID = #taskId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>

@@ -275,4 +275,8 @@ public interface EzBoardService {
 	
 	//2018-05-09 강민수92
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
+	
+	//2018-06-11 홍승비
+	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
+	
 }

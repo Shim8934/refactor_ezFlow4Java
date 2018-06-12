@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>작업 이력</title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css"
 	type="text/css" />
 <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
@@ -24,17 +24,17 @@
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script>
-	var projectId = "${projectId}";
+	var projectId = "<c:out value='${projectId}'/>";
 	var CurrentHeight = document.documentElement.clientHeight - 100;
 	var taskData = JSON.parse('${data}');
 	var groupId = 0;
 	var currentPage = 1;
-	var totalCount = "${taskListCount}";
+	var totalCount = "<c:out value='${taskListCount}'/>";
 	var orderWhat = "";
 	var orderHow = "";
 	var checkedVal = "";
 	var viewType = "1";
-	var userRole = "${userRole}";
+	var userRole = "<c:out value='${userRole}'/>";
 	
 	//검색을 위한 variables
 	var searchByStatus = "";
