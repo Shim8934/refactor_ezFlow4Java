@@ -254,7 +254,7 @@
 			   			tempTask.status = ganttStatus[tl[i].status];
 			   			tempTask.start = new Date(tl[i].planStartDate).getTime();
 			   			tempTask.end = new Date(tl[i].planEndDate).getTime();
-			   			tempTask.duration = tl[i].realWorkingday;
+			   			tempTask.duration = tl[i].workingday;
 			   			tempTask.weight = tl[i].weight;
 			   			tempTask.startIsMilestone = "";
 			   			tempTask.endIsMilestone = "";

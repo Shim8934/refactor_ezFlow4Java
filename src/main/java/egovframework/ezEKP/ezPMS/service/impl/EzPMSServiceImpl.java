@@ -678,7 +678,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			updateTaskWDNW(taskVO, taskWorkingday);
 			
 			//업무가 속한 그룹 날짜 업데이트
-			updateGroupDate(taskVO.getProjectId(), taskVO.getGroupId(),taskVO.getTenantId());
+			updateGroupDate(taskVO.getGroupId(), taskVO.getTenantId(), companyId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -770,6 +770,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			//가중치 계산
 			updateTaskWDNW(task, taskWorkingday);
 			
+			//업무가 속한 그룹 날짜 업데이트
+			updateGroupDate(task.getGroupId(), task.getTenantId(), companyId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1770,6 +1772,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			ezPMSDAO.updateTaskStatus(task);
 			
+			//업무가 속한 그룹 날짜 업데이트
+			updateGroupDate(task.getGroupId(), task.getTenantId(), companyId);
+			
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
@@ -2108,14 +2113,38 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateGroupDate(long projectId, long groupId, int tenantId) throws Exception {
+	public void updateGroupDate(long groupId, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("[SERVICE] updateGroupDate started.");
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("projectId", projectId);
 		map.put("groupId", groupId);
 		map.put("tenantId", tenantId);
 		
+		ProjectGroupVO groupVO = new ProjectGroupVO();
+		//그룹에 속한 업무들 중 가장 빠른 계획 시작일과 가장 늦은 계획 종료일을 얻어옴.
+		groupVO = getGroupBoundaryDate(groupId, tenantId);
+		
+		Date startDay = new SimpleDateFormat("yyyy-MM-dd").parse(groupVO.getPlanStartDate());
+		Date endDay = new SimpleDateFormat("yyyy-MM-dd").parse(groupVO.getPlanEndDate());
+		
+		//위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
+		int workingday = getWorkinDays(startDay, endDay, companyId, tenantId);
+		
+		map.put("workingday", workingday);
+		map.put("planStartDate", startDay);
+		map.put("planEndDate", endDay);
+		
 		ezPMSDAO.updateGroupDate(map);
 		LOGGER.debug("[SERVICE] updateGroupDate ended.");
+	}
+
+	@Override
+	public ProjectGroupVO getGroupBoundaryDate(long groupId, int tenantId) throws Exception {
+		LOGGER.debug("[SERVICE] getGroupBoundaryDate started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getGroupBoundaryDate ended.");
+		return ezPMSDAO.getGroupBoundaryDate(map);
 	}
 }
