@@ -7,51 +7,51 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>업무 관련 게시물 페이지</title>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
+<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 
+<!-- time picker-->
+<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script type="text/javascript">
-// 	var boardList;
-	
-// 	$(function(){
-// 		boardList = ${boardList};
-// 	});
-	
- 	var projectId = Number(parent.parent.projectId);
+
+ 	var projectId = Number("${projectId}");
  	var projectName = null;
-	var groupId = Number("${groupId}");
-	var taskId = Number("${taskId}");
+	var groupId = "${groupId}";
+	var taskId = "${taskId}";
 	var taskName = null;
 	var currentPage = 1;
 	var taskDetails = {};
+	var orderWhat = "";
+	var orderHow = "";
+	var limit = 5;
 		
 	$(document).ready(function() {
 		setInitData();
 		currentHeight = $(window).height();
 		$("#projectContent").css("height", currentHeight + "px");
 		$("#contentList").css("height", (currentHeight - 50) + "px");
-		
+			
 		getBoardList();
 	});
-	
-	function goAddBoard() {
-		var feature = GetOpenPosition(790, 800);
-		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&groupId=" + groupId 
-										 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=new", 
-					"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
-	}
 	
 	function getBoardList() {
 		var data = {
 			projectId : projectId,
 			groupId : groupId,
 			taskId : taskId,
-			currentPage : currentPage
+			currentPage : currentPage,
+			limit : limit,
+			//내용 header 정렬
+			orderWhat : orderWhat,
+			orderHow : orderHow
 		}
 		
 		$.ajax({
@@ -62,6 +62,8 @@
 			url : "/ezPMS/getBoardList.do",
 			success : function(contentList) {
 				$("#contentList").html(contentList);
+				
+				setInitOrder();
 			}	
 		});
 	}
@@ -72,82 +74,56 @@
 		getBoardList();
 	}
 	
-	// 메인에서 체크박스로 선택 후 삭제할 때
-	function deleteBoardsAction(itemIds) {
-		data = {
-			itemIds : itemIds,
-			projectId : projectId
-		}
-		
-		$.ajax({
-			type : "DELETE",
-			url : "/ezPMS/deleteBoard.do",
-			dataType : "json",
-			contentType : "application/json; charset=UTF-8",
-			data : JSON.stringify(data),
-			success : function(result) {
-				if(result.data == 'success') {
-					getBoardList();
-				} else {
-					alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
-				}	
-			},
-			error : function() {
-				alert("삭제에 실패하였습니다.");
-			}
-		})
-	}
-	
-	// 조회 화면에서 삭제할 때
-	function deleteBoardAction(itemIds) {
-		data = {
-			itemIds : itemIds,
-			projectId : projectId
-		}
-		
-		$.ajax({
-			type : "DELETE",
-			url : "/ezPMS/deleteBoard.do",
-			dataType : "json",
-			contentType : "application/json; charset=UTF-8",
-			data : JSON.stringify(data),
-			success : function(result) {
-				if(result.data == 'success') {
-					boardDetail.close();
-					getBoardList();
-				} else {
-					boardDetail.alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
+	function setInitOrder() {
+		$("table.mainlist th").each(function() {
+			if (orderWhat == $(this).attr("data-order")) {
+				if (orderHow == 'asc') {
+					$(this).attr("data-sort", "asc");
+					$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
+				} else if (orderHow == 'desc') {
+					$(this).attr("data-sort", "desc");
+					$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
 				}
-			},
-			error : function() {
-				alert("삭제에 실패하였습니다.");
 			}
-		})
+		});
+
+		boardListScroll();
 	}
 	
-	// 체크박스 전체선택 혹은 해제
-	function selectAllTR(elem) {
-		if($(elem).is(":checked")) {
-			 $('input:checkbox[name="boardCheckbox"]').each(function() {
-				 $(this).prop("checked","true");
-				 $(this).parent().parent().addClass("selectedTR");
-			 });
-		} else {
-			 $('input:checkbox[name="boardCheckbox"]').each(function() {
-				 $(this).removeProp("checked","true");
-				 $(this).parent().parent().removeClass("selectedTR");
-			 });
+	function boardListScroll() {
+		var thWidth = document.getElementById("tableHeader").clientWidth
+				- document.getElementById("tableBody").clientWidth;
+		if (thWidth > 0) {
+			$("#BoardList_TH").append('<th style=width:2px;></th>');
 		}
+	}
+	
+	//헤더 리스트 셋팅
+	function setListOrder(elem){
+		orderWhat = $(elem).attr("data-order");
+		orderHow = $(elem).attr("data-sort");
+		
+		if(orderHow == null){
+			orderHow='asc';
+		} else if(orderHow == 'asc'){
+			orderHow='desc';
+		} else if(orderHow == 'desc'){
+			orderHow='asc';
+		}
+		
+		getBoardList();
 	}
 	
 	function setInitData(){
 		taskDetails = JSON.parse(parent.document.querySelector("[name='frameParamTaskDetails']").value);
 		projectName = taskDetails.projectName;
 		taskName = taskDetails.taskName;
+		
+		if(!taskName) {
+			taskName = taskDetails.groupName;
+		}
 	}
 </script>
-<style type="text/css">
-</style>
 </head>
 <body>
 	<div id="projectContent">

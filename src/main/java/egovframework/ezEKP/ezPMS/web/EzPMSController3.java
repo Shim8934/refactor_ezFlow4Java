@@ -195,6 +195,8 @@ public class EzPMSController3 {
 	public String addBoard(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) throws Exception {		
 		LOGGER.debug("ezPMS addBoard started");
 		
+		LOGGER.debug("groupId : " + jsonParam.get("groupId") + ", taskId : " + jsonParam.get("taskId"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		String mode = (String) jsonParam.get("mode");
@@ -329,13 +331,13 @@ public class EzPMSController3 {
 		return "/ezPMS/pmsTaskSelectionTree";
 	}
 	
-	@RequestMapping(value="/ezPMS/getBoardList.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezPMS/getBoardList.do")
 	public String getBoardList(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) throws Exception {	
 		LOGGER.debug("ezPMS getBoardList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		int totalCount = 0;
-		int listCnt = 10;
+		int listCnt = (int) param.get("limit");
 		int countPage = 10;
 		int currentPage = (int) param.get("currentPage");
 		int projectId = (int) param.get("projectId");
@@ -352,7 +354,6 @@ public class EzPMSController3 {
 			model.addAttribute("paging", paging);
 			
 			param.put("startRow", paging.getStartCount());
-			param.put("limit", listCnt);
 			
 			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 			status = resultBody.get("status").toString();
@@ -744,7 +745,7 @@ public class EzPMSController3 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		int totalCount = 0;
-		int listCnt = 10;
+		int listCnt = (int) param.get("listCnt");
 		int countPage = 10;
 		int currentPage = (int) param.get("currentPage");
 		String projectId = (String) param.get("projectId");
@@ -761,7 +762,6 @@ public class EzPMSController3 {
 			model.addAttribute("paging", paging);
 			
 			param.put("startRow", paging.getStartCount());
-			param.put("limit", listCnt);
 			
 			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 			status = resultBody.get("status").toString();

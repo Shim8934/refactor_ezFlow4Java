@@ -944,11 +944,17 @@
 	   			  var groupId = taskId.substring(task.id.indexOf("_") + 2, task.id.lastIndexOf("_"));
 	   			  
 	   			  if (task.id.substring(1).indexOf("t") != -1) {
-	   				var feature = GetOpenPosition(0, 0);
-		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user");
+	   				var feature = GetOpenPosition(790, 800);
+	   				window.open("/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user",
+								"", "width=835, height=800, resizable=no, scrollbars=no, status=no" + feature);
+	   				/* var feature = GetOpenPosition(0, 0);
+		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user"); */
 	   			  } else {
-	   				var feature = GetOpenPosition(0, 0);
-		   			DivPopUpShow(845, 600, "/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId);  
+	   				var feature = GetOpenPosition(790, 800);
+	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId,
+								"", "width=835, height=800, resizable=no, scrollbars=no, status=no" + feature);
+	   			/* 	var feature = GetOpenPosition(0, 0);
+		   			DivPopUpShow(845, 600, "/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId);   */
 	   			  } 
 	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
 	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;

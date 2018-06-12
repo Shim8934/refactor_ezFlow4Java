@@ -30,6 +30,11 @@
 	var currentPage = 1;
 	var orderWhat = "";
 	var orderHow = "";
+	var listCnt = 5;
+	
+	var projectName = null;
+	var taskName = null;
+	var taskDetails = {};
 	
 	//검색을 위한 variables
 	var searchByUser = "";
@@ -38,16 +43,11 @@
 	var searchByContent = "";
 	
 	$(document).ready(function() {
-		
-		CurrentHeight = $(window).height() - 100;
-		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 160) + "px");
-		$("#divList").css("height", (CurrentHeight - 150) + "px");
-
-		getDatePicker();
-		
+		setInitData();
+		currentHeight = $(window).height();
+		$("#projectContent").css("height", currentHeight + "px");
+		$("#contentList").css("height", currentHeight + "px");
+	
 		getCommentList();
 	});
 	
@@ -58,6 +58,7 @@
 			groupId : groupId,
 			taskId : taskId,
 			currentPage : currentPage,
+			listCnt : listCnt,
 			//내용 header 정렬
 			orderWhat : orderWhat,
 			orderHow : orderHow,
@@ -128,129 +129,18 @@
 		getCommentList();
 	}
 	
-	function getDatePicker() {
-		$("#Sdatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			beforeShow: function (input) {
-				var i_offset = $(input).offset();
-				setTimeout(function () {
-					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-				})
-			}
-		});
-
-		$("#Edatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			beforeShow: function (input) {
-				var i_offset = $(input).offset();
-				setTimeout(function () {
-					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-				})
-			}
-		});
+	function setInitData(){
+		taskDetails = JSON.parse(parent.document.querySelector("[name='frameParamTaskDetails']").value);
+		projectName = taskDetails.projectName;
+		taskName = taskDetails.taskName;
 		
-		var SDate = new Date();
-		var EDate = new Date();
-
-		$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		$("#Sdatepicker").datepicker('setDate', "");
-		
-		$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		$("#Edatepicker").datepicker('setDate', "");
-		
-		$.datepicker.regional["<spring:message code='main.t0619' />"] = {
-				closeText: "<spring:message code='main.t3' />",
-				prevText: "<spring:message code='main.t0604' />",
-				nextText: "<spring:message code='main.t0605' />",
-				currentText: "<spring:message code='main.t0606' />",
-				monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-				             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-				             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-				             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-				monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-				                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-				                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-				                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-				dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
-				           "<spring:message code='main.t0627' />"],
-				dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				                "<spring:message code='main.t0627' />"],
-				dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				              "<spring:message code='main.t0627' />"],
-				weekHeader: "Wk",
-				dateFormat: "yy-mm-dd",
-				firstDay: 0,
-				isRTL: false,
-				duration: 200,
-				showAnim: "show",
-				showMonthAfterYear: true
-		  };
-		  
-		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-	}
-	
-	function searchComment() {
-		
-		// 이전 검색을 통해 남아있을 수 있는 값들을 초기화
-		searchByUser = "";
-		searchByStartDate = "";
-		searchByEndDate = "";
-		searchByContent = "";
-		
-		var searchCondition = $("#searchCondition option:selected").val();
-		var searchKeyword = $("#searchKeyword").val();
-		
-		if(searchCondition == 'searchByUser') {
-			searchByUser = searchKeyword;
-		} else if (searchCondition == 'searchByContent') {
-			searchByContent = searchKeyword;
-		} else if (searchCondition == 'searchByWriteDate') {
-			searchByStartDate = $("#Sdatepicker").val();
-			searchByEndDate   = $("#Edatepicker").val();
-		}
-		
-		getCommentList();
-	}
-	
-	function setSearchInput(elem) {
-		if(elem == 'searchByWriteDate') {
-			$("#searchKeyword").css("display", "none");
-			$("#searchDate").css("display", "");
-		} else {
-			$("#searchKeyword").css("display", "");
-			$("#searchDate").css("display", "none");
-		}
-	}
-	
-	function searchKeyEvent() {
-		if(event.keyCode == 13) {
-			searchComment();
+		if(!taskName) {
+			taskName = taskDetails.groupName;
 		}
 	}
 </script>
 
 <style>
-
-	#iconLine {
-		height: 72px;
-		margin-left: 10px;
-		margin-top: 5px;
-		margin-right: 20px;
-	}
-	
 	#contentList {
 		width : 98%;
 		margin-left : 1%;
@@ -266,34 +156,12 @@
 	table.mainlist th {
 		cursor: pointer;
 	}
-	
-	#sendComment {
-		display: none;
-	}
 </style>
 
 </head>
 <body>
-	<div id="iconLine">
-		<div style="float: right;">
-			<select id="searchCondition" onchange="setSearchInput(this.value)">
-				<option value="searchByUser">작성자</option>
-				<option value="searchByContent">내용</option>
-				<option value="searchByWriteDate">작성일</option>
-			</select>
-			<input id="searchKeyword" type="text" onkeydown="searchKeyEvent()"/>
-			<span id="searchDate" style="display: none;">
-				<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
-				<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-				<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
-			</span>
-			<a class="imgbtn" onclick="searchComment()" style="margin-left:3px;"><span>검색</span></a>
-		</div>
-	</div>
-	<div id="contentList" style="overflow: auto">
-		<span id="MailListRayer"
-			style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-		</span>
+	<div id="projectContent">
+		<div id="contentList"></div>
 	</div>
 </body>
 </html>

@@ -422,6 +422,7 @@
 }
 </style>
 </head>
+<body>
 <div id="taskTree"></div>
 <div id="projectArea">
 <div id="projectContent">
