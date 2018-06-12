@@ -254,7 +254,7 @@
 			   			tempTask.status = ganttStatus[tl[i].status];
 			   			tempTask.start = new Date(tl[i].planStartDate).getTime();
 			   			tempTask.end = new Date(tl[i].planEndDate).getTime();
-			   			tempTask.duration = tl[i].workingday;
+			   			tempTask.duration = tl[i].realWorkingday;
 			   			tempTask.weight = tl[i].weight;
 			   			tempTask.startIsMilestone = "";
 			   			tempTask.endIsMilestone = "";
@@ -932,45 +932,42 @@
 	   				var taskId = $(this).attr("taskid");
 	   				var isGroup = taskId.substring(taskId.lastIndexOf("_") + 1, taskId.lastIndexOf("_") + 2);
 	   				
-	   				if (taskId.indexOf("_") == -1) {
-	   					isGroup = "p";
-	   				}
+	   				//선택한 작업이 업무/그룹/프로젝트 인지 구분.
+		   			if(taskId.indexOf("_t") !== -1){
+		   				isGroup = "t";
+		   			}
+		   			else if(taskId.indexOf("_g") !== -1){
+		   				isGroup = "g";
+		   			}
+		   			else if(taskId){
+		   				isGroup = "p";
+		   			}
 	   				
-	   				taskId = taskId.substring(taskId.lastIndexOf("_") + 2);
 	   				var infoHTML = "";
-	   				
-	   				if (isGroup == "g") {
-	   					for (var i = 0; i < groupList.length; i++) {
-	   						if (groupList[i].groupId == taskId) {
-	   							infoHTML += "<div style='background-color:#d1d1d1'>" + groupList[i].groupName + "</div>";
+	   				if(isGroup !== "p"){
+	   					for (var i = 0; i < ge.tasks.length; i++) {
+	   						if (ge.tasks[i].id == taskId) {
+	   							var start = dateToYYYYMMDD(new Date(ge.tasks[i].start));
+	   		   					var end = dateToYYYYMMDD(new Date(ge.tasks[i].end));
+	   							infoHTML += "<div style='background-color:#d1d1d1'>" + ge.tasks[i].name + "</div>";
 	   							infoHTML += "<div>";
-	   							infoHTML += "시작일 : " + groupList[i].planStartDate + "<br>";
-	   							infoHTML += "종료일 : " + groupList[i].planEndDate + "<br>";
-	   							infoHTML += "남은기간 : " + groupList[i].restDueday + "<br>";
-	   							infoHTML += "진행률 : " + groupList[i].realProgress + "<br>";
+	   							infoHTML += "시작일 : " + start + "<br>";
+	   							infoHTML += "종료일 : " + end + "<br>";
+	   							infoHTML += "남은기간 : " + ge.tasks[i].duration + "<br>";
+	   							infoHTML += "진행률 : " + ge.tasks[i].progress + "<br>";
 	   							infoHTML += "</div>";
 	   						}
 	   					}
-	   				} else if (isGroup == "p") {
-						infoHTML += "<div style='background-color:#d1d1d1'>" + projectDetails.projectName + "</div>";
+	   				}else{
+	   					var start = dateToYYYYMMDD(new Date(ge.tasks[0].start));
+	   					var end = dateToYYYYMMDD(new Date(ge.tasks[0].end));
+						infoHTML += "<div style='background-color:#d1d1d1'>" + ge.tasks[0].name + "</div>";
 						infoHTML += "<div>";
-						infoHTML += "시작일 : " + projectDetails.planStartDate + "<br>";
-						infoHTML += "종료일 : " + projectDetails.planEndDate + "<br>";
-						infoHTML += "남은기간 : " + projectDetails.restDueday + "<br>";
-						infoHTML += "진행률 : " + projectDetails.progress + "<br>";
+						infoHTML += "시작일 : " + start + "<br>";
+						infoHTML += "종료일 : " + end + "<br>";
+						infoHTML += "남은기간 : " + ge.tasks[0].duration + "<br>";
+						infoHTML += "진행률 : " + ge.tasks[0].progress + "<br>";
 						infoHTML += "</div>";
-	   				} else {
-	   					for (var i = 0; i < taskList.length; i++) {
-	   						if (taskList[i].taskId == taskId) {
-	   							infoHTML += "<div style='background-color:#d1d1d1'>" + taskList[i].taskName + "</div>";
-	   							infoHTML += "<div>";
-	   							infoHTML += "시작일 : " + taskList[i].planStartDate + "<br>";
-	   							infoHTML += "종료일 : " + taskList[i].planEndDate + "<br>";
-	   							infoHTML += "남은기간 : " + taskList[i].restDueday + "<br>";
-	   							infoHTML += "진행률 : " + taskList[i].realProgress + "<br>";
-	   							infoHTML += "</div>";
-	   						}
-	   					}
 	   				}
 	   				
 	   				$(".tooltipBox").html(infoHTML);
