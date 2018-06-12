@@ -177,6 +177,7 @@ public class EzPMSGWController {
 			project.put("sortOrder", 1);
 			project.put("status", "W");
 			project.put("upperGroupId", 0);
+			project.put("companyId", companyId);
 			
 			Long projectId = ezPMSService.addNewProject(project);
 			
@@ -217,6 +218,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

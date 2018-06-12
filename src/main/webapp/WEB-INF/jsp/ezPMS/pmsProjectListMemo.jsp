@@ -37,6 +37,7 @@ $(function(){
 	</c:forEach>
 	
 	for (var i = 0; i < projectList.length; i++) {
+		console.log(projectList[i].status);
 		if (projectList[i].status == "P") {
 		 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
 		} else if (projectList[i].status == "C") {

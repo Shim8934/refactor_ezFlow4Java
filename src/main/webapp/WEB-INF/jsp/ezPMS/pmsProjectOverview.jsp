@@ -358,7 +358,7 @@ function changeStatus(status) {
 	}
 	
 	if (response == true) {
-		data = {
+		var data = {
 				nowStatus : nowStatus,
 				status : changeStatus,
 				projectList : projectId

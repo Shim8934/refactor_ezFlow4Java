@@ -283,6 +283,10 @@
 	#searchDiv {
 		margin-left : 11px;
 	}
+	
+	.mainlist tr:hover {
+		background-color: rgb(244, 245, 245);
+	}
 </style>
 
 </head>

@@ -403,7 +403,7 @@
 }
 
 .listRow:hover {
-	background-color: rgb(233, 241, 255);
+	background-color: rgb(244, 245, 245);
 }
 
 #searchDiv {

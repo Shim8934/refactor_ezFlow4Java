@@ -376,6 +376,10 @@
 	   				window.open("/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + taskId + "&userIdType=user",
 							"", "width=835, height=800, resizable=no, scrollbars=no, status=no" + feature);
 	   			}
+	   			else if(ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1){
+		   			ge.editor.openFullEditor(curTask);
+		   			return;
+	   			}
 	   			else{
 	   				taskId = curTask.id.match(/g(\d+)/)[1];
 	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + taskId,
