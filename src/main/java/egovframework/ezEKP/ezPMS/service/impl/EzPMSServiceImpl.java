@@ -2125,7 +2125,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Date endDay = new SimpleDateFormat("yyyy-MM-dd").parse(groupVO.getPlanEndDate());
 		
 		//위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
-		int workingday = getWorkinDays(startDay, endDay, companyId, tenantId);
+		int workingday = getWorkingDays(startDay, endDay, companyId, tenantId);
 		
 		map.put("workingday", workingday);
 		map.put("planStartDate", startDay);
