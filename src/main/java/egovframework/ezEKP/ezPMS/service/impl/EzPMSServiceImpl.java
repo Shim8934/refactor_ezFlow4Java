@@ -2149,9 +2149,38 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public void updateTaskProgress(ProjectTaskVO taskVO) throws Exception {
 		LOGGER.debug("[SERVICE] updateTaskProgress started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", taskVO.getGroupId());
+		map.put("tenantId", taskVO.getTenantId());
 		
+		//업무의 진행률을 업데이트 해준다.
 		ezPMSDAO.updateTaskProgress(taskVO);
 		
+		//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+		if(!taskVO.getGroupId().equals(0L)){
+			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
+			String[] ancGroupArr = ancesterGroup.split(",");
+			
+			for(int i = 0; i < ancGroupArr.length; i++){
+				map.put("groupId", ancGroupArr[i]);
+				ezPMSDAO.updateGroupProgress(map);
+			}
+		}
+		
+		//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+		ezPMSDAO.updateProjectProgress(taskVO);
+		
 		LOGGER.debug("[SERVICE] updateTaskProgress ended.");
+	}
+
+	@Override
+	public String getAncesterGroup(Long groupId, int tenantId) throws Exception {
+		LOGGER.debug("[SERVICE] getAncesterGroup started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getAncesterGroup ended.");
+		return ezPMSDAO.getAncesterGroup(map);
 	}
 }

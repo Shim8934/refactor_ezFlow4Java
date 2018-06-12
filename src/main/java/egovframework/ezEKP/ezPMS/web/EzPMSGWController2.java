@@ -1062,9 +1062,29 @@ public class EzPMSGWController2 {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			ProjectTaskVO taskVO = new ProjectTaskVO();
+			float realProgress = Float.parseFloat(request.getParameter("progress"));
 			taskVO.setTaskId(Long.parseLong(taskId));
+			taskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			
+			String groupId = request.getParameter("groupId") != "" ? request.getParameter("groupId") : "";
+			if(!groupId.equals("")){
+				taskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
+			}else{
+				taskVO.setGroupId(0L);
+			}
+			
 			taskVO.setTenantId(info.getTenantId());
-			taskVO.setRealProgress(Float.parseFloat(request.getParameter("progress")));
+			taskVO.setRealProgress(realProgress);
+			
+			// 실제 진행률이 100 이상이면 해당 업무의 상태를 완료로 반영.
+			if(realProgress >= 100){
+				taskVO.setStatus("C");
+				taskVO.setRealProgress(100.0F);
+			}
+			else{
+				taskVO.setStatus(request.getParameter("status"));
+			}
+			
 			
 			ezPMSService.updateTaskProgress(taskVO);
 			
