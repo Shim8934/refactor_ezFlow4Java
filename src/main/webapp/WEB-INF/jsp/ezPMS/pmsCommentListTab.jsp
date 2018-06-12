@@ -46,7 +46,7 @@
 		setInitData();
 		currentHeight = $(window).height();
 		$("#projectContent").css("height", currentHeight + "px");
-		$("#contentList").css("height", currentHeight + "px");
+		$("#contentList").css("height", (currentHeight - 50) + "px");
 	
 		getCommentList();
 	});
@@ -140,12 +140,7 @@
 	}
 </script>
 
-<style>
-	#contentList {
-		width : 98%;
-		margin-left : 1%;
-	}
-	
+<style>	
 	table.mainlist th, table.mainlist td {
 		overflow: hidden;
 		white-space: nowrap;

@@ -124,6 +124,11 @@
 		}
 	}
 </script>
+<style>
+#divList {
+	height: 250px !important;
+}
+</style>
 </head>
 <body>
 	<div id="projectContent">
