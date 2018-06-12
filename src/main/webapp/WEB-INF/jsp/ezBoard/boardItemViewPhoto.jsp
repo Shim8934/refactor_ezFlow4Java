@@ -970,7 +970,7 @@
 		                image.style.filter = "Alpha(Opacity=100)";
 		            }
 		            
-		            image.style.border = "#888 1px solid";
+		            image.style.border = "#888 0.015px solid";
 					image.style.margin = "0px 4px";
 		        }
 		        function imagemouseout(image)
