@@ -754,7 +754,7 @@
 		                }
 		                else {
 		                    swidth = 440;
-		                    sheight = 500;
+		                    sheight = 520;
 		                    
 		                    pleft = (pwidth - swidth) / 2;
 				            ptop = (pheight - sheight) / 2;
@@ -770,8 +770,8 @@
 		            			swidth = 440;
 			               		sheight = 460;
 		            		} else {
-			            		swidth = 440;
-				                sheight = 480;
+			            		swidth = 460;
+				                sheight = 380;
 		            		}
 		            	} else {
 		               		swidth = 460;
@@ -970,7 +970,7 @@
 		                image.style.filter = "Alpha(Opacity=100)";
 		            }
 		            
-		            image.style.border = "#888 1px solid";
+		            image.style.border = "#888 0.015px solid";
 					image.style.margin = "0px 4px";
 		        }
 		        function imagemouseout(image)

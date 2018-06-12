@@ -461,7 +461,7 @@
 	       	AND 
 	       		BoardID = #v_pBoardID#
 	        ORDER BY 
-	        	WriteDate ASC
+	        	IMAGEID ASC
 		]]>
 	</select>
 	
