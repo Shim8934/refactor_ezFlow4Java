@@ -465,8 +465,8 @@
     				</c:if>
     			</c:if>
     			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
-    			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
+    			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
   			</ul>  			
 		</div>
 		<script type="text/javascript">

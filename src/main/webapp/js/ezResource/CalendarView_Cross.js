@@ -161,8 +161,6 @@ function CalendarView(pTagetID) {
             oTh.appendChild(mSpan);
             
             /*2018-06-04 구해안 dayText 대신에 DatePicker 시작*/
-            /*var oText = document.createTextNode(" " + dayText + " ");
-            oTh.appendChild(oText);*/
            
             var oText = document.createTextNode(" " + dayText + " ");            
             
@@ -281,25 +279,6 @@ function CalendarView(pTagetID) {
             objElm.appendChild(oTBody);
             var oDiv = document.createElement("DIV");
             oDiv.setAttribute("id", "CalDiv")
-            
-           /* //2018-06-05 구해안 datepicker 호출함수
-            $('.datePick').datepicker({
-           	    changeMonth: true,
-            	changeYear: true,
-            	autoSize: true,
-            	showOn: "both",
-            	buttonImage: "/images/ImgIcon/calendar-month.gif",
-            	buttonImageOnly: true,
-            	onSelect: function (dateText, inst) {
-            		console.log('1' + dateText);
-            	   var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
-            	   var iYear = $('.datePick').val().substring(0,4);
-            	   var iDay = $('.datePick').val().substring(8,10);
-            	    
-            	   sDate.setFullYear(iYear, iMonth, iDay);
-            	   CalendarView("Calendar");
-            	}
-            });*/
         }
 
 
@@ -358,13 +337,14 @@ function CalendarView(pTagetID) {
     	   var iYear = $('.datePick').val().substring(0,4);
     	   var iDay = $('.datePick').val().substring(8,10);
     	    
-    	   var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	   
+    	   var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	
+    	   var beforeYear = sDate.getFullYear();
     	   
     	   sDate.setFullYear(iYear, iMonth, iDay); 
     	   if(typeCal == 0){    		   
-    		   if(iMonth != beforeMonth){
-    			   CalendarView("Calendar");    			   
-    		   }
+    		   if(iYear == beforeYear && iMonth == beforeMonth){
+    			   return;   			   
+    		   }else CalendarView("Calendar");
     	   }else{
     		   CalendarView("Calendar");
     	   }
