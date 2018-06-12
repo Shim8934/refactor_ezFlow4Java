@@ -477,7 +477,7 @@
 	            <td style="vertical-align:top" colspan="4">
 	                <div id="menu">
 	                <ul>
-	                    <li ID='btn_Modify' ><span  onclick="btn_ImgAddOnclick()" ><spring:message code='ezBoard.t279'/></span></li>
+	                    <li ID='btn_Modify' ><span  onclick="btn_ImgAddOnclick()" ><spring:message code='ezBoard.t98'/></span></li>
 	                    <li ID='Li1' ><span  onclick="btn_PhotoAttachAdd()" ><spring:message code='ezBoard.t1001'/></span></li>
 	                    <li ID='Li2' ><span  onclick="btn_PhotoAttachDel()" ><spring:message code='ezBoard.t1003'/></span></li>
 	                </ul>
