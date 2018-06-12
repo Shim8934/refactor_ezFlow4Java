@@ -390,7 +390,7 @@ button.PHBtn {
 .detailsTable .detailsTable-th{background-color:#f8f8fa;}
 .detailsTable .dateTd{width:180px}
 .mainBodyTop{margin-top:8px;width:818px;}
-.mainBodyMid{height:320px;}
+.mainBodyMid{height:330px;}
 .statusDivBrd{width:165px;height:168px;float:left;border: 1px solid #ccc;border-right:0px;}
 .statusChgBtn{float:left;margin:3px 25px;border:1px solid #ddd;border-radius:5px; padding:0px 7px; cursor:pointer;}
 .taskUpdateBtn{display:inline-block;width:100px;height:16px;float:right;top:25px;position:relative;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px;cursor:pointer;z-index:101;}

@@ -332,7 +332,7 @@ function moveToPage(target) {
 		var clickTabId = "1tab5";
 		var nowTabAttr = "1tab0";
 		changeTab(clickTabId, nowTabAttr);
-		$("#FBoard_ifrm", parent.document).attr("src", "/ezPMS/getComment.do");
+		$("#FBoard_ifrm", parent.document).attr("src", "/ezPMS/getCommentMain.do?projectId=" + projectId + "&onlyGroup=false");
 	} else if (target == "taskLog") {
 		var clickTabId = "1tab4";
 		var nowTabAttr = "1tab0";

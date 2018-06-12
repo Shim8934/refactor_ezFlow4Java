@@ -195,9 +195,9 @@
 					</td>
 					<td>${fn:substring(commentVO.writeDate, 0, 19)}</td>
 					<td>
-						<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezLadder/icon_game03_no.png" height="25"/></span>
-						<span onclick="saveComment(this)"   class="saveBtn"   style="cursor: pointer; display: none;"><img src="" alt="저장" height="25"/></span>
-						<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezLadder/icon_imposDelete_thirty.png" height="25"/></span>
+						<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezLadder/icon_game03_no.png" height="20"/></span>
+						<span onclick="saveComment(this)"   class="saveBtn"   style="cursor: pointer; display: none;"><img src="" alt="저장" height="20"/></span>
+						<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezLadder/icon_imposDelete_thirty.png" height="20"/></span>
 					</td>
 				</tr>
 			</c:forEach>
@@ -206,7 +206,7 @@
 </div>
 
 <c:if test="${userRole ne 3}">
-	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px 0px 0px 0px;">
+	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px;">
 		<div class="sendComment_layout">
 			<div class="comment_input_layout" style="border: none; width: 86%;">
 				<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>

@@ -2631,7 +2631,7 @@
 		</isNotEmpty>
 			C.comment_id DESC
 			
-			LIMIT #startRow#, #listCnt#
+			LIMIT #startRow#, #limit#
 	</select>
 	
 	<select id="EzPMSDAO.getCommentListCount" parameterClass="map" resultClass="Integer">
@@ -3009,9 +3009,95 @@
 			UPDATE
 				TBL_PMS_TASK
 			SET
-				REAL_PROGRESS = #realProgress#
+				REAL_PROGRESS = #realProgress#,
+				STATUS = #status#
 			WHERE
 				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateGroupProgress" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				REAL_PROGRESS = (
+									SELECT 
+										SUM(IFNULL(a.REAL_PROGRESS, 0) * a.WEIGHT / 100)
+									FROM
+										TBL_PMS_TASK a
+									JOIN
+										(
+											SELECT 
+												GROUP_ID
+											FROM
+												TBL_PMS_GROUP
+											WHERE
+												GROUP_ID IN ( SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE GROUP_ID = #groupId# OR ancester_group like concat('%,',#groupId#,',%') OR ancester_group like concat(#groupId#,',%') )
+											AND
+												TENANT_ID = #tenantId#
+											AND
+												DEL_STATUS = 0
+										) b
+									on
+										a.GROUP_ID = b.GROUP_ID
+									AND
+										a.TENANT_ID = #tenantId#
+									AND
+										a.DEL_STATUS = 0
+				
+								)
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getAncesterGroup" parameterClass="map" resultClass="string">
+		<![CDATA[
+			SELECT
+				ANCESTER_GROUP
+			FROM
+				TBL_PMS_GROUP
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateProjectProgress" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_PROJECT
+			SET
+				PROGRESS = (
+								SELECT 
+									aa.PROGRESS
+								FROM	
+									(
+										SELECT 
+											SUM(IFNULL(a.REAL_PROGRESS, 0) * a.WEIGHT / 100) AS PROGRESS
+										FROM
+											TBL_PMS_TASK a
+										JOIN
+											TBL_PMS_PROJECT b
+										on
+											a.PROJECT_ID = b.PROJECT_ID
+										AND
+											a.TENANT_ID = #tenantId#
+										AND
+											a.PROJECT_ID = #projectId#
+										AND
+											a.DEL_STATUS = 0
+									) aa
+				
+							)
+			WHERE
+				PROJECT_ID = #projectId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>

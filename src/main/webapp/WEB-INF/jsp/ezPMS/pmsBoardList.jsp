@@ -11,9 +11,7 @@
 		CurrentHeight = $(window).height()-100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
 		$("#taskTree").css("height", CurrentHeight + 10 + "px");
-		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
 		$("#divList").css("height", (CurrentHeight - 150) + "px");
 		$("#divList").css("overflow", "auto");
 		

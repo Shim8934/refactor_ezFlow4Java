@@ -30,7 +30,7 @@
 	var currentPage = 1;
 	var orderWhat = "";
 	var orderHow = "";
-	var listCnt = 5;
+	var limit = 5;
 	
 	var projectName = null;
 	var taskName = null;
@@ -46,7 +46,7 @@
 		setInitData();
 		currentHeight = $(window).height();
 		$("#projectContent").css("height", currentHeight + "px");
-		$("#contentList").css("height", currentHeight + "px");
+		$("#contentList").css("height", (currentHeight - 50) + "px");
 	
 		getCommentList();
 	});
@@ -58,7 +58,7 @@
 			groupId : groupId,
 			taskId : taskId,
 			currentPage : currentPage,
-			listCnt : listCnt,
+			limit : limit,
 			//내용 header 정렬
 			orderWhat : orderWhat,
 			orderHow : orderHow,
@@ -140,12 +140,7 @@
 	}
 </script>
 
-<style>
-	#contentList {
-		width : 98%;
-		margin-left : 1%;
-	}
-	
+<style>	
 	table.mainlist th, table.mainlist td {
 		overflow: hidden;
 		white-space: nowrap;
