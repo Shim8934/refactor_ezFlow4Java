@@ -6,7 +6,15 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1001' /></title>
 	    <style type="text/css">
-	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
+	         .preView {
+	         	width: 70px;
+	         	height: 70px;
+	         	text-align: center;
+	         	border:1px solid silver;
+	         }
+	          textarea {
+	         	resize:none;
+	         }
 	    </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -39,10 +47,17 @@
 	        var g_fileList;
 	        var pNoneActiveX = "YES";
 	        var pUrl = "";
+	        var lastItemID = "000";
+	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 	                document.getElementById("file1").multiple = false;
+	            }
+	            
+	            // imageID 앞쪽에 순서 숫자 붙은 경우에만 substring하여 마지막 imageID 사용
+	            if ("${lastItemID}".substring(0,1) != "{") {
+	            	lastItemID = "${lastItemID}".substring(0,3);
 	            }
 	        };
 	
@@ -209,7 +224,7 @@
 	            }
 	        }
 	
-	        function btn_ImgAddOnclick() { 
+	        function btn_ImgAddOnclick() {
 	            var bodycount = document.getElementById("addimagecontent").childNodes.length;
 	            var file = "";
 	            var content = "";
@@ -252,7 +267,7 @@
 	            strXML += "<ITEMID>" + pItemID + "</ITEMID>";
 	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
 	            
-	            /* 2018-06-08 홍승비 - 사진 추가 시 imageID 순서 유지하며 추가 */
+	           	/* 2018-06-08 홍승비 - 사진 추가 시 imageID 순서 유지하며 추가 */
 	            if(filecount > 0)
 	            {
 	                for (var i = 0; i < filecount ; i++) {
@@ -441,7 +456,7 @@
 		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
 		    	return zeroNum;
 		    }
-	
+	        
 	        function CustomRandom() {
 	            var now = new Date();
 	            var seed = now.getMilliseconds();
@@ -504,7 +519,7 @@
 	                <div id="lstAttachLink">&nbsp;</div>
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr style="display:none;">
 	            <td>
 	                <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	                <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">

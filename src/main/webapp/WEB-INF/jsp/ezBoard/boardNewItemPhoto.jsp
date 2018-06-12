@@ -7,7 +7,15 @@
 	    <title><spring:message code='ezBoard.t368'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <style type="text/css">
-	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
+	         .preView {
+	         	width: 70px;
+	         	height: 70px;
+	         	text-align: center;
+	         	border:1px solid silver;
+	         }
+	         textarea {
+	         	resize:none;
+	         }
 	     </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -285,7 +293,6 @@
 			    }
 	
 			    var importance = "";
-				
 	            importance = "0";
 			    
 	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
@@ -592,20 +599,20 @@
 		    function GetGUID() {
 		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 		    }
-		
+		    
 		    /* 2018-06-08 홍승비 - 사진 순서 정렬을 위한 이미지ID 조정 (000~999)  */
 		    function getZeroNum(count){
 		    	var zeroNum = "000" + count;
 		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
 		    	return zeroNum;
 		    }
-		    
+		
 		    function CustomRandom() {
 		        var now = new Date();
 		        var seed = now.getMilliseconds();
 		        return Math.random(seed) + 1;
 		    }
-		        //
+		     //
 		
 		    function onDragEnter(evt) {
 		        try{
@@ -743,7 +750,7 @@
 		    Append_AttachAdd(filename);
 		</script>
 	</c:if>
-	<body class="popup" onload="javascript:window_onload()">
+	<body class="popup" onload="window_onload()">
 	    <table border="0" class="layout">
 	        <tr>
 	            <td style="height:20px">
@@ -838,7 +845,7 @@
 	  <tr>
 	    <td>
 	        <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm">
+	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm" style="display: none">
 	        <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" accept="image/*" multiple />
 	        <input type="hidden" name="mode" id="mode" />
 	        </form>
@@ -848,6 +855,7 @@
 	    <th><spring:message code='ezBoard.t209'/></th>
 	    <td style="vertical-align:middle" colspan="2"><input type="text" id="txtAbstract"  style="width:100%;word-break:break-all" value="" maxlength=100></td>
 	  </tr>
+	
 	<%-- 2018-06-08 홍승비 - 사용하지 않는 크로스브라우징 코드 주석처리 --%>
 	<%--  
 	    <tr>
@@ -859,6 +867,7 @@
 	    </td>
 	    </tr>
 	--%>
+
 	    </table>
 	    <div id="progdiv" class="progarea" style="z-index:6000;position:absolute;top:370px;left:227px;display:none">
 	        <P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
