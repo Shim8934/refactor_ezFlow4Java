@@ -5,4 +5,5 @@ import org.json.simple.JSONObject;
 
 public interface EzCabinetService {
 	public JSONObject checkCabinetAdmin(HttpServletRequest request, String userId) throws Exception;
+	public JSONObject getCompanyList(HttpServletRequest request, String id) throws Exception;
 }

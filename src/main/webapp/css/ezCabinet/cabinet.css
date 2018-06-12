@@ -1,10 +1,11 @@
 .left_cabinet span {background: url(/images/webfolder/left_webfolder.png) no-repeat left center; display: inline-block; height: 50px; line-height: 48px; font-weight: normal; color: #fff; margin: 0px 0px 0px 16px; padding: 0px 0px 0px 33px; text-align: center; font-family: Malgun Gothic; font-size: 20px;}
 .left_cabinet {height: 52px; background: #0470e4;}
 
-.leftbody ul li:last-child {border-bottom: none;}
 #left {overflow: hidden;}
 #left h3 {border-top: none; border-bottom: none;}
-#left >ul >li {padding: 0px; list-style-type: none;}
+#left >ul >li {list-style-type: none;}
+#left >ul >li:only-child {padding: 0px;}
+.leftbody ul:not(:last-child) li:last-child {border-bottom: none;}
 
 .volumeDiv {border:1px solid #ddd; border-radius:3px; margin:10px 10px 2px; background-color: white;}
 .volumeDiv >div:first-child {margin-left:20px; margin-top: 10px;}
@@ -13,3 +14,14 @@
 .adminPanel {width:100%; padding:9px 16px 15px; font-weight: bold;}
 .adminPanel img {vertical-align: middle; margin-top: -2px; width: 20px;}
 .adminPanel span {margin-left: 10px; font-size: 18px; padding-top: 3px; color: #333; font-family: Malgun Gothic, Meiryo UI;}
+
+.cabiMain {margin-left:5px}
+.cabiMain >div:last-child {width:400px;text-align: center;}
+.compSelect {margin: 10px 0px;}
+.compSelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
+.compSelect >select {font-size: 12px; height: 20px; display:inline-block;}
+.mainbody #mainSetting {margin: 10px 0px;}
+.content {width: 400px;}
+.content tr {height: 40px;}
+.content .white {background-color: #fff !important;}
+.white >input[type='text'] {height: 30px; padding: 0px 5px;}

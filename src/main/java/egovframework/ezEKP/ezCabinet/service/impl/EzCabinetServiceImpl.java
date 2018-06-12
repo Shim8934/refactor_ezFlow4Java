@@ -26,31 +26,19 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 	private Properties config;
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public JSONObject checkCabinetAdmin(HttpServletRequest request, String userId) throws Exception {
 		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
 		String url            = gwServerUrl + "/rest/ezcabinet/check-admin/" + userId;
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
-		String status         = resultBody.get("status").toString();
-		JSONObject resultObj  =  new JSONObject();
-		
-		if (status.equals("ok")) {
-			if (resultBody.get("data").toString().equals("1")) {
-				resultObj.put("result", "ok");
-			}
-			else {
-				resultObj.put("result", "notok");
-				resultObj.put("reason", resultBody.get("reason").toString());
-			}
-		}
-		else {
-			resultObj.put("result", "notok");
-			resultObj.put("reason", resultBody.get("reason").toString());
-		}
-		
-		logger.debug("Result: " + resultObj.get("result") + " || Reason: " + resultObj.get("reason"));
-		
-		return resultObj;
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getCompanyList(HttpServletRequest request, String userId) throws Exception {
+		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
+		String url            = gwServerUrl + "/rest/ezcabinet/company-list/" + userId;
+		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
+		return resultBody;
 	}
 	
 	public static JSONObject getJsonResult(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){

@@ -32,7 +32,7 @@ public class EzCabinetController {
 	public String cabinetLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		if (!cabinetService.checkCabinetAdmin(request, userInfo.getId()).get("result").toString().equals("ok")) {
+		if ((long)cabinetService.checkCabinetAdmin(request, userInfo.getId()).get("code") != 0) {
 			model.addAttribute("isCabinetAdmin", "0");
 		}
 		else {
