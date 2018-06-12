@@ -478,6 +478,8 @@
 				ItemID = #v_pItemID#
 			AND 
 				BoardID = #v_pBoardID#
+			AND
+				LENGTH(IMAGEID) != 38
 		]]>
 	</select>
 	
