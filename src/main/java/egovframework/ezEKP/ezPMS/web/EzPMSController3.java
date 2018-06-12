@@ -745,7 +745,7 @@ public class EzPMSController3 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		int totalCount = 0;
-		int listCnt = (int) param.get("listCnt");
+		int listCnt = (int) param.get("limit");
 		int countPage = 10;
 		int currentPage = (int) param.get("currentPage");
 		String projectId = (String) param.get("projectId");

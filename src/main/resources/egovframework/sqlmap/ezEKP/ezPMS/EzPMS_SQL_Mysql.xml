@@ -2631,7 +2631,7 @@
 		</isNotEmpty>
 			C.comment_id DESC
 			
-			LIMIT #startRow#, #listCnt#
+			LIMIT #startRow#, #limit#
 	</select>
 	
 	<select id="EzPMSDAO.getCommentListCount" parameterClass="map" resultClass="Integer">

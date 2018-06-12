@@ -30,7 +30,7 @@
 	var currentPage = 1;
 	var orderWhat = "";
 	var orderHow = "";
-	var listCnt = 5;
+	var limit = 5;
 	
 	var projectName = null;
 	var taskName = null;
@@ -58,7 +58,7 @@
 			groupId : groupId,
 			taskId : taskId,
 			currentPage : currentPage,
-			listCnt : listCnt,
+			limit : limit,
 			//내용 header 정렬
 			orderWhat : orderWhat,
 			orderHow : orderHow,
