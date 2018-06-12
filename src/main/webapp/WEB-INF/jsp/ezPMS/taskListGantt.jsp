@@ -428,7 +428,7 @@
 		   			 
 	   			  var startDate = dateToYYYYMMDD(start);
 	   			  var endDate = dateToYYYYMMDD(end);
-	   			  var taskId = task.id.match(/t(\d+)/)[1];
+	   			  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
 	   			  var groupId = -1;
 	   			  
@@ -467,8 +467,10 @@
 		   		  if (typeof(newStart) == "number") {
 		   			newStart = new Date(newStart);
 		   		  }
-		   		  
-	   			  var taskId = task.id.match(/t(\d+)/)[1];
+
+	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
+	   			  var taskName = task.name;
+		   		  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
 	   			  var groupId = -1;
 	   			  
@@ -494,9 +496,6 @@
 		   			endDate = dateToYYYYMMDD(endTime);	
 	   			  }
 	   			  
-	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
-	   			  var taskName = task.name;
-	   			  
 	   			  changeDate(task, task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex, groupId, taskName);
 	   			  return task.moveTo(newStart, true,true);
 	   			};
@@ -508,12 +507,18 @@
 	   			  
 	   			  var startDate = dateToYYYYMMDD(new Date(preTask.end + (1 * 24 * 60 * 60 * 1000)));
 	   			  var endDate = dateToYYYYMMDD(new Date(preTask.end + (task.duration * 24 * 60 * 60 * 1000)));
-	   			  var taskId = task.id.match(/t(\d+)/)[1];
+	   			  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
 	   			  var preTaskRowIndex = task.depends;
 	   			  var progress = task.progress;
-	   			  var projectId = task.id.match(/p(\d+)/)[1];
-	   			  var groupId = task.id.match(/g(\d+)/)[1];
 	   			  var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
+	   			  var projectId = task.id.match(/p(\d+)/)[1];
+	   			  var groupId = -1;
+	   			  
+	   			  if (task.id.match(/g(\d+)/) != null) {
+	   				groupId = task.id.match(/g(\d+)/)[1];
+	   			  } else {
+	   				groupId = projectGroupId;
+	   			  }
 	   			  
 	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress, task.name, preTaskRowName, groupId);
 	   			  
@@ -673,14 +678,12 @@
 						var selectedTaskId = ui.item[0].id.substring(ui.item[0].id.lastIndexOf("_"));
 						var selectedGroupId = ui.item[0].id.substring(4, ui.item[0].id.lastIndexOf("_"));
 						
-						var targetTaskId = ui.item[0].id.substring(ui.item[0].id.lastIndexOf("_") + 2);
+						var targetTaskId = ui.item[0].id.match(/t(\d+)/)[1];
 						var changeGroupId = -1;
 
 						if (groupId != selectedGroupId) {
-							console.log("group Changed!");
-							console.log(targetTaskId);
 							if (groupId.indexOf("_g") != -1) {
-								changeGroupId = groupId.substring(groupId.indexOf("_g") + 2);
+								changeGroupId = groupId.match(/g(\d+)/)[1];
 							} else {
 								changeGroupId = projectGroupId;
 							}
@@ -705,29 +708,28 @@
 	   			
 	   			$(".isParent").each(function(index, element){
 	   				if (index != 0) {
-	   					groupArr.push({"projectId" : element.id.substring(5, element.id.lastIndexOf("_")), "groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "order" : index});
+	   					groupArr.push({"projectId" : element.id.match(/p(\d+)/)[1], "groupId" : element.id.match(/g(\d+)/)[1], "order" : index});
 		   				
 	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
 	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
 	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
 	   							
-	   							console.log(newPreTask);
-	   							taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx, "depends" : newPreTask});
+	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
 	   						} else {
-	   							taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx, "depends" : -1});
+	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
 	   						}
 		   				});
 	   				} else if (index == 0) {
-						groupArr.push({"projectId" : element.id.substring(5), "groupId" : projectGroupId, "order" : index});
+						groupArr.push({"projectId" : element.id.match(/p(\d+)/)[1], "groupId" : projectGroupId, "order" : index});
 		   				
 	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
 	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
 	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
 	   							
 	   							console.log(newPreTask);
-	   							taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx, "depends" : newPreTask});
+	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
 	   						} else {
-	   							taskArr.push({"groupId" : element.id.substring(element.id.lastIndexOf("_") + 2), "taskId" : elem.id.substring(elem.id.lastIndexOf("_") + 2), "order" : idx, "depends" : -1});
+	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
 	   						}
 		   				});
 	   				}
@@ -961,12 +963,14 @@
 	   		})();
 	   		
 	   		window.onload = function(){
+	   			//툴팁 위치 지정
 	   			var positionTooltip = function(event) {
 	   				var tPosX = event.pageX - 5;
 	   				var tPosY = event.pageY + 15;
 	   				$(".tooltipBox").css({top:tPosY, left : tPosX});
 	   			};
 				
+	   			//토스트팝업 위치 지정
 	   			var positionToast = function(event) {
 	   				var tPosX = event.pageX - 10;
 	   				var tPosY = event.pageY - 30;
@@ -974,6 +978,7 @@
 	   			}
 	   			
 	   			$(document).on("mouseover", ".taskBox" ,function (event) {
+	   				//마우스 오버했을 때 툴팁위치와 토스트팝업 위치 지정해줌
 	   				positionTooltip(event);
 	   				positionToast(event);
 	   				
@@ -1042,8 +1047,7 @@
 	   			  var taskRow = task.rowElement;
 	   			  var taskId = taskRow.attr("taskId");
 	   			  var onlyTaskId = taskId.substring(task.id.lastIndexOf("_") + 2);
-	   			  var projectId = taskId.substring(1, task.id.indexOf("_"));
-	   			  var groupId = taskId.substring(task.id.indexOf("_") + 2, task.id.lastIndexOf("_"));
+	   			  var projectId = taskId.match(/p(\d+)/);
 	   			  
 	   			  if (task.id.substring(1).indexOf("t") != -1) {
 	   				var feature = GetOpenPosition(0, 0);
