@@ -259,11 +259,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			@RequestParam(value="search", required=false) String search,
 			@RequestParam(value="filter", required=false) String filter,
 			@RequestParam(value="startDate", required=false) String startDate,
-			@RequestParam(value="endDate", required=false) String endDate) {
+			@RequestParam(value="endDate", required=false) String endDate,
+			@RequestParam(value="includeSubFolders", required=false) String includeSubFolders) {
 		LOGGER.debug("MOBILE G/W MAIL mMailFolderMailList started.");
 		LOGGER.debug("folderId=" + folderId + ",userId=" + userId + ",start=" + start + ",end=" + end);
 		LOGGER.debug("searchField=" + searchField + ",search=" + search + ",filter=" + filter);
 		LOGGER.debug("startDate=" + startDate + ",endDate=" + endDate);
+		LOGGER.debug("includeSubFolders=" + includeSubFolders);
 
 		JSONObject result = new JSONObject();
         IMAPAccess ia = null;
@@ -287,6 +289,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			if (endDate == null) {
 				endDate = "";
+			}
+			
+			if (includeSubFolders == null) {
+				includeSubFolders = "";
 			}
 			
 			folderId = URLDecoder.decode(folderId, "UTF-8");
@@ -345,15 +351,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
-	        UIDFolder uidFolder = (UIDFolder)folder;
+//	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
 	        boolean isUnreadOnly = false;
 	        boolean isImportantOnly = false;
+	        boolean searchSubFolder = false;
 			
 	        if (filter.equals("isUnreadOnly")) {
 	        	isUnreadOnly = true;
 	        } else if (filter.equals("isImportantOnly")) {
 	        	isImportantOnly = true;
+	        }
+	        
+	        if (includeSubFolders.equals("1")) {
+	        	searchSubFolder = true;
 	        }
 	        
 			if (!search.equals("")) {
@@ -377,17 +388,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					LOGGER.debug("search field not paging");
 				}
 				
-				messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, sd, ed, false, null, isUnreadOnly, isImportantOnly, true);
+				messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, sd, ed, searchSubFolder, null, isUnreadOnly, isImportantOnly, true);
+			
 			} else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, false, null, isUnreadOnly, false, true);
+				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, isUnreadOnly, false, true);
 			} else if (isImportantOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, false, null, false, isImportantOnly, true);
+				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, false, isImportantOnly, true);
 			}
 						
 			if (messages == null && !endDate.equals("")) {
 				LOGGER.debug("search field paging");
 				
-				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, false, null, isUnreadOnly, isImportantOnly, true);
+				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, isUnreadOnly, isImportantOnly, true);
 			}
 			
 			if (messages == null) {
@@ -428,12 +440,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Message message = messages[i];
 				
 				JSONObject messageJson = new JSONObject();
-				
-				messageJson.put("href", folderId +"/" + uidFolder.getUID(message));
-				messageJson.put("folderId", folderId);
+
+				Folder f = message.getFolder();
+				UIDFolder uidFolder = (UIDFolder) f;
+				String fName = f.getFullName();
+			        
+				messageJson.put("href", fName +"/" + uidFolder.getUID(message));
+				messageJson.put("folderId", fName);
 				messageJson.put("messageId", uidFolder.getUID(message));
 				messageJson.put("fromemail", "");
-								
+				
 				// importance
 				String[] headers = message.getHeader("X-Priority");
 				String header = headers != null ? headers[0] : "normal";
@@ -583,6 +599,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("fullCount", folder.getMessageCount());
 			data.put("optionCount", messages.length);
 			data.put("folderName", folderName);
+			data.put("includeSubFolders", includeSubFolders);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
