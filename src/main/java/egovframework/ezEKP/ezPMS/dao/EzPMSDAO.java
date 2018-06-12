@@ -481,4 +481,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateGroupDate(Map<String, Object> map){
 		update("EzPMSDAO.updateGroupDate", map);
 	}
+
+	public ProjectGroupVO getGroupBoundaryDate(Map<String, Object> map) {
+		return (ProjectGroupVO) select("EzPMSDAO.getGroupBoundaryDate", map);
+	}
 }
