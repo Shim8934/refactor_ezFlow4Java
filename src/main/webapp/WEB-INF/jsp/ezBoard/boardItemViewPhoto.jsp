@@ -754,7 +754,7 @@
 		                }
 		                else {
 		                    swidth = 440;
-		                    sheight = 500;
+		                    sheight = 520;
 		                    
 		                    pleft = (pwidth - swidth) / 2;
 				            ptop = (pheight - sheight) / 2;
