@@ -3842,24 +3842,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("moveOneLineReply ended");
 	}
 
-	//2018.05.17 김혜정
 	@Override
-	public List<HashMap<String, Object>> CheckBoardManage(LoginVO userInfo, String boardID) throws Exception {
-		logger.debug("CheckBoardManage started");
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_userID", userInfo.getId());
-		map.put("v_pDeptID", userInfo.getDeptID());
-		map.put("v_pCompanyID", userInfo.getCompanyID());
-		map.put("v_tenantID", userInfo.getTenantId());
-		map.put("v_pBoardID", boardID);
-		
-		logger.debug("CheckBoardManage started");
-		return ezBoardDAO.CheckBoardManage(map);
-	}
-
-	@Override
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> accessBoardList) throws Exception{
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception{
 		logger.debug("getSearchAllBoardItemList started");
 
 		if (boardListVO.getOrderBySub().length() > 0) {
@@ -3895,46 +3879,53 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-		
-		
 		map.put("v_pDeptID", userInfo.getDeptID());
 		map.put("v_pCompanyID", userInfo.getCompanyID());
-		
-
-		if(userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
-			logger.debug("v_GUHAN1");
-			map.put("v_GUHAN",  "1"); 
-			
-		}else{
-			logger.debug("v_GUHAN2");
-			map.put("v_GUHAN",  "2");
-			map.put("v_boardList", accessBoardList);
-		
-		}
+		map.put("v_MODE", pMode); 
+		map.put("v_boardList", accessBoardList);
 		
 		if (boardVO.getSubFlag().equals("A")) { 
 			map.put("v_PWHEREBOARD", " (1=1) ");
 		} else if (boardVO.getSubFlag().equals("G")) {
 			map.put("v_PWHEREBOARD", " A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')");
 		} else if (boardVO.getSubFlag().equals("YY")) {
-			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
-		} else {
-			map.put("v_PWHEREBOARD", " A.BOARDID = '" + boardVO.getBoardId() + "' ");
-		}
-		
-		
-		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
-		
-		myFavoriteVO.setBoardId(boardVO.getBoardId());
-		myFavoriteVO.setTenantID(boardVO.getTenantID());
-		
-		String tempString = ezBoardDAO.getBoardApprList(myFavoriteVO);
-		
-		if (tempString != null && !tempString.equals("")) {
-			map.put("v_TEMP", " AND A.APPRFLAG = 'Y' ");
+			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
 		}
 		
 		logger.debug("getSearchAllBoardItemList ended");
 		return ezBoardDAO.getSearchAllBoardItemList(map);
+	}
+
+	@Override
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception {
+		logger.debug("getSearchAllBoardItemCount started");
+
+		if (boardVO.getSearchQuery().length() > 0) {
+			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardVO.getBoardId());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("v_boardList", accessBoardList);
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_pDeptID", userInfo.getDeptID());
+		map.put("v_pCompanyID", userInfo.getCompanyID());
+		map.put("v_MODE", pMode); 
+		
+		if (boardVO.getSubFlag().equals("A")) { 
+			map.put("v_PWHEREBOARD", " (1=1) ");
+		} else if (boardVO.getSubFlag().equals("G")) {
+			map.put("v_PWHEREBOARD", " A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')");
+		} else if (boardVO.getSubFlag().equals("YY")) {
+			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
+		}
+		
+		logger.debug("getSearchAllBoardItemCount ended");
+		return ezBoardDAO.getSearchAllBoardItemCount(map);
 	}
 }

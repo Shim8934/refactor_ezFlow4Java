@@ -2093,7 +2093,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode);
 		} else {
 			//혜정  추가
-			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY") ) {
+			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
 				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO);
 			} else {
 				boardXML = getSearchBoardListItemXML(userInfo, boardVO);
@@ -7305,7 +7305,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 접근 가능한 게시판 메소드 호출
+	 * 접근 가능한 게시판 Method
 	 */
 	public ArrayList<String> accessBoardList(LoginVO userInfo) throws Exception {
 		logger.debug("accessBoardList started");
@@ -7334,12 +7334,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		ArrayList<String> accessAllBoardList = new ArrayList<String>();
 		
 		for(int i = 0; i < nList.getLength(); i++) {
-			accessBoardList.add(nList.item(i).getChildNodes().item(2).getTextContent()); //그룹게시판 리스트 
+			accessBoardList.add(nList.item(i).getChildNodes().item(2).getTextContent()); //그룹게시판
 		}
 		
-		//하위 트리게시판 
-		/*while(true) {*/
-		for(int k = 0; k < 10; k++) {
+		//10단계까지 접근가능한 하위게시판 가져옴
+		for(int k = 0; k < 10; k++) { 
 			if(accessBoardList.size() == 0) break;
 			
 			for(int i = 0; i < accessBoardList.size(); i++) {
@@ -7357,7 +7356,6 @@ public class EzBoardController extends EgovFileMngUtil{
 				nList = doc.getElementsByTagName("NODE");
 				
 				for(int j = 0; j < nList.getLength(); j++) {
-					//logger.debug(nList.item(j).getChildNodes().item(2).getTextContent());
 					tempBoardList.add(nList.item(j).getChildNodes().item(2).getTextContent()); 
 					accessAllBoardList.add(nList.item(j).getChildNodes().item(2).getTextContent());  
 				}
@@ -7365,21 +7363,15 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			accessBoardList.clear();
 			accessBoardList.addAll(tempBoardList);
-			
 			tempBoardList.clear();
-			
 		}
-		
-		/*for(int i = 0; i < accessAllBoardList.size(); i++) {
-			logger.debug(accessAllBoardList.get(i));	
-		}*/
 		
 		logger.debug("accessBoardList ended");
 		return accessAllBoardList;
 	}
 	
 	/**
-	 * 게시판 검색 리스트 메소드 호출
+	 * 게시판 검색 리스트 Method
 	 */
 	public String getSearchAllBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
 		logger.debug("getSearchAllBoardListItemXML started");
@@ -7409,9 +7401,18 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
-		//혜정 수정 LoginVO userInfo 매개변수 추가
-		//int boardCount = ezBoardService.getSearchBoardItemCount(userInfo, boardVO); 수정
-		int boardCount = 10;
+		ArrayList<String> accessBoardList = null;
+		
+		int pMode = 1;
+		if(userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+			pMode = 0;
+		}else{
+			pMode = 1;
+			accessBoardList = accessBoardList(userInfo);
+		}
+		
+		int boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, accessBoardList, pMode);
+		
 		BoardListVO boardListVO = new BoardListVO();
 		boardListVO.setPageCount(boardCount);
 		boardListVO.setTotalCount(boardCount);
@@ -7437,9 +7438,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getWriterName() == null) {
 			boardVO.setWriterName("");
 		}
-		//혜정 수정 LoginVO userInfo 매개변수 추가
-		List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, accessBoardList(userInfo));
-	
+		
+		List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, accessBoardList, pMode);
+		
 		int dlength = boardSearchList.size();
 		
 		StringBuffer resultXML = new StringBuffer();
@@ -7469,7 +7470,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String fieldName = "";
 		String fieldValue = "";
-		
+		BoardPropertyVO boardInfo;
 		
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
@@ -7519,49 +7520,11 @@ public class EzBoardController extends EgovFileMngUtil{
 					} else {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("MAINCONTENT")) + "</DATA12>");
 					}
-						
-					//2018-05-14 혜정 추가
-					resultXML.append("<DATA13>" + boardSearchList.get(j).get("ATTRIBUTEYN") + "</DATA13>");
 					
-					//2018-05-09 혜정 추가 시작
-					String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardSearchList.get(j).get("BOARDID").toString(), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+					boardInfo = getBoardInfo(boardSearchList.get(j).get("BOARDID").toString(), userInfo);
+					resultXML.append("<DATA13>" + boardInfo.getRead_FG() +"</DATA13>");
+					boardInfo = null;
 					
-					if(userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
-						logger.debug("FG1"); //전체관리자, 회사관리자, 게시물관리자 
-						resultXML.append("<DATA14>" + "true" + "</DATA14>");
-						resultXML.append("<DATA15>" + "true" + "</DATA15>");
-						resultXML.append("<DATA16>" + "true" + "</DATA16>");
-						resultXML.append("<DATA17>" + "true" + "</DATA17>");
-						resultXML.append("<DATA18>" + "true" + "</DATA18>");
-						resultXML.append("<DATA19>" + "OK" + "</DATA19>");
-						resultXML.append("<DATA20>" + "true" + "</DATA20>"); //추가
-					} else if(boardGroupAdmin_FG != null && boardGroupAdmin_FG.equals("OK")) {
-						logger.debug("FG2"); //게시물그룹관리자 
-						resultXML.append("<DATA14>" + "true" + "</DATA14>");
-						resultXML.append("<DATA15>" + "true" + "</DATA15>");
-						resultXML.append("<DATA16>" + "true" + "</DATA16>");
-						resultXML.append("<DATA17>" + "true" + "</DATA17>");
-						resultXML.append("<DATA18>" + "true" + "</DATA18>");
-						resultXML.append("<DATA19>" + "OK" + "</DATA19>");
-						resultXML.append("<DATA20>" + "true" + "</DATA20>");
-					} else{ 
-						logger.debug("FG3");
-						
-						List<HashMap<String, Object>> boardManageList = 
-								ezBoardService.CheckBoardManage(userInfo, boardSearchList.get(j).get("BOARDID").toString());
-						
-						for(int k = 0 ; k < boardManageList.size() ; k++) {
-							resultXML.append("<DATA14>" + boardManageList.get(k).get("BOARDADMIN_FG") + "</DATA14>");
-							resultXML.append("<DATA15>" + boardManageList.get(k).get("READ_FG") + "</DATA15>");
-							resultXML.append("<DATA16>" + boardManageList.get(k).get("WRITE_FG") + "</DATA16>");
-							resultXML.append("<DATA17>" + boardManageList.get(k).get("REPLY_FG") + "</DATA17>");
-							resultXML.append("<DATA18>" + boardManageList.get(k).get("DELETE_FG") + "</DATA18>");
-							resultXML.append("<DATA19>" + "NO" + "</DATA19>");
-							resultXML.append("<DATA20>" + boardManageList.get(k).get("LISTVIEW_FG") + "</DATA20>");
-						}
-						
-						boardManageList = null;
-					}
 				}
 				resultXML.append("</CELL>");
 			}

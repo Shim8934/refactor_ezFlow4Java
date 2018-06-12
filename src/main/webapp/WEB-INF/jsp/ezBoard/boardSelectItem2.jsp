@@ -13,7 +13,12 @@
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/TreeView.js"></script>
 <style>
-
+	.node_normal {
+		color: rgb(0, 0, 4) !important;
+	}
+	.node_selected  {
+		color: rgb(0, 0, 4) !important;
+	}
 </style>
 <script type="text/javascript">
 	var xmlhttp = createXMLHttpRequest();
@@ -25,10 +30,10 @@
 	var board_alertArguments = new Array();
 
 	window.onload = function () {
-        SetTreeConfig();
+		SetTreeConfig();
         makeTreeList();
     };
-
+    
     function makeTreeList() {
     	document.getElementById("TopBoardsList").innerHTML = "";
     	treeView.SetID("FromTreeView");
@@ -90,9 +95,8 @@
             return;
         }
    		opener.document.getElementById("selectedBoard").value = selectedBoard;
-   		opener.document.getElementById("selectedBoardName").innerHTML = selectedBoardName;
-   		opener.document.getElementById("selectedBoardtype").innerHTML = selectedBoardtype;
    		opener.document.getElementById("selectedBoardParentBoardID").value = selectedBoardParentBoardID;
+   		opener.document.getElementById("selectedBoardName").innerHTML = selectedBoardName;
    		//console.log(selectedBoardParentBoardID);
    		window.close();
    	}

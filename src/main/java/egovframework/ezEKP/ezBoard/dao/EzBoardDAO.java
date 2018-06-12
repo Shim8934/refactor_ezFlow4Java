@@ -681,5 +681,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public List<HashMap<String, Object>> getSearchAllBoardItemList(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchAllBoardItemList", map);
 	}
+
+	public int getSearchAllBoardItemCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getSearchAllBoardItemCount", map);
+	}
 	
 }

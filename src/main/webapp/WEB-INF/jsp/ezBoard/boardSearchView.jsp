@@ -32,18 +32,14 @@
 			var strListInfo = "";
 			var OrderCell = "";
 			var OrderOption = "";
-			var pBoardType = "N"; //새 게시물 타입
+			var pBoardType = "N";   //새 게시물 타입
 			var SQLPARADATA = "";
-			var pAdminType = ""; //mailboxInfo
+			var pAdminType = "";   //mailboxInfo
 			var ShowAdjacent = ""; //더블클릭
 			var startdate = "";
 			var enddate = "";
 			var usepostDate = false;
 			document.onselectstart = function () { return false; };
-			
-			window.onresize = function () {
-					
-			}
 			
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -72,7 +68,7 @@
 					document.getElementById("selectedBoard").value = "all";
 					document.getElementById("selectedBoardName").innerHTML = "<spring:message code='ezBoard.khj5' />";
 				}
-			});				
+			});
 			
 			$(function () {
 			    $("#Sdatepicker").datepicker({
@@ -157,13 +153,13 @@
 		    }
 			
 			function getBoardList(type) {
-			    
 			    if (SQLPARADATA != ""){
 			    	url = "/ezBoard/getSearchBoardList.do";
 			    }
 			    else{
 			    	url = "/ezBoard/getBoardList.do";
 			    }
+			    ShowProgress();
 			    $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -178,13 +174,14 @@
 							 type 		 : type
 							},
 					success: function(xml){
+						hideProgress();
 						getBoardList_after(loadXMLString(xml));
 					}
 				});	
 			}
 			
 			function getBoardList_after(xml) {
-			    /* try { */
+			    try { 
 			        var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
 			        var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 			        var pagenode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
@@ -247,37 +244,22 @@
 			            document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 22 + "px"; // +  tempno.length * 3 + 20
 			        }
 			        
+			    }
+			    catch (e) {
+			    	alert("getBoardList_after : " + e.description);
+			    }         
 			}
+			
 			function selectBoard() {
 				if (CrossYN()) {
 			        OpenWin = GetOpenWindow("/ezBoard/selectBoardItem.do", "selectBoardItem", 457, 600);
 			        try { OpenWin.focus(); } catch (e) { }
-			    } else {
-			    	/*  var pheigth = window.screen.availHeight;
-			        var pwidth = window.screen.availWidth;
-			        pheigth = parseInt(pheigth) / 2;
-			        pwidth = parseInt(pwidth) / 2;
-			        pheigth = pheigth - 200;
-			        pwidth = pwidth - 127;
-			        var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
-			
-			        if (typeof (ret) != "undefined") {
-			            if (ret == "OK") {
-			            	try {
-								leftCountRf();
-							} catch (e) {}
-							
-			                window.location.reload();
-			                window.close();
-			            }
-			        } */
-			    }
+			    } else { }
 			}
-			// 검색클릭시
+			
 			function search(type) {
 				if (type == "basic") {
-			        if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == ""
-			        		&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+			        if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == "") {
 			            alert("<spring:message code='ezBoard.t192' />");
 			            return;
 			        }
@@ -299,25 +281,27 @@
 			    MakeSubCondition();
 			    getBoardList();
 			}
+			
 			function MakeSubCondition() {
 			    var TYPE = "";
 			    var DATA = "";
 			    
-			  	if (document.getElementById("selectedBoard").value == "all") {					  // SearchAllBoard   	
+			  	if (document.getElementById("selectedBoard").value == "all") {					  //SearchAllBoard   	
 			    	TYPE += "SEARCHALLBOARD;";
 			    } else if(document.getElementById('selectedBoardParentBoardID').value == "top") { //SearchGroupBoard  
 			    	TYPE += "SEARCHGROBOARD;";
-			    } else { 																		  //SearchSubSubBoad (하위검색default)
+			    } else { 																		  //SearchSubSubBoard (하위검색default)
 			    	TYPE += "SEARCHSUBSUBBOARD;";
 			    }
 			   
-			        if (document.getElementById("txtTitle").value != "")		// DocTitle
+			        if (document.getElementById("txtTitle").value != "")			// DocTitle
 			        {
 			            TYPE += "TITLE;";
 			            DATA += "<TITLE>" + MakeXMLString(document.getElementById("txtTitle").value.replace("'", "''")) + "</TITLE>";
 			        }
 			        
-			    	if (document.getElementById("txtContent").value != "") {		// DocContent
+			    	if (document.getElementById("txtContent").value != "") 			// DocContent
+			    	{		
 						    TYPE += "CONTENT;";
 					        DATA += "<CONTENT>" + MakeXMLString(document.getElementById("txtContent").value.replace("'", "''")) + "</CONTENT>";
 			    	}
@@ -327,7 +311,7 @@
 			            DATA += "<WRITERNAME>" + MakeXMLString(document.getElementById("txtWriterName").value.replace("'", "''")) + "</WRITERNAME>";
 			        }
 			
-			        if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
+			        if (document.getElementById("txtAbstract").value != "")			// ABSTRACT
 			        {
 			            TYPE += "ABSTRACT;";
 			            DATA += "<ABSTRACT>" + MakeXMLString(document.getElementById("txtAbstract").value.replace("'", "''")) + "</ABSTRACT>";
@@ -428,7 +412,7 @@
 			}
 			
 			function ItemRead_onclick(obj) { //더블클릭
-				if(obj.getAttribute("data15") != "true") {
+				if(obj.getAttribute("data13") != "true") { //읽기권한
 					alert("<spring:message code='ezBoard.t194' />");
 			        return;
 				} 
@@ -449,6 +433,17 @@
 					window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
 				}
 			}
+			
+			function ShowProgress() {
+			    document.getElementById("MailListRayer").style.display = "";
+			    document.getElementById("MailProgress").style.top = "300px";
+			    document.getElementById("MailProgress").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+
+			function hideProgress() {
+				document.getElementById("MailProgress").style.display = "none";
+			}
 	</script>
 </head>
 <body class="mainbody"> 
@@ -457,15 +452,15 @@
 	<table class="content" style="width:100%;">
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t185' /></th>
-			<td style="text-align: left" colspan="4">
-			<span id="selectedBoardName" style="height: 100%; vertical-align: middle; overflow: hidden; display: inline-block; line-height: 27px"></span>
-			<input type ="text" id="selectedBoard" style="width: 65%;display:none;" value="">
-			<input type ="text" id="selectedBoardtype" style="width: 65%;display:none;" value="">
-			<input type ="text" id="selectedBoardParentBoardID" style="width: 65%;display:none;" value="">
+			<td style="text-align: left" colspan="3">
 			<a class="imgbtn" style="vertical-align:middle"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
-			<a class="imgbtn" style="vertical-align:middle"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
-			
+			<span id="selectedBoardName" style="height: 100%; vertical-align: middle; overflow: hidden; display: inline-block; line-height: 27px"></span> 
+			<input type ="text" id="selectedBoard" style="display:none;" value="">
+			<input type ="text" id="selectedBoardParentBoardID" style="display:none;" value="">
 			</td>
+			<th rowspan=4>
+				<a class="imgbtn" style="vertical-align:middle"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+			</th>
 		</tr>
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t223' /></th>
@@ -481,7 +476,7 @@
 		</tr>
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
-			<td colspan="4">
+			<td colspan="3">
 				<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code='ezCircular.t138'/></label>
 				<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly"> ~
 				<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
@@ -498,6 +493,10 @@
 		</div>
 		<div id="tblPageRayer" style="text-align:center"></div>
 	</span>
+	
+	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+		<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+	</div>
 	
 </body>
 </html>
