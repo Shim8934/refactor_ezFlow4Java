@@ -283,14 +283,14 @@
 					}
 					//  height : " + tdHeight + "
 					objTr = $("<tr></tr>").append($("<th style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal;' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").html(result[i].typeName));
-					objTd = $("<td nowrap></td>").css({"width" : "80px", "cursor" : "pointer"})
+					objTd = $("<td nowrap></td>").append($("<div style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal;'></div>").css({"width" : "80px", "cursor" : "pointer"})
 					.attr("id",result[i].typeId).text("0" + "<spring:message code='ezAttitude.t21'/>")
 					.attr("parentId",result[i].parentId)
 					.attr("onmouseover","this.style.color='#164aad'")
 					.attr("onmouseout","this.style.color='#666'")
 					.click(function() {
 						searchByTypeId(this);
-					});	
+					}));	
 					objTr.append(objTd);
 					objTbody.append(objTr);
 				}
@@ -319,7 +319,7 @@
 						selectedDeptID : encodeURIComponent(authDeptList.value)
 					},
 					success : function(result) {
-						$("#attiStatis td").text("0" + "<spring:message code='ezAttitude.t21'/>");
+						$("#attiStatis td div").text("0" + "<spring:message code='ezAttitude.t21'/>");
 						for (var i = 0; i < result.length; i++) {
 							$("#" + result[i].typeId).text(result[i].count + "<spring:message code='ezAttitude.t21'/>");
 						}
@@ -602,7 +602,7 @@
 	        }
 			
 			function searchByTypeId(t) {
-				var typeName = t.parentElement.getElementsByTagName("th").item(0).innerText;
+				var typeName = t.parentElement.parentElement.getElementsByTagName("th").item(0).innerText;
 				var pDate = $("#calTitle").text().trim();
 				var startDate = pDate + "-01 00:00:00";
 				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
@@ -1023,6 +1023,20 @@
 	        		$("#divisionBar").css("display","");
 	        	}
 			}
+			
+			function showStatis() {
+				if ($("#attiStatis").parent("td").css("width") != "0px") {
+					$("#attiStatis").animate({width:"0px"}, 1000, function(){
+						$(this).css("display","none");
+					});
+					$("#attiCalendar").parent("td").animate({width:"100%"}, 1000);
+					$("#attiStatis").parent("td").animate({width:"0%"}, 1000);
+				} else {
+					$("#attiStatis").parent("td").animate({width:"9%"}, 1000);
+					$("#attiCalendar").parent("td").animate({width:"91%"}, 1000);
+					$("#attiStatis").css("display","block").animate({width:($(".mainbody").width() * 9 / 100)}, 1000);
+				}
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
@@ -1034,6 +1048,7 @@
 		</c:if>
 		<div id="mainmenu">
 			<ul>
+				<li><span onClick="showStatis()">근태통계</span></li>
 				<c:if test="${adminFlag == 'true'}">
 		        	<li id="btnAbsentedList"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
@@ -1070,12 +1085,12 @@
 		
 		<table>
 			<tr>
-				<td style="vertical-align:top; width:91%;">
+				<td style="vertical-align:top; width:100%;">
 					<div style="vertical-align:top;" id="attiCalendar"></div>
 				</td>
 				<td style="vertical-align:top; width:10px;">&nbsp;</td>
-				<td style="vertical-align:top; width:9%; margin-left:5px;">
-					<div style="vertical-align:top;" id="attiStatis">
+				<td style="vertical-align:top; width:0%; margin-left:5px;">
+					<div style="vertical-align:top; display:none;" id="attiStatis">
 					</div>
 				</td>
 			</tr>
