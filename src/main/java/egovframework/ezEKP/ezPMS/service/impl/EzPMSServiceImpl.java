@@ -95,7 +95,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 						Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 						
-						int restDueday = getWorkinDays(now, endDate, companyId, tenantId);
+						int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
 						projectList.get(i).setRestDueday(restDueday);
 					}
 					
@@ -152,9 +152,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			int workingDays = 0;
 			
 			if (createAndStartDateComp <= 0) {
-				workingDays = getWorkinDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
+				workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
 			} else {
-				workingDays = getWorkinDays(createDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
+				workingDays = getWorkingDays(createDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
 			}
 						
 			map.put("workingDay", workingDays);
@@ -286,7 +286,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 				
-				int restDueday = getWorkinDays(now, endDate, companyId, tenantId);
+				int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
 				project.setRestDueday(restDueday);
 			}	
 			
@@ -324,12 +324,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			int workingDays = 0;
 			
 			if (createAndStartDateComp <= 0) {
-				workingDays = getWorkinDays(startDate, endDate, companyId, tenantId);
+				workingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			} else {
-				workingDays = getWorkinDays(nowDate, endDate, companyId, tenantId);
+				workingDays = getWorkingDays(nowDate, endDate, companyId, tenantId);
 			}
 			
-			int restDueday = getWorkinDays(nowDate, endDate, companyId, tenantId);
+			int restDueday = getWorkingDays(nowDate, endDate, companyId, tenantId);
 			map.put("workingday", workingDays);
 			map.put("restDueday", restDueday);
 			
@@ -639,7 +639,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
 			
-			int calWorkingDays = getWorkinDays(startDate, endDate, companyId, tenantId);
+			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			
 			int createAndEndDateComp = createDate.compareTo(endDate);
 			
@@ -734,7 +734,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
 			
-			int calWorkingDays = getWorkinDays(startDate, endDate, companyId, tenantId);
+			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			
 			int createAndEndDateComp = createDate.compareTo(endDate);
 			
@@ -808,9 +808,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			int workingDays = 0;
 			
 			if (createAndStartDateComp <= 0) {
-				workingDays = getWorkinDays(startDate, endDate, companyId, tenantId);
+				workingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			} else {
-				workingDays = getWorkinDays(createDate, endDate, companyId, tenantId);
+				workingDays = getWorkingDays(createDate, endDate, companyId, tenantId);
 			}
 			
 			map.put("workingDay", workingDays);
@@ -1035,16 +1035,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public int getWorkinDays(Date start, Date end, String companyId, int tenantId){
+	public int getWorkingDays(Date start, Date end, String companyId, int tenantId){
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("planStartDate", start);
 		map.put("planEndDate", end);
-		map.put("planStartDateShort", start.toString().substring(start.toString().indexOf("-") + 1));
-		map.put("planEndDateShort", end.toString().substring(end.toString().indexOf("-") + 1));
-		
-		System.out.println(start.toString().substring(start.toString().indexOf("-") + 1));
+		//map.put("planStartDateShort", start.toString().substring(start.toString().indexOf("-") + 1));
+		//map.put("planEndDateShort", end.toString().substring(end.toString().indexOf("-") + 1));
 		
 	    //Ignore argument check
 	    Calendar c1 = GregorianCalendar.getInstance();
@@ -1196,7 +1194,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date today = new Date();
 			String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
-			int restDueday = getWorkinDays(now, endDate, companyId, tenantId);
+			int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
 			
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
@@ -1223,7 +1221,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date today = new Date();
 			String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
-			int restDueday = getWorkinDays(now, endDate, companyId, tenantId);
+			int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
 			
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
@@ -1667,7 +1665,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
 			
-			int calWorkingDays = getWorkinDays(startDate, endDate, companyId, tenantId);
+			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			
 			int createAndEndDateComp = createDate.compareTo(endDate);
 			
@@ -1752,7 +1750,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
 			
-			int calWorkingDays = getWorkinDays(startDate, endDate, companyId, tenantId);
+			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			task.setRealWorkingday(calWorkingDays);
 			
 			if (task.getStatus() != null) {
@@ -2079,8 +2077,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 		Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 		
-		int totalWorkingdays = getWorkinDays(start, end, companyId, tenantId);
-		int restDueday = getWorkinDays(now, end, companyId, tenantId);
+		int totalWorkingdays = getWorkingDays(start, end, companyId, tenantId);
+		int restDueday = getWorkingDays(now, end, companyId, tenantId);
 		float planProgress = 0;
 		if(totalWorkingdays == 0){
 			totalWorkingdays = 1;

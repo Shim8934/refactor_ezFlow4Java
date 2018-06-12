@@ -45,7 +45,7 @@
 		
 	   	<script type="text/javascript">
 	   		// 프로젝트 아이디
-	   		var projectId = "${projectId}",
+	   		var projectId = "<c:out value='${projectId}'/>",
 	   			// 업무 목록
 	   			taskList = {},
 	   			// 프로젝트 세부정보
@@ -430,11 +430,20 @@
 	   			  var endDate = dateToYYYYMMDD(end);
 	   			  var taskId = task.id.match(/t(\d+)/)[1];
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
+	   			  var groupId = -1;
+	   			  
+	   			  if (task.id.match(/g(\d+)/) != null) {
+	   				groupId = task.id.match(/g(\d+)/)[1];
+	   			  } else {
+	   				groupId = projectGroupId;
+	   			  }
+	   			  
 	   			  var progress = task.progress;
 	   			  var fullId = task.id;
 	   			  var endTime = end.getTime();
 	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
 	   			  var newEndTime = end.getTime();
+	   			  var taskName = task.name;
 	   			  
 	   			  if (end.getDay() == 6) { 
 	   				newEndTime = end.getTime() + (2 * 24 * 60 * 60 * 1000);
@@ -448,7 +457,7 @@
 	   			  
 	   			  
 	   			  ge.taskIsChanged();
-	   			  changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex);
+	   			  changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex, groupId, taskName);
 	   			  
 	   			  return task.setPeriod(start, endTime);
 	   			};
@@ -461,6 +470,14 @@
 		   		  
 	   			  var taskId = task.id.match(/t(\d+)/)[1];
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
+	   			  var groupId = -1;
+	   			  
+	   			  if (task.id.match(/g(\d+)/) != null) {
+	   				groupId = task.id.match(/g(\d+)/)[1];
+	   			  } else {
+	   				groupId = projectGroupId;
+	   			  }
+	   			  
 	   			  var startDate = dateToYYYYMMDD(newStart);
 	   			  var newEndTime = newStart.getTime() + ((task.duration - 1) * 24 * 60 * 60 * 1000);
 	   			  
@@ -478,8 +495,9 @@
 	   			  }
 	   			  
 	   			  var rowIndex = $("#tid_" + task.id).find(".taskRowIndex").text();
+	   			  var taskName = task.name;
 	   			  
-	   			  changeDate(task, task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex);
+	   			  changeDate(task, task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex, groupId, taskName);
 	   			  return task.moveTo(newStart, true,true);
 	   			};
 	   			
@@ -494,8 +512,10 @@
 	   			  var preTaskRowIndex = task.depends;
 	   			  var progress = task.progress;
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
-	   			
-	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress);
+	   			  var groupId = task.id.match(/g(\d+)/)[1];
+	   			  var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
+	   			  
+	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress, task.name, preTaskRowName, groupId);
 	   			  
 	   			  return task.moveTo(task.start,false,true);
 	   			};
@@ -534,7 +554,7 @@
 	   			};
 	   		}
 	   		
-	   		function addPreTaskRel (projectId, taskId, preTaskRowIndex, startDate, endDate, progress) {
+	   		function addPreTaskRel (projectId, taskId, preTaskRowIndex, startDate, endDate, progress, taskName, preTaskRowName, groupId) {
 	   			var data = {
 	   					projectId : projectId,
 	   					taskId : taskId,
@@ -551,8 +571,9 @@
 	   				url : "/ezPMS/addPreTaskRel.do",
 	   				data :JSON.stringify(data),
 	   				success : function(result) {
-	   					if (roleCheck == "permitted") {
-	   						alert("상태가 변경되었습니다.");
+	   					if (result == "permitted") {
+	   						toastPopupShow("[" + preTaskRowName + "]이 [" + taskName + "]의 선행작업으로 지정되었습니다.");
+	   						addTaskLog(projectId, 1, groupId, taskId, "[" + preTaskRowName + "]이 [" + taskName + "]의 선행작업으로 지정되었습니다.");
 	   					} else {
 	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
 	   					}
@@ -563,7 +584,7 @@
 	   				});
 	   		}
 	   		
-	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex) {
+	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {
 	   			var data = {
 	   					  taskId : taskId,
 	   					  projectId : projectId,
@@ -585,8 +606,9 @@
 	   						ge.tasks.filter(function(task){
 	   							return task.id == fullId
 	   						})[0].end = endTime;
+	   						toastPopupShow("[" + startDate + " ~ " + endDate + "]로 날짜가 변경되었습니다.");
+	   						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "]의 계획일이 [" + startDate + " ~ " + endDate + "]로 변경되었습니다.");
 	   						ge.redraw();
-	   						toastPopupShow(rowIndex, "날짜가 변경되었습니다.");
 	   					} else {
 	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
 	   					}
@@ -598,14 +620,11 @@
 	   		}
 	   		
 	   		//위치 지정해주기
-	   		function toastPopupShow(rowIndex, toastContent) {
-   				var strHTML = "";
-   				strHTML += "<span class='toastPopup'>" + toastContent + "</span>";
-   				$(".toastArea").html(strHTML);
-   				$(".taskBox").eq(rowIndex - 1).append(strHTML);
+	   		function toastPopupShow(toastContent) {
+   				$(".toastArea").html(toastContent);
    				
    				setTimeout(function(){
-	   					$(".toastPopup").hide();
+	   					$(".toastArea").fadeOut();
 	   			}, 1000);
 	   		}
 	   		
@@ -894,11 +913,24 @@
 	   				var tPosY = event.pageY + 15;
 	   				$(".tooltipBox").css({top:tPosY, left : tPosX});
 	   			};
+				
+	   			var positionToast = function(event) {
+	   				var tPosX = event.pageX - 10;
+	   				var tPosY = event.pageY - 30;
+	   				$(".toastArea").css({top:tPosY, left : tPosX});
+	   			}
 	   			
 	   			$(document).on("mouseover", ".taskBox" ,function (event) {
 	   				positionTooltip(event);
+	   				positionToast(event);
+	   				
 	   				var taskId = $(this).attr("taskid");
 	   				var isGroup = taskId.substring(taskId.lastIndexOf("_") + 1, taskId.lastIndexOf("_") + 2);
+	   				
+	   				if (taskId.indexOf("_") == -1) {
+	   					isGroup = "p";
+	   				}
+	   				
 	   				taskId = taskId.substring(taskId.lastIndexOf("_") + 2);
 	   				var infoHTML = "";
 	   				
@@ -914,6 +946,14 @@
 	   							infoHTML += "</div>";
 	   						}
 	   					}
+	   				} else if (isGroup == "p") {
+						infoHTML += "<div style='background-color:#d1d1d1'>" + projectDetails.projectName + "</div>";
+						infoHTML += "<div>";
+						infoHTML += "시작일 : " + projectDetails.planStartDate + "<br>";
+						infoHTML += "종료일 : " + projectDetails.planEndDate + "<br>";
+						infoHTML += "남은기간 : " + projectDetails.restDueday + "<br>";
+						infoHTML += "진행률 : " + projectDetails.progress + "<br>";
+						infoHTML += "</div>";
 	   				} else {
 	   					for (var i = 0; i < taskList.length; i++) {
 	   						if (taskList[i].taskId == taskId) {
@@ -1025,9 +1065,9 @@
             width : 200px;
 		  }
 		  
-		  .toastPopup {
+		  .toastArea {
 		  	position : absolute;
-		  	background : yellow;
+		  	background : #ffffa8;
 		  	border : 1px solid #d1d1d1;
 
 		  }

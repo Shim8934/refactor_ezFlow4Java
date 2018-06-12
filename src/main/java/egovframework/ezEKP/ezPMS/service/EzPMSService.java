@@ -189,7 +189,7 @@ public interface EzPMSService {
 
 	public Float getProjectWeight(Long projectId, int tenantId) throws Exception;
 	
-	public int getWorkinDays(Date start, Date end, String companyId, int tenantId) throws Exception;
+	public int getWorkingDays(Date start, Date end, String companyId, int tenantId) throws Exception;
 	
 	public float getPlanProgress(Date start, Date end, String companyId, int tenantId) throws Exception;
 	

@@ -132,7 +132,7 @@ public class EzPMSGWController2 {
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 				
-				int restDueday = ezPMSService.getWorkinDays(now, endDate, companyId, tenantId);
+				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId);
 				taskList.get(i).setRestDueday(restDueday);
 				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId));
 				taskList.get(i).setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
@@ -974,7 +974,7 @@ public class EzPMSGWController2 {
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 				
-				int restDueday = ezPMSService.getWorkinDays(now, endDate, companyId, tenantId);
+				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId);
 				groupList.get(i).setRestDueday(restDueday);
 				groupList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId));
 				
