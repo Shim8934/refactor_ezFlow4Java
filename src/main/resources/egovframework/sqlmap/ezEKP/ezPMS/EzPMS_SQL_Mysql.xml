@@ -1907,6 +1907,8 @@
 				A.TENANT_ID = #tenantId#
 			AND
 				M.MEMBER_ROLE_ID = 1
+			AND 
+				A.DEL_STATUS = 0
 		]]>
 			<isNotEqual property="projectId" compareValue="0">
 			AND
