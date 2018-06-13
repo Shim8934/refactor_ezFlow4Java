@@ -30,13 +30,14 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/monthpicker.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 		<style type="text/css">
-		.ui-monthpicker .ui-datepicker-header .ui-datepicker-title .ui-datepicker-year{
-			margin: 0 auto;
-		} 
-				
-		.ui-monthpicker .ui-datepicker-month {
-		  display: none;
-		}
+ 		/*  .ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
+ 			margin: 0 auto; 
+ 		}  */
+		/*		
+ 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-month { 
+ 		  display: none; 
+ 		} 
+ 		*/ 
 		.ui-monthpicker td span {
 		  padding: 5px;
 		  cursor: pointer;
@@ -525,6 +526,7 @@
 		    }
 				
 		    function ViewChange(szCmd) {
+		    	var chk_str = parent.frames["left"].document.getElementById('chk_str').value;
 		        switch (szCmd.toUpperCase()) {
 		            case "DAY":
 		                typeCal = 2;
@@ -542,7 +544,8 @@
 		                if (item)
 		                    item.onclick();
 		                else */
-		                    CalendarView("Calendar");
+		                
+		                CalendarView("Calendar",chk_str);
 
 		                break;
 		                
@@ -562,7 +565,7 @@
 		                if (item)
 		                    item.onclick();
 		                else */
-		                    CalendarView("Calendar");
+		                    CalendarView("Calendar",chk_str);
 		                break;
 
 		            case "MONTH":
@@ -575,8 +578,10 @@
 		                if (item)
 		                    item.onclick(); */
 
-		                CalendarView("Calendar");
-
+		                CalendarView("Calendar",chk_str);
+		                $(document).on('mouseover', 'ui-state-default', function() { $(this).addClass('ui-state-hover'); });
+		                $(document).on('mouseleave', 'ui-state-default', function() { $(this).removeClass('ui-state-hover'); });
+		                $(document).on('.ui-monthpicker .ui-datepicker-month',function(){$(this).css('display','none'); });
 		                break;
 		        }
 		        /* 2018-02-01 김보미 - 일정관리 타이틀 고정. */
@@ -602,7 +607,8 @@
 		    }
 			
 		    function RefreshView() {
-		        CalendarView('Calendar');
+		    	var chk_str = parent.frames["left"].document.getElementById('chk_str').value;
+		        CalendarView('Calendar',chk_str);
 		        /* if (parent.frames["left"].document.getElementById("iYear")) {
 		            parent.frames["left"].CalendarMiniView("CalendarMini");
 		            parent.frames["left"].CalendarMiniDataSource();
@@ -1024,7 +1030,12 @@
 	
 		        return v_str.toString();
 		    }
-		   
+		    /* $(document).on('click','.ui-datepicker-trigger', function() { $('.ui-datepicker-month').css('display','none') }); */
+		    
+		    $('.ui-datepicker-trigger').click(function(){
+		    	$('.ui-datepicker-month').css('display','none');
+		    });
+		    
 	    </script>				
 	</head>
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px">

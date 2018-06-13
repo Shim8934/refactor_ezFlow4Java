@@ -339,11 +339,18 @@ function CalendarView(pTagetID,chk_str) {
     
     // 2018-06-07 구해안 datepicker 호출함수    
     var WstartDate, WendDate; 
-    var selectCurrentWeek = function() { 
-        window.setTimeout(function () { 
-            $(document).find('.ui-datepicker-current-day a').addClass('ui-state-active'); 
-        }, 1); 
-    } 
+    var monthCssHidden = function(){
+		window.setTimeout(function(){
+			 $('.ui-datepicker-month').css('display','none');
+			 $('.ui-datepicker-year').css('margin','0 auto');
+		}, 1);
+	}
+    var monthCssShow = function(){
+		window.setTimeout(function(){
+			 $('.ui-datepicker-month').css('display','');
+			 $('.ui-datepicker-year').css('margin','');
+		}, 1);
+	}
     if(typeCal == 2){    
     	chk_str = parent.frames["left"].document.getElementById("chk_str").value;
     	$('.datePick').datepicker({
@@ -366,10 +373,19 @@ function CalendarView(pTagetID,chk_str) {
     			sDate.setFullYear(iYear, iMonth, iDay); 
     			
     			CalendarView("Calendar",chk_str);    			
+    		},
+    		beforeShow: function(input, inst) {
+    			monthCssShow();    			
     		}
     	});
-    	$('.ui-monthpicker .ui-datepicker-month').css('display','');
+    	
+    	
     }else if(typeCal == 1){
+    	var selectCurrentWeek = function() { 
+            window.setTimeout(function () { 
+                $(document).find('.ui-datepicker-current-day a').addClass('ui-state-active'); 
+            }, 1); 
+        }     	
     	chk_str = parent.frames["left"].document.getElementById("chk_str").value;
     	$('.datePick').datepicker({
     		showOtherMonths: true, 
@@ -396,6 +412,9 @@ function CalendarView(pTagetID,chk_str) {
     			CalendarView("Calendar",chk_str);    			
     		  },
 	    	  beforeShowDay: function(date) { 
+	    		  monthCssShow();
+	    	      $(document).on('mousemove', '.ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); }); 
+	    	      $(document).on('mouseleave', '.ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });
 	              var cssClass = ''; 
 	              if (date >= WstartDate && date <= WendDate) 
 	                  cssClass = 'ui-datepicker-current-day'; 
@@ -404,11 +423,7 @@ function CalendarView(pTagetID,chk_str) {
 	          onChangeMonthYear: function(year, month, inst) { 
 	              selectCurrentWeek(); 
 	          } 
-	          
     	});
-    	$('.ui-monthpicker .ui-datepicker-month').css('display','');
-    	$(document).on('mousemove', '.ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); }); 
-    	$(document).on('mouseleave', '.ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });
     }else{   
     		chk_str = parent.frames["left"].document.getElementById("chk_str").value;
             $(".datePick").monthpicker({
@@ -431,11 +446,18 @@ function CalendarView(pTagetID,chk_str) {
         			}else{
         				CalendarView("Calendar",chk_str);
         			}
-        		}
-            });    
-            $('.ui-monthpicker .ui-datepicker-month').css('display','none');
-            $(document).on('mouseover', 'ui-state-default', function() { $(this).addClass('ui-state-hover'); });
-            $(document).on('mouseleave', 'ui-state-default', function() { $(this).removeClass('ui-state-hover'); });
+        		},
+        		beforeShow: function(input, inst) {
+        			monthCssHidden();
+            		$(document).on('mouseover', 'ui-state-default', function() { $(this).addClass('ui-state-hover'); });
+            		$(document).on('mouseleave', 'ui-state-default', function() { $(this).removeClass('ui-state-hover'); });
+            		
+            	},
+        		onChangeMonthYear: function(year, month, inst) { 
+        			monthCssHidden();
+  	          } 
+            });               
+ 
     }
 }
 
