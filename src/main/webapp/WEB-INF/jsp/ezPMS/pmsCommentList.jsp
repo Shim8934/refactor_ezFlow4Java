@@ -113,18 +113,16 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 	function modifyComment(elem) {
 		$(".originalContent").css("display", "");
 		$(".modifiedContent").css("display", "none");
-		$(".saveBtn").css("display", "none");
 		$(".modifyBtn").css("display", "");
 		
 		var contentTD = $(elem).parent().siblings(".content");
 		contentTD.children(".originalContent").css("display", "none");
 		contentTD.children(".modifiedContent").css("display", "");
 		$(elem).siblings(".saveBtn").css("display", "");
-		$(elem).css("display", "none");
 	}
 	
 	function saveComment(elem) {
-		var selectedTR = $(elem).parent().parent();
+		var selectedTR = $(elem).parent().parent().parent("tr");
 		var commentId = selectedTR.attr("data-commentId");
 		var writerId = selectedTR.attr("data-writerId");
 		var commentContent = selectedTR.find("textarea").val();
@@ -210,13 +208,17 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 					<td class="taskName">${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}</td>
 					<td class="content" style="text-align: left;">
 						<span class="originalContent">${commentVO.commentContent}</span>
-						<textarea class="modifiedContent" style="display: none; resize: none;"  rows="" cols="">${commentVO.commentContent}</textarea>
+						<div class="modifiedContent" style="display: none; border: 1px solid #ddd; width: 100%;">
+							<textarea style="resize: none; width: 85%; border: none; outline: none;">${commentVO.commentContent}</textarea>
+							<a class="imgbtn" onclick="saveComment(this)" style="float: right;">
+								<span>저장</span>
+							</a>
+						</div>
 					</td>
 					<td>${fn:substring(commentVO.writeDate, 0, 19)}</td>
 					<td>
 						<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezLadder/icon_game03_no.png" height="20"/></span>
-						<span onclick="saveComment(this)"   class="saveBtn"   style="cursor: pointer; display: none;"><img src="" alt="저장" height="20"/></span>
-						<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezLadder/icon_imposDelete_thirty.png" height="20"/></span>
+						<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete_thirty.png" height="20"/></span>
 					</td>
 				</tr>
 			</c:forEach>
@@ -225,7 +227,7 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 </div>
 
 <c:if test="${userRole ne 3}">
-	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin-top: 20px;">
+	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin-top: 10px;">
 		<div class="sendComment_layout">
 			<div class="comment_input_layout" style="border: none; width: 86%;">
 				<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
