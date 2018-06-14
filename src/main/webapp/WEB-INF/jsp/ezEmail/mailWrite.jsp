@@ -1593,7 +1593,7 @@
 	    
 	    // 재은 수정(편지지)
 	    function Letter_onClick() {
-	    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
+	    	DivPopUpShow(583, 495, "/ezEmail/mailLetter.do");
 	    }
 	    
 	    function editorPtagChk() {

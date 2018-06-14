@@ -125,7 +125,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <th><spring:message code='ezBoard.t1023'/></th>
+	            <th style="font-size:13px;"><spring:message code='ezBoard.t1023'/></th>
 	        </tr>
 	        <tr>
 	            <td>
