@@ -183,6 +183,13 @@
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    });
+		    
+		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
+		    $(window).on("resize", function(){
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		        	$("#addpopup").css("left", popupX);
+		        	$("#srarchpopup").css("left", popupX);	        	
+		     });
 		
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
