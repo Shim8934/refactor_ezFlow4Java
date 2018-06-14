@@ -1181,7 +1181,7 @@
         <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
             <span style="width: 100%; height: 100px; display: block;">
                 <span class="previewmail_info" style="display: block; width: 100%;">
-                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;">
+                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
                         <p class="mail_title" style="margin-left: 0px;">
                             <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
                                 <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>

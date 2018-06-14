@@ -1067,7 +1067,7 @@
 				<!-- 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;"> -->
 				<!-- 		                    </div> --> <!-- 		                </span> -->
 
-				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #eeeeee;"></div> 
+				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #e8e8e8;"></div> 
 				<!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
 			</span>
 		</span>
