@@ -264,12 +264,13 @@
 	                            btnClose_onclick();
 	                        }
 	                    }
-	
-	                    if (pDraftFlag != "REDRAFT")
+	                    
+	                    if (pDraftFlag != "REDRAFT") {
 	                        setFirstDrafter();
-	                    else
+	                    } else {
 	                        SignCheck();
-	
+	                    }
+	                    
 	                    HwpCtrl.SetFieldFocus("doctitle");
 	                    HwpCtrl.ezSetScrollPosInfo(0);
 	                    HwpCtrl.SetImgReg();
@@ -932,7 +933,6 @@
 		        if (!HwpCtrl.CheckFieldExist("publication")) return;
 		        var PublicType = pPublicityYN.substring(0, 1);
 
-		        var PublicText = "";
 		        if (PublicType == "Y")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
@@ -1145,6 +1145,7 @@
 			            pSummery = ret[9];
 			            pSpecialRecordCode = ret[10];
 			            pPublicityCode = ret[11];
+			            pPublicityYN = ret[21];
 			            pLimitRange = ret[12];
 			            pPageNum = ret[13];
 			            tempSecurityDate = ret[14];

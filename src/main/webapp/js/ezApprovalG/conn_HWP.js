@@ -56,21 +56,14 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 			var objNode = DocumentKeywordInfo.getElementsByTagName(CharName)[0];
 			setNodeText(objNode , value);
 			DocumentKeywordInfo.documentElement.appendChild(objNode);
-console.log("keywordInfo = " + DocumentKeywordInfo.documentElement);
-console.log("if = " + getXmlString(DocumentKeywordInfo.childNodes[0].getElementsByTagName(CharName)[0]));
-console.log(getXmlString(DocumentKeywordInfo).substring(0,9));
 			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
-console.log(getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
 			
 			return true;
 		} else {
 			var objNode = document.createElement(CharName);
 			setNodeText(objNode , value);
 			DocumentKeywordInfo.documentElement.appendChild(objNode);
-console.log("keywordInfo = " + DocumentKeywordInfo.documentElement);
-console.log("else = " + getXmlString(DocumentKeywordInfo.childNodes[0].getElementsByTagName(CharName)[0]));
 			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
-console.log(getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
 			
 			return true;
 		}
@@ -127,19 +120,21 @@ function ExcuteInfo(pprocessIdx, currTD) {
         connString = getNodeText(connNode.childNodes[0]);
         queryType = GetAttribute(connNode.childNodes[1],"qtype");
         queryString = getNodeText(connNode.childNodes[1]);
-
-        var strItemNames = "SA_DocID";
+        
+//        var strItemNames = "SA_DocID";
+        var strItemNames = "SA_DocID,SA_AprType";
         var arrItemNames = strItemNames.split(",");
         var objNewItem;
         
         for (i = 0; i < arrItemNames.length; i++) {
             objNewItem = xmlData.createElement("key");
             objNewItem.setAttribute("kind", "single");
-            objNewItem.text = arrItemNames[i];
+            setNodeText(objNewItem, arrItemNames[i]);
             connNode.childNodes[2].appendChild(objNewItem);
         }
         
         keyNodes = connNode.childNodes[2].childNodes;
+//alert(getXmlString(connNode.childNodes[2]));
 
         switch (queryType) {
             case "Q":
@@ -201,9 +196,10 @@ function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
 function callNoneUIASP(pqueryString, pkeyNodes) {
 	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 	var objRoot = makeKeyValue(pkeyNodes, "A");
+//alert(getXmlString(objRoot));
 	var resResult = "";
 	
-	var linkageField = $('#message').contents().find(".linkageValue");
+	/*var linkageField = $('#message').contents().find(".linkageValue");
 	var linkageValue = linkageField.val();
 	
 	if(!linkageValue) {
@@ -223,9 +219,9 @@ function callNoneUIASP(pqueryString, pkeyNodes) {
 		},
 		error: function() {
 		}
-	});
+	});*/
 
-	return "<RESULT>true</RESULT>";
+	return objRoot;
 }
 function callUIASP(pconnString, pqueryString, pkeyNodes) {
     var xmlsend = new ActiveXObject("Microsoft.XMLDOM");
@@ -237,10 +233,11 @@ function callUIASP(pconnString, pqueryString, pkeyNodes) {
     var url = pqueryString;
     var parameter = xmlsend.xml;
 
-    var feature = pconnString
+    var feature = pconnString;
     parameter = window.showModalDialog(url, parameter, feature);
 
-    xmlpara = loadXMLString(parameter)
+    xmlpara = loadXMLString(parameter);
+    
     return xmlpara;
 }
 function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
@@ -254,7 +251,8 @@ function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
     var feature = pconnString
     parameter = window.showModalDialog(url, xmlsend, feature);
 
-    xmlpara = loadXMLString(parameter)
+    xmlpara = loadXMLString(parameter);
+
     return xmlpara;
 }
 function getKeyValue(fieldID, num) {
@@ -458,10 +456,9 @@ function makeKeyValue(pkeyNodes, flag) {
     } else {
         var objRow = xmlpara.createNode(1, "ROW", "");
     }
-
+    
     for (i = 0; i < pkeyNodes.length; i++) {
         if (GetAttribute(pkeyNodes[i],"kind") == "single") {
-        	//두번째 create때 exception발생 -> 고쳐 (2018-06-11 이효진)
             customData = xmlpara.createNode(1, getNodeText(pkeyNodes[i]), "");
             objRow.appendChild(customData);
             fieldVal = getKeyValue(getNodeText(pkeyNodes[i]), prowNum);
