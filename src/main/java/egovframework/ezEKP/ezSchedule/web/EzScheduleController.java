@@ -288,7 +288,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 	public List<ScheduleInfoVO> scheduleListData(String startDate, String endDate, String idList, String groupID, String offSetMin, LoginVO userInfo) throws Exception {
 		
 		logger.debug("============ scheduleListData started ============");		
-		logger.debug("***중요***scheduleListData의 idList : " + idList);
 		String pidList = "";
 		String pidListSub = "";
 		
@@ -375,8 +374,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 						pidListSub += ",";
 					}
 				}
-			
-			pidListSub.substring(0, pidListSub.length()-1);
+			if(pidListSub.equals("") || pidListSub == null || pidListSub.equals("\'\'")){
+				pidListSub = "";
+			}else{
+				
+				pidListSub.substring(0, pidListSub.length()-1);
+			}
 			
 			pidList += pidListSub;
 			
@@ -385,9 +388,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		} else {
 			pidList = idList;
 		}		
-		
-		logger.debug("selectlistdata의 ***중요***pidList : " + pidList);
-		logger.debug("selectlistdata의 ***중요***pidListSub : " + pidListSub);
+		logger.debug("pidListSub : " + pidListSub);
 		
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId());		
 		
@@ -510,7 +511,6 @@ public class EzScheduleController extends EgovFileMngUtil {
         String idTypeTmp = request.getParameter("idtype");
         //2018-06-07 구해안checkbox 값을 가져와서 char[]에 담기
         String idTypeChk = request.getParameter("idTypeChk");
-        logger.debug("idTypeChk : " + idTypeChk);
         char[] chk_array = null;
         if(idTypeChk != null && !idTypeChk.equals("")){
         	
