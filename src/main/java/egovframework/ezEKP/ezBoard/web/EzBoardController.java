@@ -7318,7 +7318,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		int pMode = 0;
 		
-		if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+		if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK"))) {
 			pMode = 0;
 		} else {
 			pMode = 1;
@@ -7333,19 +7333,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		ArrayList<String> tempBoardList = new ArrayList<String>();
 		ArrayList<String> accessAllBoardList = new ArrayList<String>();
 		
-		for(int i = 0; i < nList.getLength(); i++) {
+		for (int i = 0; i < nList.getLength(); i++) {
 			accessBoardList.add(nList.item(i).getChildNodes().item(2).getTextContent()); //그룹게시판
 		}
 		
-		//10단계까지 접근가능한 하위게시판 가져옴
-		for(int k = 0; k < 10; k++) { 
-			if(accessBoardList.size() == 0) break;
-			
-			for(int i = 0; i < accessBoardList.size(); i++) {
+		while (accessBoardList.size() != 0) {
+			for (int i = 0; i < accessBoardList.size(); i++) {
 				boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(accessBoardList.get(i), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 				pMode = 0;
 				
-				if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+				if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK"))) {
 					pMode = 0;
 				} else {
 					pMode = 1;
@@ -7355,7 +7352,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				doc = commonUtil.convertStringToDocument(strXML);
 				nList = doc.getElementsByTagName("NODE");
 				
-				for(int j = 0; j < nList.getLength(); j++) {
+				for (int j = 0; j < nList.getLength(); j++) {
 					tempBoardList.add(nList.item(j).getChildNodes().item(2).getTextContent()); 
 					accessAllBoardList.add(nList.item(j).getChildNodes().item(2).getTextContent());  
 				}
