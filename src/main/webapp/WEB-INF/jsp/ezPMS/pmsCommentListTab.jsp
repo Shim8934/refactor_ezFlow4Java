@@ -151,6 +151,11 @@
 	table.mainlist th {
 		cursor: pointer;
 	}
+	
+	#divList {
+		height: 370px !important;
+	}
+
 </style>
 
 </head>

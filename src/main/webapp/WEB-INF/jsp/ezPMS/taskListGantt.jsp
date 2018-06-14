@@ -143,8 +143,9 @@
 		   			tempTask.description = pd.overview;
 		   			tempTask.progress = Number(pd.progress).toFixed(1);
 		   			tempTask.realProgress = Number(pd.progress).toFixed(1);
-		   			tempTask.planProgress = Number(pd.planProgress).toFixed(1);
+// 		   			tempTask.planProgress = Number(pd.planProgress).toFixed(1);
 		   			tempTask.hasChild = "";
+		   			tempTask.type = "p";
 		   			
 		   			ganttData.tasks.push(tempTask);
 		   			
@@ -165,6 +166,9 @@
 	   				if(subTl.length > 0){
 	   					matchTaskData(ganttData ,subTl, "", "");
 	   				}
+	   				
+	   				//프로젝트의 진행률은 계산으로 구해서 넣어준다.
+	   				ganttData.tasks[0].planProgress = getPrjPlanProgress(ganttData);
 		   		}
 	   			
 	   			function matchGroupData(ganttData, gl){
@@ -214,6 +218,7 @@
 			   			tempTask.realProgress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.planProgress = Number(gl[i].planProgress).toFixed(1);
 			   			tempTask.hasChild = "";
+			   			tempTask.type = "g";
 		   				ganttData.tasks.push(tempTask);
 		   				
 		   				//그룹 업무 추가.
@@ -289,6 +294,7 @@
 			   			tempTask.realProgress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.planProgress = Number(tl[i].planProgress).toFixed(1);
 			   			tempTask.hasChild = "";
+			   			tempTask.type = "t";
 			   			
 			   			ganttData.tasks.push(tempTask);
 		   			}
@@ -336,8 +342,35 @@
 	   		
 	   		//그룹 삭제
 	   		function delGroup(){
-	   			//projectId = 전역
-	   			var groupId = document.getElementById("groupDelTest").value.trim(); //수정해주세요.
+	   			var groupId = ""; //수정해주세요.
+	   			
+				var selectType = "";
+	   			
+	   			//선택한 작업이 업무/그룹/프로젝트 인지 구분.
+	   			if(ge.currentTask.id && ge.currentTask.id.indexOf("_t") !== -1){
+	   				selectType = "task";
+	   			}
+	   			else if(ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1){
+	   				selectType = "group";
+	   			}
+	   			else if(ge.currentTask.id){
+	   				selectType = "project";
+	   			}
+	   			
+	   			if(selectType === "group"){
+	   				groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
+	   			}
+	   			else{
+	   				alert("그룹을 선택해 주세요.")
+	   				return;
+	   			}
+	   			
+	   			if(confirm("선택한 " + selectType + "을 삭제하시겠습니까?")){
+					delTaskFunc(selectType);
+	   			}
+	   			else{
+	   				alert("안지워요");
+	   			}
 	   			
 	   			data = {
 	   					projectId : projectId,
@@ -477,6 +510,12 @@
 	   			
 	   			//기간은 그대로, 날짜만 이동
 	   			GanttMaster.prototype.moveTask = function (task, newStart) {
+	   			  //선행작업 유효성 체크
+	   			  if(!preTaskValidChk(ge.currentTask, "move", newStart)){
+	   				  alert("선행작업을 체크하세요.");
+	   				  location.reload();
+	   			  }
+	   			
 		   		  if (typeof(newStart) == "number") {
 		   			newStart = new Date(newStart);
 		   		  }
@@ -593,7 +632,7 @@
 	   						toastPopupShow("[" + preTaskRowName + "]이 [" + taskName + "]의 선행작업으로 지정되었습니다.");
 	   						addTaskLog(projectId, 1, groupId, taskId, "[" + preTaskRowName + "]이 [" + taskName + "]의 선행작업으로 지정되었습니다.");
 	   					} else {
-	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
+	   						alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
@@ -603,6 +642,12 @@
 	   		}
 	   		
 	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {
+	   			  //선행작업 유효성 체크
+	   			  if(!preTaskValidChk(ge.currentTask, "", startDate)){
+	   				  alert("선행작업을 체크하세요.");
+	   				  location.reload();
+	   			  }
+	   			
 	   			var data = {
 	   					  taskId : taskId,
 	   					  projectId : projectId,
@@ -629,7 +674,7 @@
 	   						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "]의 계획일이 [" + startDate + " ~ " + endDate + "]로 변경되었습니다.");
 	   						ge.redraw();
 	   					} else {
-	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
+	   						alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
 	   						location.reload();
 	   					}
 	   				},
@@ -767,7 +812,7 @@
 	   				data:JSON.stringify(data),
 	   				success: function(result){
 	   					if (result == "rejected") {
-	   						alert("프로젝트 담당자나 그룹의 담당자만 변경할 수 있습니다.");
+	   						alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
 	   						return;
 	   					}
 	   				},
@@ -778,18 +823,7 @@
 	   		}
 	   		
 	   		function delTask(){
-	   			var selectType = "";
-	   			
-	   			//선택한 작업이 업무/그룹/프로젝트 인지 구분.
-	   			if(ge.currentTask.id && ge.currentTask.id.indexOf("_t") !== -1){
-	   				selectType = "task";
-	   			}
-	   			else if(ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1){
-	   				selectType = "group";
-	   			}
-	   			else if(ge.currentTask.id){
-	   				selectType = "project";
-	   			}
+	   			var selectType = ge.currentTask.type;
 	   			
 	   			if(confirm("선택한 " + selectType + "을 삭제하시겠습니까?")){
 					delTaskFunc(selectType);
@@ -805,10 +839,10 @@
 	   			var taskId = "";
 	   			var data = {};
 	   			
-	   			if(selectType === "project"){
+	   			if(selectType === "p"){
 	   				url = "/ezPMS/deleteProject.do";
 	   			}
-	   			else if(selectType === "group"){
+	   			else if(selectType === "g"){
 		   			delGroup();
 	   			}
 	   			else{
@@ -857,14 +891,14 @@
 	   			
 	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
 	   			if(taskId === ""){
-	   				alert("업무를 선택해주세요.");
+	   				alert("업무를 선택해 주십시오.");
 	   			}
 	   			// 가중치 검사
 	   			else if(newWeight == ""){
    					alert("가중치를 입력해 주십시오.");
    				}
    				else if(isNaN(newWeight)) {
-   					alert("가중치는 숫자만 입력 가능합니다.");
+   					alert("가중치는 숫자만 입력할 수 있습니다.");
    				}
    				else{
    					validFlag = true;
@@ -913,18 +947,25 @@
 	   			var taskId = 0;
 	   			var groupId = 0;
 	   			
+	   			//선행작업 유효성 체크할 때 어느 함수에서 넘어온건지 확인하기 위해 사용.
+	   			var mode = "update";
+	   			
 	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
 	   			groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
 	   			
 	   			if(taskId === ""){
-	   				alert("업무를 선택해주세요.");
+	   				alert("업무를 선택해 주십시오.");
+	   			}
+	   			//선행작업과의 유효성 체크
+	   			else if(!preTaskValidChk(curTask, mode)){
+	   				alert("선행작업이 완료되어야 후행작업의 진행률을 변경할 수 있습니다.");
 	   			}
 	   			// 가중치 검사
 	   			else if(newProgress == ""){
    					alert("진행률을 입력해 주십시오.");
    				}
    				else if(isNaN(newProgress)) {
-   					alert("진행률은 숫자만 입력 가능합니다.");
+   					alert("진행률은 숫자만 입력할 수 있습니다.");
    				}
    				else{
    					validFlag = true;
@@ -964,6 +1005,48 @@
 						alert("error2");
 					}
 				});
+	   		}
+	   		
+	   		//선행작업 관련 유효성 검사.
+	   		//파라미터 : 현재작업, 동작유형(수정, 이동), 현재작업의 새 시작일.
+	   		function preTaskValidChk(curTask, mode, startDate){
+	   			var flags = true;
+	   			var preTask = ge.tasks[curTask.depends - 1];
+	   			var newStart = typeof startDate == "number" ? startDate : typeof startDate == "object" ? startDate.getTime() : new Date(startDate).getTime();
+	   			
+	   			if(preTask){
+		   			if(mode === "update"){
+			   			//선행작업의 실제진행률이 100퍼센트가 되었는지 검사.
+			   			if(preTask.realProgress != 100){
+			   				flags = false;
+			   			}
+		   			}
+		   			else if(mode === "move"){
+		   			}
+		   			else{
+		   				
+		   			}
+	   				//선행작업이 후행작업의 시작일보다 늦게 종료되는지 검사.
+		   			if(newStart < preTask.end){
+		   				flags = false;
+		   			}
+	   			}
+	   			
+	   			//flags가 true이면 패스, false이면 에러
+	   			return flags;
+	   		}
+	   		
+	   		//프로젝트의 목표진행률을 계산해서 넣어줌.
+	   		function getPrjPlanProgress(ganttData){
+	   			var prjPlanProg = 0.0;
+	   			var tasks = ge.tasks || ganttData.tasks;
+	   			for(var i = 0; i < tasks.length; i++){
+	   			    var task = tasks[i];
+	   			    if(task.type === "t"){
+	   			        prjPlanProg += task.planProgress * task.weight / 100
+	   			    }
+	   			}
+	   			return Number(prjPlanProg).toFixed(1);
 	   		}
 	   		
 	   		
@@ -1181,7 +1264,6 @@
 						<option value="1y">지연</option>
 					</select>
 		        </li>
-		        <input style="height:23px;width:114px;border:1px solid black;font-size:12px;" id="groupDelTest" placeholder="그룹아이디 입력"/>
 		    </ul>
 		</div>
 		

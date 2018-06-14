@@ -276,6 +276,7 @@
 		<result property="groupId"					column="group_id"/>
 		<result property="rootItemId"				column="root_item_id"/>
 		<result property="itemLevel"				column="item_level"/>
+		<result property="docNo"					column="doc_no"/>
 	</resultMap>
 	
 	<resultMap class="FileVO" id="fileVO">
@@ -1465,19 +1466,31 @@
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
 				write_content,		write_date,			write_update_date,	read_count,				task_id,
 				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
-				writer_position,	writer_position2
+				writer_position,	writer_position2,	doc_no
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
 				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
-				#writerPosition#,	#writerPosition2#
+				#writerPosition#,	#writerPosition2#,	#docNo#
 			)
 		]]>
 		<selectKey keyProperty="itemId" resultClass="Integer">
     		SELECT LAST_INSERT_ID()
     	</selectKey>
 	</insert>
+	
+	<select id="EzPMSDAO.getMaxDocNo" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT IFNULL(max(doc_no), 0) FROM tbl_pms_item_list B
+			JOIN tbl_pms_group G
+			ON B.group_id = G.group_id
+			WHERE 
+				project_id = #projectId#
+			AND
+				B.tenant_id = #tenantId#
+		]]>
+	</select>
 	
 	<update id="EzPMSDAO.updateRootItemId" parameterClass="Integer">
 		<![CDATA[
@@ -1493,13 +1506,13 @@
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
 				write_content,		write_date,			write_update_date,	read_count,				task_id,
 				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
-				writer_position,	writer_position2,	root_item_id,		item_level
+				writer_position,	writer_position2,	root_item_id,		item_level,				doc_no
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
 				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
-				#writerPosition#,	#writerPosition2#,	#rootItemId#,		#itemLevel#
+				#writerPosition#,	#writerPosition2#,	#rootItemId#,		#itemLevel#,			#docNo#
 			)
 		]]>
 		<selectKey keyProperty="itemId" resultClass="Integer">
@@ -1584,7 +1597,7 @@
 				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
 				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		
 				IFNULL(F.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.task_id,
-				B.group_id,			B.root_item_id,				B.item_level
+				B.group_id,			B.root_item_id,				B.item_level,			B.doc_no
 			FROM tbl_pms_item_list B
 			JOIN tbl_pms_group G
 			ON B.group_id = G.group_id

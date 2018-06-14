@@ -150,9 +150,76 @@
 		function goAddBoardReply() {
 			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=reply' + '&rootItemId=' + rootItemId + '&itemLevel=' + itemLevel;
 		}
+		
+	 	var nowZoom = 100;
+        var maxZoom = 200;
+        var minZoom = 80;
+
+        var MozNowZoom = 1;
+        var MozMaxZoom = 2;
+        var MozMinZoom = 0.8;
+	        
+		window.onload = function() {
+			var doc = document.getElementById('message');
+			
+			document.getElementById('smaller').onclick = function () {
+				Smaller(doc);
+			}
+			document.getElementById('bigger').onclick = function () {
+				Bigger(doc);
+			}
+		}
+		
+		function Bigger(doc) {     
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
+                if (MozNowZoom < MozMaxZoom) {
+                    MozNowZoom += 0.1;
+                } else {
+                    return;
+                }
+                
+                $(doc).find('.contentDiv').css("MozTransform","scale(" + MozNowZoom + ")");
+                $(doc).find('.contentDiv').css("MozTransformOrigin","0 0");
+            } else {
+                if (nowZoom < maxZoom) {
+                    nowZoom += 10;
+                } else {
+                    return;
+                }
+                
+                $(doc).find(".contentDiv").css("zoom",nowZoom + "%");
+                $(doc).find("#curZoomSize").text(nowZoom + "%");
+                $(doc).find("#curZoomSize").show();
+                setTimeout(function(){$(doc).find("#curZoomSize").css("display","none")}, 1000);
+            }
+        }
+        
+        function Smaller(doc) {
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
+                if (MozNowZoom > MozMinZoom) {
+                    MozNowZoom -= 0.1;
+                } else {
+                    return;
+                }
+
+                $(doc).find('.contentDiv').css("MozTransform","scale(" + MozNowZoom + ")");
+                $(doc).find('.contentDiv').css("MozTransformOrigin","0 0");
+            } else {
+                if (nowZoom > minZoom) {
+                    nowZoom -= 10;
+                } else {
+                    return;
+                }
+
+                $(doc).find(".contentDiv").css("zoom",nowZoom + "%");
+                $(doc).find("#curZoomSize").text(nowZoom + "%");
+                $(doc).find("#curZoomSize").show();
+                setTimeout(function(){$(doc).find("#curZoomSize").css("display","none")}, 1000);
+            }
+        }
 	</script>
 </head>
-<body class="popup" style="height: 99%;">
+<body class="popup" style="height: 98%; word-wrap: break-word;">
 	<table class="layout" style="width: 100%">
 		<tr>
 			<td style="height: 20px">
@@ -174,34 +241,43 @@
 				<table class="content" style="width:100%;">
 					<tr>
 						<th><spring:message code='ezPMS.t114' /></th>
-						<td style="width: 50%">${board.writerName}</td>
+						<td style="width: 50%"><c:out value="${board.writerName}"/></td>
 						<th><spring:message code='ezPMS.t214' /></th>
-						<td>${board.writerDeptName}</td>
+						<td><c:out value="${board.writerDeptName}"/></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t216' /></th>
-						<td style="width: 50%">${board.writerPosition}</td>
+						<td style="width: 50%"><c:out value="${board.writerPosition}"/></td>
 						<th><spring:message code='ezPMS.t117' /></th>
-						<td>${board.mobileNumber}</td>
+						<td><c:out value="${board.mobileNumber}"/></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t80' /></th>
 						<td id="taskName" style="width: 50%"></td>
 						<th><spring:message code='ezPMS.t119' /></th>
-						<td>${fn:substring(board.writeDate, 0, 19)}</td>
+						<td><c:out value="${fn:substring(board.writeDate, 0, 19)}"/></td>
 						
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t215' /></th>
-						<td colspan="3">${board.title}</td>
+						<td colspan="3"><c:out value="${board.title}"/></td>
 					</tr>
 				</table>
 			</td>
 		</tr>
 		<tr>
 			<td class="pad1" id="pad1" style="vertical-align: top; height: 100%;">
-				<div style="padding:0; width:100%; height:100%; overflow:auto; border:1px solid #d1d1d1">
-					${board.writeContent}
+				<div id="message" style="border:1px solid #d1d1d1; padding: 8px; height: 530px; overflow: auto;">
+					<div>
+						<img src="/images/minus.png" title="글자작게" id="smaller" style="cursor:pointer;">
+						<img src="/images/plus.png" title="글자크게" id="bigger" style="cursor: pointer;">
+						<span id="curZoomSize" style="display:none; float:right;"></span>
+					</div>
+					<br />
+					<br />
+					<div class="contentDiv">
+						${board.writeContent}
+					</div>
 				</div>
 			</td>
 		</tr>
@@ -216,7 +292,9 @@
 									<div style="margin-top: 3px; height: 20px">
 										<input type="checkbox" data-filename="${file.fileName}" data-filepath="${file.filePath}">
 										<img src="/images/${file.fileType}.png"/>&nbsp; 
-										<a href="/ezPMS/downloadFile.do?filePath=${file.filePath}&fileName=${file.fileName}">${file.fileName}&nbsp;(${file.fileTransSize})</a>
+										<a href="/ezPMS/downloadFile.do?filePath=${file.filePath}&fileName=${file.fileName}">
+											<c:out value="${file.fileName} (${file.fileTransSize})"/>
+										</a>
 										<br>
 									</div>
 								</c:forEach>

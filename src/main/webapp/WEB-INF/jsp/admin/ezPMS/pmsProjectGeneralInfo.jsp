@@ -156,38 +156,45 @@
 			planEndDate : planEndDate,
 			overview	 : overview,
 			endAlamStatus : endAlamStatus,
+			groupId : groupId,
+			// 담당자
 			headManagerId : headManagerId,
 			managerList : managerList,
 			participantList : participantList,
 			viewerList : viewerList,
-			groupId : groupId,
-			
+			// 진행 상태
 			status : status,
 			nowStatus : nowStatus
 		}
 		
-		$.ajax({
-			type : "POST",
-			url : "/admin/ezPMS/modifyProject.do",
-			dataType : "json",
-			contentType: "application/json; charset=UTF-8",
-			data :JSON.stringify(data),
-			success : function(result) {
-				if(result.memberChange == 'success' && result.statusChange == 'success') {
-					sendNotiMail(projectId, projectName);
-					var logContent = "[" + projectName + "]의 정보가 수정되었습니다."
-					addTaskLog(projectId, 2, groupId, null, logContent);
-					alert ("프로젝트가 수정되었습니다.");
-					window.close();
-					opener.getProjectList();
-				} else {
+		if (status == "C" && nowStatus != "C") {
+			response = confirm("프로젝트를 완료하면 하위 작업이 모두 완료됩니다.\n진행하시곘습니까?");
+		}
+		
+		if(response == true) {
+			$.ajax({
+				type : "POST",
+				url : "/admin/ezPMS/modifyProject.do",
+				dataType : "json",
+				contentType: "application/json; charset=UTF-8",
+				data :JSON.stringify(data),
+				success : function(result) {
+					if(result.memberChange == 'success' && result.statusChange == 'success') {
+						sendNotiMail(projectId, projectName);
+						var logContent = "[" + projectName + "]의 정보가 수정되었습니다."
+						addTaskLog(projectId, 2, groupId, null, logContent);
+						alert ("프로젝트가 수정되었습니다.");
+						window.close();
+						opener.getProjectList();
+					} else {
+						alert("error");
+					}		
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
 					alert("error");
-				}		
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				alert("error");
-			}
-		});
+				}
+			});
+		}	
 	}
 	
 	function setStatus(elem) {
@@ -313,7 +320,6 @@
 				</table>
 			</td>
 		</tr>
-	</table>
-	
+	</table>	
 </body>
 </html>

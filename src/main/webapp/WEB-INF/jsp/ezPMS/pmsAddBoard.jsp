@@ -304,8 +304,12 @@
 						<th><spring:message code='ezPMS.t31' /></th>
 						<td style="width: 50%">
 							<c:choose>
-								<c:when test="${projectName eq null}">${board.projectName}</c:when>
-								<c:otherwise>${projectName}</c:otherwise>
+								<c:when test="${projectName eq null}">
+									<c:out value="${board.projectName}"/> 
+								</c:when>
+								<c:otherwise>
+									<c:out value="${projectName}"/> 
+								</c:otherwise>
 							</c:choose>		
 						</td>
 						<th><spring:message code='ezPMS.t77' /></th>
@@ -315,7 +319,7 @@
 						<th><a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;"><span><spring:message code='ezPMS.t80' /></span></a></th>
 						<td style="width: 50%" id="taskName"></td>
 						<th><spring:message code='ezPMS.t57' /></th>
-						<td>${writerName}(${writerDeptName})</td>
+						<td><c:out value="${writerName}(${writerDeptName})"/></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t215' /></th>

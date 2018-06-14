@@ -66,7 +66,7 @@ function changeStatus() {
 	var status = $("input[name='status']:checked").val();
 	var response = true;
 	
-	if (status = "C") {
+	if (status == "C") {
 		response = confirm("<spring:message code='ezPMS.t159' />");
 	}
 	
