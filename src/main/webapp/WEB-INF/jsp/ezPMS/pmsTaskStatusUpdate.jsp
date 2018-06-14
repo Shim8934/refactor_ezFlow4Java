@@ -110,10 +110,10 @@
 	
 	function setProgress(){
 		var diff = 0;
-		diff = taskDetails.planProgress - taskDetails.realProgress;
-		document.querySelector("[name='realProgress']").value = taskDetails.realProgress + "%";
-		document.getElementById("planProgress").innerText = taskDetails.planProgress + "%";
-		document.getElementById("progDiff").innerText = (diff > 0 ? "+" + diff : (diff < 0 ? "-" + diff : "-")) + "%";
+		diff = Number(taskDetails.planProgress - taskDetails.realProgress).toFixed(1);
+		document.querySelector("[name='realProgress']").value = Number(taskDetails.realProgress).toFixed(1) + "%";
+		document.getElementById("planProgress").innerText = Number(taskDetails.planProgress).toFixed(1) + "%";
+		document.getElementById("progDiff").innerText = (diff > 0 ? "+" + diff : (diff < 0 ? diff : "-")) + "%";
 	}
 	
 	function setStatus(){
@@ -277,7 +277,7 @@
 		if(realStartDate){
 			$("#RSDatepicker").datepicker("setDate", RSDate);
 			diff = (PSDate.getTime() - RSDate.getTime()) / (60 * 60 * 24 * 1000);
-			document.getElementById("sDiff").innerText = diff > 0 ? "+" + diff : (diff < 0 ? "-" + diff : "-") ;
+			document.getElementById("sDiff").innerText = diff > 0 ? "+" + diff : (diff < 0 ? diff : "-") ;
 		}
 		
 		$("#PEDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -286,7 +286,7 @@
 		if(realStartDate){
 			$("#REDatepicker").datepicker("setDate", REDate);
 			diff = (PEDate.getTime() - REDate.getTime()) / (60 * 60 * 24 * 1000);
-			document.getElementById("eDiff").innerText = diff > 0 ? "+" + diff : (diff < 0 ? "-" + diff : "-");
+			document.getElementById("eDiff").innerText = diff > 0 ? "+" + diff : (diff < 0 ? diff : "-");
 		}
 		
 		$.datepicker.regional["<spring:message code='main.t0619' />"] = {
