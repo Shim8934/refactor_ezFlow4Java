@@ -207,7 +207,7 @@ form{display:inline;margin:0}
 	padding:12px 5px 0px 40px;
 	cursor:pointer;
 }
-.leftbody ul li:last-child {padding-bottom:12px; border-bottom:1px solid #e6e6e6;}
+.leftbody ul li:last-child {padding-bottom:12px; border-bottom:1px solid #e8e8e8;}
 
 .leftbody #iconul {background-color:#ffffff;list-style-type:none;padding:0;margin:0;}
 .leftbody #iconul li{
@@ -225,8 +225,8 @@ form{display:inline;margin:0}
 #left h2, #TopBoards h2{
 	margin: -1px 0px 0px 0px;
 	padding:0 0 0 19px;
-	border-top:1px solid #e6e6e6;
-	border-bottom: 1px solid #e6e6e6;
+	border-top:1px solid #e8e8e8;
+	border-bottom: 1px solid #e8e8e8;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
 	height:33px;
@@ -257,7 +257,7 @@ form{display:inline;margin:0}
 	word-break:keep-all;
 	white-space:nowrap;
 	font-weight:normal;
-	/* border-top: 1px solid #e6e6e6; */
+	/* border-top: 1px solid #e8e8e8; */
 	font-size:12px;
 }
 
@@ -1120,7 +1120,7 @@ form{display:inline;margin:0}
 {
 
 	height:35px;
-	font-weight:bold; 
+	font-weight:normal; 
 	 background:#fff;
 	 border-top:0 none;
 	border-left:1px solid #dedede; 
@@ -1136,7 +1136,7 @@ form{display:inline;margin:0}
 {
 
 	border:1px solid #dddddd; 
-	font-weight:bold; 
+	font-weight:normal; 
 	color:#003f7d;
 	padding-left:5px;
 	padding-top:15px;
@@ -1158,7 +1158,7 @@ form{display:inline;margin:0}
 	border:1px solid #dddddd;  
 	background:#f8f8fa;
 	color:#003f7d;
-	font-weight:bold;
+	font-weight:normal;
 	padding-left:5px;
 }
 .todaytd_02
