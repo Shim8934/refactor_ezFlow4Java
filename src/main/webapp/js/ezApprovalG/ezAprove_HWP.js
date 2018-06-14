@@ -1401,11 +1401,10 @@ function setPublicFlag2() {
     if (!HwpCtrl.CheckFieldExist("publication")) return;
     var PublicType = pPublicityYN.substring(0, 1);
 
-    var PublicText = "";
     if (PublicType == "Y")
-        PublicText = "<spring:message code='ezApprovalG.t47'/>";
+        PublicText = strLang82;
     else if (PublicType == "N")
-        PublicText = "<spring:message code='ezApprovalG.t46'/>";
+        PublicText = strLang84;
     else
         PublicText = " ";
     
