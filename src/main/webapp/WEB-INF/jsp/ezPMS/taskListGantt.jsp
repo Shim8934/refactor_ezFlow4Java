@@ -510,6 +510,12 @@
 	   			
 	   			//기간은 그대로, 날짜만 이동
 	   			GanttMaster.prototype.moveTask = function (task, newStart) {
+	   			  //선행작업 유효성 체크
+	   			  if(!preTaskValidChk(ge.currentTask, "move", newStart)){
+	   				  alert("선행작업을 체크하세요.");
+	   				  location.reload();
+	   			  }
+	   			
 		   		  if (typeof(newStart) == "number") {
 		   			newStart = new Date(newStart);
 		   		  }
@@ -636,6 +642,12 @@
 	   		}
 	   		
 	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {
+	   			  //선행작업 유효성 체크
+	   			  if(!preTaskValidChk(ge.currentTask, "", startDate)){
+	   				  alert("선행작업을 체크하세요.");
+	   				  location.reload();
+	   			  }
+	   			
 	   			var data = {
 	   					  taskId : taskId,
 	   					  projectId : projectId,
@@ -935,11 +947,18 @@
 	   			var taskId = 0;
 	   			var groupId = 0;
 	   			
+	   			//선행작업 유효성 체크할 때 어느 함수에서 넘어온건지 확인하기 위해 사용.
+	   			var mode = "update";
+	   			
 	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
 	   			groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
 	   			
 	   			if(taskId === ""){
 	   				alert("업무를 선택해 주십시오.");
+	   			}
+	   			//선행작업과의 유효성 체크
+	   			else if(!preTaskValidChk(curTask, mode)){
+	   				alert("선행작업이 완료되어야 후행작업의 진행률을 변경할 수 있습니다.");
 	   			}
 	   			// 가중치 검사
 	   			else if(newProgress == ""){
@@ -986,6 +1005,35 @@
 						alert("error2");
 					}
 				});
+	   		}
+	   		
+	   		//선행작업 관련 유효성 검사.
+	   		//파라미터 : 현재작업, 동작유형(수정, 이동), 현재작업의 새 시작일.
+	   		function preTaskValidChk(curTask, mode, startDate){
+	   			var flags = true;
+	   			var preTask = ge.tasks[curTask.depends - 1];
+	   			var newStart = typeof startDate == "number" ? startDate : typeof startDate == "object" ? startDate.getTime() : new Date(startDate).getTime();
+	   			
+	   			if(preTask){
+		   			if(mode === "update"){
+			   			//선행작업의 실제진행률이 100퍼센트가 되었는지 검사.
+			   			if(preTask.realProgress != 100){
+			   				flags = false;
+			   			}
+		   			}
+		   			else if(mode === "move"){
+		   			}
+		   			else{
+		   				
+		   			}
+	   				//선행작업이 후행작업의 시작일보다 늦게 종료되는지 검사.
+		   			if(newStart < preTask.end){
+		   				flags = false;
+		   			}
+	   			}
+	   			
+	   			//flags가 true이면 패스, false이면 에러
+	   			return flags;
 	   		}
 	   		
 	   		//프로젝트의 목표진행률을 계산해서 넣어줌.
