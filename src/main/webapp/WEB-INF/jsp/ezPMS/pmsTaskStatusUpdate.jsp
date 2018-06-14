@@ -31,10 +31,10 @@
 	var taskDetails;
 	var weightData;
 	var nowStatus;
-	var progressColor = "${mainSetting.progressColor}";
-	var completeColor = "${mainSetting.completeColor}";
-	var overdueColor = "${mainSetting.overdueColor}";
-	var holdColor = "${mainSetting.holdColor}";
+	var progressColor = parent.progressColor;
+	var completeColor = parent.completeColor;
+	var overdueColor = parent.overdueColor;
+	var holdColor = parent.holdColor;
 	
 	$(function(){
 		taskDetails = JSON.parse(parent.document.all["frameParamTaskDetails"].value);
@@ -179,7 +179,7 @@
 		}
 		 
 		// 가중치 검사
-		realProgress = realProgress.match(/\d+/)[0];
+		realProgress = realProgress.match(/\d+[.]\d/)[0];
 		if (realProgress != taskDetails.realProgress) {
 			if (realProgress == "") {
 				alert("진행률을 입력해 주십시오.");
@@ -198,6 +198,19 @@
 				return;
 			}
 		}
+		
+		//실제 날짜를 입력하지 않고 상태만 변경할 경우 처리.
+		if(status === "C"){
+			if(!realEndDate){
+				realEndDate = TimeToStr(new Date());
+			}
+			realProgress = 100;
+		}
+		if(status === "C" || status === "P"){
+			if(!realStartDate){
+				realStartDate = TimeToStr(new Date());
+			}
+		}
 
 		
 		data = {
@@ -208,7 +221,8 @@
 				realStartDate : realStartDate,
 				realEndDate : realEndDate,
 				realProgress : realProgress,
-				status : status
+				status : status,
+				groupId : taskDetails.groupId
 		}
 		
 		$.ajax({
@@ -283,7 +297,7 @@
 		$("#PEDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		$("#PEDatepicker").datepicker("setDate", PEDate);
 		$("#REDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		if(realStartDate){
+		if(realEndDate){
 			$("#REDatepicker").datepicker("setDate", REDate);
 			diff = (PEDate.getTime() - REDate.getTime()) / (60 * 60 * 24 * 1000);
 			document.getElementById("eDiff").innerText = diff > 0 ? "+" + diff : (diff < 0 ? diff : "-");
