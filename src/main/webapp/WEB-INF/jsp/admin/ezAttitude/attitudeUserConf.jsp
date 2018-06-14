@@ -234,7 +234,7 @@
     			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectedUserIdList=" + selectedUserIdList + "&companyId=" + pCompanyId;
 	    		
 	    		if (CrossYN()) {
-	    			OpenWin = GetOpenWindow(url, "", "340", "180");
+	    			OpenWin = GetOpenWindow2(url, "", "340", "180");
 	    			
 	    			try { OpenWin.focus();} catch (e) { }
 	    		} else {
@@ -280,7 +280,7 @@
     			var url = "/admin/ezAttitude/editAttitudeDeptConf.do?companyId=" + pCompanyId;
 	    		
 	    		if (CrossYN()) {
-	    			OpenWin = GetOpenWindow(url, "", "500", "652");
+	    			OpenWin = GetOpenWindow2(url, "", "500", "652");
 	    			
 	    			try { OpenWin.focus();} catch (e) { }
 	    		} else {

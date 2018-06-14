@@ -139,3 +139,29 @@ function makePageSelPageAtti() {
 	
 	$("#tblPageRayer").html(pagingHtml);
 }
+
+//팝업창 주모니터가 아니더라도 가운데로 오게끔
+function GetOpenWindow2(url, target, popUpW, popUpH, resizeFlag) {
+    var resize;
+    if (MACSAFARIYN())
+        popUpH = popUpH + 50;
+
+    var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+    var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+    
+    var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+    
+    var left = ((screen.width / 2) - (popUpW / 2)) + dualScreenLeft;
+    var top = ((screen.height / 2) - (popUpH / 2)) + dualScreenTop;
+
+    if (resizeFlag == undefined || resizeFlag.toUpperCase() == "NO")
+        resize = "resizable=no";
+    else
+        resize = "resizable=yes";
+    
+    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + "px ,top=" + top + "px, status = no, toolbar=no, menubar=no,location=no," + resize;
+    var result = window.open(url, target, feature);
+    result.focus();
+    return result;
+}
