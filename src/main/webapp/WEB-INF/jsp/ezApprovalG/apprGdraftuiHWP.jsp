@@ -264,12 +264,13 @@
 	                            btnClose_onclick();
 	                        }
 	                    }
-	
-	                    if (pDraftFlag != "REDRAFT")
+	                    
+	                    if (pDraftFlag != "REDRAFT") {
 	                        setFirstDrafter();
-	                    else
+	                    } else {
 	                        SignCheck();
-	
+	                    }
+	                    
 	                    HwpCtrl.SetFieldFocus("doctitle");
 	                    HwpCtrl.ezSetScrollPosInfo(0);
 	                    HwpCtrl.SetImgReg();
