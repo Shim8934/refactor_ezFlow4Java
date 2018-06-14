@@ -901,6 +901,9 @@ function ListView() {
                 objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
             else
                 objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
+            
+            // 수정띠
+            objTr.onclick = function () { event_listclick(this); };
 
             if (_rowondblclick != null)
                 objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
@@ -917,7 +920,8 @@ function ListView() {
                 _firstRowID = _thisID + "_TR_" + i;
             }
             else {
-                objTr.setAttribute("selected", "false");
+            	//  수정띠
+                objTr.setAttribute("selected", "true");
                 objTr.className = "";
                 objTr.style.backgroundColor = m_strColorDefault;
             }
@@ -1492,7 +1496,9 @@ function tr_select(pRowID, pTableID, callbackFunc) {
     strAttribute = GetAttribute(oSourceTr, "selected");
 
     if (strAttribute == "true") {
-        oSourceTr.setAttribute("selected", "false");
+    	// 수정띠
+    	oSourceTr.setAttribute("selected", "true");
+        //oSourceTr.setAttribute("selected", "false");
         oSourceTr.style.backgroundColor = m_strColorDefault;
     }
     else {

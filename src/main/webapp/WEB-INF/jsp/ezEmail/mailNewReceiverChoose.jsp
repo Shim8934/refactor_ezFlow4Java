@@ -250,7 +250,7 @@
 	            }
 	            
 	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	            $("#listType1 tr").each(function(){
+	           /*  $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
 	            });
 	            
@@ -287,7 +287,7 @@
 	            
 	            $( "#ListViewMsgBCC" ).mouseout(function(){
 	            	prevPointer = 'ListViewMsgBCC';
-				});
+				}); */
 	            
 	            
 			    // to, cc, bcc 온로드 시 이벤트 주기 재은
@@ -825,168 +825,357 @@
 	            } catch (e) { }
 	
 	            if (m_selectedTree == AddressListView) {
-	                var pListViewDL = new ListView();
-	                pListViewDL.LoadFromID("Address");
-	                var arrRows = pListViewDL.GetSelectedRows();
-	                if (arrRows.length > 0) {
-	                    var pparsingXML = "";
-	                    var pparsingXML2 = "";
-	                    for (var i = 0; i < arrRows.length; i++) {
-	                        var pAddressID = GetAttribute(arrRows[i], "DATA1");
-	                        var pAddressType = GetAttribute(arrRows[i], "DATA2");
-	                        var pAddressFolderType = GetAttribute(arrRows[i], "DATA4");
-	                        var strName = arrRows[i].cells[0].innerText
-	                        var strEmail = GetAttribute(arrRows[i], "DATA3");
-	                        pAddressID = pAddressID + "|!|" + pAddressFolderType;
-	                        if (strEmail.trim() == "") {
-	                            alert(strName + " " + strLang301)
-	                            continue;
-	                        }
-	                        if (strName.trim() == "")
-	                            strName = strEmail;
-	
-	                        if (strEmail.trim() == "mail") {
-	                            continue;
-	                        }
-	                        var listid = "";
-	                        if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
-	                            listid = "MsgToList";
-	                        }
-	                        else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
-	                            listid = "MsgCCList";
-	                        }
-	                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
-	                            listid = "MsgBCCList";
-	                        }
-	                        var targetList = new ListView();
-	                        targetList.LoadFromID(listid);
-	                        var IsInsert;
-	                        if (pAddressType == "mailgroup") {
-	                            if (type == "config") {
-	                                alert(strLang322);
-	                                return;
+	            	
+	            	if (moveRecipients) {
+	            		if (listContentArry != "") {
+	                        for (var i = 0; i < listContentArry.length; i++) {
+	                        	var strName = document.getElementById(listContentArry[i]).getAttribute("data1");
+                        		var strEmail = document.getElementById(listContentArry[i]).getAttribute("data2");
+                        		
+                        		if (strEmail.trim() == "")
+		                            return;
+		
+		                        if (strName.trim() == "")
+		                            strName = strEmail;
+                        		
+		                        var listid = "";
+		                        if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
+		                            listid = "MsgToList";
+		                        }
+		                        else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
+		                            listid = "MsgCCList";
+		                        }
+		                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
+		                            listid = "MsgBCCList";
+		                        }
+		                        
+		                        var targetList = new ListView();
+		                        targetList.LoadFromID(listid);
+		                        var IsInsert = CheckMailReceiver(strEmail, "3");
+		                        
+		                        // 재은 수정중
+                            	IsInsert = false;
+                            	var _listview = new ListView();
+            	            	_listview.LoadFromID(listid);
+            	            	var arrRows = _listview.GetDataRows();
+            		            
+            		            for (count2 = 0; count2 < arrRows.length; count2++) {
+            		                if (strEmail == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup") {
+            		                	IsInsert = true;
+            		                	moveDel = true;
+            		                } else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
+            		                    if (strEmail == arrRows[count2].getAttribute("data4")) {
+            		                    	IsInsert = true;
+            		                    	moveDel = true;
+            		                    }
+            		                }
+            		            }
+		
+		                        if (!IsInsert) {
+		                            pparsingXML2 = "";
+		                            pparsingXML = "";
+		                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+		                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+		                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
+		                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                            Resultxml = loadXMLString(pparsingXML2);
+		
+		                            var listview = new ListView();
+		                            listview.LoadFromID(listid);
+		                            var MaxID = 0;
+		                            var InitTr = listview.GetDataRows();
+		                            var MaxCntNum = 0;
+		                            for (var j = 0  ; j < InitTr.length  ; j++) {
+		                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                                if (MaxID < curnum) {
+		                                    MaxID = curnum;
+		                                    MaxCntNum = j;
+		                                }
+		                            }
+		
+		                            var objTr = listview.AddRow(InitTr.length);
+		                            if (MaxCntNum != 0)
+		                                MaxCntNum = MaxCntNum + 1;
+		                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                            listview.AddDataRow(objTr, Resultxml);
+		
+		                            document.getElementById(listid).className = "receiver_list";
+		                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		                            for (var y = 0; y < _tdlength; y++) {
+		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                            }
+		                        }
+		                        
+		                        // 복사 한뒤 삭제 => 이동 재은
+	                            if (moveRecipients && !moveDel) {
+	                            	var selList = new ListView();
+	                	            selList.LoadFromID(prevListId);
+	                	            selList.DeleteRow(selectMoveList);
 	                            }
-	                            else
-	                                IsInsert = CheckMailReceiver(pAddressID, "3");
-	                        }
-	                        else
-	                            IsInsert = CheckMailReceiver(strEmail, "3");
-	
-	                        if (!IsInsert) {
-	                            pparsingXML2 = "";
-	                            pparsingXML = "";
-	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
-	                            if (pAddressType == "mailgroup")
-	                                pparsingXML = pparsingXML + "<DATA2>" + pAddressType + "</DATA2>";
-	                            else
-	                                pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strEmail) + "]]></DATA3>";
-	                            pparsingXML = pparsingXML + "<DATA4><![CDATA[" + MakeXMLString(pAddressID) + "]]></DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
-	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                            Resultxml = loadXMLString(pparsingXML2);
-	
-	                            var listview = new ListView();
-	                            listview.LoadFromID(listid);
-	                            var MaxID = 0;
-	                            var InitTr = listview.GetDataRows();
-	                            var MaxCntNum = 0;
-	                            for (var j = 0  ; j < InitTr.length  ; j++) {
-	                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                                if (MaxID < curnum) {
-	                                    MaxID = curnum;
-	                                    MaxCntNum = j;
-	                                }
-	                            }
-	
-	                            var objTr = listview.AddRow(InitTr.length);
-	                            if (MaxCntNum != 0)
-	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                            listview.AddDataRow(objTr, Resultxml);
-	
-	                            document.getElementById(listid).className = "receiver_list";
-	                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-	                            for (var y = 0; y < _tdlength; y++) {
-	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-	                            }
-	                        }
-	                    }
-	                }
+	                        } 
+	            		}
+	            	} else {
+	            		var pListViewDL = new ListView();
+		                pListViewDL.LoadFromID("Address");
+		                var arrRows = pListViewDL.GetSelectedRows();
+		                if (arrRows.length > 0) {
+		                    var pparsingXML = "";
+		                    var pparsingXML2 = "";
+		                    for (var i = 0; i < arrRows.length; i++) {
+		                        var pAddressID = GetAttribute(arrRows[i], "DATA1");
+		                        var pAddressType = GetAttribute(arrRows[i], "DATA2");
+		                        var pAddressFolderType = GetAttribute(arrRows[i], "DATA4");
+		                        var strName = arrRows[i].cells[0].innerText
+		                        var strEmail = GetAttribute(arrRows[i], "DATA3");
+		                        pAddressID = pAddressID + "|!|" + pAddressFolderType;
+		                        if (strEmail.trim() == "") {
+		                            alert(strName + " " + strLang301)
+		                            continue;
+		                        }
+		                        if (strName.trim() == "")
+		                            strName = strEmail;
+		
+		                        if (strEmail.trim() == "mail") {
+		                            continue;
+		                        }
+		                        var listid = "";
+		                        if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
+		                            listid = "MsgToList";
+		                        }
+		                        else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
+		                            listid = "MsgCCList";
+		                        }
+		                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
+		                            listid = "MsgBCCList";
+		                        }
+		                        var targetList = new ListView();
+		                        targetList.LoadFromID(listid);
+		                        var IsInsert;
+		                        if (pAddressType == "mailgroup") {
+		                            if (type == "config") {
+		                                alert(strLang322);
+		                                return;
+		                            }
+		                            else
+		                                IsInsert = CheckMailReceiver(pAddressID, "3");
+		                        }
+		                        else
+		                            IsInsert = CheckMailReceiver(strEmail, "3");
+		
+		                        if (!IsInsert) {
+		                            pparsingXML2 = "";
+		                            pparsingXML = "";
+		                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+		                            if (pAddressType == "mailgroup")
+		                                pparsingXML = pparsingXML + "<DATA2>" + pAddressType + "</DATA2>";
+		                            else
+		                                pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+		                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strEmail) + "]]></DATA3>";
+		                            pparsingXML = pparsingXML + "<DATA4><![CDATA[" + MakeXMLString(pAddressID) + "]]></DATA4>";
+		                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                            Resultxml = loadXMLString(pparsingXML2);
+		
+		                            var listview = new ListView();
+		                            listview.LoadFromID(listid);
+		                            var MaxID = 0;
+		                            var InitTr = listview.GetDataRows();
+		                            var MaxCntNum = 0;
+		                            for (var j = 0  ; j < InitTr.length  ; j++) {
+		                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                                if (MaxID < curnum) {
+		                                    MaxID = curnum;
+		                                    MaxCntNum = j;
+		                                }
+		                            }
+		
+		                            var objTr = listview.AddRow(InitTr.length);
+		                            if (MaxCntNum != 0)
+		                                MaxCntNum = MaxCntNum + 1;
+		                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                            listview.AddDataRow(objTr, Resultxml);
+		
+		                            document.getElementById(listid).className = "receiver_list";
+		                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		                            for (var y = 0; y < _tdlength; y++) {
+		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                            }
+		                        }
+		                    }
+		                }
+	            	}	            	
+	                
 	            }
 	            else if (m_selectedTree == ListViewDL) {
-	                var pListViewDL = new ListView();
-	                pListViewDL.LoadFromID("pListViewDL");
-	                var arrRows = pListViewDL.GetSelectedRows();
-	                if (arrRows.length > 0) {
-	                    var pparsingXML = "";
-	                    var pparsingXML2 = "";
-	                    for (var i = 0; i < arrRows.length; i++) {
-	
-	                        var strName = arrRows[i].innerText;
-	                        var strEmail = GetAttribute(arrRows[i], "DATA2");
-	                        if (strEmail.trim() == "")
-	                            return;
-	
-	                        if (strName.trim() == "")
-	                            strName = strEmail;
-	                        var listid = "";
-	
-	                        if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
-	                            listid = "MsgToList";
-	                        }
-	                        else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
-	                            listid = "MsgCCList";
-	                        }
-	                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
-	                            listid = "MsgBCCList";
-	                        }
-	
-	                        var targetList = new ListView();
-	                        targetList.LoadFromID(listid);
-	                        var IsInsert = CheckMailReceiver(strEmail, "3");
-	
-	                        if (!IsInsert) {
-	                            pparsingXML2 = "";
-	                            pparsingXML = "";
-	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
-	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
-	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                            Resultxml = loadXMLString(pparsingXML2);
-	
-	                            var listview = new ListView();
-	                            listview.LoadFromID(listid);
-	                            var MaxID = 0;
-	                            var InitTr = listview.GetDataRows();
-	                            var MaxCntNum = 0;
-	                            for (var j = 0  ; j < InitTr.length  ; j++) {
-	                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                                if (MaxID < curnum) {
-	                                    MaxID = curnum;
-	                                    MaxCntNum = j;
-	                                }
+	            	
+	            	if (moveRecipients) {
+	            		if (listContentArry != "") {
+	                        for (var i = 0; i < listContentArry.length; i++) {
+	                        	var strName = document.getElementById(listContentArry[i]).getAttribute("data1");
+                        		var strEmail = document.getElementById(listContentArry[i]).getAttribute("data2");
+                        		
+                        		if (strEmail.trim() == "")
+		                            return;
+		
+		                        if (strName.trim() == "")
+		                            strName = strEmail;
+                        		
+		                        var listid = "";
+		                        if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
+		                            listid = "MsgToList";
+		                        }
+		                        else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
+		                            listid = "MsgCCList";
+		                        }
+		                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
+		                            listid = "MsgBCCList";
+		                        }
+		                        
+		                        var targetList = new ListView();
+		                        targetList.LoadFromID(listid);
+		                        var IsInsert = CheckMailReceiver(strEmail, "3");
+		                        
+		                        // 재은 수정중
+                            	IsInsert = false;
+                            	var _listview = new ListView();
+            	            	_listview.LoadFromID(listid);
+            	            	var arrRows = _listview.GetDataRows();
+            		            
+            		            for (count2 = 0; count2 < arrRows.length; count2++) {
+            		                if (strEmail == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup") {
+            		                	IsInsert = true;
+            		                	moveDel = true;
+            		                } else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
+            		                    if (strEmail == arrRows[count2].getAttribute("data4")) {
+            		                    	IsInsert = true;
+            		                    	moveDel = true;
+            		                    }
+            		                }
+            		            }
+		
+		                        if (!IsInsert) {
+		                            pparsingXML2 = "";
+		                            pparsingXML = "";
+		                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+		                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+		                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
+		                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                            Resultxml = loadXMLString(pparsingXML2);
+		
+		                            var listview = new ListView();
+		                            listview.LoadFromID(listid);
+		                            var MaxID = 0;
+		                            var InitTr = listview.GetDataRows();
+		                            var MaxCntNum = 0;
+		                            for (var j = 0  ; j < InitTr.length  ; j++) {
+		                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                                if (MaxID < curnum) {
+		                                    MaxID = curnum;
+		                                    MaxCntNum = j;
+		                                }
+		                            }
+		
+		                            var objTr = listview.AddRow(InitTr.length);
+		                            if (MaxCntNum != 0)
+		                                MaxCntNum = MaxCntNum + 1;
+		                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                            listview.AddDataRow(objTr, Resultxml);
+		
+		                            document.getElementById(listid).className = "receiver_list";
+		                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		                            for (var y = 0; y < _tdlength; y++) {
+		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                            }
+		                        }
+		                        
+		                        // 복사 한뒤 삭제 => 이동 재은
+	                            if (moveRecipients && !moveDel) {
+	                            	var selList = new ListView();
+	                	            selList.LoadFromID(prevListId);
+	                	            selList.DeleteRow(selectMoveList);
 	                            }
-	
-	                            var objTr = listview.AddRow(InitTr.length);
-	                            if (MaxCntNum != 0)
-	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                            listview.AddDataRow(objTr, Resultxml);
-	
-	                            document.getElementById(listid).className = "receiver_list";
-	                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-	                            for (var y = 0; y < _tdlength; y++) {
-	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-	                            }
-	                        }
-	                    }
-	                }
+	                        } 
+	            		}
+	            	} else {
+	            		var pListViewDL = new ListView();
+		                pListViewDL.LoadFromID("pListViewDL");
+		                var arrRows = pListViewDL.GetSelectedRows();
+		                if (arrRows.length > 0) {
+		                    var pparsingXML = "";
+		                    var pparsingXML2 = "";
+		                    for (var i = 0; i < arrRows.length; i++) {
+		
+		                        var strName = arrRows[i].innerText;
+		                        var strEmail = GetAttribute(arrRows[i], "DATA2");
+		                        if (strEmail.trim() == "")
+		                            return;
+		
+		                        if (strName.trim() == "")
+		                            strName = strEmail;
+		                        var listid = "";
+		
+		                        if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
+		                            listid = "MsgToList";
+		                        }
+		                        else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
+		                            listid = "MsgCCList";
+		                        }
+		                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
+		                            listid = "MsgBCCList";
+		                        }
+		
+		                        var targetList = new ListView();
+		                        targetList.LoadFromID(listid);
+		                        var IsInsert = CheckMailReceiver(strEmail, "3");
+		
+		                        if (!IsInsert) {
+		                            pparsingXML2 = "";
+		                            pparsingXML = "";
+		                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+		                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+		                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
+		                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                            Resultxml = loadXMLString(pparsingXML2);
+		
+		                            var listview = new ListView();
+		                            listview.LoadFromID(listid);
+		                            var MaxID = 0;
+		                            var InitTr = listview.GetDataRows();
+		                            var MaxCntNum = 0;
+		                            for (var j = 0  ; j < InitTr.length  ; j++) {
+		                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                                if (MaxID < curnum) {
+		                                    MaxID = curnum;
+		                                    MaxCntNum = j;
+		                                }
+		                            }
+		
+		                            var objTr = listview.AddRow(InitTr.length);
+		                            if (MaxCntNum != 0)
+		                                MaxCntNum = MaxCntNum + 1;
+		                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                            listview.AddDataRow(objTr, Resultxml);
+		
+		                            document.getElementById(listid).className = "receiver_list";
+		                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		                            for (var y = 0; y < _tdlength; y++) {
+		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                            }
+		                        }
+		                    }
+		                }
+	            	}
 	            }
 	            else if (m_selectedTree == orglistView) {
 	                var pparsingXML = "";
@@ -1432,7 +1621,7 @@
 		    function event_listMover(obj) {
 		    	//수정중 재은
 		    	var moveState = false;
-		    	if (obj.id.indexOf("MailUserlist") == -1)
+		    	if (obj.id.indexOf("MailUserlist") == -1 && obj.id.indexOf("Address_TR") == -1 && obj.id.indexOf("pListViewDL_TR") == -1)
 		    		moveState = true;
 		    	
 		    	for (var i = 0; i < listContentArry.length; i++) {
@@ -1464,7 +1653,7 @@
 		    function event_listMout(obj) {
 		    	//수정중 재은
 		    	var moveState = false;
-		    	if (obj.id.indexOf("MailUserlist") == -1)
+		    	if (obj.id.indexOf("MailUserlist") == -1 && obj.id.indexOf("Address_TR") == -1 && obj.id.indexOf("pListViewDL_TR") == -1)
 		    		moveState = true;
 		
 		        for (var i = 0; i < listContentArry.length; i++) {
@@ -1518,13 +1707,14 @@
 		    function event_listclick(obj) {
 		    	
 		    	//to, cc, bcc 간의 이동 재은
-		    	$("#listType1 tr").each(function(){
+		    	/* $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
-	            });
+	            }); */
 		    	
-            	if (obj.id.indexOf("MailUserlist") == -1) {
+            	if (obj.id.indexOf("MailUserlist") == -1 && obj.id.indexOf("Address_TR") == -1 && obj.id.indexOf("pListViewDL_TR") == -1) {
+            
             		moveRecipients = true;
-            		selectMoveList = obj.id;
+            		selectMoveList = obj.parentNode.id;
             		prevListId = obj.parentNode.parentNode.parentNode.id;
             		
             		if (prevListId == "ListViewMsgTo") {
@@ -1626,8 +1816,12 @@
 		                    		p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
 		                    	}
 		                    }
-		
-		                    listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+		                    
+		                    if (moveRecipients) {
+		                    	listContentArry[listContentArry.length] = p_ListOrderObject.parentNode.getAttribute("id");
+		                    } else {
+		                    	listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+		                    }
 		                }
 		            }
 		        }
@@ -2815,6 +3009,9 @@
 	            addressList.DataSource(get_xmldom_addresslistview(xmlDom));
 	            addressList.RowDataBind();
 	            for (var i = 0; i < addressList.GetRowCount() ; i++) {
+	            	// 재은 수정중
+	            	addressList.GetDataRows()[i].setAttribute("selected", "true");
+	            	addressList.GetDataRows()[i].onclick = function () { event_listclick(this); };
 	                addressList.GetDataRows()[i].draggable = true;
 	                if (CrossYN())
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
