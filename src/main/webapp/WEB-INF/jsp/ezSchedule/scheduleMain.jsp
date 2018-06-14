@@ -30,14 +30,14 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/monthpicker.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 		<style type="text/css">
- 		/*  .ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
+ 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
  			margin: 0 auto; 
- 		}  */
-		/*		
+ 		}  
+				
  		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-month { 
  		  display: none; 
  		} 
- 		*/ 
+ 		
 		.ui-monthpicker td span {
 		  padding: 5px;
 		  cursor: pointer;
@@ -544,9 +544,8 @@
 		                if (item)
 		                    item.onclick();
 		                else */
-		                
 		                CalendarView("Calendar",chk_str);
-
+		                
 		                break;
 		                
 		            case "WEEK":
@@ -566,6 +565,7 @@
 		                    item.onclick();
 		                else */
 		                    CalendarView("Calendar",chk_str);
+		                
 		                break;
 
 		            case "MONTH":
@@ -578,10 +578,7 @@
 		                if (item)
 		                    item.onclick(); */
 
-		                CalendarView("Calendar",chk_str);
-		                $(document).on('mouseover', 'ui-state-default', function() { $(this).addClass('ui-state-hover'); });
-		                $(document).on('mouseleave', 'ui-state-default', function() { $(this).removeClass('ui-state-hover'); });
-		                $(document).on('.ui-monthpicker .ui-datepicker-month',function(){$(this).css('display','none'); });
+		                CalendarView("Calendar",chk_str);		                
 		                break;
 		        }
 		        /* 2018-02-01 김보미 - 일정관리 타이틀 고정. */

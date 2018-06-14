@@ -2099,7 +2099,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
-		String use_webfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId()); //baonk added (2018-05-31)
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -2119,7 +2118,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalForDoc", approvalForDoc);
-        model.addAttribute("webfolderFlag", use_webfolder); //baonk added (2018-05-31)
 		
 		logger.debug("permissionsList ended.");
 		
@@ -2226,7 +2224,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
-		String use_webfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId()); //baonk added (2018-05-31)
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
@@ -2235,7 +2232,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
-		model.addAttribute("webfolderFlag", use_webfolder); //baonk added (2018-05-31)
 		
 		logger.debug("permissionsCheck ended.");
 		
