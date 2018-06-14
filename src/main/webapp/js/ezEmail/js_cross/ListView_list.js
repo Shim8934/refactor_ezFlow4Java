@@ -909,7 +909,7 @@ function ListView() {
             	objTr.ondragend = function (event) { event_listdragend(event); };
             }
             
-            objTr.setAttribute("selected", "true");
+            //objTr.setAttribute("selected", "true");
             
             /* objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");

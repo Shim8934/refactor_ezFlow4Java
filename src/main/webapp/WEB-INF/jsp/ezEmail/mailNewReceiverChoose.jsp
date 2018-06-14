@@ -918,18 +918,18 @@
 	                        } 
 	            		}
 	            	} else {
-	            		var pListViewDL = new ListView();
+	            		/* var pListViewDL = new ListView();
 		                pListViewDL.LoadFromID("Address");
-		                var arrRows = pListViewDL.GetSelectedRows();
-		                if (arrRows.length > 0) {
+		                var arrRows = pListViewDL.GetSelectedRows(); */
+		                if (listContentArry.length > 0) {
 		                    var pparsingXML = "";
 		                    var pparsingXML2 = "";
-		                    for (var i = 0; i < arrRows.length; i++) {
-		                        var pAddressID = GetAttribute(arrRows[i], "DATA1");
-		                        var pAddressType = GetAttribute(arrRows[i], "DATA2");
-		                        var pAddressFolderType = GetAttribute(arrRows[i], "DATA4");
-		                        var strName = arrRows[i].cells[0].innerText
-		                        var strEmail = GetAttribute(arrRows[i], "DATA3");
+		                    for (var i = 0; i < listContentArry.length; i++) {
+		                        var pAddressID = document.getElementById(listContentArry[i]).getAttribute("DATA1");
+		                        var pAddressType = document.getElementById(listContentArry[i]).getAttribute("DATA2");
+		                        var pAddressFolderType = document.getElementById(listContentArry[i]).getAttribute("DATA4");
+		                        var strName = document.getElementById(listContentArry[i]).childNodes[0].innerText
+		                        var strEmail = document.getElementById(listContentArry[i]).getAttribute("DATA3");
 		                        pAddressID = pAddressID + "|!|" + pAddressFolderType;
 		                        if (strEmail.trim() == "") {
 		                            alert(strName + " " + strLang301)
@@ -1105,16 +1105,16 @@
 	                        } 
 	            		}
 	            	} else {
-	            		var pListViewDL = new ListView();
+	            		/* var pListViewDL = new ListView();
 		                pListViewDL.LoadFromID("pListViewDL");
-		                var arrRows = pListViewDL.GetSelectedRows();
-		                if (arrRows.length > 0) {
+		                var arrRows = pListViewDL.GetSelectedRows(); */
+		                if (listContentArry.length > 0) {
 		                    var pparsingXML = "";
 		                    var pparsingXML2 = "";
-		                    for (var i = 0; i < arrRows.length; i++) {
+		                    for (var i = 0; i < listContentArry.length; i++) {
 		
-		                        var strName = arrRows[i].innerText;
-		                        var strEmail = GetAttribute(arrRows[i], "DATA2");
+		                        var strName = document.getElementById(listContentArry[i]).childNodes[0].innerText
+		                        var strEmail = document.getElementById(listContentArry[i]).getAttribute("DATA2");
 		                        if (strEmail.trim() == "")
 		                            return;
 		
