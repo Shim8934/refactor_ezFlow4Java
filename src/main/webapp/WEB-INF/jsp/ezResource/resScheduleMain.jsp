@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/monthpicker.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 		<!-- modal -->
 		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
@@ -40,6 +41,19 @@
 			#resourceDataTable tr th{
 				font-weight: normal;
 			}
+			/* 2018-06-13 구해안 추가 */
+			.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
+ 			margin: 0 auto; 
+	 		}  
+					
+	 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-month { 
+	 		  display: none; 
+	 		} 
+			.ui-monthpicker td span {
+			  padding: 5px;
+			  cursor: pointer;
+			  text-align: center;
+			}		
 		</style>
 		<script type="text/javascript">
 		var timeZoneStr = "${timeZoneStr}";
@@ -444,7 +458,8 @@
     </script>
 	
 	</head>
-	<body class="mainbody" style="overflow: auto; margin-bottom:0px;" id="BodyTop">
+	<!-- 2018-06-13 구해안 우측 여백수정 -->
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px;" id="BodyTop">
 		<h1><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -465,8 +480,8 @@
     				</c:if>
     			</c:if>
     			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
-    			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
+    			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
   			</ul>  			
 		</div>
 		<script type="text/javascript">
