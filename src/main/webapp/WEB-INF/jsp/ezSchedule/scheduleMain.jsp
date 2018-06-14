@@ -30,14 +30,14 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/monthpicker.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 		<style type="text/css">
- 		/*  .ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
+ 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
  			margin: 0 auto; 
- 		}  */
-		/*		
+ 		}  
+				
  		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-month { 
  		  display: none; 
  		} 
- 		*/ 
+ 		
 		.ui-monthpicker td span {
 		  padding: 5px;
 		  cursor: pointer;

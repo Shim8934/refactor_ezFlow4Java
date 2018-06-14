@@ -351,6 +351,11 @@ function CalendarView(pTagetID,chk_str) {
 			 $('.ui-datepicker-year').css('margin','');
 		}, 1);
 	}
+    var removeMonthClass = function(){
+		window.setTimeout(function(){
+			 $('#ui-datepicker-div').removeClass('ui-monthpicker');
+		}, 1);
+	}
     if(typeCal == 2){    
     	chk_str = parent.frames["left"].document.getElementById("chk_str").value;
     	$('.datePick').datepicker({
@@ -375,7 +380,8 @@ function CalendarView(pTagetID,chk_str) {
     			CalendarView("Calendar",chk_str);    			
     		},
     		beforeShow: function(input, inst) {
-    			monthCssShow();    			
+    			/*monthCssShow();    */
+    			removeMonthClass();
     		}
     	});
     	
@@ -412,7 +418,8 @@ function CalendarView(pTagetID,chk_str) {
     			CalendarView("Calendar",chk_str);    			
     		  },
 	    	  beforeShowDay: function(date) { 
-	    		  monthCssShow();
+	    		  /*monthCssShow();*/
+	    		  removeMonthClass();
 	    	      $(document).on('mousemove', '.ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); }); 
 	    	      $(document).on('mouseleave', '.ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });
 	              var cssClass = ''; 
@@ -448,13 +455,13 @@ function CalendarView(pTagetID,chk_str) {
         			}
         		},
         		beforeShow: function(input, inst) {
-        			monthCssHidden();
+        			/*monthCssHidden();*/
             		$(document).on('mouseover', 'ui-state-default', function() { $(this).addClass('ui-state-hover'); });
             		$(document).on('mouseleave', 'ui-state-default', function() { $(this).removeClass('ui-state-hover'); });
             		
             	},
         		onChangeMonthYear: function(year, month, inst) { 
-        			monthCssHidden();
+        			/*monthCssHidden();*/
   	          } 
             });               
  

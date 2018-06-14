@@ -42,6 +42,13 @@
 				font-weight: normal;
 			}
 			/* 2018-06-13 구해안 추가 */
+			.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
+ 			margin: 0 auto; 
+	 		}  
+					
+	 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-month { 
+	 		  display: none; 
+	 		} 
 			.ui-monthpicker td span {
 			  padding: 5px;
 			  cursor: pointer;
