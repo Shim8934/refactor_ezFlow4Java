@@ -2113,9 +2113,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			/* 2018-05-24 장진혁 홈 메뉴 pass */
 			String menuitemLinkURL = result.get(i).getLinkURL();
 			
+			/*
+			 * 2018-06-14 장진혁 홈 메뉴 안보이게 작업한거 주석처리
 			if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
 				continue;
-			}
+			}*/
 			
 			//Baonk 2018-05-31
 			if (menuitemLinkURL.equals("/ezWebFolder/webfolderMain.do")) {
