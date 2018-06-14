@@ -719,7 +719,7 @@ function MultiSelectItems(obj) {
 
         for (var i = 0; i <= 41; i++) {
             if (StartIdex <= i && Endidex >= i)
-                document.getElementById("index_" + i).style.backgroundColor = "#edf4fd";
+                document.getElementById("index_" + i).style.backgroundColor = "#f0f6ff";
             else
                 document.getElementById("index_" + i).style.backgroundColor = "";
         }
@@ -734,7 +734,7 @@ function MultiSelectEnd(obj) {
         DragEndItemID = "";
         return;
     }
-    obj.style.backgroundColor = "#edf4fd";
+    obj.style.backgroundColor = "#f0f6ff";
     Write();
 }
 function Write() {	
