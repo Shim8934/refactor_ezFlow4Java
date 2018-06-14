@@ -34,13 +34,13 @@
 	</head>
 	<body class="leftbody">
 	    <div id="left">
-	    	<div class="left_pims" title="ezPMS"><span>프로젝트관리</span></div>
-		    <h2 class="on"><span>프로젝트관리</span></h2>
+	    	<div class="left_pims" title="ezPMS"><span><spring:message code='ezPMS.t8' /></span></div>
+		    <h2 class="on"><span><spring:message code='ezPMS.t8' /></span></h2>
 		    <ul>
-		    	<li><span id="projectList" style="width:100%;display:inline-block;">프로젝트관리</span></li>
-		    	<li><span id="myTask" style="width:100%;display:inline-block;">나의 업무</span></li>
+		    	<li><span id="projectList" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t8' /></span></li>
+		    	<li><span id="myTask" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t142' /></span></li>
 		    </ul>
-		    <h3><span id="pmsSetting" style="width:100%;display:inline-block;">환경설정</span></h3>
+		    <h3><span id="pmsSetting" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t144' /></span></h3>
 		</div>
 	    
 	</body>

@@ -10,7 +10,7 @@
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-<title>프로젝트 상태 변경</title>
+<title><spring:message code='ezPMS.t92' /></title>
 <script type="text/javascript">
 var projectList = parent.checkedVal;
 var nowStatus = parent.listProjectStatus;
@@ -23,38 +23,38 @@ $(function(){
 	case 'W' :
 	case 'D' :
 		strHTML += "<input type='radio' value='P' name='status' checked>";
-		strHTML += "진행 프로젝트";
+		strHTML += "<spring:message code='ezPMS.t258' />";
 		strHTML += "</input></td></tr>";
 		strHTML += "<tr><td>";
 		strHTML += "<input type='radio' value='S' name='status'>";
-		strHTML += "보류 프로젝트";
+		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'P' :
 		strHTML += "<input type='radio' value='C' name='status' checked>";
-		strHTML += "완료 프로젝트";
+		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
 		strHTML += "<tr><td>";
 		strHTML += "<input type='radio' value='S' name='status'>";
-		strHTML += "보류 프로젝트";
+		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'L' :
 		strHTML += "<input type='radio' value='C' name='status' checked>";
-		strHTML += "완료 프로젝트";
+		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
 		strHTML += "<tr><td>";
 		strHTML += "<input type='radio' value='S' name='status' checked>";
-		strHTML += "보류 프로젝트";
+		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'S' :
 		strHTML += "<input type='radio' value='P' name='status' checked>";
-		strHTML += "진행 프로젝트";
+		strHTML += "<spring:message code='ezPMS.t258' />";
 		strHTML += "</input></td></tr>";
 		strHTML += "<tr><td>";
 		strHTML += "<input type='radio' value='C' name='status'>";
-		strHTML += "완료 프로젝트";
+		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
 		break;
 	}
@@ -67,7 +67,7 @@ function changeStatus() {
 	var response = true;
 	
 	if (status == "C") {
-		response = confirm("프로젝트를 완료하면 하위 작업이 모두 완료됩니다. \n 진행하시곘습니까?");
+		response = confirm("<spring:message code='ezPMS.t159' />");
 	}
 	
 	if (response == true) {
@@ -85,12 +85,12 @@ function changeStatus() {
 			data :JSON.stringify(data),
 			success : function(result) {
 				if (result == "permitted") {
-					alert("상태가 변경되었습니다.");
+					alert("<spring:message code='ezPMS.t10' />");
 					parent.checkedVal = "";
 					parent.setProjectList();
 					popupClose();
 				} else {
-					alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+					alert("<spring:message code='ezPMS.t9' />");
 					popupClose();
 					return;
 				}
@@ -113,9 +113,9 @@ input {
 </style>
 </head>
 <body class="popup">
-<h1>프로젝트 상태 변경</h1>
+<h1><spring:message code='ezPMS.t92' /></h1>
 <div class="main_body">
-선택된 프로젝트의 변경할 상태를 선택하세요.
+<spring:message code='ezPMS.t39' />
 	<div style="border:1px gray solid">
 		<table id="statusList">
 		
@@ -124,9 +124,9 @@ input {
 	
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="changeStatus()"><span>등록</span></a></td>
+				<td><a class="imgbtn" id="submit" onclick="changeStatus()"><span><spring:message code='ezPMS.t40' /></span></a></td>
 				<td></td>
-				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
+				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a></td>
 			</tr>
 		</table>
 </div>

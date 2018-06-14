@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t154' /></title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -72,7 +72,7 @@
 				taskName = taskName.substring(0, taskName.indexOf('('));
 			}
 			
-			contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> - [총 <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span>개]</span>";
+			contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
 			$("#taskName").html(contentTitle);
 			
 			if($(this).parent().attr("id").charAt(0) == 't') { 
@@ -377,15 +377,15 @@
 				<div id="taskName"></div>
 				<div style="float: right;">
 					<select id="searchCondition" onchange="setSearchInput(this.value)" style="height:24px;">
-						<option value="searchByUser">작성자</option>
-						<option value="searchByContent">내용</option>
-						<option value="searchByWriteDate">작성일</option>
+						<option value="searchByUser"><spring:message code='ezPMS.t129' /></option>
+						<option value="searchByContent"><spring:message code='ezPMS.t130' /></option>
+						<option value="searchByWriteDate"><spring:message code='ezPMS.t131' /></option>
 					</select>
 					<input id="searchKeyword" type="text" onkeydown="searchKeyEvent()"/>
 					<span id="searchDate" style="display: none;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-						<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
+						<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a>
 					</span>
 					<a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="searchComment()" style="height:24px; margin-top:1px;"></a>
 				</div>

@@ -71,11 +71,11 @@
 	function deleteBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
 		if(!checkBoxes.length) {
-			alert("삭제할 게시물을 선택해 주세요.");
+			alert("<spring:message code='ezPMS.t217' />");
 			return;
 		}
 		
-		if(confirm("삭제하시겠습니까?") == true) {
+		if(confirm("<spring:message code='ezPMS.t107' />") == true) {
 			itemIds = new Array();
 			checkBoxes.each(function() {
 				var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
@@ -88,7 +88,7 @@
 	function goMoveBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
 		if(!checkBoxes.length) {
-			alert("이동할 게시물을 선택해 주세요.");
+			alert("<spring:message code='ezPMS.t218' />");
 			return;
 		}
 	
@@ -217,21 +217,21 @@
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
 				<th class="checkboxHeader" width="3%"><input type="checkbox" onchange="selectAllTR(this);"></th>
-				<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%">No</th>
+				<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%"><spring:message code='ezPMS.t268' /></th>
 				<th onclick="setListOrder(this)" data-order='FILE' width="3%"><img src="/images/newAttach.gif"></th>
-				<th onclick="setListOrder(this)" data-order='TITLE'>제목</th>
-				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
-				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%">부서</th>
-				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">게시자</th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%">게시일</th>
-				<th onclick="setListOrder(this)" data-order='READ_COUNT' width="7%">조회수</th>
+				<th onclick="setListOrder(this)" data-order='TITLE'><spring:message code='ezPMS.t118' /></th>
+				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%"><spring:message code='ezPMS.t80' /></th>
+				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%"><spring:message code='ezPMS.t115' /></th>
+				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%"><spring:message code='ezPMS.t114' /></th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%"><spring:message code='ezPMS.t119' /></th>
+				<th onclick="setListOrder(this)" data-order='READ_COUNT' width="7%"><spring:message code='ezPMS.t122' /></th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
 			<c:choose>
 				<c:when test="${empty data}">
 					<tr>
-						<td colspan="9" style="text-align : center"> 데이터가 없습니다. </td>
+						<td colspan="9" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 					</tr>
 				</c:when>
 				<c:otherwise>

@@ -47,19 +47,22 @@
 	    
 	    function onDrop(evt) {
 	        file = new Array;
+	        
 	        if (evt != undefined) {
 	            evt.stopPropagation();
 	            evt.preventDefault();
 	        }
+	        
 	        if (isfileup) {
 	            alert("<spring:message code='ezCircular.t93'/>");
 	            return;
 	        }
+	        
 	        var filelist;
+	        
 	        if (evt == undefined) {
 	            filelist = document.getElementById("file").files;
-	        }
-	        else {
+	        } else {
 	            filelist = evt.dataTransfer.files;
 	        }
 	
@@ -68,16 +71,15 @@
 	        
 	        for (var i = 0; i < filelist.length; i++) {
 	            if (filelist[i].size / 1024 / 1024 > window.parent.AttachLimit) {
-	                alert("첨부파일은 크기가 " + window.parent.AttachLimit + "MB" + "를 넘을 수 없습니다.");
+	                alert("<spring:message code='ezPMS.t229' /> " + window.parent.AttachLimit + "MB" + "<spring:message code='ezPMS.t230' />");
 	                return;
-	            }
-	            else {
+	            } else {
 	                file[filecnt + i] = filelist[i];
 	                tempfilesize += filelist[i].size;
 	            }
 	        }
+	        
 	        filesize += tempfilesize;
-	
 		    fileupload();
 	    }
 	    
@@ -113,9 +115,11 @@
 	     
 	    window.onload = function () {
 	        var ua = navigator.userAgent;
+	        
 	        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
 	            document.getElementById("file").multiple = false;
 	        }
+	        
 	        var oTable = document.createElement("TABLE");
 	        oTable.style.width = "100%";
 	        oTable.id = "filelist";
@@ -123,15 +127,20 @@
 
 	        var objTr = document.createElement("TR");
 	        var objTh = document.createElement("TH");
+	        
 	        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
 	            objTh.style.width = "24px";
-	        }
-	        else
+	        } else{
 	            objTh.style.width = "15px";
+	        }
+	        
 	        var input = document.createElement("input");
 	        input.type = "checkbox";
 	        input.id = "checkboxall";
-	        input.onclick = function () { checkall(); };
+	        input.onclick = function () { 
+	        	checkall(); 
+	        };
+	        
 	        objTh.appendChild(input);
 	        objTr.appendChild(objTh);
 
@@ -184,7 +193,7 @@
 	        }
 
 	        if (!isFileDelete) {
-	            alert("삭제할 첨부파일을 선택하세요.");
+	            alert("<spring:message code='ezPMS.t133' />");
 	        }
 	        
 	        $.ajax({
@@ -269,11 +278,9 @@
 
 	                    if (fileSize / 1024 / 1024 > 1) {
 	                        fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
-	                    }
-	                    else if (fileSize / 1024 > 1) {
+	                    } else if (fileSize / 1024 > 1) {
 	                        fileSize = parseInt(fileSize / 1024) + "KB";
-	                    }
-	                    else {
+	                    } else {
 	                        fileSize = fileSize + "B";
 	                    }
 
@@ -282,15 +289,17 @@
 	                    objTr.appendChild(objTd3);
 
 	                    document.getElementById("filelist").appendChild(objTr);
-	                }
-	                else {
+	                } else {
 	                    extCheck = true;
 	                }
 	            }
-	            if (extCheck)
+	            
+	            if (extCheck) {
 	                alert("<spring:message code='main.sp12'/>");
+	            }
+	        } catch (e) { 
+	        	alert("returnvalue :: " + e.description); 
 	        }
-	        catch (e) { alert("returnvalue :: " + e.description); }
 	    }
 		    
 	    function checkall() {
@@ -299,8 +308,7 @@
 	        for (var i = 1; i < filecnt; i++) {
 	            if (document.getElementById("checkboxall").checked == true) {
 	                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = true;
-	            }
-	            else {
+	            } else {
 	                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = false;
 	            }
 	        }

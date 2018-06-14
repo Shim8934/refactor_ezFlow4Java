@@ -33,7 +33,7 @@
 		<h1><spring:message code='ezBoard.t320'/></h1>
 		<div id="close">
 			<ul>
-				<li onClick="close_onclick()"><span><spring:message code='ezBoard.t12'/></span></li>
+				<li onClick="close_onclick()"><span><spring:message code='ezPMS.t76' /></span></li>
 		    </ul>
 		</div>
 		<script type="text/javascript">
@@ -56,7 +56,7 @@
 	            <c:otherwise>
             		<table class="popuplist" style="width:100%; height:100%;">
 		            	<tr style="background-color: rgb(255, 255, 255);">
-							<td align="left" colspan="3" style="height:100%; width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezBoard.kbm01'/></td>
+							<td align="left" colspan="3" style="height:100%; width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezPMS.t219' /></td>
 						</tr>
 					</table>
 	            </c:otherwise>

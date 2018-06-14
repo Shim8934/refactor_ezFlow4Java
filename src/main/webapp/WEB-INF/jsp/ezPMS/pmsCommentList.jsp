@@ -20,19 +20,20 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 	
 	function addComment() {
 		
-		if (doubleSubmitFlag){
+		if (doubleSubmitFlag) {
     		return;
     	}
+		
 		doubleSubmitFlag = true;
 		
 		var commentContent = $("#comment_input").val().trim();
 		
-		if(commentContent == "") {
-			alert("내용을 입력해주세요.");
+		if (commentContent == "") {
+			alert("<spring:message code='ezPMS.t222' />");
 			return;
 		}
 		
-		data = {
+		var data = {
 			groupId : groupId,
 			taskId : taskId,
 			commentContent : commentContent
@@ -46,7 +47,7 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 			data : JSON.stringify(data),
 			success : function(result) {
 				if(result.data == 'success') {
-					alert("의견이 등록되었습니다.");
+					alert("<spring:message code='ezPMS.t223' />");
 					doubleSubmitFlag = false;
 					currentPage = 1;
 					
@@ -56,27 +57,27 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 					searchByEndDate = "";
 					searchByContent = "";
 					
-					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "](으)로 [" + commentContent.trim() +"] 의견이 등록되었습니다.");
+					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + commentContent.trim() +"<spring:message code='ezPMS.t126' />");
 					getCommentList();
 				} else {
-					alert("등록에 실패하였습니다.");
+					alert("<spring:message code='ezPMS.t224' />");
 					doubleSubmitFlag = false;
 				}	
 			},
 			error : function() {
-				alert("등록에 실패하였습니다.");
+				alert("<spring:message code='ezPMS.t224' />");
 				doubleSubmitFlag = false;
 			}
 		});
 	}
 	
 	function deleteComment(elem) {
-		if(confirm("삭제하시겠습니까?") == true) {
+		if(confirm("<spring:message code='ezPMS.t107' />") == true) {
 			var selectedTR = $(elem).parent().parent();
 			var commentId = selectedTR.attr("data-commentId");
 			var writerId = selectedTR.attr("data-writerId");
 			
-			data = {
+			var data = {
 				commentId : commentId,
 				projectId : projectId,
 				writerId  : writerId
@@ -89,22 +90,22 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 				contentType : "application/json; charset=UTF-8",
 				data : JSON.stringify(data),
 				success : function(result) {
-					if(result.data == 'success') {
+					if (result.data == 'success') {
 						
 						var content = selectedTR.children("td.content").text();
 						var taskName = selectedTR.children("td.taskName").text();
 						var groupId = selectedTR.attr("data-groupId");
 						var taskId = selectedTR.attr("data-taskId");
 							
-						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + content.trim() + "] 의견이 삭제되었습니다.");
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t225' />");
 							
 						getCommentList();
 					} else {
-						alert('삭제는 프로젝트 담당자나 작성자만 할 수 있습니다.');
+						alert("<spring:message code='ezPMS.t108' />");
 					}	
 				},
 				error : function() {
-					alert("삭제에 실패하였습니다.");
+					alert("<spring:message code='ezPMS.t213' />");
 				}
 			})
 		}
@@ -127,7 +128,7 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 		var writerId = selectedTR.attr("data-writerId");
 		var commentContent = selectedTR.find("textarea").val();
 		
-		data = {
+		var data = {
 			commentId : commentId,
 			projectId : projectId,
 			writerId  : writerId,
@@ -141,22 +142,22 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 			contentType : "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
 			success : function(result) {
-				if(result.data == 'success') {
+				if (result.data == 'success') {
 					
 					var content = selectedTR.find("span.originalContent").text();
 					var taskName = selectedTR.children("td.taskName").text();
 					var groupId = selectedTR.attr("data-groupId");
 					var taskId = selectedTR.attr("data-taskId");
 						
-					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + content.trim() + "] 의견이 [" + commentContent.trim() +  "](으)로 수정되었습니다.");
+					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t226' />" + commentContent.trim() +  "<spring:message code='ezPMS.t227' />");
 						
 					getCommentList();
 				} else {
-					alert('수정은 프로젝트 담당자나 작성자만 할 수 있습니다.');
+					alert("<spring:message code='ezPMS.t128' />");
 				}	
 			},
 			error : function() {
-				alert("수정에 실패하였습니다.");
+				alert("<spring:message code='ezPMS.t228' />");
 			}
 		})
 	}
@@ -165,20 +166,19 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 		if (element.value == "") {
 			document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
 			document.getElementById("sendBttn").disabled = true;
-		}
-		else {
+		} else {
 			document.getElementById("sendBttn").style.backgroundColor = "#0470e4";
 			document.getElementById("sendBttn").disabled = false;
 		}
 	}
 	
 	function cmtKeyEvent() {
-		if(event.keyCode == 13) {
+		if (event.keyCode == 13) {
 			addComment();
 		}
 	}
 	
-	$(function(){
+	$(function() {
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
 		$("#taskTree").css("height", CurrentHeight + 10 + "px");
@@ -193,18 +193,18 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
-				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%" style="text-align:center;">작성자</th>
-				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%" style="text-align:center;">작업이름</th>
-				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'>내용</th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%" style="text-align:center;">작성일시</th>
-				<th style="cursor: default; text-align:center;" width="15%">수정/삭제</th>
+				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%" style="text-align:center;"><spring:message code='ezPMS.t129' /></th>
+				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%" style="text-align:center;"><spring:message code='ezPMS.t80' /></th>
+				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'><spring:message code='ezPMS.t130' /></th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%" style="text-align:center;"><spring:message code='ezPMS.t131' /></th>
+				<th style="cursor: default; text-align:center;" width="15%"><spring:message code='ezPMS.t110' />/<spring:message code='ezPMS.t11' /></th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
 			<c:choose>
 				<c:when test="${empty data}">
 					<tr>
-						<td colspan="5" style="text-align : center"> 데이터가 없습니다. </td>
+						<td colspan="5" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 					</tr>
 				</c:when>
 				<c:otherwise>
@@ -222,7 +222,7 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 								<div class="modifiedContent" style="display: none; border: 1px solid #ddd; width: 100%;">
 									<textarea style="resize: none; width: 85%; border: none; outline: none;"><c:out value="${commentVO.commentContent}"/></textarea>
 									<a class="imgbtn" onclick="saveComment(this)" style="float: right;">
-										<span>저장</span>
+										<span><spring:message code='ezPMS.t265' /></span>
 									</a>
 								</div>
 							</td>
@@ -246,7 +246,7 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 				<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
 			</div>
 			<div class="commentBtn">
-				<button id="sendBttn" onclick="addComment()" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;">등록</button>						
+				<button id="sendBttn" onclick="addComment()" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;"><spring:message code='ezPMS.t40' /></button>						
 			</div>
 		</div>
 	</div>

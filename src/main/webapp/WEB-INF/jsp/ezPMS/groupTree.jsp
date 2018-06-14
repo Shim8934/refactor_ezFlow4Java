@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title></title>
+<title><spring:message code='ezPMS.t42' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
 <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
@@ -102,11 +102,11 @@
 
 </head>
 <body class="popup" style="overflow-y: auto; overflow-x: hidden"> 
-	<h1 style="height: 20px;">상위 그룹</h1>
+	<h1 style="height: 20px;"><spring:message code='ezPMS.t42' /></h1>
     <div id="close">
         <ul>
-            <li><span onclick="ok_Click()">확인</span></li>
-            <li><span onclick="close_Click()">취소</span></li>
+            <li><span onclick="ok_Click()"><spring:message code='ezPMS.t43' /></span></li>
+            <li><span onclick="close_Click()"><spring:message code='ezPMS.t41' /></span></li>
         </ul>
     </div>
 	<div id="test" class="tree"></div>
