@@ -66,7 +66,7 @@ function changeStatus() {
 	var status = $("input[name='status']:checked").val();
 	var response = true;
 	
-	if (status = "C") {
+	if (status == "C") {
 		response = confirm("프로젝트를 완료하면 하위 작업이 모두 완료됩니다. \n 진행하시곘습니까?");
 	}
 	

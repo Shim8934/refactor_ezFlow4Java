@@ -415,17 +415,17 @@ button.PHBtn {
 			  <c:choose>
 			  <c:when test="${empty target }">
 			    <th class="detailsTable-th" style="width:60px">업무명</th>
-			    <td class="detailsTable-td" colspan="4">${taskDetails.taskName}</td>
+			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.taskName}"/></td>
 			  </c:when>
 			  <c:otherwise>
 			    <th class="detailsTable-th" style="width:60px">그룹명</th>
-			    <td class="detailsTable-td" colspan="4">${taskDetails.groupName}</td>
+			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.groupName}"/></td>
 			  </c:otherwise>
 			  </c:choose>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">담당자</th>
-			    <td class="detailsTable-td" colspan="4">${taskDetails.headManagerName}</td>
+			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.headManagerName}"/></td>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">상태</th>
@@ -438,23 +438,23 @@ button.PHBtn {
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">시작일</th>
-			    <td class="detailsTable-td dateTd">${taskDetails.planStartDate}</td>
+			    <td class="detailsTable-td dateTd"><c:out value="${taskDetails.planStartDate}"/></td>
 			    <th class="detailsTable-th" style="width:60px">시작일</th>
-			    <td class="detailsTable-td dateTd">${taskDetails.realStartDate == null ? "-" : taskDetails.realStartDate}</td>
+			    <td class="detailsTable-td dateTd"><c:out value="${taskDetails.realStartDate == null ? '-' : taskDetails.realStartDate}"/></td>
 			    <td id="startDiff" class="detailsTable-td" name="startDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">종료일</th>
-			    <td class="detailsTable-td">${taskDetails.planEndDate}</td>
+			    <td class="detailsTable-td"><c:out value="${taskDetails.planEndDate}"/></td>
 			    <th class="detailsTable-th">종료일</th>
-			    <td class="detailsTable-td">${taskDetails.realEndDate == null ? "-" : taskDetails.realEndDate}</td>
+			    <td class="detailsTable-td"><c:out value="${taskDetails.realEndDate == null ? '-' : taskDetails.realEndDate}"/></td>
 			    <td id="endDiff" class="detailsTable-td" name="endDiff"></td>
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">진행률</th>
-			    <td class="detailsTable-td">${taskDetails.planProgress}</td>
+			    <td class="detailsTable-td"><c:out value="${taskDetails.planProgress}"/></td>
 			    <th class="detailsTable-th">진행률</th>
-			    <td class="detailsTable-td">${taskDetails.realProgress}</td>
+			    <td class="detailsTable-td"><c:out value="${taskDetails.realProgress}"/></td>
 			    <td id="progressDiff" class="detailsTable-td" name="progressDiff"></td>
 			  </tr>
 			</table>

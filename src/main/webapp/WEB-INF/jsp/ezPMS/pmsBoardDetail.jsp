@@ -174,26 +174,26 @@
 				<table class="content" style="width:100%;">
 					<tr>
 						<th>게시자</th>
-						<td style="width: 50%">${board.writerName}</td>
+						<td style="width: 50%"><c:out value="${board.writerName}"/></td>
 						<th>부&nbsp;&nbsp;서</th>
-						<td>${board.writerDeptName}</td>
+						<td><c:out value="${board.writerDeptName}"/></td>
 					</tr>
 					<tr>
 						<th>직&nbsp;&nbsp;위</th>
-						<td style="width: 50%">${board.writerPosition}</td>
+						<td style="width: 50%"><c:out value="${board.writerPosition}"/></td>
 						<th>전화번호</th>
-						<td>${board.mobileNumber}</td>
+						<td><c:out value="${board.mobileNumber}"/></td>
 					</tr>
 					<tr>
 						<th>작업이름</th>
 						<td id="taskName" style="width: 50%"></td>
 						<th>게시일</th>
-						<td>${fn:substring(board.writeDate, 0, 19)}</td>
+						<td><c:out value="${fn:substring(board.writeDate, 0, 19)}"/></td>
 						
 					</tr>
 					<tr>
 						<th>제&nbsp;&nbsp;목</th>
-						<td colspan="3">${board.title}</td>
+						<td colspan="3"><c:out value="${board.title}"/></td>
 					</tr>
 				</table>
 			</td>
@@ -216,7 +216,9 @@
 									<div style="margin-top: 3px; height: 20px">
 										<input type="checkbox" data-filename="${file.fileName}" data-filepath="${file.filePath}">
 										<img src="/images/${file.fileType}.png"/>&nbsp; 
-										<a href="/ezPMS/downloadFile.do?filePath=${file.filePath}&fileName=${file.fileName}">${file.fileName}&nbsp;(${file.fileTransSize})</a>
+										<a href="/ezPMS/downloadFile.do?filePath=${file.filePath}&fileName=${file.fileName}">
+											<c:out value="${file.fileName} (${file.fileTransSize})"/>
+										</a>
 										<br>
 									</div>
 								</c:forEach>

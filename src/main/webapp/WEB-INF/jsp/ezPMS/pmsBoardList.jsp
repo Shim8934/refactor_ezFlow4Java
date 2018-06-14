@@ -244,7 +244,7 @@
 							<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
 								<img src="/images/i_notice.gif" alt="NOTICE" />
 							</c:when>
-							<c:otherwise>${projectBoardVO.itemId}</c:otherwise>
+							<c:otherwise><c:out value="${projectBoardVO.itemId}"/></c:otherwise>
 						</c:choose>
 					</td>
 					<c:choose>
@@ -257,20 +257,33 @@
 					</c:choose>	
 						<td class="boardTitle" style="text-align: left;">
 							<c:forEach begin='0' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;</c:forEach>
-							<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> ${projectBoardVO.title}
+							<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> 
+							<c:out value="${projectBoardVO.title}"/> 
 						</td>
 					<c:choose>
 						<c:when test="${projectBoardVO.taskName eq null}">
-							<td class="taskName">${projectBoardVO.groupName}</td>
+							<td class="taskName">
+								<c:out value="${projectBoardVO.groupName}"/>
+							</td>
 						</c:when>
 						<c:otherwise>
-							<td class="taskName">${projectBoardVO.taskName}</td>
+							<td class="taskName">
+								<c:out value="${projectBoardVO.taskName}"/>
+							</td>
 						</c:otherwise>
 					</c:choose>
-					<td>${projectBoardVO.writerDeptName}</td>
-					<td>${projectBoardVO.writerName}</td>
-					<td>${fn:substring(projectBoardVO.writeDate, 0, 19)}</td>
-					<td>${projectBoardVO.readCount}</td>
+					<td>
+						<c:out value="${projectBoardVO.writerDeptName}"/>
+					</td>
+					<td>
+						<c:out value="${projectBoardVO.writerName}"/>
+					</td>
+					<td>
+						<c:out value="${fn:substring(projectBoardVO.writeDate, 0, 19)}"/>
+					</td>
+					<td>
+						<c:out value="${projectBoardVO.readCount}"/>
+					</td>
 				</tr>
 			</c:forEach>
 			</c:otherwise>

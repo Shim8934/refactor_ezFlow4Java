@@ -302,8 +302,12 @@
 						<th>프로젝트명</th>
 						<td style="width: 50%">
 							<c:choose>
-								<c:when test="${projectName eq null}">${board.projectName}</c:when>
-								<c:otherwise>${projectName}</c:otherwise>
+								<c:when test="${projectName eq null}">
+									<c:out value="${board.projectName}"/> 
+								</c:when>
+								<c:otherwise>
+									<c:out value="${projectName}"/> 
+								</c:otherwise>
 							</c:choose>		
 						</td>
 						<th>게시종류</th>
@@ -313,7 +317,7 @@
 						<th><a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;"><span>작업이름</span></a></th>
 						<td style="width: 50%" id="taskName"></td>
 						<th>등록자</th>
-						<td>${writerName}(${writerDeptName})</td>
+						<td><c:out value="${writerName}(${writerDeptName})"/></td>
 					</tr>
 					<tr>
 						<th>제&nbsp;&nbsp;목</th>

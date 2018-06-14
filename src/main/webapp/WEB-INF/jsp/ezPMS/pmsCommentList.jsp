@@ -204,12 +204,16 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 			<c:forEach items="${data}" var="commentVO">
 				<tr data-commentId="${commentVO.commentId}" data-groupId="${commentVO.groupId}" 
 					data-taskId="${commentVO.taskId}" data-writerId="${commentVO.writerId}">
-					<td>${commentVO.writerName}</td>
-					<td class="taskName">${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}</td>
+					<td>
+						<c:out value="${commentVO.writerName}"/>
+					</td>
+					<td class="taskName">
+						<c:out value="${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}"/>
+					</td>
 					<td class="content" style="text-align: left;">
-						<span class="originalContent">${commentVO.commentContent}</span>
+						<span class="originalContent"><c:out value="${commentVO.commentContent}"/></span>
 						<div class="modifiedContent" style="display: none; border: 1px solid #ddd; width: 100%;">
-							<textarea style="resize: none; width: 85%; border: none; outline: none;">${commentVO.commentContent}</textarea>
+							<textarea style="resize: none; width: 85%; border: none; outline: none;"><c:out value="${commentVO.commentContent}"/></textarea>
 							<a class="imgbtn" onclick="saveComment(this)" style="float: right;">
 								<span>저장</span>
 							</a>
