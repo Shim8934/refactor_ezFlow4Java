@@ -45,13 +45,13 @@
 			var isCrossBrowser = "${isCrossBrowser}";
 
 			window.onload = function () {
-			    if (screen.height < 1080) {
+			    /* if (screen.height < 1080) {
 			        if(screen.height <= 800){
 			            document.getElementById("MyCopList").style.height = "135px";
 			        }else{
 			            document.getElementById("MyCopList").style.height = "225px";
 			        }
-			    }
+			    } */
 			    try {
 	                if (code != "") {
 	                    window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel);
@@ -109,7 +109,7 @@
 						if (result["list"] != "") {
 							getCommunityList_after(result["list"]);
 						} else {
-							$("#MyCopList").html("<div style='height:200px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
+							$("#MyCopList").html("<div style='height:400px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
 						}
 					}
 				});
@@ -575,7 +575,7 @@
 	    <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
 	        <!-- mylist -->	        
-	        <div style="overflow: auto; overflow-x: hidden; height: 470px; background-color: white; border-bottom:1px solid #ddd" id="MyCopList">
+	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:400px" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">
 	            </ul>
