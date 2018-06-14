@@ -141,7 +141,7 @@ public class LoginDAO extends EgovAbstractDAO {
 	public LoginDeviceVO getDeviceInfo (Map<String, Object> map) throws Exception {
 		return (LoginDeviceVO) select("loginDAO.getDeviceInfo", map);
 	}
-	// 있으면 업데이트, 없으면 인서트 
+
 	public int insertDeviceInfo (Map<String, Object> map) throws Exception {
 		return update("loginDAO.insertDeviceInfo", map);
 	}

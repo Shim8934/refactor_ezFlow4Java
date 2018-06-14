@@ -369,7 +369,6 @@ public class MLoginGWController {
 				LOGGER.debug("getDeviceVO="+  deviceVO.toString());
 				Map<String, Object> map = new HashMap<>();
 				
-				map.put("devSeq", deviceVO.getDevSeq());
 				map.put("devId", deviceVO.getDevId());
 				map.put("devType", deviceVO.getDevType());
 				map.put("subType", deviceVO.getSubType());
@@ -394,10 +393,11 @@ public class MLoginGWController {
 				
 			} else {
 				LOGGER.debug("device info does not exist. devId=" + devId);
-				
 				result.put("status", "error");
 				result.put("code", "1");
-				result.put("data", "device info does not exist.");
+				result.put("data", "noexist");
+				
+				throw new Exception(); //test
 			}
 			
 		} catch (Exception e) {
@@ -422,6 +422,7 @@ public class MLoginGWController {
     public JSONObject updateLoginDeviceInfo(@RequestBody String bodyData, HttpServletRequest request, HttpServletResponse response) throws Exception {
     	LOGGER.debug("updateLoginDeviceInfo started.");
     	
+    	int resultCnt = -1;
     	Date date = new Date();
     	JSONObject result = new JSONObject();
     	JSONParser jsonParser = new JSONParser();
@@ -436,25 +437,36 @@ public class MLoginGWController {
 			String loginAndRegDate = sdf.format(date);
     		
     		String devId = (String) jsonObj.get("devId");
-        	String devType = (String) jsonObj.get("devType");
-        	String subType = (String) jsonObj.get("subType");
-        	String userId = (String) jsonObj.get("userId");
-        	String token = (String) jsonObj.get("token");
-        	String badge = (String) jsonObj.get("badge");
-        	String state = (String) jsonObj.get("state");
-        	String pushState = (String) jsonObj.get("pushState");
-        	String regDate = loginAndRegDate;
-        	String isLogin = (String) jsonObj.get("isLogin");
-        	String startMenu = (String) jsonObj.get("startMenu");
-        	String loginTime = loginAndRegDate;
-        	String loginLock = (String) jsonObj.get("loginLock");
-        	String isPasswordChange = (String) jsonObj.get("isPasswordChange");
-        	String extension1 = (String) jsonObj.get("extension1");
-        	String extension2 = (String) jsonObj.get("extension2");
+    		String devType = (String) jsonObj.get("devType");
+    		String subType = (String) jsonObj.get("subType");
+    		String userId = (String) jsonObj.get("userId");
+    		String token = (String) jsonObj.get("token");
+    		String badge = (String) jsonObj.get("badge");
+    		String state = (String) jsonObj.get("state");
+    		String pushState = (String) jsonObj.get("pushState");
+    		String regDate = loginAndRegDate;
+    		String isLogin = (String) jsonObj.get("isLogin");
+    		String startMenu = (String) jsonObj.get("startMenu");
+    		String loginTime = loginAndRegDate;
+    		String loginLock = (String) jsonObj.get("loginLock");
+    		String isPasswordChange = (String) jsonObj.get("isPasswordChange");
+    		String extension1 = (String) jsonObj.get("extension1");
+    		String extension2 = (String) jsonObj.get("extension2");
+    		
+    		LOGGER.debug("====> isLogin=" + isLogin + ", extension2=" + extension2);
+    		
+    		LoginDeviceVO deviceVO = loginService.getDeviceInfo(devId);
         	
-			int resultCnt = loginService.insertDeviceInfo(devId, devType, subType, userId, token, badge, tenantId, 
-					state, pushState, regDate, isLogin, startMenu, loginTime, loginLock, isPasswordChange, extension1, extension2);
-			
+    		if (deviceVO != null) {
+    			// 등록된 기기정보가 있으면 
+    			resultCnt = loginService.updateDeviceInfo(devId, devType, subType, userId, token, badge, tenantId, 
+    					state, pushState, isLogin, startMenu, loginTime, loginLock, isPasswordChange, extension1, extension2);
+    		} else {
+    			// 등록된 기기정보가 없으면 
+    			resultCnt = loginService.insertDeviceInfo(devId, devType, subType, userId, token, badge, tenantId, 
+    					state, pushState, regDate, isLogin, startMenu, loginTime, loginLock, isPasswordChange, extension1, extension2);
+    		}
+    	
 			LOGGER.debug("resultCnt=" + resultCnt);
 			
 			if (resultCnt > 0) {
@@ -466,9 +478,9 @@ public class MLoginGWController {
 			} else {
 				result.put("status", "error");
 				result.put("code", "1");
-				result.put("data", "device info does not updated.");
+				result.put("data", "device info update fail");
 
-				LOGGER.debug("device info does not updated. devId=" + devId);
+				LOGGER.debug("device info update fail devId=" + devId);
 			}
 			
 		} catch (Exception e) {

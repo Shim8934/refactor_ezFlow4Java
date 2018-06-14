@@ -74,10 +74,10 @@ public interface LoginService {
 	
 	public int insertDeviceInfo(String devId, String devType, String subType, String userId, String token, String badge, String tenantId,
 			String state, String pushState, String regDate, String isLogin, String startMenu, String loginTime, String loginLock,
-			String isPasswordChange, String extension1, String extesion2) throws Exception;
+			String isPasswordChange, String extension1, String extension2) throws Exception;
 	
 	public int updateDeviceInfo(String devId, String devType, String subType, String userId, String token, String badge, String tenantId,
-			String state, String pushState, String regDate, String isLogin, String startMenu, String loginTime, String loginLock,
-			String isPasswordChange, String extension1, String extesion2) throws Exception;
+			String state, String pushState, String isLogin, String startMenu, String loginTime, String loginLock,
+			String isPasswordChange, String extension1, String extension2) throws Exception;
 
 }

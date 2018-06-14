@@ -41,29 +41,31 @@
     </resultMap>    
     
     <resultMap id="loginDeviceVO" 	class="egovframework.let.user.login.vo.LoginDeviceVO">
-    	<result property="devId" 			column="devId" 								columnIndex="1"/>
-    	<result property="devType" 			column="devType" 							columnIndex="2"/>
-    	<result property="subType" 			column="subType" 							columnIndex="3"/>
-    	<result property="userId" 			column="userId" 							columnIndex="4"/>
-    	<result property="token" 			column="token" 								columnIndex="5"/>
-    	<result property="badge" 			column="badge" 								columnIndex="6"/>
-    	<result property="tenantId" 		column="tenantId" 							columnIndex="7"/>
-    	<result property="state" 			column="state" 								columnIndex="8"/>
-    	<result property="pushState" 		column="pushState" 							columnIndex="9"/>
-    	<result property="regDate" 			column="regDate" 							columnIndex="10"/>
-    	<result property="isLogin" 			column="isLogin" 							columnIndex="11"/>
-    	<result property="startMenu" 		column="startMenu" 							columnIndex="12"/>
-    	<result property="loginTime" 		column="loginTime" 							columnIndex="13"/>
-    	<result property="loginLock" 		column="loginLock" 							columnIndex="14"/>
-    	<result property="isPasswordChange" column="isPasswordChange" 					columnIndex="15"/>
-    	<result property="extension1" 		column="extension1" 						columnIndex="16"/>
-    	<result property="extension2" 		column="extension2" 						columnIndex="17"/>
+    	<result property="devSeq" 			column="devSeq" 							columnIndex="1"/>
+    	<result property="devId" 			column="devId" 								columnIndex="2"/>
+    	<result property="devType" 			column="devType" 							columnIndex="3"/>
+    	<result property="subType" 			column="subType" 							columnIndex="4"/>
+    	<result property="userId" 			column="userId" 							columnIndex="5"/>
+    	<result property="token" 			column="token" 								columnIndex="6"/>
+    	<result property="badge" 			column="badge" 								columnIndex="7"/>
+    	<result property="tenantId" 		column="tenantId" 							columnIndex="8"/>
+    	<result property="state" 			column="state" 								columnIndex="9"/>
+    	<result property="pushState" 		column="pushState" 							columnIndex="10"/>
+    	<result property="regDate" 			column="regDate" 							columnIndex="11"/>
+    	<result property="isLogin" 			column="isLogin" 							columnIndex="12"/>
+    	<result property="startMenu" 		column="startMenu" 							columnIndex="13"/>
+    	<result property="loginTime" 		column="loginTime" 							columnIndex="14"/>
+    	<result property="loginLock" 		column="loginLock" 							columnIndex="15"/>
+    	<result property="isPasswordChange" column="isPasswordChange" 					columnIndex="16"/>
+    	<result property="extension1" 		column="extension1" 						columnIndex="17"/>
+    	<result property="extension2" 		column="extension2" 						columnIndex="18"/>
     </resultMap>
     
     <!-- 로그인시 모바일 디바이스 기기 정보 호출 -->
     <select id="loginDAO.getDeviceInfo" parameterClass="Map" resultMap="loginDeviceVO">
     	<![CDATA[
     		SELECT 
+    			devSeq,
     			devId,
     			devType,
     			subType,
@@ -128,34 +130,14 @@
 				#extension1#,
 				#extension2# 
 			)
-			ON DUPLICATE KEY 
-			UPDATE 
-				devId = #devId#,
-				devType = #devType#,
-				subType = #subType#,
-				userId = #userId#,
-				token = #token#,
-				badge = #badge#,
-				tenantId = #tenantId#,
-				state = #state#,
-				pushState = #pushState#,
-				regDate = #regDate#,
-				isLogin = #isLogin#,
-				startMenu = #startMenu#,
-				loginTime = #loginTime#,
-				loginLock = #loginLock#,
-				isPasswordChange = #isPasswordChange#,
-				extension1 = #extension1#,
-				extension2 = #extension2#
 		]]>
 		
 		<selectKey keyProperty="devSeq" resultClass="String">
-			<![CDATA[
- 				SELECT LAST_INSERT_ID()			 
-			]]>
+			SELECT LAST_INSERT_ID()
 		</selectKey>
    </insert>
    
+   <!-- 모바일 로그인 시 기기 업데이트 -->
    <update id="loginDAO.updateDeviceInfo" parameterClass="Map">
    		<![CDATA[
 			UPDATE TBL_DEV_MASTER
@@ -168,7 +150,6 @@
 				tenantId = #tenantId#,
 				state = #state#,
 				pushState = #pushState#,
-				regDate = #regDate#,
 				isLogin = #isLogin#,
 				startMenu = #startMenu#,
 				loginTime = #loginTime#,

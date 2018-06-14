@@ -25,13 +25,13 @@ public class LoginDeviceVO {
 	
 	private String pushState; /** 푸시 수신 여부 */
 	
-	private String regDate; /** 등록 일자 */
+	private String regDate; /** 최초 등록 일자 : 삭제후 재설치시 기존꺼삭제후 다시 인서트 */
 	
 	private String isLogin; /** 로그인 여부 */
 	
 	private String startMenu; /** 시작 메뉴 */
 	
-	private String loginTime; /** 로그인 한 시간 */
+	private String loginTime; /** 로그인 한 시간 : 로그인 할 때마다 갱신 */
 	
 	private String loginLock; /** 로그인 lock 사용 여부 */
 	

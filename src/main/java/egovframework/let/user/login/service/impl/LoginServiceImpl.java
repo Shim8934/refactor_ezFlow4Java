@@ -315,8 +315,8 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 	@Override
 	public int updateDeviceInfo(String devId, String devType, String subType, String userId, String token, String badge,
-			String tenantId, String state, String pushState, String regDate, String isLogin, String startMenu,
-			String loginTime, String loginLock, String isPasswordChange, String extension1, String extesion2) throws Exception {
+			String tenantId, String state, String pushState, String isLogin, String startMenu,
+			String loginTime, String loginLock, String isPasswordChange, String extension1, String extension2) throws Exception {
 		logger.debug("updateDeviceInfo started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -330,18 +330,17 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		map.put("tenantId", tenantId);
 		map.put("state", state);
 		map.put("pushState", pushState);
-		map.put("regDate", regDate);
 		map.put("isLogin", isLogin);
 		map.put("startMenu", startMenu);
 		map.put("loginTime", loginTime);
 		map.put("loginLock", loginLock);
 		map.put("isPasswordChange", isPasswordChange);
 		map.put("extension1", extension1);
-		map.put("extesion2", extesion2);
+		map.put("extension2", extension2);
 		
 		int result = loginDAO.updateDeviceInfo(map);
 		
-		if (result <= -1) {
+		if (result <= 0) {
 			logger.debug("fail! updateDeviceInfo.");
 		}
 		
