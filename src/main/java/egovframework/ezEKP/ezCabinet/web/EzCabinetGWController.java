@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -28,10 +30,13 @@ public class EzCabinetGWController {
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private EzOrganService ezOrganService;
+	private EzOrganService organService;
 	
 	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
+	private EzCabinetService cabinetService;
+	
+	@Autowired
+	private EzOrganAdminService organAdminService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -97,10 +102,10 @@ public class EzCabinetGWController {
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 			
 			if (userInfo.getRollInfo().indexOf("c=1")  > -1 && !mode.equals("normal")) {
-				resultList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+				resultList = organAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 			}
 			else {
-				OrganDeptVO dept = ezOrganService.getDeptInfo(userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+				OrganDeptVO dept = organService.getDeptInfo(userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 				resultList.add(dept);
 			}
 			
@@ -108,6 +113,90 @@ public class EzCabinetGWController {
 			result.put("userCompany", userInfo.getCompanyID());
 			result.put("status", "ok");
 			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezcabinet/company-tree/comp/{companyid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCompanyTree(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		String deptId     = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		if (companyId.equals("") || serverName.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
+		
+		try {
+			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName);
+			String primary        = userInfo.getPrimary();
+			int tenantId          = userInfo.getTenantId();
+			deptId                = deptId.equals("") ? userInfo.getDeptID() : deptId;
+			SimpleDeptVO sCompany = null;
+			
+			if (deptId.equals("")) {
+				sCompany = cabinetService.getAllDepts(companyId, 0, primary, tenantId);
+			}
+			else {
+				String deptPath  = cabinetService.getDeptPath(deptId, tenantId);
+				String[] path    = deptPath.split(",");
+				sCompany         = cabinetService.getSimpleCompany(companyId, 0, primary, tenantId);
+				
+				cabinetService.getAllDepts(sCompany, path, primary, tenantId, 1, 1);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("tree", sCompany);
+			result.put("node", deptId);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezcabinet/sub-tree/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSubTree(@PathVariable(value="deptid") String deptId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")                  : "";
+		int level         = request.getParameter("level")  != null ? Integer.parseInt(request.getParameter("level")) : -1;
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId")                  : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("deptId: " + deptId + " || level: " + level + " || serverName: " + serverName + " || User Id: " + userId);
+		
+		if (deptId.equals("") || serverName.equals("") || level == -1 || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo   = commonUtil.getUserForGw(userId, serverName);
+			int tenantId       = userInfo.getTenantId();
+			String primary     = userInfo.getPrimary();
+			SimpleDeptVO sDept = cabinetService.getAllDepts(deptId, level, primary, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("subNodes", sDept);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

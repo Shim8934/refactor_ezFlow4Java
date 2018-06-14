@@ -1,85 +1,79 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import javax.servlet.http.HttpServletRequest;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 
 @Service
 public class EzCabinetServiceImpl implements EzCabinetService {
-	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl.class);
-	
-	@Autowired
-	private Properties config;
+	@Resource(name = "EzCabinetDAO")
+	private EzCabinetDAO ezCabinetDAO;
 	
 	@Override
-	public JSONObject checkCabinetAdmin(HttpServletRequest request, String userId) throws Exception {
-		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
-		String url            = gwServerUrl + "/rest/ezcabinet/check-admin/" + userId;
-		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
-		return resultBody;
+	public SimpleDeptVO getAllDepts(String companyId, int level, String primary, int tenantId) throws Exception {
+		List<SimpleDeptVO> deptList = getAllSimpleDeptsOfCompany(companyId, level, primary, tenantId);
+		SimpleDeptVO dept           = deptList.get(0);
+		deptList.remove(0);
+		dept.setSubDepts(deptList);
+		
+		return dept;
 	}
-	
+
 	@Override
-	public JSONObject getCompanyList(HttpServletRequest request, String userId) throws Exception {
-		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
-		String url            = gwServerUrl + "/rest/ezcabinet/company-list/" + userId;
-		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
-		return resultBody;
+	public String getDeptPath(String deptId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("deptId",     deptId);
+		map.put("tenantId",   tenantId);
+		return ezCabinetDAO.getDeptPath(map);
 	}
-	
-	public static JSONObject getJsonResult(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
-		logger.debug("Rest Url: " + restUrl);
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+
+	@Override
+	public SimpleDeptVO getSimpleCompany(String deptId, int level, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("deptId",     deptId);
+		map.put("primary",    primary);
+		map.put("level",      level);
+		map.put("tenantId",   tenantId);
 		
-		HttpEntity<?> entity         = new HttpEntity<>(jsonParam, headers);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(restUrl);
-		
-		if (param != null) {
-			for(String key : param.keySet()){
-				builder.queryParam(key, param.get(key));
+		return ezCabinetDAO.getSimpleCompany(map);
+	}
+
+	@Override
+	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception {
+		if (sDept.getHasSub().equals("1")) {
+			List<SimpleDeptVO> listSubSimpleDepts = getAllSimpleSubDepts(sDept.getDeptId(), level, primary, tenantId);
+			sDept.setSubDepts(listSubSimpleDepts);
+			
+			for (SimpleDeptVO subDept: listSubSimpleDepts) {
+				if (order < path.length && subDept.getDeptId().equals(path[order])) {
+					getAllDepts(subDept, path, primary, tenantId, order + 1, level + 1);
+				}
 			}
 		}
+	}
+	
+	private List<SimpleDeptVO> getAllSimpleSubDepts(String deptId, int level, String primary, int tenantId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("deptId",     deptId);
+		map.put("primary",    primary);
+		map.put("level",      level);
+		map.put("tenantId",   tenantId);
 		
-		RestTemplate rest = new RestTemplate();
-		HttpMethod method = null;
+		return ezCabinetDAO.getAllSimpleSubDepts(map);
+	}
+	
+	private List<SimpleDeptVO> getAllSimpleDeptsOfCompany(String companyId, int level, String primary, int tenantId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId",  companyId);
+		map.put("primary",    primary);
+		map.put("level",      level);
+		map.put("tenantId",   tenantId);
 		
-		switch (methodType) {
-			case "get"   : method = HttpMethod.GET   ; break;
-			case "put"   : method = HttpMethod.PUT   ; break;
-			case "post"  : method = HttpMethod.POST  ; break;
-			case "delete": method = HttpMethod.DELETE; break;
-			default      : method = HttpMethod.GET   ; break;
-		}
-		
-		logger.debug("Run here!");
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = null;
-		
-		try {
-			resultBody = (JSONObject) jp.parse(result.getBody());
-		}
-		catch (org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
-		}
-		
-		return resultBody;
+		return ezCabinetDAO.getAllSimpleDeptsOfCompany(map);
 	}
 }

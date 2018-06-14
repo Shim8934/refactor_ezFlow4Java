@@ -23,15 +23,15 @@
 			<div id="mainSetting">
 				<table class="content">
 					<tr>
-						<th><spring:message code='ezWebFolder.t131'/></th>
+						<th><spring:message code='ezCabinet.t16'/></th>
 						<th class="white">
 							<input id="basicValue" type="text" value="<c:out value='${persLimit}'/>"/>
-							<span><spring:message code='ezWebFolder.t132' /></span>
+							<span><spring:message code='ezCabinet.t17' /></span>
 						</th>
 					</tr>
 				</table>
 			</div>
-			<div>
+			<div class="bttnDiv">
 				<a class="imgbtn"><span><spring:message code='ezCabinet.t14'/></span></a>
 				<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 			</div>

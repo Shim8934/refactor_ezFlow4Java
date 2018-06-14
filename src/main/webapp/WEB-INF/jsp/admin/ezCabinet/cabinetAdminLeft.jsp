@@ -35,6 +35,9 @@
 				function setBttns() {
 					var leftDiv = document.getElementById("left");
 					var h2List  = leftDiv.getElementsByTagName("h2");
+					
+					h2List[0].addEventListener("click", function(e) {getBasicPage();}, false);
+					h2List[1].addEventListener("click", function(e) {getPersonalPage();}, false);
 					h2List[0].firstElementChild.onclick = function(e) {getBasicPage();};
 					h2List[1].firstElementChild.onclick = function(e) {getPersonalPage();};
 					
