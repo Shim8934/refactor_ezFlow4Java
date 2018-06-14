@@ -243,7 +243,10 @@ public class EzPMSGWController2 {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
 			ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Long.parseLong(taskId), info.getTenantId(), lang);
-			taskVO.setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskVO.getTaskId(), lang));
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanStartDate());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
+			
+			taskVO.setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, info.getCompanyId(), info.getTenantId()));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
