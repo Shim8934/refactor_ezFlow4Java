@@ -90,6 +90,9 @@ public class ProjectBoardVO {
 	
 	// 아이템 레벨
 	private int itemLevel;
+	
+	// 프로젝트 별 문서 번호
+	private int docNo;
 
 
 	public int getRootItemId() {
@@ -322,5 +325,13 @@ public class ProjectBoardVO {
 
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
+	}
+
+	public int getDocNo() {
+		return docNo;
+	}
+
+	public void setDocNo(int docNo) {
+		this.docNo = docNo;
 	}
 }	

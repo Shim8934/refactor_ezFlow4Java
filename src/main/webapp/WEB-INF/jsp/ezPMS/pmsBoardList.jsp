@@ -228,65 +228,65 @@
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
-		<c:choose>
-			<c:when test="${empty data}">
-			<tr>
-				<td colspan="9" style="text-align : center"> 등록된 게시물이 없습니다. </td>
-			</tr>
-			</c:when>
-			<c:otherwise>
-			<c:forEach items="${data}" var="projectBoardVO">
-				<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
-					data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
-					<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
-					<td>
-						<c:choose>
-							<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
-								<img src="/images/i_notice.gif" alt="NOTICE" />
-							</c:when>
-							<c:otherwise><c:out value="${projectBoardVO.itemId}"/></c:otherwise>
-						</c:choose>
-					</td>
-					<c:choose>
-						<c:when test="${projectBoardVO.fileCNT eq 0}">
-							<td></td>
-						</c:when>
-						<c:otherwise>
-							<td><img src="/images/newAttach.gif"></td>
-						</c:otherwise>
-					</c:choose>	
-						<td class="boardTitle" style="text-align: left;">
-							<c:forEach begin='0' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;</c:forEach>
-							<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> 
-							<c:out value="${projectBoardVO.title}"/> 
-						</td>
-					<c:choose>
-						<c:when test="${projectBoardVO.taskName eq null}">
-							<td class="taskName">
-								<c:out value="${projectBoardVO.groupName}"/>
+			<c:choose>
+				<c:when test="${empty data}">
+					<tr>
+						<td colspan="9" style="text-align : center"> 데이터가 없습니다. </td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+					<c:forEach items="${data}" var="projectBoardVO">
+						<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
+							data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
+							<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
+							<td>
+								<c:choose>
+									<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
+										<img src="/images/i_notice.gif" alt="NOTICE" />
+									</c:when>
+									<c:otherwise><c:out value="${projectBoardVO.docNo}"/></c:otherwise>
+								</c:choose>
 							</td>
-						</c:when>
-						<c:otherwise>
-							<td class="taskName">
-								<c:out value="${projectBoardVO.taskName}"/>
+							<c:choose>
+								<c:when test="${projectBoardVO.fileCNT eq 0}">
+									<td></td>
+								</c:when>
+								<c:otherwise>
+									<td><img src="/images/newAttach.gif"></td>
+								</c:otherwise>
+							</c:choose>	
+								<td class="boardTitle" style="text-align: left;">
+									<c:forEach begin='0' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;</c:forEach>
+									<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> 
+									<c:out value="${projectBoardVO.title}"/> 
+								</td>
+							<c:choose>
+								<c:when test="${projectBoardVO.taskName eq null}">
+									<td class="taskName">
+										<c:out value="${projectBoardVO.groupName}"/>
+									</td>
+								</c:when>
+								<c:otherwise>
+									<td class="taskName">
+										<c:out value="${projectBoardVO.taskName}"/>
+									</td>
+								</c:otherwise>
+							</c:choose>
+							<td>
+								<c:out value="${projectBoardVO.writerDeptName}"/>
 							</td>
-						</c:otherwise>
-					</c:choose>
-					<td>
-						<c:out value="${projectBoardVO.writerDeptName}"/>
-					</td>
-					<td>
-						<c:out value="${projectBoardVO.writerName}"/>
-					</td>
-					<td>
-						<c:out value="${fn:substring(projectBoardVO.writeDate, 0, 19)}"/>
-					</td>
-					<td>
-						<c:out value="${projectBoardVO.readCount}"/>
-					</td>
-				</tr>
-			</c:forEach>
-			</c:otherwise>
+							<td>
+								<c:out value="${projectBoardVO.writerName}"/>
+							</td>
+							<td>
+								<c:out value="${fn:substring(projectBoardVO.writeDate, 0, 19)}"/>
+							</td>
+							<td>
+								<c:out value="${projectBoardVO.readCount}"/>
+							</td>
+						</tr>
+					</c:forEach>
+				</c:otherwise>
 			</c:choose>
 		</tbody>
 	</table>	

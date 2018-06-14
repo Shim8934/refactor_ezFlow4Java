@@ -223,6 +223,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Integer) insert ("EzPMSDAO.addBoard", vo);
 	}
 	
+	public Integer getMaxDocNo(Map<String, Object> map) {
+		return (Integer) select("EzPMSDAO.getMaxDocNo", map);
+	}
+	
 	public void updateRootItemId(int itemId) {
 		update("EzPMSDAO.updateRootItemId", itemId);
 	}

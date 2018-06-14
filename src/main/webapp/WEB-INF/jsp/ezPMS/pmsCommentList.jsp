@@ -201,31 +201,40 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
-			<c:forEach items="${data}" var="commentVO">
-				<tr data-commentId="${commentVO.commentId}" data-groupId="${commentVO.groupId}" 
-					data-taskId="${commentVO.taskId}" data-writerId="${commentVO.writerId}">
-					<td>
-						<c:out value="${commentVO.writerName}"/>
-					</td>
-					<td class="taskName">
-						<c:out value="${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}"/>
-					</td>
-					<td class="content" style="text-align: left;">
-						<span class="originalContent"><c:out value="${commentVO.commentContent}"/></span>
-						<div class="modifiedContent" style="display: none; border: 1px solid #ddd; width: 100%;">
-							<textarea style="resize: none; width: 85%; border: none; outline: none;"><c:out value="${commentVO.commentContent}"/></textarea>
-							<a class="imgbtn" onclick="saveComment(this)" style="float: right;">
-								<span>저장</span>
-							</a>
-						</div>
-					</td>
-					<td>${fn:substring(commentVO.writeDate, 0, 19)}</td>
-					<td>
-						<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezLadder/icon_game03_no.png" height="20"/></span>
-						<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete_thirty.png" height="20"/></span>
-					</td>
-				</tr>
-			</c:forEach>
+			<c:choose>
+				<c:when test="${empty data}">
+					<tr>
+						<td colspan="5" style="text-align : center"> 데이터가 없습니다. </td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+					<c:forEach items="${data}" var="commentVO">
+						<tr data-commentId="${commentVO.commentId}" data-groupId="${commentVO.groupId}" 
+							data-taskId="${commentVO.taskId}" data-writerId="${commentVO.writerId}">
+							<td>
+								<c:out value="${commentVO.writerName}"/>
+							</td>
+							<td class="taskName">
+								<c:out value="${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}"/>
+							</td>
+							<td class="content" style="text-align: left;">
+								<span class="originalContent"><c:out value="${commentVO.commentContent}"/></span>
+								<div class="modifiedContent" style="display: none; border: 1px solid #ddd; width: 100%;">
+									<textarea style="resize: none; width: 85%; border: none; outline: none;"><c:out value="${commentVO.commentContent}"/></textarea>
+									<a class="imgbtn" onclick="saveComment(this)" style="float: right;">
+										<span>저장</span>
+									</a>
+								</div>
+							</td>
+							<td>${fn:substring(commentVO.writeDate, 0, 19)}</td>
+							<td>
+								<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezLadder/icon_game03_no.png" height="20"/></span>
+								<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete_thirty.png" height="20"/></span>
+							</td>
+						</tr>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>	
 		</tbody>
 	</table>	
 </div>

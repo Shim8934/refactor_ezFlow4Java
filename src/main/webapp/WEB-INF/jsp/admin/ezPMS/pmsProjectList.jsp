@@ -27,26 +27,35 @@
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
-			<c:forEach items="${projectList}" var="projectVO">
-				<tr ondblclick="getProjectGeneralInfo(${projectVO.projectId})">
-					<td>${projectVO.projectId}</td>
-					<td>${projectVO.projectName}</td>
-					<td>${projectVO.overview}</td>
-					<td>${projectVO.creatorName}</td>
-					<td>${fn:substring(projectVO.planStartDate, 0, 19)}</td>
-					<td>${fn:substring(projectVO.planEndDate, 0, 19)}</td>
-					<td>
-						<c:choose>
-							<c:when test="${projectVO.status eq 'P'}">진행(${projectVO.progress}%)</c:when>
-							<c:when test="${projectVO.status eq 'W'}">대기</c:when>
-							<c:when test="${projectVO.status eq 'C'}">완료</c:when>
-							<c:when test="${projectVO.status eq 'L'}">지연(${projectVO.progress}%)</c:when>
-							<c:when test="${projectVO.status eq 'S'}">보류(${projectVO.progress}%)</c:when>
-							<c:when test="${projectVO.status eq 'D'}">삭제</c:when>
-						</c:choose>
-					</td>
-				</tr>
-			</c:forEach>
+			<c:choose>
+				<c:when test="${empty projectList}">
+					<tr>
+						<td colspan="7" style="text-align : center"> 데이터가 없습니다. </td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+					<c:forEach items="${projectList}" var="projectVO">
+						<tr ondblclick="getProjectGeneralInfo(${projectVO.projectId})">
+							<td><c:out value="${projectVO.projectId}"/></td>
+							<td><c:out value="${projectVO.projectName}"/></td>
+							<td><c:out value="${projectVO.overview}"/></td>
+							<td><c:out value="${projectVO.creatorName}"/></td>
+							<td><c:out value="${fn:substring(projectVO.planStartDate, 0, 19)}"/></td>
+							<td><c:out value="${fn:substring(projectVO.planEndDate, 0, 19)}"/></td>
+							<td>
+								<c:choose>
+									<c:when test="${projectVO.status eq 'P'}">진행(<c:out value="${projectVO.progress}"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'W'}">대기</c:when>
+									<c:when test="${projectVO.status eq 'C'}">완료</c:when>
+									<c:when test="${projectVO.status eq 'L'}">지연(<c:out value="${projectVO.progress}"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'S'}">보류(<c:out value="${projectVO.progress}"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'D'}">삭제</c:when>
+								</c:choose>
+							</td>
+						</tr>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>                                                            	
 		</tbody>
 	</table>	
 </div>

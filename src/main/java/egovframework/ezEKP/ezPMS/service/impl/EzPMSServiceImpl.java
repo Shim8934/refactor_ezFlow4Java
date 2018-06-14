@@ -1264,6 +1264,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		int projectId = Integer.parseInt((String) jsonParam.get("projectId"));
 		int lastInsertId;
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("projectId", projectId);
+		
+		int docNo = ezPMSDAO.getMaxDocNo(map) + 1;
+		
 		String mode = (String) jsonParam.get("mode");
 		
 		ProjectBoardVO vo = new ProjectBoardVO();
@@ -1287,7 +1293,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setWriterPosition((String) jsonParam.get("writerPosition"));
 		vo.setWriterPosition2((String) jsonParam.get("writerPosition2"));
 		vo.setWriteOverview((String) jsonParam.get("writeOverview"));
-		
+		vo.setDocNo(docNo);
 		
 		if(mode.equals("reply")) {
 			vo.setRootItemId(Integer.parseInt((String) jsonParam.get("rootItemId")));
