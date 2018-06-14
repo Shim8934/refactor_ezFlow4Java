@@ -258,6 +258,7 @@
 								<td class="boardTitle" style="text-align: left;">
 									<c:forEach begin='0' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;</c:forEach>
 									<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> 
+									<c:if test="${projectBoardVO.writeDate}"></c:if>
 									<c:out value="${projectBoardVO.title}"/> 
 								</td>
 							<c:choose>
@@ -278,7 +279,7 @@
 							<td>
 								<c:out value="${projectBoardVO.writerName}"/>
 							</td>
-							<td>
+							<td class="writeDate">
 								<c:out value="${fn:substring(projectBoardVO.writeDate, 0, 19)}"/>
 							</td>
 							<td>
