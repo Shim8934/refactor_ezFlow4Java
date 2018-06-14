@@ -235,11 +235,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		Collections.sort(sList, new EzScheduleCompareUtil());
 		
-		for (ScheduleInfoVO s : sList) {
-			
-			logger.debug("***중요***collection.sort 후의 idList : " + s.getOwnerId());
-		}
-		
 		
 		for(int j = 0; j < sList.size(); j++){			
 			ScheduleInfoVO data = sList.get(j);
@@ -247,7 +242,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 		sb.append("</DATA>");
 	
-		System.out.println("getList의 sb : " + sb.toString());
 		
 		return sb.toString();
 	}
@@ -271,7 +265,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		//일정관리 데이터 호출 함수
 		List<ScheduleInfoVO> sList = scheduleListData(selectDate, selectDate, idList, "", offSetMin, userInfo);
 		
-		Collections.sort(sList, new EzScheduleCompareUtil());		
+		/*Collections.sort(sList, new EzScheduleCompareUtil());	*/	
 		
 		for(int j = 0; j < sList.size(); j++){			
 			ScheduleInfoVO data = sList.get(j);
@@ -288,7 +282,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 	public List<ScheduleInfoVO> scheduleListData(String startDate, String endDate, String idList, String groupID, String offSetMin, LoginVO userInfo) throws Exception {
 		
 		logger.debug("============ scheduleListData started ============");		
-		logger.debug("***중요***scheduleListData의 idList : " + idList);
 		String pidList = "";
 		String pidListSub = "";
 		
@@ -318,12 +311,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID);
 		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID);
 		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID);
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userInfo.getId(), userInfo.getTenantId());
 		
 		if (idList == null) {
 			idList = "";
 		}
 		
 		//2018-06-08 구해안 T인 경우를 제외하고 나머지는 id값 그대로 가공해서 넘기기
+		
 		if (idList.equals("T") || idList.equals("")) {
 			pidList = "'" + userInfo.getId() + "'," + "'" + userInfo.getDeptID() + "'," + "'" + userInfo.getCompanyID() + "'";
 			if(tList != null && tList.size()>0){
@@ -360,8 +355,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}				
 			}
 			
-			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userInfo.getId(), userInfo.getTenantId());
-			
 			for (int i = 0; i < gList.size(); i++) {
 				if((tList == null || tList.size()<=0) && (dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
 					if (i == 0) {
@@ -369,25 +362,28 @@ public class EzScheduleController extends EgovFileMngUtil {
 					}
 				}
 					ScheduleGroupListVO data = gList.get(i);			
-					pidListSub += "\'" + data.getGroupId() + "\'";
+					pidListSub += "\'" + data.getGroupId() + "\',";
 					
-					if (i != gList.size()-1) {
+					/*if (i != gList.size()-1) {
 						pidListSub += ",";
-					}
+					}*/
 				}
 			
-			pidListSub.substring(0, pidListSub.length()-1);
+			if(pidListSub.equals("") || pidListSub == null){
+				pidListSub = ",\'\'";
+			}else{				
+				pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+			}
 			
 			pidList += pidListSub;
 			
 		} else if(idList.equals("chkAllFalse")) {
 			pidList = "\'\'";
-		} else {
+		} else if (idList.equals("P")) {
+			pidList = "'" + userInfo.getId() + "'";
+		}else {
 			pidList = idList;
 		}		
-		
-		logger.debug("selectlistdata의 ***중요***pidList : " + pidList);
-		logger.debug("selectlistdata의 ***중요***pidListSub : " + pidListSub);
 		
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId());		
 		
@@ -510,7 +506,6 @@ public class EzScheduleController extends EgovFileMngUtil {
         String idTypeTmp = request.getParameter("idtype");
         //2018-06-07 구해안checkbox 값을 가져와서 char[]에 담기
         String idTypeChk = request.getParameter("idTypeChk");
-        logger.debug("idTypeChk : " + idTypeChk);
         char[] chk_array = null;
         if(idTypeChk != null && !idTypeChk.equals("")){
         	
