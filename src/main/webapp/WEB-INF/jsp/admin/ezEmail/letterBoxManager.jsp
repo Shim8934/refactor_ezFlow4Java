@@ -32,9 +32,9 @@
 		        <li><span onclick="deleteLetterBox()">&nbsp;&nbsp;- <spring:message code='ezEmail.letter18'/>&nbsp;&nbsp;</span></li>
 		    </ul>
 		</div>
-		<div id="divTree" class="myScrollableBlock">
+		<div id="divTree" class="myScrollableBlock" style="border:1px solid #ddd">
 		</div>
-		<div id="divInput">
+		<div id="divInput" style="border:1px solid #ddd; padding:15px; height:319px">
 			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
 				<label for="display">
 					<b><spring:message code='main.t76'/>(${primary})</b>
@@ -57,9 +57,9 @@
 				<%-- <div class="divInputBtn">
 					<input type="button" id="submitBtn" onclick="submitClick()" value="<spring:message code="ezEmail.t38"/>">
 				</div> --%>
-				<div id="mainmenu" style="margin-top:70%;margin-left:87%; position:relative; width:100%;">
-			        <ul>
-			            <li><span onClick="submitClick()">&nbsp;<spring:message code="ezEmail.t38"/>&nbsp;</span></li>
+				<div id="mainmenu" style="width:100%;text-align:center">
+			        <ul style="float:none;">
+			            <li style="float:none;"><span style="float:none;display: inline-block; margin-top:220px" onClick="submitClick()">&nbsp;<spring:message code="ezEmail.t38"/>&nbsp;</span></li>
 			        </ul>
 			    </div>
 			</form>
