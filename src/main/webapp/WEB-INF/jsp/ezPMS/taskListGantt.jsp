@@ -610,7 +610,8 @@
 	   					  planEndDate : endDate,
 	   					  realProgress : progress,
 	   					  endTime : endTime,
-	   					  rowIndex : rowIndex
+	   					  rowIndex : rowIndex,
+	   					  groupId : groupId
 	   			  } 
 	   			  
 	   			$.ajax({
@@ -629,6 +630,7 @@
 	   						ge.redraw();
 	   					} else {
 	   						alert("프로젝트 담당자나 업무의 담당자만 변경할 수 있습니다.");
+	   						location.reload();
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
@@ -840,7 +842,7 @@
 	   					location.reload();
 	   				},
 	   				complete : function(){
-	   					var logContent = "[" + taskId + "업무 삭제 테스트 로그 입니다.]";
+	   					var logContent = "[" + taskId + "] 업무가 삭제되었습니다.";
 	   					addTaskLog(projectId, 3, null, null, logContent);
 	   				}
 	   			});

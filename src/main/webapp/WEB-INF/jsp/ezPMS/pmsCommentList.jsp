@@ -4,7 +4,17 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
+<link rel="stylesheet" href="/css/ezPMS/default/style.css"
+	type="text/css" />
+<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
+<script type="text/javascript" src="/js/ezPMS/common.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script>
+var CurrentHeight = document.documentElement.clientHeight - 100;
+
 	//버튼 중복클릭 방지
 	var doubleSubmitFlag = false;
 	
@@ -168,17 +178,26 @@
 		}
 	}
 	
+	$(function(){
+		CurrentHeight = $(window).height() - 100;
+		$("MailListRayer").css("height", CurrentHeight + "px");
+		$("#taskTree").css("height", CurrentHeight + 10 + "px");
+		$("#projectContent").css("height", CurrentHeight + "px");
+		$("#contentList").css("height", (CurrentHeight - 100) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+		$("#divList").css("height", (CurrentHeight - 245) + "px");
+		$("#divList").css("overflow", "auto");
+	});
 </script>
-
 <div id="divList" style="width: 100%;">
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
-				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%">작성자</th>
-				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%">작업이름</th>
+				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%" style="text-align:center;">작성자</th>
+				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%" style="text-align:center;">작업이름</th>
 				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'>내용</th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%">작성일시</th>
-				<th style="cursor: default;" width="15%">수정/삭제</th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%" style="text-align:center;">작성일시</th>
+				<th style="cursor: default; text-align:center;" width="15%">수정/삭제</th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">

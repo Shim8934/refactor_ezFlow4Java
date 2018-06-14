@@ -79,7 +79,6 @@ $(function(){
 	var progressBar = setInterval(setProgressBar, 300);
 	
 	function setProgressBar() {
-		
 		for(var j = 0; j < 5 && i < projectList.length; j++, i++) {
 			if (projectList[i].status == "P") {
 			 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);

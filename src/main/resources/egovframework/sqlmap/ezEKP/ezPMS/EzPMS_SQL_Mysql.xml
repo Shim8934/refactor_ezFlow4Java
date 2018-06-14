@@ -3100,4 +3100,43 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getProjectBoundaryDate" parameterClass="map" resultClass="ProjectInfoVO">
+		<![CDATA[
+			select 
+				min(aa.plan_start_date) as planStartDate, 
+			    max(aa.plan_end_date) as planEndDate
+			from
+			(
+				SELECT 
+					plan_start_date, 
+				    plan_end_date
+				from
+					tbl_pms_task
+				WHERE
+					TENANT_ID = #tenantId#
+				AND
+					PROJECT_ID = #projectId#
+				AND
+					DEL_STATUS = 0
+			) aa
+			
+				
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateProjectDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_PROJECT
+			SET
+				PLAN_START_DATE = #planStartDate#,
+				PLAN_END_DATE = #planEndDate#,
+				WORKINGDAY = #workingday#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

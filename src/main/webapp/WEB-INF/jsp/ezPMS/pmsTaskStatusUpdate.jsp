@@ -109,7 +109,11 @@
 	}
 	
 	function setProgress(){
+		var diff = 0;
+		diff = taskDetails.planProgress - taskDetails.realProgress;
 		document.querySelector("[name='realProgress']").value = taskDetails.realProgress + "%";
+		document.getElementById("planProgress").innerText = taskDetails.planProgress + "%";
+		document.getElementById("progDiff").innerText = (diff > 0 ? "+" + diff : (diff < 0 ? "-" + diff : "-")) + "%";
 	}
 	
 	function setStatus(){
@@ -410,7 +414,7 @@ button.PHBtn {
 			    <td id="planProgress" class="planTd"></td>
 			    <th class="midTh">진행률(%)</th>
 			    <td class="realTd"><input type="text" name="realProgress"></td>
-			    <td class="progDiff"></td>
+			    <td id="progDiff" class="progDiff"></td>
 			  </tr>
 			</table>
 		</div>	

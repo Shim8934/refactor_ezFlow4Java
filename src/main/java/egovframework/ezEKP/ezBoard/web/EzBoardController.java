@@ -5630,8 +5630,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String g_ImageUrl = "";
 		String listImages = "";
 		String mainFg = "";
-		String g_Width = "230";
-		String g_Height = "230";
 		int imageCnt = 10;
 		int pStartRow = (page - 1) * imageCnt + 1;
 		int pEndRow = page * imageCnt;
@@ -5666,8 +5664,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("mainFg", mainFg);
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("guBun", guBun);
-		model.addAttribute("g_Width", g_Width);
-		model.addAttribute("g_Height", g_Height);
 		model.addAttribute("orgImagePath", listImages);
 
 		logger.debug("modifyImageItem ended");

@@ -24,9 +24,10 @@ setTotalCount("${projectListCount}");
 
 $(function(){
 	var projectList = new Array();
+	var json;
 	
 	<c:forEach items="${projectList}" var="project">
-		var json = new Object();
+		json = {};
 		json.projectId = "${project.projectId}";
 		json.progress = "${project.progress}";
 		json.totalTaskCount = "${project.totalTaskCount}";
@@ -37,19 +38,20 @@ $(function(){
 	</c:forEach>
 	
 	for (var i = 0; i < projectList.length; i++) {
+		var htmlStr = "";
 		console.log(projectList[i].status);
 		if (projectList[i].status == "P") {
-		 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
+			htmlStr = "<span class='statusSpan' style='background-color:" + progressColor + ";'>진행</span>";
 		} else if (projectList[i].status == "C") {
-			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", completeColor);
+			htmlStr = "<span class='statusSpan' style='background-color:" + completeColor + ";'>완료</span>";
 		} else if (projectList[i].status == "S") {
-			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", holdColor);
+			htmlStr = "<span class='statusSpan' style='background-color:" + holdColor + ";'>보류</span>";
 		} else if (projectList[i].status == "L") {
-			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", overdueColor);
+			htmlStr = "<span class='statusSpan' style='background-color:" + overdueColor + ";'>지연</span>";
 		} else {
-			$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#d1d1d1");
+			htmlStr = "<span class='statusSpan' style='background-color:#d1d1d1;'>&nbsp대기</span>";
 		}
-		
+		$("table#" + projectList[i].projectId + " td.test")[0].innerHTML = htmlStr;
 		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
 		
@@ -115,6 +117,12 @@ $(function(){
 	white-space : nowrap;
 	font-size : 13px;
 }
+
+.statusSpan{
+	font-size: 13px;
+    padding: 4px;
+    margin-left: 10px;
+}
 </style>
 <body>
 	<c:choose>
@@ -145,15 +153,15 @@ $(function(){
 				</th>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
-				<td colspan="2" style="height:29px;">&nbsp;&nbsp;
-					<span class="statusSpan" style="font-size:13px; padding:4px;"><c:choose>
-						<c:when test="${project.status eq 'C'}">완료</c:when>
-						<c:when test="${project.status eq 'P'}">진행</c:when>
-						<c:when test="${project.status eq 'L'}">지연</c:when>
-						<c:when test="${project.status eq 'W'}">대기</c:when>
-						<c:when test="${project.status eq 'D'}">삭제</c:when>
-						<c:when test="${project.status eq 'S'}">보류</c:when>
-					</c:choose></span>
+				<td class="test" colspan="2" style="height:29px;">
+<%-- 					<span class="statusSpan" style="font-size:13px; padding:4px;"><c:choose> --%>
+<%-- 						<c:when test="${project.status eq 'C'}">완료</c:when> --%>
+<%-- 						<c:when test="${project.status eq 'P'}">진행</c:when> --%>
+<%-- 						<c:when test="${project.status eq 'L'}">지연</c:when> --%>
+<%-- 						<c:when test="${project.status eq 'W'}">대기</c:when> --%>
+<%-- 						<c:when test="${project.status eq 'D'}">삭제</c:when> --%>
+<%-- 						<c:when test="${project.status eq 'S'}">보류</c:when> --%>
+<%-- 					</c:choose></span> --%>
 				</td>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">

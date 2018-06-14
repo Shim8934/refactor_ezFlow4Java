@@ -129,15 +129,16 @@ $(document).ready(function(){
 	getDatePicker();
 	
 	$(window).resize(function() {
-		CurrentHeight = $(window).height()-100;
-
 		$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
 	
+		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#divList").css("height", (CurrentHeight - 120) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 170) + "px");
+		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 78) + "px");
+		$("#contentList").css("height", (CurrentHeight - 100) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+		$("#divList").css("height", (CurrentHeight - 150) + "px");
+		$("#divList").css("overflow", "auto");
 	});
 });
 
@@ -263,6 +264,15 @@ function setMyTaskList(position) {
 		url : url,
 		success : function(contentList) {
 			$("#contentList").html(contentList);
+
+			CurrentHeight = $(window).height() - 100;
+			$("MailListRayer").css("height", CurrentHeight + "px");
+			$("#taskTree").css("height", CurrentHeight + 10 + "px");
+			$("#projectContent").css("height", CurrentHeight + "px");
+			$("#contentList").css("height", (CurrentHeight - 100) + "px");
+			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+			$("#divList").css("height", (CurrentHeight - 150) + "px");
+			$("#divList").css("overflow", "auto");
 			
 			//빈값으로 만들기
 			searchByTaskName = "";
@@ -426,7 +436,7 @@ function goProjectDetails(elem) {
 }
 
 .listRow:hover {
-	background-color: rgb(233, 241, 255);
+	background-color: rgb(244, 245, 245);
 }
 
 #contentList {

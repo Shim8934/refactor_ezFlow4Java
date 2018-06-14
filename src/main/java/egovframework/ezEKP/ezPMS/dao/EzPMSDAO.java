@@ -497,4 +497,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateProjectProgress(ProjectTaskVO taskVO) {
 		update("EzPMSDAO.updateProjectProgress", taskVO);
 	}
+
+	public ProjectInfoVO getProjectBoundaryDate(Map<String, Object> map) {
+		return (ProjectInfoVO) select("EzPMSDAO.getProjectBoundaryDate", map);
+	}
+	
+	public void updateProjectDate(Map<String, Object> map){
+		update("EzPMSDAO.updateProjectDate", map);
+	}
 }
