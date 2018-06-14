@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>새 업무 추가 페이지</title>
+<title><spring:message code='ezPMS.t89' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -172,10 +172,10 @@ function addTask() {
 	 
 	 //업무 이름 길이 제한
 	 if (taskName.length == 0) {
-		 alert("업무명을 입력해주세요.");
+		 alert("<spring:message code='ezPMS.t90' />");
 		 return;
 	 } else if (taskName.length > 100) {
-		 alert("업무명은 100자를 초과할 수 없습니다.");
+		 alert("<spring:message code='ezPMS.t91' />");
 		 return;
 	 }
 	 
@@ -194,13 +194,13 @@ function addTask() {
 	 
 	//1. 시작일 > 종료일은 불가능
 	 if (startDateComp.getTime() > endDateComp.getTime()) {
-		  alert("시작날짜가 종료날짜보다 늦을 수 없습니다.");
+		  alert("<spring:message code='ezPMS.t49' />");
 		  return;
 	  }
 	  
 	//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
 	 if (endDateComp.getTime() < todayComp.getTime()) {
-		 var confCheck = confirm("종료일이 현재일보다 빠르기 때문에 업무의 상태가 지연으로 변경됩니다. 계속하시겠습니까?");
+		 var confCheck = confirm("<spring:message code='ezPMS.t93' />");
 		 
 		 if (confCheck != true) {
 			 return;
@@ -210,39 +210,39 @@ function addTask() {
 	//3. 업무의 계획 시작일과 계획 종료일은 프로젝트 시작일과 종료일범위를 벗어날수 없음
 	if (startDateComp.getTime() < projectStartDateComp.getTime()) {
 		alert(startDateComp.getTime() + " <<<<>>>> " + projectStartDateComp.getTime());
-		alert("업무의 계획 시작일은 프로젝트의 시작일보다 이를 수 없습니다.");
+		alert("<spring:message code='ezPMS.t94' />");
 		return;
 	}
 	if (endDateComp.getTime() > projectEndDateComp.getTime()) {
-		alert("업무의 계획 종료일은 프로젝트의 종료일보다 늦을 수 없습니다.");
+		alert("<spring:message code='ezPMS.t95' />");
 		return;
 	}
 	
 	// 담당자 검사
 	if(managerList == null) {
 		// 현재 총괄담당자 null 허용 불가
-		alert("최소 1명 이상의 담당자를 지정해주세요.");
+		alert("<spring:message code='ezPMS.t47' />");
 		return;
 	}
 	
 	//상위그룹 미지정
 	if(groupId == "") {
-		alert("상위그룹을 지정해주세요.");
+		alert("<spring:message code='ezPMS.t85' />");
 		return;
 	}
 	
 	// 가중치 검사
 	if(weightInput == 1) {
 		if(weight == ""){
-			alert("가중치를 입력해 주십시오.");
+			alert("<spring:message code='ezPMS.t96' />");
 			return;
 		}
 		if(isNaN(weight)) {
-			alert("가중치는 숫자만 입력 가능합니다.");
+			alert("<spring:message code='ezPMS.t248' />");
 			return;
 		}
 		if(Number(weight) > remainingWeight) {
-			alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
+			alert("<spring:message code='ezPMS.t97' />");
 			return;
 		}
 	} else {
@@ -250,7 +250,7 @@ function addTask() {
 	}
 
 	
-	data = {
+	var data = {
 			taskName : taskName,
 			projectId : projectId,
 			groupId : groupId,
@@ -282,13 +282,13 @@ function addTask() {
 		contentType: "application/json; charset=UTF-8",
 		data : JSON.stringify(data),
 		success : function(data) {
-			alert("<spring:message code='ezTask.t150' />");
+			alert("<spring:message code='ezPMS.t266' />");
 			
 			parent.location.reload();
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert("error2");
+			alert("<spring:message code='ezPMS.t224' />");
 		}
 	});
 }
@@ -296,64 +296,64 @@ function addTask() {
 </script>
 </head>
 <body class="popup">
-	<h1>새 업무 추가</h1>
+	<h1><spring:message code='ezPMS.t89' /></h1>
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<tr>
-				<th>업무명</th>
+				<th><spring:message code='ezPMS.t98' /></th>
 				<td colspan="3">
 					<input type="text" id="taskName" class="textInput">
 				</td>
 			</tr>
 			<tr>
-				<th>등록자</th>
+				<th><spring:message code='ezPMS.t57' /></th>
 				<td colspan="3">${writerName}(${writerDeptName})</td>
 			</tr>
 			<tr>
-				<th>계획시작일</th>
+				<th><spring:message code='ezPMS.t61' /></th>
 				<td style="width:50%">
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-					<span style="margin-left:20px ">현재 시작일 : ${projectStartDate}</span>
+					<span style="margin-left:20px "><spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t61' /> : ${projectStartDate}</span>
 				</td>
-				<th>계획종료일</th>
+				<th><spring:message code='ezPMS.t62' /></th>
 				<td>
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-					<span style="margin-left:20px ">현재 종료일 : ${projectEndDate}</span>
+					<span style="margin-left:20px "><spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t62' /> : ${projectEndDate}</span>
 				</td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
+				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
 				<td colspan="3" style="height:70px" id="managers"></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
+				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
 				<td colspan="3" style="height:70px;" id="upperGroup"></td>
 			</tr>
 			<tr>
-				<th>가중치</th>
+				<th><spring:message code='ezPMS.t267' /></th>
 				<c:choose>
       				<c:when test="${weightInput == 0}">
 						<td colspan="3">
-						가중치 자동 계산
+						<spring:message code='ezPMS.t267' /> <spring:message code='ezPMS.t59' />
 						</td>
 					</c:when>
       				<c:when test="${weightInput == 1}">
 						<td colspan="3">
-						<input type="text" id="weight" value="0" style="width:40px;text-align:center"> %  &nbsp; 프로젝트 잔여 가중치 ${remainingWeight} % 
+						<input type="text" id="weight" value="0" style="width:40px;text-align:center"> %  &nbsp; <spring:message code='ezPMS.t103' /> ${remainingWeight} % 
 						</td>
 					</c:when>
    				</c:choose>
 			</tr>
 			<tr>
-				<th>업무개요</th>
+				<th><spring:message code='ezPMS.t104' /></th>
 				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
 			</tr>
 		</table>
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="addTask()"><span>등록</span></a></td>
+				<td><a class="imgbtn" id="submit" onclick="addTask()"><span><spring:message code='ezPMS.t40' /></span></a></td>
 				<td></td>
-				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
+				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a></td>
 			</tr>
 		</table>
 	</div>

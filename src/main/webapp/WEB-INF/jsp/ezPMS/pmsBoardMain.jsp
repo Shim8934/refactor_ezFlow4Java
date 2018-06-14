@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>게시판</title>
+<title><spring:message code='ezPMS.t141' /></title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -181,16 +181,16 @@
 						var groupId = deletedTR.attr("data-groupId");
 						var taskId = deletedTR.attr("data-taskId");
 						
-						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + title.trim() + "] 게시물이 삭제되었습니다.");
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
 					}
 					
 					getBoardList();
 				} else {
-					alert('삭제는 프로젝트 담당자나 작성자만 할 수 있습니다.');
+					alert("<spring:message code='ezPMS.t108' />");
 				}	
 			},
 			error : function() {
-				alert("삭제에 실패하였습니다.");
+				alert("<spring:message code='ezPMS.t213' />");
 			}
 		})
 	}
@@ -299,12 +299,12 @@
 				<div id="mainmenu">
 				<ul>
 					<c:if test="${userRole ne 3}">
-						<li><span onclick="goAddBoard()">등록</span></li>
-						<li><span onclick="deleteBoards()">삭제</span></li>
-						<li><span onclick="goMoveBoards()">이동</span></li>
+						<li><span onclick="goAddBoard()"><spring:message code='ezPMS.t40' /></span></li>
+						<li><span onclick="deleteBoards()"><spring:message code='ezPMS.t11' /></span></li>
+						<li><span onclick="goMoveBoards()"><spring:message code='ezPMS.t111' /></span></li>
 					</c:if>
-					<li><span onclick="location.reload()">새로고침</span></li>
-					<li><span onclick="showSearchDiv()">검색 <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></li>
+					<li><span onclick="location.reload()"><spring:message code='ezPMS.t123' /></span></li>
+					<li><span onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></li>
 				</ul>
 				</div>
 			</div>
@@ -312,28 +312,28 @@
 				<table class="content" style="width:80%; margin-bottom:5px;">
 					<tbody>
 						<tr>
-							<th>업무명 </th>
+							<th><spring:message code='ezPMS.t98' /> </th>
 							<td style="width:50%">
 								<input type="text" id="searchByTaskName" style="width:50%; margin-right:5px;">
 							</td>
-							<th>게시자</th>
+							<th><spring:message code='ezPMS.t114' /></th>
 							<td><input type="text" style="width:100%" id="searchByUser"></td>
 						</tr>
 						<tr>
-							<th>제&nbsp;&nbsp;목</th>
+							<th><spring:message code='ezPMS.t215' /></th>
 							<td style="width:50%" colspan="3"><input type="text" style="width:100%" id="searchByTitle"></td>
 						<!-- 	<th>내 용</th>
 							<td style="width:50%"><input type="text" style="width:100%" id="searchByContent"></td> -->
 						</tr>
 						<tr>
-							<th>게시개요</th>
+							<th><spring:message code='ezPMS.t81' /></th>
 							<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
 						</tr>
 						<tr>
-							<th>검색기간 </th>
+							<th><spring:message code='ezPMS.t125' /> </th>
 							<td colspan="3">
 								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a>
+								<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a>
 							</td>
 						</tr>
 					</tbody>

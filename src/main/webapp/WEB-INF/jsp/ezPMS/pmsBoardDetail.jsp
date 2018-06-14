@@ -7,7 +7,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>게시물 읽기</title>
+	<title><spring:message code='ezPMS.t105' /></title>
 	<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -58,7 +58,7 @@
 			var i = 0;
 			
 			if(!checkboxes.length) {
-				alert("파일을 선택해주십시오.");
+				alert("<spring:message code='ezPMS.t106' />");
 			}
 			
 			var link = document.createElement('a');
@@ -81,7 +81,7 @@
 		}
 		
 		function deleteBoard() {
-			if(confirm("삭제하시겠습니까?") == true) {
+			if(confirm("<spring:message code='ezPMS.t107' />") == true) {
 				var items = new Array();
 				items.push(itemId);
 				deleteBoardAction(items);
@@ -102,15 +102,15 @@
 				data : JSON.stringify(data),
 				success : function(result) {
 					if(result.data == 'success') {
-						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "]의 " + "[" + title.trim() + "] 게시물이 삭제되었습니다.");
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t208' />");
 						window.close();
 						opener.getBoardList();
 					} else {
-						alert('삭제는 프로젝트 담당자나 게시자만 할 수 있습니다.');
+						alert("<spring:message code='ezPMS.t108' />");
 					}
 				},
 				error : function() {
-					alert("삭제에 실패하였습니다.");
+					alert("<spring:message code='ezPMS.t213' />");
 				}
 			})
 		}
@@ -158,13 +158,13 @@
 			<td style="height: 20px">
 				<div id="menu">
 					<ul>
-						<li id="ReplyBtn"><span onclick="goAddBoardReply()">답변</span></li>
-						<li id="modifyBtn"><span onclick="modifyBoard()">수정</span></li>
-						<li id="deleteBtn"><span onclick="deleteBoard()">삭제</span></li>
-						<li id="moveBtn"><span onclick="goMoveBoard()">이동</span></li>
-						<li><span onclick="fromPMSBoardToMail()">메일로 발송</span></li>
-						<li><span onclick="boardViewerList()">조회자 정보</span></li>
-						<li style="float: right;"><span onclick="window.close()">닫기</span></li>
+						<li id="ReplyBtn"><span onclick="goAddBoardReply()"><spring:message code='ezPMS.t109' /></span></li>
+						<li id="modifyBtn"><span onclick="modifyBoard()"><spring:message code='ezPMS.t110' /></span></li>
+						<li id="deleteBtn"><span onclick="deleteBoard()"><spring:message code='ezPMS.t11' /></span></li>
+						<li id="moveBtn"><span onclick="goMoveBoard()"><spring:message code='ezPMS.t111' /></span></li>
+						<li><span onclick="fromPMSBoardToMail()"><spring:message code='ezPMS.t112' /></span></li>
+						<li><span onclick="boardViewerList()"><spring:message code='ezPMS.t113' /></span></li>
+						<li style="float: right;"><span onclick="window.close()"><spring:message code='ezPMS.t76' /></span></li>
 					</ul>
 				</div>
 			</td>
@@ -173,26 +173,26 @@
 			<td>
 				<table class="content" style="width:100%;">
 					<tr>
-						<th>게시자</th>
+						<th><spring:message code='ezPMS.t114' /></th>
 						<td style="width: 50%">${board.writerName}</td>
-						<th>부&nbsp;&nbsp;서</th>
+						<th><spring:message code='ezPMS.t214' /></th>
 						<td>${board.writerDeptName}</td>
 					</tr>
 					<tr>
-						<th>직&nbsp;&nbsp;위</th>
+						<th><spring:message code='ezPMS.t216' /></th>
 						<td style="width: 50%">${board.writerPosition}</td>
-						<th>전화번호</th>
+						<th><spring:message code='ezPMS.t117' /></th>
 						<td>${board.mobileNumber}</td>
 					</tr>
 					<tr>
-						<th>작업이름</th>
+						<th><spring:message code='ezPMS.t80' /></th>
 						<td id="taskName" style="width: 50%"></td>
-						<th>게시일</th>
+						<th><spring:message code='ezPMS.t119' /></th>
 						<td>${fn:substring(board.writeDate, 0, 19)}</td>
 						
 					</tr>
 					<tr>
-						<th>제&nbsp;&nbsp;목</th>
+						<th><spring:message code='ezPMS.t215' /></th>
 						<td colspan="3">${board.title}</td>
 					</tr>
 				</table>
@@ -209,7 +209,7 @@
 			<td style="vertical-align: top; paddin-top: 5px;">
 				<table class="file">
 					<tr class="pos1">
-						<th>첨부파일</th>
+						<th><spring:message code='ezPMS.t120' /></th>
 						<td>
 							<div id="lstAttachLink" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
 								<c:forEach items="${board.fileList }" var="file">

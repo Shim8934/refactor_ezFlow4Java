@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Kanban Setting</title>
+<title><spring:message code='ezPMS.t134' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />"
 	type="text/css">
 <link rel="stylesheet" href="/js/jquery-ui/jquery-ui.min.css" type="text/css">
@@ -60,7 +60,7 @@ function selectStatus(status, location) {
 		$("#sel"+status).remove();
 	} else {
 		if (selStatus.length >= 4) {
-			alert("4개 까지만 선택 가능합니다.");
+			alert("<spring:message code='ezPMS.t135' />");
 			$("#" + status).prop("checked", false);
 			return;
 		} else {
@@ -114,7 +114,7 @@ function updateKanbanStatus() {
 			popupClose(); 
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert("error : " + textStatus);
+			alert("<spring:message code='ezPMS.t208' />");
 		}
 	});  
 	
@@ -134,7 +134,7 @@ function addStatus() {
 	}
 	
 	if (selStatus.length >= 4) {
-		alert("4개 까지만 선택 가능합니다.");
+		alert("<spring:message code='ezPMS.t135' />");
 		return;
 	} else {
 		$("#" + selOne).prop("checked", true);
@@ -200,33 +200,33 @@ body {
 	<form method="POST">
 		<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
-					<h1 style="display: inline-block;">프로젝트 개요 화면 설정</h1>
+					<h1 style="display: inline-block;"><spring:message code='ezPMS.t134' /></h1>
 			    </div>					
 		</div>
 		<div id = "instruction" >
-			프로젝트 개요 화면에 표시할 업무 종류와 순서를 선택하세요.(최대 4개) 
+			<spring:message code='ezPMS.t136' /> 
 		</div>
 			<table id="kanbanSetting">
 				<tr>
 				     <td>
 						<table border=1 style="width : 100%; border-color: grey;" id="kanbanStatus" class="kanbanStatus">
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('A', 'tr')" onclick="selectOneStatus('A')">
-								<td><input type="checkbox" id="A" name="kanbanStatus" value="전체 업무" onchange="selectStatus('A', 'checkbox')">전체 업무</td>
+								<td><input type="checkbox" id="A" name="kanbanStatus" value="<spring:message code='ezPMS.t269' />" onchange="selectStatus('A', 'checkbox')"><spring:message code='ezPMS.t269' /></td>
 							</tr>
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('P', 'tr')" onclick="selectOneStatus('P')">
-								<td><input type="checkbox" id="P" name="kanbanStatus" value="진행 중인 업무" onchange="selectStatus('P', 'checkbox')">진행 중인 업무</td>
+								<td><input type="checkbox" id="P" name="kanbanStatus" value="<spring:message code='ezPMS.t138' />" onchange="selectStatus('P', 'checkbox')"><spring:message code='ezPMS.t138' /></td>
 							</tr>
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('C', 'tr')" onclick="selectOneStatus('C')">
-								<td><input type="checkbox" id="C" name="kanbanStatus" value="완료된 업무" onchange="selectStatus('C', 'checkbox')">완료된 업무</td>
+								<td><input type="checkbox" id="C" name="kanbanStatus" value="<spring:message code='ezPMS.t34' />" onchange="selectStatus('C', 'checkbox')"><spring:message code='ezPMS.t34' /></td>
 							</tr>
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('L', 'tr')" onclick="selectOneStatus('L')">
-								<td><input type="checkbox"  id="L" name="kanbanStatus" value="기한이 지난 업무" onchange="selectStatus('L', 'checkbox')">기한이 지난 업무</td>
+								<td><input type="checkbox"  id="L" name="kanbanStatus" value="<spring:message code='ezPMS.t139' />" onchange="selectStatus('L', 'checkbox')"><spring:message code='ezPMS.t139' /></td>
 							</tr>
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('W', 'tr')" onclick="selectOneStatus('W')">
-								<td><input type="checkbox" id="W" name="kanbanStatus" value="대기 중인 업무" onchange="selectStatus('W', 'checkbox')">대기 중인 업무</td>
+								<td><input type="checkbox" id="W" name="kanbanStatus" value="<spring:message code='ezPMS.t140' />" onchange="selectStatus('W', 'checkbox')"><spring:message code='ezPMS.t140' /></td>
 							</tr>
 							<tr class="white hover" style="border: 1px solid #ddd; cursor:pointer;" ondblclick="selectStatus('B', 'tr')" onclick="selectOneStatus('B')">									
-								<td><input type="checkbox" id="B" name="kanbanStatus" value="게시판" onchange="selectStatus('B', 'checkbox')">게시판</td>
+								<td><input type="checkbox" id="B" name="kanbanStatus" value="<spring:message code='ezPMS.t141' />" onchange="selectStatus('B', 'checkbox')"><spring:message code='ezPMS.t141' /></td>
 							</tr>
 						</table>
 					</td>
@@ -244,9 +244,9 @@ body {
 	         </table>
 			<table style="margin-top : 5px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="updateKanbanStatus()"><span>확인</span></a></td>
+				<td><a class="imgbtn" id="submit" onclick="updateKanbanStatus()"><span><spring:message code='ezPMS.t265' /></span></a></td>
 				<td></td>
-				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
+				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a></td>
 			</tr>
 		</table>	
 	</form>

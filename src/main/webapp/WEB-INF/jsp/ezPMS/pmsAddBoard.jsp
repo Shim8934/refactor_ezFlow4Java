@@ -9,9 +9,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>
 		<c:choose>
-			<c:when test="${mode eq 'modify'}">게시물 수정</c:when>
-			<c:when test="${mode eq 'reply'}">게시물 답변</c:when>
-			<c:otherwise>새 게시물 작성</c:otherwise>
+			<c:when test="${mode eq 'modify'}"><spring:message code='ezPMS.t71' /></c:when>
+			<c:when test="${mode eq 'reply'}"><spring:message code='ezPMS.t72' /></c:when>
+			<c:otherwise><spring:message code='ezPMS.t73' /></c:otherwise>
 		</c:choose>
 	</title>
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
@@ -69,7 +69,8 @@
 		if(mode == 'modify') {
 			var notice = $("#notice");
 			var emergency = $("#emergency");
-			switch(writeType) {
+			
+			switch (writeType) {
 			case '1':
 				notice.prop("checked","true");
 				emergency.prop("checked","true");
@@ -86,11 +87,11 @@
 			$('#writeOverview').val(writeOverview);
 			
 			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
-		} else if(mode == 'new') {
+		} else if (mode == 'new') {
 			
 			taskName = '${taskName}';
 			
-		} else if(mode == 'reply') {
+		} else if (mode == 'reply') {
 			
 			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
 			
@@ -136,9 +137,10 @@
 	
 	function addBoard() {
 	
-		if (doubleSubmitFlag){
+		if (doubleSubmitFlag) {
     		return;
     	}
+		
 		doubleSubmitFlag = true;
 		
 		var title = $("#title").val().trim();
@@ -146,24 +148,24 @@
 		var writeOverview = $("#writeOverview").val().trim();
 		
 		// 긴급 게시 / 공지 사항 여부
-		if($("#notice").is(":checked") == true) {
+		if ($("#notice").is(":checked") == true) {
 			
-			if($("#emergency").is(":checked") == true) {
+			if ($("#emergency").is(":checked") == true) {
 				writeType = 1; // 공지사항 O, 긴급게시 O
 			} else {
 				writeType = 2; // 공지사항 O, 긴급게시 X
 			}
 		} else {
 			
-			if($("#emergency").is(":checked") == true) {
+			if ($("#emergency").is(":checked") == true) {
 				writeType = 3; // 공지사항 X, 긴급게시 O
 			} else {
 				writeType = 4; // 공지사항 X, 긴급게시 X
 			}
 		}
 		
-		if(title == "") {
-			alert("제목을 입력해주십시오.");
+		if (title == "") {
+			alert("<spring:message code='ezPMS.t74' />");
 			return;
 		}
 		
@@ -181,7 +183,7 @@
     		}
 		}
 		
-		data = {
+		var data = {
 			projectId : projectId,
 			writerId : writerId,
 			writerName : writerName,
@@ -208,13 +210,13 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				
-				if(result.data == 'new' || result.data == 'modify' || result.data == 'reply') {
-					alert("게시물을 저장하였습니다.");
+				if (result.data == 'new' || result.data == 'modify' || result.data == 'reply') {
+					alert("<spring:message code='ezPMS.t75' />");
 					doubleSubmitFlag = false;
 					
-					if(result.data == 'new' || result.data == 'reply') {
+					if (result.data == 'new' || result.data == 'reply') {
 						
-						if(taskId == "null") {
+						if (taskId == "null") {
 							taskId = null;
 						}
 						
@@ -231,20 +233,20 @@
 						opener.searchByOverview = "";
 						opener.searchByContent = "";
 						
-						addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "](으)로 " + "[" + title.trim() + "] 게시물이 등록되었습니다.");
+						addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + title.trim() + "<spring:message code='ezPMS.t204' />");
 					} else {
-						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "](으)로 " + "[" + title.trim() + "] 게시물이 수정되었습니다.");
+						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + title.trim() + "<spring:message code='ezPMS.t205' />");
 					}
 					
 					opener.getBoardList();
 					window.close();
 				} else {
-					alert("저장에 실패하였습니다.");
+					alert("<spring:message code='ezPMS.t208' />");
 					doubleSubmitFlag = false;
 				}	
 			},
 			error : function() {
-				alert("저장에 실패하였습니다.");
+				alert("<spring:message code='ezPMS.t208' />");
 				doubleSubmitFlag = false;
 			}
 		});
@@ -277,7 +279,7 @@
             	window.close();
             },
             error: function(jqXHR, textStatus, errorThrown) {
-            	alert("error");	
+            	alert("<spring:message code='ezPMS.t213' />");	
             }
 		});
 	}
@@ -289,8 +291,8 @@
 			<td style="height: 20px">
 				<div id="menu">
 					<ul>
-						<li><span onclick="addBoard()">등록</span></li>
-						<li style="float: right;"><span onclick="cancelAddBoard()">닫기</span></li>
+						<li><span onclick="addBoard()"><spring:message code='ezPMS.t40' /></span></li>
+						<li style="float: right;"><span onclick="cancelAddBoard()"><spring:message code='ezPMS.t76' /></span></li>
 					</ul>
 				</div>
 			</td>
@@ -299,28 +301,28 @@
 			<td>
 				<table class="content" style="width:100%;">
 					<tr>
-						<th>프로젝트명</th>
+						<th><spring:message code='ezPMS.t31' /></th>
 						<td style="width: 50%">
 							<c:choose>
 								<c:when test="${projectName eq null}">${board.projectName}</c:when>
 								<c:otherwise>${projectName}</c:otherwise>
 							</c:choose>		
 						</td>
-						<th>게시종류</th>
-						<td><input type="checkbox" id="emergency"/> 긴급게시 <input type="checkbox" id="notice"/> 공지사항</td>
+						<th><spring:message code='ezPMS.t77' /></th>
+						<td><input type="checkbox" id="emergency"/> <spring:message code='ezPMS.t78' /> <input type="checkbox" id="notice"/> <spring:message code='ezPMS.t79' /></td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;"><span>작업이름</span></a></th>
+						<th><a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;"><span><spring:message code='ezPMS.t80' /></span></a></th>
 						<td style="width: 50%" id="taskName"></td>
-						<th>등록자</th>
+						<th><spring:message code='ezPMS.t57' /></th>
 						<td>${writerName}(${writerDeptName})</td>
 					</tr>
 					<tr>
-						<th>제&nbsp;&nbsp;목</th>
+						<th><spring:message code='ezPMS.t215' /></th>
 						<td colspan="3"><input type="text" id="title" style="width: 100%;"/></td>
 					</tr>
 					<tr>
-						<th>게시개요</th>
+						<th><spring:message code='ezPMS.t81' /></th>
 						<td colspan="3"><input type="text" id="writeOverview" style="width: 100%;"/></td>
 					</tr>
 				</table>
