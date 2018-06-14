@@ -3,7 +3,7 @@ var xmlhttp;
 
 var delFlag = false;
 
-function CalViewSource() {
+function CalViewSource(chk_str) {
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -12,9 +12,9 @@ function CalViewSource() {
 		data : {
 			STARTDATE : sStartDate,
 			ENDDATE : sEndDate,
-			APP : idtype,
+			APP : chk_str,
 			GROUPID : groupid,
-			IDLIST : (idlist == "") ? idtype : idlist
+			IDLIST : chk_str
 		},
 		success: function(text){
 			if (typeCal == 0) {
@@ -264,7 +264,6 @@ function getCalDayViewSource_after(text) {
 
 
 function tempInsert(objNodes, DataSDT, DataEDT) {
-
     var startHour = parseInt(DataSDT.getHours(), 10);
     var endHour = parseInt(DataEDT.getHours(), 10);
     var startMin = parseInt(DataSDT.getMinutes(), 10);
@@ -559,7 +558,7 @@ function CalDataSize(oAppointment, order, tempData) {
 function CalMonthDataBind(oAppointment) {
 
     var objElm = document.getElementById("TD_" + oAppointment.trID + "_Value");
-    if (objElm) {
+    if (objElm) {    	
 
         var oTr = document.createElement("TR");
         var oTd = document.createElement("TD");
@@ -592,7 +591,7 @@ function CalMonthDataBind(oAppointment) {
         var pSubject;
         if (oAppointment.DateType != 2) {
             pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
-            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject;
+            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
         }
         else {
             pTime = strLang39;

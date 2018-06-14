@@ -61,7 +61,7 @@
 				height: 370px; 
 				width: 550px; 
 				margin: 7px 7px; 
-				border: 1px solid #cbcbcb;
+				border: 1px solid #ddd;
 			}
 			
 			input::-webkit-input-placeholder{
@@ -90,8 +90,7 @@
 			}
 			
 			.btnpositionNew {
-				border-top: 5px;
-				padding-top: 6px;
+				padding-top: 7px;
 			}
 			
 			.jstree-node, .jstree-children, .jstree-container-ul { 
@@ -106,16 +105,16 @@
 		
 		<table border="1" id="letterTable" >
 			<tr style="height:8%; border-bottom:none;">
-				<th colspan="2" align="center">
+				<th colspan="2" align="center" style="border:1px solid #ddd">
 					<div class="lmtitle lmLetterBoxTitle" style="border-bottom:0px;">
-						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="<spring:message code="ezEmail.t10"/>">
+						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="<spring:message code="ezEmail.t10"/>" style="border-color:#ddd">
 						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span><spring:message code='ezEmail.letter1'/></span></a>
 						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span><spring:message code='ezBoard.t999035'/></span></a>
 					</div>	
 				</th>
 			</tr>
-			<tr style="border-color:#cbcbcb;">
-				<td style="width:50%; vertical-align:top; border-right:1px solid #cbcbcb">
+			<tr style="border-color:#ddd;">
+				<td style="width:50%; vertical-align:top; border-right:1px solid #ddd">
 					<div id="divTree" style="height: 340px; width: 273px; overflow: auto; "></div>
 				</td>
 				<td style="width:50%; vertical-align:top; ">

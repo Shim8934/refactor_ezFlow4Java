@@ -20,7 +20,10 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-		
+		<!-- layer popup -->
+		<link rel="stylesheet"  href="/js/jquery/jquery.modal.css" type="text/css" />
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+
 		<style>
 			#layer_Viewpopup { 
 				z-index:1000; 
@@ -720,9 +723,15 @@
 		    }
 		    
 		
-		
+		    /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 		        function doLayerPopup(obj) {
-		            btn_PostDate_Clear();
+		        	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+			    	parent.frames["left"].document.body.style.overflow = "hidden";
+			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	$("#srarchpopup").css("left", popupX);
+			    	$("#srarchpopup").modal();
+		        	
+		           /*  btn_PostDate_Clear();
 		            //document.getElementById("chkSearchSub").checked = false;
 		            document.getElementById("txtTitle").value = "";
 		            document.getElementById("txtAbstract").value = "";
@@ -736,7 +745,7 @@
 		            }
 		            else {
 		                BoardSearchOptionHidden();
-		            }
+		            } */
 		        }
 		        function btn_PostDate_Clear() {
 			        $("#Sdatepicker").datepicker('setDate', "");
@@ -745,6 +754,8 @@
 		        function BoardSearchOptionHidden() {
 		            document.getElementById("layer_popup").style.display = "none";
 		            document.getElementById("SearchOption").setAttribute("mode", "off");
+		        
+		            $.modal.close();
 		        }
 			    function search(type) {
 			        if (type == "basic") {
@@ -1012,8 +1023,46 @@
 	        </span>
 	    </span>
 	
-	
-	    <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+		<!-- 2018-06-08 김민성 - 게시판 검색 레이어팝업 변경 -->
+	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
+		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
+			<table class="content">
+				<tr>
+					<th class="layerHeader" colspan="2">
+						<img src="/images/kr/left/left_mail.png" style="vertical-align: middle; padding-bottom: 1px"> 
+						<spring:message code='ezBoard.t0006' /> <spring:message code='ezJournal.t43' />
+					</th>
+				</tr>
+		        <tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
+		            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+		        </tr>  
+		         <tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
+		            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
+		        </tr>    
+		       <tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
+		           <td>
+		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+		                ~
+		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
+		           </td>
+		  		</tr>
+			</table>
+			<br />
+			<table style="width: 100%">
+		        <tr>
+		            <td style="text-align:center;">
+		                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
+		                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+		                <a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
+		            </td>
+		        </tr>
+			</table>
+		</div>
+	</div>
+	    <%-- <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 	    	<div class="popupwrap1">
 	            <div class="popupwrap2">
 	        		<table class="content">
@@ -1048,6 +1097,6 @@
             	</div>
           	</div>
         	<div class="shadow"></div>
-		</div>
+		</div> --%>
 	</body>
 </html>
