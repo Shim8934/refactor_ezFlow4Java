@@ -374,11 +374,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 						pidListSub += ",";
 					}
 				}
-			if(pidListSub.equals("") || pidListSub == null || pidListSub.equals("\'\'")){
-				pidListSub = "";
-			}else{
-				
-				pidListSub.substring(0, pidListSub.length()-1);
+			if(pidListSub.equals("") || pidListSub == null){
+				pidListSub = ",\'\'";
+			}else{				
+				System.out.println("이거 타니?? : " + pidListSub);
+				pidListSub = pidListSub.substring(0, pidListSub.lastIndexOf(","));
+				System.out.println("타고난 다음 : " + pidListSub);				
 			}
 			
 			pidList += pidListSub;
@@ -389,6 +390,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			pidList = idList;
 		}		
 		logger.debug("pidListSub : " + pidListSub);
+		logger.debug("pidList : " + pidList);
 		
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId());		
 		
