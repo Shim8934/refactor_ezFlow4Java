@@ -830,7 +830,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		moduleList.put("/ezResource/resMain.do", "res");
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 		moduleList.put("/ezJournal/journalMain.do", "journal");
-		
+		moduleList.put("/ezWebFolder/webfolderMain.do", "webfolder");
+
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
 		
 		/*
@@ -845,6 +846,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("isResUsed", usedList.get("res"));
 		model.addAttribute("isCircularUsed", usedList.get("circular"));
 		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		model.addAttribute("isWebfolderUsed", usedList.get("webfolder"));
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
