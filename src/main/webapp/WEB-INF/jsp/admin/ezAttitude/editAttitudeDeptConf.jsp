@@ -45,13 +45,6 @@
 		   				}
 	   				},"#lplistView tr");
 	   			});
-	            
-// 		   		for (var i = 0; i < RetValue[0].length; i++) {
-// 	   				lpDeptId = RetValue[0][i];
-// 	   				lpDeptName = RetValue[1][i];
-	   				
-// 	   				addDeptInLP();
-// 				}
 
 		   		//timepicker셋팅
 		   		$('#workStartTime').timepicker({ 'timeFormat': 'H:i' });
