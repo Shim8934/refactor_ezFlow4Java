@@ -163,7 +163,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			defaultView = schConfVO.getDefaultView();
 			startDay = schConfVO.getStartDay();
 		}
-        
+		
 		List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId());
 		
 		String userID = loginVO.getId();
@@ -227,7 +227,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");
-		String groupID = request.getParameter("GROUPID");		
+		String groupID = request.getParameter("GROUPID");	
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		//일정관리 데이터 호출 함수
@@ -271,7 +271,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		//일정관리 데이터 호출 함수
 		List<ScheduleInfoVO> sList = scheduleListData(selectDate, selectDate, idList, "", offSetMin, userInfo);
 		
-		Collections.sort(sList, new EzScheduleCompareUtil());
+		Collections.sort(sList, new EzScheduleCompareUtil());		
 		
 		for(int j = 0; j < sList.size(); j++){			
 			ScheduleInfoVO data = sList.get(j);
@@ -287,8 +287,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */	
 	public List<ScheduleInfoVO> scheduleListData(String startDate, String endDate, String idList, String groupID, String offSetMin, LoginVO userInfo) throws Exception {
 		
-		logger.debug("============ scheduleListData started ============");
-		logger.debug("***중요***scheduleListData의 idList : " + idList);
+		logger.debug("============ scheduleListData started ============");		
 		String pidList = "";
 		String pidListSub = "";
 		
@@ -364,19 +363,24 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			for (int i = 0; i < gList.size(); i++) {
 				if((tList == null || tList.size()<=0) && (dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
-				if (i == 0) {
+					if (i == 0) {
 						pidListSub += ",";
 					}
-				}			
-				ScheduleGroupListVO data = gList.get(i);			
+				}
+					ScheduleGroupListVO data = gList.get(i);			
 					pidListSub += "\'" + data.getGroupId() + "\'";
-				
-				if (i != gList.size()-1) {
+					
+					if (i != gList.size()-1) {
 						pidListSub += ",";
-				}	
-			}			
-			
-			pidListSub.substring(0, pidListSub.length()-1);
+					}
+				}
+			if(pidListSub.equals("") || pidListSub == null){
+				pidListSub = ",\'\'";
+			}else{				
+				System.out.println("이거 타니?? : " + pidListSub);
+				pidListSub = pidListSub.substring(0, pidListSub.lastIndexOf(","));
+				System.out.println("타고난 다음 : " + pidListSub);				
+			}
 			
 			pidList += pidListSub;
 			
@@ -385,12 +389,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		} else {
 			pidList = idList;
 		}		
-		
-		logger.debug("selectlistdata의 ***중요***pidList : " + pidList);
-		logger.debug("selectlistdata의 ***중요***pidListSub : " + pidListSub);
+		logger.debug("pidListSub : " + pidListSub);
+		logger.debug("pidList : " + pidList);
 		
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId());		
-	
+		
 		return sList;
 	}
 
@@ -507,10 +510,9 @@ public class EzScheduleController extends EgovFileMngUtil {
         String otherId = request.getParameter("otherid");
         String idList = "";
         String idType = "T";        
-        String idTypeTmp = request.getParameter("idtype");        
+        String idTypeTmp = request.getParameter("idtype");
         //2018-06-07 구해안checkbox 값을 가져와서 char[]에 담기
         String idTypeChk = request.getParameter("idTypeChk");
-        logger.debug("idTypeChk : " + idTypeChk);
         char[] chk_array = null;
         if(idTypeChk != null && !idTypeChk.equals("")){
         	
@@ -539,7 +541,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         } else if (idTypeChk != null && !idTypeChk.equals("")){        	
         	idList = idTypeChk;
         }
-
+        
         
 
         pOffset = loginVO.getOffset().split("\\|")[1];      
