@@ -123,7 +123,7 @@ $(function() {
 			</div>
 			<c:choose>
 				<c:when test="${paging.endPage>0 }">
-					<div id="tblPageRayer" style="width: 470px; margin: 6px auto;">
+					<div id="tblPageRayer" style="width: 470px; margin: 6px auto; font-size:0;">
 					<div class="pagenavi">
 							<c:choose>
 								<c:when test="${paging.currentPage gt 1}">
