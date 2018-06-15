@@ -21,7 +21,7 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
-var progress = "${project.progress}";
+var projectProgress = "${project.progress}";
 var nowStatus = "${project.status}";
 var strHTML = "";
 var projectId = "${project.projectId}";
@@ -95,13 +95,13 @@ function initProgressBar() {
 		circleColor = completeColor;
 		break;
 	}
-	
+	console.log(projectProgress);
 	$(".progress_graph").circleProgress({
-		value: 0.4,
+		value: projectProgress * 0.01,
 		fill : {color : circleColor},
-		size : 120
+		size : 130
 	}).on('circle-animation-progress', function(event, progress) {
-		$(this).find('strong').html(40 + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+		$(this).find('strong').html(projectProgress + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 	});
 }
 
