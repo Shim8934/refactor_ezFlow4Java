@@ -19,6 +19,17 @@
 	
 	$(function(){
 		taskDetails = ${taskDetails};
+		
+		var preTaskId = "${taskDetails.pretask}";
+		
+		var preTaskTR = $("[taskid$='_t" + preTaskId + "']", parent.opener.document);
+		var preTaskName = preTaskTR.find("input[name='name']").val();
+		
+		if(typeof preTaskName != 'undefined') {
+			$(".preTaskName").text(preTaskName);
+		} else {
+			$(".preTaskName").text('-');
+		}
 	});
 	
 	
@@ -62,7 +73,7 @@ td.overviewTd{vertical-align:top;}
 	  </tr>
 	  <tr>
 	    <th class="">선행작업</th>
-	    <td class="">${taskDetails.pretask == null ? "-" : taskDetails.pretask}</td>
+	    <td class="preTaskName"></td>
 	  </tr>
 	  <tr>
 	    <th class="">가중치</th>
