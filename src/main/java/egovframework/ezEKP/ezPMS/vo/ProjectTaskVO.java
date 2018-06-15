@@ -122,6 +122,10 @@ public class ProjectTaskVO {
     // 계획 진행률 
     private Float planProgress;
     
+    // 선행 작업의 조상 그룹
+    private String pretaskAncesterGroup;
+    
+    
     public Long getTaskId() {
         return taskId;
     }
@@ -432,6 +436,14 @@ public class ProjectTaskVO {
 
 	public void setPlanProgress(Float planProgress) {
 		this.planProgress = planProgress;
+	}
+
+	public String getPretaskAncesterGroup() {
+		return pretaskAncesterGroup;
+	}
+
+	public void setPretaskAncesterGroup(String pretaskAncesterGroup) {
+		this.pretaskAncesterGroup = pretaskAncesterGroup;
 	}
     
 }

@@ -20,12 +20,26 @@
 	$(function(){
 		taskDetails = ${taskDetails};
 		
+		var preTaskName = "";
+		
+		var preAncester = "${taskDetails.pretaskAncesterGroup}";
+		var preAncesterArr = preAncester.split(",");
+		
+		if(preAncesterArr.length > 1) {
+			// 가장 처음 값은 프로젝트에 대한 그룹ID 값이므로 제외
+			for(var i = 1; i < preAncesterArr.length; i++) {
+				
+				var ancesterTR = $("[taskid$='_g" + preAncesterArr[i] + "']", parent.opener.document);
+				var ancesterName = ancesterTR.find("input[name='name']").val();
+				preTaskName += ancesterName + " > ";
+			}
+		}
+		
 		var preTaskId = "${taskDetails.pretask}";
-		
 		var preTaskTR = $("[taskid$='_t" + preTaskId + "']", parent.opener.document);
-		var preTaskName = preTaskTR.find("input[name='name']").val();
-		
-		if(typeof preTaskName != 'undefined') {
+		preTaskName += preTaskTR.find("input[name='name']").val();
+			
+		if(preTaskName != "undefined") {
 			$(".preTaskName").text(preTaskName);
 		} else {
 			$(".preTaskName").text('-');
