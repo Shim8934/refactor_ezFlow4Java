@@ -898,40 +898,47 @@
 	
 	        /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 	        function doLayerPopup(obj) {
-	        	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+	        	/* btn_PostDate_Clear();
+		        document.getElementById("chkSearchSub").checked = false;
+		        document.getElementById("txtTitle").value = "";
+		        document.getElementById("txtWriterName").value = "";
+		        document.getElementById("txtAbstract").value = "";
+		
+		        if (obj.getAttribute("mode") == "off") {
+		            document.getElementById("layer_popup2").style.left = "10px";
+		            if (pAdminType == "y")
+		                document.getElementById("layer_popup2").style.top = "56px";
+		            else
+		                document.getElementById("layer_popup2").style.top = "100px";
+		            document.getElementById("layer_popup2").style.display = "";
+		            obj.setAttribute("mode", "on");
+		        }
+		        else {
+		            BoardSearchOptionHidden();
+		        } */
+		        
+		    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
 		    	parent.frames["left"].document.body.style.overflow = "hidden";
 		    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-	        	$("#srarchpopup").css("left", popupX);
+		    	$("#srarchpopup").css("left", popupX);
 		    	$("#srarchpopup").modal();
-		    	
-	            /* btn_PostDate_Clear();
-	            //document.getElementById("chkSearchSub").checked = false;
-	            document.getElementById("txtTitle").value = "";
-	            document.getElementById("txtAbstract").value = "";
-	            //document.getElementById("txtWriterName").value = "";
-	
-	            if (obj.getAttribute("mode") == "off") {
-	                document.getElementById("layer_popup").style.left = "10px";
-	                document.getElementById("layer_popup").style.top = "100px";
-	                document.getElementById("layer_popup").style.display = "";
-	                obj.setAttribute("mode", "on");
-	            }
-	            else {
-	                BoardSearchOptionHidden(); 
-	            }*/
 	        }
+	        
 	        function btn_PostDate_Clear() {
 	            /* document.getElementById("idDatepicker").value = "";
 	            document.getElementById("_D2").value = ""; */
 	        	$("#Sdatepicker").datepicker('setDate', "");
 		        $("#Edatepicker").datepicker('setDate', "");
 	        }
+	        
 	        function BoardSearchOptionHidden() {
-	            document.getElementById("layer_popup").style.display = "none";
-	            document.getElementById("SearchOption").setAttribute("mode", "off");
-	            
-	            $.modal.close();
+	        	document.getElementById("layer_popup").style.display = "none";
+			    document.getElementById("SearchOption").setAttribute("mode", "off");
+			       
+			    $.modal.close();
+			    parent.frames["right"].document.body.style.overflow = "hidden";
 	        }
+	        
 	        function search(type) {
 	            if (type == "basic") {
 	            	if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""
