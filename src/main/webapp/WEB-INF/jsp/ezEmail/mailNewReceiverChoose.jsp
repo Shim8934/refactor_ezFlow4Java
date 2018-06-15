@@ -914,7 +914,7 @@
 	                            if (moveRecipients && !moveDel) {
 	                            	var selList = new ListView();
 	                	            selList.LoadFromID(prevListId);
-	                	            selList.DeleteRow(selectMoveList);
+	                	            selList.DeleteRow(listContentArry[i]);
 	                            }
 	                        } 
 	            		}
@@ -1101,7 +1101,7 @@
 	                            if (moveRecipients && !moveDel) {
 	                            	var selList = new ListView();
 	                	            selList.LoadFromID(prevListId);
-	                	            selList.DeleteRow(selectMoveList);
+	                	            selList.DeleteRow(listContentArry[i]);
 	                            }
 	                        } 
 	            		}
@@ -1346,7 +1346,7 @@
 	                            if (moveRecipients && !moveDel) {
 	                            	var selList = new ListView();
 	                	            selList.LoadFromID(prevListId);
-	                	            selList.DeleteRow(selectMoveList);
+	                	            selList.DeleteRow(listContentArry[i]);
 	                            }
 	                        }
 	
@@ -1718,12 +1718,6 @@
             		prevListId = obj.parentNode.parentNode.parentNode.id;
             		var onloadCheck = obj.getAttribute("restart");
             		
-            		if (onloadCheck == "true") {
-            			selectMoveList = obj.id;
-            		} else {
-            			selectMoveList = obj.parentNode.id;
-            		}
-            		
             		if (prevListId == "ListViewMsgTo") {
             			prevListId = "MsgToList";
                     }
@@ -1771,13 +1765,27 @@
 		                    PrelistContent = SelectedPreObj.getAttribute("id");
 		                p_ListOrderObject = obj;
 		
+		                
 		                var CurlistContent = obj.getAttribute("id");
-		                var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
-		                var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
+		                
+		                // 재은 수정중
+		                if (moveRecipients) {
+		                	CurlistContent = obj.parentNode.getAttribute("id");
+		                	var PrePoint = $("#" + prevListId + " tbody tr").index($("#" + PrelistContent));
+			                var CurPoint = $("#" + prevListId + " tbody tr").index($("#" + CurlistContent));
+		                } else {
+		                	var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
+			                var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
+		                }
+		                
 		                if (PrePoint < CurPoint) {
-		
-		                    for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
-		                        p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+							for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
+								if (moveRecipients) {
+									p_ListOrderObject = $("#" + prevListId + " tbody tr").eq(Cnt)[0];
+								} else {
+									p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+								}
+		                        
 		                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
 		                            p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
 		                        }
@@ -1787,7 +1795,12 @@
 		                }
 		                else if (PrePoint > CurPoint) {
 		                    for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) {
-		                        p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+		                    	if (moveRecipients) {
+									p_ListOrderObject = $("#" + prevListId + " tbody tr").eq(Cnt)[0];
+								} else {
+									p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+								}
+		                    	
 		                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
 		                            p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
 		                        }
@@ -3341,7 +3354,6 @@
                     InsertReceiver(document.getElementById(dropelement));
             }
             
-            var selectMoveList = "";
             function event_listdragstart(obj) {
             	dropelement = "";
                 var islist = false;
