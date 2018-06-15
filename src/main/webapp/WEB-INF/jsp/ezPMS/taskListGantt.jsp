@@ -1118,6 +1118,8 @@
 	   				$(".toastArea").css({top:tPosY, left : tPosX});
 	   			}
 	   			
+	   			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+	   			
 	   			$(document).on("mouseover", ".taskBox" ,function (event) {
 	   				//마우스 오버했을 때 툴팁위치와 토스트팝업 위치 지정해줌
 	   				positionTooltip(event);
@@ -1217,17 +1219,6 @@
 		  	clear: none;
 		  }
 		  
-		  li.pmsGanttMenuLi {
-		    float: left;
-		    margin: 0px 20px;
-		    list-style: none;
-		    border: 1px solid black;
-		    border-radius: 5px;
-		    text-align: center;
-		    cursor: pointer;
-		    padding: 3px;
-		  }
-		  
 		  li.pmsGanttZoomBtn {
 		  	float: right;
 		  	list-style: none;
@@ -1276,14 +1267,26 @@
 		</style>
 	</head>
 	<body style="background-color: #fff;">
-		<div id="pmsGanttMenuDiv" class="pmsMenuDiv" style="height: 30px;">
+		<div id="mainmenu" class="pmsMenuDiv" style="height: 30px;">
 			<ul class="pmsGanttMenuUl">
-		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi"><spring:message code='ezPMS.t89' /></li>
+		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t89' /></span></li>
 		        <!-- <li id="pmsGanttRowSaveBtn" class="pmsGanttMenuLi">save</li> -->
-		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi"><spring:message code='ezPMS.t287' /></li>
 		        <!--  <li id="pmsGanttTaskDetails" class="pmsGanttMenuLi">details</li> -->
-		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi"><spring:message code='ezPMS.t82' /></li>
-		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi"><spring:message code='ezPMS.t288' /></li>
+		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t82' /></span></li>
+		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t287' /></span></li>
+		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t288' /></span></li>
+		        <div style="float:right">
+		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
+		       	<spring:message code='ezPMS.t255' />
+					<select>
+						<option value="3d"><spring:message code='ezPMS.t14' /></option>
+						<option value="3d"><spring:message code='ezPMS.t16' /></option>
+						<option value="1w"><spring:message code='ezPMS.t15' /></option>
+						<option value="1M"><spring:message code='ezPMS.t17' /></option>
+						<option value="1Q"><spring:message code='ezPMS.t19' /></option>
+						<option value="1y"><spring:message code='ezPMS.t18' /></option>
+					</select>
+		        </li>
 		        <li id="pmsGanttZoomBtn" class="pmsGanttZoomBtn">
 					<select>
 						<option value="3d"><spring:message code='ezPMS.t251' /></option>
@@ -1293,18 +1296,7 @@
 						<option value="1y"><spring:message code='ezPMS.t254' /></option>
 					</select>
 		        </li>
-		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
-		       		<span><spring:message code='ezPMS.t255' /></span>
-					<select>
-						
-						<option value="3d"><spring:message code='ezPMS.t14' /></option>
-						<option value="3d"><spring:message code='ezPMS.t16' /></option>
-						<option value="1w"><spring:message code='ezPMS.t15' /></option>
-						<option value="1M"><spring:message code='ezPMS.t17' /></option>
-						<option value="1Q"><spring:message code='ezPMS.t19' /></option>
-						<option value="1y"><spring:message code='ezPMS.t18' /></option>
-					</select>
-		        </li>
+		        </div>
 		    </ul>
 		</div>
 		
