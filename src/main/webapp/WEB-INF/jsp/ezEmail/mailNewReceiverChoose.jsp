@@ -3069,8 +3069,8 @@
 	            addressList.DataSource(get_xmldom_addresslistview(xmlDom));
 	            addressList.RowDataBind();
 	            for (var i = 0; i < addressList.GetRowCount() ; i++) {
-	            	// 재은 수정중
-	            	addressList.GetDataRows()[i].setAttribute("selected", "true");
+	            	// 재은 수정중      
+	            	//addressList.GetDataRows()[i].setAttribute("selected", "true");
 	            	addressList.GetDataRows()[i].onclick = function () { event_listclick(this); };
 	                addressList.GetDataRows()[i].draggable = true;
 	                if (CrossYN())
@@ -3398,26 +3398,39 @@
             	dropelement = "";
                 var islist = false;
                 if (m_selectedTree == AddressListView) {
-                    var pListViewDL = new ListView();
+                	for (var i = 0; i < listContentArry.length; i++) {
+                        if (listContentArry[i] == obj.getAttribute("id")) {
+                            islist = true;
+                            break;
+                        }
+                    }
+                	/*
+                	var pListViewDL = new ListView();
                     pListViewDL.LoadFromID("Address");
                     for (var i = 0; i < pListViewDL.GetSelectedRows().length; i++) {
                         if (pListViewDL.GetSelectedRows()[i].id == obj.id) {
                             islist = true;
                             break;
                         }
-                    }
+                    } */
                     if (!islist)
                         obj.onclick();
                 }
                 else if (m_selectedTree == ListViewDL) {
-                    var pListViewDL = new ListView();
+                	for (var i = 0; i < listContentArry.length; i++) {
+                        if (listContentArry[i] == obj.getAttribute("id")) {
+                            islist = true;
+                            break;
+                        }
+                    }
+                	/* var pListViewDL = new ListView();
                     pListViewDL.LoadFromID("pListViewDL");
                     for (var i = 0; i < pListViewDL.GetSelectedRows().length; i++) {
                         if (pListViewDL.GetSelectedRows()[i].id == obj.id) {
                             islist = true;
                             break;
                         }
-                    }
+                    } */
                     if (!islist)
                         obj.onclick();
                 }
