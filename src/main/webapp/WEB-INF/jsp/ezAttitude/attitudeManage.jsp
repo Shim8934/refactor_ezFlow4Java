@@ -719,7 +719,7 @@
 	    			url = "/ezAttitude/excelAbsentedListExport.do";
 	    			break;
 	    		case "history":
-	    			url = "ezAttitude/excelHistoryListExport.do";
+	    			url = "/ezAttitude/excelHistoryListExport.do";
 	    			break;
 	    		}
 				
