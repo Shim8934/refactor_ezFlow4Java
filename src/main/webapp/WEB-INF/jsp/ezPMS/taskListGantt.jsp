@@ -555,12 +555,13 @@
 	   			//선행작업 지정
 	   			GanttMaster.prototype.changeTaskDeps = function (task) {
 	   			  console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
-	   			  var preTask = ge.tasks[task.depends - 1];	   			  
-	   			  
+	   			  var preTask = ge.tasks[task.depends - 1];	   			   
 	   			  var startDate = dateToYYYYMMDD(new Date(preTask.end + (1 * 24 * 60 * 60 * 1000)));
 	   			  var endDate = dateToYYYYMMDD(new Date(preTask.end + (task.duration * 24 * 60 * 60 * 1000)));
 	   			  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
 	   			  var preTaskRowIndex = task.depends;
+	   			  var preTaskIdStr = preTask.id;
+	   			  var preTaskId = preTaskIdStr.substring(preTaskIdStr.lastIndexOf('t') + 1);
 	   			  var progress = task.progress;
 	   			  var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
@@ -572,7 +573,7 @@
 	   				groupId = projectGroupId;
 	   			  }
 	   			  
-	   			  addPreTaskRel(projectId, taskId, preTaskRowIndex, startDate, endDate, progress, task.name, preTaskRowName, groupId);
+	   			  addPreTaskRel(projectId, taskId, preTaskId, startDate, endDate, progress, task.name, preTaskRowName, groupId);
 	   			  
 	   			  return task.moveTo(task.start,false,true);
 	   			};
@@ -611,11 +612,11 @@
 	   			};
 	   		}
 	   		
-	   		function addPreTaskRel (projectId, taskId, preTaskRowIndex, startDate, endDate, progress, taskName, preTaskRowName, groupId) {
+	   		function addPreTaskRel (projectId, taskId, preTaskId, startDate, endDate, progress, taskName, preTaskRowName, groupId) {
 	   			var data = {
 	   					projectId : projectId,
 	   					taskId : taskId,
-	   					preTaskRowIndex : preTaskRowIndex,
+	   					preTaskId : preTaskId,
 	   					planStartDate : startDate,
 	   					planEndDate : endDate,
 	   					realProgress : progress
