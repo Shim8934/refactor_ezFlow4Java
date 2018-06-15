@@ -686,7 +686,7 @@
 	   		
 	   		//위치 지정해주기
 	   		function toastPopupShow(toastContent) {
-   				$(".toastArea").html(toastContent);
+   				$(".toastArea").html(toastContent).show();
    				
    				setTimeout(function(){
 	   					$(".toastArea").fadeOut();
@@ -1249,7 +1249,7 @@
 		  	position : absolute;
 		  	background : #ffffa8;
 		  	border : 1px solid #d1d1d1;
-
+			display : none;
 		  }
 		</style>
 	</head>
