@@ -54,7 +54,7 @@
 						</c:choose>
 			    	</c:forEach>
 			    	setSelectedUser("${selectedUser }","${selectedUserName }");
-		    		setDeptName();
+		    		setDeptName(deptIds.toString(), deptNames.toString());
 		    		$('#contentlist .mainlist').html(html);
 		    		authRadioSet(authTypes.toString());
 	    		</c:if>
@@ -100,8 +100,12 @@
 	            if (pdeptIds && pdeptNames) {
 	               deptIds = pdeptIds.split(',');
 	               deptNames = pdeptNames.split(',');
+	            } 
+	            else if (pdeptNames == "" || pdeptNames == null) {
+	            	deptIds = [];
+		            deptNames = [];
 	            }
-	    		
+	            
 				var deptString = "";
 				deptIdStr = "";
 				var html = "";

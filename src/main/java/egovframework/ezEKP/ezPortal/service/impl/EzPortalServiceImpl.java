@@ -2119,13 +2119,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				continue;
 			}*/
 			
-			//Baonk 2018-05-31
-			if (menuitemLinkURL.equals("/ezWebFolder/webfolderMain.do")) {
-				if (!ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
-					continue;
-				}
-			}
-			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
 			/*String menuitemImageUID = result.get(i).getImageUId();*/
