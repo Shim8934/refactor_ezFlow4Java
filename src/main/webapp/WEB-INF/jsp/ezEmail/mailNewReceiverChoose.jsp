@@ -870,7 +870,7 @@
             		                    	moveDel = true;
             		                    }
             		                }
-            		            }
+            		            } 
 		
 		                        if (!IsInsert) {
 		                            pparsingXML2 = "";
@@ -1355,7 +1355,13 @@
 	                        var strName = p_ListOrderObject.getAttribute("_data4");
 	                        var strDeptNM = p_ListOrderObject.getAttribute("_data5");
 	                        var strEmail = p_ListOrderObject.getAttribute("_data3");
-	
+	                        var strTopDiv = p_ListOrderObject.offsetParent.parentElement; //삭제
+	                        
+                        	if (moveRecipients) {
+                        		strName = p_ListOrderObject.getAttribute("data1");
+                        		strDeptNM = p_ListOrderObject.getAttribute("data3");
+                        		strEmail = p_ListOrderObject.getAttribute("data2");
+                        	} 	
 	
 	                        var listid = "";
 	
@@ -1412,6 +1418,11 @@
 	                            for (var y = 0; y < _tdlength; y++) {
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+	                            }
+	                            
+	                         	// 복사 한뒤 삭제 => 이동 재은
+	                            if (moveRecipients && !moveDel) {
+	                            	DeleteReceiver(strTopDiv);
 	                            }
 	                        }
 	                    }
@@ -1718,7 +1729,7 @@
             		prevListId = obj.parentNode.parentNode.parentNode.id;
             		var onloadCheck = obj.getAttribute("restart");
             		
-            		if (onloadCheck == "true") {
+            		if (onloadCheck == "true" || obj.tagName == "TR") {
             			selectMoveList = obj.id;
             		} else {
             			selectMoveList = obj.parentNode.id;
@@ -1824,7 +1835,7 @@
 		                    	}
 		                    }
 		                    
-		                    if (moveRecipients && onloadCheck != "true") {
+		                    if (moveRecipients && onloadCheck != "true" && p_ListOrderObject.tagName != "TR") {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.parentNode.getAttribute("id");
 		                    } else {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");

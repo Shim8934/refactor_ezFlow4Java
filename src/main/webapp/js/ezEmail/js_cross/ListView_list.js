@@ -1124,7 +1124,8 @@ function ListView() {
             objTd.onclick = function () { event_listclick(this); };
             objTd.ondblclick = function () { event_listDBclick(this); };
             objTd.onselectstart = function () { return false; };
-            objTr.setAttribute("draggable", true);
+            objTd.setAttribute("draggable", true);
+            objTd.ondragstart = function (event) { event_listdragstart(this); }
             //objTd.setAttribute("draggable", true);
             if (CrossYN())
             	objTr.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
