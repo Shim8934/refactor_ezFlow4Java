@@ -413,7 +413,7 @@
 		   			ge.editor.openFullEditor(curTask);
 		   			return;
 	   			}
-	   			else{
+	   			else if(curTask.id.indexOf("_g") != -1){
 	   				taskId = curTask.id.match(/g(\d+)/)[1];
 	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + taskId,
 							"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
@@ -982,10 +982,6 @@
    					ge.redraw();
 	   				return;
 	   			}
-//    				if(Number(newWeight) > remainingWeight) {
-//    					alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
-//    					return;
-//    				}
 
 				data = {
 						taskName : curTask.name,
@@ -1179,12 +1175,13 @@
 								"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 	   				/* var feature = GetOpenPosition(0, 0);
 		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user"); */
-	   			  } else {
+	   			  } 
+	   			  else if(task.id.substring(1).indexOf("g") != -1) {
 	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId,
 								"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 	   			/* 	var feature = GetOpenPosition(0, 0);
 		   			DivPopUpShow(845, 600, "/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId);   */
-	   			  } 
+	   			  }
 	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
 	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;
 	   		     };
