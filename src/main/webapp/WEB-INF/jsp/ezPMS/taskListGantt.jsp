@@ -257,6 +257,7 @@
 		   				if (groupId !== "") {
 				   			tempTask.id = "p" + projectId + "_g" + groupId + "_t" + tl[i].taskId;
 				   			tempTask.level = groupDepth + 1;
+				   			tempTask.groupId = groupId;
 		   				} else {
 				   			tempTask.id = "p" + projectId + "_t" + tl[i].taskId;
 				   			tempTask.level = 1;
@@ -718,7 +719,7 @@
 	   		function eventSetting(){
 	   			document.getElementById("pmsGanttRowDelBtn").onclick = delTask;
 		   		document.getElementById("pmsGanttRowNewBtn").onclick = addTask;
-		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
+// 		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
 		   		document.getElementById("pmsGanttAddGroup").onclick = addGroup;
 		   		document.getElementById("pmsGanttDelGroup").onclick = delGroup;
 
@@ -835,7 +836,7 @@
 	   		
 	   		function delTaskFunc(selectType){
 	   			var url = "";
-	   			var groupId = "";
+	   			var groupId = ge.currentTask.groupId;
 	   			var taskId = "";
 	   			var data = {};
 	   			

@@ -2920,6 +2920,8 @@
 				a.group_id = b.group_id
 			and
 				a.tenant_id = #tenantId#
+			AND
+				a.DEL_STATUS = 0
 		]]>
 	</select>
 	
@@ -2983,6 +2985,8 @@
 				tenant_id = #tenantId#
 			AND
 				project_id = #projectId#
+			AND
+				DEL_STATUS = 0
 		]]>
 	</select>
 	
