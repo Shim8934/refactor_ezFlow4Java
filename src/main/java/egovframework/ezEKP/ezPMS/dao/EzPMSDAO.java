@@ -101,8 +101,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> getRemainingWeight(String projectId) {
-		return (Map<String, Object>) select("EzPMSDAO.getRemainingWeight", projectId);
+	public Map<String, Object> getRemainingWeight(Map<String, Object> map) {
+		return (Map<String, Object>) select("EzPMSDAO.getRemainingWeight", map);
 	}
 	
 	/**
