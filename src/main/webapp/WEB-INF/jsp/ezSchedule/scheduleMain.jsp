@@ -544,9 +544,8 @@
 		                if (item)
 		                    item.onclick();
 		                else */
-		                
 		                CalendarView("Calendar",chk_str);
-
+		                
 		                break;
 		                
 		            case "WEEK":
@@ -566,6 +565,7 @@
 		                    item.onclick();
 		                else */
 		                    CalendarView("Calendar",chk_str);
+		                
 		                break;
 
 		            case "MONTH":
@@ -578,10 +578,7 @@
 		                if (item)
 		                    item.onclick(); */
 
-		                CalendarView("Calendar",chk_str);
-		                $(document).on('mouseover', 'ui-state-default', function() { $(this).addClass('ui-state-hover'); });
-		                $(document).on('mouseleave', 'ui-state-default', function() { $(this).removeClass('ui-state-hover'); });
-		                $(document).on('.ui-monthpicker .ui-datepicker-month',function(){$(this).css('display','none'); });
+		                CalendarView("Calendar",chk_str);		                
 		                break;
 		        }
 		        /* 2018-02-01 김보미 - 일정관리 타이틀 고정. */
