@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>프로젝트 목록</title>
+<title><spring:message code='ezPMS.t155' /></title>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -68,42 +68,42 @@ $(function() {
 							<c:choose>
 								<c:when test="${position eq 'group' }">
 								<th id="BoardList_TH_1" onclick="setListOrder(this)" order="GROUP_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-									text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">그룹  이름
+									text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center"><spring:message code='ezPMS.t87' />
 								</th>
 								</c:when>
 								<c:otherwise>
 								<th id="BoardList_TH_1" onclick="setListOrder(this)" order="TASK_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-									text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">업무  이름
+									text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center"><spring:message code='ezPMS.t98' />
 								</th>
 								</c:otherwise>
 							</c:choose>
 						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="UPPER_GROUP_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px;"
-							class="h5_center">상위 그룹 이름</th>
+							class="h5_center"><spring:message code='ezPMS.t42' /></th>
 						<c:if test="${position eq 'task' || position eq 'group'}">
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROJECT_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px;"
-							class="h5_center">프로젝트 이름</th>	
+							class="h5_center"><spring:message code='ezPMS.t31' /></th>	
 						</c:if>
 						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px"
-							class="h5_center">대표 담당자</th>
+							class="h5_center"><spring:message code='ezPMS.t32' /></th>
 						<th id="BoardList_TH_5" onclick="setListOrder(this)" order="PLAN_START_DATE"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
-							class="h5_center">시작일</th>
+							class="h5_center"><spring:message code='ezPMS.t61' /></th>
 						<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_END_DATE"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
-							class="h5_center">종료일</th>
+							class="h5_center"><spring:message code='ezPMS.t62' /></th>
 						<c:choose>
 							<c:when test="${position ne 'group' }">
 								<th id="BoardList_TH_7" onclick="setListOrder(this)" order="STATUS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
-								class="h5_center">상태</th>
+								class="h5_center"><spring:message code='ezPMS.t38' /></th>
 							</c:when>
 						</c:choose>
 						<th id="BoardList_TH_8" onclick="setListOrder(this)" order="REAL_PROGRESS"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
-							class="h5_center">잔행률</th>
+							class="h5_center"><spring:message code='ezPMS.t250' /></th>
 						</thead>
 					</table>
 				</div>
@@ -113,7 +113,7 @@ $(function() {
 							<c:choose>
 								<c:when test="${empty taskList}">
 									<tr>
-										<td colspan="8" style="text-align : center"> 업무가 없습니다. </td>
+										<td colspan="8" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 									</tr>
 								</c:when>
 								<c:when test="${position ne 'group' }">
@@ -154,19 +154,19 @@ $(function() {
 											style="margin-right: 2px;"></div>
 											<c:choose>
 											<c:when test="${task.status eq 'P' }">
-												<c:out value="진행"/>
+												<spring:message code='ezPMS.t15' />
 											</c:when>
 											<c:when test="${task.status eq 'W' }">
-												<c:out value="대기"/>
+												<spring:message code='ezPMS.t16' />
 											</c:when>
 											<c:when test="${task.status eq 'L' }">
-												<c:out value="지연"/>
+												<spring:message code='ezPMS.t18' />
 											</c:when>
 											<c:when test="${task.status eq 'S' }">
-												<c:out value="보류"/>
+												<spring:message code='ezPMS.t19' />
 											</c:when>
 											<c:otherwise>
-												<c:out value="완료"/>
+												<spring:message code='ezPMS.t17' />
 											</c:otherwise>
 										</c:choose>
 										</td>

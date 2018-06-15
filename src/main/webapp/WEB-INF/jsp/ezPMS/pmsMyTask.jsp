@@ -6,7 +6,7 @@
 <html style="height: 99%;">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t142' /></title>
 
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -23,7 +23,7 @@
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script type="text/javascript">
-var projectId = "${project.projectId}";
+var projectId = "<c:out value='${project.projectId}'/>";
 var nowPosition = "";
 var status = "";
 var kanbanOrder = "MA";
@@ -60,7 +60,7 @@ $(function() {
 		nowPosition = "task";;
 		orderWhat = "";
 		currentPage = 1;
-		$("#taskName").text("업무명");
+		$("#taskName").text("<spring:message code='ezPMS.t98' />");
 		$("#searchByGroupName").attr("id", "searchByTaskName");
 		$("#mainmenu").find("div").css("display", "");
 		$("#taskSearch").css("display", "");
@@ -95,7 +95,7 @@ $(function() {
 		setMyTaskList("group");
 	});
 	
-	$("#1tab2").click(function(){
+	$("#1tab2").click(function() {
 		var clickTabId = $(this).attr("id");
 		var nowTabAttr = $(".tabon").attr("id");
 		changeTab(clickTabId, nowTabAttr);
@@ -125,7 +125,7 @@ $(function() {
 	
 });
 
-$(document).ready(function(){
+$(document).ready(function() {
 	getDatePicker();
 	
 	$(window).resize(function() {
@@ -450,26 +450,26 @@ function goProjectDetails(elem) {
 </style>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
-	<h1>나의 업무<span id="mailBoxInfo"> - [총 <span style="color:#017BEC;" id="totalCount"> </span>개]</span></h1>
+	<h1>나의 업무<span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
-	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">담당 업무</span></p>
-	  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab">담당 그룹</span></p>
-	  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab">담당 프로젝트</span></p>
+	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t147' /></span></p>
+	  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t148' /></span></p>
+	  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t149' /></span></p>
 	 	</div>
 	</div>
 	<div id="contentArea" style="overflow:auto;">
 	<div id="mainmenu">
 		<a class="imgbtn" id="addTaskBtn" onclick="showSearchDiv()"
-		style="margin-left: 1px; margin-top: 1px;"><span>검색 <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></a>
+		style="margin-left: 1px; margin-top: 1px;"><span><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></a>
 		<div>
-				업무 상태별 보기 <select id="searchStatus" onchange="searchStatus(this.value)">
-					<option value="A">전체</option>
-					<option value="P">진행</option>
-					<option value="W">대기</option>
-					<option value="C">완료</option>
-					<option value="L">지연</option>
-					<option value="S">보류</option>
+				<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
+					<option value="A"><spring:message code='ezPMS.t14' /></option>
+					<option value="P"><spring:message code='ezPMS.t15' /></option>
+					<option value="W"><spring:message code='ezPMS.t16' /></option>
+					<option value="C"><spring:message code='ezPMS.t17' /></option>
+					<option value="L"><spring:message code='ezPMS.t18' /></option>
+					<option value="S"><spring:message code='ezPMS.t19' /></option>
 				</select>
 		</div>
 	</div>
@@ -477,48 +477,48 @@ function goProjectDetails(elem) {
 	<table class="content" style="width:80%; margin-bottom:5px;">
 		<tbody id="taskSearch">
 			<tr>
-				<th id="taskName">업무명 </th>
+				<th id="taskName"><spring:message code='ezPMS.t98' /> </th>
 				<td style="width:50%"><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
-				<th>담당자</th>
+				<th><spring:message code='ezPMS.t63' /></th>
 				<td><input type="text" style="width:100%" id="searchByUser"></td>
 			</tr>
 			<tr>
-				<th>시작일 </th>
-				<td style="width:50%"><input type="text" class="Sdatepicker" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
-				<th>종료일</th>
-				<td><input type="text" class="Edatepicker" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+				<th><spring:message code='ezPMS.t61' /> </th>
+				<td style="width:50%"><input type="text" class="Sdatepicker" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+				<th><spring:message code='ezPMS.t62' /></th>
+				<td><input type="text" class="Edatepicker" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
 			</tr>
 			<tr>
-				<th>상위그룹 </th>
+				<th><spring:message code='ezPMS.t42' /></th>
 				<td style="width:50%"><input type="text" style="width:100%" id="searchByUpperGroupName"></td>
-				<th>프로젝트 이름</th>
-				<td><input type="text" style="width:70%; margin-right : 5px;" id="searchByProjectName"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
+				<th><spring:message code='ezPMS.t31' /></th>
+				<td><input type="text" style="width:70%; margin-right : 5px;" id="searchByProjectName"><a class="imgbtn" onclick="getSearchProject()"><span><spring:message code='ezPMS.t150' /></span></a></td>
 			</tr>
 			<tr>
-				<th>업무개요</th>
+				<th><spring:message code='ezPMS.t104' /></th>
 				<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
 			</tr>
 		</tbody>
 		<tbody id="projectSearch">
 				<tr>
-					<th>프로젝트명 </th>
-					<td style="width:50%"><input type="text" id="PsearchByProjectName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
-					<th>담당자</th>
+					<th><spring:message code='ezPMS.t31' /> </th>
+					<td style="width:50%"><input type="text" id="PsearchByProjectName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span><spring:message code='ezPMS.t150' /></span></a></td>
+					<th><spring:message code='ezPMS.t63' /></th>
 					<td><input type="text" id="PsearchByUser"></td>
 				</tr>
 				<tr>
-					<th>시작일 </th>
-					<td style="width:50%"><input type="text" class="Sdatepicker" id="PSdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
-					<th>종료일</th>
-					<td><input type="text" class="Edatepicker" id="PEdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+					<th><spring:message code='ezPMS.t61' /></th>
+					<td style="width:50%"><input type="text" class="Sdatepicker" id="PSdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+					<th><spring:message code='ezPMS.t62' /></th>
+					<td><input type="text" class="Edatepicker" id="PEdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
 				</tr>
 				<tr>
-					<th>개요</th>
+					<th><spring:message code='ezPMS.t66' /></th>
 					<td colspan="3"><input type="text" style="width:100%" id="PsearchByOverview"></td>
 				</tr>
 			</tbody>
 	</table>
-		<a class="imgbtn" onclick="searchContent()" style="margin-left:40%;"><span>검색</span></a>
+		<a class="imgbtn" onclick="searchContent()" style="margin-left:40%;"><span><spring:message code='ezPMS.t1' /></span></a>
 	</div>
 	<div id="contentList"></div>
 	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">

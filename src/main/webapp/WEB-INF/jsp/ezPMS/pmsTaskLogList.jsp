@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t153' /></title>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -47,19 +47,19 @@ $(function() {
 				<thead id="BoardList_THEAD">
 					<tr id="BoardList_TH">
 						<th id="BoardList_TH_0" onclick="setListOrder(this)" order="LOG_STATUS" style="text-align: left; overflow: hidden; white-space: nowrap; 
-							text-overflow: ellipsis; cursor: pointer; width: 20px; text-align: center" class="h5_center">상태</th>
+							text-overflow: ellipsis; cursor: pointer; width: 20px; text-align: center" class="h5_center"><spring:message code='ezPMS.t38' /></th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="LOG_CONTENT"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 20%;"
-							class="h5_center">이력 내용</th>
+							class="h5_center"><spring:message code='ezPMS.t186' /></th>
 						<th id="BoardList_TH_2"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 40px"
-							class="h5_center">작업 이름</th>
+							class="h5_center"><spring:message code='ezPMS.t98' /></th>
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="USER_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px"
-							class="h5_center">담당자</th>
+							class="h5_center"><spring:message code='ezPMS.t63' /></th>
 						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="LOG_DATE"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
-							class="h5_center">등록일</th>
+							class="h5_center"><spring:message code='ezPMS.t187' /></th>
 						</tr>
 						</thead>
 					</table>
@@ -70,7 +70,7 @@ $(function() {
 							<c:choose>
 								<c:when test="${empty logList}">
 									<tr>
-										<td colspan="5" style="text-align : center"> 작업이력이 없습니다. </td>
+										<td colspan="5" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 									</tr>
 								</c:when>
 							<c:otherwise>
@@ -79,13 +79,13 @@ $(function() {
 									<td style="width: 20px; cursor: default; text-align: center">
 										<c:choose>
 											<c:when test="${log.logStatus eq 1 }">
-												<span style="background-color:#8DFF1B;">&nbsp;<c:out value="등록"/>&nbsp;</span>
+												<span style="background-color:#8DFF1B;">&nbsp;<spring:message code='ezPMS.t40' />&nbsp;</span>
 											</c:when>
 											<c:when test="${log.logStatus eq 2 }">
-												<span style="background-color:#ffff66;">&nbsp;<c:out value="수정"/>&nbsp;</span>
+												<span style="background-color:#ffff66;">&nbsp;<spring:message code='ezPMS.t110' />&nbsp;</span>
 											</c:when>
 											<c:otherwise>
-												<span style="background-color:#FF7A1B;">&nbsp;<c:out value="삭제"/>&nbsp;</span>
+												<span style="background-color:#FF7A1B;">&nbsp;<spring:message code='ezPMS.t11' />&nbsp;</span>
 											</c:otherwise>
 										</c:choose>
 									</td>

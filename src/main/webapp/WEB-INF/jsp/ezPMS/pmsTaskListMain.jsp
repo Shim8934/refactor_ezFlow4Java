@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>작업 이력</title>
+<title><spring:message code='ezPMS.t153' /></title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css"
 	type="text/css" />
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
@@ -110,15 +110,15 @@
 
 	function setInitOrder() {
 		$("#BoardList_TH th").each(function() {
-				if (orderWhat == $(this).attr("order")) {
-					if (orderHow == 'asc') {
-						$(this).attr("sort", "asc");
-						$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
-					} else if (orderHow == 'desc') {
-						$(this).attr("sort", "desc");
-						$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
-					}
+			if (orderWhat == $(this).attr("order")) {
+				if (orderHow == 'asc') {
+					$(this).attr("sort", "asc");
+					$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
+				} else if (orderHow == 'desc') {
+					$(this).attr("sort", "desc");
+					$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
 				}
+			}
 		});
 
 		projectListScroll();
@@ -209,7 +209,7 @@
 			totalCount = contentCount;
 		}
 
-		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> - [총 <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span>개]</span>";
+		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
 
 		$("#taskName").html(contentTitle);
 	}
@@ -308,7 +308,7 @@
 		var result = getCheckedVal();
 		
 		if (result == 1) {
-			var response = confirm("정말로 삭제하시겠습니까?");
+			var response = confirm("<spring:message code='ezPMS.t107' />");
 			console.log(result);
 			if (response == true) {
 				$.ajax({
@@ -321,11 +321,11 @@
 					},
 					success : function(result) {
 						if (result == "permitted") {
-							alert("삭제되었습니다.");
+							alert("<spring:message code='ezPMS.t242' />");
 							checkedVal = "";
 							setContentList();
 						} else {
-							alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+							alert("<spring:message code='ezPMS.t184' />");
 							return;
 						}
 					},
@@ -422,21 +422,21 @@
 			<c:choose>
 				<c:when test="${userRole ne 3}">
 					<li><span id="addTaskBtn" onclick="goAddTask()"
-					style="margin-left: 1px; margin-top: 1px;">새업무 추가</span></li> 
+					style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t89' /></span></li> 
 					<li><span id="addTaskBtn" onclick="deleteTask()"
-					style="margin-left: 1px; margin-top: 1px;">삭제</span></li>
+					style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t11' /></span></li>
 				</c:when>
 			</c:choose> 
 			<li><span id="addTaskBtn" onclick="showSearchDiv()"
-				style="margin-left: 1px; margin-top: 1px;">검색 <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
+				style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
 				<div>
-				업무 상태별 보기 <select id="searchStatus" onchange="searchStatus(this.value)">
-					<option value="A">전체</option>
-					<option value="P">진행</option>
-					<option value="W">대기</option>
-					<option value="C">완료</option>
-					<option value="L">지연</option>
-					<option value="S">보류</option>
+				<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
+					<option value="A"><spring:message code='ezPMS.t14' /></option>
+					<option value="P"><spring:message code='ezPMS.t15' /></option>
+					<option value="W"><spring:message code='ezPMS.t16' /></option>
+					<option value="C"><spring:message code='ezPMS.t17' /></option>
+					<option value="L"><spring:message code='ezPMS.t18' /></option>
+					<option value="S"><spring:message code='ezPMS.t19' /></option>
 				</select>
 				</div>
 		</ul>
@@ -446,28 +446,28 @@
 		<table class="content" style="width:80%; margin-bottom:5px;">
 			<tbody>
 				<tr>
-					<th>업무명 </th>
+					<th><spring:message code='ezPMS.t98' /> </th>
 					<td style="width:50%"><input type="text" id="searchByTaskName" style="width:50%; margin-right:5px;"></td>
-					<th>담당자</th>
+					<th><spring:message code='ezPMS.t63' /></th>
 					<td><input type="text" id="searchByUser"></td>
 				</tr>
 				<tr>
-					<th>시작일 </th>
-					<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
-					<th>종료일</th>
-					<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+					<th><spring:message code='ezPMS.t61' /> </th>
+					<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+					<th><spring:message code='ezPMS.t62' /></th>
+					<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
 				</tr>
 				<tr>
-					<th>상위그룹 </th>
+					<th><spring:message code='ezPMS.t42' /> </th>
 					<td colspan="3" style="width:50%"><input type="text" style="width:100%" id="searchByGroupName"></td>
 				</tr>
 				<tr>
-					<th>업무개요</th>
+					<th><spring:message code='ezPMS.t104' /></th>
 					<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
 				</tr>
 			</tbody>
 		</table>
-		<a class="imgbtn" onclick="searchTask()" style="margin-left:40%;"><span>검색</span></a>
+		<a class="imgbtn" onclick="searchTask()" style="margin-left:40%;"><span><spring:message code='ezPMS.t1' /></span></a>
 	</div>
 	<div id="contentList" style="overflow: auto">
 		<span id="MailListRayer"

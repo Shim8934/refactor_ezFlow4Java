@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title> <spring:message code='ezPMS.t156' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />"
 	type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -21,21 +21,22 @@
 	 var memberCount = "${memberCount}";
 	 
 	 if (roleId == "1") {
-		roleName = "담당자"; 
+		roleName = "<spring:message code='ezPMS.t63' />"; 
 	 } else if (roleId == "2") {
-		 roleName = "참여자";
+		 roleName = "<spring:message code='ezPMS.t64' />";
 	 } else {
-		 roleName = "조회자";
+		 roleName = "<spring:message code='ezPMS.t65' />";
 	 }
 	 
-	 $("#menu1").find("h1").text(roleName + " 보기  (" + memberCount + ")");
+	 $("#menu1").find("h1").text(roleName + " <spring:message code='ezPMS.t156' />  (" + memberCount + ")");
+	 $("title").prepend(roleName);
 	 
 	 var strHTML = "<table border='1' style='width:100%; border-color:grey;'>";
 	 
 	 if (memberList.length == null || memberList.length == 0) {
 		 strHTML += "<tr id='noone' class='white' style='border:1px solid #ddd; height:35px;'>";
 		 strHTML += "<td style='border-right:none; width:100%; text-align:center;'>";
-		 strHTML += "지정된 " + roleName + "가 없습니다.";
+		 strHTML += "<spring:message code='ezPMS.t157' /> " + roleName + "<spring:message code='ezPMS.t158' />";
 		 strHTML += "</td></tr>";
 	 } else {
 		 for (var i = 0; i < memberList.length; i++) {
@@ -77,7 +78,7 @@
 	</div>
 	<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 		<tr>
-			<td><a class="imgbtn" onclick="popupClose()"><span>확인</span></a></td>
+			<td><a class="imgbtn" onclick="popupClose()"><span><spring:message code='ezPMS.t43' /></span></a></td>
 			<td>
 		</tr>
 	</table>

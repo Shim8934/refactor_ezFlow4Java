@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t193' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />"
 	type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -36,7 +36,6 @@ $(function() {
    		data:JSON.stringify(data),
    		async: false,
    		success: function(result){
-   			console.log(result);
    			for (var j = 0; j < result.userList.length; j++) {
    				strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id=" + result.userList[j].userId + " onclick='setMainListUserAuthorDept(this)'>";
    				strHTML += "<td style='border-right:none; max-width: 200px; width: 190px;'>";
@@ -60,7 +59,7 @@ $(function() {
 function setMainListUserAuthorDept(elem) {
 		if ($(elem).parent().attr("id") === "List_TBODY2") {
 			$("#List_TBODY2 tr").removeClass("selectTR");
-		} else if ($(elem).parent().parent().attr("id") === "managerName"){
+		} else if ($(elem).parent().parent().attr("id") === "managerName") {
 			$("#managerName tr").removeClass("selectTR");
 		} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
 			$("#txtlist_Layer tr").removeClass("selectTR");
@@ -84,11 +83,11 @@ function popupClose() {
  
  function selectHeadManager() {
 	 if (selMainListUserId == null) {
-		 alert("1명의 총괄담당자를 지정해야 합니다.");
+		 alert("<spring:message code='ezPMS.t194' />");
 		 return;
 	 }
 	 
-	 if(parent.document.title == "담당자 지정") {
+	 if(parent.document.title == "<spring:message code='ezPMS.t167' />") {
 		 parent.parent.headManagerId = selMainListUserId;
 		 parent.parent.managerList = managerList;
 		 parent.parent.applyList();
@@ -131,7 +130,7 @@ tr.hover:not (.selectTR ):hover {
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
-					<h1 style="display: inline-block;">총괄 담당자 선택</h1>
+					<h1 style="display: inline-block;"><spring:message code='ezPMS.t193' /></h1>
 			    </div>					
 			</div>
 			<div style="height:203px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
@@ -140,9 +139,9 @@ tr.hover:not (.selectTR ):hover {
 			</div>
 			<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="selectHeadManager()"><span>확인</span></a></td>
+				<td><a class="imgbtn" id="submit" onclick="selectHeadManager()"><span><spring:message code='ezPMS.t43' /></span></a></td>
 				<td></td>
-				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
+				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a></td>
 			</tr>
 		</table>
 		</form>

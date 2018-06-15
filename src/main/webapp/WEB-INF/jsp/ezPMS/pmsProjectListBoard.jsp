@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>프로젝트 목록</title>
+<title><spring:message code='ezPMS.t155' /></title>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -150,28 +150,28 @@ $(function(){
 									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 							</th>
 							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: left; overflow: hidden; white-space: nowrap; 
-								text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">프로젝트명</th>
+								text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center"><spring:message code='ezPMS.t31' /></th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
-								class="h5_center">총괄 담당자</th>
+								class="h5_center"><spring:message code='ezPMS.t32' /></th>
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">전체 진행률</th>
+								class="h5_center"><spring:message code='ezPMS.t33' /></th>
 							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="COMPLETE_TASK"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">완료된 업무</th>
+								class="h5_center"><spring:message code='ezPMS.t34' /></th>
 							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="LATE_TASK"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
-								class="h5_center">기한 지난 업무</th>
+								class="h5_center"><spring:message code='ezPMS.t35' /></th>
 							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="REST_DUEDAY"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
-								class="h5_center">남은 기간</th>
+								class="h5_center"><spring:message code='ezPMS.t36' /></th>
 							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="PLAN_START_DATE"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
-								class="h5_center">프로젝트 기간</th>
+								class="h5_center"><spring:message code='ezPMS.t37' /></th>
 							<th id="BoardList_TH_8" onclick="setListOrder(this)" order="STATUS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px;"
-								class="h5_center">상태</th>
+								class="h5_center"><spring:message code='ezPMS.t38' /></th>
 							</tr>
 							</thead>
 						</table>
@@ -182,7 +182,7 @@ $(function(){
 								<c:choose>
 									<c:when test="${empty projectList}">
 										<tr>
-											<td colspan="9" style="text-align : center"> 프로젝트가 없습니다. </td>
+											<td colspan="9" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 										</tr>
 									</c:when>
 									<c:otherwise>
@@ -235,12 +235,12 @@ $(function(){
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px">
 											<span class="statusSpan" style="padding:4px;">
 											<c:choose>
-												<c:when test="${project.status eq 'P' }"><c:out value="진행" /></c:when>
-												<c:when test="${project.status eq 'W' }"><c:out value="대기" /></c:when>
-												<c:when test="${project.status eq 'C' }"><c:out value="완료" /></c:when>
-												<c:when test="${project.status eq 'L' }"><c:out value="지연" /></c:when>
-												<c:when test="${project.status eq 'D' }"><c:out value="삭제" /></c:when>
-												<c:when test="${project.status eq 'S' }"><c:out value="보류" /></c:when>
+												<c:when test="${project.status eq 'P' }"><spring:message code='ezPMS.t15' /></c:when>
+												<c:when test="${project.status eq 'W' }"><spring:message code='ezPMS.t16' /></c:when>
+												<c:when test="${project.status eq 'C' }"><spring:message code='ezPMS.t17' /></c:when>
+												<c:when test="${project.status eq 'L' }"><spring:message code='ezPMS.t18' /></c:when>
+												<c:when test="${project.status eq 'D' }"><spring:message code='ezPMS.t11' /></c:when>
+												<c:when test="${project.status eq 'S' }"><spring:message code='ezPMS.t19' /></c:when>
 											</c:choose>
 											</span>
 											</td>

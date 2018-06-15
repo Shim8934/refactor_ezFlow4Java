@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>프로젝트 업무 상세 페이지</title>
+<title><spring:message code='ezPMS.t256' /></title>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -18,7 +18,6 @@
 <link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
-
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -68,23 +67,23 @@
 		
 		switch(nowStatus){
 		case "P" :
-			strStatus = "진행";
+			strStatus = "<spring:message code='ezPMS.t15' />";
 			circleColor = progressColor;
 			break;
 		case "W" :
-			strStatus = "대기";
-			circleColor = "grey";
+			strStatus = "<spring:message code='ezPMS.t16' />";
+			circleColor = "#d1d1d1";
 			break;
 		case "L" :
-			strStatus = "지연";
+			strStatus = "<spring:message code='ezPMS.t18' />";
 			circleColor = overdueColor;
 			break;
 		case "S" :
-			strStatus = "보류";
+			strStatus = "<spring:message code='ezPMS.t19' />";
 			circleColor = holdColor;
 			break;
 		case "C" :
-			strStatus = "완료";
+			strStatus = "<spring:message code='ezPMS.t17' />";
 			circleColor = completeColor;
 			break;
 		}
@@ -101,7 +100,6 @@
 	}
 	
 	function tabFuncSetting(){
-		console.log(target);
 		if (target == null || target != "group") {
 			var taskId = "${taskDetails.taskId}"
 			$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskDetailsTab.do?projectId=" + projectId + "&taskId=" + taskId);
@@ -277,12 +275,12 @@
 	}
 	
 	function diffSetting(){
-		var PSDate = new Date("${taskDetails.planStartDate}");
-		var PEDate = new Date("${taskDetails.planEndDate}");
-		var RSDate = new Date("${taskDetails.realStartDate}");
-		var REDate = new Date("${taskDetails.realEndDate}");
-		var planProg = "${taskDetails.planProgress}";
-		var realProg = "${taskDetails.realProgress}";
+		var PSDate = new Date("<c:out value='${taskDetails.planStartDate}'/>");
+		var PEDate = new Date("<c:out value='${taskDetails.planEndDate}'/>");
+		var RSDate = new Date("<c:out value='${taskDetails.realStartDate}'/>");
+		var REDate = new Date("<c:out value='${taskDetails.realEndDate}'/>");
+		var planProg = "<c:out value='${taskDetails.planProgress}'/>";
+		var realProg = "<c:out value='${taskDetails.realProgress}'/>";
 		
 		var SDateDiff = (PSDate.getTime() - RSDate.getTime()) / (60 * 60 * 24 * 1000);
 		var EDateDiff = (PEDate.getTime() - REDate.getTime()) / (60 * 60 * 24 * 1000);
@@ -317,9 +315,14 @@
 			success : function(data) {
 				
 				if (result == "permitted") {
-					alert("삭제되었습니다.");
+					if (target == "group") {
+						alert("<spring:message code='ezPMS.t196' />");
+					} else {
+						alert("<spring:message code='ezPMS.t242' />")
+					}
+					
 				} else {
-					alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+					alert("<spring:message code='ezPMS.t184' />");
 					return;
 				}
 				
@@ -330,7 +333,8 @@
 				location.reload();
 			},
 			complete : function(){
-				var logContent = "[" + taskId + "업무 삭제 테스트 로그 입니다.]";
+				var logContent = "[" + taskDetails.taskName + "] <spring:message code='ezPMS.t242' />";
+				
 				addTaskLog(projectId, 3, null, null, logContent);
 				opener.location.reload();
 				window.close();
@@ -349,7 +353,7 @@
 		var hasTaskOrNot = $("[taskid^='" + taskIdAttr + "']", window.opener.document);
 		
 		if(hasTaskOrNot.length) {
-			alert("하위 업무가 존재하는 그룹은 삭제할 수 없습니다.")
+			alert("<spring:message code='ezPMS.t243' />")
 			return;
 		}
 		
@@ -360,13 +364,13 @@
 			contentType: "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
 			success : function(data) {
-				alert("그룹이 삭제되었습니다.");
+				alert("<spring:message code='ezPMS.t196' />");
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("에러 : 그룹 삭제 에러" + textStatus + errorThrown + jqXHR);
 			},
 			complete : function(){
-				var logContent = "[그룹 삭제 테스트 로그 입니다.]";
+				var logContent = "[" + taskDetails.groupName + "] <spring:message code='ezPMS.t196' />";
 				addTaskLog(projectId, 3, groupId, null, logContent);
 				opener.location.reload();
 				window.close();
@@ -408,51 +412,51 @@ button.PHBtn {
 						<strong style="top:30px;"></strong>
 					</div>
 					<c:if test="${empty target }">
-					<div id="statusChgBtn" class="statusChgBtn">진행상태변경</div>
+					<div id="statusChgBtn" class="statusChgBtn"><spring:message code='ezPMS.t175' /></div>
 					</c:if>
 			</div>
 			<table class="detailsTable" style="clear:none">
 			  <tr>
 			  <c:choose>
 			  <c:when test="${empty target }">
-			    <th class="detailsTable-th" style="width:60px">업무명</th>
+			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t98' /></th>
 			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.taskName}"/></td>
 			  </c:when>
 			  <c:otherwise>
-			    <th class="detailsTable-th" style="width:60px">그룹명</th>
+			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t87' /></th>
 			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.groupName}"/></td>
 			  </c:otherwise>
 			  </c:choose>
 			  </tr>
 			  <tr>
-			    <th class="detailsTable-th">담당자</th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t32' /></th>
 			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.headManagerName}"/></td>
 			  </tr>
 			  <tr>
-			    <th class="detailsTable-th">상태</th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t38' /></th>
 			    <td class="detailsTable-td" name="statusTd" colspan="4"></td>
 			  </tr>
 			  <tr>
-			    <th class="detailsTable-th" colspan="2">계획</th>
-			    <th class="detailsTable-th" colspan="2">실제</th>
-			    <th class="detailsTable-th">오차</th>
+			    <th class="detailsTable-th" colspan="2"><spring:message code='ezPMS.t177' /></th>
+			    <th class="detailsTable-th" colspan="2"><spring:message code='ezPMS.t178' /></th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t176' /></th>
 			  </tr>
 			  <tr>
-			    <th class="detailsTable-th">시작일</th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t61' /><th>
 			    <td class="detailsTable-td dateTd"><c:out value="${taskDetails.planStartDate}"/></td>
-			    <th class="detailsTable-th" style="width:60px">시작일</th>
+			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t61' /></th>
 			    <td class="detailsTable-td dateTd"><c:out value="${taskDetails.realStartDate == null ? '-' : taskDetails.realStartDate}"/></td>
 			    <td id="startDiff" class="detailsTable-td" name="startDiff"></td>
 			  </tr>
 			  <tr>
-			    <th class="detailsTable-th">종료일</th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t63' /></th>
 			    <td class="detailsTable-td"><c:out value="${taskDetails.planEndDate}"/></td>
-			    <th class="detailsTable-th">종료일</th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t63' /></th>
 			    <td class="detailsTable-td"><c:out value="${taskDetails.realEndDate == null ? '-' : taskDetails.realEndDate}"/></td>
 			    <td id="endDiff" class="detailsTable-td" name="endDiff"></td>
 			  </tr>
 			  <tr>
-			    <th class="detailsTable-th">진행률</th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t250' /></th>
 			    <td class="detailsTable-td">
 			    	<c:choose>
 			    		<c:when test="${taskDetails.planProgress == '' || taskDetails.planProgress eq null}">
@@ -463,7 +467,7 @@ button.PHBtn {
 			    		</c:otherwise>
 			    	</c:choose>
 			    </td>
-			    <th class="detailsTable-th">진행률</th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t250' /></th>
 			     <td class="detailsTable-td">
 			    	<c:choose>
 			    		<c:when test="${taskDetails.realProgress == ''|| taskDetails.realProgress eq null}">
@@ -479,14 +483,14 @@ button.PHBtn {
 			</table>
 		</div>
 		<div class="mainBodyMid">
-			<div id="taskUpdateBtn" class="taskUpdateBtn">업무정보수정</div>
-			<div id="addBoardBtn" class="taskUpdateBtn" style="display: none;">게시물 등록</div>
+			<div id="taskUpdateBtn" class="taskUpdateBtn"><spring:message code='ezPMS.t179' /></div>
+			<div id="addBoardBtn" class="taskUpdateBtn" style="display: none;"><spring:message code='ezPMS.t278' /></div>
 			<div class="portlet_tabpart01" style="margin-bottom: 10px">
 			   <div class="portlet_tabpart01_top" id="tab1">
-			   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">업무정보</span></p>
-			  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab">관련게시물</span></p>
-			  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab">작업이력</span></p>
-			   		<p id="FBoard_sub3"><span id="1tab3" divname="FBoard_div0" class="tab">의견</span></p>
+			   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t256' /></span></p>
+			  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t180' /></span></p>
+			  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t153' /></span></p>
+			   		<p id="FBoard_sub3"><span id="1tab3" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t154' /></span></p>
 			   </div>
 			</div>
 			<iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>

@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t66' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 <link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
@@ -40,9 +40,9 @@ var groupId = "${project.groupId}";
 var beforePosition = "";
 var afterPosition = "";
 
-$(document).ready(function(){
+$(document).ready(function() {
 	$(window).resize(function() {
-		CurrentHeight = $(window).height()-100;
+		CurrentHeight = $(window).height() - 100;
 		$("#overviewArea").css("height", CurrentHeight - 34 + "px");
 		$(".kanban").css("height", CurrentHeight - 14 + "px");
 		$("#kanbanArea").css("height", CurrentHeight + "px");
@@ -56,7 +56,7 @@ $(function() {
 	initProgressBar();
 	setOverviewContent();
 	
-	CurrentHeight = $(window).height()-100;
+	CurrentHeight = $(window).height() - 100;
 	$("#overviewArea").css("height", CurrentHeight - 34 + "px");
 	$(".kanban").css("height", CurrentHeight - 14 + "px");
 	$("#kanbanArea").css("height", CurrentHeight + "px");
@@ -73,25 +73,25 @@ function initProgressBar() {
 	var strStatus = "";
 	var circleColor = "";
 	
-	switch(nowStatus){
+	switch (nowStatus) {
 	case "P" :
-		strStatus = "진행";
+		strStatus = "<spring:message code='ezPMS.t15' />";
 		circleColor = progressColor;
 		break;
 	case "W" :
-		strStatus = "대기";
+		strStatus = "<spring:message code='ezPMS.t16' />";
 		circleColor = "#d1d1d1";
 		break;
 	case "L" :
-		strStatus = "지연";
+		strStatus = "<spring:message code='ezPMS.t18' />";
 		circleColor = overdueColor;
 		break;
 	case "S" :
-		strStatus = "보류";
+		strStatus = "<spring:message code='ezPMS.t19' />";
 		circleColor = holdColor;
 		break;
 	case "C" :
-		strStatus = "완료";
+		strStatus = "<spring:message code='ezPMS.t17' />";
 		circleColor = completeColor;
 		break;
 	}
@@ -111,33 +111,33 @@ function ableToChangeStatus() {
 			case "L" :
 			case "P" :
 				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='C' onclick='changeStatus(this)'>";
-				strHTML += "프로젝트 완료";
+				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t17' />";
 				strHTML += "</span></a> ";
 				strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
-				strHTML += "프로젝트 보류";
+				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t19' />";
 				strHTML += "</span></a>";
 				break;
 			case "W" :
 				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
-				strHTML += "프로젝트 진행";
+				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t15' />";
 				strHTML += "</span></a> ";
 				strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
-				strHTML += "프로젝트 보류";
+				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t19' />";
 				strHTML += "</span></a>";
 				break;
 			case "S" :
 				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
-				strHTML += "프로젝트 진행";
+				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t15' />";
 				strHTML += "</span></a> ";	
 				strHTML += "<a class='imgbtn'><span id='C' onclick='changeStatus(this)'>";
-				strHTML += "프로젝트 완료";
+				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t17' />";
 				strHTML += "</span></a>";
 				break;
 			case "C" :
-				strHTML += "실제 시작일 : ";
+				strHTML += "<spring:message code='ezPMS.t99' /> : ";
 				strHTML += "${project.realStartDate}";
 				strHTML += "<br>";
-				strHTML += "실제 종료일 : ";
+				strHTML += "<spring:message code='ezPMS.t100' /> : ";
 				strHTML += "${project.realEndDate}";
 				break;
 		}
@@ -168,7 +168,7 @@ function initKanbanList() {
 	$("#kanbanDraw").html(strHTML);
 	
 	//칸반 내 업무 넣기
-	data = {
+	var data = {
 			projectId : projectId,
 			kanbanOrder : kanbanOrder,
 			limit : 10,
@@ -259,30 +259,30 @@ function initKanbanList() {
 		var title = "";
 		
 		if (kanbanOrderArr[i].indexOf("M") != -1) {
-			title += "나의 ";
+			title += "<spring:message code='ezPMS.t144' /> ";
 		}
 		
 		switch (kanbanOrderArr[i].slice(-1)) {
 		case "A" : 
-			title += "전체 업무";
+			title += "<spring:message code='ezPMS.t269' />";
 			break;
 		case "W" :
-			title += "대기 중인 업무";
+			title += "<spring:message code='ezPMS.t140' />";
 			break;
 		case "P" :
-			title += "진행 중인 업무";
+			title += "<spring:message code='ezPMS.t138' />";
 			break;
 		case "C" :
-			title += "완료된 업무"
+			title += "<spring:message code='ezPMS.t34' />"
 			break;
 		case "S" :
-			title += "보류된 업무";
+			title += "<spring:message code='ezPMS.t277' />";
 			break;
 		case "L" :
-			title += "기한이 지난 업무";
+			title += "<spring:message code='ezPMS.t35' />";
 			break;
 		case "B" :
-			title += "게시판";
+			title += "<spring:message code='ezPMS.t141' />";
 			break;
 		}
 		
@@ -352,9 +352,9 @@ function changeStatus(status) {
 	var response;
 	
 	if (changeStatus == "C") {
-		response = confirm("프로젝트를 완료하면 하위 작업이 모두 완료됩니다. \n 진행하시곘습니까?");
+		response = confirm("<spring:message code='ezPMS.t159' />");
 	} else {
-		response = confirm("프로젝트의 상태를 변경하시겠습니까?");
+		response = confirm("<spring:message code='ezPMS.t160' />");
 	}
 	
 	if (response == true) {
@@ -373,14 +373,14 @@ function changeStatus(status) {
 				success : function(result) {
 					if (result == "permitted") {
 						if (changeStatus == "P") {
-							alert("상태가 변경되었습니다. \n현재일보다 마감일이 빠른 프로젝트는 지연 프로젝트 상태로 변경됩니다.");
+							alert("<spring:message code='ezPMS.t161' />");
 						} else {
-							alert("상태가 변경되었습니다.");
+							alert("<spring:message code='ezPMS.t10' />");
 						}
 						
 						window.location.reload();
 					} else {
-						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+						alert("<spring:message code='ezPMS.t9' />");
 						return;
 					}
 				},
@@ -404,23 +404,23 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				
 				switch (taskList[i].status) {
 				case "P" :
-					taskStatus = "진행";
+					taskStatus = "<spring:message code='ezPMS.t15' />";
 					statusColor = progressColor;
 					break;
 				case "W" :
-					taskStatus = "대기";
+					taskStatus = "<spring:message code='ezPMS.t16' />";
 					statusColor = "#d1d1d1";
 					break;
 				case "L" :
-					taskStatus = "지연";
+					taskStatus = "<spring:message code='ezPMS.t18' />";
 					statusColor = overdueColor;
 					break;
 				case "S" :
-					taskStatus = "보류";
+					taskStatus = "<spring:message code='ezPMS.t19' />";
 					statusColor = holdColor;
 					break;
 				case "C" :
-					taskStatus = "완료";
+					taskStatus = "<spring:message code='ezPMS.t17' />";
 					statusColor = completeColor;
 					break;
 				}
@@ -457,23 +457,18 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 			
 			switch (taskList[i].status) {
 			case "P" :
-				taskStatus = "진행";
 				statusColor = progressColor;
 				break;
 			case "W" :
-				taskStatus = "대기";
 				statusColor = "#d1d1d1";
 				break;
 			case "L" :
-				taskStatus = "지연";
 				statusColor = overdueColor;
 				break;
 			case "S" :
-				taskStatus = "보류";
 				statusColor = holdColor;
 				break;
 			case "C" :
-				taskStatus = "완료";
 				statusColor = completeColor;
 				break;
 			}
@@ -493,7 +488,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 		var startRow = $("#" + targetPosition).find(".card").length;
 		
 		if (taskList.length >= 10) {
-			$("#" + targetPosition).append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")' style='border:1px solid black; background-color:white; text-align:center;'><span>더보기</span></div>");
+			$("#" + targetPosition).append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")' style='border:1px solid black; background-color:white; text-align:center;'><span><spring:message code='ezPMS.t276' /></span></div>");
 		}
 	}
 }
@@ -508,7 +503,7 @@ function selectedTR(elem){
 function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 	$("#" + targetPosition).find(".moreBtn").remove();
 	
-	data = {
+	var data = {
 		projectId : projectId,
 		targetPosition : targetPosition,
 		kanbanOrder : targetStatus,
@@ -535,30 +530,30 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 			var title = "";
 			
 			if (targetStatus.indexOf("M") != -1) {
-				title += "나의 ";
+				title += "<spring:message code='ezPMS.t143' /> ";
 			}
 			
 			switch (targetStatus.slice(-1)) {
 			case "A" : 
-				title += "전체 업무";
+				title += "<spring:message code='ezPMS.t269' />";
 				break;
 			case "W" :
-				title += "대기 중인 업무";
+				title += "<spring:message code='ezPMS.t139' />";
 				break;
 			case "P" :
-				title += "진행 중인 업무";
+				title += "<spring:message code='ezPMS.t138' />";
 				break;
 			case "C" :
-				title += "완료된 업무"
+				title += "<spring:message code='ezPMS.t34' />"
 				break;
 			case "S" :
-				title += "보류된 업무";
+				title += "<spring:message code='ezPMS.t277' />";
 				break;
 			case "L" :
-				title += "기한이 지난 업무";
+				title += "<spring:message code='ezPMS.t139' />";
 				break;
 			case "B" :
-				title += "게시판";
+				title += "<spring:message code='ezPMS.t141' />";
 				break;
 			}
 			
@@ -632,22 +627,22 @@ function setOverviewContent() {
 			 
 			 if (logList == null || logList.length == 0) {
 				 
-				 logHTML += "<div style='font-size:13px; margin-left:11%'>" + "작업이력이 존재하지 않습니다." + "</div>";
+				 logHTML += "<div style='font-size:13px; margin-left:11%'>" + "<spring:message code='ezPMS.t30' />" + "</div>";
 				 
 			 } else {
 				 for (var i = 0; i < logList.length; i++) {
 					 
 					 switch (logList[i].logStatus) {
 					 case 1 : 
-						 logList[i].logStatus = "<span style='background-color:#8DFF1B; font-size:13px;'>등록</span>";
+						 logList[i].logStatus = "<span style='background-color:#8DFF1B; font-size:13px;'><spring:message code='ezPMS.t40' /></span>";
 						 break;
 						 
 					 case 2 : 
-						 logList[i].logStatus = "<span style='background-color:#ffff66; font-size:13px;'>수정</span>";
+						 logList[i].logStatus = "<span style='background-color:#ffff66; font-size:13px;'><spring:message code='ezPMS.t110' /></span>";
 						 break;
 						 
 					 case 3 : 
-						 logList[i].logStatus = "<span style='background-color:#FF7A1B; font-size:13px;'>삭제</span>";
+						 logList[i].logStatus = "<span style='background-color:#FF7A1B; font-size:13px;'><spring:message code='ezPMS.t11' /></span>";
 						 break;
 					 }
 					 
@@ -667,7 +662,7 @@ function setOverviewContent() {
 			 commentHTML += "<div id='mainComment'>";	 
 			 
 			 if (commentList == null || commentList.length == 0) {
-				 commentHTML += "<div style='font-size:13px; margin-left:11%'>" + "의견이 존재하지 않습니다." + "</div>";
+				 commentHTML += "<div style='font-size:13px; margin-left:11%'>" + "<spring:message code='ezPMS.t30' />" + "</div>";
 			 } else {
 				 for (var i = 0; i < commentList.length; i++) {					 
 					 commentHTML += "<div style='clear:both; margin-bottom:1px; border-bottom:1px;'>";
@@ -828,20 +823,20 @@ hr {
 	<table style="width:95%; height:13%">
 		<tr>
 			<td class="memberList"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px;" align="middle"><span>${project.headManagerName }</span></td>
-			<td onclick="getProjectMember('1')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 담당자보기 </td>
+			<td onclick="getProjectMember('1')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> <spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /> </td>
 		</tr>
 		<tr>
-			<td onclick="getProjectMember('2')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 참여자보기 </td>
-			<td onclick="getProjectMember('3')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 조회자보기 </td>
+			<td onclick="getProjectMember('2')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> <spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' /> </td>
+			<td onclick="getProjectMember('3')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> <spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' /> </td>
 		</tr>
 	</table>
 	<div id="commentDiv">
-		의견<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('comment')">+</span>
+		<spring:message code='ezPMS.t154' /><span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('comment')">+</span>
 		<hr>
 		<div id="commentContentArea"></div>
 	</div>
 	<div id="logDiv">
-		작업이력<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
+		<spring:message code='ezPMS.t153' /><span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
 		<hr>
 		<div id="logContentArea"></div>
 	</div>

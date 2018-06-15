@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>담당자, 참여자, 조회자 추가</title>
+		<title><spring:message code='ezPMS.t162' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -55,7 +55,7 @@
 	   		}
 	   		
 	   		//조직도 뿌리는 펑션
-	   		function setDeptList(){
+	   		function setDeptList() {
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
 			     	var deptName = $("#"+id+" a:first").text();
@@ -75,7 +75,7 @@
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
-	   		function setUserList(key, value,deptName){
+	   		function setUserList(key, value,deptName) {
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
@@ -83,7 +83,8 @@
 	   				data:{"key" : key, "value" : value,"deptName":deptName},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
-	   					if(picList.length==0 && key!="DEPARTMENT"){
+	   					
+	   					if (picList.length==0 && key!="DEPARTMENT") {
 	   						alert("<spring:message code='ezCommunity.t1379'/>");
 	   					} else {
 		   					$("#orglistView").html(result);
@@ -92,12 +93,12 @@
 	   			});
 	   		}
 	   		
-	   		
 	   		//검색
 	   		function search_click() {
 	   			var key = $("#search_type").val();
 	   			var value = $("#keyword").val().trim();
-	   			if(value){
+	   			
+	   			if (value) {
 		   			setUserList(key, value);
 	   			} else {
 	   				alert("<spring:message code='ezSchedule.t8'/>")
@@ -155,6 +156,7 @@
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
 		   			$("#txtlist_Layer tr").removeClass("selectTR");
 	   			}
+	   			
 	   			$(elem).addClass("selectTR");
 	   			selUserId = $(elem).attr("id");
 	   			selUserName = $(elem).attr("name");
@@ -203,13 +205,13 @@
 		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 3, "userDeptname" : userDept});
 		   				}
 		   			} else {
-		   				alert("이미 추가된 사용자 입니다.");
+		   				alert("<spring:message code='ezPMS.t163' />");
 		   			}
 		   			
 		   			drawReceiverList(authName);
 		   			selMainListUserId = "";
 	   			} else {
-	   				alert("사용자를 선택해 주십시오.");
+	   				alert("<spring:message code='ezPMS.t164' />");
 	   			}
 	   		}
 	   		
@@ -229,7 +231,8 @@
 			    			managerArray.splice(j, 1);
 			    			selMainListUserId = "";
 			    		}
-			    	} 
+			    	}
+	   				
 			     	drawReceiverList(authName);
 	   			} else if (authName == "participant") {
 	   				for(var j = 0; j < participantArray.length; j++) {
@@ -238,14 +241,16 @@
 			    			selMainListUserId = "";
 			    		}
 			    	} 
-			     	drawReceiverList(authName);
+			     	
+	   				drawReceiverList(authName);
 	   			} else {
 	   				for(var j = 0; j < viewerArray.length; j++) {
 			    		if (viewerArray[j].userId === selMainListUserId) {
 			    			viewerArray.splice(j, 1);
 			    			selMainListUserId = "";
 			    		}
-			    	} 
+			    	
+	   				} 
 			     	drawReceiverList(authName);
 	   			}
 		     	
@@ -308,6 +313,7 @@
 			        var re = new RegExp(findStr, "gi");
 			        return (orgStr.replace(re, replaceStr));
 			    }
+	   			
 			    function replaceString(p_str) {
 			        p_str = ReplaceText(p_str, "&amp;", "&");
 			        p_str = ReplaceText(p_str, "&lt;", "<");
@@ -319,6 +325,7 @@
 	   			$("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
 		   		setDeptList();
+		   		
 	   			if ($(opener.managerList).length > 0 || $(opener.participantList).length > 0 ||  $(opener.viewerList).length > 0) {
 		   			managerArray = opener.managerList;
 		   			participantArray = opener.participantList;
@@ -339,8 +346,11 @@
 		   		
 	   			$(function () {
 		   			$(document).on({
-		   				"dblclick":function(){delTargetDept(this);},
-		   				"click":function(){targetDept = this;
+		   				"dblclick" : function() {
+		   					delTargetDept(this);
+		   				},
+		   				"click" : function() {
+		   					targetDept = this;
 			   				$("*").removeClass("selectTR");
 				   			$(this).addClass("selectTR");
 		   				}
@@ -367,14 +377,17 @@
 		                   	$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
 		                    $("#dblarrow").css("display", "none");
 		                }
+		                
 		                break;
 		    	}
+		        
 		        selMainListUserId = "";
 				selUserId = "";
 		    }
 	   		
 	   		function Tab1_MouseClick(obj) {
 	            obj.className = "tabon";
+	            
 	            if (obj.id != Tab1_SelectID) {
 	                if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
 	                    document.getElementById(Tab1_SelectID).className = "";
@@ -392,7 +405,7 @@
 	   			//window.close();
 	   		}
 	   		
-	   		function selectHeadManager(){
+	   		function selectHeadManager() {
 	   			var feature = GetOpenPosition(150, 150);
 	   			DivPopUpShow(400, 300, "/ezPMS/selectHeadManager.do");
 	   		}
@@ -416,11 +429,11 @@
 		</style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
-        <h1 style="height: 20px;">담당자, 참여자, 조회자 추가</h1>
+        <h1 style="height: 20px;"><spring:message code='ezPMS.t162' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="ok_Click()">확인</span></li>
-	            <li><span onclick="close_Click()">취소</span></li>
+	            <li><span onclick="ok_Click()"><spring:message code='ezPMS.t43' /></span></li>
+	            <li><span onclick="close_Click()"><spring:message code='ezPMS.t41' /></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
@@ -433,7 +446,7 @@
 					 	<tr>
 			                <div class="portlet_tabpart01">
 			                	<div class="portlet_tabpart01_top" id="tab1">
-					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)">조직도</span></p>
+					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezPMS.t165' /></span></p>
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
@@ -461,7 +474,7 @@
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                       <a class="imgbtn"><span onclick="deptSelect()">부서 선택</span></a>
+				                                       <a class="imgbtn"><span onclick="deptSelect()"><spring:message code='ezPMS.t166' /></span></a>
 				                                    </div>
 				                                </td> 
 				                                <td></td>   
@@ -499,7 +512,7 @@
 	                        <td style="vertical-align: top;">
 	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager" onclick="SelectReceiverWindow(manager,managerList)">담당자 </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager" onclick="SelectReceiverWindow(manager,managerList)"><spring:message code='ezPMS.t63' /> </span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">
@@ -508,7 +521,7 @@
 								
 								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="participant" onclick="SelectReceiverWindow(participant,participantList)">참여자 </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="participant" onclick="SelectReceiverWindow(participant,participantList)"><spring:message code='ezPMS.t64' /> </span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">
@@ -517,7 +530,7 @@
 								
 								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="viewer" onclick="SelectReceiverWindow(viewer,viewerList)">조회자 </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="viewer" onclick="SelectReceiverWindow(viewer,viewerList)"><spring:message code='ezPMS.t65' /> </span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">
