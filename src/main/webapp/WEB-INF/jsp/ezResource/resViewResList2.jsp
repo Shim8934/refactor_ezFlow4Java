@@ -319,7 +319,7 @@
 	        }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:hidden;">
+	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
 		<h1 style="text-overflow:ellipsis;overflow:hidden;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
   			<ul>
