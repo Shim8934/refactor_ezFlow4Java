@@ -259,7 +259,7 @@ function initKanbanList() {
 		var title = "";
 		
 		if (kanbanOrderArr[i].indexOf("M") != -1) {
-			title += "<spring:message code='ezPMS.t144' /> ";
+			title += "<spring:message code='ezPMS.t143' /> ";
 		}
 		
 		switch (kanbanOrderArr[i].slice(-1)) {
