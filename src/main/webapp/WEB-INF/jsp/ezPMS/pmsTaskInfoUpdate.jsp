@@ -70,12 +70,11 @@ var groupId = 0;
 	 
 	 managerList = JSON.parse(managerList);
 	 applyList();
-	 setPreTaskName();
+	 initPreTaskName();
  });
  
-function setPreTaskName() {
-	var preTaskName = $("#preTaskName", parent.document.getElementById("FBoard_ifrm").contentView).text();
-	alert(preTaskName);
+function initPreTaskName() {
+	var preTaskName = $("#preTaskName", parent.document.getElementById("FBoard_ifrm").contentDocument).text();
 	$("#preTaskName").text(preTaskName);
 }
 
