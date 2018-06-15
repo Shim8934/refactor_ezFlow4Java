@@ -96,7 +96,7 @@ nav .topmenu li {list-style:none;float:left; cursor:pointer;}
 
 /* top_search */
 
-.top_search {  height:85px; overflow:hidden; vertical-align:middle; padding-left:10px; overflow:hidden; border-left:1px solid #e6e6e6;border-right:1px solid #e6e6e6;}
+.top_search {  height:85px; overflow:hidden; vertical-align:middle; padding-left:10px; overflow:hidden; border-left:1px solid #e8e8e8;border-right:1px solid #e8e8e8;}
 .search_title { font-size:15px; font-weight:bold; margin:10px 0px 7px 0px; padding:0px;}
 .topsearch_btn {vertical-align:top; }
 .input_text { float:left; width:158px;  border:2px solid #f96423 ;padding:0px 0px 0px 3px; margin:0px;  color:#555; height:29px; font-size:12px; line-height:29px;}
@@ -111,7 +111,7 @@ nav .topmenu li {list-style:none;float:left; cursor:pointer;}
 .btn_quick_right { position:absolute; top:34px; right:5px; margin:0px; padding:0px; cursor:pointer;  }
 
 /* photobox */
-.photobox {border:1px solid #e6e6e6; overflow:hidden; }
+.photobox {border:1px solid #e8e8e8; overflow:hidden; }
 .photobox .title { padding:0px; margin:11px 0px 17px 16px; font-size:16px; color:#0d0d0d; font-weight:bold;}
 .photocont {margin:0px 0px 10px 17px; width:198px; height:165px; padding:0px; overflow:auto; }
 .photocont .images_container{overflow:hidden;}
@@ -120,7 +120,7 @@ nav .topmenu li {list-style:none;float:left; cursor:pointer;}
 .images_container ul li { display:block; margin:0px 1px 1px 0px }
 
 /* Title_list common */
-.content_title01{margin:0; padding:0; height:42px; border-bottom:1px solid #e6e6e6; overflow:hidden;}
+.content_title01{margin:0; padding:0; height:42px; border-bottom:1px solid #e8e8e8; overflow:hidden;}
 .content_title01 dt{float:left; height:42px; line-height:42px; padding:0px 0px 0px 19px; margin:0; background:url(../images/kr/theme01/main/icon_dotH1.gif) no-repeat left 16px; font-size:17px; font-weight:bold; color:#0d0d0d;}
 .content_title01 dd{float:right; height:42px; line-height:42px; padding:0px 11px 0px 0px; margin:0; background:url(../images/kr/theme01/main/icon_dotMore.gif) no-repeat right 17px; font-size:11px; color:#595959; cursor:pointer;}
 .content_title02{margin:0; padding:0; height:42px; background:#dfdddd; overflow:hidden;}
@@ -225,7 +225,7 @@ nav .topmenu li {list-style:none;float:left; cursor:pointer;}
 .calendar_mini_title .btn_next{width:21px; height:30px; padding:0px 1px;}
 .calendar_mini_title span{display:inline-block;}
 .calendar_mini{table-layout:fixed; border:4px solid #93d086; }
-.calendar_mini th{width:14.2%; height:23px; background:#ffffff; margin:0; padding:0; border-top:0 none; border-right:0 none; border-bottom:1px solid #e6e6e6; border-left:0 none; font-size:12px; font-family:Arial, Helvetica, sans-serif; font-size:11px;}
+.calendar_mini th{width:14.2%; height:23px; background:#ffffff; margin:0; padding:0; border-top:0 none; border-right:0 none; border-bottom:1px solid #e8e8e8; border-left:0 none; font-size:12px; font-family:Arial, Helvetica, sans-serif; font-size:11px;}
 .calendar_mini th.sun{color:#ee1c25;}
 .calendar_mini th.sat{color:rgb(0, 72, 149);}
 .calendar_mini td{width:14.2%; height:24px; text-align:center; cursor:pointer; font-size:12px; color:#313131;}

@@ -382,7 +382,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#edf4fd";
+	        var m_strColorSelect = "#f0f6ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1798,7 +1798,7 @@
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
 
-				obj.style.backgroundColor = "#edf4fd";
+				obj.style.backgroundColor = "#f0f6ff";
 
 				$
 						.ajax({
@@ -1849,7 +1849,7 @@
 				_RowObject = obj;
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
-				obj.style.backgroundColor = "#edf4fd";
+				obj.style.backgroundColor = "#f0f6ff";
 			}
 
 			var Tab1_SelectID = "1tab1";

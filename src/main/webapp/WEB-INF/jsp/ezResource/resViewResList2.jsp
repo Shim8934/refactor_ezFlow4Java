@@ -355,7 +355,7 @@
                 	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;">
                     		<tr id="weeklyline">
-                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #edf4fd;">
+                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
                 					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
 					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;
