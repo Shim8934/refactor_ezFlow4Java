@@ -125,6 +125,13 @@
 		            getBoardList();
 		        };
 		        
+		        /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
+		        $(window).on("resize", function(){
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		        	$("#addpopup").css("left", popupX);
+		        	$("#srarchpopup").css("left", popupX);	        	
+		        });
+		        
 			    $(document).ready(function() {
 			    	var clickOutside;
 			    	
@@ -725,37 +732,41 @@
 		
 		    /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 		        function doLayerPopup(obj) {
-		        	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+		        	/* btn_PostDate_Clear();
+			        document.getElementById("chkSearchSub").checked = false;
+			        document.getElementById("txtTitle").value = "";
+			        document.getElementById("txtWriterName").value = "";
+			        document.getElementById("txtAbstract").value = "";
+			
+			        if (obj.getAttribute("mode") == "off") {
+			            document.getElementById("layer_popup2").style.left = "10px";
+			            if (pAdminType == "y")
+			                document.getElementById("layer_popup2").style.top = "56px";
+			            else
+			                document.getElementById("layer_popup2").style.top = "100px";
+			            document.getElementById("layer_popup2").style.display = "";
+			            obj.setAttribute("mode", "on");
+			        }
+			        else {
+			            BoardSearchOptionHidden();
+			        } */
+			        
+			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
 			    	parent.frames["left"].document.body.style.overflow = "hidden";
 			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-		        	$("#srarchpopup").css("left", popupX);
+			    	$("#srarchpopup").css("left", popupX);
 			    	$("#srarchpopup").modal();
-		        	
-		           /*  btn_PostDate_Clear();
-		            //document.getElementById("chkSearchSub").checked = false;
-		            document.getElementById("txtTitle").value = "";
-		            document.getElementById("txtAbstract").value = "";
-		            //document.getElementById("txtWriterName").value = "";
-		
-		            if (obj.getAttribute("mode") == "off") {
-		                document.getElementById("layer_popup").style.left = "10px";
-		                document.getElementById("layer_popup").style.top = "100px";
-		                document.getElementById("layer_popup").style.display = "";
-		                obj.setAttribute("mode", "on");
-		            }
-		            else {
-		                BoardSearchOptionHidden();
-		            } */
+			    	
 		        }
 		        function btn_PostDate_Clear() {
 			        $("#Sdatepicker").datepicker('setDate', "");
 			        $("#Edatepicker").datepicker('setDate', "");
 		        }
 		        function BoardSearchOptionHidden() {
-		            document.getElementById("layer_popup").style.display = "none";
-		            document.getElementById("SearchOption").setAttribute("mode", "off");
-		        
-		            $.modal.close();
+		        	 document.getElementById("layer_popup").style.display = "none";
+				     document.getElementById("SearchOption").setAttribute("mode", "off");
+				       
+				     $.modal.close();
 		        }
 			    function search(type) {
 			        if (type == "basic") {
@@ -977,7 +988,7 @@
 	        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
 	            <span style="width: 100%; height: 100px; display: block;">
 	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;">
+	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 	                        <p class="mail_title" style="margin-left: 0px;">
 	                            <span class="icon_btn"><span onclick="MailReadOpen_temp();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
@@ -1004,7 +1015,7 @@
 	        <span id="PreContent_RayerW" style="display: block;">
 	            <span style="width: 100%; height: 100px; display: block;">
 	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;">
+	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 	                        <p class="mail_title">
 	                            <span class="icon_btn"><span onclick="MailReadOpen_temp();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>

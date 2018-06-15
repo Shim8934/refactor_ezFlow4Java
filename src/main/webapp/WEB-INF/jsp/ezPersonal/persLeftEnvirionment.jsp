@@ -158,6 +158,8 @@
 					case "journalEnv":
 				        window.parent.frames.right.document.location.href = "/ezJournal/journalConfig.do";
 				        break;
+					case "webfolder":
+						window.parent.frames.right.document.location.href = "/ezWebFolder/webfolderConfig.do";
 					default: 
 						break;
 				}
@@ -226,6 +228,9 @@
             </c:if>
             <c:if test="${isJournalUsed == 'Y'}">
    				<h2><span id="journalEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezJournal.t150' /></span></h2><ul></ul>
+   			</c:if>
+			<c:if test="${isWebfolderUsed == 'Y'}">
+				<h2><span id="webfolder" name="webfolder" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezWebFolder.t31' /></span><ul></ul></h2>
    			</c:if>
 			<h2><span id="TimeZone" name="TimeZone" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900010' /></span><ul></ul></h2>
 		</div>
