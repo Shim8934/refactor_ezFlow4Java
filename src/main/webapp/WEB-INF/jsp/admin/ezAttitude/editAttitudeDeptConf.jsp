@@ -62,6 +62,8 @@
     					$("#workEndTime").prop('readonly', false);
     				}
     			});
+        		
+        		$("#gubun").click();
    			});
 	   	
 	   		//조직도 뿌리는 펑션
@@ -210,11 +212,11 @@
         <table class="content" style="margin-top: 8px;"> 
 			<tr>
 				<th><spring:message code='ezAttitude.t126' /></th>
-				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> /><spring:message code='ezAttitude.t127' /></td>
+				<td><input type="checkbox" id="gubun" name="gubun" /><spring:message code='ezAttitude.t127' /></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezAttitude.t12' /></th>
-				<td><span><input id="workStartTime" type="text" style="width:50px;" <c:if test="${vo.gubun == '0'}">readonly="true"</c:if> value="${vo.workStartTime }"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px;" <c:if test="${vo.gubun == '0'}">readonly="true"</c:if> value="${vo.workEndTime }"/></span></td>
+				<td><span><input id="workStartTime" type="text" style="width:50px;" />&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px;" /></span></td>
 			</tr>
 		</table> 
 		
