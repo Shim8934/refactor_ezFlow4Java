@@ -767,10 +767,11 @@
 				     document.getElementById("SearchOption").setAttribute("mode", "off");
 				       
 				     $.modal.close();
+				     parent.frames["right"].document.body.style.overflow = "hidden";
 		        }
 			    function search(type) {
 			        if (type == "basic") {
-			        	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+			        	if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
 			        			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 			                alert("<spring:message code='ezBoard.t192' />");
 			                return;

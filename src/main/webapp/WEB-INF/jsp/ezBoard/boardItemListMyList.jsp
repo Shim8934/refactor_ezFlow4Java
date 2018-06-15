@@ -936,6 +936,7 @@
 			    document.getElementById("SearchOption").setAttribute("mode", "off");
 			       
 			    $.modal.close();
+			    parent.frames["right"].document.body.style.overflow = "hidden";
 	        }
 	        
 	        function search(type) {
