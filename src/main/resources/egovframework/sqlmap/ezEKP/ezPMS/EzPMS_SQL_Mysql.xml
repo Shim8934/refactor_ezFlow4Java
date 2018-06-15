@@ -107,7 +107,44 @@
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="7"/>
     </resultMap>
     
-    <resultMap id="projectTaskVO" class="ProjectTaskVO">
+    <resultMap id="projectTaskVOForDetail" class="ProjectTaskVO">
+    	<result property="taskId"							column="TASK_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="4"/>
+    	<result property="taskName"							column="TASK_NAME"					columnIndex="5"/>
+    	<result property="status"							column="STATUS"						columnIndex="6"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="7"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="8"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="9"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="10"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="11"/>
+    	<result property="weight"							column="WEIGHT"						columnIndex="12"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="13"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="14"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="15"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="16"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="17"/>
+    	<result property="writerId"							column="WRITER_ID"					columnIndex="18"/>
+    	<result property="writeDate"						column="WRITE_DATE"					columnIndex="19"/>
+    	<result property="writerName"						column="WRITER_NAME"				columnIndex="20"/>
+    	<result property="writerDeptname"					column="WRITER_DEPTNAME"			columnIndex="21"/>    	
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="22"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="23"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="24"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="25"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="26"/>
+    	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
+    	<result property="groupName"						column="UPPER_GROUP_NAME"			columnIndex="29"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
+    	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
+    	<result property="pregroup"							column="PREGROUP"					columnIndex="33"/>
+    	<result property="pretaskAncesterGroup"				column="PRE_ANCESTER_GROUP"			columnIndex="34"/>
+    </resultMap>
+    
+     <resultMap id="projectTaskVOForList" class="ProjectTaskVO">
     	<result property="taskId"							column="TASK_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
@@ -1072,7 +1109,7 @@
 		</isNotEmpty>	
 	</select>
 	
-	<select id="EzPMSDAO.getTaskList" parameterClass="Map" resultMap="projectTaskVO">
+	<select id="EzPMSDAO.getTaskList" parameterClass="Map" resultMap="projectTaskVOForList">
 		<![CDATA[
 			SELECT DISTINCT
 				A.TASK_ID,
@@ -1971,7 +2008,7 @@
 			</isNotEqual>
 		</select>
 	
-	<select id="EzPMSDAO.getTaskDetails" parameterClass="map" resultMap="projectTaskVO">
+	<select id="EzPMSDAO.getTaskDetails" parameterClass="map" resultMap="projectTaskVOForDetail">
 		<![CDATA[
 			SELECT DISTINCT
 				A.TASK_ID,
@@ -1996,7 +2033,7 @@
 				A.WRITER_NAME$lang$ AS WRITER_NAME,
 				A.WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
 				A.TREE_DEPTH,
-				A.ANCESTER_GROUP,
+				B.ANCESTER_GROUP,
 				A.SORT_ORDER,
 				A.WORKINGDAY,
 				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
@@ -2006,7 +2043,8 @@
 				P.PROJECT_NAME,
 				A.REAL_WORKINGDAY,
 				R.PRETASK,
-				R.PREGROUP
+				R.PREGROUP,
+				PG.ancester_group AS PRE_ANCESTER_GROUP
 			FROM 
 				tbl_pms_task A
 			JOIN
@@ -2023,6 +2061,14 @@
 				A.PROJECT_ID = R.PROJECT_ID
 			AND
 				A.TASK_ID = R.TASK_ID
+			LEFT JOIN 
+				tbl_pms_task PT
+			ON 
+				R.pretask = PT.task_id
+			LEFT JOIN
+				tbl_pms_group PG
+			ON 
+				PT.group_id = PG.group_id
 			WHERE
 				A.TASK_ID = #taskId#
 			AND
@@ -2874,6 +2920,8 @@
 				a.group_id = b.group_id
 			and
 				a.tenant_id = #tenantId#
+			AND
+				a.DEL_STATUS = 0
 		]]>
 	</select>
 	
@@ -2937,6 +2985,8 @@
 				tenant_id = #tenantId#
 			AND
 				project_id = #projectId#
+			AND
+				DEL_STATUS = 0
 		]]>
 	</select>
 	
@@ -3152,4 +3202,17 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getProjectProgress" parameterClass="ProjectTaskVO" resultClass="float">
+		<![CDATA[
+			SELECT 
+				PROGRESS
+			FROM
+				TBL_PMS_PROJECT
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		 ]]>
+	</select>
 </sqlMap>

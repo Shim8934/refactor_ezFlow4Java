@@ -224,7 +224,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public void updateProjectStatus(Long projectId, String status, int tenantId, String realStartDate, String planEndDate) {
 		LOGGER.debug("updateProjectStatus started.");
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("status", status);
 		map.put("tenantId", tenantId);
@@ -669,6 +669,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
 			map1.put("realWorkingday", calWorkingDays);
+			map1.put("tenantId", taskVO.getTenantId());
 			ezPMSDAO.updateProjectWorkingday(map1);
 			
 			//가중치 계산
@@ -684,8 +685,32 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				}
 			}
 			
+			//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+			if(!taskVO.getGroupId().equals(0L)){
+				String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
+				String[] ancGroupArr = ancesterGroup.split(",");
+				
+				for(int i = 0; i < ancGroupArr.length; i++){
+					map1.put("groupId", ancGroupArr[i]);
+					ezPMSDAO.updateGroupProgress(map1);
+				}
+			}
+			
+			//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+			ezPMSDAO.updateProjectProgress(taskVO);
+			
+			//업데이트 후 프로젝트 진행률을 조회
+			ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map1);
+			
+			//프로젝트 진행률이 100이상인데  업무가 추가 되었으면, 진행으로 상태를 바꾼다.
+			if(Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100){
+				map1.put("status", "P");
+				ezPMSDAO.updateProjectStatus(map1);
+			}
+			
 			//업무가 속한 프로젝트 날짜 업데이트
 //			updateProjectDate(taskVO.getProjectId(), taskVO.getTenantId(), companyId);
+			LOGGER.debug("[SERVICE] updateTaskProgress ended.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -799,15 +824,51 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void deleteTask(Long taskId, long projectId, int tenantId) {
+	public void deleteTask(Long taskId, long projectId, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("[SERVICE] deleteTask started.");
+		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskId", taskId);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		
+		ProjectTaskVO taskVO = ezPMSDAO.getTaskDetails(map);
+		
 		ezPMSDAO.deleteTask(map);
+		
+		//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
+		if(!taskVO.getGroupId().equals(0L)){
+			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
+			String[] ancGroupArr = ancesterGroup.split(",");
+			
+			for(int i = 0; i < ancGroupArr.length; i++){
+				updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId);
+			}
+		}
+		
+		//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+		if(!taskVO.getGroupId().equals(0L)){
+			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
+			String[] ancGroupArr = ancesterGroup.split(",");
+			
+			for(int i = 0; i < ancGroupArr.length; i++){
+				map.put("groupId", ancGroupArr[i]);
+				ezPMSDAO.updateGroupProgress(map);
+			}
+		}
+		
+		//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+		ezPMSDAO.updateProjectProgress(taskVO);
+		
+		//업데이트 후 프로젝트 진행률을 조회
+		ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map);
+		
+		//프로젝트 진행률이 100이상인데  업무가 추가 되었으면, 진행으로 상태를 바꾼다.
+		if(Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100){
+			map.put("status", "P");
+			ezPMSDAO.updateProjectStatus(map);
+		}
 		
 		LOGGER.debug("[SERVICE] deleteTask ended.");
 	}
@@ -2079,10 +2140,41 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public void updateTaskWeight(ProjectTaskVO taskVO){
+	public void updateTaskWeight(ProjectTaskVO taskVO) throws Exception {
 		LOGGER.debug("[SERVICE] updateTaskWeight started.");
 		
 		ezPMSDAO.updateTaskWeight(taskVO);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", taskVO.getGroupId());
+		map.put("tenantId", taskVO.getTenantId());
+		map.put("projectId", taskVO.getProjectId());
+		
+		//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+		if(!taskVO.getGroupId().equals(0L)){
+			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
+			String[] ancGroupArr = ancesterGroup.split(",");
+			
+			for(int i = 0; i < ancGroupArr.length; i++){
+				map.put("groupId", ancGroupArr[i]);
+				ezPMSDAO.updateGroupProgress(map);
+			}
+		}
+		
+		//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+		ezPMSDAO.updateProjectProgress(taskVO);
+		
+		//업데이트 후 프로젝트 진행률을 조회
+		ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map);
+		
+		//프로젝트 진행률이 100이상이면, 상태를 완료로 바꾼다.
+		if(Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100){
+			map.put("status", "C");
+		}
+		else{
+			map.put("status", "P");
+		}
+		ezPMSDAO.updateProjectStatus(map);
 		
 		LOGGER.debug("[SERVICE] updateTaskWeight ended.");
 	}
@@ -2187,6 +2279,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupId", taskVO.getGroupId());
 		map.put("tenantId", taskVO.getTenantId());
+		map.put("projectId", taskVO.getProjectId());
 		
 		//업무의 진행률을 업데이트 해준다.
 		ezPMSDAO.updateTaskProgress(taskVO);
@@ -2204,6 +2297,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
 		ezPMSDAO.updateProjectProgress(taskVO);
+		
+		//업데이트 후 프로젝트 진행률을 조회
+		ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map);
+		
+		//프로젝트 진행률이 100이상이면, 상태를 완료로 바꾼다.
+		if(Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100){
+			map.put("status", "C");
+		}
+		else{
+			map.put("status", "P");
+		}
+		ezPMSDAO.updateProjectStatus(map);
 		
 		LOGGER.debug("[SERVICE] updateTaskProgress ended.");
 	}

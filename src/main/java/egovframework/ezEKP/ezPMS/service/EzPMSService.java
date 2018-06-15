@@ -77,7 +77,7 @@ public interface EzPMSService {
 	
 	public int updateTask(ProjectTaskVO task, String companyId, int tenantId);
 	
-	public void deleteTask(Long taskId, long projectId, int tenantId);
+	public void deleteTask(Long taskId, long projectId, int tenantId, String companyId) throws Exception;
 
 	public void updateTaskInfo(ProjectTaskVO task, String companyId, int tenantId);
 

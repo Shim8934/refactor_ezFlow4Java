@@ -1274,6 +1274,7 @@ public class EzPMSGWController {
 				int tenantId = info.getTenantId();
 				String deptId = info.getDeptId();
 				long projectId = Long.parseLong(request.getParameter("projectId"));
+				String companyId = request.getParameter("companyId");
 				String roleCheck = "";
 				
 				//권한 체크
@@ -1304,7 +1305,7 @@ public class EzPMSGWController {
 				
 				if (roleCheck.equals("permitted")) {
 					for (int i = 0; i < taskIdList.length; i++) {
-						ezPMSService.deleteTask(Long.parseLong(taskIdList[i]), projectId, tenantId);
+						ezPMSService.deleteTask(Long.parseLong(taskIdList[i]), projectId, tenantId, companyId);
 					}
 					
 				}
