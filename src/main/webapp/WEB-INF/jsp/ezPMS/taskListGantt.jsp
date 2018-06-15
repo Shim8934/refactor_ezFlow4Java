@@ -169,6 +169,7 @@
 	   				
 	   				//프로젝트의 진행률은 계산으로 구해서 넣어준다.
 	   				ganttData.tasks[0].planProgress = getPrjPlanProgress(ganttData);
+	   				ganttData = setDepends(ganttData);
 		   		}
 	   			
 	   			function matchGroupData(ganttData, gl){
@@ -288,7 +289,8 @@
 			   				ganttData.resources.push(resource);
 			   				ganttData.roles.push(role);
 			   			}
-			   			tempTask.depends = tl[i].pretask;
+			   			tempTask.depends = "";
+			   			tempTask.pretask = tl[i].pretask;
 			   			tempTask.description = tl[i].overview;
 			   			tempTask.progress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(tl[i].realProgress).toFixed(1);
@@ -590,7 +592,8 @@
 	   			  row.find("[name=code]").val(task.code);
 	   			  row.find("[status]").attr("status", task.status);
 
-	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
+// 	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
+	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly", true);
 	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true);
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
 	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) ); // called on dates only because for other field is called on focus event
@@ -1061,11 +1064,32 @@
 	   			    if(task == curTask){
 	   			    	prjWeight += Number(newWeight);
 	   			    }
-	   			    if(task.type === "t"){
+	   			    else if(task.type === "t"){
 	   			    	prjWeight += Number(task.weight);
 	   			    }
 	   			}
 	   			return Number(prjWeight).toFixed(1);
+	   		}
+	   		
+	   		//선행작업 아이디값을 갖고 행값을 넣어준다.
+	   		function setDepends(ganttData){
+	   			var len = ganttData.tasks.length;
+	   			for(var i = 0; i < len; i++){
+   					var pretask = ganttData.tasks[i].pretask;
+	   				if(pretask){ //선행작업이 있는 업무이면.
+	   					for(var j = 0; j < len; j++){
+	   						var taskId = ganttData.tasks[j].id.match(/t(\d+)/);
+	   						//업무중에 선행작업 아이디와 일치하는 업무를 찾음.
+	   						if(taskId){
+	   							if(taskId[1] == pretask){
+	   								//찾은 업무의 행번호를 넣어줌.
+			   						ganttData.tasks[i].depends = (j + 1) + "";
+	   							}
+	   						}
+	   					}
+	   				}
+	   			}
+	   			return ganttData;
 	   		}
 	   		
 	   		

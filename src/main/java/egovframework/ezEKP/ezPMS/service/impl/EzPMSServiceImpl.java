@@ -685,7 +685,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			}
 			
 			//업무가 속한 프로젝트 날짜 업데이트
-			updateProjectDate(taskVO.getProjectId(), taskVO.getTenantId(), companyId);
+//			updateProjectDate(taskVO.getProjectId(), taskVO.getTenantId(), companyId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -788,7 +788,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			}
 			
 			//업무가 속한 프로젝트 날짜 업데이트
-			updateProjectDate(task.getProjectId(), task.getTenantId(), companyId);
+//			updateProjectDate(task.getProjectId(), task.getTenantId(), companyId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1807,7 +1807,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			}
 			
 			//업무가 속한 프로젝트 날짜 업데이트
-			updateProjectDate(task.getProjectId(), task.getTenantId(), companyId);
+//			updateProjectDate(task.getProjectId(), task.getTenantId(), companyId);
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
