@@ -1232,12 +1232,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public Map<String, Object> getRemainingWeight(String projectId, int tenantId) {
 		LOGGER.debug("[SERVICE] ezPMS getRemainingWeight Started");
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		
 		LOGGER.debug("[SERVICE] ezPMS getRemainingWeight Ended");
-		return ezPMSDAO.getRemainingWeight(projectId);
+		return ezPMSDAO.getRemainingWeight(map);
 	}
 
 	@Override
