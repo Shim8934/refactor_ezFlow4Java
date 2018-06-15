@@ -186,9 +186,15 @@
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
 		    $(window).on("resize", function(){
-					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
-		        	$("#addpopup").css("left", popupX);
-		        	$("#srarchpopup").css("left", popupX);	        	
+		    	if (window.parent.frames['left'] == undefined) {
+		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		    	}
+		    	else {
+		    		var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		    	}
+		    	
+		    	$("#addpopup").css("left", popupX);
+	        	$("#srarchpopup").css("left", popupX);	        
 		     });
 		
 		    $(function () {
@@ -921,36 +927,43 @@
 		
 		    /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 		    function doLayerPopup(obj) {
-		    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
-		    	parent.frames["left"].document.body.style.overflow = "hidden";
-		    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-	        	$("#srarchpopup").css("left", popupX);
-		    	$("#srarchpopup").modal();
-		    	
-		        /* btn_PostDate_Clear();
-		        document.getElementById("chkSearchSub").checked = false;
-		        document.getElementById("txtTitle").value = "";
-		        document.getElementById("txtWriterName").value = "";
-		        document.getElementById("txtAbstract").value = "";
-		
-		        if (obj.getAttribute("mode") == "off") {
-		            document.getElementById("layer_popup").style.left = "10px";
-		            if (pAdminType == "y")
-		                document.getElementById("layer_popup").style.top = "56px";
-		            else
-		                document.getElementById("layer_popup").style.top = "100px";
-		            document.getElementById("layer_popup").style.display = "";
-		            obj.setAttribute("mode", "on");
-		        }
-		        else {
-		            BoardSearchOptionHidden();
-		        } */
+		    	if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
+		        	btn_PostDate_Clear();
+			        document.getElementById("chkSearchSub").checked = false;
+			        document.getElementById("txtTitle").value = "";
+			        document.getElementById("txtWriterName").value = "";
+			        document.getElementById("txtAbstract").value = "";
+			
+			        if (obj.getAttribute("mode") == "off") {
+			            document.getElementById("layer_popup2").style.left = "10px";
+			            if (pAdminType == "y")
+			                document.getElementById("layer_popup2").style.top = "56px";
+			            else
+			                document.getElementById("layer_popup2").style.top = "100px";
+			            document.getElementById("layer_popup2").style.display = "";
+			            obj.setAttribute("mode", "on");
+			        }
+			        else {
+			            BoardSearchOptionHidden();
+			        }
+		    	}
+		    	else {
+			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+			    	parent.frames["left"].document.body.style.overflow = "hidden";
+			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			    	$("#srarchpopup").css("left", popupX);
+			    	$("#srarchpopup").modal();
+		    	}
 		    }
 		    function BoardSearchOptionHidden() {
 		        document.getElementById("layer_popup").style.display = "none";
 		        document.getElementById("SearchOption").setAttribute("mode", "off");
-		        
-		        $.modal.close();
+		        if (window.parent.frames['left'] != undefined) {
+		        	document.getElementById("layer_popup").style.display = "none";
+		        	$.modal.close();
+		        }
+		        else
+		        	document.getElementById("layer_popup2").style.display = "none";
 		    }
 		
 		    function search(type) {
@@ -1270,7 +1283,7 @@
 			</table>
 		</div>
 	</div>
-	       <%--   <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+	       <div id="layer_popup2" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 	          <div class="popupwrap1">
 	            <div class="popupwrap2">
 	        <table class="content">  
@@ -1315,6 +1328,6 @@
 	          </div>
 		        <div class="shadow">
 	            </div>
-	        </div> --%>
+	        </div> 
 	</body>
 </html>
