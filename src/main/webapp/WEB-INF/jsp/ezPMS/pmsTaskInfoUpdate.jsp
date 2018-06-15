@@ -185,7 +185,7 @@ function updateTaskInfo() {
 				taskName : taskName,
 				taskId : taskDetails.taskId + "",
 				projectId : projectId,
-				groupId : upperGroupId,
+				groupId : groupId,
 				overview	 : overview,
 				headManagerId : headManagerId,
 				managerList : managerList,
@@ -194,6 +194,8 @@ function updateTaskInfo() {
 				writeDate : writeDate,
 				weight : weight
 		}
+		
+		alert(groupId);
 		
 		$.ajax({
 			type : "POST",
