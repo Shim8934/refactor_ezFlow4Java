@@ -593,6 +593,7 @@
 // 	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
 	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly", true);
 	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true);
+	   			  row.find("[name=planProgress]").prop("readonly", true);
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
 	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) ); // called on dates only because for other field is called on focus event
 	   			  row.find("[name=endIsMilestone]").prop("checked", task.endIsMilestone);
@@ -892,6 +893,7 @@
 	   			var prevTasks = Array.prototype.slice.call(ge.tasks);
 	   			
 	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
+	   			groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
 	   			
 	   			if (taskId === "") {
 	   				alert("<spring:message code='ezPMS.t247' />");
@@ -960,6 +962,7 @@
 	   				alert("<spring:message code='ezPMS.t247' />");
 	   			} else if (!preTaskValidChk(curTask, mode)) {
 	   				//선횅작업과의 유효성 체크
+// 	   				$(".gdfTable tbody tr").eq(curTask.depends - 1).trigger("click");
 	   				alert("<spring:message code='ezPMS.t286' />");
 	   			} else if (newProgress == "") {
 	   				//가중치 검사

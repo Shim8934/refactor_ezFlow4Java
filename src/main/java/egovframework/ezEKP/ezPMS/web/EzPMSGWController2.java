@@ -1035,7 +1035,15 @@ public class EzPMSGWController2 {
 			ProjectTaskVO taskVO = new ProjectTaskVO();
 			taskVO.setTaskId(Long.parseLong(taskId));
 			taskVO.setTenantId(info.getTenantId());
+			taskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
 			taskVO.setWeight(Float.parseFloat(request.getParameter("weight")));
+			
+			String groupId = request.getParameter("groupId") != "" ? request.getParameter("groupId") : "";
+			if(!groupId.equals("")){
+				taskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
+			}else{
+				taskVO.setGroupId(0L);
+			}
 			
 			ezPMSService.updateTaskWeight(taskVO);
 			

@@ -167,7 +167,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select ("EzPMSDAO.getUserProjectRole", map);
 	}
 
-	public void updateProjectStatus(HashMap<String, Object> map) {
+	public void updateProjectStatus(Map<String, Object> map) {
 		update("EzPMSDAO.updateProjectStatus", map);
 	}
 
@@ -508,5 +508,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	public void updateProjectDate(Map<String, Object> map){
 		update("EzPMSDAO.updateProjectDate", map);
+	}
+	
+	public Float getProjectProgress(ProjectTaskVO taskVO) {
+		return (Float) select("EzPMSDAO.getProjectProgress", taskVO);
 	}
 }
