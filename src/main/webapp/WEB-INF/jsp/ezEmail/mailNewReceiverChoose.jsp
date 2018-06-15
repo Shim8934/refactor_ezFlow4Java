@@ -1791,8 +1791,18 @@
 		                	var PrePoint = $("#" + prevListId + " tbody tr").index($("#" + PrelistContent));
 			                var CurPoint = $("#" + prevListId + " tbody tr").index($("#" + CurlistContent));
 		                } else {
-		                	var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
-			                var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
+		                	if (obj.id.indexOf("MailUserlist_") != -1) {
+		                		var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
+		                		var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
+		                		
+		                	} else if (obj.id.indexOf("Address_TR_") != -1) {
+		                		var PrePoint = parseInt(PrelistContent.replace("Address_TR_", ""));
+		                		var CurPoint = parseInt(CurlistContent.replace("Address_TR_", ""));
+		                		
+		                	} else if (obj.id.indexOf("pListViewDL_TR_") != -1) {
+		                		var PrePoint = parseInt(PrelistContent.replace("pListViewDL_TR_", ""));
+		                		var CurPoint = parseInt(CurlistContent.replace("pListViewDL_TR_", ""));
+		                	}
 		                }
 		                
 		                if (PrePoint < CurPoint) {
@@ -1800,7 +1810,14 @@
 								if (moveRecipients) {
 									p_ListOrderObject = $("#" + prevListId + " tbody tr").eq(Cnt)[0];
 								} else {
-									p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+									if (obj.id.indexOf("MailUserlist_") != -1) {
+										p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+				                	} else if (obj.id.indexOf("Address_TR_") != -1) {
+				                		p_ListOrderObject = document.getElementById("Address_TR_" + Cnt);
+				                	} else if (obj.id.indexOf("pListViewDL_TR_") != -1) {
+				                		p_ListOrderObject = document.getElementById("pListViewDL_TR_" + Cnt);
+				                	}
+									
 								}
 		                        
 		                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
@@ -1815,7 +1832,13 @@
 		                    	if (moveRecipients) {
 									p_ListOrderObject = $("#" + prevListId + " tbody tr").eq(Cnt)[0];
 								} else {
-									p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+									if (obj.id.indexOf("MailUserlist_") != -1) {
+										p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+				                	} else if (obj.id.indexOf("Address_TR_") != -1) {
+				                		p_ListOrderObject = document.getElementById("Address_TR_" + Cnt);
+				                	} else if (obj.id.indexOf("pListViewDL_TR_") != -1) {
+				                		p_ListOrderObject = document.getElementById("pListViewDL_TR_" + Cnt);
+				                	}
 								}
 		                    	
 		                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
