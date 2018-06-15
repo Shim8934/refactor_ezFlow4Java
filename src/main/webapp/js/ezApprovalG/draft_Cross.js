@@ -3394,6 +3394,7 @@ function getDeptSymbol(DeptID, DeptName) {
 }
 function getDeptSendName(DeptID) {
 	var result = "";
+	var resultNode;
 	
 	$.ajax({
 		type : "POST",
@@ -3410,7 +3411,13 @@ function getDeptSendName(DeptID) {
 		}        			
 	});
 	
-    return trim(SelectSingleNodeValue(loadXMLString(result), "EXTENSIONATTRIBUTE5"));
+	resultNode = loadXMLString(result);
+	
+	if (resultNode.firstChild) {
+		resultNode = resultNode.firstChild;
+	}
+	
+    return trim(SelectSingleNodeValue(resultNode, "EXTENSIONATTRIBUTE5"));
 }
 function setMenuBar(id, flag) {
     var strCmd, display_Value;
