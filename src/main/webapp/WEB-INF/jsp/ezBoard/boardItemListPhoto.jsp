@@ -940,12 +940,12 @@
 			        document.getElementById("txtAbstract").value = "";
 			
 			        if (obj.getAttribute("mode") == "off") {
-			            document.getElementById("layer_popup2").style.left = "10px";
+			            document.getElementById("layer_popup").style.left = "10px";
 			            if (pAdminType == "y")
-			                document.getElementById("layer_popup2").style.top = "56px";
+			                document.getElementById("layer_popup").style.top = "56px";
 			            else
-			                document.getElementById("layer_popup2").style.top = "100px";
-			            document.getElementById("layer_popup2").style.display = "";
+			                document.getElementById("layer_popup").style.top = "100px";
+			            document.getElementById("layer_popup").style.display = "";
 			            obj.setAttribute("mode", "on");
 			        }
 			        else {
@@ -963,12 +963,11 @@
 			function BoardSearchOptionHidden() {
 				document.getElementById("layer_popup").style.display = "none";
 			     document.getElementById("SearchOption").setAttribute("mode", "off");
+			     
 			     if (window.parent.frames['left'] != undefined) {
-			        document.getElementById("layer_popup").style.display = "none";
-			        $.modal.close();
+			       $.modal.close();
+			       parent.frames["right"].document.body.style.overflow = "hidden";		// body style overflow 옵션 사라져서 추가함
 			     }
-			     else
-			       document.getElementById("layer_popup2").style.display = "none";
 			}
 		
 			function search(type) {
@@ -1241,7 +1240,9 @@
 	
 	    
 	<div id="ListInfo" style="display:none"></div>
-	         <div id="layer_popup2" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+	<c:choose>
+	<c:when test="${boardInfo.adminType == 'y'}">
+	         <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 	          <div class="popupwrap1">
 	            <div class="popupwrap2">
 	        <table class="content">  
@@ -1287,8 +1288,9 @@
 		        <div class="shadow">
 	            </div>
 	        </div> 
-	        
-	        <!-- 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 -->
+	</c:when>
+	<c:otherwise>        
+	<!-- 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 -->
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<table class="content">
@@ -1344,5 +1346,7 @@
 			</table>
 		</div>
 	</div>
+	</c:otherwise>
+	</c:choose>
 	</body>
 </html>
