@@ -186,9 +186,15 @@
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
 		    $(window).on("resize", function(){
-					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
-		        	$("#addpopup").css("left", popupX);
-		        	$("#srarchpopup").css("left", popupX);	        	
+		    	if (window.parent.frames['left'] == undefined) {
+		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		    	}
+		    	else {
+		    		var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		    	}
+		    	
+		    	$("#addpopup").css("left", popupX);
+	        	$("#srarchpopup").css("left", popupX);	        
 		     });
 		
 		    $(function () {
@@ -921,36 +927,42 @@
 		
 		    /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 		    function doLayerPopup(obj) {
-		    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
-		    	parent.frames["left"].document.body.style.overflow = "hidden";
-		    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-	        	$("#srarchpopup").css("left", popupX);
-		    	$("#srarchpopup").modal();
-		    	
-		        /* btn_PostDate_Clear();
-		        document.getElementById("chkSearchSub").checked = false;
-		        document.getElementById("txtTitle").value = "";
-		        document.getElementById("txtWriterName").value = "";
-		        document.getElementById("txtAbstract").value = "";
-		
-		        if (obj.getAttribute("mode") == "off") {
-		            document.getElementById("layer_popup").style.left = "10px";
-		            if (pAdminType == "y")
-		                document.getElementById("layer_popup").style.top = "56px";
-		            else
-		                document.getElementById("layer_popup").style.top = "100px";
-		            document.getElementById("layer_popup").style.display = "";
-		            obj.setAttribute("mode", "on");
-		        }
-		        else {
-		            BoardSearchOptionHidden();
-		        } */
+		    	if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
+		        	btn_PostDate_Clear();
+			        document.getElementById("chkSearchSub").checked = false;
+			        document.getElementById("txtTitle").value = "";
+			        document.getElementById("txtWriterName").value = "";
+			        document.getElementById("txtAbstract").value = "";
+			
+			        if (obj.getAttribute("mode") == "off") {
+			            document.getElementById("layer_popup").style.left = "10px";
+			            if (pAdminType == "y")
+			                document.getElementById("layer_popup").style.top = "56px";
+			            else
+			                document.getElementById("layer_popup").style.top = "100px";
+			            document.getElementById("layer_popup").style.display = "";
+			            obj.setAttribute("mode", "on");
+			        }
+			        else {
+			            BoardSearchOptionHidden();
+			        }
+		    	}
+		    	else {
+			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+			    	parent.frames["left"].document.body.style.overflow = "hidden";
+			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			    	$("#srarchpopup").css("left", popupX);
+			    	$("#srarchpopup").modal();
+		    	}
 		    }
 		    function BoardSearchOptionHidden() {
-		        document.getElementById("layer_popup").style.display = "none";
-		        document.getElementById("SearchOption").setAttribute("mode", "off");
-		        
-		        $.modal.close();
+		    	document.getElementById("layer_popup").style.display = "none";
+			     document.getElementById("SearchOption").setAttribute("mode", "off");
+			     
+			     if (window.parent.frames['left'] != undefined) {
+			       $.modal.close();
+			       parent.frames["right"].document.body.style.overflow = "hidden";		// body style overflow 옵션 사라져서 추가함
+			     }
 		    }
 		
 		    function search(type) {
@@ -1200,7 +1212,7 @@
 	        <span id="PreContent_RayerW" style="display: block;">
 	            <span style="width: 100%; height: 100px; display: block;">
 	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;">
+	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 	                        <p class="mail_title">
 	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
@@ -1220,6 +1232,8 @@
 	
 	<div id="ListInfo" style="display:none"></div>
 	<!-- 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 -->
+	<c:choose>
+	<c:when test="${adminType != 'y'}">
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<table class="content">
@@ -1270,7 +1284,9 @@
 			</table>
 		</div>
 	</div>
-	       <%--   <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+	</c:when>
+	<c:otherwise>
+	       <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 	          <div class="popupwrap1">
 	            <div class="popupwrap2">
 	        <table class="content">  
@@ -1315,6 +1331,8 @@
 	          </div>
 		        <div class="shadow">
 	            </div>
-	        </div> --%>
+	        </div> 
+	   </c:otherwise>
+		</c:choose>     
 	</body>
 </html>

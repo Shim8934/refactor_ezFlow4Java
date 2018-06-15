@@ -82,7 +82,7 @@
 		    						<img style="vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon06.png"/>
 		    					</c:otherwise>
 		    				</c:choose>
-		    				<span style="display:inline-block; padding-top: 4px; padding-bottom: 1px;">&nbsp;<spring:message code="${type.journaltypeId}"/></span></span></li>
+		    				<span style="display:inline-block; padding-top: 4px; padding-bottom: 1px;"><spring:message code="${type.journaltypeId}"/></span></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
@@ -113,7 +113,7 @@
 		    						<img style="vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon06.png"/>
 		    					</c:otherwise>
 		    				</c:choose>
-						    <span style="display:inline-block; padding-top: 4px; padding-bottom: 1px;">&nbsp;<spring:message code="${type.journaltypeId}"/></span></span></li>
+						    <span style="display:inline-block; padding-top: 4px; padding-bottom: 1px;"><spring:message code="${type.journaltypeId}"/></span></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
