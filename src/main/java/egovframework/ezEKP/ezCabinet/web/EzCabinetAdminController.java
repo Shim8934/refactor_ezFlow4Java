@@ -99,4 +99,30 @@ public class EzCabinetAdminController {
 		
 		return "admin/ezCabinet/cabinetPersonalConfig";
 	}
+	
+	@RequestMapping(value="/admin/ezCabinet/getGroupPage.do")
+	public String jspGetGroupPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
+			return "cmm/error/adminDenied";
+		}
+		
+		JSONObject resultObj = cabinetRestService.getCompanyList(request, user.getId());
+		
+		String status        = resultObj.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String companyId      = (String) resultObj.get("userCompany");
+			JSONArray companyList = (JSONArray) resultObj.get("data");
+			model.addAttribute("userCompany", companyId);
+			model.addAttribute("list", companyList);
+		}
+		else {
+			return "cmm/error/dataAccessFailure";
+		}
+		
+		return "admin/ezCabinet/cabinetGroupConfig";
+	}
+	
 }

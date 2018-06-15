@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezCabinet.t11'/></h1>
+		<h1><spring:message code='ezCabinet.t12'/></h1>
 		<div class="cabiMain">
 			<div class="compSelect" id="companySelect">
 				<span><b><spring:message code='ezCabinet.t13'/></b></span>
@@ -20,34 +20,20 @@
 				</select>
 			</div>
 			
-			<div class="cabPersonalDiv">
+			<div class="cabGroupDiv">
 				<div class="compOrg">
-					<div id="compTree"></div>
-				</div>
-				<div class="deptOrg">
-					<div>
-						<table class="mainlist" style="width: 100%;">
-							<tr>
-								<th class="inputTh"><input type="checkbox"></th>
-								<th class="nameTh"><spring:message code="ezCabinet.t18"/></th>
-								<th class="deptTh"><spring:message code="ezCabinet.t19"/></th>
-								<th class="valueTh"><spring:message code="ezCabinet.t20"/></th>
-								<th class="limitTh"><spring:message code="ezCabinet.t21"/></th>
-							</tr>
-							<tr>
-								<td><input type="checkbox"></td>
-								<td>응웬바오</td>
-								<td>오픈소루션</td>
-								<td class="valueTd"><input type="text" value="500"><span>MB</span></td>
-								<td>
-									<select>
-										<option>제한</option>
-										<option>무제한</option>
-									</select>
-								</td>
-							</tr>
-						</table>
+					<div class="deptPart">
+						<div id="deptTree"></div>
 					</div>
+					<div class="usersPart">
+						
+					</div>
+				</div>
+				<div class="selectBttns">
+					<div><img src="/images/arr_right.gif"></div>
+					<div><img src="/images/arr_left.gif" ></div>
+				</div>
+				<div class="userDiv">
 				</div>
 			</div>
 			<div class="cabBttnDiv">
@@ -60,7 +46,7 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
 			(function() {
-				var companyTree = new CabinetTree();
+				/* var companyTree = new CabinetTree();
 				window.addEventListener("load", function(e) {initBttns();}, false);
 				
 				function initBttns() {
@@ -71,6 +57,7 @@
 					var selectCompBox      = document.getElementById("companyList");
 					selectCompBox.onchange = function(e) {};
 				}
+				
 				
 				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
 					$.ajax({
@@ -90,7 +77,7 @@
 							alert(CabinetMessages.strError);
 						}
 					});
-				}
+				} */
 			})();
 		</script>
 	</body>
