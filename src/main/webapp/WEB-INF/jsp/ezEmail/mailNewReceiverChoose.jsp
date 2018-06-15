@@ -291,7 +291,7 @@
 	            
 	            
 			    // to, cc, bcc 온로드 시 이벤트 주기 재은
-	            $("#listType1 tr").each(function(){
+	            /* $("#listType1 tr").each(function(){
 	            	
 	            	var thisId = this.getAttribute('id');
 	            	if (thisId.indexOf('MsgToList_TR_') > -1 || thisId.indexOf('MsgCCList_TR_') > -1 || thisId.indexOf('MsgBCCList_TR_') > -1) {
@@ -313,9 +313,9 @@
 		                	this.ondragend = function (event) { event_listdragend(event); };
 		                }
 	            	}
-	            });
+	            }); */
 	            
-	            ChangeListView_onClick(getOrganListType());
+	            //ChangeListView_onClick(getOrganListType());
 	        }
 		    function recevieListview(pID, pListView) {
 		        var listview = new ListView();
@@ -1178,7 +1178,7 @@
 		                }
 	            	}
 	            }
-	            else if (m_selectedTree == orglistView) {
+	            else if (m_selectedTree == orglistView) { // 조직도 목록 > 받는 사람 (sua)
 	                var pparsingXML = "";
 	                var pparsingXML2 = "";
 	                var pAddFlag = false;
@@ -3421,7 +3421,7 @@
                     if (!islist)
                         obj.onclick();
                 }
-                else if (m_selectedTree == orglistView) {
+                else if (m_selectedTree == orglistView) { // 조직도 목록 > 받는 사람 (sua)
                     for (var i = 0; i < listContentArry.length; i++) {
                         if (listContentArry[i] == obj.getAttribute("id")) {
                             islist = true;

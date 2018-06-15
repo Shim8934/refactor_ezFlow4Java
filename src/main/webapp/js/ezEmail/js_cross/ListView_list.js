@@ -894,8 +894,10 @@ function ListView() {
             objTr.setAttribute("id", _thisID + "_TR_" + i);
             objTr.style.cursor = "pointer";
 
-            objTr.onmouseover = function () { event_listMover(this); };
-            objTr.onmouseout = function () { event_listMout(this); };
+            /*objTr.onmouseover = function () { event_listMover(this); };
+            objTr.onmouseout = function () { event_listMout(this); };*/
+            objTr.onmouseover = new Function("tr_mouseover(this)");
+            objTr.onmouseout = new Function("tr_mouseout(this)");
             objTr.onclick = function () { event_listclick(this); };
             objTr.ondblclick = function () { event_listDBclick(this); };
             objTr.onselectstart = function () { return false; };
@@ -909,7 +911,19 @@ function ListView() {
             	objTr.ondragend = function (event) { event_listdragend(event); };
             }
             
-            objTr.setAttribute("selected", "true");
+            if (_SelectFlag && i == 0) {   
+                objTr.setAttribute("selected", "true");
+                objTr.style.backgroundColor = m_strColorSelect;
+
+                _firstRowID = _thisID + "_TR_" + i;
+            }
+            else {
+                objTr.setAttribute("selected", "false");
+                objTr.className = "";
+                objTr.style.backgroundColor = m_strColorDefault;
+            }
+            
+            //objTr.setAttribute("selected", "true");
             
             /* objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");
@@ -1125,7 +1139,7 @@ function ListView() {
             objTd.ondblclick = function () { event_listDBclick(this); };
             objTd.onselectstart = function () { return false; };
             objTd.setAttribute("draggable", true);
-            objTd.ondragstart = function (event) { event_listdragstart(this); }
+            //objTd.ondragstart = function (event) { event_listdragstart(this); }
             //objTd.setAttribute("draggable", true);
             if (CrossYN())
             	objTr.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
