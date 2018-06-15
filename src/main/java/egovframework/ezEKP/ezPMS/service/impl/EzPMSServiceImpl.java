@@ -146,13 +146,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			//날짜 차이 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planStartDate").toString());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planEndDate").toString());
-			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("createDate").toString());
-			System.out.println(map.get("companyId"));
-			System.out.println(Integer.parseInt(map.get("tenantId").toString()));
 			int workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
 			
-			System.out.println(workingDays);
-						
 			map.put("workingDay", workingDays);
 			//map.put("workingDay", 0);
 			map.put("restDueday", workingDays);
@@ -317,14 +312,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 			Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getCreateDate());
 			
-			int createAndStartDateComp = nowDate.compareTo(startDate);
-			int workingDays = 0;
-			
-			if (createAndStartDateComp <= 0) {
-				workingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
-			} else {
-				workingDays = getWorkingDays(nowDate, endDate, companyId, tenantId);
-			}
+			int workingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			
 			int restDueday = getWorkingDays(nowDate, endDate, companyId, tenantId);
 			map.put("workingday", workingDays);
