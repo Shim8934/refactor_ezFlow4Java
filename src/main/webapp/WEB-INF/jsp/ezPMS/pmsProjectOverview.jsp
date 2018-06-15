@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -95,13 +96,13 @@ function initProgressBar() {
 		circleColor = completeColor;
 		break;
 	}
-	console.log(projectProgress);
+	
 	$(".progress_graph").circleProgress({
-		value: projectProgress * 0.01,
+		value: Number(projectProgress * 0.01).toFixed(1),
 		fill : {color : circleColor},
 		size : 130
 	}).on('circle-animation-progress', function(event, progress) {
-		$(this).find('strong').html(projectProgress + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+		$(this).find('strong').html(Number(projectProgress).toFixed(1) + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 	});
 }
 
@@ -475,7 +476,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 			
 			if (!(taskList[i].status == "B")) {
 				$("#" + targetPosition).find(".progressArea" + taskList[i].taskId).LineProgressbar({
-					percentage : taskList[i].realProgress,
+					percentage : Number(taskList[i].realProgress).toFixed(1),
 					fillBackgroundColor : statusColor,
 					height : '15px',
 					radius : '15px',
@@ -682,6 +683,14 @@ function setOverviewContent() {
 function getBoardDetails(elem) {
 	var itemId = elem.id.slice(1);
 	window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", "width=790, height=800, resizable=no, scrollbars=no, status=no;");
+}
+
+function getTaskDetails(elem) {
+	var taskId = elem.id.substring(7);
+	var feature = GetOpenPosition(835, 810);
+	
+	window.open("/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + taskId + "&userIdType=user",
+			"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 }
 </script>
 <style type="text/css">

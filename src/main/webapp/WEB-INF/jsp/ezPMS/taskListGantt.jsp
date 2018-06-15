@@ -707,10 +707,10 @@
 	   		function preProcess(){
 	   			//간트 차트 테이블 날짜 형식 세팅. i18nJs.js 의 내용에 덮어 씌움.
 	   			Date.defaultFormat = "yyyy/M/d";
-	   			Date.monthNames = ["<spring:message code='ezPMS.t246' />"];
-	   			Date.monthAbbreviations = ["<spring:message code='ezPMS.t246' />"];
-	   			Date.dayNames =["<spring:message code='ezPMS.t245' />"];
-	   			Date.dayAbbreviations =["<spring:message code='ezPMS.t244' />"];
+	   			Date.monthNames = ('<spring:message code="ezPMS.t246" />').split(";");
+	   			Date.monthAbbreviations = ('<spring:message code="ezPMS.t246" />').split(";");
+	   			Date.dayNames =('<spring:message code="ezPMS.t245" />').split(";");
+	   			Date.dayAbbreviations =('<spring:message code="ezPMS.t244" />').split(";");
 	   			
 	   		}
 	   		

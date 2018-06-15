@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -108,8 +109,8 @@ $(function() {
 												<c:when test="${project.status eq 'S' }"><spring:message code='ezPMS.t19' /></c:when>
 											</c:choose></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px"><c:out
-												value="${project.progress }" /></td>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px">
+											<fmt:formatNumber value="${project.progress }" pattern="0.0" />%</td>
 									</tr>
 								</c:forEach>
 									</c:otherwise>
