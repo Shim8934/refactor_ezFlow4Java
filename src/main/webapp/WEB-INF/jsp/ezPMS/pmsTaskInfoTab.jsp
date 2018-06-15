@@ -58,11 +58,11 @@ td.overviewTd{vertical-align:top;}
 	</c:choose>
 	  <tr>
 	    <th class="">상위그룹</th>
-	    <td class="">${taskDetails.ancesterGroup == null ? "-" : taskDetails.ancesterGroup}</td>
+	    <td class="">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
 	  </tr>
 	  <tr>
 	    <th class="">선행작업</th>
-	    <td class="">${taskDetails.preTask == null ? "-" : taskDetails.preTask}</td>
+	    <td class="">${taskDetails.pretask == null ? "-" : taskDetails.pretask}</td>
 	  </tr>
 	  <tr>
 	    <th class="">가중치</th>

@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -95,7 +96,7 @@
 			fill : {color : circleColor},
 			size : 134
 		}).on('circle-animation-progress', function(event, progress) {
-			$(this).find('strong').html(taskDetails.realProgress + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+			$(this).find('strong').html(Number(taskDetails.realProgress).toFixed(1) + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 		});
 	}
 	
@@ -285,7 +286,7 @@
 		
 		var SDateDiff = (PSDate.getTime() - RSDate.getTime()) / (60 * 60 * 24 * 1000);
 		var EDateDiff = (PEDate.getTime() - REDate.getTime()) / (60 * 60 * 24 * 1000);
-		var progDiff = planProg - realProg;
+		var progDiff = Number(planProg - realProg).toFixed(1);
 		
 		document.getElementById("startDiff").innerText = SDateDiff > 0 ? "+" + SDateDiff : SDateDiff < 0 ? SDateDiff : "";
 		document.getElementById("endDiff").innerText = EDateDiff > 0 ? "+" + EDateDiff : EDateDiff < 0 ? EDateDiff : "";
@@ -452,9 +453,27 @@ button.PHBtn {
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th">진행률</th>
-			    <td class="detailsTable-td"><c:out value="${taskDetails.planProgress}"/></td>
+			    <td class="detailsTable-td">
+			    	<c:choose>
+			    		<c:when test="${taskDetails.planProgress == '' || taskDetails.planProgress eq null}">
+					    	0.0%
+			    		</c:when>
+			    		<c:otherwise>
+					    	<fmt:formatNumber value="${taskDetails.planProgress}" pattern=".0"/>%
+			    		</c:otherwise>
+			    	</c:choose>
+			    </td>
 			    <th class="detailsTable-th">진행률</th>
-			    <td class="detailsTable-td"><c:out value="${taskDetails.realProgress}"/></td>
+			     <td class="detailsTable-td">
+			    	<c:choose>
+			    		<c:when test="${taskDetails.realProgress == ''|| taskDetails.realProgress eq null}">
+					    	0.0%
+			    		</c:when>
+			    		<c:otherwise>
+					    	<fmt:formatNumber value="${taskDetails.realProgress}" pattern=".0"/>%
+			    		</c:otherwise>
+			    	</c:choose>
+			    </td>
 			    <td id="progressDiff" class="detailsTable-td" name="progressDiff"></td>
 			  </tr>
 			</table>

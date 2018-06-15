@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>새 그룹 추가 페이지</title>
+<title><spring:message code='ezPMS.t82' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -114,27 +114,27 @@ function addGroup() {
 	 
 	 //업무 이름 길이 제한
 	 if (newGroupName.length == 0) {
-		 alert("그룹명을 입력해주세요.");
+		 alert("<spring:message code='ezPMS.t83' />");
 		 return;
 	 } else if (newGroupName.length > 100) {
-		 alert("그룹명은 100자를 초과할 수 없습니다.");
+		 alert("<spring:message code='ezPMS.t84' />");
 		 return;
 	 }
 	 
 	// 담당자 검사
 	if(managerList == null) {
 		// 현재 총괄담당자 null 허용 불가
-		alert("최소 1명 이상의 담당자를 지정해주세요.");
+		alert("<spring:message code='ezPMS.t47' />");
 		return;
 	}
 	
 	//상위그룹 미지정
 	if(groupId == "") {
-		alert("상위그룹을 지정해주세요.");
+		alert("<spring:message code='ezPMS.t85' />");
 		return;
 	}
 	
-	data = {
+	var data = {
 			groupName : newGroupName,
 			projectId : projectId,
 			upperGroupId : groupId,
@@ -153,13 +153,13 @@ function addGroup() {
 		contentType: "application/json; charset=UTF-8",
 		data : JSON.stringify(data),
 		success : function(data) {
-			alert("그룹을 추가 하였습니다.");
+			alert("<spring:message code='ezPMS.t86' />");
 			
 			parent.location.reload();
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert("error2");
+			alert("<spring:message code='ezPMS.t224' />");
 		}
 	});
 }
@@ -167,35 +167,35 @@ function addGroup() {
 </script>
 </head>
 <body class="popup">
-	<h1 style="display:inline-block; width:100px;">새 그룹 추가</h1>
+	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t82' /></h1>
 	<div class="headerDiv">
-		<a class="imgbtn" id="submit" onclick="addGroup()"><span>저장</span></a>
-		<a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a>
+		<a class="imgbtn" id="submit" onclick="addGroup()"><span><spring:message code='ezPMS.t265' /></span></a>
+		<a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a>
 	</div>
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<tr>
-				<th>그룹명</th>
+				<th><spring:message code='ezPMS.t87' /></th>
 				<td colspan="3">
 					<input type="text" id="groupName" class="textInput" placeholder="" value="" maxlength="100">
 				</td>
 			</tr>
 			<tr>
-				<th><span>등록자</span></th>
+				<th><span><spring:message code='ezPMS.t57' /></span></th>
 				<td title="${userId}">${userName}</td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
+				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
 				<td style="height:30px;" id="upperGroup"></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
+				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
 				<td id="managers"></td>
 			</tr>
 			<tr>
-				<th>그룹개요</th>
+				<th><spring:message code='ezPMS.t88' /></th>
 				<td>
-					<textarea id="overview" placeholder="내용을 입력해주세요"></textarea>
+					<textarea id="overview"></textarea>
 				</td>
 			</tr>
 		</table>

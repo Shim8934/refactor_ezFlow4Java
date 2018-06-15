@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css"
 	type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
-<title>My Task List</title>
+<title><spring:message code='ezPMS.t142' /></title>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
 
@@ -47,22 +47,22 @@ $(function() {
 									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 							</th>
 							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-								text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">프로젝트명</th>
+								text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center"><spring:message code='ezPMS.t31' /></th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
-								class="h5_center">총괄 담당자</th>
+								class="h5_center"><spring:message code='ezPMS.t32' /></th>
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PLAN_START_DATE"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
-								class="h5_center">시작일</th>
+								class="h5_center"><spring:message code='ezPMS.t61' /></th>
 							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="PLAN_END_DATE"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
-								class="h5_center">종료일</th>
+								class="h5_center"><spring:message code='ezPMS.t62' /></th>
 							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="STATUS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px;"
-								class="h5_center">상태</th>
+								class="h5_center"><spring:message code='ezPMS.t38' /></th>
 							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PROGRESS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
-								class="h5_center">진행률</th>
+								class="h5_center"><spring:message code='ezPMS.t250' /></th>
 							</tr>
 							</thead>
 						</table>
@@ -73,7 +73,7 @@ $(function() {
 								<c:choose>
 									<c:when test="${empty projectList}">
 										<tr>
-											<td colspan="9" style="text-align : center"> 프로젝트가 없습니다. </td>
+											<td colspan="9" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 										</tr>
 									</c:when>
 									<c:otherwise>
@@ -100,12 +100,12 @@ $(function() {
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px">
 											<c:choose>
-												<c:when test="${project.status eq 'P' }"><c:out value="진행" /></c:when>
-												<c:when test="${project.status eq 'W' }"><c:out value="대기" /></c:when>
-												<c:when test="${project.status eq 'C' }"><c:out value="완료" /></c:when>
-												<c:when test="${project.status eq 'L' }"><c:out value="지연" /></c:when>
-												<c:when test="${project.status eq 'D' }"><c:out value="삭제" /></c:when>
-												<c:when test="${project.status eq 'S' }"><c:out value="보류" /></c:when>
+												<c:when test="${project.status eq 'P' }"><spring:message code='ezPMS.t15' /></c:when>
+												<c:when test="${project.status eq 'W' }"><spring:message code='ezPMS.t16' /></c:when>
+												<c:when test="${project.status eq 'C' }"><spring:message code='ezPMS.t17' /></c:when>
+												<c:when test="${project.status eq 'L' }"><spring:message code='ezPMS.t18' /></c:when>
+												<c:when test="${project.status eq 'D' }"><spring:message code='ezPMS.t11' /></c:when>
+												<c:when test="${project.status eq 'S' }"><spring:message code='ezPMS.t19' /></c:when>
 											</c:choose></td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px"><c:out

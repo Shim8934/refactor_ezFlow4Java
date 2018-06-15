@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t55' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -205,26 +205,26 @@ var groupId = "${groupId}";
 	 
 	 //프로젝트 이름 길이 제한
 	 if (projectName.length == 0) {
-		 alert("프로젝트명을 입력해주세요.");
+		 alert("<spring:message code='ezPMS.t45' />");
 		 return;
 	 } else if (projectName.length > 100) {
-		 alert("프로젝트의 이름이 100자를 초과할 수 없습니다.");
+		 alert("<spring:message code='ezPMS.t46' />");
 		 return;
 	 }
 	 
 	 if (headManagerId == null) {
-		 alert("한 명의 총괄 담당자가 등록되어야 합니다.");
+		 alert("<spring:message code='ezPMS.t47' />");
 		 return;
 	 }
 	 
 	 if ($("#endAlam").prop("checked") == false) {
 		 endAlamStatus = -1;
 	 } else {
-		 if ($("#daysBeforeAlam option:selected").text() == "직접입력") {
+		 if ($("#daysBeforeAlam option:selected").text() == "<spring:message code='ezPMS.t60' />") {
 			 endAlamStatus = $("#write").val();
 			 
 			 if (endAlamStatus.match(/[^0-9]/g) != null) {
-				 alert("문자는 입력할 수 없습니다.");
+				 alert("<spring:message code='ezPMS.t48' />");
 				 return;
 			 }
 			 
@@ -251,7 +251,7 @@ var groupId = "${groupId}";
 	 
 	//1. 시작일 > 종료일은 불가능
 	 if (startDateComp.getTime() > endDateComp.getTime()) {
-		  alert("시작날짜가 종료날짜보다 늦을 수 없습니다.");
+		  alert("<spring:message code='ezPMS.t49' />");
 		  return;
 	  }
 	
@@ -282,27 +282,27 @@ var groupId = "${groupId}";
 				
 				if (mode == "edit") {
 					sendNotiMail(projectId, projectName);
-					var logContent = "[" + projectName + "]의 정보가 수정되었습니다."
+					var logContent = "[" + projectName + "<spring:message code='ezPMS.t50' />"
 					addTaskLog(projectId, 2, groupId, null, logContent);
-					alert ("프로젝트가 수정되었습니다.");
+					alert ("<spring:message code='ezPMS.t52' />");
 					parent.projectId = projectId;
 					parent.window.location.reload();
 				} else {
 					sendNotiMail(result.projectId, projectName);
-					var logContent = "[" + projectName + "](이)가 생성되었습니다."
+					var logContent = "[" + projectName + "<spring:message code='ezPMS.t51' />"
 					addTaskLog(result.projectId, 1, result.groupId, null, logContent);
-					alert("새프로젝트가 추가되었습니다.");
+					alert("<spring:message code='ezPMS.t53' />");
 					parent.setProjectList(); 
 				}
 				popupClose();
 			
 			} catch (e) {
-				alert("error 발생");
+				alert("<spring:message code='ezPMS.t224' />");
 				return;
 			} 
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert("error");
+			alert("<spring:message code='ezPMS.t224' />");
 		}
 	});
  }
@@ -374,65 +374,65 @@ var groupId = "${groupId}";
 	<h1>
 		<c:choose>
 			<c:when test="${mode eq 'new' }">
-				새 프로젝트 추가
+				<spring:message code='ezPMS.t55' />
 			</c:when>
 			<c:otherwise>
-				프로젝트 수정
+				<spring:message code='ezPMS.t56' />
 			</c:otherwise>
 		</c:choose>
 	</h1>
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<tr>
-				<th>프로젝트명</th>
+				<th><spring:message code='ezPMS.t31' /></th>
 				<td colspan="3">
 					<input type="text" id="projectName" class="textInput">
 				</td>
 			</tr>
 			<tr>
-				<th>등록자</th>
+				<th><spring:message code='ezPMS.t57' /></th>
 				<td style="width:45%">${userName }</td>
-				<th>가중치 설정</th>
-				<td><form><input type="radio" name="weightInput" value="autoCalc" style="vertical-align:left" checked>자동 계산  <input type="radio" name="weightInput" value="writeCalc">직접입력</form></td>
+				<th><spring:message code='ezPMS.t58' /></th>
+				<td><form><input type="radio" name="weightInput" value="autoCalc" style="vertical-align:left" checked><spring:message code='ezPMS.t59' />  <input type="radio" name="weightInput" value="writeCalc"><spring:message code='ezPMS.t60' /></form></td>
 			</tr>
 			<tr>
-				<th>시작일</th>
+				<th><spring:message code='ezPMS.t61' /></th>
 				<td style="width:45%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
-				<th>종료일</th>
+				<th><spring:message code='ezPMS.t62' /></th>
 				<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openOrganTree(managers)"><span>담당자</span></a></th>
+				<th><a class="imgbtn" onclick="openOrganTree(managers)"><span><spring:message code='ezPMS.t63' /></span></a></th>
 				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="managers"></div></td>
 			<tr>
-				<th><a class="imgbtn" onclick="openOrganTree(participants)"><span>참여자</span></a></th>
+				<th><a class="imgbtn" onclick="openOrganTree(participants)"><span><spring:message code='ezPMS.t64' /></span></a></th>
 				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="participants"></div></td>
 			<tr>
-				<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span>조회자</span></a></th>
+				<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span><spring:message code='ezPMS.t65' /></span></a></th>
 				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="viewers"></div></td>
 			<tr>
-				<th>개요</th>
+				<th><spring:message code='ezPMS.t66' /></th>
 				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
 			</tr>
 			<tr>
-				<th>종료알림</th>
-				<td style="width:45%"><input type="checkbox" name="endAlam" value="endAlam" id="endAlam" checked>프로젝트 작업 종료 알림메일 발송</td>
-				<th>알림일</th>
+				<th><spring:message code='ezPMS.t67' /></th>
+				<td style="width:45%"><input type="checkbox" name="endAlam" value="endAlam" id="endAlam" checked><spring:message code='ezPMS.t68' /></td>
+				<th><spring:message code='ezPMS.t69' /></th>
 				<td><select name="daysBeforeAlam" id="daysBeforeAlam">
 						<option value="1" selected>1</option>
 						<option value="3">3</option>
 						<option value="5">5</option>
 						<option value="10">10</option>
-						<option value="write">직접입력</option>
-					</select><input type="text" id="write" style="display:none; width:80px;"> 일 전
+						<option value="write"><spring:message code='ezPMS.t60' /></option>
+					</select><input type="text" id="write" style="display:none; width:80px;"> <spring:message code='ezPMS.t70' />
 				</td>
 			</tr>
 		</table>
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="addNewProject()"><span>등록</span></a></td>
+				<td><a class="imgbtn" id="submit" onclick="addNewProject()"><span><spring:message code='ezPMS.t40' /></span></a></td>
 				<td></td>
-				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
+				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a></td>
 			</tr>
 		</table>
 	</div>

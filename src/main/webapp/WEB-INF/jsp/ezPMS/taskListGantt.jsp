@@ -413,7 +413,7 @@
 		   			ge.editor.openFullEditor(curTask);
 		   			return;
 	   			}
-	   			else{
+	   			else if(curTask.id.indexOf("_g") != -1){
 	   				taskId = curTask.id.match(/g(\d+)/)[1];
 	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + taskId,
 							"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
@@ -758,8 +758,8 @@
 		   		}).disableSelection();
 		   		
 		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
-		   		$("input[name='weight']").on("change", function(){ updateWeight(this); });
-		   		$("input[name='realProgress']").on("change", function(){ updateProgress(this); });
+		   		$(document).on("change", "input[name='weight']", function(){ updateWeight(this); });
+		   		$(document).on("change", "input[name='realProgress']", function(){ updateProgress(this); });
 		   	}
 	   		
 	   		function changeGanttOrder(targetTaskId, changeGroupId) {
@@ -888,6 +888,8 @@
 	   			var validFlag = false;
 	   			var taskId = 0;
 	   			var groupId = 0;
+	   			var prjWeight = getPrjWeight(curTask, newWeight);
+	   			var prevTasks = Array.prototype.slice.call(ge.tasks);
 	   			
 	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
 	   			if(taskId === ""){
@@ -900,13 +902,16 @@
    				else if(isNaN(newWeight)) {
    					alert("가중치는 숫자만 입력할 수 있습니다.");
    				}
+   				else if(prjWeight > 100){
+   					alert("프로젝트의 가중치는 100을 넘을 수 없습니다.\n현재 가중치 : " + ge.tasks[0].weight + "\n잔여 가중치 : " + (100 - ge.tasks[0].weight));
+   				}
    				else{
    					validFlag = true;
    				}
 	   			
 	   			if(!validFlag){
-	   				//화면 새로 고침안하고 되돌릴 수 있는 방법 찾아볼것.
-	   				location.reload();
+	   				ge.loadTasks(prevTasks);
+   					ge.redraw();
 	   				return;
 	   			}
 //    				if(Number(newWeight) > remainingWeight) {
@@ -946,6 +951,7 @@
 	   			var validFlag = false;
 	   			var taskId = 0;
 	   			var groupId = 0;
+	   			var prevTasks = Array.prototype.slice.call(ge.tasks);
 	   			
 	   			//선행작업 유효성 체크할 때 어느 함수에서 넘어온건지 확인하기 위해 사용.
 	   			var mode = "update";
@@ -972,14 +978,10 @@
    				}
 	   			
 	   			if(!validFlag){
-	   				//화면 새로 고침안하고 되돌릴 수 있는 방법 찾아볼것.
-	   				location.reload();
+	   				ge.loadTasks(prevTasks);
+   					ge.redraw();
 	   				return;
 	   			}
-//    				if(Number(newWeight) > remainingWeight) {
-//    					alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
-//    					return;
-//    				}
 
 				data = {
 						taskName : curTask.name,
@@ -1047,6 +1049,22 @@
 	   			    }
 	   			}
 	   			return Number(prjPlanProg).toFixed(1);
+	   		}
+	   		
+	   		//프로젝트 가중치를 계산.
+	   		function getPrjWeight(curTask, newWeight){
+	   			var prjWeight = 0.0;
+	   			var tasks = ge.tasks;
+	   			for(var i = 0; i < tasks.length; i++){
+	   			    var task = tasks[i];
+	   			    if(task == curTask){
+	   			    	prjWeight += Number(newWeight);
+	   			    }
+	   			    if(task.type === "t"){
+	   			    	prjWeight += Number(task.weight);
+	   			    }
+	   			}
+	   			return Number(prjWeight).toFixed(1);
 	   		}
 	   		
 	   		
@@ -1157,12 +1175,13 @@
 								"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 	   				/* var feature = GetOpenPosition(0, 0);
 		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user"); */
-	   			  } else {
+	   			  } 
+	   			  else if(task.id.substring(1).indexOf("g") != -1) {
 	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId,
 								"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 	   			/* 	var feature = GetOpenPosition(0, 0);
 		   			DivPopUpShow(845, 600, "/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId);   */
-	   			  } 
+	   			  }
 	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
 	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;
 	   		     };

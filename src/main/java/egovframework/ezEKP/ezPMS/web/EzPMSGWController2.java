@@ -246,6 +246,7 @@ public class EzPMSGWController2 {
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
 			
+			taskVO.setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), Long.parseLong(taskId), lang));
 			taskVO.setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, info.getCompanyId(), info.getTenantId()));
 			
 			result.put("status", "ok");

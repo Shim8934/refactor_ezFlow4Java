@@ -2,11 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t146' /></title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -33,11 +34,11 @@
 		var taskName = chosenTask.text();
 		
 		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
-		if(taskName.indexOf('(') != -1) {
+		if (taskName.indexOf('(') != -1) {
 			taskName = taskName.substring(0, taskName.indexOf('('));
 		}
 		
-		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
+		if (chosenTask.parent().attr("id").charAt(0) == 't') { 
 			groupId = chosenTask.parents("li").eq(1).attr("id");
 			taskId  = chosenTask.parent().attr("id").substr(1);		
 		} else {
@@ -45,7 +46,7 @@
 			taskId  = null;
 		}
 		
-		data = {
+		var data = {
 			itemIds : parent.itemIds,
 			projectId : parent.projectId,
 			groupId : groupId,
@@ -60,7 +61,7 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				if(result.data == 'success') {
-					alert("이동에 성공했습니다.");
+					alert("<spring:message code='ezPMS.t145' />");
 					popupClose();
 					
 					if(typeof parent.getBoardList == 'function') {
@@ -72,22 +73,22 @@
 							var beforeGroupId = deletedTR.attr("data-groupId");
 							var beforeTaskId = deletedTR.attr("data-taskId");
 							
-							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "]의 " + "[" + title.trim() + "] 게시물을 [" + taskName.trim() +  "](으)로 이동하였습니다.");
+							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t233' />" + taskName.trim() +  "<spring:message code='ezPMS.t234' />");
 						}
 						
 						parent.getBoardList();
 					} else {
 						var beforeTaskName = parent.taskName;
-						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "]의 " + "[" + parent.title.trim() + "] 게시물을 [" + taskName.trim() +  "](으)로 이동하였습니다.");
+						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + parent.title.trim() + "<spring:message code='ezPMS.t233' />" + taskName.trim() +  "<spring:message code='ezPMS.t234' />");
 						parent.location.reload();
 					}
 					
 				} else {
-					alert('수정은 프로젝트 담당자나 게시자만 할 수 있습니다.');
+					alert("<spring:message code='ezPMS.t128' />");
 				}	
 			},
 			error : function() {
-				alert("수정에 실패했습니다.");
+				alert("<spring:message code='ezPMS.t228' />");
 			}
 		})
 	}
@@ -101,11 +102,11 @@
 </style>
 </head>
 <body class="popup">
-	<h1>업무 목록</h1>
+	<h1><spring:message code='ezPMS.t146' /></h1>
 	<div id="close">
 		<ul>
-			<li><span onclick="moveBoards()">이동</span></li>
-			<li><span onclick="popupClose()">닫기</span></li>
+			<li><span onclick="moveBoards()"><spring:message code='ezPMS.t111' /></span></li>
+			<li><span onclick="popupClose()"><spring:message code='ezPMS.t76' /></span></li>
 		</ul>
 	</div>
 	<div id="taskTree" class="tree"></div>
