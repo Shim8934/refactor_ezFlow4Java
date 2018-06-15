@@ -303,6 +303,7 @@
 		                this.ondblclick = function () { event_listDBclick(this); };
 		                this.onselectstart = function () { return false; };
 		                this.setAttribute("draggable", true);
+		                this.setAttribute("restart", true);
 		                if (CrossYN())
 		                	this.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 		                else
@@ -1714,8 +1715,14 @@
             	if (obj.id.indexOf("MailUserlist") == -1 && obj.id.indexOf("Address_TR") == -1 && obj.id.indexOf("pListViewDL_TR") == -1) {
             
             		moveRecipients = true;
-            		selectMoveList = obj.parentNode.id;
             		prevListId = obj.parentNode.parentNode.parentNode.id;
+            		var onloadCheck = obj.getAttribute("restart");
+            		
+            		if (onloadCheck == "true") {
+            			selectMoveList = obj.id;
+            		} else {
+            			selectMoveList = obj.parentNode.id;
+            		}
             		
             		if (prevListId == "ListViewMsgTo") {
             			prevListId = "MsgToList";
@@ -1817,7 +1824,7 @@
 		                    	}
 		                    }
 		                    
-		                    if (moveRecipients) {
+		                    if (moveRecipients && onloadCheck != "true") {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.parentNode.getAttribute("id");
 		                    } else {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
