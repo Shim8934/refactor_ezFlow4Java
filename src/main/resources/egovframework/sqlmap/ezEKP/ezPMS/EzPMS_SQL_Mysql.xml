@@ -664,7 +664,7 @@
 		]]>
 	</insert>
 	
-	<select id="EzPMSDAO.getRemainingWeight" parameterClass="String" resultClass="java.util.HashMap">
+	<select id="EzPMSDAO.getRemainingWeight" parameterClass="map" resultClass="java.util.HashMap">
 		<![CDATA[
 			SELECT
 				remainingWeight, plan_start_date AS projectStartDate, plan_end_date AS projectEndDate, weight_input AS weightInput
@@ -672,9 +672,21 @@
 				tbl_pms_project
 			JOIN
 				(SELECT 100 - sum(weight) AS remainingWeight
-				FROM tbl_pms_task
-				WHERE project_id = #project_id#) a
-			WHERE project_id = #project_id#
+				FROM 
+					tbl_pms_task
+				WHERE 
+					project_id = #projectId#
+				AND
+					tenant_id = #tenantId#
+				AND
+					DEL_STATUS = 0
+				) a
+			WHERE 
+				project_id = #projectId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				DEL_STATUS = 0
 		]]>
 	</select>
 	

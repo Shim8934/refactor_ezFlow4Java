@@ -772,9 +772,10 @@ public class EzPMSGWController2 {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int isGantt = 0;
 			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();
 			
 			//추후 파라미터로 받도록 수정 필요.
-			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang, "", companyId);
+			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang, deptId, companyId);
 			data.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
 			data.setWeight(ezPMSService.getProjectWeight(projectId, info.getTenantId()));
 			

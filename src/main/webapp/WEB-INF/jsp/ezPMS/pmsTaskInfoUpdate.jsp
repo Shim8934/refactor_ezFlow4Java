@@ -152,6 +152,7 @@ function updateTaskInfo() {
 		 var planStartDate = "${taskDetails.planStartDate}";
 		 var planEndDate = "${taskDetails.planEndDate}";
 		 var writeDate = "${taskDetails.writeDate}";
+		 var taskId = "${taskDetails.taskId}";
 
 		//업무 이름 길이 제한
 		 if (taskName.length == 0) {
@@ -183,7 +184,7 @@ function updateTaskInfo() {
 		
 		data = {
 				taskName : taskName,
-				taskId : taskDetails.taskId + "",
+				taskId : taskId,
 				projectId : projectId,
 				groupId : groupId,
 				overview	 : overview,
@@ -228,7 +229,7 @@ function updateTaskInfo() {
 		var data = {
 					groupName : taskName,
 					projectId : projectId,
-					groupId : originGroupId,
+					groupId : parent.groupId,
 					overview	 : overview,
 					headManagerId : headManagerId,
 					managerList : managerList,
