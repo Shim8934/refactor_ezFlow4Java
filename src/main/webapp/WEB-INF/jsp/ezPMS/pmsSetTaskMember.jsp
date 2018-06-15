@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>담당자 지정</title>
+		<title><spring:message code='ezPMS.t167' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -15,7 +15,7 @@
 	   	<script type="text/javascript">
 	   	
 	   		// 프로젝트 아이디
-	   		var projectId = "${projectId}";
+	   		var projectId = "<c:out value='${projectId}'/>";
 	   		// 선택된 담당자 배열
 	   		var managerArray = [];
 	   		
@@ -39,18 +39,18 @@
 	   		var p_selectedWindow = null;
 	   		var authName = null;
 	   		
-	   		function close_Click(){
+	   		function close_Click() {
 	   			parent.DivPopUpHidden();
 	   		}
 	   		
 	   		//프로젝트 멤버 리스트 뿌리기
-	   		function getProjectMemberList(projectId){
+	   		function getProjectMemberList(projectId) {
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/ezPMS/getProjectMemberList.do",
 	   				data:{"projectId" : projectId, "roleId" : 4},
-	   				success: function(result){
+	   				success: function (result) {
 		   				$("#orglistView").html(result);
 	   				}
 	   			});
@@ -82,6 +82,7 @@
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
 		   			$("#txtlist_Layer tr").removeClass("selectTR");
 	   			}
+	   			
 	   			$(elem).addClass("selectTR");
 	   			selUserId = $(elem).attr("id");
 	   			selUserName = $(elem).attr("name");
@@ -107,13 +108,13 @@
 		   				managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user"});
 		   				authList.push({"userName" : userName, "userId" : receiverId});
 		   			} else {
-		   				alert("이미 추가된 사용자 입니다.");
+		   				alert("<spring:message code='ezPMS.t163' />");
 		   			}
 		   			
 		   			drawReceiverList();
 		   			selMainListUserId = "";
 	   			} else {
-	   				alert("담당자를 선택해 주십시오.");
+	   				alert("<spring:message code='ezPMS.t164' />");
 	   			}
 	   		}
 	   		
@@ -165,8 +166,11 @@
 		   		
 	   			$(function () {
 		   			$(document).on({
-		   				"dblclick":function(){delTargetDept(this);},
-		   				"click":function(){targetDept = this;
+		   				"dblclick":function(){
+		   					delTargetDept(this);
+		   				},
+		   				"click":function(){
+		   					targetDept = this;
 			   				$("*").removeClass("selectTR");
 				   			$(this).addClass("selectTR");
 		   				}
@@ -176,6 +180,7 @@
 				        var re = new RegExp(findStr, "gi");
 				        return (orgStr.replace(re, replaceStr));
 				    }
+		   			
 				    function replaceString(p_str) {
 				        p_str = ReplaceText(p_str, "&amp;", "&");
 				        p_str = ReplaceText(p_str, "&lt;", "<");
@@ -188,20 +193,22 @@
    			});
 	   		
 	   		function ok_Click() {
-	   			if(managerArray.length == 0) {
-	   				alert("최소 1명 이상의 담당자를 지정해주세요");
+	   			if (managerArray.length == 0) {
+	   				alert("<spring:message code='ezPMS.t169' />");
 	   				return;
 	   			}
-	   			for(var i =0;i<managerArray.length;i++) {
+	   			
+	   			for (var i = 0; i < managerArray.length; i++) {
 	   				managerArray[i].pctinput = $("input[name='"+managerArray[i].userId+"']").val();
 	   			}
+	   			
 	   			selectHeadManager();
 	   			//opener.selReceiver = JSON.stringify(receiverList);
 	   			//opener.showReceiver();
 	   			//window.close();
 	   		}
 	   		
-	   		function selectHeadManager(){
+	   		function selectHeadManager() {
 	   			var feature = GetOpenPosition(150, 150);
 	   		 
 	   			DivPopUpShow(400, 300, "/ezPMS/selectHeadManager.do");
@@ -223,11 +230,11 @@
 		</style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
-        <h1 style="height: 20px;">담당자 지정</h1>
+        <h1 style="height: 20px;"><spring:message code='ezPMS.t167' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="ok_Click()">확인</span></li>
-	            <li><span onclick="close_Click()">취소</span></li>
+	            <li><span onclick="ok_Click()"><spring:message code='ezPMS.t43' /></span></li>
+	            <li><span onclick="close_Click()"><spring:message code='ezPMS.t41' /></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
@@ -258,7 +265,7 @@
 	                        <td style="vertical-align: top;">
 	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager">담당자 </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager"><spring:message code='ezPMS.t63' /> </span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">

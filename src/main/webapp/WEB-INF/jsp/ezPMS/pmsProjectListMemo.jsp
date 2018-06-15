@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>프로젝트 목록</title>
+<title><spring:message code='ezPMS.t155' /></title>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -39,19 +39,20 @@ $(function(){
 	
 	for (var i = 0; i < projectList.length; i++) {
 		var htmlStr = "";
-		console.log(projectList[i].status);
+		
 		if (projectList[i].status == "P") {
-			htmlStr = "<span class='statusSpan' style='background-color:" + progressColor + ";'>진행</span>";
+			htmlStr = "<span class='statusSpan' style='background-color:" + progressColor + ";'><spring:message code='ezPMS.t15' /></span>";
 		} else if (projectList[i].status == "C") {
-			htmlStr = "<span class='statusSpan' style='background-color:" + completeColor + ";'>완료</span>";
+			htmlStr = "<span class='statusSpan' style='background-color:" + completeColor + ";'><spring:message code='ezPMS.t17' /></span>";
 		} else if (projectList[i].status == "S") {
-			htmlStr = "<span class='statusSpan' style='background-color:" + holdColor + ";'>보류</span>";
+			htmlStr = "<span class='statusSpan' style='background-color:" + holdColor + ";'><spring:message code='ezPMS.t19' /></span>";
 		} else if (projectList[i].status == "L") {
-			htmlStr = "<span class='statusSpan' style='background-color:" + overdueColor + ";'>지연</span>";
+			htmlStr = "<span class='statusSpan' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
 		} else {
-			htmlStr = "<span class='statusSpan' style='background-color:#d1d1d1;'>&nbsp대기</span>";
+			htmlStr = "<span class='statusSpan' style='background-color:#d1d1d1;'><spring:message code='ezPMS.t16' /></span>";
 		}
-		$("table#" + projectList[i].projectId + " td.test")[0].innerHTML = htmlStr;
+		
+		$("table#" + projectList[i].projectId + " td.status")[0].innerHTML = htmlStr;
 		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
 		
@@ -88,7 +89,7 @@ $(function(){
 		});
 	}
 	
-	if(viewType == 0) {
+	if (viewType == 0) {
 		$("#memoStyleDiv").css("display", "");
 		$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
 		document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
@@ -98,11 +99,10 @@ $(function(){
 		
 		document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-
 	}
 	
 	if (projectList.length >= 20) {
-		$("#memoStyleDiv").append("<div class='moreBtn' onclick='moreProjectList()' style='border:1px solid #d1d1d1; background-color:white; text-align:center; clear:both; cursor:pointer; height:33px; margin-left:3%; line-height:30px;'><span>더보기</span></div>");
+		$("#memoStyleDiv").append("<div class='moreBtn' onclick='moreProjectList()' style='border:1px solid #d1d1d1; background-color:white; text-align:center; clear:both; cursor:pointer; height:33px; margin-left:3%; line-height:30px;'><span><spring:message code='ezPMS.t276' /></span></div>");
 	}
 
 });
@@ -129,7 +129,7 @@ $(function(){
 		<c:when test="${empty projectList}">
 			<table style="width:100%; height:100%">
 				<tr>
-					<td style="text-align:center; font-size:15px;">프로젝트가 없습니다.</td>
+					<td style="text-align:center; font-size:15px;"><spring:message code='ezPMS.t30' /></td>
 				</tr>
 			</table>
 		</c:when>
@@ -153,15 +153,7 @@ $(function(){
 				</th>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
-				<td class="test" colspan="2" style="height:29px;">
-<%-- 					<span class="statusSpan" style="font-size:13px; padding:4px;"><c:choose> --%>
-<%-- 						<c:when test="${project.status eq 'C'}">완료</c:when> --%>
-<%-- 						<c:when test="${project.status eq 'P'}">진행</c:when> --%>
-<%-- 						<c:when test="${project.status eq 'L'}">지연</c:when> --%>
-<%-- 						<c:when test="${project.status eq 'W'}">대기</c:when> --%>
-<%-- 						<c:when test="${project.status eq 'D'}">삭제</c:when> --%>
-<%-- 						<c:when test="${project.status eq 'S'}">보류</c:when> --%>
-<%-- 					</c:choose></span> --%>
+				<td class="status" colspan="2" style="height:29px;">
 				</td>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
@@ -178,17 +170,17 @@ $(function(){
 				<td colspan="2" style="height:22px;">&nbsp;</td>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
-				<td class="memoTd">&nbsp;&nbsp;총괄 담당자</td>
+				<td class="memoTd">&nbsp;&nbsp;<spring:message code='ezPMS.t32' /></td>
 				<td><c:out value="${project.headManagerName }" /></td>
 				</tr>
 			<tr onclick="selectedMemoTR(this);">
-			<td class="memoTd">&nbsp;&nbsp;전체 진행률</td>
+			<td class="memoTd">&nbsp;&nbsp;<spring:message code='ezPMS.t33' /></td>
 					<td><div name="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;<div style="margin-top: 5px; display: inline-block;">
 					<c:out value="${project.progress }" /></div>
 				</td>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
-				<td class="memoTd">&nbsp;&nbsp;완료된 업무</td>
+				<td class="memoTd">&nbsp;&nbsp;<spring:message code='ezPMS.t34' /></td>
 				<td><div complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 					<div style="margin-top: 5px; display: inline-block;">
 					<c:out value="${project.completeTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
@@ -196,7 +188,7 @@ $(function(){
 				</td>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">
-				<td class="memoTd">&nbsp;&nbsp;기한 지난 업무</td>
+				<td class="memoTd">&nbsp;&nbsp;<spring:message code='ezPMS.t35' /></td>
 					<td><div overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 					<div style="margin-top: 5px; display: inline-block;">
 					<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>

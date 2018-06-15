@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>gantt Chart</title>
+		<title><spring:message code='ezPMS.t151' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -14,7 +14,6 @@
 		<link rel="stylesheet" href="/css/ezPMS/gantt/gantt.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/ganttPrint.css" type="text/css" media="print">
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
-		
 		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -55,17 +54,19 @@
 	   			ganttData = {},
 	   			groupList = {},
 	   			ge = "";
-	   		var projectGroupId = "${projectDetail.groupId}";
+	   		
+	   		var projectGroupId = "<c:out value='${projectDetail.groupId}'/>";
 	   		var selectedPreTask = -1;
 	   		var preTaskIndex = -1;
 	   		
-	   		function initValues(){
+	   		function initValues() {
 	   			taskList = ${taskList};
 	   			projectDetails = ${projectDetail};
 	   			groupList = ${groupList};
+	   			
 	   			var tl = taskList;
 	   			var pd = projectDetails;
-	   			const roleName = ["담당자", "참여자", "조회자", "없음"];
+	   			const roleName = ["<spring:message code='ezPMS.t63' />", "<spring:message code='ezPMS.t64' />", "<spring:message code='ezPMS.t65' />", "<spring:message code='ezPMS.t195' />"];
 	   			const ganttStatus = {
 	   					"P": "STATUS_ACTIVE",
 	   					"S": "STATUS_SUSPENDED", 
@@ -95,15 +96,18 @@
 	   			
 	   			//프로젝트 데이터를 간트 데이터에 입력.
 	   			function matchProjectData(ganttData, pd){
-	   				if(!ganttData.tasks){
+	   				if (!ganttData.tasks) {
 		   				ganttData.tasks = [];
 		   			}
-	   				if(!ganttData.resources){
+	   				
+	   				if (!ganttData.resources) {
 		   				ganttData.resources = [];
 		   			}
-	   				if(!ganttData.roles){
+	   				
+	   				if (!ganttData.roles) {
 		   				ganttData.roles = [];
 		   			}
+	   				
 	   				var tempTask = {};
 	   				tempTask.id = "p" + pd.projectId;
 		   			tempTask.name = pd.projectName;
@@ -119,7 +123,7 @@
 		   			tempTask.endIsMilestone = "";
 		   			tempTask.assigs = [];
 		   			
-		   			for(var i = 0; i < pd.projectMember.length; i++){
+		   			for (var i = 0; i < pd.projectMember.length; i++) {
 		   				var assig = {}, resource = {}, role = {};
 			   			
 		   				assig.resourceId = pd.projectMember[i].userId;
@@ -172,8 +176,8 @@
 	   				ganttData = setDepends(ganttData);
 		   		}
 	   			
-	   			function matchGroupData(ganttData, gl){
-		   			for(var i = 0; i < gl.length; i++){
+	   			function matchGroupData(ganttData, gl) {
+		   			for (var i = 0; i < gl.length; i++) {
 		   				var tempTask = {};
 		   				var groupId = gl[i].groupId;
 		   				var groupDepth = gl[i].treeDepth;
@@ -193,7 +197,7 @@
 			   			tempTask.headManager = gl[i].headManagerId;
 			   			tempTask.assigs = [];
 			   			
-			   			for(var j = 0; j < gl[i].groupMember.length; j++){
+			   			for (var j = 0; j < gl[i].groupMember.length; j++) {
 			   				var assig = {}, resource = {}, role = {};
 				   			
 			   				assig.resourceId = gl[i].groupMember[j].userId;
@@ -224,39 +228,40 @@
 		   				
 		   				//그룹 업무 추가.
 		   				var subTl = {};
-		   				subTl = taskList.filter(function(task){
+		   				subTl = taskList.filter(function(task) {
 						    return task.groupId == groupId;
 						});
 		   				
-		   				if(subTl.length > 0){
+		   				if (subTl.length > 0) {
 		   					matchTaskData(ganttData ,subTl, groupId, groupDepth);
 		   				}
 		   				
-		   				//하위 그룹 추가.
-		   				if(groupDepth === 1){
+		   				//하위 그룹 추가. 
+		   				if (groupDepth === 1) {
 			   				var subGl = {};
-			   				subGl = groupList.filter(function(group){
+			   				subGl = groupList.filter(function(group) {
 							    return group.upperGroupId == groupId;
 							});
 			   				
-			   				if(subGl.length > 0){
+			   				if (subGl.length > 0) {
 			   					matchGroupData(ganttData ,subGl);
 			   				}
 		   				}
 		   			}
 		   		}
 	   			
-	   			function matchTaskData(ganttData, tl, groupId, groupDepth){
-		   			for(var i = 0; i < tl.length; i++){
+	   			function matchTaskData(ganttData, tl, groupId, groupDepth) {
+		   			for (var i = 0; i < tl.length; i++) {
 		   				var tempTask = {};
-		   				if(groupId !== ""){
+		   				
+		   				if (groupId !== "") {
 				   			tempTask.id = "p" + projectId + "_g" + groupId + "_t" + tl[i].taskId;
 				   			tempTask.level = groupDepth + 1;
-		   				}
-		   				else{
+		   				} else {
 				   			tempTask.id = "p" + projectId + "_t" + tl[i].taskId;
 				   			tempTask.level = 1;
 		   				}
+		   				
 			   			tempTask.name = tl[i].taskName;
 			   			tempTask.code = tl[i].groupId;
 			   			tempTask.status = ganttStatus[tl[i].status];
@@ -270,7 +275,7 @@
 			   			tempTask.headManager = tl[i].headManagerId;
 			   			tempTask.assigs = [];
 			   			
-			   			for(var j = 0; j < tl[i].taskMember.length; j++){
+			   			for (var j = 0; j < tl[i].taskMember.length; j++) {
 			   				var assig = {}, resource = {}, role = {};
 				   			
 			   				assig.resourceId = tl[i].taskMember[j].userId;
@@ -289,6 +294,7 @@
 			   				ganttData.resources.push(resource);
 			   				ganttData.roles.push(role);
 			   			}
+			   			
 			   			tempTask.depends = "";
 			   			tempTask.pretask = tl[i].pretask;
 			   			tempTask.description = tl[i].overview;
@@ -304,28 +310,28 @@
 	   		}
 	   		
 	   		//테이블 헤더 넓이를 내용에 맞춤
-	   		function headerWidthFitting(){
+	   		function headerWidthFitting() {
 	   			var header = $(".ganttFixHead .gdfColHeader");
-	   			header.each(function(){
+	   			header.each(function() { 
 	   				$(this).dblclick();
 	   			})
 	   		}
 	   		
 	   		//기본 옵션 세팅
-	   		function setDefOption(ganttMasterObj){
+	   		function setDefOption(ganttMasterObj) {
 	   			localStorage.TWPGanttGridState = '{"colSizes":[35,25,240,100,22,80,22,80,50,50,60,60,50,1000,35,25,240,100,22,80,22,80,50,50,60,60,50,1000]}';
 	   		}
 	   		
-	   		function addTask(){
+	   		function addTask() {
 	   			goAddTask();
 	   		}
 	   		
-	   		function addGroup(){
+	   		function addGroup() {
 	   			goAddGroup();
 	   		}
 	   		
 	   		//업무 추가
-	   		function goAddTask(){
+	   		function goAddTask() {
    				var top = ($(window).height() - $(this).outerHeight()) / 2;
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
@@ -334,7 +340,7 @@
 	   		}
 	   		
 	   		//그룹 추가
-	   		function goAddGroup(){
+	   		function goAddGroup() {
    				var top = ($(window).height() - $(this).outerHeight()) / 2;
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
@@ -343,38 +349,32 @@
 	   		}
 	   		
 	   		//그룹 삭제
-	   		function delGroup(){
+	   		function delGroup() {
 	   			var groupId = ""; //수정해주세요.
 	   			
 				var selectType = "";
 	   			
 	   			//선택한 작업이 업무/그룹/프로젝트 인지 구분.
-	   			if(ge.currentTask.id && ge.currentTask.id.indexOf("_t") !== -1){
+	   			if (ge.currentTask.id && ge.currentTask.id.indexOf("_t") !== -1) {
 	   				selectType = "task";
-	   			}
-	   			else if(ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1){
+	   			} else if (ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1) {
 	   				selectType = "group";
-	   			}
-	   			else if(ge.currentTask.id){
+	   			} else if (ge.currentTask.id) {
 	   				selectType = "project";
 	   			}
 	   			
-	   			if(selectType === "group"){
+	   			if (selectType === "group") {
 	   				groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
-	   			}
-	   			else{
-	   				alert("그룹을 선택해 주세요.")
+	   			} else {
+	   				alert("<spring:message code='ezPMS.t281' />")
 	   				return;
 	   			}
 	   			
-	   			if(confirm("선택한 " + selectType + "을 삭제하시겠습니까?")){
+	   			if(confirm("<spring:message code='ezPMS.t197' /> " + selectType + "<spring:message code='ezPMS.t198' />")){
 					delTaskFunc(selectType);
 	   			}
-	   			else{
-	   				alert("안지워요");
-	   			}
 	   			
-	   			data = {
+	   			var data = {
 	   					projectId : projectId,
 	   					groupId : groupId
 	   			}
@@ -386,36 +386,34 @@
 	   				contentType: "application/json; charset=UTF-8",
 	   				data : JSON.stringify(data),
 	   				success : function(data) {
-						alert("그룹이 삭제되었습니다.");
+						alert("<spring:message code='ezPMS.t196' />");
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert("에러 : 그룹 삭제 에러" + textStatus + errorThrown + jqXHR);
+	   					alert("<spring:message code='ezPMS.t213' />");
 	   				},
-	   				complete : function(){
+	   				complete : function() {
+	   					//로그 수정 필요
 	   					var logContent = "[그룹 삭제 테스트 로그 입니다.]";
 	   					addTaskLog(projectId, 3, groupId, null, logContent);
 	   				}
 	   			});
 	   		}
 	   		
-	   		function taskDetails(){
+	   		function taskDetails() {
 	   			var curTask = {};
 	   			var taskId = 0;
 	   			curTask = ge.currentTask;
 	   			
 	   			var feature = GetOpenPosition(835, 810);
 	   			
-	   			
-	   			if(curTask.id.indexOf("_t") != -1){
+	   			if (curTask.id.indexOf("_t") != -1) {
 	   				taskId = curTask.id.match(/t(\d+)/)[1];
 	   				window.open("/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + taskId + "&userIdType=user",
 							"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
-	   			}
-	   			else if(ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1){
+	   			} else if (ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1) {
 		   			ge.editor.openFullEditor(curTask);
 		   			return;
-	   			}
-	   			else if(curTask.id.indexOf("_g") != -1){
+	   			} else if (curTask.id.indexOf("_g") != -1) {
 	   				taskId = curTask.id.match(/g(\d+)/)[1];
 	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + taskId,
 							"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
@@ -429,7 +427,7 @@
    				DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + taskId + "&userIdType=user"); */	
 	   		}
 	   		
-	   		function makeLayerPopup(){
+	   		function makeLayerPopup() {
 	   			var targetFrame = frames.parent.parent.parent.document.getElementById("mainFrame");
 	   			var htmlText = "<div style='width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;' id='mailPanel'>&nbsp;</div>"
 	   							+ "<div class='layerpopup'  style='z-index: 2000; position: absolute;display: none;' id='iFramePanel'>"
@@ -438,11 +436,11 @@
 	   		}
 	   		
 	   		function ganttChartAddFunc(){
-	   			Ganttalendar.prototype.zoomReset = function(){
+	   			Ganttalendar.prototype.zoomReset = function() {
 	   				var curLevel = "1M";
 	   				var centerMillis = this.getCenterMillis();
 	   				
-	   				this.gridChanged=true;
+	   				this.gridChanged = true;
 	   			    this.zoom = curLevel;
 
 	   			    this.storeZoomLevel();
@@ -450,11 +448,11 @@
 	   			    this.goToMillis(centerMillis);
 	   			}
 	   			
-	   			Ganttalendar.prototype.zoomChange = function(zoom){
+	   			Ganttalendar.prototype.zoomChange = function(zoom) {
 	   				var curLevel = zoom;
 	   				var centerMillis = this.getCenterMillis();
 	   				
-	   				this.gridChanged=true;
+	   				this.gridChanged = true;
 	   			    this.zoom = curLevel;
 
 	   			    this.storeZoomLevel();
@@ -463,7 +461,7 @@
 	   			}
 	   		}
 	   		
-	   		function ganttChartModifyFunc(){
+	   		function ganttChartModifyFunc() {
 	   			//기간 변경
 	   			GanttMaster.prototype.changeTaskDates = function (task, start, end) {
 	   			  if (typeof(start) == "number") {
@@ -514,7 +512,7 @@
 	   			GanttMaster.prototype.moveTask = function (task, newStart) {
 	   			  //선행작업 유효성 체크
 	   			  if(!preTaskValidChk(ge.currentTask, "move", newStart)){
-	   				  alert("선행작업을 체크하세요.");
+	   				  alert("<spring:message code='ezPMS.t282' />");
 	   				  location.reload();
 	   			  }
 	   			
@@ -595,6 +593,7 @@
 // 	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
 	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly", true);
 	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true);
+	   			  row.find("[name=planProgress]").prop("readonly", true);
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
 	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) ); // called on dates only because for other field is called on focus event
 	   			  row.find("[name=endIsMilestone]").prop("checked", task.endIsMilestone);
@@ -603,11 +602,11 @@
 	   			  row.find(".taskAssigs").html(task.getAssigsString());
 
 	   			  //manage collapsed
-	   			  if (task.collapsed)
+	   			  if (task.collapsed) {
 	   			    row.addClass("collapsed");
-	   			  else
+	   			  } else {
 	   			    row.removeClass("collapsed");
-
+	   			  }
 
 	   			  //Enhancing the function to perform own operations
 	   			  this.master.element.trigger('gantt.task.afterupdate.event', task);
@@ -633,14 +632,14 @@
 	   				data :JSON.stringify(data),
 	   				success : function(result) {
 	   					if (result == "permitted") {
-	   						toastPopupShow("[" + preTaskRowName + "]이 [" + taskName + "]의 선행작업으로 지정되었습니다.");
-	   						addTaskLog(projectId, 1, groupId, taskId, "[" + preTaskRowName + "]이 [" + taskName + "]의 선행작업으로 지정되었습니다.");
+	   						toastPopupShow("[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
+	   						addTaskLog(projectId, 1, groupId, taskId, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
 	   					} else {
-	   						alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+	   						alert("<spring:message code='ezPMS.t184' />");
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert ("에러발생 \n" + textStatus);
+	   					alert ("<spring:message code='ezPMS.t54' />");
 	   				}
 	   				});
 	   		}
@@ -648,7 +647,7 @@
 	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {
 	   			  //선행작업 유효성 체크
 	   			  if(!preTaskValidChk(ge.currentTask, "", startDate)){
-	   				  alert("선행작업을 체크하세요.");
+	   				  alert("<spring:message code='ezPMS.t282' />");
 	   				  location.reload();
 	   			  }
 	   			
@@ -674,16 +673,16 @@
 	   						ge.tasks.filter(function(task){
 	   							return task.id == fullId
 	   						})[0].end = endTime;
-	   						toastPopupShow("[" + startDate + " ~ " + endDate + "]로 날짜가 변경되었습니다.");
-	   						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "]의 계획일이 [" + startDate + " ~ " + endDate + "]로 변경되었습니다.");
+	   						toastPopupShow("[" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t283' />");
+	   						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t240' />");
 	   						ge.redraw();
 	   					} else {
-	   						alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+	   						alert("<spring:message code='ezPMS.t184' />");
 	   						location.reload();
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert ("에러발생 \n" + textStatus);
+	   					alert ("<spring:message code='ezPMS.t54' />");
 	   				}
 	   				});
 	   		}
@@ -709,10 +708,10 @@
 	   		function preProcess(){
 	   			//간트 차트 테이블 날짜 형식 세팅. i18nJs.js 의 내용에 덮어 씌움.
 	   			Date.defaultFormat = "yyyy/M/d";
-	   			Date.monthNames = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-	   			Date.monthAbbreviations = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-	   			Date.dayNames =["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
-	   			Date.dayAbbreviations =["일","월","화","수","목","금","토"];
+	   			Date.monthNames = ["<spring:message code='ezPMS.t246' />"];
+	   			Date.monthAbbreviations = ["<spring:message code='ezPMS.t246' />"];
+	   			Date.dayNames =["<spring:message code='ezPMS.t245' />"];
+	   			Date.dayAbbreviations =["<spring:message code='ezPMS.t244' />"];
 	   			
 	   		}
 	   		
@@ -816,12 +815,12 @@
 	   				data:JSON.stringify(data),
 	   				success: function(result){
 	   					if (result == "rejected") {
-	   						alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+	   						alert("<spring:message code='ezPMS.t184' />");
 	   						return;
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert("에러가 발생했습니다.");
+	   					alert("<spring:message code='ezPMS.t54' />");
 	   				}
 	   			});   
 	   		}
@@ -829,11 +828,8 @@
 	   		function delTask(){
 	   			var selectType = ge.currentTask.type;
 	   			
-	   			if(confirm("선택한 " + selectType + "을 삭제하시겠습니까?")){
+	   			if(confirm("<spring:message code='ezPMS.t197' /> " + selectType + "<spring:message code='ezPMS.t198' />")){
 					delTaskFunc(selectType);
-	   			}
-	   			else{
-	   				alert("안지워요");
 	   			}
 	   		}
 	   		
@@ -868,25 +864,26 @@
 	   				data : JSON.stringify(data),
 	   				success : function(data) {
 	   					if (result == "permitted") {
-							alert("삭제되었습니다.");
+							alert("<spring:message code='ezPMS.t242' />");
 						} else {
-							alert("프로젝트 혹은 그룹 담당자만 상태를 변경할 수 있습니다.");
+							alert("<spring:message code='ezPMS.t184' />");
 							return;
 						}
+	   					
 	   					location.reload();
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert("에러 : updateTaskWDNW 쿼리 구현하면 에러 안남");
+	   					alert("<spring:message code='ezPMS.t54' />");
 	   					location.reload();
 	   				},
-	   				complete : function(){
-	   					var logContent = "[" + taskId + "] 업무가 삭제되었습니다.";
+	   				complete : function() {
+	   					var logContent = "[" + taskId + "] <spring:message code='ezPMS.t242' />";
 	   					addTaskLog(projectId, 3, null, null, logContent);
 	   				}
 	   			});
 	   		}
 	   		
-	   		function updateWeight(obj){
+	   		function updateWeight(obj) {
 	   			var curTask = ge.currentTask;
 	   			var newWeight = obj.value;
 	   			var validFlag = false;
@@ -896,24 +893,22 @@
 	   			var prevTasks = Array.prototype.slice.call(ge.tasks);
 	   			
 	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
-	   			if(taskId === ""){
-	   				alert("업무를 선택해 주십시오.");
-	   			}
-	   			// 가중치 검사
-	   			else if(newWeight == ""){
-   					alert("가중치를 입력해 주십시오.");
-   				}
-   				else if(isNaN(newWeight)) {
-   					alert("가중치는 숫자만 입력할 수 있습니다.");
-   				}
-   				else if(prjWeight > 100){
-   					alert("프로젝트의 가중치는 100을 넘을 수 없습니다.\n현재 가중치 : " + ge.tasks[0].weight + "\n잔여 가중치 : " + (100 - ge.tasks[0].weight));
-   				}
-   				else{
+	   			groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
+	   			
+	   			if (taskId === "") {
+	   				alert("<spring:message code='ezPMS.t247' />");
+	   			} else if (newWeight == "") {
+	   				//가중치 검사
+   					alert("<spring:message code='ezPMS.t96' />");
+   				} else if (isNaN(newWeight)) {
+   					alert("<spring:message code='ezPMS.t248' />");
+   				} else if (prjWeight > 100) {
+   					alert("<spring:message code='ezPMS.t284' />" + ge.tasks[0].weight + "<spring:message code='ezPMS.t285' />" + (100 - ge.tasks[0].weight));
+   				} else {
    					validFlag = true;
    				}
 	   			
-	   			if(!validFlag){
+	   			if (!validFlag) {
 	   				ge.loadTasks(prevTasks);
    					ge.redraw();
 	   				return;
@@ -923,7 +918,7 @@
 //    					return;
 //    				}
 
-				data = {
+				var data = {
 						taskName : curTask.name,
 						taskId : taskId,
 						projectId : projectId,
@@ -938,17 +933,17 @@
 					contentType: "application/json; charset=UTF-8",
 					data : JSON.stringify(data),
 					success : function(data) {
-						alert("업무 정보를 변경하였습니다.");
+						alert("<spring:message code='ezPMS.t280' />");
 						
 						location.reload();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
-						alert("error2");
+						alert("<spring:message code='ezPMS.t54' />");
 					}
 				});
 	   		}
 	   		
-	   		function updateProgress(obj){
+	   		function updateProgress(obj) {
 	   			var curTask = ge.currentTask;
 	   			var newProgress = obj.value;
 	   			var status = curTask.statusPMS;
@@ -963,31 +958,28 @@
 	   			taskId = curTask.id.match(/t(\d+)/) != null ? curTask.id.match(/t(\d+)/)[1] : "";
 	   			groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
 	   			
-	   			if(taskId === ""){
-	   				alert("업무를 선택해 주십시오.");
-	   			}
-	   			//선행작업과의 유효성 체크
-	   			else if(!preTaskValidChk(curTask, mode)){
-	   				alert("선행작업이 완료되어야 후행작업의 진행률을 변경할 수 있습니다.");
-	   			}
-	   			// 가중치 검사
-	   			else if(newProgress == ""){
-   					alert("진행률을 입력해 주십시오.");
-   				}
-   				else if(isNaN(newProgress)) {
-   					alert("진행률은 숫자만 입력할 수 있습니다.");
-   				}
-   				else{
+	   			if (taskId === "") {
+	   				alert("<spring:message code='ezPMS.t247' />");
+	   			} else if (!preTaskValidChk(curTask, mode)) {
+	   				//선횅작업과의 유효성 체크
+// 	   				$(".gdfTable tbody tr").eq(curTask.depends - 1).trigger("click");
+	   				alert("<spring:message code='ezPMS.t286' />");
+	   			} else if (newProgress == "") {
+	   				//가중치 검사
+   					alert("<spring:message code='ezPMS.t189' />");
+   				} else if (isNaN(newProgress)) {
+   					alert("<spring:message code='ezPMS.t248' />");
+   				} else {
    					validFlag = true;
    				}
 	   			
-	   			if(!validFlag){
+	   			if (!validFlag) {
 	   				ge.loadTasks(prevTasks);
    					ge.redraw();
 	   				return;
 	   			}
 
-				data = {
+				var data = {
 						taskName : curTask.name,
 						taskId : taskId,
 						projectId : projectId,
@@ -1003,35 +995,34 @@
 					contentType: "application/json; charset=UTF-8",
 					data : JSON.stringify(data),
 					success : function(data) {
-						alert("업무 정보를 변경하였습니다.");
+						alert("<spring:message code='ezPMS.t280' />");
 						
 						location.reload();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
-						alert("error2");
+						alert("<spring:message code='ezPMS.t54' />");
 					}
 				});
 	   		}
 	   		
 	   		//선행작업 관련 유효성 검사.
 	   		//파라미터 : 현재작업, 동작유형(수정, 이동), 현재작업의 새 시작일.
-	   		function preTaskValidChk(curTask, mode, startDate){
+	   		function preTaskValidChk(curTask, mode, startDate) {
 	   			var flags = true;
 	   			var preTask = ge.tasks[curTask.depends - 1];
 	   			var newStart = typeof startDate == "number" ? startDate : typeof startDate == "object" ? startDate.getTime() : new Date(startDate).getTime();
 	   			
-	   			if(preTask){
-		   			if(mode === "update"){
+	   			if (preTask) {
+		   			if (mode === "update") {
 			   			//선행작업의 실제진행률이 100퍼센트가 되었는지 검사.
-			   			if(preTask.realProgress != 100){
+			   			if (preTask.realProgress != 100) {
 			   				flags = false;
 			   			}
-		   			}
-		   			else if(mode === "move"){
-		   			}
-		   			else{
+		   			} else if(mode === "move"){
+		   			} else {
 		   				
 		   			}
+		   			
 	   				//선행작업이 후행작업의 시작일보다 늦게 종료되는지 검사.
 		   			if(newStart < preTask.end){
 		   				flags = false;
@@ -1043,12 +1034,13 @@
 	   		}
 	   		
 	   		//프로젝트의 목표진행률을 계산해서 넣어줌.
-	   		function getPrjPlanProgress(ganttData){
+	   		function getPrjPlanProgress(ganttData) {
 	   			var prjPlanProg = 0.0;
 	   			var tasks = ge.tasks || ganttData.tasks;
-	   			for(var i = 0; i < tasks.length; i++){
+	   			for (var i = 0; i < tasks.length; i++) {
 	   			    var task = tasks[i];
-	   			    if(task.type === "t"){
+	   			    
+	   			    if (task.type === "t") {
 	   			        prjPlanProg += task.planProgress * task.weight / 100
 	   			    }
 	   			}
@@ -1056,18 +1048,20 @@
 	   		}
 	   		
 	   		//프로젝트 가중치를 계산.
-	   		function getPrjWeight(curTask, newWeight){
+	   		function getPrjWeight(curTask, newWeight) {
 	   			var prjWeight = 0.0;
 	   			var tasks = ge.tasks;
-	   			for(var i = 0; i < tasks.length; i++){
+	   			
+	   			for (var i = 0; i < tasks.length; i++) {
 	   			    var task = tasks[i];
-	   			    if(task == curTask){
+	   			    
+	   			    if (task == curTask) {
 	   			    	prjWeight += Number(newWeight);
-	   			    }
-	   			    else if(task.type === "t"){
+	   			    } else if(task.type === "t"){
 	   			    	prjWeight += Number(task.weight);
 	   			    }
 	   			}
+	   			
 	   			return Number(prjWeight).toFixed(1);
 	   		}
 	   		
@@ -1093,11 +1087,12 @@
 	   		}
 	   		
 	   		
-	   		(function(){
+	   		(function() {
 	   			//임시 크기 조절
-	   			window.onresize = function(){
+	   			window.onresize = function() {
 	   				$("#TWGanttArea").height(parent.innerHeight - 200);
 	   			};
+	   			
 		   		initValues();
 		   		ganttChartAddFunc();
 		   		ganttChartModifyFunc();
@@ -1107,7 +1102,7 @@
 // 		   		ge.init($("#workSpace"));
 	   		})();
 	   		
-	   		window.onload = function(){
+	   		window.onload = function() {
 	   			//툴팁 위치 지정
 	   			var positionTooltip = function(event) {
 	   				var tPosX = event.pageX - 5;
@@ -1147,30 +1142,32 @@
 	   						if (ge.tasks[i].id == taskId) {
 	   							var start = dateToYYYYMMDD(new Date(ge.tasks[i].start));
 	   		   					var end = dateToYYYYMMDD(new Date(ge.tasks[i].end));
+	   		   					
 	   							infoHTML += "<div style='background-color:#d1d1d1'>" + ge.tasks[i].name + "</div>";
 	   							infoHTML += "<div>";
-	   							infoHTML += "시작일 : " + start + "<br>";
-	   							infoHTML += "종료일 : " + end + "<br>";
-	   							infoHTML += "남은기간 : " + ge.tasks[i].duration + "<br>";
-	   							infoHTML += "진행률 : " + ge.tasks[i].progress + "<br>";
+	   							infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
+	   							infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
+	   							infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[i].duration + "<br>";
+	   							infoHTML += "<spring:message code='ezPMS.t250' /> : " + ge.tasks[i].progress + "<br>";
 	   							infoHTML += "</div>";
 	   						}
 	   					}
-	   				}else{
+	   				} else {
 	   					var start = dateToYYYYMMDD(new Date(ge.tasks[0].start));
 	   					var end = dateToYYYYMMDD(new Date(ge.tasks[0].end));
+	   					
 						infoHTML += "<div style='background-color:#d1d1d1'>" + ge.tasks[0].name + "</div>";
 						infoHTML += "<div>";
-						infoHTML += "시작일 : " + start + "<br>";
-						infoHTML += "종료일 : " + end + "<br>";
-						infoHTML += "남은기간 : " + ge.tasks[0].duration + "<br>";
-						infoHTML += "진행률 : " + ge.tasks[0].progress + "<br>";
+						infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
+						infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
+						infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[0].duration + "<br>";
+						infoHTML += "<spring:message code='ezPMS.t250' /> : " + ge.tasks[0].progress + "<br>";
 						infoHTML += "</div>";
 	   				}
 	   				
 	   				$(".tooltipBox").html(infoHTML);
 	                $('.tooltipBox').show();
-	            }).on("mouseout", ".taskBox", function(event){
+	            }).on("mouseout", ".taskBox", function(event) {
 	            	positionTooltip(event);
 	            	$('.tooltipBox').hide();
             	});
@@ -1179,7 +1176,7 @@
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
 	   		
-	   		$(document).ready(function(){
+	   		$(document).ready(function() {
 	   			$(".tooltipBox").hide();
 
 	   			GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
@@ -1200,8 +1197,7 @@
 								"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 	   				/* var feature = GetOpenPosition(0, 0);
 		   			DivPopUpShow(845, 600, "/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + onlyTaskId + "&userIdType=user"); */
-	   			  } 
-	   			  else if(task.id.substring(1).indexOf("g") != -1) {
+	   			  } else if (task.id.substring(1).indexOf("g") != -1) {
 	   				window.open("/ezPMS/getGroupDetails.do?projectId=" + projectId + "&groupId=" + onlyTaskId,
 								"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 	   			/* 	var feature = GetOpenPosition(0, 0);
@@ -1281,31 +1277,31 @@
 	<body style="background-color: #fff;">
 		<div id="pmsGanttMenuDiv" class="pmsMenuDiv" style="height: 30px;">
 			<ul class="pmsGanttMenuUl">
-		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi">new</li>
-		        <li id="pmsGanttRowSaveBtn" class="pmsGanttMenuLi">save</li>
-		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi">delete</li>
-		        <li id="pmsGanttTaskDetails" class="pmsGanttMenuLi">details</li>
-		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi">new group</li>
-		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi">del group</li>
+		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi"><spring:message code='ezPMS.t89' /></li>
+		        <!-- <li id="pmsGanttRowSaveBtn" class="pmsGanttMenuLi">save</li> -->
+		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi"><spring:message code='ezPMS.t287' /></li>
+		        <!--  <li id="pmsGanttTaskDetails" class="pmsGanttMenuLi">details</li> -->
+		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi"><spring:message code='ezPMS.t82' /></li>
+		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi"><spring:message code='ezPMS.t288' /></li>
 		        <li id="pmsGanttZoomBtn" class="pmsGanttZoomBtn">
 					<select>
-						<option value="3d">일단위보기</option>
-						<option value="1w">주단위보기</option>
-						<option value="1M">월단위보기</option>
-						<option value="1Q">분기단위보기</option>
-						<option value="1y">연단위보기</option>
+						<option value="3d"><spring:message code='ezPMS.t251' /></option>
+						<option value="1w"><spring:message code='ezPMS.t252' /></option>
+						<option value="1M"><spring:message code='ezPMS.t289' /></option>
+						<option value="1Q"><spring:message code='ezPMS.t253' /></option>
+						<option value="1y"><spring:message code='ezPMS.t254' /></option>
 					</select>
 		        </li>
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
-		       		<span>보기설정</span>
+		       		<span><spring:message code='ezPMS.t255' /></span>
 					<select>
 						
-						<option value="3d">전체</option>
-						<option value="3d">대기</option>
-						<option value="1w">진행</option>
-						<option value="1M">완료</option>
-						<option value="1Q">보류</option>
-						<option value="1y">지연</option>
+						<option value="3d"><spring:message code='ezPMS.t14' /></option>
+						<option value="3d"><spring:message code='ezPMS.t16' /></option>
+						<option value="1w"><spring:message code='ezPMS.t15' /></option>
+						<option value="1M"><spring:message code='ezPMS.t17' /></option>
+						<option value="1Q"><spring:message code='ezPMS.t19' /></option>
+						<option value="1y"><spring:message code='ezPMS.t18' /></option>
 					</select>
 		        </li>
 		    </ul>

@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t153' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
@@ -21,14 +21,14 @@
 <script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
-var projectId = "${projectId}";
-var groupId = "${groupId}";
+var projectId = "<c:out value='${projectId}'/>";
+var groupId = "<c:out value='${groupId}'/>";
 
 if(groupId == "") {
 	groupId = 0;
 }
 
-var taskId = "${taskId}";
+var taskId = "<c:out value='${taskId}'/>";
 
 if(taskId == "") {
 	taskId = 0;
@@ -42,8 +42,7 @@ var searchContent = "";
 var searchStatus = "";
 var limit = 10;
 
-$(function(){
-	
+$(function() {
 	currentHeight = $(window).height();
 	$("#projectContent").css("height", currentHeight + "px");
 	$("#contentList").css("height", (currentHeight - 50) + "px");
@@ -52,7 +51,6 @@ $(function(){
 });
 
 function setContentList() {
-	
 	
 	var data = {
 		//기본 setting
@@ -85,35 +83,34 @@ function setContentList() {
 }
 
 //페이지 번호에 의한 셋팅
-function goToPageByNum(page){
+function goToPageByNum(page) {
 	currentPage = page;
 	setContentList();
 }
 
 //헤더 리스트 셋팅
-function setListOrder(elem){
-	
+function setListOrder(elem) {
 	orderWhat = $(elem).attr("order");
 	orderHow = $(elem).attr("sort");
 	
-	if(orderHow == null){
+	if (orderHow == null) {
 		orderHow='asc';
-	} else if(orderHow == 'asc'){
+	} else if (orderHow == 'asc') {
 		orderHow='desc';
-	} else if(orderHow == 'desc'){
+	} else if (orderHow == 'desc') {
 		orderHow='asc';
 	}
 	
 	setContentList();
 }
 
-function setInitOrder(){	
+function setInitOrder() {	
 	$("#BoardList_TH th").each(function () {
-		if(orderWhat == $(this).attr("order")) {
-			if(orderHow == 'asc'){
+		if (orderWhat == $(this).attr("order")) {
+			if (orderHow == 'asc') {
 				$(this).attr("sort","asc");
 				$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
-			} else if(orderHow == 'desc'){
+			} else if (orderHow == 'desc') {
 				$(this).attr("sort","desc");
 				$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
 			}
@@ -123,20 +120,19 @@ function setInitOrder(){
 	projectListScroll();
 }
 
-function projectListScroll(){
+function projectListScroll() {
 	var thWidth = document.getElementById("tableHeader").clientWidth - document.getElementById("tableBody").clientWidth;
-	if(thWidth > 0){ 
+	
+	if (thWidth > 0) { 
 		$("#BoardList_TH").append('<th style=width:2px;></th>');
 	} 
 }
 
-function selectedTR(elem){
+function selectedTR(elem) {
 	var parentElem = $(elem).parent();
 	$("#tableBody tr").removeClass("selectTR");
 	$(parentElem).addClass("selectTR");
 }
-
-function setContentTitle() {}
 </script>
 <style type="text/css">
 

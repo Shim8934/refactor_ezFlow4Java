@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t153' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
@@ -21,7 +21,7 @@
 <script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
-var projectId = "${projectId}";
+var projectId = "<c:out value='${projectId}'/>";
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var groupId = 0;
 var taskId = 0;
@@ -34,7 +34,7 @@ var searchStatus = "";
 var logData = JSON.parse('${data}');
 
 $(document).ready(function(){
-	CurrentHeight = $(window).height()-100;
+	CurrentHeight = $(window).height() - 100;
 	$("MailListRayer").css("height", CurrentHeight + "px");
 	$("#taskTree").css("height", CurrentHeight + 10 + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
@@ -43,7 +43,7 @@ $(document).ready(function(){
 	$("#divList").css("height", (CurrentHeight - 150) + "px");
 	
 	$(window).resize(function() {
-		CurrentHeight = $(window).height()-100;
+		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
 		$("#taskTree").css("height", CurrentHeight + 10 + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
@@ -59,8 +59,8 @@ $(function(){
 	
 	$("#searchStatus").css("display", "none");
 	
-	$("#searchId").change(function(){
-		if($("#searchId option:selected").val() == "2") {
+	$("#searchId").change(function() {
+		if ($("#searchId option:selected").val() == "2") {
 			$("#searchByContent").css("display", "none");
 			$("#searchButton").css("display", "none");
 			$("#searchStatus").css("display", "");
@@ -115,35 +115,35 @@ function searchLogStatus(status) {
 }
 
 //페이지 번호에 의한 셋팅
-function goToPageByNum(page){
+function goToPageByNum(page) {
 	currentPage = page;
 	setContentList();
 }
 
 //헤더 리스트 셋팅
-function setListOrder(elem){
+function setListOrder(elem) {
 	
 	orderWhat = $(elem).attr("order");
 	orderHow = $(elem).attr("sort");
 	
-	if(orderHow == null){
+	if (orderHow == null) {
 		orderHow='asc';
-	} else if(orderHow == 'asc'){
+	} else if (orderHow == 'asc') {
 		orderHow='desc';
-	} else if(orderHow == 'desc'){
+	} else if (orderHow == 'desc') {
 		orderHow='asc';
 	}
 	
 	setContentList();
 }
 
-function setInitOrder(){	
+function setInitOrder() {	
 	$("#BoardList_TH th").each(function () {
-		if(orderWhat == $(this).attr("order")) {
-			if(orderHow == 'asc'){
+		if (orderWhat == $(this).attr("order")) {
+			if (orderHow == 'asc') {
 				$(this).attr("sort","asc");
 				$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
-			} else if(orderHow == 'desc'){
+			} else if (orderHow == 'desc') {
 				$(this).attr("sort","desc");
 				$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
 			}
@@ -153,9 +153,10 @@ function setInitOrder(){
 	projectListScroll();
 }
 
-function projectListScroll(){
+function projectListScroll() {
 	var thWidth = document.getElementById("tableHeader").clientWidth - document.getElementById("tableBody").clientWidth;
-	if(thWidth > 0){ 
+	
+	if (thWidth > 0) { 
 		$("#BoardList_TH").append('<th style=width:2px;></th>');
 	} 
 }
@@ -167,12 +168,12 @@ function setContentTitle(taskName, totalCount) {
 		totalCount = 0;
 	}
 	
-	contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> - [총 <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span>개]</span>";
+	contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>";
 	
 	$("#taskName").html(contentTitle);
 }
 
-function selectedTR(elem){
+function selectedTR(elem) {
 	var parentElem = $(elem).parent();
 	$("#tableBody tr").removeClass("selectTR");
 	$(parentElem).addClass("selectTR");
@@ -263,16 +264,16 @@ function selectedTR(elem){
 		<div id="taskName"></div>
 		<div id="searchArea">
 			<select id="searchId">
-				<option value="1" selected>이력 내용</option>
-				<option value="2">이력 상태</option>
+				<option value="1" selected><spring:message code='ezPMS.t186' /></option>
+				<option value="2"><spring:message code='ezPMS.t188' /></option>
 			</select>
 			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}">
 			<a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="searchComment()" style="height:24px; margin-top:1px;"></a>
 			<select id="searchStatus" onchange="searchLogStatus(this.value)">
-				<option value="0">전체</option>
-				<option value="1">등록</option>
-				<option value="2">수정</option>
-				<option value="3">삭제</option>
+				<option value="0"><spring:message code='ezPMS.t14' /></option>
+				<option value="1"><spring:message code='ezPMS.t40' /></option>
+				<option value="2"><spring:message code='ezPMS.t110' /></option>
+				<option value="3"><spring:message code='ezPMS.t11' /></option>
 			</select>
 		</div>
 	</div>

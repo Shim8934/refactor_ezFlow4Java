@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>프로젝트 관리 목록</title>
+<title><spring:message code='ezPMS.t155' /></title>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -57,11 +57,11 @@ function goProjectDetails(elem) {
 	window.open("/ezPMS/getProjectDetails.do?projectId="+projectId, "right");
 }
 
-function addNewProject(){ 
+function addNewProject() { 
 	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do?mode=" + "new");
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
 	var clickOutside;
 	var leftDocument;
 	
@@ -99,13 +99,14 @@ $(document).ready(function(){
 	
 	$(window).resize(function() {
 		CurrentHeight = $(window).height()-110;
+		
 		if (viewType == 0) {
 			document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
 		} else {
 			document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		}
 
-		if(viewType == 0) {
+		if (viewType == 0) {
 			$("#memoStyleDiv").css("display", "");
 			$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
 			document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
@@ -123,8 +124,8 @@ $(document).ready(function(){
 	
 });
 
-function projectListScroll(){
-	if(viewType == 0) {
+function projectListScroll() {
+	if (viewType == 0) {
 		$("#memoStyleDiv").css("display", "");
 		$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
 		document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
@@ -141,13 +142,14 @@ function projectListScroll(){
 	
 	if (viewType == "1") {
 		var thWidth = document.getElementById("tableHeader").clientWidth - document.getElementById("tableBody").clientWidth;
+		
 		if(thWidth > 0){ 
 			$("#BoardList_TH").append('<th style=width:2px;></th>');
 		}	
 	} 
 }
 
-$(function(){
+$(function() {
 	if (viewType == 0) {
 		listNumber = 20;
 	}
@@ -155,7 +157,7 @@ $(function(){
 	setProjectList("new");
 	getDatePicker();
 
-	if(viewType == 0) {
+	if (viewType == 0) {
 		$("#listcountTR").css("display", "none");
 	} else {
 		$("#listcountTR").css("display", "");
@@ -258,20 +260,21 @@ function setTotalCount(totalCount) {
 
 function MailOptionView(obj, flag) {
     if (obj.getAttribute("mode") == "off") {
-        if (flag=='N') {
+        if (flag == 'N') {
         	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
         } else {
         	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
         }
+        
         document.getElementById("layer_Viewpopup").style.top = "100px";
         document.getElementById("layer_Viewpopup").style.display = "";
         obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
         obj.setAttribute("mode", "on");
-    }
-    else {
+    } else {
         MailOptionHidden();
     }
 }
+
 function MailOptionHidden() {
     document.getElementById("layer_Viewpopup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
@@ -339,7 +342,7 @@ function changeMainSetting() {
 		contentType: "application/json; charset=UTF-8",
 		url : "/ezPMS/updateMainSetting.do",
 		data :JSON.stringify(data),
-		success : function(result) {},
+		success : function() {},
 		error : function(jqXHR, textStatus, errorThrown) {}
 	});
 }
@@ -363,7 +366,7 @@ function changeProjectSort(sortType) {
 }
 
 //페이지 번호에 의한 셋팅
-function goToPageByNum(page){
+function goToPageByNum(page) {
 	currentPage = page;
 	setProjectList("new");
 }
@@ -374,24 +377,24 @@ function setListOrder(elem){
 	orderWhat = $(elem).attr("order");
 	orderHow = $(elem).attr("sort");
 	
-	if(orderHow == null){
+	if (orderHow == null) {
 		orderHow='asc';
-	} else if(orderHow == 'asc'){
+	} else if (orderHow == 'asc') {
 		orderHow='desc';
-	} else if(orderHow == 'desc'){
+	} else if (orderHow == 'desc') {
 		orderHow='asc';
 	}
 	
 	setProjectList("new");
 }
 
-function setInitOrder(){
+function setInitOrder() {
 	$("#BoardList_TH th").each(function () {
-		if(orderWhat == $(this).attr("order")) {
-			if(orderHow == 'asc'){
+		if (orderWhat == $(this).attr("order")) {
+			if (orderHow == 'asc') {
 				$(this).attr("sort","asc");
 				$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
-			} else if(orderHow == 'desc'){
+			} else if(orderHow == 'desc') {
 				$(this).attr("sort","desc");
 				$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
 			}
@@ -468,7 +471,7 @@ function moreProjectList() {
 }
 
 //tr선택시 - 메모지용
-function selectedMemoTR(elem){
+function selectedMemoTR(elem) {
 	if (PressCtrlKey == true) {
 		checkedCheckboxMemo(elem);
 	} else {
@@ -481,7 +484,7 @@ function selectedMemoTR(elem){
 }
 
 //tr선택시 - 게시판용
-function selectedTR(elem){
+function selectedTR(elem) {
 	if (PressCtrlKey == true) {
 		checkedCheckbox(elem);
 	} else {
@@ -580,9 +583,9 @@ function viewListByStatus(status) {
 	}
 	
 	if (listProjectStatus == "D") {
-		$("#deleteProject").text("영구삭제");
+		$("#deleteProject").text("<spring:message code='ezPMS.t12' />");
 	} else {
-		$("#deleteProject").text("삭제");
+		$("#deleteProject").text("<spring:message code='ezPMS.t11' />");
 	}
 	
 	setProjectList("new");
@@ -594,13 +597,13 @@ function deleteProject() {
 	
 	if (listProjectStatus != "D") {
 		if (result == 1) {
-			 response = confirm("프로젝트를 삭제하시겠습니까? \n 프로젝트는 삭제프로젝트로 상태가 변경됩니다.");
+			 response = confirm("<spring:message code='ezPMS.t21' />");
 		} else {
 			return;
 		}
 		
 		if (response == true) {
-			data = {
+			var data = {
 				status : "D",
 				projectList : checkedVal,
 				nowStatus : listProjectStatus
@@ -614,7 +617,7 @@ function deleteProject() {
 				data :JSON.stringify(data),
 				success : function(result) {
 					if (result == "permitted") {
-						alert("상태가 변경되었습니다.");
+						alert("<spring:message code='ezPMS.t10' />");
 						checkedVal = "";
 						
 						if (viewType != 1) {
@@ -623,7 +626,7 @@ function deleteProject() {
 						
 						setProjectList("new");
 					} else {
-						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+						alert("<spring:message code='ezPMS.t9' />");
 						return;
 					}
 				},
@@ -634,13 +637,13 @@ function deleteProject() {
 		
 	} else {
 		if (result == 1) {
-			response = confirm("프로젝트를 영구 삭제하시겠습니까?");
+			response = confirm("<spring:message code='ezPMS.t22' />");
 		} else {
 			return;
 		}
 		
 		if (response == true) {
-			data = {
+			var data = {
 					status : "D",
 					projectList : checkedVal,
 					nowStatus : listProjectStatus
@@ -654,11 +657,11 @@ function deleteProject() {
 				data :JSON.stringify(data),
 				success : function(result) {
 					if (result == "permitted") {
-						alert("프로젝트가 영구삭제 되었습니다.");
+						alert("<spring:message code='ezPMS.t23' />");
 						checkedVal = "";
 						setProjectList("new");
 					} else {
-						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+						alert("<spring:message code='ezPMS.t9' />");
 						return;
 					}
 				},
@@ -668,10 +671,12 @@ function deleteProject() {
 		}
 	}
 }
+
 function addFavoriteMemo(projectId) {
-	var response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
+	var response = confirm("<spring:message code='ezPMS.t24' />");
+	
 	if (response == true) {
-		data = {
+		var data = {
 				status : "F",
 				projectList : projectId
 		}
@@ -683,12 +688,12 @@ function addFavoriteMemo(projectId) {
 			data :JSON.stringify(data),
 			success : function(result) {
 				if (result == "0") {
-					alert("프로젝트가 즐겨찾기 되었습니다.");
+					alert("<spring:message code='ezPMS.t25' />");
 					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
 					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
 					location.reload();
 				} else {
-					alert("이미 추가된 프로젝트 입니다.");
+					alert("<spring:message code='ezPMS.t26' />");
 					return;
 				}
 			},
@@ -700,10 +705,10 @@ function addFavoriteMemo(projectId) {
 }
 
 function deleteFavoriteMemo(projectId) {
-	var response = confirm("프로젝트 즐겨찾기를 해제하시겠습니까?");
+	var response = confirm("<spring:message code='ezPMS.t27' />");
+	
 	if (response == true) {
-		
-		data = {
+		var data = {
 			status : "F",
 			projectList : projectId
 		}
@@ -714,7 +719,7 @@ function deleteFavoriteMemo(projectId) {
 			url : "/ezPMS/deleteFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function(result) {
-				alert("즐겨찾기가 해제되었습니다.");
+				alert("<spring:message code='ezPMS.t28' />");
 				$("#"+projectId).find("img").attr("src", "/images/ImgIcon/view-flag.gif");
 				$("#"+projectId).find("img").attr("onclick", "addFavoriteMemo(this)");
 				
@@ -736,7 +741,7 @@ function addFavorite() {
 	var response;
 	
 	if (result == 1) {
-		response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
+		response = confirm("<spring:message code='ezPMS.t24' />");
 	} else {
 		return;
 	}
@@ -756,9 +761,9 @@ function addFavorite() {
 				if (result == "0") {
 					checkedVal = "";
 					setProjectList("new"); 
-					alert("프로젝트가 즐겨찾기 되었습니다.");
+					alert("<spring:message code='ezPMS.t25' />");
 				} else {
-					alert("이미 추가된 프로젝트 입니다.");
+					alert("<spring:message code='ezPMS.t26' />");
 					return;
 				}
 			},
@@ -769,6 +774,7 @@ function addFavorite() {
 }
 
 var PressCtrlKey = false;
+
 function event_listOnkeyUp(event) {
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (!event) event = window.event;
@@ -794,7 +800,7 @@ function deleteFavorite() {
 	var response;
 	
 	if (result == 1) {
-		response = confirm("프로젝트를 해제 하시겠습니까?");
+		response = confirm("<spring:message code='ezPMS.t27' />");
 	} else {
 		return;
 	}
@@ -802,7 +808,7 @@ function deleteFavorite() {
 	if (response == true) {
 		getCheckedVal();
 		
-		data = {
+		var data = {
 				status : "F",
 				projectList : checkedVal
 		}
@@ -813,7 +819,7 @@ function deleteFavorite() {
 			url : "/ezPMS/deleteFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function() {
-				alert("프로젝트가 즐겨찾기가 해제되었습니다.");
+				alert("<spring:message code='ezPMS.t28' />");
 				checkedVal = "";
 				setProjectList("new"); 
 			},
@@ -851,7 +857,7 @@ function getCheckedVal() {
 	}
 	
 	if (checkedVal == "") {
-		alert("하나 이상의 프로젝트를 선택해 주세요.");
+		alert("<spring:message code='ezPMS.t29' />");
 		return 0;
 	}
 	
@@ -962,27 +968,27 @@ function searchProject() {
 </style>
 </head>
 <body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-	<h1>프로젝트 관리<span id="mailBoxInfo"> - [총 <span style="color:#017BEC;" id="totalCount"> </span>개]</span></h1>
+	<h1><spring:message code='ezPMS.t8' /><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
 	<div id="mainmenu">
 	<ul>
 		<li>
 			<select style="height:27px;" id="listByStatus" onchange="viewListByStatus(this.value)">
-				<option value="A">전체 프로젝트</option>
-				<option value="P">진행 프로젝트</option>
-				<option value="W">대기 프로젝트</option>
-				<option value="C">완료 프로젝트</option>
-				<option value="L">지연 프로젝트</option>
-				<option value="S">보류 프로젝트</option>
-				<option value="D">삭제 프로젝트</option>
-				<option value="F">자주가는 프로젝트</option>
+				<option value="A"><spring:message code='ezPMS.t271' /></option>
+				<option value="P"><spring:message code='ezPMS.t258' /></option>
+				<option value="W"><spring:message code='ezPMS.t260' /></option>
+				<option value="C"><spring:message code='ezPMS.t261' /></option>
+				<option value="L"><spring:message code='ezPMS.t262' /></option>
+				<option value="S"><spring:message code='ezPMS.t259' /></option>
+				<option value="D"><spring:message code='ezPMS.t263' /></option>
+				<option value="F"><spring:message code='ezPMS.t20' /></option>
 			</select>
 		</li>
-		<li><span id="newProject" onclick="addNewProject()">새 프로젝트</span></li>
-		<li><span id="deleteProject" onclick="deleteProject()">삭제</span></li>
-		<li><span id="changeProjectStatus" onclick="changeProjectStatus()">프로젝트 상태 변경</span></li>
-		<li><span id="deleteFavorite" onclick="deleteFavorite()">즐겨찾기 해제</span></li>
-		<li><span id="addFavorite" onclick="addFavorite()">즐겨찾기 추가</span></li>
-		<li><span id="searchProject" onclick="showSearchDiv()">검색 <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
+		<li><span id="newProject" onclick="addNewProject()"><spring:message code='ezPMS.t55' /></span></li>
+		<li><span id="deleteProject" onclick="deleteProject()"><spring:message code='ezPMS.t11' /></span></li>
+		<li><span id="changeProjectStatus" onclick="changeProjectStatus()"><spring:message code='ezPMS.t92' /></span></li>
+		<li><span id="deleteFavorite" onclick="deleteFavorite()"><spring:message code='ezPMS.t6' /></span></li>
+		<li><span id="addFavorite" onclick="addFavorite()"><spring:message code='ezPMS.t7' /></span></li>
+		<li><span id="searchProject" onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
 		<li id="right">
 	        <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="memoStyle" onclick="changeMemoStyle()">
 	        <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="boardStyle" onclick="changeBoardStyle()">
@@ -1000,16 +1006,16 @@ function searchProject() {
 		                        <col>
 		                    </colgroup>
 		                    <tr>
-		                        <th>리스트 설정</th>
+		                        <th><spring:message code='ezPMS.t272' /></th>
 		                        <td>
 		                            <select id="listSort" style="WIDTH: 82px; height: 20px;" onchange="changeProjectSort(this.value);">
-		                                <option value="0">완료일 순</option>
-		                                <option value="1">시작일 순</option>
+		                                <option value="0"><spring:message code='ezPMS.t273' /></option>
+		                                <option value="1"><spring:message code='ezPMS.t274' /></option>
 		                            </select>    
 		                        </td>
 		                    </tr>
 		                    <tr id="listcountTR">
-		                        <th><spring:message code='ezBoard.t10021' /></th>
+		                        <th><spring:message code='ezPMS.t275' /></th>
 		                        <td>
 		                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="changelistCount(this.value);">
 		                                <option value="10">10</option>
@@ -1030,24 +1036,24 @@ function searchProject() {
 		<table class="content" style="width:80%; margin-bottom:5px;">
 			<tbody>
 				<tr>
-					<th>프로젝트명 </th>
-					<td style="width:50%"><input type="text" id="searchByProjectName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
-					<th>담당자</th>
+					<th><spring:message code='ezPMS.t31' /> </th>
+					<td style="width:50%"><input type="text" id="searchByProjectName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span><spring:message code='ezPMS.t150' /></span></a></td>
+					<th><spring:message code='ezPMS.t63' /></th>
 					<td><input type="text" id="searchByUser"></td>
 				</tr>
 				<tr>
-					<th>시작일 </th>
-					<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
-					<th>종료일</th>
-					<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
+					<th><spring:message code='ezPMS.t61' /> </th>
+					<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+					<th><spring:message code='ezPMS.t62' /></th>
+					<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
 				</tr>
 				<tr>
-					<th>개요</th>
+					<th><spring:message code='ezPMS.t66' /></th>
 					<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
 				</tr>
 			</tbody>
 		</table>
-		<a class="imgbtn" onclick="searchProject()" style="margin-left:40%;"><span>검색</span></a>
+		<a class="imgbtn" onclick="searchProject()" style="margin-left:40%;"><span><spring:message code='ezPMS.t1' /></span></a>
 	</div>
 	<div id = "prjectList">
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;"></span>

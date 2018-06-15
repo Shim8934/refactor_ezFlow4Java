@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>프로젝트 업무 상세 페이지</title>
+<title><spring:message code='ezPMS.t256' /></title>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -62,39 +62,39 @@ td.overviewTd{vertical-align:top;}
 	<c:choose>
 	<c:when test="${target eq 'task' }">
 	  <tr>
-	    <th class="">작성자</th>
+	    <th class=""><spring:message code='ezPMS.t57' /></th>
 	    <td class="">${taskDetails.writerName}</td>
 	  </tr>
 	  <tr>
-	    <th class="">작성일</th>
+	    <th class=""><spring:message code='ezPMS.t131' /></th>
 	    <td class="">${taskDetails.writeDate}</td>
 	  </tr>
 	</c:when>
 	<c:otherwise>
 	  <tr>
-	    <th class="">작성자</th>
+	    <th class=""><spring:message code='ezPMS.t57' /></th>
 	    <td class="">${taskDetails.creatorName}</td>
 	  </tr>
 	  <tr>
-	    <th class="">작성일</th>
+	    <th class=""><spring:message code='ezPMS.t131' /></th>
 	    <td class="">${taskDetails.createDate}</td>
 	  </tr>
 	</c:otherwise>
 	</c:choose>
 	  <tr>
-	    <th class="">상위그룹</th>
+	    <th class=""><spring:message code='ezPMS.t42' /></th>
 	    <td class="">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
 	  </tr>
 	  <tr>
-	    <th class="">선행작업</th>
+	    <th class=""><spring:message code='ezPMS.t181' /></th>
 	    <td class="preTaskName"></td>
 	  </tr>
 	  <tr>
-	    <th class="">가중치</th>
+	    <th class=""><spring:message code='ezPMS.t267' /></th>
 	    <td class="">${taskDetails.weight == null ? "-" : taskDetails.weight}</td>
 	  </tr>
 	  <tr>
-	    <th class="overviewTh">업무개요</th>
+	    <th class="overviewTh"><spring:message code='ezPMS.t66' /></th>
 	    <td class="overviewTd">${taskDetails.overview == null ? "-" : taskDetails.overview}</td>
 	  </tr>
 	</table>

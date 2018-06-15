@@ -3198,4 +3198,17 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getProjectProgress" parameterClass="ProjectTaskVO" resultClass="float">
+		<![CDATA[
+			SELECT 
+				PROGRESS
+			FROM
+				TBL_PMS_PROJECT
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		 ]]>
+	</select>
 </sqlMap>

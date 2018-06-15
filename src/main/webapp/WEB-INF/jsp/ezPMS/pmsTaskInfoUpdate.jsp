@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>업무정보수정</title>
+<title><spring:message code='ezPMS.t179' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -40,49 +40,49 @@ th a.imgbtn {
 
 </style>
 <script>
-var projectId = "${taskDetails.projectId}";
+var projectId = "<c:out value='${taskDetails.projectId}'/>";
 var projectName = "";
 var weight = null;
 var managerList = null;
 var overview = null;
 var headManagerId = "";
 var originGroupId = 0;
-var groupName = "${taskDetails.groupName}";
+var groupName = "<c:out value='${taskDetails.groupName}'/>";
 var taskDetails = '${taskDetails}';
 var writerId= "";
 var weightData = '${weightData}';
-var target = "${target}";
-var headManagerName = "${taskDetails.headManagerName}";
+var target = "<c:out value='${target}'/>";
+var headManagerName = "<c:out value='${taskDetails.headManagerName}'/>";
 var groupId = 0;
 
  $(function() {
 	 if (target == "task") {
 		 managerList = '${taskDetails.taskMember}';
-		 groupId = "${taskDetails.groupId}";
-		 originGroupId = "${taskDetails.groupId}";
+		 groupId = "<c:out value='${taskDetails.groupId}'/>";
+		 originGroupId = "<c:out value='${taskDetails.groupId}'/>";
 	 } else {
 		 managerList = '${taskDetails.groupMember}';
-		 groupId = "${taskDetails.upperGroupId}";
-		 originGroupId = "${taskDetails.groupId}";
+		 groupId = "<c:out value='${taskDetails.upperGroupId}'/>";
+		 originGroupId = "<c:out value='${taskDetails.groupId}'/>";
 	 }
 	 
-	 headManagerId = "${taskDetails.headManagerId}";
+	 headManagerId = "<c:out value='${taskDetails.headManagerId}'/>";
 	 
 	 managerList = JSON.parse(managerList);
 	 applyList();
  });
  
 function openMemberList() {
-		 var win;
-		 var feature = GetOpenPosition(760, 700);
-		 DivPopUpShow(684, 384, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
+	var win;
+	var feature = GetOpenPosition(760, 700);
+	DivPopUpShow(684, 384, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
 function openGroupTree() {
-		var win;
-	 	var feature = GetOpenPosition(760, 700);
-	 	DivPopUpShow(338, 338, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
+	var win;
+	var feature = GetOpenPosition(760, 700);
+	DivPopUpShow(338, 338, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
 			 	"height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
@@ -124,13 +124,13 @@ function updateTaskInfo() {
 	// 담당자 검사
 	if(managerList == null) {
 		// 현재 총괄담당자 null 허용 불가
-		alert("최소 1명 이상의 담당자를 지정해주세요.");
+		alert("<spring:message code='ezPMS.t169' />");
 		return;
 	}
 	
 	//상위그룹 미지정
 	if(groupId == "") {
-		alert("상위그룹을 지정해주세요.");
+		alert("<spring:message code='ezPMS.t85' />");
 		return;
 	}
 	
@@ -147,25 +147,25 @@ function updateTaskInfo() {
 
 		//업무 이름 길이 제한
 		 if (taskName.length == 0) {
-			 alert("업무명을 입력해주세요.");
+			 alert("<spring:message code='ezPMS.t90' />");
 			 return;
 		 } else if (taskName.length > 100) {
-			 alert("업무명은 100자를 초과할 수 없습니다.");
+			 alert("<spring:message code='ezPMS.t91' />");
 			 return;
 		 }
 		
 		// 가중치 검사
 		if(weightInput == 1) {
 			if(weight == ""){
-				alert("가중치를 입력해 주십시오.");
+				alert("<spring:message code='ezPMS.t96' />");
 				return;
 			}
 			if(isNaN(weight)) {
-				alert("가중치는 숫자만 입력 가능합니다.");
+				alert("<spring:message code='ezPMS.t248' />");
 				return;
 			}
 			if(Number(weight) > remainingWeight) {
-				alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
+				alert("<spring:message code='ezPMS.t97' />");
 				return;
 			}
 		} else {
@@ -194,13 +194,13 @@ function updateTaskInfo() {
 			contentType: "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
 			success : function(data) {
-				alert("업무 정보를 변경하였습니다.");
+				alert("<spring:message code='ezPMS.t170' />");
 				
 				parent.location.reload();
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
-				alert("error2");
+				alert("<spring:message code='ezPMS.t208' />");
 			}
 		});
 	} else if (target == "group") {
@@ -208,15 +208,14 @@ function updateTaskInfo() {
 		 
 		//업무 이름 길이 제한
 		 if (taskName.length == 0) {
-			 alert("그룹명을 입력해주세요.");
+			 alert("<spring:message code='ezPMS.t83' />");
 			 return;
 		 } else if (taskName.length > 100) {
-			 alert("그룹명은 100자를 초과할 수 없습니다.");
+			 alert("<spring:message code='ezPMS.t84' />");
 			 return;
 		 }
 		 
-		console.log(originGroupId);
-		 data = {
+		var data = {
 					groupName : taskName,
 					projectId : projectId,
 					groupId : originGroupId,
@@ -232,13 +231,13 @@ function updateTaskInfo() {
 				contentType: "application/json; charset=UTF-8",
 				data : JSON.stringify(data),
 				success : function() {
-					alert("그룹 정보를 변경하였습니다.");
+					alert("<spring:message code='ezPMS.t170' />");
 					
 					parent.location.reload();
 					popupClose();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("error2");
+					alert("<spring:message code='ezPMS.t208' />");
 				}
 			});
 	}
@@ -249,73 +248,73 @@ function updateTaskInfo() {
 <body class="popup">
 	<c:choose>
 	<c:when test="${target eq 'task' }">
-	<h1 style="display:inline-block; width:100px;">업무정보수정</h1>
+	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t179' /></h1>
 	</c:when>
 	<c:otherwise>
-	<h1 style="display:inline-block; width:100px;">그룹정보수정</h1>
+	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t279' /></h1>
 	</c:otherwise>
 	</c:choose>
 	<div class="headerDiv">
-		<a class="imgbtn" id="submit" onclick="updateTaskInfo()"><span>저장</span></a>
-		<a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a>
+		<a class="imgbtn" id="submit" onclick="updateTaskInfo()"><span><spring:message code='ezPMS.t265' /></span></a>
+		<a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a>
 	</div>
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<c:choose>
 			<c:when test="${target eq 'task' }">
 			<tr>
-				<th>업무명</th>
+				<th><spring:message code='ezPMS.t98' /></th>
 				<td colspan="3">
 					<input type="text" id="taskName" class="textInput" placeholder="${taskDetails.taskName}" value="${taskDetails.taskName}" maxlength="100">
 				</td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
+				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
 				<td id="managers"></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
+				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
 				<td style="height:30px;" id="upperGroup"> 
 				${taskDetails.groupName == null ? "-" : taskDetails.groupName}
 				</td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openPreTaskTree()"><span>선행작업</span></a></th>
+				<th><a class="imgbtn" onclick="openPreTaskTree()"><span><spring:message code='ezPMS.t181' /></span></a></th>
 				<td>${taskDetails.preTask == null ? "-" : taskDetails.preTask}</td>
 			</tr>
 			<tr>
-				<th>가중치</th>
+				<th><spring:message code='ezPMS.t267' /></th>
 				<td><input type="text" id="weight" class="textInput" placeholder="${taskDetails.weight}" value="${taskDetails.weight}"></td>
 <%-- 				<td style="height:30px" id="weight">${taskDetails.weight == null ? "-" : taskDetails.weight}</td> --%>
 			</tr>
 			<tr>
-				<th>개요</th>
+				<th>개요<spring:message code='ezPMS.t104' /></th>
 				<td>
-					<textarea id="overview" placeholder="내용을 입력해주세요">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
+					<textarea id="overview">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
 				</td>
 			</tr>
 			</c:when>
 			<c:otherwise>
 			<tr>
-				<th>그룹명</th>
+				<th><spring:message code='ezPMS.t87' /></th>
 				<td colspan="3">
 					<input type="text" id="taskName" class="textInput" placeholder="${taskDetails.groupName}" value="${taskDetails.groupName}" maxlength="100">
 				</td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
+				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
 				<td id="managers"></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
+				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
 				<td style="height:30px;" id="upperGroup">
 				${taskDetails.upperGroupName == null ? "-" : taskDetails.upperGroupName}
 				</td>
 			</tr>
 			<tr>
-				<th>개요</th>
+				<th><spring:message code='ezPMS.t88' /></th>
 				<td>
-					<textarea id="overview" placeholder="내용을 입력해주세요">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
+					<textarea id="overview">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
 				</td>
 			</tr>
 			</c:otherwise>

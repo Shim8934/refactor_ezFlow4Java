@@ -6,7 +6,7 @@
 <html style="height: 99%;">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><c:out value="${project.projectName }" /></title>
 
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -87,9 +87,9 @@ function changeTab(clickTabId, nowTabAttr) {
 }
 
 function addFavorite(projectId) {
-	var response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
+	var response = confirm("<spring:message code='ezPMS.t24' />");
 	if (response == true) {
-		data = {
+		var data = {
 				status : "F",
 				projectList : projectId
 		}
@@ -101,12 +101,12 @@ function addFavorite(projectId) {
 			data :JSON.stringify(data),
 			success : function(result) {
 				if (result == "0") {
-					alert("프로젝트가 즐겨찾기 되었습니다.");
+					alert("<spring:message code='ezPMS.t25' />");
 					$("#projectName").find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
 					$("#projectName").find("img").attr("onclick", "deleteFavorite(" + projectId + ")");
 				
 				} else {
-					alert("이미 추가된 프로젝트 입니다.");
+					alert("<spring:message code='ezPMS.t26' />");
 					return;
 				}
 			},
@@ -117,9 +117,9 @@ function addFavorite(projectId) {
 }
 
 function deleteFavorite(projectId) {
-	var response = confirm("프로젝트를 즐겨찾기 해제하시겠습니까?");
+	var response = confirm("<spring:message code='ezPMS.t27' />");
 	if (response == true) {
-		data = {
+		var data = {
 				status : "F",
 				projectList : projectId
 		}
@@ -130,7 +130,7 @@ function deleteFavorite(projectId) {
 			url : "/ezPMS/deleteFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function(result) {
-				alert("즐겨찾기가 해제되었습니다.");
+				alert("<spring:message code='ezPMS.t28' />");
 				$("#projectName").find("img").attr("src", "/images/ImgIcon/view-flag.gif");
 				$("#projectName").find("img").attr("onclick", "addFavorite(" + projectId + ")");
 			},
@@ -157,12 +157,12 @@ function deleteFavorite(projectId) {
 	</h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
-	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">개요</span></p>
-	  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab">간트 차트</span></p>
-	  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab">업무 리스트</span></p>
-	 	  	<p id="FBoard_sub3"><span id="1tab3" divname="FBoard_div0" class="tab">게시판</span></p>
-	 	  	<p id="FBoard_sub4"><span id="1tab4" divname="FBoard_div0" class="tab">작업 이력</span></p>
-	   		<p id="FBoard_sub5"><span id="1tab5" divname="FBoard_div0" class="tab">의견</span></p>
+	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t66' /></span></p>
+	  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t151' /></span></p>
+	  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t152' /></span></p>
+	 	  	<p id="FBoard_sub3"><span id="1tab3" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t141' /></span></p>
+	 	  	<p id="FBoard_sub4"><span id="1tab4" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t153' /></span></p>
+	   		<p id="FBoard_sub5"><span id="1tab5" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t154' /></span></p>
 	   </div>
 	</div>
 	<iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>

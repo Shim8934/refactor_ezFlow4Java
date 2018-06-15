@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><spring:message code='ezPMS.t146' /></title>
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -29,13 +29,14 @@
 		var taskName = chosenTask.text();
 		
 		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
-		if(taskName.indexOf('(') != -1) {
+		if (taskName.indexOf('(') != -1) {
 			taskName = taskName.substr(0, taskName.indexOf('('));
 		}
+		
 		parent.document.getElementById("taskName").innerHTML = taskName;
 		parent.taskName = taskName;
 		
-		if(chosenTask.parent().attr("id").charAt(0) == 't') { 
+		if (chosenTask.parent().attr("id").charAt(0) == 't') { 
 			parent.groupId = chosenTask.parents("li").eq(1).attr("id");
 			parent.taskId  = chosenTask.parent().attr("id").substr(1);		
 		} else {
@@ -54,11 +55,11 @@
 </style>
 </head>
 <body class="popup">
-	<h1>작업 목록</h1>
+	<h1><spring:message code='ezPMS.t146' /></h1>
 	<div id="close">
 		<ul>
-			<li><span onclick="register()">등록</span></li>
-			<li><span onclick="popupClose()">닫기</span></li>
+			<li><span onclick="register()"><spring:message code='ezPMS.t40' /></span></li>
+			<li><span onclick="popupClose()"><spring:message code='ezPMS.t76' /></span></li>
 		</ul>
 	</div>
 	<div id="taskTree" class="tree"></div>

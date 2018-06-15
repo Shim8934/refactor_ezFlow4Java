@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>진행상태변경 페이지</title>
+<title><spring:message code='ezPMS.t175' /></title>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -17,7 +17,6 @@
 <link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
-
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -36,7 +35,7 @@
 	var overdueColor = parent.overdueColor;
 	var holdColor = parent.holdColor;
 	
-	$(function(){
+	$(function() {
 		taskDetails = JSON.parse(parent.document.all["frameParamTaskDetails"].value);
 		weightData = JSON.parse(parent.document.all["frameParamWeight"].value);
 		initProgressBar();
@@ -60,25 +59,25 @@
 		var strStatus = "";
 		var circleColor = "";
 		
-		switch(nowStatus){
+		switch (nowStatus) {
 		case "P" :
-			strStatus = "진행";
+			strStatus = "<spring:message code='ezPMS.t15' />";
 			circleColor = progressColor;
 			break;
 		case "W" :
-			strStatus = "대기";
-			circleColor = "grey";
+			strStatus = "<spring:message code='ezPMS.t16' />";
+			circleColor = "#d1d1d1";
 			break;
 		case "L" :
-			strStatus = "지연";
+			strStatus = "<spring:message code='ezPMS.t18' />";
 			circleColor = overdueColor;
 			break;
 		case "S" :
-			strStatus = "보류";
+			strStatus = "<spring:message code='ezPMS.t19' />";
 			circleColor = holdColor;
 			break;
 		case "C" :
-			strStatus = "완료";
+			strStatus = "<spring:message code='ezPMS.t17' />";
 			circleColor = completeColor;
 			break;
 		}
@@ -103,12 +102,12 @@
 		parent.DivPopUpHidden();
 	}
 	
-	function taskUpdate(){
+	function taskUpdate() {
 	 	var taskId = "${taskDetails.taskId}";
 		DivPopUpShow(760, 500, "/ezPMS/goUpdateTaskInfo.do?taskId=" + taskId);
 	}
 	
-	function setProgress(){
+	function setProgress() {
 		var diff = 0;
 		diff = Number(taskDetails.planProgress - taskDetails.realProgress).toFixed(1);
 		document.querySelector("[name='realProgress']").value = Number(taskDetails.realProgress).toFixed(1) + "%";
@@ -116,19 +115,20 @@
 		document.getElementById("progDiff").innerText = (diff > 0 ? "+" + diff : (diff < 0 ? diff : "-")) + "%";
 	}
 	
-	function setStatus(){
+	function setStatus() {
 		var targetStatus = document.querySelector("option[value='" + taskDetails.status + "']");
-		if(targetStatus){
+		
+		if (targetStatus) {
 			targetStatus.selected = true;
 		}
 	}
 	
-	function btnEvent(){
+	function btnEvent() {
 		document.getElementById("closeBtn").onclick = popupClose;
 		document.getElementById("saveBtn").onclick = saveStatus;
 	}
 	
-	function saveStatus(){
+	function saveStatus() {
 		var projectStartDate = weightData.planStartDate;
 		var projectEndDate = weightData.planEndDate;
 		var planStartDate = document.getElementById("PSDatepicker").value;
@@ -154,13 +154,13 @@
 		
 		//1. 시작일 > 종료일은 불가능
 		if (startDateComp.getTime() > endDateComp.getTime()) {
-		  	alert("시작날짜가 종료날짜보다 늦을 수 없습니다.");
+		  	alert("<spring:message code='ezPMS.t49' />");
 		  	return;
 		}
 		 
 		//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
 		if (endDateComp.getTime() < todayComp.getTime()) {
-			var confCheck = confirm("종료일이 현재일보다 빠르기 때문에 업무의 상태가 지연으로 변경됩니다. 계속하시겠습니까?");
+			var confCheck = confirm("<spring:message code='ezPMS.t93' />");
 			 
 			if (confCheck != true) {
 				 return;
@@ -170,11 +170,11 @@
 		//3. 업무의 계획 시작일과 계획 종료일은 프로젝트 시작일과 종료일범위를 벗어날수 없음
 		if (startDateComp.getTime() < projectStartDateComp.getTime()) {
 			alert(startDateComp.getTime() + " <<<<>>>> " + projectStartDateComp.getTime());
-			alert("업무의 계획 시작일은 프로젝트의 시작일보다 이를 수 없습니다.");
+			alert("<spring:message code='ezPMS.t94' />");
 			return;
 		}
 		if (endDateComp.getTime() > projectEndDateComp.getTime()) {
-			alert("업무의 계획 종료일은 프로젝트의 종료일보다 늦을 수 없습니다.");
+			alert("<spring:message code='ezPMS.t95' />");
 			return;
 		}
 		 
@@ -182,38 +182,40 @@
 		realProgress = realProgress.match(/\d+[.]\d/)[0];
 		if (realProgress != taskDetails.realProgress) {
 			if (realProgress == "") {
-				alert("진행률을 입력해 주십시오.");
+				alert("<spring:message code='ezPMS.t189' />");
 				return;
 			}
 			else if (isNaN(realProgress)) {
-				alert("진행률은 숫자만 입력 가능합니다.");
+				alert("<spring:message code='ezPMS.t249' />");
 				return;
 			}
 			else if (Number(realProgress) > 100) {
-				alert("진행률은 100%를 초과할 수 없습니다.");
+				alert("<spring:message code='ezPMS.t190' />");
 				return;
 			}
 			else if (Number(realProgress) < 0) {
-				alert("진행률은 0보다 작을 수 없습니다.");
+				alert("<spring:message code='ezPMS.t191' />");
 				return;
 			}
 		}
 		
 		//실제 날짜를 입력하지 않고 상태만 변경할 경우 처리.
-		if(status === "C"){
-			if(!realEndDate){
+		if (status === "C") {
+			if (!realEndDate) {
 				realEndDate = TimeToStr(new Date());
 			}
+			
 			realProgress = 100;
 		}
-		if(status === "C" || status === "P"){
-			if(!realStartDate){
+		
+		if (status === "C" || status === "P") {
+			if (!realStartDate) {
 				realStartDate = TimeToStr(new Date());
 			}
 		}
 
 		
-		data = {
+		var data = {
 				taskId : taskDetails.taskId + "",
 				projectId : taskDetails.projectId + "",
 				planStartDate : planStartDate,
@@ -232,13 +234,13 @@
 			contentType: "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
 			success : function(data) {
-				alert("업무 상태를 변경하였습니다.");
+				alert("<spring:message code='ezPMS.t280' />");
 				
 				parent.location.reload();
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
-				alert("error2");
+				alert("<spring:message code='ezPMS.t208' />");
 			}
 		});
 	}
@@ -369,10 +371,10 @@ button.PHBtn {
 </style>
 </head>
 <body class="popup">
-	<h1 style="display:inline-block; width:100px;">진행상태변경</h1>
+	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t175' /></h1>
 	<div class="headerDiv">
-		<a class="imgbtn" id="saveBtn"><span>저장</span></a>
-		<a class="imgbtn" id="closeBtn"><span>취소</span></a>
+		<a class="imgbtn" id="saveBtn"><span><spring:message code='ezPMS.t265' /></span></a>
+		<a class="imgbtn" id="closeBtn"><span><spring:message code='ezPMS.t41' /></span></a>
 	</div>
 	<div id="mainBody" class="mainBodyTSU">
 		<div class="mainBodyTop">
@@ -383,13 +385,13 @@ button.PHBtn {
 						<strong style="top:30px;"></strong>
 					</div>
 					<div class="taskStatusChgDiv">
-						<span>업무상태</span>
+						<span><spring:message code='ezPMS.t137' /> <spring:message code='ezPMS.t38' /></span>
 						<select>
-							<option value="W">대기</option>
-							<option value="P">진행</option>
-							<option value="C">완료</option>
-							<option value="S">보류</option>
-							<option value="L">지연</option>
+							<option value="W"><spring:message code='ezPMS.t16' /></option>
+							<option value="P"><spring:message code='ezPMS.t15' /></option>
+							<option value="C"><spring:message code='ezPMS.t17' /></option>
+							<option value="S"><spring:message code='ezPMS.t19' /></option>
+							<option value="L"><spring:message code='ezPMS.t18' /></option>
 						</select>
 					</div>
 			</div>
@@ -397,36 +399,36 @@ button.PHBtn {
 		<div class="mainBodyBot">
 			<table class="content">
 			  <tr>
-			    <th class="topThL" colspan="2">계획</th>
-			    <th class="topThL" colspan="2">실제</th>
-			    <th class="topThL">오차</th>
+			    <th class="topThL" colspan="2"><spring:message code='ezPMS.t177' /></th>
+			    <th class="topThL" colspan="2"><spring:message code='ezPMS.t178' /></th>
+			    <th class="topThL"><spring:message code='ezPMS.t176' /></th>
 			  </tr>
 			  <tr>
-			    <th class="midTh">시작일</th>
+			    <th class="midTh"><spring:message code='ezPMS.t61' /></th>
 			    <td class="planTd">
 				    <input type="text" id="PSDatepicker" style="width:80px;text-align:center" readonly >
 			    </td>
-			    <th class="midTh">시작일</th>
+			    <th class="midTh"><spring:message code='ezPMS.t61' /></th>
 			    <td class="realTd">
 			    	<input type="text" id="RSDatepicker" style="width:80px;text-align:center" readonly >
 			    </td>
 			    <td id="sDiff" class="sDiff"></td>
 			  </tr>
 			  <tr>
-			    <th class="midTh">종료일</th>
+			    <th class="midTh"><spring:message code='ezPMS.t62' /></th>
 			    <td class="planTd">
 			    	<input type="text" id="PEDatepicker" style="width:80px;text-align:center" readonly >
 			    </td>
-			    <th class="midTh">종료일</th>
+			    <th class="midTh"><spring:message code='ezPMS.t62' /></th>
 			    <td class="realTd">
 			    	<input type="text" id="REDatepicker" style="width:80px;text-align:center" readonly >
 			    </td>
 			    <td id="eDiff" class="eDiff"></td>
 			  </tr>
 			  <tr>
-			    <th class="midTh">진행률(%)</th>
+			    <th class="midTh"><spring:message code='ezPMS.t250' />(%)</th>
 			    <td id="planProgress" class="planTd"></td>
-			    <th class="midTh">진행률(%)</th>
+			    <th class="midTh"><spring:message code='ezPMS.t250' />(%)</th>
 			    <td class="realTd"><input type="text" name="realProgress"></td>
 			    <td id="progDiff" class="progDiff"></td>
 			  </tr>

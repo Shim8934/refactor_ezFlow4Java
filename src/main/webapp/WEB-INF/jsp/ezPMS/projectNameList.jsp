@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>프로젝트 이름으로 찾기</title>
+<title><spring:message code='ezPMS.t192' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />"
 	type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -23,7 +23,7 @@ function popupClose() {
  
 function selectProjectName(elem) {
 	
-	if ($(elem).parent().parent().attr("id") === "projectNameList"){
+	if ($(elem).parent().parent().attr("id") === "projectNameList") {
 		$("#projectNameList tr").removeClass("selectTR");
 	}
 	
@@ -61,7 +61,7 @@ tr.hover:not (.selectTR ):hover {
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
-					<h1 style="display: inline-block;">프로젝트 이름으로 찾기</h1>
+					<h1 style="display: inline-block;"><spring:message code='ezPMS.t192' /></h1>
 			    </div>					
 			</div>
 			<div style="height:203px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
@@ -77,9 +77,9 @@ tr.hover:not (.selectTR ):hover {
 			</div>
 			<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="sendProjectName()"><span>확인</span></a></td>
+				<td><a class="imgbtn" id="submit" onclick="sendProjectName()"><span><spring:message code='ezPMS.t43' /></span></a></td>
 				<td></td>
-				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
+				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a></td>
 			</tr>
 		</table>
 		</form>

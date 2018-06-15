@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><spring:message code='ezCircular.t10'/></title>
+<title><spring:message code='ezPMS.t171' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -13,21 +13,19 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>	
 <script type="text/javascript">
-var listProjectStatus = '${setting.listProjectStatus}';
-var progressColor = '${setting.progressColor}';
-var completeColor = '${setting.completeColor}';
-var overdueColor = '${setting.overdueColor}';
-var holdColor = '${setting.holdColor}';
-var listNumber = '${setting.listNumber}';
-var viewType = '${setting.viewType}';
-var projectSort = '${setting.projectSort}';
+var listProjectStatus = '<c:out value="${setting.listProjectStatus}"/>';
+var progressColor = '<c:out value="${setting.progressColor}"/>';
+var completeColor = '<c:out value="${setting.completeColor}"/>';
+var overdueColor = '<c:out value="${setting.overdueColor}"/>';
+var holdColor = '<c:out value="${setting.holdColor}"/>';
+var listNumber = '<c:out value="${setting.listNumber}"/>';
+var viewType = '<c:out value="${setting.viewType}"/>';
+var projectSort = '<c:out value="${setting.projectSort}"/>';
 var currentColor = "";
 var statusName = "";
 
-$(function(){
+$(function() {
 	$("#1tab0").addClass("tabon");
-	console.log(listNumber);
-	console.log(listProjectStatus);
 	$("#listcount option[value='" + listNumber + "']").attr("selected", true);
 	$("#defaultStatus option[value='" + listProjectStatus + "']").attr("selected", true);
 });
@@ -58,10 +56,10 @@ function save_info() {
 		contentType: "application/json; charset=UTF-8",
 		data : JSON.stringify(data),
 		success : function() {
-			alert("저장되었습니다.");
+			alert("<spring:message code='ezPMS.t170' />");
 		},
 		error : function() {
-			alert("오류가 발생했습니다.");
+			alert("<spring:message code='ezPMS.t208' />");
 		}
 	});
 					
@@ -112,16 +110,16 @@ function manyColorShow(statusId) {
 </style>
 </head>
 <body class="mainbody">
-    <h1>프로젝트관리 환경설정</h1>
+    <h1><spring:message code='ezPMS.t171' /></h1>
     <div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
-	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">기본환경설정</span></p>
+	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t172' /></span></p>
 	   </div>
 	</div>
     <div id="contentArea" style="overflow:auto;">
     	<table class="content" style="width:303px;margin-left:15px;">
 		       <tr>
-					<th>리스트 개수</th>
+					<th><spring:message code='ezPMS.t173' /></th>
 					<td>
 						<select id="listcount" style="width: 40px; height: 20px;">
 							<option value="10">10</option>
@@ -133,22 +131,22 @@ function manyColorShow(statusId) {
 					</td>
 				</tr>
             	<tr>
-                	<th>기본 프로젝트 화면</th>
+                	<th><spring:message code='ezPMS.t174' /></th>
                 		<td>
                 			<select id="defaultStatus" style="width: 120px">
-                				<option value="A">전체 프로젝트</option>
-                				<option value="P">진행 프로젝트</option>
-                				<option value="W">대기 프로젝트</option>
-                				<option value="C">완료 프로젝트</option>
-                				<option value="L">지연 프로젝트</option>
-                				<option value="S">보류 프로젝트</option>
-                				<option value="D">삭제 프로젝트</option>
-                				<option value="F">자주가는 프로젝트</option>
+                				<option value="A"><spring:message code='ezPMS.t271' /></option>
+                				<option value="P"><spring:message code='ezPMS.t258' /></option>
+                				<option value="W"><spring:message code='ezPMS.t260' /></option>
+                				<option value="C"><spring:message code='ezPMS.t261' /></option>
+                				<option value="L"><spring:message code='ezPMS.t262' /></option>
+                				<option value="S"><spring:message code='ezPMS.t259' /></option>
+                				<option value="D"><spring:message code='ezPMS.t263' /></option>
+                				<option value="F"><spring:message code='ezPMS.t20' /></option>
                 			</select>
                 		</td>
             	</tr>
 				<tr> 
-					<th>진행중인 업무</th>
+					<th><spring:message code='ezPMS.t138' /></th>
 					<td>
 						<table style="table-layout:fixed;">
 							<tr>
@@ -160,7 +158,7 @@ function manyColorShow(statusId) {
 					</td>
 				</tr>
 				<tr>
-					<th>완료된 업무</th>
+					<th><spring:message code='ezPMS.t34' /></th>
 					<td>
 						<table style="table-layout:fixed">
 							<tr>
@@ -172,7 +170,7 @@ function manyColorShow(statusId) {
 					</td>
 				</tr>
 				<tr>
-					<th>기한이 지난 업무</th>
+					<th><spring:message code='ezPMS.t139' /></th>
 					<td>
 						<table style="table-layout:fixed">
 							<tr>
@@ -184,7 +182,7 @@ function manyColorShow(statusId) {
 					</td>
 				</tr>
 				<tr>
-					<th>보류된 업무</th>
+					<th><spring:message code='ezPMS.t277' /></th>
 					<td>
 						<table style="table-layout:fixed">
 							<tr>
@@ -198,8 +196,8 @@ function manyColorShow(statusId) {
 			</table>
 			<br />
 			<div align="center" style="width:265px;">
-				<a class="imgbtn" onClick="save_info()"><span>저장</span></a>
-				<a class="imgbtn" onClick="window.location.reload(false)"><span>취소</span></a>
+				<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezPMS.t265' /></span></a>
+				<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPMS.t41' /></span></a>
 			</div>
 		</form>
     </div>
