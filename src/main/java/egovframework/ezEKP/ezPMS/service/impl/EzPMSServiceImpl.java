@@ -51,10 +51,10 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("EzPMSService")
 public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSServiceImpl.class);
-	
+
 	@Autowired
 	private CommonUtil commonUtil;
-	
+
 	@Resource(name = "EzPMSDAO")
 	private EzPMSDAO ezPMSDAO;
 
@@ -62,76 +62,77 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status,
 			Map<String, Object> search, String lang, String position, String companyId) {
 		LOGGER.debug("[SERVICE] getProjectList started.");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("lang", lang);
 		map.put("deptId", deptId);
 		map.put("position", position);
-		
+
 		if (search.get("projectSort").equals("1")) {
 			map.put("projectSort", "PLAN_START_DATE");
 		} else {
 			map.put("projectSort", "PLAN_END_DATE");
 		}
-		
+
 		search.remove("projectSort");
-		
+
 		map.putAll(search);
-		
+
 		List<ProjectInfoVO> projectList = new ArrayList<ProjectInfoVO>();
-		
-		try{
+
+		try {
 			projectList = ezPMSDAO.getProjectList(map);
-			
+
 			if (projectList != null) {
 				for (int i = 0; i < projectList.size(); i++) {
 					ProjectInfoVO project = projectList.get(i);
-					
+
 					if (!project.getStatus().equals("C")) {
 						Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 						Date today = new Date();
 						String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
-						Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
-						
+						Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
+
 						int restDueday = getWorkingDays(now, endDate, companyId, tenantId) - 1;
 						projectList.get(i).setRestDueday(restDueday);
 					}
-					
+
 					map.put("projectId", projectList.get(i).getProjectId());
-					
+
 					List<Map<String, Object>> statusCount = ezPMSDAO.getStatusCount(map);
-					//각 개수
+					// 각 개수
 					int totalTaskCount = 0;
 					int completeTaskCount = 0;
 					int lateTaskCount = 0;
-					
+
 					for (int j = 0; j < statusCount.size(); j++) {
 						String taskStatus = statusCount.get(j).get("status").toString();
 						int taskCount = Integer.parseInt(statusCount.get(j).get("count").toString());
-						
+
 						if (taskStatus.equals("C")) {
 							completeTaskCount = taskCount;
 						} else if (taskStatus.equals("L")) {
 							lateTaskCount = taskCount;
 						}
-						
+
 						totalTaskCount += taskCount;
 					}
-					
+
 					projectList.get(i).setTotalTaskCount(totalTaskCount);
 					projectList.get(i).setCompleteTaskCount(completeTaskCount);
 					projectList.get(i).setLateTaskCount(lateTaskCount);
-					
-					//프로젝트 이름에 따옴표
-					projectList.get(i).setProjectName(projectList.get(i).getProjectName().replaceAll("&quot;", "\"").replace("&#39;", "\'"));
+
+					// 프로젝트 이름에 따옴표
+					projectList.get(i).setProjectName(
+							projectList.get(i).getProjectName().replaceAll("&quot;", "\"").replace("&#39;", "\'"));
 				}
 			}
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
-		
+
 		LOGGER.debug("[SERVICE] getProjectList ended.");
 		return projectList;
 	}
@@ -139,31 +140,33 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public Long addNewProject(Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] addNewProject started.");
-		
+
 		map.put("progress", 0);
-		
+
 		try {
-			//날짜 차이 계산
+			// 날짜 차이 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planStartDate").toString());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planEndDate").toString());
-			int workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
-			
+			int workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(),
+					Integer.parseInt(map.get("tenantId").toString()));
+
 			map.put("workingDay", workingDays);
-			//map.put("workingDay", 0);
+			// map.put("workingDay", 0);
 			map.put("restDueday", workingDays);
-			
-			//프로젝트 총괄담당자 정보 불러오기
-			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(), Integer.parseInt(map.get("tenantId").toString()), "user");
+
+			// 프로젝트 총괄담당자 정보 불러오기
+			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(),
+					Integer.parseInt(map.get("tenantId").toString()), "user");
 			map.put("headManagerDeptname", headManagerInfo.getUserDeptname());
 			map.put("headManagerDeptname2", headManagerInfo.getUserDeptname2());
 			map.put("headManagerName", headManagerInfo.getUserName());
 			map.put("headManagerName2", headManagerInfo.getUserName2());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.debug("Error : " + e.getMessage() + " " + e.getStackTrace());
 		}
-		
+
 		Long projectId = ezPMSDAO.addNewProject(map);
 		LOGGER.debug("[SERVICE] addNewProject ended.");
 		return projectId;
@@ -171,28 +174,28 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void deleteProject(int tenantId, Long projectId) {
-		LOGGER.debug("Service deleteProject started.");	
-		
+		LOGGER.debug("Service deleteProject started.");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.deleteProject(map);
-		
+
 		LOGGER.debug("Service deleteProject ended.");
 	}
 
 	@Override
 	public void updateMainSetting(ProjectMainSettingVO project, int tenantId) {
 		LOGGER.debug("Service updateMainSetting started");
-		
+
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", project.getUserId());
 		param.put("tenantId", tenantId);
 		param.put("userIdType", "user");
-		
+
 		ProjectMainSettingVO projectSetting = ezPMSDAO.getProjectMainSetting(param);
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", project.getUserId());
 		map.put("tenantId", tenantId);
@@ -204,7 +207,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("projectSort", project.getProjectSort());
 		map.put("listNumber", project.getListNumber());
 		map.put("listProjectStatus", project.getListProjectStatus());
-		
+
 		if (projectSetting.getUserId() == null) {
 			LOGGER.debug("DAO insertMainSetting started");
 			ezPMSDAO.insertMainSetting(map);
@@ -212,47 +215,49 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			LOGGER.debug("DAO updateMainSetting started");
 			ezPMSDAO.updateMainSetting(map);
 		}
-		
+
 		LOGGER.debug("Service updateMainSetting ended");
 	}
 
 	@Override
-	public void updateProjectStatus(Long projectId, String status, int tenantId, String realStartDate, String planEndDate) {
+	public void updateProjectStatus(Long projectId, String status, int tenantId, String realStartDate,
+			String planEndDate) {
 		LOGGER.debug("updateProjectStatus started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("status", status);
 		map.put("tenantId", tenantId);
-		
+
 		try {
-			
+
 			if (status.equals("P")) {
-				//날짜 차이 계산
+				// 날짜 차이 계산
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(planEndDate);
 				Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(realStartDate);
-				
+
 				int createAndEndDateComp = createDate.compareTo(endDate);
-				
-				if(createAndEndDateComp > 0) {
+
+				if (createAndEndDateComp > 0) {
 					map.put("status", "L");
 				} else {
 					map.put("status", "P");
 				}
 			}
-			
+
 			ezPMSDAO.updateProjectStatus(map);
-			
+
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
-		
+
 		LOGGER.debug("updateProjectStatus ended.");
 	}
 
 	@Override
-	public ProjectInfoVO getProjectDetails(Long projectId, String userId, int tenantId, String mode, String lang, String deptId, String companyId) {
+	public ProjectInfoVO getProjectDetails(Long projectId, String userId, int tenantId, String mode, String lang,
+			String deptId, String companyId) {
 		LOGGER.debug("getProjectDetail started");
-		
+
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("lang", lang);
@@ -262,39 +267,39 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("deptId", deptId);
 		map.put("isGantt", 1);
 		map.put("roleId", 4);
-		
+
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
-		
+
 		try {
 			project.setProjectName(project.getProjectName().replaceAll("&quot;", "\"").replaceAll("&#39;", "\'"));
-			
-			//프로젝트 멤버 불러오기
+
+			// 프로젝트 멤버 불러오기
 			List<ProjectMemberVO> member = ezPMSDAO.getProjectMemberList(map);
 			project.setProjectMember(member);
-			
+
 			if (!project.getStatus().equals("C")) {
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 				Date today = new Date();
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
-				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
-				
+				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
+
 				int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
 				project.setRestDueday(restDueday);
-			}	
-			
+			}
+
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
-		
+
 		LOGGER.debug("getProjectDetail ended");
-		
+
 		return project;
 	}
 
 	@Override
 	public void updateProject(ProjectInfoVO project, int tenantId, String companyId) {
 		LOGGER.debug("Service updateProject Started.");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", project.getProjectId());
 		map.put("projectName", project.getProjectName());
@@ -305,48 +310,49 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("alamMailStatus", project.getAlamMailStatus());
 		map.put("headManagerId", project.getHeadManagerId());
 		map.put("tenantId", tenantId);
-		
+
 		try {
-			//날짜 차이 계산
+			// 날짜 차이 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 			Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getCreateDate());
-			
+
 			int workingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
-			
+
 			int restDueday = getWorkingDays(nowDate, endDate, companyId, tenantId);
 			map.put("workingday", workingDays);
 			map.put("restDueday", restDueday);
-			
-			//프로젝트 총괄담당자 정보 불러오기
+
+			// 프로젝트 총괄담당자 정보 불러오기
 			ProjectMemberVO headManagerInfo = getUserInfo(project.getHeadManagerId(), tenantId, "user");
 			map.put("headManagerDeptname", headManagerInfo.getUserDeptname());
 			map.put("headManagerDeptname2", headManagerInfo.getUserDeptname2());
 			map.put("headManagerName", headManagerInfo.getUserName());
 			map.put("headManagerName2", headManagerInfo.getUserName2());
-			
+
 		} catch (Exception e) {
 			LOGGER.debug("Error : " + e.getMessage());
 		}
-		
+
 		ezPMSDAO.updateProjectInfo(map);
-		
+
 		LOGGER.debug("Service updateProject Ended.");
 	}
 
 	@Override
-	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId, int isGantt) {
+	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId,
+			int isGantt) {
 		LOGGER.debug("getProjectMemberList started");
-		
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("projectId", projectId);
 		param.put("roleId", roleId);
 		param.put("lang", lang);
 		param.put("tenantId", tenantId);
 		param.put("isGantt", isGantt);
-		
+
 		List<ProjectMemberVO> list = ezPMSDAO.getProjectMemberList(param);
-		
+
 		LOGGER.debug("getProjectMemberList ended");
 		return list;
 	}
@@ -359,12 +365,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("userId", userId);
 		map.put("orderStatus", orderStatus);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.changeKanbanOrder(map);
-		
+
 		LOGGER.debug("[SERVICE] changeKanbanOrder ended.");
 	}
-	
+
 	@Override
 	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId) {
 		LOGGER.debug("[SERVICE] addKanbanOrder started.");
@@ -373,26 +379,26 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("userId", userId);
 		map.put("orderStatus", orderStatus);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.addKanbanOrder(map);
 		LOGGER.debug("[SERVICE] changeKanbanOrder ended.");
 	}
-	
+
 	@Override
 	public int addFavoriteProject(Long projectId, String userId, int tenantId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		
+
 		List<Long> favoriteProjectId = ezPMSDAO.getFavoriteProject(map);
-		
+
 		for (int i = 0; i < favoriteProjectId.size(); i++) {
 			if (projectId == favoriteProjectId.get(i)) {
 				return 1;
 			}
 		}
-		
+
 		ezPMSDAO.addFavoriteProject(map);
 		return 0;
 	}
@@ -403,9 +409,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("projectId", projectId);
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.deleteFavoriteProject(map);
-		
+
 	}
 
 	@Override
@@ -424,27 +430,29 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("logDate", taskLog.getLogDate());
 		map.put("groupId", taskLog.getGroupId());
 		map.put("taskId", taskLog.getTaskId());
-		
+
 		ezPMSDAO.addTaskLog(map);
 		LOGGER.debug("[SERVICE] addTaskLog ended");
 	}
 
 	@Override
-	public List<TaskLogListVO> getTaskLogList(Long projectId, Map<String, Object> map, String offset, String lang, int tenantId) throws Exception {
+	public List<TaskLogListVO> getTaskLogList(Long projectId, Map<String, Object> map, String offset, String lang,
+			int tenantId) throws Exception {
 		LOGGER.debug("[SERVICE] getTaskLogList started");
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
-		
+
 		List<TaskLogListVO> taskLogList = ezPMSDAO.getTaskLogList(map);
-		
+
 		LOGGER.debug("[SERVICE] getTaskLogList ended");
 		return taskLogList;
 	}
 
 	@Override
-	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang, String position) {
+	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang,
+			String position) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", project.getStatus());
 		map.put("searchByName", project.getProjectName());
@@ -457,16 +465,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		map.put("position", position);
-		
-		int projectListCount = ezPMSDAO.getProjectListCount(map);		
-		
+
+		int projectListCount = ezPMSDAO.getProjectListCount(map);
+
 		return projectListCount;
 	}
 
 	@Override
 	public int getTaskListCount(SearchVO search, String userId) {
 		LOGGER.debug("[SERVICE] getTaskListCount started.");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", search.getStatus());
 		map.put("isMyTask", search.getIsMyTask());
@@ -483,7 +491,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("searchByProjectName", search.getProjectName());
 
 		int taskCount = ezPMSDAO.getTaskListCount(map);
-		
+
 		LOGGER.debug("[SERVICE] getTaskListCount ended.");
 		return taskCount;
 	}
@@ -491,7 +499,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public int getTaskLogListCount(TaskLogListVO taskLog, int tenantId) {
 		LOGGER.debug("[SERVICE] getTaskLogListCount started.");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", taskLog.getProjectId());
 		map.put("searchByContent", taskLog.getLogContent());
@@ -499,9 +507,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("groupId", taskLog.getGroupId());
 		map.put("taskId", taskLog.getTaskId());
 		map.put("tenantId", tenantId);
-		
+
 		int taskLogListCount = ezPMSDAO.getTaskLogListCount(map);
-		
+
 		LOGGER.debug("taskLogListCount : " + taskLogListCount);
 		LOGGER.debug("[SERVICE] getTaskLogListCount ended.");
 		return taskLogListCount;
@@ -516,15 +524,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public String getKanbanOrder(Long projectId, String userId, int tenantId) {
 		LOGGER.debug("[SERVICE] getKanbanOrder started.");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		String kanbanOrder = "";
 		kanbanOrder = ezPMSDAO.getKanbanOrder(map);
-		
+
 		LOGGER.debug("[SERVICE] getKanbanOrder ended.");
 		return kanbanOrder;
 	}
@@ -536,9 +544,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location) {
+	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat,
+			String orderHow, String location) {
 		LOGGER.debug("[SERVICE] getTaskList started");
-		
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("projectId", search.getProjectId());
@@ -548,35 +557,36 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("overview", search.getOverview());
 		param.put("searhByStartDate", search.getPlanStartDate());
 		param.put("searchByEndDate", search.getPlanEndDate());
-		param.put("lang", ""); //파라미터로 받아와야함.
+		param.put("lang", ""); // 파라미터로 받아와야함.
 		param.put("status", search.getStatus());
 		param.put("tenantId", search.getTenantId());
 		param.put("limit", limit);
 		param.put("startRow", startRow);
 		param.put("groupId", search.getGroupId());
 		param.put("isMyTask", search.getIsMyTask());
-		
-		//정렬
+
+		// 정렬
 		param.put("orderWhat", orderWhat);
 		param.put("orderHow", orderHow);
 		param.put("location", location);
-		
-		//검색
+
+		// 검색
 		param.put("searchByOverview", search.getOverview());
 		param.put("searchByUser", search.getMemberName());
 		param.put("taskName", search.getTaskName());
 		param.put("searchByProjectName", search.getProjectName());
-		
+
 		List<ProjectTaskVO> list = ezPMSDAO.getTaskList(param);
-		
+
 		LOGGER.debug("[SERVICE] getTaskList ended");
 		return list;
 	}
 
 	@Override
-	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang) {
+	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow,
+			int limit, String lang) {
 		LOGGER.debug("[SERVICE] getGroupList started.");
-		
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("projectId", search.getProjectId());
 		param.put("tenantId", search.getTenantId());
@@ -593,9 +603,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("searchByOverview", search.getOverview());
 		param.put("searchByProjectName", search.getProjectName());
 		param.put("userId", search.getMemberId());
-		
+
 		List<ProjectGroupVO> list = ezPMSDAO.getGroupList(param);
-		
+
 		LOGGER.debug("[SERVICE] getGroupList ended.");
 		return list;
 	}
@@ -604,47 +614,47 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList, String companyId, int tenantId) {
 		LOGGER.debug("[SERVICE] addTask started.");
 		Long taskId = (long) 0;
-		
+
 		try {
-			
-			String projectId = taskVO.getProjectId()+"";
-			
+
+			String projectId = taskVO.getProjectId() + "";
+
 			// 정렬 순서 구하기
-			int sortOrder = ezPMSDAO.getSortOrder(taskVO.getGroupId()+"");
+			int sortOrder = ezPMSDAO.getSortOrder(taskVO.getGroupId() + "");
 			taskVO.setSortOrder(sortOrder);
-			
+
 			// 투입률 총합
 			float sumPctinput = 0;
-			
+
 			taskVO.setRealProgress((float) 0);
 			taskVO.setMemberCount(taskMemberList.size());
-			
-			//workingday 계산
+
+			// workingday 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
-			
+
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
-			
+
 			int createAndEndDateComp = createDate.compareTo(endDate);
-			
-			if(createAndEndDateComp > 0) {
+
+			if (createAndEndDateComp > 0) {
 				taskVO.setStatus("L");
 			} else {
 				taskVO.setStatus("W");
 			}
-			
-			//업무 총괄담당자 정보 불러오기
+
+			// 업무 총괄담당자 정보 불러오기
 			ProjectMemberVO headManagerInfo = getUserInfo(taskVO.getHeadManagerId(), taskVO.getTenantId(), "user");
 			taskVO.setHeadManagerName(headManagerInfo.getUserName());
 			taskVO.setHeadManagerName2(headManagerInfo.getUserName2());
 			taskVO.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
 			taskVO.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
 			taskVO.setRealWorkingday(calWorkingDays + 1);
-			
+
 			taskId = ezPMSDAO.addTask(taskVO);
 
-			for(int i=0;i<taskMemberList.size();i++) {
+			for (int i = 0; i < taskMemberList.size(); i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
 				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
@@ -652,59 +662,60 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			ezPMSDAO.addTaskMember(taskMemberList);
 
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
-			
+
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
 			map1.put("realWorkingday", calWorkingDays);
 			map1.put("tenantId", taskVO.getTenantId());
 			ezPMSDAO.updateProjectWorkingday(map1);
-			
-			//가중치 계산
+
+			// 가중치 계산
 			updateTaskWDNW(taskVO, taskWorkingday);
-			
-			//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
-			if(!taskVO.getGroupId().equals(0L)){
+
+			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
+			if (!taskVO.getGroupId().equals(0L)) {
 				String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
 				String[] ancGroupArr = ancesterGroup.split(",");
-				
-				for(int i = 0; i < ancGroupArr.length; i++){
+
+				for (int i = 0; i < ancGroupArr.length; i++) {
 					updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId);
 				}
 			}
-			
-			//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
-			if(!taskVO.getGroupId().equals(0L)){
+
+			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+			if (!taskVO.getGroupId().equals(0L)) {
 				String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
 				String[] ancGroupArr = ancesterGroup.split(",");
-				
-				for(int i = 0; i < ancGroupArr.length; i++){
+
+				for (int i = 0; i < ancGroupArr.length; i++) {
 					map1.put("groupId", ancGroupArr[i]);
 					ezPMSDAO.updateGroupProgress(map1);
 				}
 			}
-			
-			//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+
+			// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
 			ezPMSDAO.updateProjectProgress(taskVO);
-			
-			//업데이트 후 프로젝트 진행률을 조회
+
+			// 업데이트 후 프로젝트 진행률을 조회
 			ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map1);
-			
-			//프로젝트 진행률이 100이상인데  업무가 추가 되었으면, 진행으로 상태를 바꾼다.
-			if(Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100){
+
+			// 프로젝트 진행률이 100이상인데 업무가 추가 되었으면, 진행으로 상태를 바꾼다.
+			if (Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100) {
 				map1.put("status", "P");
 				ezPMSDAO.updateProjectStatus(map1);
 			}
-			
-			//업무가 속한 프로젝트 날짜 업데이트
-//			updateProjectDate(taskVO.getProjectId(), taskVO.getTenantId(), companyId);
+
+			// 업무가 속한 프로젝트 날짜 업데이트
+			// updateProjectDate(taskVO.getProjectId(), taskVO.getTenantId(),
+			// companyId);
 			LOGGER.debug("[SERVICE] updateTaskProgress ended.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		LOGGER.debug("[SERVICE] addTask ended.");
-		
+
 		return taskId.intValue();
 	}
 
@@ -717,14 +728,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public ProjectTaskVO getTaskDetails(Long taskId, int tenantId, String lang) {
 		LOGGER.debug("[SERVICE] getTaskDetails started.");
-		
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("taskId", taskId);
 		param.put("tenantId", tenantId);
 		param.put("lang", lang);
-		
+
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
-		
+
 		LOGGER.debug("[SERVICE] getTaskDetails ended.");
 		return taskDetails;
 	}
@@ -733,131 +744,131 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public int updateTask(ProjectTaskVO task, String companyId, int tenantId) {
 		LOGGER.debug("[SERVICE] updateTask started.");
 		Long taskId = (long) 0;
-		
+
 		try {
 			List<TaskMemberVO> taskMemberList = task.getTaskMember();
-			
+
 			String projectId = task.getProjectId() + "";
-			
+
 			// 정렬 순서 구하기
 			int sortOrder = ezPMSDAO.getSortOrder(task.getGroupId() + "");
 			task.setSortOrder(sortOrder);
-			
+
 			// 투입률 총합
 			float sumPctinput = 0;
-			
+
 			task.setRealProgress((float) 0);
 			task.setMemberCount(taskMemberList.size());
-			
-			//workingday 계산
+
+			// workingday 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
-			
+
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
-			
+
 			int createAndEndDateComp = createDate.compareTo(endDate);
-			
-			if(createAndEndDateComp > 0) {
+
+			if (createAndEndDateComp > 0) {
 				task.setStatus("L");
 			} else {
 				task.setStatus("W");
 			}
-			
-			//업무 총괄담당자 정보 불러오기
+
+			// 업무 총괄담당자 정보 불러오기
 			ProjectMemberVO headManagerInfo = getUserInfo(task.getHeadManagerId(), task.getTenantId(), "user");
 			task.setHeadManagerName(headManagerInfo.getUserName());
 			task.setHeadManagerName2(headManagerInfo.getUserName2());
 			task.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
 			task.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
-			
+
 			taskId = ezPMSDAO.addTask(task);
-			
-			for(int i=0;i<taskMemberList.size();i++) {
+
+			for (int i = 0; i < taskMemberList.size(); i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
 				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
 			}
 			ezPMSDAO.addTaskMember(taskMemberList);
-			
+
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
-			
+
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
 			ezPMSDAO.updateProjectWorkingday(map1);
-			
-			//가중치 계산
+
+			// 가중치 계산
 			updateTaskWDNW(task, taskWorkingday);
-			
-			//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
-			if(!task.getGroupId().equals(0L)){
+
+			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
+			if (!task.getGroupId().equals(0L)) {
 				String ancesterGroup = getAncesterGroup(task.getGroupId(), task.getTenantId());
 				String[] ancGroupArr = ancesterGroup.split(",");
-				
-				for(int i = 0; i < ancGroupArr.length; i++){
+
+				for (int i = 0; i < ancGroupArr.length; i++) {
 					updateGroupDate(Long.parseLong(ancGroupArr[i]), task.getTenantId(), companyId);
 				}
 			}
-			
-			//업무가 속한 프로젝트 날짜 업데이트
-//			updateProjectDate(task.getProjectId(), task.getTenantId(), companyId);
+
+			// 업무가 속한 프로젝트 날짜 업데이트
+			// updateProjectDate(task.getProjectId(), task.getTenantId(),
+			// companyId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		LOGGER.debug("[SERVICE] updateTask ended.");
-		
+
 		return taskId.intValue();
 	}
 
 	@Override
 	public void deleteTask(Long taskId, long projectId, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("[SERVICE] deleteTask started.");
-		
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskId", taskId);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		ProjectTaskVO taskVO = ezPMSDAO.getTaskDetails(map);
-		
+
 		ezPMSDAO.deleteTask(map);
-		
-		//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
-		if(!taskVO.getGroupId().equals(0L)){
+
+		// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
+		if (!taskVO.getGroupId().equals(0L)) {
 			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
 			String[] ancGroupArr = ancesterGroup.split(",");
-			
-			for(int i = 0; i < ancGroupArr.length; i++){
+
+			for (int i = 0; i < ancGroupArr.length; i++) {
 				updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId);
 			}
 		}
-		
-		//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
-		if(!taskVO.getGroupId().equals(0L)){
+
+		// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+		if (!taskVO.getGroupId().equals(0L)) {
 			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
 			String[] ancGroupArr = ancesterGroup.split(",");
-			
-			for(int i = 0; i < ancGroupArr.length; i++){
+
+			for (int i = 0; i < ancGroupArr.length; i++) {
 				map.put("groupId", ancGroupArr[i]);
 				ezPMSDAO.updateGroupProgress(map);
 			}
 		}
-		
-		//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+
+		// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
 		ezPMSDAO.updateProjectProgress(taskVO);
-		
-		//업데이트 후 프로젝트 진행률을 조회
+
+		// 업데이트 후 프로젝트 진행률을 조회
 		ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map);
-		
-		//프로젝트 진행률이 100이상인데  업무가 추가 되었으면, 진행으로 상태를 바꾼다.
-		if(Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100){
+
+		// 프로젝트 진행률이 100이상인데 업무가 추가 되었으면, 진행으로 상태를 바꾼다.
+		if (Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100) {
 			map.put("status", "P");
 			ezPMSDAO.updateProjectStatus(map);
 		}
-		
+
 		LOGGER.debug("[SERVICE] deleteTask ended.");
 	}
 
@@ -865,28 +876,29 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public Long addGroup(Map<String, Object> map, String isIssue, String companyId, int tenantId) {
 		LOGGER.debug("[SERVICE] addGroup started.");
 		map.put("delStatus", 0);
-		
-		try{
-			//날짜 차이 계산
+
+		try {
+			// 날짜 차이 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planStartDate").toString());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planEndDate").toString());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("createDate").toString());
-			
+
 			int createAndStartDateComp = createDate.compareTo(startDate);
 			int workingDays = 0;
-			
+
 			if (createAndStartDateComp <= 0) {
 				workingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			} else {
 				workingDays = getWorkingDays(createDate, endDate, companyId, tenantId);
 			}
-			
+
 			map.put("workingDay", workingDays);
 			map.put("restDueday", workingDays);
 			map.put("isIssue", isIssue);
-			
-			//프로젝트 총괄담당자 정보 불러오기
-			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(), Integer.parseInt(map.get("tenantId").toString()), "user");
+
+			// 프로젝트 총괄담당자 정보 불러오기
+			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(),
+					Integer.parseInt(map.get("tenantId").toString()), "user");
 			map.put("headManagerDeptname", headManagerInfo.getUserDeptname());
 			map.put("headManagerDeptname2", headManagerInfo.getUserDeptname2());
 			map.put("headManagerName", headManagerInfo.getUserName());
@@ -906,7 +918,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
 		map.put("tenantId", tenantId);
-		
+
 		ProjectGroupVO groupInfo = ezPMSDAO.getGroupDetails(map);
 		LOGGER.debug("[SERVICE] getGroupDetails ended.");
 		return groupInfo;
@@ -926,9 +938,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.deleteGroup(map);
-		
+
 		LOGGER.debug("[SERVICE] deleteGroup ended.");
 	}
 
@@ -941,21 +953,21 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String userIdType) {
 		LOGGER.debug("[SERVICE] getProjectMainSetting started.");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("userIdType", userIdType);
-		
+
 		ProjectMainSettingVO mainSetting = new ProjectMainSettingVO();
-		
+
 		LOGGER.debug("[Parameter] userId : " + userId + ", tenantId : " + tenantId + ", userIdType : " + userIdType);
-		try{
+		try {
 			mainSetting = ezPMSDAO.getProjectMainSetting(map);
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e.getMessage());
 		}
-		
+
 		LOGGER.debug("listStatus : " + mainSetting.getListProjectStatus());
 		LOGGER.debug("[mainSetting] userMail : " + mainSetting.getUserMail());
 		LOGGER.debug("[SERVICE] getProjectMainSetting ended.");
@@ -963,38 +975,39 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup, String location, int tenantId, String userId) {
-		
-		Map<String,Object> map = new HashMap<String, Object>();
+	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup, String location, int tenantId,
+			String userId) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("project_Id", projectId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("location", location);
-		
+
 		List<ProjectTaskTreeVO> list = ezPMSDAO.getProjectGroupTree(map);
-		
-		for(int i = 0; i < list.size(); i++) {
+
+		for (int i = 0; i < list.size(); i++) {
 			ProjectTaskTreeVO vo = list.get(i);
 			vo.setIcon("jstree-folder");
-			
-			if(vo.getParent().equals("0")) {
+
+			if (vo.getParent().equals("0")) {
 				vo.setParent("#");
 			}
-			
+
 			map.put("taskId", vo.getTaskId());
 			map.put("groupId", vo.getGroupId());
 			map.put("projectId", projectId);
-			
+
 			int taskGroupCount = 0;
-			
-			if(location != null && !location.equals("")){
+
+			if (location != null && !location.equals("")) {
 				if (location.equals("taskLog")) {
 					taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
 				} else if (location.equals("taskList")) {
 					taskGroupCount = ezPMSDAO.getTaskListCount(map);
-				} else if(location.equals("board")) {
+				} else if (location.equals("board")) {
 					taskGroupCount = ezPMSDAO.getBoardListCount(map);
-				} else if(location.equals("comment")) {
+				} else if (location.equals("comment")) {
 					taskGroupCount = ezPMSDAO.getCommentListCount(map);
 					System.out.println("======================================" + taskGroupCount);
 				}
@@ -1002,187 +1015,190 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 			if (taskGroupCount != 0) {
 				vo.setText(vo.getText() + " (" + taskGroupCount + ")");
-			} 
+			}
 		}
-		
-		if(onlyGroup.equals("false")) {
+
+		if (onlyGroup.equals("false")) {
 			List<ProjectTaskTreeVO> list2 = ezPMSDAO.getProjectTaskTree(map);
-			
-			for(int i = 0; i < list2.size(); i++) {
+
+			for (int i = 0; i < list2.size(); i++) {
 				ProjectTaskTreeVO vo = list2.get(i);
 				vo.setIcon("jstree-file");
-				
-				if(location != null && !location.equals("")) {
-					
+
+				if (location != null && !location.equals("")) {
+
 					if (location.equals("taskLog")) {
 						map.put("taskId", vo.getTaskId());
 						map.put("groupId", vo.getGroupId());
 						map.put("projectId", projectId);
-						
+
 						int taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
-						
+
 						if (taskGroupCount != 0) {
 							vo.setText(vo.getText() + " (" + taskGroupCount + ")");
 						}
-						
+
 						map.remove("taskId");
 						map.remove("groupId");
 						map.remove("projectId");
-					} else if(location.equals("board")) {
+					} else if (location.equals("board")) {
 						map.put("taskId", vo.getTaskId());
 						map.put("groupId", vo.getGroupId());
-						
+
 						int taskGroupCount = ezPMSDAO.getBoardListCount(map);
-						if(taskGroupCount > 0) {
+						if (taskGroupCount > 0) {
 							vo.setText(vo.getText() + "(" + taskGroupCount + ")");
 						}
-						
+
 						map.remove("taskId");
 						map.remove("groupId");
-					} else if(location.equals("comment")) {
+					} else if (location.equals("comment")) {
 						map.put("taskId", vo.getTaskId());
 						map.put("groupId", vo.getGroupId());
-						
+
 						int taskGroupCount = ezPMSDAO.getCommentListCount(map);
-						if(taskGroupCount > 0) {
+						if (taskGroupCount > 0) {
 							vo.setText(vo.getText() + "(" + taskGroupCount + ")");
 						}
-						
+
 						map.remove("taskId");
 						map.remove("groupId");
 					}
 				}
-				
+
 				list.add(vo);
 			}
 		}
-		
+
 		return list;
 	}
-	
+
 	@Override
-	public List<ProjectUserVO> getDeptUserList(int tenantId, String key ,String value, String lang) throws Exception{
+	public List<ProjectUserVO> getDeptUserList(int tenantId, String key, String value, String lang) throws Exception {
 		LOGGER.debug("getDeptUserList started");
-		
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("key", key);
 		param.put("value", value);
 		param.put("lang", lang);
 		List<ProjectUserVO> userList = ezPMSDAO.getDeptUserList(param);
-		
+
 		LOGGER.debug("getDeptUserList ended");
 		return userList;
 	}
-	
+
 	@Override
-	public List<ProjectCompanyVO> getCompanyList(String userId, int tenantId, String companyId,String lang) throws Exception {
+	public List<ProjectCompanyVO> getCompanyList(String userId, int tenantId, String companyId, String lang)
+			throws Exception {
 		LOGGER.debug("getCompanyList started");
-		
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
 		param.put("companyId", companyId);
 		param.put("lang", lang);
 		List<ProjectCompanyVO> compList = ezPMSDAO.getCompanyList(param);
-		
+
 		LOGGER.debug("getCompanyList ended");
 		return compList;
 	}
 
 	@Override
-	public List<DeptViewVO> getDeptViewList(String userId,String companyId, int tenantId,String lang) throws Exception {
+	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang)
+			throws Exception {
 		LOGGER.debug("getDeptViewList started");
-		
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
 		param.put("companyId", companyId);
 		param.put("lang", lang);
 		List<DeptViewVO> deptList = ezPMSDAO.getDeptViewVO(param);
-		
+
 		LOGGER.debug("getDeptViewList ended");
 		return deptList;
 	}
-	
+
 	@Override
-	public int getWorkingDays(Date start, Date end, String companyId, int tenantId){
+	public int getWorkingDays(Date start, Date end, String companyId, int tenantId) {
 		LOGGER.debug("[SERVICE]getWorkingDays started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("planStartDate", start);
 		map.put("planEndDate", end);
-		//map.put("planStartDateShort", start.toString().substring(start.toString().indexOf("-") + 1));
-		//map.put("planEndDateShort", end.toString().substring(end.toString().indexOf("-") + 1));
-		
-	    //Ignore argument check
-	    Calendar c1 = GregorianCalendar.getInstance();
-	    c1.setTime(start);
-	    int w1 = c1.get(Calendar.DAY_OF_WEEK);
-	    c1.add(Calendar.DAY_OF_WEEK, -w1 + 1);
+		// map.put("planStartDateShort",
+		// start.toString().substring(start.toString().indexOf("-") + 1));
+		// map.put("planEndDateShort",
+		// end.toString().substring(end.toString().indexOf("-") + 1));
 
-	    Calendar c2 = GregorianCalendar.getInstance();
-	    c2.setTime(end);
-	    int w2 = c2.get(Calendar.DAY_OF_WEEK);
-	    c2.add(Calendar.DAY_OF_WEEK, -w2 + 1);
+		// Ignore argument check
+		Calendar c1 = GregorianCalendar.getInstance();
+		c1.setTime(start);
+		int w1 = c1.get(Calendar.DAY_OF_WEEK);
+		c1.add(Calendar.DAY_OF_WEEK, -w1 + 1);
 
-	    //end Saturday to start Saturday 
-	    long days = (c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24);
-	    long daysWithoutSunday = days - (days * 2 / 7);
+		Calendar c2 = GregorianCalendar.getInstance();
+		c2.setTime(end);
+		int w2 = c2.get(Calendar.DAY_OF_WEEK);
+		c2.add(Calendar.DAY_OF_WEEK, -w2 + 1);
 
-	    if (w1 == Calendar.SUNDAY) {
-	        w1 = Calendar.MONDAY;
-	    }
-	    if (w2 == Calendar.SUNDAY) {
-	        w2 = Calendar.MONDAY;
-	    }
-	    
-//	    List<String> compHoliday = ezPMSDAO.getHolidaysCount(map);
-//	    
-//	    for (int i = 0; i < compHoliday.size(); i++) {
-//	    	
-//	    }
-	    
-	    int workingDays = (int) (daysWithoutSunday - w1 + w2 + 1);
-	    LOGGER.debug("WORKINGDAYS : " + workingDays);
-	    LOGGER.debug("[SERVICE]getWorkingDays ended");
-	    return workingDays;
+		// end Saturday to start Saturday
+		long days = (c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24);
+		long daysWithoutSunday = days - (days * 2 / 7);
+
+		if (w1 == Calendar.SUNDAY) {
+			w1 = Calendar.MONDAY;
+		}
+		if (w2 == Calendar.SUNDAY) {
+			w2 = Calendar.MONDAY;
+		}
+
+		// List<String> compHoliday = ezPMSDAO.getHolidaysCount(map);
+		//
+		// for (int i = 0; i < compHoliday.size(); i++) {
+		//
+		// }
+
+		int workingDays = (int) (daysWithoutSunday - w1 + w2 + 1);
+		LOGGER.debug("WORKINGDAYS : " + workingDays);
+		LOGGER.debug("[SERVICE]getWorkingDays ended");
+		return workingDays;
 	}
-	
-	
-	//유저 정보 불러오기
+
+	// 유저 정보 불러오기
 	@Override
 	public ProjectMemberVO getUserInfo(String userId, int tenantId, String userIdType) throws Exception {
 		LOGGER.debug("Service getUserInfo Started");
 		ProjectMemberVO userInfo = new ProjectMemberVO();
-		
+
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
 		param.put("userIdType", userIdType);
-		
+
 		userInfo = ezPMSDAO.getUserInfo(param);
-		
+
 		LOGGER.debug("Service getUserInfo Ended");
 		return userInfo;
 	}
-	
-	//유저의 프로젝트 role 확인
+
+	// 유저의 프로젝트 role 확인
 	@Override
-	public int getUserProjectRole (String userId, int tenantId, Long projectId, String deptId) {
+	public int getUserProjectRole(String userId, int tenantId, Long projectId, String deptId) {
 		LOGGER.debug("[SERVICE] getUserProjectRole started");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
-		param.put("projectId", projectId);	
+		param.put("projectId", projectId);
 		param.put("deptId", deptId);
-		
+
 		int projectRole = ezPMSDAO.getUserProjectRole(param);
 		LOGGER.debug("[SERVICE] getUserProjectRole ended");
 		return projectRole;
 	}
-	
+
 	@Override
 	public List<ProjectMemberVO> getProjectMember(Long projectId, int roleId, String lang) {
 		// TODO Auto-generated method stub
@@ -1190,10 +1206,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId) {		
+	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId) {
 		LOGGER.debug("[SERVICE] ezPMS addProjectMember Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
+
 		try {
 			map.put("userId", projectMemberList.getUserId());
 			map.put("userName", projectMemberList.getUserName());
@@ -1206,14 +1222,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("userIdType", projectMemberList.getUserIdType());
 			map.put("projectId", projectMemberList.getProjectId());
 			map.put("tenantId", tenantId);
-			
+
 			ezPMSDAO.addProjectMember(map);
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
-		
+
 		LOGGER.debug("[SERVICE] ezPMS addProjectMember Ended");
 	}
 
@@ -1223,7 +1239,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		LOGGER.debug("[SERVICE] ezPMS getRemainingWeight Ended");
 		return ezPMSDAO.getRemainingWeight(projectId);
 	}
@@ -1235,7 +1251,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("taskId", taskId);
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
-		
+
 		List<TaskMemberVO> taskMemberList = ezPMSDAO.getTaskMemberList(map);
 		LOGGER.debug("[SERVICE] ezPMS getTaskMemberList Ended");
 		return taskMemberList;
@@ -1247,14 +1263,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.deleteProjectMember(map);
-		
+
 		LOGGER.debug("[SERVICE] deleteProjectMember Ended");
 	}
 
 	@Override
-	public void updateProjectRealDate(Long projectId, int tenantId, String changeDate, String status, String planEndDate, String companyId) {
+	public void updateProjectRealDate(Long projectId, int tenantId, String changeDate, String status,
+			String planEndDate, String companyId) {
 		LOGGER.debug("[SERVICE] updateProjectRealDate Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -1262,26 +1279,27 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("changeDate", changeDate);
 		map.put("status", status);
 		map.put("progress", 100);
-		
+
 		try {
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(planEndDate);
 			Date today = new Date();
 			String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 			int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
-			
+
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 		ezPMSDAO.updateProjectRealDate(map);
 		LOGGER.debug("[SERVICE] updateProjectRealDate Ended");
 	}
 
 	@Override
-	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate, String companyId) {
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate,
+			String companyId) {
 		LOGGER.debug("[SERVICE] completeAllTasks Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -1296,13 +1314,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 			int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
-			
+
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 		ezPMSDAO.completeAllTasks(map);
 		LOGGER.debug("[SERVICE] completeAllTasks Ended");
 	}
@@ -1311,19 +1329,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Transactional
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception {
 		LOGGER.debug("[SERVICE] addBoard started");
-		
-		int tenantId = (int)jsonParam.get("tenantId");
+
+		int tenantId = (int) jsonParam.get("tenantId");
 		int projectId = Integer.parseInt((String) jsonParam.get("projectId"));
 		int lastInsertId;
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
-		
+
 		int docNo = ezPMSDAO.getMaxDocNo(map) + 1;
-		
+
 		String mode = (String) jsonParam.get("mode");
-		
+
 		ProjectBoardVO vo = new ProjectBoardVO();
 		vo.setTenantId(tenantId);
 		vo.setWriterId((String) jsonParam.get("writerId"));
@@ -1337,17 +1355,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setWriteType((int) jsonParam.get("writeType"));
 		vo.setReadCount(0);
 		vo.setGroupId(Long.parseLong((String) jsonParam.get("groupId")));
-		
-		if(jsonParam.get("taskId")!=null && !jsonParam.get("taskId").equals("null") && !jsonParam.get("taskId").equals("")) {
+
+		if (jsonParam.get("taskId") != null && !jsonParam.get("taskId").equals("null")
+				&& !jsonParam.get("taskId").equals("")) {
 			vo.setTaskId(Long.parseLong((String) jsonParam.get("taskId")));
 		}
-		
+
 		vo.setWriterPosition((String) jsonParam.get("writerPosition"));
 		vo.setWriterPosition2((String) jsonParam.get("writerPosition2"));
 		vo.setWriteOverview((String) jsonParam.get("writeOverview"));
 		vo.setDocNo(docNo);
-		
-		if(mode.equals("reply")) {
+
+		if (mode.equals("reply")) {
 			vo.setRootItemId(Integer.parseInt((String) jsonParam.get("rootItemId")));
 			// 답변을 쓰는 글의 level보다 1이 증가
 			vo.setItemLevel(Integer.parseInt((String) jsonParam.get("itemLevel")) + 1);
@@ -1356,194 +1375,196 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			lastInsertId = ezPMSDAO.addBoard(vo);
 			ezPMSDAO.updateRootItemId(lastInsertId);
 		}
-		
-		
+
 		String fileList = jsonParam.get("fileList").toString();
-		
+
 		// 첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		String pDirPath = "";
-		
+
 		if (fileList != null && !fileList.equals("")) {
-			
+
 			pDirPath = commonUtil.getUploadPath("upload_project.ROOT", tenantId);
 			pDirPath = realPath + pDirPath;
-			
+
 			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 				pDirPath = pDirPath + commonUtil.separator;
 			}
-			
+
 			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile");
-			
+
 			if (!file.exists()) {
 				file.mkdir();
 			}
-			
+
 			String[] attach = fileList.split("/");
-			
+
 			attachMap.put("tenantId", tenantId);
-			
+
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(":");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-				
+
 				LOGGER.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
-				
-				String uploadFilePath = commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+
+				String uploadFilePath = commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator
+						+ filePath + "." + extension;
 				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
-			
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile"
+						+ commonUtil.separator + filePath + "." + extension;
+
 				attachMap.put("last_insert_id", lastInsertId);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
-				
+
 				ezPMSDAO.insertProjectAttach(attachMap);
-				
-				
-				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+
+				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
 			}
 		}
 		LOGGER.debug("[SERVICE] addBoard ended");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void modifyBoard(JSONObject jsonParam, String realPath) throws Exception {
 		LOGGER.debug("[SERVICE] modifyBoard started");
-		
-		int tenantId = (int)jsonParam.get("tenantId");
+
+		int tenantId = (int) jsonParam.get("tenantId");
 		int projectId = Integer.parseInt((String) jsonParam.get("projectId"));
-		int itemId = Integer.parseInt((String)jsonParam.get("itemId"));
-		
+		int itemId = Integer.parseInt((String) jsonParam.get("itemId"));
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		Iterator<String> keysItr = jsonParam.keySet().iterator();
-		
-		while(keysItr.hasNext()) {
+
+		while (keysItr.hasNext()) {
 			String key = keysItr.next();
 			Object value = jsonParam.get(key);
-			
+
 			map.put(key, value);
 		}
-	
+
 		ezPMSDAO.updateBoard(map);
-		
+
 		// 첨부파일 전부 삭제 후 다시 저장
 		ezPMSDAO.deleteProjectAttach(map);
-		
+
 		String fileList = jsonParam.get("fileList").toString();
-		
+
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		String pDirPath = "";
-		
+
 		if (fileList != null && !fileList.equals("")) {
-			
+
 			pDirPath = commonUtil.getUploadPath("upload_project.ROOT", tenantId);
 			pDirPath = realPath + pDirPath;
-			
+
 			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 				pDirPath = pDirPath + commonUtil.separator;
 			}
-			
+
 			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile");
-			
+
 			if (!file.exists()) {
 				file.mkdir();
 			}
-			
+
 			String[] attach = fileList.split("/");
-			
+
 			attachMap.put("tenantId", tenantId);
-			
+
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(":");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-				
+
 				LOGGER.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
-				
-				String uploadFilePath = commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+
+				String uploadFilePath = commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator
+						+ filePath + "." + extension;
 				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
-			
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile"
+						+ commonUtil.separator + filePath + "." + extension;
+
 				attachMap.put("last_insert_id", itemId);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
-				
+
 				ezPMSDAO.insertProjectAttach(attachMap);
-				
-				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+
+				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
 			}
 		}
-		
+
 		LOGGER.debug("[SERVICE] modifyBoard ended");
 	}
-	
+
 	@Transactional
 	@SuppressWarnings("unchecked")
 	@Override
 	public void moveBoard(JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] moveBoard started");
-		
+
 		ArrayList<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
 		String userId = (String) jsonParam.get("userId");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		Iterator<String> keysItr = jsonParam.keySet().iterator();
-		
-		while(keysItr.hasNext()) {
+
+		while (keysItr.hasNext()) {
 			String key = keysItr.next();
 			Object value = jsonParam.get(key);
-			
+
 			map.put(key, value);
 		}
-		
+
 		int authority = ezPMSDAO.getUserProjectRole(map);
-		
-		for(String itemId : itemIds) {
+
+		for (String itemId : itemIds) {
 			map.put("itemId", itemId);
 			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
-			
-			if(boardVO.getWriterId().equals(userId) || authority == 1) {
+
+			if (boardVO.getWriterId().equals(userId) || authority == 1) {
 				ezPMSDAO.moveBoard(map);
 			} else {
 				Exception e = new Exception("Only project Manager and Writer are authorized to modify article");
 				throw e;
 			}
-		}	
+		}
 		LOGGER.debug("[SERVICE] moveBoard ended");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
 	public void deleteBoard(int tenantId, JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] deleteBoard started");
-		
+
 		ArrayList<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
 		String userId = (String) jsonParam.get("userId");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", jsonParam.get("projectId"));
 		map.put("userId", userId);
 		map.put("deptId", jsonParam.get("deptId"));
-		
+
 		int authority = ezPMSDAO.getUserProjectRole(map);
-		
-		for(String itemId : itemIds) {
+
+		for (String itemId : itemIds) {
 			map.put("itemId", itemId);
 			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
-			
-			if(boardVO.getWriterId().equals(userId) || authority == 1) {
+
+			if (boardVO.getWriterId().equals(userId) || authority == 1) {
 				ezPMSDAO.deleteBoard(map);
 			} else {
 				Exception e = new Exception("Only project Manager and Writer are authorized to delete article");
@@ -1552,11 +1573,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		}
 		LOGGER.debug("[SERVICE] deleteBoard ended");
 	}
-	
+
 	@Override
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int listCnt, String lang, String position, String orderWhat, String orderHow, String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, String searchByContent) {
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId,
+			int startRow, int listCnt, String lang, String position, String orderWhat, String orderHow,
+			String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate,
+			String searchByTitle, String searchByOverview, String searchByContent) {
 		LOGGER.debug("[SERVICE] getBoardList Started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
@@ -1567,7 +1591,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("lang", lang);
 		map.put("position", position);
 		map.put("orderHow", orderHow);
-		
+
 		map.put("searchByTaskName", searchByTaskName);
 		map.put("searchByUser", searchByUser);
 		map.put("searchByStartDate", searchByStartDate);
@@ -1575,55 +1599,57 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("searchByTitle", searchByTitle);
 		map.put("searchByOverview", searchByOverview);
 		map.put("searchByContent", searchByContent);
-		
+
 		if (orderWhat != null) {
-			if(orderWhat.equals("ITEM_ID")) {
+			if (orderWhat.equals("ITEM_ID")) {
 				orderWhat = "B.item_id";
-			} else if(orderWhat.equals("FILE")) {
+			} else if (orderWhat.equals("FILE")) {
 				orderWhat = "file_cnt";
-			} else if(orderWhat.equals("TITLE")) {
+			} else if (orderWhat.equals("TITLE")) {
 				orderWhat = "B.title";
-			} else if(orderWhat.equals("TASK_NAME")) {
+			} else if (orderWhat.equals("TASK_NAME")) {
 				orderWhat = "T.task_name";
-			} else if(orderWhat.equals("DEPT_NAME")) {
+			} else if (orderWhat.equals("DEPT_NAME")) {
 				orderWhat = "writer_deptname";
-			} else if(orderWhat.equals("WRITER_NAME")) {
+			} else if (orderWhat.equals("WRITER_NAME")) {
 				orderWhat = "writer_name";
-			} else if(orderWhat.equals("WRITE_DATE")) {
+			} else if (orderWhat.equals("WRITE_DATE")) {
 				orderWhat = "B.write_date";
-			} else if(orderWhat.equals("READ_COUNT")) {
+			} else if (orderWhat.equals("READ_COUNT")) {
 				orderWhat = "B.read_count";
-			}	
-		} 
-		
+			}
+		}
+
 		map.put("orderWhat", orderWhat);
-		
+
 		List<ProjectBoardVO> boardList = ezPMSDAO.getBoardList(map);
-		
-		for(ProjectBoardVO boardVO : boardList) {
+
+		for (ProjectBoardVO boardVO : boardList) {
 			map = new HashMap<String, Object>();
 			map.put("userId", userId);
 			map.put("itemId", boardVO.getItemId());
-			
-			if(ezPMSDAO.checkReadBoardOrNot(map) != -1) {
+
+			if (ezPMSDAO.checkReadBoardOrNot(map) != -1) {
 				boardVO.setReadOrNot(true);
 			}
 		}
-		
+
 		LOGGER.debug("[SERVICE] getBoardList Ended");
 		return boardList;
 	}
 
 	@Override
-	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId, String searchByTaskName, String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, String searchByContent) {
+	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId, String searchByTaskName,
+			String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle,
+			String searchByOverview, String searchByContent) {
 		LOGGER.debug("[SERVICE] getBoardListCount Started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
 		map.put("taskId", taskId);
-		
+
 		map.put("searchByTaskName", searchByTaskName);
 		map.put("searchByUser", searchByUser);
 		map.put("searchByStartDate", searchByStartDate);
@@ -1631,41 +1657,41 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("searchByTitle", searchByTitle);
 		map.put("searchByOverview", searchByOverview);
 		map.put("searchByContent", searchByContent);
-		
+
 		LOGGER.debug("[SERVICE] getBoardListCount Ended");
 		return ezPMSDAO.getBoardListCount(map);
 	}
-	
+
 	@Transactional
 	@Override
 	public ProjectBoardVO getBoardDetail(int tenantId, Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] getBoardDetail started");
-		
+
 		map.put("tenantId", tenantId);
 		ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
-		
-		if(ezPMSDAO.checkReadBoardOrNot(map) == -1) {
+
+		if (ezPMSDAO.checkReadBoardOrNot(map) == -1) {
 			ezPMSDAO.insertReadBoardLog(map);
-			
-			if(!boardVO.getWriterId().equals(map.get("userId"))) {
+
+			if (!boardVO.getWriterId().equals(map.get("userId"))) {
 				ezPMSDAO.updateBoardReadCount((int) map.get("itemId"));
 			}
 		}
-		
+
 		boardVO.setFileList(ezPMSDAO.getBoardAttach(map));
-		
+
 		LOGGER.debug("[SERVICE] getBoardDetail ended");
 		return boardVO;
 	}
-	
+
 	@Override
-	public List<ProjectInfoVO> getProgressProject(String status) throws Exception{
+	public List<ProjectInfoVO> getProgressProject(String status) throws Exception {
 		LOGGER.debug("getProgressProject Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("status", "P");
-		map.put("lang", ""); //수정 필요
+		map.put("lang", ""); // 수정 필요
 		List<ProjectInfoVO> projectList = ezPMSDAO.getProgressProject(map);
-		
+
 		LOGGER.debug("getProgressProject Ended");
 		return projectList;
 	}
@@ -1674,27 +1700,28 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	private void fileMove(String beforeFilePath, String afterFilePath) {
 		LOGGER.debug("fileMove started.");
 		LOGGER.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
-		
+
 		File srcFile = new File(beforeFilePath);
 		File destFile = new File(afterFilePath);
-		
+
 		try {
 			boolean rename = srcFile.renameTo(destFile);
 			if (!rename) {
 				FileUtils.copyFile(srcFile, destFile);
-				
+
 				if (!srcFile.delete()) {
 					FileUtils.deleteQuietly(destFile);
-					throw new IOException("Failed to delete original file '" + srcFile +
-							"' after copy to '" + destFile + "'");
+					throw new IOException(
+							"Failed to delete original file '" + srcFile + "' after copy to '" + destFile + "'");
 				}
 			}
 		} catch (FileNotFoundException e) {
-			// 수정 시, 이미 업로드되어있는 파일들은 upload폴더에 옮겨져있기 때문에 tempUpload폴더에서 찾을 수 없다. 따라서 Exception 발생하지만 문제되지 않음
+			// 수정 시, 이미 업로드되어있는 파일들은 upload폴더에 옮겨져있기 때문에 tempUpload폴더에서 찾을 수 없다.
+			// 따라서 Exception 발생하지만 문제되지 않음
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		LOGGER.debug("fileMove ended.");
 	}
 
@@ -1704,87 +1731,87 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("taskId", taskId);
-		
+
 		String userTaskRole = ezPMSDAO.getUserTaskRole(map);
-		
+
 		LOGGER.debug("[SERVICE] getUserTaskRole ended");
 		return userTaskRole;
 	}
-	
+
 	@Override
 	public List<Map<String, Object>> getFilePath(long itemId, int tenantId) {
 		LOGGER.debug("[SERVICE] getFilePath started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("itemId", itemId);
-		
+
 		List<Map<String, Object>> fileList = ezPMSDAO.getFilePath(map);
 		LOGGER.debug("[SERVICE] getFilePath ended");
-		
+
 		return fileList;
 	}
 
 	public void updateTaskInfo(ProjectTaskVO task, String companyId, int tenantId) {
 		LOGGER.debug("[SERVICE] updateTaskInfo started.");
 		Long taskId = (long) 0;
-		
+
 		try {
 			List<TaskMemberVO> taskMemberList = task.getTaskMember();
 			taskId = task.getTaskId();
-			
+
 			String projectId = task.getProjectId() + "";
-			
+
 			// 투입률 총합
 			float sumPctinput = 0;
-			
+
 			task.setRealProgress((float) 0);
 			task.setMemberCount(taskMemberList.size());
-			
-			//workingday 계산
+
+			// workingday 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
-			
+
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
-			
+
 			int createAndEndDateComp = createDate.compareTo(endDate);
-			
-			if(createAndEndDateComp > 0) {
+
+			if (createAndEndDateComp > 0) {
 				task.setStatus("L");
 			} else {
 				task.setStatus("W");
 			}
-			
-			//업무 총괄담당자 정보 불러오기
+
+			// 업무 총괄담당자 정보 불러오기
 			ProjectMemberVO headManagerInfo = getUserInfo(task.getHeadManagerId(), task.getTenantId(), "user");
 			task.setHeadManagerName(headManagerInfo.getUserName());
 			task.setHeadManagerName2(headManagerInfo.getUserName2());
 			task.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
 			task.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
-			
+
 			ezPMSDAO.updateTaskInfo(task);
 			deleteTaskMember(taskId, task.getTenantId());
-			
-			for(int i=0;i<taskMemberList.size();i++) {
+
+			for (int i = 0; i < taskMemberList.size(); i++) {
 				TaskMemberVO taskMemberVO = taskMemberList.get(i);
 				taskMemberList.get(i).setTaskId(taskId);
 				sumPctinput += taskMemberVO.getPctinput();
 			}
 			ezPMSDAO.addTaskMember(taskMemberList);
-			
+
 			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
-			
+
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
 			ezPMSDAO.updateProjectWorkingday(map1);
-			
-			//가중치 계산
+
+			// 가중치 계산
 			updateTaskWDNW(task, taskWorkingday);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		LOGGER.debug("[SERVICE] updateTaskInfo ended.");
 	}
 
@@ -1794,11 +1821,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskId", taskId);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.deleteTaskMember(map);
-		
+
 		LOGGER.debug("[SERVICE] deleteTaskMember Ended");
-		
+
 	}
 
 	@Override
@@ -1807,7 +1834,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
-		//검색
+		// 검색
 		map.put("serachByGroupName", search.getGroupName());
 		map.put("searchByUpperGroupName", search.getUpperGroupName());
 		map.put("searchByUser", search.getMemberName());
@@ -1815,64 +1842,65 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("searchByOverview", search.getOverview());
 		map.put("searchByStartDate", search.getPlanStartDate());
 		map.put("searchByEndDate", search.getPlanEndDate());
-		
+
 		int groupCount = ezPMSDAO.getGroupCount(map);
-		
+
 		LOGGER.debug("[SERVICE] getGroupCount Ended");
 		return groupCount;
 	}
-	
+
 	public void updateTaskStatus(ProjectTaskVO task, String companyId, int tenantId) {
 		LOGGER.debug("[SERVICE] updateTaskStatus started.");
-		
+
 		try {
-			//날짜 차이 계산
+			// 날짜 차이 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
-			
+
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 			task.setRealWorkingday(calWorkingDays);
-			
+
 			if (task.getStatus() != null) {
 				if (task.getStatus().equals("P")) {
 					Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getRealStartDate());
 					int createAndEndDateComp = createDate.compareTo(endDate);
-					
-					if(createAndEndDateComp > 0) {
+
+					if (createAndEndDateComp > 0) {
 						task.setStatus("L");
 					} else {
 						task.setStatus("P");
 					}
-				}				
+				}
 			}
-			
+
 			ezPMSDAO.updateTaskStatus(task);
-			
-			//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
-			if(!task.getGroupId().equals(0L)){
+
+			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
+			if (!task.getGroupId().equals(0L)) {
 				String ancesterGroup = getAncesterGroup(task.getGroupId(), task.getTenantId());
 				String[] ancGroupArr = ancesterGroup.split(",");
-				
-				for(int i = 0; i < ancGroupArr.length; i++){
+
+				for (int i = 0; i < ancGroupArr.length; i++) {
 					updateGroupDate(Long.parseLong(ancGroupArr[i]), task.getTenantId(), companyId);
 				}
 			}
-			
-			//업무가 속한 프로젝트 날짜 업데이트
-//			updateProjectDate(task.getProjectId(), task.getTenantId(), companyId);
+
+			// 업무가 속한 프로젝트 날짜 업데이트
+			// updateProjectDate(task.getProjectId(), task.getTenantId(),
+			// companyId);
 		} catch (Exception e) {
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
-		
+
 		LOGGER.debug("[SERVICE] updateTaskStatus ended.");
 	}
 
 	@Override
 	public void addGroupMember(List<ProjectGroupMemberVO> groupMember) {
 		LOGGER.debug("[SERVICE] addGroupMember started.");
-		
+
 		ezPMSDAO.addTaskGroupMember(groupMember);
-		
+
 		LOGGER.debug("[SERVICE] addGroupMember ended.");
 	}
 
@@ -1889,9 +1917,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
-		
+
 		int userGroupRole = ezPMSDAO.getUserGroupRole(map);
-		
+
 		LOGGER.debug("[SERVICE] getUserGroupRole ended.");
 		return userGroupRole;
 	}
@@ -1899,25 +1927,25 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public int getBoardViewerCount(int tenantId, String itemId, String userId) {
 		LOGGER.debug("[SERVICE] getBoardViewerCount started.");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("itemId", itemId);
 		map.put("userId", userId);
-		
+
 		LOGGER.debug("[SERVICE] getBoardViewerCount ended.");
-		
-		return ezPMSDAO.getBoardViewerCount(map);	
+
+		return ezPMSDAO.getBoardViewerCount(map);
 	}
 
 	@Override
 	public List<BoardViewerVO> getBoardViewerList(int tenantId, Map<String, Object> param) {
 		LOGGER.debug("[SERVICE] getBoardViewerList started.");
-		
+
 		param.put("tenantId", tenantId);
-		
+
 		LOGGER.debug("[SERVICE] getBoardViewerList ended.");
-		
+
 		return ezPMSDAO.getBoardViewerList(param);
 	}
 
@@ -1929,7 +1957,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("rowIndexId", rowIndexId);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.addPreTaskRel(map);
 		LOGGER.debug("[SERVICE] addPreTaskRel ended.");
 	}
@@ -1941,16 +1969,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("rowIndex", rowIndex);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		List<Long> postTaskList = ezPMSDAO.getPreTaskRel(map);
 		LOGGER.debug("[SERVICE] getPreTaskRel ended.");
 		return postTaskList;
 	}
-	
+
 	@Override
 	public List<CommentVO> getCommentList(Map<String, Object> param) {
 		LOGGER.debug("[SERVICE] getCommentList started.");
-		
+
 		LOGGER.debug("[SERVICE] getCommentList ended.");
 		return ezPMSDAO.getCommentList(param);
 	}
@@ -1958,7 +1986,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public int getCommentListCount(Map<String, Object> param) {
 		LOGGER.debug("[SERVICE] getCommentListCount started.");
-		
+
 		LOGGER.debug("[SERVICE] getCommentListCount ended.");
 		return ezPMSDAO.getCommentListCount(param);
 	}
@@ -1966,13 +1994,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public void addComment(JSONObject jsonParam) {
 		LOGGER.debug("[SERVICE] addComment started.");
-		
+
 		CommentVO vo = new CommentVO();
-		
-		if(jsonParam.get("taskId") != null && !((String)jsonParam.get("taskId")).equals("")) {
+
+		if (jsonParam.get("taskId") != null && !((String) jsonParam.get("taskId")).equals("")) {
 			vo.setTaskId(Long.parseLong((String) jsonParam.get("taskId")));
 		}
-		
+
 		vo.setTenantId((int) jsonParam.get("tenantId"));
 		vo.setGroupId(Long.parseLong((String) jsonParam.get("groupId")));
 		vo.setUpdateDate((String) jsonParam.get("updateDate"));
@@ -1983,68 +2011,68 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setWriterName2((String) jsonParam.get("writerName2"));
 		vo.setWriterDeptName((String) jsonParam.get("writerDeptName"));
 		vo.setWriterDeptName2((String) jsonParam.get("writerDeptName2"));
-		
+
 		ezPMSDAO.addComment(vo);
-		
-		LOGGER.debug("[SERVICE] addComment ended.");		
+
+		LOGGER.debug("[SERVICE] addComment ended.");
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteComment(int tenantId, JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] deleteComment started");
-		
+
 		String userId = (String) jsonParam.get("userId");
 		String writerId = (String) jsonParam.get("writerId");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("projectId", jsonParam.get("projectId"));
 		map.put("userId", userId);
 		map.put("deptId", jsonParam.get("deptId"));
-		
+
 		int authority = ezPMSDAO.getUserProjectRole(map);
-		
+
 		map.put("commentId", jsonParam.get("commentId"));
-		
-		if(writerId.equals(userId) || authority == 1) {
+
+		if (writerId.equals(userId) || authority == 1) {
 			ezPMSDAO.deleteComment(map);
 		} else {
 			Exception e = new Exception("Only project Manager and Writer are authorized to delete article");
 			throw e;
 		}
-		
+
 		LOGGER.debug("[SERVICE] deleteComment ended");
 	}
 
 	@Override
 	public void modifyComment(JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] modifyComment started");
-		
+
 		String userId = (String) jsonParam.get("userId");
 		String writerId = (String) jsonParam.get("writerId");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", jsonParam.get("tenantId"));
 		map.put("projectId", jsonParam.get("projectId"));
 		map.put("userId", userId);
 		map.put("deptId", jsonParam.get("deptId"));
-		
+
 		int authority = ezPMSDAO.getUserProjectRole(map);
-		
+
 		map.put("commentId", jsonParam.get("commentId"));
 		map.put("commentContent", jsonParam.get("commentContent"));
-		
-		if(writerId.equals(userId) || authority == 1) {
+
+		if (writerId.equals(userId) || authority == 1) {
 			ezPMSDAO.updateComment(map);
 		} else {
 			Exception e = new Exception("Only project Manager and Writer are authorized to modify article");
 			throw e;
 		}
-		
+
 		LOGGER.debug("[SERVICE] modifyComment ended");
 	}
-	
+
 	@Override
 	public List<ProjectGroupMemberVO> getGroupMemberList(Long projectId, int tenantId, Long groupId) {
 		LOGGER.debug("[SERVICE] getGroupMemberList started.");
@@ -2052,19 +2080,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("groupId", groupId);
-		
+
 		LOGGER.debug("[SERVICE] getGroupMemberList ended.");
 		return ezPMSDAO.getGroupMemberList(map);
 	}
-	
+
 	@Override
-	public void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday){
+	public void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday) {
 		HashMap<String, Object> map2 = new HashMap<String, Object>();
 		// 가중치 계산
 		String projectId = taskVO.getProjectId().toString();
 		Long taskId = taskVO.getTaskId();
-		
-		if(taskVO.getWeight() == -1) {
+
+		if (taskVO.getWeight() == -1) {
 			int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
 			float calWeight = (taskWorkingday / projectWorkingday) * 100;
 			System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
@@ -2075,10 +2103,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map2.put("taskId", taskId);
 		map2.put("workingday", taskWorkingday);
 		map2.put("tenantId", taskVO.getTenantId());
-		
+
 		ezPMSDAO.updateTaskWDNW(map2);
 	}
-	
+
 	@Override
 	public void updateGroupSort(long projectId, long groupId, int sortOrder, int tenantId) {
 		LOGGER.debug("[SERVICE] updateGroupSort started.");
@@ -2087,9 +2115,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("groupId", groupId);
 		map.put("sortOrder", sortOrder);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.updateGroupSort(map);
-		
+
 		LOGGER.debug("[SERVICE] updateGroupSort started.");
 	}
 
@@ -2101,7 +2129,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("taskId", taskId);
 		map.put("sortOrder", sortOrder);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.updateTaskSort(map);
 		LOGGER.debug("[SERVICE] updateTaskSort ended.");
 	}
@@ -2114,59 +2142,58 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("preTaskIndex", preTaskIndex);
 		map.put("tenantId", tenantId);
 		map.put("projectId", projectId);
-		
+
 		ezPMSDAO.updatePreTaskRel(map);
 		LOGGER.debug("[SERVICE] updatePreTaskRel ended.");
 	}
-	
+
 	@Override
 	public Float getGroupWeight(Long groupId, int tenantId) {
 		LOGGER.debug("[SERVICE] getGroupWeight started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupId", groupId);
 		map.put("tenantId", tenantId);
-		
+
 		LOGGER.debug("[SERVICE] getGroupWeight ended.");
 		return ezPMSDAO.getGroupWeight(map);
 	}
-	
+
 	@Override
 	public void updateTaskWeight(ProjectTaskVO taskVO) throws Exception {
 		LOGGER.debug("[SERVICE] updateTaskWeight started.");
-		
+
 		ezPMSDAO.updateTaskWeight(taskVO);
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupId", taskVO.getGroupId());
 		map.put("tenantId", taskVO.getTenantId());
 		map.put("projectId", taskVO.getProjectId());
-		
-		//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
-		if(!taskVO.getGroupId().equals(0L)){
+
+		// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+		if (!taskVO.getGroupId().equals(0L)) {
 			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
 			String[] ancGroupArr = ancesterGroup.split(",");
-			
-			for(int i = 0; i < ancGroupArr.length; i++){
+
+			for (int i = 0; i < ancGroupArr.length; i++) {
 				map.put("groupId", ancGroupArr[i]);
 				ezPMSDAO.updateGroupProgress(map);
 			}
 		}
-		
-		//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+
+		// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
 		ezPMSDAO.updateProjectProgress(taskVO);
-		
-		//업데이트 후 프로젝트 진행률을 조회
+
+		// 업데이트 후 프로젝트 진행률을 조회
 		ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map);
-		
-		//프로젝트 진행률이 100이상이면, 상태를 완료로 바꾼다.
-		if(Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100){
+
+		// 프로젝트 진행률이 100이상이면, 상태를 완료로 바꾼다.
+		if (Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100) {
 			map.put("status", "C");
-		}
-		else{
+		} else {
 			map.put("status", "P");
 		}
 		ezPMSDAO.updateProjectStatus(map);
-		
+
 		LOGGER.debug("[SERVICE] updateTaskWeight ended.");
 	}
 
@@ -2178,18 +2205,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("targetTaskId", targetTaskId);
 		map.put("changeGroupId", changeGroupId);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.updateTaskGroupId(map);
 		LOGGER.debug("[SERVICE] updateTaskGroupId ended.");
 	}
-	
+
 	@Override
 	public Float getProjectWeight(Long projectId, int tenantId) throws Exception {
 		LOGGER.debug("[SERVICE] getProjectWeight started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		LOGGER.debug("[SERVICE] getProjectWeight ended.");
 		return ezPMSDAO.getProjectWeight(map);
 	}
@@ -2198,24 +2225,23 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public float getPlanProgress(Date start, Date end, String companyId, int tenantId) throws Exception {
 		Date today = new Date();
 		String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
-		Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
-		
+		Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
+
 		int totalWorkingdays = getWorkingDays(start, end, companyId, tenantId);
 		int restDueday = getWorkingDays(now, end, companyId, tenantId);
 		float planProgress = 0;
-		if(totalWorkingdays == 0){
+		if (totalWorkingdays == 0) {
 			totalWorkingdays = 1;
 		}
-		if(restDueday > 0){
-			planProgress = ((float)(totalWorkingdays - restDueday) / totalWorkingdays) * 100;
-		}
-		else{
+		if (restDueday > 0) {
+			planProgress = ((float) (totalWorkingdays - restDueday) / totalWorkingdays) * 100;
+		} else {
 			planProgress = 100;
 		}
-		
+
 		return planProgress;
 	}
-	
+
 	@Override
 	public void updateGroupProgress(long projectId, long groupId, int tenantId) {
 		LOGGER.debug("[SERVICE] updateGroupProgress started.");
@@ -2223,7 +2249,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("projectId", projectId);
 		map.put("groupId", groupId);
 		map.put("tenantId", tenantId);
-		
+
 		ezPMSDAO.updateGroupProgress(map);
 		LOGGER.debug("[SERVICE] updateGroupProgress ended.");
 	}
@@ -2234,21 +2260,21 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupId", groupId);
 		map.put("tenantId", tenantId);
-		
+
 		ProjectGroupVO groupVO = new ProjectGroupVO();
-		//그룹에 속한 업무들 중 가장 빠른 계획 시작일과 가장 늦은 계획 종료일을 얻어옴.
+		// 그룹에 속한 업무들 중 가장 빠른 계획 시작일과 가장 늦은 계획 종료일을 얻어옴.
 		groupVO = getGroupBoundaryDate(groupId, tenantId);
-		
+
 		Date startDay = new SimpleDateFormat("yyyy-MM-dd").parse(groupVO.getPlanStartDate());
 		Date endDay = new SimpleDateFormat("yyyy-MM-dd").parse(groupVO.getPlanEndDate());
-		
-		//위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
+
+		// 위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
 		int workingday = getWorkingDays(startDay, endDay, companyId, tenantId);
-		
+
 		map.put("workingday", workingday);
 		map.put("planStartDate", startDay);
 		map.put("planEndDate", endDay);
-		
+
 		ezPMSDAO.updateGroupDate(map);
 		LOGGER.debug("[SERVICE] updateGroupDate ended.");
 	}
@@ -2259,7 +2285,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupId", groupId);
 		map.put("tenantId", tenantId);
-		
+
 		LOGGER.debug("[SERVICE] getGroupBoundaryDate ended.");
 		return ezPMSDAO.getGroupBoundaryDate(map);
 	}
@@ -2271,36 +2297,35 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("groupId", taskVO.getGroupId());
 		map.put("tenantId", taskVO.getTenantId());
 		map.put("projectId", taskVO.getProjectId());
-		
-		//업무의 진행률을 업데이트 해준다.
+
+		// 업무의 진행률을 업데이트 해준다.
 		ezPMSDAO.updateTaskProgress(taskVO);
-		
-		//프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
-		if(!taskVO.getGroupId().equals(0L)){
+
+		// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+		if (!taskVO.getGroupId().equals(0L)) {
 			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
 			String[] ancGroupArr = ancesterGroup.split(",");
-			
-			for(int i = 0; i < ancGroupArr.length; i++){
+
+			for (int i = 0; i < ancGroupArr.length; i++) {
 				map.put("groupId", ancGroupArr[i]);
 				ezPMSDAO.updateGroupProgress(map);
 			}
 		}
-		
-		//업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+
+		// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
 		ezPMSDAO.updateProjectProgress(taskVO);
-		
-		//업데이트 후 프로젝트 진행률을 조회
+
+		// 업데이트 후 프로젝트 진행률을 조회
 		ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map);
-		
-		//프로젝트 진행률이 100이상이면, 상태를 완료로 바꾼다.
-		if(Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100){
+
+		// 프로젝트 진행률이 100이상이면, 상태를 완료로 바꾼다.
+		if (Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100) {
 			map.put("status", "C");
-		}
-		else{
+		} else {
 			map.put("status", "P");
 		}
 		ezPMSDAO.updateProjectStatus(map);
-		
+
 		LOGGER.debug("[SERVICE] updateTaskProgress ended.");
 	}
 
@@ -2310,43 +2335,43 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupId", groupId);
 		map.put("tenantId", tenantId);
-		
+
 		LOGGER.debug("[SERVICE] getAncesterGroup ended.");
 		return ezPMSDAO.getAncesterGroup(map);
 	}
-	
+
 	@Override
 	public void updateProjectDate(long projectId, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("[SERVICE] updateProjectDate started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		ProjectInfoVO projectVO = new ProjectInfoVO();
-		//프로젝트에 속한 업무들 중 가장 빠른 계획 시작일과 가장 늦은 계획 종료일을 얻어옴.
+		// 프로젝트에 속한 업무들 중 가장 빠른 계획 시작일과 가장 늦은 계획 종료일을 얻어옴.
 		projectVO = getProjectBoundaryDate(projectId, tenantId);
-		
+
 		Date startDay = new SimpleDateFormat("yyyy-MM-dd").parse(projectVO.getPlanStartDate());
 		Date endDay = new SimpleDateFormat("yyyy-MM-dd").parse(projectVO.getPlanEndDate());
-		
-		//위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
+
+		// 위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
 		int workingday = getWorkingDays(startDay, endDay, companyId, tenantId);
-		
+
 		map.put("workingday", workingday);
 		map.put("planStartDate", startDay);
 		map.put("planEndDate", endDay);
-		
+
 		ezPMSDAO.updateProjectDate(map);
 		LOGGER.debug("[SERVICE] updateProjectDate ended.");
 	}
-	
+
 	@Override
 	public ProjectInfoVO getProjectBoundaryDate(long projectId, int tenantId) throws Exception {
 		LOGGER.debug("[SERVICE] getProjectBoundaryDate started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		
+
 		LOGGER.debug("[SERVICE] getProjectBoundaryDate ended.");
 		return ezPMSDAO.getProjectBoundaryDate(map);
 	}
