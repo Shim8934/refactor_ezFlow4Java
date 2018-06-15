@@ -8,7 +8,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t256' /></title>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
@@ -18,6 +17,7 @@
 <link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -52,6 +52,7 @@
 		tabFuncSetting();
 		diffSetting();
 		btnEvent();
+		selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	});
 	
 
@@ -401,9 +402,11 @@ button.PHBtn {
 </style>
 </head>
 <body class="popup">
-	<div class="popupHeader">
-	    <button id="deleteBtn" class="PHBtn">삭제</button>
-   		<button id="closeBtn" class="PHBtn">닫기</button>
+	<div id="menu">
+	    <ul>
+	    <li><span id="deleteBtn" class="PHBtn">삭제</span></li>
+   		<div style="float:right"><li><span id="closeBtn" class="PHBtn">닫기</span></li></div>
+   		</ul>
 	</div>
 	<div id="mainBody">
 		<div class="mainBodyTop">

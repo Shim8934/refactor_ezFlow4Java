@@ -338,7 +338,19 @@
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
 			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr>&nbsp;" + TITLE + "</nobr></span></li>";
+			                listHTML += "<nobr>&nbsp;"
+			                if(SCHEDULETYPE == 1) {
+			                	listHTML += "";
+			                } else if (SCHEDULETYPE == 2) {
+			                	listHTML += "(<spring:message code='ezSchedule.t12' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 3) {
+			                	listHTML += "(<spring:message code='ezSchedule.t11' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 7) {
+			                	listHTML += "(<spring:message code='ezSchedule.t282' />)&nbsp;";
+			                } else {
+			                	listHTML += "";
+			                }
+			                listHTML += TITLE + "</nobr></span></li>";
 			                count++;
 			        	}
 			        }
