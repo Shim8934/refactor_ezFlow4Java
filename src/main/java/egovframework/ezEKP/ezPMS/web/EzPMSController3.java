@@ -4,7 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -341,7 +344,15 @@ public class EzPMSController3 {
 		int countPage = 10;
 		int currentPage = (int) param.get("currentPage");
 		int projectId = (int) param.get("projectId");
-	
+		
+		String todayStr = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar yesterday = Calendar.getInstance();
+		yesterday.setTime(sdf.parse(todayStr));
+		yesterday.add(Calendar.DATE, -1);
+		
+		model.addAttribute("yesterday", sdf.format(yesterday.getTime()));
+		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list-count/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
