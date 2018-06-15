@@ -350,7 +350,7 @@
     			if (usepostDate) {
     				date_reset();
     			}
-    			$("input[name=searchCheck]").val(type);
+    			$("input[name=searchCheck][value=" + type + "]").prop("checked", true);
     			type_set();
 			}
 			
