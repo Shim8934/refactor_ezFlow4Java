@@ -257,6 +257,7 @@
 		   				if (groupId !== "") {
 				   			tempTask.id = "p" + projectId + "_g" + groupId + "_t" + tl[i].taskId;
 				   			tempTask.level = groupDepth + 1;
+				   			tempTask.groupId = groupId;
 		   				} else {
 				   			tempTask.id = "p" + projectId + "_t" + tl[i].taskId;
 				   			tempTask.level = 1;
@@ -708,17 +709,17 @@
 	   		function preProcess(){
 	   			//간트 차트 테이블 날짜 형식 세팅. i18nJs.js 의 내용에 덮어 씌움.
 	   			Date.defaultFormat = "yyyy/M/d";
-	   			Date.monthNames = ["<spring:message code='ezPMS.t246' />"];
-	   			Date.monthAbbreviations = ["<spring:message code='ezPMS.t246' />"];
-	   			Date.dayNames =["<spring:message code='ezPMS.t245' />"];
-	   			Date.dayAbbreviations =["<spring:message code='ezPMS.t244' />"];
+	   			Date.monthNames = ('<spring:message code="ezPMS.t246" />').split(";");
+	   			Date.monthAbbreviations = ('<spring:message code="ezPMS.t246" />').split(";");
+	   			Date.dayNames =('<spring:message code="ezPMS.t245" />').split(";");
+	   			Date.dayAbbreviations =('<spring:message code="ezPMS.t244" />').split(";");
 	   			
 	   		}
 	   		
 	   		function eventSetting(){
 	   			document.getElementById("pmsGanttRowDelBtn").onclick = delTask;
 		   		document.getElementById("pmsGanttRowNewBtn").onclick = addTask;
-		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
+// 		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
 		   		document.getElementById("pmsGanttAddGroup").onclick = addGroup;
 		   		document.getElementById("pmsGanttDelGroup").onclick = delGroup;
 
@@ -835,7 +836,7 @@
 	   		
 	   		function delTaskFunc(selectType){
 	   			var url = "";
-	   			var groupId = "";
+	   			var groupId = ge.currentTask.groupId;
 	   			var taskId = "";
 	   			var data = {};
 	   			

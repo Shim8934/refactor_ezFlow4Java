@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -176,7 +177,7 @@ $(function(){
 			<tr onclick="selectedMemoTR(this);">
 			<td class="memoTd">&nbsp;&nbsp;<spring:message code='ezPMS.t33' /></td>
 					<td><div name="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;<div style="margin-top: 5px; display: inline-block;">
-					<c:out value="${project.progress }" /></div>
+					&nbsp;<fmt:formatNumber value="${project.progress }" pattern="0.0" /></div>
 				</td>
 			</tr>
 			<tr onclick="selectedMemoTR(this);">

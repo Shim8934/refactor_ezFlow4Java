@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -130,7 +131,7 @@ $(function() {
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
 											value="${task.groupName }" /></td>
 									<c:if test="${position eq 'task' }">
-									<td onclick="selectedTR(this);"
+									<td onclick="selectedTR(this);" class="projectName" projectId="${task.projectId }"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
 											value="${task.projectName }" /></td>
 									</c:if>
@@ -173,7 +174,7 @@ $(function() {
 									<td onclick="selectedTR(this);"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px">
 										<div style="margin-top: 5px; display: inline-block;">
-											<c:out value="${task.realProgress }"/>%
+											<fmt:formatNumber value="${task.realProgress }" pattern="0.0" />%
 										</div>
 									</td>
 								</tr>
@@ -192,7 +193,7 @@ $(function() {
 									<td onclick="selectedTR(this);"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
 											value="${task.upperGroupName }" /></td>
-									<td onclick="selectedTR(this);"
+									<td onclick="selectedTR(this);" class="projectName" projectId="${task.projectId }"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
 											value="${task.projectName }" /></td>
 									<td onclick="selectedTR(this);"

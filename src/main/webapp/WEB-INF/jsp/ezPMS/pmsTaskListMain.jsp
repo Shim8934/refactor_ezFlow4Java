@@ -335,6 +335,14 @@
 			}
 		}
 	}
+	
+	function goTaskDetails(elem) {
+		var taskId = elem.id;
+		var feature = GetOpenPosition(835, 810);
+		
+		window.open("/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + taskId + "&userIdType=user",
+				"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
+	}
 </script>
 <style>
 #taskTree {

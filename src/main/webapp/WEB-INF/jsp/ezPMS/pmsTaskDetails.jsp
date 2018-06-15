@@ -442,7 +442,7 @@ button.PHBtn {
 			    <th class="detailsTable-th"><spring:message code='ezPMS.t176' /></th>
 			  </tr>
 			  <tr>
-			    <th class="detailsTable-th"><spring:message code='ezPMS.t61' /><th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t61' /></th>
 			    <td class="detailsTable-td dateTd"><c:out value="${taskDetails.planStartDate}"/></td>
 			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t61' /></th>
 			    <td class="detailsTable-td dateTd"><c:out value="${taskDetails.realStartDate == null ? '-' : taskDetails.realStartDate}"/></td>

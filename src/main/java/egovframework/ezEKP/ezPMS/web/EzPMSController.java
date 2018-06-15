@@ -1376,10 +1376,12 @@ public class EzPMSController {
 		String userId = userInfo.getId();
 		String taskId = request.getParameter("taskId");
 		long projectId = Long.parseLong(request.getParameter("projectId"));
+		String companyId = userInfo.getCompanyID();
 		
 		String url = "/rest/ezPMS/tasks/" + taskId + "/users/" + userId;
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("projectId", projectId);
+		param.put("companyId", companyId);
 		
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);

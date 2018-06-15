@@ -23,7 +23,6 @@
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script type="text/javascript">
-var projectId = "<c:out value='${project.projectId}'/>";
 var nowPosition = "";
 var status = "";
 var kanbanOrder = "MA";
@@ -415,7 +414,26 @@ function getSearchProject() {
 }
 
 function goProjectDetails(elem) {
+	var projectId = elem.id;
+	window.open("/ezPMS/getProjectDetails.do?projectId="+projectId, "right");
+}
+
+function goTaskDetails(elem) {
+	var taskId = elem.id;
+	var taskProjectId = $("#" + elem.id).find(".projectName").attr("projectId");
+	var feature = GetOpenPosition(835, 810);
 	
+	window.open("/ezPMS/getTaskDetails.do?projectId=" + taskProjectId + "&taskId=" + taskId + "&userIdType=user",
+			"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
+}
+
+function goGroupDetails(elem) {
+	var groupId = elem.id;
+	var feature = GetOpenPosition(835, 810);
+	var groupProjectId = $("#" + elem.id).find(".projectName").attr("projectId");
+	
+	window.open("/ezPMS/getGroupDetails.do?projectId=" + groupProjectId + "&groupId=" + groupId,
+				"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 }
 
 </script>

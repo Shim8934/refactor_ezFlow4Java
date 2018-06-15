@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -202,7 +203,7 @@ $(function(){
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
 												name="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 											<div style="margin-top: 5px; display: inline-block;">
-												<c:out value="${project.progress }" />
+												&nbsp;<fmt:formatNumber value="${project.progress }" pattern="0.0" /></div>
 											</div></td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
