@@ -70,8 +70,15 @@ var groupId = 0;
 	 
 	 managerList = JSON.parse(managerList);
 	 applyList();
+	 setPreTaskName();
  });
  
+function setPreTaskName() {
+	var preTaskName = $("#preTaskName", parent.document.getElementById("FBoard_ifrm").contentView).text();
+	alert(preTaskName);
+	$("#preTaskName").text(preTaskName);
+}
+
 function openMemberList() {
 	var win;
 	var feature = GetOpenPosition(760, 700);
@@ -87,7 +94,9 @@ function openGroupTree() {
 }
 
 function openPreTaskTree() {
-	alert("아직 미구현.");
+	var feature = GetOpenPosition(760, 700);
+	DivPopUpShow(338, 338, "/ezPMS/goPreTaskSelectionTree.do?projectId=" + projectId + "&onlyGroup=false", "",
+		 	"height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
  function popupClose() {
@@ -275,12 +284,12 @@ function updateTaskInfo() {
 			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
 				<td style="height:30px;" id="upperGroup"> 
-				${taskDetails.groupName == null ? "-" : taskDetails.groupName}
+				<c:out value="${taskDetails.groupName == null ? '-' : taskDetails.groupName}"/> 
 				</td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openPreTaskTree()"><span><spring:message code='ezPMS.t181' /></span></a></th>
-				<td>${taskDetails.preTask == null ? "-" : taskDetails.preTask}</td>
+				<td id="preTaskName"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t267' /></th>
@@ -288,9 +297,9 @@ function updateTaskInfo() {
 <%-- 				<td style="height:30px" id="weight">${taskDetails.weight == null ? "-" : taskDetails.weight}</td> --%>
 			</tr>
 			<tr>
-				<th>개요<spring:message code='ezPMS.t104' /></th>
+				<th><spring:message code='ezPMS.t104' /></th>
 				<td>
-					<textarea id="overview">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
+					<textarea id="overview"><c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/></textarea>
 				</td>
 			</tr>
 			</c:when>
@@ -308,13 +317,15 @@ function updateTaskInfo() {
 			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
 				<td style="height:30px;" id="upperGroup">
-				${taskDetails.upperGroupName == null ? "-" : taskDetails.upperGroupName}
+					<c:out value="${taskDetails.upperGroupName == null ? '-' : taskDetails.upperGroupName}"/>
 				</td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t88' /></th>
 				<td>
-					<textarea id="overview">${taskDetails.overview == null ? "-" : taskDetails.overview}</textarea>
+					<textarea id="overview">
+						<c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/>
+					</textarea>
 				</td>
 			</tr>
 			</c:otherwise>

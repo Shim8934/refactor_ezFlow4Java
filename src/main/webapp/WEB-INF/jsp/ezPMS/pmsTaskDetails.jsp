@@ -483,7 +483,12 @@ button.PHBtn {
 			</table>
 		</div>
 		<div class="mainBodyMid">
-			<div id="taskUpdateBtn" class="taskUpdateBtn"><spring:message code='ezPMS.t179' /></div>
+			<div id="taskUpdateBtn" class="taskUpdateBtn">
+				<c:choose>
+					<c:when test="${target eq 'group'}"><spring:message code='ezPMS.t279' /></c:when>
+					<c:otherwise><spring:message code='ezPMS.t179' /></c:otherwise>
+				</c:choose>
+			</div>
 			<div id="addBoardBtn" class="taskUpdateBtn" style="display: none;"><spring:message code='ezPMS.t278' /></div>
 			<div class="portlet_tabpart01" style="margin-bottom: 10px">
 			   <div class="portlet_tabpart01_top" id="tab1">

@@ -963,7 +963,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			int taskGroupCount = 0;
 			
-			if(location != null){
+			if(location != null && !location.equals("")){
 				if (location.equals("taskLog")) {
 					taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
 				} else if (location.equals("taskList")) {
@@ -988,42 +988,45 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				ProjectTaskTreeVO vo = list2.get(i);
 				vo.setIcon("jstree-file");
 				
-				if (location.equals("taskLog")) {
-					map.put("taskId", vo.getTaskId());
-					map.put("groupId", vo.getGroupId());
-					map.put("projectId", projectId);
+				if(location != null && !location.equals("")) {
 					
-					int taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
-					
-					if (taskGroupCount != 0) {
-						vo.setText(vo.getText() + " (" + taskGroupCount + ")");
+					if (location.equals("taskLog")) {
+						map.put("taskId", vo.getTaskId());
+						map.put("groupId", vo.getGroupId());
+						map.put("projectId", projectId);
+						
+						int taskGroupCount = ezPMSDAO.getTaskLogListCount(map);
+						
+						if (taskGroupCount != 0) {
+							vo.setText(vo.getText() + " (" + taskGroupCount + ")");
+						}
+						
+						map.remove("taskId");
+						map.remove("groupId");
+						map.remove("projectId");
+					} else if(location.equals("board")) {
+						map.put("taskId", vo.getTaskId());
+						map.put("groupId", vo.getGroupId());
+						
+						int taskGroupCount = ezPMSDAO.getBoardListCount(map);
+						if(taskGroupCount > 0) {
+							vo.setText(vo.getText() + "(" + taskGroupCount + ")");
+						}
+						
+						map.remove("taskId");
+						map.remove("groupId");
+					} else if(location.equals("comment")) {
+						map.put("taskId", vo.getTaskId());
+						map.put("groupId", vo.getGroupId());
+						
+						int taskGroupCount = ezPMSDAO.getCommentListCount(map);
+						if(taskGroupCount > 0) {
+							vo.setText(vo.getText() + "(" + taskGroupCount + ")");
+						}
+						
+						map.remove("taskId");
+						map.remove("groupId");
 					}
-					
-					map.remove("taskId");
-					map.remove("groupId");
-					map.remove("projectId");
-				} else if(location.equals("board")) {
-					map.put("taskId", vo.getTaskId());
-					map.put("groupId", vo.getGroupId());
-					
-					int taskGroupCount = ezPMSDAO.getBoardListCount(map);
-					if(taskGroupCount > 0) {
-						vo.setText(vo.getText() + "(" + taskGroupCount + ")");
-					}
-					
-					map.remove("taskId");
-					map.remove("groupId");
-				} else if(location.equals("comment")) {
-					map.put("taskId", vo.getTaskId());
-					map.put("groupId", vo.getGroupId());
-					
-					int taskGroupCount = ezPMSDAO.getCommentListCount(map);
-					if(taskGroupCount > 0) {
-						vo.setText(vo.getText() + "(" + taskGroupCount + ")");
-					}
-					
-					map.remove("taskId");
-					map.remove("groupId");
 				}
 				
 				list.add(vo);

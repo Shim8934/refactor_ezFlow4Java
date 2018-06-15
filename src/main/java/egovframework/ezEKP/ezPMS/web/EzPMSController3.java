@@ -887,4 +887,29 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS getCommentListTab ended");		
 		return "ezPMS/pmsCommentListTab";
 	}
+	
+	@RequestMapping(value = "/ezPMS/goPreTaskSelectionTree.do")
+	public String goPreTaskSelectionTree(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS goPreTaskSelectionTree started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String projectId = request.getParameter("projectId");
+		String onlyGroup = request.getParameter("onlyGroup");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("onlyGroup", onlyGroup);
+		param.put("location", "");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray treeData = (JSONArray) resultBody.get("data");
+			model.addAttribute("data", treeData);
+		}
+		
+		LOGGER.debug("ezPMS goPreTaskSelectionTree ended");
+		return "/ezPMS/pmsPreTaskSelectionTree";
+	}
 }

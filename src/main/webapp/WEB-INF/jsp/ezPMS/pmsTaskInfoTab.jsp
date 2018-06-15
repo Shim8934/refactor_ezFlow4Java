@@ -40,9 +40,9 @@
 		preTaskName += preTaskTR.find("input[name='name']").val();
 			
 		if(preTaskName != "undefined") {
-			$(".preTaskName").text(preTaskName);
+			$("#preTaskName").text(preTaskName);
 		} else {
-			$(".preTaskName").text('-');
+			$("#preTaskName").text('-');
 		}
 	});
 	
@@ -87,7 +87,7 @@ td.overviewTd{vertical-align:top;}
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t181' /></th>
-	    <td class="preTaskName"></td>
+	    <td id="preTaskName"></td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t267' /></th>
