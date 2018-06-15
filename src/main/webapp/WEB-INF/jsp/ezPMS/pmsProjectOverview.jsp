@@ -101,7 +101,7 @@ function initProgressBar() {
 		fill : {color : circleColor},
 		size : 130
 	}).on('circle-animation-progress', function(event, progress) {
-		$(this).find('strong').html(projectProgress + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+		$(this).find('strong').html(Number(projectProgress).toFixed(1) + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 	});
 }
 
