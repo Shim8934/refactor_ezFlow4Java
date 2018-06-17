@@ -213,20 +213,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pBoardID = request.getParameter("boardID");
 		}
 
+		/* 2018-05-02 홍승비 - 커뮤니티 썸네일과 포토게시판 썸네일 경로 다르게 수정 */
 		if (pType.toUpperCase().equals("COMMUNITYLOGO")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "LOGO", userInfo.getTenantId());
-			
-	        if (pFilePath != null && !pFilePath.equals("")) {
-	            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
-	        }
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "LOGO", userInfo.getTenantId());			
+		}
+		else if (pType.toUpperCase().equals("COMMUNITYTHUM")) {			
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYTHUM", userInfo.getTenantId());				
+		}
+		else if (pType.toUpperCase().equals("COMMUNITYBOARD")) {
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYBOARD", userInfo.getTenantId());				
 		}
 		
-		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYTHUM", userInfo.getTenantId());
-			
-	        if (pFilePath != null && !pFilePath.equals("")) {
-	            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
-	        }
+		if (pFilePath != null && !pFilePath.equals("")) {
+            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
 		}
 	}
 
@@ -267,35 +266,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		ezCommunityService.commMakeOk(userInfo, clubVO, request, response);
-	}
-	
-	/**
-	 * 커뮤니티만들기 IE9 로고 업로드
-	 */
-	@RequestMapping(value = "/ezCommunity/commMakeUpload.do")
-	public String commMakeUpload(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) {
-		logger.debug("commMakeUpload started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
-		String mode = request.getParameter("mode");
-		String fileName = request.getParameter("fileName");
-		String fileData = request.getParameter("fileData");
-		boolean result = false;
-		
-		try {
-			ezCommunityService.commMakeUpload(mode, fileName, fileData, logoPath, userInfo.getTenantId());
-			
-			result = true;
-		} catch (Exception e) {
-			result = false;
-		}
-		
-		logger.debug("commMakeUpload ended.");
-		
-		model.addAttribute("result", result);
-		
-		return "json";
 	}
 	
 	/**
@@ -402,8 +372,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean joinFlag = false, checkSysop = false;
 		int newMemberConfirmType = 0;
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+		String pastDate = "";
 		
 		String code = request.getParameter("code");
 		String userLevel = request.getParameter("userLevel");
@@ -424,14 +393,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (copType == null) {
 			copType = "type5";
 		}
-		
-		//사용하는곳이 없다
-//		int memberCount = commHomeGet2(code);
-		
+
 		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		int mode = 0;
 		
-//		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
 		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			mode = 0;
 		} else {
@@ -468,6 +433,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			checkSysop = true;
 		}
 		
+		/* 2018-05-18 홍승비 - 새 글에 new 표시 추가 */
+		pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));	
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("primary", primary);
 		model.addAttribute("code", code);
@@ -477,7 +448,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("newMemberConfirmType", newMemberConfirmType);
 		model.addAttribute("checkSysop", checkSysop);
 		model.addAttribute("retXML", retXML);
-		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("pastDate", pastDate);
 		
 		logger.debug("popupCommHome ended.");
 		
@@ -523,8 +494,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String commHomeBoardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
-		
-		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID, userInfo.getTenantId());
+
+		/* 2018-05-18 홍승비 - UTC시간에 offset을 적용한 writeDate를 가져오기 위해 offset 추가*/
+		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID, userInfo.getTenantId(), commonUtil.getMinuteUTC(userInfo.getOffset()));
 		
 		model.addAttribute("boardItemList", list);
 		
@@ -540,6 +512,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String boardName = request.getParameter("boardName");
 		String userLevel = "";
+		String pastDate = "";
 		
 		logger.debug("boarditemList started.");
 		logger.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
@@ -566,11 +539,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
+		pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
+		
 		model.addAttribute("code", code);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pBoardName", boardName);
 		model.addAttribute("userLevel", userLevel);
+		model.addAttribute("pastDate", pastDate);
 		
 		logger.debug("boarditemList ended.");
 		
@@ -2540,9 +2520,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/adminLogo.do")
 	public String adminLogo(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-		
 		String code = request.getParameter("code");
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -2564,7 +2541,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("clubVO", clubVO);
 		model.addAttribute("clubVO2", clubVO2);
-		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "ezCommunity/communityAdminLogo";
 	}
@@ -2596,34 +2572,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "json";
 	}
 		
-	/**
-	 * 커뮤니티 환경설정화면 IE9 로고 업테이트 실행함수
-	 */
-	@RequestMapping(value = "/ezCommunity/adminLogoUploadIE9.do")
-	public String adminLogoUploadIE9(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("adminLogoUploadIE9 started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
-		String fileName = request.getParameter("fileName");
-		String fileData = request.getParameter("fileData");
-		String code = request.getParameter("code");
-		String type = request.getParameter("type");
-		String imageSrc = request.getParameter("imageSrc");
-		
-		logger.debug("fileName : " + fileName + ", code : " + code + ", type : " + type);
-		
-		try {
-			ezCommunityService.adminLogoUploadIE9(code, type, imageSrc, logoPath, fileName, fileData, userInfo.getTenantId());
-			model.addAttribute("result", true);
-		} catch (Exception e) {
-			model.addAttribute("result", false);
-			throw e;
-		}
-		
-		logger.debug("adminLogoUploadIE9 ended.");
-		return "json";
-	}
 	
 	/**
 	 * 커뮤니티 환경설정화면 썸네일 temp파일 저장 실행함수
@@ -3515,13 +3463,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String mainPage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("mainPage started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		int totalPage = ezCommunityService.mainPage(userInfo);
+		
+		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
+		String pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		// addYMDtoDayTime 메서드는 시:분 까지만 다룰 수 있다. offset으로 분을 더한 뒤, 잘려나간 초 단위는 붙인다.
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("primary", userInfo.getPrimary());
+		model.addAttribute("pastDate", pastDate);
 		
 		logger.debug("mainPage ended.");
 		
@@ -3898,9 +3853,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			num = (dayOfYear % rtnVal) + 1;
 		}
 		
-		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getTenantId());
+		// 18-05-08 김민성 - 커뮤니티 회원수 수정
+		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getTenantId());		
 		
 		if (club != null) {
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			
 			if (!club.getC_Cate_A().equals("0")){
 				cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
 			}
@@ -3985,7 +3943,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow, mariaStart, mariaEnd, userInfo.getTenantId());
 		
+		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		for (CommunityClubVO club : clubList) {
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4031,6 +3991,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				clubList.get(0).setCopCnt(clubCopCnt.get(0).getCopCnt());
 			}
 			
+			// 18-05-08 김민성 - 커뮤니티 회원수 수정
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4051,6 +4013,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String userLevel = "0", pSortBy = "", showAdjacent = "", strXML = "";
 		int pPage = 1, totalPage = 1, totalCount = 0;
+		String pastDate = "";
 		
 		if (request.getParameter("sortBy") != null) {
 			pSortBy = request.getParameter("sortBy");
@@ -4111,6 +4074,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		} else {
 			totalPage = 1;
 		}
+	    
+	    /* 2018-05-18 홍승비 - 새 글에 new 표시 추가 */
+		pastDate = commonUtil.getTodayUTCTime("");
+		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -4123,6 +4092,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("page", pPage);
+		model.addAttribute("pastDate", pastDate);
 		
 		return "ezCommunity/communityBoardItemListPhoto";
 	}
@@ -4130,26 +4100,21 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 포토게시판 쓰기화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/newBoardItemPhoto")
+	@RequestMapping(value = "/ezCommunity/newBoardItemPhoto.do")
 	public String newBoardItemPhoto (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String pUploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		CommunityBoardItemVO item = null;
 		CommunityBoardPropertyVO boardInfo = null;
-		String url = "", startDateTime = "", endDateTime = "", expireDays = "", itemID = "";
-		/*String strAbstract = "";*/
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-		
+		String startDateTime = "", endDateTime = "", expireDays = "", itemID = "";
+//		String browser = ClientUtil.getClientInfo(request, "browser");		
 		String boardID = request.getParameter("boardID");
 		String mode = request.getParameter("mode");
 		
+		/* 2018-05-14 홍승비 - 포토게시판에서 의미를 가지지 않는 파라미터 제거(url, isCrossBrowser) */
 		if (request.getParameter("itemID") != null) {
 			itemID = request.getParameter("itemID");
-		}
-		if (request.getParameter("url") != null) {
-			url = request.getParameter("url");
 		}
 		
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
@@ -4162,53 +4127,39 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo)) {
 			return "cmm/error/egovError";
 		}
+
+		boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		if (!url.equals("")) {
-			startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
-			endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
-			expireDays = "-1";
-		} else {
-			boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
-			
-			if (userInfo.getLang().equals("2")) {
-				boardInfo.setBoardName(boardInfo.getBoardName2());
-			}
-			
-			expireDays = boardInfo.getExpireDays();
-			
-			if (!mode.equals("new")) {
-				item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
-				
-				if (mode.equals("reply")) {
-					item.setTitle("[" + egovMessageSource.getMessage("ezCommunity.t1179", userInfo.getLocale()) + item.getTitle());
-					item.setItemLevel(item.getItemLevel() + 1);
-				} 
-				/*else {
-					strAbstract = item.getAbsTract();
-				}*/				
-			}
-			
-			startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
-			
-			//만료일을 설정하는 부분
-			if (mode.equals("modify")) { // 수정인 경우
-				if (item.getEndDate().substring(0, 4).equals("9999")) { //영구게시인 경우
-					if (expireDays.equals("-1")) { // 게시판 설정이 영구게시인 경우 만료일 컨트롤 값을 30일 뒤로 자동세팅
-						endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
-					} else { // 게시판 설정이 영구게시가 아니면 설정된 만료일 만큼 뒤로 세팅
-						endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), Integer.parseInt(expireDays), "yyyy-MM-dd");
-					}
-				} else { // 수정 전에 설정되었던 만료일로 세팅함
-					endDateTime = item.getEndDate().split(" ")[0];
-				}
-				
-				item.setExtensionAttribute4(item.getExtensionAttribute4().replace("&amp;", "&"));
-			} else { //새 게시나 답변인 경우
-				if (expireDays.equals("-1")) {
-					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd"); 
-				} else {
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+		}
+		
+		expireDays = boardInfo.getExpireDays();
+		
+		if (!mode.equals("new")) {
+			item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
+		}
+		
+		startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
+		
+		// 만료일을 설정하는 부분
+		if (mode.equals("modify")) { // 수정인 경우
+			if (item.getEndDate().substring(0, 4).equals("9999")) { //영구게시인 경우
+				if (expireDays.equals("-1")) { // 게시판 설정이 영구게시인 경우 만료일 컨트롤 값을 30일 뒤로 자동세팅
+					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
+				} else { // 게시판 설정이 영구게시가 아니면 설정된 만료일 만큼 뒤로 세팅
 					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), Integer.parseInt(expireDays), "yyyy-MM-dd");
 				}
+			} else { // 수정 전에 설정되었던 만료일로 세팅함
+				endDateTime = item.getEndDate().split(" ")[0];
+			}
+			
+			item.setExtensionAttribute4(item.getExtensionAttribute4().replace("&amp;", "&"));
+		} else { //새 게시나 답변인 경우
+			if (expireDays.equals("-1")) {
+				endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd"); 
+			} else {
+				endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), Integer.parseInt(expireDays), "yyyy-MM-dd");
 			}
 		}
 		
@@ -4216,14 +4167,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("editor", editor);
 		model.addAttribute("pUploadPath", pUploadFilePath);
 		model.addAttribute("pMode", mode);
-		model.addAttribute("pUrl", url);
-		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("item", item);
 		model.addAttribute("expireDays", expireDays);
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
-		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "ezCommunity/communityNewBoardItemPhoto";
@@ -4268,7 +4216,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 포토게시판 앍기화면 호출함수
+	 * 포토게시판 읽기화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/boardItemViewPhoto.do")
 	public String boardItemViewPhoto(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -4344,7 +4292,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile//s_", "/uploadFile/"));
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
 			String pFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getExtensionAttribute5();
-			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
+			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
 			
 			File file = new File(pFilePath);
 			

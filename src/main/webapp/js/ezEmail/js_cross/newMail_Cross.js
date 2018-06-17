@@ -1,4 +1,5 @@
 ﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
     var msgDiv = document.getElementById('MsgToGot');
@@ -823,7 +824,9 @@ function checkMailStatusAndSave(savemode) {
         setTimeout(function() {
             checkMailStatusAndSave(savemode);
         }, 1000);
-    }               
+    }     
+    
+    dadiframe.updateItemUid();
 }
 
 function Save_onClick(savemode) {
@@ -1256,12 +1259,35 @@ function GetMailAddresses(name) {
         createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + EmaaddrFormatExt(name));
     }
     else {
+    	/* 2018-04-26 이소담 - 메일쓰기에서 받는사람에 메일 주소를 직접 입력하였을때 도메인이 내부도메인일 경우 계정이 존재하는지 확인 후 존재하지않으면 입력되지않도록 개선*/
+        $.ajax({
+        	type	: "GET",
+        	data	: {name: name},
+        	contentType : "application/json",
+        	url		: "/ezEmail/mailCheck.do",
+        	async	: false,
+        	success	: function(result) {
+        		var info = result;
+        		if (info === "") {
+        			emailFlag=true; 
+        			if (document.getElementById("MsgTo").value != ""){
+        				document.getElementById("MsgTo").value = "";
+        			} else if (document.getElementById("MsgCC").value != "") {
+        				document.getElementById("MsgCC").value = "";
+        			} else {
+        				document.getElementById("MsgBCC").value = "";
+        			}
+    			}
+    		},
+        	error	: function(error) {
+        		console.log(error);
+        	}
+        })
         createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "mail::" + EmaaddrFormatExt(name));
     }
-
     createNodeAndInsertText(xmlDOM, objNode, "DLGSEARCH", "displayname::" + name);
     createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName");
-    createNodeAndInsertText(xmlDOM, objNode, "ORGPROP", "company;description;title;mail;extensionAttribute3");
+    createNodeAndInsertText(xmlDOM, objNode, "ORGPROP", "company;description;title;mail;extensionAttribute3;displayName2");
     createNodeAndInsertText(xmlDOM, objNode, "DLPROP", "mail");
     createNodeAndInsertText(xmlDOM, objNode, "ORGTYPE", "all");
     createNodeAndInsertText(xmlDOM, objNode, "DLTYPE", "group");
@@ -1269,6 +1295,7 @@ function GetMailAddresses(name) {
     createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
     xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
     xmlHTTP.send(xmlDOM);
+
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
     var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
@@ -1451,6 +1478,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
 	    mailName = TrimText(mailArr[i]);
+	    
 	    if (mailName == "") {
 	        if (iType == 0)
 	            CompletToCnt++;
@@ -1493,7 +1521,13 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        if (result != null) {
 	            newElem = PrepareMailTag(iType, result["type"], result["name"], result["email"], result["href"]);
 	        } else {
-	            newElem = PrepareMailTag(iType, "email", mailName, mailName, "");
+	        	if (emailFlag){
+	        		alert(strLang198);
+	        		emailFlag = false;
+	        		return;
+	        	} else {
+	        		newElem = PrepareMailTag(iType, "email", mailName, mailName, "");
+	        	}
 	        }
 	
 	        var IsInsert = CheckMailReceiver(newElem);
@@ -1535,9 +1569,9 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	            	szFromName += ";";
 	            }
 	        }
-	        
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
+	        return false;
 	    } else {
 	        rgParams = new Array();
 	        rgParams["recipientTDData"] = null;
@@ -1569,6 +1603,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        }    
 	        
 	        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+	        return false;
 	    }
     }
     
@@ -2205,13 +2240,17 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                 if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
                     var strTarget = "target='_blank'";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
+                    FileName = replaceAll(FileName, "&", "&amp;");
                     var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
+                    var fileLocation = getNodeText(GetChildNodes(nodes[i])[4]);
+                    var fileDate = fileLocation.split("|!|")[0];
                     var strFileExt = FileName.substr(FileName.lastIndexOf('.'));
                     strFileExt = strFileExt.toLowerCase();
+                    
                     if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
+                    		strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+                    		strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+                    		strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
                     }
                     
@@ -2228,7 +2267,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                         fileSize = fileSize + "B";
                     }
                     
-                    var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + folderDate + "&tid=" + tid;
+                    var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + fileDate + "&tid=" + tid;
                     TempText += "<tr>" +
                                 "<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
                                 "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;' border='0'/></a>" +
@@ -3534,5 +3573,9 @@ function getEmailAddressList2(ReceiverList, pollSendType) {
     }
 
     return retVal;
+}
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }
 //end

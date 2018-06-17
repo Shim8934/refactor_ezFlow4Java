@@ -411,15 +411,23 @@
 			SELECT 
 				* 
         	FROM 
-        		( SELECT 
-                    *
+        		(SELECT 
+                    T1.*,
+                     rownum as RN
                	  FROM 
-               	  	( SELECT 
-               	  		IMAGEID ,
-               	  		FILEPATH ,
-               	  		FILECONTENT ,
-               	  		MAIN_FLAG FLAG ,
-               	  		IMAGENAME 
+					(SELECT 
+               	  		IMAGEID,
+						ITEMID,
+						BOARDID,
+						WRITERID,
+						WRITERNAME,
+						WRITERDEPTID,
+						FILEPATH,
+						WRITEDATE,
+						FILECONTENT,
+						IMAGENAME,
+						MAIN_FLAG FLAG,
+						TENANT_ID
                	  	  FROM
                	  		TBL_Photo_ImageItem 
                   	  WHERE  
@@ -429,11 +437,12 @@
                       AND 
                   		BoardID = #v_pBoardID#
                       ORDER BY 
-                  		WriteDate ASC ) T1
-                   WHERE
-                     rownum <= #v_pEndRow# ) T2
-       		WHERE  
-       			rownum >= #v_pStartRow#
+                  		IMAGEID ASC ) T1
+                  	)
+				WHERE
+                    RN <= #v_pEndRow#
+				AND
+					RN >= #v_pStartRow#
 		]]>
 	</select>
 		
@@ -469,7 +478,25 @@
 	       	AND 
 	       		BoardID = #v_pBoardID#
 	        ORDER BY 
-	        	WriteDate ASC
+	        	IMAGEID ASC
+		]]>
+	</select>
+	
+	<!-- 2018-06-11 홍승비 - 가장 큰 IMAGEID 가져오는 쿼리 -->
+	<select id="EzBoardDAO.getLastImageID" parameterClass="Map" resultClass="String" >
+		<![CDATA[
+			SELECT
+				MAX(IMAGEID)
+			FROM
+				TBL_Photo_ImageItem
+			WHERE  
+				tenant_id = #v_TENANTID#
+			AND
+				ItemID = #v_pItemID#
+			AND 
+				BoardID = #v_pBoardID#
+			AND
+				LENGTH(RTRIM(IMAGEID)) != 38
 		]]>
 	</select>
 	
@@ -593,7 +620,7 @@
             ON 
                 A.itemid = C.itemid
             AND
-                C.ReadDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
+                C.ReadDate > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5
             AND
                 C.tenant_id = #v_TENANTID#
             AND
@@ -603,7 +630,7 @@
             AND 
             	A.StartDate <= #nowDate#
             AND 
-            	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
+            	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
             AND 
             	A.EndDate > #nowDate#
             AND 
@@ -827,8 +854,6 @@
        			TENANT_ID = #v_TENANTID#
        		AND  
        			ITEMID = #v_PORGITEMID#
-            AND 
-            	BOARDID = #v_PORGBOARDID#
 		]]>
 	</select>
 	
@@ -974,7 +999,7 @@
 		      			  	(A.APPRFLAG = 'Y' 
 		      			     OR A.APPRFLAG IS NULL)
 		      			  AND 
-		      			  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5) 
+		      			  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS') 
 		      			  AND 
 		      			  	A.STARTDATE <= #nowDate#
 		      			  AND 
@@ -996,7 +1021,7 @@
 	      							 AND
 	      							 	S.USERID = #v_PUSERID# 
 	      							 AND 
-	      							 	S.READDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)))) T1
+	      							 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))) T1
       				WHERE RNUM <= #v_PENDROW# ) T2 
       		WHERE 
       			RNUM >= #v_PSTARTROW#
@@ -4714,6 +4739,18 @@
 			   						ITEMID = #itemID# )
 	  	]]>
   </select>
-
+  
+  <update id="EzBoardDAO.updateMoveOneLineReply" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ONELINEREPLY
+			SET 
+				BOARDID = #destBoardID#,
+	            ITEMID = #destItemID#
+	        WHERE
+	        	BOARDID = #orgBoardID#
+	        AND
+	        	ITEMID = #orgItemID#
+		]]>
+  </update>
 </sqlMap>
 

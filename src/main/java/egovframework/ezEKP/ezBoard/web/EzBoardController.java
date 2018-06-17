@@ -282,6 +282,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			useQuestion = "YES";
 		}
 		
+		//2018-05-08 강민수92 게시물 승인 카운트 출력
+		if (applyFlag.equals("OK")) {
+			int applyCount = 0;
+			applyCount = ezBoardService.getApprBoardTotalItemCount(userInfo);
+			modelMap.addAttribute("applyCount", applyCount);
+		}
+		
         modelMap.addAttribute("userInfo", userInfo);
         modelMap.addAttribute("resultCount", resultCount);
         modelMap.addAttribute("resultXML", resultXML);
@@ -995,7 +1002,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	logger.debug("getBoardList started");
     	logger.debug("boardID : " + boardVO.getBoardId());
     	logger.debug("boardType : " + boardVO.getBoardType());
-
+    	
     	userInfo = commonUtil.userInfo(loginCookie);
     	
     	String boardID = boardVO.getBoardId();
@@ -1026,7 +1033,6 @@ public class EzBoardController extends EgovFileMngUtil{
     		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
     			boardVO.setBoardType("N");
     			resultXML = getNewItemList(boardVO, userInfo);
-    			System.out.println(resultXML);
     		} else {
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
@@ -1885,8 +1891,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
-		
+
 		myFavoriteVO.setBoardId(boardVO.getBoardId());
+		/* 2018-05-03 홍승비 - 썸네일게시판 표출 시 사용자 테넌트 id 설정 추가 */
+		myFavoriteVO.setTenantID(userInfo.getTenantId());
 		myFavoriteVO.setUserId(userInfo.getId());
 		myFavoriteVO.setType(type);
 		myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
@@ -2739,13 +2747,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardMyFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
 		int boardCount = ezBoardService.getBrdTotalItemCount(boardMyFavoriteVO);
-		
 		int startRow = 1;
 		int endRow = 0;
 		
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		
 		int personalCount = boardConfigVO.getListCount();
+
 		String previewtype = boardConfigVO.getPreview();
 		String fieldName = "";
 		String fieldValue = "";
@@ -3553,7 +3561,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
 			boardListVO.setTitle(boardListVO.getTitle().replace("\\", "&#92;"));
 		}
-		
+		/* 2018-04-27 홍승비 - 게시요약의 \문자 변환 */ 
+		if (boardListVO.getABSTRACT() != null && !boardListVO.getABSTRACT().equals("")) {
+			boardListVO.setABSTRACT(boardListVO.getABSTRACT().replace("\\", "&#92;"));
+		}
+
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -3583,7 +3595,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
-
+		
+		logger.debug("boardListVO.getTitle()    ::    "+boardListVO.getTitle());
+		logger.debug("boardListVO.getAbstract()    ::    "+boardListVO.getABSTRACT());
+		logger.debug("boardListVO.getContent()    ::    "+boardListVO.getContent());
+		logger.debug("requestURL    ::    "+requestURL);
+		
 		logger.debug("newBoardItem ended");
 		return requestURL;
 	}
@@ -3759,7 +3776,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
-			strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
+			/* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
+			strXML.append("<PFILENAME><![CDATA[" + commonUtil.cleanValue(pFileName[i]) + "]]></PFILENAME>");
 			strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
 			strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
 			strXML.append("</NODE>");
@@ -4964,7 +4982,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", userInfo.getLocale()));
 		}
 		
-		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
+		if (adjacentItemsEnableFlag != null && showAdjacent != null && adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
 			if (boardItem.getUpperItemIDTree() == null || boardItem.getUpperItemIDTree().equals("")) {
 				boardItem.setUpperItemIDTree(itemID);
 			}
@@ -5563,11 +5581,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
+		/* 2018-06-11 홍승비 - 사진 추가 시 마지막 imageID 비교를 위해 추가 */
+		String lastItemID = ezBoardService.getLastImageID(boardID, itemID, userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("lastItemID", lastItemID);
 
 		logger.debug("addImageItem ended");
 		return "ezBoard/boardAddImageItem";
@@ -5608,8 +5630,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String g_ImageUrl = "";
 		String listImages = "";
 		String mainFg = "";
-		String g_Width = "230";
-		String g_Height = "230";
 		int imageCnt = 10;
 		int pStartRow = (page - 1) * imageCnt + 1;
 		int pEndRow = page * imageCnt;
@@ -5644,8 +5664,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("mainFg", mainFg);
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("guBun", guBun);
-		model.addAttribute("g_Width", g_Width);
-		model.addAttribute("g_Height", g_Height);
 		model.addAttribute("orgImagePath", listImages);
 
 		logger.debug("modifyImageItem ended");
@@ -6131,7 +6149,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String setBoardConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("setBoardConfig started");
-
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = request.getParameter("pUserID");
@@ -7194,7 +7212,19 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("set_TabUse2 ended");
 	}
-
+	
+	/*
+	 * 2018-05-09 강민수92 게시물승인 카운트 호출
+	 * */
+	@RequestMapping(value="/ezBoard/getApplyCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getApplyCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int applyCount = ezBoardService.getApprBoardTotalItemCount(userInfo);
+		
+		return Integer.toString(applyCount);
+	}
     
 }
 

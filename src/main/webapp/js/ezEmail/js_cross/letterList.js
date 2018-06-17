@@ -5,7 +5,7 @@ function letterSearch() {
 	var search = $("#lmSearchInput").val();
 	
 	// 편지지(사용자) 중에서 검색 모드일때만
-	if (pageType == 'letter_user') {
+	if (pageType == 'letter_user' || pageType == 'letter') {
 		searchMode = true;
 	}
 	
@@ -45,12 +45,12 @@ function disableChk() {
 	var search = $("#lmSearchInput").val();
 	
 	if(search.trim() !== "") {
-		$(".searchDis").attr("disabled",true);
+		//$(".searchDis").attr("disabled",true);
 	}
 }
 
-// 예외처리                  (문자, 특수문자 허용여부, 길이)
-function strChk(str, speChar, strLen) {
+// 예외처리                  (문자, 특수문자 허용여부, 길이, 대상 메시지)
+function strChk(str, speChar, strLen, kindMsg) {
 	// 공백, 특수문자, 길이
 	var strTrim = str.trim();
 	var msg = "";
@@ -61,13 +61,13 @@ function strChk(str, speChar, strLen) {
 			var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
 			
 			if (speCha.test(strTrim)) {
-				msg = specialMsg;
+				msg = specialMsg + "\n" + specialMsg2;
 			}	
 		}
 		
 		if (strLen !== undefined) {
-			if (strTrim.length > strLen) {
-				msg = strLen + lengthMsg;
+			if (strTrim.length >= strLen) {
+				msg = kindMsg + " " + strLen + lengthMsg;      
 			} 
 		}
 	}else {
@@ -163,13 +163,15 @@ function addLetterList(jsonArr) {
 	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
 			var langDisplayName = strLang == 1 ? jsonArr[i].displayname : jsonArr[i].displayname2;
-			
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + 
 			"' data-letterBoxNo='" + jsonArr[i].letterBoxNo + "'>"; 
-			letterListHtml += "<span style='float:left'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
 			
 			if (pageType == 'letter_user') {
+				letterListHtml += "<span style='float:left; width:100%'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
 				if (searchMode) {
+					$(".lmLetterTitle").empty();
+					$(".lmLetterTitle").html("<span id='span1'>" + letterListMsg + "</span><b id='b1'>" + letterPathMsg + "</b>");
+					
 					var boxName = "";
 					$.ajax({
 						type:"POST",
@@ -181,13 +183,13 @@ function addLetterList(jsonArr) {
 						},
 						error:function(data){
 							alert("error");
-							//console.log(data);
 						}
 					});
 					
 					letterListHtml += "<b title='" + boxName + "'>" + boxName + "</b>";
 				}
 			} else {
+				letterListHtml += "<span style='float:left;'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
 				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>" + modifyMsg + "</button>";
 				letterListHtml += "<button class='lmLetterDeleteBtn'>" + deleteMsg + "</button>";
 			}
@@ -195,6 +197,12 @@ function addLetterList(jsonArr) {
 			letterListHtml += "</li>";
 		}
 	} else {
+		
+		if (searchMode == true && pageType == "letter_user") {
+			$(".lmLetterTitle").empty();
+			$(".lmLetterTitle").html("<span id='span1'>" + letterListMsg + "</span><b id='b1'>" + letterPathMsg + "</b>");
+		}
+		
     	letterListHtml = "<li class='lmNoData'>" + dataNoMsg + "</li>";
 	}
 	
@@ -206,7 +214,6 @@ function addLetterList(jsonArr) {
 	} 
 	
 	letterListCss(pageType, searchMode);
-	searchMode = false;
 }
 
 //편지지 검색 시 엔터 사용
@@ -233,6 +240,13 @@ function letterListCss(pageType, searchMode) {
 	}
 }
 
+// 미리보기 onload
+function onloadPreview(ifr) {
+	var ifrHead = $(ifr).contents().find("head");
+	
+	$(ifrHead).html("<style> html { height:520px; } p {margin-top: 0; margin-bottom: 0;}</style>");
+}
+
 // 편지지 선택 (개별 조회 미리보기)
 $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
 	var letterNo = $(this).attr("data-letterno");
@@ -255,3 +269,4 @@ $(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect')", functio
 $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect')",function(){
 	$(this).css("background","none");
 });
+

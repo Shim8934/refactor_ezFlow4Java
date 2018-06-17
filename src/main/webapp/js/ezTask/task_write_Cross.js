@@ -81,6 +81,7 @@ function manage_share(type) {
     }
 }
 
+/* 18-05-07 김민성 - 팝업 창 닫히는 타이밍 수정 */
 function manage_share_Complete(retVal) {
     switch (m_type) {
         case 1:
@@ -91,6 +92,7 @@ function manage_share_Complete(retVal) {
 					if (g_share != null) {
 						for (var i = 0; i < g_share["email"].length; i++) {
 							if (retVal["email"][0] == g_share["email"][i]) {
+								OpenWin.close();
 								if (primary == 1) {
 									alert(retVal["name"][0] + strLang55);
 								} else {
@@ -130,6 +132,7 @@ function manage_share_Complete(retVal) {
                 var j = 0;
                 for (var i = 0; i < retVal["id"].length; i++) {
                     if (g_person != null && g_person["email"][0] == retVal["email"][i]) {
+                    	OpenWin.close();
                     	if (primary == 1) {
                     		alert(retVal["name"][i] + strLang56);
                     	} else {
@@ -335,58 +338,141 @@ function config_repeat() {
     DivPopUpShow(450, 375, "/ezTask/taskRepetition.do");
 }
 
-function config_repeat_Complete(retVal) {
-
-    if (retVal == "cancel" || typeof (retVal) == "undefined") {
+/*2018-05-16 구해안 repdisplay에 결과물 출력할 수 있도록 수정*/
+function config_repeat_Complete(rtn) {
+    if (rtn["REPETITION"] == "") {
+        repetition = "";
+        document.getElementById("periodblock").style.display = "";
+        document.getElementById("repeatblock").style.display = "none";
+        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
     }
     else {
-        if (retVal["REPETITION"] == "") {
-            repetition = "";
-            document.getElementById("periodblock").style.display = "";
-            document.getElementById("repeatblock").style.display = "none";
-            document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-        }
-        else {
-            g_sdate = retVal["SDATE"];
-            g_edate = retVal["EDATE"];
-            repetition = retVal["REPETITION"];
-            show_repetition_info();
-        }
+        g_sdate = rtn["SDATE"];
+        g_edate = rtn["EDATE"];
+        repetition = rtn["REPETITION"];
+        show_repetition_info();
+        document.getElementById("repeatinfo").innerHTML = rtn["REPDISPLAY"];
     }
-    DivPopUpHidden();
-
 }
 
 
-function show_repetition_info() {
+/*2018-05-16 실제로 id="repeatInfo"에 표시되는 정보를 구하는 함수 구해안*/
+function show_repetition_info()
+{	
+   document.getElementById("periodblock").style.display = "none";
+   document.getElementById("repeatblock").style.display = "";
+	var info = repetition.split("|");
+	var repeatinfo = strLang29;
+	
+	switch (info[2])
+	{
+		case "0":
+			repeatinfo += strLang30;
+			break;
+		case "1":
+			repeatinfo += strLang31;
+			
+		    repeatinfo += " ";
+           for (var i = 0; i < info[4].length; i++) {
+               var idx = info[4].substr(i, 1);
+               switch (idx) {
+                   case "0":
+                       repeatinfo += strLang5.split(';')[0] + " ";
+                       break;
+                   case "1":
+                       repeatinfo += strLang5.split(';')[1] + " ";
+                       break;
+                   case "2":
+                       repeatinfo += strLang5.split(';')[2] + " ";
+                       break;
+                   case "3":
+                       repeatinfo += strLang5.split(';')[3] + " ";
+                       break;
+                   case "4":
+                       repeatinfo += strLang5.split(';')[4] + " ";
+                       break;
+                   case "5":
+                       repeatinfo += strLang5.split(';')[5] + " ";
+                       break;
+                   case "6":
+                       repeatinfo += strLang5.split(';')[6] + " ";
+                       break;
+               }
+           }
+           
+			break;
+	    case "2":
+	        {
+	            repeatinfo += strLang32;
 
-    document.getElementById("periodblock").style.display = "none";
-    document.getElementById("repeatblock").style.display = "";
+	        /*    repeatinfo += " ";
+	            for (var i = 0; i < info[4].length; i++) {
+	                var idx = info[4].substr(i, 1);
+	                switch (idx) {
+	                    case "0":
+	                        repeatinfo += strLang5.split(';')[0];
+	                        break;
+	                    case "1":
+	                        repeatinfo += strLang5.split(';')[1];
+	                        break;
+	                    case "2":
+	                        repeatinfo += strLang5.split(';')[2];
+	                        break;
+	                    case "3":
+	                        repeatinfo += strLang5.split(';')[3];
+	                        break;
+	                    case "4":
+	                        repeatinfo += strLang5.split(';')[4];
+	                        break;
+	                    case "5":
+	                        repeatinfo += strLang5.split(';')[5];
+	                        break;
+	                    case "6":
+	                        repeatinfo += strLang5.split(';')[6];
+	                        break;
+	                }
+	            }*/
+	        }
+			break;
+		case "3":
+			repeatinfo += strLang33;
+			break;
+	}	
 
-    var info = repetition.split("|");
-    var repeatinfo = "" + strLang29 + "";
+	repeatinfo += ", ";	
+		var sdate, edate;
+		if (g_sdate == null)
+		{	
+		    var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		    var sYear = sDate.split("-")[0];
+		    var sMon = sDate.split("-")[1];
+		    var sDay = sDate.split("-")[2];
 
-    switch (info[2]) {
-        case "0":
-            repeatinfo += "" + strLang30 + "";
-            break;
-        case "1":
-            repeatinfo += "" + strLang31 + "";
-            break;
-        case "2":
-            repeatinfo += "" + strLang32 + "";
-            break;
-        case "3":
-            repeatinfo += "" + strLang33 + "";
-            break;
-        default:
-            break;
-    }
 
-    if (repetitiondel != "")
-        repeatinfo += ", " + strLang34 + "" + repetitiondel + " " + strLang35 + "";
+		    var eDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		    var eYear = eDate.split("-")[0];
+		    var eMon = eDate.split("-")[1];
+		    var eDay = eDate.split("-")[2];
 
-    document.getElementById("repeatinfo").innerHTML = repeatinfo;
+		    sdate = sYear + "-" + sMon + "-" + sDay;
+		    edate = eYear + "-" + eMon + "-" + eDay;		  
+		}
+		else
+		{
+			sdate = new Date(g_sdate);
+			edate = new Date(g_edate);
+			sdate = sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate();
+		    edate = edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate();
+		}
+	//2018-05-23 구해안 저장 버튼 눌렀을때 startDate 와 endDate 비교 플레그(radioCheck)
+	//strLang71, strLang72 추가
+	repeatinfo += strLang71 + " : ";
+	if(info[0] == '-1'){
+		repeatinfo += sdate + ' ~ ' + strLang72;
+	}else{
+		repeatinfo += sdate + ' ~ ' + edate;
+	}
+	document.getElementById("repeatinfo").innerHTML = repeatinfo;
 }
 
 function ReplaceText(orgStr, findStr, replaceStr) {
@@ -441,6 +527,8 @@ function doubleSubmitCheck() {
 }
 
 function save_task() {
+	var info = repetition.split("|");
+	var selectRange;
 	if (doubleSubmitCheck()){
 		return;
 	}
@@ -459,10 +547,13 @@ function save_task() {
 		startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		
-		if(startdate > enddate) {
-	    	doubleSubmitFlag = false;
-	    	alert(strLang70);
-	        return;
+		/*2018-05-23 구해안 저장버튼 클릭시 반복설정 여부에 따라 저장*/
+		if(info[0] == '0'){			
+			if(startdate > enddate) {
+				doubleSubmitFlag = false;
+				alert(strLang70);
+				return;
+			}
 		}
 		
 	} else {
@@ -483,11 +574,14 @@ function save_task() {
         enddate = edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate();
 	}
 	
-    if (sdate > edate) {
-    	doubleSubmitFlag = false;
-    	alert(strLang70);
-        return;
-    }    
+	/*2018-05-23 구해안 저장버튼 클릭시 반복설정 여부에 따라 저장*/	
+	if(info[0] == '0'){		
+		if (sdate > edate) {
+			doubleSubmitFlag = false;
+			alert(strLang70);
+			return;
+		}    
+	}    
 
     if (repetition == "") {
     	tasktype = $(":input:radio[name=tasktypesel]:checked").val();	

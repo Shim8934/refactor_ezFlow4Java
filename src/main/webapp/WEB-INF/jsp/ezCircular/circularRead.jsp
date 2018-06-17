@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -35,6 +36,7 @@
 				text-decoration: underline;
 				cursor: pointer;
 			}
+			
 		</style>
 		
 		<script type="text/javascript" >
@@ -70,6 +72,7 @@
 // 				document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 			};
 			
+			/* 18-05-25 김민성 - 회람판 > 회람 상세정보 회람확인 시 창 새로고침 되도록 수정 */
 			function circularConfirm() {
 				if(!confirm("<spring:message code='ezCircular.t196' />")) {
 					return;
@@ -83,7 +86,8 @@
 						circularID : circularID
 					},
 					success : function(result) {
-						getConfirmStatus();
+						//getConfirmStatus();
+						window.location.reload();
 						window.opener.getLeftCount();
 						window.opener.refresh_onclick();
 					},error : function(jqXHR, textStatus, errorThrown) {
@@ -97,6 +101,8 @@
 				$("#circularConfirm").hide();
 				
 				$(".confirmStatus").html(confirmStatus);
+				
+				$("#circular_bar").hide();
 			}
 			
 			function getCommentCount() {
@@ -163,6 +169,19 @@
 					});
 	            }
 	        }
+		    
+		    /* 18-05-25 김민성 - 확인자 조회 */
+	        function circularConfirmList(currentPage) {
+		    	if (!currentPage) {
+					currentPage = "";
+				}
+		        var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 500) / 2;
+		        var top = (heigth - 300) / 2;
+		        var szHref = url = "/ezCircular/circularConfirmList.do?circularID=" + circularID; 
+	            DivPopUpShow(600, 415, szHref);
+		    }
 		    
 	        var ezprtquestion_cross_dialogArguments = new Array();
 
@@ -414,6 +433,34 @@
 // 				xhr.open("POST","/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse");
 				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse";
 			}
+			
+			// 18-05-02 김민성 - 작성자 이름 클릭 시 사원정보보기 팝업
+			function OpenUserInfo() {
+	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            feature = feature + GetOpenPosition(420, 438);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID, "", feature);
+	        }
+			
+			function CircularClose_onclick() {
+				if(confirm("<spring:message code='ezCircular.t170'/>")) {
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezCircular/circularClose.do",
+						data : {
+							circularIDList : circularID
+						},
+						success: function(){
+							window.location.reload();
+							window.opener.getLeftCount();
+							window.opener.refresh_onclick();
+						}, error: function() {
+							alert("<spring:message code='ezCircular.t102'/>");
+						}
+		        	});	
+				}
+			}
 		</script>
 	</head>
 	<style>
@@ -423,6 +470,7 @@
 	</style>
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
+ 	<!-- 18-05-25 김민성 - 회람판 조회 상단 부분 수정-->
 	<body id="mainbodytag" class="popup">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -433,15 +481,27 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                	    	<c:if test="${result.confirmStatus == '0' && result.status == '0'}">
+                	    	<!-- 2018-06-04 김민성 - 회람 상세정보 상단 버튼 수정 -->
+                	    	<!-- 회람확인이 뜨는 사람 - 회람 작성자 이외의 사람 -->
+                	    	<c:if test="${result.confirmStatus == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t195' /></span></li>
+								<li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li>
                 	    	</c:if>
                 	    	
+                	    	<!-- 회람종료가 뜨는 사람 - 회람 작성자 -->
+                	    	<c:if test="${result.memberID == userInfo.id && result.status == '0'}">
+		                        <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li>
+		                        <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li>
+		                     </c:if>
+
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
-	                        <li style="background:none; padding-right:2px;margin-left:3px" class="off"><img src="/images/ImgIcon/circular_bar.gif"></li>
+	                        
+	                        <li><span onclick="circularConfirmList()"><spring:message code='ezCircular.kmsc01' /></span></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
-		                        <li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
+	                        	<c:if test="${result.status == '0'}">
+		                        	<li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
+		                        </c:if>
 		                        <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
 	                        
@@ -463,6 +523,7 @@
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  			</script>
             	    
+            	    <!-- 18-05-24 김민성 - 회람판 > 회람 본문 작성일 단어 등록일로 수정 -->
 					<table class="content" style="width:100%;">
 	                    <tr>
     	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
@@ -470,8 +531,8 @@
                     	</tr>
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
-	       					<td style="padding-left: 4px;"><div id="writer" >${result.memberName }</div></td>
-							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t33' /></th> 
+	       					<td style="padding-left: 4px;" ><div id="writer"  onclick="OpenUserInfo()" style="vertical-align: middle; cursor: pointer;"> ${result.memberName }</div></td>
+							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezBoard.t5007' /></th> 
  							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
 						</tr>
                     	<tr>
@@ -525,8 +586,9 @@
 		            		</td>
 		        		</tr>
 		        		<tr>
+		        		<!-- 2018-06-01 김민성 - 종료일 탭 추가 -->
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
+		            		<td class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
 		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
@@ -536,6 +598,10 @@
 		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
 		            				</c:when>
 		            			</c:choose>
+		            		</td>
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
+		            		<td>
+		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 		        		</tr>
 	        		</table>
@@ -599,7 +665,8 @@
 	        	</td>
         	</tr>
 		</table>
-
+		
+		<!-- 18-05-24 김민성 - 회람 인쇄 시 작성일 > 등록일로 수정 -->
 		<table id="printScreen" style="display: none;">
 			<tr style="text-align:center">
 				<td style="vertical-align:top">
@@ -617,7 +684,7 @@
 	       					<td style="padding-left: 4px;">								
 	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
-							<th style="padding-left:10px"><spring:message code='ezCircular.t33' /></th> 
+							<th style="padding-left:10px"><spring:message code='ezBoard.t5007' /></th> 
  							<td style="padding-left:6px">
  								<div id="printStatus">${result.regDate }</div>
  							</td> 

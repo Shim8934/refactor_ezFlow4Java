@@ -277,7 +277,7 @@
                        		WHERE
                        			DEPARTMENT = #v_CN#
                             AND 
-                                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                        		AND
                        			TENANT_ID = #v_TENANT_ID#	
                        	UNION ALL 
@@ -335,7 +335,7 @@
                             AND
                                 CN <> 'masteradmin'
                             AND 
-                                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                        		AND
                        			TENANT_ID = #v_TENANT_ID#	
                        	UNION ALL 
@@ -421,7 +421,7 @@
                                  AND
                                     CN <> 'masteradmin'           
                                  AND 
-                                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                     
+                                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                     
                           		AND
                           			TENANT_ID = #v_TENANT_ID#	
                           	UNION ALL 
@@ -509,7 +509,7 @@
                                         AND
                                             CN <> 'masteradmin'
                                         AND 
-                                            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                                            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                                 		AND
                                 			TENANT_ID = #v_TENANT_ID#	
 	                               UNION ALL 
@@ -612,7 +612,7 @@
 	                       AND
 	                                 CN <> 'masteradmin'      
 	                       AND 
-	                                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                 
+	                                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                 
 	 	                   AND
 	 	                       		TENANT_ID = #v_TENANT_ID#    	
 	 					   UNION ALL 
@@ -686,7 +686,7 @@
                     AND
                         CN <> 'masteradmin'
                     AND 
-                        CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                        CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                		AND
                			TENANT_ID = #v_TENANT_ID#	
 	              UNION ALL 
@@ -1193,7 +1193,7 @@
       		WHERE
       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
       		AND
       			TENANT_ID = #v_TENANT_ID#	
       		AND
@@ -1210,13 +1210,13 @@
 			SELECT 
 				cn,
 				department as displayName,
-				'' as extensionAttribute15,
+				n'' as extensionAttribute15,
 				'user' as type				
 			FROM 
 	    		TBL_USERMASTER A 
             $strSQL$
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
             AND 
                 A.TENANT_ID = #v_TENANT_ID#
 	    		 
@@ -1225,19 +1225,19 @@
 	      	SELECT 
 	      		A.cn,
 	      		deptid as displayName,
-	      		'' as extensionAttribute15,
+	      		n'' as extensionAttribute15,
 	      		'user' as type
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+            $strGyumjikForOracle$ AND A.TENANT_ID = #v_TENANT_ID#
 				
 			<isEqual property="class" compareValue="all">
 				UNION ALL
 				
 				SELECT
 					cn,
-					'' as displayName,
-					'' as extensionAttribute15,
+					n'' as displayName,
+					n'' as extensionAttribute15,
 					'group' as type
 				FROM
 					TBL_DEPTMASTER 
@@ -1247,15 +1247,15 @@
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
 	    		cn,
-	    		'' as displayName,
-	    		'' as extensionAttribute15,
+	    		n'' as displayName,
+	    		n'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
 	    		TBL_DEPTMASTER 
             $strSQL$ AND TENANT_ID = #v_TENANT_ID#
 	    </isEqual>
 	</select>
-	
+
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
 			<![CDATA[
@@ -1278,7 +1278,7 @@
 			             	TBL_USERMASTER A
                          $strSQL$
                          AND 
-                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                                                
+                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                                                
                          AND 
                              A.TENANT_ID = #v_TENANT_ID#
 			       
@@ -1311,7 +1311,7 @@
 				TBL_USERMASTER A
 				$strSQL$
 			AND
-				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 			AND
 				A.TENANT_ID = #v_TENANT_ID#
 
@@ -1365,7 +1365,7 @@
 					TBL_USERMASTER  A
 					$strSQL$
 				AND 
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 				AND 
 					A.TENANT_ID = #v_TENANT_ID#
 
@@ -1508,7 +1508,7 @@
        	WHERE  
        		TENANT_ID = #TENANTID#
         AND 
-            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #TENANTID#)
        	AND
        		DEPARTMENT = #v_DEPTID#
        	AND 
@@ -1584,5 +1584,31 @@
 			TENANT_ID = #tenantID#
 		AND
 			CN = #userID#
+	</select>
+		
+	<update id="EzOrganDAO.setListType" parameterClass="Map">
+		UPDATE
+			TBL_USERMASTER
+		SET
+			LISTTYPE = #listType#
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#			
+	</update>
+	
+	<select id="EzOrganDAO.getListType" parameterClass="Map" resultClass="String">
+		SELECT
+			LISTTYPE
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#
 	</select>
 </sqlMap>

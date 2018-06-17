@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPollDAO")
@@ -225,4 +226,30 @@ public class EzPollDAO extends EgovAbstractDAO {
 	public List<PollQuestionVO> getOpenToAllQuestion(Map<String, Object> map) {		
 		return (List<PollQuestionVO>) list("EzPollDAO.getOpenToAllQuestion", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PollUserVO> getAllUsersForQst(Map<String, Object> map) {
+		return (List<PollUserVO>) list("EzPollDAO.getAllUsersForQst", map);
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getQstAllUsers(Map<String, Object> map) {
+		return (List<LoginVO>) list("EzPollDAO.getQstAllUsers", map);
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getInfoOfSeenUsers(Map<String, Object> map) {
+		return (List<LoginVO>) list("EzPollDAO.getInfoOfSeenUsers", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getUserInfoM(Map<String, Object> map) {
+		return (List<LoginVO>) list("EzPollDAO.getUserInfoM", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getUserInfoMRD(Map<String, Object> map) {
+		return (List<LoginVO>) list("EzPollDAO.getUserInfoMRD", map);
+	}
+	
 }

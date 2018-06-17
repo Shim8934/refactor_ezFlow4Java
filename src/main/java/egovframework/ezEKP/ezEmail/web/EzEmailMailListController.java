@@ -118,6 +118,7 @@ public class EzEmailMailListController {
 		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
 		String useReSend = ezCommonService.getTenantConfig("useReSend", userInfo.getTenantId());
 		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId()); // 수아 수정(useMailWriteSenderClick 추가)
+		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
 		
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -175,6 +176,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 수정 (useMailWriteSenderClick 추가)
+		model.addAttribute("useSearchContent", useSearchContent);
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
@@ -225,7 +227,7 @@ public class EzEmailMailListController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000);
+					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -611,12 +613,17 @@ public class EzEmailMailListController {
 			if (uniqueId.endsWith(",")) {
 				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
 			}
+			
 			String[] folderAndMsgIdArray = uniqueId.split(",");
-			folderId = folderAndMsgIdArray[0].split("/")[0];			
+			
+			int delimiterIndex = folderAndMsgIdArray[0].lastIndexOf("/");
+			folderId = folderAndMsgIdArray[0].substring(0, delimiterIndex);			
 			uids = new long[folderAndMsgIdArray.length];
+			
 			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 				String folderAndMsgId = folderAndMsgIdArray[i];
-				String msgId = folderAndMsgId.split("/")[1];
+				delimiterIndex = folderAndMsgId.lastIndexOf("/");
+				String msgId = folderAndMsgId.substring(delimiterIndex + 1);
 				uids[i] = Long.parseLong(msgId);
 			}	
 		}
@@ -636,7 +643,7 @@ public class EzEmailMailListController {
 	        logger.debug("userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -653,7 +660,7 @@ public class EzEmailMailListController {
 			
 			if (useImapMoveCommand.equals("YES")) {
 				if (cmd.equalsIgnoreCase("BMOVE")) {
-					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));			
 					sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
 				} else {			
 					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
@@ -674,7 +681,7 @@ public class EzEmailMailListController {
 						isThereUserLevelQuota = true;
 					}
 									
-					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));			
 					sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
 				}
 				
@@ -756,7 +763,7 @@ public class EzEmailMailListController {
 	        logger.debug("userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);
@@ -869,7 +876,7 @@ public class EzEmailMailListController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -946,7 +953,7 @@ public class EzEmailMailListController {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -1018,7 +1025,7 @@ public class EzEmailMailListController {
 		String resultData = "ERROR";
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			Folder folder = ia.getFolder(folderPath);
 			folder.open(Folder.READ_ONLY);
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
@@ -1153,7 +1160,7 @@ public class EzEmailMailListController {
 	        logger.debug("userEmail=" + userAccount);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale, 40*1000, 20*1000);
+					userAccount, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
 			
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 			

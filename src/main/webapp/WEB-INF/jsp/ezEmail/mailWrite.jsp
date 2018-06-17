@@ -8,6 +8,8 @@
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="/css/jquery-ui.css" type="text/css" />
+		<link rel="stylesheet" href="/css/jquery.ui.all.css" type="text/css" />
 		<c:if test="${useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
@@ -19,8 +21,8 @@
 		<!-- 수신인란 height 작업 -->
 		<style>
 			.viewtxtScroller {
-				min-height: 15px;
-				max-height: 15px;
+				min-height: 16px;
+				max-height: 16px;
 				overflow-y: auto;
 				margin-bottom: 3px;
 			}
@@ -42,11 +44,14 @@
 			
 			#menu > ul:nth-child(2) > li {
 				margin: 0 2px !important;
-			}		
+			}
+			.ui-autocomplete { height: 200px; overflow-y: scroll; overflow-x: hidden;}
 		</style>
 		
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
@@ -129,7 +134,6 @@
 	    var bigtrue = 0;
 	    var tmpXML = "";
 	    var tempUrl = "";
-	    var folderDate = "${folderDate}";
 	    var filedate = "${stateName}";
 	    var gubunlist = "1";
 	    var tempvalue = "0";
@@ -151,6 +155,11 @@
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
+	    var folderPath = "${drafts}";
+	    var multipartFirstIdx = "${multipartFirstIdx}";
+
+	    //업무일지 아이디
+	    var journalId = "${journalId}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -320,7 +329,15 @@
             	// 현재 스크롤 위치를 저장
             	currentScrollPos = jqueryElement.scrollTop();
             	domElement.previousScrollPos = currentScrollPos;
-            });            
+            });
+            
+         // 쓰기창에서 수신인 자동완성 기능 사용 유무
+            <c:if test="${useMailAddrAutoComplete == 'NO'}">
+            	$( "#MsgTo" ).autocomplete("disable");
+            	$( "#MsgCC" ).autocomplete("disable");
+            	$( "#MsgBCC" ).autocomplete("disable");
+        	</c:if>
+            
 		}
 	    
 		var isAutoSave = false;
@@ -337,6 +354,9 @@
         	} else {
         		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
         	}
+        	
+        	// resize시 autoComplete창이 계속 유지되어서 display 처리
+        	$(".ui-autocomplete").css('display', 'none');
 	    }
 	    function KeEventControl(obj) {
 	        useragt = navigator.userAgent.toUpperCase();
@@ -467,15 +487,15 @@
 	    		var indexSignValue = document.getElementById("bodyValue").innerHTML.indexOf("id=\"MailSign\"");
 	            if (indexSignValue == -1) {
 		    		switch (mailsel) {
-		                case "0": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'></DIV>");
+		                case "0": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'></DIV>");
 		                    break;
-		                case "1": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
+		                case "1": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
 		                    tempvalue = "1";
 		                    break;
-		                case "2": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
+		                case "2": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
 		                    tempvalue = "1";
 		                    break;
-		                case "3": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
+		                case "3": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
 		                    tempvalue = "1";
 		                    break;
 		            }
@@ -501,15 +521,15 @@
 	    	    var bodyInnerHTML = document.getElementById("bodyValue").innerHTML.replace(/�/gi, "");
 	    	
 	            switch (mailsel) {
-	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'></DIV>" + bodyInnerHTML);
+	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'></DIV>" + bodyInnerHTML);
 	                    break;
-	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + bodyInnerHTML);
 	                    tempvalue = "1";
 	                    break;
-	                case "2": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "2": message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + bodyInnerHTML);
 	                    tempvalue = "1";
 	                    break;
-	                case "3": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "3": message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + bodyInnerHTML);
 	                    tempvalue = "1";
 	                    break;
 	            }
@@ -518,15 +538,15 @@
 				var indexSignValue = document.getElementById("tempbody").innerHTML.indexOf("id=\"MailSign\"");
 	            if (indexSignValue == -1) {
 	            	switch (mailsel) {
-			            case "0": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'></DIV>");
+			            case "0": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'></DIV>");
 			                break;
-			            case "1": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
+			            case "1": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
 			                tempvalue = "1";
 			                break;
-			            case "2": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
+			            case "2": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
 			                tempvalue = "1";
 			                break;
-			            case "3": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
+			            case "3": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
 			                tempvalue = "1";
 			                break;
 		            }
@@ -549,15 +569,15 @@
 	        }
 	        else { //새메일쓰기
 	            switch (mailsel) {
-	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'></DIV>");
+	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'></DIV>");
 	                    break;
-	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
 	                	tempvalue = "1";
 		                break;
-		            case "2": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+		            case "2": message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
 		                tempvalue = "1";
 		                break;
-		            case "3": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+		            case "3": message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
 		                tempvalue = "1";
 		                break;
 	            }
@@ -569,12 +589,15 @@
 	        var sign = "";
 	        var signcom = "";
         	var indexSignValue = message.GetEditorContent().indexOf("id=\"MailSign\"");
+			var mailSignDiv = "<DIV id='MailSign'></DIV>";
+	        mailSignDiv = editorPtagChk() + mailSignDiv;
+	        
             if (indexSignValue == -1) {
                 if (gg_cmd == "REPLY" || gg_cmd == "REPLYALL" || gg_cmd == "FORWARD") {
-                    message.SetEditorContent("<DIV id='MailSign'></DIV>" + message.GetEditorContent());
+                    message.SetEditorContent(mailSignDiv + message.GetEditorContent());
                 }
                 else {
-                    message.SetEditorContent(message.GetEditorContent() + "<DIV id='MailSign'></DIV>");
+                    message.SetEditorContent(message.GetEditorContent() + mailSignDiv);
                 }
             }
 	        switch (SelMailSign.value) {
@@ -774,22 +797,27 @@
 	        }
 	        AttachFileInfo(strXML);
 	    }
-	
+		
 	    function FileUpdateAfter(strXML) {
-	        tempXML = strXML;
+	        
+	    	tempXML = strXML;
 	        pAttachXml = loadXMLString(strXML);
+	        
 	        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
 	        var xmlDoc = createXmlDom();
 	        var objNode;
 	        var objRow;
 	        var objRows;
 	        var objRowRow;
+	        
 	        objNode = createNodeInsert(xmlDoc, objNode, "DATA");
 	        createNodeAndInsertText(xmlDoc, objNode, "CMD", "ADD");
 	        createNodeAndInsertText(xmlDoc, objNode, "URL", g_url);
 	        objRow = createNodeAndAppandNode(xmlDoc, objNode, objRow, "FILELIST");
+	        
 	        for (var i = 0; i < nodes.length; i++) {
-	            if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
+	            
+	        	if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
 	                objRows = createNodeAndAppandNode(xmlDoc, objRow, objRows, "FILE");
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "NAME", getNodeText(GetChildNodes(nodes[i])[2]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "PATH", getNodeText(GetChildNodes(nodes[i])[4]));
@@ -807,45 +835,65 @@
 	        var objRow;
 	        var objRows;
 	        objNode = createNodeInsert(xmlReturnValue, objNode, "DATA");
+	        
 	        if (xmlhttp.status == "200") {
+	        	
 	        	if (xmlhttp.responseText.indexOf("NO APPEND failed.") > -1) {
 	        		alert(strLang241);
-	        	}
-		       	else {
+	        	} else {
 		        	xmlDoc = loadXMLString(xmlhttp.responseText);
 		
-		            if (CrossYN())
+		            if (CrossYN()) {
 		                g_url = xmlDoc.getElementsByTagName("URL").item(0).textContent;
-		            else
+		            } else {
 		                g_url = xmlDoc.getElementsByTagName("URL").item(0).text;
+		            }
+		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
+	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
+	        	    
+	                if (document.location.port != "80") {
+	                	scheme += ":" + document.location.port;
+	                }
+		            
+		            /* 2018-04-25 김유진 - 파일 첨부시 href에 넣어줄 aitem 수정 */
 		            for (var i = 0; i < filelist.length; i++) {
 		                filename = SelectSingleNodeValue(filelist[i], "NAME");
 		                path = SelectSingleNodeValue(filelist[i], "PATH");
 		                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
 		                size = SelectSingleNodeValue(filelist[i], "SIZE");
 		                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-		                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
+		                
 		                if (big_yn == "Y") {
-		                    bigtrue = bigtrue + 1;
-		                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURIComponent(path) + "&filedate=" + encodeURIComponent(attid.split('/')[0]);
+		                	// 대용량 첨부시 
+		                	bigtrue = bigtrue + 1;
+		                	aitem = scheme  + "/ezEmail/downloadAttachCommon.do?"
+		                					+ "fileid=" + encodeURIComponent(path)
+		                					+ "&filedate=" + encodeURIComponent(attid.split('/')[0])
+		                					+ "&tid=" + tid;
+		                } else {
+		                	// 일반파일 첨부시
+			                aitem = "/ezEmail/downloadAttach.do?" 
+			                				+ "mode=Attach"
+			                				+ "&folderPath=" + encodeURIComponent(folderPath)
+			                				+ "&filename=" + encodeURIComponent(filename);
 		                }
-		                else {
-		                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
-		                }
+		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "URL", aitem);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
+		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "UID", g_url);
 		            }
 		            
 		            returnvalue(strXML);
 	        	}
-	        }
-	        else {
+	        	
+	        } else {
 	            alert(xmlhttp.status + " : " + strLang241);
 	        }
+	        
 	        return xmlReturnValue;
 	    }
 	
@@ -872,7 +920,12 @@
 	            }
 	            else if (Org_cmd == "CommunityDotNet") {
 	                GetBoardItemInfo_New3_DotNet("${boardID}", "${itemID}");
-	            }	            
+	            }	
+	            //업무일지면...
+	            else if (Org_cmd == "journal") {
+	            	getJournalToMail();
+	            	return;
+	            }
 	            
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
@@ -883,8 +936,98 @@
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
+	        
+	        mailSignInnerHtml();
+	    }
+
+		// 180517 : 메일 mailsign div에 메일을 작성 후 서명 등록 또는 변경 시 본문 사라지는 현상 수정
+	    function mailSignInnerHtml() {
+			if (mailsel == 0) {
+				if (pUse_Editor == "KUKUDOCS") {
+					setTimeout(function() {
+							message.EditorElementSetHtml("MailSign", "");
+					}, 300);
+				} else {
+					message.EditorElementSetHtml("MailSign", "");
+				}
+			}
 	    }
 	
+	    function getJournalToMail(){
+	    	var journal;
+	    	$.ajax ({
+				type : "POST",
+				async : false,
+				url : "/ezJournal/journalDetailJSON.do",
+				data : {
+					"journalId" : journalId
+				},
+				success : function(result) {
+					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
+					var journalContent = "<p></p><p></p><hr>" + (result.journalContent).replace(/&#39;/gi, "\'");
+					message.SetEditorContent(journalContent);
+					var fileList = result.fileList;
+					
+					var pstrXML = "";
+
+					//첨부파일이 있을 경우
+			        if (fileList.length > 0) {
+			            pstrXML += "<LISTVIEWDATA><HEADERS>";
+			            pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+			            pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+			            pstrXML += "</HEADERS><ROWS>";
+			        }
+			        for (var i = 0; i < fileList.length; i++) {
+			            var filepath = fileList[i].filePath;
+			            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
+			            var filename = fileList[i].fileName;
+			            var filesize = fileList[i].fileSize;
+
+			            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+			            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+			            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+			            pstrXML += "<DATA3></DATA3>";
+			            pstrXML += "<DATA4>BOARD</DATA4>";
+			            pstrXML += "<DATA5>N</DATA5>";
+			            pstrXML += "<DATA6>" + filesize + "</DATA6>";
+			            if(filesize > BigSizeAttachSize )
+			                pstrXML += "<DATA7>Y</DATA7>";
+			            else
+			                pstrXML += "<DATA7>N</DATA7>";
+			            pstrXML += "</CELL><CELL>";
+			            pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+			            pstrXML += "</CELL></ROW>";
+			        }
+			        if (pstrXML != "") {
+			            pstrXML += "</ROWS></LISTVIEWDATA>";
+			            objXML = loadXMLString(pstrXML);
+			            if (pAttachListXml == "") {
+			                pAttachListXml = objXML;
+			            }
+			            else {
+			                if (typeof (pAttachListXml) == "string")
+			                    Rtnxml = loadXMLString(pAttachListXml);
+			                else
+			                    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+			                for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+			                    var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+//			                    if (CrossYN())
+//			                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+//			                    else
+			                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+			                }
+			                pAttachListXml = Rtnxml;
+			            }
+			            if (DragDropAttachObjetLoading) {
+//			            	AppendFileAttachInfo(pAttachListXml);
+			            	dadiframe.fileupload2(pAttachListXml,"/ezEmail/mailInterUploadCopyXCKFromJournal.do");
+			            }
+			        }
+				}
+			});
+	    }
+	    
 	    function btn_AttachSelect_onclick() {
 	        document.getElementById('mode').value = "ATT";
 	        document.form.file1.click();
@@ -1358,13 +1501,231 @@
 	            }
 	            eSubject.value = strLang121 + eSubject.value;
 	            Subject_ReApply();
+	            
 	        }
 	    }
 	    
 	    // 재은 수정(편지지)
 	    function Letter_onClick() {
-	    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
+	    	DivPopUpShow(583, 495, "/ezEmail/mailLetter.do");
 	    }
+	    
+	    function editorPtagChk() {
+	    	var editorBody = message.GetEditorBody();
+	    	var editorBodyChild = editorBody.childNodes;
+	    	var appPtag = "";
+	    	
+	    	for (var i = 0; i < editorBodyChild.length; i++) {
+            	if ( editorBodyChild[i].tagName.toLowerCase() == "p" && message.GetEditorContent() != ""){
+            		break;
+            	}
+            	
+            	if (i + 1 == editorBodyChild.length) {
+            		appPtag = "<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>";
+            	}
+            }
+	    	
+	    	return appPtag;
+	    }
+	    /* 
+	    $(document).on("click", "#MailSign", function() {
+	    	if (mailsel == 0) {
+				message.EditorElementSetHtml("MailSign", "");
+			}
+	    }) */
+
+	    var IsInsert_MsgTo = false;
+		$(function() {
+			$("#MsgTo").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						autoFocus:true,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgTo = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgTo) {
+								MsgToGot.appendChild(newElem);
+								document.getElementById("MsgTo").value = "";
+								IsInsert_MsgTo = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgTo)
+								document.getElementById("MsgTo").value = "";
+							IsInsert_MsgTo = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+			var IsInsert_MsgCC = false;
+			$("#MsgCC").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgCC = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgCC) {
+								MsgCCGot.appendChild(newElem);
+								document.getElementById("MsgCC").value = "";
+								IsInsert_MsgCC = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgCC)
+								document.getElementById("MsgCC").value = "";
+							IsInsert_MsgCC = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+			var IsInsert_MsgBCC = false;
+			$("#MsgBCC").autocomplete(
+					{
+						source : function(request, response) {
+							$.ajax({
+								type : 'post',
+								url : "/ezEmail/autoCompleteList.do",
+								dataType : "json",
+								data : {
+									value : request.term
+								},
+								success : function(data) {
+									var susinList = data.susinList;
+									response($.map(susinList, function(ul, item) {
+										return {
+											label : ul.name + " " + ul.title + " "
+													+ ul.description + " "
+													+ "<" + ul.mail + ">",
+											value : ul.name,
+											email : ul.mail,
+											dept : ul.description,
+											title : ul.title
+										};
+									}));
+
+								}
+							});
+						},
+						minLength : 2,
+						selectFirst : false,
+						select : function(event, ui) {
+							newElem = PrepareMailTag("0", "email", ui.item.value,
+									ui.item.email, "");
+							IsInsert_MsgBCC = CheckMailReceiver(newElem);
+							if (!IsInsert_MsgBCC) {
+								MsgBCCGot.appendChild(newElem);
+								document.getElementById("MsgBCC").value = "";
+								IsInsert_MsgBCC = true;
+							}
+						},
+						focus : function(event, ui) {
+							return false;
+						},
+						close : function(event, ui) {
+							if (IsInsert_MsgBCC)
+								document.getElementById("MsgBCC").value = "";
+							IsInsert_MsgBCC = false;
+						},
+						appendTo : "#AutoCompleteResults"
+					}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+						.data("ui-autocomplete-item", item)
+						.append(
+								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.value
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.email + "</td></tr></table></a>")
+						.appendTo(ul);
+			};
+		})
 	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
@@ -1393,7 +1754,7 @@
 	                            <spring:message code='ezEmail.t546' /></span></li>
 	                        <!-- <li><span onclick="LoadFormat_onClick()">
 	                            <spring:message code='ezEmail.t824' /></span></li> -->
-	                        <li><span onclick="NameCertify_onClick()">
+	                        <li style="display:none;"><span onclick="NameCertify_onClick()">
 	                            <spring:message code='ezEmail.t331' /></span></li>
 	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
@@ -1430,15 +1791,15 @@
 	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif"></li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
-	                            <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
+	                            <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
 	                            	<option value="0">HTML</option>
-	                            	<option value="1">Plain Text</option>
+	                            	<option value="1">PlainText</option>
 	                            </select>
 	                        </li>
 	                        <c:if test="${useOnlyInnerMail != 'YES'}">
 	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
 	                        	<li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
-		                            <select style="vertical-align:top;width:120px;" onchange="ChangeSenderName(this);">
+		                            <select style="vertical-align:top;" onchange="ChangeSenderName(this);">
 		                            ${mailSendObject}
 		                            </select>
 		                        </li>
@@ -1489,8 +1850,8 @@
 	                            <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgTo" id="MsgTo" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
-	                                ime-mode: active;">
+	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" tabindex="1" style="width: 100%;
+	                                ime-mode: active;"/>
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
 	                            <select id="SelectToAddress" style="width: 106px" onchange="simple_select('TO',this)">
@@ -1517,7 +1878,7 @@
 	                            </div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgCC" id="MsgCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
+	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" tabindex="2" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectCcAddress" style="width: 106px" onchange="simple_select('CC',this)">
@@ -1541,7 +1902,7 @@
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
-	                            <input type="text" name="MsgBCC" id="MsgBCC" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
+	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" tabindex="3" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectBCCAddress" style="width: 106px" onchange="simple_select('BCC',this)">
@@ -1645,6 +2006,7 @@
             </tr>            
             </c:if>
 	    </table>
+	    <div id="AutoCompleteResults"></div>
 	    <div id="sendScreen" style="display:none;">
 	      <table width="100%" cellspacing="0" cellpadding="0" class="message" style="background-image:url(/images/email/mailsendnoti.gif)">
 	        <tr>

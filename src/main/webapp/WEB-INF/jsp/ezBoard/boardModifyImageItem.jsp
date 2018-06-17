@@ -7,7 +7,33 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1002'/></title>
 	    <style type="text/css">
-	         .preView { width: 150px; height: 150px; text-align: center; border:1px solid silver; }
+	         .preView { 
+	         	width: 150px; 
+	         	height: 150px; 
+	         	text-align: center; 
+	         	border:1px solid silver; 
+	         }
+	         #btnUl {
+	         	display:table;
+	         	margin:0px auto 0px auto;
+	         }
+	         #btnUl  li {
+	         	display: inline-block;
+				margin:0px;
+				cursor:pointer;
+	         }
+	         #btnUl li span {
+	         	display:inline-block; 
+	         	background:white; 
+	         	border:1px solid rgba(188, 211, 224, 1); 
+	         	height:25px;
+	         	padding:0px 8px 0px 8px;
+	         	border-radius:3px; 
+	         	line-height:25px;
+	         	font-weight: normal;
+	         	color:#333;
+	         	vertical-align:middle;
+	         }  
 	    </style>
         <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -375,8 +401,7 @@
 	            <td style="vertical-align:top">
 	                <div id="menu">
 	                    <ul>
-	                        <li ID='btn_Modify'><span onClick="btn_ImgOnclick()"><spring:message code='ezBoard.t316'/></span></li>
-	                        <li ID='Li1'><span onClick="btn_PhotoChange()"><spring:message code='ezBoard.t1002'/></span></li>
+	                        <li ID='btn_Modify'><span onClick="btn_ImgOnclick()"><spring:message code='ezBoard.t98'/></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
@@ -388,22 +413,25 @@
 	        </tr>
 	        <tr id="mainimage" style="display:none">
 	            <td>
-	                <input type="checkbox" id="mainFG" /><spring:message code='ezBoard.t00003'/>
+	                <input type="checkbox" id="mainFG" /><span><spring:message code='ezBoard.t00003'/></span>
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="height:28px; line-height:28px; border-bottom:0 none; background:#fff;"><spring:message code='ezBoard.t1012'/></th>
+	            <th style="height:28px; line-height:28px; border-bottom:0 none; background:#fff;">
+	    	        <ul id = "btnUl"><li><span onClick="btn_PhotoChange()"><spring:message code='ezAddress.t301'/><spring:message code='ezBoard.t47'/></span></li></ul>
+	            </th>
 	        </tr>
 	        <tr>
 	            <td style="width:100%; height:250px; border:1px solid #ddd; padding:5px;background:#e5e5e5;" >
 	                <div class="viewbox" style="width:100%; border:0 none; padding:0; background:none;">
 	                	<c:set var="result" value="${fn:split(listImages, ';')}"/>
 	                	<c:forEach var="res" items="${result}" varStatus="vs">
-		                    <table style="width:100%">
+	                	<%-- 2018-06-12 홍승비 - 사진수정 시 이미지 비율 유지 --%>
+		                    <table style="width:100%; min-height:230px; ">
 		                        <tr>
 		                            <td style="text-align:center">
 		                                <span id='imagechange1' class='preView' style='display:none;' value=""></span>
-		                                <img src='${res}' width='${g_Width}' height ='${g_Height}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer;'/>
+		                                <img src='${res}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer;max-height:230px;'/>
 		                            </td>
 		                        </tr>
 		                    </table>
@@ -436,7 +464,7 @@
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm">
-	    <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onChange="imgtemp_onclick()" accept="image/*"/>
+	    <input type="file" name="file1" id="file1"  style="display: none;" onChange="imgtemp_onclick()" accept="image/*"/>
 	    <input type="hidden" name="mode" id="mode" />
 	    </form>
 	</body>

@@ -295,7 +295,7 @@ img { border:0px;}
 #cmhome_type1 .leftmenu h2 {
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:1px solid #c6c6ca;
+	border-top:1px solid #ddd;
 	border-bottom: 1px solid #eef0f3;
 	cursor: pointer;
 	background: url('../images/kr/left/01_minus.gif') no-repeat right 13px;
@@ -324,7 +324,7 @@ img { border:0px;}
 	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:1px solid #c6c6ca;
+	border-top:1px solid #ddd;
 	border-bottom: 1px solid #eef0f3;
 	cursor: pointer;
 	height:33px;
@@ -398,14 +398,15 @@ img { border:0px;}
 
 /* cmhome_type2-left */
 #cmhome_type2 .info {
-	width:180px;
-	background: url(../images/kr/community/type2/info_bg_bottom.gif) repeat-x bottom #99bfd8;
+	width:178px;
+	/* background: url(../images/kr/community/type2/info_bg_bottom.gif) repeat-x bottom #99bfd8; */
+	border:1px solid #ddd;
 	padding:0px;
 	overflow:hidden;
 }
 #cmhome_type2 .info_box {
 	position:relative;
-	background:url(../images/kr/community/type2/info_bg01.gif) no-repeat;
+	/* background:url(../images/kr/community/type2/info_bg01.gif) no-repeat; */
 	border:0px;
 	padding:15px 10px 2px 10px;
 }
@@ -437,19 +438,20 @@ img { border:0px;}
 	margin:0px;
 	height:42px;
 	padding:0px 10px;
-	background:url(../images/kr/community/type2/info_bg02.gif) no-repeat;
+	/* background:url(../images/kr/community/type2/info_bg02.gif) no-repeat; */
+	border-bottom:1px solid #ddd;
+	border-top:1px solid #ddd;
 	list-style:none;
 }
 #cmhome_type2 .info_count li {
 	float:left;
-	width:40px;
+	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
 	text-align:right;
 	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
-	
 }
 #cmhome_type2 .info_count .icon_member {
 	background:url(../images/kr/community/type1/icon_people_big.gif) no-repeat 0px 10px;
@@ -461,25 +463,23 @@ img { border:0px;}
 #cmhome_type2 .info_count li .count {
 	display:block;
 	font-size:11px;
-	color:#797676;
+	color:#333;
 	font-weight:bold;
 	white-space:nowrap; 
 	overflow:hidden; 
-	text-overflow:ellipsis;
-	
+	text-overflow:ellipsis;	
 }
 
 #cmhome_type2 .info_list {
-	width:160x;
-	margin:7px 10px;
-	padding:0px;
+	background-color:#f8f8fa;
+	padding:7px;
 	list-style:none;
 	font-size:12px;
 }
 #cmhome_type2 .info_list li {
-	background:url(../images/kr/community/type2/icon_arrow01.gif) no-repeat 0px 7px;
+	/* background:url(../images/kr/community/type2/icon_arrow01.gif) no-repeat 0px 7px; */
 	line-height:20px;
-	padding:0px 0px 0px 8px;
+	padding:0px 0px 0px 0px;
 	color:#0d354e;
 }
 
@@ -524,14 +524,14 @@ img { border:0px;}
 }
 
 #cmhome_type2 .leftmenu {
-	border:2px solid #bad1e0;
+	border:1px solid #bad1e0;
 	margin-top:10px;
 	font-size:12px;
 }
 #cmhome_type2 .leftmenu h2 {
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:1px solid #c6c6ca;
+	border-top:0px solid #ddd;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
 	background: url('../images/kr/left/01_minus.gif') no-repeat right 13px;
@@ -551,14 +551,14 @@ img { border:0px;}
 }
 #cmhome_type2 .tree{
 	padding:10px 0px;
-	border-top:1px solid #c6c6ca;
+	border-top:1px solid #ddd;
 }
 #cmhome_type2 .leftmenu h3 {
 	font-size:12px;
 	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:1px solid #c6c6ca;
+	border-top:1px solid #ddd;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
 	height:33px;
@@ -625,14 +625,15 @@ img { border:0px;}
 
 /* cmhome_type3-left */
 #cmhome_type3 .info {
-	width:180px;
-	background: url(../images/kr/community/type3/info_bg_bottom.gif) repeat-x bottom #a08268;
+	width:178px;
+	/* background: url(../images/kr/community/type3/info_bg_bottom.gif) repeat-x bottom #a08268; */
 	padding:0px;
+	border:1px solid #c9c5ae;
 	overflow:hidden;
 }
 #cmhome_type3 .info_box {
 	position:relative;
-	background:url(../images/kr/community/type3/info_bg01.gif) no-repeat;
+	/* background:url(../images/kr/community/type3/info_bg01.gif) no-repeat; */
 	border:0px;
 	padding:15px 10px 2px 10px;
 }
@@ -664,12 +665,14 @@ img { border:0px;}
 	margin:0px;
 	height:42px;
 	padding:0px 10px;
-	background:url(../images/kr/community/type3/info_bg02.gif) no-repeat;
+	/* background:url(../images/kr/community/type3/info_bg02.gif) no-repeat; */
+	border-bottom:1px solid #c9c5ae;
+	border-top:1px solid #c9c5ae;
 	list-style:none;
 }
 #cmhome_type3 .info_count li {
 	float:left;
-	width:40px;
+	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
 	text-align:right;
@@ -696,18 +699,17 @@ img { border:0px;}
 	
 }
 
-#cmhome_type3 .info_list {
-	width:160x;
-	margin:7px 10px;
-	padding:0px;
+#cmhome_type3 .info_list {	
+	padding:7px;	
+	background-color:floralWhite;
 	list-style:none;
 	font-size:12px;
 }
 #cmhome_type3 .info_list li {
-	background:url(../images/kr/community/type3/icon_arrow01.gif) no-repeat 0px 7px;
+	/* background:url(../images/kr/community/type3/icon_arrow01.gif) no-repeat 0px 7px; */
 	line-height:20px;
-	padding:0px 0px 0px 8px;
-	color:#fff;
+	padding:0px 0px 0px 0px;
+	color:#0d354e;
 }
 
 #cmhome_type3 .icon_gray {
@@ -750,14 +752,14 @@ img { border:0px;}
 }
 
 #cmhome_type3 .leftmenu {
-	border:1px solid #a4917f;
+	border:1px solid #c9c5ae;
 	margin-top:10px;
 	font-size:12px;
 }
 #cmhome_type3 .leftmenu h2 {
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:1px solid #cac2ba;
+	border-top:0px solid #cac2ba;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
 	background:url('../images/kr/left/01_minus.gif') no-repeat right 13px #f3f1ee;
@@ -851,14 +853,15 @@ img { border:0px;}
 
 /* cmhome_type4-left */
 #cmhome_type4 .info {
-	width:180px;
-	background: url(../images/kr/community/type4/info_bg_bottom.gif) repeat-x bottom #59bc48;
+	width:178px;
+	/* background: url(../images/kr/community/type4/info_bg_bottom.gif) repeat-x bottom #59bc48; */
+	border:1px solid rgb(200, 224, 200);
 	padding:0px;
 	overflow:hidden;
 }
 #cmhome_type4 .info_box {
 	position:relative;
-	background:url(../images/kr/community/type4/info_bg01.gif) no-repeat;
+	/* background:url(../images/kr/community/type4/info_bg01.gif) no-repeat; */
 	border:0px;
 	padding:15px 10px 2px 10px;
 }
@@ -890,12 +893,14 @@ img { border:0px;}
 	margin:0px;
 	height:42px;
 	padding:0px 10px;
-	background:url(../images/kr/community/type4/info_bg02.gif) no-repeat;
+	/* background:url(../images/kr/community/type4/info_bg02.gif) no-repeat; */
+	border-top:1px solid rgb(200, 224, 200);
+	border-bottom:1px solid rgb(200, 224, 200);
 	list-style:none;
 }
 #cmhome_type4 .info_count li {
 	float:left;
-	width:40px;
+	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
 	text-align:right;
@@ -922,18 +927,17 @@ img { border:0px;}
 	
 }
 
-#cmhome_type4 .info_list {
-	width:160x;
-	margin:7px 10px;
-	padding:0px;
+#cmhome_type4 .info_list {	
+	padding:7px;
 	list-style:none;
 	font-size:12px;
+	background-color: rgb(250, 254, 250);
 }
 #cmhome_type4 .info_list li {
-	background:url(../images/kr/community/type4/icon_arrow01.gif) no-repeat 0px 7px;
+	/* background:url(../images/kr/community/type4/icon_arrow01.gif) no-repeat 0px 7px; */
 	line-height:20px;
-	padding:0px 0px 0px 8px;
-	color:#fff;
+	padding:0px 0px 0px 0px;
+	color:#333;
 }
 
 #cmhome_type4 .icon_gray {
@@ -977,14 +981,14 @@ img { border:0px;}
 }
 
 #cmhome_type4 .leftmenu {
-	border:2px solid #9ebd98;
+	border:1px solid rgb(200, 224, 200);
 	margin-top:10px;
 	font-size:12px;
 }
 #cmhome_type4 .leftmenu h2 {
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:1px solid #c6c6ca;
+	border-top:0px solid #ddd;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
 	background: url('../images/kr/left/01_minus.gif') no-repeat right 13px;
@@ -1004,14 +1008,14 @@ img { border:0px;}
 }
 #cmhome_type4 .tree{
 	padding:10px 0px;
-	border-top:1px solid #c6c6ca;
+	border-top:1px solid #ddd;
 }
 #cmhome_type4 .leftmenu h3 {
 	font-size:12px;
 	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:1px solid #c6c6ca;
+	border-top:1px solid #ddd;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
 	height:33px;
@@ -1033,7 +1037,7 @@ img { border:0px;}
 /* cmhome_type4-right */
 #cmhome_type4 .introduce {
 	clear:both;
-	border:1px solid rgb(150, 197, 111);
+	border:1px solid rgb(200, 224, 200);
 	background:url(../images/kr/community/type4/introduce_bg.gif);
 	overflow:hidden;
 	height:93px;
@@ -1164,10 +1168,16 @@ img { border:0px;}
 
 #cmhome_type5 .info_list {	
 	background-color:#f8f8fa;
-	padding:7px 10px;
+	padding:7px;
 	list-style:none;
 	font-size:12px;
 }
+
+#cmhome_type5 .info_list li {	
+	line-height:20px;
+	padding:0px 0px 0px 0px;	
+}
+
 _list li {
 	/* background:url(../images/kr/community/type5/info_dotted.gif) no-repeat 0px 7px; */
 	line-height:20px;
@@ -1360,30 +1370,34 @@ _list li {
 	padding:0px;
 	list-style:none;
 }
+
+/* 2018-05-10 홍승비 - 커뮤니티 팝업홈 게시판 리스트 li 글머리 수정 */
 .btype_list ul li {
 	clear:both;
 	margin:0px; 
 	padding:0px 0px 0px 10px;
-	line-height:21px;
-	height:21px;
-	background:url(../images/kr/community/type1/board_dotted.gif) no-repeat 2px 10px;	
+	line-height:23px;
+	height:23px;
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 0px 7px #fff;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
 }
+
+/* 2018-05-18 홍승비 -  커뮤니티 팝업홈 게시판 리스트 제목 width 수정 */
 .btype_list ul li .txt {
 	float:left;
-	width:78%;
+	width:72%;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
-
 }
+/* 2018-05-18 홍승비 -  커뮤니티 팝업홈 게시판 리스트 date 표출 수정 */
 .btype_list ul li .date{
-	float:right;
 	width:70px;
 	color:#666;
-	text-align:right;
+	position:absolute;
+	margin-left:30px;
 }
 
 /* btype_photo */
@@ -1402,7 +1416,7 @@ _list li {
 	font-size:12px;
 	color:#333;
 	font-weight:bold;
-	background:url(../images/kr/community/type1/icon_arrow02.gif) no-repeat 0px 8px;
+	/* background:url(../images/kr/community/type1/icon_arrow02.gif) no-repeat 0px 8px; */
 		
 }
 .btype_photo .title .more {
@@ -1427,11 +1441,12 @@ _list li {
 	list-style:none; 
 	color:#333;
 	cursor: pointer;}
+	
+/* 2018-05-11 홍승비 - 커뮤니티 팝업홈 포토게시판 보더 제거 */
 .btype_photo ul .photo { 
 	display:block; 
 	height:68px;
 	margin-bottom:5px;
-	border:2px solid #d8d8d8;
 }
 .btype_photo ul li .ptxt {
 	height:20px;
@@ -1527,7 +1542,6 @@ _list li {
 .cmhomelist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .cmhomelist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
-#regdate{margin-top:3px;}
 #cpublic{margin-top:5px;}
 #mailBoxInfo{font-weight: normal;}
 .urgency{color:red !important;}

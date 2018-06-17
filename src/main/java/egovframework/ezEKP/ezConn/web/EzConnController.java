@@ -134,7 +134,7 @@ public class EzConnController {
 						organUserVO.setExtensionAttribute1("c=0;k=0;g=0;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
 					}
 					
-					ezOrganAdminService.updateDBData_user(organUserVO);
+					ezOrganAdminService.updateDBData_userPermission(organUserVO);
 				}
 				
 				if (params.length > 4) {
@@ -153,10 +153,8 @@ public class EzConnController {
 						ezCommonService.saveUserLocalInfo(userInfo.getId(), userInfo);
 					}
 				}
-				
-				String encryptedPw = EgovFileScrty.encryptPassword(orgPw, resultVO.getId());
-				
-				loginController.createLoginCookie(resultVO.getId(), orgPw, encryptedPw, tenantId, request, response);
+								
+				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response);
 				
 				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함

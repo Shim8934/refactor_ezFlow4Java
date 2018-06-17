@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularConfirmVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
@@ -346,5 +347,13 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public int checkFolder(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.checkFolder", map);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<CircularConfirmVO> getConfirmMember(Map<String, Object> map) throws Exception {
+		return (List<CircularConfirmVO>) list("EzCircularDAO.getConfirmMember", map);
+	}
+	
+	public int getConfirmMemberCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.getConfirmMemberCount", map);
+	}
 }

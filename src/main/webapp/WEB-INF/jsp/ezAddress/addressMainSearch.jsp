@@ -21,7 +21,7 @@
 	        var pMaxPage = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
-	        var m_strColorSelect = "#edf4fd";
+	        var m_strColorSelect = "#f0f6ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var CardHeader1 = "<spring:message code='ezAddress.t263' />";
@@ -214,12 +214,12 @@
 	                    address_movecopy_dialogArguments[1] = move_address_Complete;
 	                    address_movecopy_dialogArguments[2] = "CLOSE";
 	                    address_movecopy_dialogArguments[3] = xmlDom;
-	                    var OpenWin = window.open("/ezAddress/addressMoveCopy.do", "address_movecopy", GetOpenWindowfeature(320, 375));
+	                    var OpenWin = window.open("/ezAddress/addressMoveCopy.do", "address_movecopy", GetOpenWindowfeature(500, 375));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                }
 	                else {
-	                    var feature = "dialogHeight:375px; dialogWidth:320px; status:no; help:no; edge:sunken";
-	                    feature = feature + GetShowModalPosition(320, 375);
+	                    var feature = "dialogHeight:375px; dialogWidth:500px; status:no; help:no; edge:sunken";
+	                    feature = feature + GetShowModalPosition(500, 375);
 	                    var moveUrl = window.showModalDialog("/ezAddress/addressMoveCopy.do", null, feature);
 	                    if (typeof (moveUrl) == "undefined")
 	                        return;
@@ -394,7 +394,7 @@
 	                    <option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
 	                    <option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
 	                    <option value="S_DEPT"><spring:message code='ezAddress.t54' /></option>
-	                    <option value="S_TITLE"><spring:message code='ezAddress.t52' /></option>
+	                    <option value="S_TITLE"><spring:message code='main.t77' /></option>
 	                    <option value="S_COMPANY_ADDR"><spring:message code='ezAddress.t295' /></option>
 	                    <option value="S_HOME_ADDR"><spring:message code='ezAddress.t296' /></option>
 	                    <option value="S_MEMO"><spring:message code='ezAddress.t259' /></option>

@@ -9,12 +9,16 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<style>
+			.mainlist tr th {
+				border-top: 0px;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
 			var xmldom = "";
@@ -297,7 +301,7 @@
 	    <table style="height:390px">
 	        <tr>
 	            <td style="width:170px;vertical-align:top;border:1px solid #ccc;">
-	                <div id="LeftBoardList" style="margin-top:-1px;overflow:auto;height:390px;"></div>
+	                <div id="LeftBoardList" style="overflow:auto;height:390px;"></div>
 	            </td>
 	            <td style="text-align:center">
 	                <a class="imgbtn"><span onclick="leftmoveboard(1)" style="font-family:'Gulim', 'arial', 'verdana'" >△</span></a>
@@ -306,7 +310,7 @@
 	                <a class="imgbtn"><span onclick="leftmoveboard(4)" style="font-family:'Gulim', 'arial', 'verdana'">▷</span></a>
 	            </td>
 	            <td style="width:170px;vertical-align:top;border:1px solid #ccc;">
-	                <div id="CopBoardList" style="margin-top:-1px;overflow:auto;height:390px;"></div>
+	                <div id="CopBoardList" style="overflow:auto;height:390px;"></div>
 	            </td>
 	            <td style="text-align:center">
 	                <a class="imgbtn"><span onclick="rightmoveboard(1)" style="font-family:'Gulim', 'arial', 'verdana'">△</span></a>
@@ -315,13 +319,13 @@
 	                <a class="imgbtn"><span onclick="rightmoveboard(3)" style="font-family:'Gulim', 'arial', 'verdana'">◁</span></a>
 	            </td>
 	            <td style="width:170px;vertical-align:top;border:1px solid #ccc;">
-	                <div id="RightBoardList" style="margin-top:-1px;overflow:auto;height:390px;"></div>
+	                <div id="RightBoardList" style="overflow:auto;height:390px;"></div>
 	            </td>
 	        </tr>
 	    </table>
 	    
 	    <br />
-	    <div style="text-align:center" class="btnpositionNew">
+	    <div style="text-align:center;" class="btnposition  btnpositionNew">
 		    <a class="imgbtn"><span onclick="save_onclick()" ><spring:message code = 'ezCommunity.t20' /></span></a>
 		    <a class="imgbtn"><span onclick="cancel_click()" ><spring:message code = 'ezCommunity.t109' /></span></a>
 		    <a class="imgbtn"><span onclick="parent.parent.window.close()" ><spring:message code = 'ezCommunity.t21' /></span></a>

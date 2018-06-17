@@ -30,6 +30,9 @@ body{
   font-size:11px;
 }
 
+.kk_editor .kk_editor_dialog table {font-size:inherit;text-align: inherit;}
+
+
 .kk_editor .kk_editor_dialog .upload_loading { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background-image: url(../images/upload-loading.gif); background-repeat: no-repeat; width: 100px; height: 100px; display: none;}
 
 
@@ -44,7 +47,7 @@ body{
 
 #kk_ms_clipboard {width: 1px; height:1px; position: absolute; top : -100000px; left:-100000px; z-index: 1000; opacity:0;overflow: hidden;}
 
-.kk_editor ::selection {background-color:rgba(135,206,235, 0.9);}
+.kk_editor ::selection {background-color:rgba(135,206,235, 1);}
 .kk_editor input::-ms-clear { display: none; }
 .kk_editor {border:1px solid #c8c8c8; outline: none; position: relative; overflow: hidden; }
 
@@ -56,6 +59,21 @@ body{
 .kk_editor .kk_editView .kk_contentView .kk_contents.dragover { background-color: #ffffcc; }
 
 .kk_editor .kk_editView .kk_contentView .kk_contents .selected { background-image: url('../images/selected.png') !important; background-color: transparent !important; background-repeat: repeat !important;}
+
+
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h1:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h2:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h3:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h4:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h5:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents h6:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents li:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents div:before,*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents p:before {content:'\200B'; display:inline-block; color: transparent;}*/
+/*.kk_editor .kk_editView .kk_contentView .kk_contents br {content: "\200B"; }*/
+.kk_editor .kk_editView .kk_contentView .kk_contents span {background:rgba(255,255,255,0)}
+.kk_editor .kk_editView .kk_contentView .kk_contents span:first-child:before {content:'\200B'}
+
 .kk_editor .kk_editView .kk_contentView .kk_contents .selected_td { background-image: url('../images/selected.png') !important; background-color: transparent !important; background-repeat: repeat !important;}
 .kk_editor .kk_editView .kk_contentView .kk_contents .selected_table { background-image: url('../images/selected.png') !important; background-color: transparent !important; background-repeat: repeat !important;}
 .kk_editor .kk_editView .kk_contentView .kk_contents [kk-selected-cell="true"] { background-image: url('../images/selected.png') !important; background-color: transparent !important; background-repeat: repeat !important;}
@@ -131,7 +149,7 @@ body{
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox > .arrow,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox > .arrow,
-.kk_editor .kk_editor_toolbar .menus .menu .menu_combobox .arrow { display: block; width: 10px; height: 10px; vertical-align: middle; background: url(../images/wysiwygeditor.png) no-repeat -185px -123px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ margin-top: -10px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_combobox .arrow { display: block; width: 10px; height: 10px; vertical-align: middle; background: url(../images/wysiwygeditor.png) no-repeat -185px -123px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .arrow_icon { display: block; width: 15px; height: 20px; background: url(../images/wysiwygeditor.png) no-repeat 0 0; vertical-align: middle; }
 
 
@@ -139,13 +157,13 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_icon:hover,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .arrow_wrap:hover { background-color: #b6b6b6; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .arrow_wrap { display: inline-block; position: absolute; height: 20px; line-height: 25px; top: 2px; cursor: pointer;}
-.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .arrow_wrap .arrow { width: 10px; height: 10px; vertical-align: middle; background: url(../images/wysiwygeditor.png) no-repeat -185px -123px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ margin-top: -10px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .arrow_wrap .arrow { width: 10px; height: 10px; vertical-align: middle; background: url(../images/wysiwygeditor.png) no-repeat -185px -123px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/}
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker { width: 30px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .i_icon:hover,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .arrow_wrap:hover { background-color: #b6b6b6; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .arrow_wrap { display: inline-block; position: absolute; height: 20px; line-height: 25px; top: 2px; cursor: pointer;}
-.kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .arrow_wrap .arrow { width: 10px; height: 10px; vertical-align: middle; background: url(../images/wysiwygeditor.png) no-repeat -185px -123px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ margin-top: -10px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .arrow_wrap .arrow { width: 10px; height: 10px; vertical-align: middle; background: url(../images/wysiwygeditor.png) no-repeat -185px -123px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ }
 
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_new { background-position: -300px -150px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ }
@@ -248,12 +266,12 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_numbered_list { background-position: -60px -30px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_bullet_list { background-position: -90px -30px;}
 
-.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker { display: none; top:25px; left:-3px; position: absolute; z-index: 100; width: 180px; margin: 0; padding: 0; background-color: #fff; border: 1px solid #b9b9b9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker { display: none; top:25px; left:-3px; position: absolute; z-index: 100; min-width: 190px; width:auto; margin: 0; padding: 0; background-color: #fff; border: 1px solid #b9b9b9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm { display: block; margin: 0; background-color: #fff; overflow: hidden; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item { height: 25px; clear: both; line-height: 25px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item:hover { cursor: pointer; background: #eee; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item .list_title{ float: left; height: 25px; width: 30px; text-align: center; background-color: #d8f5ff;}
-.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item .list_name{ float: left; width: 130px; text-align: left; padding-left: 5px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item .list_name{ float: left; min-width: 130px; text-align: left; padding-left: 5px;}
 
 
 
@@ -286,7 +304,7 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox { cursor: pointer; position: relative; display: block; height: 23px; line-height: 23px; margin: 0 3px 0 0; background-image: none; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .i-arrow-down { margin-left: -5px; background-position: -150px -120px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ margin-top: -3px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox label { cursor: pointer; position: relative; display: block; height: 21px; line-height: 21px; margin: 0; padding: 0 15px 0 5px; font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .arrow { position: absolute; top: 0; right: 0; width: 15px; height: 20px; margin-top: 0; font-size: 14px; color: #999; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .arrow { position: absolute; top: 3px; right: 0; width: 15px; height: 20px; margin-top: 0; font-size: 14px; color: #999; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list { display: none; position: absolute; top: 25px; left: -3px; background-color: #fff; border: 1px solid #B9B9B9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); z-index: 100; padding : 0; max-height: 300px; overflow-y: auto;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_active .ui_select_list { display: block; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li { display: block; height: auto; line-height: normal; font-size: 12px; padding: 3px 10px 3px 10px; cursor: pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
@@ -380,6 +398,9 @@ body{
 .kk_editor .kk_editor_footer .change_mode_menus .mode_menu{ display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ background: #f3f3f3; border : 1px solid #dddddd; border-right:none; width: 60px; height: 15px;border-radius: 0 0 3px 3px; font-size: 10px; font-weight: normal;cursor: pointer;}
 .kk_editor .kk_editor_footer .change_mode_menus .mode_menu.kk_footer_menu_active{background: #fff; border-top: 1px solid #fff;font-weight: bold;}
 
+
+
+
 .kk_editor .kk_editor_dialog {position: absolute; font-family: 돋음, Dotum, Baekmuk Dotum, Undotum, Apple Gothic, Latin font, sans-serif; text-align: center;font-size: 11px; width: 100%; height: 100%; top: 0; left: 0; z-index: 100000;background-color: rgba(150,150,150,0.3);}
 .kk_editor .kk_editor_dialog .kk_dialog { position: absolute; z-index: 10000000; border: 1px solid #999999; background-color: #f3f3f3;}
 .kk_editor .kk_editor_dialog .kk_dialog .kk_dialog_header { clear: both; z-index: 30; background: #f4f4f4; cursor: move; border-bottom:1px solid #b9b9b9;}
@@ -405,7 +426,7 @@ body{
 
 .kk_editor .kk_editor_dialog .kk_dialog_hyperlink { width:335px; }
 .kk_editor .kk_editor_dialog .kk_dialog_hyperlink .kk_dialog_contents { padding-top: 6px; }
-.kk_editor .kk_editor_dialog .kk_dialog_hyperlink .kk_dialog_contents input { width : 100%; height:18px; border: 1px solid #dddddd;}
+.kk_editor .kk_editor_dialog .kk_dialog_hyperlink .kk_dialog_contents input { width : 100%; height:23px; border: 1px solid #dddddd;}
 .kk_editor .kk_editor_dialog .kk_dialog_hyperlink .kk_dialog_contents .kk_hyperlink_type_wrap { padding: 10px; text-align: left; border-bottom: 1px solid #eaeaea; }
 .kk_editor .kk_editor_dialog .kk_dialog_hyperlink .kk_dialog_contents .kk_hyperlink_type_wrap .kk_hyperlink_type_label{ padding-left:3px; margin-right: 52px; font-size: 12px;}
 .kk_editor .kk_editor_dialog .kk_dialog_hyperlink .kk_dialog_contents .kk_hyperlink_type_wrap .kk_hyperlink_type_select{ width: 100px; }
@@ -452,12 +473,12 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_td_input .kk_table_dialog_tab_menu_contents_common_table_col_input{ background-color: #ffffff; text-align: center; border-radius: 0; border: solid 1px #a9a9a9;}
 
 
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_width_input{ width:60px; height: 15px; border: solid 1px #a9a9a9;}
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_height_input{ width:60px; height: 15px; border: solid 1px #a9a9a9; }
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_margin_left_input{ width:60px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_width_input{ width:60px; height: 20px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_height_input{ width:60px; height: 20px; border: solid 1px #a9a9a9; }
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_margin_left_input{ width:60px; height: 20px; border: solid 1px #a9a9a9;}
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_align_select{ width:66px; height: 21px; border: solid 1px #a9a9a9;}
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_id_input{ width:82px; height: 15px; border: solid 1px #a9a9a9;}
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_class_input{ width:82px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_id_input{ width:82px; height: 20px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_property_field .kk_table_dialog_tab_menu_contents_common_table_set .kk_table_dialog_tab_menu_contents_common_table_class_input{ width:82px; height: 20px; border: solid 1px #a9a9a9;}
 
 
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field { border-bottom: 1px solid #d0d0d0; padding-top: 5px; padding-bottom: 5px;}
@@ -468,12 +489,12 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item { display: inline-block; height: 27px; line-height: 27px; border: 1px solid #a9a9a9; text-align: center; width: 55px;}
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_label { display: inline-block; margin-left: 5px; }
 
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_solid  { border-top: 1px solid #000000; display: inline-block; width: 35px; height: 3px; }
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_double { border-top: 3px double #000000; display: inline-block; width: 35px; height: 2px;}
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_dashed { border-top: 1px dashed #000000; display: inline-block; width: 35px; height: 3px;}
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_dotted { border-top: 1px dotted #000000; display: inline-block; width: 35px; height: 3px;}
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_none   { border-top: 1px solid #efefef; width: 35px; height: 3px; display: none;}
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_none_label   { line-height:25px; }
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_solid  { border-top: 1px solid #000000; display: inline-block; width: 35px; height: 5px;  margin-top: 10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_double { border-top: 3px double #000000; display: inline-block; width: 35px; height: 3px; margin-top: 10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_dashed { border-top: 1px dashed #000000; display: inline-block; width: 35px; height: 5px; margin-top: 10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_dotted { border-top: 1px dotted #000000; display: inline-block; width: 35px; height: 5px; margin-top: 10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_none   { border-top: 1px solid #efefef; width: 35px; height: 0px; display: none;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item .kk_table_dialog_tab_menu_contents_border_type_none_label   { line-height:26px; }
 
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item { cursor: pointer; margin-left: -1px; background: -webkit-linear-gradient(#fefefe, #dfdfdf); background: -o-linear-gradient(#fefefe, #dfdfdf); background: -moz-linear-gradient(#fefefe, #dfdfdf); background: linear-gradient(#fefefe, #dfdfdf); }
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_border_field .kk_table_dialog_tab_menu_contents_border_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input .kk_table_dialog_tab_menu_contents_border_type_wrap .kk_table_dialog_tab_menu_contents_border_type_item:hover { background: none; background-color: #f5f4f4; }
@@ -540,8 +561,8 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_caption_field .kk_table_dialog_tab_menu_contents_caption_table_set .kk_table_dialog_tab_menu_contents_caption_table_td_label{ text-align: left; }
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_caption_field .kk_table_dialog_tab_menu_contents_caption_table_set .kk_table_dialog_tab_menu_contents_caption_table_td_input{ text-align: left; }
 
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_caption_field .kk_table_dialog_tab_menu_contents_caption_table_set .kk_table_dialog_tab_menu_contents_caption_input{ width:90px; height: 15px; border: solid 1px #a9a9a9; }
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_caption_field .kk_table_dialog_tab_menu_contents_caption_table_set .kk_table_dialog_tab_menu_contents_summary_input{ width:90px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_caption_field .kk_table_dialog_tab_menu_contents_caption_table_set .kk_table_dialog_tab_menu_contents_caption_input{ width:90px; height: 20px; border: solid 1px #a9a9a9; }
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_common .kk_table_dialog_tab_menu_contents_common_caption_field .kk_table_dialog_tab_menu_contents_caption_table_set .kk_table_dialog_tab_menu_contents_summary_input{ width:90px; height: 20px; border: solid 1px #a9a9a9;}
 
 
 
@@ -554,10 +575,10 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_border_table_td_input{ text-align: left; padding-bottom: 8px;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_background_attachment_select{ width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_background_position_x_input{ width:72px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_background_position_x_input{ width:72px; height: 20px; border: solid 1px #a9a9a9;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_background_repeat_select{ width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_background_position_y_input{ width:72px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_background_position_y_input{ width:72px; height: 20px; border: solid 1px #a9a9a9;}
 
 
 
@@ -566,7 +587,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_background_table_id_input{ width:88px; height: 20px; }
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_table_dialog_tab_menu_contents_background_table_class_input{ width:88px; height: 20px; }
 
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_file_open_path_input { width: 180px; height: 20px; border: 1px solid #dddddd; margin-right: 5px; }
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_file_open_path_input { width: 180px; height: 25px; border: 1px solid #dddddd; margin-right: 5px; }
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_file_open_input_label { width: 75px; height: 20px; text-align:center; display: inline-block; margin-right: 10px; vertical-align: middle; cursor: pointer; border: 1px solid #dddddd; color: #333333; background-color: #eeeeee; margin-top: -3px; line-height: 20px; }
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_background .kk_table_dialog_tab_menu_contents_background_property_field .kk_table_dialog_tab_menu_contents_background_table_set .kk_file_open_input { width: 1px; height: 1px; position: absolute; padding: 0; margin: 0px; overflow: hidden; border: 0; }
 
@@ -612,7 +633,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_template .kk_table_template_property_field .kk_table_template_set .kk_table_template_td_input .kk_table_template_col_input { background-color: #ffffff; text-align: center; border-radius: 0; border: solid 1px #a9a9a9;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_template .kk_table_template_property_field .kk_table_template_set .kk_table_template_width_input,
-.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_template .kk_table_template_property_field .kk_table_template_set .kk_table_template_height_input { width:60px; height: 15px; text-align: center; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_template .kk_table_template_property_field .kk_table_template_set .kk_table_template_height_input { width:60px; height: 20px; text-align: center; border: solid 1px #a9a9a9;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_template .kk_table_template_header_field {  }
 .kk_editor .kk_editor_dialog .kk_dialog_table .kk_dialog_contents .kk_table_dialog_tab_menu_contents .kk_table_dialog_tab_menu_contents_template .kk_table_template_header_field .kk_table_template_scope_wrap { height: 17px; padding-top: 3px; padding-left: 10px;text-align: left;}
@@ -752,17 +773,17 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_property_field .kk_cell_dialog_tab_menu_contents_common_cell_set .kk_cell_dialog_tab_menu_contents_common_cell_td_label{ text-align: left; }
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_property_field .kk_cell_dialog_tab_menu_contents_common_cell_set .kk_cell_dialog_tab_menu_contents_common_cell_td_input{ text-align: left; height: 27px;}
 
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_property_field .kk_cell_dialog_tab_menu_contents_common_cell_set .kk_cell_dialog_tab_menu_contents_common_cell_vertical_align_select { width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_property_field .kk_cell_dialog_tab_menu_contents_common_cell_set .kk_cell_dialog_tab_menu_contents_common_cell_align_select { width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_property_field .kk_cell_dialog_tab_menu_contents_common_cell_set .kk_cell_dialog_tab_menu_contents_common_cell_white_space_select { width:92px; height: 20px; }
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_property_field .kk_cell_dialog_tab_menu_contents_common_cell_set .kk_cell_dialog_tab_menu_contents_common_cell_vertical_align_select { width:92px; height: 25px; }
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_property_field .kk_cell_dialog_tab_menu_contents_common_cell_set .kk_cell_dialog_tab_menu_contents_common_cell_align_select { width:92px; height: 25px; }
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_property_field .kk_cell_dialog_tab_menu_contents_common_cell_set .kk_cell_dialog_tab_menu_contents_common_cell_white_space_select { width:92px; height: 25px; }
 
 
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_header_field { border-bottom: 1px solid #d0d0d0; padding-top: 2px; padding-bottom: 2px;}
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_header_field .kk_cell_dialog_tab_menu_contents_header_cell_set { width:100%; }
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_header_field .kk_cell_dialog_tab_menu_contents_header_cell_set .kk_cell_dialog_tab_menu_contents_header_cell_td_label{ text-align: left; }
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_header_field .kk_cell_dialog_tab_menu_contents_header_cell_set .kk_cell_dialog_tab_menu_contents_header_cell_td_input{ text-align: left; }
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_header_field .kk_cell_dialog_tab_menu_contents_header_cell_set .kk_cell_dialog_tab_menu_contents_header_cell_td_input .kk_cell_dialog_tab_menu_contents_header_cell_header_select { width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_header_field .kk_cell_dialog_tab_menu_contents_header_cell_set .kk_cell_dialog_tab_menu_contents_header_cell_td_input .kk_cell_dialog_tab_menu_contents_header_cell_scope_select { width:92px; height: 20px; }
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_header_field .kk_cell_dialog_tab_menu_contents_header_cell_set .kk_cell_dialog_tab_menu_contents_header_cell_td_input .kk_cell_dialog_tab_menu_contents_header_cell_header_select { width:92px; height: 25px; }
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_header_field .kk_cell_dialog_tab_menu_contents_header_cell_set .kk_cell_dialog_tab_menu_contents_header_cell_td_input .kk_cell_dialog_tab_menu_contents_header_cell_scope_select { width:92px; height: 25px; }
 
 
 
@@ -774,12 +795,12 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item { display: inline-block; height: 25px; line-height: 25px; border: 1px solid #a9a9a9; text-align: center; width: 55px;}
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_label { display: inline-block; margin-left: 5px; }
 
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_solid  { border-top: 1px solid #000000; display: inline-block; width: 35px; height: 3px; }
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_double { border-top: 3px double #000000; display: inline-block; width: 35px; height: 2px;}
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_dashed { border-top: 1px dashed #000000; display: inline-block; width: 35px; height: 3px;}
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_dotted { border-top: 1px dotted #000000; display: inline-block; width: 35px; height: 3px;}
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_solid  { border-top: 1px solid #000000; display: inline-block; width: 35px; height: 5px; margin-top: 10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_double { border-top: 3px double #000000; display: inline-block; width: 35px; height: 3px;margin-top: 10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_dashed { border-top: 1px dashed #000000; display: inline-block; width: 35px; height: 5px;margin-top: 10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_dotted { border-top: 1px dotted #000000; display: inline-block; width: 35px; height: 5px;margin-top: 10px;}
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_none   { border-top: 1px solid #efefef; display: none; width: 35px; height: 3px; }
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_none_label { line-height:24px; }
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item .kk_cell_dialog_tab_menu_contents_border_type_none_label { line-height:27px; }
 
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item { cursor: pointer; margin-left: -1px; background: -webkit-linear-gradient(#fefefe, #dfdfdf); background: -o-linear-gradient(#fefefe, #dfdfdf); background: -moz-linear-gradient(#fefefe, #dfdfdf); background: linear-gradient(#fefefe, #dfdfdf); }
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_common .kk_cell_dialog_tab_menu_contents_common_border_field .kk_cell_dialog_tab_menu_contents_border_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_input .kk_cell_dialog_tab_menu_contents_border_type_wrap .kk_cell_dialog_tab_menu_contents_border_type_item:hover { background: none; background-color: #f5f4f4; }
@@ -846,11 +867,11 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_cell_td_input{ text-align: left; height: 27px;}
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_border_cell_td_label{ text-align: left; height: 27px;}
 
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_attachment_select{ width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_position_x_input{ width:72px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_attachment_select{ width:92px; height: 25px; }
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_position_x_input{ width:72px; height: 20px; border: solid 1px #a9a9a9;}
 
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_repeat_select{ width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_position_y_input{ width:72px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_repeat_select{ width:92px; height: 25px; }
+.kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_position_y_input{ width:72px; height: 20px; border: solid 1px #a9a9a9;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_cell_height_input{ width:72px; height: 20px; }
 .kk_editor .kk_editor_dialog .kk_dialog_cell .kk_dialog_contents .kk_cell_dialog_tab_menu_contents .kk_cell_dialog_tab_menu_contents_background .kk_cell_dialog_tab_menu_contents_background_property_field .kk_cell_dialog_tab_menu_contents_background_cell_set .kk_cell_dialog_tab_menu_contents_background_cell_indent_input{ width:72px; height: 20px; }
@@ -918,9 +939,6 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_footer input { width:500px; height:20px; border: 1px solid #dddddd;font-size: 14px;}
 .kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_footer .selected_symbol_text_width { height:0px; font-size: 14px; position: absolute; opacity: 0;}
 
-
-
-
 .kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper { padding:10px; }
 .kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field { }
 .kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set { width: 355px; }
@@ -928,10 +946,10 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_background_dialog_set_td_input{ text-align: left; height: 27px;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_background_dialog_attachment_select{ width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_background_dialog_position_x_input{ width:72px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_background_dialog_position_x_input{ width:72px; height: 20px; border: solid 1px #a9a9a9;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_background_dialog_repeat_select{ width:92px; height: 20px; }
-.kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_background_dialog_position_y_input{ width:72px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_background_dialog_position_y_input{ width:72px; height: 20px; border: solid 1px #a9a9a9;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_file_open_path_input { width: 191px; height: 20px; border: 1px solid #dddddd; margin-right: 5px; }
 .kk_editor .kk_editor_dialog .kk_dialog_background_image .kk_dialog_contents .kk_background_dialog_wrapper .kk_background_dialog_field .kk_background_dialog_set .kk_file_open_input_label { width: 70px; height: 20px; text-align:center; display: inline-block; margin-right: 4px; vertical-align: middle; cursor: pointer; border: 1px solid #dddddd; color: #333333; background-color: #eeeeee; margin-top: -3px; line-height: 20px; }
@@ -960,7 +978,43 @@ body{
 
 
 
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal { width: 400px; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents { background-color: #ffffff;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper { padding:10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field { }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table { width: 100%; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_label{height: 27px; text-align: center; user-select: none;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input{height: 27px; text-align: left;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input .kk_horizontal_dialog_width,
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input .kk_horizontal_dialog_height{width: 75px; border: solid 1px #a9a9a9; height: 20px; text-align: center; padding-right: 5px;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input .kk_horizontal_dialog_color_picker{width: 20px; height: 20px; background-color: #000000; cursor: pointer; position: relative; border: 1px solid #cecece;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input .kk_horizontal_dialog_align_select{width: 92px; height: 20px;}
 
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field { margin-top: 10px; border-top: 1px solid #dddddd;padding-top:10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table { width: 100%; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_label{height: 27px; text-align: left; user-select: none;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input{height: 40px; text-align: left; border: 1px solid #ededed; cursor: pointer;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input:hover {background-color: #eeeeee;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input.kk_horizontal_dialog_template_on {background-color: #eadcdc !important;}
+
+
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker { width: 20px; height: 20px; background-color: #ffffff; cursor: pointer; position:relative;border: 1px solid #cecece;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker { display: none; position: absolute; top: 20px; left: 0px; width: 193px; background-color: #fff; margin: 0; padding: 0; border: 1px solid #b9b9b9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); z-index: 100; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul { display: block; padding: 0; list-style-type: none; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul:after { content: " "; display: block; clear: both; height: 0; visibility: hidden; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul li { display: block; float: left; padding: 0; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul li:hover,
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul li[selected] { border: 1px solid #ff0000; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul li[selected]::before { content: '✓'; color: #efefef; margin-top: -2px; margin-left: 2px; text-shadow: 0px 1px #000000; display: block;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_sub_default_color li { position: relative; float: none; display: block; height: 25px; line-height: 25px; margin: 6px; padding: 0 0 0 30px; color: #2e2e2e; text-decoration: none; border: 1px solid #b9b9b9; font-size: 13px; text-align: left; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_sub_default_color span.ui_default_color { position: absolute; top: 50%; left: 6px; margin-top: -7px; display: block; width: 12px; height: 12px; border: 1px solid #b9b9b9; background-color: #000; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_default_color_palette { margin: 10px 5px 5px 5px; padding: 0; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_default_color_palette > li { margin: 0 2px 0 2px; border: 1px solid #b9b9b9; width: 12px; height: 12px; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_color_palette { margin: 0px 5px 5px 5px; padding: 0; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_color_palette > li { margin: 0 2px 0 2px; border: 1px solid #fff; width: 12px; height: 12px; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_standard_color_palette {  margin: 10px 5px 5px 5px; padding: 0; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_standard_color_palette > li { margin: 0 2px 0 2px; border: 1px solid #b9b9b9;  width: 12px; height: 12px; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_standard_color_text { display: block; margin: 0; padding: 2px 10px; background-color: #ededed; height: 20px; line-height: 20px; font-size: 12px; font-weight: normal; text-align: left; }
 
 
 
@@ -976,7 +1030,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menus .kk_image_dialog_tab_menu_item:hover { background-color: #f5f4f4; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menus .kk_image_dialog_tab_menu_item.kk_image_dialog_tab_menu_on { background-color: #ffffff; border: 1px solid #b9b9b9; border-bottom: 2px solid #ffffff; color: #333333;}
 
-.kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menu_contents { height: 288px; padding:10px; }
+.kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menu_contents { height: 258px; padding:10px; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menu_contents .kk_image_dialog_tab_menu_contents_common { display: none; height:100%; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menu_contents .kk_image_dialog_tab_menu_contents_hyperlink { display: none; height:100%;}
 
@@ -1144,7 +1198,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list { list-style: none; margin: 0px; padding: 0px; }
 .kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list .kk_date_format_item { cursor: pointer; height: 25px; line-height: 25px; font-size: 13px; color: #6e6e6e; text-align: left; padding-left: 13px; border-bottom: 1px dotted #dddddd;}
 .kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list .kk_date_format_item.date_format_item_selected { background-color: #6f6f6f; color: #ffffff; }
-.kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list .kk_date_format_item:hover { background-color: #e6e6e6; color: #000000; }
+.kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list .kk_date_format_item:hover { background-color: #e8e8e8; color: #000000; }
 
 .kk_editor .kk_editor_dialog .kk_dialog_file_open { }
 .kk_editor .kk_editor_dialog .kk_dialog_file_open .kk_file_open_path_label { margin-right: 15px; display: inline-block; vertical-align: middle; padding-left: 10px; }
@@ -1238,10 +1292,10 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_layer .kk_dialog_contents .kk_dialog_layer_wrapper .kk_dialog_layer_field_set .kk_dialog_layer_td_input .kk_dialog_layer_width_input,
 .kk_editor .kk_editor_dialog .kk_dialog_layer .kk_dialog_contents .kk_dialog_layer_wrapper .kk_dialog_layer_field_set .kk_dialog_layer_td_input .kk_dialog_layer_height_input,
 .kk_editor .kk_editor_dialog .kk_dialog_layer .kk_dialog_contents .kk_dialog_layer_wrapper .kk_dialog_layer_field_set .kk_dialog_layer_td_input .kk_dialog_layer_position_x_input,
-.kk_editor .kk_editor_dialog .kk_dialog_layer .kk_dialog_contents .kk_dialog_layer_wrapper .kk_dialog_layer_field_set .kk_dialog_layer_td_input .kk_dialog_layer_position_y_input { text-align: center; width: 72px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_layer .kk_dialog_contents .kk_dialog_layer_wrapper .kk_dialog_layer_field_set .kk_dialog_layer_td_input .kk_dialog_layer_position_y_input { text-align: center; width: 72px; height: 20px; border: solid 1px #a9a9a9;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_layer .kk_dialog_contents .kk_dialog_layer_wrapper .kk_dialog_layer_field_set .kk_dialog_layer_td_input .kk_dialog_layer_id_input,
-.kk_editor .kk_editor_dialog .kk_dialog_layer .kk_dialog_contents .kk_dialog_layer_wrapper .kk_dialog_layer_field_set .kk_dialog_layer_td_input .kk_dialog_layer_class_input { text-align: center; width: 90px; height: 15px; border: solid 1px #a9a9a9;}
+.kk_editor .kk_editor_dialog .kk_dialog_layer .kk_dialog_contents .kk_dialog_layer_wrapper .kk_dialog_layer_field_set .kk_dialog_layer_td_input .kk_dialog_layer_class_input { text-align: center; width: 90px; height: 20px; border: solid 1px #a9a9a9;}
 
 
 
@@ -1273,7 +1327,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap .kk_bookmark_list_area_label_wrap { height: 25px; line-height: 25px; border-bottom: 1px solid #dedede;}
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap .kk_bookmark_list { height: 148px; background-color: #fbfbfb; overflow-y: auto; overflow-x: hidden;counter-reset: bookmark_item;}
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap .kk_bookmark_list .kk_bookmark_list_item { width: 248px; height: 30px; line-height: 30px; padding-left: 6px; padding-right: 15px; text-align: left; background-color: #ffffff; border-bottom: 1px dotted #e0e0e0; color: #000000; cursor: pointer;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-.kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap .kk_bookmark_list .kk_bookmark_list_item::before {counter-increment: bookmark_item; content : counter(bookmark_item); margin-right: 15px; padding-right: 15px; width: 20px; text-align: right; display: inline-block; border-right: 1px dotted #e0e0e0;}
+.kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap .kk_bookmark_list .kk_bookmark_list_item::before {counter-increment: bookmark_item; content : counter(bookmark_item); margin-right: 15px; padding-right: 15px; width: 20px; text-align: right; display: inline-block; border-right: 1px dotted #e0e0e0; }
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap .kk_bookmark_list .kk_bookmark_list_item.selected_bookmark,
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap .kk_bookmark_list .kk_bookmark_list_item.selected_bookmark:hover { background-color: #dadada; color: #000000; }
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap .kk_bookmark_list .kk_bookmark_list_item:hover { background-color: #eaeaea; }
@@ -1309,7 +1363,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents .kk_setting_language_wrapper .kk_setting_language_label { margin-right: 15px; display: inline-block; vertical-align: middle; padding-left: 10px;width: 80px;}
 .kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents .kk_setting_language_wrapper .kk_setting_language_selection { width: 120px; height: 25px; margin-right: 5px;}
 
-.kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents .kk_setting_document_type_wrapper {margin-top: 10px;padding-left: 10px;text-align: left;}
+.kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents .kk_setting_document_type_wrapper {margin-top: 10px;padding-left: 10px;text-align: left;display: none;}
 .kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents .kk_setting_document_type_wrapper .kk_setting_document_type_label { margin-right: 15px; display: inline-block; vertical-align: middle; padding-left: 10px;width: 80px;}
 .kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents .kk_setting_document_type_wrapper .kk_setting_document_type_selection { width: 120px; height: 25px; margin-right: 5px;}
 
@@ -1384,7 +1438,7 @@ body{
 
 
 
-.kk_editor .smartspinner { padding: 0; padding: 2px 10px 2px 2px; border:solid 1px #afafaf; background: url(../images/spinner/normal.jpg) no-repeat right; background-color:#f6f6f6; text-align:center;/*vertical-align:middle;*/ /*line-height:2;*/ border-radius:3px; -moz-border-radius:3px; color:#000000; font-size:12px; }
+.kk_editor .smartspinner { padding: 0; padding: 2px 20px 2px 2px; border:solid 1px #afafaf; background: url(../images/spinner/normal.jpg) no-repeat right; background-color:#f6f6f6; text-align:center;/*vertical-align:middle;*/ /*line-height:2;*/ border-radius:3px; -moz-border-radius:3px; color:#000000; font-size:12px; }
 .kk_editor .smartspinner.spinner_custom { background: url(../images/spinner/normal2.jpg) no-repeat right; border-radius: 0; }
 
 .kk_editor .smartspinner.up { background: url(../images/spinner/up.jpg) no-repeat right; background-color:#f6f6f6; cursor:pointer; }
@@ -1416,7 +1470,7 @@ body{
 .kk_context_menu .context-menu-icon.context-menu-hover:before {color: #fff;}
 .kk_context_menu .context-menu-icon.context-menu-disabled::before {color: #bbb;}
 .kk_context_menu .context-menu-item { position: relative; padding: 2px 0px 2px 31px; color: #2f2f2f; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: #fff; }
-.kk_context_menu .context-menu-separator { padding: 0; margin: .2em 0; border-bottom: 1px solid #e6e6e6; }
+.kk_context_menu .context-menu-separator { padding: 0; margin: .2em 0; border-bottom: 1px solid #e8e8e8; }
 .kk_context_menu .context-menu-item > label > input,
 .kk_context_menu .context-menu-item > label > textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
 .kk_context_menu .context-menu-item.context-menu-hover { color: #fff; cursor: pointer; background-color: #2980b9; }
@@ -1441,6 +1495,8 @@ body{
 .kk_context_menu .context-menu-item > .context-menu-list { top: .3em; right: -.3em; /* re-positioned by js */ display: none; }
 .kk_context_menu .context-menu-item.context-menu-visible > .context-menu-list {display: block;}
 .kk_context_menu .context-menu-accesskey {text-decoration: underline;}
+.kk_context_menu .context-menu-icon { height: 18px;  }
+.kk_context_menu .context-menu-icon span{ line-height: 20px; }
 .kk_context_menu .context-menu-icon::before { position: absolute; top: 10px; left: 6px; height: 18px; width: 20px; font-size: 1em; font-style: normal; font-weight: normal; line-height: 1; color: #2980b9; text-align: center; -webkit-transform: translateY(-50%); -ms-transform: translateY(-50%); -o-transform: translateY(-50%); transform: translateY(-50%); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: url(../images/wysiwygeditor.png) no-repeat 0 0; content: '\00a0';  display: inline-block; zoom: 1; *display: inline; /*IE7 HACK*/ _display: inline; /*IE6 HACK*/ }
 
 .kk_context_menu .context-menu-icon-copy:before { background-position: -150px 0px;}
@@ -1510,9 +1566,9 @@ body{
   height: 8px;
   z-index: 29;
   border-radius: 6px;
-  background: #2570ba !important;
-  background: -moz-linear-gradient( top, #92b9ea, #2570ba) !important;
-  background: -webkit-gradient(linear, 0 0, 0 100%, from(#92b9ea), to(#2570ba)) !important;
+  background: #2570ba;
+  background: -moz-linear-gradient( top, #92b9ea, #2570ba);
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#92b9ea), to(#2570ba));
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff92b9ea', endColorstr='#ff2570ba', GradientType=0) !important;
   border: 1px solid #fff;
   box-shadow: 1px 1px 2px rgba(0,0,0,.2);
@@ -1526,7 +1582,11 @@ body{
 .kk_editor .resizable-sw,
 .kk_editor .resizable-ne,
 .kk_editor .resizable-nw {
-  height: 7px;width: 7px;margin-left: -5px; margin-top: -5px;
+  height: 6px;width: 6px;margin-left: -4px; margin-top: -4px; border: 1px solid #000000; box-shadow: none;
+  background: #ffffff;
+  background: -moz-linear-gradient( top, #ffffff, #ffffff);
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#ffffff));
+  border-radius: 0px;
 }
 
 .kk_editor .resizable-n {cursor: n-resize; }
@@ -1539,6 +1599,21 @@ body{
 .kk_editor .resizable-nw{cursor: nw-resize;}
 
 
+.kk_table_move_line {
+  cursor: move;
+  background: rgba(0,0,0,0.2);
+  display: block;
+  position: absolute;
+  z-index: 28;
+}
+
+.kk_table_move_line.movable-top,
+.kk_table_move_line.movable-bottom {height: 7px;}
+
+.kk_table_move_line.movable-left,
+.kk_table_move_line.movable-right {width: 7px;}
+
+.kk_table_drag_on { position:absolute; background-image: url(../images/drag_table.png); background-repeat: no-repeat; background-size: 40px 40px; width: 40px; height: 40px; background-color : transparent; display: none;}
 
 
 
@@ -1565,7 +1640,7 @@ body{
 .kk_editor_menubar .menubar-dropdown-wrapper .menu-item .more{font-family:'MalgunGothic', 'Arial'; display:inline-block; font-size:12px;line-height:30px; width:10px;vertical-align: top;}
 
 
-.kk_editor .ui_colorpicker .ui_default_color_palette .color_transparent { text-align: center !important; width: 175px !important; height: 13px !important; margin-bottom: 5px !important; padding : 2px; color: #000000 !important;}
+.kk_editor .ui_colorpicker .ui_default_color_palette .color_transparent { text-align: center !important; width: 175px !important; height: 13px !important; margin-bottom: 5px !important; padding : 2px; color: #000000 !important; padding-top:5px !important}
 
 
 
@@ -1681,6 +1756,9 @@ body{
 .cxdialog.black .cxdialog_btns a:hover{background:#c2c2c2;}
 .cxdialog.black + .cxdialog_overlay{background:rgba(0,0,0,0.4);opacity:1;}
 
+
+.kk_editor .kk-processing { display:table; position: absolute; width: 100%; height: 100%; color: #5400f7; font-size: 40px; font-weight: bold; top: 0px; left: 0px; background-color: rgba(200,200,200, 0.5); z-index: 10000; cursor: progress; text-align: center; }
+.kk_editor .kk-processing .kk-processing-message { display: table-cell; vertical-align: middle; }
 
 /*.kk_editor .kk_editView .kk_contentView .kk_contents .kk_page_break::before {*/
   /*background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAAMCAYAAAA3bX6lAAADZElEQVRIS9XWWehVVRQG8J82WWog9BJWVNj8b7B6iEZowMoSiXooCYUIpSAsmqiIRqkHs6SoSCMsMjEboCgaIIoGmmxCIqwwLCLLBgNtMvn+rAPHwz1/n91wuPfuvc7e61vr+759R+kfp+AHHF6f77VCJ2A0fmnNHYwzce8Ie2ZpLB7FRfivE7sLLsVD+LezNgNv4Puan4gn8BO+xo34H3dhBT5I3CgESBLLhv9gdzyAE/EFDsJ3eKc2vgF31vf7MbcSPQTTcDem49mK+RhH1/fz8AKex7kDAI7BGpyP9VXEvJrcHsG1lcd+2AeTKue/8RVW42Hc0wa4N86pgJ1xWFUwCXzZAXgCllTCm/ByFeNptAHugHFIRz7CydXtdCzPMyMATPzr+LPTwUswFR/isgKY5hxXjPi1wF2N5xDG/ZYOZmTiJozHWbgZM/FZB+B9Beqlem9yVeu0ims62OS2Jz7BAfijJkPR5T0As/YNLsS6io8UNmMxLq/OJO/5yLlpQnLO83YVPAXIPkMNwKWYV4kcjzNwROlvqEXRtH9R0/5ajw4CNFTuAsx8KHpsdbLRYB/ArF+MfQfoODR9HGuLLWlK2Jb500uDp+LJLkWz1zLcgQORqkeDc/AuYh6NBhOXLjZ6TGdyUIyoCzDFi0ZTzbeQw5NMXwcTHyq3zWUjdsKORe3QPsYXU4mR7Fo+cUUxIvpOs7bSYADGucLtJBlqRAODKHoBTkI2zLiuDo/ptDWYtWjmKhyDF0sTkcFuPRSNXmcjoPI9gBfiQayq35kP5V+rwsdZAzo0/bZiosn4RH4PbxIXXNChRPgd/eVpdzDVfx9vlqZm4Uj82AF4Ja5vrQXUK0XTa6rrg1w0acSBU5A4ethxK1YOoGxYc2jFZTmdzju3V3GHr7UAjLHEPUONPH/V56AO5p0kezbilK+WnWe+3cFcC9FK7qhm5IxQKvv3uWjyiQzCqN/LNdOx5u5r49yrNNmcESPKk/v1KHzaABxQnOGpxrH279yDffFdivbFhQW5I+N63Ys+AJ8qGv6MDVX8UDMF+rzY0xT0FuSJRtsjjp37dLiDfWOPouGUqmDccKSRSzd/Dh7bRlwu82g3VErFuyMaytndEYDpZuw/Ix3Mn4ouuKxFs7fln81IALeR5/axvAVwY+gXrcCSKwAAAABJRU5ErkJggg==);*/

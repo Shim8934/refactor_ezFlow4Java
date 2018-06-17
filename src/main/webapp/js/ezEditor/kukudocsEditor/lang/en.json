@@ -445,6 +445,18 @@
     "image_upload_error": "There was a problem uploading the image. \nPlease try again.",
     "tooltip_status_image_default_size": "If you want to change the value, please disable the Keep image original size."
   },
+  "horizontalDialog": {
+    "insert_title": "Insert Horizon",
+    "modify_title": "Modify Horizon",
+    "horizontal_width": "Width",
+    "horizontal_height": "Height",
+    "horizontal_background_color": "Background color",
+    "horizontal_align": "Align",
+    "horizontal_align_default": "Default",
+    "horizontal_align_left": "left",
+    "horizontal_align_center": "center",
+    "horizontal_align_right": "right"
+  },
   "videoDialog": {
     "insert_title": "Insert video",
     "modify_title": "Edit video",
@@ -691,7 +703,8 @@
       }
     },
     "borderLine": "Color",
-    "cellBorderStyleNoneName": "No border"
+    "cellBorderStyleNoneName": "No border",
+    "editorResize" : "Resize the editor"
   },
   "alertMessage": {
     "textModeChangeConfirmMessage": "Typing, style, image, table, etc. will be lost when editing TEXT. \nDo you want to continue?",
@@ -704,8 +717,11 @@
     "copyKeydownMessage": "Please use the Ctrl + C (Mac: CMD + C) shortcut.",
     "pasteKeydownMessage": "Please use the Ctrl + V (Mac: CMD + V) keyboard shortcut.",
     "cutKeydownMessage": "Please use the Ctrl + X (Mac: CMD + X) shortcut.",
-    "notFoundTextErrorMessage": "String not found."
+    "notFoundTextErrorMessage": "String not found.",
+    "errorParsingError" : "An error occurred during conversion.",
+    "pasteParsingError" : "An error occurred while pasting."
   },
+  "processingMessage" : "Processing ...",
   "paragraphInsert": "Paragraph Insert",
   "licenseErrorMsg": "Your license term has expired. \nPlease contact your licensing administrator to extend the term."
 }

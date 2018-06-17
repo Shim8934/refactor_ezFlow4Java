@@ -38,6 +38,7 @@
 				    }
 
 					sizeBtnAppend();
+					sentDateView();
 				}
 				
 				function sizeBtnAppend() {
@@ -164,9 +165,9 @@
 			    	$frm.attr('method', 'post');
 			    	$frm.appendTo('body');
 
-			    	params = $('<input type="hidden" value="' + decodeURIComponent(params) + '" name="params" />');
+			    	params = $('<input type="hidden" value="' + params + '" name="params" />');
 			    	folderPath = $('<input type="hidden" value="' + decodeURIComponent(folderPath) + '" name="folderPath" />');
-			    	uid = $('<input type="hidden" value="' + decodeURIComponent(uid) + '" name="uid" />');
+			    	uid = $('<input type="hidden" value="' + uid + '" name="uid" />');
 			    	
 			    	$frm.append(params).append(folderPath).append(uid);
 			    	$frm.submit();
@@ -300,6 +301,44 @@
 		            parent.mtg_onClick(pGubun);
 		        }
 		        
+		        function journalMailLink(journalId,mine){
+		        	$.ajax({
+		        		type : "post",
+		        		data : {
+		        			"journalId" : journalId
+		        		},
+		        		url : "/ezJournal/checkToMailJournal.do",
+		        		success: function(result){
+		        			if (result.isLive!="N" ) {
+		        				if (result.checkSusin != "N" || mine==1) {
+		        					var feature = GetOpenPosition(820, 850);
+		        					window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
+		        							"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
+		        							+ feature);
+		        				} else {
+		        					alert("<spring:message code='ezJournal.t172'/>");
+		        				}
+		        			} else {
+		        				alert("<spring:message code='ezJournal.t171'/>");
+		        			}
+		        		}
+		        	});
+		        }
+		        
+		     	// 전달, 회신 시 보낸 시간
+		        function sentDateView(msg) {
+				    if (window.parent.sentDateMsg != "") {
+				    	var sentDateMsg = window.parent.sentDateMsg;
+				    	
+				    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+				    	$(".sentDateStr").css({
+				    		"padding" : "5px 0",
+					        "margin-bottom" : "10px",
+					        "font-size" : "14px",
+					        "background" : "rgba(255,250,205,0.5)"
+				    	});
+				    }
+		        }
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">

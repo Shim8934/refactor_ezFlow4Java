@@ -10,6 +10,7 @@
     <typeAlias alias="CircularFolderVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularFolderVO"/>
     <typeAlias alias="CircularCommentVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularCommentVO"/>
     <typeAlias alias="CircularListHeaderVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO"/>
+	<typeAlias alias="CircularConfirmVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularConfirmVO"/>
 	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 	   <![CDATA[
@@ -184,6 +185,8 @@
             	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
             AND
             	A.status != 2
+           	AND
+				B.updatestatus IN (0, 1)
             AND
                 B.memberid = #memberID#
             AND
@@ -226,6 +229,7 @@
                 A.title,
                 A.memberid,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                DATE_ADD(DATE_FORMAT(A.enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS enddate,
                 A.option,
                 A.content,
                 A.memberName,
@@ -1408,9 +1412,14 @@
 			]]>
 			
 			<isNotEqual property="searchValue" compareValue="">
-				<isEqual property="searchType" compareValue="content" prepend="AND ">
+				<isEqual property="searchType" compareValue="content" prepend="AND">
 					<![CDATA[
 						circularcomment LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isEqual property="searchType" compareValue="userID" prepend="AND">
+					<![CDATA[
+						membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 					]]>
 				</isEqual>
 			</isNotEqual>
@@ -1446,13 +1455,13 @@
 			]]>
 			
 			<isNotEqual property="searchValue" compareValue="">
-				<isEqual property="searchType" compareValue="userID" prepend="AND ">
+				<isEqual property="searchType" compareValue="userID" prepend="AND">
 					<![CDATA[
 						A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 					]]>
 				</isEqual>
 				
-				<isEqual property="searchType" compareValue="content" prepend="AND ">
+				<isEqual property="searchType" compareValue="content" prepend="AND">
 					<![CDATA[
 						A.circularcomment LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 					]]>
@@ -1573,6 +1582,8 @@
 					(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
 				AND
 					A.status != 2
+				AND
+					B.updatestatus IN (0, 1)
 				AND
 					B.memberid = #userID#
 				AND
@@ -1715,6 +1726,55 @@
 				memberid = #memberID#
 			AND
 				tenantid = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getConfirmMember" resultClass="CircularConfirmVO" >
+		<![CDATA[
+			SELECT 
+				A.memberid, B.displayname, B.description, B.company, B.title, 
+				IFNULL(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), '') AS confirmdate
+			FROM 
+				TBL_CIRCULAR_USER A
+			RIGHT JOIN 
+				TBL_USERMASTER B
+			ON 
+				A.memberid = B.cn
+			WHERE 
+				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+			AND
+				a.memberid <> ( SELECT 
+												memberId 
+										FROM 
+											TBL_CIRCULAR 
+										WHERE 
+											circularId = #circularID# )
+			ORDER BY 
+			 	A.confirmdate desc
+			 LIMIT
+			 	#start#, #perCount#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getConfirmMemberCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				count(memberid)
+			FROM 
+				TBL_CIRCULAR_USER A
+			RIGHT JOIN 
+				TBL_USERMASTER B
+			ON 
+				A.memberid = B.cn
+			WHERE 
+				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+			AND
+				 a.memberid <> ( SELECT 
+											memberId 
+										FROM 
+											TBL_CIRCULAR 
+										WHERE 
+											circularId = #circularID# )
 		]]>
 	</select>
 
@@ -1986,11 +2046,12 @@
 			UPDATE
 				TBL_CIRCULAR
 			SET
-				status = '1'
+				status = '1',
+				endDate = utc_timestamp()
 			WHERE 
 				circularid = #circularID#
 			AND
-				tenantid = #tenantID#      
+				tenantid = #tenantID#  
         ]]>
     </update>
     

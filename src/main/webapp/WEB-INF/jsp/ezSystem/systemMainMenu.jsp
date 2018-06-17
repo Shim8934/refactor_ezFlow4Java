@@ -66,7 +66,7 @@
 				}		
 						
 				var jsonStr = JSON.stringify(paramArray);
-		
+				
 				$.ajax({
 					type : "POST",
 					url : "/admin/ezSystem/updateSysParam.do",
@@ -247,6 +247,13 @@
 							<input id="useAllUserOldMailDeletePeriod" maxlength="3" type="text" value="${useAllUserOldMailDeletePeriod}"> (<spring:message code="ezSystem.kyj4"/>, <spring:message code="ezSystem.kyj5"/>)
 						</td>
 					</tr>
+					<script>
+						var mailDeletePeriod = document.getElementById("useAllUserOldMailDeletePeriod");
+						
+						mailDeletePeriod.addEventListener("change", function () {
+							useAllUserOldMailDeletePeriod = document.getElementById("useAllUserOldMailDeletePeriod").value;
+						});
+					</script>
 				</c:if>
 		    	
 	        </tbody>

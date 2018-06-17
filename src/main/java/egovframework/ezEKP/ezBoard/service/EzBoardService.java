@@ -96,7 +96,7 @@ public interface EzBoardService {
 	
 	public BoardListVO getItemInfo(String mode, String itemID, String lang, int tenantID) throws Exception;
 	
-	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception;
+	public BoardListVO getCopyItem(String orgItemID, int tenantID) throws Exception;
 	
 	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, String multiLang, int tenantID) throws Exception;
 	
@@ -272,5 +272,11 @@ public interface EzBoardService {
 
 	//2018.04.16 홍승비
 	public void setAsReadNew(LoginVO userInfo, String pBoardID, String string) throws Exception;
-
+	
+	//2018-05-09 강민수92
+	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
+	
+	//2018-06-11 홍승비
+	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
+	
 }

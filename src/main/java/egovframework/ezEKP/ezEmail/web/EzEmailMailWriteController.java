@@ -50,6 +50,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -60,6 +61,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -209,6 +211,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String dotNetUrl = "";
 		
+		//업무일지 아이디
+		String journalId = "";
+		
 		// check if parameter is valid
 		String tempStr = "";
 		if (request.getParameter("cmd") != null) {
@@ -220,7 +225,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
 				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
 				|| tempStr.equals("RESEND") || tempStr.equals("BOARDDOTNET") || tempStr.equals("DOCSENDDOTNET")
-				|| tempStr.equals("COMMUNITYDOTNET")
+				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL")
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
@@ -262,6 +267,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		logger.debug("useLetter=" + useLetter);
 		
+		// 쓰기창에서 수신인 자동완성 기능 사용 유무
+		String useMailAddrAutoComplete = ezCommonService.getTenantConfig("useMailAddrAutoComplete", loginInfo.getTenantId());
+		
 		// set serverName
 		String serverName = loginInfo.getServerName();
 		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", loginInfo.getTenantId());
@@ -283,9 +291,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
-		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
-		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
+		logger.debug("stateName=" + stateName);
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
@@ -422,7 +429,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         IMAPAccess ia = null;
         try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale);
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
 			ia.makeTopLevelFolders();
 		} finally {
 			if (ia != null) {
@@ -430,6 +437,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				ia = null;
 			}
 		}
+        
+        String multipartFirstIdx = "0";
         
         // in case of new
         if (_url.equals("") && _cmd.equals("NEW")) {
@@ -495,16 +504,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, password, egovMessageSource, locale);
+						userAccount, password, egovMessageSource, locale, ezEmailUtil);
 				
 	    		Folder orgFolder = ia.getFolder(folderPath);
 	    		orgFolder.open(Folder.READ_ONLY);       
 	    		
 				// retrieve the Drafts folder name
-	        	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
+	        	String draftsFolderName = ezEmailUtil.getDraftsFolderId(locale);
 	    		
 	        	// retrieve the Sent folder name
-	        	String sentFolderName = egovMessageSource.getMessage("ezEmail.t99000026", locale);
+	        	String sentFolderName = ezEmailUtil.getSentFolderId(locale);
 	        	
 	    		// retrieve the specified message.
 				Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
@@ -540,6 +549,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+			                multipartFirstIdx = attachedFileList.get(0).get("index");
+			                logger.debug("EDIT multipartFirstIdx=" + multipartFirstIdx);
 			                
 							for (int i = 0; i < attachedFileList.size(); i++) {
 								Map<String, String> fileInfo = attachedFileList.get(i);
@@ -574,7 +586,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		if (orgMessage.isMimeType("multipart/related")) {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			resendMessage.setContent(relatedPart);
 			        		}	        			
 			        		else {
@@ -656,6 +668,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+			                multipartFirstIdx = attachedFileList.get(0).get("index");
+			                logger.debug("RESEND multipartFirstIdx=" + multipartFirstIdx);
 			                
 							for (int i = 0; i < attachedFileList.size(); i++) {
 								Map<String, String> fileInfo = attachedFileList.get(i);
@@ -702,9 +717,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 		        		if (_cmd.equals("FORWARD")) {
 		        			if (orgMessage.isMimeType("multipart/related")) {
-				        		MimeMultipart relatedPart = new MimeMultipart("related");
+				        		MimeMultipart relatedPart = new MimeMultipart("related");				        		
+				        		boolean isThereHtmlPart = ezEmailUtil.isThereHtmlPartInRelatedPart(relatedPart);
+				        		// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
+				        		boolean convertInlineImageToAttachment = isThereHtmlPart ? false : true;
 				        		
-				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+				        		logger.debug("convertInlineImageToAttachment=" + convertInlineImageToAttachment);
+				        		
+				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, true, convertInlineImageToAttachment)) {
 				        			replyMessage.setContent(relatedPart);
 				        		}	        			
 				        		else {
@@ -725,7 +745,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		else {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			replyMessage.setContent(relatedPart);
 			        		}
 			        		else {
@@ -891,10 +911,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		//첨부파일 정보 추출
 		        		if (_cmd.equals("FORWARD")) {
 							if (attachedFileList.size() > 0) {
+								List<Map<String, String>> attachedFileListInReply = new ArrayList<Map<String, String>>();	
+								
+								// replyMessage의 첨부 파일 구성이 orgMessage와 다르게 될 수 있기 때문에 다시 첨부파일 정보를 구하도록 한다.
+								ezEmailUtil.getBodyInfo(replyMessage, folderPath, uid, -1, attachedFileListInReply, false, false, locale, null, null);					
+								
 				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+				                multipartFirstIdx = attachedFileListInReply.get(0).get("index");
+				                logger.debug("FORWARD multipartFirstIdx=" + multipartFirstIdx);
 				                
-								for (int i = 0; i < attachedFileList.size(); i++) {
-									Map<String, String> fileInfo = attachedFileList.get(i);
+								for (int i = 0; i < attachedFileListInReply.size(); i++) {
+									Map<String, String> fileInfo = attachedFileListInReply.get(i);
 									
 					                attachXmlList.append("<NODE>");
 					                //TODO : <PUPLOADSN>" + (i + 1) + "</PUPLOADSN> 으로 수정(인덱스로 파일 지울 때)
@@ -974,6 +1002,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 			}
 			
+        }
+        //업무일지면 작동
+        else if(_cmd.equals("journal")){
+        	journalId = request.getParameter("journalId");
         }
         
         String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
@@ -1077,7 +1109,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("newWindowId", newWindowId);
 		model.addAttribute("individualMailUser", individualMailUser); //int형
 		model.addAttribute("pSecurity", pSecurity);
-		model.addAttribute("folderDate", folderDate);
 		model.addAttribute("stateName", stateName);
 		model.addAttribute("pBigAttachDownloadDay", pBigAttachDownloadDay);
 		model.addAttribute("pBigAttachDownloadPeriod", pBigAttachDownloadPeriod);
@@ -1099,6 +1130,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
+		model.addAttribute("drafts", ezEmailUtil.getDraftsFolderId(locale)); // 임시보관함 스트링 추가 (윤진) 
+		model.addAttribute("multipartFirstIdx", multipartFirstIdx);
+		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
+		
+		//업무일지 아이디
+		model.addAttribute("journalId", journalId);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
@@ -1298,6 +1335,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 
                 pBigFileUpload = "Y";
                 
+                pFileName[i] = commonUtil.normalizeFileName(pFileName[i]);
+                
                 String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes("UTF-8"));
                 FileOutputStream fos = null;
                 
@@ -1422,7 +1461,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	}
         }
         
-        logger.debug("mailInterUploadXCK started.");
+        logger.debug("mailInterUploadXCK ended.");
         return xmlList;
 	}
 	
@@ -1619,7 +1658,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-                	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
+                	String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
                 	
                 	file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
                 	fos = new FileOutputStream(file);
@@ -1683,7 +1722,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis = new FileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
+					String nfcFilename = commonUtil.normalizeFileName(newFileName[i]);
+					
+					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + nfcFilename);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1703,7 +1744,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                }
 					
 					sb.append("<NODE>");
-					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<PUPLOADSN><![CDATA[" + nfcFilename + "]]></PUPLOADSN>");
 					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
 					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
 					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
@@ -1766,6 +1807,358 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     			try { outWrite.close(); } catch (Exception e) {}
     		}
     	}
+		
+		logger.debug("mailInterUploadCopy ended.");
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * <pre>
+	 * 메일 DragAndDrop 첨부파일 업로드 실행 함수
+	 * - 게시판/커뮤니티/전자결재에서 메일로 전송 시.
+	 * - 서버에 이미 업로드 되어있는 첨부파일을 복사해옴.
+	 * - 일반 첨부파일에만 해당됨.
+	 * </pre>
+	 */
+	@RequestMapping(value="/ezEmail/mailInterUploadCopyXCKFromJournal.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailInterUploadCopyFromJournal(
+			@CookieValue("loginCookie") String loginCookie, 
+			@RequestBody String bodyData,
+			HttpServletRequest request) throws Exception {
+		logger.debug("mailInterUploadCopy started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
+		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
+		logger.debug("tempFolderName=" + tempFolderName + ",isBigYN=" + isBigYN);
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String bigMaxSizeStr = doc.getElementsByTagName("BIGMAXSIZE").item(0).getTextContent();
+		long bigMaxSize = Long.parseLong(bigMaxSizeStr);
+		
+		String changeSizeStr = doc.getElementsByTagName("CHANGESIZE").item(0).getTextContent();	
+		int changeSize = Integer.parseInt(changeSizeStr);
+		
+		String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String realPath = commonUtil.getRealPath(request);
+		
+		String journalPath = realPath + commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";
+		
+		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
+		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
+		
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		
+		int fileCnt = doc.getElementsByTagName("ROW").getLength();
+		String[] fileName = new String[fileCnt];
+		String[] filePath = new String[fileCnt];
+		long[] fileSize = new long[fileCnt];
+		String[] fileExt = new String[fileCnt];
+		String[] newFileName = new String[fileCnt];
+		boolean[] downloadedFlags = new boolean[fileCnt];
+		
+		int totalFileSize = 0;
+		
+		if (tempFolderName.equals("")) {
+			logger.debug("tempFolderName is EMPTY. Return NODATA.");
+			logger.debug("mailInterUploadCopy ended.");
+			
+			return "NODATA";
+		}
+		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
+		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
+		
+		for (int i = 0; i < fileCnt; i++) {
+			String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();		
+			filePathValue = filePathValue != null ? filePathValue : "";
+			
+//			if (!filePathValue.startsWith("/")) {
+//				filePathValue = "/" + filePathValue;
+//			}
+			
+			filePath[i] = journalPath + filePathValue;
+			
+			if (dotNetIntegration.equals("YES")) {
+				try {
+					File f = new File(filePath[i]);
+					
+					// 닷넷 연동 시 첨부 파일이 존재하지 않으면 암호화된 파일일 수 있으므로 복호화 URL을 호출하여 다운로드를 시도해 본다.
+					if (!f.exists()) {						
+						String downloadUrl = dotNetUrl + "/myoffice/Common/DownloadAttach_java.aspx?filename=placeholder"
+								+ "&filepath=" + URLEncoder.encode(filePathValue, "UTF-8");
+						
+						logger.debug("downloadUrl=" + downloadUrl);
+						
+						// 다운로드된 파일을 저장할 로컬 파일명을 임의로 생성한다.
+						String localFilePath = pTempFileUploadPath + commonUtil.separator + UUID.randomUUID().toString();
+						File localFile = new File(localFilePath);
+						
+						// URL로부터 다운로드를 시도한다.
+						FileUtils.copyURLToFile(new URL(downloadUrl), localFile);
+						
+						logger.debug("downloaded File Size is " + localFile.length());
+						
+						if (localFile.length() != 0) {
+							// 다운로드한 파일의 Path로 filePath를 변경한다.
+							filePath[i] = localFilePath;
+							// 다운로드한 파일을 사용 후 삭제하기 위해 다운로드한 파일임을 표시한다.
+							downloadedFlags[i] = true;
+							// 파일 크기가 0인 경우는 다운로드가 되지 않은 경우이므로 생성된 파일을 삭제한다.
+						} else {
+							localFile.delete();
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			File f = new File(filePath[i]);
+			
+			if (f.exists()) {
+				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
+				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
+				
+				if (fileName[i].lastIndexOf(".") > -1) {
+					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
+					newFileName[i] = UUID.randomUUID().toString() + "." + fileExt[i];
+				} else {
+					fileExt[i] = "";
+					newFileName[i] = UUID.randomUUID().toString();
+				}
+//				newFileName[i] = newFileName[i].substring(newFileName[i].lastIndexOf(";")+1);
+				
+				fileSize[i] = f.length();
+				totalFileSize += fileSize[i];
+			} else {
+				logger.debug("Cannot find the file : " + filePath[i]);
+				filePath[i] = "NOFILE";
+			}
+		}
+		
+		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
+		if (bigMaxSize != 0 && totalFileSize > bigMaxSize) {
+			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
+			
+			if (dotNetIntegration.equals("YES")) {
+				for (int i = 0; i < fileCnt; i++) {
+					// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
+					if (downloadedFlags[i]) {
+						logger.debug("deleting " + filePath[i]);
+						
+						File localFile = new File(filePath[i]);
+						
+						localFile.delete();
+					}
+				}
+			}
+			
+			logger.debug("mailInterUploadCopy ended.");
+			
+			return "OVERSIZE";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ROOT><NODES>");
+		
+		if (totalFileSize > changeSize) { // 대용량첨부의 경우
+			logger.debug("In case of big attachment.");
+			
+			// 현재 날짜의 폴더가 없으면 생성한다.
+			String folderDate = EgovDateUtil.getToday("");
+			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+			File file = new File(bigAttachFolderPath);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			for (int i = 0; i < fileCnt; i++) {
+				if (filePath[i].equals("NOFILE")) {
+					continue;
+				}
+				
+				FileInputStream fis = null;
+				FileOutputStream fos = null;
+				BufferedInputStream bis = null;
+				BufferedOutputStream bos = null;
+				
+				try {
+					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+					fis = new FileInputStream(filePath[i]);
+					bis = new BufferedInputStream(fis);
+					
+					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+					bos = new BufferedOutputStream(fos);
+					
+					int data = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, data);
+					}
+					
+					bos.close(); bos = null;
+					bis.close(); bis = null;
+					fos.close(); fos = null;
+					fis.close(); fis = null;
+					
+					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
+					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
+					
+					file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
+					fos = new FileOutputStream(file);
+					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+					
+					//첨부파일 정보를 XML data로 만든다.
+					String resultUpload = "";
+					
+					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+						resultUpload = "denied";
+					} else {
+						resultUpload = "true";
+					}
+					
+					sb.append("<NODE>");
+					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+					sb.append("<FILELOCATION><![CDATA[" + folderDate + "|!|" + newFileName[i] + "]]></FILELOCATION>");
+					sb.append("<PBIGFILEUPLOAD>Y</PBIGFILEUPLOAD>");
+					sb.append("</NODE>");					
+				} catch(Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (bos != null) {
+						try { bos.close(); } catch(Exception e) {}
+					}
+					if (bis != null) {
+						try { bis.close(); } catch(Exception e) {}
+					}
+					if (fos != null) {
+						try { fos.close(); } catch(Exception e) {}
+					}
+					if (fis != null) {
+						try { fis.close(); } catch(Exception e) {}
+					}
+				}                
+			}            
+		} else { // 일반첨부의 경우
+			logger.debug("In case of common attachment.");
+			
+			File file = new File(pTempFileUploadPath);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			for (int i = 0; i < fileCnt; i++) {
+				if (filePath[i].equals("NOFILE")) {
+					continue;
+				}
+				
+				FileInputStream fis = null;
+				FileOutputStream fos = null;
+				BufferedInputStream bis = null;
+				BufferedOutputStream bos = null;
+				
+				try {
+					// 게시판의 첨부파일을 메일 첨부파일 임시폴더쪽으로 복사한다.
+					fis = new FileInputStream(filePath[i]);
+					bis = new BufferedInputStream(fis);
+					
+					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
+					bos = new BufferedOutputStream(fos);
+					
+					int data = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, data);
+					}
+					
+					//첨부파일 정보를 XML data로 만든다.
+					String resultUpload = "";
+					
+					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+						resultUpload = "denied";
+					} else {
+						resultUpload = "true";
+					}
+					
+				//	fileName[i] = fileName[i].substring(fileName[i].lastIndexOf(";")+1);
+					sb.append("<NODE>");
+					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+					sb.append("<FILELOCATION><![CDATA[" + newFileName[i] + "]]></FILELOCATION>");
+					sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+					sb.append("</NODE>");					
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (bos != null) {
+						try { bos.close(); } catch(Exception e) {}
+					}
+					if (bis != null) {
+						try { bis.close(); } catch(Exception e) {}
+					}
+					if (fos != null) {
+						try { fos.close(); } catch(Exception e){}
+					}
+					if (fis != null) {
+						try { fis.close(); } catch(Exception e){}
+					}
+				}
+			}			
+		}
+		
+		sb.append("</NODES></ROOT>");
+		
+		if (dotNetIntegration.equals("YES")) {
+			for (int i = 0; i < fileCnt; i++) {
+				// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
+				if (downloadedFlags[i]) {
+					logger.debug("deleting " + filePath[i]);
+					
+					File localFile = new File(filePath[i]);
+					
+					localFile.delete();
+				}
+			}
+		}
+		
+		// templist폴더에 메일에 대한 첨부파일 정보를 가지고있는 txt파일 생성한다.
+		File f = new File(pTempListPath);
+		
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		
+		f = new File(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
+		OutputStreamWriter outWrite = null;
+		
+		try {
+			outWrite = new OutputStreamWriter(new FileOutputStream(f));
+			outWrite.write(sb.toString());
+			String crlf = System.getProperty("line.separator");
+			outWrite.append(crlf+crlf);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (outWrite != null) {
+				try { outWrite.close(); } catch (Exception e) {}
+			}
+		}
 		
 		logger.debug("mailInterUploadCopy ended.");
 		
@@ -1995,18 +2388,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("mailInterAttach started.");
 		
 		String returnValue = "";
-		
 		String cmd = "";
-	    
 		Document xmldom = commonUtil.convertRequestToDocument(request);
 		cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
 		String uidStr = xmldom.getElementsByTagName("URL").item(0).getTextContent();
-		
 		NodeList bigs = xmldom.getElementsByTagName("BIG");
 		boolean hasAttachFile = false;
 		
 		if (bigs != null) {
-			for (int i=0; i < bigs.getLength(); i++) {
+			
+			for (int i = 0; i < bigs.getLength(); i++) {
+				
 				if (bigs.item(i).getTextContent().equals("N")) {
 				    // 일반첨부파일이 있는 경우
 					hasAttachFile = true;
@@ -2019,6 +2411,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String password  = userInfo.get(1);
 		
 		long uid = 0;
+		
 		if (uidStr != null && !uidStr.equals("")) {
 			uid = Long.parseLong(uidStr);
 		}
@@ -2027,7 +2420,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirTempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
-		
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		
@@ -2046,10 +2438,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				newMessage = sa.createMimeMessage();
 				
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale);
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
 				
 				// 임시 보관함 폴더 오픈 
-				folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+				folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 				folder.open(Folder.READ_WRITE);
 				
 				// 첨부파일 Part들을 삽입할 Multipart를 생성한다.
@@ -2080,19 +2472,30 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								
 								for (int i = 0; i < count; i++) {
 									p = mp.getBodyPart(i);
-									relatedPart.addBodyPart(p);
+									
+									// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
+									// 해당 첨부 파일을 multipart/mixed 파트로 옮기도록 한다.
+									if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+										multipart.addBodyPart(p);
+									} else {
+										relatedPart.addBodyPart(p);
+									}
 								}
 								
-								MimeBodyPart wrap = new MimeBodyPart();
-								wrap.setContent(relatedPart);
-								multipart.addBodyPart(wrap, 0);
+								// relatedPart에 속한 파트가 하나도 없는 경우 삽입하면 메시지가
+								// 정상적으로 생성되지 않는다.
+								if (relatedPart.getCount() > 0) {
+									MimeBodyPart wrap = new MimeBodyPart();
+									wrap.setContent(relatedPart);
+									multipart.addBodyPart(wrap, 0);
+								}
 							} else if (oldMessage.isMimeType("multipart/alternative")) {
 							    logger.debug("oldMessage is multipart/alternative");
 							    
 	                            Multipart alternativePart = new MimeMultipart("alternative");
 	                            
 	                            for (int i = 0; i < count; i++) {
-	                                p = mp.getBodyPart(i);
+	                                p = mp.getBodyPart(i); 
 	                                alternativePart.addBodyPart(p);
 	                            }
 	                            
@@ -2100,6 +2503,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                            wrap.setContent(alternativePart);
 	                            multipart.addBodyPart(wrap, 0);							    
 							} else {
+								
 								for (int i = 0; i < count; i++) {
 									p = mp.getBodyPart(i);
 									multipart.addBodyPart(p);
@@ -2109,7 +2513,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// 기존 메시지의 모든 헤더를 적용한다.
 						Enumeration<Header> e = oldMessage.getAllHeaders();
-						while(e.hasMoreElements()){
+						
+						while (e.hasMoreElements()) {
 							Header header = e.nextElement();
 							newMessage.setHeader(header.getName(), header.getValue());
 						}
@@ -2120,7 +2525,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 				
 				// 새로 업로드된 파일들을 새 메시지에 추가한다.
-				for (int i=0; i<fileNodes.getLength(); i++) {
+				for (int i = 0; i < fileNodes.getLength(); i++) {
 					Node subNode = fileNodes.item(i);
 					NodeList childNodes = subNode.getChildNodes();
 					String fileName = childNodes.item(0).getTextContent();
@@ -2136,14 +2541,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
 				        messageBodyPart.setDataHandler(new DataHandler(source));
 				        
+				        String nfcFilename = commonUtil.normalizeFileName(fileName);
+				        		
 				        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
 				        // otherwise, a wrong encoding may be used on some systems(linux, etc)
-				        String encodedFileName = MimeUtility.encodeText(fileName, "UTF-8", null);
+				        // nonghyup.com 메일 서버의 경우 QP로 인코딩된 경우 connection close(EOF)를 발생시켜
+				        // 무조건 BASE64로 인코딩하도록 변경함
+				        String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", "B");
 				        
 						// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
 						// and some mailers (Daum, etc) may not understand it.			        
 				        encodedFileName = MimeUtility.fold(0, encodedFileName);
-				        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"" + encodedFileName + "\"");
+				        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n filename=\"" + encodedFileName + "\"");
 				        
 				        // 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
 				        String contentType = "application/octet-stream";
@@ -2152,6 +2561,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        if (Files.probeContentType(f.toPath()) != null) {
 				        	contentType = Files.probeContentType(f.toPath());
 				        } else {
+				        	
 				        	if (path.lastIndexOf(".") > 0 && path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
 				        		contentType = "message/rfc822";
 				        	}
@@ -2167,6 +2577,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        childNodes.item(4).setTextContent(fileName);
 				        
 					} else {
+						
 						if (!path.equals("")) {
 							String[] newPath = path.split("\\|!\\|");
 							childNodes.item(1).setTextContent(newPath[1]);
@@ -2181,6 +2592,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
 					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uids[0].uid));
 				} else {
+					
 					if (uid == 0) {
 						xmldom.getElementsByTagName("URL").item(0).setTextContent("");
 					} else {
@@ -2195,7 +2607,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					
 	                if (childNodes.item(2).getTextContent().equals("N")) {
 	                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
-	                    if (file.exists()) {
+	                    
+	                	if (file.exists()) {
 	                    	file.delete();
 	                    }
 	                }
@@ -2212,6 +2625,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			returnValue = e.getMessage();
 			e.printStackTrace();
 		} finally {
+			
 			if (ia != null) {
 				ia.close();
 			}
@@ -2500,7 +2914,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		do {
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, password, egovMessageSource, locale);
+						userAccount, password, egovMessageSource, locale, ezEmailUtil);
 				
 				//메일 발송 재시도일 경우 draftUID의 메일을 지우고 retryFlag와 draftUID를 초기화한다.
 				if (retryFlag) {
@@ -2508,7 +2922,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     					Folder draftFolder = null;
     					
     					try {
-    						draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+    						draftFolder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
     						draftFolder.open(Folder.READ_WRITE);
     				        Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
     		        		draftMessage.setFlag(Flags.Flag.DELETED, true);
@@ -2534,7 +2948,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                         Folder sentFolder = null;
                         
                         try {
-                            sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+                            sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
                             sentFolder.open(Folder.READ_WRITE);
                             Message sentMessage = ((IMAPFolder)sentFolder).getMessageByUID(sentFolderMessageUID);
                             sentMessage.setFlag(Flags.Flag.DELETED, true);
@@ -2820,7 +3234,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        Message oldMessage = null;
 		        long uid = 0;
 		        
-		        Folder draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+		        Folder draftFolder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 		        draftFolder.open(Folder.READ_WRITE);
 		        
 		        logger.debug("url=" + url);
@@ -2854,6 +3268,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								int count = mp.getCount();
 								BodyPart p = null;
 								boolean hasAttach = false;
+								boolean hasInlineImage = false;
+								boolean hasRelated = false;
 								
 								// Multipart의 각 Part별 처리를 수행한다.
 								for (int i = 0; i < count; i++) {
@@ -2865,6 +3281,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								    logger.debug("Part is multipart/related");
 	    								    
 	    									hasAttach = true;
+	    									hasRelated = true;
 	    									
 	    									logger.debug("relatedPart=" + relatedPart);
 	    									
@@ -2948,6 +3365,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								    if (!contentIdSet.contains(contentId)) {
 	    								        logger.debug("Adding ContentId=" + contentId);
 	    								        
+	    								        hasInlineImage = true;
 	    								        mixedPart.addBodyPart(p);
 	    								    }
 	    								}
@@ -2956,14 +3374,42 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								// 예) Content-Type: application/octet-stream;
 	    								//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 	    							    //    Content-Transfer-Encoding: base64	    								
-	    								else if (p.getDisposition() != null || p.isMimeType("application/*")) { 
-	    									mixedPart.addBodyPart(p);
+	    								else if (p.getDisposition() != null || p.isMimeType("application/*")) {	    									
+	    									MimeBodyPart newBodyPart = (MimeBodyPart)p;
 	    									
-	    									// 첨부파일 파트인 경우
+	    									// 첨부파일 파트인 경우	    									
 	    									if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
 	    											|| p.isMimeType("application/*")) {
 	    										hasAttach = true;
+	    											    										
+	    										InternetHeaders newHeaders = new InternetHeaders();
+	    										
+	    										@SuppressWarnings("unchecked")
+												Enumeration<Header> enumerator = p.getAllHeaders();
+	    										
+	    										// 해당 파트의 헤더들을 읽는다.
+	    										while (enumerator.hasMoreElements()) {
+	    											Header h = (Header)enumerator.nextElement();
+	    											
+	    											String hValue = h.getValue();
+	    											
+	    											// long header line의 경우 작성 시에는 folding이 되어 있으나
+	    											// 파트를 복사하는 과정에서 CRLF가 사라지는 현상이 있어
+	    											// 이곳에서 다시 CRLF를 삽입하도록 함
+	    											hValue = hValue.replace("attachment; filename=", "attachment;\r\n filename=");
+	    											hValue = hValue.replace("?= =?", "?=\r\n =?");
+	    											
+	    											newHeaders.addHeader(h.getName(), hValue);
+	    										}
+	    										
+	    										// 해당 파트의 body 데이터를 읽는다.
+	    										byte[] bytes = IOUtils.toByteArray(newBodyPart.getRawInputStream());
+	    											    										
+	    										// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
+	    										newBodyPart = new MimeBodyPart(newHeaders, bytes);	 
 	    									}
+	    									
+	    									mixedPart.addBodyPart(newBodyPart);	    									
 	    								}
 	    								// Part가 message 인 경우, 즉 메일이 첨부된 경우
 	    								else if (p.isMimeType("message/*")) {
@@ -2974,6 +3420,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								}							
 	    								
 	    								break;
+									}
+								}
+								
+								// multipart/related 안에 첨부파일이 들어 있는 메일이 코린도에서 수신되어
+								// 해당 메일이 인라인 이미지도 포함한 경우의 처리를 위해 추가함.
+								// 이 경우엔 전체 메시지를 multipart/related로 구성하고
+								// 그 안에 인라인 이미지와 첨부 파일이 들어 있는 형태로 메시지를 구성한다.
+								if (oldMessage.isMimeType("multipart/related")) {
+									logger.debug("hasAttach=" + hasAttach + ",hasRelated=" + hasRelated
+													+ ",hasInlineImage=" + hasInlineImage);
+									
+									if (hasAttach && !hasRelated && hasInlineImage) {
+										hasAttach = false;
 									}
 								}
 								
@@ -3170,7 +3629,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
 			            if (mailSendCompleted == false) {
-			            	Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+			            	Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 			            	
 			            	// 보안메일 처리
 			            	if (useSecureMail.equals("YES") && isSecureMail) {
@@ -3425,11 +3884,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+				    		        	
 				    		        }
 				    		        else {
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 				    		        }
+			    		        	// 전달, 회신 테스트
+			    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
 			    		        }
 			    		        
 			    		        orgMsgFolder.close(true);
@@ -3549,9 +4011,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                     Thread.sleep(1000);
                     
                     ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                    		userAccount, password, egovMessageSource, locale);                
+                    		userAccount, password, egovMessageSource, locale, ezEmailUtil);                
                     
-                    sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+                    sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
                     sentFolder.open(Folder.READ_WRITE);
                     Message sentMessage = ((IMAPFolder)sentFolder).getMessageByUID(sentFolderMessageUID);
                     sentMessage.setFlag(Flags.Flag.DELETED, true);
@@ -3613,9 +4075,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		IMAPAccess ia = null;
     		try {
     			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-    					userEmail, password, egovMessageSource, locale);
+    					userEmail, password, egovMessageSource, locale, ezEmailUtil);
     			
-    			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+    			Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
     			folder.open(Folder.READ_WRITE);
     			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
     			logger.debug("message=" + message);
@@ -3767,9 +4229,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				IMAPAccess ia = null;
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, password, egovMessageSource, locale);
+							userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
-					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+					Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 					folder.open(Folder.READ_WRITE);
 					Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 					
@@ -3779,47 +4241,37 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						Multipart mp = (Multipart)oldMessage.getContent();
 						int count = mp.getCount();
-						BodyPart p = null;
-						boolean containBody = false; 
+						BodyPart p = null; 
+						int nonAttachCount = 0;
+
+						// 첨부파일 파트 이전에 존재하는 파트들의 갯수를 구한다.
+						// 이 로직이 제대로 동작하려면 첨부파일들이 모두 메시지의 뒷부분에 연속으로 위치하여야 한다.
+						for (int i = 0; i < count; i++) {
+							p = mp.getBodyPart(i);
+
+							if (p.getDisposition() == null) {
+								nonAttachCount++;
+							} else {
+								break;
+							}
+						}
 						
 						for (int i = 0; i < count; i++) {
 							p = mp.getBodyPart(i);
-//							logger.debug("p.getDisposition : " + p.getDisposition());
-							//임시보관함에서 연 메일, 전달 하는 메일의 경우에는 이미 본문이 첫 번째 bodyPart를 차지하므로 getDisposition이 null이다.
-							if (p.getDisposition() == null) {
-								containBody = true;
-							}
 							
 							int length = rows.getLength();
 							boolean isRemoved = false;
 							
-							//파일의 index가 한칸씩 뒤로 밀렸으므로 i-1과 비교하여 파일을 삭제한다. 
-							if (containBody) {
-								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-									for (int j = 0; j < length; j++) {
-//										String mailFileName = MimeUtility.decodeText(p.getFileName());
-//										logger.debug("mailFileName : " + mailFileName + ", index i : " + (i-1));
-//										logger.debug("rows.item(j).getFirstChild().getTextContent() : " + rows.item(j).getFirstChild().getTextContent());
-//										logger.debug("rows.item(j).getChildNodes().item(1) : " + rows.item(j).getChildNodes().item(1).getTextContent());
-//										if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
-										if (rows.item(j).getChildNodes().item(1).getTextContent().equals((i-1)+"")) {
-											isRemoved = true;
-											break;
-										}
-									}
-								}
-							} else {
-								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-									for (int j = 0; j < length; j++) {
-//										String mailFileName = MimeUtility.decodeText(p.getFileName());
-//										logger.debug("mailFileName : " + mailFileName + ", index i : " + i);
-//										logger.debug("rows.item(j).getFirstChild().getTextContent() : " + rows.item(j).getFirstChild().getTextContent());
-//										logger.debug("rows.item(j).getChildNodes().item(1) : " + rows.item(j).getChildNodes().item(1).getTextContent());
-//										if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
-										if (rows.item(j).getChildNodes().item(1).getTextContent().equals(i+"")) {
-											isRemoved = true;
-											break;
-										}
+							// 파일의 index가 nonAttachCount 만큼 뒤로 밀렸으므로 i - nonAttachCount과 비교하여 파일을 삭제한다. 
+							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+								for (int j = 0; j < length; j++) {
+//									String mailFileName = MimeUtility.decodeText(p.getFileName());
+//									logger.debug("mailFileName : " + mailFileName + ", index i : " + (i-1));
+//									logger.debug("rows.item(j).getFirstChild().getTextContent() : " + rows.item(j).getFirstChild().getTextContent());
+//									logger.debug("rows.item(j).getChildNodes().item(1) : " + rows.item(j).getChildNodes().item(1).getTextContent());
+									if (rows.item(j).getChildNodes().item(1).getTextContent().equals((i - nonAttachCount) + "")) {
+										isRemoved = true;
+										break;
 									}
 								}
 							}
@@ -4039,6 +4491,54 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			HttpServletRequest request) throws Exception{
 		
 		return "ezEmail/mailCheckName";
+	}
+	
+	/**
+	 * 편지쓰기 창에서 입력받은 메일이 존재하는지 검색. 
+	 */
+	@RequestMapping(value="/ezEmail/mailCheck.do")
+	@ResponseBody
+	public List<String> mailCheck(@CookieValue("loginCookie") String loginCookie, Locale locale, 
+			Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailCheck started.");
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String email = request.getParameter("name");
+		List<String> resultList = new ArrayList<String>();
+
+		String inputParams = "address=" + URLEncoder.encode(email, "UTF-8");;
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getAliasMail";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (object.get("resultCode").equals("OK")) {
+        	JSONArray array = (JSONArray)object.get("result");
+        	
+        	if (array != null) { 
+        		int len = array.size();
+        		for (int i=0; i<len; i++){ 
+        			resultList.add((String)array.get(i));
+        		} 
+        	} 
+        }
+		
+        int usercnt = ezOrganAdminService.userCountCheck(email, loginVO.getTenantId());
+        
+        if (usercnt >= 0) {
+        	object.put("usercnt", usercnt);
+        }
+        
+        
+        logger.debug("usercnt="  + usercnt);
+		logger.debug("mailCheck ended.");
+		
+		return resultList;
 	}
 	
 	/**
@@ -4387,6 +4887,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
             
             StringBuilder sb = new StringBuilder();
+            sb.append("<LISTVIEWDATA><ROWS>");
             
             for (AddressVO addressInfo : addressInfoList) {
             	sb.append("<ROW>");
@@ -4401,6 +4902,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             	sb.append("</ROW>");
             }
             
+            sb.append("</ROWS></LISTVIEWDATA>");
             returnValue = sb.toString();
         } catch (Exception e) {
         	e.printStackTrace();
@@ -4542,6 +5044,77 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 받는사람, 참조, 숨은참조 등 자동완성 기능
+	 */
+	@RequestMapping(value = "/ezEmail/autoCompleteList.do", produces = "text/xml; charset=utf-8")
+	public String autoCompleteList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
+			HttpServletRequest request) throws Exception {
+		logger.debug("autoCompleteList started.");
+
+		String searchValue = request.getParameter("value");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String pOrganSearchList = "displayname::" + searchValue;
+		String pOrganCellList = "displayname";
+		String pOrganPropList = "company;description;title;mail;extensionAttribute3";
+		String pOrganListType = "all";
+		String pDLSearchList = "displayname::" + searchValue;
+		String pAddressFilter = searchValue;
+
+		try {
+			Document organXML = commonUtil.convertStringToDocument(
+					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo));
+			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));
+			Document addressXML = commonUtil.convertStringToDocument(getAddressSearch(pAddressFilter, userInfo));
+
+			HashMap<String, Object> jsonObject = null;
+			List<Object> jsonList = new ArrayList<Object>();
+
+			NodeList organRow = organXML.getElementsByTagName("ROW");
+			for (int i = 0; i < organRow.getLength(); i++) {
+				Element row = (Element) organRow.item(i);
+				NodeList organList = row.getElementsByTagName("CELL");
+				Element organCell = (Element) organList.item(0);
+				jsonObject = new HashMap<String, Object>();
+				jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
+				jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
+				jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
+				jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+				jsonList.add(jsonObject);
+			}
+
+			NodeList dlRow = dlXML.getElementsByTagName("ROW");
+			for (int i = 0; i < dlRow.getLength(); i++) {
+				Element row = (Element) dlRow.item(i);
+				NodeList dlList = row.getElementsByTagName("CELL");
+				Element dlCell = (Element) dlList.item(0);
+				jsonObject = new HashMap<String, Object>();
+				jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
+				jsonObject.put("title", "");
+				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
+				jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+				jsonList.add(jsonObject);
+			}
+
+			NodeList addressRow = addressXML.getElementsByTagName("ROW");
+			for (int i = 0; i < addressRow.getLength(); i++) {
+				jsonObject = new HashMap<String, Object>();
+				jsonObject.put("name", addressXML.getElementsByTagName("SNAME").item(0).getTextContent());
+				jsonObject.put("title", "");
+				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
+				jsonObject.put("mail", addressXML.getElementsByTagName("SEMAIL").item(0).getTextContent());
+				jsonList.add(jsonObject);
+			}
+			model.addAttribute("susinList", jsonList);
+		} catch (Exception e) {
+
+		}
+
+		logger.debug("autoCompleteList ended.");
+		return "json";
+	}
+	
+	/**
 	 * size만 읽는 OutputStream 클래스
 	 */
 	public class CountOutputStream extends OutputStream {
@@ -4566,5 +5139,4 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	size += b.length;
 	    }
 	}
-	
 }

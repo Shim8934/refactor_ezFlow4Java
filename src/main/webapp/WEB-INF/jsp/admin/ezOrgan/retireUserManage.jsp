@@ -275,8 +275,9 @@
 		  	<input name="txt_PageInputNum" type="text" value="<c:out value='${pPage}'/>" onKeyDown="moveToPage()"/>
 		  	<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1" style="cursor:pointer;" onClick="nextPage_onclick()"/>
 		</div>
-		<table class="mainlist" style="width:100%">
-			<form name="frmOutbox" action="BoardItemList.aspx" method="post">
+		<div style="width:100%; border-right:1px solid #eaeaea;border-left:1px solid #eaeaea;">
+		<table class="mainlist" style="width:100%"> 
+			<!-- <form name="frmOutbox" action="BoardItemList.aspx" method="post"></form> -->
 		    	<tr>
 		      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick="funCheckBox('set','a')" /></th>
 		      		<th style="width:150px;"><spring:message code='ezOrgan.t68'/></th>
@@ -306,8 +307,8 @@
 						<td><c:out value='${fn:substring(item.updateDT, 0, 4)}'/>-<c:out value='${fn:substring(item.updateDT, 4, 6)}'/>-<c:out value='${fn:substring(item.updateDT, 6, 8)}'/></td>
 					</tr>	
 				</c:forEach>	   
-			</form>
 		</table>		
+		</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>

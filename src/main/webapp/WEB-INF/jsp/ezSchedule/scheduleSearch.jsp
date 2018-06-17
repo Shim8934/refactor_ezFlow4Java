@@ -183,7 +183,7 @@
 			
 		    function onmouseOver(elem) {
 		        elem.style.color = "blue";
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f0f6ff";
 		    }
 		
 		    function onmouseOut(elem) {
@@ -288,8 +288,8 @@
 		    			<td style="width:80px">${item.ownerName2}</td> 
 		            	<td style="width:80px">${item.creatorName2}</td>
 		    		</c:if>
-		    		<td style="width:60%">${item.title}</td> 
-	          		<td style="width:140px">${item.location}</td>		         
+		    		<td style="width:60%"><c:out value="${item.title}"/></td> 
+	          		<td style="width:140px"><c:out value="${item.location}"/></td>		         
 	            	<td style="width:140px">	            		
 	            		<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)} (<spring:message code='ezSchedule.t280'/></c:if>
 	            		<c:if test="${item.dateType != '2'}">${fn:substring(item.startDate,0,16)}</c:if>	            		

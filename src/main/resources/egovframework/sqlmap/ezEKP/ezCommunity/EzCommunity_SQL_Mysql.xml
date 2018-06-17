@@ -706,6 +706,14 @@
   				A.importance,
   				A.title,
   				A.readcount,
+  				(SELECT 
+                	COUNT(*)  
+    			FROM 
+    				tbl_comm_onelinereply
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT,
   				A.attachments,
   				A.itemlevel,
   				A.abstract,
@@ -1345,7 +1353,7 @@
 				AND
 					tenant_id = #tenantID#
 				ORDER BY
-					c_visited DESC
+					c_indate DESC
 			]]>
 		</isEqual>
 		
@@ -1369,7 +1377,7 @@
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					ORDER BY
-						TBL_C_CLUBUSER.c_visited DESC
+						TBL_C_CLUBUSER.c_indate DESC
 				]]>
 			</isEqual>
 			
@@ -1386,7 +1394,7 @@
 					AND
 						tenant_id = #tenantID#
 					ORDER BY
-						c_visited DESC
+						c_indate DESC
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -2046,7 +2054,7 @@
 				A.writerdeptname$v_USERINFO_LANG$,
 				A.writercompanyname$v_USERINFO_LANG$,
 				A.startdate,
-				A.writedate,
+				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
 				A.parentwritedate,
 				A.importance,
 				A.title,
@@ -2056,7 +2064,15 @@
 				A.abstract,
 				CASE WHEN D.totalcount IS NULL THEN 0 ELSE 1 END READFLAG,
 				A.extensionattribute4,
-				A.extensionattribute5
+				A.extensionattribute5,
+				(SELECT 
+                	COUNT(*)  
+				FROM 
+    				tbl_comm_onelinereply
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT
 			FROM
 				TBL_COMM_ITEM A
 			LEFT OUTER JOIN
@@ -2305,21 +2321,29 @@
 		<![CDATA[
 			SELECT 
             	TBL_COMM_BOARDINFO.boardid,
-				itemid,
-				title,
-				writedate,
+				A.itemid,
+				A.title,
+				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
 				gubun,
-				extensionattribute5 
+				A.extensionattribute5,
+				(SELECT 
+					COUNT(*)  
+				FROM 
+    				tbl_comm_onelinereply
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT
 			FROM
 				TBL_COMM_BOARDINFO
 			JOIN
-				TBL_COMM_ITEM
+				TBL_COMM_ITEM A
 			ON
-				TBL_COMM_BOARDINFO.boardid = TBL_COMM_ITEM.boardid
+				TBL_COMM_BOARDINFO.boardid = A.boardid
 			AND
-				TBL_COMM_BOARDINFO.tenant_id = TBL_COMM_ITEM.tenant_id
+				TBL_COMM_BOARDINFO.tenant_id = A.tenant_id
 			WHERE
-				TBL_COMM_ITEM.boardid = #v_pBoardID#
+				A.boardid = #v_pBoardID#
 			AND
 				TBL_COMM_BOARDINFO.tenant_id = #tenantID#
 			AND
@@ -2557,21 +2581,30 @@
 		<![CDATA[
 			SELECT
        			c_clubno,
-                   boardname,
-                   boardname2,
-                   itemid,
-                   gubun,
-                   writerid,
-                   writername,
-                   writername2,
-                   writerdeptname,
-                   DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
-                   title,
-                   itemcnt,
-                   c_membercnt,
-                   c_clubname,
-                   c_clubname2,
-                   a.boardid
+                boardname,
+                boardname2,
+                itemid,
+                gubun,
+                writerid,
+                writername,
+                writername2,
+                writerdeptname,
+                DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
+                title,
+                itemcnt,
+                c_membercnt,
+                c_clubname,
+                c_clubname2,
+                a.boardid,
+                readcount,
+                (SELECT 
+                	COUNT(*)  
+				FROM 
+    				tbl_comm_onelinereply
+   				WHERE  
+   					TENANT_ID = B.TENANT_ID
+   				AND
+   					ITEMID = B.ItemID) ONELINECNT
 			FROM
 				TBL_COMM_BOARDINFO A
                JOIN
@@ -4677,11 +4710,22 @@
 		<![CDATA[
 			UPDATE
 				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#,
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
-			WHERE
-				c_clubno = #v_FILENAME#
+		]]>
+			<dynamic prepend="SET">
+				<isNotEmpty property="v_LOGOFILENAME" prepend=",">
+					<![CDATA[
+						c_logo = #v_LOGOFILENAME#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="v_LOGOFILENAME_THUMBNAIL" prepend=",">
+					<![CDATA[
+						c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+					]]>
+				</isNotEmpty>	
+				</dynamic>
+		<![CDATA[
+				WHERE
+				c_clubno = #v_CODE#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -4691,10 +4735,12 @@
 			INSERT INTO TBL_LOGO_SIZE
 				(c_clubno,
 				logo_size,
+				banner_size,
 				tenant_id)
 			VALUES
-				(#v_FILENAME#,
-				#v_FILESIZE#,
+				(#v_CODE#,
+				#v_LOGOFILESIZE#,
+				#v_THUMBFILESIZE#,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5497,9 +5543,25 @@
 		<![CDATA[
 			UPDATE
 				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#,
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+		]]>
+		<dynamic prepend="SET">
+			<isNotEmpty property="v_LOGOFILENAME" prepend=",">
+				<![CDATA[
+					c_logo = #v_LOGOFILENAME#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="v_LOGOFILENAME_THUMBNAIL" prepend=",">
+				<![CDATA[
+					c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+				]]>
+			</isNotEmpty>	
+			<isNotEmpty property="v_COPTYPE" prepend=",">
+				<![CDATA[
+					c_type = #v_COPTYPE#
+				]]>
+			</isNotEmpty>	
+		</dynamic>
+		<![CDATA[
 			WHERE
 				RTRIM(c_clubno) = #v_FILENAME#
 			AND
@@ -5550,6 +5612,7 @@
 				tenant_id = #tenantID#
 		]]>
 	</update>
+	
 	
 <!-- 	<procedure id="EzCommunityDAO.adminHomeBoardSet"			parameterClass="Map"> -->
 <!-- 		{CALL EZSP_ADMIN_HOMEBOARD_SET(#v_CLEAR#, #v_POSITION#, #v_SN#, #v_CN#, #v_BOARDID#)} -->

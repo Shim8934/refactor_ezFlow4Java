@@ -145,11 +145,15 @@
 
 	                	setweek_onload("WEEK");
 	            	} else {
-		                document.getElementById("ToDaybtn").style.display = "none";
-	                	document.getElementById("Weekbtn").style.display = "none";
-	                	document.getElementById("TR_Line2").style.display = "none";
+	            		/* 2018-04-26 홍승비 - 자원 관리자의 자원등록, 자원관리 표시 수정 */
+	                	if(CheckAdmin()) {
+	                		document.getElementById("mainmenu").onload = function(){};
+	    	               	document.getElementById("noResListSpan").style.display = "none";
+	    	               	document.getElementById("tbar2").style.display = "none";
+	                	} else {
+	                		document.getElementById("mainmenu").style.display = "none";
+	                	} 
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
-	                	document.getElementById("mainmenu").style.display = "none";
 	                	document.getElementById("weeklyline").style.display = "none";
 	            	}
 	        	}
@@ -315,7 +319,7 @@
 	        }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:hidden;">
+	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
 		<h1 style="text-overflow:ellipsis;overflow:hidden;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
   			<ul>
@@ -324,10 +328,13 @@
     				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
     				<li id="tbar2" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
     			</c:if>
+    			<span id = "noResListSpan">
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
-      			<li style="background:none;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
-				<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
+    			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
+      			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
+				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
+  				</span>
   			</ul>
 		</div>
 		
@@ -348,7 +355,7 @@
                 	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;">
                     		<tr id="weeklyline">
-                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #edf4fd;">
+                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
                 					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
 					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;

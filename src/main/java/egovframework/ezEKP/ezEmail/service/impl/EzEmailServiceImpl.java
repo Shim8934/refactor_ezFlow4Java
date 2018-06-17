@@ -1218,9 +1218,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (isSaved) {
 	        	//보낸편지함에 저장
 	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	        			userEmail, password, egovMessageSource, userLocale);
+	        			userEmail, password, egovMessageSource, userLocale, ezEmailUtil);
 	        	
-	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userLocale));
+	    		Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(userLocale));
 	    		
 	    		if (!sentFolder.exists()) {
 	    			ia.createFolder(sentFolder.getFullName());
@@ -1324,9 +1324,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (isSaved) {
 	        	//보낸편지함에 저장
 	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	        			userAccount, password, egovMessageSource, userInfo.getLocale());
+	        			userAccount, password, egovMessageSource, userInfo.getLocale(), ezEmailUtil);
 	        	
-	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
+	    		Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(userInfo.getLocale()));
 	    		
 	    		if (!sentFolder.exists()) {
 	    			ia.createFolder(sentFolder.getFullName());
@@ -1376,7 +1376,7 @@ public class EzEmailServiceImpl implements EzEmailService {
             IMAPAccess ia = null;
             try {
             	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, password, egovMessageSource, userInfo.getLocale());
+						userAccount, password, egovMessageSource, userInfo.getLocale(), ezEmailUtil);
             	
             	Folder folder = ia.getFolder(mailbox);
             	
@@ -1435,7 +1435,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, userInfo.getLocale());
+					userAccount, password, egovMessageSource, userInfo.getLocale(), ezEmailUtil);
 					
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 			
@@ -1556,9 +1556,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, userInfo.getLocale(), 40*1000, 20*1000);
+					userEmail, password, egovMessageSource, userInfo.getLocale(), 40*1000, 20*1000, ezEmailUtil);
 		
-			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));		
+			Folder folder = ia.getFolder(ezEmailUtil.getInboxFolderId());		
 			folder.open(Folder.READ_ONLY);
 	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
@@ -1568,7 +1568,7 @@ public class EzEmailServiceImpl implements EzEmailService {
  			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
 	        
  			// set mailCount
- 			int unreadCount = ia.getUnreadCount(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));
+ 			int unreadCount = ia.getUnreadCount(ezEmailUtil.getInboxFolderId());
  			if (unreadCount < count) {
  				count = unreadCount;
  			}
@@ -2099,4 +2099,62 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getSecureMailReaderInfo ended.");
 		return list;
 	}
+	
+	@Override
+	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception {
+		logger.debug("checkDistributionIsIncluded started.");
+		logger.debug("standardCn=" + standardCn + ", searchCn=" + searchCn);
+		
+		String isIncluded = "NO";
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "cn=" + searchCn + "&domain=" + domainName;
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistribution";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		logger.debug("response=" + response);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				JSONArray array = (JSONArray)responseObj.get("result");
+				
+				if (array != null) {
+					
+					JSONObject obj = null;
+					while (isIncluded.equals("NO")) {
+						
+						if (array.toString().indexOf("group") != -1) {
+							for (int i = 0; i < array.size(); i++) {
+								obj = (JSONObject)array.get(i);
+								if (((String)obj.get("class")).equals("group")) {
+									String resultAddress[] = ((String)obj.get("cn")).split("@");
+									String resultCn = resultAddress[0];
+									
+									if (resultCn.equals(standardCn)) {
+										isIncluded = "YES";
+										break;
+									} else if (!resultCn.equals(standardCn)) {
+										isIncluded = checkDistributionIsIncluded(standardCn, resultCn, tenantId);
+									}
+								} 
+							}
+						} else {
+							isIncluded = "NO";
+							break;
+						}
+					}
+				} else {
+					throw new Exception("JGwServer ERROR");
+				}
+			}
+		
+		}
+			
+		logger.debug("checkDistributionIsIncluded ended.");
+		return isIncluded;
+	}
+	
 }

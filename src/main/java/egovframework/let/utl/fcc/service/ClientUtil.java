@@ -73,7 +73,7 @@ public class ClientUtil {
             	 result = "Windows Vista";
              else if (agent.indexOf("Windows NT 5.2") > 0 || agent.indexOf("Windows NT 5.1") > 0)
             	 result = "Windows XP";
-             /* 모바일 (수정된 부분)  2018.04.16 문성업 로그인 기록 수정  */
+             /* 모바일 (수정된 부분)  2018.04.26 문성업 로그인 기록 수정 - 리눅스 접속 추가  */
              else if (agent.indexOf("iPhone") > 0) 
             	 result = "iPhone";
              else if (agent.indexOf("iPod") > 0)
@@ -90,6 +90,8 @@ public class ClientUtil {
             	 result = "NOKIA";
              else if (agent.indexOf("Webos") > 0)
             	 result = "Webos";
+             else if (agent.indexOf("Linux x86") > 0) //수정
+            	 result = "Linux";
              else if (agent.indexOf("Mac OS") > 0)
             	 result = "Mac OS";
              else

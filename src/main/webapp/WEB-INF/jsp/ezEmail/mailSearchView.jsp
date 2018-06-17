@@ -33,7 +33,7 @@
 			var g_timezone = "${userTimeSet}";
 			var offsetMin = "${offsetMin}";
 		    var checkval = "f";
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f0f6ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
@@ -717,7 +717,19 @@
 			    <option value="${folderName}">
 					<c:choose>
 						<c:when test="${folderName eq 'INBOX'}">
-							<spring:message code="ezEmail.t99000025" />
+							<spring:message code="ezEmail.t644" />
+						</c:when>
+						<c:when test="${folderName eq 'Sent'}">
+							<spring:message code="ezEmail.t645" />
+						</c:when>
+						<c:when test="${folderName eq 'Drafts'}">
+							<spring:message code="ezEmail.t646" />
+						</c:when>
+						<c:when test="${folderName eq 'Trash'}">
+							<spring:message code="ezEmail.t647" />
+						</c:when>
+						<c:when test="${folderName eq 'Personal folder'}">
+							<spring:message code="ezEmail.t648" />
 						</c:when>
 						<c:otherwise>
 							${folderName}
