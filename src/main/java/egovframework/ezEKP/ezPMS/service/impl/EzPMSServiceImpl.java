@@ -735,7 +735,30 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("lang", lang);
 
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
-
+		
+		String pretaskId = taskDetails.getPretask();
+		
+		if(pretaskId != null) {
+			
+			Long projectId = taskDetails.getProjectId();
+			param.put("projectId", projectId);
+			
+			String pretaskAncesterIds[] = taskDetails.getPretaskAncesterGroupIds().split(",");	
+			
+			String pretaskName = "";
+			
+			for(int i = 1; i < pretaskAncesterIds.length; i++) {
+				param.put("groupId", pretaskAncesterIds[i]);
+				pretaskName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
+			}
+			
+			param.put("taskId", pretaskId);
+			
+			pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
+			
+			taskDetails.setPretaskName(pretaskName);
+		}
+		
 		LOGGER.debug("[SERVICE] getTaskDetails ended.");
 		return taskDetails;
 	}

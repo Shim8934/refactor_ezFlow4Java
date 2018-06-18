@@ -195,9 +195,7 @@ function updateTaskInfo() {
 				writeDate : writeDate,
 				weight : weight
 		}
-		
-		alert(groupId);
-		
+	
 		$.ajax({
 			type : "POST",
 			url : "/ezPMS/updateTaskInfo.do",

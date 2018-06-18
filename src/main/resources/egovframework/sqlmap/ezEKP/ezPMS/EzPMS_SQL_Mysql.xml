@@ -141,7 +141,7 @@
     	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
     	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
     	<result property="pregroup"							column="PREGROUP"					columnIndex="33"/>
-    	<result property="pretaskAncesterGroup"				column="PRE_ANCESTER_GROUP"			columnIndex="34"/>
+    	<result property="pretaskAncesterGroupIds"			column="PRE_ANCESTER_GROUP_IDS"		columnIndex="34"/>
     </resultMap>
     
      <resultMap id="projectTaskVOForList" class="ProjectTaskVO">
@@ -2056,7 +2056,7 @@
 				A.REAL_WORKINGDAY,
 				R.PRETASK,
 				R.PREGROUP,
-				PG.ancester_group AS PRE_ANCESTER_GROUP
+				PG.ancester_group AS PRE_ANCESTER_GROUP_IDS
 			FROM 
 				tbl_pms_task A
 			JOIN

@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezPMS.vo;
 
-import java.sql.Date;
 import java.util.List;
 
 //업무 관련 VO
@@ -123,7 +122,10 @@ public class ProjectTaskVO {
     private Float planProgress;
     
     // 선행 작업의 조상 그룹
-    private String pretaskAncesterGroup;
+    private String pretaskAncesterGroupIds;
+    
+    // 조상 그룹을 포함한 선행 작업명
+    private String pretaskName;
     
     
     public Long getTaskId() {
@@ -438,12 +440,19 @@ public class ProjectTaskVO {
 		this.planProgress = planProgress;
 	}
 
-	public String getPretaskAncesterGroup() {
-		return pretaskAncesterGroup;
+	public String getPretaskAncesterGroupIds() {
+		return pretaskAncesterGroupIds;
 	}
 
-	public void setPretaskAncesterGroup(String pretaskAncesterGroup) {
-		this.pretaskAncesterGroup = pretaskAncesterGroup;
+	public void setPretaskAncesterGroupIds(String pretaskAncesterGroupIds) {
+		this.pretaskAncesterGroupIds = pretaskAncesterGroupIds;
 	}
-    
+
+	public String getPretaskName() {
+		return pretaskName;
+	}
+
+	public void setPretaskName(String pretaskName) {
+		this.pretaskName = pretaskName;
+	}
 }
