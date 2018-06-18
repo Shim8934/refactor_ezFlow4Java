@@ -819,6 +819,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
+			map1.put("tenantId", tenantId);
 			ezPMSDAO.updateProjectWorkingday(map1);
 
 			// 가중치 계산
@@ -1827,6 +1828,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
+			map1.put("tenantId", tenantId);
 			ezPMSDAO.updateProjectWorkingday(map1);
 
 			// 가중치 계산
@@ -2116,7 +2118,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Long taskId = taskVO.getTaskId();
 
 		if (taskVO.getWeight() == -1) {
-			int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
+			int projectWorkingday = ezPMSDAO.getProjectWorkingday(taskVO);
 			float calWeight = (taskWorkingday / projectWorkingday) * 100;
 			System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
 			map2.put("weight", calWeight);
