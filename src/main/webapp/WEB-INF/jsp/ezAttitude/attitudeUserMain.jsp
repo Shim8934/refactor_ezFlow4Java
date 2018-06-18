@@ -1100,8 +1100,8 @@
 	       	<tr>
 				<th>NO.</th>
 				<th><spring:message code='ezAttitude.t146'/></th>
-				<th><spring:message code='ezAttitude.t147'/></th>
-				<th><spring:message code='ezAttitude.t148'/></th>
+				<th><spring:message code='ezAttitude.t10'/></th>
+				<th><spring:message code='ezAttitude.t9'/></th>
 				<th><spring:message code='ezAttitude.t149'/></th>
 			</tr>
 		</table>
