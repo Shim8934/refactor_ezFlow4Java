@@ -16,7 +16,7 @@
 				background-color: rgb(244,245,245);
 			}
 			.selectTR{
-				background-color: rgb(233, 241, 255);
+				background-color: #f0f6ff;
 			}
 		</style>
 		<script type="text/javascript">

@@ -11,7 +11,7 @@ var GetList_HTTP;
 var GetList_HTTP_SUB;
 var GetListInfo_HeaderObject;
 var GetListInfo_ContentObject;
-var m_strColorSelect = "#edf4fd";
+var m_strColorSelect = "#f0f6ff";
 var m_strColorOver = "#f4f5f5";
 var m_strColorDefault = "#ffffff";
 var GroupplusImg ="/images/ImgIcon/groupplus.gif";
@@ -294,8 +294,15 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
-
-                            _TDColum.innerHTML = innerHTML;
+                            
+                            if (g_bdraft == true) {
+                            	p_Subject = p_Subject
+                            } else {
+                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:60%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+                            }
+                           
+                            _TDColum.innerHTML = p_Subject;
+//                            _TDColum.innerHTML = innerHTML;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             // 수아 수정 (보낸사람 클릭 -> 보낸 사람에게 메일 전송창)
                             _TDColum.setAttribute("data-msgto", p_Msgto);
