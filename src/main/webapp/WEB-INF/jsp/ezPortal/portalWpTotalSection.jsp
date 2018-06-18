@@ -181,10 +181,20 @@
 							</div>
 						</div>
 		    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
-		    				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p>
-							<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p>
-							<span style="margin-left:13px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span>
-							<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:5px"><spring:message code='ezAttitude.t65'/></span>
+<%-- 		    				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p> --%>
+<%-- 							<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p> --%>
+<%-- 							<span style="margin-left:13px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span> --%>
+<%-- 							<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:5px"><spring:message code='ezAttitude.t65'/></span> --%>
+							<div class="main_time">
+		    					<dl class="timeCheckIn">
+		    						<dt>출근</dt>
+		    						<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">입력</dd>
+		    					</dl>
+		    					<dl class="timeCheckOut">
+		    						<dt>퇴근</dt>
+		    						<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">입력</dd>
+		    					</dl>
+		    				</div>
 		    			</div>
 	       			</c:otherwise>
 	       		</c:choose>  
@@ -193,6 +203,7 @@
 			
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
 		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
+		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />
 		<style>
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
@@ -981,14 +992,17 @@
 		    		success : function(result) {
 		    			for (var i = 0; i < result.length; i++) {
 		    				if (result[i].typeId == "A01") {
-		    					$("#inAttiClock").text("<spring:message code='ezAttitude.t64'/> : " + result[i].startDate.split(" ")[1]);
-		    					$("#inAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
+ 		    					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+								$("#inAttiBtn").removeClass("out").addClass("in");
+								$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 		    				} else if (result[i].typeId == "A02") {
-		    					$("#inAttiClock").text("").append("<spring:message code='ezAttitude.t64'/> : <font color='#ff4b00'>" + result[i].startDate.split(" ")[1] + "</font>");
-		    					$("#inAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
+		    					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+								$("#inAttiBtn").removeClass("out").addClass("lateIn");
+								$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 		    				} else if (result[i].typeId == "A03") {
-		    					$("#outAttiClock").text("<spring:message code='ezAttitude.t65'/> : " + result[i].startDate.split(" ")[1]);
-		    					$("#outAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
+		    					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+								$("#outAttiBtn").removeClass("out").addClass("in");
+								$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 		    				}
 		    			}
 		    		}
