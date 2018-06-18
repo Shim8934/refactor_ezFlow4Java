@@ -179,7 +179,7 @@
 		}
 		 
 		// 가중치 검사
-		realProgress = realProgress.match(/\d+[.]\d/)[0];
+		realProgress = realProgress.replace(/%/,"").match(/\d+[.]\d/)[0];
 		if (realProgress != taskDetails.realProgress) {
 			if (realProgress == "") {
 				alert("<spring:message code='ezPMS.t189' />");
