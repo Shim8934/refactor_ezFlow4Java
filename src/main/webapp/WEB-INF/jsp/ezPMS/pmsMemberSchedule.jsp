@@ -15,39 +15,22 @@
 <title>인력관리</title>
 <script type="text/javascript">
 var memberList = '${memberList}';
-var memberScheduleList = '${memberScheduleList}';
+var memberScheduleList = JSON.parse('${memberScheduleList}');
 var planStartDate = '${planStartDate}';
 var planEndDate = '${planEndDate}';
 var dateList = [];
 
 $(function() {
-	getDateRange(planStartDate, planEndDate, dateList);
-	//getDateRange('2017-02-01', '2017-02-05', dateList);
+	setMemberSchedule();
 });
 
-function getDateRange(startDate, endDate, listDate) {
-
-    var dateMove = new Date(startDate);
-    var strDate = startDate;
-
-    if (startDate == endDate) {
-        var strDate = dateMove.toISOString().slice(0,10);
-        $("#dateList").append("<th>" + strDate + "</th>");
-        listDate.push(strDate);
-    } else {
-        while (strDate < endDate) {
-        	console.log(dateMove.toISOString());
-            var strDate = dateMove.toISOString().slice(0, 10);
-            $("#dateList").append("<th>" + strDate + "</th>");
-            listDate.push(strDate);
-            dateMove.setDate(dateMove.getDate() + 1);
-        }
-    }
-    return listDate;
-};
-
 function setMemberSchedule() {
-	
+	for (var i = 0; i < memberScheduleList.length; i++) {
+		var memberId = memberScheduleList[i].userId;
+		var assignedDate = memberScheduleList[i].assignedDate;
+		console.log(memberId,assignedDate);
+		$("tr[userId='" + memberId + "']").find("td[date='" + assignedDate + "']").text("O");
+	}
 }
 </script>
 <style type="text/css">
@@ -65,12 +48,16 @@ function setMemberSchedule() {
 	display : inline-block;
 	height : 100%;
 }
+
+#mainmenue {
+	margin : 5px 5px;
+}
 </style>
 </head>
 <body>
 <div id="mainmenu">
 <ul>
-	<li><span>뒤로</span></li>
+	<li><span onclick="popupClose()">뒤로</span></li>
 </ul>
 </div>
 <div id="memberTable">
@@ -80,17 +67,27 @@ function setMemberSchedule() {
 		<th>부서</th>
 	</tr>
 	<c:forEach items="${memberList }" var="member">
-	<tr>
-		<td>memberList.userName</td>
-		
+	<tr id="${member.userId }">
+		<td style="width:50%">${member.userName }</td>
+		<td>${member.userDeptname }</td>
 	</tr>
 	</c:forEach>
 	</table>
 </div>
 <div id="calendar">
-	<table class="content">
-	<tr id="dateList">
+	<table id="workSchedule" class="content">
+	<tr>
+	<c:forEach items="${dateList }" var="date">
+		<th>${date }</th>
+	</c:forEach>
 	</tr>
+	<c:forEach items="${memberList }" var="member">
+	<tr userId="${member.userId }">
+	<c:forEach items="${dateList }" var="date">
+		<td date="${date }">X</td>
+	</c:forEach>
+	</tr>
+	</c:forEach>
 	</table>
 </div>
 </body>

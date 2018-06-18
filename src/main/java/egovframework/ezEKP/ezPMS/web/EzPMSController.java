@@ -1704,6 +1704,7 @@ public class EzPMSController {
 			model.addAttribute("memberScheduleList", data.get("memberScheduleList"));
 			model.addAttribute("planStartDate", data.get("planStartDate"));
 			model.addAttribute("planEndDate", data.get("planEndDate"));
+			model.addAttribute("dateList", data.get("dateList"));
 		}
 		
 		LOGGER.debug("ezPMS getMemberSchedule ended");

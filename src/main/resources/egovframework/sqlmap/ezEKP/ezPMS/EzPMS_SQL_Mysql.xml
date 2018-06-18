@@ -3265,7 +3265,7 @@
 	</select>
 	
 	<select id="EzPMSDAO.getMemberSchedule" parameterClass="map" resultMap="projectMemberScheduleVO">
-		SELECT	
+		SELECT DISTINCT
 			S.USER_ID,
 			S.ASSIGNED_DATE,
 			S.PROJECT_ID,
@@ -3284,6 +3284,8 @@
 			S.PROJECT_ID = #projectId#
 		AND	
 			S.TENANT_ID	= #tenantId#
+		ORDER BY
+			S.USER_ID, S.ASSIGNED_DATE
 	</select>
 	
 	<insert id="EzPMSDAO.addMemberSchedule" parameterClass="map">
@@ -3293,6 +3295,11 @@
 		) VALUES (
 			#projectId#,	#tenantId#,		#memberId#,		#assignedDate#
 		)
+		ON DUPLICATE KEY UPDATE
+			USER_ID = #memberId#,
+			ASSIGNED_DATE = #assignedDate#,
+			PROJECT_ID = #projectId#,
+			TENANT_ID = #tenantId#
 	]]>
 	</insert>
 </sqlMap>
