@@ -4688,42 +4688,60 @@
 				  	$v_PWHEREBOARD$
 				  AND
 				  	A.TENANT_ID = #v_TENANTID#
-				]]>
-				<isEqual property="v_MODE" compareValue="1">	  
+		]]>
+		<isEqual property="v_MODE" compareValue="1">
+			<![CDATA[		  
 				  AND 
 				  	I.BOARDID IN
-				  <iterate property="v_boardList" open="(" close=")" conjunction=","> #v_boardList[]# </iterate>
-				  <![CDATA[	
+			]]>
+			<iterate property="v_boardList" open="(" close=")" conjunction=","> #v_boardList[]# </iterate>
+				<![CDATA[	
 				  	AND
-				  		(I.BOARDGROUPID IN (SELECT 
-				  								BOARDID 
-				  							FROM 
-				  								TBL_BOARD_BOARDMANAGE
-				  							WHERE 
-				  								TENANT_ID = #v_TENANTID#
-				  							AND
+				  		(I.BOARDGROUPID IN ( SELECT 
+				  								 BOARDID 
+				  							 FROM 
+				  								 TBL_BOARD_BOARDMANAGE
+				  							 WHERE 
+				  								 TENANT_ID = #v_TENANTID#
+				  							 AND
 				  								(ACCESSID = #v_pCompanyID#
 				 									OR ACCESSID = #v_pDeptID#
 				 									OR ACCESSID = #v_PUSERID#
 				 									OR AccessID = 'everyone') 
-				  							AND 
+				  							 AND 
 				  								BOARDADMIN_FG = 'true')
 				  		OR
-				  		I.BOARDID IN (SELECT
-				  							BOARDID
-				  					   FROM
-				  					   		TBL_BOARD_BOARDMANAGE
-				  					   WHERE 
-				  					   		TENANT_ID = #v_TENANTID#
-				  					   AND
-				  					   		(ACCESSID = #v_pCompanyID#
-				 								OR ACCESSID = #v_pDeptID#
-				 								OR ACCESSID = #v_PUSERID#
-				 								OR AccessID = 'everyone') 
-				  					   AND
-				  					   		LISTVIEW_FG = 'true'))
+				  		(I.GUBUN <> '5' AND I.BOARDID IN ( SELECT
+				  										  	   BOARDID
+				  					   					   FROM
+				  					   						   TBL_BOARD_BOARDMANAGE
+									  					   WHERE 
+									  					   	   TENANT_ID = #v_TENANTID#
+									  					   AND
+									  					   	  (ACCESSID = #v_pCompanyID#
+									 							 OR ACCESSID = #v_pDeptID#
+									 							 OR ACCESSID = #v_PUSERID#
+									 							 OR AccessID = 'everyone') 
+									  					   AND
+									  					  	  LISTVIEW_FG = 'true'))
+				  		OR
+				  		(I.GUBUN = '5' AND I.BOARDID IN ( SELECT
+				  											  BOARDID
+									  					  FROM
+									  					 	  TBL_BOARD_BOARDMANAGE
+									  					  WHERE 
+									  					   	  TENANT_ID = #v_TENANTID#
+									  					  AND
+									  					     (ACCESSID = #v_pCompanyID#
+									 							OR ACCESSID = #v_pDeptID#
+									 							OR ACCESSID = #v_PUSERID#
+									 							OR AccessID = 'everyone') 
+									  					  AND
+									  					   	 LISTVIEW_FG = 'true')
+									  					  AND
+									  					 	 A.TOPWRITERID = #v_PUSERID# ))
 				  	]]>
-				  	</isEqual>
+					</isEqual>
 				  	<![CDATA[
 				  	AND 
 				  		STARTDATE <= #nowDate# 
@@ -4741,8 +4759,9 @@
  				  		$iv_PORDERBYSUB$
  				  	LIMIT
  				  		#limit#, #rowCount#
-		]]>
+					]]>
 	</select>
+	
 	<select id="EzBoardDAO.getSearchAllBoardItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -4759,57 +4778,74 @@
    				$v_PWHEREBOARD$ 
    			AND
    				A.TENANT_ID = #v_TENANTID#
-   			]]>
-   			<isEqual property="v_MODE" compareValue="1">
+   		]]>
+   		<isEqual property="v_MODE" compareValue="1">
    			<![CDATA[	
-			AND 
-				I.BOARDID IN
+				AND 
+					I.BOARDID IN
 			]]>
 			<iterate property="v_boardList" open="(" close=")" conjunction=","> #v_boardList[]# </iterate>
-			<![CDATA[	
+				<![CDATA[	
 					AND
-				  		(I.BOARDGROUPID IN (SELECT 
-				  								BOARDID 
-				  							FROM 
-				  								TBL_BOARD_BOARDMANAGE
-				  							WHERE 
-				  								TENANT_ID = #v_TENANTID#
-				  							AND
+				  		(I.BOARDGROUPID IN ( SELECT 
+				  								 BOARDID 
+				  							 FROM 
+				  								 TBL_BOARD_BOARDMANAGE
+				  							 WHERE 
+				  								 TENANT_ID = #v_TENANTID#
+				  							 AND
 				  								(ACCESSID = #v_pCompanyID#
 				 									OR ACCESSID = #v_pDeptID#
 				 									OR ACCESSID = #v_PUSERID#
 				 									OR AccessID = 'everyone') 
-				  							AND 
-				  								BOARDADMIN_FG = 'true')
+				  							 AND 
+				  								BOARDADMIN_FG = 'true' )
 				  		OR
-				  		I.BOARDID IN (SELECT
-				  							BOARDID
-				  					   FROM
-				  					   		TBL_BOARD_BOARDMANAGE
-				  					   WHERE 
-				  					   		TENANT_ID = #v_TENANTID#
-				  					   AND
-				  					   		(ACCESSID = #v_pCompanyID#
-				 								OR ACCESSID = #v_pDeptID#
-				 								OR ACCESSID = #v_PUSERID#
-				 								OR AccessID = 'everyone') 
-				  					   AND
-				  					   		LISTVIEW_FG = 'true'))
+				  		(I.GUBUN <> '5' AND I.BOARDID IN ( SELECT
+				  										  	   BOARDID
+				  					   					   FROM
+				  					   						   TBL_BOARD_BOARDMANAGE
+									  					   WHERE 
+									  					   	   TENANT_ID = #v_TENANTID#
+									  					   AND
+									  					   	  (ACCESSID = #v_pCompanyID#
+									 							 OR ACCESSID = #v_pDeptID#
+									 							 OR ACCESSID = #v_PUSERID#
+									 							 OR AccessID = 'everyone') 
+									  					   AND
+									  					  	  LISTVIEW_FG = 'true' ))
+				  		OR
+				  		(I.GUBUN = '5' AND I.BOARDID IN ( SELECT
+				  											  BOARDID
+									  					  FROM
+									  					 	  TBL_BOARD_BOARDMANAGE
+									  					  WHERE 
+									  					   	  TENANT_ID = #v_TENANTID#
+									  					  AND
+									  					     (ACCESSID = #v_pCompanyID#
+									 							OR ACCESSID = #v_pDeptID#
+									 							OR ACCESSID = #v_PUSERID#
+									 							OR AccessID = 'everyone') 
+									  					  AND
+									  					   	 LISTVIEW_FG = 'true')
+									  					  AND
+									  					 	 A.TOPWRITERID = #v_PUSERID# ))
 				]]>
-			</isEqual>
+   		</isEqual>
 			<![CDATA[
-   			AND 
-   				STARTDATE < #nowDate# 
-   			AND 
-   				ENDDATE > #nowDate#
-   			AND (
-				   (A.APPRFLAG <> 'C'  
-						AND 
-					A.APPRFLAG <> 'N')
-						OR 
-					A.APPRFLAG IS NULL
-					)
-   			$v_PSUBQUERY$
-		]]>
-	</select>	
+	   			AND 
+	   				STARTDATE < #nowDate# 
+	   			AND 
+	   				ENDDATE > #nowDate#
+	   			AND (
+					   (A.APPRFLAG <> 'C'  
+							AND 
+						A.APPRFLAG <> 'N')
+							OR 
+						A.APPRFLAG IS NULL
+						)
+	   			$v_PSUBQUERY$
+			]]>
+	</select>
+		
 </sqlMap>

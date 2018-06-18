@@ -7401,14 +7401,19 @@ public class EzBoardController extends EgovFileMngUtil{
 		ArrayList<String> accessBoardList = null;
 		
 		int pMode = 1;
-		if(userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+		if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
 			pMode = 0;
-		}else{
+		} else {
 			pMode = 1;
 			accessBoardList = accessBoardList(userInfo);
 		}
 		
-		int boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, accessBoardList, pMode);
+		int boardCount;
+		if (pMode == 0 || accessBoardList.size() > 0) {
+			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, accessBoardList, pMode);
+		} else {
+			boardCount = 0;
+		}
 		
 		BoardListVO boardListVO = new BoardListVO();
 		boardListVO.setPageCount(boardCount);
@@ -7436,9 +7441,15 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setWriterName("");
 		}
 		
-		List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, accessBoardList, pMode);
-		
-		int dlength = boardSearchList.size();
+		List<HashMap<String, Object>> boardSearchList;
+		int dlength;
+		if (pMode == 0 || accessBoardList.size() > 0) {
+			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, accessBoardList, pMode);
+			dlength = boardSearchList.size();
+		} else {
+			boardSearchList = null;
+			dlength = 0;
+		}
 		
 		StringBuffer resultXML = new StringBuffer();
 		
