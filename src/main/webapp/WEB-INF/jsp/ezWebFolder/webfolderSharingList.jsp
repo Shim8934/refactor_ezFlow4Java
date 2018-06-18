@@ -918,7 +918,7 @@
 		
 		<div id="pageArea">
 			<div style="height: 40px;">
-				<div style="font-size: 24px; font-weight: bold; padding: 8px 0px;" id="originalPath"></div>
+				<div style="font-size: 24px; font-weight: bold; padding: 8px 4px 0px;" id="originalPath"></div>
 			</div>
 			
 			<div id="mainmenu">

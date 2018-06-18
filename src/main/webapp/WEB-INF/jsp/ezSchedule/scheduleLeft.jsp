@@ -16,21 +16,7 @@
 	    	}
 	    	#iMon {
 	    		width:40px;
-	    	}
-	    	/* The container */
-			.IDcontainer {
-			    display: block;
-			    position: relative;
-			    padding-left: 26px;
-			    cursor: pointer;
-			    font-size: 12px;
-			    margin: 10px 10px 10px 21px;
-    			padding-top: 3px;
-			    -webkit-user-select: none;
-			    -moz-user-select: none;
-			    -ms-user-select: none;
-			    user-select: none;
-			}
+	    	}	    				
 			
 			/* Hide the browser's default checkbox */
 			.IDcontainer input {
@@ -418,9 +404,9 @@
 		    	<!-- 2018-06-07 구해안 mini 호출하는 부분 삭제하고 체크박스 생성 -->    	
 		    	<!-- <div id="CalendarMini" style="padding-top:5px;margin:0px 10px 10px 10px;"></div> -->
 		    	<div id="IDClick">
-		    	<label class="IDcontainer" onchange="chk_all()")><spring:message code='ezSchedule.t220'/>
+		    	<label class="IDcontainer" onchange="chk_all()"><spring:message code='ezSchedule.t220'/>
 				  <input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse">
-				  <span class="checkmark" style="background:#white; border:1px solid #ccc"></span>
+				  <span class="checkmark"></span>
 				</label>
 				<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t221'/>
 				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.id}" class="checkSelect">
@@ -469,13 +455,13 @@
 		    	</div>
 		    	<!-- 2018-06-08 구해안 일정관리 탭 삭제 -->
 			    <%-- <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li> --%>
-	            <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
+	            <li style="border-top:1px solid #e8e8e8" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
 			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>
 		    </ul>
 		    <h2><span id='Task' onClick="Function_Flag(3)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1011'/></span></h2>
 		    <ul>
-			    <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li>
+			    <%-- <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li> --%>
 			    <li><span id='Task_Search' onClick="Function_Flag(7)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1019'/></span></li>
 		    </ul>
 	        <h3><span id='Schedule_Config' onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>

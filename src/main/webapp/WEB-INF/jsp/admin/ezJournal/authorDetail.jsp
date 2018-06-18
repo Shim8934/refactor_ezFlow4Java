@@ -183,7 +183,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: rgb(237, 244, 253);
+				background-color: #f0f6ff;
 			}
 		</style>
 	</head>
