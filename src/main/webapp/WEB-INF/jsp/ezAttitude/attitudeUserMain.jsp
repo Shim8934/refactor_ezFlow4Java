@@ -134,6 +134,11 @@
 				vertical-align: middle;
 				margin-left: 5px;
 			}
+			
+			.attiImg {
+				vertical-align: middle;
+				margin-right : 3px;
+			}
 		</style>
 		<script>
 			var pMode = "";
@@ -297,7 +302,7 @@
 // 					}
 					objDt.html(result[i].typeName);
 					objDd = $("<dd></dd>")
-					 .text("0" + "<spring:message code='ezAttitude.t21'/>")
+					 .text("0")
 					 .attr("id", result[i].typeId)
 					 .attr("parentId", result[i].parentId)
 					 .click(function() {
@@ -312,36 +317,6 @@
 				objUl.append(objLi);
 				$("#attiStatis").append(objP);
 				$("#attiStatis").append(objUl);
-// 				var objTable = $("<table style='table-layout:fixed;' id='statisTB'></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%", "height":parseInt($("#attiCalendar").css("height"),10)});
-// 				var objTbody = $("<tbody></tbody>");
-// 				var objTr = "";
-// 				var objTd = "";
-// 				var calendarHeight = $("#attiCalendar").css("height");
-// // 				var tdHeight = (parseInt(document.documentElement.clientHeight, 10)) / (result.length);
-// // 				var tdHeight = (parseInt(calendarHeight.substr(0, calendarHeight.length - 2) , 10)/(result.length));
-				
-// 				objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.t171'/>")));
-// 				for (var i = 0; i < result.length; i++) {
-					
-// 					if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
-// 						continue;
-// 					}
-// 					//  height : " + tdHeight + "
-// 					objTr = $("<tr></tr>").append($("<th style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal;' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").html(result[i].typeName));
-// 					objTd = $("<td nowrap></td>").append($("<div style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal;'></div>").css({"width" : "80px", "cursor" : "pointer"})
-// 					.attr("id",result[i].typeId).text("0" + "<spring:message code='ezAttitude.t21'/>")
-// 					.attr("parentId",result[i].parentId)
-// 					.attr("onmouseover","this.style.color='#164aad'")
-// 					.attr("onmouseout","this.style.color='#666'")
-// 					.click(function() {
-// 						searchByTypeId(this);
-// 					}));	
-// 					objTr.append(objTd);
-// 					objTbody.append(objTr);
-// 				}
-				
-// 				objTable.append(objTbody);
-// 				$("#attiStatis").append(objTable);
 				
 // 				window.onresize = function () {
 // 			        $("#statisTB").css("height",$("#attiCalendar").css("height"));
@@ -366,7 +341,7 @@
 					success : function(result) {
 						$("#attiStatis td div").text("0" + "<spring:message code='ezAttitude.t21'/>");
 						for (var i = 0; i < result.length; i++) {
-							$("#" + result[i].typeId).text(result[i].count + "<spring:message code='ezAttitude.t21'/>");
+							$("#" + result[i].typeId).text(result[i].count);
 						}
 					}
 				})
@@ -440,11 +415,9 @@
 						var iconStr = "";
 						//0과 2는 icon을 추가하지 않는다.
 						if (result[i].modAppl  == '2') {
-							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
-							iconStr = " <img class='pencil' src='/images/pencil.png' />";
+							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						} else if (result[i].modAppl  == '3') {
-							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
-							iconStr = " <img class='pencil' src='/images/pencil.png' />";
+							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						}
 						startDate = result[i].startDate.split(" ")[0]; 
 						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
@@ -456,32 +429,37 @@
 							for (var j = 0; j<= subDate; j++) {
 								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
 								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append($("<tr></tr>").append($("<td></td>")
-																															.attr("attitudeId", result[i].attitudeId)
-																															.attr("typeId", result[i].typeId)
-																															.html(result[i].typeName + (result[i].region.trim() != "" ? " : " + result[i].region.trim() : "") + iconStr)));
+								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
+																															.html(result[i].typeName + (result[i].region.trim() != "" ? " : " + result[i].region.trim() : "") + iconStr)
+																															.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
 							}
 						} else if (result[i].dateType == '3') { 
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
+																																.html(result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + iconStr)
+																																.prepend($("<img/>").addClass("attiImg").css("vertical-align", "middle").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+									//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
 						} else if (result[i].dateType == '1') { 
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + iconStr + "</td></tr>"); 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
+																																.html(result[i].typeName + iconStr)
+																																.prepend($("<img/>").addClass("attiImg").css("vertical-align", "middle").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png")))); 
+									//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + iconStr + "</td></tr>"); 
 						} else {
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId).attr("modappl", result[i].modAppl)
+																																.html(result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr)
+																																.prepend($("<img/>").addClass("attiImg").css("vertical-align", "middle").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+									//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
 						} 
 					}
-					setAttitudeSquare();
+					checkAttiModAppl();
 				} else {
 					for (var i = 0; i < result.length; i++) {
 						var iconStr = "";
 						if (result[i].modAppl  == '2') {
 							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
-							iconStr = " <img class='pencil' src='/images/pencil.png' />";
+							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						} else if (result[i].modAppl  == '3') {
 							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
-							iconStr = " <img class='pencil' src='/images/pencil.png' />";
+							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						}
 						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
 							startDate = result[i].startDate.split(" ")[0];
@@ -494,24 +472,31 @@
 								for (var j = 0; j<= subDate; j++) {
 									betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
 									var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-									$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-											"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" +
-											result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
+									$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
+																																.html(result[i].typeName + " : " + result[i].writerName + iconStr)
+																																.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+											//"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 								}
 							} else if (result[i].dateType == '3') {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
+																																	.html(result[i].typeName + " : " + result[i].writerName + iconStr)
+																																	.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+										//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							} else if (result[i].dateType == '1') {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
+																																	.html(result[i].typeName + " : " + result[i].writerName + iconStr)
+																																	.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+										//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							} else {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId).attr("modappl", result[i].modAppl)
+																																	.html(result[i].typeName + " : " + result[i].writerName + iconStr)
+																																	.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+										//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							}	
 						}
 					}
 					$("td[typeid=A02][modappl=0]").css('cursor','default');
-					setAttitudeSquare();
+					checkAttiModAppl();
 				}
 			}
 			
@@ -1068,20 +1053,6 @@
 	        		$("#divisionBar").css("display","");
 	        	}
 			}
-			
-			function showStatis() {
-				if ($("#attiStatis").parent("td").css("width") != "0px") {
-					$("#attiStatis").animate({width:"0px"}, 1000, function(){
-						$(this).css("display","none");
-					});
-					$("#attiCalendar").parent("td").animate({width:"100%"}, 1000);
-					$("#attiStatis").parent("td").animate({width:"0%"}, 1000);
-				} else {
-					$("#attiStatis").parent("td").animate({width:"9%"}, 1000);
-					$("#attiCalendar").parent("td").animate({width:"91%"}, 1000);
-					$("#attiStatis").css("display","block").animate({width:($(".mainbody").width() * 9 / 100)}, 1000);
-				}
-			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
@@ -1093,7 +1064,6 @@
 		</c:if>
 		<div id="mainmenu">
 			<ul>
-				<li><span onClick="showStatis()">근태통계</span></li>
 				<c:if test="${adminFlag == 'true'}">
 		        	<li id="btnAbsentedList"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
@@ -1118,13 +1088,6 @@
 						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
 					</select>
 				</c:if>
-				<li style="background:none;margin-left:7px;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t64'/>,<spring:message code='ezAttitude.t65'/></li>
-	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t112'/></li>
-	            <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t113'/>,<spring:message code='ezAttitude.t114'/></li>
-                <li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #eede23; background:#feee33; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t115'/></li>
-                <c:if test="${attitudeConfigVO.attitudeModAppl == 1 }">
-                	<li style="background:none;cursor:default;"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezAttitude.t213'/></li>
-                </c:if>
 			</ul>
 		</div>
 		
