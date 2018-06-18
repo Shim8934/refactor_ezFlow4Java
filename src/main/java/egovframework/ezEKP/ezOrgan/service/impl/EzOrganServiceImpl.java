@@ -685,7 +685,8 @@ public class EzOrganServiceImpl implements EzOrganService {
                 
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
-        map.put("strSizeForMySQL", strSQL.replace("department", "deptID"));
+        map.put("strSizeForMySQL", strSizeForMySQL);
+        map.put("strGyumjikForOracle", strSQL.replace("department", "deptID"));
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
