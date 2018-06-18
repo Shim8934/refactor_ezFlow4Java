@@ -78,6 +78,8 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
     	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="28"/>
+    	<result property="pregroup"							column="PREGROUP"					columnIndex="29"/>
     </resultMap>
     
     <resultMap id="projectMainSettingVO" class="ProjectMainSettingVO">
@@ -1962,7 +1964,9 @@
 				A.WORKINGDAY,
 				A.REST_DUEDAY,
 				P.PROJECT_NAME,
-				B.GROUP_NAME AS UPPER_GROUP_NAME
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				R.PRETASK,
+				R.PREGROUP
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	
@@ -1984,6 +1988,12 @@
 			AND
 			</isEqual>
 			<isNotEqual property="location" compareValue="general">
+			LEFT JOIN
+				TBL_PMS_PRETASKREL R
+			ON
+				A.PROJECT_ID = R.PROJECT_ID
+			AND
+				A.GROUP_ID = R.GROUP_ID
 			WHERE
 			</isNotEqual>
 				A.TENANT_ID = #tenantId#
