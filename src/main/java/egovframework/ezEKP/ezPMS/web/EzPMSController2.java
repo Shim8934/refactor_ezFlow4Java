@@ -334,7 +334,6 @@ public class EzPMSController2 {
 		}
 		
 		model.addAttribute("projectId", projectId);
-		
 		LOGGER.debug("ezPMS getProjectForGantt ended");
 		
 		return "/ezPMS/taskListGantt";
@@ -816,5 +815,4 @@ public class EzPMSController2 {
 		
 		return "json";
 	}
-	
 }

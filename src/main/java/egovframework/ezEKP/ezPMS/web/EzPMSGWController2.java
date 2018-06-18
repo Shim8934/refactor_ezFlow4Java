@@ -84,6 +84,7 @@ public class EzPMSGWController2 {
 			String orderHow = request.getParameter("orderHow");
 			String position = request.getParameter("position");
 			String companyId = info.getCompanyId();
+			int roleId = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
 			
 			if (orderWhat == null) {
 				orderWhat = "init";
@@ -121,9 +122,8 @@ public class EzPMSGWController2 {
 			search.setOverview(request.getParameter("searchByOverview"));
 			search.setProjectName(request.getParameter("searchByProjectName"));
 			
-			
 			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
-			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position);
+			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position, roleId);
 			 
 			for(int i = 0; i < taskList.size(); i++ ){
 				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanStartDate());
@@ -354,6 +354,7 @@ public class EzPMSGWController2 {
 			String orderHow = request.getParameter("orderHow");
 			int startRow = Integer.parseInt(request.getParameter("startRow") != null ? request.getParameter("startRow") : "-1" );
 			int limit = Integer.parseInt(request.getParameter("limit") != null ? request.getParameter("limit") : "-1" ); 
+			String location = "general";
 			
 			if (orderWhat == null || orderWhat.equals("")) {
 				orderWhat = "init";
@@ -371,7 +372,7 @@ public class EzPMSGWController2 {
 			search.setProjectName(request.getParameter("searchByProjectName"));
 			search.setMemberId(userId);
 			
-			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang);
+			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang, location);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -938,7 +939,7 @@ public class EzPMSGWController2 {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/groups/users/{userId}/gantt", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getGroupMemberList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"] started.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"/gantt] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -953,6 +954,7 @@ public class EzPMSGWController2 {
 			int limit = Integer.parseInt(request.getParameter("limit") != null ? request.getParameter("limit") : "-1" ); 
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
+			String location = "gantt";
 			
 			if (orderWhat == null || orderWhat.equals("")) {
 				orderWhat = "init";
@@ -970,7 +972,7 @@ public class EzPMSGWController2 {
 			search.setProjectName(request.getParameter("searchByProjectName"));
 			search.setMemberId(userId);
 			
-			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang);
+			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit, lang, location);
 			List<ProjectGroupMemberVO> groupMemberList = ezPMSService.getGroupMemberList(Long.parseLong(projectId), info.getTenantId(), null);
 			
 			for(int i = 0; i < groupList.size(); i++){
@@ -1076,6 +1078,8 @@ public class EzPMSGWController2 {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			ProjectTaskVO taskVO = new ProjectTaskVO();
+			
+			
 			float realProgress = Float.parseFloat(request.getParameter("progress"));
 			taskVO.setTaskId(Long.parseLong(taskId));
 			taskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
@@ -1098,7 +1102,6 @@ public class EzPMSGWController2 {
 			else{
 				taskVO.setStatus(request.getParameter("status"));
 			}
-			
 			
 			ezPMSService.updateTaskProgress(taskVO);
 			

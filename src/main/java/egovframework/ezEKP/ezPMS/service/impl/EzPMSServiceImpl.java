@@ -147,16 +147,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			// 날짜 차이 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planStartDate").toString());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planEndDate").toString());
-			int workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(),
-					Integer.parseInt(map.get("tenantId").toString()));
+			int workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
 
 			map.put("workingDay", workingDays);
 			// map.put("workingDay", 0);
 			map.put("restDueday", workingDays);
 
 			// 프로젝트 총괄담당자 정보 불러오기
-			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(),
-					Integer.parseInt(map.get("tenantId").toString()), "user");
+			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(), Integer.parseInt(map.get("tenantId").toString()), "user");
 			map.put("headManagerDeptname", headManagerInfo.getUserDeptname());
 			map.put("headManagerDeptname2", headManagerInfo.getUserDeptname2());
 			map.put("headManagerName", headManagerInfo.getUserName());
@@ -265,9 +263,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("mode", mode);
 		map.put("userId", userId);
 		map.put("deptId", deptId);
-		map.put("isGantt", 1);
-		map.put("roleId", 4);
-
+		
+		if (mode.equals("gantt")) {
+			map.put("isGantt", 0);
+			map.put("roleId", 5);
+		} else {
+			map.put("isGantt", 1);
+			map.put("roleId", 4);	
+		}
+		
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 
 		try {
@@ -472,7 +476,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getTaskListCount(SearchVO search, String userId) {
+	public int getTaskListCount(SearchVO search, String userId, int roleId) {
 		LOGGER.debug("[SERVICE] getTaskListCount started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -489,6 +493,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("searchByUser", search.getMemberName());
 		map.put("taskName", search.getTaskName());
 		map.put("searchByProjectName", search.getProjectName());
+		map.put("roleId", roleId);
 
 		int taskCount = ezPMSDAO.getTaskListCount(map);
 
@@ -545,7 +550,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat,
-			String orderHow, String location) {
+			String orderHow, String location, int roleId) {
 		LOGGER.debug("[SERVICE] getTaskList started");
 
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -564,7 +569,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("startRow", startRow);
 		param.put("groupId", search.getGroupId());
 		param.put("isMyTask", search.getIsMyTask());
-
+		param.put("roleId", roleId);
+		
 		// 정렬
 		param.put("orderWhat", orderWhat);
 		param.put("orderHow", orderHow);
@@ -584,7 +590,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow,
-			int limit, String lang) {
+			int limit, String lang, String location) {
 		LOGGER.debug("[SERVICE] getGroupList started.");
 
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -603,6 +609,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("searchByOverview", search.getOverview());
 		param.put("searchByProjectName", search.getProjectName());
 		param.put("userId", search.getMemberId());
+		param.put("location", location);
 
 		List<ProjectGroupVO> list = ezPMSDAO.getGroupList(param);
 
@@ -2374,5 +2381,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		LOGGER.debug("[SERVICE] getProjectBoundaryDate ended.");
 		return ezPMSDAO.getProjectBoundaryDate(map);
+	}
+
+	@Override
+	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId) {
+		LOGGER.debug("[SERVICE] getMemberSchedule started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+
+		LOGGER.debug("[SERVICE] getMemberSchedule ended.");
+		return ezPMSDAO.getMemberSchedule(map);
 	}
 }
