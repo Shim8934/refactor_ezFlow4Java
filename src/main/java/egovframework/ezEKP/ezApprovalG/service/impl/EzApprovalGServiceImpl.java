@@ -19493,7 +19493,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		if(rtnVal.toString().equals("")){
-			rtnVal.append("<RESULT>TRUE</RESULT>");
+			String howToSendOffer = ezCommonService.getTenantConfig("howToSendOffer", tenantID);
+	        
+	        if (howToSendOffer.equals("1")) {
+	        	rtnVal.append("<RESULT>TOKIAN</RESULT>");
+			}else{
+				rtnVal.append("<RESULT>TRUE</RESULT>");
+			}
 		}
 
 		logger.debug("sendOfferCheck ended");
@@ -22007,7 +22013,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 			 	ezApprovalGDAO.insertProHistoryReceiptInfo2(map);
 			}
 		}
-		 return "<RESULT>TRUE</RESULT>";
+		
+		String howToSendOffer = ezCommonService.getTenantConfig("howToSendOffer", tenantID);
+        
+        if (howToSendOffer.equals("1")) {
+        	return "<RESULT>TOKIAN</RESULT>";
+		} else {
+			return "<RESULT>TRUE</RESULT>";
+		}
+			
     }
 
 	@Override
