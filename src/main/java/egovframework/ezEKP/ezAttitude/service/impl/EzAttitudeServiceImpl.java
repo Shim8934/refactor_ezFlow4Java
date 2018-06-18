@@ -1403,7 +1403,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		//title, body(미입력자 리스트 html로) 만들어서 전송
 		String subject = "[공지]근태미입력자 공지";
-		String memo = "<p>해당 메일을 받은 사원은 " + startDate + " ~ " + endDate + " 중 근태를 미입력한 사원입니다.</p><p>확인 후 근태를 등록해주시기 바랍니다.</p>";
+		String memo = "<p>해당 메일을 받은 사원은 " + startDate + " ~ " + endDate + " 중 근태를 미입력한 사원입니다.</p>"
+				+ "<p>확인 후 근태를 등록해주시기 바랍니다.</p>"
+				+ "<p>근태 수정 권한은  각 본부장님 또는 근태관리자, 경영지원실에 있사오니, 근태관리자 및 본부장님의 부재로 인해 근태 수정이 어려우신 경우 경영지원실로 메일 바랍니다.</p>"
+				+ "<p>근태는 매년 인사평가에 반영되는 사항이기에 차일까지 반드시 수정 부탁 드리겠습니다.</p>";
 		
 		String table = "<table style='border-collapse:collapse; width:800px;'>"
 				+ "<thead><tr>"
