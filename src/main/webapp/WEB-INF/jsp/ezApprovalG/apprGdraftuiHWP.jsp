@@ -256,19 +256,21 @@
 	                                HwpCtrl.SetFieldText("_connkey_", _connkey_);
 	                        } catch (e) { }
 	                    }
-	
+	                    
 	                    var rtnVal = ExcuteInfo("INIT", "");
+	                    
 	                    if (!rtnVal) {
 	                        if (OpenInformationUI("<spring:message code='ezApprovalG.t122'/>")) {
 	                            btnClose_onclick();
 	                        }
 	                    }
-	
-	                    if (pDraftFlag != "REDRAFT")
+	                    
+	                    if (pDraftFlag != "REDRAFT") {
 	                        setFirstDrafter();
-	                    else
+	                    } else {
 	                        SignCheck();
-	
+	                    }
+	                    
 	                    HwpCtrl.SetFieldFocus("doctitle");
 	                    HwpCtrl.ezSetScrollPosInfo(0);
 	                    HwpCtrl.SetImgReg();
@@ -899,7 +901,7 @@
 			
 			        var PublicType = pPublicityCode.substring(0, 1);
 			        var PublicLevel = pPublicityCode.substring(1, 9);
-			        var PublicType2 = pPublicityCode2;
+			        //var PublicType2 = pPublicityCode2;
 			        var PublicText = "";
 			
 			        if (pLimitRange != "")
@@ -913,12 +915,12 @@
 					    PublicText = "<spring:message code='ezApprovalG.t46'/>" + getPublicLevel(PublicLevel);
 					else
 					    PublicText = " ";
-			        if (PublicType2 == "1")
-			            PublicText = "<spring:message code='ezApprovalG.t47'/>";
-			        else if (PublicType2 == "2")
-			            PublicText = "<spring:message code='ezApprovalG.t150'/>";
-			        else
-			            PublicText = " ";
+// 			        if (PublicType2 == "1")
+// 			            PublicText = "<spring:message code='ezApprovalG.t47'/>";
+// 			        else if (PublicType2 == "2")
+// 			            PublicText = "<spring:message code='ezApprovalG.t150'/>";
+// 			        else
+// 			            PublicText = " ";
 				    HwpCtrl.SetFieldText("publication", PublicText);
 			
 				} catch (e) {
@@ -931,7 +933,6 @@
 		        if (!HwpCtrl.CheckFieldExist("publication")) return;
 		        var PublicType = pPublicityYN.substring(0, 1);
 
-		        var PublicText = "";
 		        if (PublicType == "Y")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
@@ -1144,13 +1145,14 @@
 			            pSummery = ret[9];
 			            pSpecialRecordCode = ret[10];
 			            pPublicityCode = ret[11];
+			            pPublicityYN = ret[21];
 			            pLimitRange = ret[12];
 			            pPageNum = ret[13];
 			            tempSecurityDate = ret[14];
 			            if (ret[21].substring(0,1) == "N") {
 		                	tempPublic = "N";
 		                }
-			            setPublicFlag2();
+			            setPublicFlag();
 			            SummaryFlag = true;
 			        }
 			    } catch (e) {

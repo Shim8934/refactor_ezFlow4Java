@@ -1077,7 +1077,7 @@
 		        if (!field) return;
 		        var PublicType = pPublicityCode.substring(0, 1);
 		        var PublicLevel = pPublicityCode.substring(1, 9);
-		        var PublicType2 = pPublicityCode2;
+		        // var PublicType2 = pPublicityCode2;
 		        var PublicText = "";
 		        if (pLimitRange != "")
 		            PublicText = " (" + pLimitRange + ")";
@@ -1090,12 +1090,13 @@
 		        else
 		            PublicText = " ";
 		        
-		        if (PublicType2 == "1")
-		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
-		        else if (PublicType2 == "2")
-		            PublicText = "<spring:message code='ezApprovalG.t150'/>";
-		        else
-		            PublicText = " ";
+// 		        if (PublicType2 == "1")
+// 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
+// 		        else if (PublicType2 == "2")
+// 		            PublicText = "<spring:message code='ezApprovalG.t150'/>";
+// 		        else
+// 		            PublicText = " ";
+
 		        field.innerHTML = PublicText;
 		    }
 			
@@ -1424,8 +1425,9 @@
 			                if (ret[21].substring(0,1) == "N") {
 			                	tempPublic = "N";
 			                }
-// 			                setPublicFlag();
-			                setPublicFlag2();
+			                
+ 			                setPublicFlag();
+			                // setPublicFlag2();
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

@@ -564,10 +564,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		//HWP사용유무
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		
-		if (useHWP.equals("")) {
-			useHWP = "NO";
-		}
-
 		//브라우저체크
 		String browser = ClientUtil.getClientInfo(req, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;

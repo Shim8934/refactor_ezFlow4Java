@@ -14,7 +14,7 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 .login_wrapper{height:786px; vertical-align:top; background:url(/images/kr/login/login_wrapper_bg.png) repeat-x;}
 .login_layout{width:1140px; height:786px; margin:0px auto; padding:0px; background:url(/images/kr/login/login_layout_bg.png) no-repeat center center;}
 
-.login_form {float:right; width:320px; height:365px; margin:210px 140px 0px 0px; padding:0px; background:#FFF; font-family:Malgun Gothic, Meiryo UI; box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.19);}
+.login_form {float:right; width:320px; height:365px; margin:205px 150px 0px 0px; padding:0px; background:#FFF; font-family:Malgun Gothic, Meiryo UI; box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.19);}
 .login_form .title{width:173px; height:66px; margin:62px auto 30px; padding:0;}
 .login_form form {width:227px; margin:0 auto 24px; padding:0}
 .login_form form fieldset {margin:0; padding:0px 47px; border:0; clear:both;}
@@ -50,5 +50,5 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 .help span.icon{margin:0px 5px 0px 0px;}
 .help span.txt{border-bottom:1px solid #a0a0a0;}*/
 
-footer{font-size:12px; color:darkolivegreen;}
-footer p{margin:25px 0px 0px 0px; padding:0px; text-align:center;}
+footer{font-size:12px; color:darkgray;}
+footer p{margin:20px 0px 0px 0px; padding:0px; text-align:center;}

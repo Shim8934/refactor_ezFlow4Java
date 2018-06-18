@@ -3,7 +3,7 @@ var xmlhttp;
 
 var delFlag = false;
 
-function CalViewSource() {
+function CalViewSource(chk_str) {
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -12,9 +12,9 @@ function CalViewSource() {
 		data : {
 			STARTDATE : sStartDate,
 			ENDDATE : sEndDate,
-			APP : idtype,
+			APP : chk_str,
 			GROUPID : groupid,
-			IDLIST : (idlist == "") ? idtype : idlist
+			IDLIST : chk_str
 		},
 		success: function(text){
 			if (typeCal == 0) {
@@ -264,7 +264,6 @@ function getCalDayViewSource_after(text) {
 
 
 function tempInsert(objNodes, DataSDT, DataEDT) {
-
     var startHour = parseInt(DataSDT.getHours(), 10);
     var endHour = parseInt(DataEDT.getHours(), 10);
     var startMin = parseInt(DataSDT.getMinutes(), 10);
@@ -559,7 +558,7 @@ function CalDataSize(oAppointment, order, tempData) {
 function CalMonthDataBind(oAppointment) {
 
     var objElm = document.getElementById("TD_" + oAppointment.trID + "_Value");
-    if (objElm) {
+    if (objElm) {    	
 
         var oTr = document.createElement("TR");
         var oTd = document.createElement("TD");
@@ -592,7 +591,7 @@ function CalMonthDataBind(oAppointment) {
         var pSubject;
         if (oAppointment.DateType != 2) {
             pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
-            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject;
+            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
         }
         else {
             pTime = strLang39;
@@ -1425,7 +1424,7 @@ function leadingZeros(n, digits) {
 }
 
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#edf4fd";
+    pThis.style.backgroundColor = "#f0f6ff";
 }
 
 
@@ -1440,7 +1439,7 @@ function Schedule_onMouseClick(event) {
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
         }
 
-        event.style.backgroundColor = "#edf4fd";
+        event.style.backgroundColor = "#f0f6ff";
 
         g_szCurrentApptDivID = GetAttribute(event, "id");
     }
@@ -1491,7 +1490,7 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#edf4fd";
+    tTh.style.background = "#f0f6ff";
     tTh.style.border = "1px solid #d1ddec";
     var oText = document.createTextNode(pSubject);        
     //tTh.innerHTML = pSubject;

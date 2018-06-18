@@ -43,6 +43,7 @@ public class EzMainAdminController {
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
 		
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
+		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
@@ -60,6 +61,7 @@ public class EzMainAdminController {
 		//end
 		
 		model.addAttribute("AdminActiveX", AdminActiveX);
+		model.addAttribute("useHWP", useHWP);
 		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
         

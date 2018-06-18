@@ -6,7 +6,15 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1001' /></title>
 	    <style type="text/css">
-	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
+	         .preView {
+	         	width: 70px;
+	         	height: 70px;
+	         	text-align: center;
+	         	border:1px solid silver;
+	         }
+	          textarea {
+	         	resize:none;
+	         }
 	    </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -39,10 +47,17 @@
 	        var g_fileList;
 	        var pNoneActiveX = "YES";
 	        var pUrl = "";
+	        var lastItemID = "000";
+	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 	                document.getElementById("file1").multiple = false;
+	            }
+	            
+	            // imageID 앞쪽에 순서 숫자 붙은 경우에만 substring하여 마지막 imageID 사용
+	            if ("${lastItemID}" != "") {
+	            	lastItemID = "${lastItemID}".substring(0,3);
 	            }
 	        };
 	
@@ -209,7 +224,7 @@
 	            }
 	        }
 	
-	        function btn_ImgAddOnclick() { 
+	        function btn_ImgAddOnclick() {
 	            var bodycount = document.getElementById("addimagecontent").childNodes.length;
 	            var file = "";
 	            var content = "";
@@ -252,10 +267,11 @@
 	            strXML += "<ITEMID>" + pItemID + "</ITEMID>";
 	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
 	            
+	           	/* 2018-06-08 홍승비 - 사진 추가 시 imageID 순서 유지하며 추가 */
 	            if(filecount > 0)
 	            {
 	                for (var i = 0; i < filecount ; i++) {
-	                    imageid += "{" + GetGUID() + "} " + ";";
+	                    imageid += getZeroNum(i) + "{" + GetGUID() + "}" + ";";
 	                }
 	            }
 	            else{
@@ -432,7 +448,15 @@
 	        function GetGUID() {
 	            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 	        }
-	
+	        
+	        /* 2018-06-08 홍승비 - 사진 추가 시 imageID 순서 유지하며 추가 */
+		    function getZeroNum(count){
+	        	var addCnt =  parseInt(count) + parseInt(lastItemID) + 1;
+		    	var zeroNum = "000" + addCnt;
+		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
+		    	return zeroNum;
+		    }
+	        
 	        function CustomRandom() {
 	            var now = new Date();
 	            var seed = now.getMilliseconds();
@@ -453,7 +477,7 @@
 	            <td style="vertical-align:top" colspan="4">
 	                <div id="menu">
 	                <ul>
-	                    <li ID='btn_Modify' ><span  onclick="btn_ImgAddOnclick()" ><spring:message code='ezBoard.t279'/></span></li>
+	                    <li ID='btn_Modify' ><span  onclick="btn_ImgAddOnclick()" ><spring:message code='ezBoard.t98'/></span></li>
 	                    <li ID='Li1' ><span  onclick="btn_PhotoAttachAdd()" ><spring:message code='ezBoard.t1001'/></span></li>
 	                    <li ID='Li2' ><span  onclick="btn_PhotoAttachDel()" ><spring:message code='ezBoard.t1003'/></span></li>
 	                </ul>
@@ -495,7 +519,7 @@
 	                <div id="lstAttachLink">&nbsp;</div>
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr style="display:none;">
 	            <td>
 	                <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	                <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
