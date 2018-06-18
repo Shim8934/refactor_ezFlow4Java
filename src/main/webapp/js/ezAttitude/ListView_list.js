@@ -152,8 +152,8 @@ function GetOpenWindow2(url, target, popUpW, popUpH, resizeFlag) {
     var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
     var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
     
-    var left = ((screen.width / 2) - (popUpW / 2)) + dualScreenLeft;
-    var top = ((screen.height / 2) - (popUpH / 2)) + dualScreenTop;
+    var left = ((screen.width / 2) - (popUpW / 2)) + dualScreenLeft ;
+    var top = ((screen.height / 2) - (popUpH / 2)) + dualScreenTop - 40;
 
     if (resizeFlag == undefined || resizeFlag.toUpperCase() == "NO")
         resize = "resizable=no";
