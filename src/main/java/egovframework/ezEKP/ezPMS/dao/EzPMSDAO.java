@@ -519,4 +519,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectMemberScheduleVO> getMemberSchedule(Map<String, Object> map) {
 		return (List<ProjectMemberScheduleVO>) list("EzPMSDAO.getMemberSchedule", map);
 	}
+
+	public void addMemberSchedule(Map<String, Object> map) {
+		insert ("EzPMSDAO.addMemberSchedule", map);
+	}
 }

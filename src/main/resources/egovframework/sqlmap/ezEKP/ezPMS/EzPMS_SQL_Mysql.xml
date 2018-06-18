@@ -194,7 +194,7 @@
     	<result property="userId"							column="USER_ID"					columnIndex="1"/>
     	<result property="userName"							column="USER_NAME"					columnIndex="2"/>
     	<result property="deptName"							column="DEPT_NAME"					columnIndex="3"/>
-    	<result property="assingedDate"						column="ASSIGNED_DATE"				columnIndex="4"/>
+    	<result property="assignedDate"						column="ASSIGNED_DATE"				columnIndex="4"/>
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="5"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="6"/>
     </resultMap>
@@ -3281,4 +3281,14 @@
 		AND
 			S.TENANT_ID = M.TENANT_ID
 	</select>
+	
+	<insert id="EzPMSDAO.addMemberSchedule" parameterClass="map">
+	<![CDATA[
+		INSERT INTO TBL_PMS_MEMBERSCHEDULE (
+			PROJECT_ID,		TENANT_ID,		USER_ID,		ASSIGNED_DATE
+		) VALUES (
+			#projectId#,	#tenantId#,		#memberId#,		#assignedDate#
+		)
+	]]>
+	</insert>
 </sqlMap>
