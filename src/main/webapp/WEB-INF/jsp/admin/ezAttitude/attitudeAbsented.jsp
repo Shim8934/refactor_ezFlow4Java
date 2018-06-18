@@ -43,6 +43,7 @@
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartDate = "${searchStartDate}";
 	    	var searchEndDate = "${searchEndDate}";
+	    	var today = "${searchEndDate}";
 	    	var pageNum = 1; // 페이지 ==> 초기값 설정
 	    	var totalCount = "" // 게시물 총 갯수
 	    	var totalPage = ""; // 게시판의 총 페이지갯수
@@ -240,6 +241,7 @@
 	    	}
 	    	
 			function searchAttitudeAbsentedList(searchType){
+				//날짜 형식이 맞는지
 				if (!checkPattern()) {
 					alert("<spring:message code='ezAttitude.t132' />")
 					return;
@@ -251,6 +253,13 @@
 	    			searchTitle = $("#searchTitle").val();
 	    			searchStartDate = $("#Sdatepicker").val();
 	    			searchEndDate = $("#Edatepicker").val();
+	    			
+	    			//오늘 이후 날짜가 포함되어 있으면 검색이 안되게끔.
+	    			if (searchEndDate > today) {
+	    				alert("<spring:message code='ezAttitude.t226' />");
+	    				return;
+	    			}
+	    			
 	    		} else {
 	    			//새로고침
 	    			$("#searchUserName").val("");
