@@ -7,14 +7,19 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code = 'ezAttitude.t123' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
-<!-- 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" /> -->
+		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<!-- 	    <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script> -->
+	    <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	</head>
-	
+	<style>
+		.ui-timepicker-wrapper {
+			height: 76px;
+			top: 13px;
+		}
+	</style>
 	<script type="text/javascript">
 		var gubun = "${vo.gubun}"; //회사규율:0 개인규율:1
 		var companyId = "${companyId}";
@@ -25,8 +30,8 @@
 		
 		$(function() {
 			//timepicker셋팅
-// 	   		$('#workStartTime').timepicker({ 'timeFormat': 'H:i' });
-//     		$('#workEndTime').timepicker({ 'timeFormat': 'H:i' });
+	   		$('#workStartTime').timepicker({ 'timeFormat': 'H:i' });
+    		$('#workEndTime').timepicker({ 'timeFormat': 'H:i' });
     		
 			$("#gubun").on('change', function() {
 				if($("#gubun").is(":checked") == true) {
