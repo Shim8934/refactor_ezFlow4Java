@@ -55,7 +55,7 @@ public interface EzPMSService {
 	
 	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang, String position);
 	
-	public int getTaskListCount(SearchVO search, String userId);
+	public int getTaskListCount(SearchVO search, String userId, int roleId);
 	
 	public int getTaskLogListCount(TaskLogListVO taskLog, int tenantId);
 	
@@ -65,9 +65,9 @@ public interface EzPMSService {
 	
 	public List<String> getProjectNameList(String userId, int tenantId);
 	
-	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location);
+	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location, int roleId);
 	
-	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang);
+	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang, String location);
 	
 	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList, String companyId, int tenantId);
 	
@@ -206,5 +206,7 @@ public interface EzPMSService {
 	public void updateProjectDate(long projectId, int tenantId, String companyId) throws Exception;
 	
 	public ProjectInfoVO getProjectBoundaryDate(long projectId, int tenantId) throws Exception;
+
+	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId);
 
 }

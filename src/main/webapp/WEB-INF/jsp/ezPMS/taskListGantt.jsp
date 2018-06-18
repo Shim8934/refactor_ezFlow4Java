@@ -44,26 +44,22 @@
 		
 	   	<script type="text/javascript">
 	   		// 프로젝트 아이디
-	   		var projectId = "<c:out value='${projectId}'/>",
+	   		var projectId = "<c:out value='${projectId}'/>";
 	   			// 업무 목록
-	   			taskList = {},
+	   		var	taskList = ${taskList};
 	   			// 프로젝트 세부정보
-	   			projectDetails = {},
+	   		var projectDetails = ${projectDetail};
 	   			// 사용자 아이디
-	   	 		userId = "",
-	   			ganttData = {},
-	   			groupList = {},
-	   			ge = "";
+	   	 	var userId = "";
+	   		var ganttData = {};
+	   		var groupList = ${groupList};
+	   		var ge = "";
 	   		
 	   		var projectGroupId = "<c:out value='${projectDetail.groupId}'/>";
 	   		var selectedPreTask = -1;
 	   		var preTaskIndex = -1;
 	   		
-	   		function initValues() {
-	   			taskList = ${taskList};
-	   			projectDetails = ${projectDetail};
-	   			groupList = ${groupList};
-	   			
+	   		function initValues() {	   			
 	   			var tl = taskList;
 	   			var pd = projectDetails;
 	   			const roleName = ["<spring:message code='ezPMS.t63' />", "<spring:message code='ezPMS.t64' />", "<spring:message code='ezPMS.t65' />", "<spring:message code='ezPMS.t195' />"];
@@ -337,7 +333,7 @@
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
-   				DivPopUpShow(845, 555, "/ezPMS/goAddTask.do?projectId=" + projectId);
+   				DivPopUpShow(845, 485, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	   		}
 	   		
 	   		//그룹 추가
@@ -346,7 +342,7 @@
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
-   				DivPopUpShow(684, 384, "/ezPMS/goAddGroup.do?projectId=" + projectId);
+   				DivPopUpShow(700, 417, "/ezPMS/goAddGroup.do?projectId=" + projectId);
 	   		}
 	   		
 	   		//그룹 삭제
@@ -1198,7 +1194,7 @@
 	   							infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[i].duration + "<br>";
-	   							infoHTML += "<spring:message code='ezPMS.t250' /> : " + ge.tasks[i].progress + "<br>";
+	   							infoHTML += "<spring:message code='ezPMS.t250' /> : " + ge.tasks[i].progress + "%";
 	   							infoHTML += "</div>";
 	   						}
 	   					}
@@ -1264,7 +1260,13 @@
 	   			}
 	   		})
 
-	   		
+	   		function getMemberSchedule() {
+   				var top = 10;
+   			    var left = ($(window).width() - $(this).outerWidth()) / 2;
+   				var feature = GetOpenPosition(top, left);
+   			 
+   				DivPopUpShow(1500, 700, "/ezPMS/getMemberSchedule.do?projectId=" + projectId);
+	   		}
 		</script>
 		<style>
 		/* 		  달력 깨지지 않게 하기위함. */
@@ -1328,6 +1330,7 @@
 		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t82' /></span></li>
 		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t287' /></span></li>
 		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t288' /></span></li>
+		        <li><span onclick="getMemberSchedule()">인력관리</span></li>
 		        <div style="float:right">
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
 		       	<spring:message code='ezPMS.t255' />

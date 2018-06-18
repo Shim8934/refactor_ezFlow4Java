@@ -264,17 +264,6 @@ function addTask() {
 			treeDepth : treeDepth
 	}
 	
-	console.log(taskName);
-	console.log(projectId);
-	console.log(groupId);
-	console.log(planStartDate);
-	console.log(planEndDate);
-	console.log(overview);
-	console.log(headManagerId);
-	console.log(managerList);
-	console.log(weight);
-	console.log(writerId);
-	
 	$.ajax({
 		type : "POST",
 		url : "/ezPMS/addTask.do",

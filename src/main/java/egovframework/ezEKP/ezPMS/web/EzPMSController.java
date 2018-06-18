@@ -12,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.jni.Status;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -1679,5 +1680,31 @@ public class EzPMSController {
 		commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
 		
 		return null;
+	}
+	
+
+	
+	@RequestMapping(value="/ezPMS/getMemberSchedule.do")
+	public String getMemberSchedule(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getMemberSchedule started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		long projectId = Long.parseLong(request.getParameter("projectId"));
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		String url = "/rest/ezPMS/projects/" + projectId + "/management/members";
+		param.put("userId", userId);
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) result.get("data");
+			model.addAttribute("memberList", data.get("memberList"));
+			model.addAttribute("dateList", data.get("dateList"));
+		}
+		
+		LOGGER.debug("ezPMS getMemberSchedule ended");
+		return "ezPMS/pmsMemberSchedule";
 	}
 }

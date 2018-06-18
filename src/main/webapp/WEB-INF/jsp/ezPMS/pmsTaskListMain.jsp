@@ -51,7 +51,7 @@
 		var left = ($(window).width() - $(this).outerWidth()) / 2;
 		var feature = GetOpenPosition(top, left);
 
-		DivPopUpShow(845, 478, "/ezPMS/goAddTask.do?projectId=" + projectId);
+		DivPopUpShow(845, 482, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	};
 
 	$(function() {

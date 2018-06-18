@@ -335,11 +335,11 @@ public class EzPMSController2 {
 			model.addAttribute("groupList", resultBodyGroup.get("data"));
 		}
 		
-		model.addAttribute("projectId", projectId);
 		if(taskStatus != null){
 			model.addAttribute("taskStatus", taskStatus);
 		}
-		
+
+		model.addAttribute("projectId", projectId);
 		LOGGER.debug("ezPMS getProjectForGantt ended");
 		
 		return "/ezPMS/taskListGantt";
@@ -822,5 +822,4 @@ public class EzPMSController2 {
 		
 		return "json";
 	}
-	
 }

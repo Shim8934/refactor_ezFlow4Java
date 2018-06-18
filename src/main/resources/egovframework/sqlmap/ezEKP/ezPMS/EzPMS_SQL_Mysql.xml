@@ -191,11 +191,12 @@
     </resultMap>
    
     <resultMap id="projectMemberScheduleVO" class="ProjectMemberScheduleVO">
-    
-    </resultMap>
-    
-    <resultMap id="ProjectSearchVO" class="ProjectSearchVO">
-    
+    	<result property="userId"							column="USER_ID"					columnIndex="1"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="2"/>
+    	<result property="deptName"							column="DEPT_NAME"					columnIndex="3"/>
+    	<result property="assingedDate"						column="ASSIGNED_DATE"				columnIndex="4"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="5"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="6"/>
     </resultMap>
     
     <resultMap id="ProjectTaskLogListVO" class="ProjectTaskLogListVO">
@@ -1195,10 +1196,12 @@
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND
-				C.USER_ID = #userId#
-			AND
 				A.DEL_STATUS = 0
 		]]>
+		<isNotEqual property="roleId" compareValue="3">
+			AND
+				C.USER_ID = #userId#
+		</isNotEqual>
 		<isNotEqual property="projectId" compareValue="0">
 			AND  
 				A.PROJECT_ID = #projectId#
@@ -1389,9 +1392,11 @@
 				tbl_pms_taskmember	
 			WHERE	
 				TENANT_ID = #tenantId#
+		]]>
+		<isEmpty property="taskId">
 			AND
 				TASK_ID = #taskId#
-		]]>
+		</isEmpty>
 	</select>
 	
 	<delete id="EzPMSDAO.deleteProjectMember" parameterClass="map">
@@ -1968,17 +1973,22 @@
 				TBL_PMS_GROUP B
 			ON
 				A.UPPER_GROUP_ID = B.GROUP_ID
+		]]>
+			<isEqual property="location" compareValue="general">
 			JOIN
 				TBL_PMS_GROUPMEMBER M
 			ON
 				A.GROUP_ID = M.GROUP_ID
-			WHERE
-				A.TENANT_ID = #tenantId#
-			AND
+			WHERE 
 				M.MEMBER_ROLE_ID = 1
+			AND
+			</isEqual>
+			<isNotEqual property="location" compareValue="general">
+			WHERE
+			</isNotEqual>
+				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0
-		]]>
 			<isNotEqual property="projectId" compareValue="0">
 			AND
 				A.PROJECT_ID = #projectId#
@@ -2123,11 +2133,13 @@
 				A.TASK_ID = E.TASK_ID
 			WHERE 
 				A.TENANT_ID = #tenantId#
-			AND
-				C.USER_ID = #userId#
 			AND	
 				A.DEL_STATUS = 0
 		]]>
+		<isNotEqual property="roleId" compareValue="3">
+			AND
+				C.USER_ID = #userId#
+		</isNotEqual>
 		<isNotEqual property="projectId" compareValue="0">
 			AND  
 				A.PROJECT_ID = #projectId#
@@ -3250,5 +3262,23 @@
 			AND
 				TENANT_ID = #tenantId#
 		 ]]>
+	</select>
+	
+	<select id="EzPMSDAO.getMemberSchedule" parameterClass="map" resultMap="projectMemberScheduleVO">
+		SELECT	
+			S.USER_ID,
+			S.ASSIGNED_DATE,
+			S.PROJECT_ID,
+			S.TENANT_ID,
+			M.USER_NAME$lang$ AS USER_NAME,
+			M.DEPT_NAME$lang$ AS DEPT_NAME
+		FROM
+			TBL_PMS_MEMBERSCHEDULE S
+		JOIN
+			TBL_USERMASTER M
+		ON
+			S.USER_ID = M.CN
+		AND
+			S.TENANT_ID = M.TENANT_ID
 	</select>
 </sqlMap>

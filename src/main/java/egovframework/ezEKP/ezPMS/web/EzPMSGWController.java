@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
@@ -462,8 +463,13 @@ public class EzPMSGWController {
 				ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, tenantId, "user");
 				
 				if (kanbanOrder == null || kanbanOrder.equals("")) {
-					//default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
-					kanbanOrder = "MA,P,C,B";
+					if (userRole == 3) {
+						//조회자 default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
+						kanbanOrder = "A,P,C,B";
+					} else {
+						//default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
+						kanbanOrder = "MA,P,C,B";
+					}
 				}
 				
 				data.put("project", project);
@@ -575,12 +581,17 @@ public class EzPMSGWController {
 				if (imagePath != null && !imagePath.equals("")) {
 					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId)+ commonUtil.separator + imagePath;
 					String fullPath = request.getServletContext().getRealPath(realPath);
-				
+										
 					if (fullPath != null || !fullPath.equals("")) {
 						member.setUserImage("/ezCommon/downloadAttach.do?filePath=" + realPath);
 					} else {
 						member.setUserImage("/images/poll/default_pic_vote.gif");
 					}
+
+					if (member.getUserIdType().equals("dept")) {
+						member.setUserImage("/images/poll/default_pic_vote.gif");
+					}
+					
 				} else {
 					member.setUserImage("/images/poll/default_pic_vote.gif");
 				}
@@ -903,6 +914,7 @@ public class EzPMSGWController {
 			String status = request.getParameter("status");
 			String isMyTask = request.getParameter("isMyTask");
 			long groupId = 0;
+			int roleId = ezPMSService.getUserProjectRole(userId, info.getTenantId(), projectId, info.getDeptId());
 			
 			if (request.getParameter("groupId") != null) {
 				 groupId = Long.parseLong(request.getParameter("groupId")); 
@@ -922,7 +934,7 @@ public class EzPMSGWController {
 			search.setProjectName(request.getParameter("searchByProjectName"));
 			search.setTaskName(request.getParameter("searchByTaskName"));
 			
-			int taskListCount = ezPMSService.getTaskListCount(search, userId);
+			int taskListCount = ezPMSService.getTaskListCount(search, userId, roleId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1533,6 +1545,46 @@ public class EzPMSGWController {
 				result.put("data", "");
 			}
 			
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] ended.");
+			return result;
+		}
+		
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/management/members", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+		public JSONObject getMemberSchedule(@PathVariable long projectId, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] started.");
+			
+			JSONObject result = new JSONObject();
+
+			try {
+				String userId = request.getParameter("userId");
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+				int tenantId = info.getTenantId();
+				String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+				
+				ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, "gantt", lang, info.getDeptId(), info.getCompanyId());
+				String planStartDate = project.getPlanStartDate();
+				String planEndDate = project.getPlanEndDate();
+				List<ProjectMemberVO> memberList = project.getProjectMember();
+				List<ProjectMemberScheduleVO> memberScheduleList = ezPMSService.getMemberSchedule(projectId, tenantId);
+				
+				JSONObject data = new JSONObject();
+				data.put("planStartDate", planStartDate);
+				data.put("planEndDate", planEndDate);
+				data.put("memberList", memberList);
+				data.put("memberScheduleVO", memberScheduleList);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", data);
+			} catch (Exception e) {
+				e.printStackTrace();
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+			}
+		
 			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] ended.");
 			return result;
 		}
