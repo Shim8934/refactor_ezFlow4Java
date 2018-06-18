@@ -179,13 +179,13 @@
 		}
 		 
 		// 가중치 검사
-		realProgress = realProgress.replace(/%/,"").match(/\d+[.]\d/)[0];
+		realProgress = realProgress.replace(/%/,"");
 		if (realProgress != taskDetails.realProgress) {
 			if (realProgress == "") {
 				alert("<spring:message code='ezPMS.t189' />");
 				return;
 			}
-			else if (isNaN(realProgress)) {
+			else if (isNaN(Number(realProgress))) {
 				alert("<spring:message code='ezPMS.t249' />");
 				return;
 			}
