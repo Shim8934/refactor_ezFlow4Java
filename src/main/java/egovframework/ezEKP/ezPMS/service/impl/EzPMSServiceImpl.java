@@ -737,8 +737,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
 		
 		String pretaskId = taskDetails.getPretask();
+		String pregroupId = taskDetails.getPregroup();
 		
-		if(pretaskId != null) {
+		if(pretaskId != null || pregroupId != null) {
 			
 			Long projectId = taskDetails.getProjectId();
 			param.put("projectId", projectId);
@@ -752,9 +753,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				pretaskName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
 			}
 			
-			param.put("taskId", pretaskId);
-			
-			pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
+			if(pretaskId != null) {
+				param.put("taskId", pretaskId);	
+				pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
+			} else {
+				pretaskName = pretaskName.substring(0, pretaskName.lastIndexOf(">") - 1);
+			}
 			
 			taskDetails.setPretaskName(pretaskName);
 		}

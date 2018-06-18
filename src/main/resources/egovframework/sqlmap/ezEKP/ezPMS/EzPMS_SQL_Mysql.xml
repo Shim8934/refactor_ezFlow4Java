@@ -2089,7 +2089,7 @@
 			LEFT JOIN
 				tbl_pms_group PG
 			ON 
-				PT.group_id = PG.group_id
+				IFNULL(PT.group_id, R.pregroup) = PG.group_id
 			WHERE
 				A.TASK_ID = #taskId#
 			AND
