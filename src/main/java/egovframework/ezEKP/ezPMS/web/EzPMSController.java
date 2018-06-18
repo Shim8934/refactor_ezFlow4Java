@@ -1701,7 +1701,9 @@ public class EzPMSController {
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) result.get("data");
 			model.addAttribute("memberList", data.get("memberList"));
-			model.addAttribute("dateList", data.get("dateList"));
+			model.addAttribute("memberScheduleList", data.get("memberScheduleList"));
+			model.addAttribute("planStartDate", data.get("planStartDate"));
+			model.addAttribute("planEndDate", data.get("planEndDate"));
 		}
 		
 		LOGGER.debug("ezPMS getMemberSchedule ended");

@@ -226,8 +226,12 @@ public class EzPMSGWController2 {
 			List<String> dateList = new ArrayList<String>();
 			
 			while (startCal.compareTo(endCal) != 1) {
-				dateList.add(dateFormat.format(startCal.getTime()));			
-				startCal.add(Calendar.DATE, 1);
+				if (startCal.get(Calendar.DAY_OF_WEEK) == 1 || startCal.get(Calendar.DAY_OF_WEEK) == 7) {	
+					startCal.add(Calendar.DATE, 1);
+				} else {
+					dateList.add(dateFormat.format(startCal.getTime()));		
+					startCal.add(Calendar.DATE, 1);
+				}
 			}
 			
 			for (int i = 0; i < taskMemberList2.size(); i++) {

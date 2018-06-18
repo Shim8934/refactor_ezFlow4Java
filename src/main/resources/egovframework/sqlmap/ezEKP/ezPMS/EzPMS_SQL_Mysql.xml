@@ -1393,10 +1393,10 @@
 			WHERE	
 				TENANT_ID = #tenantId#
 		]]>
-		<isEmpty property="taskId">
+		<isNotEmpty property="taskId">
 			AND
 				TASK_ID = #taskId#
-		</isEmpty>
+		</isNotEmpty>
 	</select>
 	
 	<delete id="EzPMSDAO.deleteProjectMember" parameterClass="map">
@@ -3270,8 +3270,8 @@
 			S.ASSIGNED_DATE,
 			S.PROJECT_ID,
 			S.TENANT_ID,
-			M.USER_NAME$lang$ AS USER_NAME,
-			M.DEPT_NAME$lang$ AS DEPT_NAME
+			M.DISPLAYNAME$lang$ AS USER_NAME,
+			M.DESCRIPTION$lang$ AS DEPT_NAME
 		FROM
 			TBL_PMS_MEMBERSCHEDULE S
 		JOIN
@@ -3280,6 +3280,10 @@
 			S.USER_ID = M.CN
 		AND
 			S.TENANT_ID = M.TENANT_ID
+		WHERE
+			S.PROJECT_ID = #projectId#
+		AND	
+			S.TENANT_ID	= #tenantId#
 	</select>
 	
 	<insert id="EzPMSDAO.addMemberSchedule" parameterClass="map">

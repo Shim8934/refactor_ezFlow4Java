@@ -2408,12 +2408,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId) {
+	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId, String lang) {
 		LOGGER.debug("[SERVICE] getMemberSchedule started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-
+		map.put("lang", lang);
+		
 		LOGGER.debug("[SERVICE] getMemberSchedule ended.");
 		return ezPMSDAO.getMemberSchedule(map);
 	}

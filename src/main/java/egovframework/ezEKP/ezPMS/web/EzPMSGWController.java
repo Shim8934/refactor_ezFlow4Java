@@ -1567,13 +1567,13 @@ public class EzPMSGWController {
 				String planStartDate = project.getPlanStartDate();
 				String planEndDate = project.getPlanEndDate();
 				List<ProjectMemberVO> memberList = project.getProjectMember();
-				List<ProjectMemberScheduleVO> memberScheduleList = ezPMSService.getMemberSchedule(projectId, tenantId);
+				List<ProjectMemberScheduleVO> memberScheduleList = ezPMSService.getMemberSchedule(projectId, tenantId, lang);
 				
 				JSONObject data = new JSONObject();
 				data.put("planStartDate", planStartDate);
 				data.put("planEndDate", planEndDate);
 				data.put("memberList", memberList);
-				data.put("memberScheduleVO", memberScheduleList);
+				data.put("memberScheduleList", memberScheduleList);
 				
 				result.put("status", "ok");
 				result.put("code", 0);
