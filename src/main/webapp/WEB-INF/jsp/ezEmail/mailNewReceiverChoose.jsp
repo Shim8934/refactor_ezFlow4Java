@@ -250,8 +250,10 @@
 	            }
 	            
 	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	            $("#listType1 .receiver_borderbox tbody").sortable({
-	            	connectWith: "#MsgToList tbody, #MsgCCList tbody, #MsgBCCList tbody"   
+	            $("#listType1 .receiver_borderbox div").multisortable({
+	            	connectWith: "tbody",
+	            	items : "tr",
+	            	opacity: 0.3
 	            });
 	           /*  $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
