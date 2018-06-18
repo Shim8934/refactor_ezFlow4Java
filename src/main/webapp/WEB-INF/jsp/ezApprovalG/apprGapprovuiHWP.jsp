@@ -1170,9 +1170,9 @@
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
-			                //문서 공개 범위 설정
-// 			                setPublicFlag();
-			                setPublicFlag2();
+			                // 문서 공개 범위 설정 (대민 공개 여부)
+			                // setPublicFlag2();
+			                setPublicFlag();
 			                
 			                SummaryFlag = true;
 			                savexmlhttp = null;

@@ -1434,7 +1434,7 @@
 			                pPageNum = ret[13];
 			                //문서 공개 범위 설정
 			                //setPublicFlag();
-			                setPublicFlag2();
+			                setPublicFlag();
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

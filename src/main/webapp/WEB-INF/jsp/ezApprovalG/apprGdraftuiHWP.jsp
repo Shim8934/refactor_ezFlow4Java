@@ -901,7 +901,7 @@
 			
 			        var PublicType = pPublicityCode.substring(0, 1);
 			        var PublicLevel = pPublicityCode.substring(1, 9);
-			        var PublicType2 = pPublicityCode2;
+			        //var PublicType2 = pPublicityCode2;
 			        var PublicText = "";
 			
 			        if (pLimitRange != "")
@@ -915,12 +915,12 @@
 					    PublicText = "<spring:message code='ezApprovalG.t46'/>" + getPublicLevel(PublicLevel);
 					else
 					    PublicText = " ";
-			        if (PublicType2 == "1")
-			            PublicText = "<spring:message code='ezApprovalG.t47'/>";
-			        else if (PublicType2 == "2")
-			            PublicText = "<spring:message code='ezApprovalG.t150'/>";
-			        else
-			            PublicText = " ";
+// 			        if (PublicType2 == "1")
+// 			            PublicText = "<spring:message code='ezApprovalG.t47'/>";
+// 			        else if (PublicType2 == "2")
+// 			            PublicText = "<spring:message code='ezApprovalG.t150'/>";
+// 			        else
+// 			            PublicText = " ";
 				    HwpCtrl.SetFieldText("publication", PublicText);
 			
 				} catch (e) {
@@ -1152,7 +1152,7 @@
 			            if (ret[21].substring(0,1) == "N") {
 		                	tempPublic = "N";
 		                }
-			            setPublicFlag2();
+			            setPublicFlag();
 			            SummaryFlag = true;
 			        }
 			    } catch (e) {
