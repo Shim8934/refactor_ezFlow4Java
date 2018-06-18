@@ -1198,7 +1198,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list { list-style: none; margin: 0px; padding: 0px; }
 .kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list .kk_date_format_item { cursor: pointer; height: 25px; line-height: 25px; font-size: 13px; color: #6e6e6e; text-align: left; padding-left: 13px; border-bottom: 1px dotted #dddddd;}
 .kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list .kk_date_format_item.date_format_item_selected { background-color: #6f6f6f; color: #ffffff; }
-.kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list .kk_date_format_item:hover { background-color: #e6e6e6; color: #000000; }
+.kk_editor .kk_editor_dialog .kk_dialog_date_format .kk_dialog_contents .kk_date_format_list .kk_date_format_item:hover { background-color: #e8e8e8; color: #000000; }
 
 .kk_editor .kk_editor_dialog .kk_dialog_file_open { }
 .kk_editor .kk_editor_dialog .kk_dialog_file_open .kk_file_open_path_label { margin-right: 15px; display: inline-block; vertical-align: middle; padding-left: 10px; }
@@ -1470,7 +1470,7 @@ body{
 .kk_context_menu .context-menu-icon.context-menu-hover:before {color: #fff;}
 .kk_context_menu .context-menu-icon.context-menu-disabled::before {color: #bbb;}
 .kk_context_menu .context-menu-item { position: relative; padding: 2px 0px 2px 31px; color: #2f2f2f; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: #fff; }
-.kk_context_menu .context-menu-separator { padding: 0; margin: .2em 0; border-bottom: 1px solid #e6e6e6; }
+.kk_context_menu .context-menu-separator { padding: 0; margin: .2em 0; border-bottom: 1px solid #e8e8e8; }
 .kk_context_menu .context-menu-item > label > input,
 .kk_context_menu .context-menu-item > label > textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
 .kk_context_menu .context-menu-item.context-menu-hover { color: #fff; cursor: pointer; background-color: #2980b9; }

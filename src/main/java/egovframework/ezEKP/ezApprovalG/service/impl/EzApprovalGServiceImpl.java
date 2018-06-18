@@ -4954,7 +4954,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			curSN = "1";
 		}
 		map.put("v_RtnSN", curSN);
-		ezApprovalGDAO.insertTbSerialNumGen(map);
+		// 2018-06-15 황윤호 
+		// 기록물철 인수인계시, 인수받은 부서에 중복된 REGSERIALNO 값 때문에 
+		// 새로운 기록물철 생성이 안됨(주석처리)
+//		ezApprovalGDAO.insertTbSerialNumGen(map);
 		ezApprovalGDAO.updateTbSerialNumGen(map);
 		
 		StringBuffer rowID = new StringBuffer();
