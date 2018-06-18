@@ -167,6 +167,8 @@ public class EzPMSGWController2 {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
+			String planStartDate = request.getParameter("planStartDate");
+			String planEndDate = request.getParameter("planEndDate");
 			
 			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam.get("managerList");
 			List<TaskMemberVO> taskMemberList2 = new ArrayList<TaskMemberVO>();
@@ -196,8 +198,8 @@ public class EzPMSGWController2 {
 			projectTaskVO.setProjectId(Long.parseLong(projectId));
 			projectTaskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
 			projectTaskVO.setTaskName(request.getParameter("taskName"));
-			projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
-			projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+			projectTaskVO.setPlanStartDate(planStartDate);
+			projectTaskVO.setPlanEndDate(planEndDate);
 			projectTaskVO.setWeight(Float.parseFloat(request.getParameter("weight")));
 			projectTaskVO.setOverview(request.getParameter("overview"));
 			projectTaskVO.setHeadManagerId(request.getParameter("headManagerId"));
@@ -211,6 +213,31 @@ public class EzPMSGWController2 {
 			
 			int taskId = ezPMSService.addTask(projectTaskVO, taskMemberList2, companyId, tenantId);
 			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate = dateFormat.parse(planStartDate);
+			Date endDate = dateFormat.parse(planEndDate);
+			
+			Calendar startCal = Calendar.getInstance();
+			Calendar endCal = Calendar.getInstance();
+			
+			startCal.setTime(startDate);
+			endCal.setTime(endDate);
+			
+			List<String> dateList = new ArrayList<String>();
+			
+			while (startCal.compareTo(endCal) != 1) {
+				dateList.add(dateFormat.format(startCal.getTime()));
+				System.out.println(dateFormat.format(startCal.getTime()));
+				startCal.add(Calendar.DATE, 1);
+			}
+			
+			for (int i = 0; i < taskMemberList2.size(); i++) {
+				String memberId = taskMemberList2.get(i).getUserId();
+				LOGGER.debug(memberId);
+				for (int j = 0; j < dateList.size(); j++) {
+					ezPMSService.addMemberSchedule(memberId, tenantId, dateList.get(j), projectId);
+				}
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);

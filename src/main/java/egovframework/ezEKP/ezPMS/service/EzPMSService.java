@@ -209,4 +209,6 @@ public interface EzPMSService {
 
 	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId);
 
+	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, String projectId);
+
 }

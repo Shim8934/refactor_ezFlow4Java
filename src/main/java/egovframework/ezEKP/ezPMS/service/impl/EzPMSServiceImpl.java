@@ -2417,4 +2417,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getMemberSchedule ended.");
 		return ezPMSDAO.getMemberSchedule(map);
 	}
+
+	@Override
+	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, String projectId) {
+		LOGGER.debug("[SERVICE] addMemberSchedule started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("memberId", memberId);
+		map.put("assignedDate", assignedDate);
+		
+		ezPMSDAO.addMemberSchedule(map);
+		LOGGER.debug("[SERVICE] addMemberSchedule ended.");
+	}
 }
