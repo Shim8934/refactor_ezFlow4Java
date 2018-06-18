@@ -233,13 +233,15 @@
 	    	function editUserConf(selectedUserIdList) {
     			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectedUserIdList=" + selectedUserIdList + "&companyId=" + pCompanyId;
 	    		
-	    		if (CrossYN()) {
-	    			OpenWin = GetOpenWindow2(url, "", "340", "180");
+    			window.open(url, "", GetOpenWindowfeature(340, 180));
+    			
+// 	    		if (CrossYN()) {
+// 	    			OpenWin = GetOpenWindow2(url, "", "340", "180");
 	    			
-	    			try { OpenWin.focus();} catch (e) { }
-	    		} else {
-	    			showModalDialog(url, null, "dialogWidth:340px; dialogHeight:180px; status:no; help:no; scroll:no; edge:sunken");
-	    		}
+// 	    			try { OpenWin.focus();} catch (e) { }
+// 	    		} else {
+// 	    			showModalDialog(url, null, "dialogWidth:340px; dialogHeight:180px; status:no; help:no; scroll:no; edge:sunken");
+// 	    		}
 	    	}
 	    	
 	    	function userDbClick() {
@@ -279,13 +281,15 @@
 	    	function editDeptConfList() {
     			var url = "/admin/ezAttitude/editAttitudeDeptConf.do?companyId=" + pCompanyId;
 	    		
-	    		if (CrossYN()) {
-	    			OpenWin = GetOpenWindow2(url, "", "500", "652");
+    			window.open(url, "", GetOpenWindowfeature(500, 652));
+    			
+// 	    		if (CrossYN()) {
+// 	    			OpenWin = GetOpenWindow2(url, "", "500", "652");
 	    			
-	    			try { OpenWin.focus();} catch (e) { }
-	    		} else {
-	    			showModalDialog(url, null, "dialogWidth:500px; dialogHeight:652px; status:no; help:no; scroll:no; edge:sunken");
-	    		}
+// 	    			try { OpenWin.focus();} catch (e) { }
+// 	    		} else {
+// 	    			showModalDialog(url, null, "dialogWidth:500px; dialogHeight:652px; status:no; help:no; scroll:no; edge:sunken");
+// 	    		}
 	    	}
 	    </script>
 	</head>
