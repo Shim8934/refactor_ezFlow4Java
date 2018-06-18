@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.t201' /></title>
+		<title><spring:message code='ezAttitude.t225' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
@@ -165,7 +165,7 @@
 	   				},
 	   				success: function(result){
 						if (result == "ok") {
-							alert("저장되었습니다");
+							alert("<spring:message code='ezAttitude.t155' />");
 							opener.getUserConfList();
 		   					window.close();
 						} else {
@@ -191,7 +191,7 @@
 	</head>
 	
 	<body class="popup">
-        <h1><spring:message code='ezAttitude.t201' /></h1>
+        <h1><spring:message code='ezAttitude.t225' /></h1>
        	<table>
             <tr>
                 <td class="box" style="width: 250px; height: 465px;">
