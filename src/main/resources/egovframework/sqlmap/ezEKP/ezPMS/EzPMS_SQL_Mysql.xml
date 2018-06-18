@@ -903,17 +903,21 @@
 			SET
 				workingday = workingday + #workingday#
 			WHERE
-				project_id = #projectId#			
+				project_id = #projectId#
+			AND
+				tenant_id = #tenantId#
 		]]>
 	</update>
 	
-	<select id="EzPMSDAO.getProjectWorkingday" parameterClass="String" resultClass="int">
+	<select id="EzPMSDAO.getProjectWorkingday" parameterClass="ProjectTaskVO" resultClass="int">
 		SELECT
 			workingday
 		FROM
 			tbl_pms_project
 		WHERE
 			project_id = #projectId#
+		AND
+			tenant_id = #tenantId#
 	</select>
 	
 	<update id="EzPMSDAO.updateTaskWDNW" parameterClass="Map">
