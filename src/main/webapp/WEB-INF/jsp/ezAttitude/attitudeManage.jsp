@@ -265,8 +265,6 @@
 	        }
 	        
 	        function getList() {
-	        	layerHidden();
-	        	
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
 	    			getAttitudeCheckList();
@@ -296,6 +294,7 @@
 					alert("<spring:message code='ezAttitude.t131' />");
 		            return;
 				}
+	    		layerHidden();
 	    		
 	    		$.ajax({
 	    			data : "GET",
@@ -381,6 +380,7 @@
 					alert("<spring:message code='ezAttitude.t55'/>");
 		            return;
 				}
+	    		layerHidden();
 	    		
 	    		$.ajax({
 					type : "post",
@@ -456,6 +456,7 @@
 					alert("<spring:message code='ezAttitude.t131' />");
 		            return;
 				}
+	    		layerHidden();
 	    		
 	    		$.ajax({
 	    			data : "GET",
