@@ -2982,7 +2982,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_ReceiptMemberName2", "");
 						map.put("v_ProcessDate", "NULL");
 						map.put("v_ReceiptMemberJobTitle", "");
-						map.put("v_ReceiptMemberJobTitle", "");
+						map.put("v_ReceiptMemberJobTitle2", "");
 						map.put("v_DeptMemberSN", j);
 						map.put("v_TENANTID", tenantID);
 						
