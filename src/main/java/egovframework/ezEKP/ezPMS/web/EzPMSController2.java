@@ -307,9 +307,11 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String projectId = request.getParameter("projectId");
+		String taskStatus = request.getParameter("status");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("position", "gantt");
+		param.put("status", taskStatus);
 		
 		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBodyTask.get("status").toString();
@@ -334,6 +336,9 @@ public class EzPMSController2 {
 		}
 		
 		model.addAttribute("projectId", projectId);
+		if(taskStatus != null){
+			model.addAttribute("taskStatus", taskStatus);
+		}
 		
 		LOGGER.debug("ezPMS getProjectForGantt ended");
 		
