@@ -18,6 +18,12 @@ var memberList = '${memberList}';
 var memberScheduleList = '${memberScheduleList}';
 var planStartDate = '${planStartDate}';
 var planEndDate = '${planEndDate}';
+var dateList = [];
+
+$(function() {
+	getDateRange(planStartDate, planEndDate, dateList);
+	//getDateRange('2017-02-01', '2017-02-05', dateList);
+});
 
 function getDateRange(startDate, endDate, listDate) {
 
@@ -26,21 +32,38 @@ function getDateRange(startDate, endDate, listDate) {
 
     if (startDate == endDate) {
         var strDate = dateMove.toISOString().slice(0,10);
+        $("#dateList").append("<th>" + strDate + "</th>");
         listDate.push(strDate);
     } else {
         while (strDate < endDate) {
+        	console.log(dateMove.toISOString());
             var strDate = dateMove.toISOString().slice(0, 10);
+            $("#dateList").append("<th>" + strDate + "</th>");
             listDate.push(strDate);
             dateMove.setDate(dateMove.getDate() + 1);
         }
     }
     return listDate;
 };
+
+function setMemberSchedule() {
+	
+}
 </script>
 <style type="text/css">
 #memberTable {
 	margin-left : 5px;
 	display : inline-block;
+	width : 30%;
+	overflow : auto;
+	height : 100%;
+}
+
+#calendar {
+	width : 68%;
+	overflow : auto;
+	display : inline-block;
+	height : 100%;
 }
 </style>
 </head>
@@ -51,19 +74,22 @@ function getDateRange(startDate, endDate, listDate) {
 </ul>
 </div>
 <div id="memberTable">
-	<table class="content" style="width:30%">
+	<table class="content" style="width : 100%">
 	<tr>
 		<th>이름</th>
 		<th>부서</th>
 	</tr>
+	<c:forEach items="${memberList }" var="member">
+	<tr>
+		<td>memberList.userName</td>
+		
+	</tr>
+	</c:forEach>
 	</table>
 </div>
 <div id="calendar">
 	<table class="content">
-	<tr>
-	<c:forEach items="${memberList }" var="project">
-	
-	</c:forEach>
+	<tr id="dateList">
 	</tr>
 	</table>
 </div>
