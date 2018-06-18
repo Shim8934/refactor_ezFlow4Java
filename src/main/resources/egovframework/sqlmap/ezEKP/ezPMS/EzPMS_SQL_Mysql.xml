@@ -2634,9 +2634,24 @@
 	<insert id="EzPMSDAO.addPreTaskRel" parameterClass="map">
 	<![CDATA[
 		INSERT INTO TBL_PMS_PRETASKREL (
-			PRETASK, TASK_ID, TENANT_ID, PROJECT_ID
+	]]>
+	<isEqual property="type" compareValue="task2task">
+		PRETASK, TASK_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="group2task">
+		PREGROUP, TASK_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="task2group">
+		PRETASK, GROUP_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="group2group">
+		PREGROUP, GROUP_ID, 
+	</isEqual>
+			
+	<![CDATA[
+			TENANT_ID, PROJECT_ID
 		) VALUES (
-			#rowIndexId#, #taskId#, #tenantId#, #projectId#
+			#pretaskId#, #taskId#, #tenantId#, #projectId#
 		)				
 	]]>
 	</insert>

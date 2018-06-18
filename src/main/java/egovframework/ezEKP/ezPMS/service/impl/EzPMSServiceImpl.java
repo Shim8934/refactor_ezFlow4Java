@@ -1033,7 +1033,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					taskGroupCount = ezPMSDAO.getBoardListCount(map);
 				} else if (location.equals("comment")) {
 					taskGroupCount = ezPMSDAO.getCommentListCount(map);
-					System.out.println("======================================" + taskGroupCount);
 				}
 			}
 
@@ -1975,13 +1974,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addPreTaskRel(long taskId, int rowIndexId, long projectId, int tenantId) {
+	public void addPreTaskRel(long taskId, int pretaskId, long projectId, int tenantId, String type) {
 		LOGGER.debug("[SERVICE] addPreTaskRel started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskId", taskId);
-		map.put("rowIndexId", rowIndexId);
+		map.put("pretaskId", pretaskId);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
+		map.put("type", type);
 
 		ezPMSDAO.addPreTaskRel(map);
 		LOGGER.debug("[SERVICE] addPreTaskRel ended.");
@@ -2042,7 +2042,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] addComment ended.");
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteComment(int tenantId, JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] deleteComment started");

@@ -560,21 +560,15 @@
 	   			  var startDate = dateToYYYYMMDD(new Date(preTask.end + (1 * 24 * 60 * 60 * 1000)));
 	   			  var endDate = dateToYYYYMMDD(new Date(preTask.end + (task.duration * 24 * 60 * 60 * 1000)));
 	   			  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
+	   			  var groupId = task.id.match(/g(\d+)/) != null? task.id.match(/g(\d+)/)[1] : projectGroupId;
 	   			  var preTaskRowIndex = task.depends;
-	   			  var preTaskIdStr = preTask.id;
-	   			  var preTaskId = preTaskIdStr.substring(preTaskIdStr.lastIndexOf('t') + 1);
+	   			  var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
+	   			  var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
 	   			  var progress = task.progress;
 	   			  var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
-	   			  var groupId = -1;
 	   			  
-	   			  if (task.id.match(/g(\d+)/) != null) {
-	   				groupId = task.id.match(/g(\d+)/)[1];
-	   			  } else {
-	   				groupId = projectGroupId;
-	   			  }
-	   			  
-	   			  addPreTaskRel(projectId, taskId, preTaskId, startDate, endDate, progress, task.name, preTaskRowName, groupId);
+	   			  addPreTaskRel(projectId, taskId, preTaskId, startDate, endDate, progress, task.name, preTaskRowName, groupId, preGroupId);
 	   			  
 	   			  return task.moveTo(task.start,false,true);
 	   			};
@@ -615,14 +609,34 @@
 	   			};
 	   		}
 	   		
-	   		function addPreTaskRel (projectId, taskId, preTaskId, startDate, endDate, progress, taskName, preTaskRowName, groupId) {
+	   		function addPreTaskRel (projectId, taskId, preTaskId, startDate, endDate, progress, taskName, preTaskRowName, groupId, preGroupId) {
+	   			
+	   			var type;
+	   			var taskIdParam = taskId;
+	   			
+	   			// 선행작업 지정 종류
+	   			if(taskId != null && preTaskId != null) {
+	   				type = "task2task"; 
+	   			} else if(taskId != null && preTaskId == null) {
+	   				type = "group2task";
+	   				preTaskId = preGroupId;
+	   			} else if(taskId == null && preTaskId != null) {
+	   				type = "task2group";
+	   				taskId = groupId;
+	   			} else if(taskId == null && preTaskId == null) {
+	   				type = "group2group";
+	   				taskId = groupId;
+	   				preTaskId = preGroupId;
+	   			}
+	   			
 	   			var data = {
 	   					projectId : projectId,
 	   					taskId : taskId,
 	   					preTaskId : preTaskId,
 	   					planStartDate : startDate,
 	   					planEndDate : endDate,
-	   					realProgress : progress
+	   					realProgress : progress,
+	   					type : type
 	   			}
 	   			
 	   			$.ajax({
@@ -634,7 +648,7 @@
 	   				success : function(result) {
 	   					if (result == "permitted") {
 	   						toastPopupShow("[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
-	   						addTaskLog(projectId, 1, groupId, taskId, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
+	   						addTaskLog(projectId, 1, groupId, taskIdParam, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
 	   					} else {
 	   						alert("<spring:message code='ezPMS.t184' />");
 	   					}
