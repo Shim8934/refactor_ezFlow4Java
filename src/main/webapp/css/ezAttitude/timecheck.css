@@ -10,19 +10,22 @@
 .main_time dl.timeCheckOut{ float:right;}
 .main_time dl.timeCheckIn dd.out{ background:url(/images/ezAttitude/maincheckOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Gulim, Dotum, Helvetica, sans-serif;}
 .main_time dl.timeCheckOut dd.out{ background:url(/images/ezAttitude/maincheckOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Gulim, Dotum, Helvetica, sans-serif;}
-.main_time dl.timeCheckIn dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
-.main_time dl.timeCheckIn dd.lateIn{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#fe0101; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
-.main_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.main_time dl.timeCheckIn dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.main_time dl.timeCheckIn dd.lateIn{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#fe0101; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.main_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
 
 /* sub_time  */
 .sub_time{ margin:0 auto; padding:15px 0px 0px 0px; width:176px; overflow:hidden; border-top:1px solid #e7eaec;}
 .sub_time dl{ margin:0px; padding:0px 0px; text-align:center;}
-.sub_time dl dt{ margin:0px 0px 10px 0px; padding:0px 0px 0px 10px; font-size:12px; font-weight:bold; font-family:Gulim, Dotum, Helvetica, sans-serif; background:url(../images/kr/left/checkBul.png) no-repeat 10px center;}
+.sub_time dl dt{ margin:0px 0px 10px 0px; padding:0px 0px 0px 10px; font-size:12px; font-weight:bold; font-family:Gulim, Dotum, Helvetica, sans-serif; background:url(/images/ezAttitude/checkBul.png) no-repeat 10px center;}
 .sub_time dl dd{ margin:0px; padding:0px; width:75px; height:75px; text-align:center; line-height:73px; cursor:pointer;}
 .sub_time dl.timeCheckIn{ float:left;}
 .sub_time dl.timeCheckOut{ float:right;}
-.sub_time dl.timeCheckIn dd{ background:url(../images/kr/left/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#0373c5; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
-.sub_time dl.timeCheckOut dd{ background:url(../images/kr/left/checkOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckIn dd.out{ background:url(/images/ezAttitude/checkOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckOut dd.out{ background:url(/images/ezAttitude/checkOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckIn dd.in{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckIn dd.lateIn{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#fe0101; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
 
 /* time_stats  */
 .time_stats{ margin:0px; padding:0px; width:151px;}
