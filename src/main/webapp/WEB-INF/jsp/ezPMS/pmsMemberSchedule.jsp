@@ -13,6 +13,30 @@
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <title>인력관리</title>
+<script type="text/javascript">
+var memberList = '${memberList}';
+var memberScheduleList = '${memberScheduleList}';
+var planStartDate = '${planStartDate}';
+var planEndDate = '${planEndDate}';
+
+function getDateRange(startDate, endDate, listDate) {
+
+    var dateMove = new Date(startDate);
+    var strDate = startDate;
+
+    if (startDate == endDate) {
+        var strDate = dateMove.toISOString().slice(0,10);
+        listDate.push(strDate);
+    } else {
+        while (strDate < endDate) {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate() + 1);
+        }
+    }
+    return listDate;
+};
+</script>
 <style type="text/css">
 #memberTable {
 	margin-left : 5px;
@@ -37,6 +61,9 @@
 <div id="calendar">
 	<table class="content">
 	<tr>
+	<c:forEach items="${memberList }" var="project">
+	
+	</c:forEach>
 	</tr>
 	</table>
 </div>
