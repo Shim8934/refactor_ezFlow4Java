@@ -290,6 +290,8 @@ public class EzAddressServiceImpl implements EzAddressService {
         		vo.setsCompanyPhone((String)obj.get("sCompanyPhone"));
         		vo.setsMobile((String)obj.get("sMobile"));
         		vo.setsType((String)obj.get("sType"));
+        		vo.setsDept((String)obj.get("sDept"));
+        		vo.setsTitle((String)obj.get("sTitle"));
         		
 				list.add(vo);
         	}
@@ -428,6 +430,8 @@ public class EzAddressServiceImpl implements EzAddressService {
         		vo.setsCompanyPhone((String)obj.get("sCompanyPhone"));
         		vo.setsMobile((String)obj.get("sMobile"));
         		vo.setsType((String)obj.get("sType"));
+        		vo.setsDept((String)obj.get("sDept"));
+        		vo.setsTitle((String)obj.get("sTitle"));
         		
 				list.add(vo);
         	}
@@ -713,6 +717,81 @@ public class EzAddressServiceImpl implements EzAddressService {
         		vo.setFolderName((String)obj.get("folderName"));
         		vo.setFolderType((String)obj.get("folderType"));
         		vo.setChildCount((String)obj.get("childCount"));
+        		
+				list.add(vo);
+        	}
+        }
+		
+		return list;
+	}
+	
+	@Override
+	public List<AddressFolderVO> getHighTreeInfo(int tenantId, String folderID, String pOwnerID) throws Exception {
+		List<AddressFolderVO> list = new ArrayList<AddressFolderVO>();
+		String inputParams = "folderId=" + URLEncoder.encode(folderID, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getHighFolder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray)object.get("result");
+        	
+        	for (int i=0; i<resultArray.size(); i++) {
+        		JSONObject obj = (JSONObject)resultArray.get(i);
+        		
+        		AddressFolderVO vo = new AddressFolderVO();
+        		
+        		vo.setFolderId((String)obj.get("folderId"));
+        		vo.setParentId((String)obj.get("parentId"));
+        		vo.setOwnerId(((String)obj.get("ownerId")).split("@")[0]);
+        		vo.setFolderName((String)obj.get("folderName"));
+        		vo.setFolderType((String)obj.get("folderType"));
+        		vo.setChildCount((String)obj.get("childCount"));
+        		vo.setLevel((String)obj.get("level"));
+        		
+				list.add(vo);
+        	}
+        }
+		
+		return list;
+	}
+	
+	@Override
+	public List<AddressFolderVO> getLowTreeInfo(int tenantId, String folderID, String pOwnerID) throws Exception {
+		List<AddressFolderVO> list = new ArrayList<AddressFolderVO>();
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String parentIdParam = "folderId=" + URLEncoder.encode(folderID, "UTF-8");
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerID + "@" + domainName, "UTF-8");
+		
+		String inputParams = parentIdParam + "&" + ownerIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getLowFolder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray)object.get("result");
+        	
+        	for (int i=0; i<resultArray.size(); i++) {
+        		JSONObject obj = (JSONObject)resultArray.get(i);
+        		
+        		AddressFolderVO vo = new AddressFolderVO();
+        		
+        		vo.setFolderId((String)obj.get("folderId"));
+        		vo.setParentId((String)obj.get("parentId"));
+        		vo.setOwnerId(((String)obj.get("ownerId")).split("@")[0]);
+        		vo.setFolderName((String)obj.get("folderName"));
+        		vo.setFolderType((String)obj.get("folderType"));
+        		vo.setChildCount((String)obj.get("childCount"));
+        		vo.setLevel((String)obj.get("level"));
         		
 				list.add(vo);
         	}

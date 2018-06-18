@@ -5090,11 +5090,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 			NodeList addressRow = addressXML.getElementsByTagName("ROW");
 			for (int i = 0; i < addressRow.getLength(); i++) {
+				Element row = (Element) addressRow.item(i);
 				jsonObject = new HashMap<String, Object>();
-				jsonObject.put("name", addressXML.getElementsByTagName("SNAME").item(0).getTextContent());
+				jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
 				jsonObject.put("title", "");
 				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
-				jsonObject.put("mail", addressXML.getElementsByTagName("SEMAIL").item(0).getTextContent());
+				jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
 				jsonList.add(jsonObject);
 			}
 			model.addAttribute("susinList", jsonList);

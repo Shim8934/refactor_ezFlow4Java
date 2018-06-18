@@ -32,6 +32,8 @@ public interface EzAddressService {
 	public void moveAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId) throws Exception;
 	public void copyAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId, String pCreatorId, String pCreatorName, String pCreatorName2) throws Exception;
 	public List<AddressFolderVO> getSubTreeInfo(int tenantId, String pParentID, String pOwnerID) throws Exception;
+	public List<AddressFolderVO> getHighTreeInfo(int tenantId, String folderID, String pOwnerID) throws Exception;
+	public List<AddressFolderVO> getLowTreeInfo(int tenantId, String folderID, String pOwnerID) throws Exception;
 	public AddressFolderVO getFolderInfo(String pFolderId) throws Exception;
 	public void insertFolder(int tenantId, String pParentId, String pOwnerId, String pFolderType, String pFolderName) throws Exception;
 	public void updateFolder(String pFolderId, String pFolderName) throws Exception;
