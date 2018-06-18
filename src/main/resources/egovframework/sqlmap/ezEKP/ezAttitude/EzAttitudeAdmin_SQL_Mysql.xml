@@ -261,7 +261,8 @@
 				ISUSE AS isuse,
 				IFNULL(PARENT_ID,'') AS parentId,
 				FORM_ID AS formId,
-				ISADD AS isAdd
+				ISADD AS isAdd,
+				IMG_PATH AS imgPath
 			FROM
 				TBL_ATTITUDE_TYPE
 			WHERE

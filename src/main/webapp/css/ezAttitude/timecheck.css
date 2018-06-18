@@ -34,8 +34,8 @@
 .time_stats .statsUL li{ margin:0px; padding:0px; overflow:hidden;}
 .time_stats .statsUL li .statsDL{ margin:0px; padding:6px 7px; overflow:hidden;}
 .time_stats .statsUL li .statsDL dt{ margin:0px; float:left; font-family:Gulim, Dotum, Helvetica, sans-serif; font-size:12px; color:#000; padding:4px 0px 0px 21px;}
-.time_stats .statsUL li .statsDL dt.inOut{ background:url(../images/kr/left/inOut.png) no-repeat left 3px;}
-.time_stats .statsUL li .statsDL dt.trip{ background:url(../images/kr/left/trip.png) no-repeat left 3px;}
-.time_stats .statsUL li .statsDL dt.refresh{ background:url(../images/kr/left/refresh.png) no-repeat left 3px;}
-.time_stats .statsUL li .statsDL dt.absence{ background:url(../images/kr/left/absence.png) no-repeat left 3px;}
+.time_stats .statsUL li .statsDL dt.inOut{ background:url(/images/ezAttitude/inOut.png) no-repeat left 3px;}
+.time_stats .statsUL li .statsDL dt.trip{ background:url(/images/ezAttitude/trip.png) no-repeat left 3px;}
+.time_stats .statsUL li .statsDL dt.refresh{ background:url(/images/ezAttitude/refresh.png) no-repeat left 3px;}
+.time_stats .statsUL li .statsDL dt.absence{ background:url(/images/ezAttitude/absence.png) no-repeat left 3px;}
 .time_stats .statsUL li .statsDL dd{ margin:0px; padding:0px 10px; float:right; font-size:12px; color:#000; font-family:Gulim, Dotum, Helvetica, sans-serif; height:21px; line-height:20px; box-sizing:border-box; background:#edf4fd; border:1px solid #d7e4f4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:20px; cursor:pointer;}
