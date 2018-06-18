@@ -141,7 +141,7 @@
     	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
     	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
     	<result property="pregroup"							column="PREGROUP"					columnIndex="33"/>
-    	<result property="pretaskAncesterGroup"				column="PRE_ANCESTER_GROUP"			columnIndex="34"/>
+    	<result property="pretaskAncesterGroupIds"			column="PRE_ANCESTER_GROUP_IDS"		columnIndex="34"/>
     </resultMap>
     
      <resultMap id="projectTaskVOForList" class="ProjectTaskVO">
@@ -556,7 +556,12 @@
 			PROJECT_ID = #projectId#
 		AND
 		<isNotEqual property="roleId" compareValue="4">
-			MEMBER_ROLE_ID = #roleId#
+			<isEqual property="roleId" compareValue="5">
+				MEMBER_ROLE_ID IN (1,2)
+			</isEqual>
+			<isNotEqual property="roleId" compareValue="5">
+				MEMBER_ROLE_ID = #roleId#
+			</isNotEqual>
 		</isNotEqual>
 		<isEqual property="roleId" compareValue="4">
 			MEMBER_ROLE_ID IN (1,2,3)
@@ -904,17 +909,21 @@
 			SET
 				workingday = workingday + #workingday#
 			WHERE
-				project_id = #projectId#			
+				project_id = #projectId#
+			AND
+				tenant_id = #tenantId#
 		]]>
 	</update>
 	
-	<select id="EzPMSDAO.getProjectWorkingday" parameterClass="String" resultClass="int">
+	<select id="EzPMSDAO.getProjectWorkingday" parameterClass="ProjectTaskVO" resultClass="int">
 		SELECT
 			workingday
 		FROM
 			tbl_pms_project
 		WHERE
 			project_id = #projectId#
+		AND
+			tenant_id = #tenantId#
 	</select>
 	
 	<update id="EzPMSDAO.updateTaskWDNW" parameterClass="Map">
@@ -2066,7 +2075,7 @@
 				A.REAL_WORKINGDAY,
 				R.PRETASK,
 				R.PREGROUP,
-				PG.ancester_group AS PRE_ANCESTER_GROUP
+				PG.ancester_group AS PRE_ANCESTER_GROUP_IDS
 			FROM 
 				tbl_pms_task A
 			JOIN
@@ -2642,9 +2651,24 @@
 	<insert id="EzPMSDAO.addPreTaskRel" parameterClass="map">
 	<![CDATA[
 		INSERT INTO TBL_PMS_PRETASKREL (
-			PRETASK, TASK_ID, TENANT_ID, PROJECT_ID
+	]]>
+	<isEqual property="type" compareValue="task2task">
+		PRETASK, TASK_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="group2task">
+		PREGROUP, TASK_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="task2group">
+		PRETASK, GROUP_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="group2group">
+		PREGROUP, GROUP_ID, 
+	</isEqual>
+			
+	<![CDATA[
+			TENANT_ID, PROJECT_ID
 		) VALUES (
-			#rowIndexId#, #taskId#, #tenantId#, #projectId#
+			#pretaskId#, #taskId#, #tenantId#, #projectId#
 		)				
 	]]>
 	</insert>

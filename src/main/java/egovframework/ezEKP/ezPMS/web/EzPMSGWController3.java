@@ -920,7 +920,6 @@ public class EzPMSGWController3 {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
 		}
 		
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/comments] ended");

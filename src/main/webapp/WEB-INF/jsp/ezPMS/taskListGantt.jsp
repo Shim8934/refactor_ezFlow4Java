@@ -556,21 +556,15 @@
 	   			  var startDate = dateToYYYYMMDD(new Date(preTask.end + (1 * 24 * 60 * 60 * 1000)));
 	   			  var endDate = dateToYYYYMMDD(new Date(preTask.end + (task.duration * 24 * 60 * 60 * 1000)));
 	   			  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
+	   			  var groupId = task.id.match(/g(\d+)/) != null? task.id.match(/g(\d+)/)[1] : projectGroupId;
 	   			  var preTaskRowIndex = task.depends;
-	   			  var preTaskIdStr = preTask.id;
-	   			  var preTaskId = preTaskIdStr.substring(preTaskIdStr.lastIndexOf('t') + 1);
+	   			  var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
+	   			  var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
 	   			  var progress = task.progress;
 	   			  var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
-	   			  var groupId = -1;
 	   			  
-	   			  if (task.id.match(/g(\d+)/) != null) {
-	   				groupId = task.id.match(/g(\d+)/)[1];
-	   			  } else {
-	   				groupId = projectGroupId;
-	   			  }
-	   			  
-	   			  addPreTaskRel(projectId, taskId, preTaskId, startDate, endDate, progress, task.name, preTaskRowName, groupId);
+	   			  addPreTaskRel(projectId, taskId, preTaskId, startDate, endDate, progress, task.name, preTaskRowName, groupId, preGroupId);
 	   			  
 	   			  return task.moveTo(task.start,false,true);
 	   			};
@@ -611,14 +605,34 @@
 	   			};
 	   		}
 	   		
-	   		function addPreTaskRel (projectId, taskId, preTaskId, startDate, endDate, progress, taskName, preTaskRowName, groupId) {
+	   		function addPreTaskRel (projectId, taskId, preTaskId, startDate, endDate, progress, taskName, preTaskRowName, groupId, preGroupId) {
+	   			
+	   			var type;
+	   			var taskIdParam = taskId;
+	   			
+	   			// 선행작업 지정 종류
+	   			if(taskId != null && preTaskId != null) {
+	   				type = "task2task"; 
+	   			} else if(taskId != null && preTaskId == null) {
+	   				type = "group2task";
+	   				preTaskId = preGroupId;
+	   			} else if(taskId == null && preTaskId != null) {
+	   				type = "task2group";
+	   				taskId = groupId;
+	   			} else if(taskId == null && preTaskId == null) {
+	   				type = "group2group";
+	   				taskId = groupId;
+	   				preTaskId = preGroupId;
+	   			}
+	   			
 	   			var data = {
 	   					projectId : projectId,
 	   					taskId : taskId,
 	   					preTaskId : preTaskId,
 	   					planStartDate : startDate,
 	   					planEndDate : endDate,
-	   					realProgress : progress
+	   					realProgress : progress,
+	   					type : type
 	   			}
 	   			
 	   			$.ajax({
@@ -630,7 +644,7 @@
 	   				success : function(result) {
 	   					if (result == "permitted") {
 	   						toastPopupShow("[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
-	   						addTaskLog(projectId, 1, groupId, taskId, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
+	   						addTaskLog(projectId, 1, groupId, taskIdParam, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
 	   					} else {
 	   						alert("<spring:message code='ezPMS.t184' />");
 	   					}
@@ -710,6 +724,12 @@
 	   			Date.dayNames =('<spring:message code="ezPMS.t245" />').split(";");
 	   			Date.dayAbbreviations =('<spring:message code="ezPMS.t244" />').split(";");
 	   			
+// 	   			//필터일 경우 셀렉트의 값을 변경해준다.
+// 	   			var taskStatus = "<c:out value='${taskStatus}'/>";
+// 	   			if(taskStatus !== ""){
+// 		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
+// 	   			}
+	   			
 	   		}
 	   		
 	   		function eventSetting(){
@@ -758,6 +778,7 @@
 		   		}).disableSelection();
 		   		
 		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
+		   		document.querySelector("#pmsGanttViewBtn select").onchange = function(){setMyTaskList(this.value);}
 		   		$(document).on("change", "input[name='weight']", function(){ updateWeight(this); });
 		   		$(document).on("change", "input[name='realProgress']", function(){ updateProgress(this); });
 		   	}
@@ -1083,6 +1104,33 @@
 	   			return ganttData;
 	   		}
 	   		
+	   		function setMyTaskList(status) {
+	   			var status = status;
+	   			var position = "";
+	   			
+	   			var	url = "/ezPMS/getProjectForGantt.do?projectId=" + projectId + "&status=" + status;
+	   			
+	   			location.href = url;
+	   			return;
+	   			var data = {
+	   				position : position,
+	   				status : status,
+	   				projectId : projectId
+	   			}
+	   			
+	   			$.ajax({
+	   				type : "post",
+	   				contentType : "application/json; charset=UTF-8",
+	   				dataType : "html",
+// 	   				data : JSON.stringify(data),
+	   				url : url,
+	   				success : function(result) {
+	   					console.log(result);
+	   					alert("성공~")
+	   				}
+	   			});
+	   		}
+	   		
 	   		
 	   		(function() {
 	   			//임시 크기 조절
@@ -1093,7 +1141,6 @@
 		   		initValues();
 		   		ganttChartAddFunc();
 		   		ganttChartModifyFunc();
-		   		
 		   		
 // 		   		ge = new GanttMaster();
 // 		   		ge.init($("#workSpace"));
@@ -1205,6 +1252,12 @@
 	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
 	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;
 	   		     };
+	   		     
+	   			//필터일 경우 셀렉트의 값을 변경해준다.
+	   			var taskStatus = "<c:out value='${taskStatus}'/>";
+	   			if(taskStatus !== ""){
+		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
+	   			}
 	   		})
 
 	   		function getMemberSchedule() {
@@ -1282,12 +1335,12 @@
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
 		       	<spring:message code='ezPMS.t255' />
 					<select>
-						<option value="3d"><spring:message code='ezPMS.t14' /></option>
-						<option value="3d"><spring:message code='ezPMS.t16' /></option>
-						<option value="1w"><spring:message code='ezPMS.t15' /></option>
-						<option value="1M"><spring:message code='ezPMS.t17' /></option>
-						<option value="1Q"><spring:message code='ezPMS.t19' /></option>
-						<option value="1y"><spring:message code='ezPMS.t18' /></option>
+						<option value="A"><spring:message code='ezPMS.t14' /></option>
+						<option value="W"><spring:message code='ezPMS.t16' /></option>
+						<option value="P"><spring:message code='ezPMS.t15' /></option>
+						<option value="C"><spring:message code='ezPMS.t17' /></option>
+						<option value="S"><spring:message code='ezPMS.t19' /></option>
+						<option value="L"><spring:message code='ezPMS.t18' /></option>
 					</select>
 		        </li>
 		        <li id="pmsGanttZoomBtn" class="pmsGanttZoomBtn">

@@ -126,8 +126,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		insert("EzPMSDAO.addTaskMember", list);
 	}
 	
-	public int getProjectWorkingday (String projectId) {
-		return (int) select("EzPMSDAO.getProjectWorkingday", projectId);
+	public int getProjectWorkingday (ProjectTaskVO taskVO) {
+		return (int) select("EzPMSDAO.getProjectWorkingday", taskVO);
 	}
 	
 	public void updateProjectWorkingday (Map<String, Object> map) {

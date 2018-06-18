@@ -742,7 +742,30 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("lang", lang);
 
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
-
+		
+		String pretaskId = taskDetails.getPretask();
+		
+		if(pretaskId != null) {
+			
+			Long projectId = taskDetails.getProjectId();
+			param.put("projectId", projectId);
+			
+			String pretaskAncesterIds[] = taskDetails.getPretaskAncesterGroupIds().split(",");	
+			
+			String pretaskName = "";
+			
+			for(int i = 1; i < pretaskAncesterIds.length; i++) {
+				param.put("groupId", pretaskAncesterIds[i]);
+				pretaskName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
+			}
+			
+			param.put("taskId", pretaskId);
+			
+			pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
+			
+			taskDetails.setPretaskName(pretaskName);
+		}
+		
 		LOGGER.debug("[SERVICE] getTaskDetails ended.");
 		return taskDetails;
 	}
@@ -803,6 +826,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
+			map1.put("tenantId", tenantId);
 			ezPMSDAO.updateProjectWorkingday(map1);
 
 			// 가중치 계산
@@ -1016,7 +1040,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					taskGroupCount = ezPMSDAO.getBoardListCount(map);
 				} else if (location.equals("comment")) {
 					taskGroupCount = ezPMSDAO.getCommentListCount(map);
-					System.out.println("======================================" + taskGroupCount);
 				}
 			}
 
@@ -1811,6 +1834,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			HashMap<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
+			map1.put("tenantId", tenantId);
 			ezPMSDAO.updateProjectWorkingday(map1);
 
 			// 가중치 계산
@@ -1957,13 +1981,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addPreTaskRel(long taskId, int rowIndexId, long projectId, int tenantId) {
+	public void addPreTaskRel(long taskId, int pretaskId, long projectId, int tenantId, String type) {
 		LOGGER.debug("[SERVICE] addPreTaskRel started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskId", taskId);
-		map.put("rowIndexId", rowIndexId);
+		map.put("pretaskId", pretaskId);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
+		map.put("type", type);
 
 		ezPMSDAO.addPreTaskRel(map);
 		LOGGER.debug("[SERVICE] addPreTaskRel ended.");
@@ -2024,7 +2049,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] addComment ended.");
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteComment(int tenantId, JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] deleteComment started");
@@ -2100,7 +2124,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Long taskId = taskVO.getTaskId();
 
 		if (taskVO.getWeight() == -1) {
-			int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
+			int projectWorkingday = ezPMSDAO.getProjectWorkingday(taskVO);
 			float calWeight = (taskWorkingday / projectWorkingday) * 100;
 			System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
 			map2.put("weight", calWeight);

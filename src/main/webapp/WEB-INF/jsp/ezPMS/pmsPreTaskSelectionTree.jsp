@@ -25,24 +25,21 @@
 	});
 	
 	function register() {
-		var chosenTask = $("a.jstree-clicked");
-		var taskName = chosenTask.text();
+		var chosenTaskTree = $("a.jstree-clicked").parents("li[role='treeitem']").toArray();
+		var preTaskName = "";
 		
-		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
-		if (taskName.indexOf('(') != -1) {
-			taskName = taskName.substr(0, taskName.indexOf('('));
+		for(var i = chosenTaskTree.length - 2; i >= 0; i--) {
+			
+			if(i != 0) {
+				preTaskName += $(chosenTaskTree[i]).children("a").text() + " > ";
+			} else {
+				preTaskName += $(chosenTaskTree[i]).children("a").text();
+			}
 		}
 		
-		parent.document.getElementById("taskName").innerHTML = taskName;
-		parent.taskName = taskName;
+		$("#preTaskName", parent.document).text(preTaskName);
 		
-		if (chosenTask.parent().attr("id").charAt(0) == 't') { 
-			parent.groupId = chosenTask.parents("li").eq(1).attr("id");
-			parent.taskId  = chosenTask.parent().attr("id").substr(1);		
-		} else {
-			parent.groupId = chosenTask.parent().attr("id");
-			parent.taskId  = null;
-		}	
+		alert("아직 id는 안 넘어가서 구현해야함");
 		popupClose();
 	}	
 </script>

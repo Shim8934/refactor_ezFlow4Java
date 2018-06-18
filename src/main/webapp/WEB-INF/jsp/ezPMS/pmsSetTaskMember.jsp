@@ -44,12 +44,13 @@
 	   		}
 	   		
 	   		//프로젝트 멤버 리스트 뿌리기
+	   		//roleId: 5 => roleId 1 또는 2인 사람을 조회한다.
 	   		function getProjectMemberList(projectId) {
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/ezPMS/getProjectMemberList.do",
-	   				data:{"projectId" : projectId, "roleId" : 4},
+	   				data:{"projectId" : projectId, "roleId" : 5},
 	   				success: function (result) {
 		   				$("#orglistView").html(result);
 	   				}

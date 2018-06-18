@@ -1407,9 +1407,9 @@ public class EzPMSGWController {
 		}
 		
 		@SuppressWarnings("unchecked")
-		@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/preTasks/{preTaskId}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
-		public JSONObject addPreTaskRel(@PathVariable long taskId, @PathVariable int preTaskId, HttpServletRequest request) throws Exception {
-			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/preTasks/" + preTaskId + "] started.");
+		@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/preTasks/{preTaskId}/type/{type}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+		public JSONObject addPreTaskRel(@PathVariable long taskId, @PathVariable int preTaskId, @PathVariable String type, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/preTasks/" + preTaskId + "/type/" + type + "] started.");
 			
 			JSONObject result = new JSONObject();
 			
@@ -1454,7 +1454,7 @@ public class EzPMSGWController {
 					ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
 					
 					//preTaskRel 테이블에 데이터 추가
-					ezPMSService.addPreTaskRel(taskId, preTaskId, projectId, tenantId);
+					ezPMSService.addPreTaskRel(taskId, preTaskId, projectId, tenantId, type);
 				}
 				
 				result.put("status", "ok");
@@ -1467,7 +1467,7 @@ public class EzPMSGWController {
 			}
 			
 			
-			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/preTasks/" + preTaskId + "] ended.");
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/preTasks/" + preTaskId + "/type/" + type + "] ended.");
 			return result;
 		}
 		

@@ -1576,7 +1576,7 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		
-		String url = "/rest/ezPMS/tasks/" + param.get("taskId") + "/preTasks/" + param.get("preTaskId");
+		String url = "/rest/ezPMS/tasks/" + param.get("taskId") + "/preTasks/" + param.get("preTaskId") + "/type/" + param.get("type");
 		param.put("userId", userId);
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", null);

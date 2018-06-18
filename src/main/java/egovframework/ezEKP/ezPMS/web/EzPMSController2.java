@@ -183,29 +183,29 @@ public class EzPMSController2 {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezPMS/goTaskDetail.do")
-	public String goTaskDetail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
-		
-		LOGGER.debug("ezPMS TaskListMain started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String taskId = request.getParameter("taskId");
-		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
-		String status = resultBody.get("status").toString();
-		
-		if(status.equals("ok")) {
-			JSONObject taskDetail = (JSONObject) resultBody.get("data");
-			model.addAttribute("taskDetail", taskDetail);
-		}
-		
-		LOGGER.debug("ezPMS TaskListMain ended");
-		
-		return "/ezPMS/taskListMain";
-	}
+//	@RequestMapping(value="/ezPMS/goTaskDetail.do")
+//	public String goTaskDetail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+//		
+//		LOGGER.debug("ezPMS TaskListMain started");
+//		
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		
+//		String taskId = request.getParameter("taskId");
+//		
+//		HashMap<String, Object> param = new HashMap<String, Object>();
+//		
+//		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
+//		String status = resultBody.get("status").toString();
+//		
+//		if(status.equals("ok")) {
+//			JSONObject taskDetail = (JSONObject) resultBody.get("data");
+//			model.addAttribute("taskDetail", taskDetail);
+//		}
+//		
+//		LOGGER.debug("ezPMS TaskListMain ended");
+//		
+//		return "/ezPMS/taskListMain";
+//	}
 	
 	
 	/**
@@ -307,9 +307,11 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String projectId = request.getParameter("projectId");
+		String taskStatus = request.getParameter("status");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("position", "gantt");
+		param.put("status", taskStatus);
 		
 		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBodyTask.get("status").toString();
@@ -333,6 +335,10 @@ public class EzPMSController2 {
 			model.addAttribute("groupList", resultBodyGroup.get("data"));
 		}
 		
+		if(taskStatus != null){
+			model.addAttribute("taskStatus", taskStatus);
+		}
+
 		model.addAttribute("projectId", projectId);
 		LOGGER.debug("ezPMS getProjectForGantt ended");
 		
@@ -358,6 +364,7 @@ public class EzPMSController2 {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", userInfo.getTenantId());
+		param.put("projectId", projectId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
