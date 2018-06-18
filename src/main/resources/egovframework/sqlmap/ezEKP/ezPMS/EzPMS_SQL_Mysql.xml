@@ -555,7 +555,12 @@
 			PROJECT_ID = #projectId#
 		AND
 		<isNotEqual property="roleId" compareValue="4">
-			MEMBER_ROLE_ID = #roleId#
+			<isEqual property="roleId" compareValue="5">
+				MEMBER_ROLE_ID IN (1,2)
+			</isEqual>
+			<isNotEqual property="roleId" compareValue="5">
+				MEMBER_ROLE_ID = #roleId#
+			</isNotEqual>
 		</isNotEqual>
 		<isEqual property="roleId" compareValue="4">
 			MEMBER_ROLE_ID IN (1,2,3)

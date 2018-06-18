@@ -728,6 +728,12 @@
 	   			Date.dayNames =('<spring:message code="ezPMS.t245" />').split(";");
 	   			Date.dayAbbreviations =('<spring:message code="ezPMS.t244" />').split(";");
 	   			
+// 	   			//필터일 경우 셀렉트의 값을 변경해준다.
+// 	   			var taskStatus = "<c:out value='${taskStatus}'/>";
+// 	   			if(taskStatus !== ""){
+// 		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
+// 	   			}
+	   			
 	   		}
 	   		
 	   		function eventSetting(){
@@ -776,6 +782,7 @@
 		   		}).disableSelection();
 		   		
 		   		document.querySelector("#pmsGanttZoomBtn select").onchange = function(){ge.gantt.zoomChange(this.value);}
+		   		document.querySelector("#pmsGanttViewBtn select").onchange = function(){setMyTaskList(this.value);}
 		   		$(document).on("change", "input[name='weight']", function(){ updateWeight(this); });
 		   		$(document).on("change", "input[name='realProgress']", function(){ updateProgress(this); });
 		   	}
@@ -1101,6 +1108,33 @@
 	   			return ganttData;
 	   		}
 	   		
+	   		function setMyTaskList(status) {
+	   			var status = status;
+	   			var position = "";
+	   			
+	   			var	url = "/ezPMS/getProjectForGantt.do?projectId=" + projectId + "&status=" + status;
+	   			
+	   			location.href = url;
+	   			return;
+	   			var data = {
+	   				position : position,
+	   				status : status,
+	   				projectId : projectId
+	   			}
+	   			
+	   			$.ajax({
+	   				type : "post",
+	   				contentType : "application/json; charset=UTF-8",
+	   				dataType : "html",
+// 	   				data : JSON.stringify(data),
+	   				url : url,
+	   				success : function(result) {
+	   					console.log(result);
+	   					alert("성공~")
+	   				}
+	   			});
+	   		}
+	   		
 	   		
 	   		(function() {
 	   			//임시 크기 조절
@@ -1111,7 +1145,6 @@
 		   		initValues();
 		   		ganttChartAddFunc();
 		   		ganttChartModifyFunc();
-		   		
 		   		
 // 		   		ge = new GanttMaster();
 // 		   		ge.init($("#workSpace"));
@@ -1223,6 +1256,12 @@
 	   			//var top = ($(window).height() - $(this).outerHeight()) / 2;
 	   			//var left = ($(window).width() - $(this).outerWidth()) / 2;
 	   		     };
+	   		     
+	   			//필터일 경우 셀렉트의 값을 변경해준다.
+	   			var taskStatus = "<c:out value='${taskStatus}'/>";
+	   			if(taskStatus !== ""){
+		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
+	   			}
 	   		})
 
 	   		
@@ -1293,12 +1332,12 @@
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
 		       	<spring:message code='ezPMS.t255' />
 					<select>
-						<option value="3d"><spring:message code='ezPMS.t14' /></option>
-						<option value="3d"><spring:message code='ezPMS.t16' /></option>
-						<option value="1w"><spring:message code='ezPMS.t15' /></option>
-						<option value="1M"><spring:message code='ezPMS.t17' /></option>
-						<option value="1Q"><spring:message code='ezPMS.t19' /></option>
-						<option value="1y"><spring:message code='ezPMS.t18' /></option>
+						<option value="A"><spring:message code='ezPMS.t14' /></option>
+						<option value="W"><spring:message code='ezPMS.t16' /></option>
+						<option value="P"><spring:message code='ezPMS.t15' /></option>
+						<option value="C"><spring:message code='ezPMS.t17' /></option>
+						<option value="S"><spring:message code='ezPMS.t19' /></option>
+						<option value="L"><spring:message code='ezPMS.t18' /></option>
 					</select>
 		        </li>
 		        <li id="pmsGanttZoomBtn" class="pmsGanttZoomBtn">
