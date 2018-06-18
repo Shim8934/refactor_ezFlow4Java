@@ -226,8 +226,7 @@ public class EzPMSGWController2 {
 			List<String> dateList = new ArrayList<String>();
 			
 			while (startCal.compareTo(endCal) != 1) {
-				dateList.add(dateFormat.format(startCal.getTime()));
-				System.out.println(dateFormat.format(startCal.getTime()));
+				dateList.add(dateFormat.format(startCal.getTime()));			
 				startCal.add(Calendar.DATE, 1);
 			}
 			

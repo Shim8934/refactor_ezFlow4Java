@@ -264,7 +264,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		
-		if (mode.equals("gantt")) {
+		if (mode != null && mode.equals("gantt")) {
 			map.put("isGantt", 0);
 			map.put("roleId", 5);
 		} else {
