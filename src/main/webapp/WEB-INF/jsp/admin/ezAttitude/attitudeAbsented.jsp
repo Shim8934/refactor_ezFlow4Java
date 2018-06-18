@@ -317,7 +317,7 @@
 			function sendMail() {
 				var pheight = window.screen.availHeight;
 				var conHeight = pheight * 0.8;
-				var pwidth = window.screen.availwidth;
+				var pwidth = window.screen.availWidth;
 				var pTop = (pheight - conHeight) / 2;
 				var pLeft = (pwidth - 890) / 2;
 				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&pageNum=&listSize=&orderCell=&orderOption=";
