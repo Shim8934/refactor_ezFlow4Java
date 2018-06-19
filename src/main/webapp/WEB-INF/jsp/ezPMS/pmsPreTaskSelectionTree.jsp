@@ -39,7 +39,7 @@
 		
 		$("#preTaskName", parent.document).text(preTaskName);
 		
-		alert("아직 id는 안 넘어가서 구현해야함");
+		parent.preTaskId = $("a.jstree-clicked").parent("li[role='treeitem']").attr("id");
 		popupClose();
 	}	
 </script>

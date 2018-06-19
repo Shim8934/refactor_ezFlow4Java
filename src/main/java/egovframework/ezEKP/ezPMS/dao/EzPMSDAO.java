@@ -525,6 +525,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<ProjectTaskVO> getTaskListByGroupId(Map<String, Object> map) {
+		return (List<ProjectTaskVO>) list("EzPMSDAO.getTaskListByGroupId", map);
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<String> getDateTaskList(Map<String, Object> map) {
 		return (List<String>) list("EzPMSDAO.getDateTaskList", map);
 	}
