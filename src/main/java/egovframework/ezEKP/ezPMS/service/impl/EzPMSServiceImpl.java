@@ -745,8 +745,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
 		
 		String pretaskId = taskDetails.getPretask();
+		String pregroupId = taskDetails.getPregroup();
 		
-		if(pretaskId != null) {
+		if(pretaskId != null || pregroupId != null) {
 			
 			Long projectId = taskDetails.getProjectId();
 			param.put("projectId", projectId);
@@ -760,9 +761,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				pretaskName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
 			}
 			
-			param.put("taskId", pretaskId);
-			
-			pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
+			if(pretaskId != null) {
+				param.put("taskId", pretaskId);	
+				pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
+			} else {
+				pretaskName = pretaskName.substring(0, pretaskName.lastIndexOf(">") - 1);
+			}
 			
 			taskDetails.setPretaskName(pretaskName);
 		}
@@ -2434,6 +2438,46 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
+	public List<ProjectTaskVO> getTaskListByGroupId(int tenantId, long groupId) {
+		LOGGER.debug("[SERVICE] getTaskListByGroupId started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getTaskListByGroupId ended.");
+		return ezPMSDAO.getTaskListByGroupId(map);	
+	}
+
+	@Override
+	public Date addWorkingDays(Date date, int offset, String companyId, int tenantId) {
+		LOGGER.debug("[SERVICE] addWorkingDays started");
+		
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.setTime(date);
+		
+		int addAmount = 1;
+		
+		if(offset < 0) {
+			offset = -offset;
+			addAmount = -1;
+		}
+		
+		int i = 0;
+		
+		while(i < offset) {
+			cal.add(Calendar.DATE, addAmount);
+			
+			// 평일일 때만 i를 증가
+			if(cal.get(Calendar.DAY_OF_WEEK) != 1 && cal.get(Calendar.DAY_OF_WEEK) != 7) {
+				i++;
+			}
+		}
+		
+		LOGGER.debug("[SERVICE] addWorkingDays ended");
+		return new Date(cal.getTimeInMillis());
+	}
+	
 	public List<String> getDateTaskList(long projectId, String date, String selUserId, String lang, int tenantId) {
 		LOGGER.debug("[SERVICE] getDateTaskList started.");
 		Map<String, Object> map = new HashMap<String, Object>();

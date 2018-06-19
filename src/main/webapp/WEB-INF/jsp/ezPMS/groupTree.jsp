@@ -7,7 +7,7 @@
 <head>
 <title><spring:message code='ezPMS.t42' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
+<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -44,12 +44,12 @@
 						'multiple' : false,
 						'animation' : 0,
 						'themes' : {
-							'responsive' : false,
+							'responsive' : true,
 							//'variant' : 'small',
-							'stripes' : false
+							//'stripes' : false
 						}
 					},
-					'plugins' : [ 'sort' ],
+					'plugins' : [ 'sort', "wholerow"],
 					'sort' : function(a, b) {
 						var a1 = this.get_node(a);
 						var b1 = this.get_node(b);
