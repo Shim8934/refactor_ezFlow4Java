@@ -171,7 +171,7 @@
 	</head>
 	
 	<body class="popup">
-		<h1><spring:message code='ezAttitude.t111'/><span id="mailBoxInfo"></span><c:if test="${searchEndDate != ''}"><img style="float: right; margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()"></c:if></h1>
+		<h1><spring:message code='ezAttitude.t111'/><span id="mailBoxInfo"></span><c:if test="${searchEndDate != ''}"><img style="float: right; margin-right: 5px; margin-top:1px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()"></c:if></h1>
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
@@ -188,7 +188,7 @@
 			</table>
 		</div>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"><span onclick="return btnClose_onclick()"><spring:message code='ezAttitude.t157'/></span></a>
 		</div>
 	</body>

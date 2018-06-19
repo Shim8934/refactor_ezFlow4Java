@@ -2,7 +2,7 @@
 var sDate = new Date();
 var dayOfWeeks;
 
-var monthHeight = ((parseInt(document.documentElement.clientHeight, 10) - 260) / 6) - 11;
+var monthHeight = ((parseInt(document.documentElement.clientHeight, 10) - 255) / 6) - 11;
 /**
  * 달력 생성(월보기만 제공)
  * @param pTargetID 달력을 배치시킬 ID
