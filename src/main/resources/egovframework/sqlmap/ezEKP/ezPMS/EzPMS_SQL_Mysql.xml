@@ -1988,25 +1988,22 @@
 				TBL_PMS_GROUP B
 			ON
 				A.UPPER_GROUP_ID = B.GROUP_ID
-		]]>
-			<isEqual property="location" compareValue="general">
-			JOIN
-				TBL_PMS_GROUPMEMBER M
-			ON
-				A.GROUP_ID = M.GROUP_ID
-			WHERE 
-				M.MEMBER_ROLE_ID = 1
-			AND
-			</isEqual>
-			<isNotEqual property="location" compareValue="general">
 			LEFT JOIN
 				TBL_PMS_PRETASKREL R
 			ON
 				A.PROJECT_ID = R.PROJECT_ID
 			AND
 				A.GROUP_ID = R.GROUP_ID
-			WHERE
-			</isNotEqual>
+		]]>
+			<isEqual property="location" compareValue="general">
+			JOIN
+				TBL_PMS_GROUPMEMBER M
+			ON
+				A.GROUP_ID = M.GROUP_ID
+			AND
+				M.MEMBER_ROLE_ID = 1
+			</isEqual>
+			WHERE 
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0
@@ -3363,6 +3360,24 @@
 			T.PLAN_START_DATE <= #date#
 		AND
 			T.PLAN_END_DATE >= #date#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getUpperGroupDate" parameterClass="map" resultClass="ProjectGroupVO">
+	<![CDATA[
+		SELECT 
+			a.PLAN_START_DATE as planStartDate, 
+			a.PLAN_END_DATE as planEndDate
+		FROM 
+			TBL_PMS_GROUP a
+		JOIN
+			TBL_PMS_GROUP b
+		ON
+			a.GROUP_ID = b.UPPER_GROUP_ID
+		WHERE
+			b.GROUP_ID = #groupId#
+		AND
+			b.TENANT_ID = #tenantId#
 	]]>
 	</select>
 </sqlMap>

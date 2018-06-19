@@ -533,4 +533,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<String> getDateTaskList(Map<String, Object> map) {
 		return (List<String>) list("EzPMSDAO.getDateTaskList", map);
 	}
+
+	public ProjectGroupVO getUpperGroupDate(Map<String, Object> map) {
+		return (ProjectGroupVO) select ("EzPMSDAO.getUpperGroupDate", map);
+	}
 }
