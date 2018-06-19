@@ -363,6 +363,12 @@
     	<result property="groupId"							column="group_id"/>
     	<result property="groupName"						column="group_name"/>
     </resultMap>
+    
+    <resultMap class="ProjectTaskVO" id="taskListByGroupId">
+    	<result property="taskId"							column="TASK_ID"/>
+    	<result property="planStartDate"					column="plan_start_date"/>
+    	<result property="planEndDate"						column="plan_end_date"/>
+    </resultMap>
 	
     <!-- 조직도 만들기 위한 쿼리 -->
 	<select id="EzPMSDAO.selectDeptList" parameterClass="map" resultMap="projectDeptViewMap">
@@ -3312,4 +3318,16 @@
 			TENANT_ID = #tenantId#
 	]]>
 	</insert>
+	
+	<select id="EzPMSDAO.getTaskListByGroupId" resultMap="taskListByGroupId">
+	<![CDATA[
+		SELECT 
+			task_id, plan_start_date, plan_end_date
+		FROM tbl_pms_task
+		WHERE 
+			group_id = #groupId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</select>
 </sqlMap>

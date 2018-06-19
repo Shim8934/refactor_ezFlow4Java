@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
@@ -1446,16 +1447,55 @@ public class EzPMSGWController {
 				}
 				
 				if (roleCheck.equals("permitted")) {
-					//프로젝트 task 시작날짜와 끝날짜 update
-					ProjectTaskVO projectTaskVO = new ProjectTaskVO();
-					projectTaskVO.setTenantId(tenantId);
-					projectTaskVO.setTaskId(taskId);
-					projectTaskVO.setProjectId(projectId);
-					projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
-					projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
-					projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 					
-					ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
+					if(type.equals("task2task") || type.equals("group2task")) {
+						//프로젝트 task 시작날짜와 끝날짜 update
+						ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+						projectTaskVO.setTenantId(tenantId);
+						projectTaskVO.setTaskId(taskId);
+						projectTaskVO.setProjectId(projectId);
+						projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
+						projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+						projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+						
+						ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
+					} else {
+						//프로젝트 group내의 모든 task의 시작날짜와 끝날짜 update
+						long groupId = taskId;
+						
+						List<ProjectTaskVO> tasksInGroup = ezPMSService.getTaskListByGroupId(tenantId, groupId);
+					
+						LOGGER.debug("groupId : " + groupId + ", tenantId : " + tenantId + ", projectId : " + projectId);
+						ProjectGroupVO oldGroupVO = ezPMSService.getGroupDetails(groupId, tenantId, projectId);
+						
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//						Date oldGroupStartDate = sdf.parse(oldGroupVO.getPlanStartDate());
+						Date newGroupStartDate = sdf.parse(request.getParameter("planStartDate"));
+						
+//						int offset = ezPMSService.getWorkingDays(oldGroupStartDate, newGroupStartDate, companyId, tenantId);
+						
+						for(ProjectTaskVO taskVO : tasksInGroup) {
+							
+							// offset만큼 workingday기준으로 날짜를 증가시킴
+//							Date oldStartDate = sdf.parse(taskVO.getPlanStartDate());
+//							String newStartDate = sdf.format(ezPMSService.addWorkingDays(oldStartDate, offset, companyId, tenantId));
+//							Date oldEndDate = sdf.parse(taskVO.getPlanEndDate());
+//							String newEndDate = sdf.format(ezPMSService.addWorkingDays(oldEndDate, offset, companyId, tenantId));
+							
+//							LOGGER.debug("oldStartDate : " + sdf.format(oldStartDate) + ", newStartDate : " + newStartDate);
+//							LOGGER.debug("oldEndDate   : " + sdf.format(oldEndDate) +   ", newEndDate   : " + newEndDate);
+							
+							taskVO.setTenantId(tenantId);
+							taskVO.setProjectId(projectId);
+							taskVO.setPlanStartDate(request.getParameter("planStartDate"));
+							taskVO.setPlanEndDate(request.getParameter("planEndDate"));
+							taskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+							
+							ezPMSService.updateTaskStatus(taskVO, companyId, tenantId);
+							
+							ezPMSService.updateGroupDate(groupId, tenantId, companyId);
+						}
+					}
 					
 					//preTaskRel 테이블에 데이터 추가
 					ezPMSService.addPreTaskRel(taskId, preTaskId, projectId, tenantId, type);

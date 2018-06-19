@@ -2436,4 +2436,45 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.addMemberSchedule(map);
 		LOGGER.debug("[SERVICE] addMemberSchedule ended.");
 	}
+
+	@Override
+	public List<ProjectTaskVO> getTaskListByGroupId(int tenantId, long groupId) {
+		LOGGER.debug("[SERVICE] getTaskListByGroupId started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getTaskListByGroupId ended.");
+		return ezPMSDAO.getTaskListByGroupId(map);	
+	}
+
+	@Override
+	public Date addWorkingDays(Date date, int offset, String companyId, int tenantId) {
+		LOGGER.debug("[SERVICE] addWorkingDays started");
+		
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.setTime(date);
+		
+		int addAmount = 1;
+		
+		if(offset < 0) {
+			offset = -offset;
+			addAmount = -1;
+		}
+		
+		int i = 0;
+		
+		while(i < offset) {
+			cal.add(Calendar.DATE, addAmount);
+			
+			// 평일일 때만 i를 증가
+			if(cal.get(Calendar.DAY_OF_WEEK) != 1 && cal.get(Calendar.DAY_OF_WEEK) != 7) {
+				i++;
+			}
+		}
+		
+		LOGGER.debug("[SERVICE] addWorkingDays ended");
+		return new Date(cal.getTimeInMillis());
+	}
 }

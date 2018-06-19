@@ -39,7 +39,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Controller
 public class EzPMSController {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MCommonGWController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
