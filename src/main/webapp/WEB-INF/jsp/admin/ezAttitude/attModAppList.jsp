@@ -376,7 +376,6 @@
 	    }
 	    
 	    function get_att_list(pageNum) {
-	    	console.log("get_att_list");
 	    	$("#HeaderAllCheckBox").prop("checked",false);
 	    	
 	    	var obj = new Object();
@@ -1031,7 +1030,6 @@
 	    	var attNode;
 	    	// tr 노드 개수
 	    	var nodeCount = attNodes.length;
-	    	console.log(nodeCount);
 	        if (obj.checked) {
 	        	
 	            for (var i = 0; i < nodeCount; i++) {
@@ -1086,8 +1084,6 @@
 			var applCnt;
 			
 			modAttId = tds[0].getElementsByTagName("input").item(0).getAttribute("value");
-			console.log(tds[0].getElementsByTagName("input").item(0));
-			console.log(modAttId);
 			applCnt = modAttId.split("\_")[1];
 			modAttId = modAttId.split("\_")[0];
 			

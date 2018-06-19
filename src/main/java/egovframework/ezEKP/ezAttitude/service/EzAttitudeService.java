@@ -79,8 +79,6 @@ public interface EzAttitudeService {
 	
 	public List<HolidayVO> getHolidayList(String isRest, String companyId, int tenantId) throws Exception;
 
-	public List<AttitudeAuthorVO> getDeptUserList(String tenantId, String key,	String value) throws Exception;
-
 	public int delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception;
 
 	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String primary) throws Exception;

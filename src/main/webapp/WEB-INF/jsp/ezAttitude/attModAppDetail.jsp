@@ -64,12 +64,6 @@
 				$("#message").contents().find("p").each(function(){
 					$(this).css({"font-size":fontSize, "font-family":fontFamily});	
 				});
-				
-				console.log('${attitudeConfigVO.attitudeModAppl}');
-		        console.log(pageInfo);
-				console.log(writerid);
-				console.log(userId);
-				console.log(adminFlag);
 		    }
 		    
 		    window.onresize = function () {   	

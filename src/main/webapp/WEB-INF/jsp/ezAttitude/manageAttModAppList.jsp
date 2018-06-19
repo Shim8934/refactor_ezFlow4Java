@@ -140,8 +140,6 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
-	        console.log("${startDate}");
-	        console.log("${endDate}");
 			if (checkAdmin == 'true') {
 				$("#Sdatepicker").val("${startDate}");
 	    		$("#Edatepicker").val("${endDate}");
@@ -1050,7 +1048,6 @@
 	    	var attNode;
 	    	// tr 노드 개수
 	    	var nodeCount = attNodes.length;
-	    	console.log(nodeCount);
 	        if (obj.checked) {
 	        	
 	            for (var i = 0; i < nodeCount; i++) {
@@ -1105,8 +1102,6 @@
 			var applCnt;
 			
 			modAttId = tds[0].getElementsByTagName("input").item(0).getAttribute("value");
-			console.log(tds[0].getElementsByTagName("input").item(0));
-			console.log(modAttId);
 			applCnt = modAttId.split("\_")[1];
 			modAttId = modAttId.split("\_")[0];
 			
@@ -1193,8 +1188,6 @@
 			    	}
 			    },
 			    complete : function() {
-			    	console.log(parent.frames["right"]);
-			    	console.log(parent.frames["attitude_main"]);
 			    	try {
 			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
 			    	} catch(e) {

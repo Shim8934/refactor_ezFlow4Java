@@ -608,7 +608,6 @@
 		    }
 			
 			function excelDown() {
-				console.log("excelDown started");
 				var pDate = $("#calTitle").text().trim();
 				var startDate = pDate + "-01 00:00:00";
 				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
@@ -626,7 +625,6 @@
 					},
 					success : function(attList) {
 						$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
-						console.log(attList);
 						for (var i = 0 ; i < attList.length; i ++) {
 				    		var htmlStr = "";
 				    		htmlStr += '<tr>';
@@ -642,7 +640,6 @@
 		    				htmlStr += '</tr>';
 		    				$('#ExcelAttList tbody').append(htmlStr);
 						}
-		    			console.log("excelDown ended");
 		    			btnexportexcel_onclick();
 					}
 				});
@@ -1036,7 +1033,6 @@
 						}
 					} else {
 						if (modappl == 0 && typeid == 'A02') {
-							console.log(this);
 						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4){
 							mod_detail(attitudeid);
 						}

@@ -161,29 +161,6 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 유형별 근태 조회
-	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject attitudeListType(@PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/" + attitudetypeId + "/attitudes] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/" + attitudetypeId + "/attitudes] ended.");
-		return result;
-	}
-	
-	/**
 	 * G/W 근태관리 [GET] 근태 상세조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
@@ -301,29 +278,6 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 수정신청 조회
-	 */
-	@RequestMapping(value = "/rest/ezattitude/modify-applications", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject modifyApplicationList(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications] ended.");
-		return result;
-	}
-	
-	/**
 	 * G/W 근태관리 [POST] 수정신청 등록
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/modify-applications", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
@@ -357,98 +311,6 @@ public class EzAttitudeGWController {
 			result.put("data", status);
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] ended.");
-		return result;
-	}
-	
-	/**
-	 * G/W 근태관리 [PUT] 수정신청 수정
-	 */
-	@RequestMapping(value = "/rest/ezattitude/modify-applications/{modapplId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject updatemodifyApplication(@PathVariable String modapplId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications/" + modapplId + "] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications/" + modapplId + "] ended.");
-		return result;
-	}
-	
-	/**
-	 * G/W 근태관리 [GET] 수정신청 상세보기
-	 */
-	@RequestMapping(value = "/rest/ezattitude/modify-applications/{modapplId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject modifyApplicationInfo(@PathVariable String modapplId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications/" + modapplId + "] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications/" + modapplId + "] ended.");
-		return result;
-	}
-	
-	/**
-	 * G/W 근태관리 [PUT] 수정신청 일괄처리
-	 */
-	@RequestMapping(value = "/rest/ezattitude/modify-applications", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject updateModifyApplicationBatch(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications] ended.");
-		return result;
-	}
-	
-	/**
-	 * G/W 근태관리 [DELETE] 수정신청 일괄처리
-	 */
-	@RequestMapping(value = "/rest/ezattitude/modify-applications", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deleteModifyApplicationBatch(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/modify-applications] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/modify-applications] ended.");
 		return result;
 	}
 	
@@ -1051,29 +913,6 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [POST] 관리자 권한 추가
-	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/add-authority", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject addAuthority(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/add-authority] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users" + userId + "/add-authority] ended.");
-		return result;
-	}
-	
-	/**
 	 * G/W 근태관리 [GET] 수정신청 리스트
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
@@ -1319,7 +1158,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [DELETE] 수정신청 승인,반려
+	 * G/W 근태관리 [PUT] 수정신청 승인,반려
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject changeUsersModiyAtt(@PathVariable String userId, HttpServletRequest request,
@@ -1358,7 +1197,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 작성양식
+	 * G/W 근태관리 [GET] 근태관리 작성양식
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFormBody(@PathVariable String attitudetypeId, HttpServletRequest request) {
@@ -1389,6 +1228,9 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	
+	/**
+	 * G/W 근태관리 [GET] 근태 수정 신청 상세
+	 */
 	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attModAppDetail(
 			@PathVariable String attModId, HttpServletRequest request,
@@ -1418,7 +1260,10 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
 		return result;
 	}
-	
+
+	/**
+	 * G/W 근태관리 [POST] 근태수정현황 수정
+	 */
 	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject attModAppModify(
 			@PathVariable String attModId, HttpServletRequest request,
@@ -1428,7 +1273,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=true) String offset,
 			@RequestParam(value="content", required=true) String content,
 			@RequestParam(value="changeDate", required=true) String changeDate) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] started.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/modifyattitude/"+attModId+"] started.");
 		JSONObject result = new JSONObject();
 		int update = 0;
 		try {
@@ -1443,7 +1288,7 @@ public class EzAttitudeGWController {
 			result.put("data", update);
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
 		return result;
 	}
 	
@@ -1582,7 +1427,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * 근태관리 미입력자 메일발송
+	 * G/W 근태관리 [GET] 근태관리 미입력자 메일발송
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/mail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject absentedListSendMail(HttpServletRequest request) {
@@ -1648,7 +1493,7 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	/**
-	 * 근태내역리스트
+	 * G/W 근태관리 [GET] 근태내역리스트
 	 * @param attModId
 	 * @param request
 	 * @param companyId
@@ -1765,7 +1610,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteAttitudeAuth(
 			@PathVariable String companyId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1785,7 +1630,7 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
 		return result;
 	}
 	
@@ -2019,12 +1864,13 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * 조직도 부서 및 사원목록 검색
+	 * G/W 근태관리 [GET] 조직도 부서 및 사원목록 검색
 	 */
 	@RequestMapping(value = "/rest/ezAttitude/getSearchList.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getSearchList(HttpServletRequest request){	    
-		LOGGER.debug("getSearchList started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezAttitude/getSearchList.do] started.");
+		
 	    JSONObject resultJ = new JSONObject();
 	    
 	    try {
@@ -2107,12 +1953,12 @@ public class EzAttitudeGWController {
 	    	resultJ.put("code", 1);
 	    	resultJ.put("data", "");
 		}
-		LOGGER.debug("getSearchList ended.");
+	    LOGGER.debug("G/W EzAttitude [GET /rest/ezAttitude/getSearchList.do] ended.");
 		return resultJ;
 	}
 	
 	/**
-	 * 당일 근태관리 중복
+	 * G/W 근태관리 [GET] 당일 근태관리 중복
 	 * @param request
 	 * @return
 	 */
