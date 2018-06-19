@@ -250,16 +250,11 @@
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
 	            
-	           /*  $("#ListViewMsgTo tbody").addClass("sortable");
-	            $("#ListViewMsgCC tbody").addClass("sortable");
-	            $("#ListViewMsgBCC tbody").addClass("sortable"); */
-	            
 	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
 	            $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
 	            	connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
 	            	items : "tr",
 	            	opacity: 0.3,
-	            	click : function(event) { return; },
 	            	start : function(event, elem) { 
 	            		
 	            		var p_ListOrderObject = elem.item[0];
@@ -283,9 +278,14 @@
 	            		}
 	            		
 	            	},
-	            	stop : function(event) {
-	            		
-	            	}
+	            	click : function() {
+	            		$(".receiver_borderbox tbody").find(".multiple-sortable-selected").removeClass("multiple-sortable-selected");
+
+	            		for (var i = 0; i < listContentArry.length; i++) {
+	            			$("#" + listContentArry[i]).addClass("multiple-sortable-selected");
+	            		}
+	            	},
+	            	handle : "tbody"
 	            });
 	           /*  $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
@@ -1294,6 +1294,7 @@
 	                        	var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+		                        var strTopDiv = document.getElementById(listContentArry[i]).closest("table").id; //삭제
 	                      
 	                            // 재은 수정중
 	                        	if (moveRecipients) {
@@ -1382,7 +1383,8 @@
 	                            // 복사 한뒤 삭제 => 이동 재은
 	                            if (moveRecipients && !moveDel) {
 	                            	var selList = new ListView();
-	                	            selList.LoadFromID(prevListId);
+	                            	console.log(prevListId);
+	                	            selList.LoadFromID(strTopDiv);
 	                	            selList.DeleteRow(listContentArry[i]);
 	                            }
 	                        }
@@ -1916,7 +1918,7 @@
 		                    
 		                    if (moveRecipients && onloadCheck != "true" && p_ListOrderObject.tagName != "TR") {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.parentNode.getAttribute("id");
-		                        $(p_ListOrderObject.getAttribute("id")).addClass("multi-sort");
+		                        //$(p_ListOrderObject.getAttribute("id")).addClass("multi-sort");
 		                    } else {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
 		                    }
