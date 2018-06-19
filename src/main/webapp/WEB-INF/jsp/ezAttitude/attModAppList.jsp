@@ -128,8 +128,6 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
-	        console.log("${startDate}");
-	        console.log("${endDate}");
 	    });
 	    
 	    $(function () {
@@ -317,7 +315,7 @@
     			if (usepostDate) {
     				date_reset();
     			}
-    			$(Radio1).prop("checked", true);
+//     			$(Radio1).prop("checked", true);
     			type_set();
 			}
 			else if (r == "deptChange") {
@@ -991,7 +989,6 @@
 	    	var attNode;
 	    	// tr 노드 개수
 	    	var nodeCount = attNodes.length;
-	    	console.log(nodeCount);
 	        if (obj.checked) {
 	        	
 	            for (var i = 0; i < nodeCount; i++) {
@@ -1046,8 +1043,6 @@
 			var applCnt;
 			
 			modAttId = tds[0].getElementsByTagName("input").item(0).getAttribute("value");
-			console.log(tds[0].getElementsByTagName("input").item(0));
-			console.log(modAttId);
 			applCnt = modAttId.split("\_")[1];
 			modAttId = modAttId.split("\_")[0];
 			
@@ -1134,8 +1129,6 @@
 			    	}
 			    },
 			    complete : function() {
-			    	console.log(parent.frames["right"]);
-			    	console.log(parent.frames["attitude_main"]);
 			    	try {
 			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
 			    	} catch(e) {   	}
@@ -1310,12 +1303,12 @@
 				    </thead>
 				    <tbody style="max-height:500px; width:490px; display:block; overflow-y:auto;">
 				    	<tr>
-							<th style="width:120px;height:30px"><spring:message code='ezAttitude.t107'/></th>
-				    		<th style="width:30px; height:30px"><spring:message code='ezAttitude.t206'/></th>
-				    		<th style="width:30px; height:30px"><spring:message code='ezAttitude.t207'/></th>
-				  			<th style="height:30px"><spring:message code='ezAttitude.t104'/></th>
-				  			<th style="width:120px;height:30px"><spring:message code='ezAttitude.t116'/></th>
-				  			<th style="height:30px"><spring:message code='ezAttitude.t208'/></th>
+							<th style="width:120px;height:30px;text-align:center"><spring:message code='ezAttitude.t107'/></th>
+				    		<th style="width:30px; height:30px;text-align:center"><spring:message code='ezAttitude.t206'/></th>
+				    		<th style="width:30px; height:30px;text-align:center"><spring:message code='ezAttitude.t207'/></th>
+				  			<th style="height:30px;text-align:center"><spring:message code='ezAttitude.t104'/></th>
+				  			<th style="width:120px;height:30px;text-align:center"><spring:message code='ezAttitude.t116'/></th>
+				  			<th style="height:30px;text-align:center"><spring:message code='ezAttitude.t208'/></th>
 						</tr>
 				    </tbody>
 				</table>

@@ -394,9 +394,6 @@
 				var todayMemorialDayList = memorialDayCheck(checkDate, todayLunar);
 				var todayYearMemorialDayList = yearmemorialDayCheck(checkDate, todayLunar);
 				
-				console.log(todayLunar);
-				console.log(todayMemorialDayList);
-				console.log(todayYearMemorialDayList);
 				if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
 					return false;
 				} else {
@@ -604,7 +601,8 @@
 		    		async : false,
 		    		url : "/ezAttitude/getIsAttitude.do",
 		    		data : {
-		    			typeId : typeId
+		    			typeId : typeId,
+		    			startDate : $("#Sdatepicker").val()
 		    		},
 		    		success : function(result) {
 		    			isAttitudeReturn = result;
@@ -636,7 +634,7 @@
 	                </tr>
 	                <tr>
 	                    <td style="height: 20px;">
-	                        <table id="attiwriteForm" class="content">
+	                        <table id="attiwriteForm" class="content" style="margin-top:5px">
 								<tr id="selectTR">
 									<th><spring:message code='ezAttitude.t134'/></th>
 									<td colspan="2" id="selectTD">

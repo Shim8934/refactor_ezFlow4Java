@@ -24,6 +24,29 @@
 	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: 0;}
 	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
 			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
+			
+			.popupwrapAtt {
+			  display: inline-block;
+			  vertical-align: middle;
+			  position: relative;
+			  z-index: 2;
+			  max-width: 565px;
+			  box-sizing: border-box;
+			  width: 90%;
+			  background: #fff;
+			  padding: 15px 30px;
+			  -webkit-border-radius: 8px;
+			  -moz-border-radius: 8px;
+			  -o-border-radius: 8px;
+			  -ms-border-radius: 8px;
+			  border-radius: 8px;
+			  -webkit-box-shadow: 0 0 10px #000;
+			  -moz-box-shadow: 0 0 10px #000;
+			  -o-box-shadow: 0 0 10px #000;
+			  -ms-box-shadow: 0 0 10px #000;
+			  box-shadow: 0 0 10px #000;
+			  text-align: left;
+			}
 	    </style>
 	    
 		<script type="text/javascript" language="javascript">
@@ -790,7 +813,7 @@
 		      		</li>
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>						
-		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
+		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px; border-radius:3px">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 							<c:forEach var = "dept" items="${deptList}">
 										<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
@@ -817,7 +840,7 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
-	    <div id="searchPopup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+	    <div id="searchPopup" class="popupwrapAtt" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:490px; margin:10px 0px 0px 1px;">
@@ -825,24 +848,24 @@
 						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAttitude.t79'/></th>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px"><spring:message code='ezAttitude.t10'/></th>
+			  			<th style="width:90px;height:26px"><spring:message code='ezAttitude.t10'/></th>
 						<td><input type="text" id="searchUserName" name="searchUserName" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px"><spring:message code='ezAttitude.t11'/></th>
+			  			<th style="width:90px;height:26px"><spring:message code='ezAttitude.t11'/></th>
 						<td><input type="text" id="searchTitle" name="searchTitle" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
 					</tr>
 					<tr>
-			  			<th style="width:90px;height:30px"><spring:message code='ezAttitude.t137'/></th>
+			  			<th style="width:90px;height:26px"><spring:message code='ezAttitude.t137'/></th>
 						<td>
-							<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> 
+							<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left;margin-left:3px"/> 
 							~
 							<input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
 						</td>
 					</tr>
 					<tr>
-						<th style="width:90px;height:30px"><spring:message code='ezAttitude.t134'/></th>
-						<td><select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px;"></select></td>
+						<th style="width:90px;height:26px"><spring:message code='ezAttitude.t134'/></th>
+						<td><select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px"></select></td>
 					</tr>
 				</table>
 				<!-- /내용 -->

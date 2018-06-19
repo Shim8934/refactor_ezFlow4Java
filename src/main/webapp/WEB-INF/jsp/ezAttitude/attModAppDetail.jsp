@@ -64,12 +64,6 @@
 				$("#message").contents().find("p").each(function(){
 					$(this).css({"font-size":fontSize, "font-family":fontFamily});	
 				});
-				
-				console.log('${attitudeConfigVO.attitudeModAppl}');
-		        console.log(pageInfo);
-				console.log(writerid);
-				console.log(userId);
-				console.log(adminFlag);
 		    }
 		    
 		    window.onresize = function () {   	
@@ -255,7 +249,7 @@
 	                </tr>
 	                <tr>
 	                    <td style="height: 20px">
-	                        <div id="tabShecdule">
+	                        <div id="tabShecdule" style="margin-top:5px;">
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
