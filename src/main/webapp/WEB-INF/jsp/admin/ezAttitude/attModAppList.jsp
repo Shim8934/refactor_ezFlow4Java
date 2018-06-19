@@ -328,7 +328,7 @@
     			if (usepostDate) {
     				date_reset();
     			}
-    			$(Radio1).prop("checked", true);
+//     			$(Radio1).prop("checked", true);
     			type_set();
 			}
 			
