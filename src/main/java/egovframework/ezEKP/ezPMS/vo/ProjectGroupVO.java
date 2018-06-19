@@ -106,6 +106,12 @@ public class ProjectGroupVO {
     // 계획 진행률 
     private Float planProgress;
     
+    // 선행작업
+    private String pretask;
+    
+    // 선행업무
+    private String pregroup;
+    
     public String getProjectName() {
 		return projectName;
 	}
@@ -376,6 +382,22 @@ public class ProjectGroupVO {
 
 	public void setPlanProgress(Float planProgress) {
 		this.planProgress = planProgress;
+	}
+
+	public String getPretask() {
+		return pretask;
+	}
+
+	public void setPretask(String pretask) {
+		this.pretask = pretask;
+	}
+
+	public String getPregroup() {
+		return pregroup;
+	}
+
+	public void setPregroup(String pregroup) {
+		this.pregroup = pregroup;
 	}
 
 }

@@ -78,6 +78,8 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
     	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="28"/>
+    	<result property="pregroup"							column="PREGROUP"					columnIndex="29"/>
     </resultMap>
     
     <resultMap id="projectMainSettingVO" class="ProjectMainSettingVO">
@@ -1962,7 +1964,9 @@
 				A.WORKINGDAY,
 				A.REST_DUEDAY,
 				P.PROJECT_NAME,
-				B.GROUP_NAME AS UPPER_GROUP_NAME
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				R.PRETASK,
+				R.PREGROUP
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	
@@ -1984,6 +1988,12 @@
 			AND
 			</isEqual>
 			<isNotEqual property="location" compareValue="general">
+			LEFT JOIN
+				TBL_PMS_PRETASKREL R
+			ON
+				A.PROJECT_ID = R.PROJECT_ID
+			AND
+				A.GROUP_ID = R.GROUP_ID
 			WHERE
 			</isNotEqual>
 				A.TENANT_ID = #tenantId#
@@ -3265,7 +3275,7 @@
 	</select>
 	
 	<select id="EzPMSDAO.getMemberSchedule" parameterClass="map" resultMap="projectMemberScheduleVO">
-		SELECT	
+		SELECT DISTINCT
 			S.USER_ID,
 			S.ASSIGNED_DATE,
 			S.PROJECT_ID,
@@ -3284,6 +3294,8 @@
 			S.PROJECT_ID = #projectId#
 		AND	
 			S.TENANT_ID	= #tenantId#
+		ORDER BY
+			S.USER_ID, S.ASSIGNED_DATE
 	</select>
 	
 	<insert id="EzPMSDAO.addMemberSchedule" parameterClass="map">
@@ -3293,6 +3305,11 @@
 		) VALUES (
 			#projectId#,	#tenantId#,		#memberId#,		#assignedDate#
 		)
+		ON DUPLICATE KEY UPDATE
+			USER_ID = #memberId#,
+			ASSIGNED_DATE = #assignedDate#,
+			PROJECT_ID = #projectId#,
+			TENANT_ID = #tenantId#
 	]]>
 	</insert>
 </sqlMap>

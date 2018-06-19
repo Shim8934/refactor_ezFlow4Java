@@ -640,7 +640,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
-
+			System.out.println(startDate);
+			System.out.println(endDate);
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 
 			int createAndEndDateComp = createDate.compareTo(endDate);
@@ -657,7 +658,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			taskVO.setHeadManagerName2(headManagerInfo.getUserName2());
 			taskVO.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
 			taskVO.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
-			taskVO.setRealWorkingday(calWorkingDays + 1);
+			taskVO.setRealWorkingday(calWorkingDays);
 
 			taskId = ezPMSDAO.addTask(taskVO);
 

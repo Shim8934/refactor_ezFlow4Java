@@ -213,7 +213,7 @@
 			   				ganttData.roles.push(role);
 			   			}
 			   			
-			   			tempTask.depends = "";
+			   			tempTask.depends = gl[i].pretask || gl[i].pregroup;
 			   			tempTask.description = gl[i].overview;
 			   			tempTask.progress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(gl[i].realProgress).toFixed(1);
@@ -293,7 +293,7 @@
 			   			}
 			   			
 			   			tempTask.depends = "";
-			   			tempTask.pretask = tl[i].pretask;
+			   			tempTask.pretask = tl[i].pretask || tl[i].pregroup;
 			   			tempTask.description = tl[i].overview;
 			   			tempTask.progress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(tl[i].realProgress).toFixed(1);
@@ -723,13 +723,6 @@
 	   			Date.monthAbbreviations = ('<spring:message code="ezPMS.t246" />').split(";");
 	   			Date.dayNames =('<spring:message code="ezPMS.t245" />').split(";");
 	   			Date.dayAbbreviations =('<spring:message code="ezPMS.t244" />').split(";");
-	   			
-// 	   			//필터일 경우 셀렉트의 값을 변경해준다.
-// 	   			var taskStatus = "<c:out value='${taskStatus}'/>";
-// 	   			if(taskStatus !== ""){
-// 		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
-// 	   			}
-	   			
 	   		}
 	   		
 	   		function eventSetting(){
@@ -1104,6 +1097,7 @@
 	   			return ganttData;
 	   		}
 	   		
+	   		//업무 상태 필터 기능.
 	   		function setMyTaskList(status) {
 	   			var status = status;
 	   			var position = "";
@@ -1111,24 +1105,6 @@
 	   			var	url = "/ezPMS/getProjectForGantt.do?projectId=" + projectId + "&status=" + status;
 	   			
 	   			location.href = url;
-	   			return;
-	   			var data = {
-	   				position : position,
-	   				status : status,
-	   				projectId : projectId
-	   			}
-	   			
-	   			$.ajax({
-	   				type : "post",
-	   				contentType : "application/json; charset=UTF-8",
-	   				dataType : "html",
-// 	   				data : JSON.stringify(data),
-	   				url : url,
-	   				success : function(result) {
-	   					console.log(result);
-	   					alert("성공~")
-	   				}
-	   			});
 	   		}
 	   		
 	   		

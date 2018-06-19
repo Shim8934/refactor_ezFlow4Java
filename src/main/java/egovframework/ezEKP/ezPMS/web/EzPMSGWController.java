@@ -1,6 +1,10 @@
 package egovframework.ezEKP.ezPMS.web;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1569,11 +1573,33 @@ public class EzPMSGWController {
 				List<ProjectMemberVO> memberList = project.getProjectMember();
 				List<ProjectMemberScheduleVO> memberScheduleList = ezPMSService.getMemberSchedule(projectId, tenantId, lang);
 				
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date startDate = dateFormat.parse(planStartDate);
+				Date endDate = dateFormat.parse(planEndDate);
+				
+				Calendar startCal = Calendar.getInstance();
+				Calendar endCal = Calendar.getInstance();
+				
+				startCal.setTime(startDate);
+				endCal.setTime(endDate);
+				
+				List<String> dateList = new ArrayList<String>();
+				
+				while (startCal.compareTo(endCal) != 1) {
+					if (startCal.get(Calendar.DAY_OF_WEEK) == 1 || startCal.get(Calendar.DAY_OF_WEEK) == 7) {	
+						startCal.add(Calendar.DATE, 1);
+					} else {
+						dateList.add(dateFormat.format(startCal.getTime()));		
+						startCal.add(Calendar.DATE, 1);
+					}
+				}
+				
 				JSONObject data = new JSONObject();
 				data.put("planStartDate", planStartDate);
 				data.put("planEndDate", planEndDate);
 				data.put("memberList", memberList);
 				data.put("memberScheduleList", memberScheduleList);
+				data.put("dateList", dateList);
 				
 				result.put("status", "ok");
 				result.put("code", 0);
