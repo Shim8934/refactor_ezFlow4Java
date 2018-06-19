@@ -371,7 +371,7 @@
 						selectedDeptID : encodeURIComponent(authDeptList.value)
 					},
 					success : function(result) {
-						$("#attiStatis td div").text("0" + "<spring:message code='ezAttitude.t21'/>");
+						$(".statsUL dd").text("0");
 						for (var i = 0; i < result.length; i++) {
 							$("#" + result[i].typeId).text(result[i].count);
 						}
