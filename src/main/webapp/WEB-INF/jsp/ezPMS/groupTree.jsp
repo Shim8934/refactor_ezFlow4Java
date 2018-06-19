@@ -7,7 +7,7 @@
 <head>
 <title><spring:message code='ezPMS.t42' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
+<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -19,6 +19,8 @@
 	var onlyGroup = true;
 	var treeDepth = 0;
 	var originTreeDepth = parent.treeDepth;
+	var originGroupId = parent.groupId;
+	var originGroupName = parent.groupName;
 
 	$(document).ready(function() {
 		$.ajax({
@@ -74,18 +76,28 @@
 	
 	function close_Click(){
 // 		parent.groupId = "";
-		parent.treeDepth = originTreeDepth;
+		resetSelection();
 		parent.setUpperGroup();
 		parent.DivPopUpHidden();
 	}
 	
+	function resetSelection(){
+		parent.treeDepth = originTreeDepth;
+		parent.groupId = originGroupId;
+		parent.groupName = originGroupName;
+	}
+	
 	function getTreeDepth(obj){
 		treeDepth = obj.parentNode.getAttribute("aria-level");
-		/* 추후 수정하거나 삭제 필요*/
-// 		if(treeDepth > 2){
-// 			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.")
-// 			return false;
-// 		}
+		var isAddGroup = parent.document.location.href.toLowerCase().indexOf("addgroup");
+		
+		//그룹추가 페이지인지 확인 후 경고메시지 띄움.
+		if(treeDepth > 2 && isAddGroup != -1){
+			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.");
+			$("li[aria-selected='true'] a").removeClass("jstree-clicked");
+			$("li[aria-selected='true']").attr("aria-selected", false);
+			return false;
+		}
 		parent.treeDepth = treeDepth;
 	}
 	
