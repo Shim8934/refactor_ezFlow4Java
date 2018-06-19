@@ -677,6 +677,7 @@ function deleteProject() {
 function addFavoriteMemo(projectId) {
 	var response = confirm("<spring:message code='ezPMS.t24' />");
 	
+	
 	if (response == true) {
 		var data = {
 				status : "F",
@@ -693,7 +694,7 @@ function addFavoriteMemo(projectId) {
 					alert("<spring:message code='ezPMS.t25' />");
 					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
 					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
-					location.reload();
+					setProjectList("new");
 				} else {
 					alert("<spring:message code='ezPMS.t26' />");
 					return;

@@ -44,12 +44,12 @@
 						'multiple' : false,
 						'animation' : 0,
 						'themes' : {
-							'responsive' : false,
+							'responsive' : true,
 							//'variant' : 'small',
-							'stripes' : false
+							//'stripes' : false
 						}
 					},
-					'plugins' : [ 'sort' ],
+					'plugins' : [ 'sort', "wholerow"],
 					'sort' : function(a, b) {
 						var a1 = this.get_node(a);
 						var b1 = this.get_node(b);
