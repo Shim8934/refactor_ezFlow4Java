@@ -558,7 +558,7 @@
 	   			  
 	   			  if(new Date(preTask.end) > new Date(task.start)) {
 	   				  
-	   				  if(confirm("시작일과 완료일이 변경됩니다.\n진행하시겠습니까?") == false) {
+	   				  if(confirm("<spring:message code='ezPMS.t291' />") == false) {
 	   					  return;
 	   				  }
 	   			  }
