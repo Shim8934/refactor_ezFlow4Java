@@ -2629,9 +2629,9 @@
 		  	//썸네일 이미지에 레이어 팝업 기능 관련
 		    var tempTimer;
 		    function addThumbnailEvent(){
-		  		$(document).on("mouseover",".thumbnail",function(e){
-		    		thumbnailImgMouseOver(e);
-		    	}).on("click", ".thumbCloseBtn", function(e){
+		  		$(document)
+// 		  		.on("mouseover",".thumbnail",function(e){thumbnailImgMouseOver(e);})
+		    	.on("click", ".thumbCloseBtn", function(e){
 					toggleImgPopupBox(e);
 				}).on("click", ".thumbnail", function(e){
 					toggleImgPopupBox(e);
@@ -2765,6 +2765,12 @@
 		  		var imgPopup = $("#imgPopup");
 		  		
 		  		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
+		  		
+		  		//마우스 오버 이벤트 없애는 작업과 함께 이미지 뷰어가 보이는 상태에서 다른 그림 선택했을 때 처리하기 위해 수정. 2018-06-19 홍대표
+		  		if(imgPopup.attr("_filename") != e.target.getAttribute("_filename") && e.target.id !== "thumbCloseBtn"){
+		  			thumbnailImgMouseOver(e);
+		  			return;
+		  		}
 		  		
 		  		if(imgPopup.attr("src")){
 			  		imgPopupBox.removeClass("imgPopupBox").addClass("imgPopupBoxOff");
