@@ -220,9 +220,9 @@
 	                obj.className = "tabon";
 	                Tab1_SelectID = obj.id;
 	                if (Tab1_SelectID == "modify") {
-	                	$("div#mainmenu ul li:nth-child(3)").show();
+	                	$("div#mainmenu ul li:nth-child(1)").show();
 	                } else {
-	                	$("div#mainmenu ul li:nth-child(3)").hide();
+	                	$("div#mainmenu ul li:nth-child(1)").hide();
 	                }
 	                ChangeTab(obj);
 	            }
@@ -805,12 +805,12 @@
 	    <div>
 	    	<div id="mainmenu">
 				<ul>
-		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
-		      		<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
-	      			<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
+					<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
 		      		<li>
-		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
+		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span>
 		      		</li>
+					<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
+		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
 					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px; border-radius:3px">

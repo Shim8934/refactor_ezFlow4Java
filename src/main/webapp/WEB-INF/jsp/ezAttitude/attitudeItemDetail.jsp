@@ -169,9 +169,9 @@
 	                </tr>
 	                <tr>
 	                    <td style="height: 20px">
-	                        <table id="attiInfoView" class="content">
+	                        <table id="attiInfoView" class="content" style="margin-top:5px">
 	                               <tr id="HolderWrite">
-	                                   <th><div style="width:48px"><spring:message code='ezAttitude.t134'/></th>
+	                                   <th><div style="width:48px"><spring:message code='ezAttitude.t134'/></div></th>
 	                                   <td id="typeName" colspan="2">
 	                                   </td>
 	                               </tr>
