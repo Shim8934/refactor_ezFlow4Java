@@ -214,4 +214,6 @@ public interface EzPMSService {
 	public List<ProjectTaskVO> getTaskListByGroupId(int tenantId, long groupId);
 	
 	public Date addWorkingDays(Date date, int offset, String companyId, int tenantId);
+
+	public List<String> getDateTaskList(long projectId, String date, String selUserId, String lang, int tenantId);
 }

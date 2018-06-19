@@ -2477,4 +2477,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] addWorkingDays ended");
 		return new Date(cal.getTimeInMillis());
 	}
+	
+	public List<String> getDateTaskList(long projectId, String date, String selUserId, String lang, int tenantId) {
+		LOGGER.debug("[SERVICE] getDateTaskList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("date", date);
+		map.put("selUserId", selUserId);
+		map.put("lang", lang);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("[SERVICE] getDateTaskList ended.");
+		return ezPMSDAO.getDateTaskList(map);
+	}
 }

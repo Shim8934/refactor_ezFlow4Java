@@ -606,7 +606,12 @@
 				A.USER_ID_TYPE = 'dept'
 			AND
 			<isNotEqual property="roleId" compareValue="4">
-				MEMBER_ROLE_ID = #roleId#
+				<isEqual property="roleId" compareValue="5">
+					MEMBER_ROLE_ID IN (1,2)
+				</isEqual>
+				<isNotEqual property="roleId" compareValue="5">
+					MEMBER_ROLE_ID = #roleId#
+				</isNotEqual>
 			</isNotEqual>
 			<isEqual property="roleId" compareValue="4">
 				MEMBER_ROLE_ID IN (1,2,3)
@@ -2943,7 +2948,9 @@
 				A.WORKINGDAY,
 				A.REST_DUEDAY,
 				P.PROJECT_NAME,
-				B.GROUP_NAME AS UPPER_GROUP_NAME
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				R.PRETASK,
+				R.PREGROUP
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	
@@ -2954,6 +2961,12 @@
 				TBL_PMS_GROUP B
 			ON
 				A.UPPER_GROUP_ID = B.GROUP_ID
+			LEFT JOIN
+				TBL_PMS_PRETASKREL R
+			ON
+				A.PROJECT_ID = R.PROJECT_ID
+			AND
+				A.GROUP_ID = R.GROUP_ID
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND
@@ -3328,6 +3341,28 @@
 			group_id = #groupId#
 		AND
 			tenant_id = #tenantId#
+	]]>
+	</select>
+	<select id="EzPMSDAO.getDateTaskList" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT DISTINCT 
+			TASK_NAME
+		FROM 
+			TBL_PMS_TASK T
+		JOIN
+			TBL_PMS_TASKMEMBER M
+		ON
+			T.TASK_ID = M.TASK_ID
+		WHERE
+			T.PROJECT_ID = #projectId#
+		AND
+			T.TENANT_ID = #tenantId#
+		AND
+			M.USER_ID = #selUserId#
+		AND
+			T.PLAN_START_DATE <= #date#
+		AND
+			T.PLAN_END_DATE >= #date#
 	]]>
 	</select>
 </sqlMap>

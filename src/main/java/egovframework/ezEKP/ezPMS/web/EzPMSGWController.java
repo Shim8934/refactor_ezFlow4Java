@@ -1596,7 +1596,7 @@ public class EzPMSGWController {
 		@SuppressWarnings("unchecked")
 		@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/management/members", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 		public JSONObject getMemberSchedule(@PathVariable long projectId, HttpServletRequest request) throws Exception {
-			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] started.");
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/management/members] started.");
 			
 			JSONObject result = new JSONObject();
 
@@ -1651,7 +1651,37 @@ public class EzPMSGWController {
 				result.put("data", "");
 			}
 		
-			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/gantt/order] ended.");
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/management/members] ended.");
+			return result;
+		}
+		
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/dates/{date}/users/{selUserId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+		public JSONObject getDateTaskList(@PathVariable long projectId, @PathVariable String date, @PathVariable String selUserId, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/dates/" + date + "/users/" + selUserId + "] started.");
+			
+			JSONObject result = new JSONObject();
+
+			try {
+				String userId = request.getParameter("userId");
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+				int tenantId = info.getTenantId();
+				String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+				
+				List<String> taskList = ezPMSService.getDateTaskList(projectId, date, selUserId, lang, tenantId);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", taskList);
+			} catch (Exception e) {
+				e.printStackTrace();
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+			}
+		
+			LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId + "/dates/" + date + "/users/" + selUserId + "] ended.");
 			return result;
 		}
 }

@@ -1705,9 +1705,41 @@ public class EzPMSController {
 			model.addAttribute("planStartDate", data.get("planStartDate"));
 			model.addAttribute("planEndDate", data.get("planEndDate"));
 			model.addAttribute("dateList", data.get("dateList"));
+			model.addAttribute("projectId", projectId);
 		}
 		
 		LOGGER.debug("ezPMS getMemberSchedule ended");
 		return "ezPMS/pmsMemberSchedule";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/getDateTaskList.do")
+	@ResponseBody
+	public List<String> getDateTaskList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getDateTaskList started");
+		List<String> taskList = new ArrayList<String>();
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		System.out.println(request.getParameter("selectedDate"));
+		long projectId = Long.parseLong(request.getParameter("projectId")); 
+		String selectedDate = request.getParameter("selectedDate");
+		String selectedUserId = request.getParameter("selectedUserId");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		
+		String url = "/rest/ezPMS/projects/" + projectId + "/dates/" + selectedDate + "/users/" + selectedUserId;
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			taskList = (List<String>) result.get("data");
+		}
+		
+		
+		LOGGER.debug("ezPMS getDateTaskList started");
+		return taskList;
 	}
 }

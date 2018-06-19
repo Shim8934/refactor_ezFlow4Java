@@ -12,7 +12,7 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
-<title>인력관리</title>
+<title><spring:message code='ezPMS.t290' /></title>
 <script type="text/javascript">
 var memberList = '${memberList}';
 var memberScheduleList = JSON.parse('${memberScheduleList}');
@@ -28,43 +28,122 @@ function setMemberSchedule() {
 	for (var i = 0; i < memberScheduleList.length; i++) {
 		var memberId = memberScheduleList[i].userId;
 		var assignedDate = memberScheduleList[i].assignedDate;
-		console.log(memberId,assignedDate);
-		$("tr[userId='" + memberId + "']").find("td[date='" + assignedDate + "']").text("O");
-	}
+		$("tr[userId='" + memberId + "']").find("td[date='" + assignedDate + "']").html("<div class='circle' onclick='getTaskNameList(this)'></div>");	}
+}
+
+function getTaskNameList(elem) {
+	var clickedDate = $(elem).parent().attr("date");
+	var clickedUser = $(elem).parent().parent().attr("userId");
+	var projectId = "<c:out value='${projectId}'/>";
+	
+	console.log(projectId);
+	console.log(clickedDate);
+	
+	$.ajax({
+		type : "post",
+		url : "/ezPMS/getDateTaskList.do",
+		data : {
+			"projectId" : projectId, 
+			"selectedDate" : clickedDate, 
+			"selectedUserId" : clickedUser
+		},
+		success : function(result) {
+			var infoHTML = "<div style='background-color:#d1d1d1'>" + clickedDate + " <spring:message code='ezPMS.t137' /></div>";
+			infoHTML += "<div style='padding-left : 3px;'>";
+			
+			for (var i = 0; i < result.length; i++) {
+				infoHTML += "&gt; " + result[i] + "<br>";
+			}
+			
+			infoHTML += "</div>";
+			
+			$(".tooltipBox").html(infoHTML);
+		    $('.tooltipBox').show();
+		},
+		error : function(request, status, error) {
+		}
+	});
+	
+}
+
+window.onload = function() {
+	//툴팁 위치 지정
+	var positionTooltip = function(event) {
+		var tPosX = event.pageX - 5;
+		var tPosY = event.pageY + 15;
+		$(".tooltipBox").css({top:tPosY, left : tPosX});
+	};
+	
+	$(document).on("click", ".circle", function(event) {
+		//마우스 오버했을 때 툴팁위치 위치 지정해줌
+		positionTooltip(event);
+	});
+	
+	$("html").click(function(event) {
+		if (!$(event.target).hasClass("circle")) {
+			$(".tooltipBox").hide();
+		}
+	});
 }
 </script>
 <style type="text/css">
-#memberTable {
-	margin-left : 5px;
+.circle {
+	width : 17px;
+	height : 17px;
+	border : 1px solid #d1d1d1;
 	display : inline-block;
-	width : 30%;
+	margin-top : 1px;
+	border-radius : 50%;
+	background-color : #d1d1d1;
+	cursor : pointer;
+}
+#memberTable {
+	margin-left : 15px;
+	display : inline-block;
+	width : 98%;
 	overflow : auto;
-	height : 100%;
+	height : 568px;
+	float : left;
 }
 
 #calendar {
-	width : 68%;
-	overflow : auto;
+	width : 84%;
 	display : inline-block;
 	height : 100%;
+	overflow-x : auto;
 }
 
-#mainmenue {
-	margin : 5px 5px;
+#mainmenu {
+	margin : 13px;;
+}
+
+#memberList {
+	width : 16%;
+	float : left;
+	overflow-x : hidden;
+}
+
+.tooltipBox {
+	position : absolute;
+	background : #fff;
+	border : 1px solid black;
+	width : 250px;
 }
 </style>
 </head>
 <body>
 <div id="mainmenu">
 <ul>
-	<li><span onclick="popupClose()">뒤로</span></li>
+	<li><span onclick="popupClose()"><spring:message code='ezPMS.t76' /></span></li>
 </ul>
 </div>
 <div id="memberTable">
-	<table class="content" style="width : 100%">
+<div>
+	<div>
+	<table id="memberList" class="content">
 	<tr>
-		<th>이름</th>
-		<th>부서</th>
+		<th><spring:message code='ezPMS.t137' /> <spring:message code='ezPMS.t63' /></th>
+		<th><spring:message code='ezPMS.t115' /></th>
 	</tr>
 	<c:forEach items="${memberList }" var="member">
 	<tr id="${member.userId }">
@@ -73,8 +152,8 @@ function setMemberSchedule() {
 	</tr>
 	</c:forEach>
 	</table>
-</div>
-<div id="calendar">
+	</div>
+	<div id="calendar">
 	<table id="workSchedule" class="content">
 	<tr>
 	<c:forEach items="${dateList }" var="date">
@@ -84,11 +163,14 @@ function setMemberSchedule() {
 	<c:forEach items="${memberList }" var="member">
 	<tr userId="${member.userId }">
 	<c:forEach items="${dateList }" var="date">
-		<td date="${date }">X</td>
+		<td date="${date }" style="text-align:center">&nbsp;</td>
 	</c:forEach>
 	</tr>
 	</c:forEach>
 	</table>
+	</div>
 </div>
+</div>
+<div class="tooltipBox" style="display : none;"></div>
 </body>
 </html>
