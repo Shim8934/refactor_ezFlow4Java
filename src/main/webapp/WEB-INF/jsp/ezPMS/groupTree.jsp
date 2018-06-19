@@ -95,6 +95,7 @@
 		if(treeDepth > 2 && isAddGroup != -1){
 			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.");
 			$("li[aria-selected='true'] a").removeClass("jstree-clicked");
+			$("li[aria-selected='true']").attr("aria-selected", false);
 			return false;
 		}
 		parent.treeDepth = treeDepth;
