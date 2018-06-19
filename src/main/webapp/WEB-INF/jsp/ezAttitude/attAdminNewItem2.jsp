@@ -389,9 +389,6 @@
 				var todayMemorialDayList = memorialDayCheck(checkDate, todayLunar);
 				var todayYearMemorialDayList = yearmemorialDayCheck(checkDate, todayLunar);
 				
-				console.log(todayLunar);
-				console.log(todayMemorialDayList);
-				console.log(todayYearMemorialDayList);
 				if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
 					$("#selectAtti option[value=A07]").css("display", "");
 				} else {

@@ -146,7 +146,7 @@
 		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
 	</resultMap>
 	
-	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
+	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
 		<![CDATA[
 			SELECT 
 				A.ATTITUDE_ID,
@@ -227,7 +227,7 @@
 		]]>
 	</select>
 
-	<insert id="ezAttitude.insertAttitude" parameterClass="Map">
+	<insert id="ezAttitudeDAO.insertAttitude" parameterClass="Map">
 		INSERT INTO tbl_attitude
 		(
 			COMPANY_ID,
@@ -267,7 +267,7 @@
 		</selectKey>
 	</insert>
 	
-	<insert id="ezAttitude.insertAdminAttHistory" parameterClass="Map">
+	<insert id="ezAttitudeDAO.insertAdminAttHistory" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
 			COMPANY_ID,
 			TENANT_ID,
@@ -359,7 +359,7 @@
 				) c
 	</insert>
 	
-	<select id="ezAttitude.getIsAttitudeUserConf" parameterClass="Map" resultClass="String">
+	<select id="ezAttitudeDAO.getIsAttitudeUserConf" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				COUNT(*)
@@ -372,7 +372,7 @@
 		]]>
 	</select>
 	
-	<select id="ezAttitude.getAttitudeUserConfTime" parameterClass="Map" resultMap="attitudeUserConfTime">
+	<select id="ezAttitudeDAO.getAttitudeUserConfTime" parameterClass="Map" resultMap="attitudeUserConfTime">
 		<isEqual property="isValue" compareValue="1">
 			SELECT
 				WORK_STARTTIME,
@@ -1256,7 +1256,7 @@
 		</iterate>
 	</insert>
 	
-	<delete id="ezAttitude.deleteAttitude" parameterClass="Map">
+	<delete id="ezAttitudeDAO.deleteAttitude" parameterClass="Map">
 		DELETE FROM
 			tbl_attitude
 		WHERE
@@ -1265,7 +1265,7 @@
 			TENANT_ID = #tenantId#
 	</delete>
 	
-	<insert id="ezAttitude.updateAttitude" parameterClass="Map">
+	<insert id="ezAttitudeDAO.updateAttitude" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
 				tbl_attitude
@@ -1309,10 +1309,6 @@
 				A.APPR_USER_ID = B.CN
 			AND
 				A.TENANT_ID = B.TENANT_ID
-			AND
-				A.COMPANY_ID = B.PHYSICALDELIVERYOFFICENAME
-			WHERE 
-				A.COMPANY_ID = #companyId#
 			AND 
 				A.TENANT_ID = #tenantId#
 			AND

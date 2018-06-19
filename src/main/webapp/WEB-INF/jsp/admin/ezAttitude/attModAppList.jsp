@@ -328,7 +328,7 @@
     			if (usepostDate) {
     				date_reset();
     			}
-    			$(Radio1).prop("checked", true);
+//     			$(Radio1).prop("checked", true);
     			type_set();
 			}
 			
@@ -376,7 +376,6 @@
 	    }
 	    
 	    function get_att_list(pageNum) {
-	    	console.log("get_att_list");
 	    	$("#HeaderAllCheckBox").prop("checked",false);
 	    	
 	    	var obj = new Object();
@@ -1031,7 +1030,6 @@
 	    	var attNode;
 	    	// tr 노드 개수
 	    	var nodeCount = attNodes.length;
-	    	console.log(nodeCount);
 	        if (obj.checked) {
 	        	
 	            for (var i = 0; i < nodeCount; i++) {
@@ -1086,18 +1084,11 @@
 			var applCnt;
 			
 			modAttId = tds[0].getElementsByTagName("input").item(0).getAttribute("value");
-			console.log(tds[0].getElementsByTagName("input").item(0));
-			console.log(modAttId);
 			applCnt = modAttId.split("\_")[1];
 			modAttId = modAttId.split("\_")[0];
 			
-			if (adminFlag == "true") {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo + "&companyId=" + pCompanyId, "",
-			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			} else {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt + "&pageInfo=" + pageInfo + "&companyId=" + pCompanyId, "",
-			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
-			}
+			window.open("/admin/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo + "&companyId=" + pCompanyId, "",
+				"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    }
 	    
 	    function getHistory(t) {

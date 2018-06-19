@@ -183,7 +183,6 @@
 				    	alert("<spring:message code='ezAttitude.t175'/>")
 				    },
 				    success : function(json){
-				    	console.log(json);
 						if (json == 1) {
 							alert("<spring:message code='ezAttitude.t212'/>");
 						} else {

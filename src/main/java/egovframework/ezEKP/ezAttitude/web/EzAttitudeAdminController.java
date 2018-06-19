@@ -1945,4 +1945,106 @@ public class EzAttitudeAdminController {
 		
 		return status;
 	}
+	
+	/**
+	 * 근태 수정 신청 상세
+	 */
+	@RequestMapping(value="/admin/ezAttitude/attModAppDetail.do")
+	public String attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=true)String attModId,
+			@RequestParam(required=false)String companyId,
+			@RequestParam(required=false)String applCnt,
+			@RequestParam(required=false)String adminFlag,
+			@RequestParam(required=false)String pageInfo) throws Exception {
+		LOGGER.debug("attModAppDetail started");
+		
+		String attModDeptId = "";
+		String authFlag = "";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+		
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
+		String deptFlag = "";
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/modifyattitude/" + attModId;
+									
+		if (adminFlag != null) {
+			deptFlag = adminFlag;
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("sysLang", sysLang)
+				.queryParam("applCnt", applCnt)
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");			
+			attModDeptId = (String) data.get("writerDeptId");
+			model.addAttribute("data", data);
+			
+			url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userInfo.getId());
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			JSONObject attitudeConfigVO = new JSONObject();
+			if (status.equals("ok")) {
+				attitudeConfigVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("attitudeConfigVO", attitudeConfigVO);
+			}
+		}		
+
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userTimeSet", offset);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("font", font);
+		model.addAttribute("authFlag", authFlag);
+		model.addAttribute("deptFlag", deptFlag);
+		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("companyId", companyId);
+		
+		LOGGER.debug("attModAppDetail ended");
+		
+		return "/admin/ezAttitude/attModAppDetail";
+	}
 }
