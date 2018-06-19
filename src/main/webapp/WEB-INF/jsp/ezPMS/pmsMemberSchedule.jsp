@@ -29,28 +29,42 @@ function setMemberSchedule() {
 		var memberId = memberScheduleList[i].userId;
 		var assignedDate = memberScheduleList[i].assignedDate;
 		console.log(memberId,assignedDate);
-		$("tr[userId='" + memberId + "']").find("td[date='" + assignedDate + "']").text("O");
-	}
+		$("tr[userId='" + memberId + "']").find("td[date='" + assignedDate + "']").html("<div class='circle'></div>");	}
 }
 </script>
 <style type="text/css">
-#memberTable {
-	margin-left : 5px;
+.circle {
+	width : 17px;
+	height : 17px;
+	border : 1px solid black;
 	display : inline-block;
-	width : 30%;
+	margin-top : 1px;
+	border-radius : 50%;
+}
+#memberTable {
+	margin-left : 15px;
+	display : inline-block;
+	width : 98%;
 	overflow : auto;
-	height : 100%;
+	height : 568px;
+	float : left;
 }
 
 #calendar {
-	width : 68%;
-	overflow : auto;
+	width : 84%;
 	display : inline-block;
 	height : 100%;
+	overflow-x : auto;
 }
 
-#mainmenue {
-	margin : 5px 5px;
+#mainmenu {
+	margin : 13px;;
+}
+
+#memberList {
+	width : 16%;
+	float : left;
+	overflow-x : hidden;
 }
 </style>
 </head>
@@ -61,7 +75,9 @@ function setMemberSchedule() {
 </ul>
 </div>
 <div id="memberTable">
-	<table class="content" style="width : 100%">
+<div>
+	<div>
+	<table id="memberList" class="content">
 	<tr>
 		<th>이름</th>
 		<th>부서</th>
@@ -73,8 +89,8 @@ function setMemberSchedule() {
 	</tr>
 	</c:forEach>
 	</table>
-</div>
-<div id="calendar">
+	</div>
+	<div id="calendar">
 	<table id="workSchedule" class="content">
 	<tr>
 	<c:forEach items="${dateList }" var="date">
@@ -84,11 +100,13 @@ function setMemberSchedule() {
 	<c:forEach items="${memberList }" var="member">
 	<tr userId="${member.userId }">
 	<c:forEach items="${dateList }" var="date">
-		<td date="${date }">X</td>
+		<td date="${date }" style="text-align:center">&nbsp;</td>
 	</c:forEach>
 	</tr>
 	</c:forEach>
 	</table>
+	</div>
+</div>
 </div>
 </body>
 </html>

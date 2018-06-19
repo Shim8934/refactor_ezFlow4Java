@@ -1241,7 +1241,7 @@
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
-   				DivPopUpShow(1500, 700, "/ezPMS/getMemberSchedule.do?projectId=" + projectId);
+   				DivPopUpShow(1500, 636, "/ezPMS/getMemberSchedule.do?projectId=" + projectId);
 	   		}
 		</script>
 		<style>
