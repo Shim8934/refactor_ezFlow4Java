@@ -162,6 +162,15 @@
 			  box-shadow: 0 0 10px #000;
 			  text-align: left;
 			}
+			
+			.AttRedText {
+				color : red;
+			}
+			
+			.dateDiv {
+				text-align: left;
+				padding-left: 10px;
+			}
 		</style>
 		<script>
 			var pMode = "";
@@ -709,7 +718,7 @@
 				    			objTr.append($("<td style='width:10%;' title='" + vo.writerDeptName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerDeptName)));
 
 				    			if (vo.dateType == 1) {
-					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
+					    			objTr.append($("<td style='width:15%;'></td>").append($("<div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
 					    			
 					    			if (len >= 15) {
 					    				objTr.append($("<td style='width:60%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:355px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -718,7 +727,11 @@
 					    			}
 						    		
 					    		} else if (vo.dateType == 2) {
-					    			objTr.append($("<td style='width:15%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
+					    			if (vo.typeId == 'A02' || vo.typeId == 'A08') {
+					    				objTr.append("<td style='width:15%;'><div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>"+ vo.startDate.substring(0,11) + "<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span></div></td>");	
+					    			} else {
+					    				objTr.append($("<td style='width:15%;'></td>").append($("<div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
+					    			}
 					    			
 					    			if (len >= 15) {
 					    				objTr.append($("<td style='width:60%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:355px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -727,7 +740,7 @@
 					    			}
 						    		
 					    		} else if (vo.dateType == 3) {
-					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16) + "\u00a0~\u00a0" + vo.endDate.substring(11,16))));
+					    			objTr.append($("<td style='width:25%;'></td>").append($("<div class='dateDiv' style='width:175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16) + "\u00a0~\u00a0" + vo.endDate.substring(11,16))));
 					    			
 					    			if (len >= 15) {
 					    				objTr.append($("<td style='width:50%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:311px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -736,7 +749,7 @@
 					    			}
 						    		
 					    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
-					    			objTr.append($("<td style='width:25%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+					    			objTr.append($("<td style='width:25%;'></td>").append($("<div class='dateDiv' style='width:175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
 					    			
 					    			if (len >= 15) {
 					    				objTr.append($("<td style='width:50%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:311px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -746,9 +759,9 @@
 						    		
 					    		} else if (vo.typeId == 'A04') {
 					    			if (vo.dateType == 4) {
-					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+					    				objTr.append($("<td style='width:35%;'></td>").append($("<div class='dateDiv' style='width:239px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
 					    			} else if (vo.dateType == 5) {
-					    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:249px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16)+ "\u00a0~\u00a0" + vo.endDate.substring(0,16))));
+					    				objTr.append($("<td style='width:35%;'></td>").append($("<div class='dateDiv' style='width:239px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16)+ "\u00a0~\u00a0" + vo.endDate.substring(0,16))));
 					    			}
 					    			
 					    			if (len >= 15) {
@@ -791,7 +804,7 @@
 					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
 					    		
 					    		if (vo.dateType == 1) {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
 					    			
 					    			if (len >= 15) {
 							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:519px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -799,7 +812,11 @@
 							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    			}
 					    		} else if (vo.dateType == 2) {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:141px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
+					    			if (vo.typeId == 'A02' || vo.typeId == 'A08') {
+					    				objTr.append("<td style='width:20%;'><div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>"+ vo.startDate.substring(0,11) + "<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span></div></td>");	
+					    			} else {
+					    				objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
+					    			}
 					    			
 									if (len >= 15) {
 							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:519px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -807,7 +824,7 @@
 							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    			}
 					    		} else if (vo.dateType == 3) {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16) + "\u00a0~\u00a0" + vo.endDate.substring(11,16))));
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16) + "\u00a0~\u00a0" + vo.endDate.substring(11,16))));
 					    			
 									if (len >= 15) {
 							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:475px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -815,7 +832,7 @@
 							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
 					    			}
 					    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:185px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+					    			objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
 					    			
 									if (len >= 15) {
 										objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:475px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
@@ -824,9 +841,9 @@
 					    			}
 					    		} else if (vo.typeId == 'A04') {
 					    			if (vo.dateType == 4) {
-					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+					    				objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:235px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
 					    			} else if (vo.dateType == 5) {
-					    				objTr.append($("<td style='width:20%;'></td>").append($("<div style='width:245px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16)+ "\u00a0~\u00a0" + vo.endDate.substring(0,16))));
+					    				objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:235px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16)+ "\u00a0~\u00a0" + vo.endDate.substring(0,16))));
 					    			}
 					    			
 									if (len >= 15) {
@@ -902,18 +919,22 @@
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + vo.writerDeptName + "'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerDeptName)));
 			    			
 			    			if (vo.dateType == 1) {
-				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div class='dateDiv' style='width:260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
 				    		} else if (vo.dateType == 2) {
-				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
+				    			if (vo.typeId == 'A02' || vo.typeId == 'A08') {
+				    				objTr.append("<td style='width:35%;'><div class='dateDiv' style='width:260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>"+ vo.startDate.substring(0,11) + "<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span></div></td>");	
+				    			} else {
+					    			objTr.append($("<td style='width:35%;'></td>").append($("<div class='dateDiv' style='width:260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
+				    			}
 				    		} else if (vo.dateType == 3) {
-				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16) + "\u00a0~\u00a0" + vo.endDate.substring(11,16))));
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div class='dateDiv' style='width:260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16) + "\u00a0~\u00a0" + vo.endDate.substring(11,16))));
 				    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
-				    			objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+				    			objTr.append($("<td style='width:35%;'></td>").append($("<div class='dateDiv' style='width:260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
 				    		} else if (vo.typeId == 'A04') {
 				    			if (vo.dateType == 4) {
-				    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+				    				objTr.append($("<td style='width:35%;'></td>").append($("<div class='dateDiv' style='width:260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
 				    			} else if (vo.dateType == 5) {
-				    				objTr.append($("<td style='width:35%;'></td>").append($("<div style='width:270px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16)+ "\u00a0~\u00a0" + vo.endDate.substring(0,16))));
+				    				objTr.append($("<td style='width:35%;'></td>").append($("<div class='dateDiv' style='width:260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16)+ "\u00a0~\u00a0" + vo.endDate.substring(0,16))));
 				    			}
 				    		}
 			    			
