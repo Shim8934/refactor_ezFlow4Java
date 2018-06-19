@@ -54,6 +54,7 @@ var weightData = '${weightData}';
 var target = "<c:out value='${target}'/>";
 var headManagerName = "<c:out value='${taskDetails.headManagerName}'/>";
 var groupId = 0;
+var preTaskId = "";
 
  $(function() {
 	 if (target == "task") {
@@ -181,6 +182,11 @@ function updateTaskInfo() {
 			weight = -1;
 		}
 
+		// 선행 작업이 업무인지 그룹인지 판단
+		var type;
+		if(preTaskId.indexOf("t") != -1) {
+			preTaskId = preTaskId.substring()
+		}
 		
 		data = {
 				taskName : taskName,
