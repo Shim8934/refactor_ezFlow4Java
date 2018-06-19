@@ -834,12 +834,17 @@
               	  <tr>
                     <th><spring:message code="ezEmail.t179" /></th>
                     <td> 
-	                   <select id="listcount" style="WIDTH:40px;height:20px;" onChange="ListCount(this.value);">
+	                   <select id="listcount" style="WIDTH:46px;height:20px;" onChange="ListCount(this.value);">
 	                        <option value=10 <c:if test="${mailGeneral.listCount == '10'}">selected</c:if>>10</option>
 	                        <option value=20 <c:if test="${mailGeneral.listCount == '20'}">selected</c:if>>20</option>
 	                        <option value=30 <c:if test="${mailGeneral.listCount == '30'}">selected</c:if>>30</option>
 	                        <option value=40 <c:if test="${mailGeneral.listCount == '40'}">selected</c:if>>40</option>
 	                        <option value=50 <c:if test="${mailGeneral.listCount == '50'}">selected</c:if>>50</option>
+	                        <option value=60 <c:if test="${mailGeneral.listCount == '60'}">selected</c:if>>60</option>
+	                        <option value=70 <c:if test="${mailGeneral.listCount == '70'}">selected</c:if>>70</option>
+	                        <option value=80 <c:if test="${mailGeneral.listCount == '80'}">selected</c:if>>80</option>
+	                        <option value=90 <c:if test="${mailGeneral.listCount == '90'}">selected</c:if>>90</option>
+	                        <option value=100 <c:if test="${mailGeneral.listCount == '100'}">selected</c:if>>100</option>
 	                    </select>
 	                </td>
                   </tr>
