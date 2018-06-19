@@ -32,6 +32,7 @@
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+	    <script type="text/javascript" src="/js/jquery-ui/jquery.multipleSortable.js"></script>
 	    <script type="text/javascript">
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
@@ -249,11 +250,24 @@
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
 	            
+	           /*  $("#ListViewMsgTo tbody").addClass("sortable");
+	            $("#ListViewMsgCC tbody").addClass("sortable");
+	            $("#ListViewMsgBCC tbody").addClass("sortable"); */
+	            
 	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	            $("#listType1 .receiver_borderbox div").multisortable({
-	            	connectWith: "tbody",
+	            $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
+	            	connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
 	            	items : "tr",
-	            	opacity: 0.3
+	            	opacity: 0.3,
+	            	click : function() {return;},
+	            	start : function() {
+	            		$(".receiver_borderbox tbody").find(".multiple-sortable-selected").removeClass("multiple-sortable-selected");
+	            		
+	            		for (var i = 0; i < listContentArry.length; i++) {
+	            			$("#" + listContentArry[i]).addClass("multiple-sortable-selected");
+	            		}
+	            		
+	            	}
 	            });
 	           /*  $("#listType1 tr").each(function(){
 	            	$(this).find("table tbody").sortable();
@@ -1884,6 +1898,7 @@
 		                    
 		                    if (moveRecipients && onloadCheck != "true" && p_ListOrderObject.tagName != "TR") {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.parentNode.getAttribute("id");
+		                        $(p_ListOrderObject.getAttribute("id")).addClass("multi-sort");
 		                    } else {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
 		                    }
