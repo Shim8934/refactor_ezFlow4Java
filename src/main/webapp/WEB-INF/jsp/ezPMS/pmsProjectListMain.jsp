@@ -360,8 +360,11 @@ function changeProjectSort(sortType) {
 	projectSort = sortType;
 	orderHow = "";
 	orderWhat = "";
-	changeMainSetting();
+	startRow = 0;
+	listNumber = $(".projectList").length;
+
 	setProjectList("new");
+	changeMainSetting();
 	MailOptionHidden();
 }
 
@@ -405,9 +408,8 @@ function setInitOrder() {
 }
 
 function setProjectList(mode) {
-	if (viewType == 0) {
-		listNumber = 20;
-	}
+	console.log(startRow);
+	console.log(listNumber);
 	
 	var param = {
 		projectSort : projectSort,
@@ -870,8 +872,8 @@ function getSearchProject() {
 
 function searchProject() {
 	currentPage = 1;
-	listProjectStatus = "A";
-	searchByName = $("#searchByName").val();
+	listProjectStatus = "A";	
+	searchByProjectName = $("#searchByProjectName").val();
 	searchByUser = $("#searchByUser").val();
 	searchByStartDate = $("#Sdatepicker").val();
 	searchByEndDate = $("#Edatepicker").val();

@@ -225,11 +225,13 @@
 		if (target == null || target != "group") {
 			taskId = "${taskDetails.taskId}";
 			target = "task";
+			
+			DivPopUpShow(760, 346, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		} else {
 			taskId = "${taskDetails.groupId}";
+			
+			DivPopUpShow(760, 300, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		}
-	 	
-		DivPopUpShow(760, 500, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 	}
 	
 	function goAddBoard() {
@@ -452,9 +454,9 @@ button.PHBtn {
 			    <td id="startDiff" class="detailsTable-td" name="startDiff"></td>
 			  </tr>
 			  <tr>
-			    <th class="detailsTable-th"><spring:message code='ezPMS.t63' /></th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t62' /></th>
 			    <td class="detailsTable-td"><c:out value="${taskDetails.planEndDate}"/></td>
-			    <th class="detailsTable-th"><spring:message code='ezPMS.t63' /></th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t62' /></th>
 			    <td class="detailsTable-td"><c:out value="${taskDetails.realEndDate == null ? '-' : taskDetails.realEndDate}"/></td>
 			    <td id="endDiff" class="detailsTable-td" name="endDiff"></td>
 			  </tr>
