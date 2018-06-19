@@ -92,17 +92,18 @@
 	        document.onselectstart = function () { return false; };
 	
 	        $(function () {
-	            $("#sel_year").selectmenu({
+	        	/* 2018-06-19 김민성 - 전자결재 selectbox 기본으로 변경 */
+	           /*  $("#sel_year").selectmenu({
 	                change: function (event, data) {
 	                    onSelect_Year(data.item.value);
 	                }
-	            });
+	            }); 
 	
 	            $("#who_year").selectmenu({
 	                change: function (event, data) {
 	                    onSelect_Year(data.item.value);
 	                }
-	            });
+	            }); */
 	            
 	            $("#number")
 	              .selectmenu()
@@ -1352,19 +1353,19 @@
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            </c:if>
 	            <!-- <img src="/images/i_bar.gif"> -->
-	            <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
-	                <option value="ALL">ALL</option>
-	            </select>  
+	            <li style="vertical-align: middle; margin-top:1px;"> <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
+		            <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+		        </select>  </li>
 	        </ul>
 	        <!-- 	        후결 문서함 -->
 	    	<ul id="menuapr">
 		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li> 
 		        <li id="tSearchCondiApr"><span id="SearchCondiApr" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		        <img src="/images/i_bar.gif">
-		        <select id="who_year" name="who_year" style="width:92px;" onchange="onSelect_Year(this);">
-		            <option value="ALL">ALL</option>
-		        </select>   
+		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
+		        <li style="vertical-align: middle; margin-top:1px;"> <select id="who_year" name="who_year" style="width:92px;" onchange="onSelect_Year(this);">
+		            <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+		        </select>  </li>
       		</ul>
 	    </div>
 	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
