@@ -38,7 +38,7 @@
 			</div>
 			
 			<!-- 환경설정 -->
-			<h3 style=""><span><spring:message code="ezCabinet.t06"/></span></h3>
+			<h3 id="cabinetConfig"><span><spring:message code="ezCabinet.t06"/></span></h3>
 			
 			<!-- 캐비닛 관리자 -->
 			<c:if test="${isCabinetAdmin == '1'}">
@@ -55,13 +55,16 @@
 				setButtons();
 				
 				function setButtons() {
-					var adminSpan     = document.getElementById("cabinetAdmin");
-					adminSpan.onclick = function(e) {getAdminPage();};
+					var adminSpan  = document.getElementById("cabinetAdmin");
+					adminSpan.addEventListener("click", function(e) {getAdminPage();}, false);
+					
+					var configSpan = document.getElementById("cabinetConfig");
+					configSpan.addEventListener("click", function(e) {getConfigPage();}, false);
 				}
 				
-				function getAdminPage() {
-					window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");
-				}
+				function getAdminPage() {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
+				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
+				
 			})();
 		</script>
 	</body>

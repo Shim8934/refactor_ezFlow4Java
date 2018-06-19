@@ -18,6 +18,7 @@
 .cabiMain {margin-left:5px}
 .cabiMain .bttnDiv {width: 400px; text-align: center;}
 .cabiMain .cabBttnDiv {width: 400px; text-align: center; margin: 10px auto;}
+.cabGeneral .cabBttnDiv {width: 623px; text-align: center;}
 .cabPersonalDiv, .cabGroupDiv {height: 500px; display: flex;}
 .cabPersonalDiv >div {border: 1px solid #ddd;}
 .cabPersonalDiv .compOrg, .cabGroupDiv .compOrg {width: 250px; min-width: 250px; padding: 5px;}
@@ -28,7 +29,7 @@
 .selectBttns >div >img {cursor: pointer; width: 16px; height: 16px; margin: 0px auto; display: block;}
 .selectBttns >div:first-child {margin-bottom: 5px;}
 .cabGroupDiv .compOrg {display: flex; flex-flow: column;}
-.compOrg .deptPart {height: 250px; margin-bottom: 10px;}
+.compOrg .deptPart {height: 250px; margin-bottom: 10px; overflow: auto;}
 .compOrg .usersPart {flex-grow: 1;}
 .compOrg .deptPart, .compOrg .usersPart, .cabGroupDiv .userDiv {border: 1px solid #ddd;}
 .cabGroupDiv .userDiv {flex-grow: 1;}
@@ -38,8 +39,8 @@
 .compSelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
 .compSelect >select {font-size: 12px; height: 20px; display:inline-block;}
 .mainbody #mainSetting {margin: 10px 0px;}
-.content {width: 300px;}
-.content tr {height: 40px;}
+.content.on {width: 300px;}
+.content.on tr {height: 40px;}
 .content .white {background-color: #fff !important;}
 .white >input[type='text'] {height: 30px; padding: 0px 5px;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}

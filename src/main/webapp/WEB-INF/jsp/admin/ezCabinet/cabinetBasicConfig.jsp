@@ -21,7 +21,7 @@
 			</div>
 			
 			<div id="mainSetting">
-				<table class="content">
+				<table class="content on">
 					<tr>
 						<th><spring:message code='ezCabinet.t16'/></th>
 						<th class="white">

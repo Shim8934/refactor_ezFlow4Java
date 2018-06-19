@@ -3,14 +3,23 @@ package egovframework.ezEKP.ezCabinet.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -26,12 +35,16 @@ public class EzCabinetController {
 	private EzCabinetRestService cabinetRestService;
 	
 	@RequestMapping(value = "/ezCabinet/cabinetMain.do")
-	public String cabinetMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
+	public String jspGetCabinetMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
+		logger.debug("jspGetCabinetMain started");
+		logger.debug("jspGetCabinetMain ended");
 		return "ezCabinet/cabinetMain";
 	}
 	
 	@RequestMapping(value="/ezCabinet/cabinetLeft.do")
 	public String jspGetCabinetLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		logger.debug("jspGetCabinetLeft started");
+		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		if ((long)cabinetRestService.checkCabinetAdmin(request, userInfo.getId()).get("code") != 0) {
@@ -41,7 +54,27 @@ public class EzCabinetController {
 			model.addAttribute("isCabinetAdmin", "1");
 		}
 		
+		logger.debug("jspGetCabinetLeft ended");
 		return "ezCabinet/cabinetLeft";
+	}
+	
+	@RequestMapping(value="/ezCabinet/cabinetGeneral.do")
+	public String jspGetCabinetGeneral(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetCabinetGeneral started");
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		logger.debug("jspGetCabinetGeneral ended");
+		return "ezCabinet/cabinetGeneral";
+	}
+	
+	@RequestMapping(value="/ezCabinet/cabinetConfig.do")
+	public String jspGetCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetCabinetConfig started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		logger.debug("jspGetCabinetConfig ended");
+		return "ezCabinet/cabinetConfig";
 	}
 	
 	@SuppressWarnings("unchecked")

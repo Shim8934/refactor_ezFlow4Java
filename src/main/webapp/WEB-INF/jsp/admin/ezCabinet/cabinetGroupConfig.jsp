@@ -25,9 +25,7 @@
 					<div class="deptPart">
 						<div id="deptTree"></div>
 					</div>
-					<div class="usersPart">
-						
-					</div>
+					<div class="usersPart"></div>
 				</div>
 				<div class="selectBttns">
 					<div><img src="/images/arr_right.gif"></div>
@@ -46,18 +44,29 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
 			(function() {
-				/* var companyTree = new CabinetTree();
+				var deptTree = new CabinetTree();
 				window.addEventListener("load", function(e) {initBttns();}, false);
 				
 				function initBttns() {
-					companyTree.setTreeInfo("compTree", "/ezCabinet/getCompanyTree.do", "/ezCabinet/getSubNodes.do", null, null);
-					companyTree.setCompanyId(document.getElementById("companyList").value);
-					companyTree.makeTree();
+					deptTree.setTreeInfo("deptTree", "/ezCabinet/getCompanyTree.do", "/ezCabinet/getSubNodes.do", getDeptMember, null);
+					deptTree.setCompanyId(document.getElementById("companyList").value);
+					deptTree.makeTree();
 					
 					var selectCompBox      = document.getElementById("companyList");
 					selectCompBox.onchange = function(e) {};
 				}
 				
+				function getDeptMember() {
+					var ajaxUrl      = "/ezCabinet/getDeptMembers.do";
+					var selectedElmt = document.getElementsByClassName("selectedNode")[0];
+					var data         = {"deptId" : selectedElmt.getAttribute("name")};
+					
+					makeAjaxCall( data, "GET", ajaxUrl, processUsersList, null, true);
+				}
+				
+				function processUsersList(data) {
+					var userList = data.listMembers;
+				}
 				
 				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
 					$.ajax({
@@ -77,7 +86,7 @@
 							alert(CabinetMessages.strError);
 						}
 					});
-				} */
+				}
 			})();
 		</script>
 	</body>
