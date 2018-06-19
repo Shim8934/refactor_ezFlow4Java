@@ -24,6 +24,29 @@
 	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: 0;}
 	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
 			.portlet_tabpart01_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
+			
+			.popupwrapAtt {
+			  display: inline-block;
+			  vertical-align: middle;
+			  position: relative;
+			  z-index: 2;
+			  max-width: 565px;
+			  box-sizing: border-box;
+			  width: 90%;
+			  background: #fff;
+			  padding: 15px 30px;
+			  -webkit-border-radius: 8px;
+			  -moz-border-radius: 8px;
+			  -o-border-radius: 8px;
+			  -ms-border-radius: 8px;
+			  border-radius: 8px;
+			  -webkit-box-shadow: 0 0 10px #000;
+			  -moz-box-shadow: 0 0 10px #000;
+			  -o-box-shadow: 0 0 10px #000;
+			  -ms-box-shadow: 0 0 10px #000;
+			  box-shadow: 0 0 10px #000;
+			  text-align: left;
+			}
 	    </style>
 	    
 		<script type="text/javascript" language="javascript">
@@ -817,7 +840,7 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
-	    <div id="searchPopup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+	    <div id="searchPopup" class="popupwrapAtt" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:490px; margin:10px 0px 0px 1px;">
