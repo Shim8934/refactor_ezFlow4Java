@@ -1662,14 +1662,6 @@ public class EzAttitudeController {
 			) throws Exception {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-
-		String offset = userInfo.getOffset();
-		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
-		if (userInfo.getLang().equals(sysLang))  {
-			sysLang = "primary";
-		}
 		
 		if (companyID == null || companyID.equals("")) {
 			companyID = userInfo.getCompanyID();
@@ -3234,14 +3226,6 @@ public class EzAttitudeController {
 		String companyID = request.getParameter("companyID") == null ? userInfo.getCompanyID() : request.getParameter("companyID");
 		String lang = userInfo.getPrimary();
 		String page = request.getParameter("page");
-		String infoXML = "";
-		
-		LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
-		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + "companyID=" + companyID);
-	    
-		
-		String offset = userInfo.getOffset();
-		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezAttitude/getSearchList.do";

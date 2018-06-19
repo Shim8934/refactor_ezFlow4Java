@@ -1298,8 +1298,6 @@ public class EzAttitudeGWController {
 			}
 			idList = idList.substring(0, idList.length()-1);
 			idList += ")";
-
-			LOGGER.debug("companyId : " + companyId + ", tenantId : " + tenantId + ", idList : " + idList);
 			
 			status = ezAttitudeService.delUsersModifyAtt(companyId, tenantId, ids);
 			
@@ -1338,9 +1336,6 @@ public class EzAttitudeGWController {
 		
 		try{
 			String[] ids = idList.split(",");
-
-			LOGGER.debug("companyId : " + companyId + ", tenantId : " + tenantId 
-					+ ", idList : " + idList + ", changeStatus : " + changeStatus);
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -1652,7 +1647,17 @@ public class EzAttitudeGWController {
 		
 		return result;
 	}
-	
+	/**
+	 * 근태내역리스트
+	 * @param attModId
+	 * @param request
+	 * @param companyId
+	 * @param tenantId
+	 * @param userId
+	 * @param offset
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}/history", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getModAppHistory(
 			@PathVariable String attModId, HttpServletRequest request,

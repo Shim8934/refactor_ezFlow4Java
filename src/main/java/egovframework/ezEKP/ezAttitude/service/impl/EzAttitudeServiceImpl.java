@@ -1463,11 +1463,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("displayName",userName);
 		map.put("displayName2",userName2);
 		
-		String typeId = "A01";
-		//승인, 반려 기록
-		
 		String apprStatus = ezAttitudeDAO.checkModApplStatus(map);
-		
+		//신청상태가 아니면 return
 		if (apprStatus != null && !apprStatus.equals("0")) {
 			return;
 		}
@@ -1501,11 +1498,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			Date userConfTime = f.parse(resultConfDate);
 			Date userInTime = f.parse(startDate);
 			
+			String typeId = "A01";
 			if (userInTime.after(userConfTime)) { //지각인 경우
 				typeId = "A02";
-			}
-			
+			}			
 			map.put("typeId", typeId);
+			
 			ezAttitudeDAO.changeUsersAttType(map);
 			
 			//승인일 때 attitude의 modappl상태값 변경 3(수정상태)

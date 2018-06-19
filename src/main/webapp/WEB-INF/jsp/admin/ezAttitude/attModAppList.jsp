@@ -1091,13 +1091,8 @@
 			applCnt = modAttId.split("\_")[1];
 			modAttId = modAttId.split("\_")[0];
 			
-			if (adminFlag == "true") {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo + "&companyId=" + pCompanyId, "",
-			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			} else {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt + "&pageInfo=" + pageInfo + "&companyId=" + pCompanyId, "",
-			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
-			}
+			window.open("/admin/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo + "&companyId=" + pCompanyId, "",
+				"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    }
 	    
 	    function getHistory(t) {
