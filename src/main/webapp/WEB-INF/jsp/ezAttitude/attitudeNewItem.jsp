@@ -604,7 +604,8 @@
 		    		async : false,
 		    		url : "/ezAttitude/getIsAttitude.do",
 		    		data : {
-		    			typeId : typeId
+		    			typeId : typeId,
+		    			startDate : $("#Sdatepicker").val()
 		    		},
 		    		success : function(result) {
 		    			isAttitudeReturn = result;
