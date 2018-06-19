@@ -416,10 +416,9 @@ form{display:inline;margin:0}
 	float:left;
 	/* background:url('/images/kr/cm/btn_default_offright.gif') no-repeat top right;
 	height:28px; */
-	padding:5px 4px;	
+	padding:6px 4px;	
 	font:12px Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	letter-spacing:-1;
-	padding-top:7px;
 	border:1px solid #ddd;
 	color:#666;
 	border-radius: 3px;
@@ -1294,7 +1293,7 @@ form{display:inline;margin:0}
 	font-weight:normal;
 	white-space:nowrap;
 	width:auto;
-	line-height:21px;
+	line-height:19px;
 	
 }
 
