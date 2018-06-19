@@ -259,13 +259,31 @@
 	            	connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
 	            	items : "tr",
 	            	opacity: 0.3,
-	            	click : function() {return;},
-	            	start : function() {
-	            		$(".receiver_borderbox tbody").find(".multiple-sortable-selected").removeClass("multiple-sortable-selected");
+	            	click : function(event) { return; },
+	            	start : function(event, elem) { 
+	            		
+	            		var p_ListOrderObject = elem.item[0];
+	            		var listSelectFlag = false;
+	            		for (var i = 0; i < listContentArry.length; i++) {
+	            			if (listContentArry[i] != p_ListOrderObject) {
+	            				listSelectFlag = true;
+	            			}
+	            		}
+	            		
+	            		if (listSelectFlag) {
+	            			p_ListOrderObject.childNodes[0].style.backgroundColor = m_strColorSelect;
+		            		listContentArry[listContentArry.length] = p_ListOrderObject.id;
+	            		}
+	            		
+	            		$(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
+	            		$(".receiver_borderbox tr").removeClass("ui-sortable-helper");
 	            		
 	            		for (var i = 0; i < listContentArry.length; i++) {
 	            			$("#" + listContentArry[i]).addClass("multiple-sortable-selected");
 	            		}
+	            		
+	            	},
+	            	stop : function(event) {
 	            		
 	            	}
 	            });
