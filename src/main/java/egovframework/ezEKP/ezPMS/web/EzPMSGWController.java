@@ -1465,30 +1465,32 @@ public class EzPMSGWController {
 						
 						List<ProjectTaskVO> tasksInGroup = ezPMSService.getTaskListByGroupId(tenantId, groupId);
 					
-						LOGGER.debug("groupId : " + groupId + ", tenantId : " + tenantId + ", projectId : " + projectId);
 						ProjectGroupVO oldGroupVO = ezPMSService.getGroupDetails(groupId, tenantId, projectId);
 						
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//						Date oldGroupStartDate = sdf.parse(oldGroupVO.getPlanStartDate());
+						Date oldGroupStartDate = sdf.parse(oldGroupVO.getPlanStartDate());
 						Date newGroupStartDate = sdf.parse(request.getParameter("planStartDate"));
 						
-//						int offset = ezPMSService.getWorkingDays(oldGroupStartDate, newGroupStartDate, companyId, tenantId);
+						LOGGER.debug("oldGroupStartDate : " + sdf.format(oldGroupStartDate) + ", newGroupStartDate : " + sdf.format(newGroupStartDate));
+						
+						int offset = ezPMSService.getWorkingDays(oldGroupStartDate, newGroupStartDate, companyId, tenantId) - 1;
+						LOGGER.debug("offset : " + offset);
 						
 						for(ProjectTaskVO taskVO : tasksInGroup) {
 							
 							// offset만큼 workingday기준으로 날짜를 증가시킴
-//							Date oldStartDate = sdf.parse(taskVO.getPlanStartDate());
-//							String newStartDate = sdf.format(ezPMSService.addWorkingDays(oldStartDate, offset, companyId, tenantId));
-//							Date oldEndDate = sdf.parse(taskVO.getPlanEndDate());
-//							String newEndDate = sdf.format(ezPMSService.addWorkingDays(oldEndDate, offset, companyId, tenantId));
+							Date oldStartDate = sdf.parse(taskVO.getPlanStartDate());
+							String newStartDate = sdf.format(ezPMSService.addWorkingDays(oldStartDate, offset, companyId, tenantId));
+							Date oldEndDate = sdf.parse(taskVO.getPlanEndDate());
+							String newEndDate = sdf.format(ezPMSService.addWorkingDays(oldEndDate, offset, companyId, tenantId));
 							
-//							LOGGER.debug("oldStartDate : " + sdf.format(oldStartDate) + ", newStartDate : " + newStartDate);
-//							LOGGER.debug("oldEndDate   : " + sdf.format(oldEndDate) +   ", newEndDate   : " + newEndDate);
+							LOGGER.debug("oldStartDate : " + sdf.format(oldStartDate) + ", newStartDate : " + newStartDate);
+							LOGGER.debug("oldEndDate   : " + sdf.format(oldEndDate) +   ", newEndDate   : " + newEndDate);
 							
 							taskVO.setTenantId(tenantId);
 							taskVO.setProjectId(projectId);
-							taskVO.setPlanStartDate(request.getParameter("planStartDate"));
-							taskVO.setPlanEndDate(request.getParameter("planEndDate"));
+							taskVO.setPlanStartDate(newStartDate);
+							taskVO.setPlanEndDate(newEndDate);
 							taskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 							
 							ezPMSService.updateTaskStatus(taskVO, companyId, tenantId);

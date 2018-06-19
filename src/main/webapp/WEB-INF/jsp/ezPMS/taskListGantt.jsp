@@ -553,7 +553,16 @@
 	   			//선행작업 지정
 	   			GanttMaster.prototype.changeTaskDeps = function (task) {
 	   			  console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
-	   			  var preTask = ge.tasks[task.depends - 1];	   			   
+	   			  
+	   			  var preTask = ge.tasks[task.depends - 1];	
+	   			  
+	   			  if(new Date(preTask.end) > new Date(task.start)) {
+	   				  
+	   				  if(confirm("시작일과 완료일이 변경됩니다.\n진행하시겠습니까?") == false) {
+	   					  return;
+	   				  }
+	   			  }
+	   			  
 	   			  var startDate = dateToYYYYMMDD(new Date(preTask.end + (1 * 24 * 60 * 60 * 1000)));
 	   			  var endDate = dateToYYYYMMDD(new Date(preTask.end + (task.duration * 24 * 60 * 60 * 1000)));
 	   			  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
