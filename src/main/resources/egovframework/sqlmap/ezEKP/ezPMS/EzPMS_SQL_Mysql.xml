@@ -3325,4 +3325,27 @@
 			TENANT_ID = #tenantId#
 	]]>
 	</insert>
+	
+	<select id="EzPMSDAO.getDateTaskList" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT DISTINCT 
+			TASK_NAME
+		FROM 
+			TBL_PMS_TASK T
+		JOIN
+			TBL_PMS_TASKMEMBER M
+		ON
+			T.TASK_ID = M.TASK_ID
+		WHERE
+			T.PROJECT_ID = #projectId#
+		AND
+			T.TENANT_ID = #tenantId#
+		AND
+			M.USER_ID = #selUserId#
+		AND
+			T.PLAN_START_DATE <= #date#
+		AND
+			T.PLAN_END_DATE >= #date#
+	]]>
+	</select>
 </sqlMap>
