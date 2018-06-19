@@ -634,7 +634,7 @@
 	                </tr>
 	                <tr>
 	                    <td style="height: 20px;">
-	                        <table id="attiwriteForm" class="content">
+	                        <table id="attiwriteForm" class="content" style="margin-top:5px">
 								<tr id="selectTR">
 									<th><spring:message code='ezAttitude.t134'/></th>
 									<td colspan="2" id="selectTD">

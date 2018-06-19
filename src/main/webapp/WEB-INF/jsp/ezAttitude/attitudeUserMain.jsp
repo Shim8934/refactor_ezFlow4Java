@@ -10,8 +10,7 @@
 		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >		
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>  
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -33,8 +32,8 @@
 				border : 1px solid #dedede;
 			}
 			
-			#attiCalendar td[typeId=A02], #attiCalendar td[typeId=A08] {
-/* 				color : red; */
+			#attiCalendar td[typeId=A02] {
+				/* color : red; */
 			}
 			
 			#attiCalendar td[modappl='1'][typeId=A01],[modappl='2'][typeId=A01],[modappl='3'][typeId=A01] {
@@ -137,6 +136,7 @@
 			
 			.attiImg {
 				vertical-align: middle;
+				margin-top:-1px;
 				margin-right : 3px;
 			}
 			
@@ -169,6 +169,38 @@
 			
 			.AttBlueText {
 				color : rgb(4, 112, 227);
+			}
+			
+			.dateDiv {
+				text-align: left;
+				padding-left: 10px;
+			}
+			
+			.popupwrapAtt {
+			  display: inline-block;
+			  vertical-align: middle;
+			  position: relative;
+			  z-index: 2;
+			  max-width: 565px;
+			  box-sizing: border-box;
+			  width: 90%;
+			  background: #fff;
+			  padding: 15px 30px;
+			  -webkit-border-radius: 8px;
+			  -moz-border-radius: 8px;
+			  -o-border-radius: 8px;
+			  -ms-border-radius: 8px;
+			  border-radius: 8px;
+			  -webkit-box-shadow: 0 0 10px #000;
+			  -moz-box-shadow: 0 0 10px #000;
+			  -o-box-shadow: 0 0 10px #000;
+			  -ms-box-shadow: 0 0 10px #000;
+			  box-shadow: 0 0 10px #000;
+			  text-align: left;
+			}
+			
+			.AttRedText {
+				color : red;
 			}
 			
 			.dateDiv {
@@ -524,9 +556,15 @@
 																																	.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
 										//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							} else {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId).attr("modappl", result[i].modAppl)
-																																	.html(result[i].typeName + " : " + result[i].writerName + iconStr)
-																																	.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+								if (result[i].typeId == "A02") {
+									$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId).attr("modappl", result[i].modAppl)
+																																		.html(result[i].typeName + " (" + result[i].startDate.split(" ")[1].substring(0, 5) + ")" + " : " + result[i].writerName + iconStr)
+																																		.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+								} else {
+									$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId).attr("modappl", result[i].modAppl)
+																																		.html(result[i].typeName + " : " + result[i].writerName + iconStr)
+																																		.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+								}
 										//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							}	
 						}
@@ -1111,7 +1149,7 @@
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
 					<li id="divisionBar" style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>
-						<select id="authDeptList" style="width:100px; margin-top:5px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
+						<select id="authDeptList" style="width:100px; height:28px;border-radius:3px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
 								<c:if test="${dept.mine != 'yes' }">
 									<c:if test="${selectedDeptID == dept.deptId}">
@@ -1126,7 +1164,7 @@
 					</li>
 				</c:if>
 				<c:if test="${adminFlag != 'true'}">
-					<select id="authDeptList" style="width:100px; margin-top:5px; display:none;" onchange="deptChange()">
+					<select id="authDeptList" style="width:100px; height:28px; border-radius:3px; display:none;" onchange="deptChange()">
 						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
 					</select>
 				</c:if>

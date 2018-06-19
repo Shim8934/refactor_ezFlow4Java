@@ -1303,12 +1303,12 @@
 				    </thead>
 				    <tbody style="max-height:500px; width:490px; display:block; overflow-y:auto;">
 				    	<tr>
-							<th style="width:120px;height:30px"><spring:message code='ezAttitude.t107'/></th>
-				    		<th style="width:30px; height:30px"><spring:message code='ezAttitude.t206'/></th>
-				    		<th style="width:30px; height:30px"><spring:message code='ezAttitude.t207'/></th>
-				  			<th style="height:30px"><spring:message code='ezAttitude.t104'/></th>
-				  			<th style="width:120px;height:30px"><spring:message code='ezAttitude.t116'/></th>
-				  			<th style="height:30px"><spring:message code='ezAttitude.t208'/></th>
+							<th style="width:120px;height:30px;text-align:center"><spring:message code='ezAttitude.t107'/></th>
+				    		<th style="width:30px; height:30px;text-align:center"><spring:message code='ezAttitude.t206'/></th>
+				    		<th style="width:30px; height:30px;text-align:center"><spring:message code='ezAttitude.t207'/></th>
+				  			<th style="height:30px;text-align:center"><spring:message code='ezAttitude.t104'/></th>
+				  			<th style="width:120px;height:30px;text-align:center"><spring:message code='ezAttitude.t116'/></th>
+				  			<th style="height:30px;text-align:center"><spring:message code='ezAttitude.t208'/></th>
 						</tr>
 				    </tbody>
 				</table>

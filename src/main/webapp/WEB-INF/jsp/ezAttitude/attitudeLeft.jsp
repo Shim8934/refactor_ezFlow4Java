@@ -398,7 +398,7 @@
 						<div class="digits" style="padding:18px 5px 0px 5px; width:186px; margin:16px; margin-left:10px; height:130px"></div>
 					</div>
 				</div>
-				<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
+				<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:219px; margin-bottom: 12px">
 					<div class="sub_time">
     					<dl class="timeCheckIn">
     						<dt>출근</dt>
