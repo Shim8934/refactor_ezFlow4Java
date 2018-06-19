@@ -422,17 +422,21 @@
 		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.t144'/></span></h2>
 		<ul></ul>
 		<h2>
-			<span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">
+			<c:if test="${attitudeAdminCheck != true}">
+				<span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">
 				<spring:message code = 'ezAttitude.t7' />
-				<c:if test="${attitudeAdminCheck == true}">
-					<c:if test="${totalAtt != 0 }">
-						<span class="attCount">(${totalAtt})</span>
-					</c:if>
+			</span>
+			</c:if>
+			<c:if test="${attitudeAdminCheck == true}">
+				<span id="" onclick="functionFlag(4)" style="width:100%; display:inline-block">
+				<spring:message code = 'ezAttitude.t7' />
+				<c:if test="${totalAtt != 0 }">
+					<span class="attCount">(${totalAtt})</span>
 				</c:if>
 			</span>
+			</c:if>
 		</h2>
 		<ul>
-			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.t166'/></span></li>
 			<c:if test="${attitudeAdminCheck == true}">
 				<li>
 					<span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">
@@ -443,6 +447,7 @@
 					</span>
 				</li>
 			</c:if>
+			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.t166'/></span></li>
 		</ul>
 		<c:if test="${attitudeAdminCheck == true}"> 
 			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.t73'/></span></h3>

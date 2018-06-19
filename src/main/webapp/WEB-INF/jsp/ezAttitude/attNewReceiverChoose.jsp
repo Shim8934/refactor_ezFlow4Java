@@ -20,12 +20,12 @@
 	    		padding-left:15px;
 	    	}
 	    	#left h2 {
-	    		background: url('/images/kr/left/left_dot02.gif') no-repeat left 12px;
+	    		background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px;
 	    	}
 	    	
 	    	#left h2.on, #TopBoards h2.on {
 	    	    font-weight: bold;
-			    background: url('/images/kr/left/left_dot02.gif') no-repeat left 12px;
+			    background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px;
 			    background-color: #edf4fd;
 			    color: #333333;
     			border-top: 1px solid #d1ddec;
@@ -34,7 +34,7 @@
 	    	
 	    	span.node_normal {
 	    		padding-top: 7px!important;
-	    		padding-left: 10px!important;
+	    		padding-left: 30px!important;
 	    		color: #333333!important;
 	    		font-weight: normal;
 	    		overflow: hidden!important; 
