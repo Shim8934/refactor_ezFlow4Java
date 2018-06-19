@@ -213,7 +213,8 @@
 			   				ganttData.roles.push(role);
 			   			}
 			   			
-			   			tempTask.depends = gl[i].pretask || gl[i].pregroup;
+			   			tempTask.depends = "";
+			   			tempTask.pretask = gl[i].pretask != null ? "t" + gl[i].pretask : null || gl[i].pregroup != null ? "g" + gl[i].pregroup : null;
 			   			tempTask.description = gl[i].overview;
 			   			tempTask.progress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(gl[i].realProgress).toFixed(1);
@@ -293,7 +294,7 @@
 			   			}
 			   			
 			   			tempTask.depends = "";
-			   			tempTask.pretask = tl[i].pretask || tl[i].pregroup;
+			   			tempTask.pretask = tl[i].pretask != null ? "t" + tl[i].pretask : null || tl[i].pregroup != null ? "g" + tl[i].pregroup : null ;
 			   			tempTask.description = tl[i].overview;
 			   			tempTask.progress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(tl[i].realProgress).toFixed(1);
@@ -1081,16 +1082,15 @@
 	   			var len = ganttData.tasks.length;
 	   			for(var i = 0; i < len; i++){
    					var pretask = ganttData.tasks[i].pretask;
+   					var type = pretask ? pretask.match(/\w/)[0] : "";
 	   				if(pretask){ //선행작업이 있는 업무이면.
 	   					for(var j = 0; j < len; j++){
-	   						var taskId = ganttData.tasks[j].id.match(/t(\d+)/);
-	   						//업무중에 선행작업 아이디와 일치하는 업무를 찾음.
-	   						if(taskId){
-	   							if(taskId[1] == pretask){
-	   								//찾은 업무의 행번호를 넣어줌.
-			   						ganttData.tasks[i].depends = (j + 1) + "";
-	   							}
-	   						}
+	   						var task = ganttData.tasks[j];
+	   						//업무중에 선행작업 아이디와 타입이 일치하는 업무 또는 그룹을 찾음.
+   							if(task.id.indexOf(pretask) != -1 && task.type === type){
+   								//찾은 업무의 행번호를 넣어줌.
+		   						ganttData.tasks[i].depends = (j + 1) + "";
+   							}
 	   					}
 	   				}
 	   			}
