@@ -1082,11 +1082,12 @@
 	   			var len = ganttData.tasks.length;
 	   			for(var i = 0; i < len; i++){
    					var pretask = ganttData.tasks[i].pretask;
+   					var type = pretask ? pretask.match(/\w/)[0] : "";
 	   				if(pretask){ //선행작업이 있는 업무이면.
 	   					for(var j = 0; j < len; j++){
-	   						var taskId = ganttData.tasks[j].id;
-	   						//업무중에 선행작업 아이디와 일치하는 업무를 찾음.
-   							if(taskId.indexOf(pretask) != -1){
+	   						var task = ganttData.tasks[j];
+	   						//업무중에 선행작업 아이디와 타입이 일치하는 업무 또는 그룹을 찾음.
+   							if(task.id.indexOf(pretask) != -1 && task.type === type){
    								//찾은 업무의 행번호를 넣어줌.
 		   						ganttData.tasks[i].depends = (j + 1) + "";
    							}
