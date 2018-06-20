@@ -88,12 +88,15 @@ public class ProjectBoardVO {
 	// 루트 아이템 아이디
 	private int rootItemId;
 	
+	// 상위 게시물 아이디
+	private int upperItemId;
+	
 	// 아이템 레벨
 	private int itemLevel;
 	
 	// 프로젝트 별 문서 번호
 	private int docNo;
-
+	
 
 	public int getRootItemId() {
 		return rootItemId;
@@ -333,5 +336,13 @@ public class ProjectBoardVO {
 
 	public void setDocNo(int docNo) {
 		this.docNo = docNo;
+	}
+
+	public int getUpperItemId() {
+		return upperItemId;
+	}
+
+	public void setUpperItemId(int upperItemId) {
+		this.upperItemId = upperItemId;
 	}
 }	

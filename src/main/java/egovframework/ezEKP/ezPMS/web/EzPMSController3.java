@@ -912,4 +912,28 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS goPreTaskSelectionTree ended");
 		return "/ezPMS/pmsPreTaskSelectionTree";
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezPMS/checkIfBoardHasReplies.do")
+	public String checkIfBoardHasReplies(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS checkIfHasReplies started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		jsonParam.put("userId", userInfo.getId());
+		
+//		List<String> itemIds = (List<String>) jsonParam.get("itemIds");
+//		LOGGER.debug("itemIds : " + itemIds);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/checkIfHasReplies", null, request, "post", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			boolean ifBoardHasReplies = (boolean) resultBody.get("data");
+			model.addAttribute("data", ifBoardHasReplies);
+		}
+		
+		LOGGER.debug("ezPMS checkIfHasReplies ended");
+		return "json";
+	}
+	
 }
