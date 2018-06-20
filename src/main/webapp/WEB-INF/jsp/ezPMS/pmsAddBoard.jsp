@@ -3,6 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -157,7 +158,13 @@
 			
 			writeContent = "<body free>" + writeContent + "</body>";
 			
-			writeContent = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + "${board.writeDate}" + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + "${board.writerName}" + "(" + "${board.writerPosition}" + "," + "${board.writerDeptName}" + ")<br><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + "<c:out value = '${boardListVO.title}' />" + "<br><br>" + writeContent;
+			writeContent = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----"
+						 + "<br><B><spring:message code='ezBoard.t424' />"+"</B>" 
+						 + "&nbsp;${fn:substring(board.writeDate, 0, 16)}" 
+						 + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" 
+						 + "&nbsp;${board.writerName}" + "(" + "${board.writerPosition}" + "," + "${board.writerDeptName}" + ")"
+						 + "<br><B><spring:message code='ezBoard.t413' />"+"</B>" 
+						 + '&nbsp;${board.title}' + "<br><br>" + writeContent;
 			
 			message.SetEditorContent(writeContent);
 		}
@@ -349,8 +356,8 @@
 					<tr>
 						<th>
 							<c:choose>
-								<%-- 답변 작성 시에는 작업을 변경할 수 없다. --%>
-								<c:when test="${mode eq 'reply'}">
+								<%-- 답변/수정 작성 시에는 작업을 변경할 수 없다. --%>
+								<c:when test="${mode eq 'reply' || mode eq 'modify'}">
 									<spring:message code='ezPMS.t80' />
 								</c:when>
 								<c:otherwise>
