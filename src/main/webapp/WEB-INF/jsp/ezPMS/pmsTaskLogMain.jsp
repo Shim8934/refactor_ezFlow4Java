@@ -183,7 +183,7 @@ function selectedTR(elem) {
 <style type="text/css">
 #taskTree {
 	margin-right : 5px;
-	width : 16%;
+	width : 276px;
 	overflow-y : auto;
 	overflow-x : hidden;
 	border : 1px solid #d1d1d1;
@@ -191,7 +191,6 @@ function selectedTR(elem) {
 }
 
 #projectArea {
-	width : 83%;
 	overflow : auto;
 	border : 1px solid #d1d1d1;
 }
@@ -202,7 +201,7 @@ function selectedTR(elem) {
 
 .jstree-node > a {
     /* 100% - (the width of the presentation node : the line - the left padding of the <a> node - the right padding of the <a> node)*/
-    width: calc(100% - (55px + 1px + 4px));
+    width: 200px;
     text-overflow: ellipsis;
     overflow: hidden;
 }

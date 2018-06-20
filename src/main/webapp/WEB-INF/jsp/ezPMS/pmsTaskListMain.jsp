@@ -347,7 +347,7 @@
 <style>
 #taskTree {
 	margin-right: 5px;
-	width: 16%;
+	width: 276px;
 	overflow-y: auto;
 	overflow-x : hidden;
 	border: 1px solid #d1d1d1;
@@ -356,9 +356,10 @@
 
 .jstree-node > a {
     /* 100% - (the width of the presentation node : the line - the left padding of the <a> node - the right padding of the <a> node)*/
-    width: calc(100% - (50px + 1px + 4px));
-    text-overflow: ellipsis;
-    overflow: hidden;
+    width : 200px;
+    text-overflow : ellipsis;
+    overflow : hidden;
+    min-width : 198px;
 }
 
 #taskName {
@@ -368,7 +369,6 @@
 }
 
 #projectArea {
-	width : 83%;
 	overflow : auto;
 	border : 1px solid #d1d1d1;
 }
