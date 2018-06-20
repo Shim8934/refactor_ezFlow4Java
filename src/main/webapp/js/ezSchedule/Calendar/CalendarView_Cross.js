@@ -384,7 +384,8 @@ function CalendarView(pTagetID,chk_str) {
     			removeMonthClass();
     		}
     	});
-    	
+    	$(document).off('mousemove','.ui-datepicker-calendar tr');
+    	$(document).off('mouseleave', '.ui-datepicker-calendar tr');
     	
     }else if(typeCal == 1){
     	var selectCurrentWeek = function() { 
@@ -420,8 +421,7 @@ function CalendarView(pTagetID,chk_str) {
 	    	  beforeShowDay: function(date) { 
 	    		  /*monthCssShow();*/
 	    		  removeMonthClass();
-	    	      $(document).on('mousemove', '.ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); }); 
-	    	      $(document).on('mouseleave', '.ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });
+	    	     
 	              var cssClass = ''; 
 	              if (date >= WstartDate && date <= WendDate) 
 	                  cssClass = 'ui-datepicker-current-day'; 
@@ -431,6 +431,8 @@ function CalendarView(pTagetID,chk_str) {
 	              selectCurrentWeek(); 
 	          } 
     	});
+    	 $(document).on('mousemove', '.ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); }); 
+	     $(document).on('mouseleave', '.ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });
     }else{   
     		chk_str = parent.frames["left"].document.getElementById("chk_str").value;
             $(".datePick").monthpicker({
@@ -453,16 +455,7 @@ function CalendarView(pTagetID,chk_str) {
         			}else{
         				CalendarView("Calendar",chk_str);
         			}
-        		},
-        		beforeShow: function(input, inst) {
-        			/*monthCssHidden();*/
-            		$(document).on('mouseover', 'ui-state-default', function() { $(this).addClass('ui-state-hover'); });
-            		$(document).on('mouseleave', 'ui-state-default', function() { $(this).removeClass('ui-state-hover'); });
-            		
-            	},
-        		onChangeMonthYear: function(year, month, inst) { 
-        			/*monthCssHidden();*/
-  	          } 
+        		}
             });               
  
     }
@@ -722,7 +715,7 @@ function MultiSelectItems(obj, event) {
 
         for (var i = 0; i <= 41; i++) {
             if (StartIdex <= i && Endidex >= i)
-                document.getElementById("index_" + i).style.backgroundColor = "#edf4fd";
+                document.getElementById("index_" + i).style.backgroundColor = "#f0f6ff";
             else
                 document.getElementById("index_" + i).style.backgroundColor = "";
         }
@@ -737,7 +730,7 @@ function MultiSelectEnd(obj, event) {
         DragEndItemID = "";
         return;
     }
-    obj.style.backgroundColor = "#edf4fd";
+    obj.style.backgroundColor = "#f0f6ff";
     Write();
 }
 function Write() {

@@ -18,7 +18,7 @@
 				margin-top: 3px;
 				vertical-align:top;
 				font-size: 9pt;				
-				background-color : #edf4fd;
+				background-color : #f0f6ff;
 				cursor : hand;
 			}
 			.node_hover{
@@ -47,7 +47,7 @@
 				vertical-align:top;
 				font-size: 9pt;
 				height : 15px;
-				background-color : #edf4fd;
+				background-color : #f0f6ff;
 				cursor : hand;
 			}
 			.node_hover{
