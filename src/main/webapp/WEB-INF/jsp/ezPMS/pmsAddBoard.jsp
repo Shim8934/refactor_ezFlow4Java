@@ -51,6 +51,7 @@
 		taskId = ("${board.taskId}" != "") ? "${board.taskId}" : null;
 	}
 	
+	// 수정 및 답변 달 때 넘어오는 파라미터
 	var itemId = "${param.itemId}";
 	
 	// 첨부파일 최대용량
@@ -94,11 +95,6 @@
 		} else if (mode == 'reply') {
 			
 			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
-			
-			// 답변 작성 시에는 작업을 변경할 수 없다.
-			$("#taskSelection").attr("onclick", "");
-			$("#taskSelection").css("cursor", "default");
-			
 			$('#title').val(title);
 		}
 		
@@ -113,7 +109,39 @@
 	};
 	
 	function getTaskSelectionTree() {
+		
+		if (mode == 'modify') {
+			var itemIds = new Array(itemId);
+			
+			if(checkIfHasReplies(itemIds) == true) {
+				alert("<spring:message code='ezPMS.t292' />");	
+				return;
+			}
+		}
 		DivPopUpShow(320, 320, "/ezPMS/getTaskSelectionTree.do?projectId=" + projectId + "&onlyGroup=false");
+	}
+	
+	function checkIfHasReplies(itemIds) {
+		
+		var check;
+		
+		data = {
+			itemIds : itemIds
+		}
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezPMS/checkIfBoardHasReplies.do",
+			dataType : "json",
+			async : false,
+			contentType : "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(result) {
+				check = result.data;
+			}
+		})
+		
+		return check;
 	}
 	
 	function Editor_Complete() {
@@ -319,7 +347,19 @@
 						<td><input type="checkbox" id="emergency"/> <spring:message code='ezPMS.t78' /> <input type="checkbox" id="notice"/> <spring:message code='ezPMS.t79' /></td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;"><span><spring:message code='ezPMS.t80' /></span></a></th>
+						<th>
+							<c:choose>
+								<%-- 답변 작성 시에는 작업을 변경할 수 없다. --%>
+								<c:when test="${mode eq 'reply'}">
+									<spring:message code='ezPMS.t80' />
+								</c:when>
+								<c:otherwise>
+									<a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;">
+										<span><spring:message code='ezPMS.t80' /></span>
+									</a>
+								</c:otherwise>
+							</c:choose>	
+						</th>
 						<td style="width: 50%" id="taskName"></td>
 						<th><spring:message code='ezPMS.t57' /></th>
 						<td><c:out value="${writerName}(${writerDeptName})"/></td>

@@ -218,7 +218,8 @@ public class EzPMSGWController3 {
 
 			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, 
 																	   startRow, listCnt, lang, position, orderWhat, orderHow,
-																	   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
+																	   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, 
+																	   searchByTitle, searchByOverview, searchByContent);
 			String imageFileType = "PNG,JPEG,BMP,GIF,JPG";
 			
 			for (int i = 0; i < boardList.size(); i++) {
@@ -954,4 +955,34 @@ public class EzPMSGWController3 {
 		
 		return result;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/boards/checkIfHasReplies", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject checkIfBoardHasReplies(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards/checkIfHasReplies] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.remove("userId"));
+			jsonParam.put("tenantId", info.getTenantId());
+			
+			boolean ifBoardHasReplies = ezPMSService.checkIfBoardHasReplies(jsonParam);
+					
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", ifBoardHasReplies);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards/checkIfHasReplies] ended");
+		return result;
+	}
+	
 }
