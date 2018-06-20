@@ -58,6 +58,7 @@
 	   		var projectGroupId = "<c:out value='${projectDetail.groupId}'/>";
 	   		var selectedPreTask = -1;
 	   		var preTaskIndex = -1;
+	   		var userRoleId = "${userRoleId}";
 	   		
 	   		function initValues() {	   			
 	   			var tl = taskList;
@@ -1205,6 +1206,7 @@
 	   			
 	   			eventSetting();
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
+
 	   		};
 	   		
 	   		$(document).ready(function() {
@@ -1242,6 +1244,19 @@
 	   			var taskStatus = "<c:out value='${taskStatus}'/>";
 	   			if(taskStatus !== ""){
 		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
+	   			}
+	   			
+	   			console.log(userRoleId);
+	   			
+	   			if (userRoleId == 1) {
+	   				$("#pmsGanttRowNewBtn").css("display", "");
+	   				$("#pmsGanttAddGroup").css("display", "");
+	   				$("#pmsGanttRowDelBtn").css("display", "");
+	   				$("#pmsGanttDelGroup").css("display", "");
+	   				
+	   			} else if (userRoleId == 2) {
+	   				$("#pmsGanttRowNewBtn").css("display", "");
+	   				$("#pmsGanttRowDelBtn").css("display", "");
 	   			}
 	   		})
 
@@ -1331,12 +1346,12 @@
 	<body style="background-color: #fff;">
 		<div id="mainmenu" class="pmsMenuDiv" style="height: 30px;">
 			<ul class="pmsGanttMenuUl">
-		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t89' /></span></li>
+		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t89' /></span></li>
 		        <!-- <li id="pmsGanttRowSaveBtn" class="pmsGanttMenuLi">save</li> -->
 		        <!--  <li id="pmsGanttTaskDetails" class="pmsGanttMenuLi">details</li> -->
-		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t82' /></span></li>
-		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t287' /></span></li>
-		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi"><span><spring:message code='ezPMS.t288' /></span></li>
+		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t82' /></span></li>
+		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t287' /></span></li>
+		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t288' /></span></li>
 		        <li><span onclick="getMemberSchedule()">인력관리</span></li>
 		        <div style="float:right">
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">

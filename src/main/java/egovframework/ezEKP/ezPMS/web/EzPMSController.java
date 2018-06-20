@@ -604,8 +604,8 @@ public class EzPMSController {
 							String status = result.get("status").toString();
 							
 							if (status.equals("ok")) {
-								JSONArray kanbanTask = (JSONArray) result.get("data");
-								json.put("kanbanTask" + (i + 1), kanbanTask);
+								JSONObject data = (JSONObject) result.get("data");
+								json.put("kanbanTask" + (i + 1), data.get("taskList"));
 							}
 						}
 					}
@@ -1289,8 +1289,9 @@ public class EzPMSController {
 					String status = result.get("status").toString();
 		
 					if (status.equals("ok")) {
-						JSONArray taskList = (JSONArray) result.get("data");
-						model.addAttribute("taskList", taskList);
+						JSONObject data = (JSONObject) result.get("data");
+						model.addAttribute("taskList", data.get("taskList"));
+						model.addAttribute("userRoleId", data.get("userRoleId"));
 						model.addAttribute("position", param.get("position"));
 					}
 				}

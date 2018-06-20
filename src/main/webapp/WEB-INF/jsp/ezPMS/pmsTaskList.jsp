@@ -18,8 +18,10 @@
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var contentTitle = $(".jstree-clicked").text();
 var position = "${position}";
+userRole = "${userRoleId}";
 
 $(function() {
+	
 	if (position == null || position == "") {		
 		if (contentTitle == "") {
 			var treeItemId = $("li[role=treeitem]").attr("id");

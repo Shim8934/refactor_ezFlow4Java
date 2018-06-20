@@ -218,4 +218,6 @@ public interface EzPMSService {
 	public List<String> getDateTaskList(long projectId, String date, String selUserId, String lang, int tenantId);
 	
 	public ProjectGroupVO getUpperGroupDate(long groupId, int tenantId) throws Exception;
+
+	Long getUpperGroupId(long groupId, long projectId, int tenantId);
 }

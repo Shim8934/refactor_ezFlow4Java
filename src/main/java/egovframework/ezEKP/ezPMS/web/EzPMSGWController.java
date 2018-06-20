@@ -544,6 +544,21 @@ public class EzPMSGWController {
 				ezPMSService.addProjectMember(member, tenantId);
 			}
 			
+			long groupId = Long.parseLong(request.getParameter("groupId"));
+			//프로젝트 정보를 프로젝트와 같은 이름의 최상위 그룹 정보도 바꿈
+			ProjectGroupVO groupInfo = new ProjectGroupVO();
+			groupInfo.setGroupName(request.getParameter("projectName"));
+			groupInfo.setGroupId(groupId);
+			groupInfo.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			groupInfo.setOverview(request.getParameter("overview"));
+			groupInfo.setTenantId(info.getTenantId());
+			groupInfo.setUpperGroupId(0L);
+			groupInfo.setHeadManagerId(request.getParameter("headManagerId"));
+			groupInfo.setPlanStartDate(request.getParameter("planStartDate"));
+			groupInfo.setPlanEndDate(request.getParameter("planEndDate"));
+			
+			ezPMSService.updateGroup(groupInfo);
+			
 			JSONObject data = new JSONObject();
 			data.put("projectId", projectId);
 			
