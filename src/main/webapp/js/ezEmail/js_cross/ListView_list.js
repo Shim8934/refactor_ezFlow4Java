@@ -923,40 +923,6 @@ function ListView() {
                 objTr.style.backgroundColor = m_strColorDefault;
             }
             
-            //objTr.setAttribute("selected", "true");
-            
-            /* objTr.onmouseover = new Function("tr_mouseover(this)");
-            objTr.onmouseout = new Function("tr_mouseout(this)");
-
-            if (_rowonclick != null)
-                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
-            else
-                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
-            
-            // 수정띠
-            objTr.onclick = function () { event_listclick(this); };
-
-            if (_rowondblclick != null)
-                objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
-
-            if (_contextHandler != null)
-                objTr.oncontextmenu = new Function(_contextHandler + "(this.id);");
-
-            var oCells = GetElementsByTagName(oRows[i], "CELL");
-
-            if (_SelectFlag && i == 0) {   
-                objTr.setAttribute("selected", "true");
-                objTr.style.backgroundColor = m_strColorSelect;
-
-                _firstRowID = _thisID + "_TR_" + i;
-            }
-            else {
-            	//  수정띠
-                objTr.setAttribute("selected", "false");
-                objTr.className = "";
-                objTr.style.backgroundColor = m_strColorDefault;
-            }*/
-            
             var oCells = GetElementsByTagName(oRows[i], "CELL");
             
 
@@ -1132,15 +1098,10 @@ function ListView() {
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
             
-            // 재은 수정중
-            objTd.onmouseover = function () { event_listMover(this); };
-            objTd.onmouseout = function () { event_listMout(this); };
             objTd.onclick = function () { event_listclick(this); };
             objTd.ondblclick = function () { event_listDBclick(this); };
             objTd.onselectstart = function () { return false; };
             objTd.setAttribute("draggable", true);
-            //objTd.ondragstart = function (event) { event_listdragstart(this); }
-            //objTd.setAttribute("draggable", true);
             if (CrossYN())
             	objTr.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
             else
@@ -1531,9 +1492,7 @@ function tr_select(pRowID, pTableID, callbackFunc) {
     strAttribute = GetAttribute(oSourceTr, "selected");
 
     if (strAttribute == "true") {
-    	// 수정띠
-    	oSourceTr.setAttribute("selected", "true");
-        //oSourceTr.setAttribute("selected", "false");
+        oSourceTr.setAttribute("selected", "false");
         oSourceTr.style.backgroundColor = m_strColorDefault;
     }
     else {

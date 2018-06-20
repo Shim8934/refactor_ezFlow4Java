@@ -250,107 +250,43 @@
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
 	            
-	           /*  $("#ListViewMsgTo tbody").addClass("sortable");
-	            $("#ListViewMsgCC tbody").addClass("sortable");
-	            $("#ListViewMsgBCC tbody").addClass("sortable"); */
-	            
 	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	            $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
-	            	connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
-	            	items : "tr",
-	            	opacity: 0.3,
-	            	click : function(event) { return; },
-	            	start : function(event, elem) { 
-	            		
-	            		var p_ListOrderObject = elem.item[0];
-	            		var listSelectFlag = false;
-	            		for (var i = 0; i < listContentArry.length; i++) {
-	            			if (listContentArry[i] != p_ListOrderObject) {
-	            				listSelectFlag = true;
-	            			}
-	            		}
-	            		
-	            		if (listSelectFlag) {
-	            			p_ListOrderObject.childNodes[0].style.backgroundColor = m_strColorSelect;
-		            		listContentArry[listContentArry.length] = p_ListOrderObject.id;
-	            		}
-	            		
-	            		$(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
-	            		$(".receiver_borderbox tr").removeClass("ui-sortable-helper");
-	            		
-	            		for (var i = 0; i < listContentArry.length; i++) {
-	            			$("#" + listContentArry[i]).addClass("multiple-sortable-selected");
-	            		}
-	            		
-	            	},
-	            	stop : function(event) {
-	            		
-	            	}
-	            });
-	           /*  $("#listType1 tr").each(function(){
-	            	$(this).find("table tbody").sortable();
-	            });
-	            
-	            var currentPointer = ''; //mouseenter할때
-	            var prevPointer = ''; //mouseover할때
-	            $( "#ListViewMsgTo" ).mouseenter(function(){
-	            	currentPointer = 'ListViewMsgTo';
-	            	if (currentPointer != prevPointer && prevPointer != '') {
-	            		 $("#MsgToList tbody").sortable('destroy');
-	            	}
-				});
-	            
-	            $( "#ListViewMsgCC" ).mouseenter(function(){
-	            	currentPointer = 'ListViewMsgCC';
-	            	if (currentPointer != prevPointer && prevPointer != '') {
-	            		 $("#MsgCCList tbody").sortable('destroy');
-	            	}
-				});
-	            
-	            $( "#ListViewMsgBCC" ).mouseenter(function(){
-	            	currentPointer = 'ListViewMsgBCC';
-	            	if (currentPointer != prevPointer && prevPointer != '') {
-	            		 $("#MsgBCCList tbody").sortable('destroy');
-	            	}
-				});
-	            
-	            $( "#ListViewMsgTo" ).mouseout(function(){
-	            	prevPointer = 'ListViewMsgTo';
-				});
-	            
-	            $( "#ListViewMsgCC" ).mouseout(function(){
-	            	prevPointer = 'ListViewMsgCC';
-				});
-	            
-	            $( "#ListViewMsgBCC" ).mouseout(function(){
-	            	prevPointer = 'ListViewMsgBCC';
-				}); */
-	            
-	            
-			    // to, cc, bcc 온로드 시 이벤트 주기 재은
-	            /* $("#listType1 tr").each(function(){
-	            	
-	            	var thisId = this.getAttribute('id');
-	            	if (thisId.indexOf('MsgToList_TR_') > -1 || thisId.indexOf('MsgCCList_TR_') > -1 || thisId.indexOf('MsgBCCList_TR_') > -1) {
-	            		
-	            		// 여기 수정해야됨
-	            		this.onmouseover = function () { event_listMover(this); };
-		            	this.onmouseout = function () { event_listMout(this); };
-		                this.onclick = function () { event_listclick(this); };
-		                this.ondblclick = function () { event_listDBclick(this); };
-		                this.onselectstart = function () { return false; };
-		                this.setAttribute("draggable", true);
-		                this.setAttribute("restart", true);
-		                if (CrossYN())
-		                	this.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
-		                else
-		                	this.ondragstart = function (event) { event_listdragstart(this); };
+	             $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
+                  connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
+                  items : "tr",
+                  opacity: 0.3,
+                  start : function(event, elem) { 
+                     var p_ListOrderObject = elem.item[0];
+                     var listSelectFlag = true;
+                     for (var i = 0; i < listContentArry.length; i++) {
+                        if (listContentArry[i] == p_ListOrderObject.id) {
+                           listSelectFlag = false;
+                        }
+                     }
+                     
+                     if (listSelectFlag) {
+                        p_ListOrderObject.childNodes[0].style.backgroundColor = m_strColorSelect;
+                        listContentArry[listContentArry.length] = p_ListOrderObject.id;
+                     }
+                     
+                     $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
+                     $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
+                     
+                     for (var i = 0; i < listContentArry.length; i++) {
+                        $("#" + listContentArry[i]).addClass("multiple-sortable-selected");
+                     }
+                     
+                  },
+                  click : function() {
+                	  $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
+                      $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
 
-		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                	this.ondragend = function (event) { event_listdragend(event); };
-		                }
-	            	}
-	            }); */
+                     for (var i = 0; i < listContentArry.length; i++) {
+                        $("#" + listContentArry[i]).addClass("multiple-sortable-selected");
+                     }
+                  }
+               });
+	           $(".receiver_borderbox tr").attr("restart", "true");
 	            
 	            //ChangeListView_onClick(getOrganListType());
 	        }
@@ -891,8 +827,7 @@
 		                        targetList.LoadFromID(listid);
 		                        var IsInsert = CheckMailReceiver(strEmail, "3");
 		                        
-		                        // 재은 수정중
-                            	IsInsert = false;
+		                        IsInsert = false;
                             	var _listview = new ListView();
             	            	_listview.LoadFromID(listid);
             	            	var arrRows = _listview.GetDataRows();
@@ -947,7 +882,7 @@
 		                            }
 		                        }
 		                        
-		                        // 복사 한뒤 삭제 => 이동 재은
+		                        // 복사 한뒤 삭제 => 이동
 	                            if (moveRecipients && !moveDel) {
 	                            	var selList = new ListView();
 	                	            selList.LoadFromID(prevListId);
@@ -1078,8 +1013,7 @@
 		                        targetList.LoadFromID(listid);
 		                        var IsInsert = CheckMailReceiver(strEmail, "3");
 		                        
-		                        // 재은 수정중
-                            	IsInsert = false;
+		                        IsInsert = false;
                             	var _listview = new ListView();
             	            	_listview.LoadFromID(listid);
             	            	var arrRows = _listview.GetDataRows();
@@ -1134,8 +1068,7 @@
 		                            }
 		                        }
 		                        
-		                        // 복사 한뒤 삭제 => 이동 재은
-	                            if (moveRecipients && !moveDel) {
+		                        if (moveRecipients && !moveDel) {
 	                            	var selList = new ListView();
 	                	            selList.LoadFromID(prevListId);
 	                	            selList.DeleteRow(listContentArry[i]);
@@ -1215,7 +1148,7 @@
 		                }
 	            	}
 	            }
-	            else if (m_selectedTree == orglistView) { // 조직도 목록 > 받는 사람 (sua)
+	            else if (m_selectedTree == orglistView) {
 	                var pparsingXML = "";
 	                var pparsingXML2 = "";
 	                var pAddFlag = false;
@@ -1295,8 +1228,7 @@
 	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
 	                      
-	                            // 재은 수정중
-	                        	if (moveRecipients) {
+	                            if (moveRecipients) {
 	                        		strName = document.getElementById(listContentArry[i]).getAttribute("data1");
 	                        		strDeptNM = document.getElementById(listContentArry[i]).getAttribute("data3");
 	                        		strEmail = document.getElementById(listContentArry[i]).getAttribute("data2");
@@ -1319,7 +1251,6 @@
 	                            var IsInsert = CheckMailReceiver(strEmail, "3");
 	                            
 	                            
-	                            // 재은 수정중
 	                            if (moveRecipients) {
 	                            	IsInsert = false;
 	                            	var _listview = new ListView();
@@ -1379,10 +1310,10 @@
 	                                }
 	                            }
 	                            
-	                            // 복사 한뒤 삭제 => 이동 재은
 	                            if (moveRecipients && !moveDel) {
 	                            	var selList = new ListView();
-	                	            selList.LoadFromID(prevListId);
+	                            	console.log(prevListId);
+	                	            selList.LoadFromID(strTopDiv);
 	                	            selList.DeleteRow(listContentArry[i]);
 	                            }
 	                        }
@@ -1457,8 +1388,7 @@
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                            }
 	                            
-	                         	// 복사 한뒤 삭제 => 이동 재은
-	                            if (moveRecipients && !moveDel) {
+	                         	if (moveRecipients && !moveDel) {
 	                            	DeleteReceiver(strTopDiv);
 	                            }
 	                        }
@@ -1668,11 +1598,6 @@
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
 		    function event_listMover(obj) {
-		    	//수정중 재은
-		    	var moveState = false;
-		    	if (obj.id.indexOf("MailUserlist") == -1 && obj.id.indexOf("Address_TR") == -1 && obj.id.indexOf("pListViewDL_TR") == -1)
-		    		moveState = true;
-		    	
 		    	for (var i = 0; i < listContentArry.length; i++) {
 		            if (document.getElementById(listContentArry[i]) == obj) {
 		                return;
@@ -1680,43 +1605,20 @@
 		        }
 		        if (p_ListOrderObject != obj) {
 		            for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
-		            	if (moveState) {
-		            		obj.parentNode.style.backgroundColor = m_strColorOver;
-		            	} else {
-		            		obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorOver;
-		            	}
-		                
+		            	obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorOver;
 		            }
 		        }
 		    }
 		    
-		    /*$("#listType1 tr").find("table tbody").each(function(){
-		    	if (prevListId == "MsgToList") {
-                }
-                else if (prevListId == "MsgCCList") {
-                }
-                else if (prevListId == "MsgBCCList") {
-                }
-		    }); */
-		    
 		    function event_listMout(obj) {
-		    	//수정중 재은
-		    	var moveState = false;
-		    	if (obj.id.indexOf("MailUserlist") == -1 && obj.id.indexOf("Address_TR") == -1 && obj.id.indexOf("pListViewDL_TR") == -1)
-		    		moveState = true;
-		
-		        for (var i = 0; i < listContentArry.length; i++) {
+		    	for (var i = 0; i < listContentArry.length; i++) {
 		            if (document.getElementById(listContentArry[i]) == obj) {
 		                return;
 		            }
 		        }
 		        if (p_ListOrderObject != obj) {
 		            for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
-		            	if (moveState) {
-		            		obj.parentNode.style.backgroundColor = m_strColorDefault;
-		            	} else {
-		            		obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
-		            	}
+		            	obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
 		            }
 		        }
 		    }
@@ -1754,13 +1656,7 @@
 		    var listEventCheckbox = false;
 		    var listSubEventCheckbox = false;
 		    function event_listclick(obj) {
-		    	
-		    	//to, cc, bcc 간의 이동 재은
-		    	/* $("#listType1 tr").each(function(){
-	            	$(this).find("table tbody").sortable();
-	            }); */
-		    	
-            	if (obj.id.indexOf("MailUserlist") == -1 && obj.id.indexOf("Address_TR") == -1 && obj.id.indexOf("pListViewDL_TR") == -1) {
+		    	if (obj.id.indexOf("MailUserlist") == -1 && obj.id.indexOf("Address_TR") == -1 && obj.id.indexOf("pListViewDL_TR") == -1) {
             
             		moveRecipients = true;
             		prevListId = obj.parentNode.parentNode.parentNode.id;
@@ -1908,7 +1804,11 @@
 		                    for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
 		                    	
 		                    	if (moveRecipients) {
-		                    		p_ListOrderObject.style.backgroundColor = m_strColorSelect;
+		                    		if (onloadCheck) {
+		                    			p_ListOrderObject.childNodes[0].style.backgroundColor = m_strColorSelect;
+		                    		} else {
+			                    		p_ListOrderObject.style.backgroundColor = m_strColorSelect;
+		                    		}
 		                    	} else {
 		                    		p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
 		                    	}
@@ -1916,7 +1816,6 @@
 		                    
 		                    if (moveRecipients && onloadCheck != "true" && p_ListOrderObject.tagName != "TR") {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.parentNode.getAttribute("id");
-		                        $(p_ListOrderObject.getAttribute("id")).addClass("multi-sort");
 		                    } else {
 		                    	listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
 		                    }
