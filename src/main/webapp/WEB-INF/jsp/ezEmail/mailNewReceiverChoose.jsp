@@ -280,13 +280,12 @@
                   click : function() {
                 	  $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
                       $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
-
-                     for (var i = 0; i < listContentArry.length; i++) {
-                        $("#" + listContentArry[i]).addClass("multiple-sortable-selected");
-                     }
-                  }
-               });
-	           $(".receiver_borderbox tr").attr("restart", "true");
+                      
+	            	   for (var i = 0; i < listContentArry.length; i++) {
+	            			$("#" + listContentArry[i]).addClass("multiple-sortable-selected");
+	            		}
+	            	}
+	            });
 	            
 	            //ChangeListView_onClick(getOrganListType());
 	        }
@@ -1227,6 +1226,7 @@
 	                        	var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+		                        var strTopDiv = document.getElementById(listContentArry[i]).closest("table").id; //삭제
 	                      
 	                            if (moveRecipients) {
 	                        		strName = document.getElementById(listContentArry[i]).getAttribute("data1");
