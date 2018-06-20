@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezAttitude.t28'/></title>
+		<title><spring:message code='ezAttitude.t227'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -224,7 +224,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t28'/></h1>
+	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t227'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
@@ -272,7 +272,7 @@
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
-	                                        <th><spring:message code='ezAttitude.t207'/></th>
+	                                        <th><spring:message code='ezAttitude.t228'/></th>
 	                                        <td colspan="2">
                                            		<c:out value='${data.changeDate.substring(0,16)}' />
 	                                        </td>

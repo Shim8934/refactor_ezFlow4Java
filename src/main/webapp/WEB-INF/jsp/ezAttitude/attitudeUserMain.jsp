@@ -1208,7 +1208,9 @@
 				<td style="vertical-align:top; width:91%;">
 					<div style="vertical-align:top;" id="attiCalendar"></div>
 				</td>
-				<td style="vertical-align:top; width:10px;">&nbsp;</td>
+				<td style="vertical-align:top;">
+					<div style="width:8px">&nbsp;</div>
+				</td>
 				<td style="vertical-align:top; width:9%; margin-left:5px;">
 					<div style="vertical-align:top;" class="time_stats" id="attiStatis">
 					</div>
