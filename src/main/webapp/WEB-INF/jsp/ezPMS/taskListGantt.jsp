@@ -587,7 +587,7 @@
 
 	   			  row.find(".taskRowIndex").html(task.getRow() + 1);
 	   			  row.find(".indentCell").css("padding-left", task.level * 15 + 18);
-	   			  row.find("[name=name]").val(task.name);
+	   			  row.find("[name=name]").val(task.name).prop("readonly", true).css({"color":"black"});
 	   			  row.find("[name=code]").val(task.code);
 	   			  row.find("[status]").attr("status", task.status);
 
