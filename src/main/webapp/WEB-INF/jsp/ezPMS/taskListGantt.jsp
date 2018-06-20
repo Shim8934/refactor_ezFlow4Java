@@ -343,7 +343,7 @@
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
-   				DivPopUpShow(700, 417, "/ezPMS/goAddGroup.do?projectId=" + projectId);
+   				DivPopUpShow(700, 447, "/ezPMS/goAddGroup.do?projectId=" + projectId);
 	   		}
 	   		
 	   		//그룹 삭제

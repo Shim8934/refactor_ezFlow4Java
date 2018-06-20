@@ -468,7 +468,7 @@ public class EzPMSGWController2 {
 			project.put("progress", "0");
 			
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) jsonParam.get("managerList");
-//			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
+			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
 //			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("viewerList"));
 			
 			project.put("projectId", projectId);

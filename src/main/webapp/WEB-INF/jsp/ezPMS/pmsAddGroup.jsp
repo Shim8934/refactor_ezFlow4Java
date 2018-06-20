@@ -32,7 +32,7 @@ th a.imgbtn {
 
 #overview {
     height: 175px;
-    width: 545px;
+    width: 553px;
     resize: none;
     margin: 3px 1px 0px 1px;
     resize: none;
@@ -51,6 +51,7 @@ var groupName = "";
 var taskDetails = {};
 var writerId= "";
 var treeDepth = 0;
+var participantList = null;
 
  $(function() {
 // 	 taskDetails = ${taskDetails};
@@ -58,10 +59,10 @@ var treeDepth = 0;
 // 	 headManagerId = "${taskDetails.headManagerId}";
  });
  
-function openMemberList() {
+function openMemberList(type) {
 		 var win;
 		 var feature = GetOpenPosition(760, 700);
-		 DivPopUpShow(600, 380, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
+		 DivPopUpShow(600, 380, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
@@ -72,7 +73,7 @@ function openGroupTree() {
 			 	"height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
-function openPreTaskTree() {
+function open() {
 	alert("아직 미구현.");
 }
 
@@ -98,6 +99,19 @@ function openPreTaskTree() {
 	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);
 	 
 	 $("#managers").html(managerNameList);
+ }
+ 
+ function applyParticipantList() {
+	 var participantNameList = "";
+	 
+	 for (var i = 0; i < participantList.length; i++) {
+			participantNameList += participantList[i].userName;
+			participantNameList += "(" + participantList[i].userDeptname + "), ";
+	 }
+	 
+	 participantNameList = participantNameList.substr(0, participantNameList.length - 2);
+	 
+	 $("#participants").html(participantNameList);
  }
  
 function setUpperGroup() {
@@ -143,7 +157,8 @@ function addGroup() {
 			managerList : managerList,
 			planStartDate : planStartDate,
 			planEndDate : planEndDate,
-			treeDepth : treeDepth
+			treeDepth : treeDepth,
+			participantList : participantList
 	}
 	
 	$.ajax({
@@ -185,8 +200,12 @@ function addGroup() {
 				<td style="height:30px;" id="upperGroup"></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
+				<th><a class="imgbtn" onclick="openMemberList('managers')"><span><spring:message code='ezPMS.t63' /></span></a></th>
 				<td id="managers"></td>
+			</tr>
+			<tr>
+				<th><a class="imgbtn" onclick="openMemberList('participants')"><span><spring:message code='ezPMS.t64' /></span></a></th>
+				<td id="participants"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t88' /></th>

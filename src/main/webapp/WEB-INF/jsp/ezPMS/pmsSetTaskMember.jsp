@@ -106,7 +106,7 @@
 		   			}
 		   			
 		   			if (chkFlag) {
-		   				managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user"});
+		   				managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : type === "participants" ? 2 : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user"});
 		   				authList.push({"userName" : userName, "userId" : receiverId});
 		   			} else {
 		   				alert("<spring:message code='ezPMS.t163' />");
@@ -141,20 +141,34 @@
 	   		// 선택된 수신자 배열을 토대로 화면에 그리는 곳
 	   		function drawReceiverList() {
 		    	var strHTML = "";
-		    		for (var i = 0; i < managerArray.length; i++) {
-			    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-			    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
-			    		strHTML += "<td style='width: 75%;'>";
-			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-			    		strHTML += managerArray[i].userName;
-			    		strHTML += "(" + managerArray[i].userDeptname + ")";
-			    		strHTML += "</td>";
-			    		strHTML += "<td>";
-			    		strHTML += "<input type='text' name='" + managerArray[i].userId + "' value='100' style='width:40px;text-align:center'> %";
-			    		strHTML += "</td>";
-			    		strHTML += "</tr>";
-			    		strHTML += "</table>";
-			    	}
+		    		//담당자 지정할 때와 참여자 지정할 때를 구분하여 동작.
+		    		if(type === "participants"){
+		    			for (var i = 0; i < managerArray.length; i++) {
+				    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
+				    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
+				    		strHTML += "<td style='width: 75%;'>";
+				    		strHTML += managerArray[i].userName;
+				    		strHTML += "(" + managerArray[i].userDeptname + ")";
+				    		strHTML += "</td>";
+				    		strHTML += "</tr>";
+				    		strHTML += "</table>";
+				    	}
+		    		} else {
+			    		for (var i = 0; i < managerArray.length; i++) {
+				    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
+				    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
+				    		strHTML += "<td style='width: 75%;'>";
+				    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+				    		strHTML += managerArray[i].userName;
+				    		strHTML += "(" + managerArray[i].userDeptname + ")";
+				    		strHTML += "</td>";
+				    		strHTML += "<td>";
+				    		strHTML += "<input type='text' name='" + managerArray[i].userId + "' value='100' style='width:40px;text-align:center'> %";
+				    		strHTML += "</td>";
+				    		strHTML += "</tr>";
+				    		strHTML += "</table>";
+				    	}
+		    		}
 		    		$("#managerList").html(strHTML);
 		    }
 	   		
@@ -164,7 +178,8 @@
 	   		
 	   		$(document).ready(function() {
 	   			getProjectMemberList(projectId);
-		   		
+	   			authListInitData();
+	   			
 	   			$(function () {
 		   			$(document).on({
 		   				"dblclick":function(){
@@ -194,16 +209,29 @@
    			});
 	   		
 	   		function ok_Click() {
-	   			if (managerArray.length == 0) {
-	   				alert("<spring:message code='ezPMS.t169' />");
-	   				return;
+	   			//담당자 지정할 때와 참여자 지정할 때를 구분하여 동작.
+	   			if(type === "participants"){
+	   				if (managerArray.length == 0) {
+		   				alert("<spring:message code='ezPMS.t294' />");
+		   				return;
+		   			}
+	   				
+	   				parent.participantList = managerArray;
+	   				parent.applyParticipantList();
+	   				parent.DivPopUpHidden();
+	   			} else {
+		   			if (managerArray.length == 0) {
+		   				alert("<spring:message code='ezPMS.t169' />");
+		   				return;
+		   			}
+		   			
+		   			for (var i = 0; i < managerArray.length; i++) {
+		   				managerArray[i].pctinput = $("input[name='"+managerArray[i].userId+"']").val();
+		   			}
+		   			
+		   			selectHeadManager();
 	   			}
 	   			
-	   			for (var i = 0; i < managerArray.length; i++) {
-	   				managerArray[i].pctinput = $("input[name='"+managerArray[i].userId+"']").val();
-	   			}
-	   			
-	   			selectHeadManager();
 	   			//opener.selReceiver = JSON.stringify(receiverList);
 	   			//opener.showReceiver();
 	   			//window.close();
@@ -214,6 +242,29 @@
 	   		 
 	   			DivPopUpShow(400, 300, "/ezPMS/selectHeadManager.do");
 	   		};
+	   		
+	   		function authListInitData(){
+	   			//중복 추가 방지를 위해 기존 managerList와 participantList에 등록된 사람을 authList에 추가해준다.
+	   			if(type === "participants"){
+	   				var tmpList = parent.managerList;
+	   				if(tmpList){
+			   			parent.managerList.forEach(function(elem, idx){
+			   				if(!(elem in authList)){
+			   					authList.push(elem);
+			   				}
+			   			});
+	   				}
+	   			} else {
+	   				var tmpList = parent.participantList;
+	   				if(tmpList){
+	   					tmpList.forEach(function(elem, idx){
+			   				if(!(elem in authList)){
+			   					authList.push(elem);
+			   				}
+		   				});
+	   				}
+	   			}
+	   		}
 	   		
 		</script>
 		<style>
@@ -231,7 +282,16 @@
 		</style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
-        <h1 style="height: 20px;"><spring:message code='ezPMS.t167' /></h1>
+        <h1 style="height: 20px;">
+        	<c:choose>
+        		<c:when test="${type == 'managers'}">
+		        	<spring:message code='ezPMS.t167' />
+        		</c:when>
+        		<c:otherwise>
+		        	<spring:message code='ezPMS.t293' />
+        		</c:otherwise>
+        	</c:choose>
+        </h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="ok_Click()"><spring:message code='ezPMS.t43' /></span></li>
@@ -266,7 +326,16 @@
 	                        <td style="vertical-align: top;">
 	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager"><spring:message code='ezPMS.t63' /> </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager">
+											<c:choose>
+								        		<c:when test="${type == 'managers'}">
+										        	<spring:message code='ezPMS.t63' />
+								        		</c:when>
+								        		<c:otherwise>
+										        	<spring:message code='ezPMS.t64' />
+								        		</c:otherwise>
+								        	</c:choose>
+										</span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">
