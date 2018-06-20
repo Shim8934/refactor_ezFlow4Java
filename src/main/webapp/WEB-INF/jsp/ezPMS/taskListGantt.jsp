@@ -344,7 +344,7 @@
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
    			 
-   				DivPopUpShow(700, 417, "/ezPMS/goAddGroup.do?projectId=" + projectId);
+   				DivPopUpShow(700, 447, "/ezPMS/goAddGroup.do?projectId=" + projectId);
 	   		}
 	   		
 	   		//그룹 삭제
@@ -588,19 +588,21 @@
 
 	   			  row.find(".taskRowIndex").html(task.getRow() + 1);
 	   			  row.find(".indentCell").css("padding-left", task.level * 15 + 18);
-	   			  row.find("[name=name]").val(task.name);
+	   			  row.find("[name=name]").val(task.name).prop("readonly", true).css({"color":"black"});
 	   			  row.find("[name=code]").val(task.code);
 	   			  row.find("[status]").attr("status", task.status);
 
 // 	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
-	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly", true);
-	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true);
-	   			  row.find("[name=planProgress]").prop("readonly", true);
+	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly", true).css({"text-align":"right"});
+	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true).css({"text-align":"right"});
+	   			  row.find("[name=weight]").css({"text-align":"right"});
+	   			  row.find("[name=planProgress]").prop("readonly", true).css({"text-align":"right"});
+	   			  row.find("[name=realProgress]").css({"text-align":"right"});
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
-	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) ); // called on dates only because for other field is called on focus event
+	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) || task.type === 'g'); // called on dates only because for other field is called on focus event
 	   			  row.find("[name=endIsMilestone]").prop("checked", task.endIsMilestone);
-	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent).updateOldValue();
-	   			  row.find("[name=depends]").val(task.depends);
+	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent || task.type === 'g').updateOldValue();
+	   			  row.find("[name=depends]").val(task.depends).css({"text-align":"right"});
 	   			  row.find(".taskAssigs").html(task.getAssigsString());
 
 	   			  //manage collapsed
@@ -729,7 +731,7 @@
 	   		
 	   		function preProcess(){
 	   			//간트 차트 테이블 날짜 형식 세팅. i18nJs.js 의 내용에 덮어 씌움.
-	   			Date.defaultFormat = "yyyy/M/d";
+	   			Date.defaultFormat = "yyyy/MM/d";
 	   			Date.monthNames = ('<spring:message code="ezPMS.t246" />').split(";");
 	   			Date.monthAbbreviations = ('<spring:message code="ezPMS.t246" />').split(";");
 	   			Date.dayNames =('<spring:message code="ezPMS.t245" />').split(";");
@@ -1281,7 +1283,7 @@
 		  
 		  .gdfCell {
 		    overflow: hidden;
-		    padding: 0px;
+		    padding: 0px 5px;
 		    border-bottom: 1px solid #eee;
 		    border-right: 1px solid #eee;
 	      }

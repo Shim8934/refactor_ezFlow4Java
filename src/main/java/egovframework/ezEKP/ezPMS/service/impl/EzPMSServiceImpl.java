@@ -1445,6 +1445,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		if (mode.equals("reply")) {
 			vo.setRootItemId(Integer.parseInt((String) jsonParam.get("rootItemId")));
+			vo.setUpperItemId(Integer.parseInt((String)jsonParam.get("itemId")));
 			// 답변을 쓰는 글의 level보다 1이 증가
 			vo.setItemLevel(Integer.parseInt((String) jsonParam.get("itemLevel")) + 1);
 			lastInsertId = ezPMSDAO.addBoardReplay(vo);
@@ -1600,7 +1601,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		while (keysItr.hasNext()) {
 			String key = keysItr.next();
 			Object value = jsonParam.get(key);
-
+			LOGGER.debug("parameter = [ key : " + key + ", value : " + value + "]");
 			map.put(key, value);
 		}
 
@@ -1611,6 +1612,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
 
 			if (boardVO.getWriterId().equals(userId) || authority == 1) {
+				
+				if(boardVO.getItemLevel() > 0) {
+					ezPMSDAO.updateBoardReplyToGeneral(map);
+				}
+				
 				ezPMSDAO.moveBoard(map);
 			} else {
 				Exception e = new Exception("Only project Manager and Writer are authorized to modify article");
@@ -1700,8 +1706,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("orderWhat", orderWhat);
 
 		List<ProjectBoardVO> boardList = ezPMSDAO.getBoardList(map);
-
+		
 		for (ProjectBoardVO boardVO : boardList) {
+					
 			map = new HashMap<String, Object>();
 			map.put("userId", userId);
 			map.put("itemId", boardVO.getItemId());
@@ -2539,6 +2546,22 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
+	public boolean checkIfBoardHasReplies(JSONObject jsonParam) {
+		LOGGER.debug("[SERVICE] checkIfBoardHasReplies started.");
+		boolean result = false;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemIds", jsonParam.get("itemIds"));
+		map.put("tenantId", jsonParam.get("tenantId"));
+		
+		if(ezPMSDAO.checkIfBoardHasReplies(map) > 0) {
+			result = true;
+		}
+		
+		LOGGER.debug("[SERVICE] checkIfBoardHasReplies ended.");
+		return result;
+	}
+	
 	public ProjectGroupVO getUpperGroupDate(long groupId, int tenantId) throws Exception {
 		LOGGER.debug("[SERVICE] getUpperGroupDate started.");
 		Map<String, Object> map = new HashMap<String, Object>();

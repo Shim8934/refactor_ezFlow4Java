@@ -120,7 +120,36 @@
 		}
 		
 		function goMoveBoard() {
+			
+			if(checkIfHasReplies(itemIds) == true) {
+				alert("<spring:message code='ezPMS.t292' />");	
+				return;
+			}
+			
 			DivPopUpShow(320, 320, "/ezPMS/goMoveBoards.do?projectId=" + projectId + "&onlyGroup=false");
+		}
+		
+		function checkIfHasReplies(itemIds) {
+			
+			var check;
+			
+			data = {
+				itemIds : itemIds
+			}
+			
+			$.ajax({
+				type : "POST",
+				url : "/ezPMS/checkIfBoardHasReplies.do",
+				dataType : "json",
+				async : false,
+				contentType : "application/json; charset=UTF-8",
+				data : JSON.stringify(data),
+				success : function(result) {
+					check = result.data;
+				}
+			})
+			
+			return check;
 		}
 		
 		function boardViewerList(currentPage) {

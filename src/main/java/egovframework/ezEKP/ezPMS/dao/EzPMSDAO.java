@@ -240,6 +240,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update ("EzPMSDAO.updateBoard", map);
 	}
 	
+	public void updateBoardReplyToGeneral(Map<String, Object> map) {
+		update ("EzPMSDAO.updateBoardReplyToGeneral", map);
+	}
+	
 	public void moveBoard(Map<String, Object> map) {
 		update ("EzPMSDAO.moveBoard", map);
 	}
@@ -531,7 +535,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<String> getDateTaskList(Map<String, Object> map) {
-		return (List<String>) list("EzPMSDAO.getDateTaskList", map);
+		return (List<String>) list("EzPMSDAO.getDateTaskList", map);		
+	}
+	
+	public int checkIfBoardHasReplies(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.checkIfBoardHasReplies", map);
 	}
 
 	public ProjectGroupVO getUpperGroupDate(Map<String, Object> map) {

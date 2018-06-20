@@ -369,7 +369,7 @@
     	<result property="planStartDate"					column="plan_start_date"/>
     	<result property="planEndDate"						column="plan_end_date"/>
     </resultMap>
-	
+    
     <!-- 조직도 만들기 위한 쿼리 -->
 	<select id="EzPMSDAO.selectDeptList" parameterClass="map" resultMap="projectDeptViewMap">
 		select 
@@ -1582,13 +1582,15 @@
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
 				write_content,		write_date,			write_update_date,	read_count,				task_id,
 				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
-				writer_position,	writer_position2,	root_item_id,		item_level,				doc_no
+				writer_position,	writer_position2,	root_item_id,		item_level,				doc_no,
+				upper_item_id
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
 				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
-				#writerPosition#,	#writerPosition2#,	#rootItemId#,		#itemLevel#,			#docNo#
+				#writerPosition#,	#writerPosition2#,	#rootItemId#,		#itemLevel#,			#docNo#,
+				#upperItemId#
 			)
 		]]>
 		<selectKey keyProperty="itemId" resultClass="Integer">
@@ -1603,6 +1605,18 @@
 				title = #title#, 					write_overview = #writeOverview#, 					write_type = #writeType#, 
 				write_content = #writeContent#,		write_update_date = #writeUpdateDate#,				task_id = #taskId#,
 				group_id = #groupId#
+			WHERE 
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateBoardReplyToGeneral" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_item_list 
+			SET 
+				root_item_id = #itemId#,	upper_item_id = null,	item_level = 0
 			WHERE 
 				item_id = #itemId#
 			AND
@@ -3164,9 +3178,9 @@
 			UPDATE
 				TBL_PMS_GROUP
 			SET
-				REAL_PROGRESS = (
+				REAL_PROGRESS = IFNULL((
 									SELECT 
-										SUM(IFNULL(a.REAL_PROGRESS, 0) * a.WEIGHT / 100)
+										SUM(a.REAL_PROGRESS * a.WEIGHT / 100)
 									FROM
 										TBL_PMS_TASK a
 									JOIN
@@ -3189,7 +3203,7 @@
 									AND
 										a.DEL_STATUS = 0
 				
-								)
+								), 0)
 			WHERE
 				GROUP_ID = #groupId#
 			AND
@@ -3217,11 +3231,11 @@
 			SET
 				PROGRESS = (
 								SELECT 
-									aa.PROGRESS
+									IFNULL(aa.PROGRESS, 0)
 								FROM	
 									(
 										SELECT 
-											SUM(IFNULL(a.REAL_PROGRESS, 0) * a.WEIGHT / 100) AS PROGRESS
+											SUM(a.REAL_PROGRESS * a.WEIGHT / 100) AS PROGRESS
 										FROM
 											TBL_PMS_TASK a
 										JOIN
@@ -3366,6 +3380,20 @@
 			T.PLAN_START_DATE <= #date#
 		AND
 			T.PLAN_END_DATE >= #date#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.checkIfBoardHasReplies" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT COUNT(item_id)
+		FROM tbl_pms_item_list
+	]]>
+		<iterate property="itemIds" prepend="WHERE upper_item_id IN" open="(" close=")" conjunction=",">
+			#itemIds[]#
+		</iterate>
+	<![CDATA[
+		AND 
+			tenant_id = #tenantId#
 	]]>
 	</select>
 	

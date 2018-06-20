@@ -11,21 +11,24 @@
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style>
+			#selectDeptNM {font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;	}
+			#txtlist_Layer {vertical-align: top; height: 293px; overflow: auto; width: 100%;}
+			table.mainlist{width:100%; border: 1px solid #B6B6B6;}
 		</style>
 	</head>
 		<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal">
-			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">[<span style="color:#017BEC;">${memberList.size()}</span>명]</span>
+			    		<span id="selectDeptNM" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">[<span style="color:#017BEC;">${memberList.size()}</span>명]</span>
 			    		<span style="float:right;">
                        </span>
 			        </th>
 			    </tr>
 			</tbody>
 		</table>
-		<div style="vertical-align: top; height: 293px; overflow: auto; width: 100%;" id="txtlist_Layer">
-			<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
+		<div id="txtlist_Layer">
+			<table class="mainlist">
 				<tr>
 					<td style="width: 40%; font-weight: bold;" class="td_gray"><spring:message code='ezPMS.t264' /></td>
 					<td style="width: 60%; font-weight: bold;" class="td_gray"><spring:message code='ezPMS.t115' /></td>

@@ -261,8 +261,10 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String projectId = request.getParameter("projectId");
+		String type = request.getParameter("type");
 		
 		model.addAttribute("projectId", projectId);
+		model.addAttribute("type", type);
 		
 		LOGGER.debug("ezPMS goProjectMemberList ended");
 		
