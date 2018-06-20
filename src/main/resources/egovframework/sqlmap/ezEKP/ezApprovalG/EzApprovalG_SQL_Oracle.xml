@@ -15907,6 +15907,12 @@
 			AND
 				COMPANYID = #companyID#
         ]]>
+        <isEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '080')
+        </isEqual>
+        <isNotEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '011', '012', '017', '040')
+        </isNotEqual> 
 	</select>
 			
 	<select id="EzApprovalG.getDocInfoHab" parameterClass="Map" resultClass="Integer">
@@ -17490,7 +17496,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T' )
+           		 PROCESSYN IN ( 'N','E','T', '0' )
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
