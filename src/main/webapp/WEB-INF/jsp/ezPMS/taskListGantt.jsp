@@ -596,9 +596,9 @@
 	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true);
 	   			  row.find("[name=planProgress]").prop("readonly", true);
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
-	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) ); // called on dates only because for other field is called on focus event
+	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) || task.type === 'g'); // called on dates only because for other field is called on focus event
 	   			  row.find("[name=endIsMilestone]").prop("checked", task.endIsMilestone);
-	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent).updateOldValue();
+	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent || task.type === 'g').updateOldValue();
 	   			  row.find("[name=depends]").val(task.depends);
 	   			  row.find(".taskAssigs").html(task.getAssigsString());
 
