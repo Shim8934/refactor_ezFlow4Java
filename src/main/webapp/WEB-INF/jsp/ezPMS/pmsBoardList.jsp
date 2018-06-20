@@ -308,7 +308,7 @@
 								<c:out value="${projectBoardVO.writerName}"/>
 							</td>
 							<td class="writeDate">
-								<c:out value="${fn:substring(projectBoardVO.writeDate, 0, 19)}"/>
+								<c:out value="${fn:substring(projectBoardVO.writeDate, 0, 16)}"/>
 							</td>
 							<td>
 								<c:out value="${projectBoardVO.readCount}"/>
