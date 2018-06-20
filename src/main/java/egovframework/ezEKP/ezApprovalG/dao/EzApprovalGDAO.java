@@ -2975,6 +2975,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int) select("EzApprovalG.getCountDoingDocInfo", map);
 	}
 	
+	public String getDocExt(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDocExt", map);
+	}
+	
 	public String getDocHrefInfoHref(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocHrefInfoHref", map);
 	}
