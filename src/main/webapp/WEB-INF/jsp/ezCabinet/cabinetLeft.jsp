@@ -33,8 +33,8 @@
 			<!-- 용량보기 -->
 			<div class="volumeDiv">
 				<div id="myProgress"></div>
-				<div class="volumeBar"><div id='myBar'></div></div>
-				<div class="volumes"></div>
+				<div class="volumeBar"><div id="myBar" class="myBar_green" style="width: 22%;"></div></div>
+				<div class="volumes">248.1M / 1.2G (22%)</div>
 			</div>
 			
 			<!-- 환경설정 -->

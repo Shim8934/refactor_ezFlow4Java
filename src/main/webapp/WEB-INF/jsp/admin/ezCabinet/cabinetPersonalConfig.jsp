@@ -64,8 +64,15 @@
 				window.addEventListener("load", function(e) {initBttns();}, false);
 				
 				function initBttns() {
-					companyTree.setTreeInfo("compTree", "/ezCabinet/getCompanyTree.do", "/ezCabinet/getSubNodes.do", null, null);
-					companyTree.setCompanyId(document.getElementById("companyList").value);
+					companyTree.setTreeInfo({
+						treeId     : "compTree",
+						initialUrl : "/ezCabinet/getCompanyTree.do",
+						extendUrl  : "/ezCabinet/getSubNodes.do",
+						click      : null,
+						dblClick   : null,
+						companyId  : document.getElementById("companyList").value
+					});
+					
 					companyTree.makeTree();
 					
 					var selectCompBox      = document.getElementById("companyList");

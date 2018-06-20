@@ -7,10 +7,6 @@
 #left ul li.on {font-weight: bold;}
 .leftbody ul:not(:last-child) li:last-child {border-bottom: none;}
 
-.volumeDiv {border:1px solid #ddd; border-radius:3px; margin:10px 10px 2px; background-color: white;}
-.volumeDiv >div:first-child {margin-left:20px; margin-top: 10px;}
-.volumeDiv .volumeBar {width: 80%;}
-.volumeDiv .volumes {text-align:center; margin-top:10px; margin-bottom:5px; font-weight: bold; font-family: dotum;}
 .adminPanel {width:100%; padding:9px 16px 15px; font-weight: bold;}
 .adminPanel img {vertical-align: middle; margin-top: -2px; width: 20px;}
 .adminPanel span {margin-left: 10px; font-size: 18px; padding-top: 3px; color: #333; font-family: Malgun Gothic, Meiryo UI;}
@@ -18,6 +14,7 @@
 .cabiMain {margin-left:5px}
 .cabiMain .bttnDiv {width: 400px; text-align: center;}
 .cabiMain .cabBttnDiv {width: 400px; text-align: center; margin: 10px auto;}
+.cabGeneral {margin: 0px 10px;}
 .cabGeneral .cabBttnDiv {width: 623px; text-align: center;}
 .cabPersonalDiv, .cabGroupDiv {height: 500px; display: flex;}
 .cabPersonalDiv >div {border: 1px solid #ddd;}
@@ -34,19 +31,36 @@
 .compOrg .deptPart, .compOrg .usersPart, .cabGroupDiv .userDiv {border: 1px solid #ddd;}
 .cabGroupDiv .userDiv {flex-grow: 1;}
 
-
 .compSelect {margin: 10px 0px;}
 .compSelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
 .compSelect >select {font-size: 12px; height: 20px; display:inline-block;}
 .mainbody #mainSetting {margin: 10px 0px;}
+.content.config {width: 680px; margin-top: 5px;}
 .content.on {width: 300px;}
 .content.on tr {height: 40px;}
 .content .white {background-color: #fff !important;}
+.content .large {width: 40%;}
 .white >input[type='text'] {height: 30px; padding: 0px 5px;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
 .selectedNode {color: #004a87; font-weight: bold;}
 .cabinetMinus, .cabinetPlus {width: 18px; height: 18px; cursor: pointer;}
 .cabinetImg {width: 18px; height: 18px;}
+
+/* Volume part */
+.cabVolumeDiv {width: 677px; border: 1px solid #d6d6d6; margin-top:5px}
+.cabVolumeDiv >div {width:400px; height:200px; display: inline-block;}
+.volumeDiv {border:1px solid #ddd; border-radius:3px; margin:10px 10px 2px; background-color: white;}
+.volumeDiv >div:first-child {margin-left:20px; margin-top: 10px; width: 80%; height: 7px; background-color: white; border: 1px solid #ddd; overflow: hidden;}
+.volumeDiv .volumeBar {width: 80%;}
+.volumeDiv .volumes {text-align:center; margin-top:10px; margin-bottom:5px; font-weight: bold; font-family: dotum;}
+#myBar {margin-left:20px; margin-top:-9px;}
+.myBar_red    {height: 7px; border: 1px solid #ee0606; background-color: #ff1616;}
+.myBar_orange {height: 7px; border: 1px solid #ee5e00; background-color: #ff7f00;}
+.myBar_yellow {height: 7px; border: 1px solid #eea600; background-color: #ffb600;}
+.myBar_green  {height: 7px; border: 1px solid #2C8F30; background-color: #4CAF50;}
+
+.cabSelectConf {width: 50px;}
+.cabPreviewMode {width: 100px;}
 
 /* Table css */
 .inputTh {width: 20px;}
@@ -54,3 +68,11 @@
 .valueTd {white-space: nowrap;}
 .valueTd input[type='text'] {width: 70px; max-width: 70px; padding: 0px 5px;}
 .valueTd span {margin-left: 5px;}
+.cabTable {width: 680px; border: 1px solid #efefef; border-collapse: collapse;}
+.cabTable tr {height: 32px;}
+.cabTable tr td {text-align: center; border-bottom: 1px solid #efefef; color: #5b5a5a; word-wrap: break-word; padding: 5px 4px 3px 4px; font-weight: normal; font-size: 12px; border-spacing: 0;}
+.cabTable tr td input[type='radio'] {vertical-align: middle; margin: 0px 3px;}
+.cabTable .cabName {text-align: left !important; padding-left: 20% !important;}
+
+
+

@@ -48,8 +48,15 @@
 				window.addEventListener("load", function(e) {initBttns();}, false);
 				
 				function initBttns() {
-					deptTree.setTreeInfo("deptTree", "/ezCabinet/getCompanyTree.do", "/ezCabinet/getSubNodes.do", getDeptMember, null);
-					deptTree.setCompanyId(document.getElementById("companyList").value);
+					deptTree.setTreeInfo({
+						treeId     : "deptTree",
+						initialUrl : "/ezCabinet/getCompanyTree.do",
+						extendUrl  : "/ezCabinet/getSubNodes.do",
+						click      : getDeptMember,
+						dblClick   : null,
+						companyId  : document.getElementById("companyList").value
+					});
+					
 					deptTree.makeTree();
 					
 					var selectCompBox      = document.getElementById("companyList");

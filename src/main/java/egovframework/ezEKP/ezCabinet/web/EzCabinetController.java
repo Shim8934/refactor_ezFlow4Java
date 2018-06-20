@@ -77,6 +77,15 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetConfig";
 	}
 	
+	@RequestMapping(value="/ezCabinet/cabinetInterLocking.do")
+	public String jspGetRelatedCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetRelatedCabinetConfig started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		logger.debug("jspGetRelatedCabinetConfig ended");
+		return "ezCabinet/cabinetInterLock";
+	}
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
 	@ResponseBody

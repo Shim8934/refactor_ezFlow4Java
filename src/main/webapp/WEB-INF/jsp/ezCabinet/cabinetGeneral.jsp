@@ -7,21 +7,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css"                           type="text/css"/>
 	</head>
-	<body class="cabGeneral" style="margin-left: 10px; margin-right: 10px;">
-		<br/>
+	<body class="cabGeneral">
+		<br>
 		<h2><spring:message code="ezCabinet.t24"/></h2>
 		
-		<div align="center" style="width:677px;border:1px solid #d6d6d6;margin-top:5px">
-			<div id="cabinetVolume" style="width:400px; height:200px;display: inline-block;"></div>
+		<div align="center" class="cabVolumeDiv">
+			<div id="cabinetVolume"></div>
 		</div>
-		
+		<br>
 		<span class="txt">▒&nbsp;<spring:message code="ezCabinet.t23"/></span>
-		<br />
-		<table class="content" style="width: 680px; margin-top: 5px">
+		
+		<table class="content config">
 			<tr>
-				<th><spring:message code="ezWebFolder.t241" /></th>
+				<th class="large"><spring:message code="ezWebFolder.t241" /></th>
 				<td>
 					<select id="listcount" name="pListCount" style="WIDTH: 100px">
 						<option value='10' ${wfListConfig.envValue eq '10'? 'selected' : ''}>10</option>
@@ -34,72 +33,44 @@
 				</td>
 			</tr>
 			<tr>
-				<th><spring:message code='ezEmail.t487'/></th>
+				<th><spring:message code='ezCabinet.t25'/></th>
 				<td>
-					<select id="PreviewMode" style="WIDTH: 100px" onchange="PrevieOption(this);">
-							<option value="OFF" ${previewMode == 'OFF'? selected : ''}><spring:message code='ezEmail.t99000017'/></option>
-							<option value="H"   ${previewMode == 'H'  ? selected : ''}><spring:message code='ezEmail.t99000018'/></option>
-							<option value="W"   ${previewMode == 'W'  ? selected : ''}><spring:message code='ezEmail.t99000019'/></option>
+					<select id="previewMode" class="cabPreviewMode">
+							<option value="OFF" ${previewMode == 'OFF'? selected : ''}><spring:message code='ezCabinet.t26'/></option>
+							<option value="H"   ${previewMode == 'H'  ? selected : ''}><spring:message code='ezCabinet.t27'/></option>
+							<option value="W"   ${previewMode == 'W'  ? selected : ''}><spring:message code='ezCabinet.t28'/></option>
 					</select>
-					<span id="PreviewHSizeDiv" <c:if test="${previewMode != 'H'}">style="display:none;"</c:if>>
-						<spring:message code='ezEmail.t99000020' />
-						<select id="HListUser" style="width: 50px;" onchange="HChange(this);">
+					<span id="previewHSizeDiv" ${previewMode != 'H' ? '' : 'style="display: none;"'}>
+						<spring:message code='ezCabinet.t29'/>
+						<select id="hUserList" class="cabSelectConf">
 								<c:forEach var="i" begin="39" end="74" step="1">
-									<c:choose>
-										<c:when test="${previewHListSize == i}">
-											<option value="<c:out value='${i}'/>" selected><c:out value='${i}' /></option>
-										</c:when>
-										<c:otherwise>
-											<option value="<c:out value='${i}'/>"><c:out value='${i}' /></option>
-										</c:otherwise>
-									</c:choose>
+									<option ${previewHListSize == i ? 'selected' : ''}><c:out value='${i}'/></option>
 								</c:forEach>
-						</select> <spring:message code='ezEmail.t99000021' /> 
-						<select id="HPreUser" style="width: 50px;" onchange="HChange(this);">
+						</select> <spring:message code='ezCabinet.t30'/>
+						<select id="hUserPre" class="cabSelectConf">
 								<c:forEach var="i" begin="26" end="61" step="1">
-									<c:choose>
-										<c:when test="${previewHContentSize == i}">
-											<option value="<c:out value='${i}'/>" selected><c:out value='${i}' /></option>
-										</c:when>
-										<c:otherwise>
-											<option value="<c:out value='${i}'/>"><c:out value='${i}' /></option>
-										</c:otherwise>
-									</c:choose>
+									<option ${previewHContentSize == i ? 'selected' : ''}><c:out value='${i}' /></option>
 								</c:forEach>
 						</select>
 					</span>
-					<span id="PreviewWSizeDiv" <c:if test="${previewMode != 'W'}">style="display:none;"</c:if>>
-						<spring:message code='ezEmail.t99000020' />
-						<select id="WListUser" style="width: 50px;" onchange="WChange(this);">
+					<span id="previewWSizeDiv" ${previewMode != 'W' ? 'style="display: none;"' : ''}>
+						<spring:message code='ezCabinet.t29' />
+						<select id="wUserList" role="" class="cabSelectConf">
 							<c:forEach var="i" begin="24" end="65" step="1">
-								<c:choose>
-									<c:when test="${previewWListSize == i}">
-										<option value="<c:out value='${i}'/>" selected><c:out value='${i}' /></option>
-									</c:when>
-									<c:otherwise>
-										<option value="<c:out value='${i}'/>"><c:out value='${i}' /></option>
-									</c:otherwise>
-								</c:choose>
+								<option ${previewWListSize == i ? 'selected' : ''}><c:out value='${i}' /></option>
 							</c:forEach>
 						</select>
-						<spring:message code='ezEmail.t99000021'/>
-						<select id="WPreUser" style="width: 50px;" onchange="WChange(this);">
+						<spring:message code='ezCabinet.t30'/>
+						<select id="wUserPre" class="cabSelectConf">
 							<c:forEach var="i" begin="35" end="76" step="1">
-								<c:choose>
-									<c:when test="${previewWContentSize == i}">
-										<option value="<c:out value='${i}'/>" selected><c:out value='${i}' /></option>
-									</c:when>
-									<c:otherwise>
-										<option value="<c:out value='${i}'/>"><c:out value='${i}' /></option>
-									</c:otherwise>
-								</c:choose>
+								<option ${previewWContentSize == i ? 'selected' : ''}><c:out value='${i}' /></option>
 							</c:forEach>
 					</select>
 				</span></td>
 			</tr>
 		</table>
 		
-	 	<br/>
+	 	<br>
 	 	
 		<div class="cabBttnDiv">
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t14'/></span></a>
@@ -142,34 +113,59 @@
 					
 					volumeDraw.refresh("45");
 					volumeDraw.refreshtitle("총 450MB중 220MB(45%) 사용중입니다.");
+					
+					var previewModeElmt = document.getElementById("previewMode");
+					previewModeElmt.addEventListener("change", function(e) {selectPreviewOption(this);}, false);
+					
+					var selectBoxList = document.getElementsByClassName("cabSelectConf");
+					for (var i = 0, len = selectBoxList.length; i < len; i++) {
+						selectBoxList[i].addEventListener("change", function(e) {changeValue(this);}, false);
+					}
 				}
 				
-				function cancel() {
-					document.getElementById("listcount").value = listCnt;
+				function selectPreviewOption(selectOption) {
+					if (selectOption.value == "OFF") {
+						document.getElementById("previewHSizeDiv").style.display = "none";
+						document.getElementById("previewWSizeDiv").style.display = "none";
+					}
+					else if (selectOption.value == "H") {
+						document.getElementById("previewHSizeDiv").style.display = "";
+						document.getElementById("previewWSizeDiv").style.display = "none";
+					}
+					else {
+						document.getElementById("previewHSizeDiv").style.display = "none";
+						document.getElementById("previewWSizeDiv").style.display = "";
+					}
 				}
+				
+				function changeValue(obj) {
+					var elmtId = obj.getAttribute("id");
+					
+					switch(elmtId) {
+						case "hUserList": document.getElementById("hUserPre").value  = 100 - parseInt(obj.value); break;
+						case "hUserPre" : document.getElementById("hUserList").value = 100 - parseInt(obj.value); break;
+						case "wUserList": document.getElementById("wUserPre").value  = 100 - parseInt(obj.value); break;
+						case "wUserPre" : document.getElementById("wUserList").value = 100 - parseInt(obj.value); break;
+						default: return;
+					}
+				}
+				
+				function cancel() {window.location.reload(true);}
 				
 				function save() {
 					var listCount = document.getElementById("listcount").value;
 					
 					$.ajax({
-						url : '',
-						method : 'POST',
-						dataType : 'JSON',
-						data : {
+						url: '',
+						method: 'POST',
+						dataType: 'JSON',
+						data: {
 							"listCount" : listCount
-						} ,
-						success : function(data, textStatus, jqXHR) {
-							var result = data.resultValue;
-							
-							if (result == "ok") {
-								alert('<spring:message code="ezWebFolder.t182"/>');
-								listCnt = listCount;
-							}
-							else {
-								alert('<spring:message code="ezWebFolder.t134"/>');
-							}
 						},
-						error : function(error) {
+						success: function(data) {
+							
+						},
+						error: function(error) {
 							alert('Error: ' + error);
 						}
 					});

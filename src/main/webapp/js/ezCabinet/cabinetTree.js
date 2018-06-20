@@ -4,7 +4,7 @@ function CabinetTree() {
 	//private variables
 	var _treeElmtId   = null;
 	var _companyId    = null;
-	var _initalUrl    = null;
+	var _initialUrl   = null;
 	var _getSubUrl    = null;
 	var _clickHandle  = null;
 	var _dblClickHdl  = null;
@@ -15,19 +15,20 @@ function CabinetTree() {
 	this.setTreeInfo  = setTreeInfo;
 	
 	//privileged functions
-	function setTreeInfo(treeId, initalUrl, extendUrl, handleClick, handleDblClick) {
-		_treeElmtId  = treeId;
-		_initalUrl   = initalUrl;
-		_getSubUrl   = extendUrl;
-		_clickHandle = handleClick;
-		_dblClickHdl = handleDblClick;
+	function setTreeInfo(data) {
+		_treeElmtId  = data["treeId"];
+		_initialUrl  = data["initialUrl"];
+		_getSubUrl   = data["extendUrl"];
+		_clickHandle = data["click"];
+		_dblClickHdl = data["dblClick"];
+		_companyId   = data["companyId"];
 	}
 	
-	function setCompanyId(compId) {_companyId  = compId;}
+	function setCompanyId(compId) {_companyId = compId;}
 	
 	function getInitalData() {
 		var data = {companyId : _companyId};
-		makeAjaxCall(data, "GET", _initalUrl, makeTree, null, true, null);
+		makeAjaxCall(data, "GET", _initialUrl, makeTree, null, true, null);
 	}
 	
 	function makeTree(data) {
@@ -37,6 +38,9 @@ function CabinetTree() {
 		if (!companyTree) {alert(CabinetMessages.strTreeErr); return;}
 		
 		var divTree = document.getElementById(_treeElmtId);
+		
+		if (!divTree) {alert("Cannot find element with this id: " + _treeElmtId); return;}
+		
 		var divComp = document.createElement("div");
 		
 		while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}
