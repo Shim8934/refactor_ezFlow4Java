@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"${formURL}";
 		    var DraftFlag	=	"${draftFlag}";
@@ -156,6 +157,9 @@
 			var isEditorComplete = false;
 			var isHWP = "";
 			var ext = "mht";
+			var nonElecRec = "${nonElecRec}";
+			var nonElecRecInfoXml = "";
+			var nonSepAttachLVXml = "";
 			
 		    window.onload = function ()
 		    {
@@ -607,13 +611,16 @@
 			            setDrafterAddress();
 			            if (pDraftFlag == "REDRAFT")
 			                delOpinionInfo();
-			            if (LastSignSN == 1 || DraftLastFlag) {
-			                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
-			                OpenInformationUI(pInformationContent, check_btnSendDraft4);
-			            }
-			            else
+			            if (nonElecRec != "Y") {
+				            if (LastSignSN == 1 || DraftLastFlag) {
+				                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
+				                OpenInformationUI(pInformationContent, check_btnSendDraft4);
+				            }
+				            else
+				                CheckPassWord();
+			            } else {
 			                CheckPassWord();
-		        		
+			            }
 		        	} else {
 		        		OpenAlertUI("<spring:message code='ezApprovalG.pjg02'/>");
 		        	}		            
@@ -1323,6 +1330,13 @@
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
 		        parameter[45] = pPublicityYN;
+		        parameter[46] = nonElecRec;
+		        
+		        if (nonElecRec == "Y") {
+			        parameter[47] = "nonElecRecTempCabinet";
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+		        }
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1425,9 +1439,15 @@
 			                if (ret[21].substring(0,1) == "N") {
 			                	tempPublic = "N";
 			                }
-			                
  			                setPublicFlag();
 			                // setPublicFlag2();
+			                
+			                if (nonElecRec == "Y") {
+			                	nonElecRecInfoXml = ret[23];
+			                	nonSepAttachLVXml = ret[24];
+			                	
+			                	setNonElecRecInfo(nonElecRecInfoXml);
+			                }
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

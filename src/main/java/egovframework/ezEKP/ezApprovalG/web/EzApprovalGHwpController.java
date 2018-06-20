@@ -71,7 +71,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String aprState = request.getParameter("aprState");
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String connkey = request.getParameter("connkey");
+		String nonElecRec = request.getParameter("nonElecRec");
 		String docSN = "";
+		
+		if (nonElecRec == null) {
+			nonElecRec = "";
+		}
 		
 		if (listType.equals("21")) {
 			if (request.getParameter("docSN") != null) {
@@ -118,6 +123,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("connkey", connkey);
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("isHWP", "Y");
+		model.addAttribute("nonElecRec", nonElecRec);
 		
 		LOGGER.debug("draftuiHWP ended");
 		
@@ -609,6 +615,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 비전자문서 구분 값  (return >> "Y" = TRUE, "" = FALSE)
+		String isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
@@ -623,6 +632,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("isNonElecRec", isNonElecRec);
 		
 		LOGGER.debug("ezRecevGSusinHWP ended");
 		
@@ -793,5 +803,20 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	public String makeXMLString(String orgString) throws Exception{
 		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
+	
+	/* 2018-06-18 천성준
+	 * 비전자문서 수신처 등록 메소드
+	 * */
+	@RequestMapping(value = "/ezApprovalG/nonElecRecSusinInit.do")
+	public void nonElecRecSusinInit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("nonElecRecSusinInit started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		ezApprovalGService.setNonElecRecSusinInit(docID, userInfo.getDeptID(), userInfo.getDeptName(), userInfo.getDeptName2(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		LOGGER.debug("nonElecRecSusinInit ended.");
 	}
 }

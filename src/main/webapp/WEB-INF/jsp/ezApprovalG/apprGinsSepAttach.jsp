@@ -31,6 +31,7 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    var ext = "";
+		    var nonElecRec = "";
 		    
 		    window.onload = function () {
 		        try {
@@ -51,6 +52,7 @@
   	 			ext = RetValue[3];
 		        g_SepAttchLVXml = RetValue[0];
 		        g_CabinetID = RetValue[1];
+		        nonElecRec = RetValue[4];
 		        if (RetValue[2])
 		            g_InitFlag = RetValue[2];
 		        if (g_InitFlag == "1") {
@@ -135,6 +137,7 @@
 		        para[2] = g_CabinetID;	
 		        para[3] = "";
 		        para[4] = g_CabinetID;	
+		        para[5] = nonElecRec;	
 		
 		        var url = "/ezApprovalG/regSepAttach.do";
 		
@@ -304,6 +307,7 @@
 		            para[2] = GetAttribute(selnode[0], "DATA1");	
 		            para[3] = GetSelAttachInfoXml(selnode);
 		            para[4] = g_CabinetID;	
+		            para[5] = nonElecRec;
 		
 		            var url = "/ezApprovalG/regSepAttach.do";
 		
@@ -431,7 +435,7 @@
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA3", GetAttribute(selRow, "DATA3"));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[1].innerHTML);
+		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", " "));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[2].innerHTML);

@@ -467,7 +467,7 @@ public interface EzApprovalGService {
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
 
-	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState) throws Exception;
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN) throws Exception;
 
 	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
 
@@ -531,5 +531,11 @@ public interface EzApprovalGService {
 	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
 	
 	public String getDocExt(String docID, String companyID, int tenantID) throws Exception;
+	
+	public void setNonElecRecSusinInit(String docID, String deptID, String deptName, String deptName2, String companyID, int tenantID) throws Exception;
+	
+	public String checkNonElecRec(String orgDocID, String companyID, int tenantID) throws Exception;
+	
+	public String getNonElecInfoSusinInit(String orgDocID, String companyID, int tenantID) throws Exception;
 
 }

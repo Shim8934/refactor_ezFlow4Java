@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
@@ -2977,5 +2978,20 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public String getDocExt(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocExt", map);
+	}
+	
+	public void deleteInitReceiptPonit(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteInitReceiptPonit", map);
+	}
+	public void setInitReceiptPonit(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.setInitReceiptPonit", map);
+	}
+	public int checkNonElecRec(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.checkNonElecRec", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordTempVO> getNonElecInfoSusinInit(Map<String, Object> map) throws Exception {
+		return (List<ApprGRecordTempVO>) list("EzApprovalG.getNonElecInfoSusinInit", map);
 	}
 }

@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "${docID}";
@@ -113,6 +114,9 @@
 		    var g_senderinfo = '${userInfo.companyID}' + ", " + "${userInfo.deptName1}" + ", " + "${userInfo.title1}";
 		    var approvalFlag  = '${approvalFlag}';
 		    var ext = "hwp";
+		    var nonElecRec = "${isNonElecRec}";
+		    var nonElecRecInfoXml = "";
+			var nonSepAttachLVXml = "";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -253,7 +257,8 @@
 			        SetBtnStateTrue();
 			
 			        getReceiveDocInfo();
-			
+			        getNonElecInfoSusinInit();
+			        
 			        if (pSusinDocURL != "") {
 			            if (pSusinDocURL == "PC") {
 			
@@ -501,12 +506,13 @@
 			        }
 			        catch (e) { }
 			
-			        if (cabinetID == "")
-			            btnApprovalInfo();
+			        /* if (cabinetID == "")
+			            btnApprovalInfo(); */
 			
 			        if (cabinetID == "") {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
 			            OpenAlertUI(pAlertContent);
+			            btnApprovalInfo();
 			            return;
 			        }
 			
@@ -1286,6 +1292,17 @@
 			    parameter[38] = tempSecurityDate;
 			    parameter[39] = SummaryFlag;
 			    parameter[45] = pPublicityYN;
+			    parameter[46] = nonElecRec;
+			    
+			    if (nonElecRec == "Y") {
+			    	if (pGubun == "11") {
+			        	parameter[47] = cabinetID;
+		        	} else {
+			        	parameter[47] = "nonElecRecTempCabinet";
+		        	}
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+		        }
 			    
 			    if (tempItemCode != "") {
 			        tempdocnumcode = tempItemCode;
@@ -1369,6 +1386,12 @@
 				                /*2018-04-05 김은석 수정 건설공사 공개여부*/
 //	 			                setPublicFlag();
 				                setPublicFlag2();
+				                
+				                if (nonElecRec == "Y") {
+					            	nonElecRecInfoXml = ret[23];
+					            	nonSepAttachLVXml = ret[24];
+					            	setNonElecRecInfo(nonElecRecInfoXml);
+					            }
 			                } else {
 			                	tempKeep = ret[16];
 			                	tempItemName = ret[17];
@@ -1379,6 +1402,8 @@
 			                	tempPublic = ret[11];
 			                	SetDocOption(ret[20]);
 			                }
+			                
+			                
 			                SummaryFlag = true;
 			                HwpCtrl.ChangeMode(3);
 			            } catch (e) {
@@ -1446,6 +1471,7 @@
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()" style="display: none;"><spring:message code='ezApprovalG.t157'/></span></li>
 	                        <li id="btnRefresh" style="display: none"><span onclick="return RefreshRecvDoc()"><spring:message code='ezApprovalG.t00013'/></span></li>
 	                    </ul>
 	                </div>

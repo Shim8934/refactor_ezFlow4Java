@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/showModalDialog.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezDraft_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 	    <script type="text/javascript">
 	        var FormHref = "${formURL}";
 	        var DraftFlag = "${draftFlag}";
@@ -147,6 +148,9 @@
 	        var isHWP = "${isHWP}";
 	        var isUsed = "";
 	        var ext = "hwp";
+	        var nonElecRec = "${nonElecRec}";
+	        var nonElecRecInfoXml = "";
+	        var nonSepAttachLVXml = "";
 	        
 	        window.onload = function () {
 	            try {
@@ -575,18 +579,20 @@
 	                if (pDraftFlag == "REDRAFT")
 	                    delOpinionInfo();
 	
-	                if (LastSignSN == 1 || DraftLastFlag) {
-	                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
-	                    var Ans = OpenInformationUI(pInformationContent);
-	
-	                    if (!Ans) return;
-	
-	                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
-	                        getLastOpinon();
-	                    }
-	
-	                    if (HwpCtrl.CheckFieldExist("lastdraftdate"))
-	                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
+	                if (nonElecRec != "Y") {
+		                if (LastSignSN == 1 || DraftLastFlag) {
+		                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
+		                    var Ans = OpenInformationUI(pInformationContent);
+		
+		                    if (!Ans) return;
+		
+		                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
+		                        getLastOpinon();
+		                    }
+		
+		                    if (HwpCtrl.CheckFieldExist("lastdraftdate"))
+		                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
+		                }
 	                }
 	
 	                if ("${approvalPWD}" != "N") {
@@ -1083,6 +1089,13 @@
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
 			        parameter[45] = pPublicityYN;
+			        parameter[46] = nonElecRec;
+			        
+			        if (nonElecRec == "Y") {
+				        parameter[47] = "nonElecRecTempCabinet";
+				        parameter[48] = nonElecRecInfoXml;
+				        parameter[49] = nonSepAttachLVXml;
+			        }
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
@@ -1154,6 +1167,13 @@
 		                }
 			            setPublicFlag();
 			            SummaryFlag = true;
+			            
+			            if (nonElecRec == "Y") {
+			            	nonElecRecInfoXml = ret[23];
+			            	nonSepAttachLVXml = ret[24];
+			            	
+			            	setNonElecRecInfo(nonElecRecInfoXml);
+			            }
 			        }
 			    } catch (e) {
 			        alert("ezdraftui_hwp.GetSepAttParamXml()::" + e.description);

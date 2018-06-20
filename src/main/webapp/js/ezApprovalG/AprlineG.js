@@ -377,14 +377,25 @@ function GetSelCabInfoXml(totalRows) {
     var rtnXml = createXmlDom();
     var Root, objItem, objData;
     Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
-    for (i = 0; i < totalRows.length; i++) {
-        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", totalRows[i].getAttribute("DATA1"));
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", totalRows[i].cells[0].innerText);
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", totalRows[i].getAttribute("DATA3"));
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", totalRows[i].cells[1].innerText);
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", totalRows[i].cells[2].innerText);
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", totalRows[i].getAttribute("DATA2"));
+    
+    if (nonElecRec == "Y" && pIniGubun != "11") {
+    	objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
+    	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", arr_userinfo[4]+g_CabID);
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "임시기록물");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", arr_userinfo[4]+"ZZ3782312017000002");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "임시SN(a8989891)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "임시VOLNO(ZZ378231)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ378231");
+    } else {
+	    for (i = 0; i < totalRows.length; i++) {
+	        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", totalRows[i].getAttribute("DATA1"));
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", totalRows[i].cells[0].innerText);
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", totalRows[i].getAttribute("DATA3"));
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", totalRows[i].cells[1].innerText);
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", totalRows[i].cells[2].innerText);
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", totalRows[i].getAttribute("DATA2"));
+	    }
     }
     return getXmlString(rtnXml);
 }
