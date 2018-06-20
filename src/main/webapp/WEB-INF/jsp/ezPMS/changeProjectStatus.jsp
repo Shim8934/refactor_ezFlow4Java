@@ -15,6 +15,7 @@
 var projectList = parent.checkedVal;
 var nowStatus = parent.listProjectStatus;
 var strHTML = "";
+var viewType = parent.viewType;
 
 $(function(){
 	strHTML += "<tr><td>";
@@ -87,7 +88,13 @@ function changeStatus() {
 				if (result == "permitted") {
 					alert("<spring:message code='ezPMS.t10' />");
 					parent.checkedVal = "";
-					parent.setProjectList();
+
+					if (viewType == 0) {
+						parent.startRow = 0;
+						parent.listNumber = parent.$(".projectList").length;
+					}
+					
+					parent.setProjectList("new");
 					popupClose();
 				} else {
 					alert("<spring:message code='ezPMS.t9' />");

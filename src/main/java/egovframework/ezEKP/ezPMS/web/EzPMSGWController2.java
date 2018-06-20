@@ -84,7 +84,11 @@ public class EzPMSGWController2 {
 			String orderHow = request.getParameter("orderHow");
 			String position = request.getParameter("position");
 			String companyId = info.getCompanyId();
-			int roleId = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+			int roleId = 0;
+			
+			if (projectId != 0) {
+				roleId = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+			}
 			
 			if (orderWhat == null) {
 				orderWhat = "init";

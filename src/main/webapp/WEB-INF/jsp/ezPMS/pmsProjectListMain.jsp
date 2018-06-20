@@ -360,8 +360,11 @@ function changeProjectSort(sortType) {
 	projectSort = sortType;
 	orderHow = "";
 	orderWhat = "";
-	changeMainSetting();
+	startRow = 0;
+	listNumber = $(".projectList").length;
+
 	setProjectList("new");
+	changeMainSetting();
 	MailOptionHidden();
 }
 
@@ -405,9 +408,8 @@ function setInitOrder() {
 }
 
 function setProjectList(mode) {
-	if (viewType == 0) {
-		listNumber = 20;
-	}
+	console.log(startRow);
+	console.log(listNumber);
 	
 	var param = {
 		projectSort : projectSort,
@@ -675,6 +677,7 @@ function deleteProject() {
 function addFavoriteMemo(projectId) {
 	var response = confirm("<spring:message code='ezPMS.t24' />");
 	
+	
 	if (response == true) {
 		var data = {
 				status : "F",
@@ -691,7 +694,7 @@ function addFavoriteMemo(projectId) {
 					alert("<spring:message code='ezPMS.t25' />");
 					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
 					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
-					location.reload();
+					setProjectList("new");
 				} else {
 					alert("<spring:message code='ezPMS.t26' />");
 					return;
@@ -870,8 +873,8 @@ function getSearchProject() {
 
 function searchProject() {
 	currentPage = 1;
-	listProjectStatus = "A";
-	searchByName = $("#searchByName").val();
+	listProjectStatus = "A";	
+	searchByProjectName = $("#searchByProjectName").val();
 	searchByUser = $("#searchByUser").val();
 	searchByStartDate = $("#Sdatepicker").val();
 	searchByEndDate = $("#Edatepicker").val();

@@ -919,7 +919,11 @@ public class EzPMSGWController {
 			String status = request.getParameter("status");
 			String isMyTask = request.getParameter("isMyTask");
 			long groupId = 0;
-			int roleId = ezPMSService.getUserProjectRole(userId, info.getTenantId(), projectId, info.getDeptId());
+			int roleId = 0;
+			
+			if (projectId != 0) {
+				roleId = ezPMSService.getUserProjectRole(userId, info.getTenantId(), projectId, info.getDeptId());
+			}
 			
 			if (request.getParameter("groupId") != null) {
 				 groupId = Long.parseLong(request.getParameter("groupId")); 

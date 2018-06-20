@@ -2002,25 +2002,22 @@
 				TBL_PMS_GROUP B
 			ON
 				A.UPPER_GROUP_ID = B.GROUP_ID
-		]]>
-			<isEqual property="location" compareValue="general">
-			JOIN
-				TBL_PMS_GROUPMEMBER M
-			ON
-				A.GROUP_ID = M.GROUP_ID
-			WHERE 
-				M.MEMBER_ROLE_ID = 1
-			AND
-			</isEqual>
-			<isNotEqual property="location" compareValue="general">
 			LEFT JOIN
 				TBL_PMS_PRETASKREL R
 			ON
 				A.PROJECT_ID = R.PROJECT_ID
 			AND
 				A.GROUP_ID = R.GROUP_ID
-			WHERE
-			</isNotEqual>
+		]]>
+			<isEqual property="location" compareValue="general">
+			JOIN
+				TBL_PMS_GROUPMEMBER M
+			ON
+				A.GROUP_ID = M.GROUP_ID
+			AND
+				M.MEMBER_ROLE_ID = 1
+			</isEqual>
+			WHERE 
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0
@@ -3175,9 +3172,9 @@
 			UPDATE
 				TBL_PMS_GROUP
 			SET
-				REAL_PROGRESS = (
+				REAL_PROGRESS = IFNULL((
 									SELECT 
-										SUM(IFNULL(a.REAL_PROGRESS, 0) * a.WEIGHT / 100)
+										SUM(a.REAL_PROGRESS * a.WEIGHT / 100)
 									FROM
 										TBL_PMS_TASK a
 									JOIN
@@ -3200,7 +3197,7 @@
 									AND
 										a.DEL_STATUS = 0
 				
-								)
+								), 0)
 			WHERE
 				GROUP_ID = #groupId#
 			AND
@@ -3228,11 +3225,11 @@
 			SET
 				PROGRESS = (
 								SELECT 
-									aa.PROGRESS
+									IFNULL(aa.PROGRESS, 0)
 								FROM	
 									(
 										SELECT 
-											SUM(IFNULL(a.REAL_PROGRESS, 0) * a.WEIGHT / 100) AS PROGRESS
+											SUM(a.REAL_PROGRESS * a.WEIGHT / 100) AS PROGRESS
 										FROM
 											TBL_PMS_TASK a
 										JOIN
@@ -3380,23 +3377,6 @@
 	]]>
 	</select>
 	
-	<!-- <select id="EzPMSDAO.getBoardReplyCount" parameterClass="map" resultMap="pairVO">
-	<![CDATA[
-		SELECT 
-			root_item_id, 
-			count(root_item_id) AS count
-		FROM tbl_pms_item_list
-	]]>
-		<iterate property="rootItemIds" prepend="WHERE root_item_id IN" open="(" close=")" conjunction=",">
-			#rootItemIds[]#
-		</iterate>
-	<![CDATA[
-		AND 
-			tenant_id = #tenantId#
-		GROUP BY root_item_id;
-	]]>
-	</select> -->
-	
 	<select id="EzPMSDAO.checkIfBoardHasReplies" parameterClass="map" resultClass="Integer">
 	<![CDATA[
 		SELECT COUNT(item_id)
@@ -3408,6 +3388,24 @@
 	<![CDATA[
 		AND 
 			tenant_id = #tenantId#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getUpperGroupDate" parameterClass="map" resultClass="ProjectGroupVO">
+	<![CDATA[
+		SELECT 
+			a.PLAN_START_DATE as planStartDate, 
+			a.PLAN_END_DATE as planEndDate
+		FROM 
+			TBL_PMS_GROUP a
+		JOIN
+			TBL_PMS_GROUP b
+		ON
+			a.GROUP_ID = b.UPPER_GROUP_ID
+		WHERE
+			b.GROUP_ID = #groupId#
+		AND
+			b.TENANT_ID = #tenantId#
 	]]>
 	</select>
 </sqlMap>

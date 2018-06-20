@@ -314,14 +314,14 @@
 
 	.jstree-node > a {
     /* 100% - (the width of the presentation node : the line - the left padding of the <a> node - the right padding of the <a> node)*/
-    width: calc(100% - (68px + 1px + 4px));
+  	width: 200px;
     text-overflow: ellipsis;
     overflow: hidden;
 	}
 	
 	#taskTree {
 		margin-right : 5px;
-		width : 16%;
+		width : 276px;
 		overflow : auto;
 		border : 1px solid #d1d1d1;
 		float : left;
@@ -335,7 +335,6 @@
 	}
 	
 	#projectArea {
-		width : 83%;
 		overflow : auto;
 		border : 1px solid #d1d1d1;
 	}

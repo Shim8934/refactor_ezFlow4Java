@@ -538,12 +538,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<String>) list("EzPMSDAO.getDateTaskList", map);		
 	}
 	
-//	@SuppressWarnings("unchecked")
-//	public List<PairVO> getBoardReplyCount(Map<String, Object> map) {
-//		return (List<PairVO>) list("EzPMSDAO.getBoardReplyCount", map);
-//	}
-	
 	public int checkIfBoardHasReplies(Map<String, Object> map) {
 		return (int) select("EzPMSDAO.checkIfBoardHasReplies", map);
+	}
+
+	public ProjectGroupVO getUpperGroupDate(Map<String, Object> map) {
+		return (ProjectGroupVO) select ("EzPMSDAO.getUpperGroupDate", map);
 	}
 }

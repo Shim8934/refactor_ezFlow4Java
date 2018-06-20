@@ -1304,6 +1304,28 @@
 		  	border : 1px solid #d1d1d1;
 			display : none;
 		  }
+		  
+/* 		  .isParent.project .exp-controller { */
+/* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
+/* 		  } */
+		  
+/* 		  .isParent.group .exp-controller { */
+/* 		    background-image: url(/images/OrganTree_cross/folder.gif); */
+/* 		  } */
+		  
+/* 		  .isParent.collapsed .project .exp-controller { */
+/* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
+/* 		  } */
+		  
+/* 		  .isParent.collapsed .group .exp-controller { */
+/* 		    background-image: url(/images/OrganTree_cross/folder.gif); */
+/* 		  } */
+		  
+/* 		  .taskEditRow.task .exp-controller { */
+/* 		    background: url(/images/ImgIcon/icon_approval.gif); */
+/*    		    background-repeat: no-repeat; */
+/* 		  } */
+		  
 		</style>
 	</head>
 	<body style="background-color: #fff;">
@@ -1768,12 +1790,12 @@
 			    <thead>
 			    <tr style="height:40px">
 			      <th class="gdfColHeader" style="width:35px; border-right: none"></th>
-			      <th class="gdfColHeader" style="width:25px;"></th>
+			      <th class="gdfColHeader" style="width:25px; display:none;"></th>
 			      <th class="gdfColHeader gdfResizable" style="width:240px;">업무명</th>
 			      <th class="gdfColHeader gdfResizable" style="width:100px; display:none;">code/short name</th>
-			      <th class="gdfColHeader"  align="center" style="width:17px;" title="Start date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
+			      <th class="gdfColHeader"  align="center" style="width:17px; display:none;" title="Start date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
 			      <th class="gdfColHeader gdfResizable" style="width:80px;">시작일</th>
-			      <th class="gdfColHeader"  align="center" style="width:17px;" title="End date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
+			      <th class="gdfColHeader"  align="center" style="width:17px; display:none;" title="End date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
 			      <th class="gdfColHeader gdfResizable" style="width:80px;">완료일</th>
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">남은기간</th>
 			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
@@ -1787,17 +1809,17 @@
 			  --></div>
 			
 			<div class="__template__" type="TASKROW"><!--
-			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#)" level="(#=level#)">
+			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#) (#=obj.type == 'p' ? 'project' : obj.type == 'g' ? 'group' : 'task'#)" level="(#=level#)">
 			    <th class="gdfCell edit" align="right" style="cursor:pointer; border: 0px;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </th>
-			    <td class="gdfCell noClip" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
+			    <td class="gdfCell noClip" style="display:none" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+22#)px;">
 			      <div class="exp-controller" align="center"></div>
 			      <input type="text" name="name" value="(#=obj.name#)" placeholder="name">
 			    </td>
 			    <td class="gdfCell" style="display:none"><input type="text" name="code" value="(#=obj.code?obj.code:''#)" placeholder="code/short name"></td>
-			    <td class="gdfCell" align="center"><input type="checkbox" name="startIsMilestone"></td>
+			    <td class="gdfCell" style="display:none" align="center"><input type="checkbox" name="startIsMilestone"></td>
 			    <td class="gdfCell"><input type="text" name="start"  value="" class="date"></td>
-			    <td class="gdfCell" align="center"><input type="checkbox" name="endIsMilestone"></td>
+			    <td class="gdfCell" style="display:none" align="center"><input type="checkbox" name="endIsMilestone"></td>
 			    <td class="gdfCell"><input type="text" name="end" value="" class="date"></td>
 			    <td class="gdfCell"><input type="text" name="duration" autocomplete="off" value="(#=obj.duration#)"></td>
 			    <td class="gdfCell"><input type="text" name="weight" autocomplete="off" value="(#=obj.weight#)"></td>

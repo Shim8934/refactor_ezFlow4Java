@@ -867,42 +867,53 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("taskId", taskId);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
+		//getTaskListCount에서 userId 조건을 피하기 위해 roleId = 3
+		map.put("roleId", 3);
 
 		ProjectTaskVO taskVO = ezPMSDAO.getTaskDetails(map);
 
 		ezPMSDAO.deleteTask(map);
 
-		// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
-		if (!taskVO.getGroupId().equals(0L)) {
-			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
-			String[] ancGroupArr = ancesterGroup.split(",");
-
-			for (int i = 0; i < ancGroupArr.length; i++) {
-				updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId);
+		//삭제 후 업무의 갯수를 구해온다.
+		int taskCnt = ezPMSDAO.getTaskListCount(map);
+		//프로젝트에 업무가 존재한다면 일정, 진행률, 가중치를 조정.
+		if(taskCnt > 0){
+			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
+			if (!taskVO.getGroupId().equals(0L)) {
+				String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
+				String[] ancGroupArr = ancesterGroup.split(",");
+				
+				for (int i = 0; i < ancGroupArr.length; i++) {
+					//그룹이 프로젝트일 경우 별도로 처리.
+					if(i == 0){
+						
+					}
+					updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId);
+				}
 			}
-		}
-
-		// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
-		if (!taskVO.getGroupId().equals(0L)) {
-			String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
-			String[] ancGroupArr = ancesterGroup.split(",");
-
-			for (int i = 0; i < ancGroupArr.length; i++) {
-				map.put("groupId", ancGroupArr[i]);
-				ezPMSDAO.updateGroupProgress(map);
+			
+			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+			if (!taskVO.getGroupId().equals(0L)) {
+				String ancesterGroup = getAncesterGroup(taskVO.getGroupId(), taskVO.getTenantId());
+				String[] ancGroupArr = ancesterGroup.split(",");
+				
+				for (int i = 0; i < ancGroupArr.length; i++) {
+					map.put("groupId", ancGroupArr[i]);
+					ezPMSDAO.updateGroupProgress(map);
+				}
 			}
-		}
-
-		// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
-		ezPMSDAO.updateProjectProgress(taskVO);
-
-		// 업데이트 후 프로젝트 진행률을 조회
-		ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map);
-
-		// 프로젝트 진행률이 100이상인데 업무가 추가 되었으면, 진행으로 상태를 바꾼다.
-		if (Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100) {
-			map.put("status", "P");
-			ezPMSDAO.updateProjectStatus(map);
+			
+			// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+			ezPMSDAO.updateProjectProgress(taskVO);
+			
+			// 업데이트 후 프로젝트 진행률을 조회
+			ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map);
+			
+			// 프로젝트 진행률이 100이상인데 업무가 추가 되었으면, 진행으로 상태를 바꾼다.
+			if (Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100) {
+				map.put("status", "P");
+				ezPMSDAO.updateProjectStatus(map);
+			}
 		}
 
 		LOGGER.debug("[SERVICE] deleteTask ended.");
@@ -1664,24 +1675,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("orderWhat", orderWhat);
 
 		List<ProjectBoardVO> boardList = ezPMSDAO.getBoardList(map);
-
-//		List<Integer> rootItemIds = new ArrayList<Integer>();
-//		boardList.forEach(boardVO -> rootItemIds.add(boardVO.getRootItemId()));
-//		
-//		map = new HashMap<String, Object>();
-//		map.put("tenantId", tenantId);
-//		map.put("rootItemIds", rootItemIds);
-//		
-//		List<PairVO> replyCount = ezPMSDAO.getBoardReplyCount(map);
-//		Map<Integer, Integer> replyCNTMap = new HashMap<Integer, Integer>();
-//		replyCount.forEach(pairVO -> replyCNTMap.put(Integer.parseInt(pairVO.getKey()), Integer.parseInt(pairVO.getValue())));
 		
 		for (ProjectBoardVO boardVO : boardList) {
-			
-//			if(replyCNTMap.get(boardVO.getRootItemId()) > 1) {
-//				boardVO.setMovable(false);
-//			}
-			
+					
 			map = new HashMap<String, Object>();
 			map.put("userId", userId);
 			map.put("itemId", boardVO.getItemId());
@@ -2322,6 +2318,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ProjectGroupVO groupVO = new ProjectGroupVO();
 		// 그룹에 속한 업무들 중 가장 빠른 계획 시작일과 가장 늦은 계획 종료일을 얻어옴.
 		groupVO = getGroupBoundaryDate(groupId, tenantId);
+		
+		//그룹인데 하위업무가 없을 경우 상위 그룹의 날짜를 얻어온다.
+		if(groupVO.getPlanStartDate() == null){
+			groupVO = getUpperGroupDate(groupId, tenantId);
+		}
 
 		Date startDay = new SimpleDateFormat("yyyy-MM-dd").parse(groupVO.getPlanStartDate());
 		Date endDay = new SimpleDateFormat("yyyy-MM-dd").parse(groupVO.getPlanEndDate());
@@ -2528,5 +2529,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] checkIfBoardHasReplies ended.");
 		return result;
+	}
+	
+	public ProjectGroupVO getUpperGroupDate(long groupId, int tenantId) throws Exception {
+		LOGGER.debug("[SERVICE] getUpperGroupDate started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+
+		LOGGER.debug("[SERVICE] getUpperGroupDate ended.");
+		return ezPMSDAO.getUpperGroupDate(map);
 	}
 }
