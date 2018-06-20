@@ -225,6 +225,7 @@
 			$(function(){
 				authBtn();
 				companyHoliday = companyHoliday.split(",");
+				
 				//개인근태현황에서만 근태 등록 가능
 				if (deptFlag != "true") {
 					$(document).on('dblclick', '.td_day td', function(){
@@ -321,7 +322,7 @@
 			}
 			
 			/**
-			* 근태유형 메소드
+			* [개인근태현황, 부서근태현황] 근태유형 메소드
 			*/
 			function getAttiTypeList() {
 				$.ajax({
@@ -337,7 +338,7 @@
 			}
 			
 			/**
-			* 통계바 메소드
+			* [개인근태현황, 부서근태현황] 통계바 메소드
 			*/
 			function getAttiTypeList_After(result) {
 				//, "height":$("#attiCalendar").css("height")
@@ -392,7 +393,7 @@
 			}
 			
 			/**
-			* 통계 메소드
+			* [개인근태현황, 부서근태현황] 통계 메소드
 			*/
 			function getAttiStatisList() {
 				var pDate = $("#calTitle").text().trim(); 
@@ -416,7 +417,7 @@
 			}
 			
 			/**
-			* holiday 메소드
+			* [개인근태현황, 부서근태현황] holiday 메소드
 			*/
 			function getHolidayList() {
 				$.ajax({
@@ -448,7 +449,7 @@
 			}
 			
 			/**
-			* 근태 메소드
+			* [개인근태현황, 부서근태현황] 근태 메소드
 			*/
 			function getAttitudeMainList() {
 				var startDate = $("#index_0").attr("day");
@@ -472,13 +473,16 @@
 				})
 			}
 			
+			/**
+			* [개인근태현황, 부서근태현황] 근태 메소드
+			*/
 			function getAttitudeMainList_after(result) {
 				var startDate = "";   // 근태의 시작일
 				var endDate = "";     // 근태의 종료일
 				var betweenDate = ""; // 연속일자의 일자 저장
 				var subDate = "";     // 연속일자로 등록된 근태의 날짜 차이를 저장
 				var imgPath = "";	  // 이미지 경로
-				if (deptFlag == false){
+				if (deptFlag == false){ //개인근태현황일때
 					for (var i = 0; i < result.length; i++) {
 						var iconStr = "";
 						//0과 2는 icon을 추가하지 않는다.
@@ -519,7 +523,7 @@
 						} 
 					}
 					checkAttiModAppl();
-				} else {
+				} else { //부서근태현황일때
 					for (var i = 0; i < result.length; i++) {
 						var iconStr = "";
 						if (result[i].modAppl  == '2') {
@@ -596,6 +600,9 @@
 		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 		    }
 			
+			/**
+			* [개인근태현황] 근태작성
+			*/
 			function attitudeNewItem(obj) {
 				var date = $(obj).attr("dispdate");
 				
@@ -614,7 +621,7 @@
 			}
 			
 			/**
-			* 근태수정신청
+			* [개인근태현황] 근태수정신청
 			*/
 			function attitudeModItem(obj) {
 				var pheight = window.screen.availHeight;
@@ -641,6 +648,9 @@
 	            }
 			}
 			
+			/**
+			* [개인근태현황, 부서근태현황] 근태상세보기
+			*/
 			function attitudeItemView(obj) {
 				var pAttitudeId = $(obj).attr("attitudeId"); 
 				var pTypeId = $(obj).attr("typeId");
@@ -657,50 +667,6 @@
 			function layerHidden() {
 		        $.modal.close();
 		    }
-			
-			function excelDown() {
-				var pDate = $("#calTitle").text().trim();
-				var startDate = pDate + "-01 00:00:00";
-				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
-				
-				$.ajax({
-					type : "POST",
-					dataType : "json",
-					async : true,
-					url : "/ezAttitude/getAttitudeList.do",
-					data : {
-						startDate : startDate,
-						endDate : endDate,
-						deptFlag : deptFlag,
-						selectedDeptID : encodeURIComponent(authDeptList.value)
-					},
-					success : function(attList) {
-						$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
-						for (var i = 0 ; i < attList.length; i ++) {
-				    		var htmlStr = "";
-				    		htmlStr += '<tr>';
-			    			htmlStr += '<td>' + (parseInt(i) + 1) + '</td>';
-			    			htmlStr += '<td>' + attList[i].typeName + '</td>';
-		    				htmlStr += '<td>' + attList[i].writerName + '</td>';
-		    				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
-		    				if (attList[i].endDate == null) {
-		    					htmlStr += '<td>' + attList[i].startDate + '</td>';
-				    		} else {
-				    			htmlStr += '<td>' + attList[i].startDate + '\u00a0~\u00a0' + attList[i].endDate + '</td>';
-				    		}
-		    				htmlStr += '</tr>';
-		    				$('#ExcelAttList tbody').append(htmlStr);
-						}
-		    			btnexportexcel_onclick();
-					}
-				});
-			}
-			
-			function btnexportexcel_onclick() {
-	            document.getElementById("saveExcelData").value = $("#ExcelAttList")[0].outerHTML;
-	            document.getElementById("formAgent").target = "saveExcel";
-	            document.getElementById("formAgent").submit();
-	        }
 			
 			function searchByTypeId(t) {
 				var typeName = t.previousSibling.innerText;
@@ -1017,6 +983,9 @@
 			    });
 			}
 			
+			/**
+			* [개인근태현황, 부서근태현황] 지각 상세보기
+			*/
 			function mod_detail(modAttId) {
 		    	var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -1033,42 +1002,46 @@
 				}
 		    }
 			
-			function setAttitudeSquare(){
-				//tdClassName = attiVacation, attiDefault, attiOutCom, attiLate, attiModLate, attiWeekCom
-				$("span[name=span_list] td[attitudeid]").each(function(index){
-					var squareSpan = $("<span></span>");
-					var tdTypeId = $(this).attr("typeid");
-					var tdParentId = $("#attiStatis td[typeid=" + tdTypeId + "]").attr("parentid");
-					var tdClassName = "";
-					switch(tdTypeId)
-					{
-						case "A01": case "A03": case "A06": case "A07"://출근, 퇴근, 외출, 조퇴
-							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
-								tdClassName = "attiModLate";
-							} else {
-							    tdClassName = "attiDefault";
-							}
-							break;
-						case "A04": case "A09": case "A10": //외근, 출장, 휴가
-							tdClassName = "attiOutCom";
-							break;
-						case "A02": case "A08": //지각
-							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
-								tdClassName = "attiModLate";
-							} else {
-							    tdClassName = "attiLate";
-							}
-							break;
-						default: //나머지 휴가
-							tdClassName = "attiVacation";
-							break;
-					}
-					$(this).prepend(squareSpan.addClass(tdClassName));
-				});
+			/**
+			* 정사각형 색 아이콘 표기
+			*/
+// 			function setAttitudeSquare(){
+// 				//tdClassName = attiVacation, attiDefault, attiOutCom, attiLate, attiModLate, attiWeekCom
+// 				$("span[name=span_list] td[attitudeid]").each(function(index){
+// 					var squareSpan = $("<span></span>");
+// 					var tdTypeId = $(this).attr("typeid");
+// 					var tdParentId = $("#attiStatis td[typeid=" + tdTypeId + "]").attr("parentid");
+// 					var tdClassName = "";
+// 					switch(tdTypeId)
+// 					{
+// 						case "A01": case "A03": case "A06": case "A07"://출근, 퇴근, 외출, 조퇴
+// 							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
+// 								tdClassName = "attiModLate";
+// 							} else {
+// 							    tdClassName = "attiDefault";
+// 							}
+// 							break;
+// 						case "A04": case "A09": case "A10": //외근, 출장, 휴가
+// 							tdClassName = "attiOutCom";
+// 							break;
+// 						case "A02": case "A08": //지각
+// 							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
+// 								tdClassName = "attiModLate";
+// 							} else {
+// 							    tdClassName = "attiLate";
+// 							}
+// 							break;
+// 						default: //나머지 휴가
+// 							tdClassName = "attiVacation";
+// 							break;
+// 					}
+// 					$(this).prepend(squareSpan.addClass(tdClassName));
+// 				});
 				
-				checkAttiModAppl(); //근태수정신청 비허용인 경우 dblclick 제거
-			}
+// 				checkAttiModAppl(); //근태수정신청 비허용인 경우 dblclick 제거
+// 			}
 			
+			//근태수정신청 비허용인 경우 dblclick 제거
 			function checkAttiModAppl(){
 				if (!attitudeModAppl) {
 					$('#attiCalendar tr td[typeid=A02],[typeid=A01]').each(function(){
@@ -1101,15 +1074,9 @@
 				});
 			}
 			
-			function deptChange() {
-				if (authDeptList.value == "")
-					getAttitudeMainList();
-		        else {
-		        	authBtn();
-		        	getAttitudeMainList();
-		        }
-			}
-			
+			/**
+			* [부서근태현황] 미입력자관리 버튼 클릭시
+			*/
 			function popupAbsentedList() {
     			var url = "/ezAttitude/popupAbsentedList.do?deptId=" + encodeURIComponent(authDeptList.value) + "&date=" + $("#calTitle").text().trim();
 	    		
@@ -1122,6 +1089,71 @@
 	    		}
 	    	}
 			
+			/**
+			* [부서근태현황] 엑셀다운로드버튼 클릭시
+			*/
+			function excelDown() {
+				var pDate = $("#calTitle").text().trim();
+				var startDate = pDate + "-01 00:00:00";
+				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getAttitudeList.do",
+					data : {
+						startDate : startDate,
+						endDate : endDate,
+						deptFlag : deptFlag,
+						selectedDeptID : encodeURIComponent(authDeptList.value)
+					},
+					success : function(attList) {
+						$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
+						for (var i = 0 ; i < attList.length; i ++) {
+				    		var htmlStr = "";
+				    		htmlStr += '<tr>';
+			    			htmlStr += '<td>' + (parseInt(i) + 1) + '</td>';
+			    			htmlStr += '<td>' + attList[i].typeName + '</td>';
+		    				htmlStr += '<td>' + attList[i].writerName + '</td>';
+		    				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
+		    				if (attList[i].endDate == null) {
+		    					htmlStr += '<td>' + attList[i].startDate + '</td>';
+				    		} else {
+				    			htmlStr += '<td>' + attList[i].startDate + '\u00a0~\u00a0' + attList[i].endDate + '</td>';
+				    		}
+		    				htmlStr += '</tr>';
+		    				$('#ExcelAttList tbody').append(htmlStr);
+						}
+		    			btnexportexcel_onclick();
+					}
+				});
+			}
+			
+			/**
+			* [부서근태현황] 엑셀다운로드버튼 클릭시
+			*/
+			function btnexportexcel_onclick() {
+	            document.getElementById("saveExcelData").value = $("#ExcelAttList")[0].outerHTML;
+	            document.getElementById("formAgent").target = "saveExcel";
+	            document.getElementById("formAgent").submit();
+	        }
+			
+			/**
+			* [부서근태현황] 부서 셀렉트 박스 변경시
+			*/
+			function deptChange() {
+				if (authDeptList.value == "")
+					getAttitudeMainList();
+		        else {
+		        	authBtn();
+		        	getAttitudeMainList();
+		        }
+			}
+			
+			/**
+			* [부서근태현황] 권한에따라 버튼 보이기 유무
+			*/
 			function authBtn() {
 	        	if ($("#authDeptList option:selected").attr("authType") == "" || $("#authDeptList option:selected").attr("authType") == null) {
 	        		$("#btnAbsentedList").css("display","none");
