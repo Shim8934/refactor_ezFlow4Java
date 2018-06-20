@@ -391,13 +391,13 @@ public class MLoginGWController {
 				result.put("code", "0");
 				result.put("data", map);
 				
+				LOGGER.debug("device info get devId=" + devId);
 			} else {
-				LOGGER.debug("device info does not exist. devId=" + devId);
 				result.put("status", "error");
 				result.put("code", "1");
 				result.put("data", "noexist");
 				
-				throw new Exception(); //test
+				LOGGER.debug("device info does not exist. devId=" + devId);
 			}
 			
 		} catch (Exception e) {
