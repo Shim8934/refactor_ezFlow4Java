@@ -9386,6 +9386,37 @@
            		COMPANYID = #companyID#             	
 		</isNotEqual>
 	</select>
+	
+	<select id="EzApprovalG.getDocHrefInfoHref" parameterClass="Map" resultClass="String">
+		<isEqual property="v_FLAG" compareValue="APR">
+			SELECT 
+				ATTACHFILEHREF
+            FROM 
+            	TBL_APRATTACHINFO 
+            WHERE  
+            	DOCID = #v_DOCID#
+            AND
+            	ATTACHFILESN = #docAttachSN#
+            AND
+            	TENANT_ID = #v_TENANTID#
+           	AND
+           		COMPANYID = #companyID#     	
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="APR">
+			SELECT 
+				ATTACHFILEHREF
+            FROM 
+            	TBL_ENDATTACHINFO 
+            WHERE  
+            	DOCID = #v_DOCID#
+            AND
+            	ATTACHFILESN = #docAttachSN#
+            AND
+            	TENANT_ID = #v_TENANTID#
+           	AND
+           		COMPANYID = #companyID#     	
+		</isNotEqual>
+	</select>
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETSUSINSN_INSIDE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
