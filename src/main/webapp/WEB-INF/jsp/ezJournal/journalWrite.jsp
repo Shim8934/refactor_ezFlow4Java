@@ -254,7 +254,6 @@
 						journalIdList : JSON.stringify(journalIdList)
 					},
    					success : function(result){
-   						
    						if (result.formStatus == null) {
    							$("#btnGetOther").css("display", "none");
    						} else {
@@ -296,7 +295,10 @@
 						$("#loading").html('<img id="loading-image" src="/images/ProgressBar.gif" alt="Loading...">');
 					},
    					success : function(result){
-   						
+   						if (result.formInfo == "fail") {
+   							alert("<spring:message code='ezJournal.t177'/>");
+   							window.close();
+   						}
    						$("#title").val(result.journalTitle);
    						message.SetEditorContent(result.journalContent);
    						if(mode == "sum"){
@@ -618,7 +620,8 @@
 			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
+	                    			<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezJournal.t73 => t26 -->
+			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
 			                        <li><span onclick="btn_TempSave('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>

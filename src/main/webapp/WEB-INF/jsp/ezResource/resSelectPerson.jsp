@@ -49,6 +49,8 @@
 
 		    TreeViewinitialize("${deptID}", "Top" , "", "${serverName}");
 		    ListTypeChangeIcon();
+		    
+		    ChangeListView_onClick(getOrganListType());
 		}
 
 		    function KeEventControl(obj) {
@@ -345,6 +347,7 @@
 		        pListType = Div;
 		        ListTypeChangeIcon();
 		        DisplayUserImageList();
+		        setOrganListType(pListType);
 		    }
 
 		    function ListTypeChangeIcon() {
@@ -588,7 +591,7 @@
 		            }
 		        }
 		    }
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f0f6ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -750,6 +753,36 @@
 		                displayUserList();
 		        }
 		    }
+		    
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 		</script>
 	</head>
 	<xml id="listviewheader" style="display:none">

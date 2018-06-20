@@ -23,6 +23,9 @@
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<!-- layer popup -->
+		<link rel="stylesheet"  href="/js/jquery/jquery.modal.css" type="text/css" />
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	    <style>
 			#layer_Viewpopup { 
 				z-index:1000; 
@@ -130,6 +133,7 @@
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
+		    	
 		    	if (useRunTime != "YES") {
 		    		$("#runtime").css("display", "none");
 		    	}
@@ -160,6 +164,13 @@
 		        
 		        window_onunload_Event = true;
 		    };
+		    
+		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
+		    $(window).on("resize", function(){
+				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+	        	$("#addpopup").css("left", popupX);
+	        	$("#srarchpopup").css("left", popupX);	        	
+	        });
 		    
 		    $(document).ready(function() {
 		    	var clickOutside;
@@ -1026,31 +1037,47 @@
 		        window.location.href = window.location.href;
 		    }
 		    
+		     /* 2018-06-08 김민성 - 게시판 검색 레이어팝업 변경 */ 
 		    function doLayerPopup(obj) {
-		        btn_PostDate_Clear();
-		        document.getElementById("chkSearchSub").checked = false;
-		        document.getElementById("txtTitle").value = "";
-		        document.getElementById("txtContent").value = "";
-		        document.getElementById("txtWriterName").value = "";
-		        document.getElementById("txtAbstract").value = "";
+		    	if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
+		        	btn_PostDate_Clear();
+			        document.getElementById("chkSearchSub").checked = false;
+			        document.getElementById("txtTitle").value = "";
+			        document.getElementById("txtWriterName").value = "";
+			        document.getElementById("txtAbstract").value = "";
+			
+			        if (obj.getAttribute("mode") == "off") {
+			            document.getElementById("layer_popup").style.left = "10px";
+			            if (pAdminType == "y")
+			                document.getElementById("layer_popup").style.top = "56px";
+			            else
+			                document.getElementById("layer_popup").style.top = "100px";
+			            document.getElementById("layer_popup").style.display = "";
+			            obj.setAttribute("mode", "on");
+			        }
+			        else {
+			            BoardSearchOptionHidden();
+			        }
+		    	}
+		    	else {
+			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+			    	parent.frames["left"].document.body.style.overflow = "hidden";
+			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			    	$("#srarchpopup").css("left", popupX);
+			    	$("#srarchpopup").modal();
+		    	}
+		    }
+		     
+		    function BoardSearchOptionHidden() {    	
+		    	document.getElementById("layer_popup").style.display = "none";
+			     document.getElementById("SearchOption").setAttribute("mode", "off");
+			     
+			     if (window.parent.frames['left'] != undefined) {
+			       $.modal.close();
+			       parent.frames["right"].document.body.style.overflow = "hidden";		// body style overflow 옵션 사라져서 추가함
+			     }
+		    }
 		    
-		        if (obj.getAttribute("mode") == "off") {
-		            document.getElementById("layer_popup").style.left = "10px";
-		            if (pAdminType == "y")
-		                document.getElementById("layer_popup").style.top = "56px";
-		            else
-		                document.getElementById("layer_popup").style.top = "100px";
-		            document.getElementById("layer_popup").style.display = "";           
-		            obj.setAttribute("mode", "on");
-		        }
-		        else {
-		            BoardSearchOptionHidden();
-		        }
-		    }
-		    function BoardSearchOptionHidden() {
-		        document.getElementById("layer_popup").style.display = "none";
-		        document.getElementById("SearchOption").setAttribute("mode", "off");
-		    }
 		    function search(type) {
 		        if (type == "basic") {
 		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == ""
@@ -1291,7 +1318,7 @@
 		        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
 		            <span style="width: 100%; height: 100px; display: block;">
 		                <span class="previewmail_info" style="display: block; width: 100%;">
-		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;">
+		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 		                        <p class="mail_title" style="margin-left: 0px;">
 		                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
 		                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
@@ -1317,7 +1344,7 @@
 		        <span id="PreContent_RayerW" style="display: block;">
 		            <span style="width: 100%; height: 100px; display: block;">
 		                <span class="previewmail_info" style="display: block; width: 100%;">
-		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;">
+		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 		                        <p class="mail_title">
 		                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
 		                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
@@ -1336,7 +1363,9 @@
 		        </span>
 		    </span>
 		    <div id="ListInfo" style="display:none"></div>
-		     <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+		    <c:choose>
+		    <c:when test="${boardInfo.adminType == 'y'}">
+		   <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 		          <div class="popupwrap1">
 		            <div class="popupwrap2">
 		        <table class="content">  
@@ -1370,7 +1399,7 @@
 		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
 		           </td>
 		  </tr>
-		    </table>
+		    </table> 
 		    <br />
 		    <table style="width:100%">
 		        <tr>
@@ -1386,6 +1415,65 @@
 	        <div class="shadow">
 	        </div>
 		</div>
+		</c:when>
+		<c:otherwise>
+		<!-- 2018-06-08 김민성 - 게시판 검색 레이어팝업 변경 -->
+	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
+		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
+			<table class="content">
+				<tr>
+					<th class="layerHeader" colspan="2">
+						<img src="/images/kr/left/left_mail.png" style="vertical-align: middle; padding-bottom: 1px"> 
+						<spring:message code='ezBoard.t0006' /> <spring:message code='ezJournal.t43' />
+					</th>
+				</tr>
+					<tr>
+						<th style="text-align: center">
+							<spring:message code='ezBoard.t185' />
+						</th>
+						<td>${boardName} 
+		      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+		    			</td>
+					</tr>
+				<tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.t223' /></th>
+		            <td><input type="text" id="txtWriterName" style="width:98%" value=""></td>
+		        </tr>
+		        <tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
+		            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+		        </tr>  
+		        <tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.garm01' /></th>
+		            <td><input type="text" id="txtContent" style="width:98%" value=""></td>
+		        </tr> 
+		         <tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
+		            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
+		        </tr>    
+		       <tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
+		           <td>
+		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+		                ~
+		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
+		           </td>
+		  		</tr>
+			</table>
+			<br />
+			<table style="width: 100%">
+		        <tr>
+		            <td style="text-align:center;">
+		                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
+		                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+		                <a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
+		            </td>
+		        </tr>
+			</table>
+		</div>
+	</div>
+		</c:otherwise>
+		</c:choose>
 	</c:if>
 	</body>
 </html>

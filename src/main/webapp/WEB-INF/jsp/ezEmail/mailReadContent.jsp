@@ -38,6 +38,7 @@
 				    }
 
 					sizeBtnAppend();
+					sentDateView();
 				}
 				
 				function sizeBtnAppend() {
@@ -165,8 +166,8 @@
 			    	$frm.appendTo('body');
 
 			    	params = $('<input type="hidden" value="' + params + '" name="params" />');
-			    	folderPath = $('<input type="hidden" value="' + encodeURIComponent(folderPath) + '" name="folderPath" />');
-			    	uid = $('<input type="hidden" value="' + encodeURIComponent(uid) + '" name="uid" />');
+			    	folderPath = $('<input type="hidden" value="' + decodeURIComponent(folderPath) + '" name="folderPath" />');
+			    	uid = $('<input type="hidden" value="' + uid + '" name="uid" />');
 			    	
 			    	$frm.append(params).append(folderPath).append(uid);
 			    	$frm.submit();
@@ -324,6 +325,20 @@
 		        	});
 		        }
 		        
+		     	// 전달, 회신 시 보낸 시간
+		        function sentDateView(msg) {
+				    if (window.parent.sentDateMsg != "") {
+				    	var sentDateMsg = window.parent.sentDateMsg;
+				    	
+				    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+				    	$(".sentDateStr").css({
+				    		"padding" : "5px 0",
+					        "margin-bottom" : "10px",
+					        "font-size" : "14px",
+					        "background" : "rgba(255,250,205,0.5)"
+				    	});
+				    }
+		        }
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">

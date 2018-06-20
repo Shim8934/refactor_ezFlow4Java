@@ -67,7 +67,7 @@
 	                //document.getElementById("txtlist_Layer").style.height = "455px";
 	            }
 	            document.getElementById("AddressListView").hotTrackColor = "#F7FAE0";
-	            document.getElementById("AddressListView").selectColor = "#edf4fd";
+	            document.getElementById("AddressListView").selectColor = "#f0f6ff";
 	            document.getElementById("AddressListView").dataSource = listviewheader;
 	            AddressTreeView = new window['treeview.htc'].TreeView('AddressTreeView', 'AddressTreeView');
 	            AddressTreeView.attachEvent('requestdata', address_requestdata);
@@ -80,6 +80,7 @@
 	            	document.getElementById("MsgToList").className = "receiver_list";
 	            }
 	            
+	            ChangeListView_onClick(getOrganListType());
 	        }
 	        function address_requestdata(event) {
 	            if (!event) {
@@ -1367,6 +1368,7 @@
 	            pListType = Div;
 	            ListTypeChangeIcon();
 	            DisplayUserImageList();
+	            setOrganListType(pListType);
 	        }
 	        var loadaddresstree = false;
 	        function contactTabButton_onClick() {
@@ -1391,7 +1393,7 @@
 	            document.getElementById("subtitle").innerText = "<spring:message code='ezAddress.t352' />";
 	            document.getElementById("emailname").focus();
 	        }
-	        var m_strColorSelect = "#edf4fd";
+	        var m_strColorSelect = "#f0f6ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1768,6 +1770,36 @@
             		tab3.className = "tabon";
             	}
             }
+		    
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
@@ -1842,7 +1874,8 @@
 	    <form id="Form_address_writegroup" name="Form_address_writegroup" method="post">
 	        <div id="menu">
 	            <ul>
-	                <li><span onclick="add()"><spring:message code='ezAddress.t339' /></span></li>
+	            <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
+	                <li><span onclick="add()"><spring:message code='ezAddress.t300' /></span></li>
 	            </ul>
 	        </div>
 	        <div id="close">

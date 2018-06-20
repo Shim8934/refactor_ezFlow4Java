@@ -541,7 +541,7 @@ function getExtInfo() {
                 if (field) {
                     var signWidth = 105;
                     var signHeight = 35;
-                    var strimg = "<img src='" + escape(dirPath +"/sealImg/nostamp.gif") + "' border=0 embedding='1' >";
+                    var strimg = "<img src='" + escape("/files/sealImg/nostamp.gif") + "' border=0 embedding='1' >";
                     var field2 = message.GetListItem(fields, "chief");
                     var chiefwidth = 1;
                     if (field2) {

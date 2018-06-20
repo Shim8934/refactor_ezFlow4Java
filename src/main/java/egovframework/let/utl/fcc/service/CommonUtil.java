@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -685,6 +686,8 @@ public class CommonUtil {
 			} else {
 				pattern = "yyyy-MM-dd";
 			}
+		} else if (dateStr.length() == 14) {
+			pattern = "yyyyMMddHHmmss";
 		} else if (dateStr.length() == 16) {
 			if (dateStr.indexOf("/") > -1) {
 				pattern = "yyyy/MM/dd HH:mm";
@@ -945,7 +948,7 @@ public class CommonUtil {
 		}
 		return xmlDoc;
 	}
-	
+
 	/**
 	 * globals.properties에 있는 
 	 * DataBaseType을 반환
@@ -1104,6 +1107,115 @@ public class CommonUtil {
 			e.printStackTrace();
 		}
 		logger.debug("getJsonFromRestApi ended");
+		return resultBody;
+	}
+	
+	/**
+	 * 첨부파일명이 자소분리된 형태로 나올경우, 자소결합
+	 * @param filename
+	 * @return String
+	 */
+	public String normalizeFileName (String filename) {
+		logger.debug("normalizeFileName started");
+		logger.debug("filename=" + filename);
+		
+		String nfcFilename =  Normalizer.normalize(filename, Normalizer.Form.NFC);
+		
+		logger.debug("nfcFilename=" + nfcFilename);
+		logger.debug("normalizeFileName ended");
+		return nfcFilename;
+	}
+	
+	
+	//Baonk: Get user's infor from parameters
+	public LoginVO getUserForGw(String userId, String serverName) {
+		try{
+			int tenantId  = loginService.getTenantId(serverName);
+			LoginVO login = new LoginVO();
+			login.setId(userId);
+			login.setDn("NOPASSWORD");
+			login.setTenantId(tenantId);
+			
+			LoginVO user    = loginService.selectUser(login);
+			String userLang = ezCommonService.selectUserGetLang(userId, tenantId);
+			String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
+			user.setOffset(timeZone);
+			
+			if (userLang != null) {
+				if (user.getPrimary().equals(userLang)) {
+					user.setPrimary("1");
+				}
+				else {
+					user.setPrimary("2");
+				}
+			}
+			
+			return user;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getJsonFromWebFolderRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		logger.debug("getJsonFromWebFolderRestApi started");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = new RestTemplate();
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = null;
+		
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+		logger.debug("getJsonFromWebFolderRestApi ended");
 		return resultBody;
 	}
 }

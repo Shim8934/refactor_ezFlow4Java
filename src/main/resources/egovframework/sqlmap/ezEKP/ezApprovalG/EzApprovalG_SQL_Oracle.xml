@@ -396,7 +396,7 @@
 								SELECT 
 									* 
 									FROM 
-										VAPRDOINGDOCLIST 
+										VGONGRAMAPRDOINGDOCLIST
 		               				WHERE 
 		               					APRMEMBERID = #v_USERID#
 		               				AND 
@@ -3216,6 +3216,8 @@
 	        AND
 	        	    TBL_FormContainer.COMPANYID = #companyID#
 		</isNotEmpty>
+		ORDER BY
+			TBL_FORMCONTAINER.formcontid
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO"> -->
 <!-- 		{CALL EZSP_GETSECURITYTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3873,7 +3875,7 @@
 	   		<isNotEmpty property="v_PACCOUNTPYEAR" >
 	   		<![CDATA[
 	   			 AND 
-	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_PACCOUNTPYEAR#
+	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR = #v_PACCOUNTPYEAR#
 	   		]]>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_TASKCODE" >
@@ -8914,7 +8916,7 @@
    			SELECT 
    				COUNT(DOCID) 
    			FROM 
-   				VAPRDOINGDOCLIST 
+   				VGONGRAMAPRDOINGDOCLIST 
    			WHERE 
    				APRMEMBERID = #v_USERID# 
    			AND 
@@ -9897,7 +9899,7 @@
 			 SELECT 
 			 		COUNT(DOCID) 
 			 FROM 
-			 		VAPRDOINGDOCLIST  
+			 		VGONGRAMAPRDOINGDOCLIST
 			 WHERE 
 			 		APRMEMBERID = #v_USERID#
 			 AND 
@@ -12254,7 +12256,7 @@
 				SELECT 
 					COUNT(DOCID) 
 				FROM 
-					vgongramaprdoingdoclist 
+					VGONGRAMAPRDOINGDOCLIST
          		WHERE 
          			TENANT_ID = #v_TENANTID#
          		AND
@@ -15905,6 +15907,12 @@
 			AND
 				COMPANYID = #companyID#
         ]]>
+        <isEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '080')
+        </isEqual>
+        <isNotEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '011', '012', '017', '040')
+        </isNotEqual> 
 	</select>
 			
 	<select id="EzApprovalG.getDocInfoHab" parameterClass="Map" resultClass="Integer">

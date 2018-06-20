@@ -1312,13 +1312,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception {
+	public BoardListVO getCopyItem(String orgItemID, int tenantID) throws Exception {
 		logger.debug("getCopyItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PORGITEMID", orgItemID);
-		map.put("v_PORGBOARDID", orgBoardID);
 		map.put("v_TENANTID", tenantID);
 
 		logger.debug("getCopyItem ended");
@@ -2326,7 +2325,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		int boardCount = ezBoardDAO.getPhotoCount(myFavoriteVO);
 		//BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
 		//int personalCount = boardConfigVO.getListCount();
-		int personalCount = 5;
+		/* 2018-06-04 홍승비 - 포토게시판 포틀릿 표출 썸네일 4개로 수정 */
+		int personalCount = 4;
 		
 		sb.append("<DOCLIST>");
 		sb.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
@@ -3344,23 +3344,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String destItemID = "";
 		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
-		String[] boardIDArray = orgBoardIDList.split(";");
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
-			if (boardIDArray.length > 1) {
-				orgBoardID = boardIDArray[i];
-			} else {
-				orgBoardID = boardIDArray[0];				
-			}
-			
 			destItemID = "{" + UUID.randomUUID() + "}";
 			
-			BoardListVO boardListVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
-			System.out.println("뽝 : " + boardListVO.getContent());
+			BoardListVO boardListVO = getCopyItem(orgItemID, userInfo.getTenantId());
+			//게시판아이디는 itemID로 가져오자
+			orgBoardID = boardListVO.getBoardID();
+			
 			//MHT 파일위치 변경
 			boardListVO.setContentLocation(boardListVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 			boardListVO.setStartDate("");
@@ -3677,22 +3672,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String destItemID = "";
 		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
-		String[] boardIDArray = orgBoardIDList.split(";");
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
-			if (boardIDArray.length > 1) {
-				orgBoardID = boardIDArray[i];
-			} else {
-				orgBoardID = boardIDArray[0];				
-			}
-			
 			destItemID = "{" + UUID.randomUUID() + "}";		
 
-			BoardListVO boardLisitVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
+			BoardListVO boardLisitVO = getCopyItem(orgItemID, userInfo.getTenantId());
+			
+			orgBoardID = boardLisitVO.getBoardID();
 			//MHT 파일위치 변경
 			boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 			boardLisitVO.setStartDate("");
@@ -3851,6 +3841,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("moveOneLineReply ended");
 	}
 
-
+	/* 2018-06-11 홍승비 - 포토/썸네일 이미지 리스트 중에서 가장 큰 IMAGEID 가져오기 */
+	@Override
+	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception {
+		logger.debug("getLastImageID started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getLastImageID ended");
+		return ezBoardDAO.getLastImageID(map);
+	}
 
 }

@@ -34,7 +34,6 @@
 			function listClick(val) {
 		    	selFormId = $(val).attr("formid");
 		    	formStatus = $(val).attr("formstatus");
-		    	console.log("formStatus : " + formStatus);
 				$(".formList tr").removeClass("active");
 				$(val).addClass("active");
 		    	
@@ -69,6 +68,7 @@
 		    function selectCompanyList(val) {
 				var url = "/admin/ezJournal/form.do";
 				parent.frames["right"].location.href = url+ "?companyId=" + val;
+				companyId = val;
 		    }
 		    
 			// 양식추가버튼
@@ -176,7 +176,7 @@
 			}
 			
 			#formType tr:hover,  #formList tr:hover {background:#eee; color:#fff; cursor: pointer;}
-			.active {background: rgb(233, 241, 255);}
+			.active {background: #f0f6ff;}
 			
 		</style>
 	</head>

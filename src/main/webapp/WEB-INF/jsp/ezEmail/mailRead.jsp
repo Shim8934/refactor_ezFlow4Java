@@ -51,6 +51,7 @@
 		    var pNoneActiveX = "${NoneActiveX}";
 		    var isSecureMail = "${isSecureMail}";
 		    var useReSend = "${useReSend}";
+		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    
 		    window.onresize = window_onresize;
 		    
@@ -106,7 +107,7 @@
 		            }
 		        } 
 			    catch (e) { }
-		
+			    
 			}
 		    function btnPrint_onClick()
 		    {
@@ -424,7 +425,7 @@
 		        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
 		        newwin.focus();
 		    }
-		 
+		    
 		</script>
 	</head>
 
@@ -485,8 +486,10 @@
 		                        <span id="LabelReceiveDate">${dateStr}</span> 
 		                        </div>
 		                    </td>
-		                    <td nowrap class="pos2" id="btnInsertAddr"><a href="#" class="imgbtn"><span onClick="func_addaddr('N')" id="btn_addaddr"><spring:message code="ezEmail.t554" /></span></a>
-		                    <a href="#" class="imgbtn"><span onClick="func_reject()" id="btn_reject"><spring:message code="ezEmail.t270" /></span></a></td>
+		                    <td nowrap class="pos2" id="btnInsertAddr">
+		                    	<a href="#" style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
+		                    	<a href="#" style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+		                    </td>
 		                </tr>
 		                <tr>
 		                    <th><spring:message code="ezEmail.t66" /></th>

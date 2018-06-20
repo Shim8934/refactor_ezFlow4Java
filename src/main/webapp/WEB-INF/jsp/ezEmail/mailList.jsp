@@ -92,6 +92,7 @@
 		    var dec = "decrypt";
 		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
 		    var useReSend = "${useReSend}";
+		    var useSearchContent = "${useSearchContent}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -452,6 +453,8 @@
 		            return radiosearch.item(0).value + "=" + key;
 		        else if (radiosearch.item(1).checked)
 		            return radiosearch.item(1).value + "=" + key;
+		        else if (radiosearch.item(2).checked)
+		            return radiosearch.item(2).value + "=" + key;
 		    }
 		    
 		    function reloadReadContent(url) {
@@ -782,6 +785,9 @@
 	          <c:if test="${isSentItems != true}">
 			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
 			  </c:if>
+			  <c:if test="${useSearchContent == 'YES'}">
+			  <input name="searchCheck" id="Radio4" type="radio" value="CONTENT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio4">&nbsp;<spring:message code="ezEmail.t649" /></label>
+			  </c:if>
 			  &nbsp;
 			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
 	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="start_search()"></a>
@@ -828,12 +834,17 @@
               	  <tr>
                     <th><spring:message code="ezEmail.t179" /></th>
                     <td> 
-	                   <select id="listcount" style="WIDTH:40px;height:20px;" onChange="ListCount(this.value);">
+	                   <select id="listcount" style="WIDTH:46px;height:20px;" onChange="ListCount(this.value);">
 	                        <option value=10 <c:if test="${mailGeneral.listCount == '10'}">selected</c:if>>10</option>
 	                        <option value=20 <c:if test="${mailGeneral.listCount == '20'}">selected</c:if>>20</option>
 	                        <option value=30 <c:if test="${mailGeneral.listCount == '30'}">selected</c:if>>30</option>
 	                        <option value=40 <c:if test="${mailGeneral.listCount == '40'}">selected</c:if>>40</option>
 	                        <option value=50 <c:if test="${mailGeneral.listCount == '50'}">selected</c:if>>50</option>
+	                        <option value=60 <c:if test="${mailGeneral.listCount == '60'}">selected</c:if>>60</option>
+	                        <option value=70 <c:if test="${mailGeneral.listCount == '70'}">selected</c:if>>70</option>
+	                        <option value=80 <c:if test="${mailGeneral.listCount == '80'}">selected</c:if>>80</option>
+	                        <option value=90 <c:if test="${mailGeneral.listCount == '90'}">selected</c:if>>90</option>
+	                        <option value=100 <c:if test="${mailGeneral.listCount == '100'}">selected</c:if>>100</option>
 	                    </select>
 	                </td>
                   </tr>
@@ -880,7 +891,7 @@
             <span id="PreContent_RayerH" style="position:absolute; border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">            
 	                <span class="previewmail_info" style="display:block;width:100%;">
-                        <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width:100%;display:none;">
+                        <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width:100%;display:none;">
 		                    <p class="mail_title" style="margin-left:0px;"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreH_subject" style="display:none;"><span id="PreH_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span>
 		                    <dl class="mail_item">
@@ -916,7 +927,7 @@
             <span id="PreContent_RayerW" style="display:block;border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">
 	                <span class="previewmail_info" style="display:block;width:100%;">
-                        <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display:none;">
+                        <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display:none;">
 		                    <p class="mail_title"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreW_subject" ><span id="PreW_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreW_date" ><span id="PreW_sub_date"></span></span></span>
 		                    <dl class="mail_item">

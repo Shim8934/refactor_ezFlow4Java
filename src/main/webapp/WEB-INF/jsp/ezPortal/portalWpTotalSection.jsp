@@ -25,7 +25,7 @@
     				</dl>
     				<div class="bottom"></div>
     			</div>
-    			<div class="personal_content">
+    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
 					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="count">
@@ -95,23 +95,25 @@
                     		</c:choose>
 						</ul>						
 					</a>
-					<a id="Circular" onClick="btnSumming_click(this)">
-						<ul class="last">
-							<li class="count">
-								<div>
-									<span id="circularCnt">0</span>
-								</div>
-							</li>
-                    		<c:choose>
-                    			<c:when test="${userInfo.lang != '3'}">
-                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
-                    			</c:when>
-                    			<c:otherwise>
-                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
-                    			</c:otherwise>
-                    		</c:choose>                  		
-						</ul>
-					</a>			
+					<c:if test="${isCircularUsed == 'Y'}">
+						<a id="Circular" onClick="btnSumming_click(this)">
+							<ul class="last">
+								<li class="count">
+									<div>
+										<span id="circularCnt">0</span>
+									</div>
+								</li>
+	                    		<c:choose>
+	                    			<c:when test="${userInfo.lang != '3'}">
+	                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
+	                    			</c:when>
+	                    			<c:otherwise>
+	                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
+	                    			</c:otherwise>
+	                    		</c:choose>                  		
+							</ul>
+						</a>
+					</c:if>			
 				</div>
 			</article>
       		<div class="blue_bar"></div>
@@ -146,18 +148,18 @@
         			<%-- <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p> --%>
         			<c:choose>
 						<c:when test="${host == 'gw.freet.co.kr'}">
-							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
+							<p><span id="mailwrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
 						</c:when>
 						<c:otherwise>
-							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
+							<p><span id="mailwrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
 						<c:when test="${host == 'gw.freet.co.kr'}">
-							<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
+							<p><span id="addresswrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
 						</c:when>
 						<c:otherwise>
-							<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
+							<p><span id="addresswrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
 						</c:otherwise>
 					</c:choose>
         			<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
@@ -172,6 +174,14 @@
 		</section>
 			
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+		<style>
+			select {
+				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
+			}
+			select::-ms-expand {
+			    display: none;
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
@@ -198,7 +208,16 @@
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "YES";
-
+			var isCircularUsed = "${isCircularUsed}";
+		    
+			$(document).ready(function(){
+				if (isCircularUsed != 'Y') {
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
+					$(".personal_content a ul:last").attr("class","last");
+					$(".personal_content").show();
+				}
+			});
+		    
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
@@ -319,7 +338,19 @@
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
 			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr>&nbsp;" + TITLE + "</nobr></span></li>";
+			                listHTML += "<nobr>&nbsp;"
+			                if(SCHEDULETYPE == 1) {
+			                	listHTML += "";
+			                } else if (SCHEDULETYPE == 2) {
+			                	listHTML += "(<spring:message code='ezSchedule.t12' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 3) {
+			                	listHTML += "(<spring:message code='ezSchedule.t11' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 7) {
+			                	listHTML += "(<spring:message code='ezSchedule.t282' />)&nbsp;";
+			                } else {
+			                	listHTML += "";
+			                }
+			                listHTML += TITLE + "</nobr></span></li>";
 			                count++;
 			        	}
 			        }

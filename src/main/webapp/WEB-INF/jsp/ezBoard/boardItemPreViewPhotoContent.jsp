@@ -350,6 +350,30 @@
 		            }
 		            
 		            document.getElementById("mainimages").style.display = "";
+		            
+		            /* 2018-06-01 홍승비 - 미리보기 이미지 사이즈 계산 수정 */
+		            var maxWidth = 400;
+		            var maxHeight = 280;
+		            var ratio = 0;
+	
+		            if (we > maxWidth) {
+		                ratio = maxWidth / we;
+		                document.getElementById("mainimages").width = maxWidth;
+		                document.getElementById("mainimages").height = he * ratio;
+		
+		                if (document.getElementById("mainimages").height > maxHeight) {
+		                    ratio = maxHeight / document.getElementById("mainimages").height;
+		                    document.getElementById("mainimages").height = maxHeight;
+		                    document.getElementById("mainimages").width = document.getElementById("mainimages").width * ratio;
+		                }
+		            }
+		            else {
+		                if (he > maxHeight) {
+		                    ratio = maxHeight / he;
+		                    document.getElementById("mainimages").height = maxHeight;
+		                    document.getElementById("mainimages").width = we * ratio;
+		                }
+		            }	            
 		        }
 	        }
 	
@@ -450,6 +474,8 @@
 						ImageViewTable(result);
 					}        			
 				});
+	            
+	            pageimageout();
 	        }
 	
 	        function imageViewInit() {
@@ -522,7 +548,7 @@
 	            }
 	        }
 	
-	        function imageonmouse(reslut) {
+	        function imageonmouse(result) {
 	            for (var i = 0; i < ImageCount; i++) {
 	                document.getElementById("image" + i).style.border = "";
 	                document.getElementById("image" + i).style.margin = "0px 4px";
@@ -534,51 +560,54 @@
 	                    document.getElementById("image" + i).style.filter = "Alpha(Opacity=35)";
 	            }
 	
-	            document.getElementById(reslut).style.border = "#2e71ff 3px solid";
-	            document.getElementById(reslut).style.margin = "0px 4px";
-	            document.getElementById(reslut).style.width = imgWidth;
-	            document.getElementById(reslut).style.height = imgHeight;
+	            document.getElementById(result).style.border = "#888 1px solid";
+	            document.getElementById(result).style.margin = "0px 4px";
+	            document.getElementById(result).style.width = imgWidth;
+	            document.getElementById(result).style.height = imgHeight;
 	            if (CrossYN())
-	                document.getElementById(reslut).style.opacity = "1";
+	                document.getElementById(result).style.opacity = "1";
 	            else
-	                document.getElementById(reslut).style.filter = "Alpha(Opacity=100)";
+	                document.getElementById(result).style.filter = "Alpha(Opacity=100)";
 	        }
 	
+	        /* 2018-06-01 홍승비 - 포토/썸네일게시물 미리보기 하단 UI 수정 */
 	        function imagemouseover(image) {
-	            if (document.getElementById("mainimages").name == image.name)
-	                return;
-	            if (CrossYN())
-	                image.style.opacity = "1";
-	            else
-	                image.style.filter = "Alpha(Opacity=100)";
-	            image.style.border = "#2e71ff 3px solid";
+	            if (document.getElementById("mainimages").name == image.name) {
+	            	return;
+	            }
+	            if (CrossYN()) {
+	            	image.style.opacity = "1";
+	            } else {
+	            	image.style.filter = "Alpha(Opacity=100)";
+	            }
+	            
+	            image.style.border = "#888 0.015px solid";
 	            image.style.margin = "0px 4px";
 	        }
 	        function imagemouseout(image) {
-	            if (document.getElementById("mainimages").name == image.name)
+	            if (document.getElementById("mainimages").name == image.name) {
 	                return;
-	
-	            if (CrossYN())
+	            }
+	            if (CrossYN()) {
 	                image.style.opacity = "0.35";
-	            else
+	            } else {
 	                image.style.filter = "Alpha(Opacity=35)";
-	            image.style.border = "1px solid #ffffff";
+	            }
+	            
+	            image.style.border = "none";
 	            image.style.margin = "0px 4px";
 	        }
-	
+	        
+	        /* 2018-06-01 홍승비 - 페이징 코드 수정, 도달 불가능 코드 삭제 */
 	        function pageimageover() {
 	            var endpage = pPage * 10;
-	            if (imagetotalcount >= endpage && pPage == 1) {
+	            
+	            if (imagetotalcount > endpage && pPage == 1) {
 	                document.getElementById("SmallImageNext").style.display = "";
-	
 	            }
-	            else if (pPage == 1 && imagetotalcount < 10) {
+	            else if (pPage == 1 && imagetotalcount <= 10) {
 	                document.getElementById("SmallImagePrev").style.display = "none";
 	                document.getElementById("SmallImageNext").style.display = "none";
-	            }
-	            else if (pPage == 1 && endpage > 10) {
-	                document.getElementById("SmallImagePrev").style.display = "none";
-	                document.getElementById("SmallImageNext").style.display = "";
 	            }
 	            else if (pPage != 1 && imagetotalcount <= endpage) {
 	                document.getElementById("SmallImagePrev").style.display = "";
@@ -607,12 +636,12 @@
 			        </tr>
 			        <tr id="trheight">
 			            <td style="width:100px; padding-left:50px; text-align:center">
-			                <img src="/images/etc/btn_005.gif" style="border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
+			                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
 			            </td>
-			            <td style="padding-left:15px">
+			            <td style="padding-left:22px">
 			                <table id="imagetable" style="text-align:center; border:0px;">
 			                    <tr>  
-			                        <td style="width:400px;height:300px; min-height:300px; border:8px solid #e3e1e2; text-align:center" id="imageTD">
+			                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center" id="imageTD">
 			                            <img id="mainimages" onclick="window.open(this.src)" style="background-color:#ffffff;cursor:pointer;" src=""/>            
 			                        </td>
 			                    </tr>
@@ -620,12 +649,12 @@
 			            </table>
 			            </td>
 			            <td style="width:100px; padding-right:50px; text-align:center">
-			                <img src="/images/etc/btn_006.gif" style="border:0;cursor:pointer;" onclick="Pagenationimage('nextPage');" />
+			                <img src="/images/next.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('nextPage');" />
 			            </td>
 			        </tr>
 			        <tr>
 			        	<td style="padding:10px 0px; height:88px; text-align:center" colspan="3">
-			            	<div id="MainContent" style="height:88px;overflow:auto;"></div>
+			            	<div id="MainContent" style="height:88px; padding-left:23%; padding-right:24%;"></div>
 			            </td>
 			        </tr>
 			        </table>
@@ -638,17 +667,17 @@
 		    </tr>
 		    <tr>
 		        <td>
-					<div style="background:#e5e5e5; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
+					<div style="background:#f8f8fa; border:1px solid #ddd; border-left:0px; border-top:0px; height:70px; text-align:center; padding-top:27px;">
 		            <table border="0">
 		                <tr>
-		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/etc/btn_001.gif" id="SmallImagePrev" style="border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
+		                    <td style="width:30px; padding-left:14px;padding-right:2px;padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
+		                        <img src="/images/previous.png" id="SmallImagePrev" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
 		                    </td>
 		                    <td onmouseover="pageimageover()" onmouseout="pageimageout()">
 		                        <div class="content" id="viewBox" style="width:100%; border:0;" ></div>
 		                    </td>
 		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:right" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/etc/btn_002.gif" id="SmallImageNext" style="border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
+		                        <img src="/images/next.png" id="SmallImageNext" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
 		                    </td>
 		                </tr>
 		            </table>

@@ -1,0 +1,1535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezLadder">
+	<typeAlias  alias="LadderBmUserVO" type="egovframework.ezEKP.ezLadder.vo.LadderBmUserVO"/>
+	<typeAlias  alias="LadderBmVO" type="egovframework.ezEKP.ezLadder.vo.LadderBmVO"/>
+	<typeAlias  alias="LadderCodelistVO" type="egovframework.ezEKP.ezLadder.vo.LadderCodelistVO"/>
+	<typeAlias  alias="LadderCommentVO" type="egovframework.ezEKP.ezLadder.vo.LadderCommentVO"/>
+	<typeAlias  alias="LadderLineVO" type="egovframework.ezEKP.ezLadder.vo.LadderLineVO"/>
+	<typeAlias  alias="LadderOrderVO" type="egovframework.ezEKP.ezLadder.vo.LadderOrderVO"/>
+	<typeAlias  alias="LadderVO" type="egovframework.ezEKP.ezLadder.vo.LadderVO"/>
+	
+	<select id="EzLadderDAO.getLadderCount" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_LADDER E
+			WHERE 
+				E.DELETEFLAG = 0 
+			AND 
+				E.TENANT_ID = #tenantId# 
+			AND 
+				E.LADDERID in
+			(
+			SELECT
+				A.LADDERID
+			FROM 
+				TBL_LADDER A
+			WHERE 
+			]]>
+			<isEqual property="mode" compareValue="all">
+				<![CDATA[
+				A.SECRETFLAG = 0 or A.LADDERID = ANY(
+												SELECT 
+													B.LADDERID 
+                                        		FROM 
+                                        			TBL_LADDER B 
+                                        		JOIN 
+                                        			TBL_LADDER_LINE C
+                                        		ON 
+                                        			B.LADDERID = C.LADDERID
+												WHERE 
+													C.USERID = #userId#)
+			OR
+			]]>
+			</isEqual>
+				<![CDATA[
+				A.WRITERID = #userId# 
+            )
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.getLadderList" remapResults="true" resultClass="LadderVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(
+				SELECT 
+					ROWNUM AS RNUM, F.*
+				FROM
+				(
+					SELECT
+						E.LADDERID, 
+						E.TYPE, 
+						E.TITLE,
+						E.WRITERID, 
+						E.WRITERNAME$lang$, 
+						TO_CHAR(TO_DATE(E.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+						E.STATUS, 
+						E.SECRETFLAG, 
+						E.DELETEFLAG,
+						(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = E.LADDERID) AS cmt
+					FROM
+						TBL_LADDER E
+					WHERE 
+						E.DELETEFLAG = 0 
+					AND 
+						E.TENANT_ID = #tenantId# 
+					AND 
+						E.LADDERID in
+					(
+					SELECT
+						A.LADDERID
+					FROM 
+						TBL_LADDER A
+					WHERE 
+					]]>
+					<isEqual property="mode" compareValue="all">
+						<![CDATA[
+						A.SECRETFLAG = 0 or A.LADDERID = ANY(
+														SELECT 
+															B.LADDERID 
+		                                        		FROM 
+		                                        			TBL_LADDER B 
+		                                        		JOIN 
+		                                        			TBL_LADDER_LINE C
+		                                        		ON 
+		                                        			B.LADDERID = C.LADDERID
+														WHERE 
+															C.USERID = #userId#)
+					OR
+					]]>
+					</isEqual>
+						<![CDATA[
+						A.WRITERID = #userId# 
+		            )
+		            ORDER BY
+		            ]]>
+		            <isEqual property="sort" compareValue="basic">
+		            <![CDATA[
+						WRITEDATE 
+					]]>
+					</isEqual> 
+		            <isEqual property="sort" compareValue="type">
+		            <![CDATA[
+						E.TYPE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+		            <![CDATA[
+						E.TITLE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writerName">
+		            <![CDATA[
+						E.WRITERNAME
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writeDate">
+		            <![CDATA[
+						E.WRITEDATE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="status">
+		            <![CDATA[
+						E.STATUS 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="secretFlag">
+		            <![CDATA[
+						E.SECRETFLAG 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="deleteFlag">
+		            <![CDATA[
+						(
+							CASE E.WRITERID
+							WHEN #userId# THEN 2
+							ELSE 1
+							END
+						)
+					]]>
+					</isEqual>
+					<isEqual property="sortFlag" compareValue="desc">
+		            <![CDATA[
+						DESC, E.LADDERID DESC
+					]]>
+					</isEqual>
+					<isNotEqual property="sortFlag" compareValue="desc">
+					 <![CDATA[
+						ASC, E.LADDERID ASC
+					]]>
+					</isNotEqual>
+				<![CDATA[
+					) F 
+				) 
+			WHERE
+				RNUM > #startPoint# AND RNUM <= #startPoint# + #endPoint#
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.getPartLadderCount" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM 
+				TBL_LADDER A
+			WHERE
+				A.DELETEFLAG = 0
+			AND 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.LADDERID = ANY(
+								SELECT 
+									B.LADDERID 
+                                FROM 
+                                    TBL_LADDER B 
+                                JOIN 
+                                    TBL_LADDER_LINE C
+                                ON 
+                                    B.LADDERID = C.LADDERID
+								WHERE 
+									C.USERID = #userId#) 
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.getPartLadderList" remapResults="true" resultClass="LadderVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(
+				SELECT
+					ROWNUM AS RNUM, D.*
+				FROM 
+				(
+					SELECT
+						A.LADDERID, 
+						A.TYPE, 
+						A.TITLE,
+						A.WRITERID, 
+						A.WRITERNAME$lang$, 
+						TO_CHAR(TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+						A.STATUS, 
+						A.SECRETFLAG, 
+						A.DELETEFLAG,
+						(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = A.LADDERID) AS cmt
+					FROM 
+						TBL_LADDER A
+					WHERE
+						A.DELETEFLAG = 0
+					AND 
+						A.TENANT_ID = #tenantId#
+					AND 
+						A.LADDERID = ANY(
+										SELECT 
+											B.LADDERID 
+		                                FROM 
+		                                    TBL_LADDER B 
+		                                JOIN 
+		                                    TBL_LADDER_LINE C
+		                                ON 
+		                                    B.LADDERID = C.LADDERID
+										WHERE 
+											C.USERID = #userId#)
+					ORDER BY
+					 ]]>
+					<isEqual property="sort" compareValue="basic">
+		            <![CDATA[
+						A.WRITEDATE 
+					]]>
+					</isEqual>   
+		            <isEqual property="sort" compareValue="type">
+		            <![CDATA[
+						A.TYPE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+		            <![CDATA[
+						A.TITLE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writerName">
+		            <![CDATA[
+						A.WRITERNAME
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writeDate">
+		            <![CDATA[
+						A.WRITEDATE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="status">
+		            <![CDATA[
+						A.STATUS 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="secretFlag">
+		            <![CDATA[
+						A.SECRETFLAG 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="deleteFlag">
+		            <![CDATA[
+						(
+							CASE A.WRITERID
+							WHEN #userId# THEN 2
+							ELSE 1
+							END
+						)
+					]]>
+					</isEqual>
+					<isEqual property="sortFlag" compareValue="desc">
+		            <![CDATA[
+						DESC, A.LADDERID DESC
+					]]>
+					</isEqual>
+					<isNotEqual property="sortFlag" compareValue="desc">
+					 <![CDATA[
+						ASC, A.LADDERID ASC
+					]]>
+					</isNotEqual>
+					<![CDATA[
+					) D)	
+				WHERE
+					RNUM > #startPoint# AND RNUM <= #startPoint# + #endPoint# 
+			]]>
+	</select>
+	
+	<select id="EzLadderDAO.searchSPartLadderCount" resultClass="Integer">
+		<isEqual property="searchSelect" compareValue="participant">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM
+				TBL_LADDER E 
+			WHERE 
+				E.LADDERID = ANY (
+									SELECT
+										DISTINCT A.LADDERID
+									FROM 
+										TBL_LADDER A 
+									JOIN 
+										TBL_LADDER_LINE D
+									ON
+										A.LADDERID = D.LADDERID
+									WHERE
+										A.DELETEFLAG = 0
+									AND 
+										A.TENANT_ID = #tenantId#
+									AND 
+										A.LADDERID = ANY(
+														SELECT 
+															B.LADDERID 
+						                                FROM 
+						                                    TBL_LADDER B 
+						                                JOIN 
+						                                    TBL_LADDER_LINE C
+						                                ON 
+						                                    B.LADDERID = C.LADDERID
+														WHERE 
+															C.USERID = #userId#
+														) 
+									AND 
+										D.USERNAME
+									LIKE '%'||#searchInput#||'%'
+								)
+		]]>
+		</isEqual>
+		<isNotEqual property="searchSelect" compareValue="participant">
+			<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM 
+					TBL_LADDER A
+				WHERE
+					A.DELETEFLAG = 0
+				AND 
+					A.TENANT_ID = #tenantId#
+				AND 
+					A.LADDERID = ANY(
+									SELECT 
+										B.LADDERID 
+	                                FROM 
+	                                    TBL_LADDER B 
+	                                JOIN 
+	                                    TBL_LADDER_LINE C
+	                                ON 
+	                                    B.LADDERID = C.LADDERID
+									WHERE 
+										C.USERID = #userId#)
+				]]>
+				<isEqual property="searchSelect" compareValue="title">
+			  	<![CDATA[
+			  		AND
+						A.TITLE
+					LIKE '%'||#searchInput#||'%'
+				]]>	  
+				</isEqual>
+				<isEqual property="searchSelect" compareValue="kind">
+			  	<![CDATA[
+			  		AND
+						A.TYPE
+					LIKE '%'||#searchInput#||'%'
+				]]>	  
+				</isEqual>
+				<isEqual property="searchSelect" compareValue="writer">
+			  	<![CDATA[
+			  		AND
+						A.WRITERNAME
+					LIKE '%'||#searchInput#||'%'
+				]]>	  
+				</isEqual>
+        </isNotEqual> 
+	</select>
+	
+	<select id="EzLadderDAO.searchPartLadderList" remapResults="true" resultClass="LadderVO">
+		<isEqual property="searchSelect" compareValue="participant">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(
+				SELECT
+					ROWNUM AS RNUM, E.*
+				FROM 
+				(
+				SELECT
+				DISTINCT 
+					A.LADDERID, 
+					A.TYPE, 
+					A.TITLE,
+					A.WRITERID, 
+					A.WRITERNAME$lang$, 
+					TO_CHAR(TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+					A.STATUS, 
+					A.SECRETFLAG, 
+					A.DELETEFLAG,
+					(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = A.LADDERID) AS cmt
+				FROM 
+					TBL_LADDER A 
+				JOIN 
+					TBL_LADDER_LINE D
+				ON
+					A.LADDERID = D.LADDERID
+				WHERE
+					A.DELETEFLAG = 0
+				AND 
+					A.TENANT_ID = #tenantId#
+				AND 
+					A.LADDERID = ANY(
+									SELECT 
+										B.LADDERID 
+	                                FROM 
+	                                    TBL_LADDER B 
+	                                JOIN 
+	                                    TBL_LADDER_LINE C
+	                                ON 
+	                                    B.LADDERID = C.LADDERID
+									WHERE 
+										C.USERID = #userId#
+									) 
+				AND 
+					D.USERNAME
+				LIKE '%'||#searchInput#||'%'
+				ORDER BY 
+				 ]]>
+				<isEqual property="sort" compareValue="basic">
+	            <![CDATA[
+					WRITEDATE 
+				]]>
+				</isEqual>   
+	            <isEqual property="sort" compareValue="type">
+	            <![CDATA[
+					A.TYPE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="title">
+	            <![CDATA[
+					A.TITLE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="writerName">
+	            <![CDATA[
+					A.WRITERNAME
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="writeDate">
+	            <![CDATA[
+					A.WRITEDATE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="status">
+	            <![CDATA[
+					A.STATUS 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="secretFlag">
+	            <![CDATA[
+					A.SECRETFLAG 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="deleteFlag">
+	            <![CDATA[
+					(
+						CASE A.WRITERID
+						WHEN #userId# THEN 2
+						ELSE 1
+						END
+					)
+				]]>
+				</isEqual>
+				<isEqual property="sortFlag" compareValue="desc">
+	            <![CDATA[
+					DESC, A.LADDERID DESC
+				]]>
+				</isEqual>
+				<isNotEqual property="sortFlag" compareValue="desc">
+				 <![CDATA[
+					ASC, A.LADDERID ASC
+				]]>
+				</isNotEqual>
+				 <![CDATA[
+				) E)
+				WHERE 
+					RNUM > #startPoint# AND RNUM<= #startPoint# + #endPoint#
+			]]>
+		</isEqual>
+		<isNotEqual property="searchSelect" compareValue="participant">
+			<![CDATA[
+				SELECT
+					*
+				FROM
+				(
+					SELECT
+						ROWNUM AS RNUM, D.*
+					FROM 
+					(
+						SELECT
+							A.LADDERID, 
+							A.TYPE, 
+							A.TITLE,
+							A.WRITERID, 
+							A.WRITERNAME$lang$, 
+							TO_CHAR(TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+							A.STATUS, 
+							A.SECRETFLAG, 
+							A.DELETEFLAG,
+							(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = A.LADDERID) AS cmt
+						FROM 
+							TBL_LADDER A
+						WHERE
+							A.DELETEFLAG = 0
+						AND 
+							A.TENANT_ID = #tenantId#
+						AND 
+							A.LADDERID = ANY(
+											SELECT 
+												B.LADDERID 
+			                                FROM 
+			                                    TBL_LADDER B 
+			                                JOIN 
+			                                    TBL_LADDER_LINE C
+			                                ON 
+			                                    B.LADDERID = C.LADDERID
+											WHERE 
+												C.USERID = #userId#)
+						]]>
+						<isEqual property="searchSelect" compareValue="title">
+					  	<![CDATA[
+					  		AND
+								A.TITLE
+							LIKE '%'||#searchInput#||'%'
+						]]>	  
+						</isEqual>
+						<isEqual property="searchSelect" compareValue="kind">
+					  	<![CDATA[
+					  		AND
+								A.TYPE
+							LIKE '%'||#searchInput#||'%'
+						]]>	  
+						</isEqual>
+						<isEqual property="searchSelect" compareValue="writer">
+					  	<![CDATA[
+					  		AND
+								A.WRITERNAME
+							LIKE '%'||#searchInput#||'%'
+						]]>	  
+						</isEqual>
+						<![CDATA[
+							ORDER BY 
+						 ]]>
+					<isEqual property="sort" compareValue="basic">
+		            <![CDATA[
+						WRITEDATE 
+					]]>
+					</isEqual> 	  
+		            <isEqual property="sort" compareValue="type">
+		            <![CDATA[
+						A.TYPE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+		            <![CDATA[
+						A.TITLE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writerName">
+		            <![CDATA[
+						A.WRITERNAME
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writeDate">
+		            <![CDATA[
+						A.WRITEDATE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="status">
+		            <![CDATA[
+						A.STATUS 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="secretFlag">
+		            <![CDATA[
+						A.SECRETFLAG 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="deleteFlag">
+		            <![CDATA[
+						(
+							CASE A.WRITERID
+							WHEN #userId# THEN 2
+							ELSE 1
+							END
+						)
+					]]>
+					</isEqual>
+					<isEqual property="sortFlag" compareValue="desc">
+		            <![CDATA[
+						DESC, A.LADDERID DESC
+					]]>
+					</isEqual>
+					<isNotEqual property="sortFlag" compareValue="desc">
+					 <![CDATA[
+						ASC, A.LADDERID ASC
+					]]>
+					</isNotEqual>
+					<![CDATA[
+						)D)
+					WHERE 
+						RNUM > #startPoint# AND RNUM <= #startPoint# + #endPoint#
+				]]>
+        </isNotEqual> 
+	</select>
+	
+	<select id="EzLadderDAO.searchAllSLadderCount" resultClass="Integer">
+		<isEqual property="searchSelect" compareValue="participant">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM
+				TBL_LADDER F 
+			WHERE 
+				F.LADDERID = ANY (
+									SELECT
+										DISTINCT D.LADDERID
+									FROM
+										TBL_LADDER D
+									JOIN
+										TBL_LADDER_LINE E
+									ON
+										D.LADDERID = E.LADDERID
+									WHERE
+										D.DELETEFLAG = 0
+									AND 
+										D.TENANT_ID = #tenantId#
+									AND
+										D.LADDERID IN 
+													(
+													SELECT 
+														A.LADDERID
+													FROM 
+														TBL_LADDER A
+													WHERE 
+														A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																						SELECT 
+																							B.LADDERID 
+																						FROM 
+																							TBL_LADDER B 
+																						JOIN 
+																							TBL_LADDER_LINE C
+																						ON 
+																							B.LADDERID = C.LADDERID
+																						WHERE 
+																							C.USERID = #userId#)
+													OR
+														A.WRITERID = #userId#
+													)
+									AND 
+										E.USERNAME
+									LIKE '%'||#searchInput#||'%'
+								)
+		]]>
+		</isEqual>
+		<isNotEqual property="searchSelect" compareValue="participant">
+			<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_LADDER D
+				WHERE
+					D.DELETEFLAG = 0
+				AND 
+					D.TENANT_ID = #tenantId#
+				AND
+					D.LADDERID IN 
+								(
+								SELECT 
+									A.LADDERID
+								FROM 
+									TBL_LADDER A
+								WHERE 
+								]]>
+								<isEqual property="mode" compareValue="all">
+									<![CDATA[
+									A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																	SELECT 
+																		B.LADDERID 
+																	FROM 
+																		TBL_LADDER B 
+																	JOIN 
+																		TBL_LADDER_LINE C
+																	ON 
+																		B.LADDERID = C.LADDERID
+																	WHERE 
+																		C.USERID = #userId#)
+								OR
+								]]>
+								</isEqual>
+									<![CDATA[
+									A.WRITERID = #userId#
+								)
+				]]>
+				<isEqual property="searchSelect" compareValue="title">
+			  	<![CDATA[
+			  		AND
+						D.TITLE
+					LIKE '%'||#searchInput#||'%'
+				]]>	  
+				</isEqual>
+				<isEqual property="searchSelect" compareValue="kind">
+			  	<![CDATA[
+			  		AND
+						D.TYPE
+					LIKE '%'||#searchInput#||'%'
+				]]>	  
+				</isEqual>
+				<isEqual property="searchSelect" compareValue="writer">
+			  	<![CDATA[
+			  		AND
+						D.WRITERNAME
+					LIKE '%'||#searchInput#||'%'
+				]]>	  
+				</isEqual>
+        </isNotEqual> 
+	</select>
+	
+	<select id="EzLadderDAO.searchAllLadderList" remapResults="true" resultClass="LadderVO">
+		<isEqual property="searchSelect" compareValue="participant">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(
+				SELECT
+					ROWNUM AS RNUM, F.*
+				FROM
+				(
+					SELECT
+					DISTINCT
+						D.LADDERID, 
+						D.TYPE, 
+						D.TITLE,
+						D.WRITERID, 
+						D.WRITERNAME$lang$, 
+						TO_CHAR(TO_DATE(D.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+						D.STATUS, 
+						D.SECRETFLAG, 
+						D.DELETEFLAG,
+						(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = D.LADDERID) AS cmt
+					FROM
+						TBL_LADDER D
+					JOIN
+						TBL_LADDER_LINE E
+					ON
+						D.LADDERID = E.LADDERID
+					WHERE
+						D.DELETEFLAG = 0
+					AND 
+						D.TENANT_ID = #tenantId#
+					AND
+						D.LADDERID IN 
+									(
+									SELECT 
+										A.LADDERID
+									FROM 
+										TBL_LADDER A
+									WHERE 
+										A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																		SELECT 
+																			B.LADDERID 
+																		FROM 
+																			TBL_LADDER B 
+																		JOIN 
+																			TBL_LADDER_LINE C
+																		ON 
+																			B.LADDERID = C.LADDERID
+																		WHERE 
+																			C.USERID = #userId#)
+									OR
+										A.WRITERID = #userId#
+									)
+					AND 
+						E.USERNAME
+					LIKE '%'||#searchInput#||'%'
+					ORDER BY
+					 ]]>
+					<isEqual property="sort" compareValue="basic">
+		            <![CDATA[
+						WRITEDATE 
+					]]>
+					</isEqual>   
+		            <isEqual property="sort" compareValue="type">
+		            <![CDATA[
+						D.TYPE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+		            <![CDATA[
+						D.TITLE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writerName">
+		            <![CDATA[
+						D.WRITERNAME
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writeDate">
+		            <![CDATA[
+						D.WRITEDATE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="status">
+		            <![CDATA[
+						D.STATUS 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="secretFlag">
+		            <![CDATA[
+						D.SECRETFLAG 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="deleteFlag">
+		            <![CDATA[
+						(
+							CASE D.WRITERID
+							WHEN #userId# THEN 2
+							ELSE 1
+							END
+						)
+					]]>
+					</isEqual>
+					<isEqual property="sortFlag" compareValue="desc">
+		            <![CDATA[
+						DESC, D.LADDERID DESC
+					]]>
+					</isEqual>
+					<isNotEqual property="sortFlag" compareValue="desc">
+					 <![CDATA[
+						ASC, D.LADDERID ASC
+					]]>
+					</isNotEqual>
+					 <![CDATA[
+						)F)
+					WHERE
+						RNUM > #startPoint# AND RNUM < #startPoint# + #endPoint#
+				]]>
+		</isEqual>
+		<isNotEqual property="searchSelect" compareValue="participant">
+			<![CDATA[
+				SELECT
+					*
+				FROM
+				(
+					SELECT
+						ROWNUM AS RNUM, E.*
+					FROM
+					(
+					SELECT
+						D.LADDERID, 
+						D.TYPE, 
+						D.TITLE,
+						D.WRITERID,
+						D.WRITERNAME$lang$,
+						TO_CHAR(TO_DATE(D.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+						D.STATUS, 
+						D.SECRETFLAG, 
+						D.DELETEFLAG,
+						(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = D.LADDERID) AS cmt
+					FROM
+						TBL_LADDER D
+					WHERE
+						D.DELETEFLAG = 0
+					AND 
+						D.TENANT_ID = #tenantId#
+					AND
+						D.LADDERID IN 
+									(
+									SELECT 
+										A.LADDERID
+									FROM 
+										TBL_LADDER A
+									WHERE 
+									]]>
+									<isEqual property="mode" compareValue="all">
+										<![CDATA[
+										A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																		SELECT 
+																			B.LADDERID 
+																		FROM 
+																			TBL_LADDER B 
+																		JOIN 
+																			TBL_LADDER_LINE C
+																		ON 
+																			B.LADDERID = C.LADDERID
+																		WHERE 
+																			C.USERID = #userId#)
+									OR
+									]]>
+									</isEqual>
+										<![CDATA[
+										A.WRITERID = #userId#
+									)
+					]]>
+					<isEqual property="searchSelect" compareValue="title">
+				  	<![CDATA[
+				  		AND
+							D.TITLE
+						LIKE '%'||#searchInput#||'%'
+					]]>	  
+					</isEqual>
+					<isEqual property="searchSelect" compareValue="kind">
+				  	<![CDATA[
+				  		AND
+							D.TYPE
+						LIKE '%'||#searchInput#||'%'
+					]]>	  
+					</isEqual>
+					<isEqual property="searchSelect" compareValue="writer">
+				  	<![CDATA[
+				  		AND
+							D.WRITERNAME
+						LIKE '%'||#searchInput#||'%'
+					]]>	  
+					</isEqual>
+					<![CDATA[
+						ORDER BY 
+						 ]]>
+				<isEqual property="sort" compareValue="basic">
+	            <![CDATA[
+					WRITEDATE 
+				]]>
+				</isEqual> 		  
+	            <isEqual property="sort" compareValue="type">
+	            <![CDATA[
+					D.TYPE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="title">
+	            <![CDATA[
+					D.TITLE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="writerName">
+	            <![CDATA[
+					D.WRITERNAME
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="writeDate">
+	            <![CDATA[
+					D.WRITEDATE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="status">
+	            <![CDATA[
+					D.STATUS 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="secretFlag">
+	            <![CDATA[
+					D.SECRETFLAG 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="deleteFlag">
+	            <![CDATA[
+					(
+						CASE D.WRITERID
+						WHEN #userId# THEN 2
+						ELSE 1
+						END
+					)
+				]]>
+				</isEqual>
+				<isEqual property="sortFlag" compareValue="desc">
+	            <![CDATA[
+					DESC, D.LADDERID DESC
+				]]>
+				</isEqual>
+				<isNotEqual property="sortFlag" compareValue="desc">
+				 <![CDATA[
+					ASC, D.LADDERID ASC
+				]]>
+				</isNotEqual>
+				 <![CDATA[
+					)E)
+				WHERE 
+					RNUM > #startPoint# AND RNUM <= #startPoint# + #endPoint#
+			]]>
+        </isNotEqual> 
+	</select>
+
+	<update id="EzLadderDAO.deleteLadderList" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_LADDER
+			SET
+				DELETEFLAG = 1, DELETEDATE = #deleteDate#
+			WHERE
+				WRITERID = #userId#
+			AND
+				LADDERID = #ladderId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzLadderDAO.ladderContent"  remapResults="true" resultClass="LadderVO" parameterClass="map">
+		<![CDATA[
+			SELECT
+				LADDERID, 
+				TYPE, 
+				TITLE,
+				WRITERID, 
+				WRITERNAME$lang$, 
+				TO_CHAR(TO_DATE(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE, 
+				STATUS, 
+				SECRETFLAG, 
+				DELETEFLAG,
+				DEPTNAME$lang$,
+				LINECNT,
+				LINEARRAY,
+				L.TENANT_ID,
+				EXTENSIONATTRIBUTE2 AS PIC
+			FROM
+				TBL_LADDER L
+			LEFT JOIN(
+				SELECT
+					CN, TENANT_ID, EXTENSIONATTRIBUTE2
+				FROM
+					TBL_USERMASTER
+				WHERE
+					TENANT_ID = #tenantId#
+				AND
+					CN
+				NOT IN(
+					SELECT
+						CN
+					FROM
+						TBL_USERMASTER_RETIRE
+					WHERE
+						TENANT_ID = #tenantId#
+					)
+				) U
+			ON
+				L.TENANT_ID = U.TENANT_ID
+			AND 
+				L.WRITERID = U.CN
+			WHERE
+				LADDERID = #ladderId#
+			AND
+				L.TENANT_ID = #tenantId#
+		]]>
+	</select> 
+	
+	<!-- boh -->
+	<select id="EzLadderDAO.selectSearchUser" parameterClass="map" resultClass="LadderLineVO">
+		SELECT 
+			CN AS USERID, DISPLAYNAME AS USERNAME, DISPLAYNAME2 AS USERNAME2, DESCRIPTION$lang$ AS DEPTNAME, EXTENSIONATTRIBUTE2 AS PIC, TENANT_ID
+		FROM 
+			TBL_USERMASTER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			DISPLAYNAME$lang$ = #name#
+		AND 
+			DISPLAYNAME$lang$
+		NOT IN (
+			SELECT
+				DISPLAYNAME$lang$
+			FROM
+				TBL_USERMASTER_RETIRE
+			WHERE 
+				DISPLAYNAME$lang$ = #name#
+			AND
+				TENANT_ID = #tenant_id#
+			)
+	</select>
+	
+	<insert id="EzLadderDAO.insertLadderSet" parameterClass="LadderVO">
+		INSERT INTO 
+			TBL_LADDER (TENANT_ID, LADDERID, TITLE, TYPE, SECRETFLAG, WRITERID, WRITERNAME, WRITERNAME2, DEPTNAME, DEPTNAME2, LINECNT, WRITEDATE)
+		VALUES 
+			(#tenant_id#, TBL_LADDER_SEQ.NEXTVAL, #title#, #type#, #secretFlag#, #writerId#, #writerName#, #writerName2#, #deptName#, #deptName2#, #lineCnt#, #writeDate#)
+	</insert>
+	
+	<insert id="EzLadderDAO.insertLadderLine" parameterClass="LadderLineVO">
+		INSERT INTO 
+			TBL_LADDER_LINE (TENANT_ID, ID, LADDERID, USERID, USERNAME, USERNAME2, ITEM, LADDERORDER)
+		VALUES 
+			(#tenant_id#, TBL_LADDER_LINE_SEQ.NEXTVAL, #ladderId#, #userId#, #userName#, #userName2#, #item#, #ladderOrder#)
+		<selectKey keyProperty="ladderId" resultClass="Integer" type="pre">
+			SELECT 
+				MAX(LADDERID) 
+			FROM 
+				TBL_LADDER 
+			WHERE 
+				WRITERID = #writerId#
+			AND
+				TENANT_ID = #tenant_id#
+		</selectKey>
+	</insert>
+	
+	<select id="EzLadderDAO.selectRecentLadderId" parameterClass="LadderVO" resultClass="Integer">
+		<![CDATA[
+		SELECT 
+			MAX(LADDERID) 
+		FROM 
+			TBL_LADDER 
+		WHERE 
+			WRITERID = #writerId#
+		AND
+			TENANT_ID = #tenant_id#
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.selectPreList" parameterClass="map" resultClass="LadderVO">
+		<![CDATA[
+		SELECT 
+			INB.*
+		FROM ( 
+			SELECT 
+				ROWNUM AS RNUM, INA.*
+			FROM (
+				SELECT 
+					NVL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
+				FROM 
+					TBL_LADDER_ORDER O
+				RIGHT JOIN 
+					TBL_LADDER L
+				ON 
+					L.LADDERID = O.CHANGELADDERID
+				WHERE 
+					L.TENANT_ID = #tenantId#
+				AND 
+					L.WRITERID = #userId#
+				AND
+					L.DELETEFLAG = 0
+				ORDER BY 
+					ORIG_ID DESC
+				) INA
+			) INB
+		WHERE 
+			INB.RNUM > #startPoint# AND INB.RNUM <= #startPoint# + #endPoint#
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.searchPreLadderList" parameterClass="map" resultClass="LadderVO">
+		<![CDATA[
+		SELECT 
+			INB.*
+		FROM ( 
+			SELECT 
+				ROWNUM AS RNUM, INA.*
+			FROM (
+				SELECT 
+					NVL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
+				FROM 
+					TBL_LADDER_ORDER O
+				RIGHT JOIN 
+					TBL_LADDER L
+				ON 
+					L.LADDERID = O.CHANGELADDERID
+				WHERE 
+					L.TENANT_ID = #tenantId#
+				AND 
+					L.WRITERID = #userId#
+				AND
+					L.DELETEFLAG = 0
+				AND
+					L.TITLE LIKE '%'||#searchInput#||'%'
+				ORDER BY 
+					ORIG_ID DESC
+				) INA
+			) INB
+		WHERE 
+			INB.RNUM > #startPoint# AND INB.RNUM <= #startPoint# + #endPoint#
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.selectChangePreList" parameterClass="LadderOrderVO" resultClass="LadderOrderVO">
+		SELECT 
+			LADDERID, CHANGELADDERID
+		FROM 
+			TBL_LADDER_ORDER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			USERID = #userId#
+	</select>
+	
+	<delete id="EzLadderDAO.deleteChangePreList" parameterClass="LadderOrderVO">
+		DELETE FROM 
+			TBL_LADDER_ORDER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			USERID = #userId#
+	</delete>
+	
+	<insert id="EzLadderDAO.insertChangePreList" parameterClass="LadderOrderVO">
+		INSERT INTO 
+			TBL_LADDER_ORDER(TENANT_ID, ID, LADDERID, CHANGELADDERID, USERID)
+		VALUES
+			(#tenant_id#, TBL_LADDER_ORDER_SEQ.NEXTVAL, #ladderId#, #changeLadderId#, #userId#)
+	</insert>
+	
+	<select id="EzLadderDAO.selectLadderCommentList" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
+		SELECT 
+			ID, LADDERID, "COMMENT", USERID, USERNAME, USERNAME2, WRITEDATE, C.TENANT_ID, U.EXTENSIONATTRIBUTE2 AS PIC
+		FROM
+			TBL_LADDER_COMMENT C
+		LEFT JOIN(
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenant_id#
+			AND
+				CN
+			NOT IN(
+				SELECT
+					CN
+				FROM
+					TBL_USERMASTER_RETIRE
+				WHERE
+					TENANT_ID = #tenant_id#
+				)
+			) U
+		ON
+			C.TENANT_ID = U.TENANT_ID
+		AND
+			C.USERID = U.CN
+		WHERE
+			C.TENANT_ID = #tenant_id#
+		AND 
+			LADDERID = #ladderId# 
+		ORDER BY 
+			WRITEDATE 
+		DESC
+	</select>
+	
+	<insert id="EzLadderDAO.insertLadderComment" parameterClass="LadderCommentVO">
+		INSERT INTO
+			TBL_LADDER_COMMENT (TENANT_ID, ID, LADDERID, "COMMENT", USERID, USERNAME, USERNAME2, WRITEDATE)
+		VALUES
+			(#tenant_id#, TBL_LADDER_COMMENT_SEQ.NEXTVAL, #ladderId#, #comment#, #userId#, #userName#, #userName2#, #writeDate#)
+	</insert>
+	
+	<select id="EzLadderDAO.selectLadderComment" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
+		SELECT 
+			ID, LADDERID, "COMMENT", USERID, USERNAME, USERNAME2, WRITEDATE, TENANT_ID
+		FROM 
+			TBL_LADDER_COMMENT
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			<isEqual property="id" compareValue="0">
+				<![CDATA[
+				ID = (SELECT 
+					MAX(ID) 
+				FROM 
+					TBL_LADDER_COMMENT 
+				WHERE 
+					TENANT_ID = #tenant_id# 
+				AND 
+					LADDERID = #ladderId#)
+				]]>
+			</isEqual>
+			<isNotEqual property="id" compareValue="0">
+				ID = #id#
+			</isNotEqual>
+	</select>
+	
+	<select id="EzLadderDAO.ladderGameParticipant" resultClass="LadderLineVO">
+		SELECT
+			L.TENANT_ID, LADDERID, ID AS LINEID, USERID, USERNAME, USERNAME2, U.EXTENSIONATTRIBUTE2 AS PIC, RESULTUSERID, RESULTUSERNAME, RESULTUSERNAME2, ITEM, LADDERORDER
+		FROM
+			TBL_LADDER_LINE L
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				CN
+			NOT IN (
+				SELECT
+					CN
+				FROM
+					TBL_USERMASTER_RETIRE
+				WHERE
+					TENANT_ID = #tenantId#
+				)
+			) U
+		ON
+			L.TENANT_ID = U.TENANT_ID
+		AND
+			L.USERID = U.CN
+		WHERE
+			L.TENANT_ID = #tenantId#
+		AND
+			LADDERID = #ladderId#
+		ORDER BY
+			LADDERORDER
+	</select>
+	
+	<update id="EzLadderDAO.updateLadderStart">
+		UPDATE 
+			TBL_LADDER
+		SET
+			LINEARRAY = #lineArray#, status = 1, STARTDATE = #startDate#
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			LADDERID = #ladderId#
+	</update>
+	
+	<update id="EzLadderDAO.updateLadderResult">
+		UPDATE
+			TBL_LADDER_LINE
+		SET
+			RESULTUSERID = #resultUserId#, RESULTUSERNAME = #resultUserName#, RESULTUSERNAME2 = #resultUserName2#
+		WHERE
+			LADDERORDER = #ladderOrder#
+		AND
+			TENANT_ID = #tenant_id#
+		AND
+			LADDERID = #ladderId#
+	</update>
+	
+	<update id="EzLadderDAO.updateLadderComment" parameterClass="LadderCommentVO">
+		UPDATE 
+			TBL_LADDER_COMMENT
+		SET
+			"COMMENT" = #comment#
+		WHERE
+			TENANT_ID = #tenant_id#
+		AND 
+			ID = #id#
+		AND 
+			USERID = #userId# 
+	</update>
+	
+	<update id="EzLadderDAO.setUserOrder">
+		UPDATE
+			TBL_LADDER_LINE
+		SET
+			LADDERORDER = #changeOrder#, ITEM = #changeItem#
+		WHERE
+			ID = #origUser#
+		AND
+			LADDERORDER = #origOrder#
+		AND
+			TENANT_ID = #tenant_id#
+		AND
+			LADDERID = #LadderId#
+	</update>
+	
+	<delete id="EzLadderDAO.deleteLadderComment" parameterClass="LadderCommentVO">
+		DELETE FROM
+			TBL_LADDER_COMMENT
+		WHERE
+			TENANT_ID = #tenant_id#
+		AND 
+			ID = #id#
+		AND 
+			USERID = #userId#
+	</delete>
+	
+	<select id="EzLadderDAO.selectLadderBMGroupList" parameterClass="LadderBmVO" resultClass="LadderBmVO">
+		SELECT 
+			INB.LADDERBMID, INB.BMNAME, INB.USERID, INB.REGDATE, INB.USERNAME, INB.USERNAME2, INB.COUNT
+		FROM (
+			SELECT 
+				BM.LADDERBMID, BM.BMNAME, BM.USERID, BM.REGDATE, INA.USERNAME, INA.USERNAME2, MAX(USERNO) OVER (PARTITION BY BM.LADDERBMID) - 1 AS COUNT, INA.USERNO
+			FROM (
+				SELECT 
+					LADDERBMID, USERNAME, USERNAME2, ROW_NUMBER() OVER(PARTITION BY LADDERBMID ORDER BY ID ASC) AS USERNO FROM TBL_LADDER_BMUSER
+				) INA
+			RIGHT JOIN 
+				TBL_LADDER_BM BM
+			ON 
+				BM.LADDERBMID = INA.LADDERBMID
+			WHERE 
+				TENANT_ID = #tenant_id#
+			AND 
+				USERID = #userId#
+			) INB
+		WHERE 
+			INB.USERNO = 1
+		ORDER BY 
+			INB.LADDERBMID DESC
+	</select>
+	
+	<select id="EzLadderDAO.selectLadderBMUserList" parameterClass="LadderBmUserVO" resultClass="LadderBmUserVO">
+		SELECT 
+			B.ID, B.LADDERBMID, B.USERID, B.USERNAME, B.USERNAME2, U.COMPANY, U.DESCRIPTION, U.MAIL, EXTENSIONATTRIBUTE2 AS PIC
+		FROM 
+			TBL_LADDER_BMUSER B
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenant_id#
+			AND 
+				CN
+			NOT IN (
+				SELECT 
+					CN
+				FROM
+					TBL_USERMASTER_RETIRE
+				WHERE
+					TENANT_ID = #tenant_id#
+				)
+			) U
+		ON 
+			B.TENANT_ID = U.TENANT_ID
+		AND 
+			B.USERID = U.CN
+		WHERE 
+			B.TENANT_ID = #tenant_id#
+		AND 
+			LADDERBMID = #ladderBmId#
+		ORDER BY 
+			B.ID
+	</select>
+	
+	<insert id="EzLadderDAO.insertLadderBMGroup" parameterClass="LadderBmVO">
+		INSERT INTO
+			TBL_LADDER_BM (TENANT_ID, LADDERBMID, BMNAME, USERID, REGDATE)
+		VALUES 
+			(#tenant_id#, TBL_LADDER_BM_SEQ.NEXTVAL, #bmName#, #userId#, #regdate#)
+	</insert>
+	
+	<insert id="EzLadderDAO.insertLadderBMUser" parameterClass="LadderBmUserVO">
+		INSERT INTO
+			TBL_LADDER_BMUSER (TENANT_ID, ID, LADDERBMID, USERID, USERNAME, USERNAME2)
+		VALUES 
+			(#tenant_id#, TBL_LADDER_BMUSER_SEQ.NEXTVAL, 
+			<isEqual property="ladderBmId" compareValue="0">
+				<![CDATA[
+				(SELECT 
+					MAX(LADDERBMID) 
+				FROM 
+					TBL_LADDER_BM
+				WHERE 
+					TENANT_ID = #tenant_id#
+				AND 
+					USERID = #writerId#),
+				]]>
+			</isEqual>
+			<isNotEqual property="ladderBmId" compareValue="0">
+				#ladderBmId#, 
+			</isNotEqual>
+			#userId#, #userName#, #userName2#)
+	</insert>
+	
+	<update id="EzLadderDAO.updateLadderBMGroup" parameterClass="LadderBmVO">
+		UPDATE 
+			TBL_LADDER_BM 
+		SET 
+			BMNAME = #bmName#, REGDATE = #regdate#
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			LADDERBMID = #ladderBmId#
+		AND 
+			USERID = #userId#
+	</update>
+	
+	<delete id="EzLadderDAO.deleteLadderBMGroup" parameterClass="LadderBmVO">
+		DELETE FROM 
+			TBL_LADDER_BM
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			LADDERBMID = #ladderBmId#
+		AND
+			USERID = #userId#
+	</delete>
+	
+	<!-- <delete id="EzLadderDAO.deleteLadderBMUser" parameterClass="LadderBmUserVO">
+		DELETE FROM 
+			TBL_LADDER_BMUSER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			LADDERBMID = #ladderBmId#
+		AND 
+			USERID = #userId#
+		AND 
+			USERNAME$lang$ = #userName#
+	</delete> -->
+	
+	<delete id="EzLadderDAO.deleteLadderBMUserAll" parameterClass="LadderBmVO">
+		DELETE FROM 
+			TBL_LADDER_BMUSER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			LADDERBMID = #ladderBmId#
+	</delete>
+	
+	<select id="EzLadderDAO.getTblUserMaster" resultClass="String">
+		SELECT
+			C.CN
+		FROM
+			TBL_USERMASTER C
+		WHERE 
+			C.TENANT_ID = #tenantId# AND C.CN NOT IN (
+														SELECT
+															B.CN
+														FROM
+															TBL_USERMASTER_RETIRE B 
+														WHERE
+															B.TENANT_ID = #tenantId#)
+	</select>
+</sqlMap>

@@ -1274,7 +1274,7 @@ function GetMailAddresses(name) {
         	async	: false,
         	success	: function(result) {
         		var info = result;
-        		if (info != name) {
+        		if (info === "") {
         			emailFlag=true; 
         			if (document.getElementById("MsgTo").value != ""){
         				document.getElementById("MsgTo").value = "";
@@ -1356,7 +1356,10 @@ function GetMailAddresses(name) {
         m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
         m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
     }
+    
     rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+    adCount += contactList.length;
+    
     for (var count = 0 ; count < rows.length ; count++) {
         m_addrBook["type"][count + adCount] = "email";
         m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
@@ -1590,9 +1593,9 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 		            }
 	        	}
 	        }
-	        
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
+	        return false;
 	    } else {
 	        rgParams = new Array();
 	        rgParams["recipientTDData"] = null;
@@ -1624,6 +1627,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        }    
 	        
 	        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+	        return false;
 	    }
     }
     
@@ -2262,13 +2266,17 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                 if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
                     var strTarget = "target='_blank'";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
+                    FileName = replaceAll(FileName, "&", "&amp;");
                     var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
+                    var fileLocation = getNodeText(GetChildNodes(nodes[i])[4]);
+                    var fileDate = fileLocation.split("|!|")[0];
                     var strFileExt = FileName.substr(FileName.lastIndexOf('.'));
                     strFileExt = strFileExt.toLowerCase();
+                    
                     if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
+                    		strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+                    		strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+                    		strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
                     }
                     
@@ -2285,7 +2293,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                         fileSize = fileSize + "B";
                     }
                     
-                    var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + folderDate + "&tid=" + tid;
+                    var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + fileDate + "&tid=" + tid;
                     TempText += "<tr>" +
                                 "<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
                                 "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;' border='0'/></a>" +
@@ -3592,4 +3600,7 @@ function getEmailAddressList2(ReceiverList, pollSendType) {
 
     return retVal;
 }
-//end
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
+}

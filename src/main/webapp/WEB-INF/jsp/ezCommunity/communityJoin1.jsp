@@ -14,7 +14,6 @@
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		
 		<script type="text/javascript">
 			if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -23,16 +22,17 @@
 		    }
 			
 			function join_OK() {
-				//자동가입 유형은 상세정보 입력 없이 바로 가입한다.
+				// 자동가입 유형은 상세정보 입력 없이 바로 가입한다.
 				window.location.href="/ezCommunity/joinOk.do?code=<c:out value = '${no}' />";
 			}
 			
 			window.onload = function () {
 			    document.getElementById("pMessageContent").innerHTML = "<spring:message code = 'ezCommunity.t1078' />" + "<br />" + "<spring:message code = 'ezCommunity.t1079' />";
 	
- 				var UserAgentState = navigator.userAgent.toLowerCase();
-		        
-		        if (CrossYN()) {
+			/* 2018-06-08 홍승비 - 커뮤니티 가입(자동) 팝업 리사이즈 미사용 주석처리 */
+ 			/* var UserAgentState = navigator.userAgent.toLowerCase();
+		         
+		         if (CrossYN()) {
 		        	if (UserAgentState.indexOf("chrome") > 0) {
 		        		window.resizeTo(340, 260);
 		        	} else {
@@ -50,7 +50,7 @@
 		        
 		        if (MACSAFARIYN()) {
 		            window.resizeTo(330, 251);
-		        }
+		        } */
 			}
 		</script>
 	</head>
@@ -71,7 +71,7 @@
         	</div>
         	
     		<div class="popup_noti_btnarea"> 
-   	    		<div class="btnposition"> 
+   	    		<div class="btnposition" style="padding-top:0px;"> 
 		            <input type="submit" value="<spring:message code = 'ezCommunity.t108' />" onclick="return join_OK()">
 		            <input type="submit" value="<spring:message code = 'ezCommunity.t109' />" onclick="return self.close()">
 			    </div>

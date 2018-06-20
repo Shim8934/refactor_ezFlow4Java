@@ -312,7 +312,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (clubVO != null) {
 			response.getWriter().write("<script language='javascript'>");
 			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", userInfo.getLocale()) + "');");
-			response.getWriter().write("history.back();");			
+			/* 2018-05-16 홍승비 - 경고메세지 처리를 jsp 내부에서 보이도록 하기 위해 수정 */
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 			
@@ -377,7 +377,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		//TODO 2016-05-03 이효진 뷰에서 banner을 사용하지 않아서 파라미터로 받지 않는다.
-		//2018-04-11 홍승비 thumbnail을 로고와 분리하여 대표 이미지로 사용한다.
+		// 2018-04-11 홍승비 thumbnail을 로고와 분리하여 대표 이미지로 사용한다.
 		if (cClubThumb != null && !cClubThumb.isEmpty()) {
 			attachFile = cClubThumb.getOriginalFilename();
 			thumbFileSize = (int) cClubThumb.getSize();
@@ -488,7 +488,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (clubVO == null) {
 			response.getWriter().write("<script language='javascript'>\n");
 			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1529", userInfo.getLocale()) + egovMessageSource.getMessage("ezCommunity.t1027", userInfo.getLocale()) + "');\n");
-			response.getWriter().write("document.location.href = '/ezCommunity/commMake.do?flag=1';\n");
+			response.getWriter().write("window.close();");
+			response.getWriter().write("parent.window.close();");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		}
@@ -613,8 +614,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return boardInfoList;
 	}
 	
+	/* 2018-05-18 홍승비 - UTC시간에 offset을 적용한 writeDate를 가져오기 위해 offset 추가*/
 	@Override
-	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID) throws Exception {
+	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID, String offset) throws Exception {
 		logger.debug("commHomeBoardItemList started.");
 		logger.debug("boardID : " + boardID + ", tenantID : " + tenantID + ", now : " + commonUtil.getTodayUTCTime(""));
 		
@@ -622,6 +624,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pBoardID", boardID);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		map.put("offset", offset);
 		
 		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(map);
 		
@@ -993,22 +996,22 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityCPollManagerVO> list = ezCommunityDAO.pollMainGet2(map);
-		
 		logger.debug("pollMainGet2 ended. size : " + list.size());
 		
-		String dateStr = commonUtil.getTodayUTCTime("").substring(0, 10);
+		String dateStr = commonUtil.getTodayUTCTime("");
 		logger.debug("userCurrentTime=" + dateStr);
 		
 		/* 2018-05-08 홍승비 - 커뮤니티 관리자의 설문조사 테이블 > 관리TD의 모든 버튼 활성 */
 		String sysopID = ezCommunityDAO.adminMemberListGet2(map);
 		logger.debug("sysopID=" + sysopID);
 		
+		/* 2018-05-10 홍승비 - 커뮤니티 설문조사 예정, 진행중, 완료 조건 비교 수정(년-월-일 시:분:초 단위까지 전부 비교) */
 		for (CommunityCPollManagerVO item : list) {
-			if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
+			if (dateStr.compareTo(item.getPollStartDate().substring(0, 19)) < 0) {
 				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
 				pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
 			} else {
-				if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) >= 0 && dateStr.compareTo(item.getPollEndDate().substring(0, 10)) <= 0) {
+				if (dateStr.compareTo(item.getPollStartDate().substring(0, 19)) >= 0 && dateStr.compareTo(item.getPollEndDate().substring(0, 19)) <= 0) {
 					pollState = egovMessageSource.getMessage("ezCommunity.t679", userInfo.getLocale());
 					pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
 				} else {
@@ -1037,8 +1040,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("pollMainGet4 ended.");
 
 			sb.append("<tr>");
-			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 커뮤니티ID) */
-			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
+			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 등록자ID, 커뮤니티ID) */
+			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
 			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
@@ -1382,59 +1385,38 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("tenantID", tenantID);			
 			
 			String strRegUser = ezCommunityDAO.pollDeleteGet1(map).trim();
-			
 			logger.debug("pollDeleteGet1 ended. strRegUser=" + strRegUser);
 			
-			if (strRegUser != null) {
-				logger.debug("pollDeleteGet3 started.");
-				
+			/* 2018-05-10 홍승비 - 삭제권한검사는 jsp(스크립트)에서 먼저 처리하도록 수정 */
+			if (strRegUser != null) {				
 				Map<String, Object> map1 = new HashMap<String, Object>();
 				map1.put("v_CODE", code);
 				map1.put("tenantID", tenantID);
-				
-				String sysopID = ezCommunityDAO.pollDeleteGet3(map1).trim();
-				
-				logger.debug("pollDeleteGet3 ended. sysopID=" + sysopID);
-				
-				if (strRegUser.equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
-					logger.debug("pollDeleteGet2 started.");
 
-					List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);
+				logger.debug("pollDeleteGet2 started.");
+
+				List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);				
+				logger.debug("pollDeleteGet2 ended. size=" + questionList.size());
+
+				for (CommunityCPollQuestionVO question : questionList) {
+					logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
 					
-					logger.debug("pollDeleteGet2 ended. size=" + questionList.size());
-	
-					for (CommunityCPollQuestionVO question : questionList) {
-						logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
-						
-						Map<String, Object> map2 = new HashMap<String, Object>();
-						map2.put("v_QUESTIONID", question.getQuestionID());
-						map2.put("tenantID", tenantID);
-						
-						List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);
-						
-						logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
-						
-						for(CommunityCPollAnswerVO answer : answerList) {
-							logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
-							pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
-						}
-						
-						pollDeleteDel2(question.getQuestionID(), tenantID);
+					Map<String, Object> map2 = new HashMap<String, Object>();
+					map2.put("v_QUESTIONID", question.getQuestionID());
+					map2.put("tenantID", tenantID);
+					
+					List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);					
+					logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
+					
+					for(CommunityCPollAnswerVO answer : answerList) {
+						logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
+						pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
 					}
 					
-					pollDeleteDel3(managerID[i], tenantID);
+					pollDeleteDel2(question.getQuestionID(), tenantID);
 				}
-				else {
-					/* 2018-05-07 홍승비 - 커뮤니티 설문조사 삭제권한 없는 경우의 경고창 -> do 이전의 jsp로 옮기자. */
-					response.setCharacterEncoding("UTF-8");
-					response.setContentType("text/html; charset=UTF-8");
-					response.getWriter().write("<script language='javascript'>\n");
-					response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t431", userInfo.getLocale()) + "\');\n");
-					response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
-					response.getWriter().write("</script>");
-					response.getWriter().flush();
-					return;
-				}
+				
+				pollDeleteDel3(managerID[i], tenantID);
 			}
 		}
 		
@@ -1754,14 +1736,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String code = request.getParameter("code");
 		String copType = request.getParameter("type");
+		String defaultLogo = request.getParameter("defaultLogo");
+		String defaultThumb = request.getParameter("defaultThumb");
 		MultipartFile logoFile = request.getFile("logo");
 		MultipartFile thumbFile = request.getFile("thumb");
 		String logoFileNameLogo = "";
 		String logoFileNameThumbnail = "";
 		
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
-
-		//상단 이미지 저장
+		
+		// 상단 이미지 저장
 		if (!logoFile.isEmpty()) {
 			attachFile = logoFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
@@ -1785,7 +1769,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			file.delete();
 		}
-		//썸네일 저장
+		// 썸네일 저장
 		if (!thumbFile.isEmpty()) {
 			attachFile = thumbFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
@@ -1809,8 +1793,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			file.delete();
 		}
-
-		if(!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
+		
+		/* 2018-05-16 홍승비 - 등록한 로고, 썸네일 이미지 삭제 기능 추가 */
+		if (defaultLogo != null && !defaultLogo.equals("")) {
+			logoFileNameLogo = defaultLogo;
+		}
+		if (defaultThumb != null && !defaultThumb.equals("")) {
+			logoFileNameThumbnail = defaultThumb;
+		}
+		
+		if (!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
 			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, copType, code, tenantID);
 		}		
 	}
@@ -5557,7 +5549,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		String id = userInfo.getId();
 		String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-		String offset = userInfo.getOffset();
+		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
 		int tenantID = userInfo.getTenantId();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5568,6 +5560,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_PENDROW", pEndRow);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		map.put("offset", offset);
 		
 		logger.debug("psortBY");
 		logger.debug(pSortBy);
@@ -5586,20 +5579,16 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	            sb.append("<WriterName>" + commonUtil.cleanValue(item.getWriterName()).trim() + "</WriterName>");
 	            sb.append("<WriterDeptName>" + commonUtil.cleanValue(item.getWriterDeptName()).trim() + "</WriterDeptName>");
 	            sb.append("<WriterCompanyName>" + commonUtil.cleanValue(item.getWriterCompanyName()).trim() + "</WriterCompanyName>");
-	
-	            if (EgovDateUtil.getDaysDiff(item.getWriteDate().substring(0, 10), item.getParentWriteDate().substring(0, 10)) > 0) {
-	            	sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(item.getWriteDate(), offset, false).substring(0, 10) + "</WriteDate>");
-	            } else {
-	            	sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(item.getParentWriteDate(), offset, false).substring(0, 10) + "</WriteDate>");
-	            }
 	            
+	            /* 2018-05-18 홍승비 - 쿼리가 UTC시간에 offset을 적용한 writeDate를 가져오도록 수정*/
+	            sb.append("<WriteDate>" + item.getWriteDate() + "</WriteDate>");	            
 	            sb.append("<Importance>" + item.getImportance() + "</Importance>");
 	            sb.append("<Title>" + commonUtil.cleanValue(item.getTitle()).trim() + "</Title>");
-	            if (item.getAttachments() == null)
+	            if (item.getAttachments() == null) {
 	                sb.append("<Attachments></Attachments>");
-	            else
+	            } else {
 	                sb.append("<Attachments>" + commonUtil.cleanValue(item.getAttachments()) + "</Attachments>");
-	
+	            }
 	            sb.append("<ReadCount>" + item.getReadCount() + "</ReadCount>");
 	            sb.append("<ItemLevel>" + item.getItemLevel() + "</ItemLevel>");
 	            sb.append("<ReadFlag>" + item.getReadFlag() + "</ReadFlag>");

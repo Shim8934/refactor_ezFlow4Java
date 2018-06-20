@@ -54,11 +54,11 @@
 	    <h2 class="h2_dot"><spring:message code="ezBoard.t611" /></h2>
 	    <div style="text-align:center; margin:10px;" id="div1">
 		    <span class="txt">
-		        <input type="radio" name="radioAcl" value="1" /> <spring:message code="ezBoard.t612" />
-		        <input type="radio" name="radioAcl" value="2" /> <spring:message code="ezBoard.t613" />
+		        <input style="vertical-align: middle;" type="radio" name="radioAcl" value="1" checked="checked"/> <spring:message code="ezBoard.t612" />
+		        <input style="vertical-align: middle;" type="radio" name="radioAcl" value="2" /> <spring:message code="ezBoard.t613" />
 		    </span>
 	    </div>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="Save_Acl()"><spring:message code="ezBoard.t14" /></span></a>
 	        <a class="imgbtn"><span onclick="window_Cancel()"><spring:message code="ezBoard.t15" /></span></a>
 	    </div>

@@ -8,6 +8,12 @@
 		<title><spring:message code='main.t1006' /></title>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+		<style>
+			.listtype_photo {
+				margin : 0px;
+				padding : 12px 0px 12px 0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		 document.onselectstart = function () { return false; };
@@ -94,7 +100,7 @@
                 	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
             	</span>
         	</div>
-        	<div id="tblBest" class="communitycont" style="overflow-y: auto;">
+        	<div id="tblBest" class="communitycont" style="${strHTML != '' ? 'padding-top:0px' : ''}">
         		<c:if test="${strHTML != ''}">${strHTML}</c:if>
         		<c:if test="${strHTML == ''}">
         			<div class="nodata_portlet">

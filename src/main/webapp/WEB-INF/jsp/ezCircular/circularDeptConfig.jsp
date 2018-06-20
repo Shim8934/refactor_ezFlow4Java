@@ -85,7 +85,7 @@
 						$(obj).css("backgroundColor", "#FFFFFF");
 					} else {
 						$(obj).find("input").prop("checked", true);
-						$(obj).css("backgroundColor", "#edf4fd");
+						$(obj).css("backgroundColor", "#f0f6ff");
 					}
 				} else {
 					if (_RowObject != null) {
@@ -95,7 +95,7 @@
 
 					_RowObject = obj;
 					$(obj).find("input").prop("checked", true);
-					$(obj).css("backgroundColor", "#edf4fd");
+					$(obj).css("backgroundColor", "#f0f6ff");
 				}
         	}
 
@@ -178,7 +178,7 @@
 				// 전체 체크박스 선택, 해제
 				if ($("#checkboxAll").prop("checked") == true) {
 					$(".myCheckbox").prop("checked", true);
-					$("#circularDeptList tr").css("background", "#edf4fd");
+					$("#circularDeptList tr").css("background", "#f0f6ff");
 				} else {
 					$(".myCheckbox").prop("checked", false);
 					$("#circularDeptList tr").css("background", "#FFFFFF");
@@ -192,7 +192,7 @@
 					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#edf4fd");
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f0f6ff");
 				}
 
 				event.stopPropagation();
@@ -216,10 +216,11 @@
 		                    <table class="mainlist" style="width: 100%;">
 		                    	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>
 		                    	
+		                    	<!-- 18-05-24 김민성 - 회람판 > 즐겨찾기 단어 수정 -->
 		                        <tr>
 									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>
 		                            <th><spring:message code='ezCircular.t32' /></th>
-		                            <th><spring:message code='ezCircular.t33' /></th>
+		                            <th><spring:message code='ezBoard.t5007' /></th>
 		                            <th><spring:message code='ezCircular.t34' /></th>
 		                        	<th></th>
 		                        </tr>

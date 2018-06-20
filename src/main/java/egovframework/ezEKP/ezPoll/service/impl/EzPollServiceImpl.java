@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezPoll.service.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -145,6 +147,7 @@ public class EzPollServiceImpl implements EzPollService{
 	@Override
 	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary, String mode) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();	
+		String[] deptArr = deptPath.split(",");
 		map.put("user_id", userID);
 		map.put("v_deptPath", deptPath);
 		map.put("company_id", companyID);
@@ -152,6 +155,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("search_str", searchStr);	
 		map.put("primary", primary);
 		map.put("mode", mode);
+		map.put("deptArr", deptArr);
 		return ezPollDAO.getQuestionsTest(map);		
 
 	}
@@ -749,5 +753,121 @@ public class EzPollServiceImpl implements EzPollService{
 		
 		ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, bodyContent.toString(), false);
 	}
+
+	@Override
+	public OrganUserVO getRetireEntryInfo(String cn, String lang, int tenantID) throws Exception {
+		return ezOrganAdminService.getRetireEntryInfo(cn, lang, tenantID);
+	}
+
+	public void getAllMemberOfDept(List<LoginVO> list, String deptId, int tenantID) throws Exception {		
+		List<LoginVO> list1 = loginService.selectAllReceivers(deptId, tenantID);
+		
+		if (list1 != null && list1.size() > 0) {
+			list.addAll(list1);
+		}		
+		
+		//Get all member of sub department
+		List<String> subDeptIdList = ezOrganService.getAllSubDeptId(deptId, tenantID);
+		
+		if (subDeptIdList != null && subDeptIdList.size() > 0) {
+			for (String subDeptId : subDeptIdList) {				
+				getAllMemberOfDept(list, subDeptId, tenantID);
+			}
+		}		
+	}
+
+	//tbl_vote_user_and_question 의 모든 유저 정보를 가져옴.
+	@Override
+	public List<PollUserVO> getAllUsersForQst(int tenantId, int qstId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		
+		return ezPollDAO.getAllUsersForQst(map);
+	}
+
+	//모든 투표 대상자의 정보를 usermaster에서 가져옴.
+	@Override
+	public List<LoginVO> getAllUsersInfoForQstM(int tenantId, int qstId) throws Exception {
+		List<PollUserVO> pollUser = getAllUsersForQst(tenantId, qstId);
+		List<String> userList = new ArrayList<String>();
+		List<String> deptUserList = new ArrayList<String>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		Iterator<PollUserVO> iter = pollUser.iterator();
+		while(iter.hasNext()){
+			PollUserVO user = iter.next();
+			if(user.getUserType().equals("user")){
+				userList.add(user.getUserId());
+			}
+			else{
+				deptUserList.add(user.getUserId());
+			}
+		}
+		map.put("tenant_id", tenantId);
+		
+		if(userList.size() > 0){
+			map.put("userList", userList);
+		}
+		
+		if(deptUserList.size() > 0){
+			map.put("deptUserList", deptUserList);
+		}
+		
+		return ezPollDAO.getUserInfoM(map);
+	}
+	
+	//모든 투표 대상자의 정보를 usermaster, retire, delete에서 가져옴.
+	@Override
+	public List<LoginVO> getAllUsersInfoForQstMRD(int tenantId, int qstId) throws Exception {
+		List<PollUserVO> pollUser = getAllUsersForQst(tenantId, qstId);
+		List<String> userList = new ArrayList<String>();
+		List<String> deptUserList = new ArrayList<String>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		Iterator<PollUserVO> iter = pollUser.iterator();
+		while(iter.hasNext()){
+			PollUserVO user = iter.next();
+			if(user.getUserType().equals("user")){
+				userList.add(user.getUserId());
+			}
+			else{
+				deptUserList.add(user.getUserId());
+			}
+		}
+		map.put("tenant_id", tenantId);
+		
+		if(userList.size() > 0){
+			map.put("userList", userList);
+		}
+		
+		if(deptUserList.size() > 0){
+			map.put("deptUserList", deptUserList);
+		}
+		
+		return ezPollDAO.getUserInfoMRD(map);
+	}
+	
+	@Override
+	public List<LoginVO> getQstAllUsers(int tenantId, int qstId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		
+		return ezPollDAO.getQstAllUsers(map);
+	}
+
+	@Override
+	public List<LoginVO> getInfoOfSeenUsers(int tenantId, int qstId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		
+		return ezPollDAO.getInfoOfSeenUsers(map);
+	}
+
 
 }

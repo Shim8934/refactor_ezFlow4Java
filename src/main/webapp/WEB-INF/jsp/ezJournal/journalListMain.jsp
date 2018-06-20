@@ -82,11 +82,11 @@
 }
 
 .selectTR {
-	background-color: rgb(233, 241, 255);
+	background-color: #f0f6ff;
 }
 
 .selectTD {
-	background-color: rgb(233, 241, 255);
+	background-color: #f0f6ff;
 }
 
 #journalListBody #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
@@ -159,6 +159,7 @@
 			//업무일지 리스트 뿌리기
 			function setJournalList() {
 				var url = "/ezJournal/journalList.do";
+				console.log("listCnt : " + listCnt);
 				var jsonParam={};
 				jsonParam["listType"] = listType;
 				jsonParam["formId"] = $("#formId").val();
@@ -500,7 +501,7 @@
 		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
-							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId="+journalId);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId);
 							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
@@ -851,7 +852,7 @@
 				}
 				
 				for (var i = 0; i < journalIdList.length; i++) {
-					if ($("#" + journalIdList[i]).attr("mine") == "N") {
+					if ($("#" + journalIdList[i]).attr("mine") == "N" && listType != "recv") {
 						alert("<spring:message code='ezBoard.t265'/>");
 						return;
 					}
@@ -1066,7 +1067,7 @@
 				<!-- 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;"> -->
 				<!-- 		                    </div> --> <!-- 		                </span> -->
 
-				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #eeeeee;"></div> 
+				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #e8e8e8;"></div> 
 				<!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
 			</span>
 		</span>
@@ -1075,9 +1076,8 @@
 	<span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
 		<span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar"> 
 			<img src="/images/prevview_bar_dotted.gif">
-		</span> 
-		<span onmousedown="PreviewW_onMouserDown(event);" style="margin: 2px; margin-bottom: -4.9px; cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id=""> </span > 
-		<span id="PreContent_RayerW" style="display: block;"> 
+		</span>		 
+		<span id="PreContent_RayerW" style="display: block;border-top:1px solid #e6e6e6"> 
 			<span style="width: 100%; height: 100px; display: block;"> 
 				<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
 				<!-- 		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;"> -->
@@ -1347,7 +1347,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();

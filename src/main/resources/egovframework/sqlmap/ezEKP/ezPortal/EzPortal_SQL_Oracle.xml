@@ -1080,9 +1080,7 @@
 			AND
 				A.OWNERPAGEID = #v_pOWNERPAGEID#
 			AND
-				A.TENANT_ID = #tenantID#	
-			AND
-				B.TENANT_ID = #tenantID#	
+				A.TENANT_ID = #tenantID#
         	ORDER BY
         		A.COLUMNPOS ASC
 		]]>
@@ -2520,5 +2518,53 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</update>
+	
+	<select id="EzPortalDAO.getMainMenuItemUID" parameterClass="Map" resultClass="String">
+		select
+			b.UID_
+		from
+			tbl_topmenu_general a
+		join
+			tbl_menuitem_items_menuitems b
+		on
+			a.tenant_id = b.tenant_id
+		and
+			a.UID_ = b.OWNERPAGEID
+		where
+			a.tenant_id = #tenantID#
+		and
+			a.companyid = #companyID#
+		and
+			a.lang = #lang#
+		and
+			b.LINKURL = #linkURL#
+		and
+			b.parentuid = #parentUID#
+	</select>
+	
+	<select id="EzPortalDAO.getMainMenuItemUIDList" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
+		select
+			b.UID_,
+			b.LINKURL
+		from
+			tbl_topmenu_general a
+		join
+			tbl_menuitem_items_menuitems b
+		on
+			a.tenant_id = b.tenant_id
+		and
+			a.UID_ = b.OWNERPAGEID
+		where
+			a.tenant_id = #tenantID#
+		and
+			a.companyid = #companyID#
+		<isNotEmpty property="v_pDISPLAYNAME">
+		and
+			a.UID_ = #topMenuID#
+		</isNotEmpty>
+		and
+			a.lang = #lang#
+		and
+			b.parentuid = #parentUID#
+	</select>
 </sqlMap>
-

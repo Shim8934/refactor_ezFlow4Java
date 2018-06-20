@@ -7,6 +7,11 @@
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <style>
+	    .mainlist tr th {
+	    	border-top : 0px;
+	    }
+	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -86,9 +91,9 @@
 		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
 		        }
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(0).style.backgroundColor = "#f0f6ff";
+		        obj.childNodes.item(1).style.backgroundColor = "#f0f6ff";
+		        obj.childNodes.item(2).style.backgroundColor = "#f0f6ff";
 		        tempid = obj.getAttribute("backgroundid");
 		        MakeDescription(obj.id);
 		    }
