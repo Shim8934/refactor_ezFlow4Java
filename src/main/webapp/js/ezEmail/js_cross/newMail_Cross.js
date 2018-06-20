@@ -1350,7 +1350,10 @@ function GetMailAddresses(name) {
         m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
         m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
     }
+    
     rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+    adCount += contactList.length;
+    
     for (var count = 0 ; count < rows.length ; count++) {
         m_addrBook["type"][count + adCount] = "email";
         m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
