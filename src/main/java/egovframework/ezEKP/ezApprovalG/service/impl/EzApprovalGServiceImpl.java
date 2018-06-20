@@ -23118,14 +23118,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getDocHref(String docID, String docStatus, String type, String companyID, int tenantID) throws Exception {
+	public String getDocHref(String docID, String docStatus, String type, String docAttachSN, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
 		map.put("v_FLAG", docStatus);
 		map.put("v_TENANTID", tenantID);
+		map.put("docAttachSN", docAttachSN);
 		
-		String href = ezApprovalGDAO.getDocInfoHref(map);
+		String href = "";
+		
+		if (type != null && type.equals("APPROVALG")) {
+			href = ezApprovalGDAO.getDocHrefInfoHref(map);
+		} else {
+			href = ezApprovalGDAO.getDocInfoHref(map);
+		}
 		
 		return href;
 	}
