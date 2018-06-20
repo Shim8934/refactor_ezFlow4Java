@@ -230,9 +230,11 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
+	                            	<c:if test="${data.apprStatus == 0 }">
 		                            	<li><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
 		                                <li><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
+									</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 }">
 	                            		<li><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></li>
 	                            	</c:if>
