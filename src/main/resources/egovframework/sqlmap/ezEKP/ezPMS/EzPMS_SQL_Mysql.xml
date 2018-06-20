@@ -3158,9 +3158,9 @@
 			UPDATE
 				TBL_PMS_GROUP
 			SET
-				REAL_PROGRESS = (
+				REAL_PROGRESS = IFNULL((
 									SELECT 
-										SUM(IFNULL(a.REAL_PROGRESS, 0) * a.WEIGHT / 100)
+										SUM(a.REAL_PROGRESS * a.WEIGHT / 100)
 									FROM
 										TBL_PMS_TASK a
 									JOIN
@@ -3183,7 +3183,7 @@
 									AND
 										a.DEL_STATUS = 0
 				
-								)
+								), 0)
 			WHERE
 				GROUP_ID = #groupId#
 			AND
@@ -3211,11 +3211,11 @@
 			SET
 				PROGRESS = (
 								SELECT 
-									aa.PROGRESS
+									IFNULL(aa.PROGRESS, 0)
 								FROM	
 									(
 										SELECT 
-											SUM(IFNULL(a.REAL_PROGRESS, 0) * a.WEIGHT / 100) AS PROGRESS
+											SUM(a.REAL_PROGRESS * a.WEIGHT / 100) AS PROGRESS
 										FROM
 											TBL_PMS_TASK a
 										JOIN
