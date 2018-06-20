@@ -17496,7 +17496,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T' )
+           		 PROCESSYN IN ( 'N','E','T', '0' )
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
