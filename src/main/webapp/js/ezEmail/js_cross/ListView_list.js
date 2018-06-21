@@ -878,7 +878,7 @@ function ListView() {
 
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
-        var oTbody = document.createElement("TBODY");
+    	var oTbody = document.createElement("TBODY");
         oTbody.style.backgroundColor = m_strColorDefault;
 
         var oRows = _dataSource.getElementsByTagName("ROW");
@@ -894,23 +894,22 @@ function ListView() {
             objTr.setAttribute("id", _thisID + "_TR_" + i);
             objTr.style.cursor = "pointer";
 
-            /*objTr.onmouseover = function () { event_listMover(this); };
-            objTr.onmouseout = function () { event_listMout(this); };*/
             objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");
-            objTr.onclick = function () { event_listclick(this); };
-            objTr.ondblclick = function () { event_listDBclick(this); };
-            objTr.onselectstart = function () { return false; };
-            objTr.setAttribute("draggable", true);
-            if (CrossYN())
-            	objTr.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
-            else
-            	objTr.ondragstart = function (event) { event_listdragstart(this); };
 
-            if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
-            	objTr.ondragend = function (event) { event_listdragend(event); };
-            }
-            
+            if (_rowonclick != null)
+                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
+            else
+                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
+
+            if (_rowondblclick != null)
+                objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
+
+            if (_contextHandler != null)
+                objTr.oncontextmenu = new Function(_contextHandler + "(this.id);");
+
+            var oCells = GetElementsByTagName(oRows[i], "CELL");
+
             if (_SelectFlag && i == 0) {   
                 objTr.setAttribute("selected", "true");
                 objTr.style.backgroundColor = m_strColorSelect;
@@ -922,9 +921,6 @@ function ListView() {
                 objTr.className = "";
                 objTr.style.backgroundColor = m_strColorDefault;
             }
-            
-            var oCells = GetElementsByTagName(oRows[i], "CELL");
-            
 
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
@@ -1099,17 +1095,7 @@ function ListView() {
             objTr.appendChild(objTd);
             
             objTd.onclick = function () { event_listclick(this); };
-            objTd.ondblclick = function () { event_listDBclick(this); };
-            objTd.onselectstart = function () { return false; };
             objTd.setAttribute("draggable", true);
-            if (CrossYN())
-            	objTr.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
-            else
-            	objTr.ondragstart = function (event) { event_listdragstart(this); };
-
-            if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
-            	objTr.ondragend = function (event) { event_listdragend(event); };
-            }
             
             objTd = null;
             oText = null;
