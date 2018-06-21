@@ -57,6 +57,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
@@ -3692,5 +3693,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		return resultMap;
+	}
+
+	@Override
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		return ezPortalDAO.getAllCompanyList(map);
 	}
 }

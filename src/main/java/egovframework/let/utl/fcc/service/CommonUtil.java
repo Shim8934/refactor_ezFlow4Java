@@ -205,6 +205,7 @@ public class CommonUtil {
 			String lang = decDataArray[6];
 			String timeZone = decDataArray[7];
 			String deptID = decDataArray[9];
+			String companyID = decDataArray[10];
 			
             String tenantIdStr = "0";
             
@@ -220,6 +221,7 @@ public class CommonUtil {
 			user.setOffset(timeZone);			
 			user.setServerName(serverName);
 			user.setDeptID(deptID);
+			user.setCompanyID(companyID);
 			
 			return user;
 		}catch(Exception e){

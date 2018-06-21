@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
@@ -491,5 +492,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalUseTopMenuID2VO> getMainMenuItemUIDList(Map<String, Object>map) {
 		return (List<PortalUseTopMenuID2VO>) list("EzPortalDAO.getMainMenuItemUIDList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(Map<String, Object> map) {
+		return (List<PortalTopOtherCompanyAddJobVO>) list("EzPortalDAO.getAllCompanyList", map);
 	}
 }
