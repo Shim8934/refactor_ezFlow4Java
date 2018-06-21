@@ -1001,7 +1001,7 @@
 	  <tr>
 	    <td>
 	        <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm">
+	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm" style="display:none;">
 	        <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" accept="image/*" multiple />
 	        <input type="hidden" name="mode" id="mode" />
 	        </form>

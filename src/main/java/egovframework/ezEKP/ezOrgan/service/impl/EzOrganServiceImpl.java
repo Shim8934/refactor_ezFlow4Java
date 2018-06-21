@@ -409,17 +409,8 @@ public class EzOrganServiceImpl implements EzOrganService {
             memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
             memberCount++;
         }
-<<<<<<< HEAD
-		map2.put("v_CN", pDeptID);
-		map2.put("v_TENANT_ID", tenantID);
-		String totalcount = ezOrganDAO.getMemberListCount(map2);
-		
-        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA>");
-        memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
-=======
 
         StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
->>>>>>> master
         
         for (int i = 0; i < memberCount; i++) {
             memberlist.append(memberInfo[i]);
@@ -705,17 +696,6 @@ public class EzOrganServiceImpl implements EzOrganService {
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
         
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
-<<<<<<< HEAD
-
-        if(pClass.equals("user")){
-       	 int totalcount = ezOrganDAO.getSearchListCount(map);
-	       	memberlist2 = new StringBuilder("<LISTVIEWDATA>");
-	        memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
-        }else{
-        	 memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
-        }
-=======
->>>>>>> master
       
 		for(int j=0; j < list.size(); j++){
 			Map<String, Object> map1 = new HashMap<String, Object>();			
