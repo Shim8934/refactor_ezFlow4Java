@@ -54,7 +54,7 @@ var weightData = '${weightData}';
 var target = "<c:out value='${target}'/>";
 var headManagerName = "<c:out value='${taskDetails.headManagerName}'/>";
 var groupId = 0;
-var preTaskId = "";
+var pretaskId = "";
 
  $(function() {
 	 if (target == "task") {
@@ -182,11 +182,20 @@ function updateTaskInfo() {
 			weight = -1;
 		}
 
-		// 선행 작업이 업무인지 그룹인지 판단
-		var type;
-		if(preTaskId.indexOf("t") != -1) {
-			preTaskId = preTaskId.substring()
+		
+		var type = "";
+		
+		// 지정된 선행 작업이 업무인지 그룹인지 판단
+		if(pretaskId != "") {
+			
+			if(pretaskId.indexOf("t") != -1) {
+				pretaskId = pretaskId.substring(pretaskId.indexOf("t") + 1);
+				type = "task2task";
+			} else {
+				type = "group2task";
+			}
 		}
+		
 		
 		data = {
 				taskName : taskName,
@@ -199,9 +208,15 @@ function updateTaskInfo() {
 				planStartDate : planStartDate,
 				planEndDate : planEndDate,
 				writeDate : writeDate,
-				weight : weight
+				weight : weight,
+				pretaskId : pretaskId,
+				type : type
 		}
-	
+		
+		console.log(pretaskId);
+		console.log(taskId);
+		console.log(type);
+		
 		$.ajax({
 			type : "POST",
 			url : "/ezPMS/updateTaskInfo.do",
@@ -231,30 +246,30 @@ function updateTaskInfo() {
 		 }
 		 
 		var data = {
-					groupName : taskName,
-					projectId : projectId,
-					groupId : parent.groupId,
-					overview	 : overview,
-					headManagerId : headManagerId,
-					managerList : managerList,
-					upperGroupId : groupId
+				groupName : taskName,
+				projectId : projectId,
+				groupId : parent.groupId,
+				overview	 : overview,
+				headManagerId : headManagerId,
+				managerList : managerList,
+				upperGroupId : groupId
+		}
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezPMS/updateGroupInfo.do",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function() {
+				alert("<spring:message code='ezPMS.t170' />");
+				
+				parent.location.reload();
+				popupClose();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("<spring:message code='ezPMS.t208' />");
 			}
-			
-			$.ajax({
-				type : "POST",
-				url : "/ezPMS/updateGroupInfo.do",
-				contentType: "application/json; charset=UTF-8",
-				data : JSON.stringify(data),
-				success : function() {
-					alert("<spring:message code='ezPMS.t170' />");
-					
-					parent.location.reload();
-					popupClose();
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code='ezPMS.t208' />");
-				}
-			});
+		});
 	}
 }
 

@@ -121,7 +121,7 @@ public class ProjectTaskVO {
     // 계획 진행률 
     private Float planProgress;
     
-    // 선행 작업의 조상 그룹
+    // 선행 작업의 조상 그룹 아이디
     private String pretaskAncesterGroupIds;
     
     // 조상 그룹을 포함한 선행 작업명

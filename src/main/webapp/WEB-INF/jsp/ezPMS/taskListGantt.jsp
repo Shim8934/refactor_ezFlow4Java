@@ -665,7 +665,7 @@
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert ("<spring:message code='ezPMS.t54' />");
 	   				}
-	   				});
+	   			});
 	   		}
 	   		
 	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {

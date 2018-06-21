@@ -112,6 +112,12 @@ public class ProjectGroupVO {
     // 선행업무
     private String pregroup;
     
+    // 선행 작업의 조상 그룹 아이디
+    private String pretaskAncesterGroupIds;
+    
+    // 조상 그룹을 포함한 선행 작업명
+    private String pretaskName;
+    
     public String getProjectName() {
 		return projectName;
 	}
@@ -400,4 +406,19 @@ public class ProjectGroupVO {
 		this.pregroup = pregroup;
 	}
 
+	public String getPretaskName() {
+		return pretaskName;
+	}
+
+	public void setPretaskName(String pretaskName) {
+		this.pretaskName = pretaskName;
+	}
+
+	public String getPretaskAncesterGroupIds() {
+		return pretaskAncesterGroupIds;
+	}
+
+	public void setPretaskAncesterGroupIds(String pretaskAncesterGroupIds) {
+		this.pretaskAncesterGroupIds = pretaskAncesterGroupIds;
+	}
 }

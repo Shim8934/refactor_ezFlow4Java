@@ -82,6 +82,39 @@
     	<result property="pregroup"							column="PREGROUP"					columnIndex="29"/>
     </resultMap>
     
+    <resultMap id="projectGroupVOForDetail" class="ProjectGroupVO">
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupName"						column="GROUP_NAME"					columnIndex="4"/>
+    	<result property="upperGroupId"						column="UPPER_GROUP_ID"				columnIndex="5"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="6"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="7"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="8"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="9"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="10"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="11"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="12"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="13"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="14"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="15"/>
+    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="16"/>
+    	<result property="createDate"						column="CREATE_DATE"				columnIndex="17"/>
+    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="18"/>
+    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="19"/>
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="20"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="21"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="22"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="23"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="24"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
+    	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="28"/>
+    	<result property="pregroup"							column="PREGROUP"					columnIndex="29"/>
+    	<result property="pretaskAncesterGroupIds"			column="PRE_ANCESTER_GROUP_IDS"		columnIndex="30"/>
+    </resultMap>
+    
     <resultMap id="projectMainSettingVO" class="ProjectMainSettingVO">
     	<result property="settingId"						column="SETTING_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
@@ -2711,6 +2744,32 @@
 	]]>
 	</insert>
 	
+	<update id="EzPMSDAO.updatePreTaskRel" parameterClass="map">
+	<![CDATA[
+		UPDATE TBL_PMS_PRETASKREL 
+		SET
+	]]>
+		<isEqual property="type" compareValue="task2task">
+			PRETASK = #pretaskId#, PREGROUP = null
+		WHERE TASK_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="group2task">
+			PRETASK = null, PREGROUP = #pretaskId#
+		WHERE TASK_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="task2group">
+			PRETASK = #pretaskId#, PREGROUP = null
+		WHERE GROUP_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="group2group">
+			PRETASK = null, PREGROUP = #pretaskId#
+		WHERE GROUP_ID = #taskId#
+		</isEqual>		
+	<![CDATA[
+		AND tenant_id = #tenantId#		
+	]]>
+	</update>
+
 	<select id="EzPMSDAO.getPreTaskRel" parameterClass="map" resultClass="Long">
 		SELECT
 			TASK_ID
@@ -2921,7 +2980,7 @@
 		]]>
 	</update>
 	
-	<update id="EzPMSDAO.updatePreTaskRel" parameterClass="map">
+	<!-- <update id="EzPMSDAO.updatePreTaskRel" parameterClass="map">
 		<![CDATA[
 			UPDATE 
 				TBL_PMS_PRETASKREL
@@ -2934,9 +2993,9 @@
 			AND
 				TENANT_ID = #tenantId#
 		]]>
-	</update>
+	</update> -->
 	
-	<select id="EzPMSDAO.getGroupDetails" parameterClass="map" resultMap="projectGroupVO">
+	<select id="EzPMSDAO.getGroupDetails" parameterClass="map" resultMap="projectGroupVOForDetail">
 	<![CDATA[
 		SELECT	
 				A.GROUP_ID,
@@ -2967,7 +3026,8 @@
 				P.PROJECT_NAME,
 				B.GROUP_NAME AS UPPER_GROUP_NAME,
 				R.PRETASK,
-				R.PREGROUP
+				R.PREGROUP,
+				PG.ancester_group AS PRE_ANCESTER_GROUP_IDS
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	
@@ -2984,6 +3044,14 @@
 				A.PROJECT_ID = R.PROJECT_ID
 			AND
 				A.GROUP_ID = R.GROUP_ID
+			LEFT JOIN 
+				tbl_pms_task PT
+			ON 
+				R.pretask = PT.task_id
+			LEFT JOIN
+				tbl_pms_group PG
+			ON 
+				IFNULL(PT.group_id, R.pregroup) = PG.group_id
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND

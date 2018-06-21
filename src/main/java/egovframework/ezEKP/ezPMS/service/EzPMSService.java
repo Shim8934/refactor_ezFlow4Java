@@ -181,7 +181,7 @@ public interface EzPMSService {
 
 	public void updateTaskSort(long groupId, long taskId, int sortOrder, int tenantId);
 
-	public void updatePreTaskRel(long taskId, int preTaskIndex, int tenantId, long projectId);
+	public void updatePreTaskRel(Map<String, Object> map);
 
 	void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday);
 
