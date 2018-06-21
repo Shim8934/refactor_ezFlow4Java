@@ -76,7 +76,9 @@
 	                window.close();
 	            }
 	            else {
-	                alert("<spring:message code='ezApproval.t774'/>");
+	            	// 2018-06-20. 황윤호  관리자 > 전자결재 > alert창 짤림 수정
+	            	window.close();
+		            window.opener.alert("<spring:message code='ezApproval.t774'/>");
 	            }
 	        }
 	
