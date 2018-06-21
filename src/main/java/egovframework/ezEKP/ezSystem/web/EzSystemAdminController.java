@@ -87,8 +87,16 @@ public class EzSystemAdminController {
 
 	
 	@RequestMapping(value="/admin/ezSystem/systemLeftMenu.do")
-	public String systemLeftMenu(Model model) throws Exception {
+	public String systemLeftMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String cChk = "0";
 		
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
+		
+		model.addAttribute("cChk", cChk);
 		return "/ezSystem/systemLeftMenu";
 	}
 	
