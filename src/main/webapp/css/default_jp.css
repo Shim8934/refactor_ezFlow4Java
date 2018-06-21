@@ -342,6 +342,10 @@ form{display:inline;margin:0}
 .tasktime .button01_on { background:url(/images/main/time_btn.gif) no-repeat; width:50px; height:20px; padding:3px 0 0 0 ;margin:-5px 10px 0 96px;}	
 .tasktime .button01_off { background:url(/images/main/time_empty.gif) no-repeat; width:50px; height:20px; padding:3px 0 0 0 ;margin:-5px 10px 0 96px; text-align:center; color:#455a73; font-weight:bold}
 
+.tabbody {
+	padding-left:10px;
+	padding-right:10px;
+}
 
 .mainbody {
 	background: url('/images/kr/cm/bg_main.gif') left top repeat-x;
