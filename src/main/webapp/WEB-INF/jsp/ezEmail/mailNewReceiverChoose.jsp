@@ -1244,7 +1244,7 @@
 	                        	var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                        var strTopDiv = document.getElementById(listContentArry[i]).closest("table").id; //삭제
+	                            var strTopDiv = p_ListOrderObject.offsetParent.parentElement;
 	                      
 	                            if (moveRecipients) {
 	                        		strName = document.getElementById(listContentArry[i]).getAttribute("data1");
