@@ -23139,6 +23139,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getDocInfoS(String docID, String mode, String selectSQL, LoginVO userInfo, String companyID, int tenantID) throws Exception {
+		logger.debug("getDocInfoS started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -23157,6 +23158,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
 		}
 		sb.append("</DATA>");
+		
+		logger.debug("getDocInfoS ended.");
 		
 		return sb.toString();
 	}

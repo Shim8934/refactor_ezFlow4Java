@@ -1149,6 +1149,7 @@
 		                window.opener.refresh_onclick();
 		            } catch (e) {
 		            }
+		            window.close();
 		        }
 		    	//mouseWheel Event  END
 		        function btn_ReWrite() {
