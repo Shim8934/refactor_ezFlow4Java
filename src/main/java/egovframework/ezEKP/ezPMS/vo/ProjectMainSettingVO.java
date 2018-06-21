@@ -25,7 +25,13 @@ public class ProjectMainSettingVO {
 
     // 보류 색상 
     private String holdColor;
-
+    
+    //삭제 색상 
+    private String deleteColor = "#dd3b3b";
+    
+    //대기 색상
+    private String waitColor = "#a5a5a5";
+    
     // 프로젝트 정렬 
     private int projectSort;
     
@@ -154,5 +160,21 @@ public class ProjectMainSettingVO {
 
 	public void setListProjectStatus(String listProjectStatus) {
 		this.listProjectStatus = listProjectStatus;
+	}
+
+	public String getDeleteColor() {
+		return deleteColor;
+	}
+
+	public void setDeleteColor(String deleteColor) {
+		this.deleteColor = deleteColor;
+	}
+
+	public String getWaitColor() {
+		return waitColor;
+	}
+
+	public void setWaitColor(String waitColor) {
+		this.waitColor = waitColor;
 	}
 }

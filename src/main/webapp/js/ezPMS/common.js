@@ -146,7 +146,8 @@ function getCheckedVal() {
 		}
 		
 	} else {
-		$("input[type='checkbox']:checked").parent().parent().parent().parent().each(function(){
+		console.log($("input[type='checkbox']:checked").parent().parent().parent().parent().parent().parent());
+		$("input[type='checkbox']:checked").parent().parent().parent().parent().parent().parent().each(function(){
 			checkedVal += "_" + $(this).attr("id");
 		});
 		
@@ -156,7 +157,7 @@ function getCheckedVal() {
 	}
 	
 	if (checkedVal == "") {
-		alert("하나 이상의 프로젝트를 선택해 주세요.");
+		alert("<spring:message code='ezPMS.t29' />");
 		return 0;
 	}
 	

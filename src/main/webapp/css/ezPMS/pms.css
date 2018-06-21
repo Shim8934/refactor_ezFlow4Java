@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+/* 프로젝트 관리 New Style */
+
+/* point_red */
+.point_red { color: #e40404; }
+
+/* point_red */
+.point_blue { color: #0470e4; }
+
+/* layout */
+.contentlayout {margin:0px; padding:0px; list-style:none; overflow:hidden;}
+.contentlayout .contentlayout_left {float:left;}
+.contentlayout .contentlayout_right {float:right;}
+.contentlayout .contentlayout_none {float:none; overflow:hidden;}
+
+/* 상태표시 */
+.situation_progress { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #438ddd; border-radius: 3px; color: #fff; }/* 진행 */
+.situation_standby { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #a5a5a5; border-radius: 3px; color: #fff; }/* 대기 */
+.situation_complete { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #63c449; border-radius: 3px; color: #fff; }/* 완료 */
+.situation_delay { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #dd7238; border-radius: 3px; color: #fff; }/* 지연 */
+.situation_hold { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #57c7b6; border-radius: 3px; color: #fff; }/* 보류 */
+.situation_delet { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #dd3b3b; border-radius: 3px; color: #fff; }/* 삭제 */
+
+.project_mainlist {}
+.project_mainlistUL {margin:0px; padding:0px; list-style:none;}
+.project_mainlistUL > li {float:left; margin:0px 20px 20px 0px;}
+.project_mainlistUL > li .project_list { width: 360px; height: 218px; }
+.project_mainlistUL > li .project_list > table { width: 100%; border-spacing: 0px; border-collapse: collapse; margin: 0px; padding: 0px; table-layout: fixed; }
+.project_mainlistUL > li .project_list > table th { height: 36px; padding: 0px; text-align: center; font-weight: normal; }
+.project_mainlistUL > li .project_list > table th input[type="checkbox"] { width: 13px; height: 13px; margin: 0px; padding: 0px; vertical-align: middle; overflow: hidden; }
+.project_mainlistUL > li .project_list > table th img { margin-top: 3px; cursor: pointer; }
+.project_mainlistUL > li .project_list > table th > span { display: block; line-height: 18px; padding: 0px 10px; color: #000; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+
+.project_mainlistUL > li .project_list .listBox { height: 180px; padding: 15px 20px; border: 1px solid #e8e8e8; border-top: 0px none; box-sizing: border-box; }
+.project_mainlistUL > li .project_list .listBox .project_Dday { width: 178px; height: 41px; line-height: 41px; margin: 0px; text-align: center; color: #000; font-weight:bold; font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 30px; }
+.project_mainlistUL > li .project_list .listBox .project_Dday span { font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 30px; }
+.project_mainlistUL > li .project_list .listBox .date p { margin: 0px 0px 5px 0px; padding: 0px; color: #444; font-size: 12px; }
+.project_mainlistUL > li .project_list .listBox .date p .startBox { display: inline-block; width: 43px; height: 18px; line-height: 18px; margin-right: 7px; background: #fff; border: 1px solid #000; border-radius: 3px; text-align: center; font-size: 11px; letter-spacing: -1px; color: #000; box-sizing: border-box; }
+.project_mainlistUL > li .project_list .listBox .date p .endBox { display: inline-block; width: 43px; height: 18px; line-height: 18px; margin-right: 7px; background: #fff; border: 1px solid #a7a7a7; border-radius: 3px; text-align: center; font-size: 11px; letter-spacing: -1px; color: #727272; box-sizing: border-box; }
+.project_mainlistUL > li .project_list .listBox .listBox_graph {clear:both; margin:10px 0px 0px 0px; padding:0px; overflow:hidden;}
+.project_mainlistUL > li .project_list .listBox .listBox_graph dt{clear:both; float:left; width:90px; height:25px; line-height:25px; margin:0px; padding:0px; color:#444;}
+.project_mainlistUL > li .project_list .listBox .listBox_graph dd { float: none; height: 25px; line-height: 25px; margin: 0px; padding: 0px; color:#444; overflow: hidden; }

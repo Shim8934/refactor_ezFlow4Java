@@ -45,7 +45,7 @@
 	$(function(){
 		
 		if (target == null || target != "group") {
-			weightData = '${weightData}';
+			weightData = ${weightData};
 		}
 		
 		setFrameParams();
@@ -275,7 +275,7 @@
 	
 	function setFrameParams(){
 		document.querySelector("[name='frameParamTaskDetails']").value = JSON.stringify(taskDetails);
-		document.querySelector("[name='frameParamWeight']").value = JSON.stringify(taskDetails);
+		document.querySelector("[name='frameParamWeight']").value = JSON.stringify(weightData);
 	}
 	
 	function diffSetting(){

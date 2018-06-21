@@ -32,6 +32,8 @@ var progressColor = "${mainSetting.progressColor}";
 var completeColor = "${mainSetting.completeColor}";
 var overdueColor = "${mainSetting.overdueColor}";
 var holdColor = "${mainSetting.holdColor}";
+var deleteColor = "${mainSetting.deleteColor}";
+var waitColor = "${mainSetting.waitColor}";
 var startCount = 0;
 var listNumber = 5;
 var position = "overview";
@@ -81,7 +83,7 @@ function initProgressBar() {
 		break;
 	case "W" :
 		strStatus = "<spring:message code='ezPMS.t16' />";
-		circleColor = "#a5a5a5";
+		circleColor = waitColor;
 		break;
 	case "L" :
 		strStatus = "<spring:message code='ezPMS.t18' />";
@@ -97,7 +99,7 @@ function initProgressBar() {
 		break;
 	case "D" :
 		strStatus = "<spring:message code='ezPMS.t11' />";
-		circleColor = "#dd3b3b";
+		circleColor = deleteColor;
 		break;
 	}
 	
@@ -525,11 +527,13 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 		data :JSON.stringify(data),
 		success : function(result) {
 			$("#" + targetPosition).attr("name", targetStatus);
-			
-			if (targetStatus == "B") {
-				setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, true);
-			} else {
-				setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, false);
+
+			if (result.kanbanTask1 != null) {
+				if (targetStatus == "B") {
+					setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, true);
+				} else {
+						setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, false);
+				}
 			}
 
 			var title = "";

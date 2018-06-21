@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,7 +59,7 @@ $(function() {
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px"
 							class="h5_center"><spring:message code='ezPMS.t63' /></th>
 						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="LOG_DATE"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 40px"
 							class="h5_center"><spring:message code='ezPMS.t187' /></th>
 						</tr>
 						</thead>
@@ -107,10 +108,10 @@ $(function() {
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
 											value="${log.userName }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40px"><div
 											name="${log.logId }" style="margin-right: 2px;"></div>&nbsp;
 										<div style="margin-top: 5px; display: inline-block;">
-											<c:out value="${log.logDate }" />
+											<c:out value="${fn:substring(log.logDate, 0, 16)}" />
 										</div>
 									</td>
 								</tr>
