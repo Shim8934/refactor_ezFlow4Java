@@ -556,43 +556,6 @@ public class LoginController {
     	}
     }
     
-    public void changeCompany(String loginCookie, String deptID,String companyID, HttpServletResponse response){
-		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
-			
-			String[] decDataArray = decData.split("///");
-			int tenantId = Integer.parseInt(decDataArray[8]);
-			
-			decDataArray[9] = deptID;
-			decDataArray[10] = companyID;
-			
-			decData = "";
-			for (int i = 0; i < decDataArray.length; i++) {
-				if (i==0) {
-					decData += decDataArray[i];
-				} else {
-					decData += "///"+decDataArray[i];
-				}
-			}
-			
-			loginCookie = egovFileScrty.encryptAES(decData);
-			
-	    	Cookie cookieID = new Cookie("loginCookie", loginCookie);
-	    	cookieID.setPath("/");
-	    	response.addCookie(cookieID);
-	    	
-	    	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
-	    	
-	    	if (!("NO".equalsIgnoreCase(useSSOCookie) || "".equals(useSSOCookie))) {
-	    		Cookie ssoLoginCookie = new Cookie("loginCookieSSO", loginCookie);
-	    		ssoLoginCookie.setPath("/");
-	    		ssoLoginCookie.setDomain(useSSOCookie);
-	    		response.addCookie(ssoLoginCookie);
-	    	}
-		}catch(Exception e){
-		}
-    }
-    
     /**
 	 * 로그아웃한다.
 	 * @return String

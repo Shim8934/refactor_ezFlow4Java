@@ -19,6 +19,17 @@
 				<div class="info">
     				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">
+    					<dt>
+    						<c:if test="${not empty companyList }">
+								<select id="selectCompany" onchange="changeCompany();">
+									<c:forEach items="${companyList }" var="company">
+										<option value="${company.deptID }" <c:if test="${userInfo.deptID eq company.deptID }">selected="selected"</c:if> companyID="${company.companyID }">
+											${company.companyName }(${company.deptName }) - ${company.apprCount }
+										</option>
+									</c:forEach>
+								</select>
+    						</c:if>
+						</dt>
         				<dt>${companyNm }<br></dt>
 			 			<dd>${department} ${title}</dd>
 						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
@@ -898,6 +909,12 @@
 		    }
 
 		    window_onload_total();
+		    
+		    function changeCompany(){
+		    	var TcompanyID = $("#selectCompany option:selected").attr("companyID");
+		    	var TdeptID = $("#selectCompany option:selected").val();
+		    	window.open("/ezPortal/myPortal.do?companyID="+TcompanyID+"&deptID="+TdeptID, "main");
+		    }
 		</script>
 	</head>
 </html>

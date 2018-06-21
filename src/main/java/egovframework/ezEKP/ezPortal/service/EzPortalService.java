@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -240,4 +241,6 @@ public interface EzPortalService {
 	public String getMainMenuItemUID(String pAccessID, String linkURL, String userLang, String companyID, int tenantID) throws Exception;
 	
 	public Map<String, String> getMainMenuItemUIDList(String pAccessID, Map<String, String> linkURL, String userLang, String companyID, int tenantID, String topMenuID) throws Exception;
+
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
 }

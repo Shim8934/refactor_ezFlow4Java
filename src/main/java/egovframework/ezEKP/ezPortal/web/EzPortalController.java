@@ -60,6 +60,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
@@ -793,6 +794,44 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/portalPortalPage";
 	}
 	
+	 public String changeCompany(String loginCookie, String deptID,String companyID, HttpServletResponse response){
+			try{
+				String decData = egovFileScrty.decryptAES(loginCookie);
+				
+				String[] decDataArray = decData.split("///");
+				int tenantId = Integer.parseInt(decDataArray[8]);
+				
+				decDataArray[9] = deptID;
+				decDataArray[10] = companyID;
+				
+				decData = "";
+				for (int i = 0; i < decDataArray.length; i++) {
+					if (i==0) {
+						decData += decDataArray[i];
+					} else {
+						decData += "///"+decDataArray[i];
+					}
+				}
+				
+				loginCookie = egovFileScrty.encryptAES(decData);
+				
+		    	Cookie cookieID = new Cookie("loginCookie", loginCookie);
+		    	cookieID.setPath("/");
+		    	response.addCookie(cookieID);
+		    	
+		    	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
+		    	
+		    	if (!("NO".equalsIgnoreCase(useSSOCookie) || "".equals(useSSOCookie))) {
+		    		Cookie ssoLoginCookie = new Cookie("loginCookieSSO", loginCookie);
+		    		ssoLoginCookie.setPath("/");
+		    		ssoLoginCookie.setDomain(useSSOCookie);
+		    		response.addCookie(ssoLoginCookie);
+		    	}
+			}catch(Exception e){
+			}
+			return loginCookie;
+	    }
+	
 	/**
 	 * 포탈 - 마이포탈 호출 함수
 	 */
@@ -800,6 +839,12 @@ public class EzPortalController extends EgovFileMngUtil {
 	public void myPortal (HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("myPortal started");
 
+		String companyID = req.getParameter("companyID");
+		String deptID = req.getParameter("deptID");
+		if (companyID != null && !companyID.equals("") && deptID != null && !deptID.equals("")) {
+			loginCookie = changeCompany(loginCookie, deptID, companyID, resp);
+		}
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pageID = "";
@@ -1121,6 +1166,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
 		
+		List<PortalTopOtherCompanyAddJobVO> companyList = ezPortalService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
+		
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
 		 */
@@ -1151,6 +1198,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+		model.addAttribute("companyList", companyList);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
