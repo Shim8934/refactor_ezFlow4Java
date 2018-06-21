@@ -2656,4 +2656,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getUpperGroupId ended.");
 		return ezPMSDAO.getUpperGroupId(map);
 	}
+
+	@Override
+	public ProjectTaskVO getTaskSchedule(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] getTaskSchedule started.");
+		LOGGER.debug("[SERVICE] getTaskSchedule ended.");
+		return ezPMSDAO.getTaskSchedule(map);
+	}
+
+	@Override
+	public ProjectGroupVO getGroupSchedule(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] getGroupSchedule started.");
+		LOGGER.debug("[SERVICE] getGroupSchedule ended.");
+		return ezPMSDAO.getGroupSchedule(map);
+	}
 }

@@ -107,7 +107,7 @@
 .tree {
 	overflow: auto;
 	border: 1px solid silver;
-	height: auto;
+	height: 215px;
 	width: 315px;
 	margin-top: 30px;
 }
@@ -116,13 +116,15 @@
 </head>
 <body class="popup" style="overflow-y: auto; overflow-x: hidden"> 
 	<h1 style="height: 20px;"><spring:message code='ezPMS.t42' /></h1>
-    <div id="close">
-        <ul>
-            <li><span onclick="ok_Click()"><spring:message code='ezPMS.t43' /></span></li>
-            <li><span onclick="close_Click()"><spring:message code='ezPMS.t41' /></span></li>
-        </ul>
-    </div>
 	<div id="test" class="tree"></div>
+	<div style="margin-top: 8px; text-align: center;">
+		<a class="imgbtn" onclick="ok_Click()">
+			<span><spring:message code='ezPMS.t40' /></span>
+		</a>
+		<a class="imgbtn" onclick="close_Click()">
+			<span><spring:message code='ezPMS.t76' /></span>
+		</a>
+	</div>
 </body>
 </html>
 

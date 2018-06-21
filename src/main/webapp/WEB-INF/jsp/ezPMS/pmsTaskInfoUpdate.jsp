@@ -55,6 +55,9 @@ var target = "<c:out value='${target}'/>";
 var headManagerName = "<c:out value='${taskDetails.headManagerName}'/>";
 var groupId = 0;
 var pretaskId = "";
+var realProgress = "<c:out value='${taskDetails.realProgress}'/>";
+var workingday = "<c:out value='${taskDetails.realWorkingday ne null ? taskDetails.realWorkingday : taskDetails.workingday}'/>";
+var pretaskSetType = "";
 
  $(function() {
 	 if (target == "task") {
@@ -181,18 +184,15 @@ function updateTaskInfo() {
 		} else {
 			weight = -1;
 		}
-
 		
-		var type = "";
-		
-		// 지정된 선행 작업이 업무인지 그룹인지 판단
+		// 선행작업 지정 타입을 판단
 		if(pretaskId != "") {
 			
 			if(pretaskId.indexOf("t") != -1) {
 				pretaskId = pretaskId.substring(pretaskId.indexOf("t") + 1);
-				type = "task2task";
+				pretaskSetType = "task2task";
 			} else {
-				type = "group2task";
+				pretaskSetType = "group2task";
 			}
 		}
 		
@@ -207,15 +207,17 @@ function updateTaskInfo() {
 				managerList : managerList,
 				planStartDate : planStartDate,
 				planEndDate : planEndDate,
+				realProgress : realProgress,
+				workingday : workingday,
 				writeDate : writeDate,
 				weight : weight,
 				pretaskId : pretaskId,
-				type : type
+				type : pretaskSetType
 		}
 		
 		console.log(pretaskId);
 		console.log(taskId);
-		console.log(type);
+		console.log(pretaskSetType);
 		
 		$.ajax({
 			type : "POST",

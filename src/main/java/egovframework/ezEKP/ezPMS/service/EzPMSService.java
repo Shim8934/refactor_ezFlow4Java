@@ -222,4 +222,8 @@ public interface EzPMSService {
 	public ProjectGroupVO getUpperGroupDate(long groupId, int tenantId) throws Exception;
 
 	Long getUpperGroupId(long groupId, long projectId, int tenantId);
+	
+	public ProjectTaskVO getTaskSchedule(Map<String, Object> map);
+	
+	public ProjectGroupVO getGroupSchedule(Map<String, Object> map);
 }

@@ -549,4 +549,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public Long getUpperGroupId(Map<String, Object> map) {
 		return (Long) select ("EzPMSDAO.getUpperGroupId", map);
 	}
+	
+	public ProjectTaskVO getTaskSchedule(Map<String, Object> map) {
+		return (ProjectTaskVO) select("EzPMSDAO.getTaskSchedule", map);
+	}
+	
+	public ProjectGroupVO getGroupSchedule(Map<String, Object> map) {
+		return (ProjectGroupVO) select("EzPMSDAO.getGroupSchedule", map);
+	}
 }

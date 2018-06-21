@@ -41,13 +41,20 @@
 		
 		parent.pretaskId = $("a.jstree-clicked").parent("li[role='treeitem']").attr("id");
 		popupClose();
-	}	
+	}
+	
+	function initPreTask() {
+		$("#preTaskName", parent.document).text('-');
+		parent.pretaskId = "";
+		parent.pretaskSetType = "initPreTask";
+		popupClose();
+	}
 </script>
 <style>
 .tree {
 	overflow: auto;
 	border: 1px solid silver;
-	height: auto;
+	height: 215px;
 }
 </style>
 </head>
@@ -55,10 +62,17 @@
 	<h1><spring:message code='ezPMS.t146' /></h1>
 	<div id="close">
 		<ul>
-			<li><span onclick="register()"><spring:message code='ezPMS.t40' /></span></li>
-			<li><span onclick="popupClose()"><spring:message code='ezPMS.t76' /></span></li>
+			<li><span onclick="initPreTask()"><spring:message code='ezPMS.t295' /></span></li>
 		</ul>
 	</div>
 	<div id="taskTree" class="tree"></div>
+	<div style="margin-top: 8px; text-align: center;">
+		<a class="imgbtn" onclick="register()">
+			<span><spring:message code='ezPMS.t40' /></span>
+		</a>
+		<a class="imgbtn" onclick="popupClose()">
+			<span><spring:message code='ezPMS.t76' /></span>
+		</a>
+	</div>
 </body>
 </html>
