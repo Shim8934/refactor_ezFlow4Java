@@ -393,7 +393,7 @@ public class LoginController {
     					
     					loginService.insertLog(resultVO);
     	
-    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, resultVO.getDeptID());
+    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
     		        	
     		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
     		        	cookieName.setPath("/");
@@ -476,7 +476,7 @@ public class LoginController {
     
     public void createLoginCookie(
     				String userId, String userPw, String encryptedUserPw, int tenantId, 
-    				HttpServletRequest request, HttpServletResponse response, String deptID
+    				HttpServletRequest request, HttpServletResponse response, String deptID, String companyID
     				) throws Exception {
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
@@ -539,7 +539,7 @@ public class LoginController {
 		}
 		
 		// Cookie 생성
-		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID;
+		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
 		String loginCookie = egovFileScrty.encryptAES(cInfo);
 		
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
@@ -556,13 +556,25 @@ public class LoginController {
     	}
     }
     
-    public void changeCompany(String loginCookie, String deptID, HttpServletResponse response){
+    public void changeCompany(String loginCookie, String deptID,String companyID, HttpServletResponse response){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 			
-			decData += deptID;
 			String[] decDataArray = decData.split("///");
 			int tenantId = Integer.parseInt(decDataArray[8]);
+			
+			decDataArray[9] = deptID;
+			decDataArray[10] = companyID;
+			
+			decData = "";
+			for (int i = 0; i < decDataArray.length; i++) {
+				if (i==0) {
+					decData += decDataArray[i];
+				} else {
+					decData += "///"+decDataArray[i];
+				}
+			}
+			
 			loginCookie = egovFileScrty.encryptAES(decData);
 			
 	    	Cookie cookieID = new Cookie("loginCookie", loginCookie);
