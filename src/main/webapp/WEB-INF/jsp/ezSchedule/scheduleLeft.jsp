@@ -65,6 +65,7 @@
 			    -ms-transform: rotate(45deg);
 			    transform: rotate(45deg);
 			}
+			
 	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
@@ -90,6 +91,10 @@
 			var totalCnt = 0;
 			var sStartDate;
 			var sEndDate;
+			var typeCal;
+			
+			/* var chk_total = $("input[name=chk_schedule]:checked").length;
+			var chk_fullLength = $("input[name=chk_schedule]").length; */
 			
 			//2018-06-08 구해안 left checkbox checkall			
 			function chk_all(){
@@ -97,22 +102,87 @@
 			        $('.checkSelect').each(function() {
 			            $(this).prop('checked',true);			            
 			        });
-			        chk_IDchange();
+			        /* chk_IDchange(); */
+			        chk_DisplayChange();
 			    } else {			    	
 			        $('.checkSelect').each(function() {
 			            $(this).prop('checked',false);  			            
 			        });
-			        chk_IDchange();
+			        /* chk_IDchange(); */
+			        chk_DisplayChange();
 			    }
 			}   
+			function FindByAttributeValue(attribute, value, element_type)    {
+			   element_type = element_type || "*";
+			   var All = document.getElementsByTagName(element_type);
+			   for (var i = 0; i < All.length; i++)       {
+			     if (All[i].getAttribute(attribute) == value) { return All[i]; }
+			   }
+			}
 			
+			//2018-06-18 구해안 checkbox에 대한 css 변환 함수
+			function chk_DisplayChange() {
+				var chk_str =  "";
+				var chk_total = $("input[name=chk_schedule]:checked").length;
+				var chk_fullLength = $("input[name=chk_schedule]").length;
+				
+				if(typeCal == 0) {		
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						$('.td_list td[ownerid = "'+chk_eachVal1+'"]',parent.frames["right"].document).each(function(index, value){
+							
+							$(value).addClass('chk_noneDisplay');
+						});
+					});
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						
+						$('.td_list td[ownerid = "'+test+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).removeClass('chk_noneDisplay');
+						});
+					});					
+				}else if(typeCal == 1) {
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						$('div[ownerid = "'+chk_eachVal1+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).addClass('chk_noneDisplay');
+						});
+					});
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						
+						$('div[ownerid = "'+test+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).removeClass('chk_noneDisplay');
+						});
+					});	
+				}else{
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						$('div[ownerid = "'+chk_eachVal1+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).addClass('chk_noneDisplay');
+						});
+					});
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						
+						$('div[ownerid = "'+test+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).removeClass('chk_noneDisplay');
+						});						
+					});	
+				}		
+				if(chk_total > 0 && chk_total < chk_fullLength) {
+					$('#select-all').prop('checked',false);					
+				} else if(chk_total == chk_fullLength) {
+					$('#select-all').prop('checked',true);	
+				} else if(chk_total == 0){
+					chk_str += $('#select-all').val();
+				}
+			}
 			
 			
 			//2018-06-08 구해안 left checkbox 함수
 			function chk_IDchange() {
-				var chk_str =  "";
-				var chk_total = $("input[name=chk_schedule]:checked").length;
-				var chk_fullLength = $("input[name=chk_schedule]").length;
+				
 				
 				if($(parent.frames["left"].document.getElementById("secretarySelect")).val() != "" && $(parent.frames["left"].document.getElementById("secretarySelect")).val() != null){
 					$("input[name=chk_schedule]:checked").each(function(index) {
@@ -352,6 +422,11 @@
 		                break;
 
 		            case 10:	// Search public search
+		            	$('.checkSelect').each(function() {
+				            $(this).prop('checked',true);			            
+				        });
+		            	$('#select-all').prop('checked',true);
+		            	$('#IDClick').css('pointer-events','none');
 		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
 		                break;
 		            case 11:		// Search public calendar
@@ -408,25 +483,26 @@
 				  <input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse">
 				  <span class="checkmark"></span>
 				</label>
-				<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t221'/>
+				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t221'/>
 				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.id}" class="checkSelect">
 				  <span class="checkmark" style="background:#018bfa;"></span>
 				</label>
 				<c:if test='${!empty scheSec}'>
 					<c:forEach var="sec" items="${scheSec}">
-						<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t372'/>${sec.secName }
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t372'/>${sec.secName }
 						  <input type="checkbox" checked="checked" name="chk_schedule" value="${sec.secId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#018bfa;"></span>
 						</label>
 					</c:forEach>
 				</c:if>
-				<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t222'/>
-				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.deptID}" class="checkSelect">
-				  <span class="checkmark" style="background:#01b43f;"></span>
-				</label>
+					<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t222'/>
+					  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.deptID}" class="checkSelect">
+					  <span class="checkmark" style="background:#01b43f;"></span>
+					</label>
+				
 				<c:if test='${!empty scheDept}'>
 					<c:forEach var="dep" items="${scheDept}">
-						<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t373'/>${dep.deptName }
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${dep.deptName }
 						  <input type="checkbox" checked="checked" name="chk_schedule" value="${dep.deptId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#01b43f;"></span>
 						</label>
@@ -434,19 +510,19 @@
 				</c:if>
 				<c:if test='${!empty scheCum}'>
 					<c:forEach var="cum" items="${scheCum}">
-						<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
 						  <input type="checkbox" checked="checked" name="chk_schedule" value="${cum.deptId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#01b43f;"></span>
 						</label>
 					</c:forEach>
 				</c:if>
-				<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t223'/>
+				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t223'/>
 				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.companyID}" class="checkSelect">
 				  <span class="checkmark" style="background:#ff1c71;"></span>
 				</label>
 				<c:if test='${!empty groupList}'>
 					<c:forEach var="group" items="${groupList}">
-						<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t375'/>${group.groupName }
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t375'/>${group.groupName }
 						  <input type="checkbox" checked="checked" name="chk_schedule" value="${group.groupId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#e9de13;"></span>
 						</label>
