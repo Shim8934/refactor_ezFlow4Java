@@ -43,6 +43,9 @@
 		  cursor: pointer;
 		  text-align: center;
 		}		
+		.chk_noneDisplay {
+			display:none;
+		}
 		</style>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
@@ -186,14 +189,14 @@
 		        if (pDefaultview == 2) {
 		            typeCal = 0
 		            // 2018-06-07 구해안 미니 호출 부분 주석처리
-		            /* parent.frames["left"].typeCal = 0 */
+		            parent.frames["left"].typeCal = 0
 
 		        } else if (pDefaultview == 1) {
 		            typeCal = 1
-		            /* parent.frames["left"].typeCal = 1 */
+		            parent.frames["left"].typeCal = 1
 		        } else if (pDefaultview == 0) {
 		            typeCal = 2
-		            /* parent.frames["left"].typeCal = 2 */
+		            parent.frames["left"].typeCal = 2
 		        }
 
 		        if (pStartday == 1)
@@ -531,7 +534,7 @@
 		            case "DAY":
 		                typeCal = 2;
 		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
-		                /* parent.frames["left"].typeCal = 2; */
+		                parent.frames["left"].typeCal = 2;
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -551,7 +554,7 @@
 		            case "WEEK":
 		                typeCal = 1;
 		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
-		                /* parent.frames["left"].typeCal = 1; */
+		                parent.frames["left"].typeCal = 1;
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -570,9 +573,9 @@
 
 		            case "MONTH":
 		                typeCal = 0;
-		                //2018-06-08 구해안 미니달력 미사용으로 주석처리
-		                /* parent.frames["left"].typeCal = 0;
-		                var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
+		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
+		                parent.frames["left"].typeCal = 0;
+		                /* var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
 
 		                var item = parent.frames["left"].document.getElementById(ItemID);
 		                if (item)
