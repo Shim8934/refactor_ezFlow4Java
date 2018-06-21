@@ -421,10 +421,16 @@
 		                openViewDocInfo();
 		            } else {
 		                var para = new Array();
+		                var tempURL = pURL;
+		                
 		                para[0] = pDocID;
 		                para[1] = pURL;
 		                
-		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
+		                	tempURL = tempURL.substr(0, tempURL.length - 4);
+		                }
+		                
+		                if (tempURL.substr(tempURL.length - 3, tempURL.length).toLowerCase() == "hwp") {
 		                	if (isIE()) {
 			                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                	} else {

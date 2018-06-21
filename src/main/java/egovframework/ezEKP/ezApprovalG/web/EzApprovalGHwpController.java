@@ -2,9 +2,11 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -26,10 +28,12 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 
 @Controller
 public class EzApprovalGHwpController extends EgovFileMngUtil{
@@ -37,6 +41,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private KlibUtil klibUtil;
 	
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
@@ -604,8 +611,19 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			
 			if (!newFile.exists()) {
 				File orgFile = new File(orgDocFile);
+				InputStream orgFileInputStream;
+
+				// 2018.06.21 jwseo99 KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+				if (orgDocFile.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
+					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
+				} else {
+					orgFileInputStream = new FileInputStream(orgFile);
+				}
 				
-				FileUtils.copyFile(orgFile, newFile);
+				Files.copy(orgFileInputStream, newFile.toPath());
+				orgFileInputStream.close();
+				//FileUtils.copyFile(orgFile, newFile);
 			}
 		}
 		
