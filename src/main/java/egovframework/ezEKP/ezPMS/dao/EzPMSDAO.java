@@ -545,4 +545,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public ProjectGroupVO getUpperGroupDate(Map<String, Object> map) {
 		return (ProjectGroupVO) select ("EzPMSDAO.getUpperGroupDate", map);
 	}
+	
+	public Long getUpperGroupId(Map<String, Object> map) {
+		return (Long) select ("EzPMSDAO.getUpperGroupId", map);
+	}
 }

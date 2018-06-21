@@ -2689,15 +2689,21 @@
 	
 	<select id="EzPMSDAO.getUserGroupRole" parameterClass="map" resultClass="Integer">
 		SELECT 
-			MIN(MEMBER_ROLE_ID)
+			IFNULL(MIN(A.MEMBER_ROLE_ID), 2)
 		FROM
-			TBL_PMS_GROUPMEMBER
+			TBL_PMS_GROUPMEMBER A
+		JOIN 
+			TBL_PMS_GROUP B
+		ON
+			A.GROUP_ID = B.GROUP_ID
 		WHERE
-			USER_ID = #userId#
+			A.USER_ID = #userId#
 		AND
-			GROUP_ID = #groupId#
+			A.GROUP_ID = #groupId#
 		AND
-			TENANT_ID = #tenantId#
+			A.TENANT_ID = #tenantId#
+		AND
+			B.PROJECT_ID = #projectId#
 	</select>
 	
 	<update id="EzPMSDAO.deleteGroup" parameterClass="map">
@@ -3099,7 +3105,7 @@
 		AND
 			PROJECT_ID = #projectId#
 		AND
-			TENANT_ID = #tenantId#
+			TENANT_ID = #tenantId#                       
 	]]>
 	</update>
 	
@@ -3474,6 +3480,21 @@
 			b.GROUP_ID = #groupId#
 		AND
 			b.TENANT_ID = #tenantId#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getUpperGroupId" parameterClass="map" resultClass="long">
+	<![CDATA[
+		SELECT
+			UPPER_GROUP_ID
+		FROM
+			TBL_PMS_GROUP 
+		WHERE
+			GROUP_ID = #groupId#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
 	]]>
 	</select>
 </sqlMap>

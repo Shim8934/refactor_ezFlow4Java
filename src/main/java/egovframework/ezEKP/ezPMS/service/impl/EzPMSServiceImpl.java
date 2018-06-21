@@ -999,7 +999,38 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public void updateGroup(ProjectGroupVO group) {
 		LOGGER.debug("[SERVICE] updateGroup started.");
-		ezPMSDAO.updateGroupInfo(group);
+		
+		try {
+			//총괄담당자 불러오기
+			ProjectMemberVO headManager = getUserInfo(group.getHeadManagerId(), group.getTenantId(), "user");
+			group.setHeadManagerName(headManager.getUserName());
+			group.setHeadManagerName2(headManager.getUserName2());
+			group.setHeadManagerDeptname(headManager.getUserDeptname());
+			group.setHeadManagerDeptname2(headManager.getUserDeptname2());
+			
+			ezPMSDAO.updateGroupInfo(group);
+			
+			//upperGroupId가 0일 경우 planStartDate와 planEndDate를 불러와 workingDay계산 후 저장
+			//프로젝트 최상위 그룹
+			if (group.getUpperGroupId() == 0) {
+				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(group.getPlanStartDate());
+				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(group.getPlanEndDate());
+				
+				int workingDay = getWorkingDays(startDate, endDate, "", group.getTenantId());
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("planStartDate", group.getPlanStartDate());
+				map.put("planEndDate", group.getPlanEndDate());
+				map.put("workingday", workingDay);
+				map.put("groupId", group.getGroupId());
+				map.put("tenantId", group.getTenantId());
+				
+				ezPMSDAO.updateGroupDate(map);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		LOGGER.debug("[SERVICE] updateGroup ended.");
 	}
 
@@ -2612,5 +2643,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		LOGGER.debug("[SERVICE] getUpperGroupDate ended.");
 		return ezPMSDAO.getUpperGroupDate(map);
+	}
+	
+	@Override
+	public Long getUpperGroupId(long groupId, long projectId, int tenantId) {
+		LOGGER.debug("[SERVICE] getUpperGroupId started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+
+		LOGGER.debug("[SERVICE] getUpperGroupId ended.");
+		return ezPMSDAO.getUpperGroupId(map);
 	}
 }

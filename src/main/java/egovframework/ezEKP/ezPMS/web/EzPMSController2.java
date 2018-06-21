@@ -261,8 +261,10 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String projectId = request.getParameter("projectId");
+		String type = request.getParameter("type");
 		
 		model.addAttribute("projectId", projectId);
+		model.addAttribute("type", type);
 		
 		LOGGER.debug("ezPMS goProjectMemberList ended");
 		
@@ -317,8 +319,9 @@ public class EzPMSController2 {
 		String status = resultBodyTask.get("status").toString();
 		
 		if(status.equals("ok")) {
-			JSONArray taskList = (JSONArray) resultBodyTask.get("data");
-			model.addAttribute("taskList", taskList);
+			JSONObject taskList = (JSONObject) resultBodyTask.get("data");
+			model.addAttribute("taskList", taskList.get("taskList"));
+			model.addAttribute("userRoleId", taskList.get("userRoleId"));
 		}
 		
 		JSONObject resultBodyProject = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId() + "/gantt", param, request, "get", null);

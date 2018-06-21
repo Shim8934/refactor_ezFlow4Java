@@ -43,6 +43,13 @@
 		setProgress();
 		setStatus();
 		btnEvent();
+		
+		var realStartDate = taskDetails.realStartDate;
+		var realEndDate = taskDetails.realEndDate;
+		
+		$("#RSDatepicker").val(realStartDate);
+		$("#REDatepicker").val(realEndDate);
+		
 	});
 	
 	function popupClose() {
@@ -214,6 +221,16 @@
 			}
 		}
 
+		//진행률을 100%로 변경했을 경우 status는 C로 변경하여 자동 완료처리
+		if (realProgress == 100) {
+			status = "C";
+		} else if (status != "L" && (realProgress > 0 && realProgress < 100)) {
+			//업무 상태가 보류, 진행, 대기인 경우 진행률을 수정하면 업무가 진행상태로 변경됨
+			status = "P";
+		} else if (status == "C" && (realProgress > 0 && realProgress < 100)) {
+			//업무의 상태가 완료인 경우 진행률이 100이 안되면 진행상태로 변경
+			status = "P";
+		}
 		
 		var data = {
 				taskId : taskDetails.taskId + "",
@@ -251,7 +268,7 @@
 		var realStartDate = taskDetails.realStartDate;
 		var realEndDate = taskDetails.realEndDate;
 		
-		$("#PSDatepicker, #RSDatepicker").datepicker({
+		$("#PSDatepicker").datepicker({
 			changeMonth: true,
 			changeYear: true,
 			autoSize: true,
@@ -266,7 +283,7 @@
 			}
 		});
 		
-		$("#PEDatepicker, #REDatepicker").datepicker({
+		$("#PEDatepicker").datepicker({
 			changeMonth: true,
 			changeYear: true,
 			autoSize: true,

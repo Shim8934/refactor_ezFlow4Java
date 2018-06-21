@@ -85,6 +85,7 @@ public class EzPMSGWController2 {
 			String position = request.getParameter("position");
 			String companyId = info.getCompanyId();
 			int roleId = 0;
+			long groupId = 0;
 			
 			if (projectId != 0) {
 				roleId = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
@@ -108,9 +109,11 @@ public class EzPMSGWController2 {
 			search.setStatus(request.getParameter("status"));
 			
 			 if (request.getParameter("groupId") != null) {
-				 search.setGroupId(Long.parseLong(request.getParameter("groupId"))); 
+				 groupId = Long.parseLong(request.getParameter("groupId"));
+				 search.setGroupId(groupId);
 			 } else {
-				 search.setGroupId(0L);
+				 groupId = 0;
+				 search.setGroupId(groupId);
 			 }
 			
 			search.setMemberId(request.getParameter("headManagerName"));
@@ -129,7 +132,7 @@ public class EzPMSGWController2 {
 			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
 			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position, roleId);
 			 
-			for(int i = 0; i < taskList.size(); i++ ){
+			for (int i = 0; i < taskList.size(); i++ ) {
 				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanStartDate());
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanEndDate());
 				Date today = new Date();
@@ -142,9 +145,29 @@ public class EzPMSGWController2 {
 				taskList.get(i).setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
 			}
 			
+			if (request.getParameter("position") == null || !request.getParameter("position").equals("gantt")){
+				if (roleId != 3 && roleId != 1 && roleId !=0 && groupId != 0) {
+					//upperGroupId가 0이아닌 상위 그룹이 있다면 담당자인지
+					long upperGroupId = ezPMSService.getUpperGroupId(groupId, projectId, tenantId);
+					
+					if (upperGroupId != 0) {
+						//해당 그룹의 담당자인지 해당 그룹에 해당이 안되면 roleId는 참여자(2)
+						roleId = ezPMSService.getUserGroupRole(userId, tenantId, projectId, groupId);
+						
+						if (roleId != 1) {
+							roleId = ezPMSService.getUserGroupRole(userId, tenantId, projectId, upperGroupId);
+						}
+					}
+				}
+			}
+			
+			JSONObject data = new JSONObject();
+			data.put("taskList", taskList);
+			data.put("userRoleId", roleId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", taskList);		
+			result.put("data", data);		
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -480,7 +503,7 @@ public class EzPMSGWController2 {
 			project.put("progress", "0");
 			
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) jsonParam.get("managerList");
-//			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
+			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
 //			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("viewerList"));
 			
 			project.put("projectId", projectId);
@@ -593,7 +616,7 @@ public class EzPMSGWController2 {
 			int tenantId = info.getTenantId();
 			
 			List<Map<String, Object>> managerList = (List<Map<String, Object>>) jsonParam.get("managerList");
-			List<ProjectGroupMemberVO> groupManaerList = new ArrayList<ProjectGroupMemberVO>();
+			List<ProjectGroupMemberVO> groupManagerList = new ArrayList<ProjectGroupMemberVO>();
 			
 			for (int i = 0; i < managerList.size(); i++) {
 				String groupMemberId = (String)managerList.get(i).get("userId");
@@ -609,25 +632,18 @@ public class EzPMSGWController2 {
 				groupMember.setUserDeptname(member.getUserDeptname());
 				groupMember.setUserDeptname2(member.getUserDeptname2());
 				
-				groupManaerList.add(groupMember);
+				groupManagerList.add(groupMember);
 			}
 			
 			ProjectGroupVO groupInfo = new ProjectGroupVO();
 			groupInfo.setGroupName(request.getParameter("groupName"));
 			groupInfo.setGroupId(groupId);
 			groupInfo.setProjectId(Long.parseLong(request.getParameter("projectId")));
-			groupInfo.setGroupMember(groupManaerList);
+			groupInfo.setGroupMember(groupManagerList);
 			groupInfo.setOverview(request.getParameter("overview"));
 			groupInfo.setTenantId(info.getTenantId());
 			groupInfo.setUpperGroupId(Long.parseLong(request.getParameter("upperGroupId")));
-			
-			//총괄담당자 불러오기
-			ProjectMemberVO headManager = ezPMSService.getUserInfo(request.getParameter("headManagerId"), info.getTenantId(), "user");
 			groupInfo.setHeadManagerId(request.getParameter("headManagerId"));
-			groupInfo.setHeadManagerName(headManager.getUserName());
-			groupInfo.setHeadManagerName2(headManager.getUserName2());
-			groupInfo.setHeadManagerDeptname(headManager.getUserDeptname());
-			groupInfo.setHeadManagerDeptname2(headManager.getUserDeptname2());
 			
 			ezPMSService.updateGroup(groupInfo);
 			

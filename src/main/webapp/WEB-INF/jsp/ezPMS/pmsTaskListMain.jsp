@@ -35,7 +35,7 @@
 	var orderHow = "";
 	var checkedVal = "";
 	var viewType = "1";
-	var userRole = "<c:out value='${userRole}'/>";
+	var userRole = 0;
 	
 	//검색을 위한 variables
 	var searchByStatus = "";
@@ -104,6 +104,16 @@
 				$("#contentList").html(contentList);
 				viewSetting();
 				setInitOrder();
+				
+				console.log(userRole);
+				
+				if (userRole == 1) {
+					$("#addTaskBtn").parent().css("display", "");
+					$("#deleteTaskBtn").parent().css("display", "");
+				} else {
+					$("#addTaskBtn").parent().css("display", "none");
+					$("#deleteTaskBtn").parent().css("display", "none");
+				}
 			}
 		});
 	}
@@ -427,14 +437,10 @@
 		<div id="taskName"></div>
 		<div id="mainmenu">
 		<ul>
-			<c:choose>
-				<c:when test="${userRole ne 3}">
-					<li><span id="addTaskBtn" onclick="goAddTask()"
-					style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t89' /></span></li> 
-					<li><span id="addTaskBtn" onclick="deleteTask()"
-					style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t11' /></span></li>
-				</c:when>
-			</c:choose> 
+			<li style="display:none;"><span id="addTaskBtn" onclick="goAddTask()"
+			style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t89' /></span></li> 
+			<li style="display:none;"><span id="deleteTaskBtn" onclick="deleteTask()"
+			style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t287' /></span></li>
 			<li><span id="addTaskBtn" onclick="showSearchDiv()"
 				style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
 				<div>

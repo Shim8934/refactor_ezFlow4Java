@@ -220,4 +220,6 @@ public interface EzPMSService {
 	public boolean checkIfBoardHasReplies(JSONObject jsonParam);
 
 	public ProjectGroupVO getUpperGroupDate(long groupId, int tenantId) throws Exception;
+
+	Long getUpperGroupId(long groupId, long projectId, int tenantId);
 }
