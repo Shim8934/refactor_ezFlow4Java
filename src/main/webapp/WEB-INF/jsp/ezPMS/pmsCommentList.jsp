@@ -122,6 +122,11 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 		$(elem).siblings(".saveBtn").css("display", "");
 	}
 	
+	function cancelComment(elem) {
+		$(".originalContent").css("display", "");
+		$(".modifiedContent").css("display", "none");
+	}
+	
 	function saveComment(elem) {
 		var selectedTR = $(elem).parent().parent().parent("tr");
 		var commentId = selectedTR.attr("data-commentId");
@@ -219,10 +224,13 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 							</td>
 							<td class="content" style="text-align: left;">
 								<span class="originalContent"><c:out value="${commentVO.commentContent}"/></span>
-								<div class="modifiedContent" style="display: none; border: 1px solid #ddd; width: 100%;">
-									<textarea style="resize: none; width: 85%; border: none; outline: none;"><c:out value="${commentVO.commentContent}"/></textarea>
-									<a class="imgbtn" onclick="saveComment(this)" style="float: right;">
+								<div class="modifiedContent" style="display: none; width: 100%;">
+									<textarea style="resize: none; width: 84%;"><c:out value="${commentVO.commentContent}"/></textarea>
+									<a class="imgbtn" onclick="saveComment(this)" style="margin-left:2px; margin-top:9px;">
 										<span><spring:message code='ezPMS.t265' /></span>
+									</a>
+									<a class="imgbtn" onclick="cancelComment(this)" style="margin-left:2px; margin-top:9px;">
+										<span><spring:message code='ezPMS.t41' /></span>
 									</a>
 								</div>
 							</td>
