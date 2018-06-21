@@ -230,4 +230,6 @@ public interface EzPMSService {
 	public int checkIfHasPreTaskRel(Map<String, Object> map);
 	
 	public void deletePreTaskRelInTask(Map<String, Object> map);
+
+	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;
 }

@@ -660,6 +660,7 @@ public class EzPMSGWController2 {
 			int tenantId = info.getTenantId();
 			
 			List<Map<String, Object>> managerList = (List<Map<String, Object>>) jsonParam.get("managerList");
+			managerList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
 			List<ProjectGroupMemberVO> groupManagerList = new ArrayList<ProjectGroupMemberVO>();
 			
 			for (int i = 0; i < managerList.size(); i++) {
@@ -1222,6 +1223,36 @@ public class EzPMSGWController2 {
 		}
 		
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/progress] ended.");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 그룹 하위 업무 담당자 보기.
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/member-list/group/{groupId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getTaskMemberListInGroup(@PathVariable Long groupId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/member-list/group/" + groupId + "/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
+			List<TaskMemberVO> taskMemberList = ezPMSService.getTaskMemberListInGroup(info.getTenantId(), groupId, lang);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", taskMemberList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/member-list/group/" + groupId + "/users/" + userId + "] ended.");
 		return result;
 	}
 }

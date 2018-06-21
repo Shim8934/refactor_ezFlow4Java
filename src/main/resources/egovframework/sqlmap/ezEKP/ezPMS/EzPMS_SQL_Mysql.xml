@@ -3573,4 +3573,51 @@
 			tenant_id = #tenantId#
 	]]>
 	</select>
+	
+<!-- 	<delete id="EzPMSDAO.deleteTaskMember" parameterClass="map"> -->
+<!-- 	<![CDATA[ -->
+<!-- 		DELETE	FROM -->
+<!-- 			tbl_pms_groupmember	 -->
+<!-- 		WHERE	 -->
+<!-- 			TASK_ID = #taskId#  -->
+<!-- 		AND	 -->
+<!-- 			TENANT_ID = #tenantId# -->
+<!-- 	]]> -->
+<!-- 	</delete> -->
+	
+	<select id="EzPMSDAO.getTaskMemberListInGroup" parameterClass="map" resultMap="projectTaskMemberVO">
+	<![CDATA[
+		SELECT
+			tm.TASK_MEMBER_ID,
+			tm.TENANT_ID,
+			tm.TASK_ID,
+			tm.USER_ID,
+			tm.USER_NAME$lang$ AS USER_NAME,
+			tm.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+			tm.PCTINPUT
+		FROM
+			TBL_PMS_TASKMEMBER tm
+		JOIN
+			TBL_PMS_TASK t
+		ON
+			tm.TASK_ID = t.TASK_ID
+		AND
+			tm.TENANT_ID = #tenantId#
+		AND
+			t.DEL_STATUS = 0
+		JOIN
+			(
+				SELECT 
+					GROUP_ID
+				FROM 
+					TBL_PMS_GROUP
+			    WHERE 
+			    	(GROUP_ID = #groupId# OR ANCESTER_GROUP LIKE CONCAT('%,', #groupId#, ',%') OR ANCESTER_GROUP LIKE CONCAT(#groupId#, ',%'))
+			    AND 
+			    	TENANT_ID = 1
+		    ) g
+		ON
+			t.GROUP_ID = g.GROUP_ID;
+	]]>
+	</select>
 </sqlMap>
