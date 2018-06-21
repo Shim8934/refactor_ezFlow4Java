@@ -1807,6 +1807,8 @@
 				AND
 					c_adminconfirm = 'Y'
 				AND
+					TBL_C_CLUB.companyid = #companyID#
+				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				GROUP BY
 					c_name,
@@ -1840,6 +1842,8 @@
 					TBL_C_CATEGORY.c_cat = #cat#
 				AND
 					c_adminconfirm = 'Y'
+				AND
+					TBL_C_CLUB.companyid = #companyID#
 				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				GROUP BY
@@ -1887,6 +1891,8 @@
 				AND
 					TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
 				AND
+					TBL_C_CLUB.companyid = #companyID#
+				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				ORDER BY
 					TBL_C_CLUB.c_regdate
@@ -1929,6 +1935,8 @@
 					AND
 						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
 					AND
+						TBL_C_CLUB.companyid = #companyID#
+					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					ORDER BY
 						TBL_C_CLUB.c_regdate
@@ -1967,6 +1975,8 @@
 				WHERE
 					$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
 				AND
+					T1.companyid = #companyID#
+				AND
 					T1.tenant_id = #tenantID#
 				ORDER BY
 					T1.c_regdate
@@ -2001,6 +2011,8 @@
 						T1.tenant_id = T2.tenant_id
 					WHERE
 						$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
+					AND
+						T1.companyid = #companyID#
 					AND
 						T1.tenant_id = #tenantID#
 					ORDER BY
@@ -2248,6 +2260,8 @@
 				TBL_C_CLUB.c_adminconfirm = 'Y'
 			AND
 				permit <> 0
+			AND
+				TBL_C_CLUB.companyid = #companyID#
 			AND
 				TBL_C_CLUBUSER.tenant_id = #tenantID#
 			ORDER BY
@@ -2684,6 +2698,8 @@
 			WHERE
 				c_adminconfirm = 'Y'
 			AND
+				TBL_C_CLUB.companyid = #companyID#
+			AND
 				TBL_C_CLUB.tenant_id = #tenantID#
 			ORDER BY
 				c_membercnt DESC
@@ -2718,6 +2734,8 @@
 				(c_regdate >=  DATE_SUB(DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s'), INTERVAL 30 DAY))
 			AND
 				c_adminconfirm = 'Y'
+			AND
+				TBL_C_CLUB.companyid = #companyID#
 			AND
 				TBL_C_CLUB.tenant_id = #tenantID#
 			ORDER BY
@@ -2828,6 +2846,8 @@
 			FROM
 				TBL_C_CLUB
 			WHERE
+				companyid = #companyID#
+			AND
 				tenant_id = #tenantID#
 			ORDER BY
 				TBL_C_CLUB.c_regdate DESC
@@ -2850,6 +2870,8 @@
 				TBL_C_CLUB.tenant_id = T2.tenant_id
 			WHERE
 				c_adminconfirm = 'Y'
+			AND
+				companyid = #companyID#
 			AND
 				TBL_C_CLUB.tenant_id = #tenantID#
 		]]>
@@ -2893,6 +2915,8 @@
 					TBL_C_CLUB.tenant_id = T2.tenant_id
 				WHERE
 					c_adminconfirm = 'Y'
+				AND
+					TBL_C_CLUB.companyid = #companyID#
 				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				ORDER
@@ -3687,16 +3711,18 @@
 		<isEqual property="v_MODE" compareValue="LIST">
 			<![CDATA[
 				SELECT
-					c_clubno 
+					c_clubno
 				FROM
 					(SELECT
 						T1.c_clubno,
                         writedate,
+                        T1.companyid,
                         T1.tenant_id
                   	FROM 
                   		(SELECT
 							DISTINCT TBL_C_CLUBUSER.c_clubno,
 							MAX(writedate) WRITEDATE,
+							TBL_C_CLUB.companyid,
 							TBL_C_CLUBUSER.tenant_id
                        	FROM
                        		TBL_C_CLUBUSER 
@@ -3725,6 +3751,8 @@
                        	AND
                        		TBL_C_CLUBUSER.permit <> 0
                        	AND
+                       		TBL_C_CLUBUSER.companyid = #companyID#
+                       	AND
                        		TBL_C_CLUBUSER.tenant_id = #tenantID#
                        	GROUP BY
                        		TBL_C_CLUBUSER.c_clubno 
@@ -3735,6 +3763,8 @@
 						#mariaStart#, #mariaEnd#
 					) T2
 				WHERE
+					T2.companyid = #companyID#
+				AND
 					T2.tenant_id = #tenantID#
 			]]>
 		</isEqual>
@@ -3745,6 +3775,7 @@
 				FROM
 					(SELECT
 						TBL_C_CLUBUSER.c_clubno,
+						TBL_C_CLUB.companyid,
 						TBL_C_CLUBUSER.tenant_id
 					FROM
 						TBL_C_CLUBUSER 
@@ -3760,6 +3791,8 @@
 						TBL_C_CLUB.c_adminconfirm = 'Y'
 					AND
 						permit <> 0
+					AND
+                    	TBL_C_CLUBUSER.companyid = #companyID#
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					ORDER BY
@@ -4245,7 +4278,7 @@
 <!-- 	<procedure id="EzCommunityDAO.todayCopGet1"												resultClass="String"> -->
 <!-- 		{CALL EZSP_TODAYCOP_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure>	 -->
-	<select id="EzCommunityDAO.todayCopGet1"					parameterClass="Integer"		resultClass="Integer">
+	<select id="EzCommunityDAO.todayCopGet1"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
 				IFNULL(COUNT(*), 0) CNT
@@ -4253,6 +4286,8 @@
 				TBL_C_CLUB
 			WHERE
 				c_adminconfirm = 'Y'
+			AND
+				companyid = #companyID#
 			AND
 				tenant_id = #tenantID# 
 		]]>
