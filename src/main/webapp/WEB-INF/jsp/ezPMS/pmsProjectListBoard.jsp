@@ -89,8 +89,10 @@ $(function(){
 				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", holdColor);
 			} else if (projectList[i].status == "L") {
 				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", overdueColor);
-			} else {
-				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#d1d1d1");
+			} else if (projectList[i].status == "W") {
+				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#a5a5a5");
+			} else if (projectList[i].status == "D") {
+				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", "#a5a5a5");
 			}
 			
 			var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;

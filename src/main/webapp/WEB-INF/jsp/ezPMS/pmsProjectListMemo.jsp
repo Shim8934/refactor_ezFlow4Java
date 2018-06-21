@@ -49,10 +49,12 @@ $(function(){
 			htmlStr = "<span class='statusSpan' style='background-color:" + holdColor + ";'><spring:message code='ezPMS.t19' /></span>";
 		} else if (projectList[i].status == "L") {
 			htmlStr = "<span class='statusSpan' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
-		} else {
-			htmlStr = "<span class='statusSpan' style='background-color:#d1d1d1;'><spring:message code='ezPMS.t16' /></span>";
+		} else if (projectList[i].status == "W") {
+			htmlStr = "<span class='statusSpan' style='background-color:#a5a5a5;'><spring:message code='ezPMS.t16' /></span>";
+		} else if (projectList[i].status == "D") {
+			htmlStr = "<span class='statusSpan' style='background-color:#dd3b3b;'><spring:message code='ezPMS.t11' /></span>";
 		}
-		
+		 
 		$("table#" + projectList[i].projectId + " td.status")[0].innerHTML = htmlStr;
 		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;

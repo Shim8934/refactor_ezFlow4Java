@@ -81,7 +81,7 @@ function initProgressBar() {
 		break;
 	case "W" :
 		strStatus = "<spring:message code='ezPMS.t16' />";
-		circleColor = "#d1d1d1";
+		circleColor = "#a5a5a5";
 		break;
 	case "L" :
 		strStatus = "<spring:message code='ezPMS.t18' />";
@@ -95,6 +95,10 @@ function initProgressBar() {
 		strStatus = "<spring:message code='ezPMS.t17' />";
 		circleColor = completeColor;
 		break;
+	case "D" :
+		strStatus = "<spring:message code='ezPMS.t11' />";
+		circleColor = "#dd3b3b";
+		break;
 	}
 	
 	$(".progress_graph").circleProgress({
@@ -102,7 +106,7 @@ function initProgressBar() {
 		fill : {color : circleColor},
 		size : 130
 	}).on('circle-animation-progress', function(event, progress) {
-		$(this).find('strong').html(Number(projectProgress).toFixed(1) + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+		$(this).find('strong').html(Number(projectProgress).toFixed(1) + "%<br><div style='font-size:20px;'>" + strStatus + "</div>");
 	});
 }
 
@@ -410,7 +414,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 					break;
 				case "W" :
 					taskStatus = "<spring:message code='ezPMS.t16' />";
-					statusColor = "#d1d1d1";
+					statusColor = "#a5a5a5";
 					break;
 				case "L" :
 					taskStatus = "<spring:message code='ezPMS.t18' />";
@@ -461,7 +465,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				statusColor = progressColor;
 				break;
 			case "W" :
-				statusColor = "#d1d1d1";
+				statusColor = "#a5a5a5";
 				break;
 			case "L" :
 				statusColor = overdueColor;
@@ -780,6 +784,7 @@ function getTaskDetails(elem) {
 
 .taskStatus {
 	float : right;
+	color :  #ffffff;
 }
 
 .percentCount {

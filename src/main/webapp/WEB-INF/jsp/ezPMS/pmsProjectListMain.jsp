@@ -997,6 +997,10 @@ function searchProject() {
 .listRow:hover {
 	background-color: rgb(244, 245, 245);
 }
+
+.statusSpan {
+	color :  #ffffff;
+}
 </style>
 </head>
 <body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
