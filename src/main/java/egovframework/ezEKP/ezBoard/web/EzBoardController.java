@@ -4932,7 +4932,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String mode = "new";
-		String apprFlag = "Y";
 		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
 		String showAdjacent = request.getParameter("showAdjacent");
 		String boardID = request.getParameter("boardID");
@@ -5024,9 +5023,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("commentCount", commentCount);
 		}
 		
+		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
-		model.addAttribute("apprFlag", apprFlag);
+		model.addAttribute("apprFlag", boardItem.getApprFlag());
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("useOCS", useOCS);
