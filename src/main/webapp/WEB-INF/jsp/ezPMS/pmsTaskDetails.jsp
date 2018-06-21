@@ -45,7 +45,7 @@
 	$(function(){
 		
 		if (target == null || target != "group") {
-			weightData = ${weightData};
+			weightData = JSON.parse('${weightData}');
 		}
 		
 		setFrameParams();

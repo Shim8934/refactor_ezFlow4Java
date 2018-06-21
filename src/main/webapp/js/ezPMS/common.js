@@ -157,7 +157,6 @@ function getCheckedVal() {
 	}
 	
 	if (checkedVal == "") {
-		alert("<spring:message code='ezPMS.t29' />");
 		return 0;
 	}
 	

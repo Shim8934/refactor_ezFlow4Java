@@ -436,7 +436,7 @@ function setProjectList(mode) {
 		data : JSON.stringify(param),
 		url : "/ezPMS/getProjectList.do",
 		success : function(projectList) {
-			if (listProjectStatus == "A" || listProjectStatus == "C") {
+			if (listProjectStatus == "A" || listProjectStatus == "C" || listProjectStatus == "F") {
 				$("#changeProjectStatus").css("display", "none");
 			} else {
 				$("#changeProjectStatus").css("display", "");
@@ -564,6 +564,7 @@ function changeProjectStatus() {
 	if (result == 1) {
 		addProjectPopup(36, 38, 400, 162, "/ezPMS/changeProjectStatus.do");
 	} else {
+		alert("<spring:message code='ezPMS.t29' />");
 		return;	
 	}
 }
@@ -599,6 +600,7 @@ function deleteProject() {
 		if (result == 1) {
 			 response = confirm("<spring:message code='ezPMS.t21' />");
 		} else {
+			alert("<spring:message code='ezPMS.t29' />");
 			return;
 		}
 		
@@ -765,6 +767,7 @@ function addFavorite() {
 	if (result == 1) {
 		response = confirm("<spring:message code='ezPMS.t24' />");
 	} else {
+		alert("<spring:message code='ezPMS.t29' />");
 		return;
 	}
 	
@@ -830,6 +833,7 @@ function deleteFavorite() {
 	if (result == 1) {
 		response = confirm("<spring:message code='ezPMS.t27' />");
 	} else {
+		alert("<spring:message code='ezPMS.t29' />");
 		return;
 	}
 	
