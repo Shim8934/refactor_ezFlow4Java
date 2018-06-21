@@ -40,6 +40,7 @@
 	var projectId = taskDetails.projectId;
 	var groupId = taskDetails.groupId;
 	var taskId = taskDetails.taskId;
+	var realProgress = taskDetails.realProgress;
 	
 	$(function(){
 		

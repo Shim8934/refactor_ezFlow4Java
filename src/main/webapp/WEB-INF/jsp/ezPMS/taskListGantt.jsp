@@ -665,7 +665,7 @@
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert ("<spring:message code='ezPMS.t54' />");
 	   				}
-	   				});
+	   			});
 	   		}
 	   		
 	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {
@@ -1102,6 +1102,7 @@
    							if(task.id.indexOf(pretask) != -1 && task.type === type){
    								//찾은 업무의 행번호를 넣어줌.
 		   						ganttData.tasks[i].depends = (j + 1) + "";
+		   						ganttData.tasks[i].pretaskName = task.name;
    							}
 	   					}
 	   				}
@@ -1286,6 +1287,10 @@
 		    padding: 0px 5px;
 		    border-bottom: 1px solid #eee;
 		    border-right: 1px solid #eee;
+	      }
+	      
+	      .gdfCell input[readonly]{
+	      	cursor: default;
 	      }
 		  
 		  th{
@@ -1842,7 +1847,7 @@
 			    <td class="gdfCell"><input type="text" name="weight" autocomplete="off" value="(#=obj.weight#)"></td>
 			    <td class="gdfCell"><input type="text" name="realProgress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.realProgress?obj.realProgress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
 			    <td class="gdfCell"><input type="text" name="planProgress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.planProgress?obj.planProgress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
-			    <td class="gdfCell requireCanSeeDep"><input type="text" name="depends" autocomplete="off" value="(#=obj.depends#)" (#=obj.hasExternalDep?"readonly":""#)></td>
+			    <td class="gdfCell requireCanSeeDep"><input type="text" name="depends" autocomplete="off" value="(#=obj.depends#)" (#=obj.hasExternalDep?"readonly":""#) title="(#=obj.pretaskName#)"></td>
 			    <td class="gdfCell taskAssigs">(#=obj.getAssigsString()#)</td>
 			  </tr>
 			  --></div>

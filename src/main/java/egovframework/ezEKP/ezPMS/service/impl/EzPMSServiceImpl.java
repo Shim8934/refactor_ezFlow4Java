@@ -967,6 +967,31 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 
 		ProjectGroupVO groupInfo = ezPMSDAO.getGroupDetails(map);
+		
+		String pretaskId = groupInfo.getPretask();
+		String pregroupId = groupInfo.getPregroup();
+		
+		if(pretaskId != null || pregroupId != null) {
+			
+			String pretaskAncesterIds[] = groupInfo.getPretaskAncesterGroupIds().split(",");	
+			
+			String pretaskName = "";
+			
+			for(int i = 1; i < pretaskAncesterIds.length; i++) {
+				map.put("groupId", pretaskAncesterIds[i]);
+				pretaskName += ezPMSDAO.getGroupDetails(map).getGroupName() + " > ";
+			}
+			
+			if(pretaskId != null) {
+				map.put("taskId", pretaskId);	
+				pretaskName += ezPMSDAO.getTaskDetails(map).getTaskName();
+			} else {
+				pretaskName = pretaskName.substring(0, pretaskName.lastIndexOf(">") - 1);
+			}
+			
+			groupInfo.setPretaskName(pretaskName);
+		}
+		
 		LOGGER.debug("[SERVICE] getGroupDetails ended.");
 		return groupInfo;
 	}
@@ -2220,14 +2245,62 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updatePreTaskRel(long taskId, int preTaskIndex, int tenantId, long projectId) {
+	public void updatePreTaskRel(Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] updatePreTaskRel started.");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("taskId", taskId);
-		map.put("preTaskIndex", preTaskIndex);
-		map.put("tenantId", tenantId);
-		map.put("projectId", projectId);
-
+		
+//		String type = (String) map.get("type");
+//		
+//		if(type.equals("task2task") || type.equals("group2task")) {
+//			//프로젝트 task 시작날짜와 끝날짜 update
+//			ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+//			projectTaskVO.setTenantId(tenantId);
+//			projectTaskVO.setTaskId(taskId);
+//			projectTaskVO.setProjectId(projectId);
+//			projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
+//			projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+//			projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+//			
+//			ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
+//		} else {
+//			//프로젝트 group내의 모든 task의 시작날짜와 끝날짜 update
+//			long groupId = taskId;
+//			
+//			List<ProjectTaskVO> tasksInGroup = ezPMSService.getTaskListByGroupId(tenantId, groupId);
+//		
+//			ProjectGroupVO oldGroupVO = ezPMSService.getGroupDetails(groupId, tenantId, projectId);
+//			
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//			Date oldGroupStartDate = sdf.parse(oldGroupVO.getPlanStartDate());
+//			Date newGroupStartDate = sdf.parse(request.getParameter("planStartDate"));
+//			
+//			LOGGER.debug("oldGroupStartDate : " + sdf.format(oldGroupStartDate) + ", newGroupStartDate : " + sdf.format(newGroupStartDate));
+//			
+//			int offset = ezPMSService.getWorkingDays(oldGroupStartDate, newGroupStartDate, companyId, tenantId) - 1;
+//			LOGGER.debug("offset : " + offset);
+//			
+//			for(ProjectTaskVO taskVO : tasksInGroup) {
+//				
+//				// offset만큼 workingday기준으로 날짜를 증가시킴
+//				Date oldStartDate = sdf.parse(taskVO.getPlanStartDate());
+//				String newStartDate = sdf.format(ezPMSService.addWorkingDays(oldStartDate, offset, companyId, tenantId));
+//				Date oldEndDate = sdf.parse(taskVO.getPlanEndDate());
+//				String newEndDate = sdf.format(ezPMSService.addWorkingDays(oldEndDate, offset, companyId, tenantId));
+//				
+//				LOGGER.debug("oldStartDate : " + sdf.format(oldStartDate) + ", newStartDate : " + newStartDate);
+//				LOGGER.debug("oldEndDate   : " + sdf.format(oldEndDate) +   ", newEndDate   : " + newEndDate);
+//				
+//				taskVO.setTenantId(tenantId);
+//				taskVO.setProjectId(projectId);
+//				taskVO.setPlanStartDate(newStartDate);
+//				taskVO.setPlanEndDate(newEndDate);
+//				taskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+//				
+//				ezPMSService.updateTaskStatus(taskVO, companyId, tenantId);
+//				
+//				ezPMSService.updateGroupDate(groupId, tenantId, companyId);
+//			}
+//		}
+		
 		ezPMSDAO.updatePreTaskRel(map);
 		LOGGER.debug("[SERVICE] updatePreTaskRel ended.");
 	}
