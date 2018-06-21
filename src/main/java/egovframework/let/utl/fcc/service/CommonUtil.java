@@ -141,14 +141,20 @@ public class CommonUtil {
 			
             String tenantIdStr = "0";
             
+            String deptID = "";
+            
             if (decDataArray.length >= 9) {
                 tenantIdStr = decDataArray[8];	
+            }
+            if(decDataArray.length >= 10) {
+            	deptID = decDataArray[9];
             }
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
 			login.setTenantId(Integer.parseInt(tenantIdStr));
+			login.setDeptID(deptID);
 			
 			LoginVO user = loginService.selectUser(login);
 	

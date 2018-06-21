@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="Login">
 
@@ -42,40 +42,81 @@
     <!-- 일반 로그인 -->
     <select id="loginDAO.selectUser" resultMap="login">
         <!-- 일반회원 -->       
-        <![CDATA[
-            SELECT 
-                cn,
-                password,               
-                displayname,
-                displayname2,
-                department,              
-                description,
-                description2,
-                title,
-                title2,
-                physicaldeliveryofficename as companyid,
-                company,
-                company2,
-                updatedt,
-                extensionattribute1 as rollinfo,
-                telephonenumber,
-                mail,
-                extensionattribute10 as jikchek,
-                tenant_id,
-                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
-                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-                loginCnt,
-                extensionattribute4 as gyumJik,
-                extensionattribute2 as userFileUrl,
-                extensionattribute14 as sabun
-            FROM 
-                TBL_USERMASTER a
-            WHERE 
-                (cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId#
-        ]]>
-        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
-            password = #password#
-        </isNotEqual>
+        <isEmpty property="companyID">
+	        <![CDATA[
+	            SELECT 
+	                cn,
+	                password,               
+	                displayname,
+	                displayname2,
+	                department,              
+	                description,
+	                description2,
+	                title,
+	                title2,
+	                physicaldeliveryofficename as companyid,
+	                company,
+	                company2,
+	                updatedt,
+	                extensionattribute1 as rollinfo,
+	                telephonenumber,
+	                mail,
+	                extensionattribute10 as jikchek,
+	                tenant_id,
+	                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+	                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+	                loginCnt,
+	                extensionattribute4 as gyumJik,
+	                extensionattribute2 as userFileUrl,
+	                extensionattribute14 as sabun
+	            FROM 
+	                TBL_USERMASTER a
+	            WHERE 
+	                (cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId#
+	        ]]>
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+	            password = #password#
+	        </isNotEqual>
+	    </isEmpty>
+	    <isNotEmpty property="deptID">
+	            SELECT 
+					u.cn,
+					u.password,               
+					u.displayname,
+					u.displayname2,
+					d.cn,              
+					d.displayname,
+					d.displayname2,
+					u.title,
+					u.title2,
+					d.EXTENSIONATTRIBUTE2,
+					d.EXTENSIONATTRIBUTE3 company,
+					d.COMPNM2 company2,
+					u.updatedt,
+					u.extensionattribute1 as rollinfo,
+					u.telephonenumber,
+					u.mail,
+					u.extensionattribute10 as jikchek,
+					u.tenant_id,
+					concat('top,Top,', d.dept_cd_path) AS deptPathCode,
+					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+					u.loginCnt,
+					u.extensionattribute4 as gyumJik,
+					u.extensionattribute2 as userFileUrl,
+					u.extensionattribute14 as sabun
+				FROM 
+					TBL_USERMASTER u
+				right outer join
+					tbl_deptMaster d
+				on (u.tenant_id = d.tenant_id)
+				WHERE 
+					(u.cn = #id# OR u.extensionattribute14 = #id#) 
+				    AND u.tenant_id = #tenantId#
+				    and d.cn = #deptID#
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+	            password = #password#
+	        </isNotEqual>
+	    </isNotEmpty>
     </select>
     
     <select id="loginDAO.selectUserWithCnOnly" resultMap="login">
