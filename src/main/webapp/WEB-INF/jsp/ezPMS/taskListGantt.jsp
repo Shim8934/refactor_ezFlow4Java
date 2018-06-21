@@ -54,7 +54,7 @@
 	   		var ganttData = {};
 	   		var groupList = ${groupList};
 	   		var ge = "";
-	   		
+	   		var projectStatus = "<c:out value='${projectDetail.status}'/>";
 	   		var projectGroupId = "<c:out value='${projectDetail.groupId}'/>";
 	   		var selectedPreTask = -1;
 	   		var preTaskIndex = -1;
@@ -604,7 +604,12 @@
 	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent || task.type === 'g').updateOldValue();
 	   			  row.find("[name=depends]").val(task.depends).css({"text-align":"right"});
 	   			  row.find(".taskAssigs").html(task.getAssigsString());
-
+				  
+	   			  //프로젝트 상태가 대기, 보류, 삭제일 때 실제 진행률 변경 못하게 함
+	   			  if (projectStatus == "W" || projectStatus == "S" || projectStatus == "D" || projectStatus == "C") {
+	   				row.find("[name=realProgress]").prop("readonly", true); 
+	   			  }
+	   			  
 	   			  //manage collapsed
 	   			  if (task.collapsed) {
 	   			    row.addClass("collapsed");

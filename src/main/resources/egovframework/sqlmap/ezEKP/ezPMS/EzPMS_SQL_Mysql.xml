@@ -719,7 +719,11 @@
 	<select id="EzPMSDAO.getRemainingWeight" parameterClass="map" resultClass="java.util.HashMap">
 		<![CDATA[
 			SELECT
-				remainingWeight, plan_start_date AS projectStartDate, plan_end_date AS projectEndDate, weight_input AS weightInput
+				remainingWeight, 
+				plan_start_date AS projectStartDate, 
+				plan_end_date AS projectEndDate, 
+				status AS projectStatus,
+				weight_input AS weightInput
 			FROM
 				tbl_pms_project
 			JOIN

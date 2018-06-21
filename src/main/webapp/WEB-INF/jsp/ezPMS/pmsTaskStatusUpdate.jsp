@@ -34,10 +34,13 @@
 	var completeColor = parent.completeColor;
 	var overdueColor = parent.overdueColor;
 	var holdColor = parent.holdColor;
+	var projectStatus = "";
 	
 	$(function() {
 		taskDetails = JSON.parse(parent.document.all["frameParamTaskDetails"].value);
 		weightData = JSON.parse(parent.document.all["frameParamWeight"].value);
+		projectStatus = weightData.projectStatus;
+		
 		initProgressBar();
 		datepickerSetting();
 		setProgress();
@@ -123,10 +126,15 @@
 	}
 	
 	function setStatus() {
-		var targetStatus = document.querySelector("option[value='" + taskDetails.status + "']");
 		
-		if (targetStatus) {
-			targetStatus.selected = true;
+		if (projectStatus == "W" || projectStatus == "C" || projectStatus == "S" || projectStatus == "D") {
+			$(".taskStatusChgDiv").css("display", "none");
+		} else {
+			var targetStatus = document.querySelector("option[value='" + taskDetails.status + "']");
+			
+			if (targetStatus) {
+				targetStatus.selected = true;
+			}
 		}
 	}
 	
@@ -274,6 +282,11 @@
 	}
 	
 	function datepickerSetting(){
+		
+		if (projectStatus == "W" || projectStatus == "C" || projectStatus == "S" || projectStatus == "D") {
+			$("input[name='realProgress']").prop("readonly", true);
+		}
+		
 		var planStartDate = taskDetails.planStartDate;
 		var planEndDate = taskDetails.planEndDate;
 		var realStartDate = taskDetails.realStartDate;
