@@ -408,9 +408,6 @@ function setInitOrder() {
 }
 
 function setProjectList(mode) {
-	console.log(startRow);
-	console.log(listNumber);
-	
 	var param = {
 		projectSort : projectSort,
 		viewType : viewType,
@@ -448,7 +445,6 @@ function setProjectList(mode) {
 				$("#MailListRayer").css("display", "");
 				$("#memoStyleDiv").css("display", "none");
 			} else {
-				
 				if (mode == "moreBtn") {
 					$("#memoStyleDiv").append(projectList);
 				} else {
@@ -622,9 +618,13 @@ function deleteProject() {
 						alert("<spring:message code='ezPMS.t10' />");
 						checkedVal = "";
 						
-						if (viewType != 1) {
-							listNumber = 20;
+						if (viewType == 0) {
+							startRow = 0;
+							listNumber = $(".projectList").length;
 						}
+						
+						console.log(startRow);
+						console.log(listNumber);
 						
 						setProjectList("new");
 					} else {
@@ -661,6 +661,12 @@ function deleteProject() {
 					if (result == "permitted") {
 						alert("<spring:message code='ezPMS.t23' />");
 						checkedVal = "";
+						
+						if (viewType == 0) {
+							startRow = 0;
+							listNumber = $(".projectList").length;
+						}
+						
 						setProjectList("new");
 					} else {
 						alert("<spring:message code='ezPMS.t9' />");
@@ -678,7 +684,7 @@ function addFavoriteMemo(projectId) {
 	var response = confirm("<spring:message code='ezPMS.t24' />");
 	
 	
-	if (response == true) {
+	if (response == true) {		
 		var data = {
 				status : "F",
 				projectList : projectId
@@ -694,6 +700,12 @@ function addFavoriteMemo(projectId) {
 					alert("<spring:message code='ezPMS.t25' />");
 					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
 					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
+					
+					if (viewType == 0) {
+						startRow = 0;
+						listNumber = $(".projectList").length;
+					}
+					
 					setProjectList("new");
 				} else {
 					alert("<spring:message code='ezPMS.t26' />");
@@ -710,7 +722,7 @@ function addFavoriteMemo(projectId) {
 function deleteFavoriteMemo(projectId) {
 	var response = confirm("<spring:message code='ezPMS.t27' />");
 	
-	if (response == true) {
+	if (response == true) {		
 		var data = {
 			status : "F",
 			projectList : projectId
@@ -725,6 +737,11 @@ function deleteFavoriteMemo(projectId) {
 				alert("<spring:message code='ezPMS.t28' />");
 				$("#"+projectId).find("img").attr("src", "/images/ImgIcon/view-flag.gif");
 				$("#"+projectId).find("img").attr("onclick", "addFavoriteMemo(this)");
+
+				if (viewType == 0) {
+					startRow = 0;
+					listNumber = $(".projectList").length;
+				}
 				
 				if (listProjectStatus == "F") {
 					setProjectList("new");
@@ -763,6 +780,12 @@ function addFavorite() {
 			success : function() {
 				if (result == "0") {
 					checkedVal = "";
+
+					if (viewType == 0) {
+						startRow = 0;
+						listNumber = $(".projectList").length;
+					}
+					
 					setProjectList("new"); 
 					alert("<spring:message code='ezPMS.t25' />");
 				} else {
@@ -824,6 +847,12 @@ function deleteFavorite() {
 			success : function() {
 				alert("<spring:message code='ezPMS.t28' />");
 				checkedVal = "";
+				
+				if (viewType == 0) {
+					startRow = 0;
+					listNumber = $(".projectList").length;
+				}
+				
 				setProjectList("new"); 
 			},
 			error : function(jqXHR, textStatus, errorThrown) {

@@ -224,6 +224,11 @@
 		//진행률을 100%로 변경했을 경우 status는 C로 변경하여 자동 완료처리
 		if (realProgress == 100) {
 			status = "C";
+			
+			//진행률을 100%로 변경했을 경우 실제 종료일이 realEndDate에 들어가야함
+			if (!realEndDate) {
+				realEndDate = TimeToStr(new Date());
+			}
 		} else if (status != "L" && (realProgress > 0 && realProgress < 100)) {
 			//업무 상태가 보류, 진행, 대기인 경우 진행률을 수정하면 업무가 진행상태로 변경됨
 			status = "P";
@@ -254,6 +259,7 @@
 				alert("<spring:message code='ezPMS.t280' />");
 				
 				parent.location.reload();
+				parent.opener.location.reload();
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {

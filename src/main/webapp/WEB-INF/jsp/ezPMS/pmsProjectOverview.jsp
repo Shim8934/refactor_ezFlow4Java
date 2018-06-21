@@ -750,6 +750,9 @@ function getTaskDetails(elem) {
 
 .boardContent {
 	text-overflow : ellipsis; 	
+	line-height : 1.1em;
+	max-height : 5.5em;
+	overflow : hidden;
 }
 
 .kanban > h1 {
