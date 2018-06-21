@@ -423,9 +423,9 @@
 	                        <div id="menu">
 	                            <ul id="menuTable">	
 	                                <li><span onclick="checkupload()"><spring:message code='ezSchedule.t157'/></span></li>
-	                                <c:if test="${scheduleId == ''}">
+	                                <%-- <c:if test="${scheduleId == ''}">
 	                                	<li><span onclick="check_name()"><spring:message code='ezSchedule.t53'/></span></li>
-									</c:if>
+									</c:if> --%>
 	                                <li><span onclick="Print_onClick()"><spring:message code='ezSchedule.t217'/></span></li>
 	                            </ul>
 	                            <ul style="float:right;margin-right:50px">        
