@@ -222,4 +222,6 @@ public interface EzPMSService {
 	public ProjectGroupVO getUpperGroupDate(long groupId, int tenantId) throws Exception;
 
 	Long getUpperGroupId(long groupId, long projectId, int tenantId);
+	
+	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;
 }

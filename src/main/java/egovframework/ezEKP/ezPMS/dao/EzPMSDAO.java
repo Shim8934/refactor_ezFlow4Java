@@ -549,4 +549,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public Long getUpperGroupId(Map<String, Object> map) {
 		return (Long) select ("EzPMSDAO.getUpperGroupId", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TaskMemberVO> getTaskMemberListInGroup(Map<String, Object> map) {
+		return (List<TaskMemberVO>) list("EzPMSDAO.getTaskMemberListInGroup", map);
+	}
 }

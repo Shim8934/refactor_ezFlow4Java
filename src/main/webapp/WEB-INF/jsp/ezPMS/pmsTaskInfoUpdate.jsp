@@ -31,7 +31,7 @@ th a.imgbtn {
 }
 
 #overview {
-    height: 100px;
+    height: 154px;
     width: 97.8%;
     resize: none;
     margin: 3px 1px 0px 1px;
@@ -55,6 +55,8 @@ var target = "<c:out value='${target}'/>";
 var headManagerName = "<c:out value='${taskDetails.headManagerName}'/>";
 var groupId = 0;
 var pretaskId = "";
+var participantList;
+var groupTaskMember = null;
 
  $(function() {
 	 if (target == "task") {
@@ -65,11 +67,15 @@ var pretaskId = "";
 		 managerList = '${taskDetails.groupMember}';
 		 groupId = "<c:out value='${taskDetails.upperGroupId}'/>";
 		 originGroupId = "<c:out value='${taskDetails.groupId}'/>";
+		 groupTaskMember = '${groupTaskMember}';
 	 }
 	 
 	 headManagerId = "<c:out value='${taskDetails.headManagerId}'/>";
 	 
 	 managerList = JSON.parse(managerList);
+	 if(groupTaskMember){
+		 groupTaskMember = JSON.parse(groupTaskMember);
+	 }
 	 applyList();
 	 initPreTaskName();
  });
@@ -79,10 +85,10 @@ function initPreTaskName() {
 	$("#preTaskName").text(preTaskName);
 }
 
-function openMemberList() {
+function openMemberList(type) {
 	var win;
 	var feature = GetOpenPosition(760, 700);
-	DivPopUpShow(684, 384, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
+	DivPopUpShow(684, 384, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
@@ -121,6 +127,20 @@ function openPreTaskTree() {
 	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);
 	 
 	 $("#managers").html(managerNameList);
+ }
+ 
+ //참여자를 추가하기
+ function applyParticipantList() {
+	 var participantNameList = "";
+	 
+	 for (var i = 0; i < participantList.length; i++) {
+			participantNameList += participantList[i].userName;
+			participantNameList += "(" + participantList[i].userDeptname + "), ";
+	 }
+	 
+	 participantNameList = participantNameList.substr(0, participantNameList.length - 2);
+	 
+	 $("#participants").html(participantNameList);
  }
  
 function setUpperGroup() {
@@ -213,10 +233,6 @@ function updateTaskInfo() {
 				type : type
 		}
 		
-		console.log(pretaskId);
-		console.log(taskId);
-		console.log(type);
-		
 		$.ajax({
 			type : "POST",
 			url : "/ezPMS/updateTaskInfo.do",
@@ -244,6 +260,13 @@ function updateTaskInfo() {
 			 alert("<spring:message code='ezPMS.t84' />");
 			 return;
 		 }
+		
+		//하위 업무들의 담당자 또는 참여자와 비교하여 삭제 , 추가자 선정.
+// 		var addMemberList = [];
+// 		var delMemberList = [];
+// 		managerList.concat(participantList).forEach(function(member, idx){
+// 			groupTaskMember[0].userId;
+// 		});
 		 
 		var data = {
 				groupName : taskName,
@@ -252,7 +275,8 @@ function updateTaskInfo() {
 				overview	 : overview,
 				headManagerId : headManagerId,
 				managerList : managerList,
-				upperGroupId : groupId
+				upperGroupId : groupId,
+				participantList : participantList
 		}
 		
 		$.ajax({
@@ -291,65 +315,67 @@ function updateTaskInfo() {
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<c:choose>
-			<c:when test="${target eq 'task' }">
-			<tr>
-				<th><spring:message code='ezPMS.t98' /></th>
-				<td colspan="3">
-					<input type="text" id="taskName" class="textInput" placeholder="${taskDetails.taskName}" value="${taskDetails.taskName}" maxlength="100">
-				</td>
-			</tr>
-			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
-				<td id="managers"></td>
-			</tr>
-			<tr>
-				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
-				<td style="height:30px;" id="upperGroup"> 
-				<c:out value="${taskDetails.groupName == null ? '-' : taskDetails.groupName}"/> 
-				</td>
-			</tr>
-			<tr>
-				<th><a class="imgbtn" onclick="openPreTaskTree()"><span><spring:message code='ezPMS.t181' /></span></a></th>
-				<td id="preTaskName"></td>
-			</tr>
-			<tr>
-				<th><spring:message code='ezPMS.t267' /></th>
-				<td><input type="text" id="weight" class="textInput" placeholder="${taskDetails.weight}" value="${taskDetails.weight}"></td>
-<%-- 				<td style="height:30px" id="weight">${taskDetails.weight == null ? "-" : taskDetails.weight}</td> --%>
-			</tr>
-			<tr>
-				<th><spring:message code='ezPMS.t104' /></th>
-				<td>
-					<textarea id="overview"><c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/></textarea>
-				</td>
-			</tr>
-			</c:when>
-			<c:otherwise>
-			<tr>
-				<th><spring:message code='ezPMS.t87' /></th>
-				<td colspan="3">
-					<input type="text" id="taskName" class="textInput" placeholder="${taskDetails.groupName}" value="${taskDetails.groupName}" maxlength="100">
-				</td>
-			</tr>
-			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
-				<td id="managers"></td>
-			</tr>
-			<tr>
-				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
-				<td style="height:30px;" id="upperGroup">
-					<c:out value="${taskDetails.upperGroupName == null ? '-' : taskDetails.upperGroupName}"/>
-				</td>
-			</tr>
-			<tr>
-				<th><spring:message code='ezPMS.t88' /></th>
-				<td>
-					<textarea id="overview">
-						<c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/>
-					</textarea>
-				</td>
-			</tr>
-			</c:otherwise>
+				<c:when test="${target eq 'task' }">
+					<tr>
+						<th><spring:message code='ezPMS.t98' /></th>
+						<td colspan="3">
+							<input type="text" id="taskName" class="textInput" placeholder="${taskDetails.taskName}" value="${taskDetails.taskName}" maxlength="100">
+						</td>
+					</tr>
+					<tr>
+						<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
+						<td id="managers"></td>
+					</tr>
+					<tr>
+						<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
+						<td style="height:30px;" id="upperGroup"> 
+						<c:out value="${taskDetails.groupName == null ? '-' : taskDetails.groupName}"/> 
+						</td>
+					</tr>
+					<tr>
+						<th><a class="imgbtn" onclick="openPreTaskTree()"><span><spring:message code='ezPMS.t181' /></span></a></th>
+						<td id="preTaskName"></td>
+					</tr>
+					<tr>
+						<th><spring:message code='ezPMS.t267' /></th>
+						<td><input type="text" id="weight" class="textInput" placeholder="${taskDetails.weight}" value="${taskDetails.weight}"></td>
+		<%-- 				<td style="height:30px" id="weight">${taskDetails.weight == null ? "-" : taskDetails.weight}</td> --%>
+					</tr>
+					<tr>
+						<th><spring:message code='ezPMS.t104' /></th>
+						<td>
+							<textarea id="overview"><c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/></textarea>
+						</td>
+					</tr>
+				</c:when>
+				<c:otherwise>
+					<tr>
+						<th><spring:message code='ezPMS.t87' /></th>
+						<td colspan="3">
+							<input type="text" id="taskName" class="textInput" placeholder="${taskDetails.groupName}" value="${taskDetails.groupName}" maxlength="100">
+						</td>
+					</tr>
+					<tr>
+						<th><a class="imgbtn" onclick="openMemberList('managers')"><span><spring:message code='ezPMS.t63' /></span></a></th>
+						<td id="managers"></td>
+					</tr>
+					<tr>
+						<th><a class="imgbtn" onclick="openMemberList('participants')"><span><spring:message code='ezPMS.t64' /></span></a></th>
+						<td id="participants"></td>
+					</tr>
+					<tr>
+						<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
+						<td style="height:30px;" id="upperGroup">
+							<c:out value="${taskDetails.upperGroupName == null ? '-' : taskDetails.upperGroupName}"/>
+						</td>
+					</tr>
+					<tr>
+						<th><spring:message code='ezPMS.t88' /></th>
+						<td>
+							<textarea id="overview" style="height:184px"><c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/></textarea>
+						</td>
+					</tr>
+				</c:otherwise>
 			</c:choose>
 		</table>
 	</div>
