@@ -204,6 +204,7 @@ public class CommonUtil {
 			String locale = decDataArray[5];
 			String lang = decDataArray[6];
 			String timeZone = decDataArray[7];
+			String deptID = decDataArray[9];
 			
             String tenantIdStr = "0";
             
@@ -218,6 +219,7 @@ public class CommonUtil {
             user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);			
 			user.setServerName(serverName);
+			user.setDeptID(deptID);
 			
 			return user;
 		}catch(Exception e){
