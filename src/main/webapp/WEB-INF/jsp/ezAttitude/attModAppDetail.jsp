@@ -228,16 +228,19 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
-		                            	<li><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
-		                                <li><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
-	                            	</c:if>
-<!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
-	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-	                            		<li><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></li>
-	                            	</c:if>
-	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
-	                            		<li><span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span></li>
+	                            	<!-- 회사가 수정신청을 허용으로 했을때만 -->
+	                            	<c:if test="${attitudeConfigVO.attitudeModAppl == 1}">
+		                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
+			                            	<li><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
+			                                <li><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
+		                            	</c:if>
+										<!-- 본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관 -->
+		                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
+		                            		<li><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></li>
+		                            	</c:if>
+		                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
+		                            		<li><span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span></li>
+		                            	</c:if>
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
 	                            		<li><span onclick="del()"><spring:message code='ezAttitude.t164'/></span></li>
@@ -256,7 +259,6 @@
                                             <th><spring:message code='ezAttitude.t134'/></th>
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
-<!--                                             	다국어 작업 -->
                                             </td>
                                         </tr>
                                         <tr id="HolderWrite">
@@ -277,18 +279,20 @@
                                            		<c:out value='${data.changeDate.substring(0,16)}' />
 	                                        </td>
 	                                    </tr>
-	                                    <tr>
-	                                        <th><spring:message code='ezAttitude.t208'/></th>
-                                        	<c:if test="${data.apprStatus == 0}">
-								          		<td colspan="2"><spring:message code='ezAttitude.t209'/></td>	
-								          	</c:if>
-								          	<c:if test="${data.apprStatus == 1}">
-								          		<td colspan="2"><spring:message code='ezAttitude.t210'/></td>	
-								          	</c:if>
-								          	<c:if test="${data.apprStatus == 2}">
-								          		<td colspan="2"><spring:message code='ezAttitude.t211'/></td>	
-								          	</c:if>
-	                                    </tr>
+	                                    <c:if test="${attitudeConfigVO.attitudeModAppl == 1}">
+		                                    <tr>
+		                                        <th><spring:message code='ezAttitude.t208'/></th>
+	                                        	<c:if test="${data.apprStatus == 0}">
+									          		<td colspan="2"><spring:message code='ezAttitude.t209'/></td>	
+									          	</c:if>
+									          	<c:if test="${data.apprStatus == 1}">
+									          		<td colspan="2"><spring:message code='ezAttitude.t210'/></td>	
+									          	</c:if>
+									          	<c:if test="${data.apprStatus == 2}">
+									          		<td colspan="2"><spring:message code='ezAttitude.t211'/></td>	
+									          	</c:if>
+		                                    </tr>
+	                                    </c:if>
 	                                </table>
 	                            </div>
 	                        </div>
