@@ -494,6 +494,14 @@ public class EzPMSController2 {
 				JSONObject taskDetails = (JSONObject) resultBody.get("data");
 				model.addAttribute("taskDetails", taskDetails);
 				LOGGER.debug("Headmanager name : " + taskDetails.get("headManagerName"));
+				
+				JSONObject resultBodyMember = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/member-list/group/" + Long.parseLong(taskId) + "/users/" + userInfo.getId(), param, request, "get", null);
+				status = resultBodyMember.get("status").toString();
+				
+				if(status.equals("ok")) {
+					JSONArray groupTaskMember = (JSONArray) resultBodyMember.get("data");
+					model.addAttribute("groupTaskMember", groupTaskMember);
+				}
 			}
 		}
 		

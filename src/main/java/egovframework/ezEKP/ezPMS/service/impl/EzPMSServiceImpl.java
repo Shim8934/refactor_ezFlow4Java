@@ -1028,6 +1028,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				ezPMSDAO.updateGroupDate(map);
 			}
 			
+//			deleteGroupMember();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2655,5 +2657,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		LOGGER.debug("[SERVICE] getUpperGroupId ended.");
 		return ezPMSDAO.getUpperGroupId(map);
+	}
+	
+	@Override
+	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception  {
+		LOGGER.debug("[SERVICE] ezPMS getTaskMemberListInGroup Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		map.put("lang", lang);
+
+		List<TaskMemberVO> taskMemberList = ezPMSDAO.getTaskMemberListInGroup(map);
+		LOGGER.debug("[SERVICE] ezPMS getTaskMemberListInGroup Ended");
+		return taskMemberList;
 	}
 }

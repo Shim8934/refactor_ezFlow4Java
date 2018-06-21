@@ -227,11 +227,11 @@
 			taskId = "${taskDetails.taskId}";
 			target = "task";
 			
-			DivPopUpShow(760, 346, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 392, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		} else {
 			taskId = "${taskDetails.groupId}";
 			
-			DivPopUpShow(760, 300, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 392, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		}
 	}
 	

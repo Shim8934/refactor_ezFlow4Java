@@ -1676,6 +1676,7 @@ public class EzPMSController {
 
 		JSONObject jsonList = new JSONObject();
 		jsonList.put("managerList", param.get("managerList"));
+		jsonList.put("participantList", param.get("participantList"));
 		
 		String url = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
 		commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
