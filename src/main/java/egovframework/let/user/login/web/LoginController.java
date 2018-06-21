@@ -312,7 +312,6 @@ public class LoginController {
 				loginService.insertLog(resultVO);
         		
 				//로그인 쿠기 생성
-        		createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response);
 	        	
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
 	        	cookieName.setPath("/");
@@ -394,7 +393,7 @@ public class LoginController {
     					
     					loginService.insertLog(resultVO);
     	
-    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response);
+    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, resultVO.getDeptID());
     		        	
     		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
     		        	cookieName.setPath("/");
@@ -477,7 +476,7 @@ public class LoginController {
     
     public void createLoginCookie(
     				String userId, String userPw, String encryptedUserPw, int tenantId, 
-    				HttpServletRequest request, HttpServletResponse response
+    				HttpServletRequest request, HttpServletResponse response, String deptID
     				) throws Exception {
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
@@ -540,7 +539,7 @@ public class LoginController {
 		}
 		
 		// Cookie 생성
-		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId;
+		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID;
 		String loginCookie = egovFileScrty.encryptAES(cInfo);
 		
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
