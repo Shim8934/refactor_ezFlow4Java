@@ -28,6 +28,53 @@ function CalViewSource(chk_str) {
 		}
     }); 
 }
+//2018-06-19 구해안 이동할때 css 적용하는 함수 제작
+function chk_scheduleCSS() {
+	if(typeCal == 0){		
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('.td_list td[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			
+			$('.td_list td[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});
+		});					
+	}else if(typeCal == 1) {
+		console.log('주보기진입');
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});			
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			$('div[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});			
+		});	
+	}else{
+		console.log('일보기진입');
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});			
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			
+			$('div[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});			
+		});	
+	}			
+}
 
 function sDataTemp() {
 }
@@ -69,6 +116,7 @@ function getCalMonthViewSource_after(text) {
             DataEDT = null;
         }        
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalMonthViewSource_after : " + e.description);
@@ -161,6 +209,7 @@ function getCalWeekViewSource_after(text) {
                 CalDataWidth(tempData[i], i, tempData);
         }
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalWeekViewSource_after : " + e.description);
@@ -256,6 +305,7 @@ function getCalDayViewSource_after(text) {
                 CalDataWidth(tempData[i], i, tempData);
         }        
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalDayViewSource_after : " + e.description);
