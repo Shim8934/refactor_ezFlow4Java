@@ -239,12 +239,12 @@
 	        		$(".approval").css("display","");
 	        	}
 		      	
-		        $("#sel_year").selectmenu({
+		      	/* 2018-06-19 김민성 - 전자결재 selectbox 기본으로 변경 */
+		        /* $("#sel_year").selectmenu({
 		            change: function (event, data) {
 		                onSelect_Year(data.item.value);
 		            }
-		        });
-		        
+		        }); */
 		        $("#number")
 		          .selectmenu()
 		          .selectmenu("menuWidget")
@@ -1761,9 +1761,9 @@
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-		        <select id="sel_year" name="sel_year" style="width:75px;" onmouseover="onSelect_Year(this);">    
-		            <option value="ALL">ALL</option>
-		        </select>  
+		        <li style="vertical-align: middle; margin-top:1px;"> <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
+		            <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+		        </select>  </li>
 			</ul>
 		</div>
 		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">

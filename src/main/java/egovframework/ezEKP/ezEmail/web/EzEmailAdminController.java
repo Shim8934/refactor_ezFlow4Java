@@ -865,7 +865,7 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20;
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage + 1;
 		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
 		
 		if (currPage.equals("-1")) {
