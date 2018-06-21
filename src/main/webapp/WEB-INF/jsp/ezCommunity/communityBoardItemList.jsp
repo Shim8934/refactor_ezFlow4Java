@@ -10,7 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" type="text/css" href="/css/community.css" />
 		<style type="text/css">
-        	#tblList td{
+        	#tblList td, #tblList td div {
         		white-space: nowrap;
         		text-overflow: ellipsis;
         		overflow:hidden;

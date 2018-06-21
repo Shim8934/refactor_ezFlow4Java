@@ -95,7 +95,8 @@
 		        document.onselectstart = function () { return false; };
 		
 		        $(function () {
-		            $("#rec_year").selectmenu({
+		        	/* 2018-06-20 김민성 - 전자결재 selectbox 기본으로 변경 */
+		            /* $("#rec_year").selectmenu({
 		                change: function (event, data) {
 		                    onSelect_Year(data.item.value);
 		                }
@@ -111,7 +112,7 @@
 		                change: function (event, data) {
 		                    onSelect_Year(data.item.value);
 		                }
-		            });
+		            }); */
 		
 		            $("#number")
 		              .selectmenu()
@@ -1614,9 +1615,9 @@
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li ><span id="btnCabDel" onclick="return DeleteCab();" style="Display: None"><spring:message code='ezApprovalG.t266'/></span> </li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
-	                <option value="ALL">ALL</option>
-	            </select>  
+	            <li style="vertical-align: middle; margin-top:1px;"> <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
+	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+	            </select>  </li>
 	        </ul>
 	
 	        <ul id="trRecSubMenu" style="Display: none;">
@@ -1644,9 +1645,9 @@
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
-	                <option value="ALL">ALL</option>
-	            </select>    
+	            <li style="vertical-align: middle; margin-top:1px;"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
+	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+	            </select>  </li>  
 	        </ul>
 	
 	        <ul id="trDeliveryMenu" style="display: none">
@@ -1654,9 +1655,9 @@
 	            <li id="Li1"><span id="Span1" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-	            <select id="del_year" name="del_year" style="width:75px;" onchange="onSelect_Year(this);">    
-	                <option value="ALL">ALL</option>
-	            </select>    
+	            <li style="vertical-align: middle; margin-top:1px;"> <select id="del_year" name="del_year" style="width:75px;" onchange="onSelect_Year(this);">    
+	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+	            </select>    </li>
 	        </ul>
 	    </div>
 	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
