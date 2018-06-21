@@ -635,16 +635,15 @@
 		                pArgument[5] = GetAttribute(pCurSelRow, "DATA12");
 		                pArgument[6] = GetAttribute(pCurSelRow, "DATA10");
 		                pArgument[7] = "";
-		            }
-		            else {
+		            } else {
 		                pArgument[4] = "0";    
 		                pArgument[5] = "";     
 		                pArgument[6] = "";
 		                pArgument[7] = newDocID;
 		            }
+		            
 		            pArgument[3] = GetAttribute(pCurSelRow, "DATA15");
-		        }
-		        else {
+		        } else {
 		            pArgument[4] = "0"
 		            pArgument[5] = ""
 		            pArgument[6] = ""
@@ -652,28 +651,22 @@
 		        }
 		        var temppListTypeValue = pListTypeValue;
 		        pListTypeValue = "1";
+		        
 		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 		            if (CrossYN() || pNoneActiveX == "YES") {
 		                alert(strLang1103);
 		                return;
-		            }
-		            else {
+		            } else {
 		                var openLocation = "/myoffice/ezApproval/ezViewHWP/ezDraftUI_HWP.aspx";
 		            }
-		        }
-		        else {
-		            var openLocation = "";
-		            if (CrossYN() || pNoneActiveX == "YES") {
-		                openLocation = "/ezApprovalG/draftui.do";
-		            }
-		            else {
-	                    openLocation = "/ezApprovalG/draftui.do";
-		            }
-
+		        } else {
+		            var openLocation = "/ezApprovalG/draftui.do";
+		            
 		            openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 		            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=" + escape(pListTypeValue) + "&aprState=" + escape(pArgument[6]);
 		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&isUsed=" +  editable;
 		        }
+		        
 		        openLocation += "&beforeDocID=" + pDocID;
 		        pListTypeValue = temppListTypeValue;
 		        var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
