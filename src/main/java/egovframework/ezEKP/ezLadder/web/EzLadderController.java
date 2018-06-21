@@ -108,7 +108,8 @@ public class EzLadderController {
 									.queryParam("offset", userInfo.getOffset())
 									.queryParam("lang", userInfo.getLang())
 									.queryParam("sort", sort)
-									.queryParam("sortFlag", sortFlag);
+									.queryParam("sortFlag", sortFlag)
+									.queryParam("companyID", userInfo.getCompanyID());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 

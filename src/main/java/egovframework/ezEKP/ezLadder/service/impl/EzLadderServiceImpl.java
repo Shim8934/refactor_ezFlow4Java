@@ -61,6 +61,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("userId", vo.getUserId());
 		map.put("tenantId", vo.getTenant_id());
 		map.put("mode", mode);
+		map.put("companyID", vo.getCompanyID());
 		int totalLadder = ezLadderDAO.getLadderCount(map);
 		logger.debug("totalLadder : " + totalLadder);
 		logger.debug("ladderCount ended.");
@@ -73,6 +74,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", vo.getUserId());
 		map.put("tenantId", vo.getTenant_id());
+		map.put("companyID", vo.getCompanyID());
 		int totalLadder = ezLadderDAO.getPartLadderCount(map);
 		logger.debug("totalLadder : " + totalLadder);
 		logger.debug("partLadderCount ended.");
@@ -98,6 +100,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("searchInput", searchInput);
 		map.put("mode", mode);
 		map.put("tenantId", vo.getTenant_id());
+		map.put("companyID", vo.getCompanyID());
 		
 		int totalLadder = 0;
 		if(mode.equals("part")) {		// 참여버튼 검색
@@ -126,6 +129,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("lang", lang);
 		map.put("sort", sort);
 		map.put("sortFlag", sortFlag);
+		map.put("companyID", vo.getCompanyID());
 	
 		if(mode.equals("pre")) {
 			List<LadderVO> ladList = ezLadderDAO.selectPreList(map);
@@ -170,6 +174,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("lang", lang);
 		map.put("sort", sort);
 		map.put("sortFlag", sortFlag);
+		map.put("companyID", vo.getCompanyID());
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
 		
 		// 생성된 지 24시간 여부
@@ -218,6 +223,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("lang", lang);
 		map.put("sort", sort);
 		map.put("sortFlag", sortFlag);
+		map.put("companyID", vo.getCompanyID());
 		
 		List<LadderVO> list = null;
 		if(mode.equals("part")) {		// 참여버튼 검색

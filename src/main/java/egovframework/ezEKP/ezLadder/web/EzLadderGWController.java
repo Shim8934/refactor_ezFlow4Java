@@ -94,8 +94,10 @@ public class EzLadderGWController {
 		String searchInput = request.getParameter("searchInput");
 		String sort = request.getParameter("sort");
 		String sortFlag = request.getParameter("sortFlag");
+		String companyID = request.getParameter("companyID");
 		
 		vo.setUserId(userId);
+		vo.setCompanyID(companyID);
 	
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
