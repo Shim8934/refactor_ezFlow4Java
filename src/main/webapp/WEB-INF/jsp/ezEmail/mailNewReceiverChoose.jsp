@@ -13,12 +13,6 @@
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
-	    	.mainlist_free tbody tr td:first-child{
-	    		padding-left:15px;
-	    	}
-	    	.mainlist_free thead tr th:first-child{
-	    		padding-left:15px;
-	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -251,7 +245,7 @@
 	            }
 	            
 	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	             $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
+	            $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
                   connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
                   items : "tr",
                   opacity: 0.3,
@@ -280,12 +274,36 @@
                   click : function() {
                 	  $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
                       $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
-                      
-	            	   for (var i = 0; i < listContentArry.length; i++) {
-	            			$("#" + listContentArry[i]).addClass("multiple-sortable-selected");
-	            		}
-	            	}
-	            });
+
+                     for (var i = 0; i < listContentArry.length; i++) {
+                        $("#" + listContentArry[i]).addClass("multiple-sortable-selected");
+                     }
+                  },
+                  stop : function(event, elem) {
+                	  // thead에 들어가는 현상 수정 
+                	  var elemParent = elem.item[0].parentNode;
+                	  
+                	 if (elemParent.tagName == 'THEAD'){
+                		  
+                		  var thName = '';
+                    	  if (elemParent.id == 'MsgToList_THEAD') {
+                    		  thName = 'MsgToList_TH';
+                    	  } else if (elemParent.id == 'MsgCCList_THEAD') {
+                    		  thName = 'MsgCCList_TH';
+                    	  } else if (elemParent.id == 'MsgBCCList_THEAD') {
+                    		  thName = 'MsgBCCList_TH';
+                    	  }
+                    	  
+                    	  var childArry = $("#" + elemParent.id + " tr[id!=" + thName + "]");
+                		  
+                		  for (var i = 0;i < childArry.length; i++) {
+                			  elemParent.nextSibling.appendChild(childArry[i]); // tbody에 추가
+                		  }
+                	  }
+                  }
+               });
+	         
+	            $(".receiver_borderbox tr").attr("restart", "true");
 	            ChangeListView_onClick(getOrganListType());
 	        }
 	        
@@ -1226,7 +1244,7 @@
 	                        	var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                        var strTopDiv = document.getElementById(listContentArry[i]).closest("table").id; //삭제
+	                            var strTopDiv = p_ListOrderObject.offsetParent.parentElement;
 	                      
 	                            if (moveRecipients) {
 	                        		strName = document.getElementById(listContentArry[i]).getAttribute("data1");

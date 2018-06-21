@@ -324,7 +324,7 @@ function MakeListInfoHTML(ConentObject) {
                             if (g_bdraft == true) {
                             	p_Subject = p_Subject
                             } else {
-                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:60%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
                             }
                             
                             _TDColum.innerHTML = p_Subject;
