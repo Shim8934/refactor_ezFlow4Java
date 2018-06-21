@@ -2782,6 +2782,44 @@
 	]]>
 	</update>
 
+	<select id="EzPMSDAO.checkIfHasPreTaskRel" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT 
+			COUNT(*)
+		FROM 
+			TBL_PMS_PRETASKREL 
+		WHERE
+	]]>
+		<isEqual property="type" compareValue="task2task">
+			TASK_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="group2task">
+			TASK_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="task2group">
+			GROUP_ID = #groupId#
+		</isEqual>
+		<isEqual property="type" compareValue="group2group">
+			GROUP_ID = #groupId#
+		</isEqual>	
+	<![CDATA[	
+		AND 
+			tenant_id = #tenantId#		
+	]]>
+	</select>
+	
+	<delete id="EzPMSDAO.deletePreTaskRelInTask" parameterClass="map">
+	<![CDATA[
+		DELETE FROM TBL_PMS_PRETASKREL 
+		WHERE
+			TASK_ID = #taskId#
+		AND 
+			tenant_id = #tenantId#
+		AND 
+			pretaskrel_id > 0	
+	]]>
+	</delete>
+	
 	<select id="EzPMSDAO.getPreTaskRel" parameterClass="map" resultClass="Long">
 		SELECT
 			TASK_ID

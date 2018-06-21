@@ -336,6 +336,8 @@ public class EzPMSGWController2 {
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			
+			String projectId = request.getParameter("projectId");
+			
 			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam.get("managerList");
 			List<TaskMemberVO> taskMemberList2 = new ArrayList<TaskMemberVO>();
 			
@@ -365,39 +367,52 @@ public class EzPMSGWController2 {
 			
 			// 선행작업 수정 시 DB에 반영
 			if(pretaskType != null && !pretaskType.equals("")) {
+				
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("tenantId", tenantId);
 				map.put("taskId", taskId);
 				map.put("pretaskId", pretaskId);
 				map.put("type", pretaskType);
 				
-				ezPMSService.updatePreTaskRel(map);
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				int workingday = Integer.parseInt(request.getParameter("workingday"));
-				
-				if(pretaskType.equals("task2task")) {
-					map.put("taskId", pretaskId);
-					ProjectTaskVO pretaskVO = ezPMSService.getTaskSchedule(map);
+				if(pretaskType.equals("initPretask")) {
+					ezPMSService.deletePreTaskRelInTask(map);
+				} else {
 					
-					Date pretaskEndate = sdf.parse(pretaskVO.getPlanEndDate());
-					Date newStartDate  = ezPMSService.addWorkingDays(pretaskEndate, 1, companyId, tenantId);
-					Date newEndDate    = ezPMSService.addWorkingDays(newStartDate, workingday - 1, companyId, tenantId);
+					int pretaskRelCNT = ezPMSService.checkIfHasPreTaskRel(map);
 					
-					planStartDate = sdf.format(newStartDate);
-					planEndDate   = sdf.format(newEndDate);
-				} else if(pretaskType.equals("group2task")) {
-					map.put("groupId", pretaskId);
-					ProjectGroupVO pregroupVO = ezPMSService.getGroupSchedule(map);
+					if(pretaskRelCNT > 0) {
+						ezPMSService.updatePreTaskRel(map);
+					} else {
+						ezPMSService.addPreTaskRel(Long.parseLong(taskId), Integer.parseInt(pretaskId), Long.parseLong(projectId), tenantId, pretaskType);
+					}
 					
-					Date pregroupEndate = sdf.parse(pregroupVO.getPlanEndDate());
-					Date newStartDate  = ezPMSService.addWorkingDays(pregroupEndate, 1, companyId, tenantId);
-					Date newEndDate    = ezPMSService.addWorkingDays(newStartDate, workingday - 1, companyId, tenantId);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					int workingday = Integer.parseInt(request.getParameter("workingday"));
 					
-					planStartDate = sdf.format(newStartDate);
-					planEndDate   = sdf.format(newEndDate);
+					if(pretaskType.equals("task2task")) {
+						map.put("taskId", pretaskId);
+						ProjectTaskVO pretaskVO = ezPMSService.getTaskSchedule(map);
+						
+						Date pretaskEndate = sdf.parse(pretaskVO.getPlanEndDate());
+						Date newStartDate  = ezPMSService.addWorkingDays(pretaskEndate, 1, companyId, tenantId);
+						Date newEndDate    = ezPMSService.addWorkingDays(newStartDate, workingday - 1, companyId, tenantId);
+						
+						planStartDate = sdf.format(newStartDate);
+						planEndDate   = sdf.format(newEndDate);
+					} else if(pretaskType.equals("group2task")) {
+						map.put("groupId", pretaskId);
+						ProjectGroupVO pregroupVO = ezPMSService.getGroupSchedule(map);
+						
+						Date pregroupEndate = sdf.parse(pregroupVO.getPlanEndDate());
+						Date newStartDate  = ezPMSService.addWorkingDays(pregroupEndate, 1, companyId, tenantId);
+						Date newEndDate    = ezPMSService.addWorkingDays(newStartDate, workingday - 1, companyId, tenantId);
+						
+						planStartDate = sdf.format(newStartDate);
+						planEndDate   = sdf.format(newEndDate);
+					}
+					
+					LOGGER.debug("By Pretask Change => planStartDate : " + planStartDate + ", planEndDate : " + planEndDate);
 				}
-				LOGGER.debug("By Pretask Change => planStartDate : " + planStartDate + ", planEndDate : " + planEndDate);
 			}
 			
 			ProjectTaskVO projectTaskVO = new ProjectTaskVO();

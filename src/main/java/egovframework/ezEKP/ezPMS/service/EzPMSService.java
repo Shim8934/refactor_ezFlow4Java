@@ -226,4 +226,8 @@ public interface EzPMSService {
 	public ProjectTaskVO getTaskSchedule(Map<String, Object> map);
 	
 	public ProjectGroupVO getGroupSchedule(Map<String, Object> map);
+	
+	public int checkIfHasPreTaskRel(Map<String, Object> map);
+	
+	public void deletePreTaskRelInTask(Map<String, Object> map);
 }

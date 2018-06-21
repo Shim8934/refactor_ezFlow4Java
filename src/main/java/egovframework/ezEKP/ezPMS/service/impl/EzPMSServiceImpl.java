@@ -2670,4 +2670,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getGroupSchedule ended.");
 		return ezPMSDAO.getGroupSchedule(map);
 	}
+
+	@Override
+	public int checkIfHasPreTaskRel(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] checkIfHasPreTaskRel started.");
+		LOGGER.debug("[SERVICE] checkIfHasPreTaskRel ended.");
+		return ezPMSDAO.checkIfHasPreTaskRel(map);
+	}
+
+	@Override
+	public void deletePreTaskRelInTask(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] deletePreTaskRelInTask started.");
+		ezPMSDAO.deletePreTaskRelInTask(map);
+		LOGGER.debug("[SERVICE] deletePreTaskRelInTask ended.");
+	}
 }

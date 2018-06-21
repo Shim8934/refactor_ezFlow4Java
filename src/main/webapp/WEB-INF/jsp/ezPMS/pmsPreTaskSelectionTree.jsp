@@ -46,7 +46,7 @@
 	function initPreTask() {
 		$("#preTaskName", parent.document).text('-');
 		parent.pretaskId = "";
-		parent.pretaskSetType = "initPreTask";
+		parent.pretaskSetType = "initPretask";
 		popupClose();
 	}
 </script>

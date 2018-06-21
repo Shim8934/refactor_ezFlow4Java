@@ -557,4 +557,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public ProjectGroupVO getGroupSchedule(Map<String, Object> map) {
 		return (ProjectGroupVO) select("EzPMSDAO.getGroupSchedule", map);
 	}
+	
+	public int checkIfHasPreTaskRel(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.checkIfHasPreTaskRel", map);
+	}
+	
+	public void deletePreTaskRelInTask(Map<String, Object> map) {
+		delete("EzPMSDAO.deletePreTaskRelInTask", map);
+	}
 }
