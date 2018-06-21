@@ -91,7 +91,7 @@ function changeStatus() {
 
 					if (viewType == 0) {
 						parent.startRow = 0;
-						parent.listNumber = parent.$(".projectList").length;
+						parent.listNumber = parent.$(".project_list").length;
 					}
 					
 					parent.setProjectList("new");

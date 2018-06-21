@@ -384,9 +384,8 @@
 					<span id="searchDate" style="display: none;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-						<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a>
 					</span>
-					<a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="searchComment()" style="height:24px; margin-top:1px;"></a>
+					<a href="#" style="float:right; margin-left:8px;"><img src="../../images/sub/bsearch.gif" border="0" onclick="searchComment()" style="height:24px; margin-top:1px;"></a>
 				</div>
 			</div>
 			<div id="contentList" style="overflow: auto">

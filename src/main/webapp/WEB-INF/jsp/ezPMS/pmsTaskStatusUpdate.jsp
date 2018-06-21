@@ -136,8 +136,8 @@
 	}
 	
 	function saveStatus() {
-		var projectStartDate = weightData.planStartDate;
-		var projectEndDate = weightData.planEndDate;
+		var projectStartDate = weightData.projectStartDate;
+		var projectEndDate = weightData.projectEndDate;
 		var planStartDate = document.getElementById("PSDatepicker").value;
 		var planEndDate = document.getElementById("PEDatepicker").value;
 		var realStartDate = document.getElementById("RSDatepicker").value;
@@ -145,7 +145,6 @@
 		var realProgress = document.querySelector("[name='realProgress']").value.trim();
 		var statusSelect = document.querySelector(".taskStatusChgDiv select");
 		var status = statusSelect.options[statusSelect.selectedIndex].value;
-		 
 		//날짜 제한
 		var startDateArr = planStartDate.split('-');
 		var endDateArr = planEndDate.split('-');
@@ -180,6 +179,7 @@
 			alert("<spring:message code='ezPMS.t94' />");
 			return;
 		}
+		
 		if (endDateComp.getTime() > projectEndDateComp.getTime()) {
 			alert("<spring:message code='ezPMS.t95' />");
 			return;
@@ -224,9 +224,19 @@
 		//진행률을 100%로 변경했을 경우 status는 C로 변경하여 자동 완료처리
 		if (realProgress == 100) {
 			status = "C";
+			
+			//진행률을 100%로 변경했을 경우 실제 종료일이 realEndDate에 들어가야함
+			if (!realEndDate) {
+				realEndDate = TimeToStr(new Date());
+			}
 		} else if (status != "L" && (realProgress > 0 && realProgress < 100)) {
 			//업무 상태가 보류, 진행, 대기인 경우 진행률을 수정하면 업무가 진행상태로 변경됨
 			status = "P";
+			
+			if (!realStartDate) {
+				realStartDate = TimeToStr(new Date());
+			}
+			
 		} else if (status == "C" && (realProgress > 0 && realProgress < 100)) {
 			//업무의 상태가 완료인 경우 진행률이 100이 안되면 진행상태로 변경
 			status = "P";
@@ -254,6 +264,7 @@
 				alert("<spring:message code='ezPMS.t280' />");
 				
 				parent.location.reload();
+				parent.opener.location.reload();
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {

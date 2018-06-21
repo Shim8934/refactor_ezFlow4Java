@@ -32,6 +32,8 @@ var progressColor = "${mainSetting.progressColor}";
 var completeColor = "${mainSetting.completeColor}";
 var overdueColor = "${mainSetting.overdueColor}";
 var holdColor = "${mainSetting.holdColor}";
+var deleteColor = "${mainSetting.deleteColor}";
+var waitColor = "${mainSetting.waitColor}";
 var startCount = 0;
 var listNumber = 5;
 var position = "overview";
@@ -81,7 +83,7 @@ function initProgressBar() {
 		break;
 	case "W" :
 		strStatus = "<spring:message code='ezPMS.t16' />";
-		circleColor = "#d1d1d1";
+		circleColor = waitColor;
 		break;
 	case "L" :
 		strStatus = "<spring:message code='ezPMS.t18' />";
@@ -95,6 +97,10 @@ function initProgressBar() {
 		strStatus = "<spring:message code='ezPMS.t17' />";
 		circleColor = completeColor;
 		break;
+	case "D" :
+		strStatus = "<spring:message code='ezPMS.t11' />";
+		circleColor = deleteColor;
+		break;
 	}
 	
 	$(".progress_graph").circleProgress({
@@ -102,7 +108,7 @@ function initProgressBar() {
 		fill : {color : circleColor},
 		size : 130
 	}).on('circle-animation-progress', function(event, progress) {
-		$(this).find('strong').html(Number(projectProgress).toFixed(1) + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+		$(this).find('strong').html(Number(projectProgress).toFixed(1) + "%<br><div style='font-size:20px;'>" + strStatus + "</div>");
 	});
 }
 
@@ -410,7 +416,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 					break;
 				case "W" :
 					taskStatus = "<spring:message code='ezPMS.t16' />";
-					statusColor = "#d1d1d1";
+					statusColor = "#a5a5a5";
 					break;
 				case "L" :
 					taskStatus = "<spring:message code='ezPMS.t18' />";
@@ -461,7 +467,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				statusColor = progressColor;
 				break;
 			case "W" :
-				statusColor = "#d1d1d1";
+				statusColor = "#a5a5a5";
 				break;
 			case "L" :
 				statusColor = overdueColor;
@@ -521,11 +527,13 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 		data :JSON.stringify(data),
 		success : function(result) {
 			$("#" + targetPosition).attr("name", targetStatus);
-			
-			if (targetStatus == "B") {
-				setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, true);
-			} else {
-				setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, false);
+
+			if (result.kanbanTask1 != null) {
+				if (targetStatus == "B") {
+					setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, true);
+				} else {
+						setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, false);
+				}
 			}
 
 			var title = "";
@@ -750,6 +758,9 @@ function getTaskDetails(elem) {
 
 .boardContent {
 	text-overflow : ellipsis; 	
+	line-height : 1.1em;
+	max-height : 5.5em;
+	overflow : hidden;
 }
 
 .kanban > h1 {
@@ -777,6 +788,7 @@ function getTaskDetails(elem) {
 
 .taskStatus {
 	float : right;
+	color :  #ffffff;
 }
 
 .percentCount {
