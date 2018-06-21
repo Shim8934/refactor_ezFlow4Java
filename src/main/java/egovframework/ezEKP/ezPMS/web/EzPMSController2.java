@@ -515,14 +515,21 @@ public class EzPMSController2 {
 		LOGGER.debug("ezPMS updateTaskInfo started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
 		
 		String taskId = (String)param.get("taskId");
 		
 		JSONObject jsonList = new JSONObject();
 		jsonList.put("managerList", param.get("managerList"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "put", jsonList);
+		String url = "/rest/ezPMS/tasks/" + taskId + "/users/" + userId;
+				
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
 		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("result", "success");
+		}
 		
 		LOGGER.debug("ezPMS updateTaskInfo ended");
 		

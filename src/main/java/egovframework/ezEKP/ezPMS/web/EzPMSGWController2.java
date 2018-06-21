@@ -357,6 +357,18 @@ public class EzPMSGWController2 {
 			
 			ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId);
 			
+			String pretaskType = request.getParameter("type");
+			
+			if(pretaskType != null && !pretaskType.equals("")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tenantId", tenantId);
+				map.put("taskId", taskId);
+				map.put("pretaskId", request.getParameter("pretaskId"));
+				map.put("type", pretaskType);
+				
+				ezPMSService.updatePreTaskRel(map);
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");		

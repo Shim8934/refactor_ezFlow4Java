@@ -1578,10 +1578,9 @@ public class EzPMSGWController {
 								
 						ezPMSService.updateTaskSort(groupId, taskId, sortOrder, tenantId);
 						
-						if (preTaskIndex != -1) {
-							ezPMSService.updatePreTaskRel(taskId, preTaskIndex, tenantId, projectId);
-						}
-						
+//						if (preTaskIndex != -1) {
+//							ezPMSService.updatePreTaskRel(taskId, preTaskIndex, tenantId, projectId);
+//						}
 					}
 				}
 				
