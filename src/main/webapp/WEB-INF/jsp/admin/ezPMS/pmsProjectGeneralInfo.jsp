@@ -7,7 +7,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>프로젝트 개요</title>
+	<title><c:out value="${project.projectName }"/></title>
 	<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -110,7 +110,7 @@
 	
 	function deletePermanently() {
 		
-		if(confirm("삭제하시겠습니까?") == true) {
+		if(confirm("<spring:message code='ezPMS.t22' />") == true) {
 			
 			data = {
 				projectId : projectId,
@@ -128,12 +128,12 @@
 						window.close();
 						opener.getProjectList();
 					} else {
-						alert("error");
+						alert("<spring:message code='ezPMS.t54' />");
 						return;
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("error");
+					alert("<spring:message code='ezPMS.t54' />");
 				}
 			});
 		}	
@@ -168,7 +168,7 @@
 		}
 		
 		if (status == "C" && nowStatus != "C") {
-			response = confirm("프로젝트를 완료하면 하위 작업이 모두 완료됩니다.\n진행하시곘습니까?");
+			response = confirm("<spring:message code='ezPMS.t159' />");
 		}
 		
 		if(response == true) {
@@ -181,17 +181,17 @@
 				success : function(result) {
 					if(result.memberChange == 'success' && result.statusChange == 'success') {
 						sendNotiMail(projectId, projectName);
-						var logContent = "[" + projectName + "]의 정보가 수정되었습니다."
+						var logContent = "[" + projectName + "<spring:message code='ezPMS.t50' />"
 						addTaskLog(projectId, 2, groupId, null, logContent);
-						alert ("프로젝트가 수정되었습니다.");
+						alert ("<spring:message code='ezPMS.t52' />");
 						window.close();
 						opener.getProjectList();
 					} else {
-						alert("error");
+						alert("<spring:message code='ezPMS.t54' />");
 					}		
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("error");
+					alert("<spring:message code='ezPMS.t54' />");
 				}
 			});
 		}	
@@ -227,15 +227,15 @@
 		 });
 	 }
 </script>
-<body class="popup" style="height: 99%;">
+<body class="popup" style="height: 95%;">
 	<table class="layout" style="width: 100%">
 		<tr>
 			<td style="height: 20px">
 				<div id="menu">
 					<ul>
-						<li><span onclick="saveProject()">저장</span></li>
-						<li><span onclick="deletePermanently()">영구 삭제</span></li>
-						<li style="float: right;"><span onclick="window.close()">닫기</span></li>
+						<li><span onclick="saveProject()"><spring:message code='ezPMS.t265' /></span></li>
+						<li><span onclick="deletePermanently()"><spring:message code='ezPMS.t12' /></span></li>
+						<li style="float: right;"><span onclick="window.close()"><spring:message code='ezPMS.t76' /></span></li>
 					</ul>
 				</div>
 			</td>
@@ -244,73 +244,73 @@
 			<td>
 				<table class="content" style="width:100%;">
 					<tr>
-						<th>프로젝트명</th>
+						<th><spring:message code='ezPMS.t31' /></th>
 						<td colspan="3"><c:out value="${project.projectName}"/></td>
 					</tr>
 					<tr>
-						<th>시작일</th>
+						<th><spring:message code='ezPMS.t61' /></th>
 						<td style="width: 50%;"><c:out value="${project.planStartDate}"/></td>
-						<th>종료일</th>
+						<th><spring:message code='ezPMS.t62' /></th>
 						<td><c:out value="${project.planEndDate}"/></td>
 					</tr>
 					<tr>
-						<th>작성자</th>
+						<th><spring:message code='ezPMS.t57' /></th>
 						<td colspan="3"><c:out value="${project.creatorName}(${project.creatorDeptname})"/></td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" onclick="openOrganTree(managers)"><span>담당자</span></a></th>
+						<th><a class="imgbtn" onclick="openOrganTree(managers)"><span><spring:message code='ezPMS.t63' /></span></a></th>
 						<td colspan="3">
 							<div style="overflow-y:auto; height:100%; width:100%" id="managers"></div>
 						</td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" onclick="openOrganTree(participants)"><span>참여자</span></a></th>
+						<th><a class="imgbtn" onclick="openOrganTree(participants)"><span><spring:message code='ezPMS.t64' /></span></a></th>
 						<td colspan="3">
 							<div style="overflow-y:auto; height:100%; width:100%" id="participants"></div>
 						</td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span>조회자</span></a></th>
+						<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span><spring:message code='ezPMS.t65' /></span></a></th>
 						<td colspan="3">
 							<div style="overflow-y:auto; height:100%; width:100%" id="viewers"></div>
 						</td>
 					</tr>
 					<tr>
-						<th>프로젝트 개요</th>
+						<th><spring:message code='ezPMS.t66' /></th>
 						<td colspan="3"><c:out value="${project.overview}"/></td>
 					</tr>
 					<tr>
-						<th>진행상태</th>
+						<th><spring:message code='ezPMS.t38' /></th>
 						<td colspan="3">
 							<select id="status" onchange="setStatus(this.value)">
 								<c:choose>
 									<c:when test="${project.status eq 'P'}">
-										<option value="P">진행</option>
-										<option value="C">완료</option>
-										<option value="S">보류</option>
+										<option value="P"><spring:message code='ezPMS.t15' /></option>
+										<option value="C"><spring:message code='ezPMS.t17' /></option>
+										<option value="S"><spring:message code='ezPMS.t19' /></option>
 									</c:when>
 									<c:when test="${project.status eq 'W'}">
-										<option value="P">진행</option>
-										<option value="W">대기</option>
-										<option value="S">보류</option>
+										<option value="P"><spring:message code='ezPMS.t15' /></option>
+										<option value="W"><spring:message code='ezPMS.t16' /></option>
+										<option value="S"><spring:message code='ezPMS.t19' /></option>
 									</c:when>
 									<c:when test="${project.status eq 'C'}">
-										<option value="C">완료</option>
+										<option value="C"><spring:message code='ezPMS.t17' /></option>
 									</c:when>
 									<c:when test="${project.status eq 'L'}">
-										<option value="C">완료</option>
-										<option value="L">지연</option>
-										<option value="S">보류</option>
+										<option value="C"><spring:message code='ezPMS.t17' /></option>
+										<option value="L"><spring:message code='ezPMS.t18' /></option>
+										<option value="S"><spring:message code='ezPMS.t19' /></option>
 									</c:when>
 									<c:when test="${project.status eq 'S'}">
-										<option value="P">진행</option>
-										<option value="C">완료</option>
-										<option value="S">보류</option>
+										<option value="P"><spring:message code='ezPMS.t15' /></option>
+										<option value="C"><spring:message code='ezPMS.t17' /></option>
+										<option value="S"><spring:message code='ezPMS.t19' /></option>
 									</c:when>
 									<c:when test="${project.status eq 'D'}">
-										<option value="P">진행</option>
-										<option value="S">보류</option>
-										<option value="D">삭제</option>
+										<option value="P"><spring:message code='ezPMS.t15' /></option>
+										<option value="S"><spring:message code='ezPMS.t19' /></option>
+										<option value="D"><spring:message code='ezPMS.t11' /><option>
 									</c:when>
 								</c:choose>
 							</select>
