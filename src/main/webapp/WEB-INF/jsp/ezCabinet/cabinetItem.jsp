@@ -113,8 +113,8 @@
 			<div class="shadow"></div>
 		</div>
 		
-		<div id="cabWraperDiv" style="height: 400px; display: flex;">
-			<div id="cabinetFileList" style="width: 50%; height: 100%;">
+		<div id="cabWraperDiv" style="height: 400px;">
+			<div id="cabinetFileList">
 				<table class="mainlist wftablefile" style="width: 100%; text-algin: center;" id="tblFileList">
 					<tr>
 						<th width="20px" ><input type="checkbox"></th>
@@ -153,7 +153,7 @@
 				</div>
 			</div>
 			
-			<div id="previewCabW" class="cabDivPrevW" style="display: none;">
+			<div id="previewCabW" class="cabDivPrevW">
 				<div id="preContentW" class="cabMainPrevW">
 					<div style="width: 100%;">
 						<div class="prevHeaderCab">
@@ -188,11 +188,13 @@
 				/* Only for test */
 				var cabinetPreview = null;
 				
-				setData(30, 70, 40, 60);
+				setData(50, 50, 30, 70, 40, 60);
 				window.addEventListener("resize", function(e) {cabinetPreview.resizeByWidth();}, false);
 				
-				function setData(minWPercent, maxWPercent, minHPercent, maxHPercent) {
+				function setData(height, width, minWPercent, maxWPercent, minHPercent, maxHPercent) {
 					var cabinetGeneral = {
+						height    : height,
+						width     : width,
 						minWidth  : minWPercent,
 						maxWidth  : maxWPercent,
 						minHeight : minHPercent,
@@ -256,18 +258,12 @@
 					
 					switch(mode) {
 						case "None":
-							document.getElementById("previewCabH").style.display = "none";
-							document.getElementById("previewCabW").style.display = "none";
 							cabinetPreview.resizeDestroy();
 							break;
 						case "W":
-							document.getElementById("previewCabH").style.display = "none";
-							document.getElementById("previewCabW").style.display = "";
 							cabinetPreview.resizeByWidth();
 							break;
 						case "H":
-							document.getElementById("previewCabH").style.display = "";
-							document.getElementById("previewCabW").style.display = "none";
 							cabinetPreview.resizeByHeight();
 							break;
 						default:

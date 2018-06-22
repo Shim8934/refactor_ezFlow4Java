@@ -12,6 +12,16 @@ var CabinetPreview = function () {
 		var _prevCntW     = generalInf["preContentW"];
 		
 		function setResizeableByHeight() {
+			var mainWrapper = document.getElementById(_wrapperDivId);
+			mainWrapper.style.display                          = 'flex';
+			mainWrapper.style.flexFlow                         = "column";
+			document.getElementById(_previewHId).style.display = "";
+			document.getElementById(_previewWId).style.display = "none";
+			
+			var mainDiv          = document.getElementById(_mainDivId);
+			mainDiv.style.width  = "100%";
+			mainDiv.style.height = _percentInf["height"] + "%";
+			
 			$('#' + _mainDivId).resizable({
 				handles: 's',
 				minHeight: getHeight("min"),
@@ -22,6 +32,15 @@ var CabinetPreview = function () {
 		}
 		
 		function setResizeableByWidth() {
+			var mainWrapper = document.getElementById(_wrapperDivId);
+			mainWrapper.style.display                            = 'flex';
+			mainWrapper.style.flexFlow                           = "";
+			document.getElementById(_previewHId).style.display   = "";
+			document.getElementById(_previewWId).style.display   = "none";
+			var mainDiv          = document.getElementById(_mainDivId);
+			mainDiv.style.width  = _percentInf["width"] + "%";
+			mainDiv.style.height = "100%";
+			
 			$('#' + _mainDivId).resizable({
 				handles: 'e',
 				minWidth: getWidth("min"),
@@ -33,6 +52,12 @@ var CabinetPreview = function () {
 		
 		function setDestroyResizeable() {
 			$('#' + _mainDivId).resizable("destroy");
+			document.getElementById(_wrapperDivId).style.display = '';
+			var mainDiv          = document.getElementById(_mainDivId);
+			mainDiv.style.width  = "100%";
+			mainDiv.style.height = "100%";
+			document.getElementById(_previewHId).style.display = "none";
+			document.getElementById(_previewWId).style.display = "none";
 		}
 		
 		function getWidth(mode) {
