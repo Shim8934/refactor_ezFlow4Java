@@ -14,19 +14,21 @@
 		<div id="left">
 			<div class="left_cabinet"><span><spring:message code='ezCabinet.t01'/></span></div>
 			
-			<!-- 나의 캐비닛 -->
-			<h2><span onclick=""><spring:message code='ezCabinet.t02'/></span></h2>
-			<ul><li><div id="myCabinet" class="cabinetTree"></div></li></ul>
+			<!-- 나의 캐비넷  -->
+			<h2 id="myCabinet"><span><spring:message code='ezCabinet.t02'/></span></h2>
+			<ul>
+				<div id="cabinetTree" class="cabinetTree"></div>
+				<!-- 캐비넷  관리 -->
+				<h3><span><spring:message code='ezCabinet.t03'/></span></h3>
+				<!-- 공유 캐비넷  -->
+				<h3><span><spring:message code='ezCabinet.t04'/></span></h3>
+			</ul>
 			
-			<!-- 캐비닛 관리 -->
-			<h2><span><spring:message code='ezCabinet.t03'/></span></h2>
+			<!-- 연동 캐비넷 -->
+			<h2><span><spring:message code='ezCabinet.t32'/></span></h2>
 			<ul></ul>
 			
-			<!-- 공유 캐비닛 -->
-			<h2><span><spring:message code='ezCabinet.t04'/></span></h2>
-			<ul></ul>
-			
-			<!-- 공유 반은 캐비닛 -->
+			<!-- 공유 반은 캐비넷 -->
 			<h2><span><spring:message code='ezCabinet.t05'/></span></h2>
 			<ul></ul>
 			
@@ -52,9 +54,14 @@
 		<script type="text/javascript">initToggleList(document.getElementById("left"), "h2", "ul", "li");</script>
 		<script type="text/javascript">
 			(function() {
+				document.onselectstart = function(e) {return false;}
 				setButtons();
+				getMyCabinet();
 				
 				function setButtons() {
+					var myCabinet     = document.getElementById("myCabinet");
+					myCabinet.addEventListener("click", function(e) {getMyCabinet();}, false);
+					
 					var adminSpan  = document.getElementById("cabinetAdmin");
 					adminSpan.addEventListener("click", function(e) {getAdminPage();}, false);
 					
@@ -62,9 +69,9 @@
 					configSpan.addEventListener("click", function(e) {getConfigPage();}, false);
 				}
 				
-				function getAdminPage() {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
+				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
 				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
-				
+				function getMyCabinet()  {window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do";}
 			})();
 		</script>
 	</body>

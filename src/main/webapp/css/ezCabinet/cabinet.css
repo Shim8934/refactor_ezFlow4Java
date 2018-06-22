@@ -6,6 +6,7 @@
 #left >ul >li:only-child {padding: 0px;}
 #left ul li.on {font-weight: bold;}
 .leftbody ul:not(:last-child) li:last-child {border-bottom: none;}
+#mainmenu >ul >li >img {margin-right: -2px;}
 
 .adminPanel {width:100%; padding:9px 16px 15px; font-weight: bold;}
 .adminPanel img {vertical-align: middle; margin-top: -2px; width: 20px;}
@@ -61,6 +62,21 @@
 
 .cabSelectConf {width: 50px;}
 .cabPreviewMode {width: 100px;}
+.cabDivPrevH {height: 100%; overflow: hidden; vertical-align: top; flex-grow: 1;}
+.cabMainPrevH {height: 100%; position: relative; padding-left: 5px;}
+.cabMainPrevH div {width: 100%;}
+.cabPrevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px; clear: both; padding: 0px; background: #fcfcfc; border-bottom: 1px solid #ddd; height: 36px; line-height: 36px;}
+.cabPrevTitle .cabPrevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
+.prevHeaderCab {border-top: 1px solid #ddd;}
+.prevHeaderCab >div {border-bottom: solid 1px #e8e8e8; position: relative;}
+.cabPrevTitle .cabTitleTxt {width: 70%; height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;}
+.cabPreDate {display: inline-block; position: absolute; top: 12px; right: 20px; text-align: right; width: 150px; font-size: 12px; color: #333;}
+.cabPrevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666; border-bottom: 1px solid #ddd;}
+.cabPrevItem dt {font-weight: normal; margin: 0px 10px 0px 0px; line-height: 18px; padding: 0px 0px 2px 0px; color: #919293;}
+
+.cabDivPrevW {width: 100%; overflow: hidden; flex-grow: 1;}
+.cabMainPrevW {width: 100%; position: relative; padding-top: 5px;}
+.cabMainPrevH div {height: 100%;}
 
 /* Table css */
 .inputTh {width: 20px;}
@@ -73,6 +89,23 @@
 .cabTable tr td {text-align: center; border-bottom: 1px solid #efefef; color: #5b5a5a; word-wrap: break-word; padding: 5px 4px 3px 4px; font-weight: normal; font-size: 12px; border-spacing: 0;}
 .cabTable tr td input[type='radio'] {vertical-align: middle; margin: 0px 3px;}
 .cabTable .cabName {text-align: left !important; padding-left: 20% !important;}
+.cabViewPopup {width:150px; position: absolute; background-color:#fff;}
+.cabViewPopup .popupwrap1 {background-color:#fff; position: relative;}
+.cabPanel {position: absolute; top: 0px; left: 0px; botom: 0px; right: 0px; height: 100%; width: 100%; background: transparent;}
 
+.cabcol {width: 80px;}
+.cabTitle {line-height: 20px;}
+.list_element.cabinet {width: 100%; border-spacing: 0px; border-collapse: collapse; border:none;}
+.list_element.cabinet select {width: 40px; height: 20px;}
 
+.ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
+.ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}
+.ui-resizable-s {background-image: url('/images/prevview_bar_dotted.gif'); height: 5px !important; background-position: center -2px;}
+/* cabinet item */
+.topSearchSpan {float: right; font-weight: normal; color: black;}
+.topSearchSpan >input[type='radio'] {margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;}
+.topSearchSpan >input[type='text'] {width: 150px; ime-mode: active; height: 20px; border-right: 0px; vertical-align: top}
+.topSearchSpan >a {float: right;}
+.topSearchSpan >a img {border: none;}
 
+.btnimg.cabinet {width: 22px; height: 20px;}

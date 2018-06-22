@@ -61,7 +61,6 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/cabinetGeneral.do")
 	public String jspGetCabinetGeneral(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetGeneral started");
-		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		logger.debug("jspGetCabinetGeneral ended");
@@ -85,6 +84,16 @@ public class EzCabinetController {
 		logger.debug("jspGetRelatedCabinetConfig ended");
 		return "ezCabinet/cabinetInterLock";
 	}
+	
+	@RequestMapping(value="/ezCabinet/myCabinet.do")
+	public String jspGetMyCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetMyCabinet started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		logger.debug("jspGetMyCabinet ended");
+		return "ezCabinet/cabinetItem";
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
