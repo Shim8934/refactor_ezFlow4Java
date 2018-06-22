@@ -69,8 +69,13 @@ public class EzOrganController {
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
         String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
+        String userCompanyId = userInfo.getCompanyID();
         
-        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList);
+        if (topID != userCompanyId) {
+        	topID = userCompanyId;
+        }
+        
+        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ", userCompanyId=" + userCompanyId);
         
         // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
         String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), tenantID);
@@ -220,12 +225,14 @@ public class EzOrganController {
 		String page = request.getParameter("page");
 		String infoXML = "";
 		
+		String userCompanyId = userInfo.getCompanyID();
+		
 		logger.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
 		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + ",companyId=" + companyId);
 		
 		if (page == null) {
 			if (companyId.equals("")) {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID, userCompanyId);
 			}
 			else {
 				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID);

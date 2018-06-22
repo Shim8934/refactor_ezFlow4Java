@@ -24,7 +24,7 @@ public interface EzOrganService {
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
 	
-	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID) throws Exception;
+	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID, String userCompanyId) throws Exception;
 
 	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID) throws Exception;
 	
