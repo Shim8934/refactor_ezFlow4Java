@@ -85,7 +85,7 @@ public interface EzPMSService {
 	
 	public Long addGroup(Map<String, Object> map, String isIssue, String companyId, int tenantId);
 	
-	public ProjectGroupVO getGroupDetails(long groupId, int tenantId, long projectId);
+	public ProjectGroupVO getGroupDetails(long groupId, int tenantId, long projectId) throws Exception;
 	
 	public void updateGroup(ProjectGroupVO group);
 	

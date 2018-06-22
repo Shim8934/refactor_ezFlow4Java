@@ -358,22 +358,27 @@ public class EzPMSController3 {
 		
 		if (status.equals("ok")) {			
 			totalCount = Integer.parseInt((String) resultBody.get("data"));
+			model.addAttribute("totalCount", totalCount);
 		}
 		
-		if(totalCount > 0) {
-			ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
-			model.addAttribute("paging", paging);
-			
-			param.put("startRow", paging.getStartCount());
-			
-			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
-			status = resultBody.get("status").toString();
-			
-			if(status.equals("ok")) {
-				JSONArray boardList = (JSONArray) resultBody.get("data");
-				model.addAttribute("data", boardList);
-			} 
-		}
+		
+		ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
+		model.addAttribute("paging", paging);
+		
+		int startRow = paging.getStartCount() > 0 ? paging.getStartCount() : 0;
+		
+		param.put("startRow", startRow);
+		
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray boardList = (JSONArray) resultBody.get("data");
+			String taskName = (String) resultBody.get("taskName");
+			model.addAttribute("data", boardList);
+			model.addAttribute("taskName", taskName);
+		} 
+		
 		
 		LOGGER.debug("ezPMS getBoardList ended");
 		
@@ -766,22 +771,26 @@ public class EzPMSController3 {
 		
 		if (status.equals("ok")) {			
 			totalCount = Integer.parseInt((String) resultBody.get("data"));
+			model.addAttribute("totalCount", totalCount);
 		}
 		
-		if (totalCount > 0) {
-			ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
-			model.addAttribute("paging", paging);
-			
-			param.put("startRow", paging.getStartCount());
-			
-			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
-			status = resultBody.get("status").toString();
-			
-			if(status.equals("ok")) {
-				JSONArray commentList = (JSONArray) resultBody.get("data");
-				model.addAttribute("data", commentList);
-			} 
-		}
+		
+		ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
+		model.addAttribute("paging", paging);
+		
+		int startRow = paging.getStartCount() > 0 ? paging.getStartCount() : 0;
+		param.put("startRow", startRow);
+		
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray commentList = (JSONArray) resultBody.get("data");
+			String taskName = (String) resultBody.get("taskName");
+			model.addAttribute("data", commentList);
+			model.addAttribute("taskName", taskName);
+		} 
+		
 		
 		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId() + "/role", null, request, "get", null);
 		
