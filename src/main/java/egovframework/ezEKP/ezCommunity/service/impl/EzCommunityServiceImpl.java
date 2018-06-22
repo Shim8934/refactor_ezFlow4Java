@@ -1435,6 +1435,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.getWriter().flush();
 	}
 	
+	/* 2018-06-22 홍승비 - 사간겸직 회원의 설문조사 표출 시 companyID 조건 추가 */
 	@Override
 	public void pollRes(LoginVO userInfo, Model model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception {
 		logger.debug("pollRes started.");
@@ -1578,7 +1579,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		StringBuilder strHTML = new StringBuilder();
-		String name = pollResGet4(userInfo.getPrimary(), managerVO.getPollRegUser(), tenantID);
+		
+		/* 2018-06-22 홍승비 - 사간겸직 회원의 설문조사 표출 시 companyID 조건 추가 */
+		String name = pollResGet4(userInfo.getPrimary(), managerVO.getPollRegUser(), userInfo.getCompanyID(), tenantID);
 		
 		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr style='height:25px'>");
 		
@@ -1955,11 +1958,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return listData.toString();
 	}
 
+	/* 2018-06-22 홍승비 - 사간겸직 탈퇴희망자 companyID로 중복레코드 제거 */
 	@Override
 	public String adminOuterList(LoginVO userInfo, String code) throws Exception {
 		logger.debug("adminOuterList started.");
 		
-		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, userInfo.getPrimary(), userInfo.getTenantId());
+		// companyID 조건 추가
+		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int iCount = 1, curPage = 0;
 		StringBuilder sb = new StringBuilder();
@@ -1996,7 +2001,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminMemberList(LoginVO userInfo, String code, String flag, String ser, String strSysopID, String mode) throws Exception {
 		logger.debug("adminMemberList started.");
 		
-		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), userInfo.getPrimary(), ser, userInfo.getTenantId());
+		/* 2018-06-22 홍승비 - 커뮤니티 팝업홈 회원탈퇴/마스터이취임 리스트 companyID 조건 추가*/
+		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), userInfo.getPrimary(), ser, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int iCount = 1;
 		StringBuilder sb = new StringBuilder();
@@ -5232,8 +5238,10 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", userInfoLang);
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		
+		// TBL_C_MEMBERINFO에서 승인대기자를 받아올 때, 모든 겸직을 같이 받아와서 레코드 중복이 발생한다. 관리자의 현재 companyID로 조건을 걸어 distinct로 받아오자.
 		List<CommunityCClubUserVO> userList = ezCommunityDAO.adminMemPermitGet2(map);
 
 		for (CommunityCClubUserVO user : userList) {
@@ -5885,12 +5893,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String primary, int tenantID) throws Exception {
+	/* 2018-06-22 홍승비 - 사간겸직 탈퇴희망자 companyID로 중복레코드 제거 */
+	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String primary, String companyID, int tenantID) throws Exception {
 		logger.debug("adminOuterListGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("primary", primary);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCOutApplicationVO> list = ezCommunityDAO.adminOuterListGet2(map);
@@ -5900,7 +5910,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, int tenantID) throws Exception {
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, String companyID, int tenantID) throws Exception {
 		logger.debug("adminMemberListGet3 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5908,6 +5918,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_FLAG", flag);
 		map.put("primary", primary);
 		map.put("v_SER", ser);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCClubUserVO> list = ezCommunityDAO.adminMemberListGet3(map);
@@ -6378,12 +6389,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return result;
 	}
 	
-	public String pollResGet4(String primary, String pollRegUser, int tenantID) throws Exception {
+	public String pollResGet4(String primary, String pollRegUser, String companyID, int tenantID) throws Exception {
 		logger.debug("pollResGet4 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
 		map.put("v_POLLREGUSER", pollRegUser);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		String result = ezCommunityDAO.pollResGet4(map);

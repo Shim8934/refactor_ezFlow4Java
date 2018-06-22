@@ -3189,8 +3189,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
+		// 탈퇴희망자 카운트는 정상(TBL_C_OUTAPPLICATION 테이블에는 레코드가 하나만 들어감)
 		int postCount = ezCommunityService.adminOuterListGet1(code, userInfo.getTenantId());
 		
+		/* 2018-06-22 홍승비 - 사간겸직 탈퇴희망자 companyID로 중복레코드 제거 */
 		String idSpanValue = ezCommunityService.adminOuterList(userInfo, code);
 
 		model.addAttribute("code", code);
@@ -3253,8 +3255,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
+		// 회원들 총 카운트는 정상임(TBL_C_CLUBUSER에는 겸직 상관없이 가입한 당시의 회사id로 레코드가 하나만 들어감)
 		int postCount = ezCommunityService.adminMemberListGet1(code, userInfo.getTenantId());
+		// 현재 커뮤니티의 관리자는 한 명임
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId());
+		// 이부분 companyID로 조건 추가 필요
 		String idSpanValue = ezCommunityService.adminMemberList(userInfo, code, flag, ser, strSysopID, mode);
 		
 		model.addAttribute("code", code);
@@ -3792,7 +3797,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());		
+		// 여기에서는 비승인된 회원수를 중복없이 받아온다.(신청자 레코드는 하나만 등록됨) companyID가 필요할까?
+		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());
+
+		/* 승인대기 회원 표시 companyID 조건 추가 */
 		String idSpanValue = ezCommunityService.adminMemPermit(userInfo, code);
 		
 		model.addAttribute("code", code);

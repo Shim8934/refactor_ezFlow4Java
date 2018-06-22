@@ -10,12 +10,11 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT c_clubno,
+					DISTINCT A.c_clubno,
 					closestate,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
-					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
+					D.c_clubname$v_USERINFO_LANG$ c_clubname,
 					username$v_USERINFO_LANG$ username,
-					c_sysopid,
+					A.c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
@@ -25,10 +24,16 @@
 					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
-				WHERE
-					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				INNER JOIN
+					TBL_C_CLUB D
+				ON
+					A.c_clubno = D.c_clubno
 				AND
-					B.companyID = #companyID#
+					A.tenant_id = D.tenant_id
+				WHERE
+					D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				AND
+					D.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -39,12 +44,11 @@
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT c_clubno,
+					DISTINCT A.c_clubno,
 					closestate,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
-					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
+					D.c_clubname$v_USERINFO_LANG$ c_clubname,
 					username$v_USERINFO_LANG$ username,
-					c_sysopid,
+					A.c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
@@ -54,10 +58,16 @@
 					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
-				WHERE
-					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				INNER JOIN
+					TBL_C_CLUB D
+				ON
+					A.c_clubno = D.c_clubno
 				AND
-					B.companyID = #companyID#
+					A.tenant_id = D.tenant_id
+				WHERE
+					D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				AND
+					D.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -72,8 +82,7 @@
 				SELECT
 					DISTINCT A.c_clubno,
 					closestate,
-					A.c_clubname$v_USERINFO_LANG$ c_clubname,
-					D.c_clubname  b_clubname,
+					D.c_clubname$v_USERINFO_LANG$ c_clubname,
 					username$v_USERINFO_LANG$ username,
 					A.c_sysopid,
 					applicationdate
@@ -92,7 +101,7 @@
 				AND
 					A.tenant_id = D.tenant_id
 				WHERE
-					D.companyID = #companyID#
+					D.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -105,8 +114,7 @@
 				SELECT
 					DISTINCT A.c_clubno,
 					closestate,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
-					D.c_clubname  b_clubname,
+					D.c_clubname$v_USERINFO_LANG$ c_clubname,
 					username$v_USERINFO_LANG$ username,
 					A.c_sysopid,
 					applicationdate
@@ -125,7 +133,7 @@
 				AND
 					A.tenant_id = D.tenant_id
 				WHERE
-					D.companyID = #companyID#
+					D.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY

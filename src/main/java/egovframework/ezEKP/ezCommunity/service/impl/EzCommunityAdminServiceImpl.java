@@ -82,21 +82,12 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		if (!sRadio.equals("") && sRadio.equals("C_SysopID")){
-			map.put("v_S_RADIO", "USERNAME");
-		}
-		
+		/* TBL_COMCLOSE가 아닌 TBL_C_CLUB에서 C_CLUBNAME(수정된 최신 이름 반영), C_SYSOPID(동일 테이블 접근)를 가져오도록 수정 */
 		List<CommunityCComCloseVO> list = null;
 		
-		//
 		if (!keyword.equals("") || !sRadio.equals("")) {
-			
-			logger.debug("위쪽 쿼리를 타나요??");
-			
 			list = ezCommunityAdminDAO.aspCloseComGet1Select1(map);
 		} else {
-			
-			logger.debug("아래쪽 쿼리를 타나요??");
 			list = ezCommunityAdminDAO.aspCloseComGet1Select2(map);
 		}
 		
@@ -105,6 +96,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		return list;
 	}
 
+	//b_clubname은 어디에 쓰이는가?
 	@Override
 	public String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();
@@ -140,7 +132,9 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				process = egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale());
 			} else {
 				sb.append("<a href=\"javascript:open_info('" + cComClose.getC_ClubNo().trim() + "')\">");
-				sb.append(commonUtil.cleanValue(cComClose.getB_ClubName().trim()));
+
+				/* 2018-06-22 홍승비 - b_clubname 필드 제거, c_clubname 사용 */
+				sb.append(commonUtil.cleanValue(cComClose.getC_ClubName().trim()));
 				sb.append("</a>");
 				process = egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale());
 			}
