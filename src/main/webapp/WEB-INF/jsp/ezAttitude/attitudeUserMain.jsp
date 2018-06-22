@@ -369,7 +369,7 @@
 // 					} else { //휴근, 연차종류
 // 						objDt.addClass("refresh");
 // 					}
-					objDt.html(result[i].typeName);
+					objDt.html($("<div style='width:70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></div>").html(result[i].typeName));
 					objDd = $("<dd></dd>")
 					 .text("0")
 					 .attr("id", result[i].typeId)
@@ -674,7 +674,7 @@
 				var startDate = pDate + "-01 00:00:00";
 				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
 
-				document.getElementById("popup_title").innerText = "<spring:message code='ezAttitude.t141'/>" + "[" + typeName + "]";
+				document.getElementById("popup_title").innerText = "<spring:message code='ezAttitude.t141'/>" + "[" + typeName.trim() + "]";
 				
 				$.ajax({
 					type : "POST",
