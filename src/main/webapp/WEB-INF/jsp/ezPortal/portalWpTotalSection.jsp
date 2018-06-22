@@ -20,7 +20,7 @@
     				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">
     					<dt>
-    						<c:if test="${not empty companyList }">
+    						<c:if test="${fn:length(companyList) gt 1 }">
 								<select id="selectCompany" onchange="changeCompany();">
 									<c:forEach items="${companyList }" var="company">
 										<option value="${company.deptID }" <c:if test="${userInfo.deptID eq company.deptID }">selected="selected"</c:if> companyID="${company.companyID }">
