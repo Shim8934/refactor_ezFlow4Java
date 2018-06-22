@@ -21,6 +21,8 @@
 			AND 
 				E.TENANT_ID = #tenantId# 
 			AND 
+				E.COMPANYID = #companyID#
+			AND 
 				E.LADDERID in
 			(
 			SELECT
@@ -71,6 +73,8 @@
 			AND 
 				E.TENANT_ID = #tenantId# 
 			AND 
+				E.COMPANYID = #companyID#
+			AND 
 				E.LADDERID in
 			(
 			SELECT
@@ -96,7 +100,7 @@
 			]]>
 			</isEqual>
 				<![CDATA[
-				A.WRITERID = #userId# 
+					A.WRITERID = #userId#
             )
             ORDER BY
             ]]>
@@ -171,6 +175,8 @@
 			AND 
 				A.TENANT_ID = #tenantId#
 			AND 
+				A.COMPANYID = #companyID#
+			AND 
 				A.LADDERID = ANY(
 								SELECT 
 									B.LADDERID 
@@ -204,6 +210,8 @@
 				A.DELETEFLAG = 0
 			AND 
 				A.TENANT_ID = #tenantId#
+			AND
+				A.COMPANYID = #companyID#	
 			AND 
 				A.LADDERID = ANY(
 								SELECT 
@@ -391,6 +399,8 @@
 			AND 
 				A.TENANT_ID = #tenantId#
 			AND 
+				A.COMPANYID = #companyID#
+			AND 
 				A.LADDERID = ANY(
 								SELECT 
 									B.LADDERID 
@@ -487,6 +497,8 @@
 					A.DELETEFLAG = 0
 				AND 
 					A.TENANT_ID = #tenantId#
+				AND 
+					A.COMPANYID = #companyID#
 				AND 
 					A.LADDERID = ANY(
 									SELECT 
@@ -608,6 +620,8 @@
 									AND 
 										D.TENANT_ID = #tenantId#
 									AND
+										D.COMPANYID = #companyID#
+									AND
 										D.LADDERID IN 
 													(
 													SELECT 
@@ -644,6 +658,8 @@
 				WHERE
 					D.DELETEFLAG = 0
 				AND 
+					D.COMPANYID = #companyID#
+				AND
 					D.TENANT_ID = #tenantId#
 				AND
 					D.LADDERID IN 
@@ -723,6 +739,8 @@
 				D.DELETEFLAG = 0
 			AND 
 				D.TENANT_ID = #tenantId#
+			AND
+				D.COMPANYID = #companyID#
 			AND
 				D.LADDERID IN 
 							(
@@ -829,6 +847,8 @@
 					D.DELETEFLAG = 0
 				AND 
 					D.TENANT_ID = #tenantId#
+				AND
+					D.COMPANYID = #companyID#
 				AND
 					D.LADDERID IN 
 								(
@@ -956,6 +976,8 @@
 				LADDERID = #ladderId#
 			AND
 				TENANT_ID = #tenantId#
+			AND
+				COMPANYID = #companyID#
 		]]>
 	</update>
 	
@@ -1033,9 +1055,9 @@
 	
  	<insert id="EzLadderDAO.insertLadderSet" parameterClass="LadderVO">
 		INSERT INTO 
-			TBL_LADDER (TENANT_ID, TITLE, TYPE, SECRETFLAG, WRITERID, WRITERNAME, WRITERNAME2, DEPTNAME, DEPTNAME2, LINECNT, WRITEDATE)
+			TBL_LADDER (TENANT_ID, TITLE, TYPE, SECRETFLAG, WRITERID, WRITERNAME, WRITERNAME2, DEPTNAME, DEPTNAME2, LINECNT, WRITEDATE, COMPANYID)
 		VALUES 
-			(#tenant_id#, #title#, #type#, #secretFlag#, #writerId#, #writerName#, #writerName2#, #deptName#, #deptName2#, #lineCnt#, #writeDate#)
+			(#tenant_id#, #title#, #type#, #secretFlag#, #writerId#, #writerName#, #writerName2#, #deptName#, #deptName2#, #lineCnt#, #writeDate#, #companyID#)
 	</insert>
 	
 	<insert id="EzLadderDAO.insertLadderLine" parameterClass="LadderLineVO">
@@ -1065,6 +1087,8 @@
 			WRITERID = #writerId#
 		AND
 			TENANT_ID = #tenant_id#
+		AND
+			COMPANYID = #companyID#
 		]]>
 	</select>
 	

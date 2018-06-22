@@ -46,8 +46,16 @@ public class LadderVO {
 	private int cmt;
 	/** 생성 24시간 여부*/
 	private int newFlag;
+	/** 회사 아이디 */
+	private String companyID;
 	
 	
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
 	public int getTenant_id() {
 		return tenant_id;
 	}
