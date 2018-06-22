@@ -584,17 +584,34 @@ public class EzLadderGWController {
 	/**
 	 * 사디리 삭제 
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/delete/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
-	public JSONObject gwDeleteLadderList(@PathVariable String userId,  HttpServletRequest request) {
+	public JSONObject gwDeleteLadderList(@PathVariable String userId,  @RequestBody JSONObject jsonBodys, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /rest/ladder/delete/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
-		String tenant_Id = request.getParameter("tenant_Id");
-		String ladderId = request.getParameter("ladderId");
-
+		
 		try {
-	
-			ezLadderService.deleteLadderList(userId, tenant_Id, ladderId);
+			String serverName = request.getHeader("x-user-host");
+			String dbType = globals.getProperty("Globals.DbType");
+			String logCookie = (String) jsonBodys.get("loginCookie");
+			String ladderId = (String) jsonBodys.get("ladderId");
+			LadderVO ladVO = new LadderVO();
+			
+			if(dbType.equals("mysql")) {
+				MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, userId);
+				ladVO.setUserId(userId);
+				ladVO.setTenant_id(userInfo.getTenantId());
+				ladVO.setLadderId(Integer.parseInt(ladderId));
+				ladVO.setCompanyID(userInfo.getCompanyId());
+			} else {
+				LoginVO userInfo = commonUtil.userInfo(logCookie);
+				ladVO.setUserId(userId);
+				ladVO.setTenant_id(userInfo.getTenantId());
+				ladVO.setLadderId(Integer.parseInt(ladderId));
+				ladVO.setCompanyID(userInfo.getCompanyID());
+			}
+			ezLadderService.deleteLadderList(ladVO);
 
 			result.put("status", "ok");
 			result.put("code", "0");

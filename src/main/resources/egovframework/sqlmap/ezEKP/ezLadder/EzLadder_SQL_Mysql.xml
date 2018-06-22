@@ -976,6 +976,8 @@
 				LADDERID = #ladderId#
 			AND
 				TENANT_ID = #tenantId#
+			AND
+				COMPANYID = #companyID#
 		]]>
 	</update>
 	
