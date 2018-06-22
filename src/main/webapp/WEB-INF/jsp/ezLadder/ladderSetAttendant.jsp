@@ -131,7 +131,7 @@
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${deptID}' />");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${companyID}' />");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
