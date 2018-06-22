@@ -247,6 +247,7 @@
 			writerCompanyID = "<c:out value='${vo.companyID}' />";
 			marginChangeAttendantNum = 50;
 			
+			// 사다리가 삭제 되었을 경우
 			if(deleteFlag == "0") {
 				ladder_window_resize();
 				canvasSetting();
@@ -256,6 +257,7 @@
 				return;
 			}
 			
+			// 사간겸직시
 			if(companyID != writerCompanyID) {
 				alert("<spring:message code='ezLadder.hyh02' />");
 				window.close();
