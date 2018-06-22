@@ -985,4 +985,31 @@ public class EzPMSGWController3 {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/checkIfExistPreTaskRel/{pretaskId}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject checkIfExistPreTaskRel(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int pretaskId) {
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/" + pretaskId + "] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.remove("userId"));
+			jsonParam.put("tenantId", info.getTenantId());
+			
+			boolean ifExistPreTaskRel = ezPMSService.checkIfExistPreTaskRel(jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", ifExistPreTaskRel);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/" + pretaskId + "] ended");
+		return result;
+	}
 }

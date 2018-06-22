@@ -229,6 +229,8 @@ public interface EzPMSService {
 	
 	public int checkIfHasPreTaskRel(Map<String, Object> map);
 	
+	public boolean checkIfExistPreTaskRel(Map<String, Object> map);
+	
 	public void deletePreTaskRelInTask(Map<String, Object> map);
 
 	public void deletePreTaskRelInGroup(Map<String, Object> map);

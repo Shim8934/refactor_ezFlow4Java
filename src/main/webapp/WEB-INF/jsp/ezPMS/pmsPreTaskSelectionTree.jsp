@@ -14,6 +14,8 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
 	var treeData = "";
+	var pretaskId;
+	
 	$(document).ready(function() {
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
@@ -30,6 +32,17 @@
 	function register() {
 		var chosenTaskTree = $("a.jstree-clicked").parents("li[role='treeitem']").toArray();
 		var preTaskName = "";
+		pretaskId = $("a.jstree-clicked").parent("li[role='treeitem']").attr("id");
+		
+		if(checkIfExistPreTaskRel(pretaskId) == true) {
+			alert("<spring:message code='ezPMS.t298' />");	
+			return;
+		}
+		
+		if(checkIfIsItself(pretaskId) == true) {
+			alert("<spring:message code='ezPMS.t299' />");
+			return;
+		}
 		
 		for(var i = chosenTaskTree.length - 2; i >= 0; i--) {
 			
@@ -42,8 +55,60 @@
 		
 		$("#preTaskName", parent.document).text(preTaskName);
 		
-		parent.pretaskId = $("a.jstree-clicked").parent("li[role='treeitem']").attr("id");
+		
+		parent.pretaskId = pretaskId;
 		popupClose();
+	}
+	
+	function checkIfExistPreTaskRel(pretaskId) {
+		
+		var check;
+		
+		if(pretaskId.indexOf("t") != -1) {
+			pretaskId = pretaskId.substring(pretaskId.indexOf("t") + 1);
+			type = "task";
+		} else {
+			type = "group";
+		}
+		
+		data = {
+			pretaskId : pretaskId,
+			type : type
+		}
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezPMS/checkIfExistPreTaskRel.do",
+			dataType : "json",
+			async : false,
+			contentType : "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function(result) {
+				check = result.data;
+			}
+		})
+		
+		return check;
+	}
+	
+	// 선택한 업무(또는 그룹)이 자기 자신인지의 여부를 판단
+	function checkIfIsItself(pretaskId) {
+		
+		if(pretaskId.indexOf("t") != -1) {
+			pretaskId = pretaskId.substring(pretaskId.indexOf("t") + 1);
+			
+			if(parent.taskId == pretaskId) {
+				return true;
+			}
+			
+		} else {
+			
+			if(parent.originGroupId == pretaskId) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	function initPreTask() {

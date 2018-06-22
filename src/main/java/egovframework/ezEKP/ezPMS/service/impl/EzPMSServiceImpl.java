@@ -2684,6 +2684,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
+	public boolean checkIfExistPreTaskRel(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] checkIfExistPreTaskRel started.");
+		boolean result = false;
+		
+		if(ezPMSDAO.checkIfExistPreTaskRel(map) > 0) {
+			result = true;
+		} 
+		
+		LOGGER.debug("[SERVICE] checkIfExistPreTaskRel ended.");
+	
+		return result;
+	}
+	
+	@Override
 	public void deletePreTaskRelInTask(Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] deletePreTaskRelInTask started.");
 		ezPMSDAO.deletePreTaskRelInTask(map);

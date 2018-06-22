@@ -936,4 +936,23 @@ public class EzPMSController3 {
 		return "json";
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezPMS/checkIfExistPreTaskRel.do")
+	public String checkIfExistPreTaskRel(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS checkIfExistPreTaskRel started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		jsonParam.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/checkIfExistPreTaskRel/" + jsonParam.get("pretaskId"), null, request, "post", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			boolean ifExistPreTaskRel = (boolean) resultBody.get("data");
+			model.addAttribute("data", ifExistPreTaskRel);
+		}
+		
+		LOGGER.debug("ezPMS checkIfExistPreTaskRel ended");
+		return "json";
+	}
 }
