@@ -866,7 +866,7 @@ function openOpinionUI(ret, CompleteFunction) {
     else
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
-    DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+    DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do?orgCompanyID="+orgCompanyID);
 }
 function openOpinionUI_Complete(ret) {
     DivPopUpHidden();
@@ -923,7 +923,7 @@ function makeOpinionList(OpinionXML) {
 var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     var parameter = pDocID;
-    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID);
+    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&orgCompanyID=" + orgCompanyID;
 
     aprattach_cross_dialogArguments[0] = parameter;
     aprattach_cross_dialogArguments[1] = openFileAttachUI_Complete;
@@ -1178,7 +1178,8 @@ function getApprovInfo() {
 	 			async : false,
 	 			url : "/ezApprovalG/getLineMode.do",
 	 			data : {
-	 					docID : pDocID
+	 					docID : pDocID,
+	 					orgCompanyID : pCompanyID
 	 					},
 	 			success: function(xml){
 	 				if (xml == "END") {
@@ -1199,7 +1200,8 @@ function getApprovInfo() {
     			userID : pUserID,
     			deptID : OrgAprUserDeptID,
     			mode : pMode,
-    			chamState : docState
+    			chamState : docState,
+    			orgCompanyID : pCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -1367,7 +1369,7 @@ function getCurApproverAprLine(type) {
 				docID    : pDocID, 
 				userID 	 : "",
 				formID   : "",
-				deptID   : arr_userinfo[4],
+				orgCompanyID : orgCompanyID,
 				isUsed   : type,
 				mode     : pMode
 				},
@@ -1558,6 +1560,7 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
     createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", DocNumCode);
     createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
+    createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
 
     var g_SepAttachLVXml = "";
     g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
@@ -1634,7 +1637,8 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -1675,7 +1679,8 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -2903,7 +2908,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do");
+        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID);
         }
     } catch (e) {
         alert(e.description);
@@ -2932,6 +2937,7 @@ function SignSave() {
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
+            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", orgCompanyID);
         }
         xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);
@@ -3284,7 +3290,8 @@ function UpdateLineHistory() {
 			chkFlag : "CHECK",
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16]
+			userDeptName2 : arr_userinfo[16],
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
@@ -3545,7 +3552,8 @@ function getNextDocInfo() {
     		data : {
     			docID : pDocID,
     			userID  : pUserID,
-    			userDeptID  : arr_userinfo[4]
+    			userDeptID  : arr_userinfo[4],
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -3571,6 +3579,8 @@ function getNextDocInfo() {
             NextDocAprType = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRTYPE"));
             NextDocHref = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "HREF"));
             NextDocExtended = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "EXTENDEDNAME"));
+            pCompanyID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "COMPANYID"));
+            orgCompanyID = pCompanyID;
         }
     } catch (e) { }
 }

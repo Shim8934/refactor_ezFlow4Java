@@ -151,6 +151,7 @@
 			var draftDeptID = "${draftDeptID}";
 			
 			var docState = "${docState}";
+			var orgCompanyID = "${orgCompanyID}";
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -1145,7 +1146,7 @@
 	        var pTop = (pheight - conHeight) / 2;
 	        var pLeft = (pwidth - 890) / 2;
 	        //기존
-	        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref);
+	        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref)+"&orgCompanyID="+orgCompanyID;
 	        //수정
 //		        var pURL = "/ezEmail/mailWrite.do?docHref=" + encodeURIComponent(pDocHref) + "&cmd=docsend&docID=" + pDocID + "&imageCnt=&target=APPROVALG";
 	        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -1324,7 +1325,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID="+pCompanyID, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1342,7 +1343,8 @@
 			                    		async : false,
 			                    		url : "/ezApprovalG/aprLineSave.do",
 			                    		data : {
-			                    				ret    : ret[1]
+			                    				ret    : ret[1],
+			                    				orgCompanyID : orgCompanyID
 			                    				},
 			                    		success : function(result){
 			                    			
@@ -1367,7 +1369,8 @@
 			                    		async : false,
 			                    		url : "/ezApprovalG/aprLineSave.do",
 			                    		data : {
-			                    				ret    : ret[1]
+			                    				ret    : ret[1],
+			                    				orgCompanyID : orgCompanyID
 			                    				},
 			                    		success : function(result){
 			                    			
@@ -1393,7 +1396,8 @@
 		                    		async : false,
 		                    		url : "/ezApprovalG/aprDeptSave.do",
 		                    		data : {
-		                    				aprDeptInfo : ret[2]
+		                    				aprDeptInfo : ret[2],
+		                    				orgCompanyID : orgCompanyID
 		                    				},
 		                    		success : function(result){
 		                    			if (result == 'TRUE') {
@@ -1544,7 +1548,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
+		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID);
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -1564,7 +1568,8 @@
 		    		url : "/ezApprovalG/getCabinetSN.do",
 		    		data : {
 		    			docID : pDocID,
-		    			deptID : draftDeptID
+		    			deptID : draftDeptID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = xml;

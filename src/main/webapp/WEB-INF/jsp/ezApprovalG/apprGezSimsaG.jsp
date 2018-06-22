@@ -83,6 +83,8 @@
 		    var flag = false;
 		    var pUse_Editor = "${useEditor}";
 		    var PrtBodyContent;
+		    var orgCompanyID = "";
+		    
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
 		    }
@@ -579,7 +581,8 @@
 		    		url : "/ezApprovalG/saveFile.do",
 		    		data : {
 		    			docID : pDocID,
-		    			html  : mhtBody
+		    			html  : mhtBody,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(text){
 		    			result = text;

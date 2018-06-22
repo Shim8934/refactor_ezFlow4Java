@@ -106,7 +106,8 @@ function initReceptListView() {
 		data : {
 			docID : docIDorSN,
 			mode  : pMode,
-			isUsed : isUsed
+			isUsed : isUsed,
+			orgCompanyID : companyID
 		},
 		success: function(xml){
 			result = loadXMLString(xml);

@@ -54,6 +54,14 @@ public class ApprGReceiveDocVO {
 	/** */
 	private String aprCount;
 	
+	private String companyID;
+	
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
 	public String getOrgDocID() {
 		return orgDocID;
 	}

@@ -66,6 +66,7 @@
 		    var signImageType = "${signImageType}";
 		    var pMode = "${mode}";
 		    var forceCallBackYN = "${forceCallBackYN}";
+		    var orgCompanyID = "${orgCompanyID}";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -366,7 +367,8 @@
 		    		url : "/ezApprovalG/gongRamUpdate.do",
 		    		data : {
 		    			docID : DocID,
-		    			userID: ListSusin
+		    			userID: ListSusin,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
