@@ -154,7 +154,7 @@ public class EzConnController {
 					}
 				}
 								
-				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response);
+				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response,"","");
 				
 				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
@@ -285,7 +285,7 @@ public class EzConnController {
 					logger.debug("isUserExists=" + isUserExists);
 					
 					if (isUserExists) {
-						loginController.createLoginCookie(resultVO.getId(), "", "", tenantId, request, response);
+						loginController.createLoginCookie(resultVO.getId(), "", "", tenantId, request, response,"","");
 						
 						// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 						// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함

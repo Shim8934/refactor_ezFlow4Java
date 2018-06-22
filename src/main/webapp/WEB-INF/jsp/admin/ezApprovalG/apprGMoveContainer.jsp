@@ -405,7 +405,7 @@
 	        }
 
 	        selectelem = elem;
-	        elem.style.backgroundColor = "#edf4fd";
+	        elem.style.backgroundColor = "#f0f6ff";
 	        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 	        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
@@ -423,7 +423,7 @@
 					strMoveListIDInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body").css("background", "#edf4fd");
+					$(".row_body").css("background", "#f0f6ff");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteListID.push($(this).attr("id") + ";")
@@ -577,6 +577,9 @@
 	            var Flag;
 	            if (typeof (retVal) != "undefined") {
 	                $("#drafterdept").val(retVal[1]);
+	             	// 2018-06-20. 황윤호 	관리자 > 전자결재 > 문서이동 #drafetdept 값 설정
+	                document.getElementsByName("drafterdept")[0].id = retVal[0];
+	                document.getElementsByName("drafterdept")[0].value = retVal[1];
 	            }
 	            Flag = "TDeptName";
 	            getDocType(Flag);
@@ -723,7 +726,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f0f6ff";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅

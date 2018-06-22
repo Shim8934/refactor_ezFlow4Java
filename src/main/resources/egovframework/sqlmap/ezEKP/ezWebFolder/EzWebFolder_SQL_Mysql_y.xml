@@ -134,7 +134,7 @@
 				type.TYPE_ICON   		as TYPE_ICON ,
 				folder.FOLDER_PATH	  	as FOLDER_PATH,
 				folder.FOLDER_NAME1    	as FOLDER_NAME1,
-				if(s.user_id = null,'1','0') as FAVORITE_STATUS,
+				IF(S.USER_ID IS NULL, '0', '1') AS FAVORITE_STATUS,
 				CASE WHEN EXISTS(SELECT SHARE_ID FROM TBL_WEBFOLDER_SHARE WHERE FOLDERFILE_ID = f.FILE_ID AND FOLDERFILE_TYPE = 'F' AND TENANT_ID = f.TENANT_ID)
 					THEN 'Y'
 					ELSE 'N'
@@ -166,7 +166,7 @@
 				type.TYPE_ICON		AS TYPE_ICON    ,     
 				folder.FOLDER_PATH  AS FOLDER_PATH  ,     
 				folder.FOLDER_NAME1 AS FOLDER_NAME1 ,    
-				if(s.user_id =null, '1','0') as FAVORITE_STATUS,
+				IF(S.USER_ID IS NULL, '0', '1') AS FAVORITE_STATUS,
                 CASE WHEN EXISTS(SELECT SHARE_ID FROM TBL_WEBFOLDER_SHARE WHERE FOLDERFILE_ID = folder.FOLDER_ID AND FOLDERFILE_TYPE = 'D' AND TENANT_ID = folder.TENANT_ID)
 					THEN 'Y'
 					ELSE 'N'
@@ -387,85 +387,6 @@
 	        ORDER BY SELECTED DESC ,  FOLDERNAME1
 		]]>
 	</select>
-    
-    <select id="EzWebFolderDAO_y.getFolderList" resultClass="HashMap" parameterClass="Map" >
-		<![CDATA[
-			select 
-				distinct 
-				ff.FOLDER_ID as id ,if( ff.folder_upper = 'root', '##', ff.FOLDER_UPPER )as parent,
-				if ( ff.FOLDER_UPPER = 'root', true, false) as selected,
-				if ( #primary# = '1' , ff.FOLDER_NAME1, ff.FOLDER_NAME2) as text,
-				ff.create_id as createId
-			from tbl_webfolder_folder as ff  inner join  (
-			
-				select 	
-					SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-					fld.folder_id, fld.folder_path
-				from tbl_webfolder_folder fld inner join 
-			
-				(
-					select 
-						*
-					from 
-						tbl_webfolder_folderuser  
-					where 
-						USER_ID in (
-							select dept.cn 		
-							from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-							where addj.cn = #userId# 
-							union all 
-							select owner_id 
-							from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
-               				where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
-						)
-						or user_id = #userId# or user_id= #deptId# 
-						or user_id in(
-							SELECT
-								d2.cn
-							FROM
-								TBL_DEPTMASTER d2 JOIN
-									(
-									SELECT
-										f.*
-									FROM
-										(
-											tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
-											ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
-										)
-									) AS a ON d2.CN = a.OWNER_ID AND  d2.TENANT_ID = a.TENANT_ID
-							WHERE
-								d2.TENANT_ID = #tenantId#
-						)
-					) as user on fld.folder_id = user.folder_id 
-					where fld.folder_type = #folderType#
-					and user.tenant_id = #tenantId#
-				)as tt on tt.folder_id = ff.folder_id 
-				or tt.folder_id = ff.folder_id or ff.FOLDER_PATH like concat('%',tt.folder_path,'%')
-				where ff.tenant_id = #tenantId#
-				and ff.owner_id = #comId#
-				and ff.use_status = 'Y'
-			union all 
-			select ff.FOLDER_ID as id ,if( ff.folder_upper = 'root', '##', ff.FOLDER_UPPER )as parent,
-				if ( ff.FOLDER_UPPER = 'root', true, false) as selected,
-				if ( #primary# = '1' , ff.FOLDER_NAME1, ff.FOLDER_NAME2) as text,
-				ff.create_id as createId 
-			from tbl_webfolder_folder ff 
-			where ff.tenant_id = #tenantId#
-				and ff.owner_id = #comId# 
-				and ff.use_status = 'Y' and ff.COMPANY_ID = #comId# and ff.folder_type = #folderType# and ff.folder_upper = 'root'
-	        order by selected desc            
-		]]>
-	</select>
-    
-    <select id="EzWebFolderDAO_y.getParentId" resultClass="String" parameterClass="Map">
-    	SELECT FOLDER_UPPER
-			FROM 
-				TBL_WEBFOLDER_FOLDER  
-			WHERE  
-                	FOLDER_ID = #folderId#
-                and TENANT_ID = #tenantId#
-    </select>
-    
     
 	<select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">   
    		<![CDATA[
@@ -754,8 +675,8 @@
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
+					(DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -777,7 +698,7 @@
 						f.FILE_EXT	  			AS FILE_EXT,
 						f.FOLDER_ID	  			AS FOLDER_ID,
 						f.USE_STATUS   			AS USE_STATUS,
-						if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+						if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) AS CREATE_NAME1,
 						f.CREATE_NAME2 as CREATE_NAME2,
 						DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
 						f.TENANT_ID    			AS TENANT_ID,
@@ -957,95 +878,6 @@
 		]]>
 	</select>
 	
-	
-	<select id ="EzWebFolderDAO_y.getFolderList_all" resultClass="HashMap" parameterClass="Map">
-		<![CDATA[
-		 SELECT distinct
-				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, folder.folder_name1 as text,folder.create_id as createId
-			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
-			where  SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in(
-				select  distinct folder.folder_id
-				FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
-				where   folder.TENANT_ID = #tenantId# 
-					and user.TENANT_ID = #tenantId# 
-					and folder.company_id = #comId# 
-			    	and (user.USER_ID IN (select dept.cn 
-										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-										where addj.cn = #userId# or dept.cn = #deptId#) 
-				or user.USER_ID = #userId# or user.USER_ID = #comId#)
-				)
-			and folder.tenant_id = #tenantId#
-			or (folder.FOLDER_UPPER = 'root' AND folder.TENANT_ID = #tenantId# and folder.company_id =#comId# 
-				and folder.use_status = 'Y' and folder.OWNER_ID = #comId#) 
-			or (folder.use_status = 'Y'	AND folder.TENANT_ID = #tenantId# and folder.COMPANY_ID = #comId# 
-					and (folder.OWNER_ID = #userId# or  folder.OWNER_ID = #deptId# or  folder.OWNER_ID = #comId# or folder.OWNER_ID IN (
-										select dept.cn 
-										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-										where addj.cn = #userId# or dept.cn = #deptId#)  ))
-	        order by folder.FOLDER_TYPE
-										
-	    ]]>
-	        
-	</select>
-	
-	<select id="EzWebFolderDAO_y.getFolderList_U" resultClass="HashMap" parameterClass="Map" >
-		<![CDATA[
-			select distinct
-				folder.FOLDER_ID as id ,if( folder.folder_upper = 'root', '##', folder.FOLDER_UPPER )as parent,
-				folder.create_id as createId, 
-				if ( #primary# = '1' , folder.FOLDER_NAME1, folder.FOLDER_NAME2) as text,
-				if ( folder.FOLDER_UPPER = 'root', true, false) as selected
-			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.FOLDER_ID  = user.FOLDER_ID
-			where 		folder.folder_type = #folderType# 
-					and folder.use_status = 'Y'
-					AND folder.TENANT_ID = #tenantId# 
-					and folder.COMPANY_ID = #comId# 
-					and folder.OWNER_ID = #userId#
-			order by selected desc
-		]]>
-	</select>
-	
-	<select id="EzWebFolderDAO_y.getFolderList_D" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
-			
-	        SELECT distinct
-				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, 
-				folder.owner_id as owner, folder.FOLDER_PATH,folder.CREATE_ID as createId,
-				if ( #primary# = '1' , folder.FOLDER_NAME1, folder.FOLDER_NAME2) as text,
-				if ( folder.owner_id = #deptId# && folder.folder_upper = 'root', true, false) as selected
-			from TBL_WEBFOLDER_FOLDER folder 
-			where  
-							folder.TENANT_ID = #tenantId# 
-						and folder.folder_type = #folderType# 
-						and folder.company_id = #comId# 
-			            and folder.owner_id in (
-			            	select dept.cn 		
-							from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-							where addj.cn = #userId# or folder.owner_id = #deptId#
-							union  
-							select owner_id 
-							from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
-               				where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
-			            )
-						and folder.use_status = 'Y'
-	        union  
-	        select 
-	        	f.folder_id as id ,if( f.folder_upper = 'root', '##', f.folder_upper )  as parent,
-				f.owner_id as owner, f.FOLDER_PATH, f.CREATE_ID as createId,
-	        	if ( #primary# = '1' , f.FOLDER_NAME1, f.FOLDER_NAME2) as text,
-				if ( f.owner_id = #deptId# && f.folder_upper = 'root', true, false) as selected
-
-			from 
-			
-			(			tbl_deptmaster as dept inner join tbl_webfolder_folder f on  dept.cn = f.owner_id
-			inner join tbl_webfolder_folderuser user  on f.folder_id = user.FOLDER_ID and f.tenant_id = user.tenant_id  )
-			
-			where user.user_id = #userId# and f.tenant_id = #tenantId# and user.USER_TYPE = 'chief' and f.use_status = 'Y'
-			order by selected desc
-			
-		]]>
-	</select>
-	
 	<select id="EzWebFolderDAO_y.getFolderDetail" parameterClass="Map" resultMap="folderVO">
 		<![CDATA[
 			SELECT 
@@ -1148,47 +980,7 @@
 			select DEPTID as cn from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#
 		]]>
 	</select>
-	<select id="EzWebFolderDAO_y.getDeptAddJobList" parameterClass="Map" resultClass="HashMap"> 
-		<![CDATA[
-			select cn from tbl_addjobmaster where DEPTID = #deptId# and tenant_id = #tenantId#
-		]]>
-	</select>
-	<select id="EzWebFolderDAO_y.getDeptSub" parameterClass="Map" resultClass="HashMap"> 
-		<![CDATA[
-			select cn , EXTENSIONATTRIBUTE9 from tbl_deptmaster where DEPT_CD_PATH like concat('%',#deptId#,'%') and tenant_id =#tenantId#
-		]]>
-	</select>
-	<select id="EzWebFolderDAO_y.existCheck" parameterClass="Map" resultClass="Integer"> 
-		<![CDATA[
-				SELECT count(owner_id)
-				FROM tbl_webfolder_folder 
-				WHERE tenant_id =#tenantId# and company_id = #comId# and folder_type = #folderType#  and folder_upper='root'
-		]]>
-		<isEqual property="folderType" compareValue="C" prepend="AND">
-			<![CDATA[
-				owner_id = #comId#
-	   		]]>	
-		</isEqual>
-		<isEqual property="folderType" compareValue="D" prepend="AND">
-			<![CDATA[
-				owner_id = #deptId#
-	   		]]>	
-		</isEqual>
-		<isEqual property="folderType" compareValue="U" prepend="AND">
-			<![CDATA[
-				owner_id = #userId#
-	   		]]>	
-		</isEqual>
-	</select>
 	
-	<select id="EzWebFolderDAO_y.getdeptInfo" parameterClass="Map" resultClass="HashMap"> 
-		<![CDATA[
-			select
-				cn , DISPLAYNAME, DISPLAYNAME2 ,EXTENSIONATTRIBUTE9 ,EXTENSIONATTRIBUTE1 ,EXTENSIONATTRIBUTE2
-			from tbl_deptmaster
-			WHERE tenant_id =#tenantId# and cn =#deptId#
-		]]>
-	</select>
 	<update id="EzWebFolderDAO_y.updateFolder" parameterClass="Map" >
 		<![CDATA[
 			UPDATE
@@ -1300,27 +1092,6 @@
 		]]>
 	</update>
 	
-	<update id="EzWebFolderDAO_y.deleteFile" parameterClass="Map" >
-		<![CDATA[
-			update
-				tbl_webfolder_file as file
-			set
-				file.use_status = 'T',
-				file.DELETER_ID = #userId#
-			where 
-				file.TENANT_ID = #tenantId#
-			and
-				file.FOLDER_ID in (
-					select id 
-			        from (
-						select concat(folder.folder_path ,'%') as path, folder.FOLDER_ID id
-						from tbl_webfolder_folder folder  
-						where folder.folder_path like concat('%|',#folderId#,'|%') and folder.TENANT_ID = #tenantId# 
-							and folder.company_id = #comId#)  
-						a)
-		]]>
-	</update>
-	 
 	<update id="EzWebFolderDAO_y.deleteFileInFolder" parameterClass="Map" >
 		<![CDATA[
 			update
@@ -1345,74 +1116,20 @@
 		]]> 
 	</update>
 	
-	<insert id="EzWebFolderDAO_y.deptInsertTest" parameterClass="Map">
-		<selectKey keyProperty="id" resultClass="String">
-			<![CDATA[
-				SELECT if (folder_id is null,1, MAX(CONVERT(FOLDER_ID ,UNSIGNED))+1)
-				FROM TBL_WEBFOLDER_FOLDER 
-				WHERE TENANT_ID = #tenantId# 
-			]]>
-	
-		</selectKey>
-		<![CDATA[
-			INSERT INTO tbl_webfolder_folder
-			(  				FOLDER_ID,
-					    	FOLDER_NAME1,
-					    	FOLDER_NAME2,
-					    	FOLDER_TYPE,
-					    	FOLDER_PATH,
-					    	FOLDER_STEP,
-					    	FOLDER_LEVEL,
-					    	FOLDER_UPPER,
-					    	USE_STATUS,
-					    	OWNER_ID,
-					    	CREATE_ID,
-					    	CREATE_DATE,
-					    	CREATE_NAME1,
-					    	CREATE_NAME2,
-					    	UPDATE_ID,
-					    	UPDATE_DATE,
-					    	COMPANY_ID,
-					    	TENANT_ID
-			                )
-			SELECT 			        
-			        #id#,
-			    	#folderName1#,
-			    	#folderName2#,
-			    	#folderType#,
-			    	concat(#folderPath#,#id#,'|'),
-			    	#folderStep#,
-			    	#folderLevel#,
-			    	#folderUppId#,
-			    	'Y',
-			    	#deptId#,
-			    	#userId#,
-			    	#timeUTC#,
-			    	#createName1#,
-			    	#createName2#,
-			    	#userId#,
-			    	#timeUTC#,
-			    	#comId#,
-			    	#tenantId#
-	        FROM tbl_webfolder_folder
-			WHERE NOT EXISTS (
-			    SELECT owner_id FROM tbl_webfolder_folder  WHERE owner_id = #deptId# and tenant_id = #tenantId# and folder_type = 'D'
-			) LIMIT 1
-			ON DUPLICATE KEY UPDATE tenant_id = #tenantId#
-		]]>
-	</insert>
 	<select id="EzWebFolderDAO_y.getUsrListCnt" parameterClass="Map" resultClass="Integer"> 
 		<![CDATA[
 			SELECT IFNULL(
 				( select ENV_VALUE from tbl_webfolder_env  where cn = #userId# and tenant_id = #tenantId# and ENV_TYPE='P') , 10) as cnnt
 		]]>
 	</select>
+	
 	<insert id="EzWebFolderDAO_y.envInsert" parameterClass="Map">
 		INSERT INTO tbl_webfolder_env (cn, env_type,env_value,tenant_id) 
 		value (#userId#,'P',#listCount#, #tenantId#)
 		ON DUPLICATE KEY UPDATE env_value = #listCount#
 		
 	</insert>
+	
 	<select id ="EzWebFolderDAO_y.folderDetailByFileId" parameterClass="Map" resultMap="folderVO">
 		<![CDATA[
 			SELECT fld.*
@@ -1420,6 +1137,7 @@
 			WHERE f.TENANT_ID = #tenantId# and fld.COMPANY_ID = #comId# and f.FILE_ID = #fileId# 
 		]]>
 	</select>
+	
 	<select id="EzWebFolderDAO_y.checkCompanyFolderPermission" parameterClass="Map" resultClass="Integer">
 		SELECT COUNT(*) 
 		FROM TBL_WEBFOLDER_FOLDERUSER FU
@@ -1438,4 +1156,3 @@
 		AND FU.TENANT_ID = #tenantId#
 	</select>
 </sqlMap>
-

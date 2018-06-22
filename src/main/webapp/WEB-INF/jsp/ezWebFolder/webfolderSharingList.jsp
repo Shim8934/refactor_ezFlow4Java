@@ -320,7 +320,8 @@
 			// folderPath 는 숫자 
 			function setNamePath(folderPath, originalPath) {
 				var orginalPathElmt = document.getElementById("originalPath");
-				var nameTag = document.createElement("span");
+				var nameTag = document.createElement("div");
+				nameTag.setAttribute("class", "mainPath");
 				var originPath;
 				
 				// for statement using
@@ -332,16 +333,19 @@
 				orginalPathElmt.appendChild(nameTag);
 				
 				if (folderPath == null) {
-					detailName = document.createElement("span");
+					detailName = document.createElement("div");
 					detailName.className = "aName";
-					detailName.textContent = "공유한목록";
-					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
 						isShareMode = true;
 						isSubSearching = "N";
 						nameFileList("");
 					};
 					
+					var divName = document.createElement("div");
+					divName.textContent = "<spring:message code='ezWebFolder.t267'/>";
+					divName.setAttribute("style", "font-size:15px;");
+					
+					detailName.appendChild(divName);
 					nameTag.appendChild(detailName);
 					return;
 				}
@@ -352,7 +356,8 @@
 				length = path.length - 1;
 				
 				for (var i = 0; i < length; i++) {
-					detailName = document.createElement("span");
+					detailName = document.createElement("div");
+					var divName = document.createElement("div");
 					
 					detailName.className = "aName";
 					detailName.id = originPath[i];
@@ -360,17 +365,17 @@
 						nameFileList(this.id);
 					};
 
-					detailName.textContent = path[i] ;
+					divName.textContent = path[i] ;
 					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
-					detailName.setAttribute("style", "font-size:15px; ");
+					divName.setAttribute("style", "font-size:15px;");
+					detailName.appendChild(divName);
 					nameTag.appendChild(detailName);
 					
-					if(length == 1) {
-						detailName = document.createElement("span");
-						/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
-						detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-						detailName.setAttribute("style", "font-size:15px;");
-						nameTag.appendChild(detailName);
+					if (length == 1) {
+						var divSeparator = document.createElement("div");
+						divSeparator.setAttribute("class", "separator");
+						divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+						nameTag.appendChild(divSeparator);
 					}
 					
 					/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
@@ -379,9 +384,10 @@
 					imgElmt.src = "/images/webfolder/arrow2.png"; */
 					
 					if (i != length - 1) {
-						detailName = document.createElement("span");
-						detailName.textContent = " > ";
-						nameTag.appendChild(detailName);
+						var divSeparator = document.createElement("div");
+						divSeparator.setAttribute("class", "separator");
+						divSeparator.textContent = " > ";
+						nameTag.appendChild(divSeparator);
 					}	
 				}
 			}
@@ -911,11 +917,8 @@
 		</h1>
 		
 		<div id="pageArea">
-			<!-- pagenation이 namePath로 움직이지 않도록 설정 -->
-			<div id="originalPathWrapper" style="height: 40px;">
-				<span style="font-size: 24px; font-weight: bold; font-weight: bold; display: block; float: left;" id="originalPath">
-					<span class="aName" style="font-size:15px;" onClick="getFileList();"><spring:message code='ezWebFolder.t267' /></span>
-				</span>
+			<div style="height: 40px;">
+				<div style="font-size: 24px; font-weight: bold; padding: 8px 4px 0px;" id="originalPath"></div>
 			</div>
 			
 			<div id="mainmenu">

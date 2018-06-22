@@ -30,6 +30,7 @@
 		<script type="text/javascript">
 			var beforethis;
 			var lang = "${userInfo.lang}";
+			var topMenuID = "${topMenuID}";
 			
 			window.onload = function () {
 				if ("${firstScreen_Mail}" == "YES") {
@@ -106,9 +107,9 @@
 				    case "menu06":
 				    	var packageType = "${packageType}";
 				    	if (packageType != 'standard') {
-				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "02", "bottom");	
+				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "02&topMenuID=" + topMenuID, "bottom");	
 				    	} else {
-				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "01", "bottom");	
+				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "01&topMenuID=" + topMenuID, "bottom");	
 				    	}
 				        
 				        break;
@@ -142,22 +143,32 @@
 			  <tr>
 			  	  <c:choose>
 			  	  	<c:when test="${packageType == 'mail'}">
-						<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
-		      			<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
+			  	  		<c:if test="${isMailUsed == 'Y'}">
+			  	  			<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+			  	  			<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
+			  	  		</c:if>
 		      			<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
 			  			<td style="width:100%">&nbsp;</td>
 			  	  	</c:when>			  	  
 			  	  	<c:when test="${packageType == 'basic'}">
 						<c:choose>
 							<c:when test="${firstScreen_Mail == 'YES'}">
-								<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+								<c:if test="${isMailUsed == 'Y'}">
+									<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+								</c:if>
 								<td style="width:100%">&nbsp;</td>
 							</c:when>
 							<c:otherwise>
-								<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
-				      			<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
-				      			<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
-				      			<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
+								<c:if test="${isMailUsed == 'Y'}">
+									<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+									<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
+								</c:if>
+				      			<c:if test="${isScheduleUsed == 'Y'}">
+				      				<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
+			  	  				</c:if>
+			  	  				<c:if test="${isBoardUsed == 'Y'}">
+				      				<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
+				      			</c:if>
 				      			<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
 					  			<td style="width:100%">&nbsp;</td>
 							</c:otherwise>
@@ -166,24 +177,42 @@
 			  	  	<c:otherwise>
 			  	  		<c:choose>
 			  	  			<c:when test="${firstScreen_Mail == 'YES'}">
-			  	  				<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+			  	  				<c:if test="${isMailUsed == 'Y'}">
+			  	  					<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+			  	  				</c:if>
 			  	  				<td style="width:100%">&nbsp;</td>
 			  	  			</c:when>
 			  	  			<c:otherwise>
 			  	  				<td class="normal" id="menu00" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">포탈</td>
-						      	<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
-						      	<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
-						      	<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
-						      	<!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">업무관리</td> -->
-						      	<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
-						      	<td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자설문</td>  
-						      	<c:if test="${userApprovalG == 'YES'}">
-						      		<td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 </td>
+			  	  				<c:if test="${isMailUsed == 'Y'}">
+						      		<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+						      		<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
 						      	</c:if>
-						      	<!-- <td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 G</td> -->
-						      	<td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">커뮤니티</td>
-						      	<td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">자원관리</td>
-						      	<td class="normal" id="menu12" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">회람판</td>
+						      	<c:if test="${isScheduleUsed == 'Y'}">
+						      		<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
+						      	</c:if>
+						      	<!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">업무관리</td> -->
+						      	<c:if test="${isBoardUsed == 'Y'}">
+			  	  					<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
+			  	  					<td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자설문</td>
+			  	  				</c:if>
+			  	  				<c:if test="${isApprUsed == 'Y'}">
+			  	  					<c:if test="${approvalFlag == 'G'}">
+			  	  						<td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 G</td>
+						      		</c:if>
+						      		<c:if test="${approvalFlag != 'G'}">
+						      			<td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 </td>
+						      		</c:if>
+						      	</c:if>
+						      	<c:if test="${isCommunityUsed == 'Y'}">
+						      		<td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">커뮤니티</td>
+						      	</c:if>
+						      	<c:if test="${isResUsed == 'Y'}">
+						      		<td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">자원관리</td>
+								</c:if>
+								<c:if test="${isCircularUsed == 'Y'}">
+									<td class="normal" id="menu12" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">회람판</td>
+								</c:if>
 						      	<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
 							  	<td style="width:100%">&nbsp;</td>
 			  	  			</c:otherwise>
@@ -200,37 +229,61 @@
 			<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 	  			<tr>
 	  				<c:choose>
-			  	  	<c:when test="${packageType == 'mail'}">
-					    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">メール</td>
-					    <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
-			  			<td style="width:100%">&nbsp;</td>
-			  	  	</c:when>			  	  	  				
-	  					<c:when test="${packageType == 'basic'}">
-						    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">メール</td>
-						    <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
-						    <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">日程管理</td>
-						    <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
-						    <td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">マイポータルの設定</td>
-			    			<td style="width:100%">&nbsp;</td>
-	  					</c:when>
-	  					<c:otherwise>
-	  						<td class="normal" id="menu00" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">ポータル</td>
-						    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">メール</td>
-						    <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
-						    <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">スケジュール</td>
-						    <!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">業務管理</td> -->
-						    <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
-						    <td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アンケート</td>  
-						    <c:if test="${userApprovalG == 'YES'}">
-				      			<td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子決裁</td>
-				      		</c:if>
-						    <!-- <td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子決裁G</td> -->
-						    <td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">コミュニティ</td>
-						    <td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">設備管理</td>
-						    <td class="normal" id="menu12" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">回覧板</td>
-						    <td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">環境設定</td>
-			    			<td style="width:100%">&nbsp;</td>
-	  					</c:otherwise>
+				  	  	<c:when test="${packageType == 'mail'}">
+				  	  		<c:if test="${isMailUsed == 'Y'}">
+						    	<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">メール</td>
+						    	<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
+						    </c:if>
+				  			<td style="width:100%">&nbsp;</td>
+				  	  	</c:when>			  	  	  				
+		  				<c:when test="${packageType == 'basic'}">
+		  						<c:if test="${isMailUsed == 'Y'}">
+									<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">メール</td>
+									<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
+								</c:if>
+				      			<c:if test="${isScheduleUsed == 'Y'}">
+				      				<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">日程管理</td>
+			  	  				</c:if>
+			  	  				<c:if test="${isBoardUsed == 'Y'}">
+				      				<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
+				      			</c:if>
+				      			<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">マイポータルの設定</td>
+				    			<td style="width:100%">&nbsp;</td>
+		  				</c:when>
+		  				<c:otherwise>
+		  						<td class="normal" id="menu00" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">ポータル</td>
+			  	  				<c:if test="${isMailUsed == 'Y'}">
+			  	  					<td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">メール</td>
+			  	  					<td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
+						      	</c:if>
+						      	<c:if test="${isScheduleUsed == 'Y'}">
+						      		<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">スケジュール</td>
+						      	</c:if>
+						      	<!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">業務管理</td> -->
+						      	<c:if test="${isBoardUsed == 'Y'}">
+			  	  					<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
+			  	  					<td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アンケート</td>
+			  	  				</c:if>
+			  	  				<c:if test="${isApprUsed == 'Y'}">
+			  	  					<c:if test="${approvalFlag == 'G'}">
+			  	  						<td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子決裁G</td>
+						      		</c:if>
+						      		<c:if test="${approvalFlag != 'G'}">
+						      			<td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子決裁</td>
+						      		</c:if>
+						      	</c:if>
+						      	<c:if test="${isCommunityUsed == 'Y'}">
+						      		<td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">コミュニティ</td>
+						      	</c:if>
+						      	<c:if test="${isResUsed == 'Y'}">
+						      		<td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">設備管理</td>
+								</c:if>
+								<c:if test="${isCircularUsed == 'Y'}">
+									<td class="normal" id="menu12" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">回覧板</td>
+								</c:if>
+								<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">環境設定</td>
+							  	<td style="width:100%">&nbsp;</td>
+		  				</c:otherwise>
 	  				</c:choose>
 	  			</tr>	
 			</table>

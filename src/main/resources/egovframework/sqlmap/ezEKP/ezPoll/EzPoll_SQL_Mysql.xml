@@ -9,7 +9,6 @@
     <typeAlias  alias="PollUserAnswerVO"               type="egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO"/>
     <typeAlias  alias="PollQuestionStatusVO"           type="egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO"/>
     <typeAlias  alias="PollUserVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUserVO"/>
-    <typeAlias  alias="PollUsersVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUsersVO"/>
     <typeAlias  alias="loginVO"                 	   type="egovframework.let.user.login.vo.LoginVO"/>
 
     <!-- question resultMap -->
@@ -88,16 +87,6 @@
         <result property="userType"         	column="user_type"                	columnIndex="4"/>
     </resultMap>
      
-    <resultMap id="pollUsers" class="PollUsersVO">
-    	<result property="userId"             	column="USER_ID"                   	columnIndex="1"/>
-    	<result property="userName"             column="USER_NAME"                  columnIndex="2"/>
-        <result property="userName2"         	column="USER_NAME2"                	columnIndex="3"/>
-        <result property="deptId"         		column="DEPT_ID"                	columnIndex="4"/>
-        <result property="deptName"         	column="DEPT_NAME"                	columnIndex="5"/>
-        <result property="deptName2"         	column="DEPT_NAME2"                	columnIndex="6"/>
-        <result property="userStatus"         	column="USER_STATUS"                columnIndex="7"/>
-    </resultMap>
-    
     <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
         <result property="id"                   column="cn"                         columnIndex="1"/>
         <result property="password"             column="password"                   columnIndex="2"/>
@@ -387,14 +376,35 @@
 		]]>			
     </select> 
      
-    <select id="EzPollDAO.getQuestionsTest" resultMap="pollQuestion">   
+    <select id="EzPollDAO.getQuestionsTest" resultClass="PollQuestionVO">   
 		<![CDATA[
 			SELECT 
-				*
+				a.ID AS qstid,
+				a.TENANT_ID AS tenantid,
+				a.CONTENT AS content,
+				a.MULTI_SELECT AS multiselect,
+				a.CREATE_DATE AS createdate,
+				a.START_DATE AS startdate,
+				a.END_DATE AS enddate,
+				a.TARGET AS target,
+				a.TITLE AS title,
+				a.SECRET_VOTE AS secretvote,
+				a.CREATOR AS creator,
+				a.CREATOR_NAME1 AS creatorname1,
+				a.CREATOR_NAME2 AS creatorname2,
+				a.FILE_PATH AS filepath,
+				a.RESULT_FIRST AS resultfirst,
+				a.IS_MODIFYING AS ismodifying,
+				a.SET_DATE AS setdate,
+				a.IS_SORTING AS inssorting,
+				a.IS_SELONLYONCE AS isselonlyonce,
+				a.SENDPOSTNOTICE AS sendpostnotice,
+				a.OPENTOALL AS opentoall,
+				((SELECT COUNT(ID) FROM TBL_VOTE_COMMENT WHERE QST_ID = a.ID and TENANT_ID = a.TENANT_ID)) AS CMTCNT
 			FROM 
-				TBL_VOTE_QUESTION
+				TBL_VOTE_QUESTION a
 			WHERE  
-				ID
+				a.ID
 			IN
 				(
 					SELECT 
@@ -403,19 +413,19 @@
 						TBL_VOTE_USER_AND_QUESTION
 					WHERE
 						(
-								USER_TYPE = "user"
+								USER_TYPE = 'user'
 							AND
 								USER_ID   = #user_id#
 						)	
 					OR
 						(
-								USER_TYPE = "company"
+								USER_TYPE = 'company'
 							AND
 								USER_ID   = #company_id#
 						) 
 					OR
 						(
-								USER_TYPE = "dept"
+								USER_TYPE = 'dept'
 							AND
 								USER_ID 
 								IN
@@ -428,7 +438,7 @@
 											(												
 												FIND_IN_SET	(CN, #v_deptPath#)		
 												OR 
-													CN = "Top"											
+													CN = 'Top'									
 											)
 										AND
 											TENANT_ID = #tenant_id#
@@ -438,53 +448,74 @@
 						TENANT_ID = #tenant_id#
 				)
 			AND
-				TENANT_ID = #tenant_id#								
+				a.TENANT_ID = #tenant_id#								
 		]]>	
 		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
-				TITLE LIKE CONCAT('%', #search_str#, '%')				
+				a.TITLE LIKE CONCAT('%', #search_str#, '%')				
 			]]>
 		</isEqual>	
 		<isEqual property="mode" compareValue="wri" prepend="AND">
 			<isEqual property="primary" compareValue="1" >
 				<![CDATA[
-					CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
+					a.CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
 				]]>
 			</isEqual>	
 			<isNotEqual property="primary" compareValue="1">
 				<![CDATA[
-	        		CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
+	        		a.CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
 		        ]]>
 			 </isNotEqual>
-		</isEqual>			
+		</isEqual>	
     </select> 
     
-    <select id="EzPollDAO.getAllQuestions" resultMap="pollQuestion">   
+    <select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">
 		<![CDATA[
 			SELECT 
-				*
+				a.ID AS qstid,
+				a.TENANT_ID AS tenantid,
+				a.CONTENT AS content,
+				a.MULTI_SELECT AS multiselect,
+				a.CREATE_DATE AS createdate,
+				a.START_DATE AS startdate,
+				a.END_DATE AS enddate,
+				a.TARGET AS target,
+				a.TITLE AS title,
+				a.SECRET_VOTE AS secretvote,
+				a.CREATOR AS creator,
+				a.CREATOR_NAME1 AS creatorname1,
+				a.CREATOR_NAME2 AS creatorname2,
+				a.FILE_PATH AS filepath,
+				a.RESULT_FIRST AS resultfirst,
+				a.IS_MODIFYING AS ismodifying,
+				a.SET_DATE AS setdate,
+				a.IS_SORTING AS inssorting,
+				a.IS_SELONLYONCE AS isselonlyonce,
+				a.SENDPOSTNOTICE AS sendpostnotice,
+				a.OPENTOALL AS opentoall,
+				((SELECT COUNT(ID) FROM TBL_VOTE_COMMENT WHERE QST_ID = a.ID and TENANT_ID = a.TENANT_ID)) AS CMTCNT
 			FROM 
-				TBL_VOTE_QUESTION
+				TBL_VOTE_QUESTION a
 			WHERE 
-				TENANT_ID = #tenant_id#											
+				TENANT_ID = #tenant_id#
 		]]>	
 		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
-				TITLE LIKE CONCAT('%', #search_str#, '%')				
+				a.TITLE LIKE CONCAT('%', #search_str#, '%')				
 			]]>
 		</isEqual>	
 		<isEqual property="mode" compareValue="wri" prepend="AND">
 			<isEqual property="primary" compareValue="1" >
 				<![CDATA[
-					CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
+					a.CREATOR_NAME1 LIKE CONCAT('%', #search_str#, '%')						
 				]]>
 			</isEqual>	
 			<isNotEqual property="primary" compareValue="1">
 				<![CDATA[
-	        		CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
+	        		a.CREATOR_NAME2 LIKE CONCAT('%', #search_str#, '%')				
 		        ]]>
 			 </isNotEqual>
-		</isEqual>			
+		</isEqual>
     </select>     
     
     <select id="EzPollDAO.getOwnQuestions" resultMap="pollQuestion">   
@@ -1154,205 +1185,6 @@
 		]]>				
     </select>
     
-     <select id="EzPollDAO.getQstUsers" resultMap="pollUsers">
-		<![CDATA[
-			SELECT 
-				 USER_ID,
-				 USER_NAME,
-				 USER_NAME2,
-				 DEPT_ID,
-				 DEPT_NAME,
-				 DEPT_NAME2,
-				 USER_STATUS
-			FROM 
-				TBL_VOTE_USERS
-			WHERE  
-				TENANT_ID = #tenant_id#
-			AND
-				QST_ID = #qst_id#
-		]]>				
-		<isNotEmpty property="user_id"> 
-			AND
-				USER_ID = #user_id#	
-       	</isNotEmpty>
-    </select>
-    
-    <select id="EzPollDAO.getQstAllUsers" resultMap="login">
-		<![CDATA[
-			SELECT
-				a.user_id AS CN,
-				b.password,
-				a.user_name AS displayname,
-				a.user_name2 AS displayname2,
-				a.dept_id AS department,              
-				a.dept_name AS description,
-				a.dept_name2 AS description2,
-				b.title,
-				b.title2,
-				b.companyid,
-				b.company,
-				b.company2,
-				b.updatedt,
-				b.rollinfo,
-				b.telephonenumber,
-				b.mail,
-				b.jikchek,
-				a.tenant_id,
-				b.deptPathCode,
-				b.primaryLang,
-				b.gyumJik,
-				b.userFileUrl,
-				b.sabun
-			FROM
-				(
-					SELECT 
-						 TENANT_ID,
-						 USER_ID,
-						 USER_NAME,
-						 USER_NAME2,
-						 DEPT_ID,
-						 DEPT_NAME,
-						 DEPT_NAME2,
-						 USER_STATUS
-					FROM 
-						TBL_VOTE_USERS
-					WHERE  
-						TENANT_ID = #tenant_id#
-					AND
-						QST_ID = #qst_id#
-				) a
-			LEFT JOIN
-				(
-					SELECT 
-						cn,  
-						password,
-						displayname,
-						displayname2,
-						department,              
-						description,
-						description2,
-						title,
-						title2,
-						physicaldeliveryofficename as companyid,
-						company,
-						company2,
-						updatedt,
-						extensionattribute1 as rollinfo,
-						telephonenumber,
-						mail,
-						extensionattribute10 as jikchek,
-						tenant_id,
-						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-						extensionattribute4 as gyumJik,
-						extensionattribute2 as userFileUrl,
-						extensionattribute14 as sabun
-					FROM 
-						TBL_USERMASTER a
-					WHERE 
-						tenant_id = #tenant_id#
-					AND 
-               			cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
-					union all
-					SELECT 
-						cn,  
-						password,
-						displayname,
-						displayname2,
-						department,              
-						description,
-						description2,
-						title,
-						title2,
-						physicaldeliveryofficename as companyid,
-						company,
-						company2,
-						updatedt,
-						extensionattribute1 as rollinfo,
-						telephonenumber,
-						mail,
-						extensionattribute10 as jikchek,
-						tenant_id,
-						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-						extensionattribute4 as gyumJik,
-						extensionattribute2 as userFileUrl,
-						extensionattribute14 as sabun
-					FROM 
-						TBL_USERMASTER_RETIRE a
-					WHERE 
-						tenant_id = #tenant_id#
-					
-				) b
-			ON
-			a.USER_ID = b.cn
-		]]>				
-    </select>
-    
-    <insert id="EzPollDAO.insertQstUsers" parameterClass="Map">
-       	<![CDATA[
-            INSERT INTO TBL_VOTE_USERS(
-                TENANT_ID,		QST_ID,			USER_ID,		USER_NAME, 		USER_NAME2,
-                DEPT_ID, 		DEPT_NAME, 		DEPT_NAME2, 	USER_STATUS
-            )
-            VALUES(
-                #tenant_id#,	#qst_id#,		#user_id#,		#user_name#, 	#user_name2#,
-                #dept_id#, 		#dept_name#, 	#dept_name2#, 	#user_status#
-            )
-       	]]>
-    </insert>
-    
-    <update id="EzPollDAO.updateQstUsers" parameterClass="Map">
-   		<![CDATA[
-            UPDATE 
-           		 TBL_VOTE_USERS
-            SET 
-            	 USER_ID = #user_id#,
-				 USER_NAME = #user_name#,
-				 USER_NAME2 = #user_name2#,
-				 DEPT_ID = #dept_id#,
-				 DEPT_NAME = #dept_name#,
-				 DEPT_NAME2 = #dept_name2#,
-				 USER_STATUS  = #user_status#
-            WHERE
-       			 QST_ID = #qst_id#
-            AND
-               	 TENANT_ID = #tenant_id#
-            AND
-               	 USER_ID = #user_id#
-		]]>
-    </update>
-    
-    <delete id="EzPollDAO.deleteUsersForQst" parameterClass="Map">
-   		<![CDATA[
-			DELETE FROM
-				TBL_VOTE_USERS
-          	WHERE
-          		QST_ID = #qst_id#
-			AND
-				TENANT_ID = #tenant_id#
-		]]>
-		<isNotEmpty property="user_id"> 
-			AND
-				USER_ID = #user_id#
-		</isNotEmpty>
-   </delete>
-   
-   <update id="EzPollDAO.updateQstUsersStatus" parameterClass="Map">
-  		<![CDATA[
-           UPDATE 
-       		 	TBL_VOTE_USERS
-           SET 
-				USER_STATUS  = #user_status#
-           WHERE
-      			QST_ID = #qst_id#
-           AND
-              	TENANT_ID = #tenant_id#
-           AND
-              	USER_ID = #user_id#
-	]]>
-   </update>
-   
    <select id="EzPollDAO.getInfoOfSeenUsers" resultMap="login">
 		<![CDATA[
 			SELECT
@@ -1384,11 +1216,7 @@
 					SELECT 
 						QST_ID,
 						USER_ID,
-						TENANT_ID,
-						SEEN,
-						COMMENT,
-						HIDE,
-						MODIFYING
+						TENANT_ID
 					FROM 
 						TBL_VOTE_QUESTION_RELATED
 					WHERE  
@@ -1429,7 +1257,145 @@
 					WHERE 
 						tenant_id = #tenant_id#
 					AND 
-                		cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+               			cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+					union all
+					SELECT 
+						cn,  
+			            password,
+						displayname,
+						displayname2,
+						department,              
+						description,
+						description2,
+						title,
+						title2,
+						physicaldeliveryofficename as companyid,
+						company,
+						company2,
+						updatedt,
+						extensionattribute1 as rollinfo,
+						telephonenumber,
+						mail,
+						extensionattribute10 as jikchek,
+						tenant_id,
+						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						extensionattribute4 as gyumJik,
+						extensionattribute2 as userFileUrl,
+						extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_RETIRE a
+					WHERE 
+						tenant_id = #tenant_id#
+				UNION ALL
+					SELECT 
+						cn,  
+			            password,
+						displayname,
+						displayname2,
+						department,              
+						description,
+						description2,
+						title,
+						title2,
+						physicaldeliveryofficename as companyid,
+						company,
+						company2,
+						updatedt,
+						extensionattribute1 as rollinfo,
+						telephonenumber,
+						mail,
+						extensionattribute10 as jikchek,
+						tenant_id,
+						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						extensionattribute4 as gyumJik,
+						extensionattribute2 as userFileUrl,
+						extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_DELETE a
+					WHERE 
+						tenant_id = #tenant_id#
+					AND 
+                		cn NOT IN (SELECT cn FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id#)
+				) b
+				ON
+				a.USER_ID = b.cn
+
+		]]>			
+    </select> 
+    
+    <select id="EzPollDAO.getAllUsersForQst" resultMap="pollUser">         
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenant_id#	
+			AND
+				QST_ID    = #qst_id#
+		]]>			
+    </select>
+    
+    <select id="EzPollDAO.getUserInfoMRD" resultMap="login">
+		<![CDATA[
+			SELECT
+				CN AS CN,
+				password,
+				IFNULL(displayname, CN) AS DISPLAYNAME,
+				IFNULL(displayname2, CN) AS DISPLAYNAME2,
+				department,              
+				description,
+				description2,
+				title,
+				title2,
+				companyid,
+				company,
+				company2,
+				updatedt,
+				rollinfo,
+				telephonenumber,
+				mail,
+				jikchek,
+				tenant_id,
+				deptPathCode,
+				primaryLang,
+				gyumJik,
+				userFileUrl,
+				sabun
+			FROM
+				(
+					SELECT 
+						cn,  
+			            password,
+						displayname,
+						displayname2,
+						department,              
+						description,
+						description2,
+						title,
+						title2,
+						physicaldeliveryofficename as companyid,
+						company,
+						company2,
+						updatedt,
+						extensionattribute1 as rollinfo,
+						telephonenumber,
+						mail,
+						extensionattribute10 as jikchek,
+						tenant_id,
+						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						extensionattribute4 as gyumJik,
+						extensionattribute2 as userFileUrl,
+						extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER a
+					WHERE 
+						tenant_id = #tenant_id#
+					AND 
+                		cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
 				UNION ALL
 					SELECT 
 						cn,  
@@ -1459,11 +1425,129 @@
 						TBL_USERMASTER_RETIRE a
 					WHERE 
 						tenant_id = #tenant_id#
-					
-				) b
-				ON
-				a.USER_ID = b.cn
-
-		]]>			
+				UNION ALL
+					SELECT 
+						cn,  
+			            password,
+						displayname,
+						displayname2,
+						department,              
+						description,
+						description2,
+						title,
+						title2,
+						physicaldeliveryofficename as companyid,
+						company,
+						company2,
+						updatedt,
+						extensionattribute1 as rollinfo,
+						telephonenumber,
+						mail,
+						extensionattribute10 as jikchek,
+						tenant_id,
+						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						extensionattribute4 as gyumJik,
+						extensionattribute2 as userFileUrl,
+						extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_DELETE a
+					WHERE 
+						tenant_id = #tenant_id#
+					AND 
+                		cn NOT IN (SELECT cn FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id#)
+				) a
+			WHERE
+				1 = 1
+		]]>	
+		<dynamic prepend="AND">
+		(
+			<isNotEmpty property="userList" prepend="AND">
+				a.CN IN (
+				<iterate conjunction="," property="userList">
+				<![CDATA[
+					#userList[]#
+				]]>
+				</iterate>
+				)
+			</isNotEmpty>
+			<isNotEmpty property="deptUserList">
+				<iterate property="deptUserList" prepend="OR">
+				<![CDATA[
+					a.CN IN (
+					SELECT CN FROM TBL_USERMASTER 
+					where 
+						DEPARTMENT in (SELECT CN FROM TBL_DEPTMASTER WHERE CN = #deptUserList[]# OR DEPT_CD_PATH LIKE CONCAT('%\,',#deptUserList[]#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#deptUserList[]#,'\,%'))
+					AND
+						TENANT_ID = #tenant_id#
+				)
+				]]>
+				</iterate>
+			</isNotEmpty>
+		)
+		</dynamic>	
+    </select>
+    
+    <select id="EzPollDAO.getUserInfoM" resultMap="login">
+		<![CDATA[
+			SELECT 
+				cn,  
+	            password,
+				displayname,
+				displayname2,
+				department,              
+				description,
+				description2,
+				title,
+				title2,
+				physicaldeliveryofficename as companyid,
+				company,
+				company2,
+				updatedt,
+				extensionattribute1 as rollinfo,
+				telephonenumber,
+				mail,
+				extensionattribute10 as jikchek,
+				tenant_id,
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				extensionattribute4 as gyumJik,
+				extensionattribute2 as userFileUrl,
+				extensionattribute14 as sabun
+			FROM 
+				TBL_USERMASTER a
+			WHERE 
+				tenant_id = #tenant_id#
+			AND 
+              	cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+		]]>	
+		<dynamic prepend="AND">
+		(
+			<isNotEmpty property="userList" prepend="AND">
+				a.CN IN (
+				<iterate conjunction="," property="userList">
+				<![CDATA[
+					#userList[]#
+				]]>
+				</iterate>
+				)
+			</isNotEmpty>
+			<isNotEmpty property="deptUserList">
+				<iterate property="deptUserList" prepend="OR" conjunction="OR">
+				<![CDATA[
+					a.CN IN (
+					SELECT CN FROM TBL_USERMASTER 
+					where 
+						DEPARTMENT in (SELECT CN FROM TBL_DEPTMASTER WHERE CN = #deptUserList[]# OR DEPT_CD_PATH LIKE CONCAT('%\,',#deptUserList[]#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#deptUserList[]#,'\,%'))
+					AND
+						TENANT_ID = #tenant_id#
+					AND 
+              			CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+				)
+				]]>
+				</iterate>
+			</isNotEmpty>
+		)
+		</dynamic>	
     </select> 
 </sqlMap>

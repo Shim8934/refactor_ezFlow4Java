@@ -19,13 +19,24 @@
 				<div class="info">
     				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">
+    					<dt>
+    						<c:if test="${fn:length(companyList) gt 1 }">
+								<select id="selectCompany" onchange="changeCompany();">
+									<c:forEach items="${companyList }" var="company">
+										<option value="${company.deptID }" <c:if test="${userInfo.deptID eq company.deptID }">selected="selected"</c:if> companyID="${company.companyID }">
+											${company.companyName }(${company.deptName }) - ${company.apprCount }
+										</option>
+									</c:forEach>
+								</select>
+    						</c:if>
+						</dt>
         				<dt>${companyNm }<br></dt>
 			 			<dd>${department} ${title}</dd>
 						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
     				</dl>
     				<div class="bottom"></div>
     			</div>
-    			<div class="personal_content">
+    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
 					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="count">
@@ -95,23 +106,25 @@
                     		</c:choose>
 						</ul>						
 					</a>
-					<a id="Circular" onClick="btnSumming_click(this)">
-						<ul class="last">
-							<li class="count">
-								<div>
-									<span id="circularCnt">0</span>
-								</div>
-							</li>
-                    		<c:choose>
-                    			<c:when test="${userInfo.lang != '3'}">
-                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
-                    			</c:when>
-                    			<c:otherwise>
-                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
-                    			</c:otherwise>
-                    		</c:choose>                  		
-						</ul>
-					</a>			
+					<c:if test="${isCircularUsed == 'Y'}">
+						<a id="Circular" onClick="btnSumming_click(this)">
+							<ul class="last">
+								<li class="count">
+									<div>
+										<span id="circularCnt">0</span>
+									</div>
+								</li>
+	                    		<c:choose>
+	                    			<c:when test="${userInfo.lang != '3'}">
+	                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
+	                    			</c:when>
+	                    			<c:otherwise>
+	                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
+	                    			</c:otherwise>
+	                    		</c:choose>                  		
+							</ul>
+						</a>
+					</c:if>			
 				</div>
 			</article>
       		<div class="blue_bar"></div>
@@ -172,6 +185,14 @@
 		</section>
 			
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+		<style>
+			select {
+				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
+			}
+			select::-ms-expand {
+			    display: none;
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
@@ -198,7 +219,16 @@
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "YES";
-
+			var isCircularUsed = "${isCircularUsed}";
+		    
+			$(document).ready(function(){
+				if (isCircularUsed != 'Y') {
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
+					$(".personal_content a ul:last").attr("class","last");
+					$(".personal_content").show();
+				}
+			});
+		    
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
@@ -319,7 +349,19 @@
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
 			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr>&nbsp;" + TITLE + "</nobr></span></li>";
+			                listHTML += "<nobr>&nbsp;"
+			                if(SCHEDULETYPE == 1) {
+			                	listHTML += "";
+			                } else if (SCHEDULETYPE == 2) {
+			                	listHTML += "(<spring:message code='ezSchedule.t12' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 3) {
+			                	listHTML += "(<spring:message code='ezSchedule.t11' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 7) {
+			                	listHTML += "(<spring:message code='ezSchedule.t282' />)&nbsp;";
+			                } else {
+			                	listHTML += "";
+			                }
+			                listHTML += TITLE + "</nobr></span></li>";
 			                count++;
 			        	}
 			        }
@@ -867,6 +909,12 @@
 		    }
 
 		    window_onload_total();
+		    
+		    function changeCompany(){
+		    	var TcompanyID = $("#selectCompany option:selected").attr("companyID");
+		    	var TdeptID = $("#selectCompany option:selected").val();
+		    	window.open("/ezPortal/myPortal.do?companyID="+TcompanyID+"&deptID="+TdeptID, "main");
+		    }
 		</script>
 	</head>
 </html>

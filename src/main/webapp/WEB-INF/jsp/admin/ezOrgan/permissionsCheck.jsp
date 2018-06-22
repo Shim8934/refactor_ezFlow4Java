@@ -37,6 +37,7 @@
 		    var xmlHTTP = createXMLHttpRequest();
 		    var xmlHTTP2 = createXMLHttpRequest();
 		    var ReturnFunction;
+		    var isfirst = true;
 			
 		    $(document).ready(function(){
 		    	try {
@@ -107,6 +108,7 @@
 		                treeView.DataBind("TreeView");
 
 		                xmlHTTP = null;
+		                isfirst = false;
 		            } else {
 		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.statusText);
 		                xmlHTTP = null;
@@ -156,7 +158,8 @@
 		        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + nodeIdx.GetNodeData("VALUE");
 		        SelectDeptNM.setAttribute("countinfo", "")
 
-		        if (cn != "") {
+		        //if (cn != "") {
+		        if (isfirst && cn != "") {
 		            document.getElementById('search_type').selectedIndex = 1;
 		            document.getElementById('keyword').value = cn;
 		            
@@ -169,7 +172,8 @@
 			        	success : function(xml){
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
-		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                    headerData = result;
+// 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                    if (CrossYN()) {
 		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -205,7 +209,8 @@
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
 
 		                if (CrossYN()) {
 		                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -462,7 +467,7 @@
 	            }
 	        }
 		    
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f0f6ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -827,7 +832,8 @@
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
 		                var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
 		                
 		                if (CrossYN()) {
 		                	usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
@@ -1034,14 +1040,12 @@
 			            </CELL>
 			        </ROW>   
                     </c:if>
-                    <c:if test="${webfolderFlag == 'YES'}">
-                    <ROW>
-			            <CELL>            
+					<ROW>
+			            <CELL>
 			                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
 			                <DATA1>wf</DATA1>
 			            </CELL>
 			        </ROW>
-			         </c:if>
 				</ROWS>
 			</LISTVIEWDATA>
 		</xml>

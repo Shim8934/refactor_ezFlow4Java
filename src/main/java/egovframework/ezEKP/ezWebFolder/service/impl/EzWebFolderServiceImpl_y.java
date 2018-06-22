@@ -22,7 +22,6 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -94,7 +93,6 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("primary", primary);
 		map.put("tenantId", tenantId);
 		
-		//TODO: 폴더 트리뷰 정렬 기준?
 		if (folderType.equals("U") || folderType.equals("")) {
 			map.put("userId", userId);
 			List<Map<String, Object>> userFolderTree = ezWebFolderDAO_y.getUserFolderTree(map);
@@ -256,37 +254,37 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdMapList(userId, deptId, companyId, tenantId);
 		map.put("idList", idList);
-//		try {
-			map.put("flag", flag);
-			if (flag.equals("1")) {
-				LOGGER.debug("searchFileToTalCount start ");
-				if (parentId.equals("root")) {
-					fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCountR(map);
-				}else {
-					fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
-				}
-				LOGGER.debug("searchFileToTalCount end ");
+		map.put("flag", flag);
+		
+		if (flag.equals("1")) {
+			LOGGER.debug("searchFileToTalCount start ");
+			if (parentId.equals("root")) {
+				fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCountR(map);
+			} else {
+				fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
+			}
+			LOGGER.debug("searchFileToTalCount end ");
+		} else {
+			LOGGER.debug("getFileTotalCount start ");
+			if (parentId.equals("root")) {
+				fileTotalCnt = ezWebFolderDAO_y.getFileTotalCountR(map);
 			}else {
-				LOGGER.debug("getFileTotalCount start ");
-				if (parentId.equals("root")) {
-					fileTotalCnt = ezWebFolderDAO_y.getFileTotalCountR(map);
-				}else {
-					fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
-				}
-				LOGGER.debug("getFileTotalCount end ");
+				fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
 			}
-			LOGGER.debug("getFldTotalCount start ");
-			fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
-			LOGGER.debug("getFldTotalCount end ");
-			
-//		} catch (Exception e) {
-			if (fileTotalCnt < 0) {
-				fileTotalCnt = 0;
-			}
-			if (fldTotalCnt < 0) {
-				fldTotalCnt = 0;
-			}
-//		}
+			LOGGER.debug("getFileTotalCount end ");
+		}
+		
+		LOGGER.debug("getFldTotalCount start ");
+		fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
+		LOGGER.debug("getFldTotalCount end ");
+		
+		if (fileTotalCnt < 0) {
+			fileTotalCnt = 0;
+		}
+		
+		if (fldTotalCnt < 0) {
+			fldTotalCnt = 0;
+		}
 		
 		Map<String, Integer> cnt = new HashMap<String, Integer>();
 		int totalCount = 0;
@@ -313,13 +311,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 
 	@Override					
 	public String insertFolder(int tenantId, String comId, String deptId, String userId,String folderType, String newFolderName1,
-			String newFolderName2, FolderVO uppFolder , String timeUTC)  {
+			String newFolderName2, FolderVO uppFolder , String timeUTC) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		LoginVO loginvo =  getUserInfo(tenantId,comId,userId);
 		LOGGER.debug("insertFolder start");
-
 		map.put("tenantId", 	 tenantId);
+		
 		if (uppFolder != null){
 			map.put("folderUppId",	 uppFolder.getFolderId());
 			int folderStep = ezWebFolderDAO_y.getFolderStep(map);
@@ -358,6 +356,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		} else {
 			map.put("createName2", loginvo.getDisplayName2() );
 		}
+		
 		LOGGER.debug("folderType is " + folderType );
 
 		String result = ezWebFolderDAO_y.insertFolder(map);
@@ -368,23 +367,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		} else {
 			result = "ok";
 		}
-		LOGGER.debug("insertFolder ended");
-		return result;
-	}
-
-	// 부서장인지 확인하고 dept가져오는 메서드
-	@Override
-	public List<Map<String, Object>> getDeptFolder(int tenantId, String userId,
-			String deptId, String comId,String folderType) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("folderType", folderType);		
-		map.put("tenantId", tenantId);		
-		map.put("userId", userId);		
-		map.put("deptId", deptId);		
-		map.put("comId", comId);		
-		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
-		result = ezWebFolderDAO_y.getDeptFolder(map);
+		LOGGER.debug("insertFolder ended");
 		return result;
 	}
 
@@ -398,25 +382,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		return ezWebFolderDAO_y.getAddJobList(map);
 	}
 	
-	// 첫 로그인 후 폴더가 존재하는지 판단하는 메서드 
 	@Override
-	public int existFolderChk(String userId, String deptId, String comId,
-			String folderType, int tenantId, String primary) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);		
-		map.put("userId", userId);		
-		map.put("deptId", deptId);		
-		map.put("comId", comId);		
-		map.put("folderType", folderType);		
-		map.put("primary", primary);		
-		
-		//해당 폴더가 있으면 flag=1, 없으면 flag=0을 반환
-		int  result = ezWebFolderDAO_y.existFolderChk(map);
-		return result;
-	}
-
-	@Override
-	public void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2, String timeUTC) {
+	public void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2, String timeUTC) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
@@ -493,7 +460,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	}
 
 	@Override
-	public int getUsrListCount(int tenantId, String userId) {
+	public int getUsrListCount(int tenantId, String userId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
@@ -505,7 +472,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	}
 
 	@Override
-	public void insertEnv(String userId, int tenantId, int listCount) {
+	public void insertEnv(String userId, int tenantId, int listCount) throws Exception {
 		LOGGER.debug("insertEnv Start");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -524,6 +491,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		map.put("userId", userId);
 		map.put("deptId", deptId);
+		map.put("comId", comId);
 		map.put("tenantId", tenantId);
 		
 		FolderVO folderVO = null;

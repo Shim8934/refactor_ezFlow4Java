@@ -222,6 +222,7 @@
 			            #idList[].id#
 			         </iterate>
     </sql>
+    
     <select id="EzWebFolderDAO_y.checkRootFolder" parameterClass="Map" resultClass="Integer"> 
 		<![CDATA[
 			SELECT COUNT(OWNER_ID)
@@ -264,6 +265,7 @@
 		WHERE CN = #ownerId#
 		AND TENANT_ID = #tenantId#
 	</insert>
+	
 	<select id="EzWebFolderDAO_y.getUserFolderTree" resultMap="folderTreeVO" parameterClass="Map">
 		<![CDATA[
 	        SELECT
@@ -386,73 +388,6 @@
 		]]>
 	</select>
 	
-    <select id="EzWebFolderDAO_y.getFolderList" resultClass="HashMap" parameterClass="Map" >
-		<![CDATA[
-	        select 
-				distinct 
-				ff.FOLDER_ID as id ,
-				decode ( ff.folder_upper , 'root', '##', ff.FOLDER_UPPER )as parent,
-				decode ( ff.FOLDER_UPPER , 'root', 1,0 ) as selected,
-				decode ( #primary# ,'1' , ff.FOLDER_NAME1, ff.FOLDER_NAME2) as text,
-				ff.create_id as createId
-			from tbl_webfolder_folder  ff  inner join  (
-			
-				select 	
-					REGEXP_SUBSTR(fld.FOLDER_PATH, '[^|]+', 2,  2) as a,
-					fld.folder_id, fld.folder_path
-				from tbl_webfolder_folder fld inner join 
-			
-				(
-					select 
-						*
-					from 
-						tbl_webfolder_folderuser  
-					where 
-						USER_ID in (
-							select TO_CHAR(dept.cn) user_Id		
-							from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-							where addj.cn = #userId# 
-							union all 
-							select owner_id usrId 
-							from tbl_webfolder_folderuser u inner join tbl_webfolder_folder folder on u.folder_id = folder.folder_id  
-               				where u.user_id = #userId#  AND u.USER_TYPE = 'chief' and folder.tenant_id = #tenantId# 
-                           
-						)
-						or user_id = #userId#  or user_id= #deptId#
-				) t2 on fld.folder_id = t2.folder_id 
-				where fld.folder_type = #folderType#
-				and t2.tenant_id = #tenantId#
-			) tt on tt.folder_id = ff.folder_id 
-			or tt.folder_id = ff.folder_id or ff.FOLDER_PATH like '%'||tt.folder_path||'%'
-			where ff.tenant_id = #tenantId#
-			and ff.owner_id = #comId#
-			and ff.USE_STATUS = 'Y'
-		union all 
-			 select ff.FOLDER_ID as id ,decode( ff.folder_upper , 'root', '##', ff.FOLDER_UPPER )as parent,
-				decode ( ff.FOLDER_UPPER , 'root', 1,0) as selected,
-				decode ( #primary#, '1' , ff.FOLDER_NAME1, ff.FOLDER_NAME2) as text,
-				ff.create_id as createId 
-			from tbl_webfolder_folder ff 
-			where ff.tenant_id = #tenantId#
-				and ff.owner_id = #comId#
-				and ff.USE_STATUS = 'Y' and ff.COMPANY_ID = #comId#
-                and ff.folder_type = #folderType# and ff.folder_upper = 'root'
-			
-			
-	        order by selected desc            
-		]]>
-	</select>
-    
-    <select id="EzWebFolderDAO_y.getParentId" resultClass="String" parameterClass="Map">
-    	SELECT FOLDER_UPPER
-			FROM 
-				TBL_WEBFOLDER_FOLDER  
-			WHERE  
-                FOLDER_ID = #folderId#
-                and TENANT_ID = #tenantId#
-    </select>
-    
-    
     <select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">
     	<![CDATA[
     		select * 
@@ -583,9 +518,7 @@
 		<![CDATA[
 			ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
 	            ) pchk
-	                
 	           where ROWNUM <= #pEnd# + #pStart#
-              
             )
         where rownums >= #pStart# + 1
 
@@ -635,20 +568,18 @@
 						]]>
 					<![CDATA[
 					) t 
-					
 					where folder_path like (#folderPath#||'%') 
 					]]>
 					<include refid="searchAll"/>
 					<![CDATA[
-						
 					ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
 	                ) pchk 
 				where ROWNUM <= #pEnd# + #pStart#
-	              
 	            )
 	        where rownums >= #pStart# + 1
 		]]>	
 	</select>
+	
 	<select id="EzWebFolderDAO_y.searchFileListR" resultMap="fileVO" parameterClass="Map">
 		<![CDATA[
     		select * from ( 
@@ -820,7 +751,6 @@
 			where 1=1
 			]]>	
 		<include refid="searchAll"/>
-	
 	</select>
 		
 	<select id="EzWebFolderDAO_y.searchFileToTalCountR" resultClass="Integer" parameterClass="Map">   
@@ -915,6 +845,7 @@
 		</isNotEqual>	
 			) totalCount
 	</select>
+	
 	<select id="EzWebFolderDAO_y.getFileToTalCountR" resultClass="Integer" parameterClass="Map"> 
 		<![CDATA[
    		select count(*) from ( 
@@ -1007,6 +938,7 @@
                 TENANT_ID = #tenantId# and PHYSICALDELIVERYOFFICENAME = #comId# and CN = #userId#
 		]]>
 	</select>
+	
 	<insert id="EzWebFolderDAO_y.insertFolder" parameterClass="Map" >
 		<selectKey keyProperty="id" resultClass="String">
 			SELECT TO_CHAR(NVL(MAX(to_number(FOLDER_ID)), 0) + 1)
@@ -1055,6 +987,7 @@
 		    	)
     
 	</insert>
+	
 	<select id="EzWebFolderDAO_y.getFolderStep" parameterClass="Map" resultClass ="Integer">
 		<![CDATA[
 			SELECT TO_CHAR(NVL(MAX(to_number(FOLDER_ID)), 0) + 1)
@@ -1068,42 +1001,7 @@
 			select DEPTID as cn from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#
 		]]>
 	</select>
-	<select id="EzWebFolderDAO_y.getDeptSub" parameterClass="Map" resultClass="HashMap"> 
-		<![CDATA[
-			select cn , EXTENSIONATTRIBUTE9 from tbl_deptmaster where DEPT_CD_PATH like ('%'||#deptId#||'%') and tenant_id =#tenantId#
-		]]>
-	</select>
-	<select id="EzWebFolderDAO_y.existCheck" parameterClass="Map" resultClass="Integer"> 
-		<![CDATA[
-				SELECT count(owner_id)
-				FROM tbl_webfolder_folder 
-				WHERE tenant_id =#tenantId# and company_id = #comId# and folder_type = #folderType#  and folder_upper='root'
-		]]>
-		<isEqual property="folderType" compareValue="C" prepend="AND">
-			<![CDATA[
-				owner_id = #comId#
-	   		]]>	
-		</isEqual>
-		<isEqual property="folderType" compareValue="D" prepend="AND">
-			<![CDATA[
-				owner_id = #deptId#
-	   		]]>	
-		</isEqual>
-		<isEqual property="folderType" compareValue="U" prepend="AND">
-			<![CDATA[
-				owner_id = #userId#
-	   		]]>	
-		</isEqual>
-	</select>
 	
-	<select id="EzWebFolderDAO_y.getdeptInfo" parameterClass="Map" resultClass="HashMap"> 
-		<![CDATA[
-			select
-				CN , DISPLAYNAME, DISPLAYNAME2 ,EXTENSIONATTRIBUTE9 ,EXTENSIONATTRIBUTE1 ,EXTENSIONATTRIBUTE2
-			from tbl_deptmaster
-			WHERE tenant_id = #tenantId# and cn = #deptId#
-		]]>
-	</select>
 	<update id="EzWebFolderDAO_y.updateFolder" parameterClass="Map" >
 		<![CDATA[
 			UPDATE
@@ -1144,6 +1042,7 @@
 			FROM DUAL
 		]]>
 	</select>
+	
 	<select id="EzWebFolderDAO_y.checkFileCreater" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT CASE WHEN (
@@ -1215,27 +1114,6 @@
 		]]>
 	</update>
 	
-	<update id="EzWebFolderDAO_y.deleteFile" parameterClass="Map" >
-		<![CDATA[
-			update
-				tbl_webfolder_file
-			set
-				UPDATE_DATE  = TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
-				use_status = 'T',
-				DELETER_ID = #userId#
-			where
-                TENANT_ID = #tenantId#
-            and  	
-				FOLDER_ID in (             
-                select folder.folder_id
-				from tbl_webfolder_folder folder  
-				where folder.folder_path like ('%|' || #folderId# || '|%') 
-                    and folder.TENANT_ID = #tenantId# 
-					and folder.company_id = #comId#
-                )
-		]]> 
-	</update>
-	
 	<update id="EzWebFolderDAO_y.deleteFileInFolder" parameterClass="Map" >
 		<![CDATA[
 			update
@@ -1260,81 +1138,12 @@
 		]]> 
 	</update>
 	
-	<insert id="EzWebFolderDAO_y.deptInsertTest" parameterClass="Map">
-		<selectKey keyProperty="id" resultClass="String">
-			<![CDATA[
-				SELECT NVL(MAX(to_number(FOLDER_ID)), 0) + 1
-				FROM TBL_WEBFOLDER_FOLDER 
-				WHERE TENANT_ID = #tenantId# 
-			]]>
-	
-		</selectKey>
-		
-		<![CDATA[
-			MERGE INTO TBL_WEBFOLDER_ENV TRG
-				USING (
-				    SELECT #userId# CN, 'P' ENV_TYPE, #tenantId# TENANT_ID FROM DUAL
-				) SRC
-			ON (TRG.CN = SRC.CN AND TRG.ENV_TYPE = SRC.ENV_TYPE AND TRG.TENANT_ID = SRC.TENANT_ID)
-			WHEN MATCHED THEN
-			    UPDATE SET ENV_VALUE = #listCount#
-			WHEN NOT MATCHED THEN
-			    INSERT (CN, ENV_TYPE, ENV_VALUE, TENANT_ID)
-			    VALUES(SRC.CN, SRC.ENV_TYPE, #listCount#, SRC.TENANT_ID)
-			    
-			    
-			INSERT INTO tbl_webfolder_folder
-			(  				FOLDER_ID,
-					    	FOLDER_NAME1,
-					    	FOLDER_NAME2,
-					    	FOLDER_TYPE,
-					    	FOLDER_PATH,
-					    	FOLDER_STEP,
-					    	FOLDER_LEVEL,
-					    	FOLDER_UPPER,
-					    	USE_STATUS,
-					    	OWNER_ID,
-					    	CREATE_ID,
-					    	CREATE_DATE,
-					    	CREATE_NAME1,
-					    	CREATE_NAME2,
-					    	UPDATE_ID,
-					    	UPDATE_DATE,
-					    	COMPANY_ID,
-					    	TENANT_ID
-            )
-			SELECT 			        
-			        #id#,
-			    	#folderName1#,
-			    	#folderName2#,
-			    	#folderType#,
-			    	#folderPath#||#id#||'|',
-			    	#folderStep#,
-			    	#folderLevel#,
-			    	#folderUppId#,
-			    	'Y',
-			    	#deptId#,
-			    	#userId#,
-			    	TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
-			    	#createName1#,
-			    	#createName2#,
-			    	#userId#,
-			    	TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
-			    	#comId#,
-			    	#tenantId#
-	        FROM tbl_webfolder_folder
-			WHERE NOT EXISTS (
-			    SELECT owner_id FROM tbl_webfolder_folder  WHERE owner_id = #deptId# and tenant_id = #tenantId# and folder_type = #folderType#
-			) 
-			ON DUPLICATE KEY UPDATE tenant_id = #tenantId#
-			
-		]]>
-	</insert>
 	<select id="EzWebFolderDAO_y.getUsrListCnt" parameterClass="Map" resultClass="Integer"> 
 		<![CDATA[
 			SELECT NVL((SELECT ENV_VALUE FROM TBL_WEBFOLDER_ENV WHERE CN = #userId# AND TENANT_ID = #tenantId# AND ENV_TYPE='P') , 10) AS CNNT FROM DUAL
 		]]>
 	</select>
+	
 	<insert id="EzWebFolderDAO_y.envInsert" parameterClass="Map">
 		<![CDATA[
 			MERGE INTO TBL_WEBFOLDER_ENV TRG
@@ -1377,4 +1186,3 @@
 	</select>
 	
 </sqlMap>
-

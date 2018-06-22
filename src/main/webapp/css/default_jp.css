@@ -202,18 +202,21 @@ form{display:inline;margin:0}
 	}
 .leftbody ul{background-color:#ffffff;list-style-type:none;padding:0;margin:0; width:100%;}
 .leftbody ul li{
-	border-bottom: 1px solid #eee;
-	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;
-	padding:8px 5px 7px 40px;
+	border-bottom: 1px solid white;
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 15px #fff;
+	padding:12px 5px 0px 40px;
 	cursor:pointer;
 }
+.leftbody ul li:last-child {padding-bottom:12px; border-bottom:1px solid #e8e8e8;}
+
 .leftbody #iconul {background-color:#ffffff;list-style-type:none;padding:0;margin:0;}
 .leftbody #iconul li{
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid white;
 	background:#fff;
-	padding:7px 5px 6px 20px;
+	padding:12px 5px 0px 20px;
 	cursor:pointer;
 }
+.leftbody #iconul li:last-child {padding-bottom:12px}
 .leftbody #iconul li span .icon { vertical-align:text-bottom; border:0px; margin-right:2px; }
 
 .tree{padding:10px 0px;}
@@ -222,8 +225,8 @@ form{display:inline;margin:0}
 #left h2, #TopBoards h2{
 	margin: -1px 0px 0px 0px;
 	padding:0 0 0 19px;
-	border-top:1px solid #dedede;
-	border-bottom: 1px solid #dedede;
+	border-top:1px solid #e8e8e8;
+	border-bottom: 1px solid #e8e8e8;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
 	height:33px;
@@ -236,7 +239,7 @@ form{display:inline;margin:0}
 #left h2.on, #TopBoards h2.on{
 	font-weight: bold;
 	background: url('/images/kr/left/01_plus.gif') no-repeat right 13px;
-	background-color:#edf4fd;
+	background-color:#f0f6ff;
 	color:#333333;
 	border-top:1px solid #d1ddec;
 	border-bottom:1px solid #d1ddec;
@@ -248,13 +251,13 @@ form{display:inline;margin:0}
 	padding:0 0 0 40px;
 	border-bottom: 0px;
 	cursor: pointer;
-	background: url('/images/kr/left/icon_setup.gif') no-repeat 20px 8px;
+	background: url('/images/kr/left/icon_setup.gif') no-repeat 20px 10px;
 	height:33px;
 	line-height:33px;
 	word-break:keep-all;
 	white-space:nowrap;
 	font-weight:normal;
-	border-top: 1px solid #dedede;
+	/* border-top: 1px solid #e8e8e8; */
 	font-size:12px;
 }
 
@@ -413,10 +416,9 @@ form{display:inline;margin:0}
 	float:left;
 	/* background:url('/images/kr/cm/btn_default_offright.gif') no-repeat top right;
 	height:28px; */
-	padding:5px 4px;	
+	padding:6px 4px;	
 	font:12px Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	letter-spacing:-1;
-	padding-top:7px;
 	border:1px solid #ddd;
 	color:#666;
 	border-radius: 3px;
@@ -1109,7 +1111,7 @@ form{display:inline;margin:0}
 {
 
 	height:35px;
-	font-weight:bold; 
+	font-weight:normal; 
 	 background:#fff;
 	 border-top:0 none;
 	border-left:1px solid #dedede; 
@@ -1125,7 +1127,7 @@ form{display:inline;margin:0}
 {
 
 	border:1px solid #dddddd; 
-	font-weight:bold; 
+	font-weight:normal; 
 	color:#003f7d;
 	padding-left:5px;
 	padding-top:15px;
@@ -1147,7 +1149,7 @@ form{display:inline;margin:0}
 	border:1px solid #dddddd;  
 	background:#f8f8fa;
 	color:#003f7d;
-	font-weight:bold;
+	font-weight:normal;
 	padding-left:5px;
 }
 .todaytd_02
@@ -1159,7 +1161,7 @@ form{display:inline;margin:0}
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:31px}
-.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:6px 4px; border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8; background-color: #f8f8fa; height:24px}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:6px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; background-color: #f8f8fa; height:24px}
 .mainlist tr th.title{width:100%; text-align:left;}
 .mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
@@ -1168,10 +1170,10 @@ form{display:inline;margin:0}
 
 .mainlist_free{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
-.mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #eee;border-bottom:1px solid #eee; font-weight:normal; background-color: #f8f8fa;}
+.mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; font-weight:normal; background-color: #f8f8fa;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 
-.mainlist_free tr td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
+.mainlist_free tr td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
 .mainlist_free tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
@@ -1181,7 +1183,7 @@ form{display:inline;margin:0}
 .mainlist_depth tr th.left {border-left:1px solid #ddd;}
 .mainlist_depth tr th.right {border-right:1px solid #ddd;}
 
-.mainlist_depth tr td{  font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; background:transparent;}
+.mainlist_depth tr td{  font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #efefef; background:transparent;}
 .mainlist_depth tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_depth tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
@@ -1291,7 +1293,7 @@ form{display:inline;margin:0}
 	font-weight:normal;
 	white-space:nowrap;
 	width:auto;
-	line-height:21px;
+	line-height:19px;
 	
 }
 
@@ -1522,10 +1524,10 @@ form{display:inline;margin:0}
 
 /* organliststyle2 */
 .popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
-.popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; line-height:19px; padding:4px 4px 0px; border-top:1px solid #cfcfcf; border-bottom:1px solid #cfcfcf; background-color: #f8f8fa;}
+.popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; line-height:19px; padding:4px 4px 0px; border-top:1px solid #e8e8ef; border-bottom:1px solid #e8e8ef; background-color: #f8f8fa;}
 .popup_mainlist tr th.title{width:100%; text-align:left;}
 
-.popup_mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0;}
+.popup_mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0;}
 .popup_mainlist tr td  img{vertical-align:middle;}
 .popup_mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .popup_mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
@@ -1653,23 +1655,23 @@ form{display:inline;margin:0}
 	z-index:1;
 	
 }
-#left .list_thumbnail  li {
-	padding:5px 0px 5px 0px; 
-	border-bottom:1px solid #e8e8e8;
+#left .list_thumbnail li {
+	padding:3px 0px 2px 0px; 
+	border-bottom:0px;
 	vertical-align:middle;
 	height:33px;
 	line-height:16px;
 	vertical-align:middle;
 	white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-#left .list_thumbnail  li .thumbnail {
+#left .list_thumbnail li .thumbnail {
 	vertical-align:middle;
 	margin-left:10px;
 	margin-right:10px;
 	display:inline-block;
 	margin-top:3px;	
 }
-#left .list_thumbnail  li .name {
+#left .list_thumbnail li .name {
 	display:inline;
 	vertical-align:middle;
 }
@@ -1686,7 +1688,7 @@ form{display:inline;margin:0}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityTR{display:none; position:absolute; right:0px; top:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_TR.gif) no-repeat;}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityBL{display:none; position:absolute; left:0px; bottom:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_BL.gif) no-repeat;}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityBR{display:none; position:absolute; right:0px; bottom:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_BR.gif) no-repeat; z-index:1;}
-.contents_todayCommunity .todayCommunity_img{float:left; width:198px; height:140px; border:1px solid #e8e8e8; margin:0px 19px 0px 0px; padding:0; overflow:hidden;}
+.contents_todayCommunity .todayCommunity_img{float:left; width:198px; height:140px; border:1px solid white; margin:0px 19px 0px 0px; padding:0; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list{float:none; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list dt{font-size:13px; font-weight:bold; color:#666; margin:0; padding:0; line-height:2; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list dd{font-size:12px; color:#666; margin:0; padding:0; line-height:2;}
@@ -1706,7 +1708,7 @@ form{display:inline;margin:0}
 .newCommunity_title li .newCommunity_titleMg{position:relative; z-index:1 !important; margin:0px 0px 0px 0px;}
 .newCommunity_listLayout{padding:0px;}
 .newCommunity_listLayout .newCommunity_list{margin:0; padding:8px 5px 7px 5px; font-size:12px; border-bottom:1px dotted #777; overflow:hidden;}
-.newCommunity_listLayout .newCommunity_list dt{float:left; position:relative; width:56px; height:40px; margin:0px 32px 0px 0px; padding:0; border:1px solid #c7c4c5;}
+.newCommunity_listLayout .newCommunity_list dt{float:left; position:relative; width:56px; height:40px; margin:0px 32px 0px 0px; padding:0; border:1px solid white;}
 .newCommunity_listLayout .newCommunity_list dt .icon_newcommunity01{display:inline-block; position:absolute; right:-22px; top:9px; width:29px; height:32px;}
 .newCommunity_listLayout .newCommunity_list dt .icon_newcommunity02{display:inline-block; position:absolute; right:-22px; top:9px; width:31px; height:32px;}
 .newCommunity_listLayout .newCommunity_list dd{float:none; margin:0; padding:0; color:#676767; overflow:hidden; line-height:22px; height:20px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -1730,7 +1732,7 @@ form{display:inline;margin:0}
 .tabpartMycommunity .tabpartMycommunityTitle dd .line{display:inline-block; width:1px; height:12px; color:#f8f8f8; margin:0px 5px 0px 3px; background:#f8f8f8; overflow:hidden;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .btn_community01{display:inline-block; padding:0px 0px 0px 0px;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .btn_community01 span{display:inline-block; padding:0px 10px 0px 10px; height:22px; background:#f7f7f7;; color:#333; border:1px solid #d2d2d2;border-radius:3px; cursor:pointer;}
-.tabpartMycommunityList{clear:both; padding:0px; border-top:1px solid #e8e8ea;border-bottom:1px solid #e8e8ea; min-height:180px;}
+.tabpartMycommunityList{clear:both; padding:0px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; min-height:180px;}
 .tabpartMycommunityList table{table-layout:fixed;}
 .tabpartMycommunityList table td{height:32px;padding:2px}
 .tabpartMycommunityList table .text{padding:0 0 0 9px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -1761,7 +1763,7 @@ form{display:inline;margin:0}
 .right_tabpartListLayout{table-layout:fixed; }
 .right_tabpartListLayout td{border-bottom:1px solid #ddd;}
 .right_tabpartList{margin:0; padding:14px 0px;}
-.right_tabpartList dt{float:left; width:84px; height:60px; margin-right:24px; border:1px solid #bab6b7; overflow:hidden;}
+.right_tabpartList dt{float:left; width:84px; height:60px; margin-right:24px; border:1px solid white; overflow:hidden;}
 .right_tabpartList dd{float:none; line-height:20px; height:20px; color:#666; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .right_tabpartList dd strong{color:#666;}
 
@@ -1784,7 +1786,7 @@ form{display:inline;margin:0}
 
 .receiver_list{border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .receiver_list th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:8px 4px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; background-color: #f6f6f6;}
-.receiver_list td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
+.receiver_list td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
 
 
 .address_wordmenu {margin:0px 0px 10px 0px; min-height:25px; padding:5px 0px 10px 0px; list-style:none; border-top:1px dotted #aaa; border-bottom:1px dotted #aaa;}
@@ -1812,7 +1814,7 @@ form{display:inline;margin:0}
 .sublist{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #ddd;}
 .sublist tr th.title{width:100%; text-align:left;}
-.sublist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0;}
+.sublist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0;}
 .sublist tr td img{vertical-align:middle;}
 .sublist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .sublist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
@@ -1996,7 +1998,7 @@ form{display:inline;margin:0}
 
 
 .content_property .tabTitle:hover{background:rgb(48, 77, 127); color:#fff;}
-.content_property .tabList table td:hover{background:#edf4fd;}
+.content_property .tabList table td:hover{background:#f0f6ff;}
 
 .content_propertyInfo{margin:10px 0px 0px 0px;}
 .content_propertyInfo table{border-collapse:collapse; border-spacing:0;}
@@ -2106,3 +2108,16 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .calResTitleSpan {font-size:13px;color:#2f2f2f;text-align:center;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
 .layerHeader {border-color: rgb(4, 112, 227); color: white; background-color: rgb(4, 112, 227); text-align: left; height:30px !important;font-size:14px; font-weight: bold !important; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+
+.IDcontainer {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 12px 10px 12px 21px;
+ 	padding: 0px 0px 0px 26px;    			
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

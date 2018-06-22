@@ -18,6 +18,8 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -777,15 +779,20 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPersonal/leftEnvironment.do")
 	public String leftEnvironment(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("leftEnvironment started");
-
 		userInfo = commonUtil.userInfo(loginCookie);
 		String funCode = "";
+		String topMenuID = "";
 		String ezInfoSSL = "";
 		String SSL = "";
 		
 		if (req.getParameter("funCode") != null && !req.getParameter("funCode").equals("")) {
 			funCode = req.getParameter("funCode");
 		}
+		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").trim().equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
 		if (config.getProperty("config.ezInfoSSL") != null && !config.getProperty("config.ezInfoSSL").equals("")) {
 			ezInfoSSL = config.getProperty("config.ezInfoSSL");
 		}
@@ -796,8 +803,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		//초기화면 메일만 사용하고 싶을 때 YES
 		String	firstScreen_Mail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
-		//회람판 사용여부
-		String	useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", userInfo.getTenantId());
 		//마이포탈설정 0:보이게,1:마이포탈페이지만,2:초기화면설정만
 		String portalEnv = ezCommonService.getTenantConfig("portalEnv", userInfo.getTenantId());
 		
@@ -807,37 +812,46 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (firstScreen_Mail == null || firstScreen_Mail.equals("")) {
 			firstScreen_Mail = "NO";
 		}
-		if (useCircular == null || useCircular.equals("")) {
-			useCircular = "NO";
-		}
 
+		String accessList = ezPortalService.getAccessList(userInfo);
+		
 		/*
-		 * 각 모듈의 사용 유무를 확인 
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
 		 */
 		
-		String accessList = ezPortalService.getAccessList(userInfo);
-		String isMailUsed = ezPortalService.getMainMenuItemUID(accessList, "/ezEmail/mailMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-		String isScheduleUsed = ezPortalService.getMainMenuItemUID(accessList, "/ezSchedule/scheduleIndex.do?funCode=2", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-		String isApprUsed = ezPortalService.getMainMenuItemUID(accessList, "/ezApprovalG/apprGMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-		String isBoardUsed = ezPortalService.getMainMenuItemUID(accessList, "/ezBoard/boardMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-		String isCommunityUsed = ezPortalService.getMainMenuItemUID(accessList, "/ezCommunity/communityMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-		String isResUsed = ezPortalService.getMainMenuItemUID(accessList, "/ezResource/resMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-		String isCircularUsed = ezPortalService.getMainMenuItemUID(accessList, "/ezCircular/circularIndex.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-		String isJournalUsed = ezPortalService.getMainMenuItemUID(accessList, "/ezJournal/journalMain.do", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+		moduleList.put("/ezEmail/mailMain.do", "mail");
+		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+		moduleList.put("/ezBoard/boardMain.do", "board");
+		moduleList.put("/ezCommunity/communityMain.do", "community");
+		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+		moduleList.put("/ezJournal/journalMain.do", "journal");
+		moduleList.put("/ezWebFolder/webfolderMain.do", "webfolder");
+
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
 		
-		model.addAttribute("isMailUsed", isMailUsed);
-		model.addAttribute("isScheduleUsed", isScheduleUsed);
-		model.addAttribute("isApprUsed", isApprUsed);
-		model.addAttribute("isBoardUsed", isBoardUsed);
-		model.addAttribute("isCommunityUsed", isCommunityUsed);
-		model.addAttribute("isResUsed", isResUsed);
-		model.addAttribute("isCircularUsed", isCircularUsed);
-		model.addAttribute("isJournalUsed", isJournalUsed);
+		/*
+		 * moduleList에 추가해준 모듈의 이름으로 확인 
+		 */
+		
+		model.addAttribute("isMailUsed", usedList.get("mail"));
+		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
+		model.addAttribute("isApprUsed", usedList.get("appr"));
+		model.addAttribute("isBoardUsed", usedList.get("board"));
+		model.addAttribute("isCommunityUsed", usedList.get("community"));
+		model.addAttribute("isResUsed", usedList.get("res"));
+		model.addAttribute("isCircularUsed", usedList.get("circular"));
+		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		model.addAttribute("isWebfolderUsed", usedList.get("webfolder"));
+		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
 		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
-		model.addAttribute("USE_CIRCULAR", useCircular);
         model.addAttribute("packageType", packageType);
         model.addAttribute("portalEnv", portalEnv);
         

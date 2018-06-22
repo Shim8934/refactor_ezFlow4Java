@@ -103,7 +103,8 @@
 
     close: function() {
       if (parent.frames["left"]) {
-    	  if (parent.frames["left"].document.getElementById("blockLeft")) {	
+    	  if (parent.frames["left"].document.getElementById("blockLeft")) {
+    		  $(parent.frames["left"].document.body).css("overflow", "");
     		  $(parent.frames["left"].document.getElementById("blockLeft")).remove();
     	  }
       }

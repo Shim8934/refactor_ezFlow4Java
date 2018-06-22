@@ -38,9 +38,28 @@ public class LoginSimpleVO implements Serializable {
 	private String offset;
 	/** 서버네임 */
 	private String serverName;
+	/** 부서아이디 */
+	private String deptID;
+	/** 회사아이디 */
+	private String companyID;
 	
 	
 
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	public String getId() {
 		return id;
 	}

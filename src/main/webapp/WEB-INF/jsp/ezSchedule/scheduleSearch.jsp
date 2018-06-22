@@ -183,7 +183,7 @@
 			
 		    function onmouseOver(elem) {
 		        elem.style.color = "blue";
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f0f6ff";
 		    }
 		
 		    function onmouseOut(elem) {

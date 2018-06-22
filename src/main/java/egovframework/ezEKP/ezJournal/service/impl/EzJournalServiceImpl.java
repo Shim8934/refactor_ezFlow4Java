@@ -844,37 +844,33 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("journalIdS", journalIdS);
 		
 		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
-			
+		try {	
 		for (JournalVO journal : journalList) {
 			String journalContent = journal.getJournalContent();
 			Elements thisElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").children();
 
-			synchronized (thisElems) {
-				Iterator<Element> it = thisElems.iterator();
-				while (it.hasNext()) {
-					String elemHtml = it.next().html().replaceAll("&nbsp;", "");
-					String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
-					if (elemText.equals("")) {
-						it.remove();
-					} else {
-						break;
-					}
+			Iterator<Element> it = thisElems.iterator();
+			while (it.hasNext()) {
+				String elemHtml = it.next().html().replaceAll("&nbsp;", "");
+				String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
+				if (elemText.equals("")) {
+					it.remove();
+				} else {
+					break;
 				}
 			}
 			String thisContent = thisElems.toString();
 			
 			Elements nextElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").children();
 
-			synchronized (nextElems) {
-				Iterator<Element> it = nextElems.iterator();
-				while (it.hasNext()) {
-					String elemHtml = it.next().html().replaceAll("&nbsp;", "");
-					String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
-					if (elemText.equals("")) {
-						it.remove();
-					} else {
-						break;
-					}
+			it = nextElems.iterator();
+			while (it.hasNext()) {
+				String elemHtml = it.next().html().replaceAll("&nbsp;", "");
+				String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
+				if (elemText.equals("")) {
+					it.remove();
+				} else {
+					break;
 				}
 			}
 			String nextContent = nextElems.toString();
@@ -894,7 +890,10 @@ public class EzJournalServiceImpl implements EzJournalService {
 		formThis.append(formThisHtml.toString());
 		formNext.append(formNextHtml.toString());
 		form.setFormContent(formDoc.toString());
-		
+		} catch (Exception e) {
+			logger.debug("journal sum is fail");
+			form.setFormInfo("fail");
+		}
 		logger.debug("getJournalDivideThisNext ended.");
 		return form;
 	}

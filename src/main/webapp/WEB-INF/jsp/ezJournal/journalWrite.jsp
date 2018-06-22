@@ -254,7 +254,6 @@
 						journalIdList : JSON.stringify(journalIdList)
 					},
    					success : function(result){
-   						
    						if (result.formStatus == null) {
    							$("#btnGetOther").css("display", "none");
    						} else {
@@ -296,7 +295,10 @@
 						$("#loading").html('<img id="loading-image" src="/images/ProgressBar.gif" alt="Loading...">');
 					},
    					success : function(result){
-   						
+   						if (result.formInfo == "fail") {
+   							alert("<spring:message code='ezJournal.t177'/>");
+   							window.close();
+   						}
    						$("#title").val(result.journalTitle);
    						message.SetEditorContent(result.journalContent);
    						if(mode == "sum"){

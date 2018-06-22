@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPortal.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,6 +61,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
@@ -476,7 +478,6 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
 				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
 				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
-
 			}
 		}
 		
@@ -545,7 +546,10 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 			//스킨정보
 			strHTML = strHTML.replace("table-layout:fixed;", "");
-			
+			//topMenuId로 사용중인 모듈을 확인하기 위해서 parameter로 전달
+			strHTML = strHTML.replace("/ezPortal/environmentMain.do", "/ezPortal/environmentMain.do?topMenuID=" + pageID);
+			strHTML = strHTML.replace("/ezPortal/help/help.do", "/ezPortal/help/help.do?topMenuID=" + pageID);
+
 			if (!mode.equals("edit") || !mode.equals("view")) {
 				mode = "view";
 			}
@@ -791,6 +795,44 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/portalPortalPage";
 	}
 	
+	 public String changeCompany(String loginCookie, String deptID,String companyID, HttpServletResponse response){
+			try{
+				String decData = egovFileScrty.decryptAES(loginCookie);
+				
+				String[] decDataArray = decData.split("///");
+				int tenantId = Integer.parseInt(decDataArray[8]);
+				
+				decDataArray[9] = deptID;
+				decDataArray[10] = companyID;
+				
+				decData = "";
+				for (int i = 0; i < decDataArray.length; i++) {
+					if (i==0) {
+						decData += decDataArray[i];
+					} else {
+						decData += "///"+decDataArray[i];
+					}
+				}
+				
+				loginCookie = egovFileScrty.encryptAES(decData);
+				
+		    	Cookie cookieID = new Cookie("loginCookie", loginCookie);
+		    	cookieID.setPath("/");
+		    	response.addCookie(cookieID);
+		    	
+		    	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
+		    	
+		    	if (!("NO".equalsIgnoreCase(useSSOCookie) || "".equals(useSSOCookie))) {
+		    		Cookie ssoLoginCookie = new Cookie("loginCookieSSO", loginCookie);
+		    		ssoLoginCookie.setPath("/");
+		    		ssoLoginCookie.setDomain(useSSOCookie);
+		    		response.addCookie(ssoLoginCookie);
+		    	}
+			}catch(Exception e){
+			}
+			return loginCookie;
+	    }
+	
 	/**
 	 * 포탈 - 마이포탈 호출 함수
 	 */
@@ -798,7 +840,45 @@ public class EzPortalController extends EgovFileMngUtil {
 	public void myPortal (HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("myPortal started");
 
+		String companyID = req.getParameter("companyID");
+		String deptID = req.getParameter("deptID");
+		if (companyID != null && !companyID.equals("") && deptID != null && !deptID.equals("")) {
+			loginCookie = changeCompany(loginCookie, deptID, companyID, resp);
+		}
+		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Cookie cookieID0 = new Cookie("APRUI0", userInfo.getDeptID());
+    	cookieID0.setPath("/");
+    	resp.addCookie(cookieID0);
+    	
+    	Cookie cookieID1 = new Cookie("APRUI1", URLEncoder.encode(userInfo.getDeptName(), "utf-8"));
+    	cookieID1.setPath("/");
+    	resp.addCookie(cookieID1);
+    	
+    	Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(userInfo.getDeptName2(), "utf-8"));
+    	cookieID2.setPath("/");
+    	resp.addCookie(cookieID2);
+    	
+    	Cookie cookieID3 = new Cookie("APRUI3", URLEncoder.encode(userInfo.getCompanyName(), "utf-8"));
+    	cookieID3.setPath("/");
+    	resp.addCookie(cookieID3);
+    	
+    	Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(userInfo.getCompanyName2(), "utf-8"));
+    	cookieID4.setPath("/");
+    	resp.addCookie(cookieID4);
+    	
+    	Cookie cookieID5 = new Cookie("APRUI5", URLEncoder.encode(userInfo.getTitle(), "utf-8"));
+    	cookieID5.setPath("/");
+    	resp.addCookie(cookieID5);
+    	
+    	Cookie cookieID6 = new Cookie("APRUI6", URLEncoder.encode(userInfo.getTitle2(), "utf-8"));
+    	cookieID6.setPath("/");
+    	resp.addCookie(cookieID6);
+    	
+    	Cookie cookieID7 = new Cookie("APRUI7", userInfo.getCompanyID());
+    	cookieID7.setPath("/");
+    	resp.addCookie(cookieID7);
 		
 		String pageID = "";
 		String mode = "view";
@@ -1099,6 +1179,41 @@ public class EzPortalController extends EgovFileMngUtil {
 			checkBrowser = false;
 		}
 		
+		String accessList = ezPortalService.getAccessList(userInfo);
+		
+		/*
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
+		 */
+		
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+//		moduleList.put("/ezEmail/mailMain.do", "mail");
+//		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+//		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+//		moduleList.put("/ezBoard/boardMain.do", "board");
+//		moduleList.put("/ezCommunity/communityMain.do", "community");
+//		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+//		moduleList.put("/ezJournal/journalMain.do", "journal");
+		
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
+		
+		List<PortalTopOtherCompanyAddJobVO> companyList = ezPortalService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
+		
+		/*
+		 * moduleList에 추가해준 모듈의 이름으로 확인 
+		 */
+		
+//		model.addAttribute("isMailUsed", usedList.get("mail"));
+//		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
+//		model.addAttribute("isApprUsed", usedList.get("appr"));
+//		model.addAttribute("isBoardUsed", usedList.get("board"));
+//		model.addAttribute("isCommunityUsed", usedList.get("community"));
+//		model.addAttribute("isResUsed", usedList.get("res"));
+		model.addAttribute("isCircularUsed", usedList.get("circular"));
+//		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("department", department);
 		model.addAttribute("title", title);
@@ -1116,6 +1231,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+		model.addAttribute("companyList", companyList);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
@@ -2685,6 +2801,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String usePortal = "";
 		String url = "";
 		String funCode = "";
+		String topMenuID = "";
 		
 		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
@@ -2692,14 +2809,19 @@ public class EzPortalController extends EgovFileMngUtil {
 			funCode = req.getParameter("funCode");
 		}
 		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
 		if (funCode.equals("1")) {
-			url = "/ezPersonal/leftEnvironment.do?funCode=1";
+			url = "/ezPersonal/leftEnvironment.do?funCode=1&topMenuID="+topMenuID;
 		} else {
-			url = "/ezPersonal/leftEnvironment.do";
+			url = "/ezPersonal/leftEnvironment.do?topMenuID="+topMenuID;
 		}
 		
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("url", url);
+		model.addAttribute("topMenuID", topMenuID);
 
 		logger.debug("environmentMain ended");
 		return "/ezPortal/portalEnvironmentMain";
@@ -3310,14 +3432,21 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - 도움말 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/help/help.do")
-	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("help started");
-
+		
+		String topMenuID = "";
+		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 				
 		model.addAttribute("lang", userInfo.getLang());
 		model.addAttribute("packageType", packageType);
+		model.addAttribute("topMenuID", topMenuID);
 		
 		logger.debug("help ended");
 		return "/ezPortal/help/help";
@@ -3327,18 +3456,60 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - 도움말 상단 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/help/top.do")
-	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("top started");
 
+		String topMenuID = "";
+		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 				
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			firstScreenMail = "NO";
 		}
 		
+		String accessList = ezPortalService.getAccessList(userInfo);
+		
+		/*
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
+		 */
+		
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+		moduleList.put("/ezEmail/mailMain.do", "mail");
+		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+		moduleList.put("/ezBoard/boardMain.do", "board");
+		moduleList.put("/ezCommunity/communityMain.do", "community");
+		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+		moduleList.put("/ezJournal/journalMain.do", "journal");
+		
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
+		
+		/*
+		 * moduleList에 추가해준 모듈의 이름으로 확인 
+		 */
+		
+		model.addAttribute("isMailUsed", usedList.get("mail"));
+		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
+		model.addAttribute("isApprUsed", usedList.get("appr"));
+		model.addAttribute("isBoardUsed", usedList.get("board"));
+		model.addAttribute("isCommunityUsed", usedList.get("community"));
+		model.addAttribute("isResUsed", usedList.get("res"));
+		model.addAttribute("isCircularUsed", usedList.get("circular"));
+		model.addAttribute("isJournalUsed", usedList.get("journal"));
+
+		model.addAttribute("topMenuID", topMenuID);
+		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("packageType", packageType);
@@ -3506,10 +3677,45 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");
+		
+		String topMenuID = "";
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-				
+		
+		String accessList = ezPortalService.getAccessList(userInfo);
+		
+		/*
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
+		 */
+		
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+		moduleList.put("/ezEmail/mailMain.do", "mail");
+		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+		moduleList.put("/ezBoard/boardMain.do", "board");
+		moduleList.put("/ezCommunity/communityMain.do", "community");
+		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+		moduleList.put("/ezJournal/journalMain.do", "journal");
+		
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
+		
+		/*
+		 * moduleList에 추가해준 모듈의 이름으로 확인 
+		 */
+		
+		model.addAttribute("isMailUsed", usedList.get("mail"));
+		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
+		model.addAttribute("isApprUsed", usedList.get("appr"));
+		model.addAttribute("isBoardUsed", usedList.get("board"));
+		model.addAttribute("isCommunityUsed", usedList.get("community"));
+		model.addAttribute("isResUsed", usedList.get("res"));
+		model.addAttribute("isCircularUsed", usedList.get("circular"));
+		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("packageType", packageType);
 

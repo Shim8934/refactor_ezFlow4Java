@@ -57,6 +57,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
@@ -1431,8 +1432,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append("</TR>\n");
 			} else { 
 				if (menuItemMenuItemType.equals("0")) {
+					System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {
+					System.out.println("######################################### " + sb.toString());
 					sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));
 				}
 			}
@@ -2111,16 +2114,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			/* 2018-05-24 장진혁 홈 메뉴 pass */
 			String menuitemLinkURL = result.get(i).getLinkURL();
 			
+			/*
+			 * 2018-06-14 장진혁 홈 메뉴 안보이게 작업한거 주석처리
 			if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
 				continue;
-			}
-			
-			//Baonk 2018-05-31
-			if (menuitemLinkURL.equals("/ezWebFolder/webfolderMain.do")) {
-				if (!ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
-					continue;
-				}
-			}
+			}*/
 			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
@@ -3666,5 +3664,42 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			returnValue = "N";
 		}
 		return returnValue;
+	}
+	
+	@Override
+	public Map<String, String> getMainMenuItemUIDList(String accessID, Map<String, String> moduleList, String userLang, String companyID, int tenantID, String topMenuID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, String> resultMap = new HashMap<String, String>();
+		
+		map.put("tenantID", tenantID);
+		map.put("parentUID", "203"); //메인메뉴영역
+		map.put("companyID", companyID);
+		map.put("lang", userLang);
+		
+		if (topMenuID != null && !topMenuID.equals("")); {
+			map.put("topMenuID",topMenuID);
+		}
+		
+		/*top 메뉴에 있는 UID와 LINK URL*/
+		
+		List<PortalUseTopMenuID2VO> menuItemUID = ezPortalDAO.getMainMenuItemUIDList(map);
+		for (int i = 0; i < menuItemUID.size(); i++) {
+			//접근 권한 확인
+			String moduleName = moduleList.get(menuItemUID.get(i).getLinkURL());
+			if (checkViewRightBln(menuItemUID.get(i).getuID_(), accessID, tenantID)) {
+				resultMap.put(moduleName, "Y");
+			} else {
+				resultMap.put(moduleName, "N");
+			}
+		}
+		return resultMap;
+	}
+
+	@Override
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		return ezPortalDAO.getAllCompanyList(map);
 	}
 }
