@@ -1243,8 +1243,8 @@ public class EzPMSController {
 		String logStatus = logResult.get("status").toString();
 		
 		if (logStatus.equals("ok")) {
-			JSONArray data = (JSONArray) logResult.get("data");
-			overviewContent.put("logList", data);
+			JSONObject data = (JSONObject) logResult.get("data");
+			overviewContent.put("logList", data.get("taskLogList"));
 		}
 		
 		

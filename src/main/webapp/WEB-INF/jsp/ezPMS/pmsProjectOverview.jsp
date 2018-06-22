@@ -180,7 +180,9 @@ function initKanbanList() {
 			kanbanOrder : kanbanOrder,
 			limit : 10,
 			startRow : 0,
-			position : position
+			position : position,
+			groupId : 0,
+			taskId : 0
 	}
 			
 	$.ajax({

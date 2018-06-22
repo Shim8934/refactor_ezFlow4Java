@@ -557,14 +557,14 @@
 	   				var taskDepends = task.depends; 
 	   				var preTask = ge.tasks[taskDepends - 1];
 	   			  
-	   				/* var str = "";
+	   				var str = "";
 	   				
 	   				for(var key in task) {
 	   				    var value = task[key];
 	   				    str += key + " : " + value + ", ";
 	   				}
 	   				
-	   				alert(str); */
+	   				alert(str);
 	   				
 	   			  	// 중복 선행작업 지정 막기
 	   			  	if(taskDepends.indexOf(",") != -1) {

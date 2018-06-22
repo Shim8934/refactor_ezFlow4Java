@@ -831,16 +831,18 @@ public class EzPMSGWController {
 			JSONObject data = new JSONObject();
 			data.put("taskLogList", taskLogList);
 			
-			if (request.getParameter("taskId").equals("0")) {
-				long groupId = Long.parseLong(request.getParameter("groupId"));
-				ProjectGroupVO groupDetails = ezPMSService.getGroupDetails(groupId, info.getTenantId(), projectId);
-				data.put("groupDetails", groupDetails);
-				data.put("taskDetails", "{}");
-			} else {
-				long taskId = Long.parseLong(request.getParameter("taskId"));
-				ProjectTaskVO taskDetails = ezPMSService.getTaskDetails(taskId, info.getTenantId(), lang);
-				data.put("taskDetails", taskDetails);
-				data.put("groupDetails", "{}");
+			if (request.getParameter("taskId") != null) {
+				if (request.getParameter("taskId").equals("0")) {
+					long groupId = Long.parseLong(request.getParameter("groupId"));
+					ProjectGroupVO groupDetails = ezPMSService.getGroupDetails(groupId, info.getTenantId(), projectId);
+					data.put("groupDetails", groupDetails);
+					data.put("taskDetails", "{}");
+				} else {
+					long taskId = Long.parseLong(request.getParameter("taskId"));
+					ProjectTaskVO taskDetails = ezPMSService.getTaskDetails(taskId, info.getTenantId(), lang);
+					data.put("taskDetails", taskDetails);
+					data.put("groupDetails", "{}");
+				}
 			}
 			
 			result.put("status", "ok");

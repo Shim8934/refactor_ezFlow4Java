@@ -970,9 +970,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 
 		ProjectGroupVO groupInfo = ezPMSDAO.getGroupDetails(map);
+		String pretaskId = null;
+		String pregroupId = null;
 		
-		String pretaskId = groupInfo.getPretask();
-		String pregroupId = groupInfo.getPregroup();
+		if(groupInfo != null) {
+			pretaskId = groupInfo.getPretask();
+			pregroupId = groupInfo.getPregroup();
+		}
 		
 		if(pretaskId != null || pregroupId != null) {
 			

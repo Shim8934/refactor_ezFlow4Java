@@ -249,12 +249,12 @@ public class EzPMSGWController3 {
 				}
 			}
 			
-			String taskName;
+			String taskName = "";
 			
 			if(taskId != 0) {
 				ProjectTaskVO taskVO = ezPMSService.getTaskDetails(taskId, tenantId, lang);
 				taskName = taskVO.getTaskName();
-			} else {
+			} else if(groupId != 0){
 				ProjectGroupVO groupVO = ezPMSService.getGroupDetails(groupId, tenantId, Long.parseLong(projectId));
 				taskName = groupVO.getGroupName();
 			}
@@ -798,16 +798,22 @@ public class EzPMSGWController3 {
 
 			List<CommentVO> commentList = ezPMSService.getCommentList(param); 
 			
-			String taskName;
+			String taskName = "";
 			String taskId = request.getParameter("taskId");
 			String groupId = request.getParameter("groupId");
 			
-			if(!taskId.equals("")) {
-				ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Long.parseLong(taskId), tenantId, lang);
-				taskName = taskVO.getTaskName();
-			} else {
-				ProjectGroupVO groupVO = ezPMSService.getGroupDetails(Long.parseLong(groupId), tenantId, Long.parseLong(projectId));
-				taskName = groupVO.getGroupName();
+			LOGGER.debug("taskId : " + taskId + ", groupId : " + groupId);
+			
+			if(taskId != null && groupId != null) {
+				
+				if(!taskId.equals("") && !taskId.equals("0")) {
+					ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Long.parseLong(taskId), tenantId, lang);
+					taskName = taskVO.getTaskName();
+				} else if(!groupId.equals("") && !groupId.equals("0")) {
+					ProjectGroupVO groupVO = ezPMSService.getGroupDetails(Long.parseLong(groupId), tenantId, Long.parseLong(projectId));
+					taskName = groupVO.getGroupName();
+				}
+				
 			}
 			
 			result.put("status", "ok");
