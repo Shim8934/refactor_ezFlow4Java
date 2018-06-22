@@ -452,8 +452,10 @@
 			* [개인근태현황, 부서근태현황] 근태 메소드
 			*/
 			function getAttitudeMainList() {
-				var startDate = $("#index_0").attr("day");
-				var endDate = $("#index_41").attr("day");
+				var curYear = $("#calTitle").text().split("-")[0].trim();
+				var curMonth = $("#calTitle").text().split("-")[1].trim();
+				var startDate = curYear + "-" + curMonth + "-" + "01";
+				var endDate = curYear + "-" + curMonth + "-" + (new Date(curYear, curMonth, 0)).getDate();
 				$.ajax({
 					type : "POST",
 					dataType : "json",
