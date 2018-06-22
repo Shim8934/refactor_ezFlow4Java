@@ -2688,6 +2688,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
+	public void deletePreTaskRelInGroup(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] deletePreTaskRelInGroup started.");
+		ezPMSDAO.deletePreTaskRelInGroup(map);
+		LOGGER.debug("[SERVICE] deletePreTaskRelInGroup ended.");	
+	}
+
+	@Override
 	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception  {
 		LOGGER.debug("[SERVICE] ezPMS getTaskMemberListInGroup Started");
 		Map<String, Object> map = new HashMap<String, Object>();

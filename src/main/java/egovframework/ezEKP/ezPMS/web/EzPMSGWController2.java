@@ -658,6 +658,9 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			
+			Long projectId = Long.parseLong(request.getParameter("projectId"));
 			
 			List<Map<String, Object>> managerList = (List<Map<String, Object>>) jsonParam.get("managerList");
 			managerList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
@@ -678,6 +681,81 @@ public class EzPMSGWController2 {
 				groupMember.setUserDeptname2(member.getUserDeptname2());
 				
 				groupManagerList.add(groupMember);
+			}
+			
+			String pretaskType   = request.getParameter("type");
+			String pretaskId     = request.getParameter("pretaskId");
+			String planStartDate = request.getParameter("planStartDate");
+			
+			// 선행작업 수정 시 DB에 반영
+			if(pretaskType != null && !pretaskType.equals("")) {
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tenantId", tenantId);
+				map.put("taskId", groupId);
+				map.put("pretaskId", pretaskId);
+				map.put("type", pretaskType);
+				
+				if(pretaskType.equals("initPretask")) {
+					ezPMSService.deletePreTaskRelInGroup(map);
+				} else {
+					int pretaskRelCNT = ezPMSService.checkIfHasPreTaskRel(map);
+					
+					if(pretaskRelCNT > 0) {
+						ezPMSService.updatePreTaskRel(map);
+					} else {
+						ezPMSService.addPreTaskRel(groupId, Integer.parseInt(pretaskId), projectId, tenantId, pretaskType);
+					}	
+				}
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date oldGroupStartDate = sdf.parse(planStartDate);
+				Date newGroupStartDate = null;
+				
+				if(pretaskType.equals("task2group")) {
+					map.put("taskId", pretaskId);
+					ProjectTaskVO pretaskVO = ezPMSService.getTaskSchedule(map);
+					
+					Date pretaskEndate = sdf.parse(pretaskVO.getPlanEndDate());
+					newGroupStartDate  = ezPMSService.addWorkingDays(pretaskEndate, 1, companyId, tenantId);
+					
+				} else if(pretaskType.equals("group2group")) {
+					map.put("groupId", pretaskId);
+					ProjectGroupVO pregroupVO = ezPMSService.getGroupSchedule(map);
+					
+					Date pregroupEndate = sdf.parse(pregroupVO.getPlanEndDate());
+					newGroupStartDate  = ezPMSService.addWorkingDays(pregroupEndate, 1, companyId, tenantId);
+				}
+				
+				LOGGER.debug("oldGroupStartDate : " + sdf.format(oldGroupStartDate) + ", newGroupStartDate : " + sdf.format(newGroupStartDate));
+				
+				int offset = ezPMSService.getWorkingDays(oldGroupStartDate, newGroupStartDate, companyId, tenantId) - 1;
+				LOGGER.debug("offset : " + offset);
+				
+				List<ProjectTaskVO> tasksInGroup = ezPMSService.getTaskListByGroupId(tenantId, groupId);
+				
+				//프로젝트 group내의 모든 task의 시작날짜와 끝날짜 update
+				for(ProjectTaskVO taskVO : tasksInGroup) {
+					
+					// offset만큼 workingday기준으로 날짜를 증가시킴
+					Date oldStartDate = sdf.parse(taskVO.getPlanStartDate());
+					String newStartDate = sdf.format(ezPMSService.addWorkingDays(oldStartDate, offset, companyId, tenantId));
+					Date oldEndDate = sdf.parse(taskVO.getPlanEndDate());
+					String newEndDate = sdf.format(ezPMSService.addWorkingDays(oldEndDate, offset, companyId, tenantId));
+					
+					LOGGER.debug("oldStartDate : " + sdf.format(oldStartDate) + ", newStartDate : " + newStartDate);
+					LOGGER.debug("oldEndDate   : " + sdf.format(oldEndDate) +   ", newEndDate   : " + newEndDate);
+					
+					taskVO.setTenantId(tenantId);
+					taskVO.setProjectId(projectId);
+					taskVO.setPlanStartDate(newStartDate);
+					taskVO.setPlanEndDate(newEndDate);
+					taskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
+					
+					ezPMSService.updateTaskStatus(taskVO, companyId, tenantId);
+					
+					ezPMSService.updateGroupDate(groupId, tenantId, companyId);
+				}
 			}
 			
 			ProjectGroupVO groupInfo = new ProjectGroupVO();

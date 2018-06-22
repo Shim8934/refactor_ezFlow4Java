@@ -231,7 +231,7 @@
 		} else {
 			taskId = "${taskDetails.groupId}";
 			
-			DivPopUpShow(760, 392, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 422, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		}
 	}
 	

@@ -566,8 +566,14 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		delete("EzPMSDAO.deletePreTaskRelInTask", map);
 	}
 	
+	public void deletePreTaskRelInGroup(Map<String, Object> map) {
+		delete("EzPMSDAO.deletePreTaskRelInGroup", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<TaskMemberVO> getTaskMemberListInGroup(Map<String, Object> map) {
 		return (List<TaskMemberVO>) list("EzPMSDAO.getTaskMemberListInGroup", map);
 	}
+
+	
 }

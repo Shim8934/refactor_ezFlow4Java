@@ -274,7 +274,18 @@ function updateTaskInfo() {
 // 		managerList.concat(participantList).forEach(function(member, idx){
 // 			groupTaskMember[0].userId;
 // 		});
-		 
+		
+		// 선행작업 지정 타입을 판단
+		if(pretaskId != "") {
+			
+			if(pretaskId.indexOf("t") != -1) {
+				pretaskId = pretaskId.substring(pretaskId.indexOf("t") + 1);
+				pretaskSetType = "task2group";
+			} else {
+				pretaskSetType = "group2group";
+			}
+		}
+		
 		var data = {
 				groupName : taskName,
 				projectId : projectId,
@@ -282,9 +293,17 @@ function updateTaskInfo() {
 				overview	 : overview,
 				headManagerId : headManagerId,
 				managerList : managerList,
+				planStartDate : planStartDate,
+				planEndDate : planEndDate,
 				upperGroupId : groupId,
-				participantList : participantList
+				participantList : participantList,
+				pretaskId : pretaskId,
+				type : pretaskSetType
 		}
+		
+		console.log(pretaskId);
+		console.log(groupId);
+		console.log(pretaskSetType);
 		
 		$.ajax({
 			type : "POST",
@@ -315,7 +334,7 @@ function updateTaskInfo() {
 	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t279' /></h1>
 	</c:otherwise>
 	</c:choose>
-	<div class="headerDiv">
+	<div class="headerDiv" style="text-align: right;">
 		<a class="imgbtn" id="submit" onclick="updateTaskInfo()"><span><spring:message code='ezPMS.t265' /></span></a>
 		<a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a>
 	</div>
@@ -375,6 +394,10 @@ function updateTaskInfo() {
 						<td style="height:30px;" id="upperGroup">
 							<c:out value="${taskDetails.upperGroupName == null ? '-' : taskDetails.upperGroupName}"/>
 						</td>
+					</tr>
+					<tr>
+						<th><a class="imgbtn" onclick="openPreTaskTree()"><span><spring:message code='ezPMS.t181' /></span></a></th>
+						<td id="preTaskName"></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t88' /></th>

@@ -231,5 +231,7 @@ public interface EzPMSService {
 	
 	public void deletePreTaskRelInTask(Map<String, Object> map);
 
-	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;
+	public void deletePreTaskRelInGroup(Map<String, Object> map);
+	
+	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;	
 }
