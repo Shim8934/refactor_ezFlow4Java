@@ -204,12 +204,14 @@ public class EzLadderGWController {
 				ladVO.setWriterName2(userInfo.getUserName2());
 				ladVO.setDeptName(userInfo.getDeptName());
 				ladVO.setDeptName2(userInfo.getDeptName2());
+				ladVO.setCompanyID(userInfo.getCompanyId());
 			} else {
 				LoginVO userInfo = commonUtil.userInfo(logCookie);
 				ladVO.setWriterName(userInfo.getDisplayName());
 				ladVO.setWriterName2(userInfo.getDisplayName2());
 				ladVO.setDeptName(userInfo.getDeptName());
 				ladVO.setDeptName2(userInfo.getDeptName2());
+				ladVO.setCompanyID(userInfo.getCompanyID());
 			}
 			
 			ladLineVO.setUserIds((ArrayList<String>) jsonBodys.get("userIds"));
