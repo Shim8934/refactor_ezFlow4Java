@@ -109,7 +109,10 @@
 			<table id="normalScreen" class="layout">
 				<tr>
 					<td height="20" id="menuTable">
-						<div class="new_popup_title_txt" id="taskChangeMode"><spring:message code='ezTask.t1511' /></div>
+						<div class="new_popup_title_txt" id="taskChangeMode">
+							<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh02' /></c:if>
+							<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t1511' /></c:if>
+						</div>
 						<div id="menu" style="float: right; padding-right: 42px;">
 							<ul>
 								<li><span onClick="save_taskWork()"><spring:message code='ezTask.t96' /></span></li>
