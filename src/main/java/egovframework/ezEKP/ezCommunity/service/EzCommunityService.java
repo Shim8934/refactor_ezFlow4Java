@@ -103,7 +103,8 @@ public interface EzCommunityService {
 
 	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String primary, int tenantID) throws Exception;
 	
-	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, int tenantID) throws Exception;
+	/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
+	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, String companyID, int tenantID) throws Exception;
 	
 	public CommunityMemberInfoVO getMemberInfo(String companyID, String cID, int tenantID) throws Exception;
 	

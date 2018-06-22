@@ -2467,7 +2467,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (club != null) {
 			//커뮤니티 소개글 수정할 때 br태그 안나오게 \r\n으로 치환
 			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n")); 
-			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
+			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			if (userInfo.getLang().equals("2")) {
 				member.setUserName(member.getUserName2());
@@ -3398,7 +3398,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
+		
+		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
+		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
 		

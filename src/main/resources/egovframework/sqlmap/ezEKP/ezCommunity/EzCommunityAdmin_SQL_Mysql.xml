@@ -31,17 +31,17 @@
 				AND
 					A.tenant_id = D.tenant_id
 				WHERE
+			]]>
+			<isEqual property="v_S_RADIO" compareValue="USERNAME">
+				<![CDATA[
+					B.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 				]]>
-				<isEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						B.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-					]]>
-				</isEqual>
-				<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-					]]>
-				</isNotEqual>
+			</isEqual>
+			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
+				<![CDATA[
+					D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				]]>
+			</isNotEqual>
 			<![CDATA[
 				AND
 					D.companyid = #companyID#
@@ -170,15 +170,32 @@
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				IFNULL(COUNT(C1.c_clubno), 0)
+				IFNULL(COUNT(DISTINCT C1.c_clubno), 0)
 			FROM
 				TBL_C_COMCLOSE as C1
+			INNER JOIN
+				TBL_C_MEMBERINFO B
+			ON
+				RTRIM(C1.c_sysopid) = RTRIM(B.userid)
+			AND
+				C1.tenant_id = B.tenant_id
 			INNER JOIN
 				TBL_C_CLUB
 			ON
 				TBL_C_CLUB.c_clubno = C1.c_clubno
 			WHERE
-				C1.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+			]]>
+			<isEqual property="v_S_RADIO" compareValue="USERNAME">
+				<![CDATA[
+					B.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				]]>
+			</isEqual>
+			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
+				<![CDATA[
+					C1.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				]]>
+			</isNotEqual>
+		<![CDATA[
 			AND
 				TBL_C_CLUB.companyid = #companyID#
 			AND
@@ -188,7 +205,7 @@
 	
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select2"				parameterClass="Map"		resultClass="Integer">
 		SELECT
-			IFNULL(COUNT(C1.c_clubno), 0)
+			IFNULL(COUNT(DISTINCT C1.c_clubno), 0)
 		FROM
 			TBL_C_COMCLOSE as C1
 		INNER JOIN
@@ -208,7 +225,7 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					c_clubno,
+					DISTINCT c_clubno,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
@@ -237,7 +254,7 @@
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					c_clubno,
+					DISTINCT c_clubno,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
@@ -327,24 +344,30 @@
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				IFNULL(COUNT(c_clubno), 0) 
+				IFNULL(COUNT(DISTINCT c_clubno), 0) 
 			FROM
-				TBL_C_CLUB
+				TBL_C_CLUB A
+			INNER JOIN
+				TBL_C_MEMBERINFO B
+			ON
+				A.c_sysopid = B.userID
+			AND
+				A.tenant_id = B.tenant_id
 			WHERE
 				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				c_adminconfirm = 'N'
 			AND
-				companyid = #companyID#
+				A.companyid = #companyID#
 			AND
-				tenant_id = #tenantID#
+				A.tenant_id = #tenantID#
 		]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select2"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				IFNULL(COUNT(c_clubno), 0)
+				IFNULL(COUNT(DISTINCT c_clubno), 0)
 			FROM
 				TBL_C_CLUB
 			WHERE

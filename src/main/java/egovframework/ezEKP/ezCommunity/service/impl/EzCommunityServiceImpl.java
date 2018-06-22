@@ -4358,14 +4358,16 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return sysopCheck;
 	}
 
+	/* 겸직사원의 커뮤니티 클릭 시 too many results로 쿼리 터짐 */
 	@Override
-	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, int tenantID) throws Exception {
+	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCommInfoGet2 started.");
 		logger.debug("primary : " + primary + ", sysopID : " + sysopID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
 		map.put("v_RECORD_C_SYSOPID", sysopID);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		CommunityMemberInfoVO vo = ezCommunityDAO.aspCommInfoGet2(map);
