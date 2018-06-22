@@ -13,10 +13,13 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script>
-var CurrentHeight = document.documentElement.clientHeight - 100;
+	var CurrentHeight = document.documentElement.clientHeight - 100;
 
 	//버튼 중복클릭 방지
 	var doubleSubmitFlag = false;
+	
+	var contentCount = "${totalCount}";
+	var taskName = "${taskName}";
 	
 	function addComment() {
 		
@@ -192,6 +195,8 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
 		$("#divList").css("height", (CurrentHeight - 245) + "px");
 		$("#divList").css("overflow", "auto");
+		
+		setContentTitle(taskName, contentCount);
 	});
 </script>
 <div id="divList" style="width: 100%;">

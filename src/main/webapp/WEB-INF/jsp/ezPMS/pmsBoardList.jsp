@@ -7,6 +7,9 @@
 	var boardDetail;
 	var CurrentHeight = document.documentElement.clientHeight - 100;
 	
+	var contentCount = "${totalCount}";
+	var taskName = "${taskName}";
+	
 	$(function() {
 		CurrentHeight = $(window).height()-100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
@@ -34,6 +37,8 @@
 		$("tr[data-readornot='false']").addClass("noView");
 		
 		getDatePicker();
+		
+		setContentTitle(taskName, contentCount);
 	})
 	
 	// 체크박스 전체선택 혹은 해제

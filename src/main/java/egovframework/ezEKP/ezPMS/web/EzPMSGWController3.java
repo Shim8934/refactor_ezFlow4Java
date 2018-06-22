@@ -38,6 +38,8 @@ import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -159,7 +161,8 @@ public class EzPMSGWController3 {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			String uploadPathName = "uploadFile";
 			
 			Long groupId = 0L;
@@ -246,9 +249,20 @@ public class EzPMSGWController3 {
 				}
 			}
 			
+			String taskName;
+			
+			if(taskId != 0) {
+				ProjectTaskVO taskVO = ezPMSService.getTaskDetails(taskId, tenantId, lang);
+				taskName = taskVO.getTaskName();
+			} else {
+				ProjectGroupVO groupVO = ezPMSService.getGroupDetails(groupId, tenantId, Long.parseLong(projectId));
+				taskName = groupVO.getGroupName();
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", boardList);		
+			result.put("taskName", taskName);		
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -750,7 +764,8 @@ public class EzPMSGWController3 {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 	
 			String searchByUser = request.getParameter("searchByUser");
 			String searchByContent = request.getParameter("searchByContent");
@@ -758,7 +773,7 @@ public class EzPMSGWController3 {
 			Map<String, Object> param = new HashMap<String, Object>();
 			
 			param.put("lang", lang);
-			param.put("tenantId", info.getTenantId());
+			param.put("tenantId", tenantId);
 			
 			Enumeration<String> parameterNames = request.getParameterNames();
 			
@@ -783,9 +798,22 @@ public class EzPMSGWController3 {
 
 			List<CommentVO> commentList = ezPMSService.getCommentList(param); 
 			
+			String taskName;
+			String taskId = request.getParameter("taskId");
+			String groupId = request.getParameter("groupId");
+			
+			if(!taskId.equals("")) {
+				ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Long.parseLong(taskId), tenantId, lang);
+				taskName = taskVO.getTaskName();
+			} else {
+				ProjectGroupVO groupVO = ezPMSService.getGroupDetails(Long.parseLong(groupId), tenantId, Long.parseLong(projectId));
+				taskName = groupVO.getGroupName();
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", commentList);		
+			result.put("data", commentList);
+			result.put("taskName", taskName);	
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
