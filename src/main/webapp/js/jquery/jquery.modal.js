@@ -112,11 +112,36 @@
     		  $(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
     	  }
       }
+      
+      if (parent.parent.frames["left"]) {
+	      if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+			  $(parent.parent.frames["left"].document.body).css("overflow", "");
+			  $(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+			  $(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+		  }
+      }
+      
       modals.pop();
       this.unblock();
       this.hide();
-      if (!$.modal.isActive())
+      if (!$.modal.isActive()) {
         $(document).off('keydown.modal');
+        
+        if (parent.frames["right"]) {        	
+        	parent.frames["right"].document.body.style.overflow = "hidden";
+        }
+        
+        if (parent.frames["FBoard_ifrm"]) {
+        	parent.frames["FBoard_ifrm"].document.body.style.overflow = "hidden";
+        	        	   		
+    		/*parent.parent.frames["right"].document.body.style.marginLeft = "10px";
+    		parent.parent.frames["right"].document.body.style.marginRight = "10px";
+    		parent.parent.frames["right"].document.getElementById("boardMainbody").style.paddingLeft = "0px";
+    		parent.parent.frames["right"].document.getElementById("boardMainbody").style.paddingRight = "0px";
+    		parent.frames["FBoard_ifrm"].document.body.style.paddingLeft = "0px";
+    		parent.frames["FBoard_ifrm"].document.body.style.paddingRight = "0px";*/
+        }
+      }
     },
 
     block: function() {
