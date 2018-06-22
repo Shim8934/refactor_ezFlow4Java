@@ -195,6 +195,7 @@ public class EzLadderController {
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("companyID", userInfo.getCompanyID());
 		
 		logger.debug("setLadderAttendantPopUp ended.");
 		
