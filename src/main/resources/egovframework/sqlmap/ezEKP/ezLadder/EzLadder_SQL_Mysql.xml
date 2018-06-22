@@ -1053,9 +1053,9 @@
 	
  	<insert id="EzLadderDAO.insertLadderSet" parameterClass="LadderVO">
 		INSERT INTO 
-			TBL_LADDER (TENANT_ID, TITLE, TYPE, SECRETFLAG, WRITERID, WRITERNAME, WRITERNAME2, DEPTNAME, DEPTNAME2, LINECNT, WRITEDATE)
+			TBL_LADDER (TENANT_ID, TITLE, TYPE, SECRETFLAG, WRITERID, WRITERNAME, WRITERNAME2, DEPTNAME, DEPTNAME2, LINECNT, WRITEDATE, COMPANYID)
 		VALUES 
-			(#tenant_id#, #title#, #type#, #secretFlag#, #writerId#, #writerName#, #writerName2#, #deptName#, #deptName2#, #lineCnt#, #writeDate#)
+			(#tenant_id#, #title#, #type#, #secretFlag#, #writerId#, #writerName#, #writerName2#, #deptName#, #deptName2#, #lineCnt#, #writeDate#, #companyID#)
 	</insert>
 	
 	<insert id="EzLadderDAO.insertLadderLine" parameterClass="LadderLineVO">
@@ -1085,6 +1085,8 @@
 			WRITERID = #writerId#
 		AND
 			TENANT_ID = #tenant_id#
+		AND
+			COMPANYID = #companyID#
 		]]>
 	</select>
 	
