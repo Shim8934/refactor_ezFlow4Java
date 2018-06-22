@@ -51,9 +51,9 @@ function getProjectTaskTree(containerId, data, location) {
 
 
 function convertString(str) {
-	str = ReplaceText(str, "&", "&amp;");
-	str = ReplaceText(str, "<", "&lt;");
-	str = ReplaceText(str, ">", "&gt;");
+//	str = ReplaceText(str, "&", "&amp;");
+//	str = ReplaceText(str, "<", "&lt;");
+//	str = ReplaceText(str, ">", "&gt;");
 	//str = ReplaceText(str, "\'", "&apos;");
 	//str = ReplaceText(str, "\"", "&quot;");
 	str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
@@ -66,13 +66,14 @@ function ReplaceText(orgStr, findStr, replaceStr) {
 }
  
 function replaceString(p_str) {
-     p_str = ReplaceText(p_str, "&amp;", "&");
      p_str = ReplaceText(p_str, "&lt;", "<");
      p_str = ReplaceText(p_str, "&gt;", ">");
      p_str = ReplaceText(p_str, "&apos;", "\'");
      p_str = ReplaceText(p_str, "&#039;", "\'");
      p_str = ReplaceText(p_str, "&quot;", "\"");
      p_str = ReplaceText(p_str, "&#034;", "\"");
+     p_str = ReplaceText(p_str, "&amp;", "&");
+     p_str = p_str.replace(/<br\/>/g, "\r\n");
      return p_str;
 }
 

@@ -48,7 +48,7 @@ var overview = null;
 var headManagerId = "";
 var originGroupId = 0;
 var groupName = "<c:out value='${taskDetails.groupName}'/>";
-var taskDetails = '${taskDetails}';
+var taskDetails = "";
 var writerId= "";
 var weightData = '${weightData}';
 var target = "<c:out value='${target}'/>";
@@ -63,6 +63,10 @@ var groupTaskMember = null;
 var taskId = "${taskDetails.taskId}";
 
  $(function() {
+	 taskDetails = ${taskDetails};
+	 $("#taskName").val(replaceString(taskDetails.taskName));
+	 $("#overview").val(replaceString(taskDetails.overview));
+	 
 	 if (target == "task") {
 		 managerList = '${taskDetails.taskMember}';
 		 groupId = "<c:out value='${taskDetails.groupId}'/>";
@@ -347,7 +351,7 @@ function updateTaskInfo() {
 					<tr>
 						<th><spring:message code='ezPMS.t98' /></th>
 						<td colspan="3">
-							<input type="text" id="taskName" class="textInput" placeholder="${taskDetails.taskName}" value="${taskDetails.taskName}" maxlength="100">
+							<input type="text" id="taskName" class="textInput" maxlength="100">
 						</td>
 					</tr>
 					<tr>
@@ -372,7 +376,7 @@ function updateTaskInfo() {
 					<tr>
 						<th><spring:message code='ezPMS.t104' /></th>
 						<td>
-							<textarea id="overview"><c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/></textarea>
+							<textarea id="overview"></textarea>
 						</td>
 					</tr>
 				</c:when>

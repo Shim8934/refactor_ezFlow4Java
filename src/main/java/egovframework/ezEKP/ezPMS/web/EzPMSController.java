@@ -834,6 +834,36 @@ public class EzPMSController {
 						model.addAttribute("groupDetails", data.get("groupDetails"));
 						model.addAttribute("taskDetails", data.get("taskDetails"));
 					}
+				} else {
+					if (param.get("taskId").equals("0")) {
+						long groupId = Long.parseLong(param.get("groupId").toString());
+						String groupUrl = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
+						
+						param.put("projectId", projectId);
+						
+						JSONObject result = commonUtil.getJsonFromRestApi(groupUrl, param, request, "get", null);
+						String status = result.get("status").toString();
+						
+						if (status.equals("ok")) {
+							JSONObject groupDetails = (JSONObject) result.get("data");
+							model.addAttribute("groupDetails", groupDetails);
+							model.addAttribute("taskDetails", "{}");
+						}
+					} else {
+						long taskId = Long.parseLong(param.get("taskId").toString());
+						String taskUrl = "/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId();
+						
+						param.put("projectId", projectId);
+						
+						JSONObject result = commonUtil.getJsonFromRestApi(taskUrl, param, request, "get", null);
+						String status = result.get("status").toString();
+						
+						if (status.equals("ok")) {
+							JSONObject taskDetails = (JSONObject) result.get("data");
+							model.addAttribute("taskDetails", taskDetails);
+							model.addAttribute("groupDetails", "{}");
+						}
+					}
 				}
 			}
 		}
@@ -1296,6 +1326,19 @@ public class EzPMSController {
 						model.addAttribute("userRoleId", data.get("userRoleId"));
 						model.addAttribute("position", param.get("position"));
 						model.addAttribute("groupDetail", data.get("groupDetail"));
+					}
+				} else {
+					long groupId = Long.parseLong(param.get("groupId").toString());
+					String groupUrl = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
+					
+					param.put("projectId", projectId);
+					
+					JSONObject result = commonUtil.getJsonFromRestApi(groupUrl, param, request, "get", null);
+					String status = result.get("status").toString();
+					
+					if (status.equals("ok")) {
+						JSONObject groupDetails = (JSONObject) result.get("data");
+						model.addAttribute("groupDetail", groupDetails);
 					}
 				}
 			}

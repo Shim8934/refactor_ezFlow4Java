@@ -24,22 +24,8 @@ var groupDetail = "";
 $(function() {
 	groupDetail = ${groupDetail};
 	
-	if (position == null || position == "") {		
-		if (contentTitle == "") {
-			var treeItemId = $("li[role=treeitem]").attr("id");
-			contentTitle = $("#" + treeItemId + "_anchor").text();
-			
-			/* if (contentTitle.indexOf("(") != -1) {
-				contentTitle = contentTitle.substring(0, contentTitle.indexOf("("));
-			} */
-			
-			setContentTitle(groupDetail.groupName, "${taskListCount}");
-		} else {
-			/* if (contentTitle.lastIndexOf("(") != -1) {
-				contentTitle = contentTitle.substring(0, contentTitle.lastIndexOf("("));
-			} */
-			setContentTitle(groupDetail.groupName, "${taskListCount}");
-		}
+	if (position == null || position == "") {	
+		setContentTitle(groupDetail.groupName, "${taskListCount}");
 	} else { 
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
