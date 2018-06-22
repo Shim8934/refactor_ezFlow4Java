@@ -13,7 +13,7 @@
 		<style>
 			#lstAttachLink {
 				height: 117px;
-				border: 1px solid #3C2F2E;
+				border: 1px solid #d2d2d2;
 			}
 		</style>
 		<script type="text/javascript">
@@ -672,7 +672,7 @@
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
-        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px" />
+        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px;display:none;" />
         <input type="hidden" value="업로드" onclick ="fileupload()" />
   </body>
 </html>
