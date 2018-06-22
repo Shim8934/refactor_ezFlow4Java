@@ -110,7 +110,6 @@ window.onload = function() {
 	width : 84%;
 	display : inline-block;
 	height : 100%;
-	overflow-x : auto;
 }
 
 #mainmenu {
