@@ -191,28 +191,18 @@ public class EzLadderGWController {
 			String todayDate = commonUtil.getTodayUTCTime("");
 			
 			String logCookie = (String) jsonBodys.get("loginCookie");
+			LoginVO userInfo = commonUtil.userInfo(logCookie);
 			
 			ladVO.setTitle((String) jsonBodys.get("title"));
 			ladVO.setType((String) jsonBodys.get("type"));
 			ladVO.setSecretFlag((String) jsonBodys.get("secretFlag"));
 			ladVO.setLineCnt((String) jsonBodys.get("lineCnt"));
 			ladVO.setWriteDate(todayDate);
-			
-			if(dbType.equals("mysql")) {
-				MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, writerId);
-				ladVO.setWriterName(userInfo.getUserName());
-				ladVO.setWriterName2(userInfo.getUserName2());
-				ladVO.setDeptName(userInfo.getDeptName());
-				ladVO.setDeptName2(userInfo.getDeptName2());
-				ladVO.setCompanyID(userInfo.getCompanyId());
-			} else {
-				LoginVO userInfo = commonUtil.userInfo(logCookie);
-				ladVO.setWriterName(userInfo.getDisplayName());
-				ladVO.setWriterName2(userInfo.getDisplayName2());
-				ladVO.setDeptName(userInfo.getDeptName());
-				ladVO.setDeptName2(userInfo.getDeptName2());
-				ladVO.setCompanyID(userInfo.getCompanyID());
-			}
+			ladVO.setWriterName(userInfo.getDisplayName());
+			ladVO.setWriterName2(userInfo.getDisplayName2());
+			ladVO.setDeptName(userInfo.getDeptName());
+			ladVO.setDeptName2(userInfo.getDeptName2());
+			ladVO.setCompanyID(userInfo.getCompanyID());
 			
 			ladLineVO.setUserIds((ArrayList<String>) jsonBodys.get("userIds"));
 			ladLineVO.setUserNames((ArrayList<String>) jsonBodys.get("userNames"));
@@ -596,21 +586,14 @@ public class EzLadderGWController {
 			String dbType = globals.getProperty("Globals.DbType");
 			String logCookie = (String) jsonBodys.get("loginCookie");
 			String ladderId = (String) jsonBodys.get("ladderId");
-			LadderVO ladVO = new LadderVO();
+			LoginVO userInfo = commonUtil.userInfo(logCookie);
 			
-			if(dbType.equals("mysql")) {
-				MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, userId);
-				ladVO.setUserId(userId);
-				ladVO.setTenant_id(userInfo.getTenantId());
-				ladVO.setLadderId(Integer.parseInt(ladderId));
-				ladVO.setCompanyID(userInfo.getCompanyId());
-			} else {
-				LoginVO userInfo = commonUtil.userInfo(logCookie);
-				ladVO.setUserId(userId);
-				ladVO.setTenant_id(userInfo.getTenantId());
-				ladVO.setLadderId(Integer.parseInt(ladderId));
-				ladVO.setCompanyID(userInfo.getCompanyID());
-			}
+			LadderVO ladVO = new LadderVO();
+			ladVO.setUserId(userId);
+			ladVO.setTenant_id(userInfo.getTenantId());
+			ladVO.setLadderId(Integer.parseInt(ladderId));
+			ladVO.setCompanyID(userInfo.getCompanyID());
+			
 			ezLadderService.deleteLadderList(ladVO);
 
 			result.put("status", "ok");
