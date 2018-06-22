@@ -24595,5 +24595,16 @@
 			TENANT_ID = #tenantID#
 		AND
 			COMPANYID = #companyID#
+		UNION
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#	
 	</select>
 </sqlMap>
