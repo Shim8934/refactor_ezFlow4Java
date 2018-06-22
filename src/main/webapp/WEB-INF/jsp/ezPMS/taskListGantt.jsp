@@ -564,8 +564,8 @@
 	   				  }
 	   			  }
 	   			  
-	   			  var startDate = dateToYYYYMMDD(new Date(preTask.end + (1 * 24 * 60 * 60 * 1000)));
-	   			  var endDate = dateToYYYYMMDD(new Date(preTask.end + (task.duration * 24 * 60 * 60 * 1000)));
+	   			  var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
+	   			  var taskDuration = task.duration;
 	   			  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
 	   			  var groupId = task.id.match(/g(\d+)/) != null? task.id.match(/g(\d+)/)[1] : projectGroupId;
 	   			  var preTaskRowIndex = task.depends;
@@ -575,7 +575,10 @@
 	   			  var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
 	   			  
-	   			  addPreTaskRel(projectId, taskId, preTaskId, startDate, endDate, progress, task.name, preTaskRowName, groupId, preGroupId);
+	   			  console.log(pretaskEndDate);
+	   			  console.log(taskDuration);
+	   			  
+	   			  addPreTaskRel(projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, task.name, preTaskRowName, groupId, preGroupId);
 	   			  
 	   			  return task.moveTo(task.start,false,true);
 	   			};
@@ -623,7 +626,7 @@
 	   			};
 	   		}
 	   		
-	   		function addPreTaskRel (projectId, taskId, preTaskId, startDate, endDate, progress, taskName, preTaskRowName, groupId, preGroupId) {
+	   		function addPreTaskRel (projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, taskName, preTaskRowName, groupId, preGroupId) {
 	   			
 	   			var type;
 	   			var taskIdParam = taskId;
@@ -647,8 +650,8 @@
 	   					projectId : projectId,
 	   					taskId : taskId,
 	   					preTaskId : preTaskId,
-	   					planStartDate : startDate,
-	   					planEndDate : endDate,
+	   					pretaskEndDate : pretaskEndDate,
+	   					taskDuration : taskDuration,
 	   					realProgress : progress,
 	   					type : type
 	   			}

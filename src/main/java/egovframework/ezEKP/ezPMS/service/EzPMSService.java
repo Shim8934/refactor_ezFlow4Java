@@ -223,5 +223,15 @@ public interface EzPMSService {
 
 	Long getUpperGroupId(long groupId, long projectId, int tenantId);
 	
-	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;
+	public ProjectTaskVO getTaskSchedule(Map<String, Object> map);
+	
+	public ProjectGroupVO getGroupSchedule(Map<String, Object> map);
+	
+	public int checkIfHasPreTaskRel(Map<String, Object> map);
+	
+	public void deletePreTaskRelInTask(Map<String, Object> map);
+
+	public void deletePreTaskRelInGroup(Map<String, Object> map);
+	
+	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;	
 }

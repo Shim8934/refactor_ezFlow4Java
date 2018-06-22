@@ -2660,6 +2660,41 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
+	public ProjectTaskVO getTaskSchedule(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] getTaskSchedule started.");
+		LOGGER.debug("[SERVICE] getTaskSchedule ended.");
+		return ezPMSDAO.getTaskSchedule(map);
+	}
+
+	@Override
+	public ProjectGroupVO getGroupSchedule(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] getGroupSchedule started.");
+		LOGGER.debug("[SERVICE] getGroupSchedule ended.");
+		return ezPMSDAO.getGroupSchedule(map);
+	}
+
+	@Override
+	public int checkIfHasPreTaskRel(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] checkIfHasPreTaskRel started.");
+		LOGGER.debug("[SERVICE] checkIfHasPreTaskRel ended.");
+		return ezPMSDAO.checkIfHasPreTaskRel(map);
+	}
+
+	@Override
+	public void deletePreTaskRelInTask(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] deletePreTaskRelInTask started.");
+		ezPMSDAO.deletePreTaskRelInTask(map);
+		LOGGER.debug("[SERVICE] deletePreTaskRelInTask ended.");
+	}
+	
+	@Override
+	public void deletePreTaskRelInGroup(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] deletePreTaskRelInGroup started.");
+		ezPMSDAO.deletePreTaskRelInGroup(map);
+		LOGGER.debug("[SERVICE] deletePreTaskRelInGroup ended.");	
+	}
+
+	@Override
 	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception  {
 		LOGGER.debug("[SERVICE] ezPMS getTaskMemberListInGroup Started");
 		Map<String, Object> map = new HashMap<String, Object>();

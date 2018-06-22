@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1465,16 +1466,28 @@ public class EzPMSGWController {
 					}
 				}
 				
+				// planStartDate를 pretaskEndDate 다음 날로 변경
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date pretaskEndDate = sdf.parse(request.getParameter("pretaskEndDate"));
+				Date startDate = ezPMSService.addWorkingDays(pretaskEndDate, 1, companyId, tenantId);
+			
 				if (roleCheck.equals("permitted")) {
 					
 					if(type.equals("task2task") || type.equals("group2task")) {
+						// taskDuration을 통해 endDate를 workingday를 고려해 계산
+						int taskDuration = Integer.parseInt(request.getParameter("taskDuration"));
+						String planStartDate = sdf.format(startDate);
+						String planEndDate   = sdf.format(ezPMSService.addWorkingDays(sdf.parse(planStartDate), taskDuration - 1, companyId, tenantId));
+						
+						LOGGER.debug("newPlanStartDate : " + planStartDate + ", taskDuration : " + taskDuration +  ", newPlanEndDate : " + planEndDate);
+						
 						//프로젝트 task 시작날짜와 끝날짜 update
 						ProjectTaskVO projectTaskVO = new ProjectTaskVO();
 						projectTaskVO.setTenantId(tenantId);
 						projectTaskVO.setTaskId(taskId);
 						projectTaskVO.setProjectId(projectId);
-						projectTaskVO.setPlanStartDate(request.getParameter("planStartDate"));
-						projectTaskVO.setPlanEndDate(request.getParameter("planEndDate"));
+						projectTaskVO.setPlanStartDate(planStartDate);
+						projectTaskVO.setPlanEndDate(planEndDate);
 						projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 						
 						ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
@@ -1486,9 +1499,8 @@ public class EzPMSGWController {
 					
 						ProjectGroupVO oldGroupVO = ezPMSService.getGroupDetails(groupId, tenantId, projectId);
 						
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 						Date oldGroupStartDate = sdf.parse(oldGroupVO.getPlanStartDate());
-						Date newGroupStartDate = sdf.parse(request.getParameter("planStartDate"));
+						Date newGroupStartDate = startDate;
 						
 						LOGGER.debug("oldGroupStartDate : " + sdf.format(oldGroupStartDate) + ", newGroupStartDate : " + sdf.format(newGroupStartDate));
 						

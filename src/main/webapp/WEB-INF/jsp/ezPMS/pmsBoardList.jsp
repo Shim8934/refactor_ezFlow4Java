@@ -75,12 +75,18 @@
 			return;
 		}
 		
+		itemIds = new Array();
+		checkBoxes.each(function() {
+			var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
+			itemIds.push(itemId);		
+		});
+		
+		if(checkIfHasReplies(itemIds) == true) {
+			alert("<spring:message code='ezPMS.t296' />");	
+			return;
+		}
+		
 		if(confirm("<spring:message code='ezPMS.t107' />") == true) {
-			itemIds = new Array();
-			checkBoxes.each(function() {
-				var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
-				itemIds.push(itemId);		
-			});
 			deleteBoardsAction(itemIds);
 		}	
 	}

@@ -550,8 +550,30 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Long) select ("EzPMSDAO.getUpperGroupId", map);
 	}
 	
+	public ProjectTaskVO getTaskSchedule(Map<String, Object> map) {
+		return (ProjectTaskVO) select("EzPMSDAO.getTaskSchedule", map);
+	}
+	
+	public ProjectGroupVO getGroupSchedule(Map<String, Object> map) {
+		return (ProjectGroupVO) select("EzPMSDAO.getGroupSchedule", map);
+	}
+	
+	public int checkIfHasPreTaskRel(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.checkIfHasPreTaskRel", map);
+	}
+	
+	public void deletePreTaskRelInTask(Map<String, Object> map) {
+		delete("EzPMSDAO.deletePreTaskRelInTask", map);
+	}
+	
+	public void deletePreTaskRelInGroup(Map<String, Object> map) {
+		delete("EzPMSDAO.deletePreTaskRelInGroup", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<TaskMemberVO> getTaskMemberListInGroup(Map<String, Object> map) {
 		return (List<TaskMemberVO>) list("EzPMSDAO.getTaskMemberListInGroup", map);
 	}
+
+	
 }

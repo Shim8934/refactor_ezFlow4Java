@@ -81,6 +81,12 @@
 		}
 		
 		function deleteBoard() {
+			
+			if(checkIfHasReplies(itemIds) == true) {
+				alert("<spring:message code='ezPMS.t296' />");	
+				return;
+			}
+			
 			if(confirm("<spring:message code='ezPMS.t107' />") == true) {
 				var items = new Array();
 				items.push(itemId);

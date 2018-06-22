@@ -50,18 +50,20 @@
 .tree {
 	overflow: auto;
 	border: 1px solid silver;
-	height: auto;
+	height: 198px;
 }
 </style>
 </head>
 <body class="popup">
 	<h1><spring:message code='ezPMS.t146' /></h1>
-	<div id="close">
-		<ul>
-			<li><span onclick="register()"><spring:message code='ezPMS.t40' /></span></li>
-			<li><span onclick="popupClose()"><spring:message code='ezPMS.t76' /></span></li>
-		</ul>
-	</div>
 	<div id="taskTree" class="tree"></div>
+	<div style="margin-top: 8px; text-align: center;">
+		<a class="imgbtn" onclick="register()">
+			<span><spring:message code='ezPMS.t40' /></span>
+		</a>
+		<a class="imgbtn" onclick="popupClose()">
+			<span><spring:message code='ezPMS.t76' /></span>
+		</a>
+	</div>
 </body>
 </html>
