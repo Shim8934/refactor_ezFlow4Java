@@ -79,6 +79,11 @@
 		        if (lvXml == "") {
 		            lvXml = GetLVHearderXml();
 		        }
+		        if (nonElecRec == "Y" && g_CabinetID != "") {
+		        	var CabInfo = createXmlDom();
+		        	CabInfo = GetCabinetClassInfo(g_CabinetID);
+		        	lvXml = lvXml.replace(/nonElecRecTempCabinetName/gi, SelectSingleNodeValue(CabInfo.documentElement, "TITLE"));
+		        } 
 		        oList = createXmlDom();
 		        oList = loadXMLString(lvXml);
 		

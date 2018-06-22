@@ -2994,4 +2994,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGRecordTempVO> getNonElecInfoSusinInit(Map<String, Object> map) throws Exception {
 		return (List<ApprGRecordTempVO>) list("EzApprovalG.getNonElecInfoSusinInit", map);
 	}
+	
+	public void setNonElecRecCabID(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setNonElecRecCabID", map);
+	}
+	public void setEndNonElecRecDocDel(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setEndNonElecRecDocDel", map);
+	}
 }

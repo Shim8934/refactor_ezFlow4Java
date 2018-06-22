@@ -537,10 +537,12 @@
 					                return;
 					            }
 					            
-					            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
-					                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
-					                OpenAlertUI(pAlertContent);
-					                return;
+					            if (nonElecRec != "Y") {
+						            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
+						                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
+						                OpenAlertUI(pAlertContent);
+						                return;
+						            }
 					            }
 				            } else {
 					            if (cabinetID == "") {

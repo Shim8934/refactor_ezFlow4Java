@@ -257,7 +257,10 @@
 			        SetBtnStateTrue();
 			
 			        getReceiveDocInfo();
-			        getNonElecInfoSusinInit();
+			        
+			        if (nonElecRec == "Y") {
+				        getNonElecInfoSusinInit();
+			        }
 			        
 			        if (pSusinDocURL != "") {
 			            if (pSusinDocURL == "PC") {

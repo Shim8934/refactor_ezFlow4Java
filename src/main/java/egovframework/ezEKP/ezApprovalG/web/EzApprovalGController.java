@@ -1054,7 +1054,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optGamsabu = ezApprovalGService.getOptionInfo("A40", "001", userInfo, "CODE");
 		String susinGroupUseFlag = ezApprovalGService.getCode2Name("A53", "002", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
-		if (!guBun.equals("11")) {
+		if (guBun.equals("1")) {
 		    String regY = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,4);
 		    String regM = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5,7);
 		    String regD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(8,10);
@@ -3542,6 +3542,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		String docState = request.getParameter("docState");
 		String mode = request.getParameter("mode");
+		String orgDocID = request.getParameter("orgDocID");
+		
+		if (orgDocID == null) {
+			orgDocID = "";
+		}
 		
 		if (mailChk == null) {
 			mailChk = "";
@@ -3608,6 +3613,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 		}
+		
+		String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+        if (!nonElecRec.equals("")) {
+        	model.addAttribute("nonElecRec", nonElecRec);
+        }
 		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
@@ -7728,7 +7738,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("checkDocExt ended");
 		return ext;
 	}
-	
+	/* 2018-06-18 천성준
+	 * 비전자문서 부서수신함에서 문서를 열었을때 호출됨.
+	 * return 비전자문서XML
+	 * */
 	@RequestMapping(value="/ezApprovalG/getNonElecInfoSusinInit.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getNonElecInfoSusinInit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -7740,8 +7753,41 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		int tenantID = userInfo.getTenantId();
 		
 		String result = ezApprovalGService.getNonElecInfoSusinInit(docID, companyID, tenantID);
-		logger.debug(":::::" + result);
 		logger.debug("getNonElecInfoSusinInit ended.");
 		return result;
+	}
+	
+	/* 2018-06-18 천성준
+	 * 비전자문서 수신처 등록 메소드
+	 * */
+	@RequestMapping(value = "/ezApprovalG/nonElecRecSusinInit.do")
+	@ResponseBody
+	public void nonElecRecSusinInit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("nonElecRecSusinInit started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		ezApprovalGService.setNonElecRecSusinInit(docID, userInfo.getDeptID(), userInfo.getDeptName(), userInfo.getDeptName2(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("nonElecRecSusinInit ended.");
+	}
+	
+	/* 2018-06-21 천성준
+	 * 비전자문서 접수 후, 임시 캐비넷 아이디 선택 캐비넷 아이디로 바꿈
+	 * */
+	@RequestMapping(value = "/ezApprovalG/nonElecRecTempCabSwitch.do")
+	@ResponseBody
+	public void nonElecRecTempCabSwitch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("nonElecRecTempCabSwitch started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String orgDocID = request.getParameter("orgDocID");
+		String cabinetID = request.getParameter("cabinetID");
+		
+		ezApprovalGService.setNonElecRecCabID(docID, orgDocID, cabinetID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("nonElecRecTempCabSwitch ended.");
 	}
 }

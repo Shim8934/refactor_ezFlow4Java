@@ -13575,7 +13575,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (config.getProperty("config.hideCabinet").equals("0")) {
 				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
 					if (rtnVal) {
-						subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+						subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale(), nonElecRecXML);
 						
 						if (subSQL.toUpperCase().equals("FALSE")) {
 							rtnVal = false;
@@ -14325,7 +14325,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("setLastOpinionToOrgDoc ended");
 		return "<RESULT>TRUE</RESULT>";
 	}
-	public String setCabinetRecv(String docID, String userID, String userName, String userName2, String deptID, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception {
+	public String setCabinetRecv(String docID, String userID, String userName, String userName2, String deptID, String companyID, String lang, int tenantID, String offSet, Locale locale, String nonElecRecXML) throws Exception {
 		logger.debug("setCabinetRecv started");
 
 		String strSQL = "";
@@ -14378,18 +14378,49 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String deliverySN = makeListField(docXML.getElementsByTagName("SN").item(0).getTextContent().trim());
 			
-			strSQL = regDocToCabinet("0", docID, docSN, 
-					docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
-					docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(),
-					writerDeptID, writerDeptName, writerDeptName2, "2", ezOrganService.getPropertyValue(userID, "title", tenantID), ezOrganService.getPropertyValue(userID, "title2", tenantID),
-					docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(), "", docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
-					docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(),
-					commonUtil.getTodayUTCTime("yyyy-MM-dd"), userName, userName2, deliverySN, "1", 
-					docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
-					docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
-					docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(), 
-					docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim(), 
-					"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale, "");
+			if (!nonElecRecXML.equals("")) {
+				Document nonElecRecDocXML = commonUtil.convertStringToDocument(nonElecRecXML);
+				seperateAttachXML = makeListField(nonElecRecDocXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").item(0).getTextContent().trim());
+				
+				strSQL = regDocToCabinet("0", docID, docSN, 
+						docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(),
+						docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(),
+						writerDeptID, writerDeptName, writerDeptName2,
+						nonElecRecDocXML.getElementsByTagName("REGISTERTYPE").item(0).getTextContent().trim(),
+						ezOrganService.getPropertyValue(userID, "title", tenantID), 
+						ezOrganService.getPropertyValue(userID, "title2", tenantID),
+						nonElecRecDocXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("RECEIPTMEMBER").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("RECEIPTMEMBER2").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("DELIVERYNO").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent().trim(),
+						nonElecRecDocXML.getElementsByTagName("ORIGINREGSN").item(0).getTextContent().trim(),
+						docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
+						docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(),
+						docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim(),
+						"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale, "");
+				
+				if (strSQL.equals("TRUE")) {
+					ezApprovalGDAO.setEndNonElecRecDocDel(map);
+				}
+			} else {
+				strSQL = regDocToCabinet("0", docID, docSN, 
+						docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
+						docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(),
+						writerDeptID, writerDeptName, writerDeptName2, "2", ezOrganService.getPropertyValue(userID, "title", tenantID), ezOrganService.getPropertyValue(userID, "title2", tenantID),
+						docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(), "", docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
+						docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(),
+						commonUtil.getTodayUTCTime("yyyy-MM-dd"), userName, userName2, deliverySN, "1", 
+						docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
+						docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
+						docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(), 
+						docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim(), 
+						"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale, "");
+			}
 		} else {
 			logger.debug("setCabinetRecv ended");
 			return "FALSE";
@@ -14745,10 +14776,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		// 비전자문서 구분 값
 		if (!nonElecRecXML.equals("")) {
+			nonElecRecXML = commonUtil.htmlUnescape(nonElecRecXML);
 			Document nonElecRecParam = commonUtil.convertStringToDocument(nonElecRecXML);
 			logger.debug("nonElecRecXML : " + nonElecRecXML);
 			
 			nonElecRecYN = "Y";
+			title = nonElecRecParam.getElementsByTagName("TITLE").item(0).getTextContent();
 			registerType = nonElecRecParam.getElementsByTagName("REGISTERTYPE").item(0).getTextContent();
 			registerDate = nonElecRecParam.getElementsByTagName("REGISTERDATE").item(0).getTextContent();
 			executeDate = nonElecRecParam.getElementsByTagName("EXECUTEDATE").item(0).getTextContent();
@@ -14828,7 +14861,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertRecord(map);
 			
 			// 기록물 분리첨부 테이블에 저장
-			subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID, locale, docID, nonElecRecXML);
+			subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID, locale, docID, "");
 			
 			if (subSQL.equals("FALSE")) {
 				return "FALSE";
@@ -26282,7 +26315,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		if (strXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").getLength() > 0) {
 			seperateAttach = strXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").item(0).getTextContent();
-			seperateAttach = commonUtil.htmlUnescape(seperateAttach);
+			seperateAttach = commonUtil.cleanValue(seperateAttach);
 		}
 		resultXML.append("<NONELECRECINFO>");
 		resultXML.append("<REGISTERTYPE>" + registerType + "</REGISTERTYPE>");
@@ -26303,7 +26336,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<CABINETID>" + cabinetID + "</CABINETID>");
 		resultXML.append("<AUDIOVISUALRECINFO>" + audioVisualRecInfo + "</AUDIOVISUALRECINFO>");
 		resultXML.append("<AUDIOVISUALRECSUMMARY>" + audioVisualRecSummary + "</AUDIOVISUALRECSUMMARY>");
-		resultXML.append(seperateAttach); //분첨은 xml통채라 그냥 append
+		resultXML.append("<NONELECREC_SEPERATEATTACH>" + seperateAttach + "</NONELECREC_SEPERATEATTACH>");
 		resultXML.append("</NONELECRECINFO>");
 		
 		logger.debug("nonElecRecInfoToXML ended.");
@@ -26398,5 +26431,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    resultXML.append("</NONELECREC></NONELECRECINFO>");
 		
 		return resultXML.toString();
+	}
+	
+	@Override
+	public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID) throws Exception {
+		logger.debug("setNonElecRecCabID started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("docID", docID);
+	    map.put("orgDocID", orgDocID);
+	    map.put("cabinetID", cabinetID);
+   	    map.put("companyID", companyID);
+	    map.put("tenantID", tenantID);
+	    
+	    ezApprovalGDAO.setNonElecRecCabID(map);
+		
+		logger.debug("setNonElecRecCabID ended.");
 	}
 }

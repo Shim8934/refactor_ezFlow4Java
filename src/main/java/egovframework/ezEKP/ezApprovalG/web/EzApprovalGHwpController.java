@@ -149,6 +149,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String orgAprUserDeptID = request.getParameter("deptID");
 		String docID = request.getParameter("docID");
 		String tempUserID = userInfo.getId();
+		String orgDocID = request.getParameter("orgDocID");
 
 		String allFlag = request.getParameter("allFlag");
 		//hwp 툴바가 6줄인데 맨윗줄 부터 '1' 이면 사용 '0' 이면 사용하지 않는다. ex)'100001' 맨위랑 맨아래 툴바만 표시
@@ -156,6 +157,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String docState = request.getParameter("docState");
+		
+		if (orgDocID == null) {
+			orgDocID = "";
+		}
 
         if (userInfo.getRollInfo().indexOf("a=1") > -1) {
         	susinAdmin = "YES";
@@ -186,6 +191,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
         String optjunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
              
+        String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+        if (!nonElecRec.equals("")) {
+        	model.addAttribute("nonElecRec", nonElecRec);
+        }
+        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalPWD", approvalPWD);
         model.addAttribute("useEditor", useEditor);
@@ -803,20 +813,5 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	public String makeXMLString(String orgString) throws Exception{
 		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-	}
-	
-	/* 2018-06-18 천성준
-	 * 비전자문서 수신처 등록 메소드
-	 * */
-	@RequestMapping(value = "/ezApprovalG/nonElecRecSusinInit.do")
-	public void nonElecRecSusinInit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("nonElecRecSusinInit started.");
-		
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String docID = request.getParameter("docID");
-		
-		ezApprovalGService.setNonElecRecSusinInit(docID, userInfo.getDeptID(), userInfo.getDeptName(), userInfo.getDeptName2(), userInfo.getCompanyID(), userInfo.getTenantId());
-		
-		LOGGER.debug("nonElecRecSusinInit ended.");
 	}
 }

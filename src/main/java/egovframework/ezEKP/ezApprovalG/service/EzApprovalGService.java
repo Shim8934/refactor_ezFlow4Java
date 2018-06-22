@@ -537,5 +537,7 @@ public interface EzApprovalGService {
 	public String checkNonElecRec(String orgDocID, String companyID, int tenantID) throws Exception;
 	
 	public String getNonElecInfoSusinInit(String orgDocID, String companyID, int tenantID) throws Exception;
+	
+	public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID) throws Exception;
 
 }

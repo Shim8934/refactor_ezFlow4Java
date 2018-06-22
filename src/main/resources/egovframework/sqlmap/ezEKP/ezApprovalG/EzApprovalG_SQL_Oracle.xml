@@ -24682,4 +24682,37 @@
 		ORDER BY 
 			B.SEPERATEATTACHNO
     </select>
+    <update id="EzApprovalG.setNonElecRecCabID" parameterClass="Map">
+    	UPDATE 
+    		TBL_SEPERATEATTACH_TEMP
+    	SET
+    		CABINETID = #cabinetID#
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND 
+			COMPANYID = #companyID# 
+		AND 
+			TENANT_ID = #tenantID#
+    </update>
+    <update id="EzApprovalG.setEndNonElecRecDocDel" parameterClass="Map">
+    	UPDATE 
+    		TBL_EXPENDAPRDOCINFO 
+    	SET 
+    		DELFLAG = '1' 
+    	WHERE 
+    		DOCID = (SELECT 
+    					ORGDOCID 
+    				FROM 
+    					TBL_ENDAPRDOCINFO 
+    				WHERE 
+    					DOCID = #v_DOCID# 
+    				AND 
+    					TENANT_ID = #v_TENANTID# 
+    				AND 
+    					COMPANYID = #companyID#) 
+    	AND 
+    		TENANT_ID = #v_TENANTID# 
+    	AND 
+    		COMPANYID = #companyID#
+    </update>
 </sqlMap>

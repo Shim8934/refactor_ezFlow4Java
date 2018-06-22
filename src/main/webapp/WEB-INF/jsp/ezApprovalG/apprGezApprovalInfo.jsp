@@ -532,20 +532,7 @@
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
 	            
-	            if (pIniGubun == "11" && nonElecRec == "Y") { // 비전자문서등록 - 결재선, 문서정보, 기록물정보
-                    document.getElementById("showAprLine").style.display = "";
-                    document.getElementById("showReceptinfo").style.display = "none";
-                    document.getElementById("showCabinetinfo").style.display = "";
-                    document.getElementById("showDocinfo").style.display = "";
-                    document.getElementById("showNonElecRecInfo").style.display = "";
-                    document.getElementById("Lineinfo").style.display = "";
-                    document.getElementById("Receptinfo").style.display = "none";
-                    document.getElementById("Cabinetinfo").style.display = "";
-                    document.getElementById("Docinfo").style.display = "";
-                    document.getElementById("NonElecRecInfo").style.display = "";
-                    document.getElementById("1tab1").onclick();
-                    ChangeTab(document.getElementById("1tab1"));
-                } else if (nonElecRec == "Y") { // 비전자문서등록 - 문서정보, 기록물정보
+	            if (nonElecRec == "Y" && pIniGubun == "1") { // 비전자문서등록 - 문서정보, 기록물정보
                     document.getElementById("showAprLine").style.display = "none";
                     document.getElementById("showReceptinfo").style.display = "none";
                     document.getElementById("showCabinetinfo").style.display = "none";
@@ -558,6 +545,32 @@
                     document.getElementById("NonElecRecInfo").style.display = "";
                     document.getElementById("1tab6").onclick();
                     ChangeTab(document.getElementById("1tab6"));
+                } else if (nonElecRec == "Y" && pIniGubun == "11") { // 비전자문서등록 - 결재선, 기록물철, 문서정보, 기록물정보
+                	document.getElementById("showAprLine").style.display = "";
+                    document.getElementById("showReceptinfo").style.display = "none";
+                    document.getElementById("showCabinetinfo").style.display = "";
+                    document.getElementById("showDocinfo").style.display = "";
+                    document.getElementById("showNonElecRecInfo").style.display = "";
+                    document.getElementById("Lineinfo").style.display = "";
+                    document.getElementById("Receptinfo").style.display = "none";
+                    document.getElementById("Cabinetinfo").style.display = "";
+                    document.getElementById("Docinfo").style.display = "";
+                    document.getElementById("NonElecRecInfo").style.display = "";
+                    document.getElementById("1tab1").onclick();
+                    ChangeTab(document.getElementById("1tab1"));
+                } else if (nonElecRec == "Y" && pIniGubun == "6") {
+                	document.getElementById("showAprLine").style.display = "";
+                    document.getElementById("showReceptinfo").style.display = "none";
+                    document.getElementById("showCabinetinfo").style.display = "none";
+                    document.getElementById("showDocinfo").style.display = "";
+                    document.getElementById("showNonElecRecInfo").style.display = "";
+                    document.getElementById("Lineinfo").style.display = "";
+                    document.getElementById("Receptinfo").style.display = "none";
+                    document.getElementById("Cabinetinfo").style.display = "none";
+                    document.getElementById("Docinfo").style.display = "";
+                    document.getElementById("NonElecRecInfo").style.display = "";
+                    document.getElementById("1tab1").onclick();
+                    ChangeTab(document.getElementById("1tab1"));
                 }
 	        }
 	
@@ -676,6 +689,8 @@
 	                    
 	                    if (!bool6)
 	                    	nonElecRecInit();
+	                    if (pIniGubun == "6")
+							setCabInfo(GetCabinetClassInfo(g_CabID));
 	                    
 	                    bool6 = true;
 	                    break;
@@ -1637,7 +1652,7 @@
 		    var g_SepAttachLVXml = "";
 		    var inssepattach_cross_dialogArguments = new Array();
 		    function btnAddSepAttach_onclick() {
-		    	if (pIniGubun == "11") {
+		    	if (pIniGubun != "1") {
 		    		setCabInfoInit();
 		    	}
 		        if (g_CabID != "") {
@@ -1646,6 +1661,10 @@
 		            para[1] = g_CabID;
 					para[3] = ext;
 					para[4] = nonElecRec;
+					
+					if (pIniGubun == "11" || pIniGubun == "6") {
+						para[2] = "1";	
+					}
 					
 		            var url = "/ezApprovalG/insSepAttach.do";
 
@@ -2528,7 +2547,8 @@
 	    <c:if test="${approvalFlag eq 'G' }">
 			<!-- 비전자문서 정보 -->
 			<div id="NonElecRecInfo" style="width: 100%; height: 597px; display: none;">
-				<%-- <h2><spring:message code='ezApprovalG.t1018'/></h2><!-- 기록물철 정보 -->
+				<c:if test="${guBun eq '6'}">
+				<h2><spring:message code='ezApprovalG.t1018'/></h2><!-- 기록물철 정보 -->
 				<table style="width:100%" class="content">
 					<tr>
         				<th><b><spring:message code='ezApprovalG.t1063'/></b></th><!-- 기록물철 이름 -->
@@ -2548,7 +2568,8 @@
 						<th><spring:message code='ezApprovalG.t573'/></th><!-- 권호수 -->
 						<td id="tdCabinetVolNo" style="padding-right:15px;white-space:nowrap">&nbsp;</td>
             		</tr>
-	        	</table> --%>
+	        	</table>
+	        	</c:if>
 				<table style="width: 100%;">
 					<tr>
 	        			<td>
@@ -2655,7 +2676,16 @@
 								    <th><spring:message code='ezApprovalG.t58'/></th><!-- 분리첨부 -->
 									<td>
 								        <a class="imgbtn">
-						     	           <span id="btnAddSepAttach" onClick="return btnAddSepAttach_onclick()" style="" ><spring:message code='ezApprovalG.t949'/></span>
+						     	           <span id="btnAddSepAttach" onClick="return btnAddSepAttach_onclick()" style="" >
+						     	           <c:choose>
+						     	           		<c:when test="${guBun eq '1'}">
+							     	           		<spring:message code='ezApprovalG.t949'/>
+						     	           		</c:when>
+						     	           		<c:otherwise>
+						     	           			<spring:message code='ezPersonal.jjs01'/>
+						     	           		</c:otherwise>
+						     	           </c:choose>
+						     	           </span>
 				                        </a>
 					                </td>
 				                </tr>

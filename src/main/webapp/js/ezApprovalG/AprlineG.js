@@ -378,11 +378,12 @@ function GetSelCabInfoXml(totalRows) {
     var Root, objItem, objData;
     Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
     
-    if (nonElecRec == "Y" && pIniGubun != "11") {
+    // 비전자문서 기안시 임시 기록물 정보 입력
+    if (nonElecRec == "Y" && pIniGubun == "1") {
     	objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
-    	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", arr_userinfo[4]+g_CabID);
+    	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", g_CabID);
 		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "임시기록물");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", arr_userinfo[4]+"ZZ3782312017000002");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "ZZ3782312017000002");
 		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "임시SN(a8989891)");
 		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "임시VOLNO(ZZ378231)");
 		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ378231");

@@ -53,7 +53,7 @@ function InitCode() {
  * 수신처를 직접 디비에 넣어서 불러오는 형식으로 만듬
  * */
 function nonElecRecSusinInit() {
-	if (pIniGubun != "11") {
+	if (pIniGubun == "1") {
 		$.ajax({
 	       type : "POST",
 	       dataType : "text",
@@ -352,7 +352,7 @@ function getNonElecInfoSusinInit_complete(result) {
         	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
         	node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", SelectSingleNodeValue(oRows[i], "SEPNO"));
         	
-        	createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA1", "nonElecRecTempCabinet");
+        	createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA1", SelectSingleNodeValue(SelectNodes(result, "NONELECRECINFO/NONELECREC")[0], "CABINETID"));
         	createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA2", SelectSingleNodeValue(oRows[i], "SEPREGTYPE"));
         	createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA3", SelectSingleNodeValue(oRows[i], "SEPRECORDTYPE"));
         	
@@ -434,6 +434,40 @@ function setCabInfoInit() {
 		rtnValue = GetAttribute(totalRows[0], "DATA1");
 		g_CabID = rtnValue;
 		g_SepAttachLVXml = g_SepAttachLVXml.replace(/nonElecRecTempCabinetName/gi, GetAttribute(totalRows[0], "DATA5")).replace(/nonElecRecTempCabinet/gi, g_CabID);
+	}
+}
+/*
+ * 비전자문서 임시 캐비넷 아이디 -> 선택 캐비넷 아이디 변경 메소드
+ * */
+function nonElecRecTempCabSwitch() {
+	if (pGubun == "11") {
+		try {
+		$.ajax({
+	       type : "POST",
+	       dataType : "text",
+	       async : false,
+	       url : "/ezApprovalG/nonElecRecTempCabSwitch.do",
+	       data : {
+	             docID  : pDocID,
+	             orgDocID : pOrg_orgDocID,
+	             cabinetID : cabinetID
+	       }});
+		} catch(e) {
+			alert("nonElecRecTempCabSwitch() error! " + e.description);
+		}
+	}
+}
+
+function setCabInfo(CabXml) {
+	if (CabXml != "" && CabXml != null) {
+		/* 철이름 */
+		tdCabinetName.innerHTML =  SelectSingleNodeValue(CabXml.documentElement, "TITLE");
+		/* 형태 */
+		tdCabinetType.innerHTML = SelectSingleNodeValue(CabXml.documentElement, "CABCLASSNO");
+		/* 연번 */
+		tdCabinetSN.innerHTML = SelectSingleNodeValue(CabXml.documentElement, "REGSN");
+		/* 권호수 */
+		tdCabinetVolNo.innerHTML = SelectSingleNodeValue(CabXml.documentElement, "DISPCABCLASSNO").split("(")[1].substring(0,3);
 	}
 }
 

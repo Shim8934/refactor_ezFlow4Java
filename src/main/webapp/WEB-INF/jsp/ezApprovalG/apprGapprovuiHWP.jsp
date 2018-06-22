@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 	    <script type="text/javascript">
 	        var OrgAprUserID = "${orgAprUserID}";
 	        var OrgAprUserName = "${orgAprUserName}";
@@ -132,6 +133,8 @@
 	        var approvalFlag = "${approvalFlag}";
 	        var ext = "hwp";
 	        var docState = "${docState}";
+	        var nonElecRec = "${nonElecRec}";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -315,6 +318,10 @@
 		                getDocInfo();
 		                setAttachInfo(pDocID, "APR", lstAttachLink);
 		                GetExchInfo();
+		                
+		                if (nonElecRec == "Y") {
+					        getNonElecInfoSusinInit();
+				        }
 		
 		                if (pDocHref != "") {
 		                    showProgress("<spring:message code='ezApprovalG.t368'/>");
@@ -1095,6 +1102,17 @@
 			        parameter[39] = SummaryFlag;
 			        parameter[40] = "";
 			        parameter[45] = pPublicityYN;
+			        parameter[46] = nonElecRec;
+				    
+				    if (nonElecRec == "Y") {
+				    	if (pGubun != "1") {
+				        	parameter[47] = cabinetID;
+			        	} else {
+				        	parameter[47] = "nonElecRecTempCabinet";
+			        	}
+				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+				        parameter[49] = nonSepAttachLVXml; // 분첨
+			        }
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
@@ -1173,6 +1191,14 @@
 			                // 문서 공개 범위 설정 (대민 공개 여부)
 			                // setPublicFlag2();
 			                setPublicFlag();
+			                
+			                if (nonElecRec == "Y") {
+				            	nonElecRecInfoXml = ret[23];
+				            	nonSepAttachLVXml = ret[24];
+				            	if (ext == "hwp") {
+					            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	}
+				            }
 			                
 			                SummaryFlag = true;
 			                savexmlhttp = null;

@@ -1404,7 +1404,7 @@ function SaveDraftDocInfo_ilban(pState)
 		}
 		
 		// 분리첨부가 존재할 경우
-		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW")) {
+		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
 			var sepAtt, Data, i;
 			var rtnXml = createXmlDom();
 	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");

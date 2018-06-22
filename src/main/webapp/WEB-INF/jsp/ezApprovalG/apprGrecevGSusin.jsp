@@ -309,7 +309,10 @@
 		            IsSkipDrafter = "FALSE";
 		            SetBtnStateTrue();
 		            getReceiveDocInfo();
-		            getNonElecInfoSusinInit();
+		            
+		            if (nonElecRec == "Y") {
+			            getNonElecInfoSusinInit();
+		            }
 		            
 		            if (pSusinDocURL != "") {
 		                message.Set_EditorContentURL(pSusinDocURL);
@@ -434,9 +437,13 @@
 		    }
 		
 		    function TaskCode_Check() {
-		        if (cabinetID == "")
-		            btnSetTaskCode_onclick();
-		        else {
+		        if (cabinetID == "") {
+		        	if (!nonElecRec == "Y") {
+			            btnSetTaskCode_onclick();
+		        	} else {
+			            TaskCode_Save();
+		        	}
+		        } else {
 		            TaskCode_Save();
 		        }
 		    }
