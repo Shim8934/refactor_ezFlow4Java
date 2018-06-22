@@ -243,7 +243,8 @@
 			back = "<c:out value='${back}' />";
 			sort = "<c:out value='${sort}' />";
 			sortFlag = "<c:out value='${sortFlag}' />";
-			
+			companyID = "<c:out value='${companyID}' />";
+			writerCompanyID = "<c:out value='${vo.companyID}' />";
 			marginChangeAttendantNum = 50;
 			
 			if(deleteFlag == "0") {
@@ -252,7 +253,14 @@
 			} else {
 				alert("<spring:message code='ezLadder.hyh01' />");
 				window.close();
+				return;
 			}
+			
+			if(companyID != writerCompanyID) {
+				alert("<spring:message code='ezLadder.hyh02' />");
+				window.close();
+			}
+			
 		}
 		
 		function afterDrag() {
