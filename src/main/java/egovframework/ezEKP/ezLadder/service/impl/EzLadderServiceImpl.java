@@ -565,16 +565,17 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public void deleteLadderList(String userId, String tenant_Id, String ladderId) throws Exception {
+	public void deleteLadderList(LadderVO ladVO) throws Exception {
 		logger.debug("deleteLadder started.");			// 사다리 1개 삭제
 		String deleteDate = commonUtil.getTodayUTCTime("");	// deleteDate UCT 타임 설정
-		Map<String,Object> map = new HashMap<String, Object>();	
 	
-		
-		map.put("userId", userId);
-		map.put("ladderId", ladderId);
-		map.put("tenantId", tenant_Id);
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("userId", ladVO.getUserId());
+		map.put("ladderId", ladVO.getLadderId());
+		map.put("tenantId", ladVO.getTenant_id());
 		map.put("deleteDate", deleteDate);
+		map.put("companyID", ladVO.getCompanyID());
+		
 		ezLadderDAO.deleteLadderList(map);
 		
 		logger.debug("deleteLadder ended.");
