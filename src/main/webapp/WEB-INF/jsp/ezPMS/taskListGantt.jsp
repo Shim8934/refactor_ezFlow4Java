@@ -500,7 +500,6 @@
 		   			endDate = dateToYYYYMMDD(endTime);	
 	   			  }
 	   			  
-	   			  
 	   			  ge.taskIsChanged();
 	   			  changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex, groupId, taskName);
 	   			  
@@ -553,8 +552,6 @@
 	   			
 	   			//선행작업 지정
 	   			GanttMaster.prototype.changeTaskDeps = function (task) {
-	   			  console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
-	   			  
 	   			  var preTask = ge.tasks[task.depends - 1];	
 	   			  
 	   			  if(new Date(preTask.end) > new Date(task.start)) {
@@ -575,8 +572,6 @@
 	   			  var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
 	   			  var projectId = task.id.match(/p(\d+)/)[1];
 	   			  
-	   			  console.log(pretaskEndDate);
-	   			  console.log(taskDuration);
 	   			  
 	   			  addPreTaskRel(projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, task.name, preTaskRowName, groupId, preGroupId);
 	   			  
@@ -705,9 +700,10 @@
 	   						ge.tasks.filter(function(task){
 	   							return task.id == fullId
 	   						})[0].end = endTime;
-	   						toastPopupShow("[" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t283' />");
+	   						
+	   						toastPopupShow("[" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t240' />");
 	   						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t240' />");
-	   						ge.redraw();
+	   						//ge.refresh();
 	   					} else {
 	   						alert("<spring:message code='ezPMS.t184' />");
 	   						location.reload();
@@ -821,7 +817,6 @@
 	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
 	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
 	   							
-	   							console.log(newPreTask);
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
 	   						} else {
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
@@ -1257,7 +1252,6 @@
 		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
 	   			}
 	   			
-	   			console.log(userRoleId);
 	   			
 	   			if (userRoleId == 1) {
 	   				$("#pmsGanttRowNewBtn").css("display", "");

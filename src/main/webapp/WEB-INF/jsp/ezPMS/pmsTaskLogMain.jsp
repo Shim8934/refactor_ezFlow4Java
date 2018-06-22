@@ -31,7 +31,7 @@ var orderWhat = "";
 var orderHow = "";
 var searchContent = "";
 var searchStatus = "";
-var logData = JSON.parse('${data}');
+var logData = "";
 
 $(document).ready(function(){
 	CurrentHeight = $(window).height() - 100;
@@ -55,6 +55,9 @@ $(document).ready(function(){
 });
 
 $(function(){
+	logData = ${data};
+	logData = JSON.parse(JSON.stringify(logData));
+	
 	getProjectTaskTree("taskTree", logData, "taskLog");
 	
 	$("#searchStatus").css("display", "none");

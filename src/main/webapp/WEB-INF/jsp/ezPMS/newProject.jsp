@@ -35,7 +35,7 @@ var planEndDate = "${project.planEndDate}";
 var managerList = null;
 var participantList = null;
 var viewerList = null;
-var overview = "${project.overview}";
+var overview = replaceString("${project.overview}");
 var endAlamStatus = "${project.alamMailStatus}";
 var headManagerId = "${project.headManagerId}";
 var mode = "${mode}"
@@ -91,7 +91,8 @@ var groupId = "${groupId}";
 		}
 		
 		//newProject에 value넣어주기
-		$("#projectName").val(projectName);
+		console.log(projectName);
+		$("#projectName").val(replaceString(projectName));
 		$("input[name=weightInput][value="+calcType+"]").prop("checked", true);
 		$("#Sdatepicker").val(planStartDate);
 		$("#Edatepicker").val(planEndDate);

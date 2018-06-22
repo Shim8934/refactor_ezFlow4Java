@@ -13,8 +13,11 @@
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
-	var treeData = JSON.parse('${data}');
+	var treeData = "";
 	$(document).ready(function() {
+		treeData = ${data};
+		treeData = JSON.parse(JSON.stringify(treeData));
+		
 		getProjectTaskTree("taskTree", treeData, false);
 		
 		$("#taskTree").on("dblclick", ".jstree-anchor", function(evt) {

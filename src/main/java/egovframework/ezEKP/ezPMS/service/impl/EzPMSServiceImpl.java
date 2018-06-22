@@ -744,31 +744,34 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
 		
-		String pretaskId = taskDetails.getPretask();
-		String pregroupId = taskDetails.getPregroup();
-		
-		if(pretaskId != null || pregroupId != null) {
+		if (taskDetails != null) {
+
+			String pretaskId = taskDetails.getPretask();
+			String pregroupId = taskDetails.getPregroup();
 			
-			Long projectId = taskDetails.getProjectId();
-			param.put("projectId", projectId);
-			
-			String pretaskAncesterIds[] = taskDetails.getPretaskAncesterGroupIds().split(",");	
-			
-			String pretaskName = "";
-			
-			for(int i = 1; i < pretaskAncesterIds.length; i++) {
-				param.put("groupId", pretaskAncesterIds[i]);
-				pretaskName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
+			if(pretaskId != null || pregroupId != null) {
+				
+				Long projectId = taskDetails.getProjectId();
+				param.put("projectId", projectId);
+				
+				String pretaskAncesterIds[] = taskDetails.getPretaskAncesterGroupIds().split(",");	
+				
+				String pretaskName = "";
+				
+				for(int i = 1; i < pretaskAncesterIds.length; i++) {
+					param.put("groupId", pretaskAncesterIds[i]);
+					pretaskName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
+				}
+				
+				if(pretaskId != null) {
+					param.put("taskId", pretaskId);	
+					pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
+				} else {
+					pretaskName = pretaskName.substring(0, pretaskName.lastIndexOf(">") - 1);
+				}
+				
+				taskDetails.setPretaskName(pretaskName);
 			}
-			
-			if(pretaskId != null) {
-				param.put("taskId", pretaskId);	
-				pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
-			} else {
-				pretaskName = pretaskName.substring(0, pretaskName.lastIndexOf(">") - 1);
-			}
-			
-			taskDetails.setPretaskName(pretaskName);
 		}
 		
 		LOGGER.debug("[SERVICE] getTaskDetails ended.");

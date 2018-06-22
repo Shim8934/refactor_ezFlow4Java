@@ -806,7 +806,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String searchByContent = request.getParameter("searchByContent");
-			
+
 			//검색을 위한 search 파라미터
 			Map<String, Object> search = new HashMap<>();
 			search.put("location", request.getParameter("location"));
@@ -828,10 +828,24 @@ public class EzPMSGWController {
 			search.put("searchByContent", searchByContent);
 			
 			List<TaskLogListVO> taskLogList = ezPMSService.getTaskLogList(projectId, search, info.getOffSet(), lang, info.getTenantId());
+			JSONObject data = new JSONObject();
+			data.put("taskLogList", taskLogList);
+			
+			if (request.getParameter("taskId").equals("0")) {
+				long groupId = Long.parseLong(request.getParameter("groupId"));
+				ProjectGroupVO groupDetails = ezPMSService.getGroupDetails(groupId, info.getTenantId(), projectId);
+				data.put("groupDetails", groupDetails);
+				data.put("taskDetails", "{}");
+			} else {
+				long taskId = Long.parseLong(request.getParameter("taskId"));
+				ProjectTaskVO taskDetails = ezPMSService.getTaskDetails(taskId, info.getTenantId(), lang);
+				data.put("taskDetails", taskDetails);
+				data.put("groupDetails", "{}");
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", taskLogList);
+			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

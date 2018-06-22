@@ -111,6 +111,7 @@ public class EzPMSGWController2 {
 			 if (request.getParameter("groupId") != null) {
 				 groupId = Long.parseLong(request.getParameter("groupId"));
 				 search.setGroupId(groupId);
+
 			 } else {
 				 groupId = 0;
 				 search.setGroupId(groupId);
@@ -164,6 +165,12 @@ public class EzPMSGWController2 {
 			JSONObject data = new JSONObject();
 			data.put("taskList", taskList);
 			data.put("userRoleId", roleId);
+			
+			if (groupId != 0) {
+				//그룹정보 불러오기
+				ProjectGroupVO groupDetail = ezPMSService.getGroupDetails(groupId, tenantId, projectId);
+				data.put("groupDetail", groupDetail);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);

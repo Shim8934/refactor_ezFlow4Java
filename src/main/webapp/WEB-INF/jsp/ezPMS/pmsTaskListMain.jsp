@@ -27,7 +27,7 @@
 <script>
 	var projectId = "<c:out value='${projectId}'/>";
 	var CurrentHeight = document.documentElement.clientHeight - 100;
-	var taskData = JSON.parse('${data}');
+	var taskData = "";
 	var groupId = 0;
 	var currentPage = 1;
 	var totalCount = "<c:out value='${taskListCount}'/>";
@@ -55,6 +55,9 @@
 	};
 
 	$(function() {
+		taskData = ${data};
+		taskData = JSON.parse(JSON.stringify(taskData));
+		
 		getProjectTaskTree("taskTree", taskData, "taskList");
 		getDatePicker();
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
@@ -104,9 +107,7 @@
 				$("#contentList").html(contentList);
 				viewSetting();
 				setInitOrder();
-				
-				console.log(userRole);
-				
+
 				if (userRole == 1) {
 					$("#addTaskBtn").parent().css("display", "");
 					$("#deleteTaskBtn").parent().css("display", "");
@@ -218,7 +219,10 @@
 		} else {
 			totalCount = contentCount;
 		}
-
+		
+		console.log(taskName);
+		taskName = convertString(taskName);
+		
 		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
 
 		$("#taskName").html(contentTitle);

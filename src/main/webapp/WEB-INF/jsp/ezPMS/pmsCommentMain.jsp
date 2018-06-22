@@ -29,7 +29,7 @@
 	var taskId = "";
 	var taskName = "";
 	var currentPage = 1;
-	var treeData = JSON.parse('${data}');
+	var treeData = "";
 	var orderWhat = "";
 	var orderHow = "";
 	var limit = 10;
@@ -58,6 +58,9 @@
 			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
 			$("#divList").css("height", (CurrentHeight - 245) + "px");
 		});
+
+		treeData = ${data};
+		treeData = JSON.parse(JSON.stringify(treeData));
 		
 		getProjectTaskTree("taskTree", treeData, false);
 		
@@ -67,10 +70,10 @@
 			var contentTitle = "";
 			
 			// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
-			if(taskName.indexOf('(') != -1) {
+			/* if(taskName.indexOf('(') != -1) {
 				contentCount = taskName.substring(taskName.indexOf('(') + 1, taskName.indexOf(')'));
 				taskName = taskName.substring(0, taskName.indexOf('('));
-			}
+			} */
 			
 			contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
 			$("#taskName").html(contentTitle);

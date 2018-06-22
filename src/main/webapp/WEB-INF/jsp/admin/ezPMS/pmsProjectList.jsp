@@ -17,13 +17,13 @@
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
-				<th onclick="setListOrder(this)" data-order='PROJECT_ID'>NO</th>
-				<th onclick="setListOrder(this)" data-order='PROJECT_NAME'>프로젝트명</th>
+				<th onclick="setListOrder(this)" data-order='PROJECT_ID' style="width:60px;">NO</th>
+				<th onclick="setListOrder(this)" data-order='PROJECT_NAME' style="width:23%;">프로젝트명</th>
 				<th onclick="setListOrder(this)" data-order='OVERVIEW'>프로젝트 개요</th>
-				<th onclick="setListOrder(this)" data-order='CREATOR_NAME'>작성자</th>
-				<th onclick="setListOrder(this)" data-order='PLAN_START_DATE'>시작일</th>
-				<th onclick="setListOrder(this)" data-order='PLAN_END_DATE'>종료일</th>
-				<th onclick="setListOrder(this)" data-order='STATUS'>상태</th>
+				<th onclick="setListOrder(this)" data-order='CREATOR_NAME' style="width:100px;">작성자</th>
+				<th onclick="setListOrder(this)" data-order='PLAN_START_DATE' style="width:140px;">시작일</th>
+				<th onclick="setListOrder(this)" data-order='PLAN_END_DATE' style="width:140px;">종료일</th>
+				<th onclick="setListOrder(this)" data-order='STATUS' style="width:150px;">상태</th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">

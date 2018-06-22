@@ -829,8 +829,10 @@ public class EzPMSController {
 					String status = result.get("status").toString();
 		
 					if (status.equals("ok")) {
-						JSONArray logList = (JSONArray) result.get("data");
-						model.addAttribute("logList", logList);
+						JSONObject data = (JSONObject) result.get("data");
+						model.addAttribute("logList", data.get("taskLogList"));
+						model.addAttribute("groupDetails", data.get("groupDetails"));
+						model.addAttribute("taskDetails", data.get("taskDetails"));
 					}
 				}
 			}
@@ -1293,6 +1295,7 @@ public class EzPMSController {
 						model.addAttribute("taskList", data.get("taskList"));
 						model.addAttribute("userRoleId", data.get("userRoleId"));
 						model.addAttribute("position", param.get("position"));
+						model.addAttribute("groupDetail", data.get("groupDetail"));
 					}
 				}
 			}
