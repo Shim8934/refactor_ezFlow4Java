@@ -547,7 +547,11 @@ public class EzPMSGWController2 {
 			project.put("progress", "0");
 			
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) jsonParam.get("managerList");
-			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
+			
+			if (jsonParam.get("participantList") != null) {
+				projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
+			}
+			
 //			projectMemberList.addAll((List<Map<String, Object>>) jsonParam.get("viewerList"));
 			
 			project.put("projectId", projectId);
@@ -602,6 +606,7 @@ public class EzPMSGWController2 {
 			result.put("code", 0);
 			result.put("data", "success");		
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "fail");		
