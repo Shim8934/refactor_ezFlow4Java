@@ -15,6 +15,8 @@ public interface EzAddressService {
 	public void setAddressConfig(int tenantId, String pUserID, String pListCnt, String pListType) throws Exception;
 	public int getAddressCount(int tenantId, String pFolderId, String pOwnerId, String pFilter) throws Exception;
 	public int getSearchCount(int tenantId, String[] pIdLists, String pFilter) throws Exception;
+	public int getAddressSearchCount(int tenantId, String pFolderId, String[] pOwnerId, String pFilter) throws Exception;
+	public List<AddressVO> getAddressSearchList(int tenantId, String pFolderID, String[] pOwnerIDs, String pOrderOption, String pFilter, int pListPageSize, int pStart) throws Exception;
 	public List<AddressVO> getAddressList(int tenantId, String pFolderID, String pOwnerID, String pOrderOption, String pFilter, int pListPageSize, int pStart) throws Exception;
 	public List<AddressVO> getAllAddressList(int tenantId, String pFolderID, String pOwnerID, String pOrderOption, String pFilter) throws Exception;
 	public List<AddressVO> getSearchList(int tenantId, String[] pIdLists, String pOrderOption, String pFilter, int pListPageSize, int pStart) throws Exception;

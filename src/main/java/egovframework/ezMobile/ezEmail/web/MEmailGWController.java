@@ -4070,6 +4070,130 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId}", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public Object deleteAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId) {		
+		LOGGER.debug("MOBILE G/W MAIL deleteAddressInfo started.");
+		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
+		
+        JSONObject data = new JSONObject();
+        JSONObject result = new JSONObject();
+		
+        try {
+        	String[] addressIds = new String[]{addressId};
+        	ezAddressService.deleteAddress(addressIds);
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "success");			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");			
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL deleteAddressInfo ended.");
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public Object updateAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId, @RequestBody JSONObject jsonObject) {		
+		LOGGER.debug("MOBILE G/W MAIL updateAddressInfo started.");
+		
+		JSONObject result = new JSONObject();
+		
+        try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+								
+			String ownerId = "";
+			String folderType = "";
+			String sName = "";
+			String sCompany = "";
+			String sDept = "";
+			String sTitle = "";
+			String sEmail = "";
+			String sCompanyPhone = "";
+			String sMobile = "";
+			String sMemo = "";
+			String folderId = "";
+			
+			if (jsonObject.get("folderType") != null) {
+				folderType = (String)jsonObject.get("folderType");
+			}
+			
+			if (jsonObject.get("folderId") != null) {
+				folderId = (String)jsonObject.get("folderId");
+			}
+			
+			if (jsonObject.get("sName") != null) {
+				sName = (String)jsonObject.get("sName");
+			}
+
+			if (jsonObject.get("sCompany") != null) {
+				sCompany = (String)jsonObject.get("sCompany");
+			}
+			
+			if (jsonObject.get("sDept") != null) {
+				sDept = (String)jsonObject.get("sDept");
+			}
+			
+			if (jsonObject.get("sTitle") != null) {
+				sTitle = (String)jsonObject.get("sTitle");
+			}
+
+			if (jsonObject.get("sEmail") != null) {
+				sEmail = (String)jsonObject.get("sEmail");
+			}
+			
+			if (jsonObject.get("sCompanyPhone") != null) {
+				sCompanyPhone = (String)jsonObject.get("sCompanyPhone");
+			}
+			
+			if (jsonObject.get("sMobile") != null) {
+				sMobile = (String)jsonObject.get("sMobile");
+			}
+
+			if (jsonObject.get("sMemo") != null) {
+				sMemo = (String)jsonObject.get("sMemo");
+			}
+			
+			if (!folderType.isEmpty()) {				
+				if (folderType.equals("C")) {
+					ownerId = info.getCompanyId();
+				} else if (folderType.equals("D")) {
+					ownerId = info.getDeptId();
+				} else {
+					ownerId = info.getUserId();
+				}
+				
+				ezAddressService.updateAddress(info.getTenantId(), addressId, info.getUserId(), info.getUserName(), info.getUserName2(), 
+						sName, sEmail, sCompany, sDept, sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo);
+				
+		        result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", "success");
+			} else {
+				result.put("status", "error");
+				result.put("code", 2);			
+				result.put("data", "fail");							
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");			
+		}
+		LOGGER.debug("MOBILE G/W MAIL updateAddressInfo ended.");
+		
+		return result;
+	}
+	
 	/**
 	 * 메일 책갈피 지정 실행 함수
 	 */
@@ -4405,7 +4529,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
     }
 	
 	/**
-	 * 주소록 정보 호출 함수
+	 * 주소록 정보 호출 함수 (folderID로 호출)
 	 */
 	private String getAddressSearch(String searchTarget, String filterName, String filterValue, MCommonVO userInfo,
 					int start, int count, int[] searchCount, String folderID) {
@@ -4414,30 +4538,38 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count);
 		
         String returnValue = "";
-        String ownerID = "";
-        if(searchTarget.equalsIgnoreCase("personal"))
-        {
-        	ownerID = userInfo.getUserId();
-        }
-        else if(searchTarget.equalsIgnoreCase("company"))
-        {
-        	ownerID = userInfo.getCompanyId();
-        }
-        else if(searchTarget.equalsIgnoreCase("department"))
-        {
-        	ownerID = userInfo.getDeptId();
-        }
-        else
-        {
-        	ownerID = userInfo.getUserId();
-        }
-        
+       
         try {
+        	
+        	String[] ownerIds = null;
+        	List<String> ownerIdList = new ArrayList<>();
+        	
+        	if (searchTarget.equalsIgnoreCase("all")) {
+                ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};        		
+        	} else {
+	        	if (searchTarget.contains("company")) {
+	        		ownerIdList.add(userInfo.getCompanyId());
+	        	}
+	        	
+	        	if (searchTarget.contains("department")) {
+	        		ownerIdList.add(userInfo.getDeptId());
+	        	}
+	        	
+	        	if (searchTarget.contains("personal")) {
+	        		ownerIdList.add(userInfo.getUserId());
+	        	}
+	        	
+	        	ownerIds = ownerIdList.toArray(new String[0]);
+        	}
+            
+        	for (String ownerId : ownerIds) {
+        		LOGGER.debug("getAddressSearch ownerId=" + ownerId);
+        	}
         	
             String pFilter = filterName + "," + filterValue;
                         
-            searchCount[0] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerID, filterName + ",");
-            searchCount[1] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerID, pFilter);            
+            searchCount[0] = ezAddressService.getAddressSearchCount(userInfo.getTenantId(), folderID, ownerIds, filterName + ",");
+            searchCount[1] = ezAddressService.getAddressSearchCount(userInfo.getTenantId(), folderID, ownerIds, pFilter);            
             
             // start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
             if(start == 0 && count == 1){
@@ -4445,7 +4577,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             }
             // 끝
             
-            List<AddressVO> addressInfoList = ezAddressService.getAddressList(userInfo.getTenantId(), folderID, ownerID, "", pFilter, count, start);
+            List<AddressVO> addressInfoList = ezAddressService.getAddressSearchList(userInfo.getTenantId(), folderID, ownerIds, "", pFilter, count, start);
             
             StringBuilder sb = new StringBuilder();
             sb.append("<LISTVIEWDATA><ROWS>");
@@ -4613,7 +4745,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		}
     }
     
-
+    /**
+	 * 주소록 최상위 폴더 호출
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressTopFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getAddressTopFolder(HttpServletRequest request, @PathVariable String userId) {		
@@ -4645,7 +4779,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
                 {
                 	addressName = egovMessageSource.getMessage("ezAddress.t146", locale);
                 }
-                else
+                else if(key.equalsIgnoreCase("C"))
                 {
                 	addressName = egovMessageSource.getMessage("ezAddress.t147", locale);
                 }
@@ -4674,6 +4808,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 	
+	/**
+	 * 주소록 하위 폴더 호출
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressSubFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getAddressSubFolder(HttpServletRequest request, @PathVariable String userId) {		
@@ -4734,6 +4871,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 	
+	/**
+	 * 주소록 상위 폴더 호출
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressHighFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getAddressHighFolder(HttpServletRequest request, @PathVariable String userId) {		
@@ -4796,6 +4936,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 	
+	/**
+	 * 주소록 하위 폴더 호출
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressLowFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getAddressLowFolder(HttpServletRequest request, @PathVariable String userId) {		
@@ -4858,10 +5001,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 	
+	/**
+	 * 주소록 해당 폴더의 리스트 호출
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/subAddressbook", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public Object subAddressbook(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
-		LOGGER.debug("MOBILE G/W MAIL searchAddressBook started.");
+		LOGGER.debug("MOBILE G/W MAIL subAddressbook started.");
 		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
 		
         String addressXML = "";
@@ -4926,7 +5072,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", "fail");			
 		}
         
-		LOGGER.debug("MOBILE G/W MAIL searchAddressBook ended.");
+		LOGGER.debug("MOBILE G/W MAIL subAddressbook ended.");
 		
 		return result;
 	}

@@ -1556,7 +1556,8 @@
 											value : ul.name,
 											email : ul.mail,
 											dept : ul.description,
-											title : ul.title
+											title : ul.title,
+											type : ul.type
 										};
 									}));
 
@@ -1567,7 +1568,12 @@
 						selectFirst : false,
 						autoFocus:true,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("0", "email", ui.item.value,
+							var addressType = "email";
+							if(ui.item.type == "G") {
+								addressType = "mailgroup";
+							}
+							
+							newElem = PrepareMailTag("0", addressType, ui.item.value,
 									ui.item.email, "");
 							IsInsert_MsgTo = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgTo) {

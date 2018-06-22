@@ -5072,6 +5072,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
 				jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
 				jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+				jsonObject.put("type", "");
 				jsonList.add(jsonObject);
 			}
 
@@ -5085,6 +5086,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				jsonObject.put("title", "");
 				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
 				jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+				jsonObject.put("type", "");
 				jsonList.add(jsonObject);
 			}
 
@@ -5096,6 +5098,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				jsonObject.put("title", "");
 				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
 				jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
+				jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
 				jsonList.add(jsonObject);
 			}
 			model.addAttribute("susinList", jsonList);
