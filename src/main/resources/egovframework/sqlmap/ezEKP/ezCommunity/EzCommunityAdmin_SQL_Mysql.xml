@@ -31,7 +31,18 @@
 				AND
 					A.tenant_id = D.tenant_id
 				WHERE
-					D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				]]>
+				<isEqual property="v_S_RADIO" compareValue="USERNAME">
+					<![CDATA[
+						B.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
+					<![CDATA[
+						D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+					]]>
+				</isNotEqual>
+			<![CDATA[
 				AND
 					D.companyid = #companyID#
 				AND
@@ -65,7 +76,18 @@
 				AND
 					A.tenant_id = D.tenant_id
 				WHERE
-					D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				]]>
+				<isEqual property="v_S_RADIO" compareValue="USERNAME">
+					<![CDATA[
+						B.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
+					<![CDATA[
+						D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+					]]>
+				</isNotEqual>
+			<![CDATA[
 				AND
 					D.companyid = #companyID#
 				AND

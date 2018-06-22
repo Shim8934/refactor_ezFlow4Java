@@ -1423,6 +1423,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("wpNewCommunity started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		/* 2018-06-22 홍승비 - 포탈메인 커뮤니티 호출 companyID 구분 추가 */
 		String strHTML = ezPortalService.addBestTable(userInfo);
 		
 		model.addAttribute("userLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));

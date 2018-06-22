@@ -82,7 +82,11 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		/* TBL_COMCLOSE가 아닌 TBL_C_CLUB에서 C_CLUBNAME(수정된 최신 이름 반영), C_SYSOPID(동일 테이블 접근)를 가져오도록 수정 */
+		/* TBL_COMCLOSE가 아닌 TBL_C_CLUB에서 C_CLUBNAME(수정된 최신 이름 반영)를 가져오도록 수정 */
+		if (!sRadio.equals("") && sRadio.equals("C_SysopID")){
+			map.put("v_S_RADIO", "USERNAME");
+		}
+		
 		List<CommunityCComCloseVO> list = null;
 		
 		if (!keyword.equals("") || !sRadio.equals("")) {
