@@ -553,34 +553,71 @@
 	   			
 	   			//선행작업 지정
 	   			GanttMaster.prototype.changeTaskDeps = function (task) {
-	   			  console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
+	   				console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
+	   			  	
+	   				var taskDepends = task.depends; 
+	   				var preTask = ge.tasks[taskDepends - 1];
 	   			  
-	   			  var preTask = ge.tasks[task.depends - 1];	
-	   			  
-	   			  if(new Date(preTask.end) > new Date(task.start)) {
+	   				/* var str = "";
+	   				
+	   				for(var key in task) {
+	   				    var value = task[key];
+	   				    str += key + " : " + value + ", ";
+	   				}
+	   				
+	   				alert(str); */
+	   				
+	   			  	// 중복 선행작업 지정 막기
+	   			  	if(taskDepends.indexOf(",") != -1) {
+	   				  	alert("<spring:message code='ezPMS.t297' />");
+	   					location.reload();
+	   				  	throw "multiple pretask error";
+	   				  	return;
+	   			  	}
+	   			  	
+	   				var cnt = 0;
+	   				
+	   				// 중복 후행작업 지정 막기 
+	   			  	for(var i in ge.tasks) {
+	   					
+	   			  		if(ge.tasks[i].depends.split(",")[0] == taskDepends) {
+	   			  			cnt++;
+	   			  		}
+	   			  	}
+	   				
+	   				if(cnt > 1) {
+	   					alert("<spring:message code='ezPMS.t298' />");
+	   					location.reload();
+	   				  	throw "multiple pretask error";
+	   				  	return;
+	   				}
+	   			    // ----------------
+	   				
+	   				
+	   			  	if(new Date(preTask.end) > new Date(task.start)) {
 	   				  
-	   				  if(confirm("<spring:message code='ezPMS.t291' />") == false) {
-	   					  return;
-	   				  }
-	   			  }
+	   				  	if(confirm("<spring:message code='ezPMS.t291' />") == false) {
+	   					  	return;
+	   				  	}
+	   			  	}
 	   			  
-	   			  var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
-	   			  var taskDuration = task.duration;
-	   			  var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
-	   			  var groupId = task.id.match(/g(\d+)/) != null? task.id.match(/g(\d+)/)[1] : projectGroupId;
-	   			  var preTaskRowIndex = task.depends;
-	   			  var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
-	   			  var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
-	   			  var progress = task.progress;
-	   			  var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
-	   			  var projectId = task.id.match(/p(\d+)/)[1];
+	   			  	var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
+	   			  	var taskDuration = task.duration;
+	   			  	var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
+	   			  	var groupId = task.id.match(/g(\d+)/) != null? task.id.match(/g(\d+)/)[1] : projectGroupId;
+	   			  	var preTaskRowIndex = task.depends;
+	   			  	var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
+	   			  	var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
+	   			  	var progress = task.progress;
+	   			  	var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
+	   			  	var projectId = task.id.match(/p(\d+)/)[1];
 	   			  
-	   			  console.log(pretaskEndDate);
-	   			  console.log(taskDuration);
+	   			  	console.log(pretaskEndDate);
+	   			  	console.log(taskDuration);
 	   			  
-	   			  addPreTaskRel(projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, task.name, preTaskRowName, groupId, preGroupId);
+	   			  	addPreTaskRel(projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, task.name, preTaskRowName, groupId, preGroupId);
 	   			  
-	   			  return task.moveTo(task.start,false,true);
+	   			  	return task.moveTo(task.start,false,true);
 	   			};
 	   			
 	   			//depth에 따른 들여쓰기 조절하기 위해 재정의

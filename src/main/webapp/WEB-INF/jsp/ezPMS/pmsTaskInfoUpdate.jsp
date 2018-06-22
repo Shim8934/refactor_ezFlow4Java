@@ -60,6 +60,7 @@ var workingday = "<c:out value='${taskDetails.realWorkingday ne null ? taskDetai
 var pretaskSetType = "";
 var participantList;
 var groupTaskMember = null;
+var taskId = "${taskDetails.taskId}";
 
  $(function() {
 	 if (target == "task") {
@@ -176,7 +177,6 @@ function updateTaskInfo() {
 		 var planStartDate = "${taskDetails.planStartDate}";
 		 var planEndDate = "${taskDetails.planEndDate}";
 		 var writeDate = "${taskDetails.writeDate}";
-		 var taskId = "${taskDetails.taskId}";
 
 		//업무 이름 길이 제한
 		 if (taskName.length == 0) {
@@ -250,6 +250,7 @@ function updateTaskInfo() {
 				alert("<spring:message code='ezPMS.t170' />");
 				
 				parent.location.reload();
+				parent.opener.location.reload();
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
@@ -314,6 +315,7 @@ function updateTaskInfo() {
 				alert("<spring:message code='ezPMS.t170' />");
 				
 				parent.location.reload();
+				parent.opener.location.reload();
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {

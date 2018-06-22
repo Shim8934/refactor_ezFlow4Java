@@ -562,6 +562,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select("EzPMSDAO.checkIfHasPreTaskRel", map);
 	}
 	
+	public int checkIfExistPreTaskRel(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.checkIfExistPreTaskRel", map);
+	}
+	
 	public void deletePreTaskRelInTask(Map<String, Object> map) {
 		delete("EzPMSDAO.deletePreTaskRelInTask", map);
 	}

@@ -2812,6 +2812,26 @@
 	]]>
 	</select>
 	
+	<select id="EzPMSDAO.checkIfExistPreTaskRel" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT 
+			COUNT(*)
+		FROM 
+			TBL_PMS_PRETASKREL 
+		WHERE
+	]]>
+		<isEqual property="type" compareValue="task">
+			pretask = #pretaskId#
+		</isEqual>
+		<isEqual property="type" compareValue="group">
+			pregroup = #pretaskId#
+		</isEqual>
+	<![CDATA[	
+		AND 
+			tenant_id = #tenantId#		
+	]]>
+	</select>
+	
 	<delete id="EzPMSDAO.deletePreTaskRelInTask" parameterClass="map">
 	<![CDATA[
 		DELETE FROM TBL_PMS_PRETASKREL 
