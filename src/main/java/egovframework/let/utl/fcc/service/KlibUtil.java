@@ -49,7 +49,7 @@ public class KlibUtil {
 		}
 
 		CIPHER = loadSuccess ? new KlibCipher() : new NonKlibChipher();
-		
+
 		// KLIB 테스트
 		try {
 			String testString = "Hello klib!";
@@ -84,28 +84,13 @@ public class KlibUtil {
 		@Override
 		public byte[] encrypt(byte[] originBytes) {
 			LOGGER.debug("NonKlibCipher encrypt running..");
-			return reverse(originBytes);
+			return originBytes;
 		}
 
 		@Override
 		public byte[] decrypt(byte[] encryptedBytes) {
 			LOGGER.debug("NonKlibCipher decrypt running..");
-			return reverse(encryptedBytes);
-		}
-
-		private byte[] reverse(byte[] a) {
-			if (a == null) {
-				return null;
-			}
-
-			int p1 = 0, p2 = a.length;
-			byte[] result = new byte[p2];
-
-			while (--p2 >= 0) {
-				result[p2] = a[p1++];
-			}
-
-			return result;
+			return encryptedBytes;
 		}
 	}
 
@@ -118,7 +103,14 @@ public class KlibUtil {
 	// public static native byte[] encrypt(byte[] originBytes) throws Exception,
 	// UnsatisfiedLinkError;
 	public byte[] encrypt(byte[] originBytes) throws Exception, UnsatisfiedLinkError {
-		return CIPHER.encrypt(originBytes);
+		LOGGER.debug("encrypt started.");
+		byte[] result = CIPHER.encrypt(originBytes);
+		
+		debugBytes("origin bytes", originBytes);
+		debugBytes("encrypted bytes", result);
+		LOGGER.debug("encrypt ended.");
+		
+		return result;
 	}
 
 	/**
@@ -130,6 +122,20 @@ public class KlibUtil {
 	// public static native byte[] decrypt(byte[] encryptedBytes) throws
 	// Exception, UnsatisfiedLinkError;
 	public byte[] decrypt(byte[] encryptedBytes) throws Exception, UnsatisfiedLinkError {
-		return CIPHER.decrypt(encryptedBytes);
+		LOGGER.debug("decrypt started.");
+		byte[] result = CIPHER.decrypt(encryptedBytes);
+		
+		debugBytes("encrypted bytes", encryptedBytes);
+		debugBytes("decrypted bytes", result);
+		LOGGER.debug("decrypt ended.");
+		
+		return result;
+	}
+
+	private void debugBytes(String byteArrayName, byte[] bytes) {
+		byte[] ellipsisBytes = new byte[20];
+		System.arraycopy(bytes, 0, ellipsisBytes, 0, ellipsisBytes.length);
+
+		LOGGER.debug("{}: {}…, to string: {}…", byteArrayName, DatatypeConverter.printHexBinary(ellipsisBytes), new String(ellipsisBytes));
 	}
 }

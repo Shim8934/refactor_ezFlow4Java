@@ -529,6 +529,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
      * @throws Exception
      */
     private void downFileForKlib(HttpServletRequest request, HttpServletResponse response, String streFileNm, String orignFileNm) throws Exception {
+    	LOGGER.debug("downFileForKlib started.");
 	    String downFileName = EgovStringUtil.isNullToString(streFileNm);
 		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
 		
@@ -557,7 +558,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    		ex2.printStackTrace();
 		    		// 원본 파일의 파이트로 다운로드 처리하기 위함
 		    		decryptedBytes = encryptedBytes;
-		    		return;
+		    		LOGGER.debug("failed to decryption file: {}", downFileName);
 		    	}
 		    }
 		    
@@ -578,6 +579,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    response.getOutputStream().flush();
 		    response.getOutputStream().close();
 		}
+		
+		LOGGER.debug("downFileForKlib ended.");
     }
     
     /**
