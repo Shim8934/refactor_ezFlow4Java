@@ -1104,6 +1104,8 @@
 		WHERE 
 			L.TENANT_ID = #tenantId#
 		AND 
+			L.COMPANYID = #companyID#
+		AND
 			L.WRITERID = #userId#
 		AND
 			L.DELETEFLAG = 0
