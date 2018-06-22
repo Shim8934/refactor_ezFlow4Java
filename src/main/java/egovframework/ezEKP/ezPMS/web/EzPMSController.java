@@ -799,7 +799,7 @@ public class EzPMSController {
 		
 		if (countStatus.equals("ok")) {
 			JSONObject countJson = (JSONObject) countResult.get("data");
-			
+			System.out.println(countJson.get("taskLogListCount").toString());
 			if (countJson.get("taskLogListCount").toString() != null) {
 				logListCount = Integer.parseInt(countJson.get("taskLogListCount").toString());
 				model.addAttribute("taskLogListCount", logListCount);
@@ -835,7 +835,7 @@ public class EzPMSController {
 						model.addAttribute("taskDetails", data.get("taskDetails"));
 					}
 				} else {
-					if (param.get("taskId").equals("0")) {
+					if (param.get("taskId").toString().equals("0")) {
 						long groupId = Long.parseLong(param.get("groupId").toString());
 						String groupUrl = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
 						
@@ -1325,7 +1325,12 @@ public class EzPMSController {
 						model.addAttribute("taskList", data.get("taskList"));
 						model.addAttribute("userRoleId", data.get("userRoleId"));
 						model.addAttribute("position", param.get("position"));
-						model.addAttribute("groupDetail", data.get("groupDetail"));
+						
+						if (data.get("groupDetail") == null) {
+							model.addAttribute("groupDetail", "{}");
+						} else {
+							model.addAttribute("groupDetail", data.get("groupDetail"));
+						}
 					}
 				} else {
 					long groupId = Long.parseLong(param.get("groupId").toString());
@@ -1491,6 +1496,7 @@ public class EzPMSController {
 						JSONArray groupList = (JSONArray) result.get("data");
 						model.addAttribute("taskList", groupList);
 						model.addAttribute("position", param.get("position"));
+						model.addAttribute("groupDetail", "{}");
 					}
 				}
 			}

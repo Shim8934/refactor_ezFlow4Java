@@ -230,6 +230,7 @@
 	 
 	function searchStatus(status) {
 		searchByStatus = status;
+		currentPage = 1;
 		setContentList();
 	}
 	
