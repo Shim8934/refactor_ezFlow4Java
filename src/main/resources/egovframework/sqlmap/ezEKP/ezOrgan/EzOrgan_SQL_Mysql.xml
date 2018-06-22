@@ -1237,7 +1237,7 @@
 	    		'group' as type
 	    	FROM
 	    		TBL_DEPTMASTER 
-            $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#
+            $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID# $userCompanyIdSql$
             $strSizeForMySQL$
 	    </isEqual>
 	</select>

@@ -656,6 +656,7 @@ public class EzLadderController {
 			model.addAttribute("vo", vo); // ladder
 			model.addAttribute("list", list);// ladder line list
 			model.addAttribute("cmtlist", cmtlist); // ladder comment list
+			model.addAttribute("companyID", userInfo.getCompanyID());
 		} else {
 			return "error";
 		}
