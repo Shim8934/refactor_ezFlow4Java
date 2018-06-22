@@ -103,6 +103,7 @@
 		    var junGyulFlag = "${junGyulFlag}";
 			var dirPath = "${approvalROOT}";
 			var approvalFlag = "${approvalFlag}";
+			var orgCompanyID = "";
 			
 		    function process_AfterOpen() {
 		        try {

@@ -186,6 +186,7 @@
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
+	        var orgCompanyID = "${orgCompanyID}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -1429,7 +1430,8 @@
 	            		async : false,
 	            		url : "/ezApprovalG/gongRamDocInfo.do",
 	            		data : {
-	            			docID : pDocID
+	            			docID : pDocID,
+	            			orgCompanyID : orgCompanyID
 	            		},
 	            		success: function(xml){
 	            			result = xml;

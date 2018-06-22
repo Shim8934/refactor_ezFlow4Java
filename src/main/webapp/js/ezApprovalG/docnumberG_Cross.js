@@ -21,7 +21,8 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
     		url : "/ezApprovalG/getCabinetSN.do",
     		data : {
     			docID : pDocID,
-    			deptID : pDeptID
+    			deptID : pDeptID,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			result = xml;

@@ -248,18 +248,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         myDept = userInfo.getPrimary().equals("1") ? deptName : deptName2;
         
-        if (userInfo.getDeptID().equals(deptID)) {
-        	if (title.equals("")){
-        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "</option>";
-        	} else {
-        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "[" + title + "]" + "</option>";
-        	}
-        } else {
-        	if (title.equals("")){
-        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "</option>";
-        	} else {
-        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + title + "]" + "</option>";
-        	}
+        if (companyID.equals(userInfo.getCompanyID())) {
+	        if (userInfo.getDeptID().equals(deptID)) {
+	        	if (title.equals("")){
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "</option>";
+	        	} else {
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "[" + title + "]" + "</option>";
+	        	}
+	        } else {
+	        	if (title.equals("")){
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "</option>";
+	        	} else {
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + title + "]" + "</option>";
+	        	}
+	        }
         }
         
         String lang = "";
@@ -268,6 +270,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         	lang = "2";
         }
         
+        int deptListFlag = 0;
         if (!deptInfo.equals("")) {
         	String[] deptList = deptInfo.split(";");
         	
@@ -313,7 +316,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "' >" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "[" + pTitle_ + "]" + "</option>";
 	                    }
 	                }
-	                isSubTitle = true;
+	                deptListFlag += 1;
+	                if (deptListFlag > 1) {
+	                	isSubTitle = true;
+					}
                 } 
         	}
         }
@@ -529,6 +535,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docState = request.getParameter("docState");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         int tenantID = userInfo.getTenantId();        
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
@@ -1022,6 +1036,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String beforeDocID = request.getParameter("beforeDocID");
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		if (isUsed == null) {
 			isUsed = "";
 		}
@@ -1070,6 +1091,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("ezApprovalInfo ended.");
 		
@@ -1093,6 +1115,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isUsed = request.getParameter("isUsed");
 		String beforeDocID = request.getParameter("beforeDocID");
 		String mode = request.getParameter("mode");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (isUsed == null) {
 			isUsed = "";
@@ -1158,6 +1187,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String strXML = request.getParameter("ret");
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.updateLineInfo(strXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		logger.debug("aprLineSave result : " + result); 
@@ -1177,6 +1213,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String strXML = request.getParameter("aprDeptInfo");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 
 		String result = ezApprovalGService.updateReceiptInfo(strXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
@@ -1421,6 +1464,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = "ING";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String isUsed = request.getParameter("isUsed");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (isUsed == null) {
 			isUsed = "";
@@ -1786,7 +1836,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 기안 의견버튼 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprOpinion.do")
-	public String aprOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String aprOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("aprOpinion started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -1794,6 +1844,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -1822,6 +1878,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getOpinionInfo(docID, "CAPR", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("opinionRequest ended.");
@@ -1854,11 +1917,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/opinionSave.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String opinionSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
+	public String opinionSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom, HttpServletRequest request) throws Exception{
 		logger.debug("opinionSave Start");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document docXML = commonUtil.convertStringToDocument(xmlDom);
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.updateOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		logger.debug("opinionSave End");
 		return result;
@@ -1896,6 +1966,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// 첨부파일명 최대길이
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
 		
 		if (attachFileNameMaxLength.equals("")) {
 			attachFileNameMaxLength = "100";
@@ -1920,6 +1991,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
 		model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("aprAttach ended");
 		
@@ -2118,7 +2190,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.getAttachFileInfo(docID, "ING", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			companyID = orgCompanyID;
+		}
+		String result = ezApprovalGService.getAttachFileInfo(docID, "ING", "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("attachRequest ended");
 		
@@ -2181,6 +2259,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String tempUserDeptName = request.getParameter("userDeptName");
 		String tempUserDeptName2 = request.getParameter("userDeptName2");
 		String modifyFlag = request.getParameter("modifyFlag");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String result = ezApprovalGService.updateHistoryForAttach(docID, attachSN, tempUserID, tempUserName, tempUserName2, tempUserJobTitle, tempUserJobTitle2, 
 																  tempUserDeptID, tempUserDeptName, tempUserDeptName2, modifyFlag, dirPath, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -2199,6 +2284,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("aprAttachSave started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
@@ -2249,6 +2340,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.deleteAttachFileInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("attachRemove ended");
@@ -2496,9 +2594,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			companyID = orgCompanyID;
+		}
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = ezApprovalGService.getAttachDocInfo(docID, "ING", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGService.getAttachDocInfo(docID, "ING", "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
 		logger.debug("getAttachInfo ended.");
 		
@@ -2599,6 +2703,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
@@ -2673,6 +2778,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("whoKyulCount", whoKyulCount);
 		model.addAttribute("checkPwdFlag", checkPwdFlag);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 
 		logger.debug("contDocView ended.");
 		
@@ -2894,6 +3000,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getHistoryForDoc(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("getDocHistory ended");
@@ -2912,6 +3025,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getHistoryForLine(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("getLineHistory ended");
@@ -2930,6 +3050,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String result = ezApprovalGService.getHistoryForAttach(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
@@ -2950,6 +3077,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String modifySN = request.getParameter("changeSN");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());		
 		String result = ezApprovalGService.getHistoryForLineDetail(docID, modifySN, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
@@ -3256,6 +3390,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String formText = request.getParameter("html");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String saveFileName = "";
@@ -3337,6 +3476,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userDeptName = request.getParameter("userDeptName");
 		String userDeptName2 = request.getParameter("userDeptName2");
 		String chkFlag = request.getParameter("chkFlag");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String result = ezApprovalGService.updateHistoryForLine(docID ,userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, chkFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("docID = " + docID + ", userID = " + userID + ", userName = " + userName + ", userName2 = " + userName2 + ", userJobTitle = " + userJobTitle + ", userJobTitle2 = " + userJobTitle2 + ", userDeptID = " + userDeptID + ", userDeptName = " + userDeptName + ", userDeptName2 =" + userDeptName + ", chkFlag = " + chkFlag);
@@ -3490,6 +3635,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		String docState = request.getParameter("docState");
 		String mode = request.getParameter("mode");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (mailChk == null) {
 			mailChk = "";
@@ -3583,6 +3734,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("agreeReturnType", agreeReturnType);
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("docState", docState);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("approvui ended");
 		
@@ -3621,6 +3773,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String chamState = request.getParameter("chamState");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String result = ezApprovalGService.getApproveDocInfo(userInfo, docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), mode, chamState);
 
@@ -3706,7 +3863,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
-		String result = ezApprovalGService.getCabinetNum(deptID, "", userInfo.getCompanyID(), docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (!orgCompanyID.equals(userInfo.getCompanyID())) {
+			companyID = orgCompanyID;
+		}
+		String result = ezApprovalGService.getCabinetNum(deptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		logger.debug("docID = " + docID + "deptID = " + deptID);
 
 		logger.debug("getCabinetSN result = " + result);
@@ -3785,6 +3948,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
+		}
+		
 		String result = ezApprovalGService.doProcess("003", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, xmlDom.getDocumentElement().getChildNodes().item(26).getTextContent(), userInfo.getCompanyID(), userInfo.getLang(),userInfo);
@@ -3810,6 +3977,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
+		}
+		
 		String result = ezApprovalGService.doProcess("004", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
@@ -3834,6 +4005,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
+		}
 		
 		String result = ezApprovalGService.doProcess("005", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
@@ -3917,8 +4092,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String type = request.getParameter("type");
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
 		model.addAttribute("docID", docID);
 		model.addAttribute("type", type);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("totalSaveFileInfo ended.");
 		
@@ -3937,6 +4115,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getTotalDownload(docID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("getTotalDoc ended.");
@@ -4178,7 +4363,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.gongRamDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			companyID = orgCompanyID;
+		}
+		
+		String result = ezApprovalGService.gongRamDocInfo(docID, companyID, userInfo.getTenantId());
 		
 		logger.debug("gongRamDocInfo ended.");
 		
@@ -4651,7 +4843,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("aprDocView started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
+		 
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
@@ -4677,6 +4869,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String listType = request.getParameter("listType");
 		String mode = "VIE";
 		String callBackType = request.getParameter("CallBackType");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (listType.equals("1") || listType.equals("2") || listType.equals("3")) {
 			mode = "VIE";
@@ -4758,6 +4956,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("aprDocView ended.");
 		
@@ -4797,6 +4996,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
 		String userDeptID = request.getParameter("userDeptID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getNextDocInfo(docID, userID, userDeptID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("getNextDocInfo ended.");
@@ -5238,6 +5444,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				aprDocUserID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+				String orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(0).getTextContent();
 				/* 2018-04-27 천성준 - 부재자 결재문서는 일괄결재에서 제외시킨다 */
 				if (!aprDocUserID.equals(userID)) {
 					docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
@@ -5251,7 +5458,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						if (!docListNode.item(k).getChildNodes().item(0).getChildNodes().item(7).getTextContent().equals(userInfo.getDeptID()) && useAdditionalRole.equals("YES")) {
 							docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
 						} else {
-	  						aprType_aprState = ezApprovalGService.getAprType_AprState(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent(), docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent(), strDocState, companyID, userInfo.getTenantId());
+	  						aprType_aprState = ezApprovalGService.getAprType_AprState(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent(), docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent(), strDocState, orgCompanyID, userInfo.getTenantId());
 							
 							String mhtOrHwp = "MHT";
 							
@@ -5268,7 +5475,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 								cnt++;
 								
 							    sbStr.append("<tr>");
-	                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "|" + strDocState + "\")'></td>");
+	                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' orgCompanyID="+orgCompanyID+" value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "|" + strDocState + "\")'></td>");
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("DOCTITLE").item(k).getTextContent()) + "</TD>");
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
@@ -5714,13 +5921,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	@RequestMapping(value = "/ezApprovalG/aprAttachMail.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String aprAttachMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+	public String aprAttachMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("aprAttachMail started");   
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String docID = xmlDom.getDocumentElement().getTextContent();
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String ingFlag = ezApprovalGService.aprAttachMail(docID, "1", userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		Document xmlQuery = commonUtil.convertStringToDocument(ingFlag);
@@ -6152,6 +6366,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.gongRamUpdate(docID, userID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("gongRamUpdate ended");	
@@ -6376,7 +6597,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				mode = xmlDom.getElementsByTagName("MODE").item(k).getTextContent();
 				
 				String docState = xmlDom.getElementsByTagName("DOCSTATE").item(k).getTextContent().trim();
-				String approveRet = ezApprovalGService.getApproveDocInfo(userInfo, xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(),mode,docState);
+				String orgCompanyID = xmlDom.getElementsByTagName("orgCompanyID").item(k).getTextContent().trim();
+				String approveRet = ezApprovalGService.getApproveDocInfo(userInfo, xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgCompanyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(),mode,docState);
 				
 				Document aprXML = commonUtil.convertStringToDocument(approveRet);
 				
@@ -6386,20 +6608,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						//rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo, mode);
 						//참조일때
 						if (aprXML.getElementsByTagName("DocFlag").item(0).getTextContent().equals("CHAMJO")) {
-							rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo, "", "017");
+							rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), orgCompanyID, userInfo.getLang(), userInfo, "", "017");
 						} else {
-							rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo,mode);
+							rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, orgCompanyID, request, userInfo,mode);
 						}
 					} else {
-						rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo);
+						rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, orgCompanyID, request, userInfo);
 					}
 				} else {
 					//rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo, mode);
 					//참조일때
 					if (aprXML.getElementsByTagName("DocFlag").item(0).getTextContent().equals("CHAMJO")) {
-						rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo, "", "017");
+						rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), orgCompanyID, userInfo.getLang(), userInfo, "", "017");
 					} else {
-						rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo,mode);
+						rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, orgCompanyID, request, userInfo,mode);
 					}
 				}
 				
@@ -6776,6 +6998,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			type = request.getParameter("type");
 		}
 		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String dirPath = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
@@ -6826,12 +7054,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 //		String docHref = request.getParameter("docHref");
 		String cmd = request.getParameter("cmd");
 		String docID = request.getParameter("docID");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String strImgCount = "";
 		//TODO 결재문서 ezCommon 경로에 이미지 저장하는 부분 제외 아직까지 사용하는부분 없어서... 모바일쪽에서 사용할지도 
 		
 		logger.debug("sendToMailApproval ended");
 		
-		return "redirect:/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+		return "redirect:/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG&orgCompanyID="+userInfo.getCompanyID();
 	}
 	
 	/**
@@ -7235,6 +7470,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String level = request.getParameter("level");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String result = ezApprovalGService.getCodeTreeInfo(code, level, userInfo);
 

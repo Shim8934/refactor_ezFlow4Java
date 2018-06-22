@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPortal.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -846,6 +847,38 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Cookie cookieID0 = new Cookie("APRUI0", userInfo.getDeptID());
+    	cookieID0.setPath("/");
+    	resp.addCookie(cookieID0);
+    	
+    	Cookie cookieID1 = new Cookie("APRUI1", URLEncoder.encode(userInfo.getDeptName(), "utf-8"));
+    	cookieID1.setPath("/");
+    	resp.addCookie(cookieID1);
+    	
+    	Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(userInfo.getDeptName2(), "utf-8"));
+    	cookieID2.setPath("/");
+    	resp.addCookie(cookieID2);
+    	
+    	Cookie cookieID3 = new Cookie("APRUI3", URLEncoder.encode(userInfo.getCompanyName(), "utf-8"));
+    	cookieID3.setPath("/");
+    	resp.addCookie(cookieID3);
+    	
+    	Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(userInfo.getCompanyName2(), "utf-8"));
+    	cookieID4.setPath("/");
+    	resp.addCookie(cookieID4);
+    	
+    	Cookie cookieID5 = new Cookie("APRUI5", URLEncoder.encode(userInfo.getTitle(), "utf-8"));
+    	cookieID5.setPath("/");
+    	resp.addCookie(cookieID5);
+    	
+    	Cookie cookieID6 = new Cookie("APRUI6", URLEncoder.encode(userInfo.getTitle2(), "utf-8"));
+    	cookieID6.setPath("/");
+    	resp.addCookie(cookieID6);
+    	
+    	Cookie cookieID7 = new Cookie("APRUI7", userInfo.getCompanyID());
+    	cookieID7.setPath("/");
+    	resp.addCookie(cookieID7);
 		
 		String pageID = "";
 		String mode = "view";

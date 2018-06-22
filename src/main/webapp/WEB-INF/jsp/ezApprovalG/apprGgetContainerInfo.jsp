@@ -88,6 +88,7 @@
  	        var period;
  	        var pDocInfoValue = "1";
  	       	var nowDate = "${nowDateUTC}";
+ 	        var orgComapnyID = "";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -585,7 +586,7 @@
 		            var selRow = DocList.GetSelectedRows();
 		            var tr = selRow[0];
 		            pURL = tr.getAttribute("DATA2");
-		
+					orgCompanyID = tr.getAttribute("ORGCOMPANYID");
 		            var formid = tr.getAttribute("DATA6");
 		            var docState =  tr.getAttribute("DATA12");
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
@@ -596,7 +597,7 @@
 		            else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;
+		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
@@ -1099,15 +1100,18 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
 		            return;
 		        }
-		        else
+		        else{
 		            pDocID = tr[0].getAttribute("DATA1");
+		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        }
 		
-		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
+		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
 		        feature = feature + GetOpenPosition(580, 450);
 		        window.open(url, "", feature);

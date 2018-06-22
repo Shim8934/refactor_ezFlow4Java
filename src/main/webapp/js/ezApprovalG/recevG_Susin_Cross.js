@@ -2207,6 +2207,8 @@ function getReceiveDocInfo() {
             var node = GetElementsByTagName(xmlpara, "DOCNUMCODE");
             pOrgDocNumCode = getNodeText(node[0]);
         }
+        
+        orgCompanyID = getNodeText(GetElementsByTagName(xmlpara, "ORGCOMPANYID")[0]);
 
         xmlpara = createXmlDom();
         pdocXML = SelectSingleNodeNew(result, "RECEIVEDATA/ATTACHINFO");

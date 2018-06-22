@@ -5,7 +5,7 @@
 function SaveAprLineInfoCC(pstrXML) {
     try {
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("Post", "/ezApprovalG/gongRamSave.do?type=" + type, false);
+        xmlhttp.open("Post", "/ezApprovalG/gongRamSave.do?type=" + type+"&orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(pstrXML);
 
         if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -34,7 +34,8 @@ function delAprLineInfoCC() {
 		async : false,
 		url : "/ezApprovalG/gongRamDocInfo.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

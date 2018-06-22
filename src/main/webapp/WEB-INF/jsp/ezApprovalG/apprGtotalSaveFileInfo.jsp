@@ -13,6 +13,7 @@
 	    <script type="text/javascript">	
 	        var pDocID = "${docID}";
 	        var pType = "${type}";
+	        var orgCompanyID = "${orgCompanyID}";
 	        var ReturnFunction;
 	        window.onload = function ()
 	        {
@@ -34,7 +35,8 @@
 	        		url : "/ezApprovalG/getTotalDoc.do",
 	        		data : {
 	        			docID : pDocID,
-	        			mode : pType
+	        			mode : pType,
+	        			orgCompanyID : orgCompanyID
 	        		},
 	        		success: function(text){
 	        			result = text;

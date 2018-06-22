@@ -48,6 +48,8 @@
 	        var g_szUserID = arr_userinfo[8];
 	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
 	        var pUse_Editor = "${useEditor}";
+	        var orgCompanyID = "";
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -378,7 +380,8 @@
 		    		url : "/ezApprovalG/saveFile.do",
 		    		data : {
 		    			docID : newDocID,
-		    			html  : mhtBody
+		    			html  : mhtBody,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(text){
 		    			result = text;
