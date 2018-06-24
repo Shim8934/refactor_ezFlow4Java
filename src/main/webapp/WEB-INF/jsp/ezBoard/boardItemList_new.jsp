@@ -651,7 +651,7 @@
 			}
 		</style>
 	</head>
-	<body class="" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+	<body class="tabbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<c:if test="${boardInfo.listView_FG != true}'">
 			<div style="margin-top:100px;text-align:center"><spring:message code="ezBoard.t272" /></div>
 		</c:if>
