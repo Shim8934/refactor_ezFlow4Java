@@ -878,7 +878,7 @@ function ListView() {
 
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
-        var oTbody = document.createElement("TBODY");
+    	var oTbody = document.createElement("TBODY");
         oTbody.style.backgroundColor = m_strColorDefault;
 
         var oRows = _dataSource.getElementsByTagName("ROW");
@@ -1094,8 +1094,8 @@ function ListView() {
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
             
-            // 수정 수아 재은
-            objTr.draggable = "true";
+            objTd.onclick = function () { event_listclick(this); };
+            objTd.setAttribute("draggable", true);
             
             objTd = null;
             oText = null;

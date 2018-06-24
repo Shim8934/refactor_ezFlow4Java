@@ -406,55 +406,59 @@
         }
 		//2018-06-05 구해안 showres 함수 추가
 		function showRes(val01) {
-	    		$.ajax({
-					type : "POST",
-					dataType : "json",
-					async : false,
-					url : "/ezResource/scheduleResourceData.do",
-					data : { 
-						resourceId   : val01						
-					},
-					success: function(result){
-						if (result.primary == "1") {						
-							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
-						} else {
-							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
-						}
-						
-						$("#ownerCall").html(result.resBrd.ownerCall);
-						$("#resLocation").html(result.resBrd.resLocation);						
-						
-						var approveFlag = result.resBrd.approveFlag;
-						
-						if (approveFlag == "1") {
-							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
-						} else {
-							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
-						}
-						
-						var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
-						
-						$("#brdExplain").html(resbrdExc);
-						
-						/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-			        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-			        	
-			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-			        	
-			        	$("#ResourceInfo").css("left", popupX);
-			        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-						
-						$("#ResourceInfo").modal();
-					}, 
-					error: function() {
-						
+    		$.ajax({
+				type : "POST",
+				dataType : "json",
+				async : false,
+				url : "/ezResource/scheduleResourceData.do",
+				data : { 
+					resourceId   : val01						
+				},
+				success: function(result){
+					if (result.primary == "1") {						
+						$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
+						$("#ownerDept").html(result.resBrd.ownDeptNm);
+						$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
+					} else {
+						$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
+						$("#ownerDept").html(result.resBrd.ownDeptNm2);
+						$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
 					}
-				});	    		
-	        }
+					
+					$("#ownerCall").html(result.resBrd.ownerCall);
+					$("#resLocation").html(result.resBrd.resLocation);						
+					
+					var approveFlag = result.resBrd.approveFlag;
+					
+					if (approveFlag == "1") {
+						$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
+					} else {
+						$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+					}
+					
+					var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+					
+					$("#brdExplain").html(resbrdExc);
+					
+					/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+		        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	
+		        	$("#ResourceInfo").css("left", popupX);
+		        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+					
+					$("#ResourceInfo").modal();
+				}, 
+				error: function() {
+					
+				}
+			});	    		
+        }
+		
+		function SearchOptionHidden() {
+        	$.modal.close();
+        }
     </script>
 	
 	</head>
