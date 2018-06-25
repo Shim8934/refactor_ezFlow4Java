@@ -596,7 +596,7 @@ public class EzOrganServiceImpl implements EzOrganService {
     }	
 
 	@Override
-	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID, String userCompanyId) throws Exception {
+	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception {
 		logger.debug("getSearchList started");
 		
         String[] searchParemeta = null;
@@ -608,7 +608,6 @@ public class EzOrganServiceImpl implements EzOrganService {
         String strSQL = "";        
         String type = "";        
         int i = 0;
-        String userCompanyIdSql = "";
         
         if (pLimit != 0) {
             strSize = " AND ROWNUM <= " + pLimit;
@@ -680,10 +679,6 @@ public class EzOrganServiceImpl implements EzOrganService {
             type = "U";
         }else{
         	type = "G";
-        	
-        	if (!userCompanyId.equalsIgnoreCase("top")) {
-        		userCompanyIdSql = "AND EXTENSIONATTRIBUTE2 = '" + userCompanyId + "'";
-        	}
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -695,7 +690,6 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
-        map.put("userCompanyIdSql", userCompanyIdSql);
         
         logger.debug("strSQL=" + strSQL);
         
