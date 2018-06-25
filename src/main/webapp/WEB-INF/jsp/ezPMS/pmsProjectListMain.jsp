@@ -56,7 +56,7 @@ var searchByOverview = "";
 
 function goProjectDetails(elem) {
 	var projectId = $(elem).attr("id");
-	window.open("/ezPMS/getProjectDetails.do?projectId="+projectId, "right");
+	window.open("/ezPMS/getProjectDetails.do?projectId=" + projectId, "right");
 }
 
 function addNewProject() { 
@@ -879,6 +879,11 @@ function searchProject() {
 	searchByStartDate = $("#Sdatepicker").val();
 	searchByEndDate = $("#Edatepicker").val();
 	searchByOverview = $("#searchByOverview").val();
+	
+	if (viewType == 0) {
+		listNumber = 20;
+		startRow = 0;
+	}
 	
 	setProjectList("new");
 }
