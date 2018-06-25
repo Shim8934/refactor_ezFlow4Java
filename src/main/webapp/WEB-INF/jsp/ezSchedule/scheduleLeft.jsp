@@ -520,10 +520,12 @@
 				</c:if>
 				<c:if test='${!empty scheCum}'>
 					<c:forEach var="cum" items="${scheCum}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
-						  <span class="checkmark" style="background-color:#01b43f;"></span>
-						</label>
+						<c:if test="${cum.deptId ne loginVO.deptID}">
+							<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
+							  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
+							  <span class="checkmark" style="background-color:#01b43f;"></span>
+							</label>
+						</c:if>
 					</c:forEach>
 				</c:if>
 				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t223'/>
