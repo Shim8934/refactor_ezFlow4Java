@@ -125,47 +125,59 @@
 				var chk_str =  "";
 				var chk_total = $("input[name=chk_schedule]:checked").length;
 				var chk_fullLength = $("input[name=chk_schedule]").length;
+				/* var chk_type = $(".chk_schedule").data("schedule-type"); */
+				/* var chk_type; */
 				
 				if(typeCal == 0) {		
 					$("input[name=chk_schedule]").each(function(index){
 						var chk_eachVal1 = $(this).val();
-						$('.td_list td[ownerid = "'+chk_eachVal1+'"]',parent.frames["right"].document).each(function(index, value){
+						var chk_type=$(this).data("schedule-type")
+						
+						$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
 							
 							$(value).addClass('chk_noneDisplay');
+							
 						});
 					});
 					$("input[name=chk_schedule]:checked").each(function(index) {
 						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
 						
-						$('.td_list td[ownerid = "'+test+'"]',parent.frames["right"].document).each(function(index, value){
+						$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
 							$(value).removeClass('chk_noneDisplay');
 						});
 					});					
 				}else if(typeCal == 1) {
 					$("input[name=chk_schedule]").each(function(index){
 						var chk_eachVal1 = $(this).val();
-						$('div[ownerid = "'+chk_eachVal1+'"]',parent.frames["right"].document).each(function(index, value){
+						var chk_type = $(this).data("schedule-type");
+						
+						$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
 							$(value).addClass('chk_noneDisplay');
 						});
 					});
 					$("input[name=chk_schedule]:checked").each(function(index) {
 						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
 						
-						$('div[ownerid = "'+test+'"]',parent.frames["right"].document).each(function(index, value){
+						$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
 							$(value).removeClass('chk_noneDisplay');
 						});
 					});	
 				}else{
 					$("input[name=chk_schedule]").each(function(index){
 						var chk_eachVal1 = $(this).val();
-						$('div[ownerid = "'+chk_eachVal1+'"]',parent.frames["right"].document).each(function(index, value){
+						var chk_type = $(this).data("schedule-type");
+						
+						$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
 							$(value).addClass('chk_noneDisplay');
 						});
 					});
 					$("input[name=chk_schedule]:checked").each(function(index) {
 						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
 						
-						$('div[ownerid = "'+test+'"]',parent.frames["right"].document).each(function(index, value){
+						$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
 							$(value).removeClass('chk_noneDisplay');
 						});						
 					});	
@@ -209,7 +221,6 @@
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
 					
 					// 구해안1 끝
-					/* parent.frames["right"].window.location.href = "/ezSchedule/scheduleMain.do?idTypeChk=" + chk_str; */
 				}else{					
 					$("input[name=chk_schedule]:checked").each(function(index) {
 						var test = $(this).val();
@@ -235,7 +246,6 @@
 					parent.frames["right"].CalendarView("Calendar",chk_str);
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
 					// 구해안1 끝
-					/* parent.frames["right"].window.location.href = "/ezSchedule/scheduleMain.do?idTypeChk=" + chk_str; */
 				}
 			}
 				
@@ -484,46 +494,48 @@
 				  <span class="checkmark"></span>
 				</label>
 				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t221'/>
-				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.id}" class="checkSelect">
+				  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
 				  <span class="checkmark" style="background:#018bfa;"></span>
 				</label>
 				<c:if test='${!empty scheSec}'>
 					<c:forEach var="sec" items="${scheSec}">
 						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t372'/>${sec.secName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" value="${sec.secId }" class="checkSelect">
+						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#018bfa;"></span>
 						</label>
 					</c:forEach>
 				</c:if>
 					<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t222'/>
-					  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.deptID}" class="checkSelect">
+					  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
 					  <span class="checkmark" style="background:#01b43f;"></span>
 					</label>
 				
 				<c:if test='${!empty scheDept}'>
 					<c:forEach var="dep" items="${scheDept}">
 						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${dep.deptName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" value="${dep.deptId }" class="checkSelect">
+						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#01b43f;"></span>
 						</label>
 					</c:forEach>
 				</c:if>
 				<c:if test='${!empty scheCum}'>
 					<c:forEach var="cum" items="${scheCum}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" value="${cum.deptId }" class="checkSelect">
-						  <span class="checkmark" style="background-color:#01b43f;"></span>
-						</label>
+						<c:if test="${cum.deptId ne loginVO.deptID}">
+							<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
+							  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
+							  <span class="checkmark" style="background-color:#01b43f;"></span>
+							</label>
+						</c:if>
 					</c:forEach>
 				</c:if>
 				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t223'/>
-				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.companyID}" class="checkSelect">
+				  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="3" value="${loginVO.companyID}" class="checkSelect">
 				  <span class="checkmark" style="background:#ff1c71;"></span>
 				</label>
 				<c:if test='${!empty groupList}'>
 					<c:forEach var="group" items="${groupList}">
 						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t375'/>${group.groupName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" value="${group.groupId }" class="checkSelect">
+						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#e9de13;"></span>
 						</label>
 					</c:forEach>

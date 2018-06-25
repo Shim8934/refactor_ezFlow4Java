@@ -19,7 +19,7 @@ public interface EzLadderService {
 	public List<LadderVO> searchLadderList(LadderVO vo, List<String> allData, int startPoint, int endPoint, String sort, String sortFlag) throws Exception;
 	
 	/** boh */
-	public List<LadderLineVO> selectSearchUser(String [] searchUserName, int tenant_id, String lang)  throws Exception;
+	public List<LadderLineVO> selectSearchUser(String [] searchUserName, LadderVO ladVO)  throws Exception;
 	
 	public int insertLadder(LadderVO lad, LadderLineVO ladLines, String logCookie) throws Exception; // 사다리 게임 만들기
 	public int selectRecentLadderId(LadderVO lad) throws Exception; // 최근 등록한 사다리게임 아이디 조회

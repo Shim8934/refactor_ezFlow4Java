@@ -258,8 +258,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	/** boh */
 	@Override
-	public List<LadderLineVO> selectSearchUser(String [] searchUserName, int tenant_id, String lang)  throws Exception {
-		String primaryLang = commonUtil.getMultiData(lang, tenant_id);
+	public List<LadderLineVO> selectSearchUser(String [] searchUserName, LadderVO ladVO)  throws Exception {
+		String primaryLang = commonUtil.getMultiData(ladVO.getLang(), ladVO.getTenant_id());
 		
 		List<LadderLineVO> resultUser = new ArrayList<>();
 		Map<String, Object> dataMap = new HashMap<>();
@@ -267,8 +267,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		for(String name : searchUserName) {
 			if(name != null && !name.equals("")) {
 				dataMap.put("name", name);
-				dataMap.put("tenant_id", tenant_id);
+				dataMap.put("tenant_id", ladVO.getTenant_id());
 				dataMap.put("lang", primaryLang);
+				dataMap.put("companyID", ladVO.getCompanyID());
 				
 				List<LadderLineVO> user = ezLadderDAO.selectSearchUser(dataMap);
 				
