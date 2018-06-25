@@ -2908,7 +2908,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID);
+        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID+"&pDocID="+pDocID);
         }
     } catch (e) {
         alert(e.description);

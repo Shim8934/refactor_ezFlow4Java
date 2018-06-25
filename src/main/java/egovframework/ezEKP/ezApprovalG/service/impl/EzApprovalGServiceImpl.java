@@ -22087,7 +22087,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String docAttachLineInfo(String docID, String id, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_DOCID", docID);
+		map.put("docID", docID);
 		map.put("v_ID", id);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);

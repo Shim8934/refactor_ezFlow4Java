@@ -2633,10 +2633,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/updateDocAttach.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String updateDocattach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
+	public String updateDocattach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom, HttpServletRequest request) throws Exception{
 		logger.debug("updateDocAttach started.");
 
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		Document doc = commonUtil.convertStringToDocument(xmlDom);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -5444,7 +5450,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				aprDocUserID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
-				String orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(0).getTextContent();
+				String orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(k).getTextContent();
 				/* 2018-04-27 천성준 - 부재자 결재문서는 일괄결재에서 제외시킨다 */
 				if (!aprDocUserID.equals(userID)) {
 					docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());

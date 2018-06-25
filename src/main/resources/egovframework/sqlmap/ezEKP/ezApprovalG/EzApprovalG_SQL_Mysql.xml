@@ -7634,32 +7634,38 @@
 							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
 					   			AND
 							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
-							   	AND
-										TBL_ENDAPRDOCINFO.COMPANYID IN (
-												SELECT 
-													EXTENSIONATTRIBUTE2 
-												FROM 
-													TBL_DEPTMASTER 
-												INNER JOIN 
-													TBL_ADDJOBMASTER 
-												ON
-													(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-													AND 
-													TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-												WHERE 
-													TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+							   	<isNotEmpty property="v_CONTID">
+									AND
+							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+								</isNotEmpty>
+								<isEmpty property="v_CONTID">
+						   		AND
+									TBL_ENDAPRDOCINFO.COMPANYID IN (
+											SELECT 
+												EXTENSIONATTRIBUTE2 
+											FROM 
+												TBL_DEPTMASTER 
+											INNER JOIN 
+												TBL_ADDJOBMASTER 
+											ON
+												(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
 												AND 
-													TBL_ADDJOBMASTER.CN = #v_USERID#
-												UNION ALL
-												SELECT 
-													PHYSICALDELIVERYOFFICENAME
-												FROM
-													TBL_USERMASTER
-												WHERE
-													CN = #v_USERID#
-												AND
-													TENANT_ID = #v_TENANTID# 
-												)
+												TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+											WHERE 
+												TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+											AND 
+												TBL_ADDJOBMASTER.CN = #v_USERID#
+											UNION ALL
+											SELECT 
+												PHYSICALDELIVERYOFFICENAME
+											FROM
+												TBL_USERMASTER
+											WHERE
+												CN = #v_USERID#
+											AND
+												TENANT_ID = #v_TENANTID# 
+											)
+								</isEmpty>
 							   	<isEqual property="approvalFlag" compareValue="S">
 							   	  INNER JOIN 
 				 						TBL_CODELIST  C
@@ -7688,33 +7694,38 @@
 							   			 TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 							    AND
 							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-							   	AND
-										TBL_ENDAPRDOCINFO.COMPANYID IN (
-												SELECT 
-													EXTENSIONATTRIBUTE2 
-												FROM 
-													TBL_DEPTMASTER 
-												INNER JOIN 
-													TBL_ADDJOBMASTER 
-												ON
-													(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-													AND 
-													TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-												WHERE 
-													TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+							   	<isNotEmpty property="v_CONTID">
+									AND
+							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+								</isNotEmpty>
+								<isEmpty property="v_CONTID">
+						   		AND
+									TBL_ENDAPRDOCINFO.COMPANYID IN (
+											SELECT 
+												EXTENSIONATTRIBUTE2 
+											FROM 
+												TBL_DEPTMASTER 
+											INNER JOIN 
+												TBL_ADDJOBMASTER 
+											ON
+												(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
 												AND 
-													TBL_ADDJOBMASTER.CN = #v_USERID#
-												UNION ALL
-												SELECT 
-													PHYSICALDELIVERYOFFICENAME
-												FROM
-													TBL_USERMASTER
-												WHERE
-													CN = #v_USERID#
-												AND
-													TENANT_ID = #v_TENANTID# 
-												)
-							   	
+												TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+											WHERE 
+												TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+											AND 
+												TBL_ADDJOBMASTER.CN = #v_USERID#
+											UNION ALL
+											SELECT 
+												PHYSICALDELIVERYOFFICENAME
+											FROM
+												TBL_USERMASTER
+											WHERE
+												CN = #v_USERID#
+											AND
+												TENANT_ID = #v_TENANTID# 
+											)
+								</isEmpty>
 							   	<isEqual property="approvalFlag" compareValue="S">
 							   	   AND  C.CODE1 ='SA02'
    									AND  D.CODE1 ='A04'
@@ -7814,34 +7825,40 @@
 							              		AprMemberID = #v_USERID#
 							              AND
 												TENANT_ID = #v_TENANTID#
-										  AND
-												COMPANYID IN (
-														SELECT 
-															EXTENSIONATTRIBUTE2 
-														FROM 
-															TBL_DEPTMASTER 
-														INNER JOIN 
-															TBL_ADDJOBMASTER 
-														ON
-															(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-															AND 
-															TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-														WHERE 
-															TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+										]]>
+										 <isNotEmpty property="v_CONTID">
+											AND
+									   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+										</isNotEmpty>
+										<isEmpty property="v_CONTID">
+								   		AND
+											TBL_ENDAPRDOCINFO.COMPANYID IN (
+													SELECT 
+														EXTENSIONATTRIBUTE2 
+													FROM 
+														TBL_DEPTMASTER 
+													INNER JOIN 
+														TBL_ADDJOBMASTER 
+													ON
+														(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
 														AND 
-															TBL_ADDJOBMASTER.CN = #v_USERID#
-														UNION ALL
-														SELECT 
-															PHYSICALDELIVERYOFFICENAME
-														FROM
-															TBL_USERMASTER
-														WHERE
-															CN = #v_USERID#
-														AND
-															TENANT_ID = #v_TENANTID# 
-														)
+														TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+													WHERE 
+														TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+													AND 
+														TBL_ADDJOBMASTER.CN = #v_USERID#
+													UNION ALL
+													SELECT 
+														PHYSICALDELIVERYOFFICENAME
+													FROM
+														TBL_USERMASTER
+													WHERE
+														CN = #v_USERID#
+													AND
+														TENANT_ID = #v_TENANTID# 
+													)
+										</isEmpty>
 							      				) = 'Y')
-							   		]]>
 							   	</isEqual>
 							   	<isEqual property="v_SECURITYLINEFLAG" compareValue="N">
 							   	 	<![CDATA[
@@ -12439,6 +12456,11 @@
    			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
    		AND 
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+   		<isNotEmpty property="v_CONTID">
+			AND
+	   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		</isNotEmpty>
+		<isEmpty property="v_CONTID">
    		AND
 			TBL_ENDAPRDOCINFO.COMPANYID IN (
 					SELECT 
@@ -12465,6 +12487,7 @@
 					AND
 						TENANT_ID = #v_TENANTID# 
 					)
+		</isEmpty>
 		<isEqual property="approvalFlag" compareValue="S">
 		 AND  
 		 		C.CODE1 ='SA02'

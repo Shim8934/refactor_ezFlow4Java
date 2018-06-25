@@ -312,7 +312,8 @@ public class LoginController {
 				loginService.insertLog(resultVO);
         		
 				//로그인 쿠기 생성
-	        	
+				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+				
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
