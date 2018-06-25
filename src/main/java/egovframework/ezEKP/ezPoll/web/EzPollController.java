@@ -312,6 +312,7 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("get question is running!");				
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);		
 		String userID = loginVO.getId();
+		String companyID = loginVO.getCompanyID();
 		int currPage = 1;
 		int pageSize = 15;
 		int totalPages = 0;
@@ -409,7 +410,7 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get list of questions for this user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();	
 		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, searchStr, mode);
-		List<Integer> listHiddenQuestionIds = ezPollService.getHiddenQuestionIds(userID, loginVO.getTenantId());
+		List<Integer> listHiddenQuestionIds = ezPollService.getHiddenQuestionIds(userID, loginVO.getTenantId(), companyID);
 		
 		//Set status for each question
 		checkingArray = setStatusForQuestions(setOfQuestions, listHiddenQuestionIds, loginVO, checkingArray, seeAll);
@@ -548,6 +549,7 @@ public class EzPollController extends EgovFileMngUtil {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantID = loginVO.getTenantId();
 		String userID = loginVO.getId();		
+		String companyID = loginVO.getCompanyID();		
 		String numberOfOptions = req.getParameter("numberOfOptions");		
 		//String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));	
 		String qstTitle = req.getParameter("qst_title");	
@@ -633,6 +635,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setIsSelOnlyOnce(isSelOnlyOnce);
 		pollQuestionVO.setSendPostNotice(sendPostNotice);
 		pollQuestionVO.setOpenToAll(openToAll);
+		pollQuestionVO.setCompanyId(companyID);
 		
 		
 		if (!qstModifyInfo.equals("")) {
@@ -692,6 +695,7 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("question vote is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
+		String companyID =	loginVO.getCompanyID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		String brdId = request.getParameter("brdId") != null ? request.getParameter("brdId") : "";
 		int totalUsers = 0;		
@@ -801,7 +805,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//해당 투표 대상자 전체 인원을 얻어옴. 2018-06-04 홍대표
-		List<LoginVO> listofTotalUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId);
+		List<LoginVO> listofTotalUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId, companyID);
 		
 		//Check if user has the vote privilege
 		if (listofTotalUsers.contains(loginVO)) {
@@ -812,7 +816,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Get all seen users
-		List<LoginVO> listOfCurrentSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId);
+		List<LoginVO> listOfCurrentSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId, companyID);
 		totalSeenUsers = listOfCurrentSeenUsers.size();
 		
 		//해당 투표 대상자 중 사용자가 포함되어 있는 기존 열람 유저 리스트에 없으면 추가해준다.
@@ -823,7 +827,7 @@ public class EzPollController extends EgovFileMngUtil {
 				pollQstStatusVO.setUserId(loginVO.getId());
 				pollQstStatusVO.setTenantId(loginVO.getTenantId());
 				pollQstStatusVO.setQustId(qstId);	
-				ezPollService.insertSeenQuestion(pollQstStatusVO);
+				ezPollService.insertSeenQuestion(pollQstStatusVO, companyID);
 				totalSeenUsers = totalSeenUsers + 1;
 				getUpdateSeenRequests(totalSeenUsers, qstId, loginVO.getTenantId());
 			}
@@ -1975,6 +1979,7 @@ public class EzPollController extends EgovFileMngUtil {
 	public String showUnJoinedUsersInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("Show un joined user info is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String companyID = loginVO.getCompanyID();
 		int tenantId = loginVO.getTenantId();
 		int qstId = -1;
 		int numberOfUnVotedUsers = 0;
@@ -1989,7 +1994,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get all users for this question
 		//해당 투표 대상자 전체 인원을 얻어옴. 2018-06-04 홍대표
-		List<LoginVO> listofTotalUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId);
+		List<LoginVO> listofTotalUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId, companyID);
 		List<LoginVO> listOfUnvotedUsers = new ArrayList<LoginVO>(listofTotalUsers);		
 		
 		//Get list of users and their answers
@@ -2044,10 +2049,12 @@ public class EzPollController extends EgovFileMngUtil {
 	}
 	
 	@MessageMapping("/editVote") 
-	public void editVote(JSONObject message) throws org.json.simple.parser.ParseException {
+	public void editVote(JSONObject message, @CookieValue("loginCookie")String loginCookie) throws org.json.simple.parser.ParseException {
 		logger.debug("Edit vote is running!");		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int qstId = Integer.parseInt((String) message.get("question"));
 		int tenantId = Integer.parseInt((String)message.get("tenant"));	
+		String companyID = loginVO.getCompanyID();
 		String sessionId = (String)message.get("sessionid");
 		String userId = (String)message.get("user");
 		
@@ -2058,7 +2065,7 @@ public class EzPollController extends EgovFileMngUtil {
 			pollQstStatusVO.setUserId(userId);
 			pollQstStatusVO.setTenantId(tenantId);
 			pollQstStatusVO.setQustId(qstId);
-			ezPollService.insertModifyingQuestion(pollQstStatusVO);
+			ezPollService.insertModifyingQuestion(pollQstStatusVO, companyID);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -2103,6 +2110,7 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("Show seen users info is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
+		String companyID = loginVO.getCompanyID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		int target = 0;
 		if(request.getParameter("target") != null){
@@ -2111,12 +2119,12 @@ public class EzPollController extends EgovFileMngUtil {
 	
 		//Get all related users for this question
 		//해당 투표 대상자 전체 인원을 얻어옴. 2018-06-04 홍대표
-		List<LoginVO> listofUnseenUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId);
+		List<LoginVO> listofUnseenUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId, companyID);
 		List<LoginVO> listofSeenUsers = new ArrayList<LoginVO>();
 		
 		//Get all of seen users
 //		List<String> listOfSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
-		listofSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId);
+		listofSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId, companyID);
 		
 		int numberOfSeenUsers = listofSeenUsers.size();
 		listofUnseenUsers.removeAll(listofSeenUsers);
