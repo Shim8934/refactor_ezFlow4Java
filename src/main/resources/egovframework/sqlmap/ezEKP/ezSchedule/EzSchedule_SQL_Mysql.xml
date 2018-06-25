@@ -796,9 +796,7 @@
         	and
         		( a.status = 0 or a.status = 3 )
         	and
-				a.tenant_id = #v_TENANTID#
-			and
-        		a.companyid = #v_COMPANYID#			
+				a.tenant_id = #v_TENANTID#	
         	order by a.responsedate desc
 		]]>
 	</select>
