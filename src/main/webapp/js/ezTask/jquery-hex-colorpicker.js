@@ -326,7 +326,7 @@
                 output+="</div>";//end of hex-color-picker-wrapper
                 output+="<div class='btnposition'>";
                 output+="<a class='imgbtn'><span onclick='ok_onclick()'>저장</span></a>";
-                output+="<a class='imgbtn'><span onclick='window.close()'>취소</span></a>"
+                
                 return output;
             }   
         }
