@@ -358,17 +358,17 @@
 							<c:choose>
 								<%-- 답변/수정 작성 시에는 작업을 변경할 수 없다. --%>
 								<c:when test="${mode eq 'reply' || mode eq 'modify'}">
-									<spring:message code='ezPMS.t80' />
+									<spring:message code='ezPMS.t98' />
 								</c:when>
 								<c:otherwise>
 									<a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;">
-										<span><spring:message code='ezPMS.t80' /></span>
+										<span><spring:message code='ezPMS.t98' /></span>
 									</a>
 								</c:otherwise>
 							</c:choose>	
 						</th>
 						<td style="width: 50%" id="taskName"></td>
-						<th><spring:message code='ezPMS.t57' /></th>
+						<th><spring:message code='ezPMS.t114' /></th>
 						<td><c:out value="${writerName}(${writerDeptName})"/></td>
 					</tr>
 					<tr>

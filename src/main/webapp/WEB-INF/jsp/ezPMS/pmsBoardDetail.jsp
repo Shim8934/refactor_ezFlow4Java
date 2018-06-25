@@ -287,7 +287,7 @@
 						<td><c:out value="${board.mobileNumber}"/></td>
 					</tr>
 					<tr>
-						<th><spring:message code='ezPMS.t80' /></th>
+						<th><spring:message code='ezPMS.t98' /></th>
 						<td id="taskName" style="width: 50%"></td>
 						<th><spring:message code='ezPMS.t119' /></th>
 						<td><c:out value="${fn:substring(board.writeDate, 0, 19)}"/></td>

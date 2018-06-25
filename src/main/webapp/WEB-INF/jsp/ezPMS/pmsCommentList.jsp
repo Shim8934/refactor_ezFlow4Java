@@ -203,7 +203,7 @@
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
-				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%" style="text-align:center;"><spring:message code='ezPMS.t129' /></th>
+				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%" style="text-align:center;"><spring:message code='ezPMS.t114' /></th>
 				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%" style="text-align:center;"><spring:message code='ezPMS.t80' /></th>
 				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'><spring:message code='ezPMS.t130' /></th>
 				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%" style="text-align:center;"><spring:message code='ezPMS.t131' /></th>
