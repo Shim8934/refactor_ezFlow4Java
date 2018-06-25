@@ -5,12 +5,13 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
-		<link rel="stylesheet" href="/css/jquery-ui.css"                     type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>"    type="text/css">
+		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css">
+		<link rel="stylesheet" href="/css/jquery-ui.css"                        type="text/css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
 	</head>
 	<body class="mainbody">
-		<h1>
+		<h1 id="cabInfo" role="<c:out value="${cabId}"/>">
 			<%-- <spring:message code='ezWebFolder.t220'/>
 			<span id="mailBoxInfo"></span> --%>
 			<span class="topSearchSpan">
@@ -22,7 +23,7 @@
 			</span>
 		</h1>
 		
-		<div id="mainmenu" style="position: relative;">
+		<div id="mainmenu">
 			<ul>
 				<li><a><span><spring:message code='ezCabinet.t45'/></span></a></li>
 				<li><img src="/images/i_bar.gif"></li>
@@ -34,60 +35,55 @@
 				<li><img src="/images/i_bar.gif"></li>
 				<li><a><span><spring:message code='ezCabinet.t50'/></span></a></li>
 				<li id="right">
-					<img src="/images/kr/cm/btn_noframe.gif"     class="btnimg cabinet" id="preViewNone"  >
-					<img src="/images/kr/cm/btn_bottomframe.gif" class="btnimg cabinet" id="preViewBottom">
-					<img src="/images/kr/cm/btn_leftframe.gif"   class="btnimg cabinet" id="preViewleft"  >
-					<img src="/images/kr/cm/btn_arrow_up.gif"    role="off" id="sltView">
+					<img src="${previewMode == 'none' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg cabinet" id="preViewNone"  >
+					<img src="${previewMode == 'H'    ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">
+					<img src="${previewMode == 'W'    ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg cabinet" id="preViewleft"  >
+					<img src="/images/kr/cm/btn_arrow_up.gif" role="off" id="sltView">
 				</li>
 			</ul>
 		</div>
 		
-		<div id="searchPanel" class="wfSearchPanel" style="display:none;">
-			<div style="margin: 20px;">
-				<table class="content wftable">
+		<div id="searchPanel" class="cabSearchPanel off">
+			<div>
+				<table class="content cabtable">
 					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t22'/></th>
+						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png">&nbsp;<spring:message code='ezCabinet.t54'/></th>
 					</tr>
+					<tr><td class="cabSearchTh2" colspan="2"></td></tr>
 					<tr>
-						<td class="wfSearchTh2" colspan="2"></td>
-					</tr>
-					<tr>
-						<th class="wfSearchTh"><spring:message code='ezWebFolder.t151'/></th>
-						<td class="wfSearchTd"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
-					</tr>
-					<tr>
-						<th class="wfSearchTh"><spring:message code='ezWebFolder.t152'/></th>
-						<td class="wfSearchTd"><input id="fileExtVal" type="text" style="height: 23px; width: 200px;"></td>
-					</tr>
-					<tr>
-						<th class="wfSearchTh"><spring:message code='ezWebFolder.t153'/></th>
-						<td class="wfSearchTd"><input id="fileNameVal" type="text" style="height: 23px; width: 200px;"></td>
-					</tr>
-					<tr>
-						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
-						<td class="wfSearchTd"><input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;"></td>
-					</tr>
-					<tr>
-						<th class="wfSearchTh"><spring:message code='ezWebFolder.t188'/></th>
-						<td class="wfSearchTd">
-							<select id="fileTypeVal">
-								<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
-								<option value="2"         ><spring:message code='ezWebFolder.t192'/></option>
-								<option value="3"         ><spring:message code='ezWebFolder.t193'/></option>
-								<option value="4"         ><spring:message code='ezWebFolder.t194'/></option>
-								<option value="5"         ><spring:message code='ezWebFolder.t195'/></option>
-								<option value="6"         ><spring:message code='ezWebFolder.t196'/></option>
-								<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
-							</select>
+						<th class="cabSearchTh"><spring:message code='ezCabinet.t01'/></th>
+						<td class="cabSearchTd">
+							<div>
+								<span id="cabinetName" class="cabSearchName">그룹웨어 업무</span>
+								<span class="searchDetail"><input type="checkbox" id="dCheckBox"><span>하위폴더 검색</span></span>
+							</div>
 						</td>
 					</tr>
+					<tr>
+						<th class="cabSearchTh"><spring:message code='ezCabinet.t55'/></th>
+						<td class="cabSearchTd"><input id="sUserName" type="text"></td>
+					</tr>
+					<tr>
+						<th class="cabSearchTh"><spring:message code='ezCabinet.t56'/></th>
+						<td class="cabSearchTd"><input id="sCabTitle" type="text"></td>
+					</tr>
+					<tr>
+						<th class="cabSearchTh"><spring:message code='ezCabinet.t57'/></th>
+						<td class="cabSearchTd"><input id="sCabIntro" type="text"></td>
+					</tr>
+					<tr>
+						<th class="cabSearchTh"><spring:message code='ezCabinet.t58'/></th>
+						<td class="cabSearchTd"><input type="text" id="Sdatepicker" class="cabDate" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" class="cabDate" readonly="readonly"></td>
+					</tr>
+					
 				</table>
-				<div class="wfdivBttn">
-					<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
-					<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+				<div class="cabdivBttn">
+					<a class="cabBttn"><span><spring:message code='ezCabinet.t59'/></span></a>
+					<a class="cabBttn"><span><spring:message code='ezCabinet.t49'/></span></a>
+					<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
 				</div>
 			</div>
-			<span class="wfCloseBttn"></span>
+			<span class="cabCloseBttn"></span>
 		</div>
 		
 		<div id="layer_popup" class="cabViewPopup" style="left: 0px; top: 0px; display: none;">
@@ -115,17 +111,15 @@
 		
 		<div id="cabWraperDiv" style="height: 400px;">
 			<div id="cabinetFileList">
-				<table class="mainlist wftablefile" style="width: 100%; text-algin: center;" id="tblFileList">
+				<table class="mainlist cabTbl" id="tblCabinetList">
 					<tr>
-						<th width="20px" ><input type="checkbox"></th>
-						<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
-						<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
-						<th headers="fs" style="text-align: center; width: 6%;" ><spring:message code='ezWebFolder.t157'/></th>
-						<th headers="un" style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th>
-						<th headers="cd" style="width: 10%;"><spring:message code='ezWebFolder.t190'/></th>
-						<th headers="ud" style="width: 10%;"><spring:message code='ezWebFolder.t198'/></th>
-						<th              style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th>
-						<th headers="dt" width="70px" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
+						<th headers=""   class="inputTh"><input type="checkbox"></th>
+						<th headers="ft" class="noTh"   ><spring:message code='ezCabinet.t60'/></th>
+						<th headers="fn" class="typeTh" ><spring:message code='ezCabinet.t61'/></th>
+						<th headers="fs" class="ttlTh"  ><spring:message code='ezCabinet.t62'/></th>
+						<th headers="un" class="userTh" ><spring:message code='ezCabinet.t63'/></th>
+						<th headers="cd" class="dateTh" ><spring:message code='ezCabinet.t64'/></th>
+						<th headers="dt" class="sizeTh" ><spring:message code='ezCabinet.t65'/></th>
 					</tr>
 					
 				</table>
@@ -134,7 +128,7 @@
 			<div id="previewCabH" class="cabDivPrevH">
 				<div id="preContentH" class="cabMainPrevH">
 					<div>
-						<div class="prevHeaderCab">
+						<div class="prevHeaderCabH">
 							<div id="preview_HeaderH">
 								<p class="cabPrevTitle">
 									<span class="cabPrevIcon"></span>
@@ -156,8 +150,8 @@
 			<div id="previewCabW" class="cabDivPrevW">
 				<div id="preContentW" class="cabMainPrevW">
 					<div style="width: 100%;">
-						<div class="prevHeaderCab">
-							<div id="Preview_HeaderW">
+						<div class="prevHeaderCabW">
+							<div id="previewHeaderW">
 								<p class="cabPrevTitle">
 									<span class="cabPrevIcon"></span>
 									<span id="PreW_subject" class="cabTitleTxt">회신: [부고] 솔루션1팀 이효민 대리 외조부상</span>
@@ -177,121 +171,15 @@
 				</div>
 			 </div>
 		</div>
-		
 		<div id="tblPageRayer"></div>
-		<script type="text/javascript" src="/js/mouseeffect.js"             ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js" ></script>
-		<script type="text/javascript" src="/js/ezCabinet/cabinetPreview.js"></script>
-		<script type="text/javascript">
-			(function() {
-				/* Only for test */
-				var cabinetPreview = null;
-				
-				setData(50, 50, 30, 70, 40, 60);
-				window.addEventListener("resize", function(e) {cabinetPreview.resizeByWidth();}, false);
-				
-				function setData(height, width, minWPercent, maxWPercent, minHPercent, maxHPercent) {
-					var cabinetGeneral = {
-						height    : height,
-						width     : width,
-						minWidth  : minWPercent,
-						maxWidth  : maxWPercent,
-						minHeight : minHPercent,
-						maxHeight : maxHPercent
-					};
-					
-					cabinetPreview = new CabinetPreview({
-						percent     : cabinetGeneral,
-						prevDivH    : "previewCabH",
-						prevDivW    : "previewCabW",
-						tableId     : "cabinetFileList",
-						wraperId    : "cabWraperDiv",
-						preContentH : "preContentH",
-						preContentW : "preContentW"
-					});
-					
-					cabinetPreview.resizeByWidth();
-				}
-				
-				/* Only for test end */
-				
-				var crrPreMode = null;
-				window.addEventListener("resize", function(e) {windowResize();}, false);
-				
-				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-				initEvents();
-				
-				function windowResize() {
-					closeViewPopUp();
-				}
-				
-				function initEvents() {
-					var sSearchInputElmt = document.getElementById("ssInput");
-					sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
-					sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
-					
-					var searchBttnElmt = document.getElementById("searchBttn");
-					searchBttnElmt.addEventListener("click", function(e) {startSimpleSearch();}, false);
-					
-					var preViewNoneElmt   = document.getElementById("preViewNone");
-					var preViewBottomElmt = document.getElementById("preViewBottom");
-					var preViewleftElmt   = document.getElementById("preViewleft");
-					var optionViewElmt    = document.getElementById("sltView");
-					
-					preViewNoneElmt.addEventListener("click", function(e) {changePreview("None");}, false);
-					preViewBottomElmt.addEventListener("click", function(e) {changePreview("W");}, false);
-					preViewleftElmt.addEventListener("click", function(e) {changePreview("H");}, false);
-					optionViewElmt.addEventListener("click", function(e) {toggleOptionView(this);}, false);
-				}
-				
-				function onStartSimpleSearch(event) {if(event.keyCode == "13") {startSimpleSearch();}}
-				
-				function startSimpleSearch() {
-					
-				}
-				
-				function clearKeyword(inputElmt) {inputElmt.value = "";}
-				
-				function changePreview(mode) {
-					if (mode == crrPreMode) {return;}
-					
-					switch(mode) {
-						case "None":
-							cabinetPreview.resizeDestroy();
-							break;
-						case "W":
-							cabinetPreview.resizeByWidth();
-							break;
-						case "H":
-							cabinetPreview.resizeByHeight();
-							break;
-						default:
-							return;
-					}
-				}
-				
-				function toggleOptionView(optElmt) {
-					if (optElmt.getAttribute("role") == "off") {showViewPopUp();} else {closeViewPopUp();}
-				}
-				
-				function showViewPopUp() {
-					var optElmt             = document.getElementById("sltView");
-					var viewPopup           = document.getElementById("layer_popup");
-					viewPopup.style.left    = document.documentElement.clientWidth - 160 + "px";
-					viewPopup.style.top     = "100px";
-					viewPopup.style.display = "";
-					optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-					optElmt.setAttribute("role", "on");
-				}
-				
-				function closeViewPopUp() {
-					var optElmt = document.getElementById("sltView");
-					document.getElementById("layer_popup").style.display = "none";
-					optElmt.setAttribute("role", "off");
-					optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-				}
-			})();
-		</script>
+		
+		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"                     ></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"             ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetPreview.js"        ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetItem.js"           ></script>
 	</body>
 </html>

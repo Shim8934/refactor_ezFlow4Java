@@ -1,5 +1,4 @@
 //Baonk 2018-06-22
-
 var CabinetPreview = function () {
 	return function(generalInf) {
 		//Set private variables
@@ -35,8 +34,8 @@ var CabinetPreview = function () {
 			var mainWrapper = document.getElementById(_wrapperDivId);
 			mainWrapper.style.display                            = 'flex';
 			mainWrapper.style.flexFlow                           = "";
-			document.getElementById(_previewHId).style.display   = "";
-			document.getElementById(_previewWId).style.display   = "none";
+			document.getElementById(_previewHId).style.display   = "none";
+			document.getElementById(_previewWId).style.display   = "";
 			var mainDiv          = document.getElementById(_mainDivId);
 			mainDiv.style.width  = _percentInf["width"] + "%";
 			mainDiv.style.height = "100%";

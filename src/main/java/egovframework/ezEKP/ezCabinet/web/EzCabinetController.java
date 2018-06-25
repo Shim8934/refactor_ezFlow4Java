@@ -94,6 +94,16 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetItem";
 	}
 	
+	@RequestMapping(value="/ezCabinet/addCabinetFile.do")
+	public String jspGetAddCabinetFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetAddCabinetFile started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId   = request.getParameter("cabId");
+		model.addAttribute("cabinetId", cabinetId);
+		logger.debug("jspGetAddCabinetFile ended");
+		return "ezCabinet/cabinetAddFile";
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")

@@ -48,8 +48,6 @@
 			</c:if>
 		</div>
 		
-		<div id="bnkBlockLeft" class="blockLeft" style="display: none;"></div>
-		
 		<script src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">initToggleList(document.getElementById("left"), "h2", "ul", "li");</script>
 		<script type="text/javascript">

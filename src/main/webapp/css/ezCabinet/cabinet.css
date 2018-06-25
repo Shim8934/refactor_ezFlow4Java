@@ -1,3 +1,4 @@
+* {box-sizing: border-box;}
 .left_cabinet span {background: url(/images/webfolder/left_webfolder.png) no-repeat left center; display: inline-block; height: 50px; line-height: 48px; font-weight: normal; color: #fff; margin: 0px 0px 0px 16px; padding: 0px 0px 0px 33px; text-align: center; font-family: Malgun Gothic; font-size: 20px;}
 .left_cabinet {height: 52px; background: #0470e4;}
 #left {overflow: hidden;}
@@ -62,20 +63,20 @@
 
 .cabSelectConf {width: 50px;}
 .cabPreviewMode {width: 100px;}
-.cabDivPrevH {height: 100%; overflow: hidden; vertical-align: top; flex-grow: 1;}
-.cabMainPrevH {height: 100%; position: relative; padding-left: 5px;}
-.cabMainPrevH div {width: 100%;}
+.cabDivPrevW {height: 100%; overflow: hidden; vertical-align: top; flex-grow: 1;}
+.cabMainPrevW {height: 100%; position: relative; padding-left: 5px;}
+.cabMainPrevW div {width: 100%;}
 .cabPrevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px; clear: both; padding: 0px; background: #fcfcfc; border-bottom: 1px solid #ddd; height: 36px; line-height: 36px;}
 .cabPrevTitle .cabPrevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
-.prevHeaderCab {border-top: 1px solid #ddd;}
-.prevHeaderCab >div {border-bottom: solid 1px #e8e8e8; position: relative;}
+.prevHeaderCabW {border-top: 1px solid #ddd;}
+.prevHeaderCabW >div, .prevHeaderCabH >div {border-bottom: solid 1px #e8e8e8; position: relative;}
 .cabPrevTitle .cabTitleTxt {width: 70%; height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;}
 .cabPreDate {display: inline-block; position: absolute; top: 12px; right: 20px; text-align: right; width: 150px; font-size: 12px; color: #333;}
-.cabPrevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666; border-bottom: 1px solid #ddd;}
+.cabPrevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666;}
 .cabPrevItem dt {font-weight: normal; margin: 0px 10px 0px 0px; line-height: 18px; padding: 0px 0px 2px 0px; color: #919293;}
 
-.cabDivPrevW {width: 100%; overflow: hidden; flex-grow: 1;}
-.cabMainPrevW {width: 100%; position: relative; padding-top: 5px;}
+.cabDivPrevH {width: 100%; overflow: hidden; flex-grow: 1;}
+.cabMainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .cabMainPrevH div {height: 100%;}
 
 /* Table css */
@@ -92,6 +93,15 @@
 .cabViewPopup {width:150px; position: absolute; background-color:#fff;}
 .cabViewPopup .popupwrap1 {background-color:#fff; position: relative;}
 .cabPanel {position: absolute; top: 0px; left: 0px; botom: 0px; right: 0px; height: 100%; width: 100%; background: transparent;}
+.cabTbl {width: 100%; text-algin: center;}
+.cabTbl .inputTh {width: 20px;}
+.cabTbl .noTh   {width: 20px; text-align: center;}
+.cabTbl .typeTh {width: 60px; text-align: center;}
+.cabTbl .ttlTh  {width: 40%;}
+.cabTbl .userTh {width: 30%;}
+.cabTbl .dateTh {width: 30%;}
+.cabTbl .sizeTh {width: 80px; text-align: center;}
+.tableDataDiv {overflow-y: auto; overflow-x: hidden;}
 
 .cabcol {width: 80px;}
 .cabTitle {line-height: 20px;}
@@ -109,3 +119,54 @@
 .topSearchSpan >a img {border: none;}
 
 .btnimg.cabinet {width: 22px; height: 20px;}
+
+.cabSearchPanel {z-index: 2000; position: fixed; height: auto; width: 424px; border:1px solid #666; background-color: #fff;; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;}
+.cabSearchPanel.off {display: none;}
+.cabSearchPanel >div {margin: 20px;}
+.cabtable {border-collapse: collapse; width:100%;}
+.cabtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}
+.cabSearchTh {width: 80px; min-width: 80px;}
+.cabSearchTh2 {border-left-color:white !important;border-right-color:white !important;height:10px !important;}
+.cabSearchTd {border:1px solid #b6b6b6; background-color:#fff;}
+.cabSearchTd input[type='text'] {height: 23px; width: 100%; outline: none; padding: 0px 5px;}
+.cabSearchTd input[type='text']:focus, .tblFileInf tr td >input[type='text']:focus, .rlFileDiv >input[type='text']:focus {border-color:#66afe9; outline:0; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+.cabSearchTd .cabDate {width: 100px !important; text-align: center;}
+.cabdivBttn {margin: 12px 0px; text-align: center;}
+.cabdivBttn .cabBttn {white-space:nowrap; display:inline-block; cursor: pointer; vertical-align:top; padding: 0px;}
+.cabBttn span {display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding: 5px 10px; font:12px gulim; letter-spacing:-1; vertical-align:top; text-align: center;}
+.cabBttn span:hover {color:rgb(4, 112, 227); border-color:rgb(4, 112, 227);}
+.cabCloseBttn {position: absolute; top: -12.5px; right: -12.5px; display: block; width: 30px; height: 30px; text-indent: -9999px; background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAANjr9RwUqgAAACBjSFJNAABtmAAAc44AAPJxAACDbAAAg7sAANTIAAAx7AAAGbyeiMU/AAAG7ElEQVR42mJkwA8YoZjBwcGB6fPnz4w/fvxg/PnzJ2N6ejoLFxcX47Rp036B5Dk4OP7z8vL+P3DgwD+o3v9QjBUABBALHguZoJhZXV2dVUNDgxNIcwEtZnn27Nl/ZmZmQRYWFmag5c90dHQY5OXl/z98+PDn1atXv79+/foPUN9fIP4HxRgOAAggRhyWMoOwqKgoq6GhIZe3t7eYrq6uHBDb8/Pz27Gysloga/jz588FYGicPn/+/OapU6deOnXq1GdgqPwCOuA31AF/0S0HCCB0xAQNBU4FBQWB0NBQublz59oADV37Hw28ePHi74MHD/6ii3/8+HEFMGQUgQ6WEhQU5AeZBTWTCdkigABC9ylIAZeMjIxQTEyMysaNG/3+/v37AGTgr1+//s2cOfOXm5vbN6Caz8jY1NT0a29v76/v37//g6q9sHfv3khjY2M5YAgJgsyEmg0PYYAAQreUk4+PT8jd3V1l1apVgUAzfoIM2rlz5x9gHH5BtxAdA9PB1zNnzvyB+R6oLxoopgC1nBPZcoAAgiFQnLIDMb+enp5iV1eXBzDeHoI0z58//xcwIX0mZCkMg9S2trb+hFk+ffr0QCkpKVmQ2VA7QHYxAgQQzLesQMwjIiIilZWVZfPu3bstMJ+SYikyBmUzkBnA9HEMyNcCYgmQHVC7mAACCJagOEBBbGdnp7lgwYJEkIavX7/+BcY1SvAaGRl9tba2xohjMTGxL8nJyT+AWQsuxsbG9vnp06e/QWYdPHiwHmiWKlBcCGQXyNcAAQSzmBuoSQqYim3u37+/EKR48uTJv5ANB+bVr7Dga2xs/AkTV1JS+gq0AJyoQIkPWU9aWtoPkPibN2/2A/l6QCwJ9TULQADB4hcY//xKXl5eHt++fbsAUmxhYYHiM1DiAsr9R7ZcVVUVbikIdHd3/0TWIyws/AWYVsByAgICdkAxRSAWAGI2gACClV7C4uLiOv7+/lEgRZ8+ffqLLd6ABck3ZMuB6uCWrlu37je29HDx4kVwQisvL88FFqkaQDERUHADBBAomBl5eHiYgQmLE1hSgQQZgIUD1lJm69atf4HR8R1YKoH5QIPAWWP9+vV/gOI/gHkeQw+wGAXTwAJJ5t+/f/BUDRBA4NIEKMDMyMjICtQIiniG379/4yza7t69+//Lly8oDrty5co/bJaCAEwcZCkwwTJDLWYCCCCwxcDgY3z16hXDnTt3voP4EhISWA0BFgZMwNqHExh3jMiG1tbWsgHjnA2bHmAeBtdWwOL1MycnJ7wAAQggBmi+kgIW/OaKiorJwOLuFShO0LMSMPF9AUYBSpz6+vqixHlOTs4P9MIEWHaDsxSwYMoE2mEGFJcG5SKAAGJCqjv/AbPUn8ePH98ACQQHB6NUmZqamkzABIgSp5s3bwbHORCA1QDLAWZkPc7OzszA8oHl5cuXVy5duvQBGIXwWgoggGA+FgO6xkBNTS28r69vDrT2+Y1cIMDyJchX6KkXVEmAshd6KB06dAic94EO3AzkBwGxPhCLg8ptgACCZyeQp9jZ2b2AmsuAefM8tnxJCk5ISPgOLTKfAdNEOVDMA2QHLDsBBBC8AAFlbmCLwlZISCg5JSVlJizeQAaQaimoWAUFK0g/sGGwHiiWCMS2yAUIQAAxI7c4gEmeFZi4OJ48ecLMzc39CRiEmgEBASxA/QzA8vYvAxEgNjaWZc2aNezAsprp2LFjp4FpZRdQ+AkQvwLij0AMSoC/AQIIXklAC3AVUBoBxmE8sPXQAiyvN8J8fuPGjR/h4eHf0eMdhkENhOPHj8OT+NGjR88BxZuBOA5kJtRseCUBEECMSI0AdmgBDooDaaDl8sASTSkyMlKzpqZGU1paGlS7MABLrX83b978A6zwwakTmE0YgIkSnHpBfGCV+gxYh98qKSk5CeTeAxVeQPwUiN8AMSjxgdLNX4AAYkRqCLBAXcMHtVwSaLkMMMHJAvOq9IQJE9R8fHxElJWV1bEF8aNHj+7t27fvLTDlXwXGLyhoH0OD+DnU0k/QYAa1QP8BBBAjWsuSFWo5LzRYxKFYAljqiAHzqxCwIBEwMTERBdZeoOYMA7Bl+RFYEbwB5oS3IA9D4/IFEL+E4nfQ6IDFLTgvAwQQI5ZmLRtSsINSuyA0uwlBUyQPMPWD20/AKo8ByP4DTJTfgRgUjB+gFoEc8R6amGDB+wu5mQsQQIxYmrdMUJ+zQTM6NzQEeKGO4UJqOzFADQMZ/A1qCSzBfQXi71ALfyM17sEAIIAY8fQiWKAYFgIwzIbWTv4HjbdfUAf8RPLhH1icojfoAQKIEU8bG9kRyF0aRiz6YP0k5C4LsmUY9TtAADEyEA+IVfufGEUAAQYABejinPr4dLEAAAAASUVORK5CYII=") no-repeat 0 0; cursor: pointer;}
+.cabSearchTd .searchDetail {padding-right: 5px; white-space: nowrap;}
+.cabSearchTd >div {display: flex; align-items: center; max-width: 275px;}
+.cabSearchTd .cabSearchName {flex-grow: 1; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+.blockLeft {width: 100%; height: 100%; z-index: 10;}
+
+.cabFogPanel {width:100%; height:100%; position:absolute; top:0px; left:0px; z-index:1000; background:none rgba(0,0,0,0.5);}
+.popup .cabBttnDiv {text-align: center; margin: 10px auto;}
+
+.divInfo {width: 100%;}
+.tblFileInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse;}
+.tblFileInf tr td, .tblFileInf tr th {border: 1px solid #ddd;}
+.tblFileInf tr th {width: 120px;}
+.tblFileInf tr td >input[type='text']{width: 100%; border: 0px; padding: 5px; outline: none;}
+.rlFileDiv {display: flex; align-items: center;}
+.rlFileDiv >input[type='text'] {flex-grow: 1; border: none; margin-right: 8px; outline: none; padding: 0px 5px;}
+.rlFileDiv >a {padding-right: 8px; cursor: pointer;}
+.rlFileDiv >a >span {padding: 3px 8px; white-space: nowrap; border: 1px solid #ddd;}
+.fileUploadDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 250px; height: 250px; overflow: auto;}
+.divInform {width: 100%; height: 100%; display: flex; flex-flow: column; justify-content: center; align-items: center;}
+.divInform span + span {margin-top: 5px;}
+.fileList {width: 100%; height: 100%;}
+.fileList.off {display: none;}
+.ulFiles {margin: 0px; padding: 2.5px; list-style: none;}
+.ulFiles li {float: left; width: 50%; height: 65px; padding: 2.5px;}
+
+.cabDivFile {display: flex; border: 1px solid #ddd; width: 100%; height: 100%;}
+.cabDivFile .cabImgAva {height: 50px; width: 40px; min-width: 40px; margin: 5px;}
+.cabDivFile .cabImgAva >img {height: 100%; width: 100%;}
+.cabDivFile .cabFileInf {display: flex; flex-grow: 1; flex-flow: column; overflow: hidden; padding-top: 8px;}
+.cabDivFile .cabFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.cabDivFile .cabFileInf >span:last-child {padding: 2px 4px 4px 0px;}
+
+
+
