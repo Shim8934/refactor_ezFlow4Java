@@ -497,19 +497,18 @@
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
 	                        
 	                        <li><span onclick="circularConfirmList()"><spring:message code='ezCircular.kmsc01' /></span></li>
-	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
 	                        	<c:if test="${result.status == '0'}">
 		                        	<li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
-		                        </c:if>
-		                        <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
+		                        </c:if>		                       
 	                        </c:if>
-	                        
 	                        <c:if test="${type != 'new'}">
 	                        	<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
 	                        </c:if>
-               	    		
-	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
+	                        <c:if test="${result.memberID == userInfo.id}">
+	                        	 <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
+	                        </c:if>
+	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>	                        
                     	</ul>
                 	</div>
                 	<div id="close">
