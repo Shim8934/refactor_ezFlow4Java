@@ -152,8 +152,9 @@ public class EzScheduleAdminController {
 		int tenantID = loginVO.getTenantId();
 		String userID = request.getParameter("userID");
 		String deptID = request.getParameter("deptID");
+		String companyID = loginVO.getCompanyID();
 		
-		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID);
+		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID, companyID);
 		
 		if (checkCnt == 0) {
 			loginVO.setId(userID);
@@ -170,7 +171,7 @@ public class EzScheduleAdminController {
 			String deptName = organDeptVO.getDisplayName();
 			String deptName2 = organDeptVO.getDisplayName2();
 	
-			ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2, tenantID);
+			ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2, tenantID, companyID);
 			
 			return "SUCCESS";
 		} else {
