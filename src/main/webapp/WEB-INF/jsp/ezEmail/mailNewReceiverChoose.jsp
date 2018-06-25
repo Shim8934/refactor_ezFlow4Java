@@ -3343,6 +3343,11 @@
 		  </LISTVIEWDATA>
 		</xml>
 	    <h1 id="h1Title"><spring:message code='ezEmail.t572' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+            </ul>
+        </div>
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
@@ -3631,9 +3636,8 @@
 	    </table>
 	    <table style="width: 100%; text-align: center;">
 	        <tr>
-	            <td class="btnposition btnpositionNew" style="text-align: center;background-color: white;border-top:0px">
+	            <td class="btnposition btnpositionNew" style="text-align: center;">
 	                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
-	                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 	            </td>
 	        </tr>
 	    </table>

@@ -1206,6 +1206,11 @@
 	</head>
 <body class="popup" style="overflow:hidden">
 		<h1 id="h1Title"><c:out value="${title}" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1302,7 +1307,6 @@
 	 	</table>	    
 		<div class="btnposition">
 	    	<a class="imgbtn" onClick="close_onclick()" ><span><spring:message code='ezTask.t19' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezTask.t20' /></span></a>
 		</div>
 	</body>
 </html>

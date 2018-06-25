@@ -1986,7 +1986,7 @@
             <c:if test="${isCrossBrowser == true}">
 	        <tr>
 	            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
-	                <span style="color:#3a76c3;height:18px;display:inline-block;">${pAttachWarning}</span>
+	                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 	                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
 	            </td>
 	        </tr>
@@ -1995,7 +1995,7 @@
             <tr>
                 <td height="20" style="padding-top: 10px;">
                     <span style="color: #3a76c3; font-weight: bold; height: 15px; display: inline-block;">
-                        <img src="/images/i_urgency.gif" align="absmiddle" />&nbsp;${pAttachWarning}</span>
+                        <img src="/images/i_notice.gif" align="absmiddle" />&nbsp;${pAttachWarning}</span>
                     <table class="file" id="attachTable">
                         <tr>
                             <th><spring:message code='ezEmail.t557' /></th>
