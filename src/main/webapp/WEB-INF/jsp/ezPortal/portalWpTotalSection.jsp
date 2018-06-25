@@ -913,7 +913,7 @@
 		    function changeCompany(){
 		    	var TcompanyID = $("#selectCompany option:selected").attr("companyID");
 		    	var TdeptID = $("#selectCompany option:selected").val();
-		    	window.open("/ezPortal/myPortal.do?companyID="+TcompanyID+"&deptID="+TdeptID, "main");
+		    	window.parent.parent.changeCompany(TcompanyID,TdeptID);
 		    }
 		</script>
 	</head>
