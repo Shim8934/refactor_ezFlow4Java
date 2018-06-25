@@ -64,7 +64,7 @@ var taskId = "${taskDetails.taskId}";
 
  $(function() {
 	 taskDetails = ${taskDetails};
-	 $("#taskName").val(replaceString(taskDetails.taskName));
+	 $("#taskName").val(replaceString(taskDetails.taskName || taskDetails.groupName));
 	 $("#overview").val(replaceString(taskDetails.overview));
 	 
 	 if (target == "task") {
@@ -274,11 +274,12 @@ function updateTaskInfo() {
 		 }
 		
 		//하위 업무들의 담당자 또는 참여자와 비교하여 삭제 , 추가자 선정.
-// 		var addMemberList = [];
-// 		var delMemberList = [];
-// 		managerList.concat(participantList).forEach(function(member, idx){
-// 			groupTaskMember[0].userId;
-// 		});
+		var addMemberList = [];
+		var delMemberList = [];
+		managerList.concat(participantList).forEach(function(member, idx){
+			debugger
+			groupTaskMember[0].userId;
+		});
 		
 		// 선행작업 지정 타입을 판단
 		if(pretaskId != "") {
