@@ -99,6 +99,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String redirectBoardID = "";
 		String redirectBoardGroupID = "";
 		
+		// 게시판ID는 게시판 설정 시 사용하게 된다.(boardProperty.jsp 참고)
 		if (request.getParameter("boardID") != null) {
 			redirectBoardID = request.getParameter("boardID");
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, user.getTenantId());
@@ -134,7 +135,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String parentBoardID = request.getParameter("boardType");
 		
-		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		// 게시판 리스트들을 가져온다. 여기서 관리자가 볼 수 있는 게시판 그룹을 companyID로 제한할 필요가 있다.
+		// parentBoardID는 top이다.
+		/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트 표출 시 companyID 조건 추가 */
+		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		for (int i = 0; i < list.size(); i++) {
 			BoardTreeVO vo = list.get(i);
@@ -190,9 +194,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
+		// 현재 관리자의 companyID 필드 삽입
+		boardPropertyVO.setCompanyID(user.getCompanyID());
 		boardPropertyVO.setTenantID(user.getTenantId());
 
 		logger.debug("createBoardGroup ended");
+		
+		/* 2018-06-25 홍승비 - 게시판 그룹 생성 시 companyID 부여 */
 		ezBoardAdminService.createBoardGroup(boardPropertyVO);
 	}
 
@@ -252,6 +260,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
+		// 하위게시판 등록시에도 companyID 부여
+		boardPropertyVO.setCompanyID(user.getCompanyID());
 		boardPropertyVO.setTenantID(user.getTenantId());
 		
 		ezBoardAdminService.createBoard(boardPropertyVO);
@@ -289,8 +299,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		// pBoardIDList로는 게시판순서조정 테이블에 표시된 게시판만 가져와 카운트한다.
 		String pBoardIDList = request.getParameter("boardList");
 		
+		// 게시판 순서조정 시 companyID 필요없음(동일 테넌트 상에서 고유한 boardID로 접근하므로)
 		ezBoardAdminService.saveBoardOrder(pBoardIDList, userInfo.getTenantId());
 
 		logger.debug("saveBoardOrder ended");
@@ -307,6 +319,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		String upperBoardID = request.getParameter("upperBoardID");
+		
+		// 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가
 		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", user.getTenantId());
 
 		logger.debug("getSubBoards ended");
@@ -932,7 +946,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String accessID = request.getParameter("accessID");
 		
-		BoardPropertyVO boardProperty = ezBoardAdminService.getACL(boardID, accessID, userInfo.getTenantId());
+		/* 2018-06-25 홍승비 - 게시판 권한 표출 시 companyID 조건 추가 */
+		BoardPropertyVO boardProperty = ezBoardAdminService.getACL(boardID, accessID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<NODES>");
@@ -972,6 +987,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		try {
 			Document doc = commonUtil.convertStringToDocument(data);
 			Map<String, Object> map = new HashMap<String, Object>();
+			/* 2018-06-25 홍승비 - 게시판 권한설정 시 companyID 부여 */
+			map.put("v_COMPANYID", userInfo.getCompanyID());
 			map.put("v_TENANTID", userInfo.getTenantId());
 			
 			for (int i = 0; i < doc.getElementsByTagName("BOARDID").getLength(); i++) {
@@ -1005,6 +1022,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				map.put("v_pBoardGroupACL", doc.getElementsByTagName("TARGETGROUP").item(i).getTextContent());
 			}
 			
+			/* 2018-06-25 홍승비 - 게시판 권한설정 시 companyID 부여 */
 			// save 서비스 구현
 			ezBoardAdminService.saveACL(map);
 			
@@ -1032,7 +1050,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		try {
 			Document doc = commonUtil.convertStringToDocument(data);
 			
-			ezBoardAdminService.deleteACL(doc, userInfo.getTenantId());
+			/* 2018-06-25 홍승비 - 게시판 권한 삭제 시 companyID 조건 부여 */
+			ezBoardAdminService.deleteACL(doc, userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			rtnValue = "OK";
 		} catch (Exception e) {

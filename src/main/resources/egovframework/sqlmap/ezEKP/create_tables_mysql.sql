@@ -2471,7 +2471,8 @@ CREATE TABLE `tbl_board_apprlist` (
   `BOARDID` varchar(76) NOT NULL,
   `APPRUSERID` varchar(40) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`APPRUSERID`)
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`APPRUSERID`),
+  `COMPANYID` varchar(80) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2533,7 +2534,8 @@ CREATE TABLE `tbl_board_boardinfo` (
   `APPRMAILFLAG` varchar(4) DEFAULT NULL,
   `ATTRIBUTEYN` varchar(4) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`BOARDID`(255),`TENANT_ID`)
+  PRIMARY KEY (`BOARDID`(255),`TENANT_ID`),
+  `COMPANYID` varchar(80) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2583,7 +2585,8 @@ CREATE TABLE `tbl_board_boardmanage` (
   `POSTNOTICE` varchar(10) DEFAULT NULL,
   `BOARDGROUPACL` varchar(2) DEFAULT 'Y',
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ACCESSID`)
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ACCESSID`),
+  `COMPANYID` varchar(80) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

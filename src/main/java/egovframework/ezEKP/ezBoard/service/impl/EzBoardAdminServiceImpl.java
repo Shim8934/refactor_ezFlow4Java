@@ -220,8 +220,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}
 
+	/* 2018-06-25 홍승비 - 게시판 트리캐시 생성 시  companyID로 제한 걸어주기 */
 	@Override
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception {
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID) throws Exception {
 		logger.debug("brdBoardTree started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -233,6 +234,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_pMode", pMode);
 		map.put("v_pSelectBy", pSelectBy);
 		map.put("v_pExcludeBoardID", pExcludeBoardID);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 
 		logger.debug("brdBoardTree ended");
@@ -310,13 +312,14 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, int tenantID) throws Exception {
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID) throws Exception {
 		logger.debug("get_Admin_TopBoardList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("parentBoardID", parentBoardID);
 		map.put("lang", multiLang);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 
 		logger.debug("get_Admin_TopBoardList ended");
@@ -379,19 +382,21 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception {
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, String companyID, int tenantID) throws Exception {
 		logger.debug("getACL started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("pBoardID", pBoardID);
 		map.put("userDeptPath", userDeptPath);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 
 		logger.debug("getACL ended");
 		return ezBoardAdminDAO.getACL(map);
 	}
 
+	/* 2018-06-25 홍승비 - 게시판 그룹 생성 시 companyID 부여 */
 	@Override
 	public void createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception {
 		logger.debug("createBoardGroup started");
@@ -405,11 +410,14 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_PARENTBOARDID", "top");
+		// 현재 관리자의 companyID 필드 삽입
+		map.put("v_COMPANYID", boardPropertyVO.getCompanyID());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
 		ezBoardAdminDAO.createBoardGroup(map);
 		ezBoardAdminDAO.createBoardGroup2(map);
 		
+		// 새로 게시판 그룹이 추가되었으므로, 해당 테넌트의 모든 TBL_BOARD_TREECACHE를 삭제한다.(이후 새로 만들게된다.)
 		trunkBoard(boardPropertyVO.getTenantID());
 
 		logger.debug("createBoardGroup ended");
@@ -428,17 +436,22 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
 		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
-		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());	
+		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
+		map.put("v_COMPANYID", boardPropertyVO.getCompanyID());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());	
 		
+		// 현재 관리자의 companyID를 하위게시판에 부여
 		ezBoardAdminDAO.createBoard_I(map);
 		ezBoardAdminDAO.createBoard_I2(map);
 		
+		// 해당 하위게시판의 경로(부모게시판 등)를 설정한다. 여기에서는 companyID가 필요없다.
 		String boardTreePath = getBoardTreePath(boardPropertyVO.getBoardID(), boardPropertyVO.getTenantID());
 		map.put("boardTreePath", boardTreePath);
 		
+		// TBL_Board_BoardInfo 테이블을 업데이트한다.(하위게시판 경로 설정 등)
 		ezBoardAdminDAO.createBoard_U(map);
 		
+		// 새로운 게시판이 등록되었으므로, 해당 테넌트의 TBL_BOARD_TREECACHE 레코드를 삭제한다.
 		trunkBoard(boardPropertyVO.getTenantID());
 
 		logger.debug("createBoard ended");
@@ -813,25 +826,29 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 		int tempCount = ezBoardAdminDAO.getBoardManage(map);
 		
+		/* 2018-06-25 홍승비 - 게시판 권한설정 시 companyID 부여 */
 		if (tempCount > 0) {
 			ezBoardAdminDAO.saveACL_U(map);
 		} else {
 			ezBoardAdminDAO.saveACL_I(map);
 		}
 		
+		// 게시판 권한이 변경되었으므로, 해당 테넌트의 트리캐시 삭제
 		trunkBoard((int) map.get("v_TENANTID"));
 
 		logger.debug("saveACL ended");
 	}
 
 	@Override
-	public void deleteACL(Document doc, int tenantID) throws Exception {
+	public void deleteACL(Document doc, String companyID, int tenantID) throws Exception {
 		logger.debug("deleteACL started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
+		/* 게시판 권한 삭제 시 companyID 조건 부여 */
 		for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
 			map.put("v_pBoardID", doc.getElementsByTagName("BOARDID").item(i).getTextContent());
 			map.put("v_pAccessID", doc.getElementsByTagName("TARGETID").item(i).getTextContent());

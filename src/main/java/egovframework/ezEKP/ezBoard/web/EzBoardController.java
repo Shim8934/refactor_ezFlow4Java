@@ -244,13 +244,18 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		int pSelectBy = 0;
+		
+		//가장 처음의 parentBoardID는 top.
 		String pRootBoardID = "top";
 		String pSubFlag = "0";
+		
+		//사실상 제외 게시판ID는 사용하지 않는다.(" "로 되어있으니까...)
 		String pExcludeBoardID = " ";
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, pUserID, pDeptID, pCompanyID, tenantID);
 		
+		// 승인게시판의 승인자를 전부 가져온다.
 		List<BoardVO> applyUserList = ezBoardAdminService.checkApplyUser(tenantID);
-		
+		// 현재 사용자가 승인자인지 확인하고 승인  플래그를 설정한다.
 		for (BoardVO vo: applyUserList) {
 			if (vo.getApprUserId().toLowerCase().indexOf(pUserID.toLowerCase()) > -1) {
 				applyFlag = "OK";
@@ -259,6 +264,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		int pMode = 0;
 		
+		// 해당 게시판에 권한이 있거나, 전체관리자이거나, 회사관리자이거나, 게시관리자라면 Admin(pMode=0)으로 설정한다.
 		if (pRollInfo != null && (boardGroupAdmin_FG.equals("OK") || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1)) {
 			pMode = 0;
 		} else {
@@ -266,6 +272,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		//Library 연결 부분 Method화
+		// pRootBoardID = "top" // pSelectBy = 0
 		String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang, userInfo.getTenantId()), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		int resultCount = doc.getElementsByTagName("NODE").getLength();
@@ -285,6 +292,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		//2018-05-08 강민수92 게시물 승인 카운트 출력
 		if (applyFlag.equals("OK")) {
 			int applyCount = 0;
+			// WriterCompanyID로 현재 회사의 승인대기 게시물만 카운트한다.
 			applyCount = ezBoardService.getApprBoardTotalItemCount(userInfo);
 			modelMap.addAttribute("applyCount", applyCount);
 		}
@@ -668,6 +676,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getMyBoardTreeConfig(String userID, String pRootTreeID, String lang, int tenantID) throws Exception {
 		logger.debug("getMyBoardTreeConfig started");
 
+		// 마이게시판 리스트를 가져온다.
 		List<BoardMyFavoriteVO> resultList  = ezBoardAdminService.getMyBoardTree_get3(userID, pRootTreeID.trim(), tenantID);
 		
 		StringBuilder sb = new StringBuilder();
@@ -829,7 +838,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userDeptPath = deptPathOrgan + ",everyone";
 		
 		for (int i = 0; i < userDeptPath.split(",").length; i++) {
-			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
+			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			if (boardInfoTemp != null) {
 				boardInfo = boardInfoTemp;
@@ -924,7 +933,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userDeptPath = deptPathOrgan+",everyone";
 		
 		for (int i=0; i<userDeptPath.split(",").length; i++) {
-			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
+			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			if (boardInfoTemp == null) {
 				break;
@@ -1052,6 +1061,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	String orderOption2 = "";
     	String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
     	
+    	// 헤더를 가져오는 곳이...
     	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
     	
     	int i = 0;
@@ -1306,6 +1316,9 @@ public class EzBoardController extends EgovFileMngUtil{
     	resultXML.append("</DOCLIST>");
 
 		logger.debug("getApprboardList ended");
+		
+		logger.debug("resultXML      ::     " + resultXML.toString());
+		
         return resultXML.toString();
 	}
     
@@ -1499,7 +1512,7 @@ public class EzBoardController extends EgovFileMngUtil{
     				endRow = 0;
     			}
     		}
-    	} else {
+    	} else { // 임시저장 게시물의 경우
     		startRow = ((personalCount * (boardVO.getPageNum() - 1)))  +  1;
     		endRow = (personalCount * boardVO.getPageNum());
     		
@@ -4296,7 +4309,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			BoardPropertyVO boardPropertyVO = null;
 			
 			for (int k = 0; k < userDeptPath.split(",").length; k++) {
-				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getTenantId());
+				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getCompanyID(), userInfo.getTenantId());
 				
 				if (boardPropertyVO != null) {
 					break;
@@ -4504,6 +4517,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardMyFavoriteVO.setTreeName2(doc.getElementsByTagName("PTREENAME2").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeUpper(doc.getElementsByTagName("PUPPERID").item(0).getTextContent());
 		boardMyFavoriteVO.setMode(doc.getElementsByTagName("PMODE").item(0).getTextContent());
+		
+		// TREEBOARDID에 추가할 게시판ID가 들어간다.
 		boardMyFavoriteVO.setBoardId(doc.getElementsByTagName("PBOARDID").item(0).getTextContent());
 		boardMyFavoriteVO.setTenantID(userInfo.getTenantId());
 		
@@ -6040,8 +6055,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		int startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
 		int endRow = page * boardInfo.getSs_board_maxRows();
 		
+		// 예약게시물 표출 시, companyID로 조건을 줄 것.
 		List<BoardListVO> reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
-		
+		// 예약게시물 카운트 시, companyID로 조건을 줄 것.
 		totalCount = ezBoardService.getReservedItemListCount(userInfo.getId(), userInfo.getTenantId());
 		
 		if (reservedList == null && page > 1) {

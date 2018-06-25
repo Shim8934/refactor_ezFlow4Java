@@ -263,6 +263,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String[] boardIDs = pBoardList.split(";");
 		String[] delBoardIDs = pDelBoardList.split(";");
 		
+		//
 		for (int k = 0; k < boardIDs.length; k++) {
 			map.put("boardID", boardIDs[k]);
 			map.put("count", k + 1);
@@ -2433,24 +2434,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		int count = 0;
 		String strForbiddenBoardIDList = "";
+		
+		// 일단 현재 사용자의 companyID를 받아오기는 한다.
 		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
 		
+		// 게시판의 XML 트리 리스트가 존재한다면 반환 -> 컨트롤러로 돌아간다.
 		if (retValue != null && retValue.length() > 30) {
 			return retValue;
 		}
 		
+		// 게시판의 XML 트리 리스트가 없다면 새로 만들어준다.// 접근권한ID로 userID, 부서id 등을 붙인다.
 		String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
+		// 사용자의 관리자 권한을 받아온다(전체/회사/게시... 등등)
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
+		// 새로운 게시판 트리 리스트를 저장할 객체
 		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
 		
 		for (int i = 0; i < pAccessID.split(",").length; i++) {
 			String boardID = "";
 			
 			if (pMode == 0) {
-				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, tenantID);            
+				// Admin 권한이 있는 경우, parentBoard(top)와 테넌트id만으로 상위 게시판(그룹)들을 가져온다.
+				// AccessID는 everyone으로 넘기지만, 실제 쿼리에서는 조건으로 사용하지 않는다.(Admin은 모든 게시판에 접근 가능하므로)
+				/* 2018-06-25 홍승비 - 게시판 트리캐시 생성 시  companyID로 제한 걸어주기 */
+				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID);            
 			} else {
-				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, tenantID);
+				// Admin 권한이 없는 경우, parentBoard(top)에 AccessID를 조건으로 붙여 접근 권한이 있는 상위 게시판(그룹)들을 가져온다.
+				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID);
 				
 				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
 					for (BoardTreeVO k : tempBrdBoardTreeList) {
@@ -2463,6 +2474,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 								}
 							}
 							
+							// 가져온 게시판을 하나씩 게시판 리스트에 추가한다.
 							if (tempCnt == 0) {
 								brdBoardTreeList.add(k);
 							}
@@ -2473,12 +2485,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 			
+			// 관리자가 아니라면, 위에서 만든 AccessID와 parentBoardID를 조건으로 접근 불가능(ACCESS_=0)한 게시판 리스트를 다시 가져온다.
+			// TBL_Board_BoardManage에 단독으로 접근한다. 그 테이블에도 companyID가 필요하다!!
+			// -> companyID가 없다면, 사간겸직 사원의  accessID(특히 개인권한-userID가 accessID로 들어간 경우)에 대해 사원이 권한을 가지는 모든 게시판이 나타날 수도 있다.(부모 게시판이 top인 경우 등...)
 			if (pMode != 0) {
 				List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
 				
 				if (boardTreeList.size() > 0) {
 					for (int r = 0; r < boardTreeList.size(); r++) {
 						boardID = boardTreeList.get(r).getBoardId().split(",")[0];
+						// 접근을 막는 게시판 리스트에 추가한다.
 						strForbiddenBoardIDList += boardID.trim();
 					}
 				}
@@ -2486,7 +2502,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		StringBuilder result = new StringBuilder();
 		
-		if (pSubFlag == 1) {
+		if (pSubFlag == 1) { // 하위 게시판 플래그에 따라 태그를 다르게 붙여준다.
 			result.append("<NODES>");
 		} else {
 			result.append("<TREEVIEWDATA>");
@@ -2500,6 +2516,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		});
 		
+		// 다시 관리자 권한을 확인하고, 관리자 권한이 없다면 접근 제한된 게시판은 XML 형식의 게시판 트리에서 제외한다.(continue)
+		// -> 관리자 권한이 있다면 가져온 모든 게시판을 XML 트리로 만든다.
 		for (int i = 0; i < brdBoardTreeList.size(); i++) {
 			if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
 				if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
@@ -2561,6 +2579,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			result.append("</TREEVIEWDATA>");
 		}
 		
+		// 현재 테넌트에 동일 쿼리가 있다면, 지운 뒤에 새로 게시판 트리 리스트를 넣어준다. (동일 쿼리가 없다면 그냥 새로운 레코드가 들어가게 된다.)
+		// TBL_Board_TreeCache 테이블은 쿼리 + tenantID를 PRI KEY로 사용한다. 쿼리 안에 부모게시판ID, 사용자ID, 부서ID, 회사ID가 전부 들어있으므로 companyID 추가는 필요없다.
 		ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
 		ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString(), tenantID);
 
