@@ -56,7 +56,7 @@ $(function(){
 		} else if (projectList[i].status == "D") {
 			htmlStr = "<span class='situation_delet' style='background-color:" + deleteColor + ";'><spring:message code='ezPMS.t11' /></span>";
 		}
-		 
+		
 		$("#" + projectList[i].projectId).find(".projectNameArea").find("span").prepend(htmlStr);
 		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;

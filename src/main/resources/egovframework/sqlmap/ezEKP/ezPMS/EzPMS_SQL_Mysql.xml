@@ -845,6 +845,12 @@
 				G.UPPER_GROUP_ID = 0
 			AND	
 				ISSUEYN = 'N'
+			LEFT JOIN
+				TBL_PMS_MEMBER M
+			ON
+				A.PROJECT_ID = M.PROJECT_ID
+			AND
+				A.TENANT_ID = M.TENANT_ID
 		]]> 
 		<isNotEqual property="listProjectStatus" compareValue="F">
 			LEFT JOIN 
@@ -868,9 +874,9 @@
 			AND
 		</isNotEmpty>
 		<isNotEmpty property="userId">
-				( B.USER_ID = #userId# 
+				( M.USER_ID = #userId# 
 				OR 
-				  B.USER_ID = #deptId# 
+				  M.USER_ID = #deptId# 
 				)
 			AND 
 		</isNotEmpty>
@@ -1043,8 +1049,8 @@
 				tbl_pms_member M
 			ON
 				A.PROJECT_ID = M.PROJECT_ID
-			AND A.TENANT_ID = M.TENANT_ID
-			
+			AND 
+				A.TENANT_ID = M.TENANT_ID
 			WHERE	
 				M.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
 			AND
