@@ -154,13 +154,13 @@ public class EzLadderGWController {
 	 * */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/writers/{writerId}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, int tenant_id, String lang, HttpServletRequest request) {
+	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, LadderVO ladVO, HttpServletRequest request) {
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			
-			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, tenant_id, lang);
+			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, ladVO);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

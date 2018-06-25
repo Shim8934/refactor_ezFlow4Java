@@ -225,7 +225,8 @@ public class EzLadderController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
-				.queryParam("lang", userInfo.getLang());
+				.queryParam("lang", userInfo.getLang())
+				.queryParam("companyID", userInfo.getCompanyID());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		

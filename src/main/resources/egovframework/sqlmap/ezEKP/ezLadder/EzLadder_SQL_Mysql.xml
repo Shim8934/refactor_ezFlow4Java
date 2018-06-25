@@ -1040,6 +1040,8 @@
 			TENANT_ID = #tenant_id#
 		AND 
 			DISPLAYNAME$lang$ = #name#
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#			
 		AND 
 			DISPLAYNAME$lang$
 		NOT IN (
@@ -1051,6 +1053,33 @@
 				DISPLAYNAME$lang$ = #name#
 			AND
 				TENANT_ID = #tenant_id#
+			AND
+				PHYSICALDELIVERYOFFICENAME = #companyID#
+			)
+		UNION
+		SELECT 
+			CN AS USERID, DISPLAYNAME AS USERNAME, DISPLAYNAME2 AS USERNAME2, DESCRIPTION$lang$ AS DEPTNAME, EXTENSIONATTRIBUTE2 AS PIC, TENANT_ID
+		FROM 
+			TBL_USERMASTER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			DISPLAYNAME$lang$ = #name#
+		AND
+			EXTENSIONATTRIBUTE4 LIKE CONCAT('%', #companyID#, '%')			
+		AND 
+			DISPLAYNAME$lang$
+		NOT IN (
+			SELECT
+				DISPLAYNAME$lang$
+			FROM
+				TBL_USERMASTER_RETIRE
+			WHERE 
+				DISPLAYNAME$lang$ = #name#
+			AND
+				TENANT_ID = #tenant_id#
+			AND
+				EXTENSIONATTRIBUTE4 LIKE CONCAT('%', #companyID#, '%')
 			)
 	</select>
 	
