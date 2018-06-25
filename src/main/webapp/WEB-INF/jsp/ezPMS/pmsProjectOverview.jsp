@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 <link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
+<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>
@@ -43,26 +44,12 @@ var groupId = "${project.groupId}";
 var beforePosition = "";
 var afterPosition = "";
 
-$(document).ready(function() {
-	$(window).resize(function() {
-		CurrentHeight = $(window).height() - 100;
-		$("#overviewArea").css("height", CurrentHeight - 34 + "px");
-		$(".kanban").css("height", CurrentHeight - 14 + "px");
-		$("#kanbanArea").css("height", CurrentHeight + "px");
-	});
-	
-});
 
 $(function() {
 	initKanbanList();
 	ableToChangeStatus();
 	initProgressBar();
 	setOverviewContent();
-	
-	CurrentHeight = $(window).height() - 100;
-	$("#overviewArea").css("height", CurrentHeight - 34 + "px");
-	$(".kanban").css("height", CurrentHeight - 14 + "px");
-	$("#kanbanArea").css("height", CurrentHeight + "px");
 	
 	$("#kanbanDraw").sortable({
 		update : function(event, ui) {
@@ -103,7 +90,7 @@ function initProgressBar() {
 		break;
 	}
 	
-	$(".progress_graph").circleProgress({
+	$("#circleProgress").circleProgress({
 		value: Number(projectProgress * 0.01).toFixed(1),
 		fill : {color : circleColor},
 		size : 130
@@ -117,7 +104,7 @@ function ableToChangeStatus() {
 		switch(nowStatus){
 			case "L" :
 			case "P" :
-				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='C' onclick='changeStatus(this)'>";
+				strHTML += "<a class='imgbtn' style='margin-right:5px;'><span id='C' onclick='changeStatus(this)'>";
 				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t17' />";
 				strHTML += "</span></a> ";
 				strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
@@ -125,7 +112,7 @@ function ableToChangeStatus() {
 				strHTML += "</span></a>";
 				break;
 			case "W" :
-				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
+				strHTML += "<a class='imgbtn' style='margin-right:5px;'><span id='P' onclick='changeStatus(this)'>";
 				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t15' />";
 				strHTML += "</span></a> ";
 				strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
@@ -133,7 +120,7 @@ function ableToChangeStatus() {
 				strHTML += "</span></a>";
 				break;
 			case "S" :
-				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
+				strHTML += "<a class='imgbtn' style='margin-right:5px;'><span id='P' onclick='changeStatus(this)'>";
 				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t15' />";
 				strHTML += "</span></a> ";	
 				strHTML += "<a class='imgbtn'><span id='C' onclick='changeStatus(this)'>";
@@ -149,7 +136,7 @@ function ableToChangeStatus() {
 				break;
 		}
 		
-		$("#changeStatus").html(strHTML);
+		$(".btnStyle_center").html(strHTML);
 	} 
 }
 
@@ -166,13 +153,55 @@ function initKanbanList() {
 	var strHTML = "";
 	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
-		strHTML += "<div id='kanban"+ (i + 1) +"' class='kanban' style='cursor : pointer'>";
-		strHTML += "<h1></h1>";
-		strHTML += "<div class='cardArea'></div>"
-		strHTML += "</div>";
+		strHTML += "<li id='kanban"+ (i + 1) +"' class='kanban' style='cursor : pointer'>";
+		strHTML += "<div class='overview_section_list' style='height:740px;'>";
+		strHTML += "<dl class='overview_section_listDL'>";
+		strHTML += "</dl><div class='cardArea'></div>";
+		strHTML += "</div></li>";
 	}
 	
-	$("#kanbanDraw").html(strHTML);
+	$(".project_overview_section").html(strHTML);
+	
+	for (var i = 0; i < kanbanOrderArr.length; i++) {
+		$("#kanban" + (i + 1)).attr("name", kanbanOrderArr[i]);
+		var title = "";
+		
+		if (kanbanOrderArr[i].indexOf("M") != -1) {
+			title += "<spring:message code='ezPMS.t143' /> ";
+		}
+		
+		switch (kanbanOrderArr[i].slice(-1)) {
+		case "A" : 
+			title += "<spring:message code='ezPMS.t269' />";
+			break;
+		case "W" :
+			title += "<spring:message code='ezPMS.t140' />";
+			break;
+		case "P" :
+			title += "<spring:message code='ezPMS.t138' />";
+			break;
+		case "C" :
+			title += "<spring:message code='ezPMS.t34' />"
+			break;
+		case "S" :
+			title += "<spring:message code='ezPMS.t277' />";
+			break;
+		case "L" :
+			title += "<spring:message code='ezPMS.t35' />";
+			break;
+		case "B" :
+			title += "<spring:message code='ezPMS.t141' />";
+			break;
+		}
+		
+		if (kanbanOrderArr[i].indexOf("M") == -1 && kanbanOrderArr[i].indexOf("B") == -1 && userRole != 3) {
+			$("#kanban" + (i + 1)).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_allwork.png' alt='"+ title +"' onclick='moreTaskList(\"M" + kanbanOrderArr[i] + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");	
+		} else if (kanbanOrderArr[i].indexOf("M") != -1 && kanbanOrderArr[i].indexOf("B") == -1 && userRole != 3) {
+			$("#kanban" + (i + 1)).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_mywork.png' alt='"+ title +"' onclick='moreTaskList(\"" + kanbanOrderArr[i].slice(-1) + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+		} else {
+			$("#kanban" + (i + 1)).find(".overview_section_listDL").html("<dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+		}
+	}
 	
 	//칸반 내 업무 넣기
 	var data = {
@@ -194,10 +223,10 @@ function initKanbanList() {
 		success : function(result) {
 			var kanbanOrderArr = kanbanOrder.split(",");
 
-			$("#kanban1").find("h1").append(" (" + result.kanbanTaskCount1 + ")");
-			$("#kanban2").find("h1").append(" (" + result.kanbanTaskCount2 + ")");
-			$("#kanban3").find("h1").append(" (" + result.kanbanTaskCount3 + ")");
-			$("#kanban4").find("h1").append(" (" + result.kanbanTaskCount4 + ")");
+			$("#kanban1").find(".point_blue").append(result.kanbanTaskCount1);
+			$("#kanban2").find(".point_blue").append(result.kanbanTaskCount2);
+			$("#kanban3").find(".point_blue").append(result.kanbanTaskCount3);
+			$("#kanban4").find(".point_blue").append(result.kanbanTaskCount4);
 			
 			if (kanbanOrderArr[0] != "B") {
 				setTasksIntoKanban(result.kanbanTask1, "kanban1", result.kanbanTaskCount1, "new", false);
@@ -259,50 +288,6 @@ function initKanbanList() {
 		error : function(jqXHR, textStatus, errorThrown) {
 		}
 	});
-	
-	CurrentHeight = $(window).height()-100;
-	$(".kanban").css("height", CurrentHeight - 14 + "px");
-	
-	for (var i = 0; i < kanbanOrderArr.length; i++) {
-		$("#kanban" + (i + 1)).attr("name", kanbanOrderArr[i]);
-		var title = "";
-		
-		if (kanbanOrderArr[i].indexOf("M") != -1) {
-			title += "<spring:message code='ezPMS.t143' /> ";
-		}
-		
-		switch (kanbanOrderArr[i].slice(-1)) {
-		case "A" : 
-			title += "<spring:message code='ezPMS.t269' />";
-			break;
-		case "W" :
-			title += "<spring:message code='ezPMS.t140' />";
-			break;
-		case "P" :
-			title += "<spring:message code='ezPMS.t138' />";
-			break;
-		case "C" :
-			title += "<spring:message code='ezPMS.t34' />"
-			break;
-		case "S" :
-			title += "<spring:message code='ezPMS.t277' />";
-			break;
-		case "L" :
-			title += "<spring:message code='ezPMS.t35' />";
-			break;
-		case "B" :
-			title += "<spring:message code='ezPMS.t141' />";
-			break;
-		}
-		
-		if (kanbanOrderArr[i].indexOf("M") == -1 && kanbanOrderArr[i].indexOf("B") == -1 && userRole != 3) {
-			$("#kanban" + (i + 1)).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"M" + kanbanOrderArr[i] + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'>MY!</span>");	
-		} else if (kanbanOrderArr[i].indexOf("M") != -1 && kanbanOrderArr[i].indexOf("B") == -1 && userRole != 3) {
-			$("#kanban" + (i + 1)).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"" + kanbanOrderArr[i].slice(-1) + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'>MY!</span>");
-		} else {
-			$("#kanban" + (i + 1)).find("h1").html(title);
-		}
-	}
 }
 
 
@@ -410,45 +395,50 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 			if (!isBoard) {
 				var taskStatus = "";
 				var statusColor = "";
+				var className = "";
 				
 				switch (taskList[i].status) {
 				case "P" :
 					taskStatus = "<spring:message code='ezPMS.t15' />";
 					statusColor = progressColor;
+					className = "progress";
 					break;
 				case "W" :
 					taskStatus = "<spring:message code='ezPMS.t16' />";
 					statusColor = "#a5a5a5";
+					className = "standby";
 					break;
 				case "L" :
 					taskStatus = "<spring:message code='ezPMS.t18' />";
 					statusColor = overdueColor;
+					className = "delay";
 					break;
 				case "S" :
 					taskStatus = "<spring:message code='ezPMS.t19' />";
 					statusColor = holdColor;
+					className = "hold";
 					break;
 				case "C" :
 					taskStatus = "<spring:message code='ezPMS.t17' />";
 					statusColor = completeColor;
+					className = "complete";
 					break;
 				}
 				
-				kanbanHTML += "<div id='" + targetPosition + taskList[i].taskId + "' class='card' onclick='selectedTR(this)' ondblclick='getTaskDetails(this)'>";
-				kanbanHTML += "<h5>" + taskList[i].taskName + "</h5>";
-				kanbanHTML += "<div class='progressArea" + taskList[i].taskId + "'></div>";
-				kanbanHTML += "<div style='float:left'><span style='border:1px solid black'>start</span>" + taskList[i].planStartDate + "</div><br>";
-				kanbanHTML += "<div><span style='border:1px solid black'>end </span>" + taskList[i].planEndDate;
-				kanbanHTML += "<div class='taskStatus' style='background-color:" + statusColor + "'>" + taskStatus + "</div></div>";
+				kanbanHTML += "<div id='" + targetPosition + taskList[i].taskId + "' class='overview_list card' onclick='selectedTR(this)' ondblclick='getTaskDetails(this)'>";
+				kanbanHTML += "<p class='overview_list_title'><span class='situation_" + className + "' style='background-color:" + statusColor + "'>" + taskStatus + "</span>" + taskList[i].taskName + "</p>";
+				kanbanHTML += "<div class='progressArea" + taskList[i].taskId + " progressArea_new'></div>";
+				kanbanHTML += "<div class='date'><p><span class='startBox'>START</span>" + taskList[i].planStartDate + "</p>";
+				kanbanHTML += "<p><span class='endBox'>END</span>" + taskList[i].planEndDate + "</p></div>";
 				kanbanHTML += "</div>";
 			} else {
-				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='card board' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
-				kanbanHTML += "<h5>" + taskList[i].title + "</h5>";
+				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='overview_list card' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
+				kanbanHTML += "<p class='overview_list_title'>" + taskList[i].title + "</p>";
 
 				if (taskList[i].imageFilePath == null) {
-					kanbanHTML += "<div class='boardContent'>" + taskList[i].writeContent + "</div>";
+					kanbanHTML += "<div class='boardArea_new'>" + taskList[i].writeContent + "</div>";
 				} else {
-					kanbanHTML += "<div class='boardContent' style='text-align:center;'><img style='width:135px; height:82px; margin-top:11px;' src='" + taskList[i].imageFilePath + "'></div>";
+					kanbanHTML += "<div class='boardArea_new'><img style='width:100%; height:100%;' src='" + taskList[i].imageFilePath + "'></div>";
 				}
 				
 				kanbanHTML += "</div>"
@@ -488,16 +478,16 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 					fillBackgroundColor : statusColor,
 					height : '15px',
 					radius : '15px',
-					width : '71%'
+					width : '50%'
 				});
 			}
 		}
 		
 		var targetStatus = $("#" + targetPosition).attr("name");
-		var startRow = $("#" + targetPosition).find(".card").length;
+		var startRow = $("#" + targetPosition).find(".overview_list").length;
 		
 		if (taskList.length >= 10) {
-			$("#" + targetPosition).append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")' style='border:1px solid black; background-color:white; text-align:center;'><span><spring:message code='ezPMS.t276' /></span></div>");
+			$("#" + targetPosition).find(".overview_section_list").append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")' style='border:1px solid black; background-color:white; text-align:center;'><span><spring:message code='ezPMS.t276' /></span></div>");
 		}
 	}
 }
@@ -569,14 +559,14 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 			}
 			
 			if (targetStatus.indexOf("M") == -1) {
-				$("#" + targetPosition).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"M" + targetStatus + "\", \""+ targetPosition +"\", 0, \"new\")'>MY!</span>");
+				$("#" + targetPosition).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_allwork.png' alt='"+ title +"' onclick='moreTaskList(\"M" + targetStatus + "\", \""+ targetPosition +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
 			} else if (targetStatus.indexOf("B") == -1) {
-				$("#" + targetPosition).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"" + targetStatus.slice(-1) + "\", \""+ targetPosition +"\", 0, \"new\")'>MY!</span>");
+				$("#" + targetPosition).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_mywork.png' alt='"+ title +"' onclick='moreTaskList(\"" + targetStatus.slice(-1) + "\", \"" + targetPosition +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
 			} else {
-				$("#" + targetPosition).find("h1").html(title);
+				$("#" + targetPosition).find(".overview_section_listDL").html("<dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
 			}
 			
-			$("#" + targetPosition).find("h1").append(" (" + result.kanbanTaskCount1 + ")");
+			$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1);
 			
 			updateOrderStatus();	
 		},
@@ -634,55 +624,47 @@ function setOverviewContent() {
 		success : function(overviewList) {
 			 var logList = overviewList.logList;
 			 var logHTML = "";
-			 logHTML += "<div id='mainLog'>";
 			 
 			 if (logList == null || logList.length == 0) {
 				 
-				 logHTML += "<div style='font-size:13px; margin-left:11%'>" + "<spring:message code='ezPMS.t30' />" + "</div>";
+				 logHTML += "<li>" + "<spring:message code='ezPMS.t30' />" + "</li>";
 				 
 			 } else {
 				 for (var i = 0; i < logList.length; i++) {
 					 
 					 switch (logList[i].logStatus) {
 					 case 1 : 
-						 logList[i].logStatus = "<span style='background-color:#8DFF1B; font-size:13px;'><spring:message code='ezPMS.t40' /></span>";
+						 logHTML += "<li><span class='situation_registration'><spring:message code='ezPMS.t40' /></span>";
 						 break;
 						 
 					 case 2 : 
-						 logList[i].logStatus = "<span style='background-color:#ffff66; font-size:13px;'><spring:message code='ezPMS.t110' /></span>";
+						 logHTML += "<li><span class='situation_modify'><spring:message code='ezPMS.t110' /></span>";
 						 break;
 						 
 					 case 3 : 
-						 logList[i].logStatus = "<span style='background-color:#FF7A1B; font-size:13px;'><spring:message code='ezPMS.t11' /></span>";
+						 logHTML += "<li><span class='situation_delete'><spring:message code='ezPMS.t11' /></span>";
 						 break;
 					 }
 					 
-					 logHTML += "<div style='clear:both; margin-bottom:1px; border-bottom:1px;'>";
-					 logHTML += "<div style='width:16%; float:left; font-weight:bold;'>" + logList[i].logStatus + "</div>";
-					 logHTML += "<div style='font-size:13px; height:21px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap'>" + logList[i].logContent + "</div>";
-					 logHTML += "</div>";
+					 logHTML += "<span class='text'>" + logList[i].logContent + "</span>";
+					 logHTML += "</li>";
 				 }
-				 
-				 logHTML += "</div>";
 			 }
 			 
 			 $("#logContentArea").html(logHTML);
 			 
 			 var commentList = overviewList.commentList;
-			 var commentHTML = "";
-			 commentHTML += "<div id='mainComment'>";	 
+			 var commentHTML = ""; 
 			 
 			 if (commentList == null || commentList.length == 0) {
-				 commentHTML += "<div style='font-size:13px; margin-left:11%'>" + "<spring:message code='ezPMS.t30' />" + "</div>";
+				 commentHTML += "<li><span>" + "<spring:message code='ezPMS.t30' />" + "</span></li>";
 			 } else {
 				 for (var i = 0; i < commentList.length; i++) {					 
-					 commentHTML += "<div style='clear:both; margin-bottom:1px; border-bottom:1px;'>";
-					 commentHTML += "<div style='width:16%; float:left;font-size:13px;'>" + commentList[i].writerName + "</div>";
-					 commentHTML += "<div style='font-size:13px; height:21px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap'>" + commentList[i].commentContent + "</div>";
-					 commentHTML += "</div>";
+					 commentHTML += "<li>";
+					 commentHTML += "<span class='name'>" + commentList[i].writerName + "</span>";
+					 commentHTML += "<span class='text'>" + commentList[i].commentContent + "</span>";
+					 commentHTML += "</li>";
 				 }
-				 
-				 commentHTML += "</div>";
 			 }
 			  
 			 $("#commentContentArea").html(commentHTML);
@@ -703,166 +685,57 @@ function getTaskDetails(elem) {
 			"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 }
 </script>
-<style type="text/css">
-.circle {
- margin : 6px 6px 34px;
- top : 14px;
- height : 120px;
-}
-
-#kanbanArea {
-	float : left;
-	width : 78%;
-	padding : 5px;
-	border-right : 1px solid #d1d1d1;
-	overflow : auto;
-}
-
-#kanbanDraw {
-	min-width : 1011px;
-}
-
-#overviewArea {
-	width : 20%;
-	overflow : auto;
-}
-
-.rightPart {
-	float : right;
-}
-
-.kanban {
-	display : table-cell;
-	margin-right : 17px;
-	border : 1px solid #d1d1d1;
-	padding : 5px;
-	width : 22%;
-	overflow : auto;
-	float : left;
-	background-color : rgb(240, 240, 240);
-}
-
-.card {
-	margin : 10px 5px;
-	padding : 10px;
-	position : relative;
-	width : 85%;
-	height : 100px;
-	color : block;
-	border : 1px solid black;
-	background-color : rgb(255, 255, 255);
-	overflow : hidden;
-}
-
-.board {
-	height : 120px;
-}
-
-.boardContent {
-	text-overflow : ellipsis; 	
-	line-height : 1.1em;
-	max-height : 5.5em;
-	overflow : hidden;
-}
-
-.kanban > h1 {
-	margin: 0;
-	border-bottom: 1px solid #999;
-	padding-bottom: 5px;
-	font-size: 10pt;
-	text-align: center;
-}
-
-.card > h5 {
-	margin : 0;
-	border-bottom : 1px solid #999;
-	padding-bottom : 5px;
-	text-overflow : ellipsis; 	
-}
-
-.icon {
-	width : 40px;
-	height : 40px;
-	border : 1px solid #d1d1d1;
-	display : inline-block;
-	float : right;
-}
-
-.taskStatus {
-	float : right;
-	color :  #ffffff;
-}
-
-.percentCount {
-	width : 20%;
-	padding-left : 5px;
-}
-
-.selectTR {
-	background-color : rgb(233, 241, 255);
-}
-
-hr {
-	text-align : center;
-	margin : 8px 0px;
-	border-bottom : 0px; 
-	width : 95%;
-}
-
-#logDiv {
-	margin-top : 10px;
-}
-</style>
 </head>
 <body>
-<div id="kanbanArea" class="overview"><div id="kanbanDraw" class="overview"></div></div>
-
-<div id="iconArea" class="rightPart">
-		<!-- <div id="printReport" class="icon">출력</div> -->
-		<c:if test="${userRole eq 1 }">
-			<div id="editProjectInfo" class="icon" onclick="editProjectInfo()" style="cursor:pointer;"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
-		</c:if>
-		<div id="setting" class="icon" style="cursor:pointer;" onclick="kanbanSetting()">환경설정</div>
-	</div>
-<div id="overviewArea" class="overview rightPart">
-	<div class="circle progress_graph">
-		<strong style="top:25px;"></strong>
-	</div>
-	<div style="text-align:center;">
-	<div style="font-size:31px; font-weight:bold; margin-top:41px;">D 
-		<c:choose>
-				<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
-		</c:choose>
-	</div>
-		<div>
-		<span style="border:1px solid black">start</span>${project.planStartDate }
+<div class="project_overview">
+<ul class="contentlayout" style="height:740px;">
+	<li class="contentlayout_right" style="height:740px;"><!--우측정보-->
+		<div class="project_overview_right" style="height:740px;">
+			<div class="overview_graphinfoBox">
+				<ul class="overview_btnBox">
+					<li onclick="editProjectInfo()"><img src="/images/ezPMS/icon_project_modify.png" alt="수정" /></li>
+					<li onclick="kanbanSetting()"><img src="/images/ezPMS/icon_project_setting.png" alt="환경설정" /></li>
+				</ul>
+				<ul class="contentlayout overview_graphinfo">
+					<li class="contentlayout_left overview_graph_canvas" id="circleProgress"><strong></strong></li>
+					<li class="contentlayout_none date">
+						<p class="project_Dday">D <span class="point_red"><c:choose>
+							<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
+							</c:choose></span>
+						</p>
+						<p><span class="startBox">START</span>${project.planStartDate }</p>
+						<p><span class="endBox">END</span>${project.planEndDate }</p>
+					</li>
+				</ul>
+				<div class="btnStyle_center"></div>
+			</div>
+			<div class="overview_textbox">${project.overview }</div>
+			<ul class="overview_infomationBox">
+				<li><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }" />${project.headManagerName }</li>
+				<li onclick="getProjectMember('1')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /></li>
+				<li onclick="getProjectMember('2')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' /></li>
+				<li onclick="getProjectMember('3')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' /></li>
+			</ul>
+			<div class="project_portlet_opinion">
+				<dl class="project_portlet_title">
+					<dd onclick="moveToPage('comment')"><spring:message code='ezPMS.t276' /></dd>
+					<dt><spring:message code='ezPMS.t154' /></dt>
+				</dl>
+				<ul class="project_portlet_list" id="commentContentArea"></ul>
+			</div>
+			<div class="project_portlet_workhistory">
+				<dl class="project_portlet_title">
+					<dd onclick="moveToPage('taskLog')"><spring:message code='ezPMS.t276' /></dd>
+					<dt><spring:message code='ezPMS.t153' /></dt>
+				</dl>
+				<ul class="project_portlet_list" id="logContentArea"></ul>
+			</div>
 		</div>
-		<div>
-		<span style="border:1px solid black">end</span>${project.planEndDate }
-		</div>
-		</div>
-	<div id="changeStatus" style="text-align:center; clear : both;"></div>
-	<div id="overview" style="width:95%; padding:5px; border:1px solid gray; margin:5px 0">${project.overview }</div>
-	<table style="width:95%; height:13%">
-		<tr>
-			<td class="memberList"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px;" align="middle"><span>${project.headManagerName }</span></td>
-			<td onclick="getProjectMember('1')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> <spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /> </td>
-		</tr>
-		<tr>
-			<td onclick="getProjectMember('2')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> <spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' /> </td>
-			<td onclick="getProjectMember('3')" class="memberList" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> <spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' /> </td>
-		</tr>
-	</table>
-	<div id="commentDiv">
-		<spring:message code='ezPMS.t154' /><span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('comment')">+</span>
-		<hr>
-		<div id="commentContentArea"></div>
-	</div>
-	<div id="logDiv">
-		<spring:message code='ezPMS.t153' /><span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
-		<hr>
-		<div id="logContentArea"></div>
-	</div>
+	</li>
+	<li class="contentlayout_none" style="height:740px;"><!--좌측리스트-->
+		<ul class="project_overview_section" id="kanbanDraw"></ul>
+	</li>
+</ul>
 </div>
 <div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
