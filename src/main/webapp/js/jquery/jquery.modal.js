@@ -130,17 +130,6 @@
         if (parent.frames["right"]) {        	
         	parent.frames["right"].document.body.style.overflow = "hidden";
         }
-        
-        if (parent.frames["FBoard_ifrm"]) {
-        	parent.frames["FBoard_ifrm"].document.body.style.overflow = "hidden";
-        	        	   		
-    		/*parent.parent.frames["right"].document.body.style.marginLeft = "10px";
-    		parent.parent.frames["right"].document.body.style.marginRight = "10px";
-    		parent.parent.frames["right"].document.getElementById("boardMainbody").style.paddingLeft = "0px";
-    		parent.parent.frames["right"].document.getElementById("boardMainbody").style.paddingRight = "0px";
-    		parent.frames["FBoard_ifrm"].document.body.style.paddingLeft = "0px";
-    		parent.frames["FBoard_ifrm"].document.body.style.paddingRight = "0px";*/
-        }
       }
     },
 
