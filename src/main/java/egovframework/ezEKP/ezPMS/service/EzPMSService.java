@@ -229,11 +229,13 @@ public interface EzPMSService {
 	
 	public int checkIfHasPreTaskRel(Map<String, Object> map);
 	
-	public boolean checkIfExistPreTaskRel(Map<String, Object> map);
+	public boolean checkIfPreTaskRelExist(Map<String, Object> map);
 	
 	public void deletePreTaskRelInTask(Map<String, Object> map);
 
 	public void deletePreTaskRelInGroup(Map<String, Object> map);
 	
-	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;	
+	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;
+	
+	public List<Integer> getLaggingGroupIds(Map<String, Object> map);
 }

@@ -18,8 +18,8 @@
 	//버튼 중복클릭 방지
 	var doubleSubmitFlag = false;
 	
-	var contentCount = "${totalCount}";
-	var taskName = "${taskName}";
+	var contentCount = '<c:out value="${totalCount}"/>';
+	var taskName = '<c:out value="${taskName}"/>';
 	
 	function addComment() {
 		

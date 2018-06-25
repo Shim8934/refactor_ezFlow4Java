@@ -562,8 +562,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select("EzPMSDAO.checkIfHasPreTaskRel", map);
 	}
 	
-	public int checkIfExistPreTaskRel(Map<String, Object> map) {
-		return (int) select("EzPMSDAO.checkIfExistPreTaskRel", map);
+	public int checkIfPreTaskRelExist(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.checkIfPreTaskRelExist", map);
 	}
 	
 	public void deletePreTaskRelInTask(Map<String, Object> map) {
@@ -579,5 +579,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<TaskMemberVO>) list("EzPMSDAO.getTaskMemberListInGroup", map);
 	}
 
-	
-}
+	@SuppressWarnings("unchecked")
+	public List<String> getLaggingAncestorGroupIds(Map<String, Object> map) {
+		return (List<String>) list("EzPMSDAO.getLaggingAncestorGroupIds", map);
+	}
+} 

@@ -259,6 +259,8 @@ public class EzPMSGWController3 {
 				taskName = groupVO.getGroupName();
 			}
 			
+			LOGGER.debug("taskName : " + taskName);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", boardList);		
@@ -1021,7 +1023,7 @@ public class EzPMSGWController3 {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/tasks/checkIfExistPreTaskRel/{pretaskId}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject checkIfExistPreTaskRel(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int pretaskId) {
+	public JSONObject checkIfPreTaskRelExist(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int pretaskId) {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/" + pretaskId + "] started");
 		
 		JSONObject result = new JSONObject();
@@ -1031,7 +1033,7 @@ public class EzPMSGWController3 {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.remove("userId"));
 			jsonParam.put("tenantId", info.getTenantId());
 			
-			boolean ifExistPreTaskRel = ezPMSService.checkIfExistPreTaskRel(jsonParam);
+			boolean ifExistPreTaskRel = ezPMSService.checkIfPreTaskRelExist(jsonParam);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

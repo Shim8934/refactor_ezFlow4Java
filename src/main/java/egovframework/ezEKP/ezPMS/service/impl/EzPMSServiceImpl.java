@@ -9,9 +9,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -2688,11 +2690,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public boolean checkIfExistPreTaskRel(Map<String, Object> map) {
+	public boolean checkIfPreTaskRelExist(Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] checkIfExistPreTaskRel started.");
 		boolean result = false;
 		
-		if(ezPMSDAO.checkIfExistPreTaskRel(map) > 0) {
+		if(ezPMSDAO.checkIfPreTaskRelExist(map) > 0) {
 			result = true;
 		} 
 		
@@ -2701,6 +2703,33 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return result;
 	}
 	
+	@Override
+	public List<Integer> getLaggingGroupIds(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] getLaggingGroupIds started.");
+		
+		Set<Integer> groupIdSet = new HashSet<Integer>();
+		
+		if(ezPMSDAO.checkIfPreTaskRelExist(map) > 0) {
+			List<String> groupIdsStr = ezPMSDAO.getLaggingAncestorGroupIds(map);
+			
+			Iterator<String> iterator = groupIdsStr.iterator();
+			
+			while(iterator.hasNext()) {
+				
+				String[] groupIdStrArr = iterator.next().split(",");
+				
+				for(String groupIdStr : groupIdStrArr) {
+					groupIdSet.add(Integer.parseInt(groupIdStr));
+				}
+			}
+		}
+		
+		List<Integer> groupIds = new ArrayList<Integer>(groupIdSet);
+		
+		LOGGER.debug("[SERVICE] getLaggingGroupIds ended.");
+		return groupIds;
+	}
+
 	@Override
 	public void deletePreTaskRelInTask(Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] deletePreTaskRelInTask started.");

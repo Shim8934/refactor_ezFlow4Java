@@ -42,7 +42,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -111,6 +113,9 @@ public class EzPMSController3 {
 		String writerName = userInfo.getDisplayName();
 		String writerDeptName = userInfo.getDeptName();
 		String mode = request.getParameter("mode");
+		String projectId = request.getParameter("projectId");
+		String groupId   = request.getParameter("groupId");
+		String taskId 	 = request.getParameter("taskId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
@@ -119,21 +124,42 @@ public class EzPMSController3 {
 		
 		if(status.equals("ok")) {
 			JSONArray configList = (JSONArray) resultBody.get("data");
+			
 			for(Object configVO : configList) {
 				JSONObject configItem = (JSONObject) configVO;
+				
 				if(configItem.get("name").equals("MailAttachLimit")) {
 					model.addAttribute("attachLimit", configItem.get("value"));
 				}
 			}
 		}
 		
+		param.put("userId", userId);
+		param.put("projectId", projectId);
+		
+		if(!taskId.equals("null") && taskId != null && !taskId.equals("")) {
+			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userId, param, request, "get", null);
+			
+			if(status.equals("ok")) {
+				JSONObject taskVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("taskName", taskVO.get("taskName"));
+				model.addAttribute("projectName", taskVO.get("projectName"));
+			}
+		} else {
+			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/groups/" + groupId + "/users/" + userId, param, request, "get", null);
+			
+			if(status.equals("ok")) {
+				JSONObject groupVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("taskName", groupVO.get("groupName"));
+				model.addAttribute("projectName", groupVO.get("projectName"));
+			}
+		}
+		
+				
 		if(mode.equals("modify")) {
 			String itemId = request.getParameter("itemId");
-			String projectId = request.getParameter("projectId");
-			
-			param.put("userId", userId);
+		
 			param.put("itemId", itemId);
-			param.put("projectId", projectId);
 			
 			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
 			status = resultBody.get("status").toString();
@@ -161,11 +187,8 @@ public class EzPMSController3 {
 			}
 		} else if(mode.equals("reply")) {
 			String itemId = request.getParameter("itemId");
-			String projectId = request.getParameter("projectId");
 			
-			param.put("userId", userId);
 			param.put("itemId", itemId);
-			param.put("projectId", projectId);
 			
 			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId, param, request, "get", null);
 			status = resultBody.get("status").toString();

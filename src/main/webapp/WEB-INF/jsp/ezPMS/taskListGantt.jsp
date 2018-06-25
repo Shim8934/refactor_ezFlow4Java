@@ -550,22 +550,53 @@
 	   			  return task.moveTo(newStart, true,true);
 	   			};
 	   			
+	   			function checkIfCircularRef(taskId, groupId) {
+	   				
+	   			}
+	   			
 	   			//선행작업 지정
 	   			GanttMaster.prototype.changeTaskDeps = function (task) {
 	   				console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
 	   			  	
 	   				var taskDepends = task.depends; 
-	   				var preTask = ge.tasks[taskDepends - 1];
-	   			  
-	   				var str = "";
+	   				var preTask = ge.tasks[taskDepends - 1];		
+	   				var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
+	   			  	var taskDuration = task.duration;
+	   			  	var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
+	   			  	var groupId = task.id.match(/g(\d+)/) != null? task.id.match(/g(\d+)/)[1] : projectGroupId;
+	   			  	var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
+	   			  	var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
+	   			  	var progress = task.progress;
+	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepends - 1).find("input[name='name']").val();
+	   			  	var projectId = task.id.match(/p(\d+)/)[1];
+	   			    
+	   				/* var str = "";
 	   				
 	   				for(var key in task) {
 	   				    var value = task[key];
 	   				    str += key + " : " + value + ", ";
 	   				}
 	   				
-	   				alert(str);
+	   				alert(str); */
 	   				
+	   				// 선행작업의 무한 순환 지정 막기(Circular reference)
+	   				
+	   				
+	   				/* var preTaskDepends = preTask.depends;
+	   				
+	   				if(preTaskDepends != null && preTaskDepends != "") {
+	   					var prePreTask = ge.tasks[preTask.depends - 1];
+		   				var prePreGroupId = prePreTask.id.match(/g(\d+)/) != null ? prePreTask.id.match(/g(\d+)/)[1] : null;
+		   				
+		   				if(prePreGroupId == groupId) {
+		   					alert("ERROR:\nCircular reference");
+		   					location.reload();
+		   					throw "circular reference";
+		   					return;
+		   				}
+	   				} */
+	   				
+
 	   			  	// 중복 선행작업 지정 막기
 	   			  	if(taskDepends.indexOf(",") != -1) {
 	   				  	alert("<spring:message code='ezPMS.t297' />");
@@ -583,7 +614,7 @@
 	   			  			cnt++;
 	   			  		}
 	   			  	}
-	   				
+
 	   				if(cnt > 1) {
 	   					alert("<spring:message code='ezPMS.t298' />");
 	   					location.reload();
@@ -596,20 +627,10 @@
 	   			  	if(new Date(preTask.end) > new Date(task.start)) {
 	   				  
 	   				  	if(confirm("<spring:message code='ezPMS.t291' />") == false) {
+	   				  		throw "";
 	   					  	return;
 	   				  	}
 	   			  	}
-	   			  
-	   			  	var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
-	   			  	var taskDuration = task.duration;
-	   			  	var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
-	   			  	var groupId = task.id.match(/g(\d+)/) != null? task.id.match(/g(\d+)/)[1] : projectGroupId;
-	   			  	var preTaskRowIndex = task.depends;
-	   			  	var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
-	   			  	var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
-	   			  	var progress = task.progress;
-	   			  	var preTaskRowName = $(".taskEditRow").eq(preTaskRowIndex - 1).find("input[name='name']").val();
-	   			  	var projectId = task.id.match(/p(\d+)/)[1];
 	   			  	
 	   			  	console.log(pretaskEndDate);
 	   			  	console.log(taskDuration);

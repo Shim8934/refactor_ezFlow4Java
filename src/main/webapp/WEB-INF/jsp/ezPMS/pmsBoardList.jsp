@@ -7,8 +7,8 @@
 	var boardDetail;
 	var CurrentHeight = document.documentElement.clientHeight - 100;
 	
-	var contentCount = "${totalCount}";
-	var taskName = "${taskName}";
+	var contentCount = '<c:out value="${totalCount}"/>';
+	taskName = '<c:out value="${taskName}"/>';
 	
 	$(function() {
 		CurrentHeight = $(window).height()-100;

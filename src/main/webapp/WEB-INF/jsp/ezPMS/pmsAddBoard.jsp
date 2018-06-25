@@ -88,19 +88,15 @@
 			$('#title').val(title);
 			$('#writeOverview').val(writeOverview);
 			
-			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
-		} else if (mode == 'new') {
-			
-			taskName = '${taskName}';
-			
+			taskName = '<c:out value="${board.taskName ne null ? board.taskName : board.groupName}"/>';
 		} else if (mode == 'reply') {
 			
-			taskName = ('${board.taskName}' != '') ? '${board.taskName}' : '${board.groupName}';	
 			$('#title').val(title);
+			taskName = '<c:out value="${board.taskName ne null ? board.taskName : board.groupName}"/>';
+		} else {
+			taskName = '<c:out value="${taskName}"/>';
 		}
-		
-		$('#taskName').text(taskName);		
-		
+				
 		var fileList = '${fileList}';
 		
 		if (fileList != null && fileList != "") {
@@ -367,7 +363,23 @@
 								</c:otherwise>
 							</c:choose>	
 						</th>
-						<td style="width: 50%" id="taskName"></td>
+						<td style="width: 50%">
+							<c:choose>
+								<c:when test="${taskName eq null}">
+									<c:choose>
+										<c:when test="${board.taskName ne null}">
+											<c:out value="${board.taskName}"/> 
+										</c:when>
+										<c:otherwise>
+											<c:out value="${board.groupName}"/> 
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+								<c:otherwise>
+									<c:out value="${taskName}"/> 
+								</c:otherwise>
+							</c:choose>		
+						</td>
 						<th><spring:message code='ezPMS.t114' /></th>
 						<td><c:out value="${writerName}(${writerDeptName})"/></td>
 					</tr>

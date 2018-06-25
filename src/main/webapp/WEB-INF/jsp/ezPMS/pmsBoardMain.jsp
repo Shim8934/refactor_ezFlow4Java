@@ -90,12 +90,7 @@
 			var project = $("li[role='treeitem'][aria-level='1']").last();
 			
 			groupId = project.attr("id");
-			projectName = project.children("a").text();
 			project.children("a").click();
-			
-			if(projectName.indexOf('(') != -1) {
-				projectName = projectName.substr(0, projectName.indexOf('('));
-			}
 			
 			taskName = projectName;
 		});
@@ -103,8 +98,7 @@
 	
 	function goAddBoard() {
 		var feature = GetOpenPosition(790, 800);
-		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&groupId=" + groupId 
-										 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=new", 
+		window.open("/ezPMS/goAddBoard.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId + "&mode=new", 
 					"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
 	}
 	

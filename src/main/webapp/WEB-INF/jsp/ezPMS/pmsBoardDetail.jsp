@@ -26,8 +26,8 @@
 		var groupId = '${board.groupId}';	
 		var taskId = '${board.taskId}';	
 		var title = '${board.title}';
-		var taskName = '${board.taskName ne null ? board.taskName : board.groupName}';
-		var projectName = '${board.projectName}';
+		var taskName = '<c:out value = "${board.taskName ne null ? board.taskName : board.groupName}"/>';
+		var projectName = '<c:out value = "${board.projectName}"/>';
 		var itemIds = new Array(itemId); // 메인화면에서 여러개의 게시물을 한 번에 이동하는 함수를 재사용하기 위함
 		
 		$(function() {
@@ -42,8 +42,6 @@
 			if(authority == '3') {
 				$("#ReplyBtn").css("display", "none");
 			}
-			
-			$("#taskName").text(taskName);
 		})
 		// 첨부파일 모두 선택
 		function attach_SelectAll() {
@@ -122,7 +120,8 @@
 		}
 		
 		function modifyBoard() {
-			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=modify';
+			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=modify'
+								+ '&groupId=' + groupId + "&taskId=" + taskId;
 		}
 		
 		function goMoveBoard() {
@@ -183,7 +182,8 @@
 		}
 		
 		function goAddBoardReply() {
-			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=reply' + '&rootItemId=' + rootItemId + '&itemLevel=' + itemLevel;
+			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=reply' + '&rootItemId=' + rootItemId 
+								 + '&itemLevel=' + itemLevel + '&groupId=' + groupId + "&taskId=" + taskId;
 		}
 		
 	 	var nowZoom = 100;
@@ -288,7 +288,9 @@
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t98' /></th>
-						<td id="taskName" style="width: 50%"></td>
+						<td style="width: 50%">
+							<c:out value="${board.taskName ne null ? board.taskName : board.groupName}"></c:out>
+						</td>
 						<th><spring:message code='ezPMS.t119' /></th>
 						<td><c:out value="${fn:substring(board.writeDate, 0, 19)}"/></td>
 						

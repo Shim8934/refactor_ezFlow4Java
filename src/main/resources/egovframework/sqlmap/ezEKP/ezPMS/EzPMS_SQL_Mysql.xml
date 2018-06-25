@@ -2812,7 +2812,7 @@
 	]]>
 	</select>
 	
-	<select id="EzPMSDAO.checkIfExistPreTaskRel" parameterClass="map" resultClass="Integer">
+	<select id="EzPMSDAO.checkIfPreTaskRelExist" parameterClass="map" resultClass="Integer">
 	<![CDATA[
 		SELECT 
 			COUNT(*)
@@ -2825,6 +2825,37 @@
 		</isEqual>
 		<isEqual property="type" compareValue="group">
 			pregroup = #pretaskId#
+		</isEqual>
+	<![CDATA[	
+		AND 
+			tenant_id = #tenantId#		
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getLaggingAncestorGroupIds" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT 
+			G.ancester_group
+		FROM 
+			tbl_pms_pretaskrel PT
+		LEFT JOIN 
+			tbl_pms_task T
+		ON 
+			PT.task_id = T.task_id
+		LEFT JOIN 
+			tbl_pms_group G
+		ON 
+			IFNULL(PT.group_id, T.group_id) = G.group_id
+	]]>
+		<isEqual property="type" compareValue="task">
+			<iterate prepend="WHERE pretask in" property="pretaskId" open="(" conjunction="," close=")">
+				#pretaskId[]#
+			</iterate>
+		</isEqual>
+		<isEqual property="type" compareValue="group">
+			<iterate prepend="WHERE pregroup in" property="pretaskId" open="(" conjunction="," close=")">
+				#pretaskId[]#
+			</iterate>
 		</isEqual>
 	<![CDATA[	
 		AND 
@@ -3658,4 +3689,6 @@
 			t.GROUP_ID = g.GROUP_ID;
 	]]>
 	</select>
+	
+	
 </sqlMap>
