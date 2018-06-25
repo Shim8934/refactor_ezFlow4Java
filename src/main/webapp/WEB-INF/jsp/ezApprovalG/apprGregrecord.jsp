@@ -55,6 +55,8 @@
     var pDeptName		= arr_userinfo[5];
     var pDocID =""; 
     var pDocSN = "0";
+    var orgCompanyID = "";
+    
     window.onload = function () {
         if (window.dialogArguments != null) {
             var objWinDlgArgs = window.dialogArguments;
@@ -274,7 +276,7 @@
     }
     function openFileAttachUI() {
         try {
-            DivPopUpShow(570, 285, "/ezApprovalG/regRecordAttach.do?docID=" + pDocID);
+            DivPopUpShow(570, 285, "/ezApprovalG/regRecordAttach.do?docID=" + pDocID + "&orgCompanyID=" + orgCompanyID);
         }
         catch (e) {
             alert("openFileAttachUI()" + e.description);

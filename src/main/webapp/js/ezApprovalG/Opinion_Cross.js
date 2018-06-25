@@ -8,7 +8,8 @@
     		async : false,
     		url : "/ezApprovalG/opinionRequest.do",
     		data : {
-    			docID : pDocID
+    			docID : pDocID,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -357,7 +358,8 @@ function AddOpinionContent(Opstate, OpContent) {
                     			userID : pUserID,
                     			formID  : "",
                     			isUsed  : "",
-                    			mode     : ""
+                    			mode     : "",
+                    			orgCompanyID : orgCompanyID
                     		},
                     		success: function(text){
                     			result = text;
@@ -756,7 +758,7 @@ function autosaveOpinionXMLInfo() {
         }
 
         objXML = getOpinionListInfo();
-        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;
@@ -832,7 +834,7 @@ function saveHesoungOpinionXMLInfo() {
                 }
             }
             objXML = getOpinionListInfo();
-            xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+            xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
             xmlhttp.send(objXML);
 
             var RtnVal = xmlhttp.responseText;
@@ -897,7 +899,7 @@ function saveOpinionXMLInfo() {
         }
         objXML = getOpinionListInfo();
         var xmlhttp = new createXMLHttpRequest();
-        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;

@@ -3064,12 +3064,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return boardInfo;
 	}
 	
+	/* 2018-06-22 홍승비 - 포탈메인 커뮤니티 호출 companyID 구분 추가 */
 	public String addBestTable (LoginVO userInfo) throws Exception {
 		logger.debug("addBestTable started");
 
 		StringBuilder strData = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);

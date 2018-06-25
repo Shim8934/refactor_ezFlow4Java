@@ -384,6 +384,7 @@
 		        SelList.LoadFromID("DocList");
 		        var oArrRows = SelList.GetSelectedRows();
 		        var pCurSelRow = oArrRows[0];
+		        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		        if (pCurSelRow != null && oArrRows.length > 0) {
 		            if (GetBujaeFlag())
 		                return;
@@ -432,7 +433,7 @@
 		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
 		                else {
 	                        openLocation = "/ezApprovalG/contDocView.do";
-		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
+		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 		                }
 		                openwindow(openLocation, "", 880, 570);
 		            }
@@ -550,6 +551,8 @@
 		            var DocList = new ListView();
 		            DocList.LoadFromID("DocList");
 		            var oArrRows = DocList.GetSelectedRows();
+		            var pCurSelRow = oArrRows[0];
+			        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		            if (oArrRows.length > 0)
 		                openViewDocInfo();
 		            else {
@@ -569,7 +572,7 @@
 		            else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
+		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" + "&orgCompanyID=" + orgCompanyID;
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
@@ -1280,20 +1283,23 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>", "", "OPEN");
 		            return;
 		        }
-		        else
+		        else {
 		            pDocID = tr[0].getAttribute("DATA1");
+		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        }
 				
 		        //직인의뢰함에서 타입을 END로 주기위해
 		        var url;
 		        if (pListTypeValue == 7 || pListTypeValue == 8 || pListTypeValue == 9) {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;	
 		        } else {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID;
 		        }
 		        
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";

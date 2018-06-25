@@ -183,6 +183,8 @@
        			(creatorid = #v_USERID# or ( memberid = #v_USERID# and status = 1 ))
 			and
 				a.tenant_id = #v_TENANTID#
+			and
+				a.companyid = #v_COMPANYID#
         	order by groupname
 		]]>
 	</select>
@@ -225,13 +227,73 @@
 	       	where  
 	       		a.scheduleid = #v_SCHEDULEID#
 	       	and
-	       		a.tenant_id = #v_TENANTID#	
+	       		a.tenant_id = #v_TENANTID#	       	
+	       		
 		]]>
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
 		<![CDATA[
-			select 
+			select a.* from
+			(select 
+				scheduleid,
+				parentid,
+				ownerid,
+				ownername,
+				ownername2,
+				creatorid,
+				creatorname,
+				creatorname2,				
+				date_add(createdate, interval +#v_OFFSETMIN# minute) as createdate,
+				modifierid,
+				modifiername,
+				modifiername2,				
+				date_add(modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
+				scheduletype,
+				importance,
+				hasattendant,
+				hasattach,
+				hascomment,
+				isreadonly,
+				ispublic,
+				datetype,				
+				date_add(startdate, interval +#v_OFFSETMIN# minute) as startdate,				
+				date_add(enddate, interval +#v_OFFSETMIN# minute) as enddate,
+				repetition,
+				repetitiondelete,
+				title,
+				location,
+				contentpath,
+				'' as groupname
+        	from 
+        		tbl_schedule
+       		where  
+       			ownerid in ($v_INDILIST$)
+            and 
+            	(            		
+            		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
+            		or
+            		(ENDDATE >= #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
+            		or
+            		(startdate < #v_PSTARTDATE# and enddate >= #v_PENDDATE#) 
+            		or 
+            		(datetype='3')
+            	)
+            and
+            	tenant_id = #v_TENANTID#
+            ]]>
+            <isNotEmpty property="v_SEARCHTITLE">
+            <![CDATA[
+            and 
+            	title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="v_PKEYWORD">and $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
+        	order by startdate asc) a
+        	UNION
+        	<![CDATA[
+        	select b.* from
+        	(select 
 				scheduleid,
 				parentid,
 				ownerid,
@@ -265,6 +327,8 @@
         		tbl_schedule
        		where  
        			ownerid in ($v_PIDLIST$)
+       		and
+        		companyid = #v_COMPANYID#       		
             and 
             	(            		
             		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
@@ -285,7 +349,7 @@
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
-        	order by startdate asc
+        	order by startdate asc) b
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
@@ -301,6 +365,8 @@
         		creatorid = #v_USERID#
        		and
        			tenant_id = #v_TENANTID#
+       		and
+        		companyid = #v_COMPANYID#
         	order by groupname
 		]]>
 	</select>
@@ -322,6 +388,8 @@
              )a join tbl_usermaster b on a.memberid = b.cn and a.tenant_id = b.tenant_id
              where
              	b.tenant_id = #v_TENANTID#
+             and
+        		b.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
 		]]>
 	</select>
 	<!-- checked -->
@@ -351,6 +419,8 @@
              )a join tbl_usermaster b on a.memberid = b.cn and a.tenant_id = b.tenant_id
              where
              	b.tenant_id = #v_TENANTID#
+             and
+        		b.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
 		]]>
 	</select>
 	<!-- checked -->
@@ -409,7 +479,10 @@
             	</isNotEqual>
             and
 				tenant_id = #v_TENANTID#
-			order by description		
+			and
+        		b.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			order by description
+					
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.scheduleGetLunarUse" parameterClass="map" resultClass="String">		
@@ -448,7 +521,9 @@
         	where 
         		userid = #v_USERID#
         	and
-        		tenant_id = #v_TENANTID#	
+        		tenant_id = #v_TENANTID#
+        	and
+        		companyid = #v_COMPANYID#	
         	order by secretaryname							
 		]]>			
 	</select>
@@ -467,6 +542,8 @@
         		secretaryid = #v_CN#
         	and	
         		tenant_id = #v_TENANTID#
+        	and
+        		companyid = #v_COMPANYID#
 		]]>			
 	</select>
 	<!-- checked -->
@@ -484,6 +561,8 @@
        			usercn = #v_CN#
        		and
        			tenant_id = #v_TENANTID#
+       		and
+       			companyid = #v_COMPANYID#
 		]]>			
 	</select>
 	<!-- checked -->
@@ -501,6 +580,8 @@
        			a.cn = #v_CN#
        		and
        			a.tenant_id = #v_TENANTID#
+       		and
+       			b.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 		]]>			
 	</select>
 	<!-- checked -->
@@ -516,6 +597,9 @@
             	( status = 0 or status = 3 )
             and
             	tenant_id = #v_TENANTID#
+            and
+        		companyid = #v_COMPANYID#
+            
 		]]>			
 	</select>
 	<!-- checked -->
@@ -531,6 +615,9 @@
             	( status = 0 or status = 3 )
             and
             	a.tenant_id = #v_TENANTID#
+            and
+        		a.companyid = #v_COMPANYID#
+            
             	
 		]]>			
 	</select>
@@ -544,7 +631,10 @@
 	       	where  
 	       		scheduleid = #v_SCHEDULEID#
 	       	and
-	       		tenant_id = #v_TENANTID#	        
+	       		tenant_id = #v_TENANTID#	 
+	       	and
+        		companyid = #v_COMPANYID#
+	       	       
 		]]>			
 	</select>
 	<!-- checked -->
@@ -564,7 +654,10 @@
 	       		scheduleid = #v_SCHEDULEID#
 	       	and
 	       		tenant_id = #v_TENANTID#
+	       	and
+        		companyid = #v_COMPANYID#	       	
 	        order by attendantname
+	        
 		]]>			
 	</select>
 	<!-- checked -->
@@ -677,6 +770,8 @@
 				scheduleid = #v_SCHEDULEID#
 			and
 				tenant_id = #v_TENANTID#
+			and
+        		companyid = #v_COMPANYID#			
 		]]>
 	</select>
 	<!-- checked -->
@@ -701,7 +796,7 @@
         	and
         		( a.status = 0 or a.status = 3 )
         	and
-				a.tenant_id = #v_TENANTID#
+				a.tenant_id = #v_TENANTID#	
         	order by a.responsedate desc
 		]]>
 	</select>
@@ -724,7 +819,7 @@
 	        and
 	        	(status = 0 or status = 3)
 	        and
-	        	a.tenant_id = #v_TENANTID#
+	        	a.tenant_id = #v_TENANTID#	               
 	        order by groupname
 		]]>
 	</select>
@@ -741,7 +836,7 @@
 			where
 				scheduleid = #v_SCHEDULEID#
 			and
-				tenant_id = #v_TENANTID#
+				tenant_id = #v_TENANTID#	
 		]]>
 	</select>
 	<!-- checked -->	
@@ -750,11 +845,11 @@
 			insert into tbl_schedule(
 				parentid, 			ownerid, 			ownername, 					ownername2,			creatorid, 			creatorname,		creatorname2,		createdate,			modifierid,		modifiername,
 				modifiername2,		modifydate,			scheduletype,				importance,			hasattendant,		hasattach,			hascomment,			isreadonly,			ispublic,		datetype,	
-				startdate, 			enddate,	 		repetition,					repetitiondelete,	title,				location,			contentpath,		tenant_id
+				startdate, 			enddate,	 		repetition,					repetitiondelete,	title,				location,			contentpath,		tenant_id,			companyid
 			) values (
 				0,					#v_OWNERID#,		#v_OWNERNAME#,				#v_OWNERNAME2#,		#v_CREATORID#,		#v_CREATORNAME#,	#v_CREATORNAME2#,	utc_timestamp(),	#v_CREATORID#,	#v_CREATORNAME#,
 				#v_CREATORNAME2#,	utc_timestamp(),	#v_SCHEDULETYPE#,			#v_IMPORTANCE#,		#v_HASATTENDANT#,	#v_HASATTACH#,		'N',				'N',				#v_ISPUBLIC#,	#v_DATETYPE#,
-				#v_STARTDATE#,		#v_ENDDATE#,		ifnull(#v_REPETITION#, ''),	'',					#v_TITLE#,			ifnull(#v_LOCATION#, ''),				#v_CONTENTPATH#,	#v_TENANTID#	 
+				#v_STARTDATE#,		#v_ENDDATE#,		ifnull(#v_REPETITION#, ''),	'',					#v_TITLE#,			ifnull(#v_LOCATION#, ''),				#v_CONTENTPATH#,	#v_TENANTID#,   #v_COMPANYID#	 
 			)
    		]]>
 	</insert>
@@ -773,10 +868,10 @@
 		<![CDATA[
 			insert into tbl_attendant(
 				scheduleid,			attendantid,			attendantname, 			attendantname2,			attendantdeptname,		attendantdeptname2,
-				status,				tenant_id,				responsedate			
+				status,				tenant_id,				responsedate,			companyid			
 			) values (
 				#v_SCHEDULEID#,		#v_ATTENDANTID#,		#v_ATTENDANTNAME#,		#v_ATTENDANTNAME2#,		#v_ATTENDANTDEPTNAME#,	#v_ATTENDANTDEPTNAME2#,	
-				0,					#v_TENANTID#,			utc_timestamp()	
+				0,					#v_TENANTID#,			utc_timestamp(),		#v_COMPANYID#	
 			)
    		]]>
 	</insert>
@@ -784,9 +879,9 @@
 	<insert id="EzScheduleDAO.insertScheduleRepeDel" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedulerepetition_del(
-				scheduleid,			startdate, 				enddate,				tenant_id
+				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
 			) values (
-				#v_SCHEDULEID#,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#
+				#v_SCHEDULEID#,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
 			)
    		]]>
 	</insert>
@@ -804,9 +899,9 @@
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedulegroup(
-				groupid, 			groupname, 				creatorid, 				creatorname, 			creatorname2, 		description,		createdate,			tenant_id		
+				groupid, 			groupname, 				creatorid, 				creatorname, 			creatorname2, 		description,		createdate,			tenant_id,		companyid		
 			) values (
-				#v_GUID#,			#v_GROUPNAME#,			#v_USERID#,				#v_DISPLAYNAME#,		#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	utc_timestamp(),	#v_TENANTID#
+				#v_GUID#,			#v_GROUPNAME#,			#v_USERID#,				#v_DISPLAYNAME#,		#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	utc_timestamp(),	#v_TENANTID#,	#v_COMPANYID#
 			)
    		]]>
 	</insert>
@@ -824,9 +919,9 @@
 	<insert id="EzScheduleDAO.insertSecretary" parameterClass="map">
 		<![CDATA[
 			insert into tbl_secretary(
-				userid, 			username, 				username2, 				secretaryid, 			secretaryname, 		tenant_id		
+				userid, 			username, 				username2, 				secretaryid, 			secretaryname, 		tenant_id,		companyid		
 			) values (
-				#v_USERID#,			#v_DISPLAYNAME#,		#v_DISPLAYNAME2#,		#v_SECRETARYID#,		#v_SECRETARYNAME#,	#v_TENANTID#
+				#v_USERID#,			#v_DISPLAYNAME#,		#v_DISPLAYNAME2#,		#v_SECRETARYID#,		#v_SECRETARYNAME#,	#v_TENANTID#,	#v_COMPANYID#
 			)
    		]]>
 	</insert>
@@ -837,13 +932,13 @@
 				parentid, 			ownerid, 				ownername, 				ownername2, 			creatorid, 			creatorname, 		creatorname2, 
 				createdate, 		modifierid, 			modifiername, 			modifiername2, 			modifydate, 		scheduletype, 		importance, 			hasattendant, 
 				hasattach, 			hascomment, 			isreadonly, 			ispublic, 				datetype, 			startdate, 			enddate, 				repetition, 
-				repetitiondelete, 	title, 					location, 				contentpath,			tenant_id
+				repetitiondelete, 	title, 					location, 				contentpath,			tenant_id,			companyid	
 			) (
 			select
 				#v_SCHEDULEID#,		#v_ATTENDANTID#,		#v_ATTENDANTNAME#,		#v_ATTENDANTNAME2#,		creatorid, 			creatorname, 		creatorname2,
 				createdate, 		modifierid, 			modifiername, 			modifiername2, 			modifydate, 		scheduletype, 		importance, 			hasattendant,
 				hasattach, 			hascomment,				'Y',					ispublic, 				datetype, 			startdate, 			enddate, 				repetition, 
-				repetitiondelete, 	title,					location, 				contentpath,			tenant_id
+				repetitiondelete, 	title,					location, 				contentpath,			tenant_id,			companyid
 			from
 				tbl_schedule
 			where

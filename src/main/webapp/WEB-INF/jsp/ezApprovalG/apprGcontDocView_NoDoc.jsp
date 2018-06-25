@@ -47,6 +47,7 @@
 		//기록물 기본정보, 부가정보
 		var g_BInfoXml
 		var pDocSN = "1";
+		var orgCompanyID = "";
 		
 		window.onload = function () {
 		    g_arrayDIV = new Array(divTabDis1);

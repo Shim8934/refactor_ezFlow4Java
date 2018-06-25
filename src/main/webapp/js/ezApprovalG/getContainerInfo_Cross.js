@@ -591,6 +591,7 @@ function selFirstRow(Resultxml) {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
+        orgCompanyID = tr.getAttribute("ORGCOMPANYID");
         
         if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
@@ -713,7 +714,8 @@ function getDataInfo() {
 		url : pUrl,
 		data : {
 				docID : DocID,
-				mode  : "END"
+				mode  : "END",
+				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
 			getdoclistSub_after(xml);
@@ -773,7 +775,7 @@ function lvtDoclist_SelChange() {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
-
+        orgCompanyID =  tr.getAttribute("ORGCOMPANYID");
         if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
             DocState = GetAttribute(tr, "DATA12");
