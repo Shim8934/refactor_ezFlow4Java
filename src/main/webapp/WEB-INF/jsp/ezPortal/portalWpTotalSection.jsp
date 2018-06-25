@@ -326,7 +326,7 @@
 			        var count = 0;
 			        var mType;
 			        
-			        if (mode == "P") {
+			        if (mode == "T") {
 			        	//2018.02.05 김기하 #11421
 			        	mType = "16";
 			        } else {
