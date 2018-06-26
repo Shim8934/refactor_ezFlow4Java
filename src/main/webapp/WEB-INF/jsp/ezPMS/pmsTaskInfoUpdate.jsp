@@ -81,9 +81,12 @@ var taskId = "${taskDetails.taskId}";
 	 headManagerId = "<c:out value='${taskDetails.headManagerId}'/>";
 	 
 	 managerList = JSON.parse(managerList);
+	 originManagerList = managerList;
+	 
 	 if(groupTaskMember){
 		 groupTaskMember = JSON.parse(groupTaskMember);
 	 }
+	 
 	 applyList();
 	 initPreTaskName();
  });
@@ -274,11 +277,15 @@ function updateTaskInfo() {
 		 }
 		
 		//삭제 및 추가할 리스트를 받아옴.
-		var addDelList = getAddDelMemberList(managerList, participantList);
+		var canDel = checkDelGroupMember(managerList, participantList);
+		
+		if (!canDel) {
+			alert("<spring:message code='ezPMS.t301' />");
+			return;
+		}
 		
 		// 선행작업 지정 타입을 판단
 		if(pretaskId != "") {
-			
 			if(pretaskId.indexOf("t") != -1) {
 				pretaskId = pretaskId.substring(pretaskId.indexOf("t") + 1);
 				pretaskSetType = "task2group";
@@ -286,22 +293,21 @@ function updateTaskInfo() {
 				pretaskSetType = "group2group";
 			}
 		}
+		console.log(managerList);
 		
 		var data = {
-				groupName : taskName,
-				projectId : projectId,
-				groupId : parent.groupId,
-				overview	 : overview,
-				headManagerId : headManagerId,
-				managerList : managerList,
-				planStartDate : planStartDate,
-				planEndDate : planEndDate,
-				upperGroupId : groupId,
-				participantList : participantList,
-				pretaskId : pretaskId,
-				type : pretaskSetType,
-				addMemberList : addDelList.addMemberList,
-				delMemberList : addDelList.delMemberList
+			groupName : taskName,
+			projectId : projectId,
+			groupId : parent.groupId,
+			overview	 : overview,
+			headManagerId : headManagerId,
+			managerList : managerList,
+			planStartDate : planStartDate,
+			planEndDate : planEndDate,
+			upperGroupId : groupId,
+			participantList : participantList,
+			pretaskId : pretaskId,
+			type : pretaskSetType
 		}
 		
 		console.log(pretaskId);
@@ -323,26 +329,28 @@ function updateTaskInfo() {
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("<spring:message code='ezPMS.t208' />");
 			}
-		});
+		}); 
 	}
 	
-	function getAddDelMemberList(managerList, paricipantList){
-		//하위 업무들의 담당자 또는 참여자와 비교하여 삭제 , 추가자 선정.
-		var addMemberList = [];
+	function checkDelGroupMember(managers, participants){
+		//하위 업무들의 담당자가 있는지 확인
 		var delMemberList = [];
-		var tempList = [];
-		var remainList = [];
-		var newList = managerList.concat(participantList);
+		var newList = managers;
 		var list = {};
+		var flags = true;
+		var canDel = true;
 		
+		if (participants != undefined) {
+			newList = newList.concat(participants);
+		}
+		
+		console.log(newList);
 		//삭제, 유지, 추가를 분류
 		for(var i = 0; i < groupTaskMember.length; i++){
-			var flags = true;
 			newList.forEach(function(member, idx){
+				console.log(member);
 				if(groupTaskMember[i].userId === member.userId){
 					flags = false;
-					tempList.push(member.userId);
-					remainList.push(member)
 				}
 			})
 			if(flags){
@@ -350,16 +358,11 @@ function updateTaskInfo() {
 			}
 		}
 		
-		for(var i = 0; i < newList.length; i++){
-			if(tempList.indexOf(newList[i].userId) == -1){
-				addMemberList.push(newList[i]);
-			}
+		if (delMemberList.length > 0) {
+			canDel = false;
 		}
 		
-		list.addMemberList = addMemberList;
-		list.delMemberList = delMemberList;
-		
-		return list;
+		return canDel;
 	}
 }
 

@@ -583,4 +583,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<String> getLaggingAncestorGroupIds(Map<String, Object> map) {
 		return (List<String>) list("EzPMSDAO.getLaggingAncestorGroupIds", map);
 	}
+
+	public void deleteGroupMember(Map<String, Object> map) {
+		delete("EzPMSDAO.deleteGroupMember", map);
+		
+	}
 } 

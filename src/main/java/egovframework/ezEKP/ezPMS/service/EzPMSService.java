@@ -238,4 +238,6 @@ public interface EzPMSService {
 	public List<TaskMemberVO> getTaskMemberListInGroup(int tenantId, long groupId, String lang)  throws Exception;
 	
 	public List<Integer> getLaggingGroupIds(Map<String, Object> map);
+
+	public void deleteGroupMember(Long projectId, long groupId, int tenantId);
 }

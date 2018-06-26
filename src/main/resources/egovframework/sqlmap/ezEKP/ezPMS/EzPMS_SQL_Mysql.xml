@@ -3696,5 +3696,14 @@
 	]]>
 	</select>
 	
-	
+	<delete id="EzPMSDAO.deleteGroupMember">
+		<![CDATA[
+			DELETE FROM 
+				TBL_PMS_GROUPMEMBER 
+			WHERE	
+				GROUP_ID = #groupId#
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
 </sqlMap>

@@ -1037,7 +1037,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				ezPMSDAO.updateGroupDate(map);
 			}
 			
-//			deleteGroupMember();
+			//그룹 멤버 삭제 후 추가
+			deleteGroupMember(group.getProjectId(), group.getGroupId(), group.getTenantId());
+			addGroupMember(group.getGroupMember());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2755,5 +2757,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		List<TaskMemberVO> taskMemberList = ezPMSDAO.getTaskMemberListInGroup(map);
 		LOGGER.debug("[SERVICE] ezPMS getTaskMemberListInGroup Ended");
 		return taskMemberList;
+	}
+
+	@Override
+	public void deleteGroupMember(Long projectId, long groupId, int tenantId) {
+		LOGGER.debug("[SERVICE] ezPMS deleteGroupMember Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.deleteGroupMember(map);
+		LOGGER.debug("[SERVICE] ezPMS deleteGroupMember Started");
 	}
 }

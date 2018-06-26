@@ -106,7 +106,12 @@
 		   			}
 		   			
 		   			if (chkFlag) {
-		   				managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : type === "participants" ? 2 : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user"});
+		   				if (parent.originGroupId != undefined || parent.originGroupId != null) {
+		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : type === "participants" ? 2 : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user", "groupId" : parent.originGroupId});
+		   				} else {
+		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : type === "participants" ? 2 : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user"});
+		   				}
+		   				
 		   				authList.push({"userName" : userName, "userId" : receiverId});
 		   			} else {
 		   				alert("<spring:message code='ezPMS.t163' />");

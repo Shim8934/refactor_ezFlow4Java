@@ -674,13 +674,16 @@ public class EzPMSGWController2 {
 			
 			Long projectId = Long.parseLong(request.getParameter("projectId"));
 			
-			List<Map<String, Object>> managerList = (List<Map<String, Object>>) jsonParam.get("addMemberList");
-			List<Map<String, Object>> delMemberList = (List<Map<String, Object>>) jsonParam.get("delMemberList");
-			managerList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
-			List<ProjectGroupMemberVO> groupManagerList = new ArrayList<ProjectGroupMemberVO>();
+			List<Map<String, Object>> groupMembers = (List<Map<String, Object>>) jsonParam.get("managerList");
 			
-			for (int i = 0; i < managerList.size(); i++) {
-				String groupMemberId = (String)managerList.get(i).get("userId");
+			if (jsonParam.get("participantList") != null) {
+				groupMembers.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
+			}
+			
+			List<ProjectGroupMemberVO> groupMemberList = new ArrayList<ProjectGroupMemberVO>();
+			
+			for (int i = 0; i < groupMembers.size(); i++) {
+				String groupMemberId = (String)groupMembers.get(i).get("userId");
 				
 				ProjectGroupMemberVO groupMember = new ProjectGroupMemberVO();
 				groupMember.setTenantId(tenantId);
@@ -692,8 +695,10 @@ public class EzPMSGWController2 {
 				groupMember.setUserName2(member.getUserName2());
 				groupMember.setUserDeptname(member.getUserDeptname());
 				groupMember.setUserDeptname2(member.getUserDeptname2());
+				groupMember.setMemberRoleId(Integer.parseInt(groupMembers.get(i).get("memberRoleId").toString()));
+				groupMember.setGroupId(Long.parseLong(groupMembers.get(i).get("groupId").toString()));
 				
-				groupManagerList.add(groupMember);
+				groupMemberList.add(groupMember);
 			}
 			
 			String pretaskType   = request.getParameter("type");
@@ -775,7 +780,7 @@ public class EzPMSGWController2 {
 			groupInfo.setGroupName(request.getParameter("groupName"));
 			groupInfo.setGroupId(groupId);
 			groupInfo.setProjectId(Long.parseLong(request.getParameter("projectId")));
-			groupInfo.setGroupMember(groupManagerList);
+			groupInfo.setGroupMember(groupMemberList);
 			groupInfo.setOverview(request.getParameter("overview"));
 			groupInfo.setTenantId(info.getTenantId());
 			groupInfo.setUpperGroupId(Long.parseLong(request.getParameter("upperGroupId")));
