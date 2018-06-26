@@ -45,7 +45,15 @@ public class MApprovalGDocInfoVO {
 	private String urgentApproval;
 	/** 결재진행중  or 완료 여부*/
 	private String mode;
+	/** 회사아이디*/
+	private String companyID;
 	
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
 	public String getDocID() {
 		return docID;
 	}
