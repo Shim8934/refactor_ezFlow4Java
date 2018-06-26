@@ -189,6 +189,8 @@
 				A.tenantid = B.tenantid
 			WHERE
 				A.tenantid = #tenantID#
+			and
+        		A.companyid = #v_COMPANYID#
 		]]>
 
 		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
@@ -335,6 +337,9 @@
 				A.tenantid = B.tenantid
 			WHERE
 					A.tenantid = #tenantID#
+				
+				AND
+        			A.companyid = #v_COMPANYID#
 				AND
 						((A.creatorid = #userID# and A.tasktype = 1)
 					OR
@@ -388,6 +393,8 @@
 				A.tenantid = B.tenantid
 			WHERE
 				A.tenantid = #tenantID#
+			AND
+        		A.companyid = #v_COMPANYID#
 			AND
 				(A.creatorid = #userID# and ((A.tasktype = 2 OR A.tasktype = 3) OR ((A.tasktype = 5 OR A.tasktype = 6) AND A.totalrep != 0)))
 
@@ -445,6 +452,8 @@
 				A.tenantid = B.tenantid
 			WHERE
 				A.tenantid = #tenantID#
+			AND
+        		A.companyid = #v_COMPANYID#
 			AND
 				(
 						((A.creatorid = #userID#) AND (A.tasktype = 4 AND A.totalrep != 0))
@@ -507,6 +516,8 @@
 				A.tenantid = B.tenantid
 			WHERE
 				A.tenantid = #tenantID#
+			AND
+        		A.companyid = #v_COMPANYID#
 			AND
 				(
 					(A.creatorid = #userID# and ((A.tasktype = 2 or A.tasktype = 3 or A.tasktype = 1) or ((A.tasktype = 4 or A.tasktype = 5 or A.tasktype = 6) and A.totalrep != 0)))
@@ -583,7 +594,8 @@
 				memo,
 				repetition,
 				totalrep,
-				tenantid)
+				tenantid,
+				companyid)
 			VALUES
 		]]>
 		
@@ -618,7 +630,8 @@
 				#memo#,
 				#repetition#,
 				#totalrepetition#,
-				#tenantID#)
+				#tenantID#,
+				#v_COMPANYID#)
 			]]>
 		</isNull>
 		

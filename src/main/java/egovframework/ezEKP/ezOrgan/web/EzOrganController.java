@@ -69,8 +69,16 @@ public class EzOrganController {
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
         String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
+        String userCompanyID = userInfo.getCompanyID();
+        String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
         
-        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList);
+        if ((userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrganChk.length > 1)) {
+        	topID = adminOrganChk[0];
+        } else  if (!topID.equals(userCompanyID)) {
+        	topID = userCompanyID;
+        }
+        
+        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID);
         
         // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
         String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), tenantID);

@@ -1729,11 +1729,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList("", pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "\'\'", "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID());
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		
-		for(int j = 0; j < sList.size(); j++){			
+		for(int j = 0; j < sList.size(); j++){		
 			ScheduleInfoVO data = sList.get(j);
 			sb.append(commonUtil.getQueryResult(data));
 		}
