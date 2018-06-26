@@ -1044,8 +1044,8 @@ function searchProject() {
 		        <div class="shadow">
 		        </div>
 		    </div>
-	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
-		<table class="content" style="width:80%; margin-bottom:5px;">
+	<div id = "searchDiv" style="margin-bottom:40px; display:none;">
+		<table class="content" style="width:100%;">
 			<tbody>
 				<tr>
 					<th><spring:message code='ezPMS.t31' /> </th>
@@ -1065,7 +1065,9 @@ function searchProject() {
 				</tr>
 			</tbody>
 		</table>
-		<a class="imgbtn" onclick="searchProject()" style="margin-left:40%;"><span><spring:message code='ezPMS.t1' /></span></a>
+		<div class="newbtn_position">
+        	<a class="imgbtn" onclick="searchProject()"><span><spring:message code='ezPMS.t1' /></span></a>
+    	</div>
 	</div>
 	<div id = "prjectList">
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;"></span>

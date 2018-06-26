@@ -518,10 +518,9 @@
 .jstree-default > .jstree-container-ul .jstree-loading > .jstree-ocl {
   background: url("throbber.gif") center center no-repeat;
 }
-.jstree-default .jstree-file {
-  background: url("/images/ImgIcon/icon_approval.gif");
-  background-repeat: no-repeat;
-  margin-top : 3px;
+.jstree-default .jstree-file{
+    background:url(/images/ezPMS/icon_project.png) no-repeat;
+    margin-top:3px;
 }
 .jstree-default .jstree-folder {
   background: url("/images/OrganTree_cross/fldr.gif");

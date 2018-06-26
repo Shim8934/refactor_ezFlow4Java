@@ -33,25 +33,12 @@ var searchContent = "";
 var searchStatus = "";
 var logData = "";
 
-$(document).ready(function(){
-	CurrentHeight = $(window).height() - 100;
-	$("MailListRayer").css("height", CurrentHeight + "px");
-	$("#taskTree").css("height", CurrentHeight + 10 + "px");
-	$("#projectContent").css("height", CurrentHeight + "px");
-	$("#contentList").css("height", (CurrentHeight - 100) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-	$("#divList").css("height", (CurrentHeight - 150) + "px");
+$(document).ready(function() {
+	viewSetting();
 	
 	$(window).resize(function() {
-		CurrentHeight = $(window).height() - 100;
-		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + 10 + "px");
-		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-		$("#divList").css("height", (CurrentHeight - 150) + "px");
+		viewSetting();
 	});
-
 });
 
 $(function(){
@@ -173,9 +160,9 @@ function setContentTitle(taskName, totalCount) {
 		totalCount = 0;
 	}
 	
-	contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>";
+	contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>";
 	
-	$("#taskName").html(contentTitle);
+	$("#taskNameArea").html(contentTitle);
 }
 
 function selectedTR(elem) {
@@ -211,29 +198,6 @@ function selectedTR(elem) {
     overflow: hidden;
 }
 
-#searchArea {
-	float : right;
-	margin-top : 10px;
-	margin-right : 10px;
-}
-
-#searchId, #searchStatus {
-	height : 25px;
-	width : 87px;
-}
-
-#taskName {
-	margin-top : 10px;
-	margin-left : 10px;
-	overflow : hidden;
-}
-
-#iconLine {
-	margin-left: 10px;
-	margin-top: 5px;
-	height: 80px;
-}
-
 #contentList {
 	width : 98%;
 	margin-left : 1%;
@@ -258,28 +222,36 @@ function selectedTR(elem) {
 .listRow:hover {
 	background-color: rgb(244, 245, 245);
 }
+
+#taskNameArea {
+	width : 50%;
+	white-space : nowrap;
+	overflow : hidden;
+	text-overflow : ellipsis;
+}
 </style>
 </head>
 <body>
 <div id="taskTree"></div>
 <div id="projectArea">
 <div id="projectContent">
-	<div id="iconLine">
-		<div id="taskName"></div>
-		<div id="searchArea">
+	<div id="iconLine" class="mainbody" style="margin:0px;">
+		<h1 id="taskName"><div id="taskNameArea" style="display:inline-block"></div>
+		<span id="searchArea" style="float:right;font-weight:normal;color:black;">
 			<select id="searchId">
 				<option value="1" selected><spring:message code='ezPMS.t186' /></option>
 				<option value="2"><spring:message code='ezPMS.t188' /></option>
 			</select>
-			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}">
-			<a id="searchButton" href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="searchLogContent()" style="height:24px; margin-top:1px;"></a>
+			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top">
+                <a id="searchButton" href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onclick="searchComment()"></a>
 			<select id="searchStatus" onchange="searchLogStatus(this.value)">
 				<option value="0"><spring:message code='ezPMS.t14' /></option>
 				<option value="1"><spring:message code='ezPMS.t40' /></option>
 				<option value="2"><spring:message code='ezPMS.t110' /></option>
 				<option value="3"><spring:message code='ezPMS.t11' /></option>
 			</select>
-		</div>
+		</span>
+		</h1>
 	</div>
 	<div id="contentList" style="overflow:auto">
 	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">

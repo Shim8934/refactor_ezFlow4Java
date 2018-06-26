@@ -13,6 +13,7 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
@@ -91,13 +92,13 @@ $(function() {
 									<td style="width: 20px; cursor: default; text-align: center">
 										<c:choose>
 											<c:when test="${log.logStatus eq 1 }">
-												<span style="background-color:#8DFF1B;">&nbsp;<spring:message code='ezPMS.t40' />&nbsp;</span>
+												<span class="situation_registration">&nbsp;<spring:message code='ezPMS.t40' />&nbsp;</span>
 											</c:when>
 											<c:when test="${log.logStatus eq 2 }">
-												<span style="background-color:#ffff66;">&nbsp;<spring:message code='ezPMS.t110' />&nbsp;</span>
+												<span class="situation_modify">&nbsp;<spring:message code='ezPMS.t110' />&nbsp;</span>
 											</c:when>
 											<c:otherwise>
-												<span style="background-color:#FF7A1B;">&nbsp;<spring:message code='ezPMS.t11' />&nbsp;</span>
+												<span class="situation_delet">&nbsp;<spring:message code='ezPMS.t11' />&nbsp;</span>
 											</c:otherwise>
 										</c:choose>
 									</td>
