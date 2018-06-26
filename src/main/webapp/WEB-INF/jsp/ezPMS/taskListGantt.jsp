@@ -558,8 +558,8 @@
 	   			GanttMaster.prototype.changeTaskDeps = function (task) {
 	   				console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
 	   			  	
-	   				var taskDepends = task.depends; 
-	   				var preTask = ge.tasks[taskDepends - 1];		
+	   				var taskDepends = task.depends.split(",");
+	   				var preTask = ge.tasks[taskDepends[taskDepends.length - 1] - 1];		
 	   				var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
 	   			  	var taskDuration = task.duration;
 	   			  	var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
@@ -570,6 +570,13 @@
 	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepends - 1).find("input[name='name']").val();
 	   			  	var projectId = task.id.match(/p(\d+)/)[1];
 	   			    
+	   			  	if(taskId == null || preTaskId == null) {
+	   			  		alert("<spring:message code='ezPMS.t300' />");
+	   			  		location.reload();
+	   			  		throw "It is not allowed to set Group as Pretask";
+	   			  		return;
+	   			  	}
+	   			  	
 	   				/* var str = "";
 	   				
 	   				for(var key in task) {
@@ -598,16 +605,16 @@
 	   				
 
 	   			  	// 중복 선행작업 지정 막기
-	   			  	if(taskDepends.indexOf(",") != -1) {
+	   			  	/* if(taskDepends.indexOf(",") != -1) {
 	   				  	alert("<spring:message code='ezPMS.t297' />");
 	   					location.reload();
 	   				  	throw "multiple pretask error";
 	   				  	return;
-	   			  	}
+	   			  	} */
 	   			  	
-	   				var cnt = 0;
-	   				
 	   				// 중복 후행작업 지정 막기 
+	   				/* var cnt = 0;
+	   			
 	   			  	for(var i in ge.tasks) {
 	   					
 	   			  		if(ge.tasks[i].depends.split(",")[0] == taskDepends) {
@@ -620,7 +627,7 @@
 	   					location.reload();
 	   				  	throw "multiple pretask error";
 	   				  	return;
-	   				}
+	   				} */
 	   			    // ----------------
 	   				
 	   				
