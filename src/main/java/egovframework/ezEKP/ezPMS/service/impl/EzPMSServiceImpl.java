@@ -746,35 +746,70 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		ProjectTaskVO taskDetails = ezPMSDAO.getTaskDetails(param);
 		
-		if (taskDetails != null) {
-
-			String pretaskId = taskDetails.getPretask();
-			String pregroupId = taskDetails.getPregroup();
+		String pretaskIds = taskDetails.getPretask();
+		
+		if(pretaskIds != null && !pretaskIds.equals("")) {
+			String[] pretaskIdArr = pretaskIds.split(",");
 			
-			if(pretaskId != null || pregroupId != null) {
-				
-				Long projectId = taskDetails.getProjectId();
-				param.put("projectId", projectId);
-				
-				String pretaskAncesterIds[] = taskDetails.getPretaskAncesterGroupIds().split(",");	
-				
+			Long projectId = taskDetails.getProjectId();
+			param.put("projectId", projectId);
+			
+			List<String> pretaskFullNames = new ArrayList<String>();
+			List<String> pretaskNames = new ArrayList<String>();
+			
+			for(String pretaskId : pretaskIdArr) {
+				String pretaskFullName = "";
 				String pretaskName = "";
 				
-				for(int i = 1; i < pretaskAncesterIds.length; i++) {
-					param.put("groupId", pretaskAncesterIds[i]);
-					pretaskName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
+				param.put("taskId", pretaskId);	
+				ProjectTaskVO pretaskVO = ezPMSDAO.getTaskDetails(param);
+				
+				String[] pretaskAncesterGroup = pretaskVO.getAncesterGroup().split(",");
+				
+				for(int i = 1; i < pretaskAncesterGroup.length; i++) {
+					param.put("groupId", pretaskAncesterGroup[i]);
+					pretaskFullName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
 				}
 				
-				if(pretaskId != null) {
-					param.put("taskId", pretaskId);	
-					pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
-				} else {
-					pretaskName = pretaskName.substring(0, pretaskName.lastIndexOf(">") - 1);
-				}
-				
-				taskDetails.setPretaskName(pretaskName);
+				pretaskFullName += pretaskVO.getTaskName();
+				pretaskName = pretaskVO.getTaskName();
+				pretaskFullNames.add(pretaskFullName);
+				pretaskNames.add(pretaskName);
 			}
+			
+			taskDetails.setPretaskFullNames(pretaskFullNames);
+			taskDetails.setPretaskNames(pretaskNames);
 		}
+		
+//		if (taskDetails != null) {
+//
+//			String pretaskId = taskDetails.getPretask();
+//			String pregroupId = taskDetails.getPregroup();
+//			
+//			if(pretaskId != null || pregroupId != null) {
+//				
+//				Long projectId = taskDetails.getProjectId();
+//				param.put("projectId", projectId);
+//				
+//				String pretaskAncesterIds[] = taskDetails.getPretaskAncesterGroupIds().split(",");	
+//				
+//				String pretaskName = "";
+//				
+//				for(int i = 1; i < pretaskAncesterIds.length; i++) {
+//					param.put("groupId", pretaskAncesterIds[i]);
+//					pretaskName += ezPMSDAO.getGroupDetails(param).getGroupName() + " > ";
+//				}
+//				
+//				if(pretaskId != null) {
+//					param.put("taskId", pretaskId);	
+//					pretaskName += ezPMSDAO.getTaskDetails(param).getTaskName();
+//				} else {
+//					pretaskName = pretaskName.substring(0, pretaskName.lastIndexOf(">") - 1);
+//				}
+//				
+//				taskDetails.setPretaskName(pretaskName);
+//			}
+//		}
 		
 		LOGGER.debug("[SERVICE] getTaskDetails ended.");
 		return taskDetails;
@@ -2705,32 +2740,32 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return result;
 	}
 	
-	@Override
-	public List<Integer> getLaggingGroupIds(Map<String, Object> map) {
-		LOGGER.debug("[SERVICE] getLaggingGroupIds started.");
-		
-		Set<Integer> groupIdSet = new HashSet<Integer>();
-		
-		if(ezPMSDAO.checkIfPreTaskRelExist(map) > 0) {
-			List<String> groupIdsStr = ezPMSDAO.getLaggingAncestorGroupIds(map);
-			
-			Iterator<String> iterator = groupIdsStr.iterator();
-			
-			while(iterator.hasNext()) {
-				
-				String[] groupIdStrArr = iterator.next().split(",");
-				
-				for(String groupIdStr : groupIdStrArr) {
-					groupIdSet.add(Integer.parseInt(groupIdStr));
-				}
-			}
-		}
-		
-		List<Integer> groupIds = new ArrayList<Integer>(groupIdSet);
-		
-		LOGGER.debug("[SERVICE] getLaggingGroupIds ended.");
-		return groupIds;
-	}
+//	@Override
+//	public List<Integer> getLaggingGroupIds(Map<String, Object> map) {
+//		LOGGER.debug("[SERVICE] getLaggingGroupIds started.");
+//		
+//		Set<Integer> groupIdSet = new HashSet<Integer>();
+//		
+//		if(ezPMSDAO.checkIfPreTaskRelExist(map) > 0) {
+//			List<String> groupIdsStr = ezPMSDAO.getLaggingAncestorGroupIds(map);
+//			
+//			Iterator<String> iterator = groupIdsStr.iterator();
+//			
+//			while(iterator.hasNext()) {
+//				
+//				String[] groupIdStrArr = iterator.next().split(",");
+//				
+//				for(String groupIdStr : groupIdStrArr) {
+//					groupIdSet.add(Integer.parseInt(groupIdStr));
+//				}
+//			}
+//		}
+//		
+//		List<Integer> groupIds = new ArrayList<Integer>(groupIdSet);
+//		
+//		LOGGER.debug("[SERVICE] getLaggingGroupIds ended.");
+//		return groupIds;
+//	}
 
 	@Override
 	public void deletePreTaskRelInTask(Map<String, Object> map) {

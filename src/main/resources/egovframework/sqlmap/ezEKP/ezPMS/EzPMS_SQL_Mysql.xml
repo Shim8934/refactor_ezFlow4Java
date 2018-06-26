@@ -78,8 +78,6 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
     	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
-    	<result property="pretask"							column="PRETASK"					columnIndex="28"/>
-    	<result property="pregroup"							column="PREGROUP"					columnIndex="29"/>
     </resultMap>
     
     <resultMap id="projectGroupVOForDetail" class="ProjectGroupVO">
@@ -110,9 +108,6 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
     	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
-    	<result property="pretask"							column="PRETASK"					columnIndex="28"/>
-    	<result property="pregroup"							column="PREGROUP"					columnIndex="29"/>
-    	<result property="pretaskAncesterGroupIds"			column="PRE_ANCESTER_GROUP_IDS"		columnIndex="30"/>
     </resultMap>
     
     <resultMap class="ProjectGroupVO" id="groupScheduleVO">
@@ -180,8 +175,6 @@
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
     	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
     	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
-    	<result property="pregroup"							column="PREGROUP"					columnIndex="33"/>
-    	<result property="pretaskAncesterGroupIds"			column="PRE_ANCESTER_GROUP_IDS"		columnIndex="34"/>
     </resultMap>
     
      <resultMap id="projectTaskVOForList" class="ProjectTaskVO">
@@ -217,7 +210,6 @@
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
     	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
     	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
-    	<result property="pregroup"							column="PREGROUP"					columnIndex="33"/>
     </resultMap>
     
     <resultMap class="ProjectTaskVO" id="taskScheduleVO">
@@ -1231,8 +1223,7 @@
 				D.GROUP_NAME AS UPPER_GROUP_NAME,
 				B.PROJECT_NAME,
 				A.REAL_WORKINGDAY,
-				R.PRETASK,
-				R.PREGROUP
+				R.PRETASK
 			FROM 
 				tbl_pms_task A
 			JOIN 
@@ -1254,10 +1245,12 @@
 			ON
 				A.TASK_ID = E.TASK_ID
 			LEFT JOIN
-				TBL_PMS_PRETASKREL R
+				(	
+					SELECT task_id, group_concat(pretask separator ',') AS pretask
+					FROM tbl_pms_pretaskrel
+					GROUP BY task_id
+				) R
 			ON
-				A.PROJECT_ID = R.PROJECT_ID
-			AND
 				A.TASK_ID = R.TASK_ID
 			WHERE
 				A.TENANT_ID = #tenantId#
@@ -2042,9 +2035,7 @@
 				A.WORKINGDAY,
 				A.REST_DUEDAY,
 				P.PROJECT_NAME,
-				B.GROUP_NAME AS UPPER_GROUP_NAME,
-				R.PRETASK,
-				R.PREGROUP
+				B.GROUP_NAME AS UPPER_GROUP_NAME
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	
@@ -2055,12 +2046,6 @@
 				TBL_PMS_GROUP B
 			ON
 				A.UPPER_GROUP_ID = B.GROUP_ID
-			LEFT JOIN
-				TBL_PMS_PRETASKREL R
-			ON
-				A.PROJECT_ID = R.PROJECT_ID
-			AND
-				A.GROUP_ID = R.GROUP_ID
 		]]>
 			<isEqual property="location" compareValue="general">
 			JOIN
@@ -2158,9 +2143,7 @@
 				B.GROUP_NAME AS UPPER_GROUP_NAME,
 				P.PROJECT_NAME,
 				A.REAL_WORKINGDAY,
-				R.PRETASK,
-				R.PREGROUP,
-				PG.ancester_group AS PRE_ANCESTER_GROUP_IDS
+				R.PRETASK
 			FROM 
 				tbl_pms_task A
 			JOIN
@@ -2172,19 +2155,13 @@
 			ON	
 				A.PROJECT_ID = P.PROJECT_ID
 			LEFT JOIN
-				TBL_PMS_PRETASKREL R
+				(	
+					SELECT task_id, group_concat(pretask separator ',') AS pretask
+					FROM tbl_pms_pretaskrel
+					GROUP BY task_id
+				) R
 			ON
-				A.PROJECT_ID = R.PROJECT_ID
-			AND
 				A.TASK_ID = R.TASK_ID
-			LEFT JOIN 
-				tbl_pms_task PT
-			ON 
-				R.pretask = PT.task_id
-			LEFT JOIN
-				tbl_pms_group PG
-			ON 
-				IFNULL(PT.group_id, R.pregroup) = PG.group_id
 			WHERE
 				A.TASK_ID = #taskId#
 			AND
@@ -2874,6 +2851,12 @@
 		DELETE FROM TBL_PMS_PRETASKREL 
 		WHERE
 			TASK_ID = #taskId#
+	]]>
+		<isNotEmpty property="pretaskId">
+		AND
+			pretask = #pretaskId#
+		</isNotEmpty>
+	<![CDATA[	
 		AND 
 			tenant_id = #tenantId#
 		AND 
@@ -3147,10 +3130,7 @@
 				A.WORKINGDAY,
 				A.REST_DUEDAY,
 				P.PROJECT_NAME,
-				B.GROUP_NAME AS UPPER_GROUP_NAME,
-				R.PRETASK,
-				R.PREGROUP,
-				PG.ancester_group AS PRE_ANCESTER_GROUP_IDS
+				B.GROUP_NAME AS UPPER_GROUP_NAME
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	
@@ -3161,20 +3141,6 @@
 				TBL_PMS_GROUP B
 			ON
 				A.UPPER_GROUP_ID = B.GROUP_ID
-			LEFT JOIN
-				TBL_PMS_PRETASKREL R
-			ON
-				A.PROJECT_ID = R.PROJECT_ID
-			AND
-				A.GROUP_ID = R.GROUP_ID
-			LEFT JOIN 
-				tbl_pms_task PT
-			ON 
-				R.pretask = PT.task_id
-			LEFT JOIN
-				tbl_pms_group PG
-			ON 
-				IFNULL(PT.group_id, R.pregroup) = PG.group_id
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND

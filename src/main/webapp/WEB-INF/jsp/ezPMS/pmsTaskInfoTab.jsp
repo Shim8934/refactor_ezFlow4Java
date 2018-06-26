@@ -16,28 +16,57 @@
 <script type="text/javascript">
 	var taskDetails;
 	var nowStatus;
-	
+
 	$(function(){
 		taskDetails = ${taskDetails};
-		
-		var preTaskName = "${taskDetails.pretaskName}"
-			
-		if(preTaskName != "") {
-			$("#preTaskName").text(preTaskName);
-		} else {
-			$("#preTaskName").text('-');
-		}
 	});
 	
 	
 </script>
 <style type="text/css">
-.tg    {border-collapse:collapse;border-spacing:0;width:100%;}
-.tg tr {height: 30px;}
-.tg td {padding:5px 5px;border:1px solid #ccc;}
-.tg th {padding:5px 5px;border:1px solid #ccc;width:60px;}
-th.overviewTh{height:310px;}
-td.overviewTd{vertical-align:top;}
+	.tg    {border-collapse:collapse;border-spacing:0;width:100%;}
+	.tg tr {height: 30px;}
+	.tg td {padding:5px 5px;border:1px solid #ccc;}
+	.tg th {padding:5px 5px;border:1px solid #ccc;width:60px;}
+	th.overviewTh{height:310px;}
+	td.overviewTd{vertical-align:top;}
+	.tooltip {
+	    position: relative;
+	    display: inline-block;
+	}
+	
+	.tooltip .tooltiptext {
+	    visibility: hidden;
+	    width: 120px;
+	    background-color: #555;
+	    color: #fff;
+	    text-align: center;
+	    border-radius: 6px;
+	    padding: 5px 0;
+	    position: absolute;
+	    z-index: 1;
+	    bottom: 125%;
+	    left: 50%;
+	    margin-left: -60px;
+	    opacity: 0;
+	    transition: opacity 0.3s;
+	}
+	
+	.tooltip .tooltiptext::after {
+	    content: "";
+	    position: absolute;
+	    top: 100%;
+	    left: 50%;
+	    margin-left: -5px;
+	    border-width: 5px;
+	    border-style: solid;
+	    border-color: #555 transparent transparent transparent;
+	}
+	
+	.tooltip:hover .tooltiptext {
+	    visibility: visible;
+	    opacity: 1;
+	}
 </style>
 </head>
 <body class="taskInfoTabBody">
@@ -68,10 +97,35 @@ td.overviewTd{vertical-align:top;}
 	    <th class=""><spring:message code='ezPMS.t42' /></th>
 	    <td class="">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
 	  </tr>
-	  <tr>
+	  <c:if test="${target eq 'task' }">
+	   <tr>
 	    <th class=""><spring:message code='ezPMS.t181' /></th>
-	    <td id="preTaskName"></td>
+	    <td id="pretaskNames">
+	    	<c:choose>
+	    		<c:when test="${taskDetails.pretaskNames ne null}">
+	    			<c:forEach items="${taskDetails.pretaskNames}" var="pretaskName" varStatus="status">
+			    		<c:choose>
+			    			<c:when test="${status.count lt taskDetails.pretaskNames.size()}">
+			    				<span class="tooltip">
+			    					<c:out value="${pretaskName}, "/>
+			    					<span class="tooltiptext"><c:out value="${taskDetails.pretaskFullNames[status.index]}"/></span>
+			    				</span>
+			    			</c:when>
+			    			<c:otherwise>
+			    				<span class="tooltip">
+			    					<c:out value="${pretaskName}"/>
+			    					<span class="tooltiptext"><c:out value="${taskDetails.pretaskFullNames[status.index]}"/></span>
+			    				</span>
+			    			</c:otherwise>
+			    		</c:choose>
+			    	</c:forEach>
+	    		</c:when>
+	    		<c:otherwise>-</c:otherwise>
+	    	</c:choose>	
+	    </td>
 	  </tr>
+	  </c:if>
+	 
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t267' /></th>
 	    <td class="">${taskDetails.weight == null ? "-" : taskDetails.weight}</td>

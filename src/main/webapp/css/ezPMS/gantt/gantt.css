@@ -310,7 +310,7 @@ body{
 
 
 .ganttTable td.end{
-  border-right: 2px dotted #ddd;
+  border-right: 2px solid #ddd;
 }
 
 .ganttHead2 th.holy{
@@ -427,6 +427,8 @@ body{
 
 .taskEditRow input{
   background-color: transparent;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .taskEditRow.rowSelected td{
@@ -524,6 +526,9 @@ select.taskStatus{
   position: relative;
   top: 2px;
   margin-left: -18px;
+  vertical-align: top;
+  margin-left: -10px;
+  margin-top: 2px;
 }
 
 .isParent .exp-controller{

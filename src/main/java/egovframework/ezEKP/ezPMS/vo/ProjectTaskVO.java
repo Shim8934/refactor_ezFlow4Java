@@ -121,12 +121,11 @@ public class ProjectTaskVO {
     // 계획 진행률 
     private Float planProgress;
     
-    // 선행 작업의 조상 그룹 아이디
-    private String pretaskAncesterGroupIds;
-    
     // 조상 그룹을 포함한 선행 작업명
-    private String pretaskName;
+    private List<String> pretaskFullNames;
     
+    // 선행작업명
+    private List<String> pretaskNames;
     
     public Long getTaskId() {
         return taskId;
@@ -440,19 +439,19 @@ public class ProjectTaskVO {
 		this.planProgress = planProgress;
 	}
 
-	public String getPretaskAncesterGroupIds() {
-		return pretaskAncesterGroupIds;
+	public List<String> getPretaskNames() {
+		return pretaskNames;
 	}
 
-	public void setPretaskAncesterGroupIds(String pretaskAncesterGroupIds) {
-		this.pretaskAncesterGroupIds = pretaskAncesterGroupIds;
+	public void setPretaskNames(List<String> pretaskNames) {
+		this.pretaskNames = pretaskNames;
 	}
 
-	public String getPretaskName() {
-		return pretaskName;
+	public List<String> getPretaskFullNames() {
+		return pretaskFullNames;
 	}
 
-	public void setPretaskName(String pretaskName) {
-		this.pretaskName = pretaskName;
+	public void setPretaskFullNames(List<String> pretaskFullNames) {
+		this.pretaskFullNames = pretaskFullNames;
 	}
 }
