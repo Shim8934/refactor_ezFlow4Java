@@ -1559,6 +1559,7 @@
 	   			if(taskStatus !== ""){
 		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
 	   			}
+	   			document.querySelector("#pmsGanttZoomBtn select").value = ganttData.zoom;
 	   			
 	   			
 	   			if (userRoleId == 1) {
