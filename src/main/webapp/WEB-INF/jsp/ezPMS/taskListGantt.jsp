@@ -1168,15 +1168,31 @@
    					var pretask = ganttData.tasks[i].pretask;
    					var type = pretask ? pretask.match(/\w/)[0] : "";
 	   				if(pretask){ //선행작업이 있는 업무이면.
-	   					for(var j = 0; j < len; j++){
-	   						var task = ganttData.tasks[j];
-	   						//업무중에 선행작업 아이디와 타입이 일치하는 업무 또는 그룹을 찾음.
-   							if(task.id.indexOf(pretask) != -1 && task.type === type){
-   								//찾은 업무의 행번호를 넣어줌.
-		   						ganttData.tasks[i].depends = (j + 1) + "";
-		   						ganttData.tasks[i].pretaskName = task.name;
-   							}
+	   					
+	   					var pretaskArr = pretask.split(",");
+	   					var dependencies = "";
+	   					var pretaskNames = "";
+	   					
+	   					for(var k = 0; k < pretaskArr.length; k++) {
+	   						pretask = pretaskArr[k];
+	   						
+	   						for(var j = 0; j < len; j++){
+		   						var task = ganttData.tasks[j];
+		   						//업무중에 선행작업 아이디와 타입이 일치하는 업무 또는 그룹을 찾음.
+	   							if(task.id.indexOf(pretask) != -1 && task.type === type){
+	   								//찾은 업무의 행번호를 넣어줌.
+			   						dependencies += (j + 1) + ",";
+			   						pretaskNames += task.name;
+	   							}
+		   					}
 	   					}
+	   					
+	   					if(dependencies.lastIndexOf(",") != -1) {
+	   						dependencies = dependencies.substring(0, dependencies.lastIndexOf(","));
+	   					}
+	   					
+	   					ganttData.tasks[i].depends = dependencies;
+	   					ganttData.tasks[i].pretaskName = pretaskNames;
 	   				}
 	   			}
 	   			return ganttData;

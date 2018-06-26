@@ -320,7 +320,8 @@ public class EzPMSGWController2 {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
