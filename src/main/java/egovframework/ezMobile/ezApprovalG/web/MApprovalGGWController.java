@@ -220,6 +220,12 @@ public class MApprovalGGWController {
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
+			String companyID = request.getParameter("companyID");
+			
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
+			
 			String realPath = commonUtil.getRealPath(request);
 			String domain = request.getServerName() + ":" + request.getServerPort();
 	        String scheme = "http://";
@@ -267,6 +273,7 @@ public class MApprovalGGWController {
 			String type = request.getParameter("type");
 			String mode = request.getParameter("mode");
 			String serverName = request.getHeader("x-user-host");
+			String companyID = request.getParameter("companyID");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
@@ -278,6 +285,10 @@ public class MApprovalGGWController {
 			}
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
 			
 			//결재선
 			List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = mApprovalGService.getAprLineInfo(docId, type, userInfo);
@@ -323,6 +334,11 @@ public class MApprovalGGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
+			
 			//의견갯수
 			String commentCount = mApprovalGService.getOpinionCount(docId, type, userInfo);
 			
@@ -365,6 +381,11 @@ public class MApprovalGGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
+			
 			List<MApprovalGAttachInfoVO> approvalGAttachInfoVOs = mApprovalGService.getAttachList(docId, type, userInfo);
 			
 			result.put("status", "ok");
@@ -405,6 +426,11 @@ public class MApprovalGGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
+			
 			List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGService.getOpinionInfo(docId, type, userInfo);
 			
 			result.put("status", "ok");
@@ -441,6 +467,11 @@ public class MApprovalGGWController {
 			LOGGER.debug("opinionGB : " + opinionGB);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
 			
 			int resultCode = mApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "INSERT");
 			
@@ -486,6 +517,11 @@ public class MApprovalGGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
+			
 			mApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "UPDATE");
 			
 			result.put("status", "ok");
@@ -518,6 +554,11 @@ public class MApprovalGGWController {
 			LOGGER.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
 			
 			mApprovalGService.mSetOpinionInfo(docId, "", "", userInfo, "DELETE");
 			
@@ -720,6 +761,11 @@ public class MApprovalGGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
+			
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
 			
 			String rtnVal = "";
 			

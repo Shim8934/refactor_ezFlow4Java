@@ -437,10 +437,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		int sIndex = 0;
 		List<Integer> storeIndex = new ArrayList<Integer>(); 
 		for (ScheduleInfoVO s : resultList) {
-			/*System.out.println("인덱스번호 : " + sIndex + "해당 인덱스번호의 schduleid : " + s.getScheduleId());*/
 			if(s.getOwnerId().equals(companyID)){
 				if(s.getScheduleType().equals("2") && !s.getOwnerId().equals(deptID)){
-					/*logger.debug("아니 그래서 누가 자꾸 충돌나는데? : " + s.getOwnerId() + "   스케쥴타입  : "+s.getScheduleType()+"   부서아이디 : " + deptID + "    인덱스 번호 : " + sIndex);*/
 					storeIndex.add(sIndex);
 				}
 			}
@@ -451,7 +449,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		if(storeIndex != null || storeIndex.size() != 0){			
 			for (Integer i : storeIndex) {
-				/*logger.debug("지우는 인덱스 : " + i.intValue() + "   지우는 인덱스의 스케쥴번호 "+ resultList.get(i.intValue()).getScheduleId()+"    해당 인덱스의 ownerid와 schType : " + resultList.get(i.intValue()).getOwnerId() + "  ::  " + resultList.get(i.intValue()).getScheduleType());*/
 				resultList.remove(i.intValue());
 			}
 		}

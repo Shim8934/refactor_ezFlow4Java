@@ -137,7 +137,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		StringBuilder rootFolderXML = new StringBuilder();
-
+		
 		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		for (int i=0; i < list.size(); i++) {

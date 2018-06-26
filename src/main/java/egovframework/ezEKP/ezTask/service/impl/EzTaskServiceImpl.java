@@ -161,7 +161,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	@Override
-	public void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String fileNames, String fileSizes, String offset, int tenantID) throws Exception {
+	public void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String fileNames, String fileSizes, String offset, int tenantID, String companyID) throws Exception {
 		logger.debug("taskSave started.");
 		logger.debug("contentPath = " + taskInfoVO.getContentPath());
 		
@@ -199,7 +199,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		if (taskID.equals("")) {
 			/* task write */
 			taskInfoVO.setTaskStatus(1);
-			taskID = insertTask(taskInfoVO, offset, tenantID);
+			taskID = insertTask(taskInfoVO, offset, tenantID, companyID);
 			
 		} else {
 			/* task edit */
@@ -461,7 +461,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	
 
 	@Override
-	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception {
+	public List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset,String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID, String companyID) throws Exception {
 		logger.debug("getTaskList started.");
 		logger.debug("userID : " + userID + " | startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass + " | taskStatusCount : " + taskStatusCount + " | pSelectTab : " + pSelectTab);
 
@@ -493,6 +493,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		map.put("today", utcTime);
+		map.put("v_COMPANYID", companyID);
 
 		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map);
 		logger.debug("--------------------------------------------------------------");
@@ -857,7 +858,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, String taskStatusCount, String pSelectTab, int tenantID) throws Exception {
+	public String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, String taskStatusCount, String pSelectTab, int tenantID, String companyID) throws Exception {
 		logger.debug("getTaskCount started.");
 		logger.debug("userID = " + userID + " || type = " + type + " || filter = " + filter + " || chkValue = " + chkValue);
 				
@@ -879,6 +880,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);
 		map.put("taskStatusCount", taskStatusCount);
 		map.put("today", utcTime);
+		map.put("v_COMPANYID", companyID);
 		
 		if (pSelectTab.equals("taskprog")) {			
 			cnt = ezTaskDAO.getTaskCount(map);
@@ -976,7 +978,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 	
 	/** 업무작성 */
-	private String insertTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
+	private String insertTask(TaskInfoVO vo, String offset, int tenantID, String companyID) throws Exception {
 		logger.debug("insertTask started.");
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -1011,6 +1013,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("repetition", vo.getRepetition());
 		map.put("totalrepetition", vo.getTotalRep());
 		map.put("tenantID", tenantID);
+		map.put("v_COMPANYID", companyID);
 		
 		String taskID = ezTaskDAO.insertTask(map);
 		
