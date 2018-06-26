@@ -25,6 +25,8 @@ public class KlibUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlibUtil.class);
 
 	private static final Cipher CIPHER;
+	
+	private static final int DEBUG_BYTE_SIZE = 16;
 
 	static {
 		boolean loadSuccess = false;
@@ -105,11 +107,11 @@ public class KlibUtil {
 	public byte[] encrypt(byte[] originBytes) throws Exception, UnsatisfiedLinkError {
 		LOGGER.debug("encrypt started.");
 		byte[] result = CIPHER.encrypt(originBytes);
-		
+
 		debugBytes("origin bytes", originBytes);
 		debugBytes("encrypted bytes", result);
 		LOGGER.debug("encrypt ended.");
-		
+
 		return result;
 	}
 
@@ -124,18 +126,20 @@ public class KlibUtil {
 	public byte[] decrypt(byte[] encryptedBytes) throws Exception, UnsatisfiedLinkError {
 		LOGGER.debug("decrypt started.");
 		byte[] result = CIPHER.decrypt(encryptedBytes);
-		
+
 		debugBytes("encrypted bytes", encryptedBytes);
 		debugBytes("decrypted bytes", result);
 		LOGGER.debug("decrypt ended.");
-		
+
 		return result;
 	}
 
 	private void debugBytes(String byteArrayName, byte[] bytes) {
-		byte[] ellipsisBytes = new byte[20];
-		System.arraycopy(bytes, 0, ellipsisBytes, 0, ellipsisBytes.length);
+		boolean isGreaterThanEllipsis = bytes.length > DEBUG_BYTE_SIZE;
 
-		LOGGER.debug("{}: {}…, to string: {}…", byteArrayName, DatatypeConverter.printHexBinary(ellipsisBytes), new String(ellipsisBytes));
+		byte[] ellipsisBytes = new byte[isGreaterThanEllipsis ? bytes.length : DEBUG_BYTE_SIZE];
+		System.arraycopy(bytes, 0, ellipsisBytes, 0, DEBUG_BYTE_SIZE);
+
+		LOGGER.debug(isGreaterThanEllipsis ? "{}: {}…, to string: {}…" : "{}: {}, to string: {}", byteArrayName, DatatypeConverter.printHexBinary(ellipsisBytes), new String(ellipsisBytes));
 	}
 }
