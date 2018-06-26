@@ -1507,6 +1507,10 @@ public class EzPMSGWController {
 						projectTaskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 						
 						ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
+						
+						Long groupId = Long.parseLong(request.getParameter("groupId"));
+						
+						ezPMSService.updateGroupDate(groupId, tenantId, companyId);
 					} else {
 						//프로젝트 group내의 모든 task의 시작날짜와 끝날짜 update
 						long groupId = taskId;

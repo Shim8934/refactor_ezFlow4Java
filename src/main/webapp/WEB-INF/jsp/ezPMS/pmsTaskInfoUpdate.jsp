@@ -15,29 +15,66 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 
 <style type="text/css">
-.textInput {
-	width : 100%;
-}
-.headerDiv {
-    width: 150px;
-    float: right;
-    text-align: center;
-    margin-top: 7px;
-}
-
-th a.imgbtn {
-	width: 74px;
-	text-align: center;
-}
-
-#overview {
-    height: 154px;
-    width: 97.8%;
-    resize: none;
-    margin: 3px 1px 0px 1px;
-    resize: none;
-}
-
+	.textInput {
+		width : 100%;
+	}
+	.headerDiv {
+	    width: 150px;
+	    float: right;
+	    text-align: center;
+	    margin-top: 7px;
+	}
+	
+	th a.imgbtn {
+		width: 74px;
+		text-align: center;
+	}
+	
+	#overview {
+	    height: 154px;
+	    width: 97.8%;
+	    resize: none;
+	    margin: 3px 1px 0px 1px;
+	    resize: none;
+	}
+	
+	.tooltip {
+	    position: relative;
+	    display: inline-block;
+	}
+	
+	.tooltip .tooltiptext {
+	    visibility: hidden;
+	    width: 120px;
+	    background-color: #555;
+	    color: #fff;
+	    text-align: center;
+	    border-radius: 6px;
+	    padding: 5px 0;
+	    position: absolute;
+	    z-index: 1;
+	    bottom: 125%;
+	    left: 50%;
+	    margin-left: -60px;
+	    opacity: 0;
+	    transition: opacity 0.3s;
+	}
+	
+	.tooltip .tooltiptext::after {
+	    content: "";
+	    position: absolute;
+	    top: 100%;
+	    left: 50%;
+	    margin-left: -5px;
+	    border-width: 5px;
+	    border-style: solid;
+	    border-color: #555 transparent transparent transparent;
+	}
+	
+	.tooltip:hover .tooltiptext {
+	    visibility: visible;
+	    opacity: 1;
+	}
 </style>
 <script>
 var projectId = "<c:out value='${taskDetails.projectId}'/>";
@@ -85,12 +122,13 @@ var taskId = "${taskDetails.taskId}";
 		 groupTaskMember = JSON.parse(groupTaskMember);
 	 }
 	 applyList();
-	 initPreTaskName();
+	 initpretaskNames();
  });
  
-function initPreTaskName() {
-	var preTaskName = $("#preTaskName", parent.document.getElementById("FBoard_ifrm").contentDocument).text();
-	$("#preTaskName").text(preTaskName);
+function initpretaskNames() {
+	var pretaskNames = $("#pretaskNames", parent.document.getElementById("FBoard_ifrm").contentDocument).html();
+		
+	$("#pretaskNames").html(pretaskNames);
 }
 
 function openMemberList(type) {
@@ -363,6 +401,12 @@ function updateTaskInfo() {
 	}
 }
 
+function initPreTask() {
+	$("#pretaskNames").text('-');
+	pretaskId = "";
+	pretaskSetType = "initPretask";
+}
+
 </script>
 </head>
 <body class="popup">
@@ -399,8 +443,13 @@ function updateTaskInfo() {
 						</td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" onclick="openPreTaskTree()"><span><spring:message code='ezPMS.t181' /></span></a></th>
-						<td id="preTaskName"></td>
+						<th><spring:message code='ezPMS.t181' /></th>
+						<td>
+							<span id="pretaskNames" style="line-height: 30px;"></span>
+							<a class="imgbtn" onclick="initPreTask()" style="float: right; margin-top: 4px;">
+								<span><spring:message code='ezPMS.t295' /></span>
+							</a>
+						</td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t267' /></th>
@@ -434,10 +483,6 @@ function updateTaskInfo() {
 						<td style="height:30px;" id="upperGroup">
 							<c:out value="${taskDetails.upperGroupName == null ? '-' : taskDetails.upperGroupName}"/>
 						</td>
-					</tr>
-					<tr>
-						<th><a class="imgbtn" onclick="openPreTaskTree()"><span><spring:message code='ezPMS.t181' /></span></a></th>
-						<td id="preTaskName"></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t88' /></th>

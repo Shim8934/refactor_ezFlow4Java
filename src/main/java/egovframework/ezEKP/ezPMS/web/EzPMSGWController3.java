@@ -1048,4 +1048,32 @@ public class EzPMSGWController3 {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/" + pretaskId + "] ended");
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/preTasks/{preTaskId}", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deletePreTaskRel(@PathVariable long taskId, @PathVariable int preTaskId, @RequestBody JSONObject jsonParam, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/pretasks/" + preTaskId + "] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.remove("userId"));
+			jsonParam.put("tenantId", info.getTenantId());
+			
+			ezPMSService.deletePreTaskRelInTask(jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/pretasks/" + preTaskId + "] ended");	
+		return result;
+	}
 }

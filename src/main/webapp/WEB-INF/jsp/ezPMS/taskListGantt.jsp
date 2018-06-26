@@ -735,7 +735,179 @@
 
 	   			  //prof.stop();
 	   			};
+	   			
+	   			Ganttalendar.prototype.drawLink = function (from, to, type) {
+	   			  //console.debug("drawLink")
+	   			  var self = this;
+	   			  var peduncolusSize = 10;
 
+	   			  /**
+	   			   * Given an item, extract its rendered position
+	   			   * width and height into a structure.
+	   			   */
+	   			  function buildRectFromTask(task) {
+	   			    var self=task.master.gantt;
+	   			    var editorRow = task.rowElement;
+	   			    var top = editorRow.position().top + editorRow.offsetParent().scrollTop();
+	   			    var x = Math.round((task.start - self.startMillis) * self.fx);
+	   			    var rect = {left: x, top: top + self.taskVertOffset, width: Math.max(Math.round((task.end - task.start) * self.fx),1), height: self.taskHeight};
+	   			    return rect;
+	   			  }
+
+	   			  /**
+	   			   * The default rendering method, which paints a start to end dependency.
+	   			   */
+	   			  function drawStartToEnd(from, to, ps) {
+	   			    var svg = self.svg;
+
+	   			    //this function update an existing link
+	   			    function update() {
+	   			      var group = $(this);
+	   			      var from = group.data("from");
+	   			      var to = group.data("to");
+
+	   			      var rectFrom = buildRectFromTask(from);
+	   			      var rectTo = buildRectFromTask(to);
+
+	   			      var fx1 = rectFrom.left;
+	   			      var fx2 = rectFrom.left + rectFrom.width;
+	   			      var fy = rectFrom.height / 2 + rectFrom.top;
+
+	   			      var tx1 = rectTo.left;
+	   			      var tx2 = rectTo.left + rectTo.width;
+	   			      var ty = rectTo.height / 2 + rectTo.top;
+
+
+	   			      var tooClose = tx1 < fx2 + 2 * ps;
+	   			      var r = 5; //radius
+	   			      var arrowOffset = 5;
+	   			      var up = fy > ty;
+	   			      var fup = up ? -1 : 1;
+
+	   			      var prev = fx2 + 2 * ps > tx1;
+	   			      var fprev = prev ? -1 : 1;
+
+	   			      var image = group.find("image");
+	   			      var p = svg.createPath();
+
+	   			      if (tooClose) {
+	   			        var firstLine = fup * (rectFrom.height / 2 - 2 * r + 2);
+	   			        p.move(fx2, fy)
+	   			          .line(ps, 0, true)
+	   			          .arc(r, r, 90, false, !up, r, fup * r, true)
+	   			          .line(0, firstLine, true)
+	   			          .arc(r, r, 90, false, !up, -r, fup * r, true)
+	   			          .line(fprev * 2 * ps + (tx1 - fx2), 0, true)
+	   			          .arc(r, r, 90, false, up, -r, fup * r, true)
+	   			          .line(0, (Math.abs(ty - fy) - 4 * r - Math.abs(firstLine)) * fup - arrowOffset, true)
+	   			          .arc(r, r, 90, false, up, r, fup * r, true)
+	   			          .line(ps, 0, true);
+	   			        image.attr({x:tx1 - 5, y:ty - 5 - arrowOffset});
+
+	   			      } else {
+	   			        p.move(fx2, fy)
+	   			          .line((tx1 - fx2) / 2 - r, 0, true)
+	   			          .arc(r, r, 90, false, !up, r, fup * r, true)
+	   			          .line(0, ty - fy - fup * 2 * r + arrowOffset, true)
+	   			          .arc(r, r, 90, false, up, r, fup * r, true)
+	   			          .line((tx1 - fx2) / 2 - r, 0, true);
+	   			        image.attr({x:tx1 - 5, y:ty - 5 + arrowOffset});
+	   			      }
+
+	   			      group.find("path").attr({d:p.path()});
+	   			    }
+
+
+	   			    // create the group
+	   			    var group = svg.group(self.linksGroup, "" + from.id + "-" + to.id);
+	   			    svg.title(group, from.name + " -> " + to.name);
+
+	   			    var p = svg.createPath();
+
+	   			    //add the arrow
+	   			    svg.image(group, 0, 0, 5, 10, self.master.resourceUrl +"linkArrow.png");
+	   			    //create empty path
+	   			    svg.path(group, p, {class:"taskLinkPathSVG"});
+
+	   			    //set "from" and "to" to the group, bind "update" and trigger it
+	   			    var jqGroup = $(group).data({from:from, to:to }).attr({from:from.id, to:to.id}).on("update", update).trigger("update");
+
+	   			    if (self.showCriticalPath && from.isCritical && to.isCritical)
+	   			      jqGroup.addClass("critical");
+
+	   			    jqGroup.addClass("linkGroup");
+	   			    return jqGroup;
+	   			  }
+
+
+	   			  /**
+	   			   * A rendering method which paints a start to start dependency.
+	   			   */
+	   			  function drawStartToStart(from, to) {
+	   			    console.error("StartToStart not supported on SVG");
+	   			    var rectFrom = buildRectFromTask(from);
+	   			    var rectTo = buildRectFromTask(to);
+	   			  }
+
+	   			  var link;
+	   			  // Dispatch to the correct renderer
+	   			  if (type == 'start-to-start') {
+	   			    link = drawStartToStart(from, to, peduncolusSize);
+	   			  } else {
+	   			    link = drawStartToEnd(from, to, peduncolusSize);
+	   			  }
+
+	   			  // in order to create a dependency you will need permissions on both tasks
+	   			  if (this.master.permissions.canWrite || ( from.canWrite && to.canWrite)) {
+	   			    link.click(function (e) {
+	   			      var el = $(this);
+	   			      e.stopPropagation();// to avoid body remove focused
+	   			      self.element.find("[class*=focused]").removeClass("focused");
+	   			      $(".ganttSVGBox .focused").removeClass("focused");
+	   			      var el = $(this);
+	   			      if (!self.resDrop)
+	   			        el.addClass("focused");
+	   			      self.resDrop = false; //hack to avoid select
+
+	   			      $("body").off("click.focused").one("click.focused", function () {
+	   			        $(".ganttSVGBox .focused").removeClass("focused");
+	   			      })
+
+	   			    });
+	   			    
+					
+	   				
+	   			    // 삭제 처리 위해 추가
+	   			    link.dblclick(function() {
+	   			    	
+	   			    	var el = $(this);
+	   			    	var pretaskId = el.attr("from").match(/t(\d+)/) != null? el.attr("from").match(/t(\d+)/)[1] : null;
+	   			    	var taskId = el.attr("to").match(/t(\d+)/) != null? el.attr("to").match(/t(\d+)/)[1] : null;
+	   			    	
+	   			    	if(confirm("<spring:message code='ezPMS.t107' />") == true) {
+	   			    		deletePretaskRel(pretaskId, taskId);
+	   			    	}
+	   			    })
+	   			  }
+	   			};
+	   		}
+	   		
+	   		function deletePretaskRel(pretaskId, taskId) {
+	   			var data = {
+	   					pretaskId : pretaskId,
+	   					taskId : taskId
+	   			}
+
+	   			$.ajax({
+	   				type : "DELETE",
+	   				data : JSON.stringify(data),
+	   				dataType: "text",
+	   				contentType: "application/json; charset=UTF-8",
+	   				url : "/ezPMS/deletePretaskRel.do",
+	   				success : function(result) {
+	   					location.reload();
+	   				}
+	   			});
 	   		}
 	   		
 	   		function addPreTaskRel (projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, taskName, preTaskRowName, groupId, preGroupId) {
@@ -761,6 +933,8 @@
 	   			var data = {
 	   					projectId : projectId,
 	   					taskId : taskId,
+	   					// task가 속한 group의 Id
+	   					groupId : groupId, 
 	   					preTaskId : preTaskId,
 	   					pretaskEndDate : pretaskEndDate,
 	   					taskDuration : taskDuration,
@@ -1402,6 +1576,13 @@
 	   				$("#pmsGanttRowNewBtn").css("display", "");
 	   				$("#pmsGanttRowDelBtn").css("display", "");
 	   			}
+	   			
+	   			setTimeout(function() {
+	   				$("#workSpace #linksGroup .taskLinkPathSVG").dblclick(function() {
+		   				alert("까꿍");
+		   			})
+	   			}, 100);
+	   			
 	   		})
 
 	   		function getMemberSchedule() {

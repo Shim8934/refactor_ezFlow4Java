@@ -987,4 +987,24 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS checkIfExistPreTaskRel ended");
 		return "json";
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezPMS/deletePretaskRel.do")
+	public String deletePretaskRel(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS deletePretaskRel started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		jsonParam.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezPMS/tasks/" + jsonParam.get("taskId") + "/preTasks/" + jsonParam.get("pretaskId");
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, request, "delete", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("data", "success");
+		}
+		
+		LOGGER.debug("ezPMS deletePretaskRel ended");
+		return "json";
+	}
 }

@@ -661,8 +661,6 @@ Ganttalendar.prototype.drawLink = function (from, to, type) {
 
     });
   }
-
-
 };
 
 Ganttalendar.prototype.redrawLinks = function () {

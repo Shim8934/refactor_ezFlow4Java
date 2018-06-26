@@ -2851,6 +2851,12 @@
 		DELETE FROM TBL_PMS_PRETASKREL 
 		WHERE
 			TASK_ID = #taskId#
+	]]>
+		<isNotEmpty property="pretaskId">
+		AND
+			pretask = #pretaskId#
+		</isNotEmpty>
+	<![CDATA[	
 		AND 
 			tenant_id = #tenantId#
 		AND 

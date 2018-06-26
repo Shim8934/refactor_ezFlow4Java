@@ -97,7 +97,8 @@
 	    <th class=""><spring:message code='ezPMS.t42' /></th>
 	    <td class="">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
 	  </tr>
-	  <tr>
+	  <c:if test="${target eq 'task' }">
+	   <tr>
 	    <th class=""><spring:message code='ezPMS.t181' /></th>
 	    <td id="pretaskNames">
 	    	<c:choose>
@@ -123,6 +124,8 @@
 	    	</c:choose>	
 	    </td>
 	  </tr>
+	  </c:if>
+	 
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t267' /></th>
 	    <td class="">${taskDetails.weight == null ? "-" : taskDetails.weight}</td>
