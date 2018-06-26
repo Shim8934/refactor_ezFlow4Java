@@ -455,7 +455,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		return "OK";
 	}
 	
-	@RequestMapping(value="/ezEmail/readExternalRecipient")
+	@RequestMapping(value="/ezEmail/readExternalRecipient.do")
 	@ResponseBody
 	public String readExternalRecipient(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("readExternalRecipient started.");
@@ -475,7 +475,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		
 		String[] readInfoArray = recipientReadKey.split("/", -1);
 		
-		if(readInfoArray.length != 4) {
+		if (readInfoArray.length != 4) {
 			logger.debug("readInfoArray length is not 4");
 			logger.debug("readExternalRecipient ended.");
 			

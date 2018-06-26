@@ -3134,7 +3134,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        
 		        // 추적(외부 수신확인)
 		        if (replyReadTime.equals("2")) {
-		        	message.setHeader("X-Jmocha-Ext-Receipt", "1");
+		        	message.setHeader("X-JMocha-Ext-Receipt", "1");
 		        }
 		        
 		        //SentDate 설정
