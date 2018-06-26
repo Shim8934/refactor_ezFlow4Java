@@ -687,7 +687,55 @@
 	   			  //Enhancing the function to perform own operations
 	   			  this.master.element.trigger('gantt.task.afterupdate.event', task);
 	   			  //profiler.stop();
+	   			  
 	   			};
+	   			
+	   			//그래프쪽 디자인 수정하기 위해 재정의
+	   			Ganttalendar.prototype.redrawTasks = function (drawAll) {
+	   			  //console.debug("redrawTasks ");
+	   			  var self=this;
+	   			  //var prof = new Profiler("ganttRedrawTasks");
+
+	   			  self.element.find("table.ganttTable").height(self.master.editor.element.height());
+
+	   			  var collapsedDescendant = this.master.getCollapsedDescendant();
+
+	   			  var startRowAdd=self.master.firstScreenLine-self.master.rowBufferSize;
+	   			  var endRowAdd =self.master.firstScreenLine+self.master.numOfVisibleRows+self.master.rowBufferSize;
+
+	   			  $("#linksGroup,#tasksGroup").empty();
+	   			  var gridGroup=$("#gridGroup").empty().get(0);
+
+	   			  //add missing ones
+	   			  var row=0;
+	   			  self.master.firstVisibleTaskIndex=-1;
+	   			  for (var i=0;i<self.master.tasks.length;i++){
+	   			    var task=self.master.tasks[i];
+	   			    if (collapsedDescendant.indexOf(task)>=0){
+	   			      continue;
+	   			    }
+	   			    if (drawAll || (row>=startRowAdd && row<endRowAdd)) {
+	   			    this.drawTask(task);
+	   			      self.master.firstVisibleTaskIndex=self.master.firstVisibleTaskIndex==-1?i:self.master.firstVisibleTaskIndex;
+	   			      self.master.lastVisibleTaskIndex = i;
+	   			    }
+	   			    row++
+	   			  }
+
+	   			  //creates rows grid
+	   			  for (var i = 40; i <= self.master.editor.element.height(); i += self.master.rowHeight)
+	   			    self.svg.rect(gridGroup, 0.5, i + 0.5, "100%", self.master.rowHeight, {class: "ganttLinesSVG"});
+
+	   			  // drawTodayLine
+	   			  if (new Date().getTime() > self.startMillis && new Date().getTime() < self.endMillis) {
+	   			    var x = Math.round(((new Date().getTime()) - self.startMillis) * self.fx);
+	   			    self.svg.line(gridGroup, x, 0, x, "100%", {class: "ganttTodaySVG"});
+	   			  }
+
+
+	   			  //prof.stop();
+	   			};
+
 	   		}
 	   		
 	   		function addPreTaskRel (projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, taskName, preTaskRowName, groupId, preGroupId) {
@@ -1192,6 +1240,11 @@
 	   			location.href = url;
 	   		}
 	   		
+	   		//간트차트 생성 후 CSS를 바꿈.
+	   		function ganttRedesign(){
+	   			$("#TWGanttArea").css({"padding":0, "overflow-y":"auto", "overflow-x":"hidden","position":"relative","border":"1px solid #d1d1d1"});
+	   		}
+	   		
 	   		
 	   		(function() {
 	   			//임시 크기 조절
@@ -1280,6 +1333,7 @@
             	});
 	   			
 	   			eventSetting();
+	   			ganttRedesign();
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 
 	   		};
@@ -1466,7 +1520,7 @@
 		    </ul>
 		</div>
 		
-		<div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden; border:1px solid #e5e5e5; position:relative; margin:0 5px;"></div>
+		<div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden; position:relative;"></div>
 		
 		<style>
 		  .resEdit {
@@ -1913,7 +1967,7 @@
 			
 			<div class="__template__" type="TASKROW"><!--
 			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#) (#=obj.type == 'p' ? 'project' : obj.type == 'g' ? 'group' : 'task'#)" level="(#=level#)">
-			    <th class="gdfCell edit" align="right" style="cursor:pointer; border: 0px;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </th>
+			    <td class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </td>
 			    <td class="gdfCell noClip" style="display:none" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+22#)px;">
 			      <div class="exp-controller" align="center"></div>
@@ -1935,7 +1989,7 @@
 			
 			<div class="__template__" type="TASKEMPTYROW"><!--
 			  <tr class="taskEditRow emptyRow" >
-			    <th class="gdfCell" align="right"></th>
+			    <td class="gdfCell" align="right"></td>
 			    <td class="gdfCell noClip" align="center"></td>
 			    <td class="gdfCell"></td>
 			    <td class="gdfCell"></td>

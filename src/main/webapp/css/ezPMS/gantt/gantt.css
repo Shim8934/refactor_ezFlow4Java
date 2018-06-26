@@ -17,7 +17,7 @@ body{
 /* -------------------------------------- GRIDIFY -----------------------------------*/
 .gdfTable {
   table-layout: fixed;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
   background-color: #fff;
 }
@@ -45,9 +45,9 @@ body{
 .gdfColHeader {
   min-width: 5px;
   height: 30px;
-  background-color: #eee;
-  border-bottom:2px solid #bbb;
-  border-right: 1px solid #bbb;
+  background-color: #f5f6f6;
+  border-bottom:1px solid #d1d1d1;
+  border-right: 1px solid #d1d1d1;
 }
 
 .gdfColHeader:last-of-type {
@@ -90,6 +90,8 @@ body{
 .splitterContainer {
   width: 100%;
   height: 100%;
+  margin: -1px;
+  position: relative;
 }
 
 .splitBox1{
@@ -168,7 +170,7 @@ body{
   position: absolute;
   z-index: 2;
   top:0;
-  height: 42px;
+  height: 40px;
 }
 
 /* -------------------------------------- GANTT -----------------------------------*/
@@ -189,12 +191,12 @@ body{
 }
 
 .ganttHead1 th{
-  border-left:1px solid #b0b0b0;
+  border-left:1px solid #d1d1d1;
   padding: 0;
   margin: 0;
-  /*border-right: 1px solid #bbb;*/
-  border-bottom:1px solid #bbb;
-  background: #EEEEEE;
+  border-right: 1px solid #d1d1d1;
+  border-bottom:1px solid #d1d1d1;
+  background: #f5f6f6;
   white-space: pre-line;
   word-break: break-all;
 }
@@ -208,9 +210,9 @@ body{
 .ganttHead2 th{
   padding: 0;
   margin: 0;
-  border-left:1px solid #b0b0b0;
-  /*border-right: 1px solid #bbb;*/
-  border-bottom:2px solid #bbb;
+  border-left:1px solid #d1d1d1;
+  border-right: 1px solid #d1d1d1;
+  border-bottom:1px solid #d1d1d1;
   background: #EEEEEE;
 }
 
@@ -591,26 +593,27 @@ select.taskStatus{
 }
 
 .ganttTodaySVG{
-  stroke-width:2px;
+  stroke-width:1px;
   stroke:#e06671;
-  stroke-linecap:"round";
-  stroke-dasharray:2,2;
 }
 
 .colorByStatus .taskStatusSVG[status=STATUS_ACTIVE]{
-  fill: #3BBF67;
+  fill: #438ddd;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_DONE]{
-  fill: #6EBEF4;
+  fill: #63c449;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_FAILED]{
-  fill: #763A96;
+  fill: #dd7238;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_SUSPENDED]{
-  fill: #f9c154;
+  fill: #57c7b6;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_UNDEFINED]{
-  fill: #dededf;
+  fill: #dd3b3b;
+}
+.colorByStatus .taskStatusSVG[status=STATUS_WAITING]{
+  fill: #a5a5a5;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_UNDEFINED] .taskLayout{
   stroke: #ccc;
