@@ -689,6 +689,53 @@
 	   			  //profiler.stop();
 	   			  
 	   			};
+	   			
+	   			//그래프쪽 디자인 수정하기 위해 재정의
+	   			Ganttalendar.prototype.redrawTasks = function (drawAll) {
+	   			  //console.debug("redrawTasks ");
+	   			  var self=this;
+	   			  //var prof = new Profiler("ganttRedrawTasks");
+
+	   			  self.element.find("table.ganttTable").height(self.master.editor.element.height());
+
+	   			  var collapsedDescendant = this.master.getCollapsedDescendant();
+
+	   			  var startRowAdd=self.master.firstScreenLine-self.master.rowBufferSize;
+	   			  var endRowAdd =self.master.firstScreenLine+self.master.numOfVisibleRows+self.master.rowBufferSize;
+
+	   			  $("#linksGroup,#tasksGroup").empty();
+	   			  var gridGroup=$("#gridGroup").empty().get(0);
+
+	   			  //add missing ones
+	   			  var row=0;
+	   			  self.master.firstVisibleTaskIndex=-1;
+	   			  for (var i=0;i<self.master.tasks.length;i++){
+	   			    var task=self.master.tasks[i];
+	   			    if (collapsedDescendant.indexOf(task)>=0){
+	   			      continue;
+	   			    }
+	   			    if (drawAll || (row>=startRowAdd && row<endRowAdd)) {
+	   			    this.drawTask(task);
+	   			      self.master.firstVisibleTaskIndex=self.master.firstVisibleTaskIndex==-1?i:self.master.firstVisibleTaskIndex;
+	   			      self.master.lastVisibleTaskIndex = i;
+	   			    }
+	   			    row++
+	   			  }
+
+	   			  //creates rows grid
+	   			  for (var i = 40; i <= self.master.editor.element.height(); i += self.master.rowHeight)
+	   			    self.svg.rect(gridGroup, 0.5, i + 0.5, "100%", self.master.rowHeight, {class: "ganttLinesSVG"});
+
+	   			  // drawTodayLine
+	   			  if (new Date().getTime() > self.startMillis && new Date().getTime() < self.endMillis) {
+	   			    var x = Math.round(((new Date().getTime()) - self.startMillis) * self.fx);
+	   			    self.svg.line(gridGroup, x, 0, x, "100%", {class: "ganttTodaySVG"});
+	   			  }
+
+
+	   			  //prof.stop();
+	   			};
+
 	   		}
 	   		
 	   		function addPreTaskRel (projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, taskName, preTaskRowName, groupId, preGroupId) {

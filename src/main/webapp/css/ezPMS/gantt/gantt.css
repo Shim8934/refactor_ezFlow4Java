@@ -170,7 +170,7 @@ body{
   position: absolute;
   z-index: 2;
   top:0;
-  height: 42px;
+  height: 40px;
 }
 
 /* -------------------------------------- GANTT -----------------------------------*/
@@ -191,12 +191,12 @@ body{
 }
 
 .ganttHead1 th{
-  border-left:1px solid #b0b0b0;
+  border-left:1px solid #d1d1d1;
   padding: 0;
   margin: 0;
-  /*border-right: 1px solid #bbb;*/
-  border-bottom:1px solid #bbb;
-  background: #EEEEEE;
+  border-right: 1px solid #d1d1d1;
+  border-bottom:1px solid #d1d1d1;
+  background: #f5f6f6;
   white-space: pre-line;
   word-break: break-all;
 }
@@ -210,9 +210,9 @@ body{
 .ganttHead2 th{
   padding: 0;
   margin: 0;
-  border-left:1px solid #b0b0b0;
-  /*border-right: 1px solid #bbb;*/
-  border-bottom:2px solid #bbb;
+  border-left:1px solid #d1d1d1;
+  border-right: 1px solid #d1d1d1;
+  border-bottom:1px solid #d1d1d1;
   background: #EEEEEE;
 }
 
@@ -593,10 +593,8 @@ select.taskStatus{
 }
 
 .ganttTodaySVG{
-  stroke-width:2px;
+  stroke-width:1px;
   stroke:#e06671;
-  stroke-linecap:"round";
-  stroke-dasharray:2,2;
 }
 
 .colorByStatus .taskStatusSVG[status=STATUS_ACTIVE]{
