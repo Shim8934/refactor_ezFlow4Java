@@ -675,7 +675,8 @@ public class EzPMSGWController2 {
 			
 			Long projectId = Long.parseLong(request.getParameter("projectId"));
 			
-			List<Map<String, Object>> managerList = (List<Map<String, Object>>) jsonParam.get("managerList");
+			List<Map<String, Object>> managerList = (List<Map<String, Object>>) jsonParam.get("addMemberList");
+			List<Map<String, Object>> delMemberList = (List<Map<String, Object>>) jsonParam.get("delMemberList");
 			managerList.addAll((List<Map<String, Object>>) jsonParam.get("participantList"));
 			List<ProjectGroupMemberVO> groupManagerList = new ArrayList<ProjectGroupMemberVO>();
 			
