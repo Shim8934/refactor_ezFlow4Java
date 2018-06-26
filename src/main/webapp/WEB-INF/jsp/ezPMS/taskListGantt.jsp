@@ -692,9 +692,7 @@
 	   			
 	   			//그래프쪽 디자인 수정하기 위해 재정의
 	   			Ganttalendar.prototype.redrawTasks = function (drawAll) {
-	   			  //console.debug("redrawTasks ");
 	   			  var self=this;
-	   			  //var prof = new Profiler("ganttRedrawTasks");
 
 	   			  self.element.find("table.ganttTable").height(self.master.editor.element.height());
 
@@ -731,9 +729,6 @@
 	   			    var x = Math.round(((new Date().getTime()) - self.startMillis) * self.fx);
 	   			    self.svg.line(gridGroup, x, 0, x, "100%", {class: "ganttTodaySVG"});
 	   			  }
-
-
-	   			  //prof.stop();
 	   			};
 	   			
 	   			Ganttalendar.prototype.drawLink = function (from, to, type) {
@@ -1437,9 +1432,9 @@
 	   		
 	   		
 	   		(function() {
-	   			//임시 크기 조절
+	   			//간트차트 높이 조절.
 	   			window.onresize = function() {
-	   				$("#TWGanttArea").height(parent.innerHeight - 200);
+	   				$("#TWGanttArea").height(parent.innerHeight - 155);
 	   			};
 	   			
 		   		initValues();

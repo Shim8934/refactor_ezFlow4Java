@@ -286,8 +286,8 @@
 		var planProg = "<c:out value='${taskDetails.planProgress}'/>";
 		var realProg = "<c:out value='${taskDetails.realProgress}'/>";
 		
-		var SDateDiff = (PSDate.getTime() - RSDate.getTime()) / (60 * 60 * 24 * 1000);
-		var EDateDiff = (PEDate.getTime() - REDate.getTime()) / (60 * 60 * 24 * 1000);
+		var SDateDiff = (RSDate.getTime() - PSDate.getTime()) / (60 * 60 * 24 * 1000);
+		var EDateDiff = (REDate.getTime() - PEDate.getTime()) / (60 * 60 * 24 * 1000);
 		var progDiff = Number(planProg - realProg).toFixed(1);
 		
 		document.getElementById("startDiff").innerText = SDateDiff > 0 ? "+" + SDateDiff : SDateDiff < 0 ? SDateDiff : "";

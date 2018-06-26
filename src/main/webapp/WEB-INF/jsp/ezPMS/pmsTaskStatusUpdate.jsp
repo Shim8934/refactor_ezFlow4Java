@@ -119,7 +119,7 @@
 	
 	function setProgress() {
 		var diff = 0;
-		diff = Number(taskDetails.planProgress - taskDetails.realProgress).toFixed(1);
+		diff = Number(taskDetails.realProgress - taskDetails.planProgress).toFixed(1);
 		document.querySelector("[name='realProgress']").value = Number(taskDetails.realProgress).toFixed(1) + "%";
 		document.getElementById("planProgress").innerText = Number(taskDetails.planProgress).toFixed(1) + "%";
 		document.getElementById("progDiff").innerText = (diff > 0 ? "+" + diff : (diff < 0 ? diff : "-")) + "%";
@@ -341,7 +341,7 @@
 		$("#RSDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		if(realStartDate){
 			$("#RSDatepicker").datepicker("setDate", RSDate);
-			diff = (PSDate.getTime() - RSDate.getTime()) / (60 * 60 * 24 * 1000);
+			diff = (RSDate.getTime() - PSDate.getTime()) / (60 * 60 * 24 * 1000);
 			document.getElementById("sDiff").innerText = diff > 0 ? "+" + diff : (diff < 0 ? diff : "-") ;
 		}
 		
@@ -350,7 +350,7 @@
 		$("#REDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		if(realEndDate){
 			$("#REDatepicker").datepicker("setDate", REDate);
-			diff = (PEDate.getTime() - REDate.getTime()) / (60 * 60 * 24 * 1000);
+			diff = (REDate.getTime() - PEDate.getTime()) / (60 * 60 * 24 * 1000);
 			document.getElementById("eDiff").innerText = diff > 0 ? "+" + diff : (diff < 0 ? diff : "-");
 		}
 		

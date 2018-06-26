@@ -429,8 +429,10 @@ Ganttalendar.prototype.drawTask = function (task) {
       }
     }
 
+    //사각형 높이 줄이기 위해 수정함 - 홍대표 2018-06-26
 		if (task.isParent())
-      svg.rect(taskSvg, 0, 0, "100%", 3, {fill:"#000"});
+			svg.rect(taskSvg, 0, 0, "100%", 1, {fill:"#000"});
+//      svg.rect(taskSvg, 0, 0, "100%", 3, {fill:"#000"});
 
     if (task.startIsMilestone) {
       svg.image(taskSvg, -9, dimensions.height/2-9, 18, 18, self.master.resourceUrl +"milestone.png")
