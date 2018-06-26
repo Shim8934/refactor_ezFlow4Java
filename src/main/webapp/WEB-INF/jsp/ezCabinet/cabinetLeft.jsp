@@ -20,8 +20,6 @@
 				<div id="cabinetTree" class="cabinetTree"></div>
 				<!-- 캐비넷  관리 -->
 				<h3><span><spring:message code='ezCabinet.t03'/></span></h3>
-				<!-- 공유 캐비넷  -->
-				<h3><span><spring:message code='ezCabinet.t04'/></span></h3>
 			</ul>
 			
 			<!-- 연동 캐비넷 -->

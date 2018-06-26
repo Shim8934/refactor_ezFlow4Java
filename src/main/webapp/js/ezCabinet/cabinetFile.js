@@ -2,6 +2,7 @@ var CabinetFile = function() {
 	var lineWidth = 4;
 	var start     = 4.72;
 	var isStart   = false;
+	var fillColor = "#09F";
 	
 	function onDragEnter(evt) {
 		evt.dataTransfer.dropEffect = "copy";
@@ -31,19 +32,18 @@ var CabinetFile = function() {
 	}
 
 	function fileupload(fileItem) {
-		var fd                    = new FormData();
-		var filePath              = null;
-		var checkImageFile        = isImage(fileItem.name);
-		var fileDivElmt           = document.getElementById("fileDiv");
-		var divfileListElmt       = fileDivElmt.firstElementChild;
-		var ulElmt                = divfileListElmt.firstElementChild;
+		var fd              = new FormData();
+		var filePath        = null;
+		var checkImageFile  = isImage(fileItem.name);
+		var fileDivElmt     = document.getElementById("fileDiv");
+		var divfileListElmt = fileDivElmt.firstElementChild;
+		var ulElmt          = divfileListElmt.firstElementChild;
 		
 		if (!isStart) {
 			divfileListElmt.className = "fileList";
 			var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
 			if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
 		}
-		
 		
 		var liElmt        = document.createElement("li");
 		var divMainElmt   = document.createElement("div");
@@ -71,9 +71,11 @@ var CabinetFile = function() {
 		
 		fd.append("fileToUpload", fileItem);
 		
-		var ctx = canvasElmt.getContext('2d');
-		var cw = ctx.canvas.width;
-		var ch = ctx.canvas.height;
+		var ctx       = canvasElmt.getContext('2d');
+		var cw        = ctx.canvas.width;
+		var ch        = ctx.canvas.height;
+		ctx.fillStyle = fillColor;
+		ctx.fillText('0%', cw * 0.5 - lineWidth, ch * 0.5 + 3, cw);
 		
 		$.ajax({
 			url : "/ezCabinet/uploadFile.do",
@@ -89,7 +91,7 @@ var CabinetFile = function() {
 				var xhr = $.ajaxSettings.xhr();
 				
 				if (xhr.upload) {
-					xhr.upload.addEventListener('progress', function(event) {
+					xhr.upload.addEventListener("progress", function(event) {
 						var percent  = 0;
 						var position = event.loaded || event.position;
 						var total    = event.total;
@@ -98,13 +100,13 @@ var CabinetFile = function() {
 						}
 						
 						//update progressbar
-						diff = ((percent / 100) * Math.PI*2*lineWidth).toFixed(2);
+						diff = ((percent / 100) * Math.PI * 2 * lineWidth).toFixed(2);
 						ctx.clearRect(0, 0, cw, ch);
 						ctx.lineWidth   = 4;
-						ctx.fillStyle   = '#09F';
-						ctx.strokeStyle = "#09F";
-						ctx.textAlign   = 'center';
-						ctx.fillText(percent + '%', cw*.5, ch*.5 + 3, cw);
+						ctx.fillStyle   = fillColor;
+						ctx.strokeStyle = fillColor;
+						ctx.textAlign   = "center";
+						ctx.fillText(percent + "%", cw * 0.5, ch * 0.5 + 3, cw);
 						ctx.beginPath();
 						ctx.arc(20, 20, 18, start, diff/lineWidth + start, false);
 						ctx.stroke();

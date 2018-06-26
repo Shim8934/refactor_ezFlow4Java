@@ -68,7 +68,7 @@
 						<td class="cabSearchTd"><input id="sCabTitle" type="text"></td>
 					</tr>
 					<tr>
-						<th class="cabSearchTh"><spring:message code='ezCabinet.t57'/></th>
+						<th class="cabSearchTh"><spring:message code='ezCabinet.t52'/></th>
 						<td class="cabSearchTd"><input id="sCabIntro" type="text"></td>
 					</tr>
 					<tr>
@@ -77,7 +77,7 @@
 					</tr>
 					
 				</table>
-				<div class="cabdivBttn">
+				<div class="cabdivBttn" id="searchDivBttn">
 					<a class="cabBttn"><span><spring:message code='ezCabinet.t59'/></span></a>
 					<a class="cabBttn"><span><spring:message code='ezCabinet.t49'/></span></a>
 					<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
@@ -85,6 +85,9 @@
 			</div>
 			<span class="cabCloseBttn"></span>
 		</div>
+		
+		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileDelete.jsp"></jsp:include>
+		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileMove.jsp"  ></jsp:include>
 		
 		<div id="layer_popup" class="cabViewPopup" style="left: 0px; top: 0px; display: none;">
 			<div class="popupwrap1">

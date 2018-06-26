@@ -1,25 +1,23 @@
 //Baonk 2018-06-25
 var CabinetNavi = function() {
-	var instance;
-	
-	function createInstance() {
+	 return function(data) {
 		var _blockSize      = 10;
 		var _currentPage    = 0;
 		var _totalRows      = 0;
 		var _totalPages     = 0;
-		var _behindDivId    = "tblPageRayer";
-		var _divClass       = "pagenavi";
+		var _behindDivId    = data.divId    ? data.divId    : "tblPageRayer";
+		var _divClass       = data.divClass ? data.divClass : "pagenavi";
 		var _spanClass      = "ptxt";
 		var _imgClass       = "btnimg";
 		var _selectedClass  = "on";
-		var _headerId       = "";
-		var _searchCallBack = null;
-		var _messages       = {
+		var _headerId       = data.headerId ? data.headerId : "";
+		var _searchCallBack = data.callback ? data.callback : null;
+		var _messages       = data.messages ? data.callback : {
 			next     : "Next",
 			previous : "Previous",
 			item     : "Items",
 			total    : "Total"
-		}
+		};
 		
 		//define private method
 		function setBlockSize(blockSizeValue) {_blockSize = blockSizeValue;}
@@ -35,7 +33,11 @@ var CabinetNavi = function() {
 		}
 		
 		function makePage() {
-			var behindDiv       = document.getElementById(_behindDivId);
+			if (_searchCallBack == null) {alert("Please provide search function!"); return;}
+			
+			var behindDiv = document.getElementById(_behindDivId);
+			if (!behindDiv) {alert("Cannot found element with this id: " + _behindDivId); return;}
+			
 			behindDiv.innerHTML = "";
 			setPageNavForElmt(behindDiv);
 		}
@@ -175,30 +177,15 @@ var CabinetNavi = function() {
 		
 		function setSearchCallBack(functionName) {_searchCallBack = functionName;}
 		
-		function setDisplayMessages(messages) {
-			_messages.next     = messages["next"]     ? messages["next"]     : _messages.next;
-			_messages.previous = messages["previous"] ? messages["previous"] : _messages.previous;
-			_messages.item     = messages["item"]     ? messages["item"]     : _messages.item;
-			_messages.previous = messages["total"]    ? messages["total"]    : _messages.total;
-		}
-		
 		//Set public api
 		return {
 			init        : renderPageWithInfo,
 			header      : setHeaderInfo,
 			search      : setSearchCallBack,
 			get         : getCurrentInfo,
-			setMessages : setDisplayMessages,
 			setBlock    : setBlockSize,
 			setDivs     : setDivInfo,
 			load        : makePage
 		};
 	}
-	
-	return {
-		getInstance : function(){
-			if(!instance) {instance = createInstance();}
-			return instance;
-		}
-	};
 }();

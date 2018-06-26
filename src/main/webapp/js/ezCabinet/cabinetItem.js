@@ -67,7 +67,7 @@ var CabinetItem = function() {
 	initEvents();
 	
 	function windowResize() {closeViewPopUp(); cabinetPreview.resizeByWidth();}
-	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {openSearchPanel();}}}
+	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
 	function initEvents() {
 		document.onselectstart = function () { return false;};
@@ -89,19 +89,30 @@ var CabinetItem = function() {
 		optionViewElmt.addEventListener("click", function(e) {toggleOptionView(this);}, false);
 		
 		var closeSearchBttn     = document.getElementsByClassName("cabCloseBttn")[0];
-		closeSearchBttn.onclick = function() {openSearchPanel();};
-		var cabdivBttnElmt      = document.getElementsByClassName("cabdivBttn")[0];
+		closeSearchBttn.onclick = function() {toggleSearchPanel();};
+		var cabdivBttnElmt      = document.getElementById("searchDivBttn");
 		var listBttns           = cabdivBttnElmt.children;
-		listBttns[0].onclick    = function(e) {};
+		listBttns[0].onclick    = function(e) {clearSearchDate();};
 		listBttns[1].onclick    = function(e) {};
-		listBttns[2].onclick    = function(e) {openSearchPanel();};
+		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
+		
+		var cabDelBttnElmt      = document.getElementById("delDivBttn");
+		var dellistBttns        = cabDelBttnElmt.children;
+		dellistBttns[0].onclick = function(e) {deleteFile();};
+		dellistBttns[1].onclick = function(e) {toggleDeletePopup();};
+		
+		var cabMoveBttnElmt     = document.getElementById("moveDivBttn");
+		var movlistBttns        = cabMoveBttnElmt.children;
+		movlistBttns[0].onclick = function(e) {moveFile("copy");};
+		movlistBttns[1].onclick = function(e) {moveFile("move");};
+		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
 		
 		var libttns = document.getElementById("mainmenu").firstElementChild.children;
 		libttns[0].firstElementChild.onclick  = function() {addFile();};
-		libttns[2].firstElementChild.onclick  = function() {deleteFile();};
-		libttns[3].firstElementChild.onclick  = function() {moveFile();};
+		libttns[2].firstElementChild.onclick  = function() {deleteFileConfirm();};
+		libttns[3].firstElementChild.onclick  = function() {moveFileConfirm();};
 		libttns[5].firstElementChild.onclick  = function() {refresh();};
-		libttns[6].firstElementChild.onclick  = function() {openSearchPanel();};
+		libttns[6].firstElementChild.onclick  = function() {toggleSearchPanel();};
 		libttns[8].firstElementChild.onclick  = function() {openSharePanel();};
 		
 		$("#Sdatepicker").datepicker({
@@ -125,14 +136,20 @@ var CabinetItem = function() {
 		});
 		
 		//Initial page navigation
-		cabinetNavi = CabinetNavi.getInstance();
-		cabinetNavi.setMessages({
+		var naviMessages = {
 			next     : CabinetMessages.strNext,
 			previous : CabinetMessages.strPrev,
 			item     : CabinetMessages.strItem,
 			total    : CabinetMessages.strTotal
+		};
+		
+		cabinetNavi = new CabinetNavi({
+			messages : naviMessages,
+			divId    : "tblPageRayer",
+			divClass : "pagenavi",
+			headerId : "",
+			callback : startSearchCabinet
 		});
-		cabinetNavi.search(startSearchCabinet);
 		
 		//Initial table
 		cabinetTable = new CabinetTable();
@@ -142,11 +159,11 @@ var CabinetItem = function() {
 	}
 	
 	/* Search Panel */
-	function openSearchPanel() {
+	function toggleSearchPanel() {
 		var rightFrame  = window.parent.frames["right"].document;
 		var searchPanel = rightFrame.getElementById("searchPanel");
 		if (searchPanel.className == "cabSearchPanel off") {
-			addFogPanel();
+			addFogPanel("search");
 			var position            = getPosition(426, 278);
 			searchPanel.style.top   = position[0] + "px";
 			searchPanel.style.right = position[1] + "px";
@@ -166,16 +183,26 @@ var CabinetItem = function() {
 		rightFrame.getElementById("sCabIntro").value   = "";
 	}
 	
-	function addFogPanel() {
-		var fogPanel               = document.createElement("div");
-		fogPanel.onclick           = function(e) {openSearchPanel();};
-		fogPanel.className         = "cabFogPanel";
-		document.body.appendChild(fogPanel);
-		var leftFogPanel           = document.createElement("div");
-		leftFogPanel.onclick       = function(e) {openSearchPanel();};
-		leftFogPanel.className     = "blockLeft";
-		var leftFrameBody          = window.parent.frames["left"].document.body;
+	function addFogPanel(mode) {
+		var handleClickFunct = null;
+		
+		switch(mode) {
+			case "search": handleClickFunct = toggleSearchPanel; break;
+			case "del"   : handleClickFunct = toggleDeletePopup; break;
+			case "move"  : handleClickFunct = toggleMovePopup  ; break;
+			default      : alert(CabinetMessages.strError); return;
+		}
+		
+		var fogPanel           = document.createElement("div");
+		fogPanel.className     = "cabFogPanel";
+		var leftFogPanel       = document.createElement("div");
+		leftFogPanel.className = "blockLeft";
+		fogPanel.onclick       = function(e) {handleClickFunct();};
+		leftFogPanel.onclick   = function(e) {handleClickFunct();};
+		var leftFrameBody      = window.parent.frames["left"].document.body;
+		
 		leftFrameBody.appendChild(leftFogPanel);
+		document.body.appendChild(fogPanel);
 	}
 	
 	function removeFogPanel() {
@@ -188,6 +215,11 @@ var CabinetItem = function() {
 		if (leftFogPanel) {leftFrame.body.removeChild(leftFogPanel);}
 		
 		if (rightFrame.getElementById("ui-datepicker-div")) {rightFrame.getElementById("ui-datepicker-div").style.display = "none";}
+	}
+	
+	function clearSearchDate() {
+		document.getElementById("Sdatepicker").value = "";
+		document.getElementById("Edatepicker").value = "";
 	}
 	
 	function getPosition(popUpW, popUpH) {
@@ -259,7 +291,7 @@ var CabinetItem = function() {
 	}
 	
 	function onMainSearch() {
-		openSearchPanel();
+		toggleSearchPanel();
 		startSearchCabinet("1");
 	}
 	/* Main search */
@@ -298,6 +330,62 @@ var CabinetItem = function() {
 	function addFile() {
 		var cabId = document.getElementById("cabInfo").getAttribute("role");
 		var popup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabId, "addFile", getOpenWindowfeature(600, 450));
+	}
+	
+	function deleteFileConfirm() {
+		var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		var fileId = null;
+		
+		//*Note: add checking conditions before open popup
+		toggleDeletePopup();
+	}
+	
+	function toggleDeletePopup() {
+		var rightFrame  = window.parent.frames["right"].document;
+		var deletePanel = rightFrame.getElementById("cabFileDel");
+		if (deletePanel.className == "popup cabFileDeloff") {
+			addFogPanel("del");
+			var position            = getPosition(450, 180);
+			deletePanel.style.top   = position[0] + "px";
+			deletePanel.style.right = position[1] + "px";
+			deletePanel.className   = "popup cabFileDelon";
+		}
+		else {
+			removeFogPanel();
+			deletePanel.className   = "popup cabFileDeloff";
+		}
+	}
+	
+	function deleteFile() {
+		//*Note Add code here
+	}
+	
+	function moveFileConfirm() {
+		var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		var fileId = null;
+		
+		//Show folder Tree then toggle popup
+		toggleMovePopup();
+	}
+	
+	function toggleMovePopup() {
+		var rightFrame  = window.parent.frames["right"].document;
+		var movePanel = rightFrame.getElementById("cabFileMove");
+		if (movePanel.className == "popup cabFileMoveoff") {
+			addFogPanel("move");
+			var position          = getPosition(260, 350);
+			movePanel.style.top   = position[0] + "px";
+			movePanel.style.right = position[1] + "px";
+			movePanel.className   = "popup cabFileMoveon";
+		}
+		else {
+			removeFogPanel();
+			movePanel.className   = "popup cabFileMoveoff";
+		}
+	}
+	
+	function moveFile(mode) {
+		
 	}
 	
 	return {
