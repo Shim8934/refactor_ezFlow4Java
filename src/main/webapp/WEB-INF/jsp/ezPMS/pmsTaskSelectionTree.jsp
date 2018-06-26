@@ -55,6 +55,12 @@
 	border: 1px solid silver;
 	height: 198px;
 }
+
+.jstree-node > a {
+   width: 200px;
+   text-overflow: ellipsis;
+   overflow: hidden;
+}
 </style>
 </head>
 <body class="popup">
