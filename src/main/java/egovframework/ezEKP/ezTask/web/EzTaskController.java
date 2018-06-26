@@ -513,7 +513,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskSave started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int tenantID = userInfo.getTenantId();			
+		int tenantID = userInfo.getTenantId();	
+		String companyID = userInfo.getCompanyID();
 		
 		String realPath = commonUtil.getRealPath(request);
 		String uploadTaskPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID);
@@ -575,7 +576,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		taskInfoVO.setShareList(shareList);
 		
-		ezTaskService.taskSave(taskInfoVO, realPath, uploadTaskPath, content, fileList, fileName, fileSize, userInfo.getOffset(), tenantID);
+		ezTaskService.taskSave(taskInfoVO, realPath, uploadTaskPath, content, fileList, fileName, fileSize, userInfo.getOffset(), tenantID, companyID);
 
 		logger.debug("taskSave ended");
 		
@@ -1226,6 +1227,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String primary = userInfo.getPrimary();
     	String offset = userInfo.getOffset();
     	int tenantID = userInfo.getTenantId();
+    	String companyID = userInfo.getCompanyID();
     	
     	String type = request.getParameter("type");
     	String filter = request.getParameter("filter");
@@ -1260,8 +1262,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		logger.debug("startDate: " +  startDate + "endDate: " +  endDate + "taskStatusCount: " +  taskStatusCount + "|| pSelectTab: " + pSelectTab + "|| Type: " + type);
 		
-    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID);   	
-    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, taskStatusCount, pSelectTab, tenantID);
+    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID, companyID);   	
+    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, taskStatusCount, pSelectTab, tenantID, companyID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 
