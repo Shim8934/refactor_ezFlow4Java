@@ -467,7 +467,6 @@
 		</table>
 		<div class="btnposition btnpositionNew" style="margin-top:15px">
 		    <a class="imgbtn" onClick="select_member()" ><span><spring:message code='ezPersonal.t12'/></span></a>
-		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezPersonal.t13'/></span></a>
 		</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
