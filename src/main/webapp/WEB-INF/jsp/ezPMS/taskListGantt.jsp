@@ -687,6 +687,7 @@
 	   			  //Enhancing the function to perform own operations
 	   			  this.master.element.trigger('gantt.task.afterupdate.event', task);
 	   			  //profiler.stop();
+	   			  
 	   			};
 	   		}
 	   		
@@ -1192,6 +1193,11 @@
 	   			location.href = url;
 	   		}
 	   		
+	   		//간트차트 생성 후 CSS를 바꿈.
+	   		function ganttRedesign(){
+	   			$("#TWGanttArea").css({"padding":0, "overflow-y":"auto", "overflow-x":"hidden","position":"relative","border":"1px solid #d1d1d1"});
+	   		}
+	   		
 	   		
 	   		(function() {
 	   			//임시 크기 조절
@@ -1280,6 +1286,7 @@
             	});
 	   			
 	   			eventSetting();
+	   			ganttRedesign();
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 
 	   		};
@@ -1466,7 +1473,7 @@
 		    </ul>
 		</div>
 		
-		<div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden; border:1px solid #e5e5e5; position:relative; margin:0 5px;"></div>
+		<div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden; position:relative;"></div>
 		
 		<style>
 		  .resEdit {
@@ -1913,7 +1920,7 @@
 			
 			<div class="__template__" type="TASKROW"><!--
 			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#) (#=obj.type == 'p' ? 'project' : obj.type == 'g' ? 'group' : 'task'#)" level="(#=level#)">
-			    <th class="gdfCell edit" align="right" style="cursor:pointer; border: 0px;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </th>
+			    <td class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> </td>
 			    <td class="gdfCell noClip" style="display:none" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+22#)px;">
 			      <div class="exp-controller" align="center"></div>
@@ -1935,7 +1942,7 @@
 			
 			<div class="__template__" type="TASKEMPTYROW"><!--
 			  <tr class="taskEditRow emptyRow" >
-			    <th class="gdfCell" align="right"></th>
+			    <td class="gdfCell" align="right"></td>
 			    <td class="gdfCell noClip" align="center"></td>
 			    <td class="gdfCell"></td>
 			    <td class="gdfCell"></td>
