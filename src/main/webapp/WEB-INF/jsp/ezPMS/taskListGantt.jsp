@@ -1331,8 +1331,18 @@
    				var top = 10;
    			    var left = ($(window).width() - $(this).outerWidth()) / 2;
    				var feature = GetOpenPosition(top, left);
-   			 
-   				DivPopUpShow(1500, 636, "/ezPMS/getMemberSchedule.do?projectId=" + projectId);
+   			 	
+
+   		        document.getElementById("iFrameLayer").src = "/ezPMS/getMemberSchedule.do?projectId=" + projectId;
+   		        document.getElementById("iFramePanel").style.top = "1%";
+   		        document.getElementById("iFramePanel").style.left = "5%";
+   		        document.getElementById("iFramePanel").style.height = "84%";
+   		        document.getElementById("iFrameLayer").style.width = "100%";
+   		        document.getElementById("iFrameLayer").style.height = "100%";
+   		        document.getElementById("mailPanel").style.display = "";
+   		        document.getElementById("iFramePanel").style.display = "";
+   		        
+   				//DivPopUpShow(1500, 636, "/ezPMS/getMemberSchedule.do?projectId=" + projectId);
 	   		}
 		</script>
 		<style>
@@ -1423,7 +1433,7 @@
 		        <li id="pmsGanttAddGroup" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t82' /></span></li>
 		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t287' /></span></li>
 		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t288' /></span></li>
-		        <li><span onclick="getMemberSchedule()">인력관리</span></li>
+		        <li><span onclick="getMemberSchedule()"><spring:message code='ezPMS.t290' /></span></li>
 		        <div style="float:right">
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
 		       	<spring:message code='ezPMS.t255' />
@@ -2165,7 +2175,7 @@
 			  }
 		</script>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none; width:91%" id="iFramePanel">
 			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
