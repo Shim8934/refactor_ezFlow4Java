@@ -44,7 +44,7 @@
 		    }
 	
 		    function HWP_GetDocumentElement() {
-		        return GetDocumentElement(HwpCtrl, "CONNROOT");
+		        return GetDocumentElement(HwpCtrl, "CONNROOT", "admin");
 		    }
 	
 		    function HWP_SetDocumentElement(ConnValue) {

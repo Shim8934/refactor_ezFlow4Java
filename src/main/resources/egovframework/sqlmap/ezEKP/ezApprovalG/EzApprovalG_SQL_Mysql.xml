@@ -24317,4 +24317,28 @@
 			DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) > A.STARTDATE
 		</isEqual>
 	</select>
+	
+	<select id="EzApprovalG.getDocExt" parameterClass="Map" resultClass="String">
+		SELECT 
+			HREF
+		FROM
+			TBL_APRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		UNION
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#	
+	</select>
 </sqlMap>

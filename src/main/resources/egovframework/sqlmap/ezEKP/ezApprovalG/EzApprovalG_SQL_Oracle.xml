@@ -4321,7 +4321,7 @@
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID				   		
 			  </isEqual> 
-				  INNER JOIN 
+				  LEFT JOIN 
 				   			TBL_ENDAPRLINEINFO 
 				   ON 
 				   			TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
@@ -10196,7 +10196,7 @@
 	   AND 
 	   		TBL_RECORD.DocID = TBL_EXPENDAPRDOCINFO.DocID 
   </isEqual> 
-  		INNER JOIN 
+  		LEFT JOIN 
      		TBL_ENDAPRLINEINFO 
     	 ON 
      		TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
@@ -24595,5 +24595,16 @@
 			TENANT_ID = #tenantID#
 		AND
 			COMPANYID = #companyID#
+		UNION
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#	
 	</select>
 </sqlMap>
