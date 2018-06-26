@@ -696,6 +696,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezTask.t21' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel_click()"><spring:message code='ezEmail.t63' /></span></li>
+            </ul>
+        </div>
 		<div id="TB_Promise" style="display:none">
 			<h2><spring:message code='ezTask.t29' /></h2>
 			<table class="content">
@@ -892,7 +897,6 @@
 		</table>		
 		<div class="btnpositionNew">
 			<a class="imgbtn" onClick="ok_click()" ><span><spring:message code='ezTask.t19' /></span></a>
-			<a class="imgbtn" onClick="cancel_click()" ><span><spring:message code='ezTask.t20' /></span></a>
 			<a class="imgbtn" onClick="remove_click()" ><span><spring:message code='ezTask.t77' /></span></a>
 		</div>
 	</body>

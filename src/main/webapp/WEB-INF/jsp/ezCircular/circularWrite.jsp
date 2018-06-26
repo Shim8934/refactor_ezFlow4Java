@@ -419,7 +419,7 @@
 	        			</tr>
 						<tr>
 	           				<th rowspan="2" style="border-bottom:0px"><spring:message code="ezCircular.t34"/></th>
-	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
+	           				<td colspan="7" id ="itemList" style="padding-left:2px;">
 	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code="ezCircular.t39"/></span></a>
 	           				</td>
 						</tr>
