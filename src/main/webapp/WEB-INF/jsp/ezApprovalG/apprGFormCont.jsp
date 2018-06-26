@@ -476,83 +476,87 @@
 		</TREEVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezApprovalG.t152'/></h1>
-		    <table class="content" style="width:697px;">
-			    <tr>
-				    <th><spring:message code='ezApprovalG.t1540'/></th>
-				    <td><select name="select" onChange="return select_onchange()" id="FromList">
-						    <OPTION value="000" selected><spring:message code='ezApprovalG.t1541'/></OPTION>
-						    ${docType}
-					    </select>
-				    </td>
-		            <td style="white-space: nowrap">
-		                <select id="searchoption">
-		                    <option value="1"><spring:message code='ezApprovalG.t442'/></option>
-		                    <option value="2"><spring:message code='ezApprovalG.t598'/></option>
-		                </select>
-		                <input id="forminfo" onkeypress="search_press(event)" type="text" />
-		                <a class="imgbtn" onclick="searchform()"><span><spring:message code='ezApprovalG.t111'/></span></a>
-		                <a class="imgbtn" onclick="reset()"><span><spring:message code='ezApprovalG.t1301'/></span></a>
-		            </td>
-			    </tr>
-		    </table>
-		        <div class="portlet_tabpart01" style="margin-top: 3px; width: 697px">
-		        <div class="portlet_tabpart01_top" id="tab1">
-		            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
-		            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
-		            <div style="float: right; padding-top: 1.5px;"> 
-		                <a id="addfav" class="imgbtn" style="display:none;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
-		                <a id="delfav" class="imgbtn"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
-		            </div>
-		        </div>
-		    </div>
-		    <table id="favoritetable" style="margin-top: 5px; width: 697px;">
-		        <tr>
-		            <td style="vertical-align: top;">
-		                <div class="border_gray" style="border-bottom: 0px">
-		                    <div id="divlvtFavForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow:auto; padding: 0px"></div>
-		                </div>
-		            </td>
-		        </tr>
-		        <tr>
-		            <td style="vertical-align: top;">
-		                <table class="content">
-		                    <tr>
-		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip2" style="width: 95%">&nbsp;</td>
-		                    </tr>
-		                </table>
-		            </td>
-		        </tr>
-		    </table>
-		    <table id="formtable" style="margin-top: 5px;width: 697px;display:none">
-		        <tr>
-		            <td rowspan="2" style="vertical-align: top;">
-		                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
-		            </td> 
-		            <td style="padding-left: 5px; vertical-align: top;">
-		                <div class="border_gray" style="border-bottom: 0px; width:408px;"> 
-		                    <!-- 기존 class="listview" -->
-		                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 407px; HEIGHT: 353px; margin:auto; overflow-y: auto; overflow-x: hidden;"></div>
-		                </div>
-		            </td>
-		        </tr>
-		        <tr>
-		            <td style="padding-left: 5px; vertical-align: top;">
-		                <table class="content">
-		                    <tr>
-		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip" style="width: 95%;">&nbsp;</td>
-		                    </tr>
-		                </table>
-		            </td>
-		        </tr>
-		    </table>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+            </ul>
+        </div>
+	    <table class="content" style="width:697px;">
+		    <tr>
+			    <th><spring:message code='ezApprovalG.t1540'/></th>
+			    <td><select name="select" onChange="return select_onchange()" id="FromList">
+					    <OPTION value="000" selected><spring:message code='ezApprovalG.t1541'/></OPTION>
+					    ${docType}
+				    </select>
+			    </td>
+	            <td style="white-space: nowrap">
+	                <select id="searchoption">
+	                    <option value="1"><spring:message code='ezApprovalG.t442'/></option>
+	                    <option value="2"><spring:message code='ezApprovalG.t598'/></option>
+	                </select>
+	                <input id="forminfo" onkeypress="search_press(event)" type="text" />
+	                <a class="imgbtn" onclick="searchform()"><span><spring:message code='ezApprovalG.t111'/></span></a>
+	                <a class="imgbtn" onclick="reset()"><span><spring:message code='ezApprovalG.t1301'/></span></a>
+	            </td>
+		    </tr>
+	    </table>
+	        <div class="portlet_tabpart01" style="margin-top: 7px; width: 697px">
+	        <div class="portlet_tabpart01_top" id="tab1">
+	            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
+	            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
+	            <div style="float: right; padding-top: 1.5px;"> 
+	                <a id="addfav" class="imgbtn" style="display:none;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
+	                <a id="delfav" class="imgbtn"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
+	            </div>
+	        </div>
+	    </div>
+	    <table id="favoritetable" style="margin-top: 5px; width: 697px;">
+	        <tr>
+	            <td style="vertical-align: top;">
+	                <div class="border_gray" style="border-bottom: 0px">
+	                    <div id="divlvtFavForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow:auto; padding: 0px"></div>
+	                </div>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td style="vertical-align: top;">
+	                <table class="content">
+	                    <tr>
+	                        <th><spring:message code='ezApprovalG.t1543'/></th>
+	                        <td id="descrip2" style="width: 95%">&nbsp;</td>
+	                    </tr>
+	                </table>
+	            </td>
+	        </tr>
+	    </table>
+	    <table id="formtable" style="margin-top: 5px;width: 697px;display:none">
+	        <tr>
+	            <td rowspan="2" style="vertical-align: top;">
+	                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
+	            </td> 
+	            <td style="padding-left: 5px; vertical-align: top;">
+	                <div class="border_gray" style="border-bottom: 0px; width:408px;"> 
+	                    <!-- 기존 class="listview" -->
+	                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 407px; HEIGHT: 353px; margin:auto; overflow-y: auto; overflow-x: hidden;"></div>
+	                </div>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td style="padding-left: 5px; vertical-align: top;">
+	                <table class="content">
+	                    <tr>
+	                        <th><spring:message code='ezApprovalG.t1543'/></th>
+	                        <td id="descrip" style="width: 95%;">&nbsp;</td>
+	                    </tr>
+	                </table>
+	            </td>
+	        </tr>
+	    </table>
 		<div class="btnposition btnpositionNew" >
 <%-- 		  <input type="button" name="LocalloadHwp" id="LocalloadHwp" value="<spring:message code='ezApprovalG.t1544'/>" onClick="return Localload_onclick('HWP')" style="width:210px;"> --%>
 <%-- 		  <input type="button" name="LocalloadMht" id="LocalloadMht" value="<spring:message code='ezApprovalG.t1545'/>" onClick="return Localload_onclick('MHT')" style="width:210px;"> --%>
 		
-		  <a class="imgbtn"><span onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-		  <a class="imgbtn"><span onClick="return btncancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
+			<a class="imgbtn"><span onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>
 		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
