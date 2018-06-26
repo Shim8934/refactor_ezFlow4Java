@@ -310,7 +310,7 @@ body{
 
 
 .ganttTable td.end{
-  border-right: 2px dotted #ddd;
+  border-right: 2px solid #ddd;
 }
 
 .ganttHead2 th.holy{

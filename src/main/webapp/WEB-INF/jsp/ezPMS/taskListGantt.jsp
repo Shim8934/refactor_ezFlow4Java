@@ -692,7 +692,6 @@
 	   			
 	   			//그래프쪽 디자인 수정하기 위해 재정의
 	   			Ganttalendar.prototype.redrawTasks = function (drawAll) {
-	   			  //console.debug("redrawTasks ");
 	   			  var self=this;
 	   			  //var prof = new Profiler("ganttRedrawTasks");
 
@@ -731,9 +730,6 @@
 	   			    var x = Math.round(((new Date().getTime()) - self.startMillis) * self.fx);
 	   			    self.svg.line(gridGroup, x, 0, x, "100%", {class: "ganttTodaySVG"});
 	   			  }
-
-
-	   			  //prof.stop();
 	   			};
 
 	   		}
