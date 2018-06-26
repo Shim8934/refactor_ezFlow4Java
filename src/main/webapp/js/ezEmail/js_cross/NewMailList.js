@@ -321,12 +321,13 @@ function MakeListInfoHTML(ConentObject) {
                             if (p_SecureMail == 1) {
                             	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + p_Subject;
                             }
-                            if (g_bdraft == true) {
-                            	p_Subject = p_Subject
-                            } else {
-                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+                            if (useMailNewWindow == "YES") {
+	                            if (g_bdraft == true) {
+	                            	p_Subject = p_Subject
+	                            } else {
+                            		p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+	                            }
                             }
-                            
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
