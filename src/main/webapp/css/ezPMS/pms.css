@@ -20,6 +20,8 @@
 .situation_delay { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #dd7238; border-radius: 3px; color: #fff; }/* 지연 */
 .situation_hold { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #57c7b6; border-radius: 3px; color: #fff; }/* 보류 */
 .situation_delet { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #dd3b3b; border-radius: 3px; color: #fff; }/* 삭제 */
+.situation_registration { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #9860b0; border-radius: 3px; color: #fff; }/* 등록 */
+.situation_modify { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #c65091; border-radius: 3px; color: #fff; }/* 수정 */
 
 /* 프로젝트 목록 */
 .project_mainlist {}
@@ -83,7 +85,8 @@
 .project_portlet_workhistory .project_portlet_list li {background:none;}
 .project_portlet_workhistory .project_portlet_list li .text { padding-left: 0px; }
 .project_portlet_workhistory .project_portlet_list li .situation_registration,
-.project_portlet_workhistory .project_portlet_list li .situation_modify { float: left; margin-right: 6px; margin-top:3px;}
+.project_portlet_workhistory .project_portlet_list li .situation_modify,
+.project_portlet_workhistory .project_portlet_list li .situation_delet { float: left; margin-right: 6px; margin-top:3px;}
 
 /* 개요 좌측 list */
 .project_overview_section { clear: both; margin: 0px; padding: 0px; list-style:none; overflow: hidden; }
