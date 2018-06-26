@@ -273,13 +273,8 @@ function updateTaskInfo() {
 			 return;
 		 }
 		
-		//하위 업무들의 담당자 또는 참여자와 비교하여 삭제 , 추가자 선정.
-		var addMemberList = [];
-		var delMemberList = [];
-		managerList.concat(participantList).forEach(function(member, idx){
-			debugger
-			groupTaskMember[0].userId;
-		});
+		//삭제 및 추가할 리스트를 받아옴.
+		var addDelList = getAddDelMemberList(managerList, participantList);
 		
 		// 선행작업 지정 타입을 판단
 		if(pretaskId != "") {
@@ -304,7 +299,9 @@ function updateTaskInfo() {
 				upperGroupId : groupId,
 				participantList : participantList,
 				pretaskId : pretaskId,
-				type : pretaskSetType
+				type : pretaskSetType,
+				addMemberList : addDelList.addMemberList,
+				delMemberList : addDelList.delMemberList
 		}
 		
 		console.log(pretaskId);
@@ -327,6 +324,42 @@ function updateTaskInfo() {
 				alert("<spring:message code='ezPMS.t208' />");
 			}
 		});
+	}
+	
+	function getAddDelMemberList(managerList, paricipantList){
+		//하위 업무들의 담당자 또는 참여자와 비교하여 삭제 , 추가자 선정.
+		var addMemberList = [];
+		var delMemberList = [];
+		var tempList = [];
+		var remainList = [];
+		var newList = managerList.concat(participantList);
+		var list = {};
+		
+		//삭제, 유지, 추가를 분류
+		for(var i = 0; i < groupTaskMember.length; i++){
+			var flags = true;
+			newList.forEach(function(member, idx){
+				if(groupTaskMember[i].userId === member.userId){
+					flags = false;
+					tempList.push(member.userId);
+					remainList.push(member)
+				}
+			})
+			if(flags){
+				delMemberList.push(groupTaskMember[i]);
+			}
+		}
+		
+		for(var i = 0; i < newList.length; i++){
+			if(tempList.indexOf(newList[i].userId) == -1){
+				addMemberList.push(newList[i]);
+			}
+		}
+		
+		list.addMemberList = addMemberList;
+		list.delMemberList = delMemberList;
+		
+		return list;
 	}
 }
 
