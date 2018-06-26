@@ -253,14 +253,15 @@
 				canvasSetting();
 			} else {
 				alert("<spring:message code='ezLadder.hyh01' />");
-				window.close();
+				window.location.href = "/ezLadder/ladderMain.do?brdID=7";
 				return;
 			}
 			
 			// 사간겸직시
 			if(companyID != writerCompanyID) {
 				alert("<spring:message code='ezLadder.hyh02' />");
-				window.close();
+				window.location.href = "/ezLadder/ladderMain.do?brdID=7";
+				return;
 			}
 			
 		}
