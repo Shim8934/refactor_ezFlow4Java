@@ -598,19 +598,22 @@ select.taskStatus{
 }
 
 .colorByStatus .taskStatusSVG[status=STATUS_ACTIVE]{
-  fill: #3BBF67;
+  fill: #438ddd;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_DONE]{
-  fill: #6EBEF4;
+  fill: #63c449;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_FAILED]{
-  fill: #763A96;
+  fill: #dd7238;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_SUSPENDED]{
-  fill: #f9c154;
+  fill: #57c7b6;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_UNDEFINED]{
-  fill: #dededf;
+  fill: #dd3b3b;
+}
+.colorByStatus .taskStatusSVG[status=STATUS_WAITING]{
+  fill: #a5a5a5;
 }
 .colorByStatus .taskStatusSVG[status=STATUS_UNDEFINED] .taskLayout{
   stroke: #ccc;
