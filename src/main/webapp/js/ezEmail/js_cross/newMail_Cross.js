@@ -1084,7 +1084,13 @@ function event_SaveonClick() {
                 MailStatus = "NO";
                 
                 try {
-                	window.opener.MailListRefreshByTimeout();
+//                	window.opener.MailListRefreshByTimeout();
+                	/* 2018-05-07 이소담 - 왼쪽 메뉴의 '메일쓰기'로 '내게쓰기'로 메일을 발신했을때 메일 목록 자동으로 새로고침되도록 개선*/
+                	if (window.opener.name == "left") {
+                		window.opener.parent.frames["right"].MailListRefreshByTimeout();
+                	} else {
+                		window.opener.MailListRefreshByTimeout();
+                	}
                 } catch (e) { }
                 
                 window.close();
@@ -1477,6 +1483,10 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     var newElem;
     var count1;
     var length;
+    
+    if (mailArr[mailArr.length - 1] == ""){
+    	mailArr.pop(); 
+    }
 
     nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
@@ -1538,10 +1548,19 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	            validDIV.appendChild(newElem);
 	        }
 	        var szFromName = "";
-	        for (count1 = 1; count1 < mailArr.length; count1++) {
+	        for (count1 = 1; count1 <= mailArr.length; count1++) {
+	        	if (count1 - 1 != i) { // tndk
+		            szFromName += mailArr[count1 - 1];
+		            
+		            if (count1 != mailArr.length) {
+		            	szFromName += ";";
+		            }
+	        	}
+	        }
+	        /*for (count1 = 1; count1 < mailArr.length; count1++) {
 	            szFromName += mailArr[count1];
 	            if (count1 != mailArr.length - 1) szFromName += ";";
-	        }
+	        }*/
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
 	        return;
@@ -1565,12 +1584,14 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	
 	        var szFromName = "";
 	       
-	        for (count1 = 1; count1 < mailArr.length; count1++) {
-	            szFromName += mailArr[count1];
-	            
-	            if (count1 != mailArr.length - 1) {
-	            	szFromName += ";";
-	            }
+	        for (count1 = 1; count1 <= mailArr.length; count1++) {
+	        	if (count1 - 1 != i) { // tndk
+		            szFromName += mailArr[count1 - 1];
+		            
+		            if (count1 != mailArr.length) {
+		            	szFromName += ";";
+		            }
+	        	}
 	        }
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
@@ -1653,8 +1674,10 @@ function CompleteEmailAddress_Complete(rgParams) {
         }
         var szFromName = "";
         for (count1 = 1; count1 < checkname_cross_dialogArguments[3].length; count1++) {
-            szFromName += checkname_cross_dialogArguments[3][count1];
-            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";
+        		szFromName += checkname_cross_dialogArguments[3][count1-1];
+                if (count1 != checkname_cross_dialogArguments[3].length-1) szFromName += ";";
+        	/*szFromName += checkname_cross_dialogArguments[3][count1];
+            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";*/
         }
         checkname_cross_dialogArguments[6].value = szFromName;
     }
@@ -3581,4 +3604,3 @@ function getEmailAddressList2(ReceiverList, pollSendType) {
 function replaceAll(str, searchStr, replaceStr) {
 	return str.split(searchStr).join(replaceStr);
 }
-//end

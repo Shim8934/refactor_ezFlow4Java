@@ -13,12 +13,6 @@
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
-	    	.mainlist_free tbody tr td:first-child{
-	    		padding-left:15px;
-	    	}
-	    	.mainlist_free thead tr th:first-child{
-	    		padding-left:15px;
-	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -32,6 +26,7 @@
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+	    <script type="text/javascript" src="/js/jquery-ui/jquery.multipleSortable.js"></script>
 	    <script type="text/javascript">
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
@@ -68,6 +63,8 @@
 	        var strSearch = "";
 	        var ua = navigator.userAgent;
 	        var tabSel = "";
+	        var divListArry = [];
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -246,14 +243,67 @@
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
 	            
-	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	            $("#listType1 tr").each(function(){
-	            	$(this).find("table tbody").sortable();
-	            });
-	            
+	            // (수신자 설정 시 drag, drop으로 순서 조정)
+	            $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
+                  connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
+                  items : "tr",
+                  opacity: 0.3,
+                  start : function(event, elem) { 
+                      $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
+                      $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
+                      
+                      divListArry = [];
+                     
+                  },
+                  click : function() {
+                	  
+                	  var selectList = $("#" + event.currentTarget.id + " tr[selected=true]");
+                      
+                      $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
+                      $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
+                      
+                      for (var i = 0; i <selectList.length; i++) {
+                     	 divListArry[i] = selectList[i];
+                     	 $("#" + divListArry[i].id).addClass("multiple-sortable-selected");
+                      }
+                  },
+                  stop : function(event, elem) {
+                	  
+                	  //드랍되었을때 selected랑 색 변경해주기
+                	  var noSelectedList = $("#" + event.target.id + " tbody tr");
+                	  
+                	  for (var i = 0; i < noSelectedList.length; i++) {
+                		  noSelectedList[i].style.backgroundColor = m_strColorDefault;
+                		  noSelectedList[i].selected = false;
+                	  }
+                	  
+                	  // thead에 들어가는 현상 수정 
+                	  var elemParent = elem.item[0].parentNode;
+                	  
+                	  if (elemParent.tagName == 'THEAD'){
+                		  
+                		  var thName = '';
+                    	  if (elemParent.id == 'MsgToList_THEAD') {
+                    		  thName = 'MsgToList_TH';
+                    	  } else if (elemParent.id == 'MsgCCList_THEAD') {
+                    		  thName = 'MsgCCList_TH';
+                    	  } else if (elemParent.id == 'MsgBCCList_THEAD') {
+                    		  thName = 'MsgBCCList_TH';
+                    	  }
+                    	  
+                    	  var childArry = $("#" + elemParent.id + " tr[id!=" + thName + "]");
+                		  
+                		  for (var i = 0;i < childArry.length; i++) {
+                			  elemParent.nextSibling.appendChild(childArry[i]); // tbody에 추가
+                		  }
+                	  }
+                  }
+               });
+	         
+	            $(".receiver_borderbox tr").attr("restart", "true");
 	            ChangeListView_onClick(getOrganListType());
-
 	        }
+	        
 		    function recevieListview(pID, pListView) {
 		        var listview = new ListView();
 		        listview.SetID(pID);
@@ -1141,6 +1191,7 @@
 	                listid = "MsgBCCList";
 	            }
 	        }
+	        
 	        function CheckMailReceiver(selRow, option) {
 	            var rtnValue = false;
 	            var email;
@@ -1153,7 +1204,8 @@
 	            var _listview = new ListView();
 	            _listview.LoadFromID("MsgToList");
 	            var arrRows = _listview.GetDataRows();
-	            for (count2 = 0; count2 < arrRows.length; count2++) {
+	            
+	           for (count2 = 0; count2 < arrRows.length; count2++) {
 	                if (email == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup")
 	                    return true;
 	                else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
@@ -1183,7 +1235,7 @@
 	                        return true;
 	                }
 	            }
-	            return rtnValue
+	            return rtnValue;
 	        }
 	
 	        function DeleteReceiver(pListView) {
@@ -1206,6 +1258,7 @@
 	                selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
+	        
 	        function SelectReceiverWindow(Title, selectedWindow) {
 	            for (var count = 0; count < m_receiverTitleList.length; count++) {
 	                m_receiverTitleList[count].style.fontWeight = "normal";
@@ -2983,6 +3036,7 @@
                 if (dropelement != "")
                     InsertReceiver(document.getElementById(dropelement));
             }
+            
             function event_listdragstart(obj) {
                 dropelement = "";
                 var islist = false;
@@ -3021,11 +3075,11 @@
                         event_listclick(obj);
                 }
             }
+            
             window.ondragover = function () {
                 dropelement = "";
             }
-
-
+            
             var BlockSize2 = 10;
             function td_Create2(strtext) {
                 document.getElementById("tblPageRayer2").innerHTML = strtext;
@@ -3289,6 +3343,11 @@
 		  </LISTVIEWDATA>
 		</xml>
 	    <h1 id="h1Title"><spring:message code='ezEmail.t572' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+            </ul>
+        </div>
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
@@ -3577,9 +3636,8 @@
 	    </table>
 	    <table style="width: 100%; text-align: center;">
 	        <tr>
-	            <td class="btnposition btnpositionNew" style="text-align: center;background-color: white;border-top:0px">
+	            <td class="btnposition btnpositionNew" style="text-align: center;">
 	                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
-	                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 	            </td>
 	        </tr>
 	    </table>
