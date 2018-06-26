@@ -308,6 +308,8 @@
 									AND 
 										A.TENANT_ID = #tenantId#
 									AND 
+										A.COMPANYID = #companyID#
+									AND 
 										A.LADDERID = ANY(
 														SELECT 
 															B.LADDERID 
@@ -335,6 +337,8 @@
 				WHERE
 					A.DELETEFLAG = 0
 				AND 
+					A.COMPANYID = #companyID#
+				AND
 					A.TENANT_ID = #tenantId#
 				AND 
 					A.LADDERID = ANY(
