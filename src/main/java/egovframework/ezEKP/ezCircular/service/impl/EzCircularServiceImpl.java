@@ -188,7 +188,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		circularID = ezCircularDAO.insertCircular(map);
 		
 		for (int i=0; i<receiverLength; i++) {
-			insertCircularUser(circularUserId, circularID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, userInfo.getTenantId());
+			insertCircularUser(circularUserId, circularID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, userInfo.getTenantId(), userInfo.getCompanyID());
 		}
 		
 		//첨부파일 저장
@@ -324,9 +324,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		}
 	}
 
-	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception {
+	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID, String companyID) throws Exception {
 		logger.debug("insertCircularUser started.");
-		logger.debug("circularUserID = " + circularUserID + " || circularID = " + circularID + " || memberID = " + memberID + " || confirmDate = " + confirmDate + " || status = " + status + " || updateStatus = " + updateStatus + " || tenantID = " + tenantID);
+		logger.debug("circularUserID = " + circularUserID + " || circularID = " + circularID + " || memberID = " + memberID + " || confirmDate = " + confirmDate + " || status = " + status + " || updateStatus = " + updateStatus + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularUserID", circularUserID);
@@ -338,6 +338,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("status", status);
 		map.put("updateStatus", updateStatus);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		ezCircularDAO.insertCircularUser(map);
 		
@@ -392,7 +393,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String commentStatusList = "";
 
 		for (int i=0; i<receiverLength; i++) {			
-			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
+			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID, "");
 
 			//의견을 확인 안한 회람자의 commentStatus 를 1 로 update
 			List<CircularListVO> commentStatus = getCommentStatus(circularID, receiverID[i].trim(), tenantID);
@@ -522,7 +523,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		deleteCircularUser(circularID, tenantID);
 		
 		for (int i=0; i<receiverLength; i++) {
-			insertCircularUser(circularUserId, circularID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, confirmDate, updateStatus, tenantID);
+			insertCircularUser(circularUserId, circularID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, confirmDate, updateStatus, tenantID, "");
 		}
 		
 		//첨부파일 삭제 후 등록
