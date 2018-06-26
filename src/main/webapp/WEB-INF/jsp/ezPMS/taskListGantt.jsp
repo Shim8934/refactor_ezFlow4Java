@@ -693,7 +693,6 @@
 	   			//그래프쪽 디자인 수정하기 위해 재정의
 	   			Ganttalendar.prototype.redrawTasks = function (drawAll) {
 	   			  var self=this;
-	   			  //var prof = new Profiler("ganttRedrawTasks");
 
 	   			  self.element.find("table.ganttTable").height(self.master.editor.element.height());
 
@@ -1259,9 +1258,9 @@
 	   		
 	   		
 	   		(function() {
-	   			//임시 크기 조절
+	   			//간트차트 높이 조절.
 	   			window.onresize = function() {
-	   				$("#TWGanttArea").height(parent.innerHeight - 200);
+	   				$("#TWGanttArea").height(parent.innerHeight - 155);
 	   			};
 	   			
 		   		initValues();
