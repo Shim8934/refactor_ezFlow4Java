@@ -642,7 +642,7 @@ function setOverviewContent() {
 						 break;
 						 
 					 case 3 : 
-						 logHTML += "<li><span class='situation_delete'><spring:message code='ezPMS.t11' /></span>";
+						 logHTML += "<li><span class='situation_delet'><spring:message code='ezPMS.t11' /></span>";
 						 break;
 					 }
 					 
