@@ -1971,7 +1971,7 @@
 			    <td class="gdfCell noClip" style="display:none" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+22#)px;">
 			      <div class="exp-controller" align="center"></div>
-			      <input type="text" name="name" value="(#=obj.name#)" placeholder="name">
+			      <input type="text" name="name" value="(#=obj.name#)" placeholder="name" title="(#=obj.name#)" >
 			    </td>
 			    <td class="gdfCell" style="display:none"><input type="text" name="code" value="(#=obj.code?obj.code:''#)" placeholder="code/short name"></td>
 			    <td class="gdfCell" style="display:none" align="center"><input type="checkbox" name="startIsMilestone"></td>
@@ -1983,7 +1983,7 @@
 			    <td class="gdfCell"><input type="text" name="realProgress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.realProgress?obj.realProgress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
 			    <td class="gdfCell"><input type="text" name="planProgress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.planProgress?obj.planProgress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
 			    <td class="gdfCell requireCanSeeDep"><input type="text" name="depends" autocomplete="off" value="(#=obj.depends#)" (#=obj.hasExternalDep?"readonly":""#) title="(#=obj.pretaskName#)"></td>
-			    <td class="gdfCell taskAssigs">(#=obj.getAssigsString()#)</td>
+			    <td class="gdfCell taskAssigs" title="(#=obj.getAssigsString()#)">(#=obj.getAssigsString()#)</td>
 			  </tr>
 			  --></div>
 			
