@@ -20,6 +20,8 @@
 .situation_delay { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #dd7238; border-radius: 3px; color: #fff; }/* 지연 */
 .situation_hold { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #57c7b6; border-radius: 3px; color: #fff; }/* 보류 */
 .situation_delet { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #dd3b3b; border-radius: 3px; color: #fff; }/* 삭제 */
+.situation_registration { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #9860b0; border-radius: 3px; color: #fff; }/* 등록 */
+.situation_modify { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #c65091; border-radius: 3px; color: #fff; }/* 수정 */
 
 /* 프로젝트 목록 */
 .project_mainlist {}
