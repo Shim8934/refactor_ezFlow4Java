@@ -38,7 +38,7 @@
 					<img src="${previewMode == 'none' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg cabinet" id="preViewNone"  >
 					<img src="${previewMode == 'H'    ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">
 					<img src="${previewMode == 'W'    ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg cabinet" id="preViewleft"  >
-					<img src="/images/kr/cm/btn_arrow_up.gif" role="off" id="sltView">
+					<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
 				</li>
 			</ul>
 		</div>

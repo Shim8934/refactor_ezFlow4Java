@@ -3,23 +3,16 @@ package egovframework.ezEKP.ezCabinet.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -144,4 +137,74 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezCabinet/uploadFile.do", method = RequestMethod.POST)
+	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("Upload file is running!");
+		
+		/*LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
+		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
+		String folderId                = request.getParameter("folderId");
+		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
+		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload";
+		
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		requestFactory.setBufferRequestBody(false);
+		
+		RestTemplate restTemplate                       = new RestTemplate(requestFactory);
+		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
+		
+		for (int i = 0; i < messageConverters.size(); i++) {
+			HttpMessageConverter<?> messageConverter = messageConverters.get(i);
+			
+			if (messageConverter.getClass().equals(ResourceHttpMessageConverter.class)) {
+				messageConverters.set(i, new BnkResourceHttpMessageConverter());
+			}
+		}
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		JSONObject jsonObject             = new JSONObject();
+		JSONArray jsonArray               = new JSONArray();
+		
+		for (MultipartFile file: multiFiles) {
+			JSONObject fileJson = new JSONObject();
+			
+			fileJson.put("originalFilename", file.getOriginalFilename());
+			jsonArray.add(fileJson);
+			map.add("files", new MultipartFileResource(file.getInputStream(), file.getOriginalFilename()));
+		}
+		
+		jsonObject.put("nameArray", jsonArray);
+		jsonObject.put("userId", userInfo.getId());
+		jsonObject.put("folderId", folderId);
+		
+		map.add("data", jsonObject);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		headers.set("host-name", request.getServerName());
+		
+		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
+		UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);
+		ResponseEntity<String> result                    = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp         = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		String status         = resultBody.get("status").toString();
+		JSONArray listFileVO  = null;
+		
+		if (status.equals("ok")) {
+			listFileVO = (JSONArray) resultBody.get("data");
+			model.addAttribute("listFile", listFileVO);
+		}
+		else {
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		
+		*/
+		
+		logger.debug("Upload file finishes!");
+		return "json";
+	}
 }
