@@ -332,7 +332,8 @@ public class EzLadderController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
 				.queryParam("offset", userInfo.getOffset())
-				.queryParam("lang", userInfo.getLang());
+				.queryParam("lang", userInfo.getLang())
+				.queryParam("companyID", userInfo.getCompanyID());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -405,7 +406,8 @@ public class EzLadderController {
 				.queryParam("userNames", BMUserVO.getUserNames())
 				.queryParam("userName2s", BMUserVO.getUserName2s())
 				.queryParam("lang", userInfo.getLang())
-				.queryParam("offset", userInfo.getOffset());
+				.queryParam("offset", userInfo.getOffset())
+				.queryParam("companyID", userInfo.getCompanyID());
 		
 		ResponseEntity<String> result = null;
 		

@@ -1301,6 +1301,8 @@
 		WHERE 
 			B.TENANT_ID = #tenant_id#
 		AND
+			B.COMPANYID = #companyID#
+		AND
 			B.USERID = #userId#
 		GROUP BY 
 			LADDERBMID
@@ -1337,7 +1339,7 @@
 			B.USERID = U.CN
 		WHERE 
 			B.TENANT_ID = #tenant_id#
-		AND 
+		AND
 			LADDERBMID = #ladderBmId#
 		ORDER BY 
 			B.ID
@@ -1345,9 +1347,9 @@
 	
 	<insert id="EzLadderDAO.insertLadderBMGroup" parameterClass="LadderBmVO">
 		INSERT 
-			TBL_LADDER_BM (TENANT_ID, BMNAME, USERID, REGDATE)
+			TBL_LADDER_BM (TENANT_ID, BMNAME, USERID, REGDATE, COMPANYID)
 		VALUES 
-			(#tenant_id#, #bmName#, #userId#, #regdate#)
+			(#tenant_id#, #bmName#, #userId#, #regdate#, #companyID#)
 	</insert>
 	
 	<insert id="EzLadderDAO.insertLadderBMUser" parameterClass="LadderBmUserVO">
@@ -1384,6 +1386,8 @@
 			LADDERBMID = #ladderBmId#
 		AND 
 			USERID = #userId#
+		AND
+			COMPANYID = #companyID#
 	</update>
 	
 	<delete id="EzLadderDAO.deleteLadderBMGroup" parameterClass="LadderBmVO">
