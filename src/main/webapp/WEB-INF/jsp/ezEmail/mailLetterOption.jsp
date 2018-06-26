@@ -361,9 +361,11 @@
 							</select>
 						</c:otherwise>
 					</c:choose> -->
-					<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none" </c:if>id="responseReadType" onChange="">
+					<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none" </c:if>id="responseReadType" onChange="" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
 						<option value="1"><spring:message code='ezEmail.t371' /></option>
+						<c:if test="${useReceiptExternal == 'YES'}">
 						<option value="2"><spring:message code='ezEmail.t372' /></option>
+						</c:if>
 					</select>
 				</td>
 			</tr>

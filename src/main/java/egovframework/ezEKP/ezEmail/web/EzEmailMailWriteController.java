@@ -249,7 +249,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// set replyReadTime
 		String isDefaultReceiptExternal = ezCommonService.getTenantConfig("isDefaultReceiptExternal", loginInfo.getTenantId());
-		replyReadTime = "YES".equalsIgnoreCase(isDefaultReceiptExternal) ? "2" : "1";
+		String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", loginInfo.getTenantId());
+		
+		if (useReceiptExternal.equals("YES")) {
+			replyReadTime = "YES".equalsIgnoreCase(isDefaultReceiptExternal) ? "2" : "1";
+		} else {
+			replyReadTime = "1";
+		}
 		
 		// set attributes
 		String userPrimary = loginInfo.getPrimary();
@@ -4559,11 +4565,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", tenantId);
 		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", tenantId);
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", tenantId);
 		
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("individualMailUser", individualMailUser);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("useReceiptExternal", useReceiptExternal);
 		
 		logger.debug("mailLetterOption ended.");
 		return "ezEmail/mailLetterOption";
