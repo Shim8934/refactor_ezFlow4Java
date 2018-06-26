@@ -61,6 +61,10 @@
 	// 버튼 중복클릭 방지
     var doubleSubmitFlag = false;
     
+	$(function() {
+		taskName = $("#taskName").text();
+	})
+	
 	window.onload = function() {
 		
 		$(window).unload(function() {
@@ -88,13 +92,9 @@
 			$('#title').val(title);
 			$('#writeOverview').val(writeOverview);
 			
-			taskName = '<c:out value="${board.taskName ne null ? board.taskName : board.groupName}"/>';
 		} else if (mode == 'reply') {
 			
 			$('#title').val(title);
-			taskName = '<c:out value="${board.taskName ne null ? board.taskName : board.groupName}"/>';
-		} else {
-			taskName = '<c:out value="${taskName}"/>';
 		}
 				
 		var fileList = '${fileList}';
@@ -266,7 +266,7 @@
 						
 						addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + title.trim() + "<spring:message code='ezPMS.t204' />");
 					} else {
-						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + title.trim() + "<spring:message code='ezPMS.t205' />");
+						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> [" + title.trim() + "<spring:message code='ezPMS.t205' />");
 					}
 					
 					if(typeof opener.getBoardList == 'function') {
@@ -363,7 +363,7 @@
 								</c:otherwise>
 							</c:choose>	
 						</th>
-						<td style="width: 50%">
+						<td style="width: 50%" id="taskName">
 							<c:choose>
 								<c:when test="${taskName eq null}">
 									<c:choose>

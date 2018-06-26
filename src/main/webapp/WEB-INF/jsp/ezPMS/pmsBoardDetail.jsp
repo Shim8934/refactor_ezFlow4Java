@@ -26,7 +26,7 @@
 		var groupId = '${board.groupId}';	
 		var taskId = '${board.taskId}';	
 		var title = '${board.title}';
-		var taskName = '<c:out value = "${board.taskName ne null ? board.taskName : board.groupName}"/>';
+		var taskName;
 		var projectName = '<c:out value = "${board.projectName}"/>';
 		var itemIds = new Array(itemId); // 메인화면에서 여러개의 게시물을 한 번에 이동하는 함수를 재사용하기 위함
 		
@@ -42,6 +42,8 @@
 			if(authority == '3') {
 				$("#ReplyBtn").css("display", "none");
 			}
+			
+			taskName = $("#taskName").text();
 		})
 		// 첨부파일 모두 선택
 		function attach_SelectAll() {
@@ -106,7 +108,7 @@
 				data : JSON.stringify(data),
 				success : function(result) {
 					if(result.data == 'success') {
-						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t208' />");
+						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
 						window.close();
 						opener.getBoardList();
 					} else {
@@ -288,7 +290,7 @@
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t98' /></th>
-						<td style="width: 50%">
+						<td style="width: 50%" id="taskName">
 							<c:out value="${board.taskName ne null ? board.taskName : board.groupName}"></c:out>
 						</td>
 						<th><spring:message code='ezPMS.t119' /></th>

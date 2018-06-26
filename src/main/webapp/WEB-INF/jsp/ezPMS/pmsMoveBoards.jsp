@@ -15,10 +15,11 @@
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
-
-	var treeData = JSON.parse('${data}');
 	
 	$(document).ready(function() {
+		var treeData = ${data};
+		treeData = JSON.parse(JSON.stringify(treeData));
+		
 		getProjectTaskTree("taskTree", treeData, false);
 		
 		$("#taskTree").on("dblclick", ".jstree-anchor", function(evt) {
@@ -98,6 +99,12 @@
 	overflow: auto;
 	border: 1px solid silver;
 	height: 198px;
+}
+
+.jstree-node > a {
+   width: 200px;
+   text-overflow: ellipsis;
+   overflow: hidden;
 }
 </style>
 </head>
