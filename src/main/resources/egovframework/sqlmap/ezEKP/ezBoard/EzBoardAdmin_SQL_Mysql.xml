@@ -131,12 +131,16 @@
     			WHERE  
     				TENANT_ID = #v_TENANTID#
     			AND
+       				COMPANYID = #v_COMPANYID#
+    			AND
     				TREEUPPER = A.TREEID) CHILDCNT,
              	TREEBOARDID 
         	FROM 
         		TBL_Board_MyTree A
        		WHERE  
        			TENANT_ID = #v_TENANTID#
+       		AND
+       			COMPANYID = #v_COMPANYID#
        		AND
        			( USERID = #v_PUSERID#
                   OR USERID = 'everyone' )
@@ -527,6 +531,8 @@
      		WHERE  
      			tenant_id = #v_TENANTID#
      		AND
+     			companyid = #v_COMPANYID#
+     		AND
      			BoardID = #v_pBoardID#
      		AND 
      			AccessID = #v_pAccessID#
@@ -662,9 +668,11 @@
 	            width ,
 	            height
 	       FROM 
-	        	TBL_BOARD_BOARDBACKGROUNDINFO	       
+	        	TBL_BOARD_BOARDBACKGROUNDINFO
 	       WHERE
 	       		tenant_id = #tenantID#
+	       	AND
+	       		companyid = #companyID#
 		]]>
 			<isEqual property="type" compareValue="USE">
 		       AND
@@ -715,17 +723,17 @@
 	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
 		INSERT INTO TBL_Board_BoardManage (
-			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID
 		)
         VALUES ( 
-        	#v_pBoardID#, #v_pAccessID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, <isEmpty property="v_PACCESSLEVEL">NULL,</isEmpty><isNotEmpty property="v_PACCESSLEVEL">#v_PACCESSLEVEL#,</isNotEmpty> #v_PACCESS#, #v_PPARENTBOARDID#, #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#, #v_TENANTID# 
+        	#v_pBoardID#, #v_pAccessID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, <isEmpty property="v_PACCESSLEVEL">NULL,</isEmpty><isNotEmpty property="v_PACCESSLEVEL">#v_PACCESSLEVEL#,</isNotEmpty> #v_PACCESS#, #v_PPARENTBOARDID#, #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#, #v_TENANTID#, #v_COMPANYID# 
         )
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID 
 			)
             ( SELECT 
             	#v_pBoardID# ,
@@ -744,11 +752,14 @@
                 INHERIT_FG ,
                 POSTNOTICE ,
                 BOARDGROUPACL,
-                TENANT_ID
+                TENANT_ID,
+                COMPANYID
       	      FROM 
       	      	TBL_Board_BoardManage A
               WHERE  
               	TENANT_ID = #v_TENANTID#
+              AND
+          	  	COMPANYID = #v_COMPANYID#
               AND
               	BOARDID = #v_PDEFAULTBOARDID# )
 		]]>
@@ -757,7 +768,7 @@
 	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID 
 			)
         	( SELECT
         		#v_pBoardID# ,
@@ -776,11 +787,14 @@
                 INHERIT_FG ,
                 POSTNOTICE ,
                 BOARDGROUPACL ,
-                TENANT_ID
+                TENANT_ID,
+                COMPANYID
           	  FROM 
           	  	TBL_Board_BoardManage A
           	  WHERE  
           	  	TENANT_ID = #v_TENANTID#
+          	  AND
+          	  	COMPANYID = #v_COMPANYID#
           	  AND
           	  	BOARDID = #v_PDEFAULTBOARDID#
           	  AND
@@ -836,10 +850,10 @@
 	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardBackGroundInfo ( 
-				BACKGROUNDID, ORGFILENAME, SAVEFILENAME, REGUSERID, REGDATE, ISUSE, SN, WIDTH, HEIGHT, TENANT_ID 
+				BACKGROUNDID, ORGFILENAME, SAVEFILENAME, REGUSERID, REGDATE, ISUSE, SN, WIDTH, HEIGHT, TENANT_ID, COMPANYID
 			)
            	VALUES ( 
-           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, CASE WHEN (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) IS NULL THEN 1 ELSE (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) END, ( SELECT MAX(SN) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
+           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, CASE WHEN (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) IS NULL THEN 1 ELSE (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) END, ( SELECT MAX(SN) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID#, #v_COMPANYID# 
            	)
 		]]>
 	</insert>
@@ -858,10 +872,10 @@
 	<insert id="EzBoardAdminDAO.setMyBoardTreeConfig_N" parameterClass="MyFavoriteVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_MyTree ( 
-				TREEID, USERID, TREENAME, TREENAME2, TREESTEP, TREEUPPER, TREEBOARDID, TENANT_ID 
+				TREEID, USERID, TREENAME, TREENAME2, TREESTEP, TREEUPPER, TREEBOARDID, TENANT_ID, COMPANYID
 			)
             VALUES ( 
-            	#treeId#, #userId#, #treeName#, #treeName2#, ( SELECT CASE WHEN MAX(TREESTEP) IS NULL THEN 1 ELSE MAX(TREESTEP) + 1 END FROM TBL_Board_MyTree A WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID# 
+            	#treeId#, #userId#, #treeName#, #treeName2#, ( SELECT CASE WHEN MAX(TREESTEP) IS NULL THEN 1 ELSE MAX(TREESTEP) + 1 END FROM TBL_Board_MyTree A WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID#, #companyID# 
             )
 		]]>
 	</insert>
@@ -1170,6 +1184,8 @@
             BOARDGROUPACL = #v_PBOARDGROUPACL#
         WHERE  
         	TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #v_COMPANYID#
         AND
         	ACCESSID = #v_PACCESSID#
         AND 

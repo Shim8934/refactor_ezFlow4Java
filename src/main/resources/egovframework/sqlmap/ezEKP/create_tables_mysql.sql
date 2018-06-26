@@ -2471,8 +2471,7 @@ CREATE TABLE `tbl_board_apprlist` (
   `BOARDID` varchar(76) NOT NULL,
   `APPRUSERID` varchar(40) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`APPRUSERID`),
-  `COMPANYID` varchar(80) DEFAULT NULL
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`APPRUSERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2494,7 +2493,8 @@ CREATE TABLE `tbl_board_boardbackgroundinfo` (
   `WIDTH` varchar(510) DEFAULT NULL,
   `HEIGHT` varchar(510) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`BACKGROUNDID`(255))
+  PRIMARY KEY (`TENANT_ID`,`BACKGROUNDID`(255)),
+  `COMPANYID` varchar(80) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2873,7 +2873,8 @@ CREATE TABLE `tbl_board_mytree` (
   `TREEUPPER` varchar(76) DEFAULT NULL,
   `TREEBOARDID` varchar(76) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`TREEID`)
+  PRIMARY KEY (`TENANT_ID`,`TREEID`),
+  `COMPANYID` varchar(80) DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

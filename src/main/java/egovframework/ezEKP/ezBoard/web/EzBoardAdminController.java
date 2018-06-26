@@ -99,9 +99,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String redirectBoardID = "";
 		String redirectBoardGroupID = "";
 		
-		// 게시판ID는 게시판 설정 시 사용하게 된다.(boardProperty.jsp 참고)
+		// 게시판ID는 게시판 일반설정 시 사용하게 된다.(boardProperty.jsp -> /admin/ezBoard/saveBoardProperty.do 참고)
 		if (request.getParameter("boardID") != null) {
 			redirectBoardID = request.getParameter("boardID");
+			// BoardGroupID를 가져온다. 이 부분은 companyID로 제한할 필요가 없다.(관리자는 이미 자신의 companyID로 걸러진 게시판에만 접근하므로)
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, user.getTenantId());
 			
 			redirectBoardGroupID = leftBoardList.get(0).getBoardGroupId();
@@ -112,6 +113,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("user", user);
 		model.addAttribute("serverName", serverName);
 
+		logger.debug("지금 회사ID는      ::   " + user.getCompanyID());
+		
 		logger.debug("boardLeft ended");
 		return "admin/ezBoard/boardLeft";
 	}
@@ -402,8 +405,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("getBackGroundImage started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boardBackgroundVO.setCompanyID(userInfo.getCompanyID());
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
 		
+		/* 2018-06-26 홍승비 - companyID 조건 추가 */
 		List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
 		
 		StringBuffer xmlStr = new StringBuffer();
@@ -549,6 +554,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		boardBackgroundVO.setRegUserID(user.getId());
+		boardBackgroundVO.setCompanyID(user.getCompanyID());
 		boardBackgroundVO.setTenantID(user.getTenantId());
 		
 		MultipartFile file = request.getFile("file1");
@@ -575,6 +581,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		/* 2018-06-26 홍승비 - 배경이미지 저장 시  companyID 삽입 */
 		ezBoardAdminService.saveBackGroundImage(boardBackgroundVO);
 
 		logger.debug("saveBackGroundImage ended");
@@ -736,6 +743,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		boardPropertyVO.setTenantID(userInfo.getTenantId());
 		
+		// 게시판 이름뿐만이 아니라, 만료일이나 승인여부 등 온갖 설정을 다 변경한다.
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
 
 		logger.debug("saveBoardProperty ended");
@@ -880,6 +888,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		String boardName = boardProperty.getBoardName();
 		
+		// 사용자 ID와 부서(회사)ID로 권한 있는 사람/부서의 정보 가져온다.(권한설정 테이블에 나타내기 위해)
+		// 이미 게시판이 각 회사 별로 묶여있기 때문에(companyID추가됨), 해당 게시판에 대한 권한 레코드는 그 회사 사람/부서만이 가진다.
 		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
@@ -1147,31 +1157,35 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String boardID = request.getParameter("boardID");
+		String boardID = request.getParameter("boardID");		
 		String type = request.getParameter("type");
 		
+		// 권한전파 시 companyID 추가 필요
+		// 게시판ID와 부모 게시판ID를 리스트로 받아온다.
 		List<BoardPropertyVO> list = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "2", userInfo.getTenantId());
 		
-		if (type.equals("1")) {
+		if (type.equals("1")) { // 권한 복사(type 1) // 하위 게시판의 ID와 정보들을 리스트로 받아온다.
 			List<BoardPropertyVO> list2 = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "1", userInfo.getTenantId());
 			
-			for (int i = 0; i < list.size(); i++) {
+			for (int i = 0; i < list.size(); i++) { // 게시판ID와 부모 게시판ID만 받아온 리스트에 대해 반복
 				BoardPropertyVO vo1 = list.get(i);
 				
-				for (int j = 0; j < list2.size(); j++) {
-					BoardPropertyVO vo2 = list2.get(j);
+				for (int j = 0; j < list2.size(); j++) { // 모든 정보를 가져온 하위게시판 하나에 대해 반복
+					BoardPropertyVO vo2 = list2.get(j); 
 					
-					vo2.setBoardID(vo1.getBoardID());
+					vo2.setBoardID(vo1.getBoardID()); // 권한을 전파할 게시판ID를 하나씩 가져와 삽입
+					vo2.setCompanyID(userInfo.getCompanyID());
 					vo2.setTenantID(userInfo.getTenantId());
 					
 					ezBoardAdminService.setUnderBoardIDAcl(vo2);
 				}				
 			}			
-		} else {			
+		} else { // 기존권한 삭제 후 복사(type 2)
 			for (int i = 0; i < list.size(); i++) {
 				BoardPropertyVO vo = list.get(i);
 				
-				ezBoardAdminService.setUnderBoardIDAcl2(boardID, vo.getBoardID(), vo.getParentBoardID(), userInfo.getTenantId());
+				/* 2018-06-26 홍승비 - 권한전파 시 companyID 삽입 추가 */
+				ezBoardAdminService.setUnderBoardIDAcl2(boardID, vo.getBoardID(), vo.getParentBoardID(), userInfo.getCompanyID(), userInfo.getTenantId());
 			}
 		}		
 
@@ -1211,7 +1225,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		Document doc = commonUtil.convertStringToDocument(data);
 		
-		rtnValue = ezBoardAdminService.copyBoardAcl(doc, userInfo.getTenantId());
+		/* 2018-06-26 홍승비 - 권한복사 시 companyID 추가 */
+		rtnValue = ezBoardAdminService.copyBoardAcl(doc, userInfo.getCompanyID(), userInfo.getTenantId());
 
 		logger.debug("copyBoardAcl ended");
 		return rtnValue;

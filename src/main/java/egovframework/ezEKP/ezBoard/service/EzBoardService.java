@@ -50,7 +50,8 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID, int tenantID) throws Exception;
 	
-	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, int tenantID) throws Exception;
+	/* 예약게시물 표출 시 companyID 조건 추가 */
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, String companyID, int tenantID) throws Exception;
 	
 	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, int tenantID) throws Exception;
 	
@@ -122,7 +123,8 @@ public interface EzBoardService {
 	
 	public String setBoardConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 	
-	public String apprItem(String userID, String itemList, String pMod, int tenantID) throws Exception;
+	/* 2018-06-26 홍승비 - 승인게시물 표출 조건으로 companyID 추가 */
+	public String apprItem(String userID, String itemList, String pMod, String companyID, int tenantID) throws Exception;
 	
 	public String deleteOneLineReply(String id, String replyID, String guBun, int tenantID) throws Exception;
 	
@@ -133,7 +135,8 @@ public interface EzBoardService {
 	/* 2018-06-25 홍승비 - 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가 */
 	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang, int tenantID) throws Exception;
 	
-	public int getReservedItemListCount(String userID, int tenantID) throws Exception;
+	/* 예약게시물 카운트 표출 시 companyID 조건 추가 */
+	public int getReservedItemListCount(String userID, String companyID, int tenantID) throws Exception;
 	
 	public int getNewItemListCount(LoginVO userInfo) throws Exception;
 

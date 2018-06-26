@@ -21,8 +21,10 @@ public class BoardBackgroundVO {
 	private String height;
 	/** 타입*/
 	private String type;
-	/** tenantid*/
+	/** tenantID*/
 	private int tenantID;
+	/** 2018-06-26 홍승비 companyID 추가 */
+	private String companyID;
 
 	public String getBackgroundID() {
 		return backgroundID;
@@ -89,6 +91,12 @@ public class BoardBackgroundVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 	
 }

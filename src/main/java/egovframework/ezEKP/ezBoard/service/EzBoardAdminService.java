@@ -30,7 +30,8 @@ public interface EzBoardAdminService {
 	
 	public List<BoardAttributeVO> getBoardHeader(String gubun, String boardID, int tenantID) throws Exception;
 	
-	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID, int tenantID) throws Exception;	
+	/* 2018-06-26 홍승비 - 마이게시판 트리 가져올때 companyID 조건 추가 */
+	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID, String companyID, int tenantID) throws Exception;	
 	
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;	
 	
@@ -94,7 +95,8 @@ public interface EzBoardAdminService {
 
 	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception;
 
-	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, int tenantID) throws Exception;
+	/* 2018-06-26 홍승비 - 권한전파 시 companyID 조건 추가 */
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, String companyID, int tenantID) throws Exception;
 
 	public void saveBoardProperty_appr(String boardID, String apprUserID, String pMode, int tenantID) throws Exception;
 
@@ -104,7 +106,8 @@ public interface EzBoardAdminService {
 
 	public void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception;
 
-	public String copyBoardAcl(Document doc, int tenantID) throws Exception;
+	/* 2018-06-26 홍승비 - 권한복사 시 companyID 추가 */
+	public String copyBoardAcl(Document doc, String companyID, int tenantID) throws Exception;
 	
 
 }
