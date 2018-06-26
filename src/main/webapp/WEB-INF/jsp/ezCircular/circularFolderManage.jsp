@@ -176,23 +176,23 @@
 	<body style="overflow:hidden;" class="popup">
 		<h1 style="margin-bottom:0px;"><spring:message code='ezCircular.t9' /></h1>
 		<div id="close">
-		  <ul>
-		    <li><span onClick="close_onclick()"><spring:message code='ezCircular.t84' /></span></li>
-		  </ul>
-		</div>
-		<div style="margin-bottom:5px;">
+			<ul>
+		    	<li><span onClick="close_onclick()"><spring:message code='ezCircular.t84' /></span></li>
+		  	</ul>
+		</div>		
+		<table class="popuplist" style="width:100%;margin-top:5px">
+			<tr>
+		    	<td>
+		        	<div style="height:390px;width:100%;overflow-x:auto;overflow-y:auto;background-color:#FFFFFF;padding-left:2px;padding-top:5px;" id="PostTreeView">
+					</div>
+		    	</td>
+		  	</tr>
+		</table>
+		<div class="btnposition" style="margin-top:10px;">
 		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezCircular.t77' /></span></a>
 		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezCircular.t29' /></span></a>
 		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezCircular.t30' /></span></a>
 		</div>
-		<table class="popuplist" style="width:100%">
-		  <tr>
-		    <td>
-		        <div style="height:400px;width:100%;overflow-x:auto;overflow-y:auto;background-color:#FFFFFF;padding-left:2px;padding-top:5px;" id="PostTreeView">
-				</div>
-		    </td>
-		  </tr>
-		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>

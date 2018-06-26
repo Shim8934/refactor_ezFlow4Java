@@ -317,6 +317,11 @@
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.t353' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel()"><spring:message code='ezEmail.t63' /></span></li>
+            </ul>
+        </div>
 		<table style="width:100%;" class="content">
 			<tr style="display:none;">
 				<th><spring:message code='ezEmail.t363' /></th>
@@ -393,7 +398,6 @@
 		</c:if>
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
-			<a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 	</body>
 </html>
