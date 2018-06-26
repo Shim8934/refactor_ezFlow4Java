@@ -427,6 +427,8 @@ body{
 
 .taskEditRow input{
   background-color: transparent;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .taskEditRow.rowSelected td{
