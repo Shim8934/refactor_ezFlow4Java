@@ -86,7 +86,7 @@
 	   			ganttData.selectedRow = 0;
 	   			ganttData.deletedTaskIds = [];
 	   			//간트 줌 설정 3d, 1w, 1M, 1Q, 2Q, 1y, 2y
-	   			ganttData.zoom = "3d";
+	   			ganttData.zoom = "1M";
 // 	   			ganttData.canAdd = true;
 	   			preProcess();
 	   			/*-------------------------기타 세팅 -----------------------*/
@@ -2400,9 +2400,9 @@
 			      "TASK_MOVE_INCONSISTENT_LEVEL":"You cannot exchange tasks of different depth.",
 			      "CANNOT_MOVE_TASK":"CANNOT_MOVE_TASK",
 			      "PLEASE_SAVE_PROJECT":"PLEASE_SAVE_PROJECT",
-			      "GANTT_SEMESTER":"Semester",
+			      "GANTT_SEMESTER":"<spring:message code='ezPMS.t303' />",
 			      "GANTT_SEMESTER_SHORT":"s.",
-			      "GANTT_QUARTER":"Quarter",
+			      "GANTT_QUARTER":"<spring:message code='ezPMS.t302' />",
 			      "GANTT_QUARTER_SHORT":"q.",
 			      "GANTT_WEEK":"<spring:message code='ezCommunity.t591' />",
 			      "GANTT_WEEK_SHORT":"<spring:message code='ezCommunity.t591' />"
