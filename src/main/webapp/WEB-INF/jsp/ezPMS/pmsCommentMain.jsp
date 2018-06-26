@@ -268,7 +268,7 @@
 		searchByEndDate = "";
 		searchByContent = "";
 		
-		var searchCondition = $("#searchCondition option:selected").val();
+		var searchCondition = $("#searchArea option:selected").val();
 		var searchKeyword = $("#searchKeyword").val();
 		
 		if(searchCondition == 'searchByUser') {
@@ -311,9 +311,9 @@
 		console.log(taskName);
 		taskName = convertString(taskName);
 		
-		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
+		contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
 
-		$("#taskName").html(contentTitle);
+		$("#taskNameArea").html(contentTitle);
 	}
 </script>
 
@@ -372,6 +372,13 @@
 	table.mainlist th {
 		cursor: pointer;
 	}
+	
+	#taskNameArea {
+		width : 50%;
+		white-space : nowrap;
+		overflow : hidden;
+		text-overflow : ellipsis;
+	}
 </style>
 
 </head>
@@ -379,21 +386,22 @@
 	<div id="taskTree"></div>
 	<div id="projectArea">
 		<div id="projectContent">
-			<div id="iconLine">
-				<div id="taskName"></div>
-				<div style="float: right;">
-					<select id="searchCondition" onchange="setSearchInput(this.value)" style="height:24px;">
+			<div id="iconLine" class="mainbody" style="margin:0px;">
+				<h1 id="taskName"><div id="taskNameArea" style="display:inline-block"></div>
+				<span id="searchArea" style="float:right;font-weight:normal;color:black;">
+					<select id="searchCondition" onchange="setSearchInput(this.value)">
 						<option value="searchByUser"><spring:message code='ezPMS.t129' /></option>
 						<option value="searchByContent"><spring:message code='ezPMS.t130' /></option>
 						<option value="searchByWriteDate"><spring:message code='ezPMS.t131' /></option>
 					</select>
-					<input id="searchKeyword" type="text" onkeydown="searchKeyEvent()"/>
+					<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top">
 					<span id="searchDate" style="display: none;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 					</span>
-					<a href="#" style="float:right; margin-left:8px;"><img src="../../images/sub/bsearch.gif" border="0" onclick="searchComment()" style="height:24px; margin-top:1px;"></a>
-				</div>
+					<a id="searchButton" href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onclick="searchComment()"></a>
+				</span>
+				</h1>
 			</div>
 			<div id="contentList" style="overflow: auto">
 				<span id="MailListRayer"

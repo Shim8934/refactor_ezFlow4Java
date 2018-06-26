@@ -229,6 +229,13 @@ function selectedTR(elem) {
 	overflow : hidden;
 	text-overflow : ellipsis;
 }
+
+#iconLine {
+	height: 80px;
+	margin-left: 10px;
+	margin-top: 5px;
+	margin-right: 20px;
+}
 </style>
 </head>
 <body>
@@ -243,7 +250,7 @@ function selectedTR(elem) {
 				<option value="2"><spring:message code='ezPMS.t188' /></option>
 			</select>
 			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top">
-                <a id="searchButton" href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onclick="searchComment()"></a>
+                <a id="searchButton" href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onclick="searchLogContent()"></a>
 			<select id="searchStatus" onchange="searchLogStatus(this.value)">
 				<option value="0"><spring:message code='ezPMS.t14' /></option>
 				<option value="1"><spring:message code='ezPMS.t40' /></option>

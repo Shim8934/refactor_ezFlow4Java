@@ -96,11 +96,11 @@ $(function(){
 	
 	if (viewType == 0) {
 		$("#memoStyleDiv").css("display", "");
-		$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
+		$("#memoStyle").attr("src", "/images/kr/cm/btn_cardframe_on.png");
 		document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
 	} else {
 		$("#MailListRayer").css("display", "inline-block");
-		$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+		$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe_on");
 		
 		document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";

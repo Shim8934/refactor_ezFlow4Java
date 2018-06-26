@@ -105,19 +105,19 @@ $(document).ready(function() {
 		if (viewType == 0) {
 			document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
 		} else {
-			document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+			document.getElementById("MailListRayer").style.height = CurrentHeight - 1 + "px";
 		}
 
 		if (viewType == 0) {
 			$("#memoStyleDiv").css("display", "");
-			$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
+			$("#memoStyle").attr("src", "/images/kr/cm/btn_cardframe_on.png");
 			document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
 		} else {
 			$("#MailListRayer").css("display", "inline-block");
-			$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+			$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe_on.png");
 			
 			document.getElementById("divList").style.overflow = "auto";
-			document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+			document.getElementById("MailListRayer").style.height = CurrentHeight - 1 + "px";
 			document.getElementById("MailListRayer").style.width = "100%";
 			document.getElementById("divList").style.height = (CurrentHeight - 45) + "px";
 			document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
@@ -129,14 +129,14 @@ $(document).ready(function() {
 function projectListScroll() {
 	if (viewType == 0) {
 		$("#memoStyleDiv").css("display", "");
-		$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
+		$("#memoStyle").attr("src", "/images/kr/cm/btn_cardframe_on.png");
 		document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
 	} else {
 		$("#MailListRayer").css("display", "inline-block");
-		$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+		$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe_on.png");
 		
 		document.getElementById("divList").style.overflow = "auto";
-		document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+		document.getElementById("MailListRayer").style.height = CurrentHeight - 1 + "px";
 		document.getElementById("MailListRayer").style.width = "100%";
 		document.getElementById("divList").style.height = (CurrentHeight - 45) + "px";
 		document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
@@ -304,8 +304,8 @@ function changeMemoStyle() {
 	changeMainSetting();
 	setProjectList("new");
 	
-	$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
-	$("#boardStyle").attr("src", "/images/kr/cm/btn_bottomframe.gif");
+	$("#memoStyle").attr("src", "/images/kr/cm/btn_cardframe_on.png");
+	$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe.png");
 	$("#listcountTR").css("display", "none");
 }
 
@@ -317,8 +317,8 @@ function changeBoardStyle() {
 	changeMainSetting();
 	setProjectList("new");
 	
-	$("#memoStyle").attr("src", "/images/kr/cm/btn_noframe.gif");
-	$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+	$("#memoStyle").attr("src", "/images/kr/cm/btn_cardframe.png");
+	$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe_on.png");
 	$("#listcountTR").css("display", "");
 	
 }
@@ -977,6 +977,10 @@ function searchProject() {
 .statusSpan {
 	color :  #ffffff;
 }
+
+.project_mainlistUL li {
+	cursor : pointer;
+}
 </style>
 </head>
 <body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
@@ -1002,8 +1006,8 @@ function searchProject() {
 		<li><span id="addFavorite" onclick="addFavorite()"><spring:message code='ezPMS.t7' /></span></li>
 		<li><span id="searchProject" onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
 		<li id="right">
-	        <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="memoStyle" onclick="changeMemoStyle()">
-	        <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="boardStyle" onclick="changeBoardStyle()">
+	        <img src="/images/kr/cm/btn_cardframe.png" width="22" height="20" class="btnimg" id="memoStyle" onclick="changeMemoStyle()">
+	        <img src="/images/kr/cm/btn_listframe.png" width="22" height="20" class="btnimg" id="boardStyle" onclick="changeBoardStyle()">
 			<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 		</li>
 	</ul>
