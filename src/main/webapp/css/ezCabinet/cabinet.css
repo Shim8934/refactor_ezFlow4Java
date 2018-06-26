@@ -15,9 +15,8 @@
 .deptOrg .mainlist tr th {border-top: none !important;}
 .cabiMain {margin-left:5px}
 .cabiMain .bttnDiv {width: 400px; text-align: center;}
-.cabiMain .cabBttnDiv {width: 400px; text-align: center; margin: 10px auto;}
 .cabGeneral {margin: 0px 10px;}
-.cabGeneral .cabBttnDiv {width: 623px; text-align: center;}
+.cabGeneral .cabBttnDiv, .cabiMain .cabBttnDiv {width: 623px; text-align: center;}
 .cabPersonalDiv, .cabGroupDiv {height: 500px; display: flex;}
 .cabPersonalDiv >div {border: 1px solid #ddd;}
 .cabPersonalDiv .compOrg, .cabGroupDiv .compOrg {width: 250px; min-width: 250px; padding: 5px;}

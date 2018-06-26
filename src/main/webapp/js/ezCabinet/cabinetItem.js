@@ -70,7 +70,7 @@ var CabinetItem = function() {
 	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
 	function initEvents() {
-		document.onselectstart = function () { return false;};
+		document.onselectstart = function() { return false;};
 		var sSearchInputElmt   = document.getElementById("ssInput");
 		sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
 		sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
@@ -113,7 +113,7 @@ var CabinetItem = function() {
 		libttns[3].firstElementChild.onclick  = function() {moveFileConfirm();};
 		libttns[5].firstElementChild.onclick  = function() {refresh();};
 		libttns[6].firstElementChild.onclick  = function() {toggleSearchPanel();};
-		libttns[8].firstElementChild.onclick  = function() {openSharePanel();};
+		libttns[8].firstElementChild.onclick  = function() {openSharePopup();};
 		
 		$("#Sdatepicker").datepicker({
 			changeMonth: true,

@@ -18,10 +18,11 @@
 			
 			<!-- 용량설정 -->
 			<h2><span><spring:message code='ezCabinet.t10'/></span></h2>
-			<ul>
-				<li><span id="personal"><spring:message code='ezCabinet.t11'/></span></li>
-				<li><span id="group"   ><spring:message code='ezCabinet.t12'/></span></li>
-			</ul>
+			<ul></ul>
+			
+			<!-- 연동설정 -->
+			<h2><span><spring:message code='ezCabinet.t31'/></span></h2>
+			<ul></ul>
 		</div>
 		<div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;" onclick="closePop();"></div>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -38,18 +39,15 @@
 					
 					h2List[0].addEventListener("click", function(e) {getBasicPage();}, false);
 					h2List[1].addEventListener("click", function(e) {getPersonalPage();}, false);
+					h2List[2].addEventListener("click", function(e) {getRelatedConfig();}, false);
 					h2List[0].firstElementChild.onclick = function(e) {getBasicPage();};
 					h2List[1].firstElementChild.onclick = function(e) {getPersonalPage();};
-					
-					var persElmnt     = document.getElementById("personal");
-					var groupElmt     = document.getElementById("group");
-					persElmnt.onclick = function(e) {getPersonalPage();};
-					groupElmt.onclick = function(e) {getGroupPage();};
+					h2List[2].firstElementChild.onclick = function(e) {getRelatedConfig();};
 				}
 				
-				function getBasicPage()    {window.open("/admin/ezCabinet/getBasicPage.do", "right");}
-				function getPersonalPage() {window.open("/admin/ezCabinet/getPersonalPage.do", "right");}
-				function getGroupPage()    {window.open("/admin/ezCabinet/getGroupPage.do", "right");}
+				function getBasicPage()     {window.open("/admin/ezCabinet/getBasicPage.do", "right");}
+				function getPersonalPage()  {window.open("/admin/ezCabinet/getPersonalPage.do", "right");}
+				function getRelatedConfig() {window.open("/admin/ezCabinet/getRelatedCabinetConfig.do", "right");}
 			})();
 		</script>
 	</body>

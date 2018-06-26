@@ -26,33 +26,40 @@ public class EzCabinetAdminController {
 	
 	@RequestMapping(value = "/admin/ezCabinet/cabinetAdminMain.do")
 	public String jspAdminPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jspAdminPage start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
 			return "cmm/error/adminDenied";
 		}
 		
+		logger.debug("jspAdminPage end");
 		return "admin/ezCabinet/adminMain";
 	}
 	
 	@RequestMapping(value="/admin/ezcabinet/adminTop.do")
 	public String jspAdminTop() throws Exception {
+		logger.debug("jspAdminTop start");
+		logger.debug("jspAdminTop end");
 		return "admin/ezCabinet/cabinetAdminTop";
 	}
 	
 	@RequestMapping(value="/admin/ezcabinet/cabinetAdminLeft.do")
 	public String jspAdminLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jspAdminLeft start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
 			return "cmm/error/adminDenied";
 		}
 		
+		logger.debug("jspAdminLeft end");
 		return "admin/ezCabinet/cabinetAdminLeft";
 	}
 	
 	@RequestMapping(value="/admin/ezCabinet/getBasicPage.do")
 	public String jspGetBasicPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetBasicPage start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
@@ -72,11 +79,13 @@ public class EzCabinetAdminController {
 			return "cmm/error/dataAccessFailure";
 		}
 		
+		logger.debug("jspGetBasicPage end");
 		return "admin/ezCabinet/cabinetBasicConfig";
 	}
 	
 	@RequestMapping(value="/admin/ezCabinet/getPersonalPage.do")
 	public String jspGetPersonalPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetPersonalPage start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
@@ -97,11 +106,13 @@ public class EzCabinetAdminController {
 			return "cmm/error/dataAccessFailure";
 		}
 		
+		logger.debug("jspGetPersonalPage end");
 		return "admin/ezCabinet/cabinetPersonalConfig";
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/getGroupPage.do")
-	public String jspGetGroupPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	@RequestMapping(value="/admin/ezCabinet/getRelatedCabinetConfig.do")
+	public String jspGetRelatedCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetRelatedCabinetConfig start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
@@ -109,7 +120,6 @@ public class EzCabinetAdminController {
 		}
 		
 		JSONObject resultObj = cabinetRestService.getCompanyList(request, user.getId());
-		
 		String status        = resultObj.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -122,7 +132,8 @@ public class EzCabinetAdminController {
 			return "cmm/error/dataAccessFailure";
 		}
 		
-		return "admin/ezCabinet/cabinetGroupConfig";
+		logger.debug("jspGetRelatedCabinetConfig end");
+		return "admin/ezCabinet/cabinetAdminInterLock";
 	}
 	
 }
