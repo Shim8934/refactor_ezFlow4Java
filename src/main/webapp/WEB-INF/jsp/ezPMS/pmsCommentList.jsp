@@ -241,8 +241,8 @@
 							</td>
 							<td>${fn:substring(commentVO.writeDate, 0, 16)}</td>
 							<td>
-								<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezLadder/icon_game03_no.png" height="20"/></span>
-								<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete_thirty.png" height="20"/></span>
+								<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_modify.png"/></span>
+								<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_eliminate.png"/></span>
 							</td>
 						</tr>
 					</c:forEach>

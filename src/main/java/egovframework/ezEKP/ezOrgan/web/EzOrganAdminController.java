@@ -1301,7 +1301,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					OrganDeptVO deptVO = ezOrganService.getDeptInfo(vo.getParentCn(), userInfo.getPrimary(), tenantID);//user의 부서 정보
 					companyId = deptVO.getExtensionAttribute2();//회사 ID
 					String beforeTitle = useRankMailUser.getTitle();//이전의 직위
-					String beforePosition = useRankMailUser.getExtensionAttribute102(); //이전의 직책
+					String beforePosition = useRankMailUser.getExtensionAttribute10(); //이전의 직책
 					
 					if (!jobTile.equals("")) {
 						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
