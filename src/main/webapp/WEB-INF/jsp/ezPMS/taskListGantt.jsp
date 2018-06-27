@@ -559,7 +559,8 @@
 	   				console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
 	   			  	
 	   				var taskDepends = task.depends.split(",");
-	   				var preTask = ge.tasks[taskDepends[taskDepends.length - 1] - 1];		
+	   				var taskDepend = taskDepends[taskDepends.length - 1];
+	   				var preTask = ge.tasks[taskDepend - 1];		
 	   				var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
 	   			  	var taskDuration = task.duration;
 	   			  	var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
@@ -567,7 +568,7 @@
 	   			  	var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
 	   			  	var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
 	   			  	var progress = task.progress;
-	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepends - 1).find("input[name='name']").val();
+	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepend - 1).find("input[name='name']").val();
 	   			  	var projectId = task.id.match(/p(\d+)/)[1];
 	   			    
 	   			  	if(taskId == null || preTaskId == null) {
@@ -1571,13 +1572,6 @@
 	   				$("#pmsGanttRowNewBtn").css("display", "");
 	   				$("#pmsGanttRowDelBtn").css("display", "");
 	   			}
-	   			
-	   			setTimeout(function() {
-	   				$("#workSpace #linksGroup .taskLinkPathSVG").dblclick(function() {
-		   				alert("까꿍");
-		   			})
-	   			}, 100);
-	   			
 	   		})
 
 	   		function getMemberSchedule() {
