@@ -1488,7 +1488,7 @@
 	   							var start = dateToYYYYMMDD(new Date(ge.tasks[i].start));
 	   		   					var end = dateToYYYYMMDD(new Date(ge.tasks[i].end));
 	   		   					
-	   							infoHTML += "<div style='background-color:#d1d1d1'>" + ge.tasks[i].name + "</div>";
+	   							infoHTML += "<div class='tooltipTitle' style='background-color:#d1d1d1'>" + ge.tasks[i].name + "</div>";
 	   							infoHTML += "<div>";
 	   							infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
@@ -1501,7 +1501,7 @@
 	   					var start = dateToYYYYMMDD(new Date(ge.tasks[0].start));
 	   					var end = dateToYYYYMMDD(new Date(ge.tasks[0].end));
 	   					
-						infoHTML += "<div style='background-color:#d1d1d1'>" + ge.tasks[0].name + "</div>";
+						infoHTML += "<div class='tooltipTitle' style='background-color:#d1d1d1'>" + ge.tasks[0].name + "</div>";
 						infoHTML += "<div>";
 						infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 						infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
@@ -1654,6 +1654,11 @@
 			display : none;
 		  }
 		  
+		  .tooltipTitle {
+		  	text-overflow : ellipsis;
+		  	white-space : nowrap;
+		  	overflow : hidden;
+		  }
 /* 		  .isParent.project .exp-controller { */
 /* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
 /* 		  } */
