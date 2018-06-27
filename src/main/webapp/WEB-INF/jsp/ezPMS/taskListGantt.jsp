@@ -871,8 +871,6 @@
 
 	   			    });
 	   			    
-					
-	   				
 	   			    // 삭제 처리 위해 추가
 	   			    link.dblclick(function() {
 	   			    	
@@ -901,7 +899,7 @@
 	   				contentType: "application/json; charset=UTF-8",
 	   				url : "/ezPMS/deletePretaskRel.do",
 	   				success : function(result) {
-	   					location.reload();
+	   					$('#workSpace').trigger('deleteFocused.gantt');
 	   				}
 	   			});
 	   		}
