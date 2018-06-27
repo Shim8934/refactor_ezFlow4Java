@@ -880,7 +880,7 @@
 		<div style="vertical-align:top;border:0px solid red; white-space:nowrap;" id="list_Layer">
 			<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%">
 			    <tr>
-					<th style="cursor:pointer;text-align:center;padding:4px 7px 4px 1px;width:20px;">
+					<th style="cursor:pointer;text-align:center;width:20px;">
 				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
 					</th>
 					<th style="text-align:center;width:40px;vertical-align: middle;padding:0px"><img src="/images/i_individual.gif" border="0"></th>
