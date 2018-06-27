@@ -194,7 +194,8 @@
 	            initFontSize : defaultFontSize,
 	            skin : "classic",
 	            uploadFilePath : uploadFilePath,
-	            uploadPasteContentsPath : uploadPasteContentsPath
+	            uploadPasteContentsPath : uploadPasteContentsPath,
+	            autoFocus : false
 	        });
 	        
 	        xfe.render('xfe');
