@@ -188,7 +188,7 @@
 	    </div>
 	    <div id="close">
 	    	<ul>
-	    		<li><span onclick="window.close()"><spring:message code='ezCommunity.t21' /></span></li>
+	    		<li><span onclick="window.close()"></span></li>
 	    	</ul>
 	    </div>
 	    <%-- 2018-05-16 홍승비 - 경고메세지 처리를 jsp 내부에서 보이도록 하기 위해 수정 --%>
@@ -323,7 +323,6 @@
 	    </form>	    
 	    <script type="text/javascript">
             selToggleList(document.getElementById("menu"), "ul", "li", "0");
-            selToggleList(document.getElementById("close"), "ul", "li", "0");
         </script>
 	</body>
 </html>

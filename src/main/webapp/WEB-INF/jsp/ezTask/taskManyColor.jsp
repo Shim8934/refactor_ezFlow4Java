@@ -115,7 +115,7 @@
 	    <h1><spring:message code="ezTask.t91" /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 	    <!-- <table onClick="select_color(event)" border="1" cellspacing="2" id="ColorTable" style="width:259px;" class="box">

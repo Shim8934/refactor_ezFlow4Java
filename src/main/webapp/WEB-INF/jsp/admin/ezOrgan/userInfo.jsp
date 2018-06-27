@@ -532,7 +532,7 @@
 	    </div>
 	    <div id="close">
 	    	<ul>
-	            <li><span onclick="window.close()"><spring:message code='ezOrgan.t143' /></span></li>
+	            <li><span onclick="window.close()"></span></li>
 	        </ul>
 	    </div>
 	    <div class="portlet_tabpart01">

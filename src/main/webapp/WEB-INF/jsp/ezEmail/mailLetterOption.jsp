@@ -319,7 +319,7 @@
 		<h1><spring:message code='ezEmail.t353' /></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="cancel()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="cancel()"></span></li>
             </ul>
         </div>
 		<table style="width:100%;" class="content">

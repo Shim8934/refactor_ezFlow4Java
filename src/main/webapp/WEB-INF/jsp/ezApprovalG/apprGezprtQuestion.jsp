@@ -183,7 +183,7 @@
 		<h1><spring:message code='ezApprovalG.t10018'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="return Cancel()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return Cancel()"></span></li>
             </ul>
         </div>
 		<span>▒ <spring:message code='ezApprovalG.t10019'/></span>
