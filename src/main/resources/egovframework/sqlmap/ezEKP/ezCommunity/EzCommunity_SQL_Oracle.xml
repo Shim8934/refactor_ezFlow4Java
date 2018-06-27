@@ -1536,8 +1536,6 @@
 			WHERE
 				userid = #v_RECORD_C_SYSOPID#
 			AND
-				companyid = #companyID#
-			AND
 				tenant_id = #tenantID#
 		]]>
 	</select>
@@ -1656,8 +1654,6 @@
 			WHERE
 				RTRIM(A.c_clubno) = #v_CODE#
 			AND
-				B.companyid = #companyID#
-			AND
 				A.tenant_id = #tenantID#
 		]]>
 	</select>
@@ -1669,7 +1665,7 @@
 		<isEqual property="v_FLAG" compareValue="ID">
 			<![CDATA[
 				SELECT
-					DISTINCT A.c_id,
+					A.c_id,
 					A.companyid,
 					CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 				FROM
@@ -1687,8 +1683,6 @@
 				AND
 					A.c_id LIKE '%' || #v_SER# || '%'
 				AND
-					A.companyid = #companyID#
-				AND
 					A.tenant_id = #tenantID#
 			]]>
 		</isEqual>
@@ -1696,7 +1690,7 @@
 			<isEqual property="v_FLAG" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						DISTINCT A.c_id,
+						A.c_id,
 						A.companyid,
 						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 					FROM
@@ -1714,15 +1708,13 @@
 					AND
 						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE '%' || #v_SER# || '%'
 					AND
-						A.companyid = #companyID#
-					AND
 						A.tenant_id = #tenantID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_FLAG" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						DISTINCT A.c_id,
+						A.c_id,
 						A.companyid,
 						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 					FROM
@@ -1737,8 +1729,6 @@
 						RTRIM(c_clubno) = #v_CODE#
 					AND
 						permit <> 0
-					AND
-						A.companyid = #companyID#
 					AND
 						A.tenant_id = #tenantID#
 				]]>
@@ -1809,7 +1799,7 @@
 	<select id="EzCommunityDAO.adminMemPermitGet2"				parameterClass="Map"		resultClass="CommunityCClubUserVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				DISTINCT A.c_id,
+				A.c_id,
 				A.companyid,
 				A.c_indate,
 				B.username$v_USERINFO_LANG$
@@ -1825,8 +1815,6 @@
 				RTRIM(A.c_clubno) = #v_CODE#
 			AND
 				permit = '0'
-			AND
-				A.companyid = #companyID#
 			AND
 				A.tenant_id = #tenantID#
 		]]>
@@ -1863,8 +1851,6 @@
 				AND
 					c_adminconfirm = 'Y'
 				AND
-					TBL_C_CLUB.companyid = #companyID#
-				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				GROUP BY
 					c_name,
@@ -1898,8 +1884,6 @@
 					TBL_C_CATEGORY.c_cat = #cat#
 				AND
 					c_adminconfirm = 'Y'
-				AND
-					TBL_C_CLUB.companyid = #companyID#
 				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				GROUP BY
@@ -1955,8 +1939,6 @@
 					AND
 						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
 					AND
-						TBL_C_CLUB.companyid = #companyID#
-					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
 				WHERE
@@ -2008,8 +1990,6 @@
 					AND
 						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
 					AND
-						TBL_C_CLUB.companyid = #companyID#
-					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
 				WHERE
@@ -2056,8 +2036,6 @@
 					WHERE
 						$v_searchName$ LIKE '%' || #v_searchValue# || '%'
 					AND
-						T1.companyid = #companyID#
-					AND
 						T1.tenant_id = #tenantID#
 					)
 				WHERE
@@ -2094,8 +2072,6 @@
 						T1.tenant_id = T2.tenant_id
 					WHERE
 						$v_searchName$ LIKE '%' || #v_searchValue# || '%'
-					AND
-						T1.companyid = #companyID#
 					AND
 						T1.tenant_id = #tenantID#
 					)
@@ -2353,8 +2329,6 @@
 				TBL_C_CLUB.c_adminconfirm = 'Y'
 			AND
 				permit <> 0
-			AND
-				TBL_C_CLUB.companyid = #companyID#
 			AND
 				TBL_C_CLUBUSER.tenant_id = #tenantID#
 			ORDER BY
@@ -2801,8 +2775,6 @@
                 WHERE
                 	c_adminconfirm = 'Y'
                 AND
-                	TBL_C_CLUB.companyid = #companyID#
-				AND
                 	TBL_C_CLUB.tenant_id = #tenantID#
                 ORDER BY
                 	c_membercnt DESC
@@ -2842,8 +2814,6 @@
                 AND
                 	c_adminconfirm = 'Y'
                 AND
-                	TBL_C_CLUB.companyid = #companyID#
-				AND
                 	TBL_C_CLUB.tenant_id = #tenantID#
                 ORDER BY
                 	c_regdate DESC)
@@ -2957,8 +2927,6 @@
 				FROM
 					TBL_C_CLUB
 				WHERE
-					companyid = #companyID#
-				AND
 					tenant_id = #tenantID#
 				) T1
 			WHERE
@@ -2980,8 +2948,6 @@
 				TBL_C_CLUB.tenant_id = T2.tenant_id
 			WHERE
 				c_adminconfirm = 'Y'
-			AND
-				companyid = #companyID#
 			AND
 				TBL_C_CLUB.tenant_id = #tenantID#
 		]]>
@@ -3029,8 +2995,6 @@
 						TBL_C_CLUB.tenant_id = T2.tenant_id
 					WHERE
 						c_adminconfirm = 'Y'
-					AND
-						TBL_C_CLUB.companyid = #companyID#
 					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
@@ -3740,8 +3704,6 @@
 			WHERE
 				userid = #v_POLLREGUSER#
 			AND
-				companyid = #companyID#
-			AND
 				tenant_id = #tenantID#
 		]]>
 	</select>
@@ -3837,14 +3799,12 @@
 					(SELECT
 						T1.c_clubno,
                         writedate,
-                        T1.companyid,
                         T1.tenant_id,
                         ROW_NUMBER() OVER (ORDER BY writedate DESC) ROWNUM_  
                   	FROM 
                   		(SELECT
 							DISTINCT TBL_C_CLUBUSER.c_clubno,
 							MAX(writedate) WRITEDATE,
-							TBL_C_CLUB.companyid,
 							TBL_C_CLUBUSER.tenant_id
                        	FROM
                        		TBL_C_CLUBUSER 
@@ -3873,16 +3833,12 @@
                        	AND
                        		TBL_C_CLUBUSER.permit <> 0
                        	AND
-                       		TBL_C_CLUBUSER.companyid = #companyID#
-                       	AND
                        		TBL_C_CLUBUSER.tenant_id = #tenantID#
                        	GROUP BY
                        		TBL_C_CLUBUSER.c_clubno, TBL_C_CLUBUSER.tenant_id
 						) T1 
 					) T2
 				WHERE
-					T2.companyid = #companyID#
-				AND
 					T2.tenant_id = #tenantID# 
 				AND
 					ROWNUM_ <= #v_PEND#) X
@@ -3897,7 +3853,6 @@
 				FROM
 					(SELECT
 						TBL_C_CLUBUSER.c_clubno,
-						TBL_C_CLUB.companyid,
 						TBL_C_CLUBUSER.tenant_id,
 						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUBUSER.c_visited DESC ) ROWNUM_
 					FROM
@@ -3914,8 +3869,6 @@
 						TBL_C_CLUB.c_adminconfirm = 'Y'
 					AND
 						permit <> 0
-					AND
-						TBL_C_CLUBUSER.companyid = #companyID#
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					) T1
@@ -4399,7 +4352,7 @@
 <!-- 	<procedure id="EzCommunityDAO.todayCopGet1"												resultClass="String"> -->
 <!-- 		{CALL EZSP_TODAYCOP_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure>	 -->
-	<select id="EzCommunityDAO.todayCopGet1"					parameterClass="Map"		resultClass="Integer">
+	<select id="EzCommunityDAO.todayCopGet1"					parameterClass="Integer"		resultClass="Integer">
 		<![CDATA[
 			SELECT
 				NVL(COUNT(*), 0) CNT
@@ -4407,8 +4360,6 @@
 				TBL_C_CLUB
 			WHERE
 				c_adminconfirm = 'Y'
-			AND
-				companyid = #companyID#
 			AND
 				tenant_id = #tenantID# 
 		]]>
