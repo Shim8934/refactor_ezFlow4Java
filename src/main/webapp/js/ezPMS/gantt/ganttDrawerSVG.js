@@ -381,7 +381,13 @@ Ganttalendar.prototype.drawTask = function (task) {
             taskFrom = self.master.getTask(targetBox.attr("taskid"));
             taskTo = self.master.getTask(taskBox.attr("taskid"));
           }
-
+      	
+          // 그룹 지정 불가위해 추가 - 임민석
+      	  if(taskTo.id.match(/t(\d+)/) == null || taskFrom.id.match(/t(\d+)/) == null) {
+      		  banGroupFromPretask();
+      		  return;
+      	  }
+      			  
           if (taskTo && taskFrom) {
             var gap = 0;
             var depInp = taskTo.rowElement.find("[name=depends]");
@@ -662,6 +668,16 @@ Ganttalendar.prototype.drawLink = function (from, to, type) {
       })
 
     });
+    
+    // 삭제 처리 위해 추가 - 임민석
+    link.dblclick(function() {
+    	
+    	var el = $(this);
+    	var pretaskId = el.attr("from").match(/t(\d+)/) != null? el.attr("from").match(/t(\d+)/)[1] : null;
+    	var taskId = el.attr("to").match(/t(\d+)/) != null? el.attr("to").match(/t(\d+)/)[1] : null;
+    	
+    	deletePretaskRel(pretaskId, taskId);	
+    })
   }
 };
 
