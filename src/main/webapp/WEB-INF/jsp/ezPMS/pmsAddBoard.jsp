@@ -318,6 +318,21 @@
 		});
 	}
 	</script>
+	<style type="text/css">
+		.content {
+			table-layout : fixed;
+		}
+		
+		.content tr th {
+			width : 27%;
+		}
+		
+		.content tr td {
+			text-overflow : ellipsis;
+			overflow : hidden;
+			white-space : nowrap;
+		}
+	</style>
 </head>
 <body class="popup" style="height: 99%;">
 	<table class="layout" style="width: 100%">
@@ -336,7 +351,7 @@
 				<table class="content" style="width:100%;">
 					<tr>
 						<th><spring:message code='ezPMS.t31' /></th>
-						<td style="width: 50%">
+						<td>
 							<c:choose>
 								<c:when test="${projectName eq null}">
 									<c:out value="${board.projectName}"/> 
@@ -363,7 +378,7 @@
 								</c:otherwise>
 							</c:choose>	
 						</th>
-						<td style="width: 50%" id="taskName">
+						<td id="taskName">
 							<c:choose>
 								<c:when test="${taskName eq null}">
 									<c:choose>

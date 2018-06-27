@@ -44,7 +44,7 @@
 	var searchByUser = "";
 	var searchByPlanStartDate = "";
 	var searchByPlanEndDate = "";
-	var searchByGroupName = "";
+	var searchByUpperGroupName = "";
 	var searchByOverview = "";
 	
 	function goAddTask() {
@@ -94,7 +94,7 @@
 			searchByUser : searchByUser,
 			searchByStartDate : searchByPlanStartDate,
 			searchByEndDate : searchByPlanEndDate,
-			searchByGroupName : searchByGroupName,
+			searchByUpperGroupName : searchByUpperGroupName,
 			searchByOverview : searchByOverview
 		}
 
@@ -314,7 +314,7 @@
 		searchByUser = $("#searchByUser").val();
 		searchByPlanStartDate = $("#Sdatepicker").val();
 		searchByPlanEndDate = $("#Edatepicker").val();
-		searchByGroupName = $("#searchByGroupName").val();
+		searchByUpperGroupName = $("#searchByUpperGroupName").val();
 		searchByOverview = $("#searchByOverview").val();
 		
 		setContentList();
@@ -478,7 +478,7 @@
 				</tr>
 				<tr>
 					<th><spring:message code='ezPMS.t42' /> </th>
-					<td colspan="3" style="width:50%"><input type="text" style="width:100%" id="searchByGroupName"></td>
+					<td colspan="3" style="width:50%"><input type="text" style="width:100%" id="searchByUpperGroupName"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezPMS.t104' /></th>
@@ -487,7 +487,7 @@
 			</tbody>
 		</table>
 		<div class="newbtn_position">
-        	<a class="imgbtn" onclick="searchProject()"><span><spring:message code='ezPMS.t1' /></span></a>
+        	<a class="imgbtn" onclick="searchTask()"><span><spring:message code='ezPMS.t1' /></span></a>
     	</div>
 	</div>
 	<div id="contentList" style="overflow: auto">

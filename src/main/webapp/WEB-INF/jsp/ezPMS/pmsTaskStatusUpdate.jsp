@@ -181,6 +181,11 @@
 			}
 		}
 		
+		//업무가 지연 상태일때 오늘날짜보다 종료날짜가 뒤로 변경되면 상태를 진행으로 변경
+		if (status == "L" && (endDateComp.getTime() > todayComp.getTime())) {
+			status = "P";
+		}
+		
 		//3. 업무의 계획 시작일과 계획 종료일은 프로젝트 시작일과 종료일범위를 벗어날수 없음
 		if (startDateComp.getTime() < projectStartDateComp.getTime()) {
 			alert(startDateComp.getTime() + " <<<<>>>> " + projectStartDateComp.getTime());

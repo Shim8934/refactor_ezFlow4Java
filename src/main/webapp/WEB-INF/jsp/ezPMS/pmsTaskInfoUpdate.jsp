@@ -80,7 +80,7 @@
 var projectId = "<c:out value='${taskDetails.projectId}'/>";
 var projectName = "";
 var weight = null;
-var managerList = null;
+var managerList = [];
 var overview = null;
 var headManagerId = "";
 var originGroupId = 0;
@@ -95,9 +95,10 @@ var pretaskId = "";
 var realProgress = "<c:out value='${taskDetails.realProgress}'/>";
 var workingday = "<c:out value='${taskDetails.realWorkingday ne null ? taskDetails.realWorkingday : taskDetails.workingday}'/>";
 var pretaskSetType = "";
-var participantList;
+var participantList = [];
 var groupTaskMember = null;
 var taskId = "${taskDetails.taskId}";
+var initMemberList = [];
 
  $(function() {
 	 taskDetails = ${taskDetails};
@@ -105,11 +106,11 @@ var taskId = "${taskDetails.taskId}";
 	 $("#overview").val(replaceString(taskDetails.overview));
 	 
 	 if (target == "task") {
-		 managerList = '${taskDetails.taskMember}';
+		 initMemberList = '${taskDetails.taskMember}';
 		 groupId = "<c:out value='${taskDetails.groupId}'/>";
 		 originGroupId = "<c:out value='${taskDetails.groupId}'/>";
 	 } else {
-		 managerList = '${taskDetails.groupMember}';
+		 initMemberList = '${taskDetails.groupMember}';
 		 groupId = "<c:out value='${taskDetails.upperGroupId}'/>";
 		 originGroupId = "<c:out value='${taskDetails.groupId}'/>";
 		 groupTaskMember = '${groupTaskMember}';
@@ -117,14 +118,22 @@ var taskId = "${taskDetails.taskId}";
 	 
 	 headManagerId = "<c:out value='${taskDetails.headManagerId}'/>";
 	 
-	 managerList = JSON.parse(managerList);
-	 originManagerList = managerList;
+	 initMemberList = JSON.parse(initMemberList);
+	 
+	 for (var i = 0; i < initMemberList.length; i++) {
+		 if (initMemberList[i].memberRoleId == 2) {
+			 participantList.push(initMemberList[i]);
+		 } else {
+			 managerList.push(initMemberList[i]);
+		 }
+	 }
 	 
 	 if(groupTaskMember){
 		 groupTaskMember = JSON.parse(groupTaskMember);
 	 }
 	 
 	 applyList();
+	 applyParticipantList();
 	 initpretaskNames();
  });
  
@@ -160,7 +169,7 @@ function openPreTaskTree() {
  
  function applyList() {
 	 var managerNameList = "";
-	 
+	 console.log(headManagerId);
 	 for (var i = 0; i < managerList.length; i++) {
 		if(headManagerId == managerList[i].userId) {
 			managerNameList += "<b>"

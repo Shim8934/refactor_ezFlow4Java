@@ -76,11 +76,14 @@ $(function(){
 	
 	// by mslim start
 	var i = 0;
+	setProgressBar();
+	
+	i = i++;
 	
 	var progressBar = setInterval(setProgressBar, 300);
 	
 	function setProgressBar() {
-		for(var j = 0; j < 5 && i < projectList.length; j++, i++) {
+		for(var j = 0; j < 10 && i < projectList.length; j++, i++) {
 			if (projectList[i].status == "P") {
 			 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
 			} else if (projectList[i].status == "C") {
