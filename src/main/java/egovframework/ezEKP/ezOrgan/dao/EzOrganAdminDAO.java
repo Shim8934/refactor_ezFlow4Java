@@ -1269,6 +1269,30 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I19", map);
     }
     
+    public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS", map);
+    }
+    
+    public void insertCompanyInfo_IKMS2(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS2", map);
+    }
+    
+    public void insertCompanyInfo_IKMS3(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS3", map);
+    }
+
+    public void insertCompanyInfo_IKMS4(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS4", map);
+    }
+    
+    public void insertCompanyInfo_IKMS5(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS5", map);
+    }
+    
+    public void insertCompanyInfo_IKMS6(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS6", map);
+    }
+    
 	/**
 	 * 그룹웨어 계정으로 비즈메카톡 계정을 동기화한다.
 	 */    

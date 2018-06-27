@@ -883,11 +883,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pUID", pUID);
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
-		
+
 		String temp = ezPortalDAO.getPorletProperties_S(map);
 
 		logger.debug("getPorletProperties ended");
-		
+
 		if (temp != null && temp.equals("1")) {
 			return ezPortalDAO.getPorletProperties(map);
 		} else {
@@ -2346,7 +2346,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 			
 			String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId());
-			
+
 			if (cacheValue != null && !cacheValue.trim().equals("")) {
 				return cacheValue;
 			}
@@ -2489,7 +2489,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         String RootParentUID = getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID());
         String boarderValue = "0";
         int i= 0;
-        
+
         if (pPortalPageID.equals(RootParentUID)) {
         	userInfo.setRootPage(true);
         }
@@ -2716,7 +2716,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
 			String portletMandatory = result.get(i).getMandatory();
 			String portletMoveURL = "";
-			
+
 			if (pMode.equals("edit")) {
 				if (portletHeight != 0) {
 					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: " + portletHeight + "px\">\n");

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
@@ -562,6 +563,27 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("userID", userInfo.getId());
 				map1.put("userName", userInfo.getName());
 				map1.put("nowDate", nowDate);
+				map1.put("portalUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoUUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaUUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoKoUUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoJaUUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
+				
+				for (int i = 0; i < 111; i++) {
+					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
+				}
+				
+				for (int i = 0; i < 19; i++) {
+					map1.put("portalItemUID"+i, UUID.randomUUID().toString());
+				}
 				
 				ezOrganAdminDao.insertCompanyInfo_I1(map1);
 				ezOrganAdminDao.insertCompanyInfo_I2(map1);
@@ -582,6 +604,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I17(map1);
 				ezOrganAdminDao.insertCompanyInfo_I18(map1);
 				ezOrganAdminDao.insertCompanyInfo_I19(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS2(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS3(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS4(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS5(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS6(map1);
+				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
