@@ -88,12 +88,7 @@
 			var project = $("li[role='treeitem'][aria-level='1']").last();
 			
 			groupId = project.attr("id");
-			taskName = project.children("a").text();
 			project.children("a").click();
-			
-			if(taskName.indexOf('(') != -1) {
-				taskName = taskName.substring(0, projectName.indexOf('('));
-			}
 		});
 		
 		getDatePicker();

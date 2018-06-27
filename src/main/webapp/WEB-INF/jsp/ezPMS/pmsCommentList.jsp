@@ -60,6 +60,11 @@
 					searchByEndDate = "";
 					searchByContent = "";
 					
+					taskName = $("#taskNameArea").text();
+					taskName = taskName.substring(0, taskName.lastIndexOf('-'));
+					
+					console.log(taskName);
+					
 					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + commentContent.trim() +"<spring:message code='ezPMS.t126' />");
 					getCommentList();
 				} else {
@@ -99,7 +104,7 @@
 						var taskName = selectedTR.children("td.taskName").text();
 						var groupId = selectedTR.attr("data-groupId");
 						var taskId = selectedTR.attr("data-taskId");
-							
+												
 						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t225' />");
 							
 						getCommentList();
