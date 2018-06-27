@@ -678,7 +678,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("workingday", taskWorkingday);
 			map1.put("realWorkingday", calWorkingDays);
 			map1.put("tenantId", taskVO.getTenantId());
-			ezPMSDAO.updateProjectWorkingday(map1);
+//			ezPMSDAO.updateProjectWorkingday(map1);
 
 			// 가중치 계산
 			updateTaskWDNW(taskVO, taskWorkingday);
@@ -872,7 +872,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
 			map1.put("tenantId", tenantId);
-			ezPMSDAO.updateProjectWorkingday(map1);
+//			ezPMSDAO.updateProjectWorkingday(map1);
 
 			// 가중치 계산
 			updateTaskWDNW(task, taskWorkingday);
@@ -1962,7 +1962,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
 			map1.put("tenantId", tenantId);
-			ezPMSDAO.updateProjectWorkingday(map1);
+//			ezPMSDAO.updateProjectWorkingday(map1);
 
 			// 가중치 계산
 			updateTaskWDNW(task, taskWorkingday);
@@ -1993,7 +1993,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		// 검색
-		map.put("serachByGroupName", search.getGroupName());
+		map.put("searchByGroupName", search.getGroupName());
 		map.put("searchByUpperGroupName", search.getUpperGroupName());
 		map.put("searchByUser", search.getMemberName());
 		map.put("searchByProjectName", search.getProjectName());

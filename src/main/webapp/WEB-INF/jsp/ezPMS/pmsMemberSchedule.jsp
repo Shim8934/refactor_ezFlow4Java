@@ -133,7 +133,7 @@ window.onload = function() {
 <body>
 <div id="mainmenu">
 <ul>
-	<li><span onclick="popupClose()"><spring:message code='ezPMS.t76' /></span></li>
+	<li><span onclick="parent.DivMemberSchedulePopUpHidden()"><spring:message code='ezPMS.t76' /></span></li>
 </ul>
 </div>
 <div id="memberTable">

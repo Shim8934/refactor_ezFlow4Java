@@ -924,6 +924,7 @@
 		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
 		                	ret[12] = "";
 		                	ret[13] = "";
+		                	ret[21] = "";
 		                }
 	
 		                if (document.getElementById("AprSecurity").checked)
