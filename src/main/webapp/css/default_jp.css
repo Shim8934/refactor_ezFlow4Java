@@ -205,7 +205,7 @@ form{display:inline;margin:0}
 .leftbody ul{background-color:#ffffff;list-style-type:none;padding:0;margin:0; width:100%;}
 .leftbody ul li{
 	border-bottom: 1px solid white;
-	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 15px #fff;
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 16px #fff;
 	padding:12px 5px 0px 40px;
 	cursor:pointer;
 }
@@ -643,11 +643,12 @@ form{display:inline;margin:0}
 }
 
 .content input {vertical-align:middle; border:1px solid #dedede; height:24px;}
+.content input[type=checkbox] {height:20px;}
+
 .content td, .file td, .file2 td{
 	width: 100%;
 }
 
-.content input { vertical-align:middle;}
 .content td table td, .popuplist td table td{border:none;}
 
 .content2 th{
@@ -655,6 +656,7 @@ form{display:inline;margin:0}
 	height:23px;
 	font-weight:normal;
 }
+
 .content2{border:1px solid #ddd;margin:0;}
 .content2 td{
 	padding:0 2px;
@@ -1168,7 +1170,7 @@ form{display:inline;margin:0}
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:31px}
-.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:6px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; background-color: #f8f8fa; height:24px}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:4px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; background-color: #f8f8fa; height:24px}
 .mainlist tr th.title{width:100%; text-align:left;}
 .mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
@@ -2139,3 +2141,6 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 }
 
 .btnbtn { margin-top:10px; text-align: center; }
+
+#Preview_HeaderH, #Preview_HeaderW { background-color: #f8f8fa; }
+#subject { vertical-align: middle }

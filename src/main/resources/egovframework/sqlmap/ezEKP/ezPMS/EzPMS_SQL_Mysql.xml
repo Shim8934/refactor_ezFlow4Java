@@ -904,7 +904,7 @@
 		</isNotEmpty>
 		<isNotEmpty property="position">
 			AND
-				B.MEMBER_ROLE_ID = 1
+				M.MEMBER_ROLE_ID = 1
 		</isNotEmpty>
 		<isNotEqual property="orderWhat" compareValue="init">
 			ORDER BY	
@@ -1057,7 +1057,6 @@
 				)
 			AND 
 		</isNotEmpty>
-		
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0
@@ -1066,7 +1065,11 @@
 				AND  
 					A.STATUS = #status#
 			</isNotEqual> 
-		</isNotEqual> 
+		</isNotEqual>
+		<isNotEmpty property="position">
+				AND
+					B.MEMBER_ROLE_ID = 1
+		</isNotEmpty>
 		<isNotEmpty property="searchByName">
 			AND
 				A.PROJECT_NAME LIKE CONCAT('%',#searchByName#,'%')
@@ -2054,11 +2057,26 @@
 				A.GROUP_ID = M.GROUP_ID
 			AND
 				M.MEMBER_ROLE_ID = 1
+			LEFT JOIN
+				TBL_PMS_GROUPMEMBER M2
+			ON
+				A.GROUP_ID = M2.GROUP_ID
+			AND
+			
+				A.TENANT_ID = M2.TENANT_ID
 			</isEqual>
 			WHERE 
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.DEL_STATUS = 0
+			<isEqual property="projectId" compareValue="0">
+			AND
+				M.USER_ID = #userId#
+			<isEmpty property="searchByUser">
+			AND 
+				M2.USER_ID = #userId#	
+			</isEmpty>
+			</isEqual>
 			<isNotEqual property="projectId" compareValue="0">
 			AND
 				A.PROJECT_ID = #projectId#
@@ -2073,7 +2091,7 @@
 			</isNotEmpty>
 			<isNotEmpty property="searchByUser">
 				AND 
-					M.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
+					M2.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
 			</isNotEmpty>
 			<isNotEmpty property="searchByProjectName">
 				AND 
@@ -2529,7 +2547,7 @@
 	
 	<select id="EzPMSDAO.getGroupCount" parameterClass="map" resultClass="Integer">
 	<![CDATA[
-		SELECT	
+		SELECT DISTINCT
 			COUNT(A.GROUP_ID)
 		FROM
 			TBL_PMS_GROUP A
@@ -2545,10 +2563,20 @@
 			TBL_PMS_GROUPMEMBER M
 		ON
 			A.GROUP_ID = M.GROUP_ID
+		AND
+			M.MEMBER_ROLE_ID = 1
+		LEFT JOIN
+			TBL_PMS_GROUPMEMBER M2
+		ON
+			A.GROUP_ID = M2.GROUP_ID
+		AND
+			A.TENANT_ID = M2.TENANT_ID
 		WHERE
 			M.USER_ID = #userId#
 		AND
 			A.TENANT_ID = #tenantId#
+		AND
+			A.DEL_STATUS = 0
 	]]>
 	<isNotEmpty property="searchByGroupName">
 		AND 
@@ -2560,8 +2588,12 @@
 	</isNotEmpty>
 	<isNotEmpty property="searchByUser">
 		AND 
-			M.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
+			M2.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
 	</isNotEmpty>
+	<isEmpty property="searchByUser">
+		AND 
+			M2.USER_ID = #userId#
+	</isEmpty>
 	<isNotEmpty property="searchByProjectName">
 		AND 
 			P.PROJECT_NAME LIKE CONCAT('%', #searchByProjectName#, '%')	

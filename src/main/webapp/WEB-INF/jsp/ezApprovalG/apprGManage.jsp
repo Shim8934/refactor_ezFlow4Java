@@ -1457,7 +1457,7 @@
 					        DATA += "<FORMID>" + condition[9] + "</FORMID>";
 					    }
 					    
-					    if (condition[10] != "") {
+					    if (condition[11] != "") {
 					        TYPE += "WRITERDEPTNAME;"
 					        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
 					    }

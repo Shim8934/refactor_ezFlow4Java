@@ -93,6 +93,7 @@
 		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
 		    var useReSend = "${useReSend}";
 		    var useSearchContent = "${useSearchContent}";
+		    var useMailNewWindow = "${useMailNewWindow}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
