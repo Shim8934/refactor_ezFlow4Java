@@ -356,4 +356,12 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public int getConfirmMemberCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getConfirmMemberCount", map);
 	}
+	
+	public String getCircularDeptUser(Map<String, Object> map) throws Exception {
+		return (String) select("EzCircularDAO.getCircularDeptUser", map);
+	}
+	
+	public String getCircularUserDeptId(Map<String, Object> map) throws Exception {
+		return (String) select("EzCircularDAO.getCircularUserDeptId", map);
+	}
 }

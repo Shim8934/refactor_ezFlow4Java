@@ -700,7 +700,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void setCircularDeptSave(String title, String userID, String[] memberListStr, int tenantID, String companyID) throws Exception {
+	public void setCircularDeptSave(String title, String userID, String[] memberListStr, int tenantID, String companyID, String[] deptListStr) throws Exception {
 		logger.debug("setCircularDeptSave started.");
 		logger.debug("title = " + title + " || userID = " + userID + " || tenantID = " + tenantID);
 		
@@ -717,9 +717,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		map.put("circularBMId", circularBMId);
 		
-		for(String memberID : memberListStr) {
-			logger.debug("memberID = " + memberID);
-			map.put("memberID", memberID);
+		//for(String memberID : memberListStr) {
+		for(int i=0; i<memberListStr.length; i++) {
+			map.put("deptName", deptListStr[i]);
+			
+			String dept = ezCircularDAO.getCircularDeptUser(map);
+			
+			logger.debug("memberID = " + memberListStr[i] + ", dept = " + dept);
+			map.put("memberID", memberListStr[i]);
+			map.put("deptID", dept);
 			
 			ezCircularDAO.setCircularMemberList(map);
 		}
@@ -764,9 +770,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void updateCircularDept(String title, String userID, String[] memberListStr, String circularBMId, int tenantID) throws Exception {
+	public void updateCircularDept(String title, String userID, String[] memberListStr, String circularBMId, int tenantID, String companyID, String[] deptListStr) throws Exception {
 		logger.debug("updateCircularDept started.");
-		logger.debug("title = " + title + " || userID = " + userID + " || circularBMId = " + circularBMId + " || tenantID = " + tenantID);
+		logger.debug("title = " + title + " || userID = " + userID + " || circularBMId = " + circularBMId + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", title);
@@ -774,17 +780,24 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("userID", userID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		ezCircularDAO.updateCircularDept(map);
 		ezCircularDAO.deleteCircularMemberList(map);
 		
-		for (String memberID : memberListStr) {	
-			logger.debug("memberID = " + memberID);
+		for(int i=0; i<memberListStr.length; i++) {
+			map.put("deptName", deptListStr[i]);
+			map.put("memberID", memberListStr[i]);
+
+			String dept = ezCircularDAO.getCircularDeptUser(map);
 			
-			map.put("memberID", memberID);
-			
+			logger.debug("memberID = " + memberListStr[i] + ", dept = " + deptListStr[i]);
+			map.put("deptID", dept);
+					
 			ezCircularDAO.setCircularMemberList(map);
 		}
+		
+		
 		
 		logger.debug("updateCircularDept ended.");
 	}
@@ -1840,6 +1853,21 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		logger.debug("getConfirmMemberList ended");
 		return resultXML;
+	}
+	
+	@Override
+	public String getCircularUserDeptId(int tenantID, int circularBMId, String userID) throws Exception {
+		logger.debug("getConfirmMemberList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("circularBMId", circularBMId);
+		map.put("userID", userID);
+		
+		logger.debug("getConfirmMemberList ended");
+		
+		return ezCircularDAO.getCircularUserDeptId(map);
 	}
 
 }

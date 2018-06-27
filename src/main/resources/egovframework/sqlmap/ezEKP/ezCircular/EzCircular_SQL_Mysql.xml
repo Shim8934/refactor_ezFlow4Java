@@ -414,6 +414,8 @@
                 A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
     </select>
 
@@ -422,8 +424,8 @@
 			SELECT
 				A.circularbmid,
 				A.memberid,
-				B.company,
-				B.description,
+                C.COMPNM2 as company,
+				C.DISPLAYNAME as description,
 				B.title,
 				A.membername,
 				B.mail
@@ -435,6 +437,12 @@
 				A.memberid = B.cn
 			AND
 				A.tenantid = B.tenant_id
+			RIGHT JOIN 
+				TBL_DEPTMASTER C
+			ON 
+				A.DEPTID = C.CN
+			AND 
+				B.TENANT_ID = C.TENANT_ID  
 			WHERE
 				circularbmid = #circularBMId#
 			AND
@@ -1806,7 +1814,36 @@
 											circularId = #circularID# )
 		]]>
 	</select>
-
+ 
+	<select id="EzCircularDAO.getCircularDeptUser" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				cn 
+			FROM 
+				tbl_deptmaster 
+			WHERE 
+				tenant_id=#tenantID# AND displayname = #deptName# AND EXTENSIONATTRIBUTE2 = #companyID#
+		]]>
+	</select> 
+	
+	<select id="EzCircularDAO.getCircularUserDeptId" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				DISPLAYNAME 
+			FROM 
+				tbl_deptmaster 
+			WHERE 
+				tenant_id=#tenantID# 
+			AND 
+				CN = ( SELECT 
+								deptId 
+						  FROM 
+								tbl_circular_bmuser
+						  WHERE 
+								circularBMId=#circularBMId# AND memberId = #userID#)
+		]]>
+	</select> 
+	
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR
@@ -1850,9 +1887,9 @@
     <insert id="EzCircularDAO.setCircularDeptSave" parameterClass="Map">
         <![CDATA[
 			INSERT INTO TBL_CIRCULAR_BM
-				(title, memberid, regdate, tenantid)
+				(title, memberid, regdate, tenantid, companyid)
 			VALUES 
-				(#title#, #userID#, #nowDate#, #tenantID#)
+				(#title#, #userID#, #nowDate#, #tenantID#, #companyID#)
         ]]>
         
         <selectKey resultClass="String">
@@ -1863,13 +1900,14 @@
     <insert id="EzCircularDAO.setCircularMemberList" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_BMUSER 
-				(circularbmid, memberid, membername, membername2, tenantid)
+				(circularbmid, memberid, membername, membername2, tenantid, deptid)
 			SELECT
 				#circularBMId#,
 				cn,
 				displayname,
 				displayname2,
-				tenant_id
+				tenant_id,
+				#deptID#
 			FROM
 				TBL_USERMASTER
 			WHERE
@@ -2484,18 +2522,5 @@
 				tenantid = #tenantID#
 		]]>
 	</delete>
-	
-	<update id="EzCircularDAO.updateCompanyID" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_CIRCULAR_FOLDER
-			SET
-				companyid = #companyID#
-			WHERE
-    			memberid = #memberId#
-    		AND
-    			tenantid = #tenantId#
-		]]>
-	</update>
 
 </sqlMap>

@@ -26,6 +26,7 @@
     		var userID = "${userID}";
    			var userName = "${userName}"
 			var userName2 = "${userName2}"
+			var deptName = "${deptName}"
 			var listSize = "${listSize}";
     		
 	    	window.onload = function() {				
@@ -40,11 +41,13 @@
 	        	var list = userID.split(",");
 	        	var nameList = userName.split(",");
 	        	var nameList2 = userName2.split(",");
+	        	var deptList = deptName.split(",");
 
 	        	for (var i = 0; i < listSize; i++) {
 	            	g_attendant["id"][i] = list[i].trim();
 	        		g_attendant["name"][i] = nameList[i].trim();
 	        		g_attendant["name2"][i] = nameList2[i].trim();
+	        		g_attendant["deptname"][i] = deptList[i].trim();
 	        	}
 	        	
 	    		try {
@@ -65,9 +68,11 @@
 	    		
 	    		var title = document.getElementById("title").value;
 	    		var memberListStr = new Array();
+	    		var deptListStr = new Array();
 	    		
 	    		for (var i=0; i<g_attendant["id"].length; i++) {
 	    			memberListStr[i] = g_attendant["id"][i];
+	    			deptListStr[i] = g_attendant["deptname"][i];
 	    		}	    
 	    		
 	    		$.ajax({
@@ -78,7 +83,8 @@
 	    			data : {
 	    				title : title,
 	    				circularBMId : circularBMId,
-	    				memberListStr : memberListStr
+	    				memberListStr : memberListStr,
+	    				deptListStr : deptListStr
 	    			},
 	    			success : function() {
 		                if (ReturnFunction != null) {
