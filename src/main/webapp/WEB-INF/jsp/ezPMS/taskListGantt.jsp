@@ -107,7 +107,7 @@
 	   				
 	   				var tempTask = {};
 	   				tempTask.id = "p" + pd.projectId;
-		   			tempTask.name = pd.projectName;
+		   			tempTask.name = pd.projectName.replace(/\"/g,"&quot;");
 		   			tempTask.code = "";
 		   			tempTask.level = 0;
 		   			tempTask.status = ganttStatus[pd.status];
@@ -141,7 +141,7 @@
 		   			}
 		   			
 		   			tempTask.depends = "";
-		   			tempTask.description = pd.overview;
+		   			tempTask.description = pd.overview.replace(/\"/g,"&quot;");
 		   			tempTask.progress = Number(pd.progress).toFixed(1);
 		   			tempTask.realProgress = Number(pd.progress).toFixed(1);
 // 		   			tempTask.planProgress = Number(pd.planProgress).toFixed(1);
@@ -180,7 +180,7 @@
 		   				var groupDepth = gl[i].treeDepth;
 		   				
 			   			tempTask.id = "p" + pd.projectId + "_g" + groupId;
-			   			tempTask.name = gl[i].groupName;
+			   			tempTask.name = gl[i].groupName.replace(/\"/g,"&quot;");
 			   			tempTask.code = gl[i].ancesterGroup;
 			   			tempTask.level = groupDepth;
 			   			tempTask.status = ganttStatus["G"];
@@ -216,7 +216,7 @@
 			   			
 			   			tempTask.depends = "";
 			   			tempTask.pretask = gl[i].pretask != null ? "t" + gl[i].pretask : null || gl[i].pregroup != null ? "g" + gl[i].pregroup : null;
-			   			tempTask.description = gl[i].overview;
+			   			tempTask.description = gl[i].overview.replace(/\"/g,"&quot;");
 			   			tempTask.progress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.planProgress = Number(gl[i].planProgress).toFixed(1);
@@ -261,7 +261,7 @@
 				   			tempTask.level = 1;
 		   				}
 		   				
-			   			tempTask.name = tl[i].taskName;
+			   			tempTask.name = tl[i].taskName.replace(/\"/g,"&quot;");
 			   			tempTask.code = tl[i].groupId;
 			   			tempTask.status = ganttStatus[tl[i].status];
 			   			tempTask.statusPMS = tl[i].status;
@@ -296,7 +296,7 @@
 			   			
 			   			tempTask.depends = "";
 			   			tempTask.pretask = tl[i].pretask != null ? "t" + tl[i].pretask : null || tl[i].pregroup != null ? "g" + tl[i].pregroup : null ;
-			   			tempTask.description = tl[i].overview;
+			   			tempTask.description = tl[i].overview.replace(/\"/g,"&quot;");
 			   			tempTask.progress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.planProgress = Number(tl[i].planProgress).toFixed(1);
@@ -573,7 +573,6 @@
 	   			    
 	   			  	if(taskId == null || preTaskId == null) {
 	   			  		alert("<spring:message code='ezPMS.t300' />");
-	   			  		location.reload();
 	   			  		throw "It is not allowed to set Group as Pretask";
 	   			  		return;
 	   			  	}
@@ -731,179 +730,31 @@
 	   			    self.svg.line(gridGroup, x, 0, x, "100%", {class: "ganttTodaySVG"});
 	   			  }
 	   			};
-	   			
-	   			Ganttalendar.prototype.drawLink = function (from, to, type) {
-	   			  //console.debug("drawLink")
-	   			  var self = this;
-	   			  var peduncolusSize = 10;
-
-	   			  /**
-	   			   * Given an item, extract its rendered position
-	   			   * width and height into a structure.
-	   			   */
-	   			  function buildRectFromTask(task) {
-	   			    var self=task.master.gantt;
-	   			    var editorRow = task.rowElement;
-	   			    var top = editorRow.position().top + editorRow.offsetParent().scrollTop();
-	   			    var x = Math.round((task.start - self.startMillis) * self.fx);
-	   			    var rect = {left: x, top: top + self.taskVertOffset, width: Math.max(Math.round((task.end - task.start) * self.fx),1), height: self.taskHeight};
-	   			    return rect;
-	   			  }
-
-	   			  /**
-	   			   * The default rendering method, which paints a start to end dependency.
-	   			   */
-	   			  function drawStartToEnd(from, to, ps) {
-	   			    var svg = self.svg;
-
-	   			    //this function update an existing link
-	   			    function update() {
-	   			      var group = $(this);
-	   			      var from = group.data("from");
-	   			      var to = group.data("to");
-
-	   			      var rectFrom = buildRectFromTask(from);
-	   			      var rectTo = buildRectFromTask(to);
-
-	   			      var fx1 = rectFrom.left;
-	   			      var fx2 = rectFrom.left + rectFrom.width;
-	   			      var fy = rectFrom.height / 2 + rectFrom.top;
-
-	   			      var tx1 = rectTo.left;
-	   			      var tx2 = rectTo.left + rectTo.width;
-	   			      var ty = rectTo.height / 2 + rectTo.top;
-
-
-	   			      var tooClose = tx1 < fx2 + 2 * ps;
-	   			      var r = 5; //radius
-	   			      var arrowOffset = 5;
-	   			      var up = fy > ty;
-	   			      var fup = up ? -1 : 1;
-
-	   			      var prev = fx2 + 2 * ps > tx1;
-	   			      var fprev = prev ? -1 : 1;
-
-	   			      var image = group.find("image");
-	   			      var p = svg.createPath();
-
-	   			      if (tooClose) {
-	   			        var firstLine = fup * (rectFrom.height / 2 - 2 * r + 2);
-	   			        p.move(fx2, fy)
-	   			          .line(ps, 0, true)
-	   			          .arc(r, r, 90, false, !up, r, fup * r, true)
-	   			          .line(0, firstLine, true)
-	   			          .arc(r, r, 90, false, !up, -r, fup * r, true)
-	   			          .line(fprev * 2 * ps + (tx1 - fx2), 0, true)
-	   			          .arc(r, r, 90, false, up, -r, fup * r, true)
-	   			          .line(0, (Math.abs(ty - fy) - 4 * r - Math.abs(firstLine)) * fup - arrowOffset, true)
-	   			          .arc(r, r, 90, false, up, r, fup * r, true)
-	   			          .line(ps, 0, true);
-	   			        image.attr({x:tx1 - 5, y:ty - 5 - arrowOffset});
-
-	   			      } else {
-	   			        p.move(fx2, fy)
-	   			          .line((tx1 - fx2) / 2 - r, 0, true)
-	   			          .arc(r, r, 90, false, !up, r, fup * r, true)
-	   			          .line(0, ty - fy - fup * 2 * r + arrowOffset, true)
-	   			          .arc(r, r, 90, false, up, r, fup * r, true)
-	   			          .line((tx1 - fx2) / 2 - r, 0, true);
-	   			        image.attr({x:tx1 - 5, y:ty - 5 + arrowOffset});
-	   			      }
-
-	   			      group.find("path").attr({d:p.path()});
-	   			    }
-
-
-	   			    // create the group
-	   			    var group = svg.group(self.linksGroup, "" + from.id + "-" + to.id);
-	   			    svg.title(group, from.name + " -> " + to.name);
-
-	   			    var p = svg.createPath();
-
-	   			    //add the arrow
-	   			    svg.image(group, 0, 0, 5, 10, self.master.resourceUrl +"linkArrow.png");
-	   			    //create empty path
-	   			    svg.path(group, p, {class:"taskLinkPathSVG"});
-
-	   			    //set "from" and "to" to the group, bind "update" and trigger it
-	   			    var jqGroup = $(group).data({from:from, to:to }).attr({from:from.id, to:to.id}).on("update", update).trigger("update");
-
-	   			    if (self.showCriticalPath && from.isCritical && to.isCritical)
-	   			      jqGroup.addClass("critical");
-
-	   			    jqGroup.addClass("linkGroup");
-	   			    return jqGroup;
-	   			  }
-
-
-	   			  /**
-	   			   * A rendering method which paints a start to start dependency.
-	   			   */
-	   			  function drawStartToStart(from, to) {
-	   			    console.error("StartToStart not supported on SVG");
-	   			    var rectFrom = buildRectFromTask(from);
-	   			    var rectTo = buildRectFromTask(to);
-	   			  }
-
-	   			  var link;
-	   			  // Dispatch to the correct renderer
-	   			  if (type == 'start-to-start') {
-	   			    link = drawStartToStart(from, to, peduncolusSize);
-	   			  } else {
-	   			    link = drawStartToEnd(from, to, peduncolusSize);
-	   			  }
-
-	   			  // in order to create a dependency you will need permissions on both tasks
-	   			  if (this.master.permissions.canWrite || ( from.canWrite && to.canWrite)) {
-	   			    link.click(function (e) {
-	   			      var el = $(this);
-	   			      e.stopPropagation();// to avoid body remove focused
-	   			      self.element.find("[class*=focused]").removeClass("focused");
-	   			      $(".ganttSVGBox .focused").removeClass("focused");
-	   			      var el = $(this);
-	   			      if (!self.resDrop)
-	   			        el.addClass("focused");
-	   			      self.resDrop = false; //hack to avoid select
-
-	   			      $("body").off("click.focused").one("click.focused", function () {
-	   			        $(".ganttSVGBox .focused").removeClass("focused");
-	   			      })
-
-	   			    });
-	   			    
-					
-	   				
-	   			    // 삭제 처리 위해 추가
-	   			    link.dblclick(function() {
-	   			    	
-	   			    	var el = $(this);
-	   			    	var pretaskId = el.attr("from").match(/t(\d+)/) != null? el.attr("from").match(/t(\d+)/)[1] : null;
-	   			    	var taskId = el.attr("to").match(/t(\d+)/) != null? el.attr("to").match(/t(\d+)/)[1] : null;
-	   			    	
-	   			    	if(confirm("<spring:message code='ezPMS.t107' />") == true) {
-	   			    		deletePretaskRel(pretaskId, taskId);
-	   			    	}
-	   			    })
-	   			  }
-	   			};
+	   		}
+	   		
+	   		function banGroupFromPretask() {
+	   			alert("<spring:message code='ezPMS.t300' />");
 	   		}
 	   		
 	   		function deletePretaskRel(pretaskId, taskId) {
-	   			var data = {
-	   					pretaskId : pretaskId,
-	   					taskId : taskId
-	   			}
+	   			
+	   			if(confirm("<spring:message code='ezPMS.t107' />") == true) {
+	   				var data = {
+		   					pretaskId : pretaskId,
+		   					taskId : taskId
+		   			}
 
-	   			$.ajax({
-	   				type : "DELETE",
-	   				data : JSON.stringify(data),
-	   				dataType: "text",
-	   				contentType: "application/json; charset=UTF-8",
-	   				url : "/ezPMS/deletePretaskRel.do",
-	   				success : function(result) {
-	   					location.reload();
-	   				}
-	   			});
+		   			$.ajax({
+		   				type : "DELETE",
+		   				data : JSON.stringify(data),
+		   				dataType: "text",
+		   				contentType: "application/json; charset=UTF-8",
+		   				url : "/ezPMS/deletePretaskRel.do",
+		   				success : function(result) {
+		   					$('#workSpace').trigger('deleteFocused.gantt');
+		   				}
+		   			});
+	   			}
 	   		}
 	   		
 	   		function addPreTaskRel (projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, taskName, preTaskRowName, groupId, preGroupId) {
