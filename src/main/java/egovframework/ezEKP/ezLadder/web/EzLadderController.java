@@ -191,7 +191,7 @@ public class EzLadderController {
 	public String setLadderAttendantPopUp(@CookieValue("loginCookie") String loginCookie, Model model) {
 		logger.debug("setLadderAttendantPopUp started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
@@ -736,7 +736,7 @@ public class EzLadderController {
 			String secondUserOrder, String firstItem, String secondItem, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("serUserOrder started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/rest/ladder/ladders/" + ladderId + "/users/" + userInfo.getId();
@@ -796,8 +796,7 @@ public class EzLadderController {
 	public String setLadderStart(@CookieValue("loginCookie") String loginCookie,  String[] allData, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setLadderStart started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/rest/ladder/start/" + allData[0] + "/users/" + userInfo.getId();
 		
@@ -805,15 +804,16 @@ public class EzLadderController {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		JSONObject jsonBodys = new JSONObject();
+		jsonBodys.put("size", allData[5]);
+		jsonBodys.put("lineCnt", allData[6]);
+		jsonBodys.put("loginCookie", loginCookie);
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonBodys, headers);
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-							.queryParam("tenantId", userInfo.getTenantId())
-							.queryParam("size", allData[5])
-							.queryParam("lineCnt", allData[6])
-							.queryParam("lang", userInfo.getLang());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 	
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 		

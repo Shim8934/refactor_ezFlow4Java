@@ -605,10 +605,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt, String lang) throws Exception {
+	public void setLadderStart(LadderVO ladVO, int size) throws Exception {
 		logger.debug("setLadderStart started.");	// lang 추가 해줘야 됨
 		// lineCnt를 이용해 lineArray를 구함
 		int height = 40;
+		int lineCnt = ladVO.getLineCnt();
 		int[] lineArray = new int[lineCnt];
 		int[] lineMap = new int[size*height];
 		lineArray = getLineArray(size, lineCnt);
@@ -617,11 +618,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 		for(int i =0; i<lineMap.length; i++) {
 			line += Integer.toString(lineMap[i]);
 		}
-		String langs = commonUtil.getMultiData(lang, Integer.parseInt(tenantId));
+		String langs = commonUtil.getMultiData(ladVO.getLang(), ladVO.getTenant_id());
 		String startDate = commonUtil.getTodayUTCTime("");	// startDate UCT 타임 설정
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ladderId", ladderId);
-		map.put("tenantId", tenantId);
+		map.put("ladderId", ladVO.getLadderId());
+		map.put("tenantId", ladVO.getTenant_id());
 		map.put("startDate", startDate);
 		map.put("lineArray", line);
 		map.put("lang", langs);
@@ -653,8 +654,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 		for (int i = 0; i < size; i++) {
 			Map<String, Object> m = new HashMap<String, Object>();
-			m.put("ladderId", ladderId);
-			m.put("tenant_id", tenantId);
+			m.put("ladderId", ladVO.getLadderId());
+			m.put("tenant_id", ladVO.getTenant_id());
 			m.put("ladderOrder", i);
 			m.put("resultUserId", list.get(load[i]).getUserId());
 			m.put("resultUserName", list.get(load[i]).getUserName());
