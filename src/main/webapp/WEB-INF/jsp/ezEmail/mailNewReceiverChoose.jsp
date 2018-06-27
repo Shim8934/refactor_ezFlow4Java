@@ -3394,6 +3394,7 @@
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezEmail.t31' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezEmail.t26' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezEmail.t28' /></option>
+                                      		                <option value="extensionAttribute10" usedefault="1"><spring:message code='ezEmail.t281' /></option>
 	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezEmail.t99000045' /></option>
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezEmail.t99000046' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
