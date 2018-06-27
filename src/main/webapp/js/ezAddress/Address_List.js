@@ -435,7 +435,7 @@ function Complete_Get_AddressList() {
         if (XmlRows.length == 0) {
             if (searchFlag) {
                 pCurrentPage--;
-                if (pCurrentPage < 0) {
+                if (pCurrentPage <= 0) {
                     document.getElementById("mailBoxInfo").style.visibility = "hidden";
                     while (document.getElementById("MailList").childNodes.length > 0) {
                         document.getElementById("MailList").removeChild(document.getElementById("MailList").childNodes.item(0));
@@ -449,7 +449,7 @@ function Complete_Get_AddressList() {
                     makePageSelPage();
                     return;
                 }
-                Get_SearchAddressList();
+                //Get_SearchAddressList();
                 return;
             }
         }

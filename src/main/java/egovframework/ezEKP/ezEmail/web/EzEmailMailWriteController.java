@@ -4874,7 +4874,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String returnValue = "";
         try {
             String[] ownerIds = new String[]{userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId()};
-            pFilter = "S_NAME," + pFilter;
+            pFilter = "S_NAME;S_EMAIL," + pFilter;
             
             List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
             
