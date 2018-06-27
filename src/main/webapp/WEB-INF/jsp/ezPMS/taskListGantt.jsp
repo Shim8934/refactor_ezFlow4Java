@@ -1231,7 +1231,7 @@
 	   							if(task.id.indexOf(pretask) != -1 && task.type === type){
 	   								//찾은 업무의 행번호를 넣어줌.
 			   						dependencies += (j + 1) + ",";
-			   						pretaskNames += task.name;
+			   						pretaskNames += task.name + "\n";
 	   							}
 		   					}
 	   					}
