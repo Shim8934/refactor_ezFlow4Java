@@ -19,7 +19,7 @@
 			<ul>
 				<div id="cabinetTree" class="cabinetTree"></div>
 				<!-- 캐비넷  관리 -->
-				<h3><span><spring:message code='ezCabinet.t03'/></span></h3>
+				<h3 id="cabinetManagement"><span><spring:message code='ezCabinet.t03'/></span></h3>
 			</ul>
 			
 			<!-- 연동 캐비넷 -->
@@ -63,11 +63,28 @@
 					
 					var configSpan = document.getElementById("cabinetConfig");
 					configSpan.addEventListener("click", function(e) {getConfigPage();}, false);
+					
+					var cabinetMg  = document.getElementById("cabinetManagement");
+					cabinetMg.addEventListener("click", function(e) {getManagement();}, false);
 				}
 				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
 				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
 				function getMyCabinet()  {window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do";}
+				function getManagement() {window.open("/ezCabinet/cabinetManagement.do", "management", getOpenWindowfeature(600, 500));}
+				
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
+					var pleftpos = parseInt(width) - popUpW;
+					heigth       = parseInt(heigth) - popUpH;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+					return feature;
+				}
 			})();
 		</script>
 	</body>

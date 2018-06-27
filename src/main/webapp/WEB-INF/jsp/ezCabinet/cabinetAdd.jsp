@@ -1,0 +1,17 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
+<div class="popup cabAddoff" id="cabAddDiv">
+	<h1 id="addCabTtl"></h1>
+	<div class="cbNameInputDiv">
+		<span><spring:message code='ezCabinet.t80'/></span>
+		<input id="cabNameTxt1" type="text" maxlength="50">
+		<br>
+		<span><spring:message code='ezCabinet.t81'/></span>
+		<input id="cabNameTxt2" type="text" maxlength="50">
+	</div>
+	<div class="cabdivBttn" id="cabAddBttn">
+		<a class="cabBttn"><span><spring:message code='ezCabinet.t79'/></span></a>
+		<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+	</div>
+</div>

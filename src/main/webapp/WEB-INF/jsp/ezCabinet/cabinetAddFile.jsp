@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
-	<body class="popup">
+	<body class="popup cabAddMain">
 		<h1><spring:message code="ezCabinet.t67"/></h1> 
 <%-- 		<div id="close">
 			<ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul>
@@ -36,9 +36,9 @@
 			</div>
 		</div>
 		
-		<div class="cabBttnDiv">
-			<a class="imgbtn"><span><spring:message code='ezCabinet.t14'/></span></a>
-			<a class="imgbtn"><span><spring:message code='ezCabinet.t66'/></span></a>
+		<div class="cabBttnDiv" id="cabAddBttn">
+			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
+			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
 		<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
@@ -54,7 +54,7 @@
 					document.onselectstart  = function () { return false;};
 					//var closeBttn         = document.getElementById("close").firstElementChild.firstElementChild.firstElementChild;
 					//closeBttn.onclick     = function(e) {closeWindow();};
-					var cabdivBttnElmt      = document.getElementsByClassName("cabBttnDiv")[0];
+					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
 					var listBttns           = cabdivBttnElmt.children;
 					listBttns[0].onclick    = function(e) {};
 					listBttns[1].onclick    = function(e) {closeWindow();};
@@ -72,32 +72,23 @@
 				function getRelatedFile() {
 					if (rlWindow) {rlWindow.close();}
 					
-					rlWindow = window.open("/ezCabinet/getRelatedFile.do", getPosition(600, 500));
+					rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
 				function closeWindow() {window.close();}
 				
-				function getPosition(popUpW, popUpH) {
-					var returnValue = new Array();
-					var heigth      = window.parent.document.documentElement.clientHeight;
-					if (heigth == 0) {heigth = window.parent.document.body.clientHeight;}
-					
-					var width = window.parent.document.documentElement.clientWidth;
-					if (width == 0) {width = window.parent.document.body.clientWidth;}
-					
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
 					var pleftpos = parseInt(width) - popUpW;
 					heigth       = parseInt(heigth) - popUpH;
-					
-					if (heigth < (popUpH + 50)) {
-						returnValue[0] = (heigth / 2);
-					}
-					else {
-						returnValue[0] = (heigth / 2) - 50;
-					}
-					
-					returnValue[1] = pleftpos / 2;
-					return returnValue;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+					return feature;
 				}
 			})();
 		</script>
