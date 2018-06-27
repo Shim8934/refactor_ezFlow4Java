@@ -1416,12 +1416,22 @@
    		        document.getElementById("iFramePanel").style.top = "1%";
    		        document.getElementById("iFramePanel").style.left = "5%";
    		        document.getElementById("iFramePanel").style.height = "84%";
+   		        document.getElementById("iFramePanel").style.width = "91%";
    		        document.getElementById("iFrameLayer").style.width = "100%";
    		        document.getElementById("iFrameLayer").style.height = "100%";
    		        document.getElementById("mailPanel").style.display = "";
    		        document.getElementById("iFramePanel").style.display = "";
    		        
    				//DivPopUpShow(1500, 636, "/ezPMS/getMemberSchedule.do?projectId=" + projectId);
+	   		}
+	   		
+	   		function DivMemberSchedulePopUpHidden() {
+	   		    try {
+	   		        document.getElementById("mailPanel").style.display = "none";
+	   		        document.getElementById("iFramePanel").style.display = "none";
+	   		     	document.getElementById("iFramePanel").style.width = "";
+	   		        document.getElementById("iFrameLayer").src = "/blank.htm";
+	   		    } catch (e) {}
 	   		}
 		</script>
 		<style>
@@ -1485,17 +1495,6 @@
 		  	white-space : nowrap;
 		  	overflow : hidden;
 		  }
-/* 		  .isParent.project .exp-controller { */
-/* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
-/* 		  } */
-		  
-/* 		  .isParent.group .exp-controller { */
-/* 		    background-image: url(/images/OrganTree_cross/folder.gif); */
-/* 		  } */
-		  
-/* 		  .isParent.collapsed .project .exp-controller { */
-/* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
-/* 		  } */
 
 		  .taskEditRow .typeImgDiv {
 		  	display: inline-block;
@@ -2269,7 +2268,7 @@
 			  }
 		</script>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none; width:91%" id="iFramePanel">
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
