@@ -105,7 +105,6 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
-	
 	        var pCompanyID = "${userInfo.companyID}";
 	        var KuyjeType = "002";
 	        var signDateFormat = "${optSignDateFormat}";
@@ -134,7 +133,7 @@
 	        var ext = "hwp";
 	        var docState = "${docState}";
 	        var nonElecRec = "${nonElecRec}";
-	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -321,6 +320,7 @@
 		                
 		                if (nonElecRec == "Y") {
 					        getNonElecInfoSusinInit();
+					        document.getElementById("btnAddSepAttach").style.display = "none";
 				        }
 		
 		                if (pDocHref != "") {
@@ -1112,6 +1112,8 @@
 			        	}
 				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
 				        parameter[49] = nonSepAttachLVXml; // 분첨
+				        parameter[50] = g_szSCListXml;
+				        parameter[51] = sepAttachCheckYN; // 분첨
 			        }
 			        
 			        if (tempItemCode != "")
@@ -1195,6 +1197,8 @@
 			                if (nonElecRec == "Y") {
 				            	nonElecRecInfoXml = ret[23];
 				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+						        sepAttachCheckYN = ret[26];
 				            	if (ext == "hwp") {
 					            	setNonElecRecInfo(nonElecRecInfoXml);
 				            	}

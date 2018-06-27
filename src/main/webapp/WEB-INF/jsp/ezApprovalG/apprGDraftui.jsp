@@ -174,6 +174,11 @@
 		        if(approvalFlag == "G") {
 		        	$("#btnAddSepAttach").css("display","");
 	        	}
+		        
+		        if(nonElecRec == "Y") {
+		        	document.getElementById("btnSelForm").style.display = "none";
+                	document.getElementById("btnAddSepAttach").style.display = "none";
+		        }
 		    };
 		    function dragNdrapNo()
 		    {
@@ -531,6 +536,12 @@
 			            
 			            if (hideCabinet == "0") {
 				            if (approvalFlag == "G") {
+				            	if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+				            		var pAlertContent = "기록물 정보를 입력해 주세요.";
+					                OpenAlertUI(pAlertContent);
+					                return;
+				            	}
+				            	
 					            if (cabinetID == "") {
 					                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
 					                OpenAlertUI(pAlertContent, check_btnSendDraft);

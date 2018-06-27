@@ -392,6 +392,8 @@
 	            	g_CabID = RetValue[47];
 	            	nonElecRecInfoXml = RetValue[48];
 	            	g_SepAttachLVXml = RetValue[49];
+	            	g_szSCListXml = RetValue[50];
+	            	sepAttachCheckYN = RetValue[51];
 	            }
 	            
 	            if (pSuSinFlag == "N") {
@@ -687,10 +689,10 @@
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
 	                    
-	                    if (!bool6)
+	                    if (!bool6) {
 	                    	nonElecRecInit();
-	                    if (pIniGubun == "6")
-							setCabInfo(GetCabinetClassInfo(g_CabID));
+	                    }
+	                    setCabInfoInit();
 	                    
 	                    bool6 = true;
 	                    break;
@@ -1028,19 +1030,28 @@
 			                }
 			                
 			                if (nonElecRec == "Y") {
+			                	if (!bool6) {
+			                    	nonElecRecInit();
+			                    }
+			                	
 			                	if (pIniGubun == "11") {
 			                		setCabInfoInit();
-			                	}
-			                	// 기록툴 정보 탭을 누르지 않았을때 이닛을 이때 호출한다.
-			                	if (!bool6) {
-			                		nonElecRecInit();
-			                		// 기록물정보 입력란 유효성 검사
-			                	} else if (!CheckInputField()) {
+			                	} else if (!CheckInputField()) { // 기록물정보 입력란 유효성 검사
 			                		return;
 			                	}
 			                	
-			                	ret[23] = getNonElecRecInfo();
-			                	ret[24] = g_SepAttachLVXml;
+			                	if (g_SepAttachLVXml != "") {
+			                		if (sepAttachCheckYN != "TRUE") {
+			                			OpenAlertUI("분리첨부가 있습니다. 확인해주세요.");
+			                			document.getElementById("1tab6").onclick();
+			    		                return;
+			                		}
+			                	}
+			                	
+			                	ret[23] = getNonElecRecInfo(); // 비전자문서 기본등록사항 + 분리첨부 + 특수목록
+			                	ret[24] = g_SepAttachLVXml; // 분리첨부
+			                	ret[25] = g_szSCListXml; // 특수목록
+			                	ret[26] = sepAttachCheckYN; // 분리첨부 확인여부
 			                }
 		                }
 		
@@ -1683,9 +1694,11 @@
 		        }
 		    }
 
+		    var sepAttachCheckYN = "";
 		    function btnAddSepAttach_onclick_Complete(rtn) {
 		        DivPopUpHidden();
 		        if (rtn[0] == "TRUE") {
+			        sepAttachCheckYN = rtn[0];
 		            g_SepAttachLVXml = rtn[1];
 		        }
 		    }
@@ -2548,7 +2561,7 @@
 			<!-- 비전자문서 정보 -->
 			<div id="NonElecRecInfo" style="width: 100%; height: 597px; display: none;">
 				<c:if test="${guBun eq '6'}">
-				<h2><spring:message code='ezApprovalG.t1018'/></h2><!-- 기록물철 정보 -->
+				<h2 class="h2_dot"><spring:message code='ezApprovalG.t1018'/></h2><!-- 기록물철 정보 -->
 				<table style="width:100%" class="content">
 					<tr>
         				<th><b><spring:message code='ezApprovalG.t1063'/></b></th><!-- 기록물철 이름 -->
@@ -2650,24 +2663,26 @@
 							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="13">
 								    </td>
 								</tr>
-								<tr>
-								    <th><spring:message code='ezApprovalG.t94'/></th><!-- 특수목록 -->
-									<td>
-							        	<table border="0" style="width:100%;border-collapse:collapse; border-spacing:0;padding:0px;" >
-							       			<tr>
-							               		<td id="tdSpecialFlag">&nbsp;</td>
-							               		<td style="width:70px">
-							                       <img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle" id="btnAddSC" name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20">
-					                            </td>
-						                    </tr>
-							            </table>
-							    	</td>
-								</tr>
+								<c:if test="${guBun ne '1'}">
+									<tr>
+									    <th><spring:message code='ezApprovalG.t94'/></th><!-- 특수목록 -->
+										<td>
+								        	<table border="0" style="width:100%;border-collapse:collapse; border-spacing:0;padding:0px;" >
+								       			<tr>
+								               		<td id="tdSpecialFlag">&nbsp;</td>
+								               		<td style="width:70px">
+								                       <img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle" id="btnAddSC" name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20">
+						                            </td>
+							                    </tr>
+								            </table>
+								    	</td>
+									</tr>
+								</c:if>
 								<tr>
 								    <th><spring:message code='ezApprovalG.t868'/></th><!-- 전자기록물여부 -->
 									<td style="text-align:left">
-										<input type="radio" name="rdoElectronicFlag" value="1" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;" disabled="disabled">
-										<span><spring:message code='ezApprovalG.t981'/></span>
+										<input type="radio" name="rdoElectronicFlag" value="1" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top; display: none;" disabled="disabled">
+										<%-- <span><spring:message code='ezApprovalG.t981'/></span> --%>
 										<input type="radio" name="rdoElectronicFlag" style="height:13px;width:13px;padding:0px;margin:0px;" value="2" checked>
 										<span><spring:message code='ezApprovalG.t1070'/></span>
 								    </td>
@@ -2690,8 +2705,27 @@
 					                </td>
 				                </tr>
 			        		</table>
+			        		<div id="divAudioVisualDummy" style="display:none"></div>
+			        		<div id="divAudioVisual" style="display: none">
+			        			<h2 class="h2_dot"><spring:message code='ezApprovalG.t1074'/></h2><!-- 시청각 기록물 추가등록 사항 -->
+			        			<table style="width:100%;" class="content">
+									<tr>
+				        				<th><spring:message code='ezApprovalG.t1075'/></th>
+										<td>
+				        					<TextArea style="width:99%; height:60px" id=txtSummary name=txtSummary></TextArea>
+				        				</td>
+									</tr>
+									<tr>
+				        				<th><spring:message code='ezApprovalG.t826'/></th>
+										<td>
+				        					<div id=tdAVType style="overflow:auto;"></div>
+											<div id="lstAttachLink" style="display: none;"></div>
+	                                    </td>
+	                        	    </tr>
+			                    </table>
+			        		</div>
 						</td>
-						<td>
+						<%-- <td>
 			        		<div id="divAudioVisualDummy" style="display:none"></div>
 							<div id="divAudioVisual" style="display: none">
 								<h2><spring:message code='ezApprovalG.t1074'/></h2><!-- 시청각 기록물 추가등록 사항 -->
@@ -2711,7 +2745,7 @@
 	                        	    </tr>
 			                    </table>
 		                    </div>
-	                    </td>
+	                    </td> --%>
 		            </tr>
 			    </table>
 			</div>

@@ -102,13 +102,13 @@
 		    arr_userinfo[8]  = "${userInfo.email}";
 		    arr_userinfo[9]  = "";
 		    arr_userinfo[10] = "${susinAdmin}";
-		    var pCompanyID = "${userInfo.companyID}";
 		    arr_userinfo[11]  = "${userInfo.displayName1}";
 		    arr_userinfo[12]  = "${userInfo.displayName2}";
 		    arr_userinfo[13]  = "${userInfo.title1}";
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    var pCompanyID = "${userInfo.companyID}";
 		    var KuyjeType = "002";
 		    var signDateFormat = "${optSignDateFormat}";
 		    var isSplit = "${optIsSplit}";
@@ -153,7 +153,7 @@
 			var isHWP = "";
 			var ext = "mht";
 			var nonElecRec = "${nonElecRec}";
-	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 			
 			var docState = "${docState}";
 		    window.onload = function () {
@@ -167,6 +167,7 @@
 		    	
 		    	if (nonElecRec == "Y") {
 			        getNonElecInfoSusinInit();
+					document.getElementById("btnAddSepAttach").style.display = "none";
 		        }
 		    };
 		    
@@ -1316,6 +1317,8 @@
 		        	}
 			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
 			        parameter[49] = nonSepAttachLVXml; // 분첨
+			        parameter[50] = g_szSCListXml;
+			        parameter[51] = sepAttachCheckYN;
 		        }
 		        
 		        if (approvalFlag == "S") {
@@ -1457,6 +1460,8 @@
 			                if (nonElecRec == "Y") {
 				            	nonElecRecInfoXml = ret[23];
 				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+				            	sepAttachCheckYN = ret[26];
 				            	if (ext == "hwp") {
 					            	setNonElecRecInfo(nonElecRecInfoXml);
 				            	}

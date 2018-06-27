@@ -22,7 +22,7 @@
 		    }
 		    var OrderCell = "";
 		    var rtnVal = new Array();
-		    var g_SepAttchLVXml="";
+		    var g_SepAttachLVXml="";
 		    var g_CabinetID;
 		    var g_InitFlag="";
 		    var g_TaskCode;
@@ -50,7 +50,7 @@
 		            document.getElementById("lvList").style.height = "500px";
 		        }
   	 			ext = RetValue[3];
-		        g_SepAttchLVXml = RetValue[0];
+		        g_SepAttachLVXml = RetValue[0];
 		        g_CabinetID = RetValue[1];
 		        nonElecRec = RetValue[4];
 		        if (RetValue[2])
@@ -65,7 +65,7 @@
 		            document.getElementById("trModify").style.display = "";
 		            document.getElementById("trChangeCabinet").style.display = "none";
 		        }
-		        InitListView(g_SepAttchLVXml);
+		        InitListView(g_SepAttachLVXml);
 		        if (!CrossYN()) {
 		            rtnVal[0] = "FALSE";
 		            window.dialogHeight = "380px";
@@ -79,11 +79,11 @@
 		        if (lvXml == "") {
 		            lvXml = GetLVHearderXml();
 		        }
-		        if (nonElecRec == "Y" && g_CabinetID != "") {
+		        /* if (nonElecRec == "Y" && g_CabinetID != "") { // 기록물철명 자동세팅 주석
 		        	var CabInfo = createXmlDom();
 		        	CabInfo = GetCabinetClassInfo(g_CabinetID);
 		        	lvXml = lvXml.replace(/nonElecRecTempCabinetName/gi, SelectSingleNodeValue(CabInfo.documentElement, "TITLE"));
-		        } 
+		        }  */
 		        oList = createXmlDom();
 		        oList = loadXMLString(lvXml);
 		
@@ -368,7 +368,7 @@
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
 
-		                 DivPopUpShow(475, 375, url);
+		                 DivPopUpShow(675, 475, url);
 		            } else {
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
@@ -490,6 +490,14 @@
 		            alert("<spring:message code='ezApprovalG.t1031'/>");
 		            return;
 		        }
+		        
+		        if (nonElecRec == "Y") {
+			        if (!CheckSepAttParamXmlNull()) {
+			            alert("<spring:message code='ezApprovalG.t1411'/>");
+			            return;
+			        }
+		        }
+		        
 		        rtnVal[0] = "TRUE";
 		        rtnVal[1] = GetListXml();
 
@@ -513,6 +521,22 @@
 		    }
 		    window.onbeforeunload = function () {
 	            window.returnValue = rtnVal;
+		    }
+		    
+		    function CheckSepAttParamXmlNull() {
+		        var rtnVal = true;
+		        var List = new ListView();
+		    	List.LoadFromID("pLvList");
+		    	
+		    	var rows = List.GetDataRows();
+		    	var i;
+	    		for (i = 0; i < rows.length; i++) {
+	    			if (GetAttribute(rows[i], "DATA1") == "") {
+	    				rtnVal = false;
+	    			}
+	    		}
+		    	
+		        return rtnVal;
 		    }
 		</script>
 		<style>

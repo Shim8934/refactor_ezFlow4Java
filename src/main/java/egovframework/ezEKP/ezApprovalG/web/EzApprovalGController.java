@@ -7784,9 +7784,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String orgDocID = request.getParameter("orgDocID");
-		String cabinetID = request.getParameter("cabinetID");
+		String nonElecRecXML = request.getParameter("xml");
 		
-		ezApprovalGService.setNonElecRecCabID(docID, orgDocID, cabinetID, userInfo.getCompanyID(), userInfo.getTenantId());
+		ezApprovalGService.setNonElecRecCabID(docID, orgDocID, nonElecRecXML, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("nonElecRecTempCabSwitch ended.");
 	}

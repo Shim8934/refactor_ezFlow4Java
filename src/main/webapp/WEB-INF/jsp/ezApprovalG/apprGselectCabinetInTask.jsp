@@ -524,45 +524,66 @@
 		</script>
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px">
-		<h1><spring:message code='ezApprovalG.t711'/></h1>
+		<h1>
+			<spring:message code='ezApprovalG.t711'/>
+			<span id="trCreateCab" style="display:inline; float:right;">
+				<a class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
+				<a class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
+			</span>
+		</h1>
 		<table style="width:445px">
 		  <tr>			
 		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/></h2> 
 		      <table>
-		        <tr id="trCreateCab"> 
-		          <th><a  class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-				  <a  class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a></th>
-		        </tr>
+		        <%-- <tr id="trCreateCab"> // (529~532 으로 이동)
+		          <th>
+			          <a class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
+					  <a class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
+				  </th>
+		        </tr> --%>
 		        <tr id="trCreateCabDummy" style="display:none"> 
-		          <td></td>
 		        </tr>
 		        <tr> 
 		          <td>
-				        <div class="listview">
-		                    <div id="CabinetList" style="border:0;HEIGHT: 215px; WIDTH: 380px;overflow:auto;"></div>
-		                </div>
+			        <div class="listview">
+	                    <div id="CabinetList" style="border:0;HEIGHT: 280px; WIDTH: 380px;overflow:auto;"></div>
+	                </div>
 		          </td>
 		        </tr>
 		      </table>
 		    </td>
-		    <td style="width:45px;text-align:center"> 
+		    <td style="width:45px;text-align:center; padding: 3px;"> 
 		      <table border="0" style="border-collapse:collapse; border-spacing:0;padding:2px;">
-		        <tr > 
-		          <td ><a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" > 
-		                  <img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
-								onClick="return AddCabList_onclick()"></a></td>
+			      <tr>
+			      	<td>
+			      		<img id="RecvAdd" src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" onClick="return AddCabList_onclick()" style="cursor: pointer; padding-bottom: 2px;">
+			      	</td>
+			      </tr>
+			      <tr>
+			      	<td>
+			      		<img id="RecvDel" src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" onClick="return DelCabList_onclick()" style="cursor: pointer; padding-top: 2px;">
+			      	</td>
+			      </tr>
+		        <!-- <tr> // (557 ~ 566 으로 이동)
+		          <td>
+		          	<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" > 
+		            	<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddCabList_onclick()">
+		            </a>
+		          </td>
 		        </tr>
-		        <tr > 
-		          <td ><a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image103','','/images/arr_left.gif',1)"> 
-		                  <img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" 
-								onClick="return DelCabList_onclick()"></a></td>
-		        </tr>
+		        <tr> 
+		          <td>
+		          	<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image103','','/images/arr_left.gif',1)"> 
+		            	<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelCabList_onclick()">
+		            </a>
+		          </td>
+		        </tr> -->
 		      </table>
 		    </td>
 		    <td style="width:200px;vertical-align:top">
 			<h2><spring:message code='ezApprovalG.t1120'/></h2>
 		      <div class="listview">
-			    <div id="SelCabinetList" style="border:0; HEIGHT: 242px; WIDTH: 250px;overflow:auto;" ></div>
+			    <div id="SelCabinetList" style="border:0; HEIGHT: 280px; WIDTH: 250px;overflow:auto;" ></div>
 		      </div>
 		    </td>
 		  </tr>

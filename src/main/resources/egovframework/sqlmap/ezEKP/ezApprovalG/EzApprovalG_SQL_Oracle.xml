@@ -24689,6 +24689,8 @@
     		CABINETID = #cabinetID#
     	WHERE
     		DOCID = #orgDocID#
+    	AND
+    		SEPERATEATTACHNO = #sepAttachNO#
     	AND 
 			COMPANYID = #companyID# 
 		AND 

@@ -1300,7 +1300,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getRecSCInfo(xmlDom,userInfo.getLang(),userInfo);
-		
 		logger.debug("getRecSCInfo ended");
 		
 		return result;

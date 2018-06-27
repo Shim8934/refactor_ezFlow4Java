@@ -90,6 +90,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    var pCompanyID = "${userInfo.companyID}";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
@@ -121,8 +122,7 @@
 		    var isReceived = "${isReceived}";
 		    var ext = "mht";
 		    var nonElecRec = "${isNonElecRec}";
-		    var nonElecRecInfoXml = "";
-			var nonSepAttachLVXml = "";
+		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -136,6 +136,10 @@
 				if (isReceived != 0) {
 					alert("<spring:message code='ezApprovalG.pjg04'/>");
 					window.close();
+				}
+				
+				if (nonElecRec == "Y") {
+					document.getElementById("btnAddSepAttach").style.display = "none";
 				}
 			});
 		    
@@ -1297,6 +1301,8 @@
 		        	}
 			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
 			        parameter[49] = nonSepAttachLVXml; // 분첨
+			        parameter[50] = g_szSCListXml; // 특수목록
+			        parameter[51] = sepAttachCheckYN; // 특수목록
 		        }
 		        
 		        if (approvalFlag == "S") {
@@ -1404,6 +1410,8 @@
 			                if (nonElecRec == "Y") {
 				            	nonElecRecInfoXml = ret[23];
 				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+				            	sepAttachCheckYN = ret[26];
 				            	setNonElecRecInfo(nonElecRecInfoXml);
 				            }
 		                } else {

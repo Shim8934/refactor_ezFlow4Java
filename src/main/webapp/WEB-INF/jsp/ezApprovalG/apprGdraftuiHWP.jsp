@@ -149,8 +149,7 @@
 	        var isUsed = "";
 	        var ext = "hwp";
 	        var nonElecRec = "${nonElecRec}";
-	        var nonElecRecInfoXml = "";
-	        var nonSepAttachLVXml = "";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
 	        
 	        window.onload = function () {
 	            try {
@@ -186,6 +185,11 @@
 	
 	                HwpCtrl.SetFieldFocus("doctitle");
 	                HwpCtrl.ezSetScrollPosInfo(0);
+	                
+	                if (nonElecRec == "Y") {
+	                	document.getElementById("btnSelForm").style.display = "none";
+	                	document.getElementById("btnAddSepAttach").style.display = "none";
+	                }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.window.onload::" + e.description);
 	                hideProgress();
@@ -536,6 +540,13 @@
 	                if (pDocTitle.length > 127) {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t132'/>";
 	                    OpenAlertUI(pAlertContent);
+	                    return;
+	                }
+	                
+	                if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+	                	var pAlertContent = "기록물 정보를 입력해 주세요.";
+	                    OpenAlertUI(pAlertContent);
+	                    btnApprovalInfo(1);
 	                    return;
 	                }
 	

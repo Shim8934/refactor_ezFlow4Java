@@ -5,7 +5,6 @@
 
 ﻿var g_CabListXml;
 var bSpecialFlag = "0";
-var g_szSCListXml = "";
 var g_arrSCName = new Array();
 var g_CodeInfoXml;
 var g_RecTypeCode;
@@ -141,6 +140,45 @@ function getNonElecRecInfo() {
 		createNodeAndAppandNodeText(rtnXml, objItem, objData, "SEPERATEATTACH", "");
 	}
 	
+	// 특수목록 Flag (1=true 0=false)
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "SPECIALCATALOGFLAG", bSpecialFlag);
+	
+	var objSI, objSC, objData,cataloginfo;
+    objSI = createNodeAndAppandNode(rtnXml, objItem, objSI, "SPECIALCATALOGINFO");
+    
+    // 특수목록이 존재할경우
+    if (bSpecialFlag == "1") {
+    	cataloginfo = createNodeAndAppandNode(rtnXml, objSI, objSC, "SCNAME");
+        objData = createNodeAndAppandNodeText(rtnXml, cataloginfo, objData, "LIST1", g_arrSCName[0]);
+        objData = createNodeAndAppandNodeText(rtnXml, cataloginfo, objData, "LIST2", g_arrSCName[1]);
+        objData = createNodeAndAppandNodeText(rtnXml, cataloginfo, objData, "LIST3", g_arrSCName[2]);
+        
+        if (g_szSCListXml != "") {
+            var i;
+            var objSCXml = createXmlDom();
+            objSCXml = loadXMLString(g_szSCListXml);
+            var oRows = SelectNodes(objSCXml, "LISTVIEWDATA/ROWS/ROW");
+            if (oRows.length > 0) {
+                for (i = 0; i < oRows.length; i++) {
+                	objSC = createNodeAndAppandNode(rtnXml, objSI, objSC, "SCDATA");
+                    var objSN = createNodeAndAppandNodeText(rtnXml, objSC, objSN, "SN", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[0])[0]));
+                    if (GetChildNodes(oRows[i])[1])
+                        createNodeAndAppandNodeText(rtnXml, objSC, objSN, "LIST1", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[1])[0]));
+                    else
+                        createNodeAndAppandNodeText(rtnXml, objSC, objSN, "LIST1", "");
+                    if (GetChildNodes(oRows[i])[2])
+                        createNodeAndAppandNodeText(rtnXml, objSC, objSN, "LIST2", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[2])[0]));
+                    else
+                        createNodeAndAppandNodeText(rtnXml, objSC, objSN, "LIST2", "");
+                    if (GetChildNodes(oRows[i])[3])
+                        createNodeAndAppandNodeText(rtnXml, objSC, objSN, "LIST3", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[3])[0]));
+                    else
+                        createNodeAndAppandNodeText(rtnXml, objSC, objSN, "LIST3", "");
+                }
+            }
+        }
+    }
+	
 	return ConvertEntityReferenceToChar(getXmlString(rtnXml));
 }
 /*
@@ -235,33 +273,6 @@ function setNonElecRecInfo(ret) {
 		HwpCtrl.SetFieldText("nonElecRec_ExeDate", getNodeText(objNodes.item(0).childNodes(11)));
 		HwpCtrl.SetFieldText("nonElecRec_RegType", regTypePicker(getNodeText(objNodes.item(0).childNodes(3))));
 		
-		/*switch(getNodeText(objNodes.item(0).childNodes(3))) {
-			case "1" :
-				HwpCtrl.SetFieldText("nonElecRec_RegType", "일반문서 생산/발송");
-				break;
-			case "2" :
-				HwpCtrl.SetFieldText("nonElecRec_RegType", "일반문서 접수");
-				break;
-			case "3" :
-				HwpCtrl.SetFieldText("nonElecRec_RegType", "도면류 생산/발송");
-				break;
-			case "4" :
-				HwpCtrl.SetFieldText("nonElecRec_RegType", "도면류 접수");
-				break;
-			case "5" :
-				HwpCtrl.SetFieldText("nonElecRec_RegType", "사진/필름류");
-				break;
-			case "6" :
-				HwpCtrl.SetFieldText("nonElecRec_RegType", "녹음/동영상류");
-				break;
-			case "7" :
-				HwpCtrl.SetFieldText("nonElecRec_RegType", "카드류 생산/발송");
-				break;
-			case "8" :
-				HwpCtrl.SetFieldText("nonElecRec_RegType", "카드류 이첩발송");
-				break;
-		}*/
-			
 		objNodes = xmldom.selectNodes("NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW");
 		count = objNodes.length;
 		if (count > 0) {
@@ -339,7 +350,7 @@ function getNonElecInfoSusinInit() {
  * 기록물정보xml, 분리첨부xml 가공
  * */
 function getNonElecInfoSusinInit_complete(result) {
-	nonElecRecInfoXml = getXmlString(result);
+	nonElecRecInfoXml = getXmlString(result); // 기록물정보 xml
 	
 	var InfoXml = loadXMLString(GetLVHearderXml());
 	var Rows = InfoXml.childNodes[0].childNodes[1];
@@ -352,14 +363,14 @@ function getNonElecInfoSusinInit_complete(result) {
         	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
         	node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", SelectSingleNodeValue(oRows[i], "SEPNO"));
         	
-        	createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA1", SelectSingleNodeValue(SelectNodes(result, "NONELECRECINFO/NONELECREC")[0], "CABINETID"));
+        	createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA1", SelectSingleNodeValue(oRows[i], "SEPCABINETID"));
         	createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA2", SelectSingleNodeValue(oRows[i], "SEPREGTYPE"));
         	createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA3", SelectSingleNodeValue(oRows[i], "SEPRECORDTYPE"));
         	
         	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
         	createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", SelectSingleNodeValue(oRows[i], "SEPTITLE"));
         	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-        	createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", "nonElecRecTempCabinetName");
+    		createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", getCabTitle(SelectSingleNodeValue(oRows[i], "SEPCABINETID")));
         	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
         	createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", regTypePicker(SelectSingleNodeValue(oRows[i], "SEPREGTYPE")));
         	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
@@ -369,8 +380,8 @@ function getNonElecInfoSusinInit_complete(result) {
         	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
         	createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", SelectSingleNodeValue(oRows[i], "SEPSUMMARY"));
         }
+        nonSepAttachLVXml = getXmlString(InfoXml); // 분리첨부 xml
     }
-    nonSepAttachLVXml = getXmlString(InfoXml);
 }
 /*
  * 분리첨부 전용 헤더 세팅 메소드
@@ -415,7 +426,7 @@ function GetLVHearderXml() {
     return getXmlString(oList);
 }
 /*
- * 캐비넷 아이디 switch(변환)
+ * 캐비넷 아이디 세팅
  * */
 function setCabInfoInit() {
 	var List = new ListView();
@@ -429,17 +440,29 @@ function setCabInfoInit() {
 	if (MyRows.length > 0) {
 		rtnValue = GetAttribute(MyRows[0], "DATA1");
 		g_CabID = rtnValue;
-		g_SepAttachLVXml = g_SepAttachLVXml.replace(/nonElecRecTempCabinetName/gi, GetAttribute(MyRows[0], "DATA5")).replace(/nonElecRecTempCabinet/gi, g_CabID);
 	} else if (totalRows.length > 0) {
 		rtnValue = GetAttribute(totalRows[0], "DATA1");
 		g_CabID = rtnValue;
-		g_SepAttachLVXml = g_SepAttachLVXml.replace(/nonElecRecTempCabinetName/gi, GetAttribute(totalRows[0], "DATA5")).replace(/nonElecRecTempCabinet/gi, g_CabID);
+	}
+	
+	if (g_CabID != "" && g_CabID != "nonElecRecTempCabinet") {
+		var CabXml = GetCabinetClassInfo(g_CabID);
+		
+		if (pIniGubun == "6") {
+			setCabInfo(CabXml);
+	    }
+	    
+	    InitCabClassInfo2(CabXml);
+	    //InitRegisterType();
+	    InitSCInputBox();
+	} else {
+		g_SepAttachLVXml = g_SepAttachLVXml.replace(/nonElecRecTempCabinetName/gi, "").replace(/nonElecRecTempCabinet/gi, "");
 	}
 }
 /*
  * 비전자문서 임시 캐비넷 아이디 -> 선택 캐비넷 아이디 변경 메소드
  * */
-function nonElecRecTempCabSwitch() {
+function nonElecRecTempCabSwitch(nonElecRecInfoXml) {
 	if (pGubun == "11") {
 		try {
 		$.ajax({
@@ -450,16 +473,18 @@ function nonElecRecTempCabSwitch() {
 	       data : {
 	             docID  : pDocID,
 	             orgDocID : pOrg_orgDocID,
-	             cabinetID : cabinetID
+	             xml : nonElecRecInfoXml
 	       }});
 		} catch(e) {
 			alert("nonElecRecTempCabSwitch() error! " + e.description);
 		}
 	}
 }
-
+/*
+ * 캐비넷 xml에서 각 정보들 불러와서 세팅해주는 메소드
+ * */
 function setCabInfo(CabXml) {
-	if (CabXml != "" && CabXml != null) {
+	if (CabXml != "" && CabXml != null && g_CabID != "") {
 		/* 철이름 */
 		tdCabinetName.innerHTML =  SelectSingleNodeValue(CabXml.documentElement, "TITLE");
 		/* 형태 */
@@ -468,7 +493,77 @@ function setCabInfo(CabXml) {
 		tdCabinetSN.innerHTML = SelectSingleNodeValue(CabXml.documentElement, "REGSN");
 		/* 권호수 */
 		tdCabinetVolNo.innerHTML = SelectSingleNodeValue(CabXml.documentElement, "DISPCABCLASSNO").split("(")[1].substring(0,3);
+		
+		g_SepAttachLVXml = g_SepAttachLVXml.replace(/nonElecRecTempCabinetName/gi, "");
 	}
+}
+
+function getCabTitle(CabID) {
+	var rtnVal = "";
+	
+	var CabXml = GetCabinetClassInfo(CabID);
+	if (CabXml != "" && CabXml != null) {
+		rtnVal = SelectSingleNodeValue(CabXml.documentElement, "TITLE");
+	}
+	
+	return rtnVal;
+}
+
+function GetCabinetClassInfo(pCabID) {
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getCabinetInfo.do",
+		data : {
+			cabinetID : pCabID,
+			companyID : pCompanyID,
+			strType   : 1
+		},
+		success: function(xml){
+			result = xml;
+			
+			var dataNodes = GetChildNodes(loadXMLString(result));
+		    var rtnXml = getNodeText(dataNodes[0]);
+
+		    if (rtnXml == "FALSE") {
+		        alert(strLang483);
+		    }
+		},
+		error : function() {
+			alert(strLang483);
+		}
+	});
+    
+    return loadXMLString(result);
+}
+
+var g_szSCListXml = "";
+var AddSpecialCatalog_Cross_dialogArguments = new Array();
+function btnAddSpecialCatalog_onclick() {
+    var para = new Array();
+    para[0] = g_szSCListXml;
+    para[1] = g_arrSCName[0];
+    para[2] = g_arrSCName[1];
+    para[3] = g_arrSCName[2];
+    var url = "/ezApprovalG/insSpecialList.do";
+    var rtn;
+    AddSpecialCatalog_Cross_dialogArguments[0] = para;
+    AddSpecialCatalog_Cross_dialogArguments[1] = btnAddSpecialCatalog_onclick_Complete;
+    var OpenWin;
+    
+        OpenWin = window.open(url, "AddSpecialCatalog_Cross", GetOpenWindowfeature(500, 435));
+
+    try { OpenWin.focus(); } catch (e) { }
+}
+
+function btnAddSpecialCatalog_onclick_Complete(rtn) {
+	   DivPopUpHidden();
+	   if (rtn[0] == "TRUE") {
+	        g_szSCListXml = rtn[1];
+	    }
 }
 
 // 일단 이쪽부턴 사용안하지만 필요할것 같아서 놔둠 ↓↓↓↓↓↓↓↓
@@ -488,7 +583,7 @@ function InitCabinetInfo(g_CabListXml) {
     InitSCInputBox();
 }
 
-function InitCabClassInfo(objCabInfoXml) {
+function InitCabClassInfo2(objCabInfoXml) {
 	bSpecialFlag = objCabInfoXml.getElementsByTagName("SCFLAG")[0].textContent;
     if (bSpecialFlag == "1")
     {
@@ -733,7 +828,7 @@ function InitAVTypeTD(nodeXml, objTD1, objTD2) {
     var szHtm1 = "";
     var szHtm2 = "";
     var i;
-    szHtm1 = "<div style=\"width:100%;height:140px;overflow:auto;\">";
+    szHtm1 = "<div style=\"width:100%;height:85px;overflow:auto;\">";
 
     for (i = 0; i < nodeXml.length; i++) {
         if (i % 2 == 0) {
