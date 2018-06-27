@@ -45,5 +45,5 @@ public interface EzLadderService {
 	public void deleteLadderList(LadderVO ladVO) throws Exception; // 사다리 삭제
 	public void setUserOrder(LadderVO ladVO, String firstUser, String secondUser, int firstUserOrder, int secondUserOrder, 
 			String firstItem, String secondItem) throws Exception; // 사용자 위치 바꾸기
-	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt, String lang) throws Exception;	// 사다리 게임 시작
+	public void setLadderStart(LadderVO ladVO, int size) throws Exception;	// 사다리 게임 시작
 }

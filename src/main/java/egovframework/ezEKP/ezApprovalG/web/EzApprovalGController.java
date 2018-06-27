@@ -7456,6 +7456,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userName2 = doc.getElementsByTagName("PUSERNAME2").item(0).getTextContent();
 		String userJobTitle2 = doc.getElementsByTagName("PUSERJOBTITLE2").item(0).getTextContent();
 		String userDeptName2 = doc.getElementsByTagName("PUSERDEPTNAME2").item(0).getTextContent();
+		
+		if (doc.getElementsByTagName("ORGCOMPANYID") != null && !doc.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+			userInfo.setCompanyID(doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
+		}
 
 		String result = ezApprovalGService.updateHistoryForDoc(docID, url, userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, userInfo);
 		
