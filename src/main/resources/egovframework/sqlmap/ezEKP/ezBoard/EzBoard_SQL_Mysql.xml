@@ -216,6 +216,8 @@
                 	B.COMPANYID = #v_COMPANYID#
 	            AND
 	            	A.USERID = 'everyone'
+	            AND  
+                	B.USERID = #v_USERID#
 	            	
 	            ORDER BY 
 	            	VIEWORDER ASC
@@ -276,6 +278,8 @@
                 	C.COMPANYID = #v_COMPANYID#
 	            AND  
                 	A.USERID = 'everyone'
+                AND  
+                	C.USERID = #v_USERID#
                 AND 
                 	C.TABUSED = 'Y'
                 	
