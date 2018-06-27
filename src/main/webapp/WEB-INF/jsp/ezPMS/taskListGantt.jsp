@@ -404,7 +404,7 @@
 	   		function delGroup() {
 	   			var selectType = ge.currentTask.type;
 	   			var url = "";
-	   			var groupId = ge.currentTask.groupId;
+	   			var groupId = "";
 	   			var data = {};
 	   			
 	   			if(selectType !== "g"){
@@ -414,6 +414,7 @@
 	   				if(!confirm("<spring:message code='ezPMS.t306' />")){
 	   					return;
 	   				}
+	   				groupId = ge.currentTask.id.match(/g(\d+)/)[1];
 	   			}
 	   			
 	   			var data = {
@@ -436,6 +437,7 @@
 	   				complete : function() {
 	   					var logContent = "[" + groupId + "] <spring:message code='ezPMS.t196' />";
 	   					addTaskLog(projectId, 3, groupId, null, logContent);
+	   					location.reload();
 	   				}
 	   			});
 	   		}
