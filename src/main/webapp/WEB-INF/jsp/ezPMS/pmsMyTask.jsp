@@ -71,7 +71,8 @@ $(function() {
 			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
 			$("#searchDiv").hide();
 		}
-		
+
+		searchClear();
 		setMyTaskList("task");
 	});
 	
@@ -95,7 +96,8 @@ $(function() {
 			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
 			$("#searchDiv").hide();
 		}
-		
+
+		searchClear();
 		setMyTaskList("group");
 	});
 	
@@ -116,7 +118,8 @@ $(function() {
 			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
 			$("#searchDiv").hide();
 		}
-		
+
+		searchClear();
 		setMyTaskList("project")
 	});
 	
@@ -128,6 +131,32 @@ $(function() {
 	});
 	
 });
+
+function searchClear() {
+	searchByTaskName = "";
+	searchByGroupName = "";
+	searchByProjectName = "";
+	searchByUser = "";
+	searchByPlanStartDate = "";
+	searchByPlanEndDate = "";
+	searchByOverview = "";
+	searchByUpperGroupName = "";
+	
+	if (nowPosition == "task") {
+		$("#searchByTaskName").val("");
+		$("#searchByUpperGroupName").val("");
+	} else if (nowPosition == "group") {
+		$("#searchByGroupName").val("");
+		$("#searchByUpperGroupName").val("");
+	}
+	
+	$("#searchByUser").val("");
+	$("#searchByProjectName").val("");
+	$("#searchByPlanStartDate").val("");
+	$("#searhchByPlanEndDate").val("");
+	$("#searchByOverview").val("");
+	
+}
 
 $(document).ready(function() {
 	getDatePicker();
@@ -252,6 +281,7 @@ function setMyTaskList(position) {
 		orderHow : orderHow,
 		//검색
 		searchByTaskName : searchByTaskName,
+		searchByGroupName : searchByGroupName,
 		searchByUser : searchByUser,
 		searchByStartDate : searchByPlanStartDate,
 		searchByEndDate : searchByPlanEndDate,
@@ -277,16 +307,6 @@ function setMyTaskList(position) {
 			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
 			$("#divList").css("height", (CurrentHeight - 150) + "px");
 			$("#divList").css("overflow", "auto");
-			
-			//빈값으로 만들기
-			searchByTaskName = "";
-			searchByUser = "";
-			searchByPlanStartDate = "";
-			searchByPlanEndDate = "";
-			searchByGroupName = "";
-			searchByProjectName = "";
-			searchByUpperGroupName = "";
-			searchByOverview = "";
 			
 			setInitOrder();
 		}
@@ -538,7 +558,7 @@ function goGroupDetails(elem) {
 			</tbody>
 	</table>
 	<div class="newbtn_position">
-		<a class="imgbtn" onclick="searchProject()"><span><spring:message code='ezPMS.t1' /></span></a>
+		<a class="imgbtn" onclick="searchContent()"><span><spring:message code='ezPMS.t1' /></span></a>
     </div>
 	</div>
 	<div id="contentList"></div>

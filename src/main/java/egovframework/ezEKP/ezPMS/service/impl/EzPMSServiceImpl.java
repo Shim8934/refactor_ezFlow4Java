@@ -1993,7 +1993,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		// 검색
-		map.put("serachByGroupName", search.getGroupName());
+		map.put("searchByGroupName", search.getGroupName());
 		map.put("searchByUpperGroupName", search.getUpperGroupName());
 		map.put("searchByUser", search.getMemberName());
 		map.put("searchByProjectName", search.getProjectName());
