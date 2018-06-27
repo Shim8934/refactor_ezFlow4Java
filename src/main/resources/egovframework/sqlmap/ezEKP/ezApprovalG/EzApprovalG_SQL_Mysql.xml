@@ -3867,7 +3867,7 @@
 	   		<isNotEmpty property="v_PACCOUNTPYEAR" >
 	   		<![CDATA[
 	   			 AND 
-	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR = #v_PACCOUNTPYEAR#
+	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_PACCOUNTPYEAR#
 	   		]]>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_TASKCODE" >
@@ -13202,7 +13202,7 @@
               #v_DTaskName2# ,
               Title ,
               Title2 ,
-              #v_YEAR# ,
+              ProductionYear ,
               #v_CNT# ,
               RecTypeCode ,
               #v_DeptMName# ,
