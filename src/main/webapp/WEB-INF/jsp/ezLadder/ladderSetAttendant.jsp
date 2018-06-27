@@ -47,6 +47,7 @@
 	        var ReturnFunction;
 	        var deptClickFlag;
 	        var attendants;
+	        var companyID = "<c:out value='${companyID}' />";
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -1154,8 +1155,8 @@
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-						page : CurPage ,
-						type : "user"
+						type : "user",
+						company : companyID
 					} ,
 						success : function(xml) {
 							event_displayUserList2(loadXMLString(xml));
@@ -1399,7 +1400,7 @@
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
-		    function makePageSelPage() {
+		   /*  function makePageSelPage() {
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
@@ -1535,7 +1536,7 @@
 		            else
 		                displayUserList();
 		        }
-		    }
+		    } */
 		    function event_Mover(obj) {
 		        if (obj != _RowObject) {
 		        	obj.style.backgroundColor = "#EDEDED";
