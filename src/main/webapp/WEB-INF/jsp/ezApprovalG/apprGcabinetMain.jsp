@@ -40,9 +40,9 @@
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css">   
+		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"> -->   
 		<script type="text/javascript" id="clientEventHandlersJS">
 				var OrderOption = "";
 		        var OrderCell = "";        
@@ -115,10 +115,10 @@
 		                }
 		            }); */
 		
-		            $("#number")
+		            /* $("#number")
 		              .selectmenu()
 		              .selectmenu("menuWidget")
-		                .addClass("overflow");
+		                .addClass("overflow"); */
 		        });
 		
 		        window.onload = function () {
@@ -1465,7 +1465,7 @@
 		
 		
 		        $('#sel_year').val("ALL");
-		        $('#sel_year').selectmenu('refresh');
+		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 		    
 			/////////////////////////////////////////////////////////////////////////////

@@ -7,7 +7,7 @@
 		<title><spring:message code='ezApprovalG.hyj02'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
+		<!-- <link rel="stylesheet" href="/js/jquery/jquery-ui.css"> -->
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<style> 
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script> -->
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		
 		<script ID="clientEventHandlersJS" type="text/javascript">
@@ -245,10 +245,11 @@
 		                onSelect_Year(data.item.value);
 		            }
 		        }); */
-		        $("#number")
+		
+		        /* $("#number")
 		          .selectmenu()
 		          .selectmenu("menuWidget")
-		            .addClass("overflow");
+		            .addClass("overflow"); */
 		    });
 		  
 		    function window_onload() {
@@ -1384,7 +1385,7 @@
 		            }
 		        }
 		        $('#sel_year').val("ALL");
-		        $('#sel_year').selectmenu('refresh');
+		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 		    var SearchFlag = false;
 		    function MakeSubCondition() {
@@ -1600,7 +1601,7 @@
 		        }
 		
 		        $('#sel_year').val("ALL");
-		        $('#sel_year').selectmenu('refresh');
+		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 		    
 		    var SelUserCont_dialogArgument = new Array();
@@ -1761,9 +1762,11 @@
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-		        <li style="vertical-align: middle; margin-top:1px;"> <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
-		            <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
-		        </select>  </li>
+		        <li style="vertical-align: middle;"> 
+		        	<select id="sel_year" name="sel_year" style="height:28px;border-radius:3px" onchange="onSelect_Year(this);">    
+		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+		        	</select>  
+		        </li>
 			</ul>
 		</div>
 		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
