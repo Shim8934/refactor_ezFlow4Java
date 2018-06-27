@@ -593,9 +593,17 @@
 			SELECT 
 				DISTINCT appruserid 
 			FROM 
-				TBL_BOARD_APPRLIST
+				TBL_BOARD_APPRLIST A
+			INNER JOIN
+				TBL_BOARD_BOARDINFO B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.boardid = B.boardid
 			WHERE 
-				tenant_id = #tenantID#
+				A.tenant_id = #tenantID#
+			AND
+				B.companyid = #companyID#
 		]]>
 	</select>
 	
@@ -883,7 +891,7 @@
 	<insert id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_MyBoards ( 
-				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
+				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
 			)
          	( SELECT 
          		#v_PUSERID# USERID ,
@@ -896,6 +904,8 @@
      			  	TBL_Board_MyBoards 
      			  WHERE
      			  	TENANT_ID = #v_TENANTID#
+     			  AND
+     			  	COMPANYID = #v_COMPANYID#
      			  AND  
      			  	USERID = #v_PUSERID# ),
                 ( SELECT
@@ -909,8 +919,11 @@
                   WHERE  
                   	TENANT_ID = #v_TENANTID#
                   AND
+     			  	COMPANYID = #v_COMPANYID#
+                  AND
                   	USERID = #v_PUSERID# ),
-                TENANT_ID
+                TENANT_ID,
+                COMPANYID
            	  FROM 
            	  	TBL_Board_BoardInfo 
            	  WHERE

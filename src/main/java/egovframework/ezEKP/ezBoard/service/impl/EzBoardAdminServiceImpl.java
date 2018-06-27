@@ -64,20 +64,24 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("checkIfBoardGroupAdmin ended");
 		return ezBoardAdminDAO.checkIfBoardGroupAdmin(map);
 	}
-
+	
+	/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
 	@Override
-	public String addMyBoards(String userID, String boardID, int tenantID) throws Exception {
+	public String addMyBoards(String userID, String boardID, String companyID, int tenantID) throws Exception {
 		logger.debug("addMyBoards started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardID);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_PQUERY", userID);
 		
 		try {
+			// 삽입되는 companyID는 boardInfo 테이블에서 가져온다(각 회사에 대해 companyID 조건으로 카운트하여 viewOrder 설정함)
 			ezBoardAdminDAO.addMyBoards(map);
+			// 트리캐시 제거
 			ezBoardAdminDAO.getBoardTree_Set_D(map);
 			
 			logger.debug("addMyBoards ended");
@@ -97,7 +101,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		// 마이게시판 트리 설정 시 COMPANYid 추가 필요
 		try {
 			if (boardMyFavoriteVO.getMode().equals("NEW")) {
-				// 새 분류추가 시 companyID 삽입
+				// 새 분류추가, 하위추가, 마이게시판 추가 시 companyID 삽입
 				ezBoardAdminDAO.setMyBoardTreeConfig_N(boardMyFavoriteVO);
 				
 				rtnValue = "OK";
@@ -192,9 +196,18 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return dbPath;
 	}
 
+	/* 2018-06-27 홍승비 - 게시물 승인권한 확인 companyID 조건 추가 */
 	@Override
-	public List<BoardVO> checkApplyUser(int tenantID) throws Exception {
-		return ezBoardAdminDAO.checkApplyUser(tenantID);
+	public List<BoardVO> checkApplyUser(String companyID, int tenantID) throws Exception {
+		logger.debug("checkApplyUser started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		
+		logger.debug("checkApplyUser ended");
+		return ezBoardAdminDAO.checkApplyUser(map);
 	}
 
 	@Override

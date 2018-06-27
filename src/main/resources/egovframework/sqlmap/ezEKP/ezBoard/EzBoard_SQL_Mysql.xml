@@ -148,6 +148,8 @@
     		WHERE  
     			TENANT_ID = #v_TENANTID#
     		AND
+    			COMPANYID = #v_COMPANYID#
+    		AND
     			USERID = #v_USERID#
 		]]>
 	</select>
@@ -168,10 +170,10 @@
 	<insert id="EzBoardDAO.insertBoardNewBoardOrder" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_NEWBOARD_ORDERINFO ( 
-				BOARDID, 								  USERID, 	  TABUSED, VIEWORDER, TENANT_ID 
+				BOARDID,  	 USERID, 	  TABUSED, VIEWORDER, TENANT_ID, COMPANYID 
 			)
             VALUES ( 
-            	'{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', #v_USERID#, 'Y', 	   0, 		  #v_TENANTID# 
+            	'{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', #v_USERID#, 'Y', 	   0, 		  #v_TENANTID#,	#v_COMPANYID# 
             )
 		]]>
 	</insert>
@@ -183,15 +185,38 @@
 					BOARDID ,
 	                BOARDNAME ,
 	                BOARDNAME2 ,
-	                TABUSED 
+	                TABUSED,
+	                VIEWORDER
 	            FROM 
-	            	TBL_Board_MyBoards 
-	            WHERE  
-	            	TENANT_ID = #v_TENANTID#
+	            	TBL_Board_MyBoards
+                WHERE
+                	TENANT_ID = #v_TENANTID#
+                AND
+                	COMPANYID = #v_COMPANYID#
 	            AND
-	            	(USERID = #v_USERID#
-	            	OR 
-	            	USERID = 'everyone')
+	            	USERID = #v_USERID#
+	            	
+				UNION
+	            
+	            SELECT 
+					A.BOARDID ,
+	                A.BOARDNAME ,
+	                A.BOARDNAME2 ,
+	                B.TABUSED,
+	                B.VIEWORDER
+	            FROM
+	            	TBL_Board_MyBoards A
+				JOIN
+					TBL_BOARD_NEWBOARD_ORDERINFO B
+				ON
+					A.TENANT_ID = B.TENANT_ID
+                WHERE
+                	A.TENANT_ID = #v_TENANTID#
+                AND
+                	B.COMPANYID = #v_COMPANYID#
+	            AND
+	            	A.USERID = 'everyone'
+	            	
 	            ORDER BY 
 	            	VIEWORDER ASC
 			]]>
@@ -203,7 +228,8 @@
                     A.BOARDNAME ,
                     A.BOARDNAME2 ,
                     TABUSED ,
-                    B.GUBUN 
+                    B.GUBUN ,
+                    A.VIEWORDER
                 FROM 
                 	TBL_Board_MyBoards A
                 JOIN 
@@ -214,11 +240,45 @@
                 	A.TENANT_ID = B.TENANT_ID
                 WHERE
                 	A.TENANT_ID = #v_TENANTID#
+                AND
+                	B.COMPANYID = #v_COMPANYID#
 	            AND  
-                	( USERID = #v_USERID#
-                      OR USERID = 'everyone' )
+                	USERID = #v_USERID#
                 AND 
                 	TABUSED = 'Y'
+                	
+              UNION  	
+                	
+                	SELECT 
+					A.BOARDID ,
+                    A.BOARDNAME ,
+                    A.BOARDNAME2 ,
+                    C.TABUSED ,
+                    B.GUBUN ,
+                    C.VIEWORDER
+                FROM 
+                	TBL_Board_MyBoards A
+                JOIN 
+                	TBL_Board_BoardInfo B   
+                ON 
+                	A.BoardID = B.BoardID
+                AND
+                	A.TENANT_ID = B.TENANT_ID
+				JOIN
+					TBL_BOARD_NEWBOARD_ORDERINFO C
+				ON
+					A.BoardID = B.BoardID
+				AND
+					A.TENANT_ID = C.TENANT_ID         
+                WHERE
+                	A.TENANT_ID = 6
+                AND
+                	C.COMPANYID = #v_COMPANYID#
+	            AND  
+                	A.USERID = 'everyone'
+                AND 
+                	C.TABUSED = 'Y'
+                	
                 ORDER BY 
                 	VIEWORDER ASC
 			]]>
@@ -587,6 +647,8 @@
                   WHERE  
                   	TENANT_ID = #v_TENANTID#
                   AND
+                  	COMPANYID = #v_COMPANYID#
+                  AND
                   	UserID = #v_pUserID# ) B   
             ON 
 				A.TENANT_ID = B.TENANT_ID
@@ -600,6 +662,8 @@
 			  	A.BOARDID = P.BOARDID
 			AND 
 			  	A.TENANT_ID = #v_TENANTID#
+	 		AND
+            	A.WRITERCOMPANYID = #v_COMPANYID#
 			AND
 			  	(A.APPRFLAG = 'Y' 
 			     OR A.APPRFLAG IS NULL)
@@ -954,6 +1018,8 @@
      					  WHERE   
      					  	TENANT_ID = #v_TENANTID#
      					  AND
+     					  	COMPANYID = #v_COMPANYID#
+     					  AND
      					  	USERID = #v_PUSERID# ) B 
      			  ON 
      			  	A.TENANT_ID = B.TENANT_ID
@@ -964,9 +1030,13 @@
      			  ON 
      			  	A.TENANT_ID = P.TENANT_ID
      			  AND
+     			  	A.WRITERCOMPANYID = P.COMPANYID
+     			  AND
      			  	A.BOARDID = P.BOARDID
      			  AND 
      			  	A.TENANT_ID = #v_TENANTID#
+     			  AND
+     			  	A.WRITERCOMPANYID = #v_COMPANYID#
      			  AND
      			  	(A.APPRFLAG = 'Y' 
      			     OR A.APPRFLAG IS NULL)
@@ -3753,6 +3823,10 @@
             WHERE  
             	TENANT_ID = #tenantID#
             AND
+		    	(COMPANYID = #companyID#
+		    	 OR
+		    	 COMPANYID IS NULL)
+            AND
             	BOARDID = #boardID#
             AND 
             	( USERID = #userID#
@@ -3765,6 +3839,8 @@
 			DELETE FROM TBL_Board_MyBoards
 			WHERE  
 				TENANT_ID = #tenantID#
+			AND
+		    	COMPANYID = #companyID#
 			AND
 				BOARDID = #boardID#
             AND 
@@ -3786,6 +3862,8 @@
 		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' )
 		    WHERE
 		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
 		    AND  
 		    	USERID = #userID#
 		]]>
@@ -3798,6 +3876,8 @@
           		TABUSED = #v_TABUSED#
           	WHERE
           		TENANT_ID = #v_TENANTID#
+          	AND
+		    	COMPANYID = #companyID#
           	AND  
           		USERID = #v_USERID#
 		]]>

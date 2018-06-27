@@ -117,21 +117,28 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.get_apprUserList(map);
 	}
 
+	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
 	@Override
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception {
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_USERID", userID);
 		map.put("v_MODE", pMode);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
+		// 즐겨찾기 탭 순서대로 게시판을 받아온다.
 		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
 		
+		// 즐겨찾기 탭 순서를 저장한다.
 		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null && !boardMyFavoriteVO.equals("")) {
+			//
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO);
 		} else {
+			// 즐겨찾기 레코드(tbl_board_mayboards + tbl_board_newboard_orderinfo)가 없는 경우, 새로 생성한다.
+			// 사용자 별로 새게시물 게시판의 순서를 저장한다. companyID 추가.
 			ezBoardDAO.insertBoardNewBoardOrder(map);
 			
 			BoardMyFavoriteVO boardMyFavoriteVO2 = new BoardMyFavoriteVO();
@@ -139,10 +146,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardMyFavoriteVO2.setTabUsed("Y");
 			boardMyFavoriteVO2.setViewOrder("0");
 			
+			// 새게시물의 tbl_board_newboard_orderinfo 레코드를 viewOrder 0으로 삽입한다.
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO2);
 		}
 
 		logger.debug("get_favoriteList ended");
+		// 실제 나타낼 즐겨찾기 게시판을 가져온다. mode(ALL-환경설정용/USE-실제사용표출)에 따라 표출이 달라진다.
 		return ezBoardDAO.get_favoriteList(map);
 	}
 
@@ -258,30 +267,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("userID", userInfo.getId());
 		
+		// 새게시물 탭 순서를 포함하여 즐겨찾기 순서를 조정한다.
 		String[] boardIDs = pBoardList.split(";");
 		String[] delBoardIDs = pDelBoardList.split(";");
 		
-		//
 		for (int k = 0; k < boardIDs.length; k++) {
 			map.put("boardID", boardIDs[k]);
 			map.put("count", k + 1);
 			
+			// 즐겨찾기 순서 업데이트(새게시물이 아닌 게시판들)
 			ezBoardDAO.setListOrder_U(map);
 		}
-		
+		// 즐겨찾기 순서 삽입(새게시물 게시판)
 		ezBoardDAO.setListOrder(map);
 		
 		for (int k = 0; k < delBoardIDs.length; k++) {
 			map.put("boardID", delBoardIDs[k]);
 			
+			// 즐겨찾기에서 삭제
 			ezBoardDAO.setListOrder_D(map);
 		}
 
 		logger.debug("setListOrder ended");
 	}
 
+	/* 2018-06-27 홍승비 - 새게시물 카운트 시 companyID 조건 추가 */
 	@Override
 	public int getNewItemListCount(LoginVO userInfo)  throws Exception {
 		logger.debug("getNewItemListCount started");
@@ -289,6 +302,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pUserID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
@@ -324,6 +338,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return boardConfigVO;
 	}
 
+	/* 2018-06-27 홍승비 - 새게시물 리스트 표출 시 companyID 조건 추가 */
 	@Override
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception {
 		logger.debug("getNewItemList started");
@@ -343,6 +358,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_COMPANYID", boardListVO.getCompanyID());
 		map.put("v_TENANTID", boardListVO.getTenantID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -440,8 +456,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getQNABrdTotalItemCount(map);
 	}
 
+	/* 2018-06-27 홍승비 - 즐겨찾기 탭 회사별로 구분 */
 	@Override
-	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, int tenantID) throws Exception {
+	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, String companyID, int tenantID) throws Exception {
 		logger.debug("setTabUsed started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -449,6 +466,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_BOARDID", pBoardList);
 		map.put("v_TABUSED", tabUsed);
 		map.put("v_USERID", pUserID);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
 		if (pBoardList != null && pBoardList.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {

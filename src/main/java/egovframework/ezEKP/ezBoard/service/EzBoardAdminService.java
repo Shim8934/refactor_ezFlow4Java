@@ -16,7 +16,8 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzBoardAdminService {
 	
-	public List<BoardVO> checkApplyUser(int tenantID) throws Exception;
+	/* 2018-06-27 홍승비 - 게시물 승인권한 확인 companyID 조건 추가 */
+	public List<BoardVO> checkApplyUser(String companyID, int tenantID) throws Exception;
 	
 	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception;
 	
@@ -46,7 +47,8 @@ public interface EzBoardAdminService {
 	
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int tenantID) throws Exception;
 	
-	public String addMyBoards(String userID, String boardID, int tenantID) throws Exception;
+	/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
+	public String addMyBoards(String userID, String boardID, String companyID, int tenantID) throws Exception;
 	
 	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
 	

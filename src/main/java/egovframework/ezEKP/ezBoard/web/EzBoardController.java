@@ -253,9 +253,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pExcludeBoardID = " ";
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, pUserID, pDeptID, pCompanyID, tenantID);
 		
-		// 승인게시판의 승인자를 전부 가져온다. // 이부분 copanyID 필요한가?...
-		List<BoardVO> applyUserList = ezBoardAdminService.checkApplyUser(tenantID);
-		// 현재 사용자가 승인자인지 확인하고 승인  플래그를 설정한다.
+		// 승인게시판의 승인자를 전부 가져온다. /* 2018-06-27 홍승비 - 게시물 승인권한 확인 companyID 조건 추가 */
+		List<BoardVO> applyUserList = ezBoardAdminService.checkApplyUser(pCompanyID, tenantID);
+		// 현재 사용자가 승인자인지 확인하고 승인 플래그를 설정한다.(동일 승인자에 대해 A사의 승인권한와 B사의 승인권한이 구분된다.)
 		for (BoardVO vo: applyUserList) {
 			if (vo.getApprUserId().toLowerCase().indexOf(pUserID.toLowerCase()) > -1) {
 				applyFlag = "OK";
@@ -346,7 +346,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userID = userInfo.getId();
 		String result = "";
 		
-		List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getTenantId());
+		/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
+		List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String parentName = parentBoardName(resultList, userInfo);
 		StringBuffer sb = new StringBuffer();
@@ -624,7 +625,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		   String strName = "";
 		   int intCount = 0;
 		   
-		   for (int i = 0; i < nList.getLength(); i++) {
+		   for (int i = 0; i < nList.getLength(); i++) { // 마이게시판 하위에 새게시물 게시판이 있는 경우(현재 불가능)
 			   if (nList.item(i).getChildNodes().item(4).getTextContent().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 				   intCount = ezBoardService.getBrdNewItemCount(userInfo.getId(), userInfo.getTenantId());
 				   
@@ -635,7 +636,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				   nList.item(i).getChildNodes().item(0).setTextContent(nList.item(i).getChildNodes().item(0).getTextContent() + strName);
 				   
 				   resultXML = commonUtil.convertDocumentToString(doc);
-			   } else {
+			   } else { // 마이게시판 하위 게시판에 대해 반복
 				   if (nList.item(i).getChildNodes().item(5).getTextContent().trim().equals("BOARD")) {
 					   BoardPropertyVO boardInfo = getBoardInfo(nList.item(i).getChildNodes().item(4).getTextContent().trim(), userInfo);
 					   BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
@@ -646,9 +647,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					   myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
 					   
 					   if (boardInfo != null) {
-						   if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("4")) {
+						   if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("4")) { // 썸네일 게시판인 경우
 							   intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
-						   } else {
+						   } else { // 다른 게시판인 경우
 							   intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
 						   }
 					   }
@@ -1040,10 +1041,10 @@ public class EzBoardController extends EgovFileMngUtil{
     	} else if (boardType.equals("A")) { //게시판승인
     		resultXML = getApprboardList(boardVO, userInfo, mode, type);
     	} else {
-    		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+    		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
     			boardVO.setBoardType("N");
     			resultXML = getNewItemList(boardVO, userInfo);
-    		} else {
+    		} else { // 일반게시판
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
     	}
@@ -2612,8 +2613,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		String fieldName = "";
 		String fieldValue = "";
 		
+		// 개인의 리스트 표시갯수 설정 등 게시판설정 받아옴
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		
+		// 새게시물 카운트 시 companyID 조건 추가
 		int boardCount = ezBoardService.getNewItemListCount(userInfo);
 		int startRow = 1;
 		int endRow = 0;
@@ -2626,6 +2629,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		endRow = (personalCount_ * boardVO.getPageNum());
 		
 		boardListVO.setUserID(userInfo.getId());
+		boardListVO.setCompanyID(userInfo.getCompanyID());
 		boardListVO.setTenantID(userInfo.getTenantId());
 		boardListVO.setStartRow(startRow);
 		boardListVO.setEndRow(endRow);
@@ -2633,6 +2637,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setOrderBySub(orderOption1);
 		boardListVO.setOrderByMain(orderOption2);
 		
+		// 새게시물 표출 시 companyID 조건 추가
 		List<HashMap<String, Object>> boardList = ezBoardService.getNewItemList(boardListVO);
 		
 		int dlength = boardList.size();
@@ -3099,6 +3104,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pBoardList = request.getParameter("pBoardList");
 		String pDelBoardList = request.getParameter("pDelboardList");
 		
+		// 즐겨찾기 순서조정
 		ezBoardService.setListOrder(userInfo, pBoardList, pDelBoardList);
 
 		logger.debug("saveListOrder ended");
@@ -3118,7 +3124,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String tabUsed = request.getParameter("tabUsed");
 		int tenantID = loginVO.getTenantId();
 		
-		ezBoardService.setTabUsed(pUserID, pBoardList, tabUsed, tenantID);
+		// 즐겨찾기 탭 저장 시 companyID 삽입
+		ezBoardService.setTabUsed(pUserID, pBoardList, tabUsed, loginVO.getCompanyID(), tenantID);
 
 		logger.debug("set_TabUse ended");
 	}
@@ -4466,8 +4473,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
-		// 마이게시판에 해당 게시판 추가
-		String result = ezBoardAdminService.addMyBoards(userInfo.getId(), boardID, userInfo.getTenantId());
+		/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
+		String result = ezBoardAdminService.addMyBoards(userInfo.getId(), boardID, userInfo.getCompanyID(), userInfo.getTenantId());
 
 		logger.debug("addToMyBoards ended");
 		return "<RESULT>" + result + "</RESULT>";
@@ -7231,7 +7238,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String tabUseds[] = tabUsed.split(";");
 		
 		for (int k = 0; k < pBoardLists.length; k++) {
-			ezBoardService.setTabUsed(pUserID, pBoardLists[k], tabUseds[k], tenantID);
+			ezBoardService.setTabUsed(pUserID, pBoardLists[k], tabUseds[k], loginVO.getCompanyID(), tenantID);
 		}
 
 		logger.debug("set_TabUse2 ended");

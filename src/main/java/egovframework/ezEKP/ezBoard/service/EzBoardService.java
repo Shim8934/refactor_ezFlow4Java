@@ -26,7 +26,8 @@ public interface EzBoardService {
 	
 	public List<BoardVO> get_apprUserList(String boardID, int tenantID) throws Exception;
 
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception;
+	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception;
 
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
 	
@@ -192,7 +193,8 @@ public interface EzBoardService {
 
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception;
 
-	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, int tenantID) throws Exception;
+	/* 2018-06-27 홍승비 - 즐겨찾기 탭 회사별로 구분 */
+	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, String companyID, int tenantID) throws Exception;
 	
 	public void setMainImageID(String mainImageID, String itemID, int tenantID) throws Exception;
 	
