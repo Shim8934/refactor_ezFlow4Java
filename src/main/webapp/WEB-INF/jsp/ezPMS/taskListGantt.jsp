@@ -86,7 +86,7 @@
 	   			ganttData.selectedRow = 0;
 	   			ganttData.deletedTaskIds = [];
 	   			//간트 줌 설정 3d, 1w, 1M, 1Q, 2Q, 1y, 2y
-	   			ganttData.zoom = "3d";
+	   			ganttData.zoom = "1M";
 // 	   			ganttData.canAdd = true;
 	   			preProcess();
 	   			/*-------------------------기타 세팅 -----------------------*/
@@ -559,7 +559,8 @@
 	   				console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
 	   			  	
 	   				var taskDepends = task.depends.split(",");
-	   				var preTask = ge.tasks[taskDepends[taskDepends.length - 1] - 1];		
+	   				var taskDepend = taskDepends[taskDepends.length - 1];
+	   				var preTask = ge.tasks[taskDepend - 1];		
 	   				var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
 	   			  	var taskDuration = task.duration;
 	   			  	var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
@@ -567,7 +568,7 @@
 	   			  	var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
 	   			  	var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
 	   			  	var progress = task.progress;
-	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepends - 1).find("input[name='name']").val();
+	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepend - 1).find("input[name='name']").val();
 	   			  	var projectId = task.id.match(/p(\d+)/)[1];
 	   			    
 	   			  	if(taskId == null || preTaskId == null) {
@@ -655,7 +656,7 @@
 
 	   			  row.find(".taskRowIndex").html(task.getRow() + 1);
 	   			  row.find(".indentCell").css("padding-left", task.level * 15 + 18);
-	   			  row.find("[name=name]").val(task.name).prop("readonly", true).css({"color":"black"});
+	   			  row.find("[name=name]").val(task.name).prop("readonly", true).css({"color":"black", "width":"calc(100% - 28px)"});
 	   			  row.find("[name=code]").val(task.code);
 	   			  row.find("[status]").attr("status", task.status);
 
@@ -1559,6 +1560,7 @@
 	   			if(taskStatus !== ""){
 		   			document.querySelector("#pmsGanttViewBtn select").value = taskStatus;
 	   			}
+	   			document.querySelector("#pmsGanttZoomBtn select").value = ganttData.zoom;
 	   			
 	   			
 	   			if (userRoleId == 1) {
@@ -1571,13 +1573,6 @@
 	   				$("#pmsGanttRowNewBtn").css("display", "");
 	   				$("#pmsGanttRowDelBtn").css("display", "");
 	   			}
-	   			
-	   			setTimeout(function() {
-	   				$("#workSpace #linksGroup .taskLinkPathSVG").dblclick(function() {
-		   				alert("까꿍");
-		   			})
-	   			}, 100);
-	   			
 	   		})
 
 	   		function getMemberSchedule() {
@@ -1670,15 +1665,24 @@
 /* 		  .isParent.collapsed .project .exp-controller { */
 /* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
 /* 		  } */
+
+		  .taskEditRow .typeImgDiv {
+		  	display: inline-block;
+		    width: 16px;
+		    height: 16px;
+		    position: relative;
+		    top: 3px;
+		    vertical-align: top;
+		    margin-left: -3px;
+		  }
 		  
-/* 		  .isParent.collapsed .group .exp-controller { */
-/* 		    background-image: url(/images/OrganTree_cross/folder.gif); */
-/* 		  } */
+		  .taskEditRow.project .typeImgDiv, .taskEditRow.group .typeImgDiv{
+		  	background-image: url(/images/OrganTree_cross/fldr.gif);
+		  }
 		  
-/* 		  .taskEditRow.task .exp-controller { */
-/* 		    background: url(/images/ImgIcon/icon_approval.gif); */
-/*    		    background-repeat: no-repeat; */
-/* 		  } */
+		  .taskEditRow.task .typeImgDiv{
+		  	background-image: url(/images/ezPMS/icon_project.png);
+		  }
 		  
 		</style>
 	</head>
@@ -2168,6 +2172,7 @@
 			    <td class="gdfCell noClip" style="display:none" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+22#)px;">
 			      <div class="exp-controller" align="center"></div>
+			      <div class="typeImgDiv" align="center"></div>
 			      <input type="text" name="name" value="(#=obj.name#)" placeholder="name" title="(#=obj.name#)" >
 			    </td>
 			    <td class="gdfCell" style="display:none"><input type="text" name="code" value="(#=obj.code?obj.code:''#)" placeholder="code/short name"></td>
@@ -2405,9 +2410,9 @@
 			      "TASK_MOVE_INCONSISTENT_LEVEL":"You cannot exchange tasks of different depth.",
 			      "CANNOT_MOVE_TASK":"CANNOT_MOVE_TASK",
 			      "PLEASE_SAVE_PROJECT":"PLEASE_SAVE_PROJECT",
-			      "GANTT_SEMESTER":"Semester",
+			      "GANTT_SEMESTER":"<spring:message code='ezPMS.t303' />",
 			      "GANTT_SEMESTER_SHORT":"s.",
-			      "GANTT_QUARTER":"Quarter",
+			      "GANTT_QUARTER":"<spring:message code='ezPMS.t302' />",
 			      "GANTT_QUARTER_SHORT":"q.",
 			      "GANTT_WEEK":"<spring:message code='ezCommunity.t591' />",
 			      "GANTT_WEEK_SHORT":"<spring:message code='ezCommunity.t591' />"
