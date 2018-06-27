@@ -266,6 +266,9 @@
 		var searchCondition = $("#searchArea option:selected").val();
 		var searchKeyword = $("#searchKeyword").val();
 		
+		console.log(searchCondition);
+		console.log(searchKeyword);
+		
 		if(searchCondition == 'searchByUser') {
 			searchByUser = searchKeyword;
 		} else if (searchCondition == 'searchByContent') {
@@ -383,7 +386,7 @@
 						<option value="searchByContent"><spring:message code='ezPMS.t130' /></option>
 						<option value="searchByWriteDate"><spring:message code='ezPMS.t131' /></option>
 					</select>
-					<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top">
+					<input type="text" id="searchKeyword" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top">
 					<span id="searchDate" style="display: none;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">

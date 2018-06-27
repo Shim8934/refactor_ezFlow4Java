@@ -339,7 +339,7 @@
 					</tbody>
 				</table>
 				<div class="newbtn_position">
-        			<a class="imgbtn" onclick="searchProject()"><span><spring:message code='ezPMS.t1' /></span></a>
+        			<a class="imgbtn" onclick="searchBoard()"><span><spring:message code='ezPMS.t1' /></span></a>
     			</div>
 			</div>
 			<div id="contentList" style="overflow: auto">
