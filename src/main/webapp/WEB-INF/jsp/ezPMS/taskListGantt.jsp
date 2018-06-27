@@ -559,7 +559,8 @@
 	   				console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
 	   			  	
 	   				var taskDepends = task.depends.split(",");
-	   				var preTask = ge.tasks[taskDepends[taskDepends.length - 1] - 1];		
+	   				var taskDepend = taskDepends[taskDepends.length - 1];
+	   				var preTask = ge.tasks[taskDepend - 1];		
 	   				var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
 	   			  	var taskDuration = task.duration;
 	   			  	var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
@@ -567,7 +568,7 @@
 	   			  	var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
 	   			  	var preGroupId = preTask.id.match(/g(\d+)/) != null ? preTask.id.match(/g(\d+)/)[1] : null;
 	   			  	var progress = task.progress;
-	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepends - 1).find("input[name='name']").val();
+	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepend - 1).find("input[name='name']").val();
 	   			  	var projectId = task.id.match(/p(\d+)/)[1];
 	   			    
 	   			  	if(taskId == null || preTaskId == null) {
@@ -870,8 +871,6 @@
 
 	   			    });
 	   			    
-					
-	   				
 	   			    // 삭제 처리 위해 추가
 	   			    link.dblclick(function() {
 	   			    	
@@ -900,7 +899,7 @@
 	   				contentType: "application/json; charset=UTF-8",
 	   				url : "/ezPMS/deletePretaskRel.do",
 	   				success : function(result) {
-	   					location.reload();
+	   					$('#workSpace').trigger('deleteFocused.gantt');
 	   				}
 	   			});
 	   		}
@@ -1488,7 +1487,7 @@
 	   							var start = dateToYYYYMMDD(new Date(ge.tasks[i].start));
 	   		   					var end = dateToYYYYMMDD(new Date(ge.tasks[i].end));
 	   		   					
-	   							infoHTML += "<div style='background-color:#d1d1d1'>" + ge.tasks[i].name + "</div>";
+	   							infoHTML += "<div class='tooltipTitle' style='background-color:#d1d1d1'>" + ge.tasks[i].name + "</div>";
 	   							infoHTML += "<div>";
 	   							infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
@@ -1501,7 +1500,7 @@
 	   					var start = dateToYYYYMMDD(new Date(ge.tasks[0].start));
 	   					var end = dateToYYYYMMDD(new Date(ge.tasks[0].end));
 	   					
-						infoHTML += "<div style='background-color:#d1d1d1'>" + ge.tasks[0].name + "</div>";
+						infoHTML += "<div class='tooltipTitle' style='background-color:#d1d1d1'>" + ge.tasks[0].name + "</div>";
 						infoHTML += "<div>";
 						infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 						infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
@@ -1572,13 +1571,6 @@
 	   				$("#pmsGanttRowNewBtn").css("display", "");
 	   				$("#pmsGanttRowDelBtn").css("display", "");
 	   			}
-	   			
-	   			setTimeout(function() {
-	   				$("#workSpace #linksGroup .taskLinkPathSVG").dblclick(function() {
-		   				alert("까꿍");
-		   			})
-	   			}, 100);
-	   			
 	   		})
 
 	   		function getMemberSchedule() {
@@ -1655,6 +1647,23 @@
 			display : none;
 		  }
 		  
+		  .tooltipTitle {
+		  	text-overflow : ellipsis;
+		  	white-space : nowrap;
+		  	overflow : hidden;
+		  }
+/* 		  .isParent.project .exp-controller { */
+/* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
+/* 		  } */
+		  
+/* 		  .isParent.group .exp-controller { */
+/* 		    background-image: url(/images/OrganTree_cross/folder.gif); */
+/* 		  } */
+		  
+/* 		  .isParent.collapsed .project .exp-controller { */
+/* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
+/* 		  } */
+
 		  .taskEditRow .typeImgDiv {
 		  	display: inline-block;
 		    width: 16px;

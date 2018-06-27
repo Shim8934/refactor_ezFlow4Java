@@ -255,6 +255,21 @@
             }
         }
 	</script>
+	<style type="text/css">
+		.content {
+			table-layout : fixed;
+		}
+		
+		.content tr th {
+			width : 20%;
+		}
+		
+		.content tr td {
+			text-overflow : ellipsis;
+			overflow : hidden;
+			white-space : nowrap;
+		}
+	</style>
 </head>
 <body class="popup" style="height: 98%; word-wrap: break-word;">
 	<table class="layout" style="width: 100%">
@@ -278,19 +293,19 @@
 				<table class="content" style="width:100%;">
 					<tr>
 						<th><spring:message code='ezPMS.t114' /></th>
-						<td style="width: 50%"><c:out value="${board.writerName}"/></td>
+						<td><c:out value="${board.writerName}"/></td>
 						<th><spring:message code='ezPMS.t214' /></th>
 						<td><c:out value="${board.writerDeptName}"/></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t216' /></th>
-						<td style="width: 50%"><c:out value="${board.writerPosition}"/></td>
+						<td><c:out value="${board.writerPosition}"/></td>
 						<th><spring:message code='ezPMS.t117' /></th>
 						<td><c:out value="${board.mobileNumber}"/></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t98' /></th>
-						<td style="width: 50%" id="taskName">
+						<td id="taskName">
 							<c:out value="${board.taskName ne null ? board.taskName : board.groupName}"></c:out>
 						</td>
 						<th><spring:message code='ezPMS.t119' /></th>

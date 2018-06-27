@@ -88,12 +88,7 @@
 			var project = $("li[role='treeitem'][aria-level='1']").last();
 			
 			groupId = project.attr("id");
-			taskName = project.children("a").text();
 			project.children("a").click();
-			
-			if(taskName.indexOf('(') != -1) {
-				taskName = taskName.substring(0, projectName.indexOf('('));
-			}
 		});
 		
 		getDatePicker();
@@ -335,12 +330,6 @@
 		display : inline-block
 	}
 	
-	#taskName {
-		margin-top: 10px;
-		margin-left: 10px;
-		margin-bottom : 17px;
-	}
-	
 	#projectArea {
 		overflow : auto;
 		border : 1px solid #d1d1d1;
@@ -394,7 +383,7 @@
 						<option value="searchByContent"><spring:message code='ezPMS.t130' /></option>
 						<option value="searchByWriteDate"><spring:message code='ezPMS.t131' /></option>
 					</select>
-					<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top">
+					<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top">
 					<span id="searchDate" style="display: none;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">

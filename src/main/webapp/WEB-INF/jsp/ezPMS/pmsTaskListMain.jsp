@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/css/ezPMS/default/style.css"
 	type="text/css" />
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
@@ -378,9 +379,8 @@
 }
 
 #taskName {
-	margin-top : 10px;
-	margin-left : 10px;
-	margin-bottom : 17px;
+	margin-top : 14px;
+	margin-bottom : 19px;
 }
 
 #projectArea {
@@ -393,7 +393,7 @@
 }
 
 #iconLine {
-	height: 80px;
+	height: 95px;
 	margin-left: 10px;
 	margin-top: 5px;
 }
@@ -438,8 +438,8 @@
 <div id="taskTree"></div>
 <div id="projectArea">
 <div id="projectContent">
-	<div id="iconLine">
-		<div id="taskName"></div>
+	<div id="iconLine" class="mainbody" style="margin:0px;">
+		<h1 id="taskName"></h1>
 		<div id="mainmenu">
 		<ul>
 			<li style="display:none;"><span id="addTaskBtn" onclick="goAddTask()"
@@ -461,8 +461,8 @@
 		</ul>
 		</div>
 	</div>
-	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
-		<table class="content" style="width:80%; margin-bottom:5px;">
+	<div id = "searchDiv" style="margin-bottom:40px; display:none;">
+		<table class="content" style="width:100%;">
 			<tbody>
 				<tr>
 					<th><spring:message code='ezPMS.t98' /> </th>
@@ -486,7 +486,9 @@
 				</tr>
 			</tbody>
 		</table>
-		<a class="imgbtn" onclick="searchTask()" style="margin-left:40%;"><span><spring:message code='ezPMS.t1' /></span></a>
+		<div class="newbtn_position">
+        	<a class="imgbtn" onclick="searchProject()"><span><spring:message code='ezPMS.t1' /></span></a>
+    	</div>
 	</div>
 	<div id="contentList" style="overflow: auto">
 		<span id="MailListRayer"
