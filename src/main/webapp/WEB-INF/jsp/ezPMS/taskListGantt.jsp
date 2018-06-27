@@ -700,7 +700,7 @@
 // 	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent);
 	   			  row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly", true).css({"text-align":"right"});
 	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true).css({"text-align":"right"});
-	   			  row.find("[name=weight]").css({"text-align":"right"});
+	   			  row.find("[name=weight]").prop("readonly", task.type === 'g').css({"text-align":"right"});
 	   			  row.find("[name=planProgress]").prop("readonly", true).css({"text-align":"right"});
 	   			  row.find("[name=realProgress]").prop("readonly", task.type === 'g').css({"text-align":"right"});
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
