@@ -2815,7 +2815,7 @@
 	]]>
 	</select>
 	
-	<select id="EzPMSDAO.getLaggingAncestorGroupIds" parameterClass="map" resultClass="String">
+	<!-- <select id="EzPMSDAO.getLaggingAncestorGroupIds" parameterClass="map" resultClass="String">
 	<![CDATA[
 		SELECT 
 			G.ancester_group
@@ -2844,7 +2844,7 @@
 		AND 
 			tenant_id = #tenantId#		
 	]]>
-	</select>
+	</select> -->
 	
 	<delete id="EzPMSDAO.deletePreTaskRelInTask" parameterClass="map">
 	<![CDATA[
@@ -3672,4 +3672,29 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</delete>
+	
+	<update id="EzPMSDAO.updateAllTaskDatesInPrj">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_task
+		SET
+			plan_start_date = CASE
+	]]>
+		<iterate property="taskSchedules" conjunction=" ">
+			WHEN task_id = #taskSchedules[].taskId# THEN #taskSchedules[].start#
+		</iterate>
+	<![CDATA[
+		END,
+			plan_end_date = CASE
+	]]>
+		<iterate property="taskSchedules" conjunction=" ">
+			WHEN task_id = #taskSchedules[].taskId# THEN #taskSchedules[].end#
+		</iterate>
+	<![CDATA[
+		END
+	]]>
+		<iterate prepend="WHERE task_id in" property="taskSchedules" open="(" conjunction="," close=")">
+			#taskSchedules[].taskId#
+		</iterate>
+	</update>
 </sqlMap>

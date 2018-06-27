@@ -240,4 +240,6 @@ public interface EzPMSService {
 	public void deleteGroupMember(Long projectId, long groupId, int tenantId);
 
 //	public List<Integer> getLaggingGroupIds(Map<String, Object> map);
+	
+	public void updateAllTaskDatesInPrj(Map<String, Object> map);
 }

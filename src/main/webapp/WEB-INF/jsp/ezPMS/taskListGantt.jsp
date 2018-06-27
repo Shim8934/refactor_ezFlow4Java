@@ -546,6 +546,8 @@
 		   			endDate = dateToYYYYMMDD(endTime);	
 	   			  }
 	   			  
+	   			  console.log(startDate);
+	   			  console.log(endDate);
 	   			  changeDate(task, task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex, groupId, taskName);
 	   			  return task.moveTo(newStart, true,true);
 	   			};
@@ -557,8 +559,9 @@
 	   				var taskDepends = task.depends.split(",");
 	   				var taskDepend = taskDepends[taskDepends.length - 1];
 	   				var preTask = ge.tasks[taskDepend - 1];		
-	   				var pretaskEndDate = dateToYYYYMMDD(new Date(preTask.end));
-	   			  	var taskDuration = task.duration;
+/* 	   				var taskStartDate = dateToYYYYMMDD(new Date(task.start));
+	   				var taskEndDate   = dateToYYYYMMDD(new Date(task.end));
+	   			  	var taskDuration = task.duration; */
 	   			  	var taskId = task.id.match(/t(\d+)/) != null? task.id.match(/t(\d+)/)[1] : null;
 	   			  	var groupId = task.id.match(/g(\d+)/) != null? task.id.match(/g(\d+)/)[1] : projectGroupId;
 	   			  	var preTaskId = preTask.id.match(/t(\d+)/) != null ? preTask.id.match(/t(\d+)/)[1] : null;
@@ -573,74 +576,63 @@
 	   			  		return;
 	   			  	}
 	   			  	
-	   				/* var str = "";
-	   				
-	   				for(var key in task) {
-	   				    var value = task[key];
-	   				    str += key + " : " + value + ", ";
-	   				}
-	   				
-	   				alert(str); */
-	   				
-	   				// 선행작업의 무한 순환 지정 막기(Circular reference)
-	   				
-	   				
-	   				/* var preTaskDepends = preTask.depends;
-	   				
-	   				if(preTaskDepends != null && preTaskDepends != "") {
-	   					var prePreTask = ge.tasks[preTask.depends - 1];
-		   				var prePreGroupId = prePreTask.id.match(/g(\d+)/) != null ? prePreTask.id.match(/g(\d+)/)[1] : null;
-		   				
-		   				if(prePreGroupId == groupId) {
-		   					alert("ERROR:\nCircular reference");
-		   					location.reload();
-		   					throw "circular reference";
-		   					return;
-		   				}
-	   				} */
-	   				
-
-	   			  	// 중복 선행작업 지정 막기
-	   			  	/* if(taskDepends.indexOf(",") != -1) {
-	   				  	alert("<spring:message code='ezPMS.t297' />");
-	   					location.reload();
-	   				  	throw "multiple pretask error";
-	   				  	return;
-	   			  	} */
-	   			  	
-	   				// 중복 후행작업 지정 막기 
-	   				/* var cnt = 0;
-	   			
-	   			  	for(var i in ge.tasks) {
-	   					
-	   			  		if(ge.tasks[i].depends.split(",")[0] == taskDepends) {
-	   			  			cnt++;
-	   			  		}
-	   			  	}
-
-	   				if(cnt > 1) {
-	   					alert("<spring:message code='ezPMS.t298' />");
-	   					location.reload();
-	   				  	throw "multiple pretask error";
-	   				  	return;
-	   				} */
-	   			    // ----------------
-	   				
-	   				
-	   			  	if(new Date(preTask.end) > new Date(task.start)) {
+	   			  	/* if(new Date(preTask.end) > new Date(task.start)) {
 	   				  
 	   				  	if(confirm("<spring:message code='ezPMS.t291' />") == false) {
 	   				  		throw "";
 	   					  	return;
 	   				  	}
-	   			  	}
+	   			  	} */
 	   			  	
-	   			  	console.log(pretaskEndDate);
-	   			  	console.log(taskDuration);
-	   			  
-	   			  	addPreTaskRel(projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, task.name, preTaskRowName, groupId, preGroupId);
-	   			  
-	   			  	return task.moveTo(task.start,false,true);
+	   			  	if(task.moveTo(task.start,false,true)) {
+
+	   			  		if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
+
+		   			  		var allGanttItems = ge.saveProject().tasks;
+		   			  		var allTasks = [];
+		   			  		
+		   			  		function TaskSchedule(taskId, start, end) {
+		   			  			this.taskId = taskId;
+		   			  			this.start = start;
+		   			  			this.end = end;
+		   			  		} 
+		   			  		
+		   			  		for(var i = 0; i < allGanttItems.length; i++) {
+		   			  			
+		   			  			var taskId = allGanttItems[i].id.match(/t(\d+)/) != null ? allGanttItems[i].id.match(/t(\d+)/)[1] : null;
+		   			  			var newStart  = dateToYYYYMMDD(new Date(allGanttItems[i].start));
+		   			  			var newEnd    = dateToYYYYMMDD(new Date(allGanttItems[i].end));
+		   			  			
+		   			  			if(taskId != null) {
+		   			  				allTasks.push(new TaskSchedule(taskId, newStart, newEnd));
+		   			  			}
+		   			  		}
+		   			  		
+		   			  		console.log(JSON.stringify(allTasks));
+		   			  		
+		   			  		data = {
+		   			  			allTasks : allTasks	
+		   			  		}
+		   			  		
+		   			  		$.ajax({
+			   			  		type : "PUT",
+			   					url : "/ezPMS/updateAllTasksDate.do",
+			   					dataType : "json",
+			   					contentType : "application/json; charset=UTF-8",
+			   					data : JSON.stringify(data),
+			   					success : function(result) {
+			   						
+			   					}
+		   			  		});
+	   			  		} else {  			
+	   			  			location.reload();
+	   			  			throw "Pretask Set Error";
+	   			  			return false;
+	   			  		};
+	   			  		
+	   			  	} else {
+	   			  		return false;
+	   			  	}
 	   			};
 	   			
 	   			//depth에 따른 들여쓰기 조절하기 위해 재정의
@@ -753,10 +745,11 @@
 	   			}
 	   		}
 	   		
-	   		function addPreTaskRel (projectId, taskId, preTaskId, pretaskEndDate, taskDuration, progress, taskName, preTaskRowName, groupId, preGroupId) {
+	   		function addPreTaskRel (projectId, taskId, preTaskId, progress, taskName, preTaskRowName, groupId, preGroupId) {
 	   			
 	   			var type;
 	   			var taskIdParam = taskId;
+	   			var returnVal = false;
 	   			
 	   			// 선행작업 지정 종류
 	   			if(taskId != null && preTaskId != null) {
@@ -779,8 +772,6 @@
 	   					// task가 속한 group의 Id
 	   					groupId : groupId, 
 	   					preTaskId : preTaskId,
-	   					pretaskEndDate : pretaskEndDate,
-	   					taskDuration : taskDuration,
 	   					realProgress : progress,
 	   					type : type
 	   			}
@@ -791,10 +782,12 @@
 	   				contentType: "application/json; charset=UTF-8",
 	   				url : "/ezPMS/addPreTaskRel.do",
 	   				data :JSON.stringify(data),
+	   				async : false,
 	   				success : function(result) {
 	   					if (result == "permitted") {
 	   						toastPopupShow("[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
 	   						addTaskLog(projectId, 1, groupId, taskIdParam, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
+	   						returnVal = true;
 	   					} else {
 	   						alert("<spring:message code='ezPMS.t184' />");
 	   					}
@@ -803,6 +796,8 @@
 	   					alert ("<spring:message code='ezPMS.t54' />");
 	   				}
 	   			});
+	   			
+	   			return returnVal;
 	   		}
 	   		
 	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {

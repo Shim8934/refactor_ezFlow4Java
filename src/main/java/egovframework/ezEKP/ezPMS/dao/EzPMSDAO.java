@@ -586,6 +586,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	public void deleteGroupMember(Map<String, Object> map) {
 		delete("EzPMSDAO.deleteGroupMember", map);
-		
+	}
+	
+	public void updateAllTaskDatesInPrj(Map<String, Object> map) {
+		update("EzPMSDAO.updateAllTaskDatesInPrj", map);
 	}
 } 
