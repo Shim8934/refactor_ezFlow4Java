@@ -655,7 +655,7 @@
 
 	   			  row.find(".taskRowIndex").html(task.getRow() + 1);
 	   			  row.find(".indentCell").css("padding-left", task.level * 15 + 18);
-	   			  row.find("[name=name]").val(task.name).prop("readonly", true).css({"color":"black"});
+	   			  row.find("[name=name]").val(task.name).prop("readonly", true).css({"color":"black", "width":"calc(100% - 28px)"});
 	   			  row.find("[name=code]").val(task.code);
 	   			  row.find("[status]").attr("status", task.status);
 
@@ -1655,26 +1655,23 @@
 			display : none;
 		  }
 		  
-/* 		  .isParent.project .exp-controller { */
-/* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
-/* 		  } */
+		  .taskEditRow .typeImgDiv {
+		  	display: inline-block;
+		    width: 16px;
+		    height: 16px;
+		    position: relative;
+		    top: 3px;
+		    vertical-align: top;
+		    margin-left: -3px;
+		  }
 		  
-/* 		  .isParent.group .exp-controller { */
-/* 		    background-image: url(/images/OrganTree_cross/folder.gif); */
-/* 		  } */
+		  .taskEditRow.project .typeImgDiv, .taskEditRow.group .typeImgDiv{
+		  	background-image: url(/images/OrganTree_cross/fldr.gif);
+		  }
 		  
-/* 		  .isParent.collapsed .project .exp-controller { */
-/* 		    background-image: url(/images/OrganTree_cross/fldr.gif); */
-/* 		  } */
-		  
-/* 		  .isParent.collapsed .group .exp-controller { */
-/* 		    background-image: url(/images/OrganTree_cross/folder.gif); */
-/* 		  } */
-		  
-/* 		  .taskEditRow.task .exp-controller { */
-/* 		    background: url(/images/ImgIcon/icon_approval.gif); */
-/*    		    background-repeat: no-repeat; */
-/* 		  } */
+		  .taskEditRow.task .typeImgDiv{
+		  	background-image: url(/images/ezPMS/icon_project.png);
+		  }
 		  
 		</style>
 	</head>
@@ -2164,6 +2161,7 @@
 			    <td class="gdfCell noClip" style="display:none" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+22#)px;">
 			      <div class="exp-controller" align="center"></div>
+			      <div class="typeImgDiv" align="center"></div>
 			      <input type="text" name="name" value="(#=obj.name#)" placeholder="name" title="(#=obj.name#)" >
 			    </td>
 			    <td class="gdfCell" style="display:none"><input type="text" name="code" value="(#=obj.code?obj.code:''#)" placeholder="code/short name"></td>
