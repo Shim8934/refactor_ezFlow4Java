@@ -1953,6 +1953,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String orgCompanyID = request.getParameter("orgCompanyID");
         
+        if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+        
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
             susinAdmin = "YES";
 		} else {
@@ -2018,6 +2022,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String deptID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		
@@ -2035,6 +2045,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("aprDocAttachList started");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String contID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String pageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();

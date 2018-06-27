@@ -2908,7 +2908,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID);
+        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID+"&pDocID="+pDocID);
         }
     } catch (e) {
         alert(e.description);
@@ -3252,6 +3252,7 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);

@@ -117,21 +117,28 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.get_apprUserList(map);
 	}
 
+	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
 	@Override
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception {
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_USERID", userID);
 		map.put("v_MODE", pMode);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
+		// 즐겨찾기 탭 순서대로 게시판을 받아온다.
 		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
 		
+		// 즐겨찾기 탭 순서를 저장한다.
 		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null && !boardMyFavoriteVO.equals("")) {
+			//
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO);
 		} else {
+			// 즐겨찾기 레코드(tbl_board_mayboards + tbl_board_newboard_orderinfo)가 없는 경우, 새로 생성한다.
+			// 사용자 별로 새게시물 게시판의 순서를 저장한다. companyID 추가.
 			ezBoardDAO.insertBoardNewBoardOrder(map);
 			
 			BoardMyFavoriteVO boardMyFavoriteVO2 = new BoardMyFavoriteVO();
@@ -139,10 +146,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardMyFavoriteVO2.setTabUsed("Y");
 			boardMyFavoriteVO2.setViewOrder("0");
 			
+			// 새게시물의 tbl_board_newboard_orderinfo 레코드를 viewOrder 0으로 삽입한다.
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO2);
 		}
 
 		logger.debug("get_favoriteList ended");
+		// 실제 나타낼 즐겨찾기 게시판을 가져온다. mode(ALL-환경설정용/USE-실제사용표출)에 따라 표출이 달라진다.
 		return ezBoardDAO.get_favoriteList(map);
 	}
 
@@ -258,8 +267,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("userID", userInfo.getId());
 		
+		// 새게시물 탭 순서를 포함하여 즐겨찾기 순서를 조정한다.
 		String[] boardIDs = pBoardList.split(";");
 		String[] delBoardIDs = pDelBoardList.split(";");
 		
@@ -267,20 +278,23 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("boardID", boardIDs[k]);
 			map.put("count", k + 1);
 			
+			// 즐겨찾기 순서 업데이트(새게시물이 아닌 게시판들)
 			ezBoardDAO.setListOrder_U(map);
 		}
-		
+		// 즐겨찾기 순서 삽입(새게시물 게시판)
 		ezBoardDAO.setListOrder(map);
 		
 		for (int k = 0; k < delBoardIDs.length; k++) {
 			map.put("boardID", delBoardIDs[k]);
 			
+			// 즐겨찾기에서 삭제
 			ezBoardDAO.setListOrder_D(map);
 		}
 
 		logger.debug("setListOrder ended");
 	}
 
+	/* 2018-06-27 홍승비 - 새게시물 카운트 시 companyID 조건 추가 */
 	@Override
 	public int getNewItemListCount(LoginVO userInfo)  throws Exception {
 		logger.debug("getNewItemListCount started");
@@ -288,6 +302,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pUserID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
@@ -323,6 +338,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return boardConfigVO;
 	}
 
+	/* 2018-06-27 홍승비 - 새게시물 리스트 표출 시 companyID 조건 추가 */
 	@Override
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception {
 		logger.debug("getNewItemList started");
@@ -342,6 +358,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_COMPANYID", boardListVO.getCompanyID());
 		map.put("v_TENANTID", boardListVO.getTenantID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -439,8 +456,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getQNABrdTotalItemCount(map);
 	}
 
+	/* 2018-06-27 홍승비 - 즐겨찾기 탭 회사별로 구분 */
 	@Override
-	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, int tenantID) throws Exception {
+	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, String companyID, int tenantID) throws Exception {
 		logger.debug("setTabUsed started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -448,6 +466,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_BOARDID", pBoardList);
 		map.put("v_TABUSED", tabUsed);
 		map.put("v_USERID", pUserID);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
 		if (pBoardList != null && pBoardList.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
@@ -1078,6 +1097,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getMyNoticePostItem(map);
 	}
 
+	// 나의게시물 리스트 ㅛ출 시 companyID 추가
 	@Override
 	public List<HashMap<String, Object>> getMyBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
 		logger.debug("getMyBoardListItem started");
@@ -1097,6 +1117,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
@@ -1110,6 +1131,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getMyBoardListItem(map);
 	}
 
+	/* 2018-06-26 홍승비 - 마이게시판 > 임시보관함 게시물 표출 시 companyID 조건 추가 */
 	@Override
 	public List<HashMap<String, Object>> getMyBoardListItemTemp(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
 		logger.debug("getMyBoardListItemTemp started");
@@ -1129,6 +1151,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
@@ -1141,6 +1164,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getMyBoardListItemTemp(map);
 	}
 
+	/* 2018-06-26 홍승비 - 승인게시물 셀렉트 시 companyID 조건 추가 */
 	@Override
 	public List<HashMap<String, Object>> getApprBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
 		logger.debug("getApprBoardListItem started");
@@ -1160,6 +1184,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
@@ -1579,6 +1604,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.checkApprUserList(map);
 	}
 
+	/* 마이게시판 > 나의게시물 카운트 companyID 조건 추가 */
 	@Override
 	public int getMyBoardTotalItemCount(LoginVO userInfo) throws Exception {
 		logger.debug("getMyBoardTotalItemCount started");
@@ -1586,6 +1612,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
@@ -1593,6 +1620,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getMyBoardTotalItemCount(map);
 	}
 
+	/* 마이게시판 > 임시보관함 카운트 companyID 조건 추가 */
 	@Override
 	public int getMyBoardTotalItemCountTemp(LoginVO userInfo) throws Exception {
 		logger.debug("getMyBoardTotalItemCountTemp started");
@@ -1600,6 +1628,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 
 		logger.debug("getMyBoardTotalItemCountTemp ended");
@@ -1659,6 +1688,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getSearchMyBoardItemCountTemp(map);
 	}
 
+	/* 2018-06-26 홍승비 - 게시물 승인 카운트 표시 시 companyID 조건 추가 */
 	@Override
 	public int getApprBoardTotalItemCount(LoginVO userInfo) throws Exception {
 		logger.debug("getApprBoardTotalItemCount started");
@@ -1666,6 +1696,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("id", userInfo.getId());
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
@@ -1982,7 +2013,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String apprItem(String userID, String item, String pMod, int tenantID) throws Exception {
+	public String apprItem(String userID, String item, String pMod, String companyID, int tenantID) throws Exception {
 		logger.debug("apprItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1990,11 +2021,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_ITEMID", item);
 		map.put("v_MODE", pMod);
 		map.put("v_USERID", userID);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
 		try {
+			// 해당 게시물에 대한 승인자 셀렉트(각 회사에 대해 고유한 boardID로 조건을 주므로, companyID 필요없음)
 			String tempString = ezBoardDAO.getBoardApprListUser(map);
 			
+			// 승인게시물 업데이트(itemID 사용하므로 companyID 필요없음)
 			if (tempString != null && !tempString.equals("")) {
 				ezBoardDAO.apprItem(map);
 			}
@@ -2062,8 +2096,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return resultMessage;
 	}
 
+	/* 예약게시물 표출 시 companyID 조건 추가 */
 	@Override
-	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, int tenantID) throws Exception {
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, String companyID, int tenantID) throws Exception {
 		logger.debug("getReservedItemList started");
 
 		if(!(endRow > 0)){
@@ -2076,6 +2111,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userID);
 		map.put("lang", lang);
 		map.put("v_PSORTBY", sortBy);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
@@ -2105,13 +2141,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.readOneLineReply(map);
 	}
 
+	/* 예약게시물 카운트 표출 시 companyID 조건 추가 */
 	@Override
-	public int getReservedItemListCount(String userID, int tenantID) throws Exception {
+	public int getReservedItemListCount(String userID, String companyID, int tenantID) throws Exception {
 		logger.debug("getReservedItemListCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userID", userID);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
@@ -2433,24 +2471,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		int count = 0;
 		String strForbiddenBoardIDList = "";
+		
+		// 게시판의 XML 트리 리스트를 가져온다.
 		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
 		
+		// 게시판의 XML 트리 리스트가 존재한다면 반환 -> 컨트롤러로 돌아간다.
 		if (retValue != null && retValue.length() > 30) {
 			return retValue;
 		}
 		
+		// 게시판의 XML 트리 리스트가 없다면 새로 만들어준다.// 접근권한ID로 userID, 부서id 등을 붙인다.
 		String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
+		// 사용자의 관리자 권한을 받아온다(전체/회사/게시... 등등)
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
+		// 새로운 게시판 트리 리스트를 저장할 객체
 		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
 		
 		for (int i = 0; i < pAccessID.split(",").length; i++) {
 			String boardID = "";
 			
 			if (pMode == 0) {
-				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, tenantID);            
+				// Admin 권한이 있는 경우, parentBoard(top)와 테넌트id만으로 상위 게시판(그룹)들을 가져온다.
+				// AccessID는 everyone으로 넘기지만, 실제 쿼리에서는 조건으로 사용하지 않는다.(Admin은 모든 게시판에 접근 가능하므로)
+				/* 2018-06-25 홍승비 - 게시판 트리캐시 생성 시  companyID로 제한 걸어주기 */
+				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID);            
 			} else {
-				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, tenantID);
+				// Admin 권한이 없는 경우, parentBoard(top)에 AccessID를 조건으로 붙여 접근 권한이 있는 상위 게시판(그룹)들을 가져온다.
+				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID);
 				
 				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
 					for (BoardTreeVO k : tempBrdBoardTreeList) {
@@ -2463,6 +2511,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 								}
 							}
 							
+							// 가져온 게시판을 하나씩 게시판 리스트에 추가한다.
 							if (tempCnt == 0) {
 								brdBoardTreeList.add(k);
 							}
@@ -2473,12 +2522,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 			
+			// 관리자가 아니라면, 위에서 만든 AccessID와 parentBoardID를 조건으로 접근 불가능(ACCESS_=0)한 게시판 리스트를 다시 가져온다.
+			// TBL_Board_BoardManage에 단독으로 접근한다. 그 테이블에도 companyID가 필요하다!!
+			// -> companyID가 없다면, 사간겸직 사원의  accessID(특히 개인권한-userID가 accessID로 들어간 경우)에 대해 사원이 권한을 가지는 모든 게시판이 나타날 수도 있다.(부모 게시판이 top인 경우 등...)
 			if (pMode != 0) {
 				List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
 				
 				if (boardTreeList.size() > 0) {
 					for (int r = 0; r < boardTreeList.size(); r++) {
 						boardID = boardTreeList.get(r).getBoardId().split(",")[0];
+						// 접근을 막는 게시판 리스트에 추가한다.
 						strForbiddenBoardIDList += boardID.trim();
 					}
 				}
@@ -2486,7 +2539,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		StringBuilder result = new StringBuilder();
 		
-		if (pSubFlag == 1) {
+		if (pSubFlag == 1) { // 하위 게시판 플래그에 따라 태그를 다르게 붙여준다.
 			result.append("<NODES>");
 		} else {
 			result.append("<TREEVIEWDATA>");
@@ -2500,6 +2553,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		});
 		
+		// 다시 관리자 권한을 확인하고, 관리자 권한이 없다면 접근 제한된 게시판은 XML 형식의 게시판 트리에서 제외한다.(continue)
+		// -> 관리자 권한이 있다면 가져온 모든 게시판을 XML 트리로 만든다.
 		for (int i = 0; i < brdBoardTreeList.size(); i++) {
 			if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
 				if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
@@ -2561,6 +2616,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			result.append("</TREEVIEWDATA>");
 		}
 		
+		// 현재 테넌트에 동일 쿼리가 있다면, 지운 뒤에 새로 게시판 트리 리스트를 넣어준다. (동일 쿼리가 없다면 그냥 새로운 레코드가 들어가게 된다.)
+		// TBL_Board_TreeCache 테이블은 쿼리 + tenantID를 PRI KEY로 사용한다. 쿼리 안에 부모게시판ID, 사용자ID, 부서ID, 회사ID가 전부 들어있으므로 companyID 추가는 필요없다.
 		ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
 		ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString(), tenantID);
 

@@ -63,9 +63,14 @@
 	        window.onload = function () {
 	            pUserID = arr_userinfo[1];
 	            pUserName = arr_userinfo[2];
-	            pUserJobTitle = arr_userinfo[3];
-	            pDeptID = arr_userinfo[4];
-	            pDeptName = arr_userinfo[5];
+	            pUserJobTitle = "${title }";
+	            pDeptID = "${detpID }";
+	            pDeptName = "${detpNM }";
+// 	            pUserID = arr_userinfo[1];
+// 	            pUserName = arr_userinfo[2];
+// 	            pUserJobTitle = arr_userinfo[3];
+// 	            pDeptID = arr_userinfo[4];
+// 	            pDeptName = arr_userinfo[5];
 	
 	            if (CrossYN() || pNoneActiveX == "YES") {
 	                pDocID = parent.aprcabinetattach_cross_dialogArguments[0];

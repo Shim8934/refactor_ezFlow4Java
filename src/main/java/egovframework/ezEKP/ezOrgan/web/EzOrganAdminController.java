@@ -2043,7 +2043,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
 		} else {
-			topID = "Top";
+			topID = "Top/organ";
 		}
 
 		model.addAttribute("topID", topID);
@@ -2219,7 +2219,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
 		} else {
-			topID = "Top";
+			topID = "Top/organ";
 		}
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());

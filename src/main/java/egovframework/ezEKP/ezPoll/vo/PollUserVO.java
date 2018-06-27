@@ -5,6 +5,7 @@ public class PollUserVO {
 	private String userId;
 	private int tenantId;
 	private String userType;
+	private String companyId;
 	
 	public int getQstId() {
 		return qstId;
@@ -29,6 +30,12 @@ public class PollUserVO {
 	}
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+	public String getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 	
 	

@@ -43,9 +43,12 @@
 	    		
 	    		var title = document.getElementById("title").value;
 	    		var memberListStr = new Array();
+	    		var deptListStr = new Array();
 	    		
 	    		for (var i=0; i<g_attendant["id"].length; i++) {
 	    			memberListStr[i] = g_attendant["id"][i];
+	    			deptListStr[i] = g_attendant["deptname"][i];
+	    			alert('id : ' + memberListStr[i] + ', dept : ' +deptListStr[i] );
 	    		}	    
 	    		
 	    		$.ajax({
@@ -56,7 +59,8 @@
 	    			data : {
 	    				title : title,
 	    				circularBMId : circularBMId,
-	    				memberListStr : memberListStr
+	    				memberListStr : memberListStr,
+	    				deptListStr : deptListStr
 	    			},
 	    			success : function() {
 		                if (ReturnFunction != null) {
@@ -71,7 +75,7 @@
 	    			}
 	    			
 	    		})
-	    		
+	    		 
 	    		opener.location.reload();
 	    	}
 	    </script>

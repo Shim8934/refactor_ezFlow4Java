@@ -61,11 +61,11 @@ public class BoardPropertyVO {
 	private String formLocation;
 	/** 템플릿 게시판	*/
 	private String formFlag;
-	/** ?	*/
+	/** 승인게시판 여부	*/
 	private String apprFlag;
-	/** ?	*/
+	/** 승인게시판 승인자에게 메일 보내는 여부	*/
 	private String apprMailFlag;
-	/** ?   */
+	/** 승인게시판 승인자들   */
 	private String apprUserList;
 	/** ?   */
 	private String orgApprFlag;	
@@ -131,6 +131,8 @@ public class BoardPropertyVO {
 	private int tenantID;
 	/** */
 	private String displayName;
+	/** 2018-06-25 홍승비 - 게시판 그룹에 companyID 추가 */
+	private String companyID;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -504,6 +506,13 @@ public class BoardPropertyVO {
 	}
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+	
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 	
 }

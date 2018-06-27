@@ -846,8 +846,8 @@
 						document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 					}
 				}
-				var listid ="MsgToList";
-				_RowObjectID = null;
+				/* var listid ="MsgToList";
+				_RowObjectID = null; */
 			}	
 	    
 		    function CheckMailReceiver(selRow, option) {

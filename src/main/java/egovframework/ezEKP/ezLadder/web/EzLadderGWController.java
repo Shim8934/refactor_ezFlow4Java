@@ -154,13 +154,13 @@ public class EzLadderGWController {
 	 * */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/writers/{writerId}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, int tenant_id, String lang, HttpServletRequest request) {
+	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, LadderVO ladVO, HttpServletRequest request) {
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			
-			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, tenant_id, lang);
+			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, ladVO);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -646,19 +646,23 @@ public class EzLadderGWController {
 	 * 사다리게임 시작
 	 */
 	@RequestMapping(value = "/rest/ladder/start/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
-	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request) {
+	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String userId, @RequestBody JSONObject jsonBodys, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [PUT /rest/ladder/start/" + ladderId+ "/users/" + userId + "] started.");
 	
 		JSONObject result = new JSONObject();
 	
 		try {
-			int ladId = Integer.parseInt(ladderId);
-			int size = Integer.parseInt(request.getParameter("size"));
-			int lineCnt = Integer.parseInt(request.getParameter("lineCnt"));
-			String tenantId = request.getParameter("tenantId");
-			String lang = request.getParameter("lang");
+			String logCookie = (String) jsonBodys.get("loginCookie");
+			LoginVO userInfo = commonUtil.userInfo(logCookie);
 			
-			ezLadderService.setLadderStart(ladId, tenantId, size, lineCnt, lang);
+			LadderVO ladVO = new LadderVO();
+			ladVO.setTenant_id(userInfo.getTenantId());
+			ladVO.setLang(userInfo.getLang());
+			ladVO.setLadderId(Integer.parseInt(ladderId));
+			ladVO.setLineCnt(Integer.parseInt((String)jsonBodys.get("lineCnt")));
+			int size = Integer.parseInt((String)jsonBodys.get("size"));
+			
+			ezLadderService.setLadderStart(ladVO, size);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

@@ -10,7 +10,7 @@ function getDocType() {
     objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "NODE", pDeptID);
 
-    xmlhttp.open("POST", "/ezApprovalG/mgetDeptUseDocType.do", false);
+    xmlhttp.open("POST", "/ezApprovalG/mgetDeptUseDocType.do?orgCompanyID="+orgCompanyID, false);
     xmlhttp.send(xmlpara);
 
     xmlRtn = loadXMLString(xmlhttp.responseText);
@@ -58,7 +58,7 @@ function getDocList() {
     createNodeAndInsertText(xmlpara, objNode, "BlockNum", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
 
-    xmlhttp.open("POST", "/ezApprovalG/aprDocAttachList.do", false);
+    xmlhttp.open("POST", "/ezApprovalG/aprDocAttachList.do?orgCompanyID="+orgCompanyID, false);
     xmlhttp.send(xmlpara);
 
     Resultxml = loadXMLString(xmlhttp.responseText);
@@ -226,7 +226,7 @@ function DocMoveParser() {
         createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA13", GetAttribute(listview.GetDataRows()[i], "DATA13"));
     }
 
-    xmlhttp.open("Post", "/ezApprovalG/updateDocAttach.do", false);
+    xmlhttp.open("Post", "/ezApprovalG/updateDocAttach.do?orgCompanyID="+orgCompanyID, false);
     xmlhttp.send(xmlpara);
 
     var rtnval = xmlhttp.responseText;

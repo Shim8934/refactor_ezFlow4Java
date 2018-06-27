@@ -308,6 +308,8 @@
 									AND 
 										A.TENANT_ID = #tenantId#
 									AND 
+										A.COMPANYID = #companyID#
+									AND 
 										A.LADDERID = ANY(
 														SELECT 
 															B.LADDERID 
@@ -335,6 +337,8 @@
 				WHERE
 					A.DELETEFLAG = 0
 				AND 
+					A.COMPANYID = #companyID#
+				AND
 					A.TENANT_ID = #tenantId#
 				AND 
 					A.LADDERID = ANY(
@@ -997,7 +1001,8 @@
 				LINECNT,
 				LINEARRAY,
 				L.TENANT_ID,
-				EXTENSIONATTRIBUTE2 AS PIC
+				EXTENSIONATTRIBUTE2 AS PIC,
+				COMPANYID
 			FROM
 				TBL_LADDER L
 			LEFT JOIN(
@@ -1039,6 +1044,8 @@
 			TENANT_ID = #tenant_id#
 		AND 
 			DISPLAYNAME$lang$ = #name#
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#			
 		AND 
 			DISPLAYNAME$lang$
 		NOT IN (
@@ -1050,6 +1057,33 @@
 				DISPLAYNAME$lang$ = #name#
 			AND
 				TENANT_ID = #tenant_id#
+			AND
+				PHYSICALDELIVERYOFFICENAME = #companyID#
+			)
+		UNION
+		SELECT 
+			CN AS USERID, DISPLAYNAME AS USERNAME, DISPLAYNAME2 AS USERNAME2, DESCRIPTION$lang$ AS DEPTNAME, EXTENSIONATTRIBUTE2 AS PIC, TENANT_ID
+		FROM 
+			TBL_USERMASTER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			DISPLAYNAME$lang$ = #name#
+		AND
+			EXTENSIONATTRIBUTE4 LIKE CONCAT('%', #companyID#, '%')			
+		AND 
+			DISPLAYNAME$lang$
+		NOT IN (
+			SELECT
+				DISPLAYNAME$lang$
+			FROM
+				TBL_USERMASTER_RETIRE
+			WHERE 
+				DISPLAYNAME$lang$ = #name#
+			AND
+				TENANT_ID = #tenant_id#
+			AND
+				EXTENSIONATTRIBUTE4 LIKE CONCAT('%', #companyID#, '%')
 			)
 	</select>
 	
@@ -1271,6 +1305,8 @@
 		WHERE 
 			B.TENANT_ID = #tenant_id#
 		AND
+			B.COMPANYID = #companyID#
+		AND
 			B.USERID = #userId#
 		GROUP BY 
 			LADDERBMID
@@ -1307,7 +1343,7 @@
 			B.USERID = U.CN
 		WHERE 
 			B.TENANT_ID = #tenant_id#
-		AND 
+		AND
 			LADDERBMID = #ladderBmId#
 		ORDER BY 
 			B.ID
@@ -1315,9 +1351,9 @@
 	
 	<insert id="EzLadderDAO.insertLadderBMGroup" parameterClass="LadderBmVO">
 		INSERT 
-			TBL_LADDER_BM (TENANT_ID, BMNAME, USERID, REGDATE)
+			TBL_LADDER_BM (TENANT_ID, BMNAME, USERID, REGDATE, COMPANYID)
 		VALUES 
-			(#tenant_id#, #bmName#, #userId#, #regdate#)
+			(#tenant_id#, #bmName#, #userId#, #regdate#, #companyID#)
 	</insert>
 	
 	<insert id="EzLadderDAO.insertLadderBMUser" parameterClass="LadderBmUserVO">
@@ -1354,6 +1390,8 @@
 			LADDERBMID = #ladderBmId#
 		AND 
 			USERID = #userId#
+		AND
+			COMPANYID = #companyID#
 	</update>
 	
 	<delete id="EzLadderDAO.deleteLadderBMGroup" parameterClass="LadderBmVO">

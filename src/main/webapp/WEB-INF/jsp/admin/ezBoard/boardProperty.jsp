@@ -77,7 +77,7 @@
 	            }
 			});
 			
-			function Save() {				
+			function Save() {
 	            if ($.trim($("#txtBoardName").val()) == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
 	                return;

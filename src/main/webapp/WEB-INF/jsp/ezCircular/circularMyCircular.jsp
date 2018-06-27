@@ -229,7 +229,6 @@
 		        		edate : ""
 							},
 					success: function(xml){
-						console.log(xml);
 						getBoardList_after(loadXMLString(xml));	
 						
 						var imgTag = "";

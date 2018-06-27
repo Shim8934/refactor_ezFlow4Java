@@ -32,6 +32,7 @@ public class PollQuestionVO implements Serializable {
 	private int sendPostNotice;
 	private int openToAll;
 	private int cmtCnt;
+	private String companyId;
 	
 	public int getQstId() {
 		return qstId;
@@ -247,6 +248,14 @@ public class PollQuestionVO implements Serializable {
 
 	public void setCmtCnt(int cmtCnt) {
 		this.cmtCnt = cmtCnt;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 
 	public boolean equals(Object object) {
