@@ -550,10 +550,6 @@
 	   			  return task.moveTo(newStart, true,true);
 	   			};
 	   			
-	   			function checkIfCircularRef(taskId, groupId) {
-	   				
-	   			}
-	   			
 	   			//선행작업 지정
 	   			GanttMaster.prototype.changeTaskDeps = function (task) {
 	   				console.log("changeTaskDeps", task, dateToYYYYMMDD(new Date(task.start)), dateToYYYYMMDD(new Date(task.end)));
@@ -2253,7 +2249,7 @@
 			      "GANTT_ERROR_DESCENDANT_OF_CLOSED_TASK":"Error: due to a descendant of a closed task.",
 			      "TASK_HAS_EXTERNAL_DEPS":"This task has external dependencies.",
 			      "GANNT_ERROR_LOADING_DATA_TASK_REMOVED":"GANNT_ERROR_LOADING_DATA_TASK_REMOVED",
-			      "CIRCULAR_REFERENCE":"Circular reference.",
+			      "CIRCULAR_REFERENCE":"<spring:message code='ezPMS.t304' />",
 			      "CANNOT_DEPENDS_ON_ANCESTORS":"Cannot depend on ancestors.",
 			      "INVALID_DATE_FORMAT":"The data inserted are invalid for the field format.",
 			      "GANTT_ERROR_LOADING_DATA_TASK_REMOVED":"An error has occurred while loading the data. A task has been trashed.",
