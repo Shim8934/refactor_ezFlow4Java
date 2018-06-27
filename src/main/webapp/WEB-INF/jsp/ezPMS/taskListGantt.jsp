@@ -338,6 +338,59 @@
    				DivPopUpShow(845, 485, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	   		}
 	   		
+	   		//업무 삭제
+	   		function delTask(){
+	   			var selectType = ge.currentTask.type;
+	   			var url = "";
+	   			var groupId = ge.currentTask.groupId;
+	   			var taskId = "";
+	   			var data = {};
+	   			
+	   			if(selectType !== "t"){
+		   			alert("<spring:message code='ezPMS.t247' />");
+		   			return;
+	   			} else {
+	   				if(!confirm("<spring:message code='ezPMS.t305' />")){
+	   					return;
+	   				}
+	   				taskId = ge.currentTask.id.match(/t(\d+)/)[1];
+	   			}
+	   			
+   				url = "/ezPMS/deleteTask.do?projectId=" + projectId + "&taskId=" + taskId;
+	   			
+	   			data = {
+	   					projectId : projectId,
+	   					groupId : groupId,
+	   					taskId : taskId
+	   			}
+	   			
+	   			$.ajax({
+	   				type : "POST",
+	   				url : url,
+	   				dataType : "json",
+	   				contentType: "application/json; charset=UTF-8",
+	   				data : JSON.stringify(data),
+	   				success : function(data) {
+	   					if (result == "permitted") {
+							alert("<spring:message code='ezPMS.t242' />");
+						} else {
+							alert("<spring:message code='ezPMS.t184' />");
+							return;
+						}
+	   					
+	   					location.reload();
+	   				},
+	   				error : function(jqXHR, textStatus, errorThrown) {
+	   					alert("<spring:message code='ezPMS.t54' />");
+	   					location.reload();
+	   				},
+	   				complete : function() {
+	   					var logContent = "[" + taskId + "] <spring:message code='ezPMS.t242' />";
+	   					addTaskLog(projectId, 3, null, null, logContent);
+	   				}
+	   			});
+	   		}
+	   		
 	   		//그룹 추가
 	   		function goAddGroup() {
    				var top = ($(window).height() - $(this).outerHeight()) / 2;
@@ -349,28 +402,18 @@
 	   		
 	   		//그룹 삭제
 	   		function delGroup() {
-	   			var groupId = ""; //수정해주세요.
+	   			var selectType = ge.currentTask.type;
+	   			var url = "";
+	   			var groupId = ge.currentTask.groupId;
+	   			var data = {};
 	   			
-				var selectType = "";
-	   			
-	   			//선택한 작업이 업무/그룹/프로젝트 인지 구분.
-	   			if (ge.currentTask.id && ge.currentTask.id.indexOf("_t") !== -1) {
-	   				selectType = "task";
-	   			} else if (ge.currentTask.id && ge.currentTask.id.indexOf("_g") !== -1) {
-	   				selectType = "group";
-	   			} else if (ge.currentTask.id) {
-	   				selectType = "project";
-	   			}
-	   			
-	   			if (selectType === "group") {
-	   				groupId = curTask.id.match(/g(\d+)/) != null ? curTask.id.match(/g(\d+)/)[1] : "";
+	   			if(selectType !== "g"){
+		   			alert("<spring:message code='ezPMS.t281' />");
+		   			return;
 	   			} else {
-	   				alert("<spring:message code='ezPMS.t281' />")
-	   				return;
-	   			}
-	   			
-	   			if(confirm("<spring:message code='ezPMS.t197' /> " + selectType + "<spring:message code='ezPMS.t198' />")){
-					delTaskFunc(selectType);
+	   				if(!confirm("<spring:message code='ezPMS.t306' />")){
+	   					return;
+	   				}
 	   			}
 	   			
 	   			var data = {
@@ -391,8 +434,7 @@
 	   					alert("<spring:message code='ezPMS.t213' />");
 	   				},
 	   				complete : function() {
-	   					//로그 수정 필요
-	   					var logContent = "[그룹 삭제 테스트 로그 입니다.]";
+	   					var logContent = "[" + groupId + "] <spring:message code='ezPMS.t196' />";
 	   					addTaskLog(projectId, 3, groupId, null, logContent);
 	   				}
 	   			});
@@ -984,64 +1026,6 @@
 	   					alert("<spring:message code='ezPMS.t54' />");
 	   				}
 	   			});   
-	   		}
-	   		
-	   		function delTask(){
-	   			var selectType = ge.currentTask.type;
-	   			
-	   			if(confirm("<spring:message code='ezPMS.t197' /> " + selectType + "<spring:message code='ezPMS.t198' />")){
-					delTaskFunc(selectType);
-	   			}
-	   		}
-	   		
-	   		function delTaskFunc(selectType){
-	   			var url = "";
-	   			var groupId = ge.currentTask.groupId;
-	   			var taskId = "";
-	   			var data = {};
-	   			
-	   			if(selectType === "p"){
-	   				url = "/ezPMS/deleteProject.do";
-	   			}
-	   			else if(selectType === "g"){
-		   			delGroup();
-	   			}
-	   			else{
-		   			taskId = ge.currentTask.id.match(/t(\d+)/)[1];
-	   				url = "/ezPMS/deleteTask.do?projectId=" + projectId + "&taskId=" + taskId;
-	   			}
-	   			
-	   			data = {
-	   					projectId : projectId,
-	   					groupId : groupId,
-	   					taskId : taskId
-	   			}
-	   			
-	   			$.ajax({
-	   				type : "POST",
-	   				url : url,
-	   				dataType : "json",
-	   				contentType: "application/json; charset=UTF-8",
-	   				data : JSON.stringify(data),
-	   				success : function(data) {
-	   					if (result == "permitted") {
-							alert("<spring:message code='ezPMS.t242' />");
-						} else {
-							alert("<spring:message code='ezPMS.t184' />");
-							return;
-						}
-	   					
-	   					location.reload();
-	   				},
-	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert("<spring:message code='ezPMS.t54' />");
-	   					location.reload();
-	   				},
-	   				complete : function() {
-	   					var logContent = "[" + taskId + "] <spring:message code='ezPMS.t242' />";
-	   					addTaskLog(projectId, 3, null, null, logContent);
-	   				}
-	   			});
 	   		}
 	   		
 	   		function updateWeight(obj) {
