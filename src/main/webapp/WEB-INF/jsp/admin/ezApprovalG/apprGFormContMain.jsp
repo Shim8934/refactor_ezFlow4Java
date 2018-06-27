@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -356,6 +357,10 @@
 						if (document.getElementById("rdTotal").checked) {
 				    		InsFContTotal();
 						} else {
+							if ($('#tbManage').val() == "") {
+								alert(strLanggarm01);
+								return;
+							}
 				    		InsFContGroup();
 						}
 						
@@ -384,6 +389,10 @@
 						if (document.getElementById("rdTotal").checked) {
 				    		UpFcontTotal();
 						} else {
+							if ($('#tbManage').val() == "") {
+								alert(strLanggarm01);
+								return;
+							}
 				    		UpFContGroup();
 						}
 						
