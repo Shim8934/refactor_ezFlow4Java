@@ -107,7 +107,7 @@
 	   				
 	   				var tempTask = {};
 	   				tempTask.id = "p" + pd.projectId;
-		   			tempTask.name = pd.projectName;
+		   			tempTask.name = pd.projectName.replace(/\"/g,"&quot;");
 		   			tempTask.code = "";
 		   			tempTask.level = 0;
 		   			tempTask.status = ganttStatus[pd.status];
@@ -141,7 +141,7 @@
 		   			}
 		   			
 		   			tempTask.depends = "";
-		   			tempTask.description = pd.overview;
+		   			tempTask.description = pd.overview.replace(/\"/g,"&quot;");
 		   			tempTask.progress = Number(pd.progress).toFixed(1);
 		   			tempTask.realProgress = Number(pd.progress).toFixed(1);
 // 		   			tempTask.planProgress = Number(pd.planProgress).toFixed(1);
@@ -180,7 +180,7 @@
 		   				var groupDepth = gl[i].treeDepth;
 		   				
 			   			tempTask.id = "p" + pd.projectId + "_g" + groupId;
-			   			tempTask.name = gl[i].groupName;
+			   			tempTask.name = gl[i].groupName.replace(/\"/g,"&quot;");
 			   			tempTask.code = gl[i].ancesterGroup;
 			   			tempTask.level = groupDepth;
 			   			tempTask.status = ganttStatus["G"];
@@ -216,7 +216,7 @@
 			   			
 			   			tempTask.depends = "";
 			   			tempTask.pretask = gl[i].pretask != null ? "t" + gl[i].pretask : null || gl[i].pregroup != null ? "g" + gl[i].pregroup : null;
-			   			tempTask.description = gl[i].overview;
+			   			tempTask.description = gl[i].overview.replace(/\"/g,"&quot;");
 			   			tempTask.progress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.planProgress = Number(gl[i].planProgress).toFixed(1);
@@ -261,7 +261,7 @@
 				   			tempTask.level = 1;
 		   				}
 		   				
-			   			tempTask.name = tl[i].taskName;
+			   			tempTask.name = tl[i].taskName.replace(/\"/g,"&quot;");
 			   			tempTask.code = tl[i].groupId;
 			   			tempTask.status = ganttStatus[tl[i].status];
 			   			tempTask.statusPMS = tl[i].status;
@@ -296,7 +296,7 @@
 			   			
 			   			tempTask.depends = "";
 			   			tempTask.pretask = tl[i].pretask != null ? "t" + tl[i].pretask : null || tl[i].pregroup != null ? "g" + tl[i].pregroup : null ;
-			   			tempTask.description = tl[i].overview;
+			   			tempTask.description = tl[i].overview.replace(/\"/g,"&quot;");
 			   			tempTask.progress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(tl[i].realProgress).toFixed(1);
 			   			tempTask.planProgress = Number(tl[i].planProgress).toFixed(1);
