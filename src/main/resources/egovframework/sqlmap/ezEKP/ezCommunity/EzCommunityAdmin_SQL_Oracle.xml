@@ -10,11 +10,12 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT A.c_clubno,
+					DISTINCT c_clubno,
 					closestate,
-					D.c_clubname$v_USERINFO_LANG$ c_clubname,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
-					A.c_sysopid,
+					c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
@@ -24,27 +25,8 @@
 					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
 				WHERE
-				]]>
-				<isEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						B.$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
-					]]>
-				</isEqual>
-				<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						D.$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
-					]]>
-				</isNotEqual>
-			<![CDATA[
-				AND
-					D.companyid = #companyID#
+					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -55,11 +37,12 @@
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT A.c_clubno,
+					DISTINCT c_clubno,
 					closestate,
-					D.c_clubname$v_USERINFO_LANG$ c_clubname,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
-					A.c_sysopid,
+					c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
@@ -69,27 +52,8 @@
 					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
 				WHERE
-				]]>
-				<isEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						B.$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
-					]]>
-				</isEqual>
-				<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						D.$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
-					]]>
-				</isNotEqual>
-			<![CDATA[
-				AND
-					D.companyid = #companyID#
+					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -102,11 +66,12 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT A.c_clubno,
+					DISTINCT c_clubno,
 					closestate,
-					D.c_clubname$v_USERINFO_LANG$ c_clubname,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
-					A.c_sysopid,
+					c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
@@ -116,15 +81,7 @@
 					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
 				WHERE
-					D.companyid = #companyID#
-				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
 					applicationdate DESC
@@ -134,11 +91,12 @@
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT A.c_clubno,
+					DISTINCT c_clubno,
 					closestate,
-					D.c_clubname$v_USERINFO_LANG$ c_clubname,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
-					A.c_sysopid,
+					c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
@@ -148,15 +106,7 @@
 					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
 				WHERE
-					D.companyid = #companyID#
-				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
 					$v_SORT1$ $v_SORT2$
@@ -170,34 +120,11 @@
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(DISTINCT C1.c_clubno), 0)
+				NVL(COUNT(c_clubno), 0)
 			FROM
-				TBL_C_COMCLOSE as C1
-			INNER JOIN
-				TBL_C_MEMBERINFO B
-			ON
-				RTRIM(C1.c_sysopid) = RTRIM(B.userid)
-			AND
-				C1.tenant_id = B.tenant_id
-			INNER JOIN
-				TBL_C_CLUB
-			ON
-				TBL_C_CLUB.c_clubno = C1.c_clubno
+				TBL_C_COMCLOSE
 			WHERE
-			]]>
-			<isEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					B.$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
-				]]>
-			</isEqual>
-			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					C1.$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
-				]]>
-			</isNotEqual>
-		<![CDATA[
-			AND
-				C1.TBL_C_CLUB.companyid = #companyID#
+				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -205,17 +132,11 @@
 	
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select2"				parameterClass="Map"		resultClass="Integer">
 		SELECT
-			NVL(COUNT(DISTINCT C1.c_clubno), 0)
+			NVL(COUNT(c_clubno), 0)
 		FROM
-			TBL_C_COMCLOSE as C1
-		INNER JOIN
-			TBL_C_CLUB
-		ON
-			TBL_C_CLUB.c_clubno = C1.c_clubno
+			TBL_C_COMCLOSE
 		WHERE
-			TBL_C_CLUB.companyid = #companyID#
-		AND
-			C1.tenant_id = #tenantID#
+			tenant_id = #tenantID#
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspAdmitComGet1"					parameterClass="Map"			resultClass="CommunityClubVO"> -->
@@ -225,7 +146,7 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT c_clubno,
+					c_clubno,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
@@ -242,8 +163,6 @@
 					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 				AND
 					A.c_adminconfirm = 'N'
-				AND
-					A.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -254,7 +173,7 @@
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT c_clubno,
+					c_clubno,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
@@ -271,8 +190,6 @@
 					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 				AND
 					A.c_adminconfirm = 'N'
-				AND
-					A.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -301,8 +218,6 @@
 				AND
 					A.tenant_id = B.tenant_id
 				WHERE
-					A.companyID = #companyID#
-				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
 					A.c_regdate DESC
@@ -328,8 +243,6 @@
 				AND
 					A.tenant_id = B.tenant_id
 				WHERE
-					A.companyID = #companyID#
-				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
 					$v_SORT1$ $v_SORT2$
@@ -344,36 +257,26 @@
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(DISTINCT c_clubno), 0) 
+				NVL(COUNT(c_clubno), 0) 
 			FROM
-				TBL_C_CLUB A
-			INNER JOIN
-				TBL_C_MEMBERINFO B
-			ON
-				A.c_sysopid = B.userID
-			AND
-				A.tenant_id = B.tenant_id
+				TBL_C_CLUB
 			WHERE
 				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 			AND
 				c_adminconfirm = 'N'
 			AND
-				A.companyid = #companyID#
-			AND
-				A.tenant_id = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select2"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(DISTINCT c_clubno), 0)
+				NVL(COUNT(c_clubno), 0)
 			FROM
 				TBL_C_CLUB
 			WHERE
 				c_adminconfirm = 'N'
-			AND
-				companyid = #companyID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -417,13 +320,9 @@
 								WHERE
 									c_clubdesc LIKE '%' || #v_STRQUERY# || '%'
 								AND
-									companyid = #companyID#
-								AND
 									tenant_id = #tenantID#)
 				AND
 					c_adminconfirm = 'Y'
-				AND
-					companyid = #companyID#
 				AND
 					tenant_id = #tenantID#
 			]]>
@@ -440,13 +339,9 @@
 									WHERE
 										CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE '%' || #v_STRQUERY# || '%'
 									AND
-										companyid = #companyID#
-									AND
 										tenant_id = #tenantID#)
 					AND
 						c_adminconfirm = 'Y'
-					AND
-						companyid = #companyID#
 					AND
 						tenant_id = #tenantID#
 				]]>
@@ -456,8 +351,6 @@
 				<![CDATA[
 					WHERE
 						c_adminconfirm = 'Y'
-					AND
-						companyid = #companyID#
 					AND
 						tenant_id = #tenantID#
 				]]>
@@ -501,8 +394,6 @@
 				AND
 					c_adminconfirm = 'Y'
 				AND
-					companyid = #companyID#
-				AND
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
@@ -522,8 +413,6 @@
 					AND
 						c_adminconfirm = 'Y'
 					AND
-						companyid = #companyID#
-					AND
 						tenant_id = #tenantID#
 				]]>
 			</isEqual>
@@ -532,8 +421,6 @@
 				<![CDATA[
 					WHERE
 						c_adminconfirm = 'Y'
-					AND
-						companyid = #companyID#
 					AND
 						tenant_id = #tenantID#
 				]]>
@@ -814,8 +701,6 @@
 				TBL_C_MEMBERINFO
 			WHERE
 				RTRIM(userid) = #v_ID#
-			AND
-				companyid = #companyID#
 			AND
 				tenant_id = #tenantID#
 		]]>
