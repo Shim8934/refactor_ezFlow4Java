@@ -93,6 +93,7 @@
 		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
 		    var useReSend = "${useReSend}";
 		    var useSearchContent = "${useSearchContent}";
+		    var useMailNewWindow = "${useMailNewWindow}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -800,13 +801,13 @@
           <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
           <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
           <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
-          <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
           <li><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
           <li><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
           <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
           <li onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
           <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
-          <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
           <li><span onClick="deleteWork(false)"><spring:message code="ezEmail.t95" /></span></li>
           <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
           <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>

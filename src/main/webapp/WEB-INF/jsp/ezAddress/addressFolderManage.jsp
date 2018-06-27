@@ -434,7 +434,7 @@
 	    <h1>${title}</h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_close();"><spring:message code='ezAddress.t5' /></span></li>
+	            <li><span onclick="Window_close();"></span></li>
 	        </ul>
 	    </div>
 	    <table class="content" style="width: 100%;">

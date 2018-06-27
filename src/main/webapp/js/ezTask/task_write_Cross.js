@@ -335,7 +335,7 @@ function config_repeat() {
     task_repetition_cross_dialogArguments[0] = prameter;
     task_repetition_cross_dialogArguments[1] = config_repeat_Complete;
    
-    DivPopUpShow(450, 375, "/ezTask/taskRepetition.do");
+    DivPopUpShow(450, 405, "/ezTask/taskRepetition.do");
 }
 
 /*2018-05-16 구해안 repdisplay에 결과물 출력할 수 있도록 수정*/

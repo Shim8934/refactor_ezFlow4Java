@@ -125,7 +125,7 @@
 	    <h1><spring:message code='ezEmail.t270' /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="btn_cancel()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="btn_cancel()"></span></li>
             </ul>
         </div>
 	    <div style="overflow: auto;">

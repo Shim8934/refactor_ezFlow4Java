@@ -273,7 +273,12 @@
         	</HEADERS>
     		</LISTVIEWDATA>
 		</XML> 
-		<h1><spring:message code='ezApprovalG.t1187'/></h1>
+		<h1><spring:message code='ezApprovalG.t1516'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return cmdcancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table> 
 			<tr> 
 		    	<td>
@@ -302,7 +307,6 @@
 		</table> 
 		<div class="btnposition btnpositionNew">
     		<a class="imgbtn" onClick="return cmdOK_onclick()" ><span><spring:message code='ezApprovalG.t1760'/></span></a>
-    		<a class="imgbtn" onClick="return cmdcancel_onclick()" ><span><spring:message code='ezApprovalG.t1761'/></span></a>
 		</div>
 	</body>
 </html>
