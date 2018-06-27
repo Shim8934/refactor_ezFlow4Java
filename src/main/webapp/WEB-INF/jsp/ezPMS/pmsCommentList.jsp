@@ -246,7 +246,7 @@
 							</td>
 							<td>${fn:substring(commentVO.writeDate, 0, 16)}</td>
 							<td>
-								<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_modify.png"/></span>
+								<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_modify.png"/></span>&nbsp;&nbsp;&nbsp;
 								<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_eliminate.png"/></span>
 							</td>
 						</tr>

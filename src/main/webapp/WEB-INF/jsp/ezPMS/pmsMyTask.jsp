@@ -10,6 +10,7 @@
 
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -61,6 +62,7 @@ $(function() {
 		currentPage = 1;
 		$("#taskName").text("<spring:message code='ezPMS.t98' />");
 		$("#searchByGroupName").attr("id", "searchByTaskName");
+		$("#taskOverview").text("<spring:message code='ezPMS.t104' />");
 		$("#mainmenu").find("div").css("display", "");
 		$("#taskSearch").css("display", "");
 		$("#projectSearch").css("display", "none")
@@ -83,8 +85,11 @@ $(function() {
 		$("#mainmenu").find("div").css("display", "none");
 		orderWhat = "";
 		currentPage = 1;
+		$("#taskName").text("<spring:message code='ezPMS.t87' />");
 		$("#taskSearch").css("display", "");
 		$("#projectSearch").css("display", "none");
+		$("#searchByTaskName").attr("id", "searchByGroupName");
+		$("#taskOverview").text("<spring:message code='ezPMS.t88' />");
 		
 		if ($("#searchDiv").css("display") != "none") {
 			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
@@ -409,10 +414,6 @@ function searchContent() {
 	setMyTaskList(nowPosition);
 }
 
-function getSearchProject() {
-	addProjectPopup(20, 30, 400, 300, "/ezPMS/getProjectNameList.do");
-}
-
 function goProjectDetails(elem) {
 	var projectId = elem.id;
 	window.open("/ezPMS/getProjectDetails.do?projectId="+projectId, "right");
@@ -491,8 +492,8 @@ function goGroupDetails(elem) {
 				</select>
 		</div>
 	</div>
-	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
-	<table class="content" style="width:80%; margin-bottom:5px;">
+	<div id = "searchDiv" style="margin-bottom:40px; display:none;">
+	<table class="content" style="width:100%;">
 		<tbody id="taskSearch">
 			<tr>
 				<th id="taskName"><spring:message code='ezPMS.t98' /> </th>
@@ -510,17 +511,17 @@ function goGroupDetails(elem) {
 				<th><spring:message code='ezPMS.t42' /></th>
 				<td style="width:50%"><input type="text" style="width:100%" id="searchByUpperGroupName"></td>
 				<th><spring:message code='ezPMS.t31' /></th>
-				<td><input type="text" style="width:70%; margin-right : 5px;" id="searchByProjectName"><a class="imgbtn" onclick="getSearchProject()"><span><spring:message code='ezPMS.t150' /></span></a></td>
+				<td><input type="text" style="width:70%; margin-right : 5px;" id="searchByProjectName"></td>
 			</tr>
 			<tr>
-				<th><spring:message code='ezPMS.t104' /></th>
+				<th id="taskOverview"><spring:message code='ezPMS.t104' /></th>
 				<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
 			</tr>
 		</tbody>
 		<tbody id="projectSearch">
 				<tr>
 					<th><spring:message code='ezPMS.t31' /> </th>
-					<td style="width:50%"><input type="text" id="PsearchByProjectName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span><spring:message code='ezPMS.t150' /></span></a></td>
+					<td style="width:50%"><input type="text" id="PsearchByProjectName" style="width:50%; margin-right:5px;"></td>
 					<th><spring:message code='ezPMS.t63' /></th>
 					<td><input type="text" id="PsearchByUser"></td>
 				</tr>
@@ -536,7 +537,9 @@ function goGroupDetails(elem) {
 				</tr>
 			</tbody>
 	</table>
-		<a class="imgbtn" onclick="searchContent()" style="margin-left:40%;"><span><spring:message code='ezPMS.t1' /></span></a>
+	<div class="newbtn_position">
+		<a class="imgbtn" onclick="searchProject()"><span><spring:message code='ezPMS.t1' /></span></a>
+    </div>
 	</div>
 	<div id="contentList"></div>
 	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
