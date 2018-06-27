@@ -1301,7 +1301,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					OrganDeptVO deptVO = ezOrganService.getDeptInfo(vo.getParentCn(), userInfo.getPrimary(), tenantID);//user의 부서 정보
 					companyId = deptVO.getExtensionAttribute2();//회사 ID
 					String beforeTitle = useRankMailUser.getTitle();//이전의 직위
-					String beforePosition = useRankMailUser.getExtensionAttribute102(); //이전의 직책
+					String beforePosition = useRankMailUser.getExtensionAttribute10(); //이전의 직책
 					
 					if (!jobTile.equals("")) {
 						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
@@ -1313,7 +1313,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, cn);
 								 
 							 } else {// 직위로 공용배포그룹이 없을때  or 직위 를 변경할때
-								 if (beforeTitle != null && !beforeTitle.equals("")) {
+								 String beforeTitleUserName = ezOrganAdminService.getDistributionUserName(tenantID, beforeTitle);
+								 if (beforeTitleUserName != null && !beforeTitleUserName.equals("")) {
 									 result = ezOrganAdminService.deleteTargetAddressUser(tenantID, beforeTitle, cn, companyId);
 								 }
 
@@ -1330,7 +1331,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						 if (beforePosition != null && beforePosition.equals(jobPostion)) {//직책으로 공용 배포그룹 존재할떄
 							 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, cn);
 						 } else {// 직책으로 공용배포그룹이 없을때 or 직책 을 변경할때
-							if (beforePosition != null && !beforePosition.equals("")) {
+							 String beforeTitleUserName = ezOrganAdminService.getDistributionUserName(tenantID, beforeTitle);
+							if (beforeTitleUserName != null && !beforeTitleUserName.equals("")) {
 								result = ezOrganAdminService.deleteTargetAddressUser(tenantID, beforePosition, cn, companyId);
 							}
 							 

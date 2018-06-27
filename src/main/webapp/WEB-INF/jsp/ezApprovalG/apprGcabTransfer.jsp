@@ -27,6 +27,8 @@
 	    	var g_SDeptName = "${userInfo.deptName}";
 	        var CompanyID = "${userInfo.companyID}";
 	        var UserLang = "${userInfo.lang}";
+	        var date = new Date();
+            var nowYear = date.getFullYear();
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -38,6 +40,13 @@
 	            }
 	            document.getElementById("tdSDeptName").innerText = g_SDeptName;
 	            InitSelCabinetList();
+	            
+	            //2018-05-18 강민수92 셀렉트 박스 추가
+	            for (var i = nowYear + 5; i >= nowYear - 5; i--) {
+	            	$('#selYear').append("<option value='" + i + "'>" + i + "</option>")
+	            }
+				
+	            $("#selYear").val(nowYear).prop("selected", true);
 	        };
 	
 	        function bt_OK_onclick() {
@@ -139,6 +148,7 @@
 	        if (len > 0) {
 	            for (i = 0; i < len; i++) {
 	                createNodeAndInsertText(oXml, objNode, "ID", Rows[i].getAttribute("DATA1"));
+	                createNodeAndInsertText(oXml, objNode, "PRODUCTIONYEAR", Rows[i].getAttribute("DATA7"));
 	            }
 	        }
 	        return oXml;
@@ -198,7 +208,10 @@
 	        g_STaskCode = getNodeText(SelectNodes(oXml, "/TASKINFO/TASK/CODE")[0]);
 	        document.getElementById("tdSTaskCode").innerText = g_STaskCode;
 	        document.getElementById("tdSTaskName").innerText = getNodeText(SelectNodes(oXml, "/TASKINFO/TASK/NAME")[0]);
-	        GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2");
+	        
+	        var selYear = $('#selYear').val();
+	        
+	        GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2", selYear);
 	    }
 	
 	    function GetSelDTaskInfo(szTaskXml) {
@@ -385,6 +398,16 @@
 	        SelListView.DataSource(oList);
 	        SelListView.DataBind("SelCabinetList");
 	    }
+	    
+	    function selYear_onChange() {
+	    	console.log(g_SDeptCode == "")
+	    	console.log(g_STaskCode == "")
+	    	
+	    	if (g_SDeptCode != "" && g_STaskCode != "") {
+	    		var selYear = $('#selYear').val();
+	    		GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2", selYear);
+	    	}
+	    }
 	
 	    </script>
 	</head>
@@ -422,7 +445,8 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2><spring:message code='ezApprovalG.t578'/></h2>
+	                <h2><spring:message code='ezApprovalG.t578'/>&nbsp;<select id="selYear" style="width: 55px;" onchange="selYear_onChange()"></select></h2>
+	                
 	                <div style="WIDTH: 450px; HEIGHT: 300px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="CabinetList"></div>
 	                </div>
