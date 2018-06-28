@@ -62,15 +62,15 @@ var participantList = [];
 function openMemberList(type) {
 		 var win;
 		 var feature = GetOpenPosition(760, 700);
-		 DivPopUpShow(600, 380, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
-				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		 DivPopUpShow(600, 408, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
+				 "height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
 function openGroupTree() {
 		var win;
 	 	var feature = GetOpenPosition(760, 700);
-	 	DivPopUpShow(338, 384, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
-			 	"height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	 	DivPopUpShow(338, 335, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
+			 	"height = 335px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
 function open() {

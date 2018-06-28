@@ -132,7 +132,7 @@ var treeDepth = 0;
 function openMemberList() {
 		 var win;
 		 var feature = GetOpenPosition(760, 700);
-		 DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.8, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
+		 DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.85, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 

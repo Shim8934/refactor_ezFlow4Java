@@ -324,6 +324,10 @@ public class EzPMSController {
 			jsonList.put("participantList", param.get("participantList"));
 			jsonList.put("viewerList", param.get("viewerList"));
 			
+			param.remove("managerList");
+			param.remove("participantList");
+			param.remove("viewerList");
+			
 			JSONObject result = new JSONObject(); 
 			
 			if (param.get("mode").equals("new")) {
@@ -1010,7 +1014,8 @@ public class EzPMSController {
 	// 알림메일 발송
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/sendNotiMail.do")
-	public void sendNotiMail(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+	@ResponseBody
+	public String sendNotiMail(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("sendNotiMail Started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1109,6 +1114,8 @@ public class EzPMSController {
 			LOGGER.debug("sendNotiMail ERROR : " + e.getMessage());
 			e.printStackTrace();
 		}
+		
+		return "";
 	}
 	
 	public InternetAddress[] getToArrMailList (List<Map<String, Object>> nameList, Map<String, Object> param, HttpServletRequest request, String projectName, long projectId, String authName, @CookieValue("loginCookie") String loginCookie) {

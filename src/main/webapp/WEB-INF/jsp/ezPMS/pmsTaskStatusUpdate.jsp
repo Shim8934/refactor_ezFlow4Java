@@ -493,7 +493,7 @@ button.PHBtn {
 			</table>
 			<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 				<tr>
-					<td><a class="imgbtn" id="submit" onclick="updateTaskInfo()"><span><spring:message code='ezPMS.t265' /></span></a></td>
+					<td><a class="imgbtn" id="submit" onclick="saveStatus()"><span><spring:message code='ezPMS.t265' /></span></a></td>
 				</tr>
 			</table>
 		</div>	

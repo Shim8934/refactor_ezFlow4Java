@@ -133,7 +133,15 @@
 </style>
 </head>
 <body class="popup">
-	<h1><spring:message code='ezPMS.t146' /></h1>
+	<h1><spring:message code='ezPMS.t146' />
+		<div id="close" style="float:right">
+		<ul>
+			<li>
+				<span id="cancel" onclick="popupClose()"></span>
+			</li>
+		</ul>
+		</div>
+	</h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="initPreTask()"><spring:message code='ezPMS.t295' /></span></li>
@@ -143,9 +151,6 @@
 	<div style="margin-top: 8px; text-align: center;">
 		<a class="imgbtn" onclick="register()">
 			<span><spring:message code='ezPMS.t40' /></span>
-		</a>
-		<a class="imgbtn" onclick="popupClose()">
-			<span><spring:message code='ezPMS.t76' /></span>
 		</a>
 	</div>
 </body>
