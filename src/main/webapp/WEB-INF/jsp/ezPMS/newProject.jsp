@@ -412,13 +412,13 @@ var groupId = "${groupId}";
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(managers)"><span><spring:message code='ezPMS.t63' /></span></a></th>
-				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="managers"></div></td>
+				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; max-height:100%; width:100%" id="managers"></div></td>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(participants)"><span><spring:message code='ezPMS.t64' /></span></a></th>
-				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="participants"></div></td>
+				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; max-height:100%; width:100%" id="participants"></div></td>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span><spring:message code='ezPMS.t65' /></span></a></th>
-				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="viewers"></div></td>
+				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; max-height:100%; width:100%" id="viewers"></div></td>
 			<tr>
 				<th><spring:message code='ezPMS.t66' /></th>
 				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
