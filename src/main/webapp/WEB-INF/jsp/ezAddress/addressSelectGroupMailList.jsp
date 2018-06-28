@@ -68,7 +68,7 @@
 			<h1><spring:message code='ezAddress.t320' /></h1>
 			 <div id="close">
 	            <ul>
-	                <li><span onclick="Window_Close()"><spring:message code='ezEmail.t63' /></span></li>
+	                <li><span onclick="Window_Close()"></span></li>
 	            </ul>
 	        </div>
 			<div id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; border:0px; HEIGHT:323px;" class="box">

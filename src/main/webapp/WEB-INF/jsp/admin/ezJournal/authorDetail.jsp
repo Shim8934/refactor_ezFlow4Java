@@ -191,13 +191,9 @@
         <h1><spring:message code='ezJournal.t164'/></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="setAuthorViewUser()"><spring:message code='main.t4008'/></span></li>
-	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
+	            <li><span onclick="close_Click()"></span></li>
 	        </ul>
 	    </div>
-	    <script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 		<table id="TreeViewTD">
 		 	<tr>
 	            <td>
@@ -260,6 +256,9 @@
 				</td>
 			</tr>
         </table>
+        <div class="btnposition">
+		    <a class="imgbtn" onClick="setAuthorViewUser()" ><span><spring:message code='main.t4008'/></span></a>
+		</div>
 	</body>
 </html>
 

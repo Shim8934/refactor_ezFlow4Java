@@ -212,7 +212,7 @@
 	    <h1><spring:message code='ezApprovalG.t00008'/></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="window_close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window_close()"></span></li>
             </ul>
         </div>
 	    <span>&nbsp;▒ <spring:message code='ezApprovalG.t00009'/></span>
