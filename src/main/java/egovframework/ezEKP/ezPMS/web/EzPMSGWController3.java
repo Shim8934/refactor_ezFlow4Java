@@ -1090,11 +1090,17 @@ public class EzPMSGWController3 {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 
 			List<LinkedHashMap> taskSchedules = (List<LinkedHashMap>) jsonParam.get("allTasks");
+			List<LinkedHashMap> groupSchedules = (List<LinkedHashMap>) jsonParam.get("allGroups");
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("tenantId", info.getTenantId());
 			map.put("taskSchedules", taskSchedules);
 			
 			ezPMSService.updateAllTaskDatesInPrj(map);
+			
+			map.remove("taskSchedules");
+			map.put("groupSchedules", groupSchedules);
+			
+			ezPMSService.updateAllGroupDatesInPrj(map);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

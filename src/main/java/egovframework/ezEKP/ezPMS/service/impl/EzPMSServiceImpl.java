@@ -2812,6 +2812,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.updateAllTaskDatesInPrj(map);
 		LOGGER.debug("[SERVICE] ezPMS updateAllTaskDatesInPrj Ended");
 	}
-	
-	
+
+	@Override
+	public void updateAllGroupDatesInPrj(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] ezPMS updateAllGroupDatesInPrj Started");
+		ezPMSDAO.updateAllGroupDatesInPrj(map);
+		LOGGER.debug("[SERVICE] ezPMS updateAllGroupDatesInPrj Ended");
+	}
 }

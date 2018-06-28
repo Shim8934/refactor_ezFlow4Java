@@ -628,15 +628,23 @@
 	   				  	}
 	   			  	} */
 	   			  	
-	   			  	if(task.moveTo(task.start,false,true)) {
+	   			  	// 후행작업의 기간이 정상적으로 조정된 후, 화면의 정보를 바탕으로 DB업데이트
+	   			  	if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
 
-	   			  		if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
+	   			  		if(task.moveTo(task.start,false,true)) {
 
 		   			  		var allGanttItems = ge.saveProject().tasks;
 		   			  		var allTasks = [];
+		   			  		var allGroups = [];
 		   			  		
 		   			  		function TaskSchedule(taskId, start, end) {
 		   			  			this.taskId = taskId;
+		   			  			this.start = start;
+		   			  			this.end = end;
+		   			  		} 
+		   			  		
+		   			  		function GroupSchedule(groupId, start, end) {
+		   			  			this.groupId = groupId;
 		   			  			this.start = start;
 		   			  			this.end = end;
 		   			  		} 
@@ -649,13 +657,17 @@
 		   			  			
 		   			  			if(taskId != null) {
 		   			  				allTasks.push(new TaskSchedule(taskId, newStart, newEnd));
+		   			  			} else {
+		   			  				var groupId = allGanttItems[i].id.match(/g(\d+)/) != null ? allGanttItems[i].id.match(/g(\d+)/)[1] : null;
+		   			  				allGroups.push(new GroupSchedule(groupId, newStart, newEnd));
 		   			  			}
 		   			  		}
 		   			  		
-		   			  		console.log(JSON.stringify(allTasks));
+		   			  		/* console.log(JSON.stringify(allTasks)); */
 		   			  		
 		   			  		data = {
-		   			  			allTasks : allTasks	
+		   			  			allTasks : allTasks,
+		   			  			allGroups : allGroups
 		   			  		}
 		   			  		
 		   			  		$.ajax({

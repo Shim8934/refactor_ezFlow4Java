@@ -591,4 +591,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateAllTaskDatesInPrj(Map<String, Object> map) {
 		update("EzPMSDAO.updateAllTaskDatesInPrj", map);
 	}
+	
+	public void updateAllGroupDatesInPrj(Map<String, Object> map) {
+		update("EzPMSDAO.updateAllGroupDatesInPrj", map);
+	}
 } 

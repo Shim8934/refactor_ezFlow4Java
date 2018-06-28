@@ -3728,5 +3728,36 @@
 		<iterate prepend="WHERE task_id in" property="taskSchedules" open="(" conjunction="," close=")">
 			#taskSchedules[].taskId#
 		</iterate>
+	<![CDATA[
+		AND tenant_id = #tenantId#
+	]]>	
+	</update>
+	
+	<update id="EzPMSDAO.updateAllGroupDatesInPrj">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_group
+		SET
+			plan_start_date = CASE
+	]]>
+		<iterate property="groupSchedules" conjunction=" ">
+			WHEN group_id = #groupSchedules[].groupId# THEN #groupSchedules[].start#
+		</iterate>
+	<![CDATA[
+		END,
+			plan_end_date = CASE
+	]]>
+		<iterate property="groupSchedules" conjunction=" ">
+			WHEN group_id = #groupSchedules[].groupId# THEN #groupSchedules[].end#
+		</iterate>
+	<![CDATA[
+		END
+	]]>
+		<iterate prepend="WHERE group_id in" property="groupSchedules" open="(" conjunction="," close=")">
+			#groupSchedules[].groupId#
+		</iterate>
+	<![CDATA[
+		AND tenant_id = #tenantId#
+	]]>	
 	</update>
 </sqlMap>
