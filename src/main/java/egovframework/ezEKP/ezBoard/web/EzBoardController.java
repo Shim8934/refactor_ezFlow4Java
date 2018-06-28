@@ -348,7 +348,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
 		List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
-		
 		String parentName = parentBoardName(resultList, userInfo);
 		StringBuffer sb = new StringBuffer();
 		

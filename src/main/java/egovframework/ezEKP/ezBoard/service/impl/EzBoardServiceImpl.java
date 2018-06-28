@@ -134,7 +134,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		// 즐겨찾기 탭 순서를 저장한다.
 		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null && !boardMyFavoriteVO.equals("")) {
-			//
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO);
 		} else {
 			// 즐겨찾기 레코드(tbl_board_mayboards + tbl_board_newboard_orderinfo)가 없는 경우, 새로 생성한다.
@@ -152,6 +151,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("get_favoriteList ended");
 		// 실제 나타낼 즐겨찾기 게시판을 가져온다. mode(ALL-환경설정용/USE-실제사용표출)에 따라 표출이 달라진다.
+		/* 2018-06-28 홍승비 - 각 회사의 초기 즐겨찾기가 '새게시물'이 아닌 게시판도 각 회사마다 다르게 표시 가능하도록 쿼리 수정 */
 		return ezBoardDAO.get_favoriteList(map);
 	}
 

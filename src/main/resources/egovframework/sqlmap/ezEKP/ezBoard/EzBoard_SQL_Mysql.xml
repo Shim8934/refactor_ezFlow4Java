@@ -213,7 +213,11 @@
                 WHERE
                 	A.TENANT_ID = #v_TENANTID#
                 AND
-                	B.COMPANYID = #v_COMPANYID#
+                (
+                	(A.COMPANYID = #v_COMPANYID# 			AND 			B.COMPANYID = #v_COMPANYID#)
+                	OR
+                	(A.COMPANYID IS NULL			AND			B.COMPANYID = #v_COMPANYID#)
+                )
 	            AND
 	            	A.USERID = 'everyone'
 	            AND  
@@ -275,7 +279,11 @@
                 WHERE
                 	A.TENANT_ID = 6
                 AND
-                	C.COMPANYID = #v_COMPANYID#
+                (
+                	(A.COMPANYID = #v_COMPANYID# 			AND 			C.COMPANYID = #v_COMPANYID#)
+                	OR
+                	(A.COMPANYID IS NULL			AND			C.COMPANYID = #v_COMPANYID#)
+	            )
 	            AND  
                 	A.USERID = 'everyone'
                 AND  
