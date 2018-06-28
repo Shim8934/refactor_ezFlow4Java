@@ -38,7 +38,9 @@
 		
 		getDatePicker();
 		
-		setContentTitle(taskName, contentCount);
+		if(typeof setContentTitle != 'undefined') {
+			setContentTitle(taskName, contentCount);
+		}	
 	})
 	
 	// 체크박스 전체선택 혹은 해제

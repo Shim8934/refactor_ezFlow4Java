@@ -278,16 +278,14 @@
 	   		
 	   		//기존 담당자 또는 참여자를 초기값으로 넣어준다.
 	   		function setPrevUser(){
-	   			if(parent.managerList || parent.participants){
-		   			if(type === "participants" && parent.participants.length > 0){
-			   			parent.participants.forEach(function(elem, idx){
-			   				$('#' + elem.userId).click().dblclick();
-			   			});
-		   			} else if (type !== "participants" && parent.managerList.length > 0){
-		   				parent.managerList.forEach(function(elem, idx){
-		   					$('#' + elem.userId).click().dblclick();
-			   			});
-		   			}
+	   			if(type === "participants" && parent.participantList.length > 0){
+		   			parent.participantList.forEach(function(elem, idx){
+		   				$('#' + elem.userId).click().dblclick();
+		   			});
+	   			} else if (type !== "participants" && parent.managerList.length > 0){
+	   				parent.managerList.forEach(function(elem, idx){
+	   					$('#' + elem.userId).click().dblclick();
+		   			});
 	   			}
 	   		}
 		</script>

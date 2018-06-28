@@ -201,7 +201,9 @@
 		$("#divList").css("height", (CurrentHeight - 245) + "px");
 		$("#divList").css("overflow", "auto");
 		
-		setContentTitle(taskName, contentCount);
+		if(typeof setContentTitle != 'undefined') {
+			setContentTitle(taskName, contentCount);
+		}
 	});
 </script>
 <div id="divList" style="width: 100%;">

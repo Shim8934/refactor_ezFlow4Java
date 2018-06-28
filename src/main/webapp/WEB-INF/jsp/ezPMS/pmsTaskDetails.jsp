@@ -262,7 +262,6 @@
 	}
 	
 	function btnEvent(){
-		document.getElementById("closeBtn").onclick = popupClose;
 		document.getElementById("deleteBtn").onclick = delTaskFunc;
 		document.getElementById("taskUpdateBtn").onclick = taskUpdate;
 		document.getElementById("addBoardBtn").onclick = goAddBoard;
@@ -389,9 +388,7 @@
 button.PHBtn {
     margin-top: 5px;
 }
-#closeBtn{
-	float:right;
-}
+
 .detailsTable{border-collapse:collapse;border-spacing:0;width:652px;height:167px;}
 .detailsTable td{padding:5px 5px;border:1px solid #ccc;overflow:hidden;}
 .detailsTable th{border:1px solid #ccc;overflow:hidden;}

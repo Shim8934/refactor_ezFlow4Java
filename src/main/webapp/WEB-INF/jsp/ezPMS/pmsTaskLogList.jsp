@@ -29,7 +29,9 @@ $(function() {
 		contentTitle = groupDetails.groupName;
 	}
 	
-	setContentTitle(contentTitle, "${taskLogListCount}");
+	if(typeof setContentTitle != 'undefined') {
+		setContentTitle(contentTitle, "${taskLogListCount}");
+	}
 	
 	/* if (contentTitle == "") {
 		var treeItemId = $("li[role=treeitem]").attr("id");

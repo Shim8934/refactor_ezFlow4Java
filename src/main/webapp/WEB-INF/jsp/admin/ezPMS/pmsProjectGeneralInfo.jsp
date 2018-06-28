@@ -227,6 +227,16 @@
 		 });
 	 }
 </script>
+<style>
+	.content th {
+		text-align: center;
+		font-weight: bold;
+	}
+	
+	.content td {
+		padding: 5px;
+	}
+</style>
 <body class="popup" style="height: 95%;">
 	<table class="layout" style="width: 100%">
 		<tr>
@@ -259,25 +269,29 @@
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openOrganTree(managers)"><span><spring:message code='ezPMS.t63' /></span></a></th>
-						<td colspan="3">
-							<div style="overflow-y:auto; height:100%; width:100%" id="managers"></div>
+						<td colspan="3" style="height: 58px;">
+							<div style="overflow-y:auto; max-height:100%; width:100%" id="managers"></div>
 						</td>
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openOrganTree(participants)"><span><spring:message code='ezPMS.t64' /></span></a></th>
-						<td colspan="3">
-							<div style="overflow-y:auto; height:100%; width:100%" id="participants"></div>
+						<td colspan="3" style="height: 58px;">
+							<div style="overflow-y:auto; max-height:100%; width:100%" id="participants"></div>
 						</td>
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span><spring:message code='ezPMS.t65' /></span></a></th>
-						<td colspan="3">
-							<div style="overflow-y:auto; height:100%; width:100%" id="viewers"></div>
+						<td colspan="3" style="height: 58px;">
+							<div style="overflow-y:auto; max-height:100%; width:100%" id="viewers"></div>
 						</td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t66' /></th>
-						<td colspan="3"><c:out value="${project.overview}"/></td>
+						<td colspan="3" style="height: 58px;">
+							<div style="overflow-y:auto; max-height:100%; width:100%">
+								<c:out value="${project.overview}"/>
+							</div>
+						</td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t38' /></th>
