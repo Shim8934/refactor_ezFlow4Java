@@ -131,6 +131,10 @@
 			function commentRefresh() {
 				getCircularComment();
 			}
+			
+			function getCommentCount() {
+				
+			}
 		</script>
 		
 	</head>
@@ -141,13 +145,15 @@
 		</div>
 		<h1><spring:message code='ezCircular.t180'/>[${myCommentCount}/${totalCommentCount }]</h1>
 		<div id="close">
-			<ul>
-				<c:if test="${vo.memberID == userInfo.id}">
-					<li><span onclick="commentSendMail();"><spring:message code='ezCircular.t83'/></span></li>
-				</c:if>
-				<li><span onclick="closePopup();"><spring:message code='ezCircular.t84' /></span></li>
+			<ul>				
+				<li><span onclick="closePopup();"></span></li>
 			</ul>
 		</div>
+		<div id="menu" class="extraMenu">
+			<ul>				
+				<li><span onclick="commentSendMail();"><spring:message code='ezCircular.t83'/></span></li>
+			</ul>
+		</div>		
 		
 		<!-- 18-05-24 김민성 - 회람판 > 상세정보 > 의견목록 검색 부분 UI 수정 -->
 		<c:choose>
@@ -211,7 +217,6 @@
 			if(myCommentCount != 0) {
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			} 
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>
 </html>

@@ -757,7 +757,7 @@
         </div>
         <div id="close">
           <ul>
-            <li><span onClick="window.close();"><spring:message code='ezEmail.t63' /></span></li>
+            <li><span onClick="window.close();"></span></li>
           </ul>
         </div>
 	    <div style="border:1px solid #dbdbda;width:585px;height:475px;overflow-y:auto;margin:5px 5px 5px 5px;">
@@ -781,7 +781,6 @@
 	</body>
 	<script type="text/javascript">
 	    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	</script>
 
 	<div id="inboxRuleCon" name="inboxRuleCon" style="display:none;">

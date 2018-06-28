@@ -293,10 +293,15 @@
 		  	</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code="ezBoard.t609" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="Cancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%;">
 		    <tr>
 		        <td rowspan="1" valign="top">
-		        	<div class="box" style="width:320px;height:550px;overflow:auto;word-break:break-all" id="TopBoardsList"></div>
+		        	<div class="box" style="width:320px;height:550px;overflow-x:hidden;overflow-y:auto;word-break:break-all" id="TopBoardsList"></div>
 		        </td>
 		        <td style="width:30px; text-align:center; padding:10px;">
 		            <img style="cursor:pointer; border:0px; width:16px; height:16px;" src="/images/kr/cm/arr_right.gif" onclick="InsertReceiver()" />
@@ -311,7 +316,6 @@
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn"><span onclick="Save_onclick()"><spring:message code="ezBoard.t604" /></span></a>
-		    <a class="imgbtn"><span onclick="Cancel_onclick()"><spring:message code="ezBoard.t15" /></span></a>
 		</div>
 	</body>        
 </html>

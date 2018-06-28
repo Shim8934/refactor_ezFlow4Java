@@ -1962,14 +1962,12 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick="window_close()">
-	                            <spring:message code='ezEmail.t63' /></span></li>
+	                        <li><span onclick="window_close()"></span></li>
 	                    </ul>
 	                </div>
 	                
 	                <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		      			
 		      			if (useSecureMail == "YES") {
 		    	        	$('.securemail').not('.bar').css('display', '');

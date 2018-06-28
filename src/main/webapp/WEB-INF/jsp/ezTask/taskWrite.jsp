@@ -634,7 +634,7 @@
 								</div>
 								<div id="close">
 									<ul>
-										<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+										<li><span onClick="close_onclick()"></span></li>
 									</ul>
 								</div>
 							</c:when>
@@ -668,9 +668,11 @@
 										</div>
 										<div id="close">
 											<ul>
-												<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-												<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+												<li><span onClick="close_onclick()"></span></li>
 											</ul>
+										</div>
+										<div class="btnposition btnpositionNew">
+										    <a class="imgbtn" onClick="save_task()" ><span><spring:message code='ezTask.t96' /></span></a>
 										</div>
 									 </c:when>
 									 
@@ -704,14 +706,16 @@
 														<option value='2' selected><spring:message code='ezTask.t172' /></option>
 														<option value='3'><spring:message code='ezTask.t173' /></option>
 													</select>
-												</li>
+												</li>												
 											</ul>
 										</div>
 										<div id="close">
 											<ul>
-												<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-												<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+												<li><span onClick="close_onclick()"></span></li>
 											</ul>
+										</div>
+										<div class="btnposition btnpositionNew">
+										    <a class="imgbtn" onClick="save_task()" ><span><spring:message code='ezTask.t96' /></span></a>
 										</div>
 									  </c:otherwise>
 								 </c:choose>								
@@ -720,7 +724,6 @@
 						
 						<script type="text/javascript">
 							selToggleList(document.getElementById("menu"), "ul", "li", "0");
-							selToggleList(document.getElementById("close"), "ul", "li", "0");
 						</script>
 					</td>
 				</tr>
@@ -1028,7 +1031,7 @@
 						<c:choose>
 							<c:when test="${ mode == '2'}">
 								<tr>
-									<td id="EdtorSize" style="height: 340px;">
+									<td id="EdtorSize" style="height: 440px;">
 										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 100%; width: 99.7%; overflow: auto;"></iframe>
 									</td>
 								</tr>

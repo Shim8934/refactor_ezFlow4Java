@@ -473,9 +473,7 @@
 		<div id="close">
 			<ul>
 				<li>
-					<span onclick="window.close()">
-						<spring:message code='ezPortal.t8'/>
-					</span>
+					<span onclick="window.close()"></span>
 				</li>
 			</ul>
 		</div>
@@ -861,7 +859,6 @@
 		<script type="text/javascript">
     		selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>
 </html>

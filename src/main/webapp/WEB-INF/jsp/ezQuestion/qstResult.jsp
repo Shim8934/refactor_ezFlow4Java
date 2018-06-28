@@ -103,7 +103,7 @@
 				<ul>
 					<li><span onClick="menuQstList()"><spring:message code='ezQuestion.t130' /></span></li>
 					<c:if test="${resCnt > '0' && qstUserPermissionVO.publicFlg == '0'}">
-						<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
+						<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 						<li><span  onClick="menuQst_ResponseList('Y')"><spring:message code='ezQuestion.t350' /></span></li>
 					</c:if>
 					<c:if test="${qstUserPermissionVO.responseRange == '1' && qstUserPermissionVO.publicFlg == '0'}">

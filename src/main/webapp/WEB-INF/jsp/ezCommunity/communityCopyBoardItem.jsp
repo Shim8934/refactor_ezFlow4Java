@@ -290,11 +290,14 @@
 	</head>
 	<body class = "popup" style = "overflow : hidden">
 		<h1><spring:message code='ezCommunity.t359' /></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <div class="box" style="width: 420px; height: 540px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" name="Submit" onclick="return Select()"><span><spring:message code='ezCommunity.t278' /></span></a>
-	        <a class="imgbtn" name="Submit" onclick="javascript: window.close();"><span><spring:message code='ezCommunity.t21' /></span></a>
 	    </div>
 	    <div id="dialog_alert" style="display:none;">
 	    	<button id="close_pop">확인</button>

@@ -67,7 +67,7 @@
 		<h1><spring:message code='ezEmail.t605' /></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.returnValue=0;window.close()"><spring:message code='ezEmail.t63' /></span></li>
+		    <li><span onClick="window.returnValue=0;window.close()"></span></li>
 		  </ul>
 		</div>
 		<div class="box" id="maillist" style="overflow:auto; height:250px;margin:0px;padding:0px;border-top:0px;border-right:1px solid #ddd">
@@ -87,9 +87,6 @@
 			</table>
 		</div>
 		</form> 
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 	</body>
 </html>
 

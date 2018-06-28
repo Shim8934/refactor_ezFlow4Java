@@ -113,12 +113,9 @@
 		<h1><spring:message code='ezPersonal.t100002'/></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="delete_onClick()"><spring:message code='ezPersonal.t10'/></span></li>
+		    <li><span onClick="delete_onClick()"></span></li>
 		  </ul>
 		</div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 		<h2><spring:message code='ezPersonal.t100003'/></h2>
 		<div class="listview" style="overflow:auto;">
 		  <div id="ListViewItem" style="Width:587px; Height:195px; border:0px;overflow:auto;" ></div>

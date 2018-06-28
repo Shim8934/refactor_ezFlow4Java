@@ -238,7 +238,11 @@
 	</head>
 	<body class="popup" style="overflow: hidden">
 		<h1><spring:message code = 'ezCommunity.t359' /></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
         <div class="box" style="width: 320px; height: 550px; overflow: auto; word-break: break-all;border-top:0px" id="TopBoardsList"></div>
         <div class="btnposition">
             <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>

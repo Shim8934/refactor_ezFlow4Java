@@ -350,15 +350,15 @@
 		<div id="mainmenu">
     		<ul>
         		<li><span onclick="newpage()"><spring:message code='ezPortal.t247'/></span></li>
-        		<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+        		<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
         		<li><span onclick="DeletePortalPage()"><spring:message code='ezPortal.t67'/></span></li>
         		<li><span onclick="preview()"><spring:message code='ezPortal.t63'/></span></li>
-        		<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+        		<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
         		<li><span onclick="ACLEdit()"><spring:message code='ezPortal.t87'/></span></li>
-        		<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+        		<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
         		<li><span onclick="usepage()"><spring:message code='ezPortal.t248'/></span></li>
         		<li><span onclick="Outofusepage()"><spring:message code='ezPortal.t249'/></span></li>
-        		<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+        		<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
         		<li><span onclick="DefaultPageSet('Y')"><spring:message code='ezPortal.t990017'/></span></li>
         		<li><span onclick="DefaultPageSet('N')"><spring:message code='ezPortal.t990018'/></span></li>
     		</ul>
