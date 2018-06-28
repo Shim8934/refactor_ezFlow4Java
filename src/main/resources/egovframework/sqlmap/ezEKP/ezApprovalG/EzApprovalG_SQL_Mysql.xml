@@ -4277,7 +4277,7 @@
 	   		<isNotEmpty property="v_PACCOUNTPYEAR" >
 	   		<![CDATA[
 	   			 AND 
-	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR = #v_PACCOUNTPYEAR#
+	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_PACCOUNTPYEAR#
 	   		]]>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_TASKCODE" >
@@ -4679,7 +4679,8 @@
 	                	TBL_RECORD.DrafterName$multiLang$ as DrafterName, 
 	                	TBL_RECORD.AttachFlag,
 						TBL_CABINET.OwnerTask, 
-						TBL_RECORD.RejectFlag, 
+						TBL_RECORD.RejectFlag,
+						TBL_EXPENDAPRDOCINFO.PUBLICITYYN,
 						TBL_RECORD.ReceiptMemberName$multiLang$ as ReceiptName
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval 
@@ -4712,7 +4713,15 @@
 				   		TBL_RECORD.DocID = TBL_EXPENDAPRDOCINFO.DocID 
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
-			  </isEqual> 
+			  </isEqual>
+		  			LEFT JOIN 
+				   			TBL_ENDAPRLINEINFO 
+				   ON 
+				   			TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
+	               AND 
+	               			TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
+	               AND 
+	               			TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
 				   Inner Join 
 				   		( Select 
 				   				ProcessDeptCode, 
@@ -5165,8 +5174,8 @@
       				TBL_APRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
-      		AND 
-       				TBL_APRDOCINFO.COMPANYID = #companyID# 
+      		AND
+      				TBL_APRDOCINFO.COMPANYID = #companyID#
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="CHAMJOAPR">
 			SELECT 
@@ -5185,8 +5194,8 @@
       				TBL_APRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
-      		AND 
-     				TBL_APRDOCINFO.COMPANYID = #companyID# 
+      		AND
+     				TBL_APRDOCINFO.COMPANYID = #companyID#
 		</isEqual>
 		
 		<isNotEqual  property="v_MODE" compareValue="APR">
@@ -5207,8 +5216,8 @@
       				TBL_ENDAPRDOCINFO.DOCID = #v_DOCID#
       		AND
       				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-       	 	AND		 
-      	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
+       		AND		
+      	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -9218,7 +9227,8 @@
    		UNION ALL 
 	<!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<![CDATA[
-	   		SELECT COUNT (DISTINCT DOCID,COMPANYID) AS COUNT
+	   		SELECT 
+				COUNT (DISTINCT DOCID,COMPANYID) AS COUNT
 	   		FROM 
 	   			VAPRWILLDOCLIST 
 	   		WHERE 
@@ -10162,6 +10172,37 @@
             	TENANT_ID = #v_TENANTID#
            AND
            		COMPANYID = #companyID# 
+		</isNotEqual>
+	</select>
+
+	<select id="EzApprovalG.getDocHrefInfoHref" parameterClass="Map" resultClass="String">
+		<isEqual property="v_FLAG" compareValue="APR">
+			SELECT 
+				ATTACHFILEHREF
+            FROM 
+            	TBL_APRATTACHINFO 
+            WHERE  
+            	DOCID = #v_DOCID#
+            AND
+            	ATTACHFILESN = #docAttachSN#
+            AND
+            	TENANT_ID = #v_TENANTID#
+           	AND
+           		COMPANYID = #companyID#     	
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="APR">
+			SELECT 
+				ATTACHFILEHREF
+            FROM 
+            	TBL_ENDATTACHINFO 
+            WHERE  
+            	DOCID = #v_DOCID#
+            AND
+            	ATTACHFILESN = #docAttachSN#
+            AND
+            	TENANT_ID = #v_TENANTID#
+           	AND
+           		COMPANYID = #companyID#     	
 		</isNotEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->
@@ -11166,7 +11207,15 @@
 	   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID 
 	   AND 
 	   		TBL_RECORD.DocID = TBL_EXPENDAPRDOCINFO.DocID 
-  </isEqual> 
+  </isEqual>
+		LEFT JOIN 
+     		TBL_ENDAPRLINEINFO 
+    	 ON 
+     		TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
+     	 AND 
+     		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
+    	 AND 
+     		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
 	   Inner Join 
 	   		( Select 
 	   				ProcessDeptCode, 
@@ -11422,6 +11471,12 @@
 			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 		]]>
 	</isNotEmpty>
+	<![CDATA[
+		 AND   
+		 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
+	     OR      
+	     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
+     ]]>
 	<isNotEmpty property="sc" prepend="AND">
 			TBL_RECORD.RecordID IN (SELECT 
 										RecordID 
@@ -14128,7 +14183,7 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing7" parameterClass="Map">
 		INSERT INTO 
 			TBL_EXPAPRDOCINFO
-     	( DocID, SECURITYCODE, STORAGEPERIOD, KEYWORD, FORMNAME, COMPANYID, ITEMCODE, ITEMNAME, URGENTAPPROVAL, SECURITYAPPROVAL, TEMPATTRIBUTE, STATUS, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, FormName2, ItemName2, TENANT_ID )
+     	( DocID, SECURITYCODE, STORAGEPERIOD, KEYWORD, FORMNAME, COMPANYID, ITEMCODE, ITEMNAME, URGENTAPPROVAL, SECURITYAPPROVAL, TEMPATTRIBUTE, STATUS, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, FormName2, ItemName2, TENANT_ID, PUBLICITYYN)
      	( SELECT 
      		  #v_PDOCID# ,
               SECURITYCODE ,
@@ -14154,7 +14209,8 @@
               SUMMARY ,
               FormName2 ,
               ItemName2 ,
-	          TENANT_ID 
+	          TENANT_ID ,
+	          PUBLICITYYN
           FROM 
           	  TBL_TMPEXPAPRDOCINFO 
           WHERE  
@@ -14552,7 +14608,7 @@
               #v_DTaskName2# ,
               Title ,
               Title2 ,
-              #v_YEAR# ,
+              ProductionYear ,
               #v_CNT# ,
               RecTypeCode ,
               #v_DeptMName# ,
@@ -15935,7 +15991,7 @@
 	<insert id="EzApprovalG.createNewDoc2" parameterClass="Map">
 		INSERT 
 	   		INTO TBL_EXPAPRDOCINFO
-        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
+        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, PUBLICITYYN, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
         		( 
         			SELECT 
         				#v_DOCID# ,
@@ -15947,6 +16003,7 @@
 		                 ' ' ,
 		                 ' ' ,
 		                 ' ' ,
+						 ' ' ,
 		                 0 ,
 		                 ' ' ,
 		                 ' ' ,
@@ -18827,7 +18884,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T' )
+           		 PROCESSYN IN ( 'N','E','T','0' )
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
@@ -19851,6 +19908,14 @@
 			, SecurityApproval = #v_SECURITYAPPROVAL#
 		</isNotEqual>
 		</isNotEmpty>
+		<isNotEmpty property="v_PUBLICITYYN">
+		<isEqual property="v_FIRSTFLAG19" compareValue="true">
+			 PublicityYN = #v_PUBLICITYYN#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG19" compareValue="true">
+			, PublicityYN = #v_PUBLICITYYN#
+		</isNotEqual>
+		</isNotEmpty>
 		
 		WHERE 
 			DocID = #v_DOCID#
@@ -20050,9 +20115,9 @@
    <insert id="EzApprovalG.insertCamjoExAPrDocInfo" parameterClass="Map">
 		INSERT INTO 
 			TBL_EXPAPRDOCINFO 
-		(	 DocID,    SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+		(	 DocID,    SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
         (SELECT 
-        	#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+        	#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
          FROM 
          	TBL_EXPAPRDOCINFO 
 		 WHERE 
@@ -20187,9 +20252,9 @@
    <insert id="EzApprovalG.insertDeptAssistExAprDocInfo" parameterClass="Map">
          INSERT INTO 
          	TBL_EXPAPRDOCINFO 
-         (   DocID,     SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+         (   DocID,     SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
          (SELECT 
-         	#v_NEWID#, SecurityCode, storagePeriod,   KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+         	#v_NEWID#, SecurityCode, storagePeriod,   KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
           FROM 
           	TBL_EXPAPRDOCINFO A 
           WHERE 
@@ -20560,7 +20625,8 @@
 			SUMMARY , 
 			FormName2 , 
 			ItemName2 , 
-			TENANT_ID 
+			TENANT_ID ,
+			PUBLICITYYN
 		  FROM 
 		  	TBL_EXPAPRDOCINFO A
 		  WHERE  
@@ -20843,9 +20909,9 @@
    <insert id="EzApprovalG.insertRejectExpendAprDocInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_EXPENDAPRDOCINFO
-	     ( 		DocID,        SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, TENANT_ID )
+	     ( 		DocID,        SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, TENANT_ID, PUBLICITYYN)
 	     ( SELECT 
-	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID 
+	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID, PUBLICITYYN 
 	       FROM 
 	       		TBL_EXPAPRDOCINFO A
 	       WHERE  
@@ -20981,9 +21047,9 @@
    <insert id="EzApprovalG.insertReSendExpAprDocInfo" parameterClass="Map">
    		 INSERT INTO 
    		 	TBL_EXPAPRDOCINFO 
-   		 (		DocID,     SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, SecurityApproval, TempAttribute, SpecialRecordCode, PublicityCode, PageNum, TENANT_ID) 
+   		 (		DocID,     SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, SecurityApproval, TempAttribute, SpecialRecordCode, PublicityCode, PageNum, TENANT_ID, PUBLICITYYN) 
          (SELECT 
-         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, SecurityApproval, TempAttribute, SpecialRecordCode, PublicityCode, PageNum, TENANT_ID 
+         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, SecurityApproval, TempAttribute, SpecialRecordCode, PublicityCode, PageNum, TENANT_ID, PUBLICITYYN
           FROM 
           		TBL_EXPENDAPRDOCINFO 
           WHERE 
@@ -21333,9 +21399,9 @@
    <insert id="EzApprovalG.insertHesongExpAprDocInfo" parameterClass="Map">
    		INSERT INTO 
    				TBL_EXPAPRDOCINFO 
-   		(	DocID,     SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+   		(	DocID,     SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
         (SELECT 
-        	#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+        	#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
          FROM 
          	TBL_EXPAPRDOCINFO A  
          WHERE 
@@ -21590,9 +21656,9 @@
    <insert id="EzApprovalG.insertGongRamExpAprDocInfo" parameterClass="Map">
    		    INSERT INTO 
    		    	TBL_EXPAPRDOCINFO 
-   		    (         DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+   		    (         DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
    		    (SELECT 
-   		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+   		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
    		     FROM 
    		     	TBL_EXPENDAPRDOCINFO A 
              WHERE 
@@ -21747,9 +21813,9 @@
 	<insert id="EzApprovalG.insertBebuExpAprDocInfo" parameterClass="Map">
 			INSERT INTO 
 				TBL_EXPAPRDOCINFO 
-			(     DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+			(     DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
             (SELECT 
-            	#v_NEWID# , SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+            	#v_NEWID# , SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
              FROM 
              	TBL_EXPAPRDOCINFO A 
 			 WHERE 
@@ -22011,6 +22077,10 @@
     	
     	<isNotEmpty property="v_SecurityApproval">
     		, SecurityApproval = #v_SecurityApproval#
+    	</isNotEmpty>
+    	
+		<isNotEmpty property="v_PublicityYN">
+    		, PublicityYN = #v_PublicityYN#
     	</isNotEmpty>
     	
 		WHERE 
@@ -22512,9 +22582,9 @@
    	<insert id="EzApprovalG.insertApprovExpEndAprDocInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_EXPENDAPRDOCINFO 
-   		( DocID, SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID )
+   		( DocID, SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, PUBLICITYYN)
 		(SELECT 
-			#v_DOCID#, SecurityCode, storagePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID  
+			#v_DOCID#, SecurityCode, storagePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, PUBLICITYYN
 		 FROM 
 		 	TBL_EXPAPRDOCINFO A   
 		 WHERE  
@@ -22560,9 +22630,9 @@
    	<insert id="EzApprovalG.insertDoSendExpAprDocInfo" parameterClass="Map">
    	     INSERT INTO 
    	     		TBL_EXPAPRDOCINFO 
-   	     (      DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID)
+   	     (      DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID)
          (SELECT 
-         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
           FROM 
           	TBL_EXPAPRDOCINFO A 
           WHERE 
@@ -22792,9 +22862,9 @@
    	<insert id="EzApprovalG.insertGongRamSaveExpAprDocInfo" parameterClass="Map"> 
    		INSERT INTO
    			 TBL_EXPAPRDOCINFO 
-   		(DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+   		(DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
    		(SELECT 
-			#v_gongRamDocID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID
+			#v_gongRamDocID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID
 		 FROM 
 		 	TBL_EXPAPRDOCINFO A
 		 WHERE 
@@ -23826,6 +23896,7 @@
 			    TEMPATTRIBUTE,
 			    STATUS,
 			    PUBLICITYCODE,
+				PUBLICITYYN,
 			    CABINETID,
 			    TASKCODE,
 			    DOCNUMCODE,
@@ -23995,9 +24066,9 @@
    <insert id="EzApprovalG.insertRejectExpendAprDocInfoS" parameterClass="Map">
    		INSERT INTO 
    			TBL_EXPENDAPRDOCINFO
-	     ( 		DocID,        SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, TENANT_ID )
+	     ( 		DocID,        SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, TENANT_ID )
 	     ( SELECT 
-	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID 
+	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , PublicityYN, LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID 
 	       FROM 
 	       		TBL_EXPAPRDOCINFO A
 	       WHERE  
@@ -24962,9 +25033,9 @@
 	  <insert id="EzApprovalG.insertRelayExpAprDocInfo" parameterClass="Map">
 	  		INSERT INTO 
 	  			TBL_EXPAPRDOCINFO 
-	  			(DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
+	  			(DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, PUBLICITYYN, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
 			VALUES 
-				(#NEWID#, '중계문서','RELAYDOC', #companyID#, 'N', 999, '', '', '', 0, '', '', '', '', '', '', #v_TENANTID#)
+				(#NEWID#, '중계문서','RELAYDOC', #companyID#, 'N', 999, '', '', '', '', 0, '', '', '', '', '', '', #v_TENANTID#)
 	  </insert>
 	  
 	    <insert id="EzApprovalG.insertRelayAttchInfo" parameterClass="Map">

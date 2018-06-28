@@ -1091,11 +1091,11 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
-	            <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+	            <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
 	            <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274'/></span></li>
 	            <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134'/></span></li>
-	            <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+	            <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
 	            <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
 	            <li id="right">

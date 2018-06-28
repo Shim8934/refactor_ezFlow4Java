@@ -1920,6 +1920,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezCircular.t40' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -2071,7 +2076,6 @@
 	 	</table>	    
 		<div class="btnposition">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezCircular.t26' /></span></a>
 		</div>
 	</body>
 </HTML>

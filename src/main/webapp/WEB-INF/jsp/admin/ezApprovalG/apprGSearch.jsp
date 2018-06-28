@@ -669,6 +669,11 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code ='ezApprovalG.t1325' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr style="display: none">
             	<th><spring:message code ='ezApprovalG.t1197' /></th>
@@ -742,7 +747,6 @@
 	        <a class="imgbtn"><span onclick="return btnToDaySearch_onclick()"><spring:message code ='ezApprovalG.t1336' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnWeekSearch_onclick()"><spring:message code ='ezApprovalG.t1337' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnMonthSearch_onclick()"><spring:message code ='ezApprovalG.t1557' /></span></a>
-	        <a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code ='ezApprovalG.t119' /></span></a>
 	    </div>
 	</body>
 </html>

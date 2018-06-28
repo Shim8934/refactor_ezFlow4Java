@@ -344,12 +344,16 @@
 </head>
 <body class="popup">
     <h1><spring:message code='ezApproval.t317'/></h1>
-    <div class="box" style="WIDTH: 440px; HEIGHT: 240px; overflow: auto; BACKGROUND-COLOR: #FFFFFF; padding: 4px 6px 6px 4px" id="divUserContTree"></div>
+    <div id="close">
+        <ul>
+            <li><span onclick="return btnCancel_onclick()"></span></li>
+        </ul>
+    </div>
+    <div class="box" style="WIDTH: 440px; HEIGHT: 270px; overflow: auto; BACKGROUND-COLOR: #FFFFFF; padding: 4px 6px 6px 4px" id="divUserContTree"></div>
     <div class="btnposition btnpositionNew">
         <a class="imgbtn" onclick="return btnIns_onclick()"><span><spring:message code='ezApproval.t313'/></span></a>
         <a class="imgbtn" onclick="return btnEdit_onclick()"><span><spring:message code='ezApproval.t314'/></span></a>
         <a class="imgbtn" onclick="return btnDel_onclick()"><span><spring:message code='ezApproval.t315'/></span></a>
-        <a class="imgbtn" onclick="return btnCancel_onclick()"><span><spring:message code='ezApproval.t70'/></span></a>
     </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

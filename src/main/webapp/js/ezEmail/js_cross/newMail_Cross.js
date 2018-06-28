@@ -2296,7 +2296,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + fileDate + "&tid=" + tid;
                     TempText += "<tr>" +
                                 "<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
-                                "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;' border='0'/></a>" +
+                                "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
                                 "<a id='BigSizeFileLink' href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + FileName + " (" + fileSize + ")</a></td>" +
                                 "</tr>";
                 }

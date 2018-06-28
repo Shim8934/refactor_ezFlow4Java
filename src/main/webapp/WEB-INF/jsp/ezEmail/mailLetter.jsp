@@ -102,7 +102,11 @@
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.t824'/></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel()"></span></li>
+            </ul>
+        </div>
 		<table border="1" id="letterTable" >
 			<tr style="height:8%; border-bottom:none;">
 				<th colspan="2" align="center" style="border:1px solid #ddd">
@@ -130,7 +134,6 @@
 		<div class="btnposition btnpositionNew" >
 			<a class="imgbtn" onclick="letterPreview(this)"><span><spring:message code='ezEmail.t487'/></span></a>
 			<a class="imgbtn" onclick="letterSelect()"><span><spring:message code='ezBoard.t47'/></span></a>
-			<a class="imgbtn" onclick="cancel()"><span><spring:message code='ezEmail.t63'/></span></a>
 		</div>
 		
 		<script type="text/javascript">

@@ -237,7 +237,7 @@
     </div>
     <div id="close">
         <ul>
-        <li><span onClick="window.close()"><spring:message code='ezPersonal.t10'/></span></li>
+        <li><span onClick="window.close()"></span></li>
         </ul>
     </div>
 

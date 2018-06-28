@@ -73,7 +73,7 @@
 					<button onClick="letterBoxMove(this)">
 						<spring:message code='ezEmail.letter4' />
 					</button>
-					<img src="/images/i_bar.gif" alt="line">
+					<!-- <img src="/images/i_bar.gif" alt="line"> -->
 					<button class="lmBtnPrev searchDis" onclick="orderSelect('prev')">
 						<img src="/images/ImgIcon/prev.gif" alt="prev">
 					</button>

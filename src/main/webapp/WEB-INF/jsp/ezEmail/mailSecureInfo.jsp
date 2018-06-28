@@ -36,7 +36,7 @@
 		
 		<div id="close">
 		  <ul>
-		    <li><span onClick="btnClose()"><spring:message code='ezEmail.t63' /></span></li>
+		    <li><span onClick="btnClose()"></span></li>
 		  </ul>
 		</div>
 		

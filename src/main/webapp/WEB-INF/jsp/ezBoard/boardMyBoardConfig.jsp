@@ -403,10 +403,17 @@
 	    <h1 style="margin-bottom: 0px;"><spring:message code='ezBoard.t10044'/></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="window.close()"><spring:message code='ezBoard.t12'/></span></li>
+	            <li><span onclick="window.close()"></span></li>
 	        </ul>
 	    </div>
-	    <div style="margin-bottom:5px;margin-top:3px;">
+	    <table class="popuplist" style="width: 100%;margin-top:5px">
+	        <tr>
+	            <td>
+	                <div class="tree" style='width: auto; overflow-x: auto; overflow-y: auto; margin-left: 5px; height: 280px;' id='TreeCtrl_MyBoardTree'></div>
+	            </td>
+	        </tr>
+	    </table>
+	    <div style="margin-top:10px;text-align:center">
 	        <a  class="imgbtn"><span onClick="add_onclick('U')"><spring:message code='ezBoard.t10045'/></span></a>
 	        <a  class="imgbtn"><span onClick="add_onclick('C')"><spring:message code='ezBoard.t10046'/></span></a>
 	        <a  class="imgbtn"><span onClick="modify_onclick()"><spring:message code='ezBoard.t316'/></span></a>
@@ -416,13 +423,6 @@
 	            <a  class="imgbtn"><span onClick="add_MyBoard()"><spring:message code='ezBoard.t275'/></span></a>
 	        </c:if>
 	    </div>
-	    <table class="popuplist" style="width: 100%">
-	        <tr>
-	            <td>
-	                <div class="tree" style='width: auto; overflow-x: auto; overflow-y: auto; margin-left: 5px; height: 280px;' id='TreeCtrl_MyBoardTree'></div>
-	            </td>
-	        </tr>
-	    </table>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
