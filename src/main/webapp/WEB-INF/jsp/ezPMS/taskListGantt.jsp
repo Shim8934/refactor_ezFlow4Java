@@ -637,29 +637,34 @@
 		   			  		var allTasks = [];
 		   			  		var allGroups = [];
 		   			  		
-		   			  		function TaskSchedule(taskId, start, end) {
+		   			  		function TaskSchedule(taskId, start, end, duration) {
 		   			  			this.taskId = taskId;
 		   			  			this.start = start;
 		   			  			this.end = end;
+		   			  			this.duration = duration;
 		   			  		} 
 		   			  		
-		   			  		function GroupSchedule(groupId, start, end) {
+		   			  		function GroupSchedule(groupId, start, end, duration) {
 		   			  			this.groupId = groupId;
 		   			  			this.start = start;
 		   			  			this.end = end;
+		   			  			this.duration = duration;
 		   			  		} 
 		   			  		
 		   			  		for(var i = 0; i < allGanttItems.length; i++) {
 		   			  			
-		   			  			var taskId = allGanttItems[i].id.match(/t(\d+)/) != null ? allGanttItems[i].id.match(/t(\d+)/)[1] : null;
+		   			  			var taskId    = allGanttItems[i].id.match(/t(\d+)/) != null ? allGanttItems[i].id.match(/t(\d+)/)[1] : null;
+		   			  			var groupId   = allGanttItems[i].id.match(/g(\d+)/) != null ? allGanttItems[i].id.match(/g(\d+)/)[1] : null;
 		   			  			var newStart  = dateToYYYYMMDD(new Date(allGanttItems[i].start));
 		   			  			var newEnd    = dateToYYYYMMDD(new Date(allGanttItems[i].end));
+		   			  			var duration  = allGanttItems[i].duration;
+		   			  			
+		   			  			console.log("newStart : " + newStart + ", newEnd : " + newEnd);
 		   			  			
 		   			  			if(taskId != null) {
-		   			  				allTasks.push(new TaskSchedule(taskId, newStart, newEnd));
-		   			  			} else {
-		   			  				var groupId = allGanttItems[i].id.match(/g(\d+)/) != null ? allGanttItems[i].id.match(/g(\d+)/)[1] : null;
-		   			  				allGroups.push(new GroupSchedule(groupId, newStart, newEnd));
+		   			  				allTasks.push(new TaskSchedule(taskId, newStart, newEnd, duration));
+		   			  			} else if(groupId != null){
+		   			  				allGroups.push(new GroupSchedule(groupId, newStart, newEnd, duration));
 		   			  			}
 		   			  		}
 		   			  		
