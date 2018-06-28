@@ -690,5 +690,4 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public String getLastImageID(Map<String, Object> map) throws Exception{
 		return (String) select("EzBoardDAO.getLastImageID", map);
 	}
-	
 }

@@ -1,3 +1,4 @@
+
 package egovframework.ezMobile.ezEmail.web;
 
 import java.io.BufferedReader;
@@ -211,7 +212,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			for (int i = 0; i < subMailFolder.size(); i++) {
 				Folder f = subMailFolder.get(i);
-							
+				
 				String displayName = ezEmailUtil.getDisplayNameFromFolderId(f.getName(), locale);
 				
 				folder = new JSONObject();
@@ -442,7 +443,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Message message = messages[i];
 				
 				JSONObject messageJson = new JSONObject();
-
+				
 				Folder f = message.getFolder();
 				UIDFolder uidFolder = (UIDFolder) f;
 				String fName = f.getFullName();
@@ -451,7 +452,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				messageJson.put("folderId", fName);
 				messageJson.put("messageId", uidFolder.getUID(message));
 				messageJson.put("fromemail", "");
-				
+								
 				// importance
 				String[] headers = message.getHeader("X-Priority");
 				String header = headers != null ? headers[0] : "normal";
@@ -3508,16 +3509,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			Message[] messages = sourceFolder.getMessagesByUID(uids);
 			
-			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);	
+			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
 			
 			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
 			
 			if (useImapMoveCommand.equals("YES")) {
 				sourceFolder.moveUIDMessages(messages, movefolder);
 			} else {			
-				sourceFolder.copyUIDMessages(messages, movefolder);
-				
-				sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			sourceFolder.copyUIDMessages(messages, movefolder);
+			
+			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
 			}
 			
 			sourceFolder.close(true);
@@ -3685,10 +3686,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 			} else {
 				if (!permanentlyDelete) {			
-					sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-				}
-				
-				sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+				sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+			}
+			
+			sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
 			}
 
 			sourceFolder.close(true);
@@ -4519,7 +4520,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             returnValue = sb.toString();
         } catch (Exception e) {
         	e.printStackTrace();
-        	
+            
         	returnValue = "EXCEPTION";
         }
         
@@ -4744,7 +4745,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		    }
 		}
     }
-    
+	
     /**
 	 * 주소록 최상위 폴더 호출
 	 */

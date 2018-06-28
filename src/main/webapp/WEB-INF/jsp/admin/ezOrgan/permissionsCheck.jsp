@@ -1040,10 +1040,16 @@
 			            </CELL>
 			        </ROW>   
                     </c:if>
-					<ROW>
-			            <CELL>
+                    <ROW>
+			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
 			                <DATA1>wf</DATA1>
+			            </CELL>
+			        </ROW>
+                    <ROW>
+			            <CELL>            
+			                <VALUE>근태관리자</VALUE>
+			                <DATA1>wa</DATA1>
 			            </CELL>
 			        </ROW>
 				</ROWS>
@@ -1056,12 +1062,11 @@
 	    </div>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
+	            <li><span onclick="close_Click()"></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	    <table id="TreeViewTD">
 	        <tr>

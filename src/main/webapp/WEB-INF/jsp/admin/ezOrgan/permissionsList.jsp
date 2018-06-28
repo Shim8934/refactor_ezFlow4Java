@@ -470,10 +470,10 @@
 	            </select>
 		        <ul style="margin-top:15px">
 		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
-		            <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
-		            <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
 		        </ul>
 		    </div>
@@ -494,7 +494,8 @@
 	                <c:if test="${approvalForDoc == 'Y'}">
 	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	                </c:if>
-					<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+	                	<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+	                <p id="Permission_sub12"><span divname="wa" id="1tab12">근태관리자</span></p>
 		        </div>
 		    </div>
 		

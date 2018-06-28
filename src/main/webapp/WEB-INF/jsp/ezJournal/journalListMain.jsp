@@ -991,7 +991,7 @@
 				<li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
 			</c:if>
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			</c:if>
 			<c:if test="${listType eq 'department'}">
 				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:28px;border-radius:3px">

@@ -76,7 +76,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li><span id="btnClose" onclick="return btnClose_onclick()"><spring:message code = 'ezApprovalG.t64' /></span></li>
+	                        <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	            </td>
@@ -92,7 +92,6 @@
 	    </table>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
 	    </script>
 	</body>
 </html>
