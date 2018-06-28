@@ -34,7 +34,7 @@
 							<option          value="homePhone"><spring:message code="ezCabinet.t100"/></option>
 							<option          value="faxNumber"><spring:message code="ezCabinet.t101"/></option>
 							<option          value="mail"     ><spring:message code="ezCabinet.t102"/></option>
-							<option          value="address"  ><spring:message code="ezCabinet.t103"/></option>
+							<option          value="address"  ><spring:message code="ezCabinet.t107"/></option>
 						</select>
 						<input type="text">
 						<a class="cabBttn2"><span><spring:message code='ezCabinet.t49'/></span></a>
@@ -88,7 +88,7 @@
 							<option          value="homePhone"><spring:message code="ezCabinet.t100"/></option>
 							<option          value="faxNumber"><spring:message code="ezCabinet.t101"/></option>
 							<option          value="mail"     ><spring:message code="ezCabinet.t102"/></option>
-							<option          value="address"  ><spring:message code="ezCabinet.t103"/></option>
+							<option          value="address"  ><spring:message code="ezCabinet.t107"/></option>
 						</select>
 						<input type="text">
 						<a class="cabBttn2"><span><spring:message code='ezCabinet.t49'/></span></a>
