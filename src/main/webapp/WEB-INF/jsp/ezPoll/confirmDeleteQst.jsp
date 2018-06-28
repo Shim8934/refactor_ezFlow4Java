@@ -45,6 +45,11 @@
 	<body class="popup">
 		<form id="Form1" method="post"> 
 			<h1 style="padding-left: 40%;"><spring:message code='ezPoll.t127'/></h1>
+			<div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
 			<div style="overflow: auto; max-height: 120px;">
 	  			<table class="content" style="table-layout: fixed; width: 100%;">   				
 	    			<tr > 
@@ -70,8 +75,7 @@
   				</c:if>
         	</div>
 			<div class="btnposition btnpositionNew">
-				<input type="button" name="Submit" style="color:white;background-color: #0470e4;border:1px solid #0470e4" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()"> 
-        		<input type="button" name="Submit2" style="color:#333;" value="<spring:message code='ezPoll.t139' />" onclick="window.close()">
+				<input type="button" name="Submit" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()">
         	</div>
 		</form> 
 	</body>

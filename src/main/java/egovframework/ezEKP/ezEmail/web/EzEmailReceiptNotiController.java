@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -46,6 +47,7 @@ import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
  * @Description [Controller] 메일 수신확인
@@ -84,6 +86,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	@Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
 	
 	/**
 	 * 메일 수신확인/회수 화면 호출 함수
@@ -448,6 +453,81 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		logger.debug("mailCancelSend ended.");
 		
 		return "OK";
+	}
+	
+	@RequestMapping(value="/ezEmail/readExternalRecipient.do")
+	@ResponseBody
+	public String readExternalRecipient(Model model, HttpServletRequest request) throws Exception {
+		logger.debug("readExternalRecipient started.");
+		
+		// 암호화된 수신자 정보
+		String recipientReadKey = request.getParameter("key");
+		
+		if (recipientReadKey == null) {
+			recipientReadKey = "";
+		}
+		
+		logger.debug("encrypted recipientReadKey=" + recipientReadKey);
+		
+		// 복호화: 발신자/메세지ID/수신자/수신자이름
+		recipientReadKey = egovFileScrty.decryptAES(recipientReadKey);
+		logger.debug("decrypted recipientReadKey=" + recipientReadKey);
+		
+		String[] readInfoArray = recipientReadKey.split("/", -1);
+		
+		if (readInfoArray.length != 4) {
+			logger.debug("readInfoArray length is not 4");
+			logger.debug("readExternalRecipient ended.");
+			
+			return "";
+		}
+		
+		// 파라미터 설정
+		String senderAddress = readInfoArray[0];
+		String messageId = readInfoArray[1];
+		String readerAddress = readInfoArray[2];
+		String readerName = readInfoArray[3];
+		
+		logger.debug("senderAddress=" + senderAddress);
+		logger.debug("messageId=" + messageId);
+		logger.debug("readerAddress=" + readerAddress);
+		logger.debug("readerName=" + readerName);
+		
+		// 수신 여부를 체크하기 위해서 두개만 넣음 (getMailReadList 스펙)
+		StringBuilder inputParams = new StringBuilder();
+		inputParams.append("userId=").append(URLEncoder.encode(senderAddress, "UTF-8"))
+			.append("&messageId=").append(URLEncoder.encode(messageId, "UTF-8"));
+		
+		logger.debug("getMailReadList inputParams=" + inputParams);
+		
+		// 수신자 리스트 목록 API 호출
+		String checkResultJsonStr = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailReadList", inputParams.toString());
+		
+		JSONParser jsonParser = new JSONParser();
+		JSONObject checkResultJson = (JSONObject) jsonParser.parse(checkResultJsonStr);
+		JSONArray readList = (JSONArray) checkResultJson.get("result");
+		JSONObject readInfoJson;
+		
+		// 수신을 이미 했다면 return
+		for (Object readInfoObject : readList) {
+			readInfoJson = (JSONObject) readInfoObject;
+		
+			if (readerAddress.equals(readInfoJson.get("readerEmail"))) {
+				logger.debug("setMailReadInfo skip.");
+				logger.debug("readExternalRecipient ended.");
+				return "";
+			}
+		}
+		
+		// 수신 확인 API 호출
+		inputParams.append("&readerEmail=").append(URLEncoder.encode(readerAddress, "UTF-8"))
+			.append("&readerName=").append(URLEncoder.encode(readerName, "UTF-8"));
+		
+		String resultJsonStr = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailReadInfo", inputParams.toString());
+
+		logger.debug("result="+resultJsonStr);		
+		logger.debug("readExternalRecipient ended.");
+		return "";
 	}
 	
 	public List<String> getMember(List<String> addressList) {

@@ -151,7 +151,7 @@
 	<body class="popup"> 
 		<form method="post"> 
 			<h1>Quick Poll<span id="mailBoxInfo"></span></h1>
-			<div id="close"><ul><li><span onClick="window.close()"><spring:message code='ezPersonal.t10' /></span></li></ul></div>
+			<div id="close"><ul><li><span onClick="window.close()"></span></li></ul></div>
   			<table> 
     			<tr> 
       				<td class="mainbody" style="padding:3px 10px;vertical-align:top;background:none">

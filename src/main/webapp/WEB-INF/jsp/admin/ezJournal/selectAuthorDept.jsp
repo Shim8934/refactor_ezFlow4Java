@@ -166,32 +166,37 @@
         <h1><spring:message code='ezJournal.t165'/></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="setAuthorViewDept()"><spring:message code='main.t4008'/></span></li>
-	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
+	            <li><span onclick="close_Click()"></span></li>
 	        </ul>
 	    </div>
        	<table>
             <tr>
-                <td class="box" style="width: 250px; height: 465px;">
-                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                <td class="box" style="width: 250px; height: 455px;">
+                    <div style="width: 250px; height: 455px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
                 </td>
                 <td style="width: 30px; text-align: center;" rowspan="2">                            
                       <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
                       <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept()">
            		</td>
                 <td class="listview" style="width: 200px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
-                	<div style="width: 200px; height: 494px; overflow: auto;">
+                	<div style="width: 250px; height: 474px; overflow: auto;">
 	                	<table class="mainlist_free">
 						</table>
 					</div>
                 </td>    
             </tr>
             <tr>
-            	<td class="box" style="width: 250px;">
-            		<div><input type="checkbox" id="withChild" name="withChild" /><label for="withChild"><spring:message code='ezSchedule.t39' /></label></div>
+            	<td class="box" style="width: 250px;padding-top:5px;padding-left:3px">
+            		<div style="height:25px">
+            			<input type="checkbox" id="withChild" name="withChild" style="vertical-align: middle" />
+            			<label for="withChild"><spring:message code='ezSchedule.t39' /></label>
+            		</div>
             	</td>
             </tr>
         </table>
+        <div class="btnposition">
+	        <a class="imgbtn"><span onclick="insertAuthDept();" ><spring:message code='ezSchedule.t157' /></span></a>
+	    </div>
 	</body>
 </html>
 

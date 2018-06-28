@@ -1341,7 +1341,7 @@
 		<h1 id="h1Title"><c:out value="${title}" /></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 		<table style="width:100%">

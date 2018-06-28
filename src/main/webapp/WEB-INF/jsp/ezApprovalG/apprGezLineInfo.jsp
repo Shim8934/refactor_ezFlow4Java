@@ -332,7 +332,7 @@
 		</h1>
 		<div id="close">
 		  <ul>
-		    <li><span onclick="window.close()"><spring:message code='ezApprovalG.t64'/></span></li>
+		    <li><span onclick="window.close()"></span></li>
 		  </ul>
 		</div>
 		
@@ -371,9 +371,5 @@
        	</div>
        	
 		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:350px;WIDTH:100%;"></div></div>
-		<script type="text/javascript" >
-			//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 	</body>
 </html>

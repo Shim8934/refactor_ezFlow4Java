@@ -702,7 +702,7 @@
 			  <li><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
 			  <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
 			  <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
-			  <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>
 			</ul>
@@ -711,7 +711,7 @@
 		<tr> 
 			<th nowrap><spring:message code="ezEmail.t642" /></th> 
 			<td width="100%">
-			    <select id="select2" style="height: 23px">
+			    <select id="select2" style="height: 22px">
 			    <option value="ALL"><spring:message code="ezEmail.t643" /></option>      
 			    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
 			    <option value="${folderName}">
@@ -738,13 +738,13 @@
 			    </option>
 			    </c:forEach>
 			    </select>
-			    <select name="select" class="text" id="select" style="height: 23px;">
+			    <select name="select" class="text" id="select" style="height: 22px;">
 					<option selected value="<spring:message code="ezEmail.t98" />"><spring:message code="ezEmail.t98" /></option> 
 					<option value="<spring:message code="ezEmail.t649" />"><spring:message code="ezEmail.t649" /></option> 
 					<option value="<spring:message code="ezEmail.t161" />"><spring:message code="ezEmail.t161" /></option> 
 					<option value="<spring:message code="ezEmail.t650" />"><spring:message code="ezEmail.t651" /></option> 
 			    </select>
-			    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;"onkeyup="return search_keypress(event)" />
+			    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;height:22px"onkeyup="return search_keypress(event)" />
 		    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
 		    	<a class="imgbtn"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
 		    </td> 
