@@ -16,7 +16,7 @@
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    
  	    <style> 
-	    	#contentlist table.mainlist td {
+	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
 	    		overflow : hidden;
 	    		white-space : nowrap;
 	    		text-overflow : ellipsis;
@@ -71,25 +71,27 @@
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#contentlist table.mainlist th', function(){
-	    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
-	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
-	    					src = "";
-	    					orderOption = "";
-	    					orderCell = $(this).attr("colname");
-	    				}
-	    			
-		    			if (orderOption == "" || orderOption == "DESC") {
-		    				src = '/images/etc/view-sortup.gif';
-		    				orderOption = "ASC";
-		    			} else {
-		    				src = '/images/etc/view-sortdown.gif';
-		    				orderOption = "DESC";
+	    			if (totalCount != 0) {
+		    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
+		    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+		    					src = "";
+		    					orderOption = "";
+		    					orderCell = $(this).attr("colname");
+		    				}
+		    			
+			    			if (orderOption == "" || orderOption == "DESC") {
+			    				src = '/images/etc/view-sortup.gif';
+			    				orderOption = "ASC";
+			    			} else {
+			    				src = '/images/etc/view-sortdown.gif';
+			    				orderOption = "DESC";
+			    			}
+			    			
+			    			$("#contentlist table.mainlist th").find("img").remove();
+			    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+			    			
+			    			getUserConfList();
 		    			}
-		    			
-		    			$("#contentlist table.mainlist th").find("img").remove();
-		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
-		    			
-		    			getUserConfList();
 	    			}
 	    		});
 	    	});
@@ -139,8 +141,10 @@
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 	    				
 	    				getUserConfList_after(result.list);
-	    				//더블클릭 이벤트
-	    				addTrDblclickEvent(userDbClick);
+	    				if (totalCount != 0) {
+		    				//더블클릭 이벤트
+		    				addTrDblclickEvent(userDbClick);
+	    				}
 	    				
 	    				$("#HeaderAllCheckBox").prop("checked",false);
 	    			}
@@ -161,7 +165,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";
+	    			resultHtml = "<tr class='tr_noItems'><td colspan='6' style='text-align:center;cursor: ;'><spring:message code='ezAttitude.t130' /></td></tr>";
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);

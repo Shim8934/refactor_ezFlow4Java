@@ -20,7 +20,7 @@ $(document).on('click', '#HeaderAllCheckBox', function() {
 })
 
 //tr클릭 시 - 휴가유형관리, 근태권한 관리
-$(document).on('click', '#contentlist tr', function(e) {
+$(document).on('click', '#contentlist tr:not(.tr_noItems)', function(e) {
 	//근무시간관리일때
 	if ($(this).find("input[type='checkbox']").length != 0) {
 		if (e.type == "click") {
@@ -47,7 +47,7 @@ $(document).on('click', '#contentlist tr', function(e) {
 })
 
 //tr hover시 배경색 변경 - 휴가유형관리, 근태권한 관리
-$(document).on('mouseover mouseleave', '#contentlist tr', function(e) {
+$(document).on('mouseover mouseleave', '#contentlist tr:not(.tr_noItems)', function(e) {
 	if ($(this).attr("class") == "selectTR") {
 		return;
 	}
@@ -72,12 +72,12 @@ $(document).on('click', "#contentlist tr input[type='checkbox']:not(#HeaderAllCh
 /** jQuery 옵션 끝*/
 //tr 클릭이벤트 부여
 function addTrClickEvent(func) {
-	$("#contentlist tr:not(#contentlist tr:eq(0))").unbind('click').on('click', func);
+	$("#contentlist tr:not(#contentlist tr:eq(0)):not(.tr_noItems)").unbind('click').on('click', func);
 }
 
 //tr 더블클릭이벤트 부여
 function addTrDblclickEvent(func) {
-	$("#contentlist tr:not(#contentlist tr:eq(0))").unbind('dblclick').on('dblclick', func);
+	$("#contentlist tr:not(#contentlist tr:eq(0)):not(.tr_noItems)").unbind('dblclick').on('dblclick', func);
 }
 
 //attitude 페이징 중복 함수, 페이징 셋팅
