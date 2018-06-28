@@ -160,11 +160,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String topid = "";
+		String deptTreeTopId = "";
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topid = user.getCompanyID();
+			deptTreeTopId = topid;
 		} else {
 			topid = "Top";
+			deptTreeTopId = topid + "/organ";
 		}
 		
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
@@ -182,6 +185,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -2044,11 +2048,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + user.getLang(), user.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + user.getLang(), user.getTenantId());
+		String deptTreeTopId = "";
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
+			deptTreeTopId = topID;
 		} else {
-			topID = "Top/organ";
+			topID = "Top";
+			deptTreeTopId = topID + "/organ";
 		}
 
 		model.addAttribute("topID", topID);
@@ -2058,6 +2065,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("userInfo", user);
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		
 		logger.debug("addJobConfig ended.");
 		
@@ -2224,11 +2232,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String userID = (request.getParameter("userID") != null ? request.getParameter("userID") : "");
         String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
 		String topID = "";
+		String deptTreeTopId = "";
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
+			deptTreeTopId = topID;
 		} else {
-			topID = "Top/organ";
+			topID = "Top";
+			deptTreeTopId = topID + "/organ";
 		}
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
@@ -2241,6 +2252,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		
 		logger.debug("permissionsCheck ended.");
 		

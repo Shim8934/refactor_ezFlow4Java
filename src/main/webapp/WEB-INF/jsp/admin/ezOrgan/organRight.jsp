@@ -26,6 +26,7 @@
 		    var useBizmekaSpambox = "${useBizmekaSpambox}";
 		    var userinfo_dialogArguments = new Array();
 		    var useDisablePopImap = "";
+		    var deptTreeTopId = "${deptTreeTopId}";
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -57,7 +58,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -571,7 +572,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
 		        	success : function(result){	
 		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
@@ -587,7 +588,7 @@
 					return;
 				}else if (adCount == 1){
 				    g_xmlHTTP = createXMLHttpRequest();
-				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					g_xmlHTTP.send(strQuery);
@@ -607,7 +608,7 @@
 					    if (rgParams["deptid"] != "") {
 					        g_xmlHTTP = createXMLHttpRequest();
 					        // 20110412 사용자 추가시 필요 정보 추가처리.
-					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
+					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
 					        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					        g_xmlHTTP.send(strQuery);
@@ -622,7 +623,7 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -645,7 +646,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user"},
+		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user", adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var listview = new ListView();

@@ -220,14 +220,19 @@ public class EzOrganController {
         logger.debug("tenantID=" + tenantID);       
 		
 		String searchlist = request.getParameter("search").trim();
-		String companyId  = request.getParameter("company") == null ? "" : request.getParameter("company");
+		String companyId  = request.getParameter("company") == null ? userInfo.getCompanyID() : request.getParameter("company");
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
 		String listtype = request.getParameter("type");
 		String lang = userInfo.getPrimary();
 		String page = request.getParameter("page");
 		String infoXML = "";
+		String adminOrgan = request.getParameter("adminOrgan") == null ? "n" : request.getParameter("adminOrgan"); // 관리자페이지 > 조직도 메뉴에서 검색
 		
+		if ((userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrgan.equalsIgnoreCase("y")) || companyId.equalsIgnoreCase("Top")) { // 전체 관리자 && 관리자 > 조직도 메뉴 => 전체 검색
+			companyId = "";
+		}
+
 		logger.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
 		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + ",companyId=" + companyId);
 		
@@ -239,7 +244,7 @@ public class EzOrganController {
 				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID);
 			}
 		} else {
-			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID);
+			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
