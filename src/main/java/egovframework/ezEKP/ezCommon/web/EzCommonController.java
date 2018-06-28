@@ -389,6 +389,7 @@ public class EzCommonController extends EgovFileMngUtil{
 					}
 					
 				} else {
+					literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 					literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 					literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
 				}
