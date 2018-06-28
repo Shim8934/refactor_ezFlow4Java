@@ -1679,7 +1679,13 @@
 				message.EditorElementSetHtml("MailSign", "");
 			}
 	    }) */
-
+	    
+	    // 20180628 자동완성창의 width 값 고정
+	    jQuery.ui.autocomplete.prototype._resizeMenu = function () {
+	    	var ul = this.menu.element;
+	    	ul.outerWidth(this.element.outerWidth());
+	    }
+	    
 	    var IsInsert_MsgTo = false;
 		$(function() {
 			$("#MsgTo").autocomplete(
