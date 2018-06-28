@@ -516,13 +516,13 @@
 				if (useTodoMemo == 'YES') {
 					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 550, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 700, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
 			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        } else {
-					var feature = GetOpenPosition(760, 645);
+					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 550, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
-			                "height = 645px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 700, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
+			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        }
 				
 			}			
@@ -1679,13 +1679,12 @@
 		</div>
 		<div id="close">
 			<ul>
-				<li><span onClick="window.close()"><spring:message code='ezTask.t9' /></span></li>
+				<li><span onClick="window.close()"></span></li>
 			</ul>
 		</div>
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
 		<div class="wrap_progress" style="height:245px;">

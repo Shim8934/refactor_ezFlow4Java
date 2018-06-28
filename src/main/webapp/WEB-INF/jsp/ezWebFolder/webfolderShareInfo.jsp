@@ -122,7 +122,7 @@
 		
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close();"><spring:message code='main.t3' /></span></li>
+		    <li><span onClick="window.close();"></span></li>
 		  </ul>
 		</div>
 		

@@ -131,7 +131,7 @@
 	    <h1><spring:message code='ezApprovalG.t55'/></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="return btn_OpinionCancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return btn_OpinionCancel_onclick()"></span></li>
             </ul>
         </div>
 	    <div class="listview">

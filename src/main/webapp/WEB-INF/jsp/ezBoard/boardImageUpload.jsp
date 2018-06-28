@@ -162,6 +162,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 	    <h1 style="margin-bottom:5px"><spring:message code='ezBoard.t5000'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table style="width:100%" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
@@ -186,7 +191,6 @@
 		</table>
 	    <div class="btnposition btnpositionNew">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code='ezBoard.t98'/></span></a>
-	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code='ezBoard.t15'/></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="display:none;">

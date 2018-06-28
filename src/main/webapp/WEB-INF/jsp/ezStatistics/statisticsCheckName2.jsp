@@ -112,12 +112,9 @@
 		<h1>이름확인</h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="delete_onClick()">닫기</span></li>
+		    <li><span onClick="delete_onClick()"></span></li>
 		  </ul>
 		</div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 		<h2><spring:message code='ezStatistics.t11' /></h2>
 		<div class="listview">
 		  <div id="ListViewItem" style="width:100%; min-width:587px; Height:210px; border:0px;overflow:auto" ></div>

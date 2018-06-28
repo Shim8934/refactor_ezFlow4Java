@@ -71,7 +71,7 @@
 	<h1 id ="topMenu" style="margin:0px;margin-bottom:3px"><spring:message code='ezWebFolder.t246'/></h1>
 	<div id="close">
 		<ul>
-			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
+			<li><span onclick="wClose();"></span></li>
 		</ul>
 	</div>
 	<div style="height:100px; border:1px solid #ddd; font-size:12px;padding:10px"><spring:message code='ezWebFolder.t307'/></div>		
