@@ -159,7 +159,7 @@
 		<option value="searchByOverview">프로젝트 개요</option>
 		<option value="listProjectStatus">상태</option>
 	</select>
-	<input id="searchKeyword" type="text"/>
+	<input id="searchKeyword" type="text" onkeypress="if(event.keyCode==13) {searchProject(); return false;}"/>
 	<a class="imgbtn" id="searchBtn" onclick="searchProject()" style="margin-left:3px;"><span>검색</span></a>
 	<select id="listByStatus" onchange="viewListByStatus(this.value)" style="display: none;">
 		<option value="A">전체 프로젝트</option>
