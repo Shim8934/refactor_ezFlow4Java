@@ -200,6 +200,7 @@ public class EzLadderGWController {
 			ladVO.setWriteDate(todayDate);
 			ladVO.setWriterName(userInfo.getDisplayName());
 			ladVO.setWriterName2(userInfo.getDisplayName2());
+			ladVO.setDeptID(userInfo.getDeptID());
 			ladVO.setDeptName(userInfo.getDeptName());
 			ladVO.setDeptName2(userInfo.getDeptName2());
 			ladVO.setCompanyID(userInfo.getCompanyID());

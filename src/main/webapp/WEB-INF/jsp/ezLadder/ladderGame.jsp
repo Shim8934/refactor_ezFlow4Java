@@ -658,10 +658,10 @@
 			}
 		}
 		
-		function menuQst_DetailUserInfo(pUserID, reFlag) {
+		function menuQst_DetailUserInfo(pUserID, pDeptID, reFlag) {
 			if(!reFlag) {
 				var feature = GetOpenPosition(420, 438);
-				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			}
 		}
 		
@@ -816,7 +816,7 @@
 		<div class="fullwidth">
 			<div style="height:50px">
 				<div style="float:left;margin-top:3px;margin-bottom:10px">
-					<p class="pic" style="float:left;margin:5px 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('<c:out value="${vo.writerId}" />')" > 
+					<p class="pic" style="float:left;margin:5px 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('<c:out value="${vo.writerId}" />', '<c:out value="${vo.deptID}" />')" > 
 						<c:choose>
 							<c:when test="${empty vo.pic}">
 								<img src="/images/poll/default_pic_vote.gif" width="48px" height="48px" style="position: relative;">

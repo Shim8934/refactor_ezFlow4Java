@@ -65,6 +65,7 @@
 				E.STATUS, 
 				E.SECRETFLAG, 
 				E.DELETEFLAG,
+				E.DEPTID,
 				(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = E.LADDERID) AS cmt
 			FROM
 				TBL_LADDER E
@@ -203,6 +204,7 @@
 				A.STATUS, 
 				A.SECRETFLAG, 
 				A.DELETEFLAG,
+				A.DEPTID,
 				(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = A.LADDERID) AS cmt
 			FROM 
 				TBL_LADDER A
@@ -391,6 +393,7 @@
 				A.STATUS, 
 				A.SECRETFLAG, 
 				A.DELETEFLAG,
+				A.DEPTID,
 				(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = A.LADDERID) AS cmt
 			FROM 
 				TBL_LADDER A 
@@ -494,6 +497,7 @@
 					A.STATUS, 
 					A.SECRETFLAG, 
 					A.DELETEFLAG,
+					A.DEPTID,
 					(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = A.LADDERID) AS cmt
 				FROM 
 					TBL_LADDER A
@@ -732,6 +736,7 @@
 				D.STATUS, 
 				D.SECRETFLAG, 
 				D.DELETEFLAG,
+				D.DEPTID,
 				(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = D.LADDERID) AS cmt
 			FROM
 				TBL_LADDER D
@@ -844,6 +849,7 @@
 					D.STATUS, 
 					D.SECRETFLAG, 
 					D.DELETEFLAG,
+					D.DEPTID,
 					(SELECT COUNT(*) FROM TBL_LADDER_COMMENT WHERE LADDERID = D.LADDERID) AS cmt
 				FROM
 					TBL_LADDER D
@@ -1002,7 +1008,8 @@
 				LINEARRAY,
 				L.TENANT_ID,
 				EXTENSIONATTRIBUTE2 AS PIC,
-				COMPANYID
+				COMPANYID,
+				DEPTID
 			FROM
 				TBL_LADDER L
 			LEFT JOIN(
@@ -1089,9 +1096,9 @@
 	
  	<insert id="EzLadderDAO.insertLadderSet" parameterClass="LadderVO">
 		INSERT INTO 
-			TBL_LADDER (TENANT_ID, TITLE, TYPE, SECRETFLAG, WRITERID, WRITERNAME, WRITERNAME2, DEPTNAME, DEPTNAME2, LINECNT, WRITEDATE, COMPANYID)
+			TBL_LADDER (TENANT_ID, TITLE, TYPE, SECRETFLAG, WRITERID, WRITERNAME, WRITERNAME2, DEPTNAME, DEPTNAME2, LINECNT, WRITEDATE, COMPANYID, DEPTID)
 		VALUES 
-			(#tenant_id#, #title#, #type#, #secretFlag#, #writerId#, #writerName#, #writerName2#, #deptName#, #deptName2#, #lineCnt#, #writeDate#, #companyID#)
+			(#tenant_id#, #title#, #type#, #secretFlag#, #writerId#, #writerName#, #writerName2#, #deptName#, #deptName2#, #lineCnt#, #writeDate#, #companyID#, #deptID#)
 	</insert>
 	
 	<insert id="EzLadderDAO.insertLadderLine" parameterClass="LadderLineVO">

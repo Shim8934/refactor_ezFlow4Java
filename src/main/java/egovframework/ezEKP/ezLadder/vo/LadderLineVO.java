@@ -15,6 +15,8 @@ public class LadderLineVO {
 	/** 참여자 이름(다국어) */
 	private String userName2;
 	private String deptName;
+	private String deptID;
+	
 	/** 게임 아이템 - 결과값 */
 	private String item;
 	/** 순서 */
@@ -43,6 +45,12 @@ public class LadderLineVO {
 	/** 순서 배열 */
 	private int [] ladderOrders;
 	
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
 	public int getTenant_id() {
 		return tenant_id;
 	}

@@ -20,6 +20,8 @@ public class LadderVO {
 	/** 게임 작성자 이름(다국어) */
 	private String writerName2;
 	/** 게임 작성자 부서 이름 */
+	private String deptID;
+	/** 게임 작성자 부서 ID */
 	private String deptName;
 	/** 게임 작성자 부서 이름(다국어)*/
 	private String deptName2;
@@ -50,6 +52,12 @@ public class LadderVO {
 	private String companyID;
 	
 	
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
 	public String getCompanyID() {
 		return companyID;
 	}
