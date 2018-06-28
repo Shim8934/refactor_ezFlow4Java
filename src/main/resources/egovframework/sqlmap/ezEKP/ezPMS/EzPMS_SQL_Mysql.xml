@@ -786,7 +786,7 @@
 			FROM
 				tbl_pms_project
 			JOIN
-				(SELECT 100 - sum(weight) AS remainingWeight
+				(SELECT 100 - IFNULL(SUM(weight), 0) AS remainingWeight
 				FROM 
 					tbl_pms_task
 				WHERE 
@@ -3780,6 +3780,13 @@
 			WHEN task_id = #taskSchedules[].taskId# THEN #taskSchedules[].end#
 		</iterate>
 	<![CDATA[
+		END,
+			real_workingday = CASE
+	]]>
+		<iterate property="taskSchedules" conjunction=" ">
+			WHEN task_id = #taskSchedules[].taskId# THEN #taskSchedules[].duration#
+		</iterate>	
+	<![CDATA[
 		END
 	]]>
 		<iterate prepend="WHERE task_id in" property="taskSchedules" open="(" conjunction="," close=")">
@@ -3806,6 +3813,13 @@
 	]]>
 		<iterate property="groupSchedules" conjunction=" ">
 			WHEN group_id = #groupSchedules[].groupId# THEN #groupSchedules[].end#
+		</iterate>
+	<![CDATA[
+		END,
+			workingday = CASE
+	]]>
+		<iterate property="groupSchedules" conjunction=" ">
+			WHEN group_id = #groupSchedules[].groupId# THEN #groupSchedules[].duration#
 		</iterate>
 	<![CDATA[
 		END
