@@ -585,78 +585,135 @@
 	</select>
 	
 	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO" remapResults="true">
-		SELECT
-			USER_ID AS USER_ID,
-			USER_NAME$lang$ AS USER_NAME,
-			USER_DEPTNAME$lang$ AS USER_DEPTNAME,
-			USER_POSITION$lang$ AS USER_POSITION,
-			MEMBER_ROLE_ID,
-			USER_ID_TYPE,
-			TENANT_ID
-		FROM 
-			TBL_PMS_MEMBER
-		WHERE
-			PROJECT_ID = #projectId#
-		AND
-		<isNotEqual property="roleId" compareValue="4">
-			<isEqual property="roleId" compareValue="5">
-				MEMBER_ROLE_ID IN (1,2)
-			</isEqual>
-			<isNotEqual property="roleId" compareValue="5">
-				MEMBER_ROLE_ID = #roleId#
-			</isNotEqual>
-		</isNotEqual>
-		<isEqual property="roleId" compareValue="4">
-			MEMBER_ROLE_ID IN (1,2,3)
-		</isEqual>
-		AND
-			TENANT_ID = #tenantId#
-		<isEqual property="isGantt" compareValue="0">
-		AND
-			USER_ID_TYPE = 'user'
-		UNION
-			SELECT 
-				CN AS USER_ID,
-				DISPLAYNAME$lang$ AS USER_NAME,
-				DESCRIPTION$lang$ AS USER_DEPTNAME,
-				TITLE AS USER_POSITION,
-				C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
-				C.USER_ID_TYPE AS USER_ID_TYPE,
-				C.TENANT_ID AS TENANT_ID
-			FROM TBL_USERMASTER D JOIN
-			(SELECT DISTINCT 
-				B.CN AS DEPARTMENT,
-				A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
-				A.USER_ID_TYPE AS USER_ID_TYPE,
-				A.TENANT_ID AS TENANT_ID
-			FROM
-				TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
-			ON
-				B.DEPT_CD_PATH LIKE CONCAT('%',A.USER_ID,'%')
-			AND
-				A.TENANT_ID = B.TENANT_ID
+		<isNotEqual property="roleId" compareValue="5">
+			SELECT
+				USER_ID AS USER_ID,
+				USER_NAME$lang$ AS USER_NAME,
+				USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				USER_POSITION$lang$ AS USER_POSITION,
+				MEMBER_ROLE_ID,
+				USER_ID_TYPE,
+				TENANT_ID
+			FROM 
+				TBL_PMS_MEMBER
 			WHERE
-				A.PROJECT_ID = #projectId#
-			AND
-				A.USER_ID_TYPE = 'dept'
+				PROJECT_ID = #projectId#
 			AND
 			<isNotEqual property="roleId" compareValue="4">
-				<isEqual property="roleId" compareValue="5">
-					MEMBER_ROLE_ID IN (1,2)
-				</isEqual>
-				<isNotEqual property="roleId" compareValue="5">
-					MEMBER_ROLE_ID = #roleId#
-				</isNotEqual>
+				MEMBER_ROLE_ID = #roleId#
 			</isNotEqual>
 			<isEqual property="roleId" compareValue="4">
 				MEMBER_ROLE_ID IN (1,2,3)
 			</isEqual>
 			AND
-				A.TENANT_ID = 1) C
-			ON
-				D.DEPARTMENT = C.DEPARTMENT
+				TENANT_ID = #tenantId#
+			<isEqual property="isGantt" compareValue="0">
+			AND
+				USER_ID_TYPE = 'user'
+			UNION
+				SELECT 
+					CN AS USER_ID,
+					DISPLAYNAME$lang$ AS USER_NAME,
+					DESCRIPTION$lang$ AS USER_DEPTNAME,
+					TITLE AS USER_POSITION,
+					C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
+					C.USER_ID_TYPE AS USER_ID_TYPE,
+					C.TENANT_ID AS TENANT_ID
+				FROM TBL_USERMASTER D JOIN
+				(SELECT DISTINCT 
+					B.CN AS DEPARTMENT,
+					A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
+					A.USER_ID_TYPE AS USER_ID_TYPE,
+					A.TENANT_ID AS TENANT_ID
+				FROM
+					TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
+				ON
+					B.DEPT_CD_PATH LIKE CONCAT('%',A.USER_ID,'%')
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.PROJECT_ID = #projectId#
+				AND
+					A.USER_ID_TYPE = 'dept'
+				AND
+				<isNotEqual property="roleId" compareValue="4">
+					MEMBER_ROLE_ID = #roleId#
+				</isNotEqual>
+				<isEqual property="roleId" compareValue="4">
+					MEMBER_ROLE_ID IN (1,2,3)
+				</isEqual>
+				AND
+					A.TENANT_ID = 1) C
+				ON
+					D.DEPARTMENT = C.DEPARTMENT
+				WHERE
+					D.TENANT_ID = #tenantId#
+			</isEqual>
+		</isNotEqual>
+		<isEqual property="roleId" compareValue="5">
+			SELECT
+				USER_ID AS USER_ID,
+				USER_NAME$lang$ AS USER_NAME,
+				USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				USER_POSITION$lang$ AS USER_POSITION,
+				0 AS MEMBER_ROLE_ID,
+				"" AS USER_ID_TYPE,
+				TENANT_ID
+			FROM 
+				TBL_PMS_MEMBER
 			WHERE
-				D.TENANT_ID = #tenantId#
+				PROJECT_ID = #projectId#
+			AND
+			<isNotEqual property="roleId" compareValue="4">
+				MEMBER_ROLE_ID IN (1,2)
+			</isNotEqual>
+			<isEqual property="roleId" compareValue="4">
+				MEMBER_ROLE_ID IN (1,2,3)
+			</isEqual>
+			AND
+				TENANT_ID = #tenantId#
+			<isEqual property="isGantt" compareValue="0">
+			AND
+				USER_ID_TYPE = 'user'
+			UNION
+				SELECT 
+					CN AS USER_ID,
+					DISPLAYNAME$lang$ AS USER_NAME,
+					DESCRIPTION$lang$ AS USER_DEPTNAME,
+					TITLE AS USER_POSITION,
+					0 AS MEMBER_ROLE_ID,
+					"" AS USER_ID_TYPE,
+					C.TENANT_ID AS TENANT_ID
+				FROM TBL_USERMASTER D JOIN
+				(SELECT DISTINCT 
+					B.CN AS DEPARTMENT,
+					A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
+					A.USER_ID_TYPE AS USER_ID_TYPE,
+					A.TENANT_ID AS TENANT_ID
+				FROM
+					TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
+				ON
+					B.DEPT_CD_PATH LIKE CONCAT('%',A.USER_ID,'%')
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.PROJECT_ID = #projectId#
+				AND
+					A.USER_ID_TYPE = 'dept'
+				AND
+				<isNotEqual property="roleId" compareValue="4">
+					MEMBER_ROLE_ID IN (1,2)
+				</isNotEqual>
+				<isEqual property="roleId" compareValue="4">
+					MEMBER_ROLE_ID IN (1,2,3)
+				</isEqual>
+				AND
+					A.TENANT_ID = 1) C
+				ON
+					D.DEPARTMENT = C.DEPARTMENT
+				WHERE
+					D.TENANT_ID = #tenantId#
+			</isEqual>
 		</isEqual>
 	</select>
 	

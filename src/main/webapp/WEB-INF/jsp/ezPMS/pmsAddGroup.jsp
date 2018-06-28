@@ -43,7 +43,7 @@ th a.imgbtn {
 var projectId = parent.projectId;
 var projectName = "";
 var weight = null;
-var managerList = null;
+var managerList = [];
 var overview = null;
 var headManagerId = "";
 var groupId = "";
@@ -51,7 +51,7 @@ var groupName = "";
 var taskDetails = {};
 var writerId= "";
 var treeDepth = 0;
-var participantList = null;
+var participantList = [];
 
  $(function() {
 // 	 taskDetails = ${taskDetails};
