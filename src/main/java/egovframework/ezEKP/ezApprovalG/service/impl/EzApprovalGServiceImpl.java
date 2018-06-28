@@ -24912,8 +24912,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		Document document = builder.parse(new InputSource(mapPath));
 			result = "OK";
 		} catch (Exception e){
+			e.printStackTrace();
 			result = "FALSE";
-		}
+		} 
 		return result;
 	}
 	

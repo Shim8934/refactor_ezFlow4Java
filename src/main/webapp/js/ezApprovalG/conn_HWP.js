@@ -22,7 +22,7 @@ function GetDocumentElement(HwpCtrl, CharName, adminFlag)
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-			if (adminFlag != "") {
+			if (adminFlag != "" && adminFlag != undefined) {
 				return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
 			} else {
 				return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
