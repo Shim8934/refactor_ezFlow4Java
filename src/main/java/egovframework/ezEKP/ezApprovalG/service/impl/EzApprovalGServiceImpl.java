@@ -4305,7 +4305,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (selYear != null) {
-			map.put("v_PACCOUNTPYEAR", selYear);
+			map.put("v_PYEAR", selYear);
+//			map.put("v_PACCOUNTPYEAR", accountYear);
 		} else {
 			map.put("v_PYEAR", productionYear);
 			map.put("v_PACCOUNTPYEAR", accountYear);
@@ -4368,6 +4369,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent().trim()) + "]]></DATA4>");
 			resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()) + "]]></DATA5>");
 			resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE2").item(k).getTextContent()) + "]]></DATA6>");
+			resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(k).getTextContent()) + "]]></DATA7>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(makeListField(docXML.getElementsByTagName("RECTYPECODE").item(k).getTextContent()), companyID, langType, tenantID) + "]]></VALUE>");
@@ -24976,8 +24978,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		Document document = builder.parse(new InputSource(mapPath));
 			result = "OK";
 		} catch (Exception e){
+			e.printStackTrace();
 			result = "FALSE";
-		}
+		} 
 		return result;
 	}
 	

@@ -617,7 +617,7 @@
 			<body class="mainbody">
 		</c:if>
 		<c:if test="${pParentNeed != 'Y'}">
-			<body>
+			<body class="tabbody">
 		</c:if>
 		<xml id="listviewheader" style="display: none">
 		  <LISTVIEWDATA>
@@ -767,14 +767,14 @@
             <ul>
 				<c:if test="${adminType == 'y'}">
 	                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
-	                <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+	                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 				</c:if>
             	<li><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>
             	<li><span onclick="SaveACL()"><spring:message code='ezBoard.t98'/></span></li>
-                <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
             	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
-            	<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+            	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             	<li><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></li>
             	<li><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></li>
             </ul>

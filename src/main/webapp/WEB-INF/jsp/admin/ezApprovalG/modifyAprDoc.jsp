@@ -60,12 +60,12 @@
     <input type="hidden" name="txt_OpinionContent2" id="txt_OpinionContent2" value="" />
         <div id="menu">
             <ul>
-                <li><span id="btnSave" onClick="return btn_save()">저장</span></li>
+                <li><span id="btnSave" onClick="return btn_save()"><spring:message code='ezApprovalG.t1767' /></span></li>
             </ul>
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btn_close()">닫기</span></li>
+                <li><span id="btnClose" onClick="return btn_close()"></span></li>
             </ul>
         </div>		
         <div id="ApvForm_content2" style="width:100%; padding-top:10px;">

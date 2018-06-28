@@ -254,7 +254,7 @@
 	    </h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="return btn_OpinionCancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return btn_OpinionCancel_onclick()"></span></li>
             </ul>
         </div>
 	    <div class="listview" style="width: 100%; height: 190px; overflow-x:hidden; overflow-y: AUTO;">

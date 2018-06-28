@@ -3333,6 +3333,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			ret = "TRUE";
 		} catch (Exception e) {
+			e.printStackTrace();
+			
 			ret = "FALSE";
 		} finally {
 			if (bos != null) {
