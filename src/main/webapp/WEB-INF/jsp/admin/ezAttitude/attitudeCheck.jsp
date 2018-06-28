@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <style>
-	    	#contentlist table.mainlist td {
+	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
 	    		overflow : hidden;
 	    		white-space : nowrap;
 	    		text-overflow : ellipsis;
@@ -243,7 +243,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems' class='tr_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
