@@ -19,6 +19,22 @@
 
 	$(function(){
 		taskDetails = ${taskDetails};
+		var target = "${target}";
+		if(target !== "task"){
+			var managersNameList = "";
+			var participantsNameList = "";
+			var members = taskDetails.groupMember;
+			for(var i = 0; i < members.length; i++){
+				if(members[i].memberRoleId === 1){
+					managersNameList += members[i].userName + ", "
+				} else {
+					participantsNameList += members[i].userName + ", "
+				}
+			}
+			
+			document.querySelector(".managers").innerText = managersNameList.substr(managersNameList, managersNameList.lastIndexOf(", "));
+			document.querySelector(".participants").innerText = participantsNameList.substr(participantsNameList, participantsNameList.lastIndexOf(", "));
+		}
 	});
 	
 	
@@ -28,7 +44,7 @@
 	.tg tr {height: 30px;}
 	.tg td {padding:5px 5px;border:1px solid #ccc;}
 	.tg th {padding:5px 5px;border:1px solid #ccc;width:60px;}
-	th.overviewTh{height:310px;}
+	th.overviewTh{height:298px;}
 	td.overviewTd{vertical-align:top;}
 	.tooltip {
 	    position: relative;
@@ -67,6 +83,9 @@
 	    visibility: visible;
 	    opacity: 1;
 	}
+	
+	.managers, .participants{max-height: 100%;overflow-y: auto;}
+	.memberTd{height:29px;}
 </style>
 </head>
 <body class="taskInfoTabBody">
@@ -81,6 +100,16 @@
 	    <th class=""><spring:message code='ezPMS.t131' /></th>
 	    <td class="">${taskDetails.writeDate}</td>
 	  </tr>
+	  <tr>
+	    <th class=""><spring:message code='ezPMS.t63' /></th>
+	    <td class="memberTd">
+	    	<div class="managers">
+	    		<c:forEach items="${taskDetails.taskMember}" var="member" varStatus="status">
+	    			<c:out value="${status.last ? member.userName : member.userName += ','}"></c:out>
+	    		</c:forEach>
+	    	</div>
+	    </td>
+	  </tr>
 	</c:when>
 	<c:otherwise>
 	  <tr>
@@ -90,6 +119,18 @@
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t131' /></th>
 	    <td class="">${taskDetails.createDate}</td>
+	  </tr>
+	  <tr>
+	    <th class=""><spring:message code='ezPMS.t63' /></th>
+	    <td class="memberTd">
+	    	<div class="managers"></div>
+	    </td>
+	  </tr>
+	  <tr>
+	    <th class=""><spring:message code='ezPMS.t64' /></th>
+	    <td class="memberTd">
+	    	<div class="participants"></div>
+	    </td>
 	  </tr>
 	</c:otherwise>
 	</c:choose>
