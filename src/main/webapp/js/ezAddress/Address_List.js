@@ -169,6 +169,7 @@ function MakeAddressList() {
             var _TD1 = document.createElement("TD");
             _TD1.style.width = "20px";
             _TD1.style.margin = "0px";
+            _TD1.style.textAlign = "center";
             var _TDCheckBox_Sub = document.createElement("INPUT");
             _TDCheckBox_Sub.type = "checkbox";
             _TDCheckBox_Sub.style.margin = "0px";
