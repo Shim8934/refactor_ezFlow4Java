@@ -148,7 +148,7 @@
 	    <h1><spring:message code='ezAddress.t269' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_Close()"><spring:message code='ezAddress.t5' /></span></li>
+	            <li><span onclick="Window_Close()"></span></li>
 	        </ul>
 	    </div>
 	    <table class="content" style="width: 100%;">

@@ -926,15 +926,15 @@
 					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t316'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>
 					<li id="hideShareBtn"><a onclick="shareContext.hideShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t317'/></span></a></li>
 					<li id="hiddenShareListBtn"><a onclick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t318'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 					<li><a onclick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li style="height: 28px;">
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
 							<option value=""><spring:message code='ezWebFolder.t191'/></option>

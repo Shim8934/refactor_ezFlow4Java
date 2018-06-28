@@ -54,7 +54,7 @@
 		<h1><spring:message code='ezBoard.t10100'/></h1>
 	    <div id="close">
 	        <ul>
-	          <li><span onClick="close_onclick()"><spring:message code='ezBoard.t12'/></span></li>
+	          <li><span onClick="close_onclick()"></span></li>
 	        </ul>
 	      </div>
 	    <table class="content" style="width:100%">

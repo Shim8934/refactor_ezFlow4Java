@@ -1478,7 +1478,7 @@
 	    </h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 	    <div class="portlet_tabpart02" style="margin: 5px 0px 10px">

@@ -504,10 +504,10 @@
 	            </select>
 		        <ul style="margin-top:15px">		            
 		            <li><span onClick="AddJob_Add()"><spring:message code='ezOrgan.t00014' /></span></li>
-		            <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="AddJob_Del('DEL', '')"><spring:message code='ezOrgan.t00015' /></span></li>
 		            <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li>
-					<li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+					<!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
 		        </ul>
 		    </div>

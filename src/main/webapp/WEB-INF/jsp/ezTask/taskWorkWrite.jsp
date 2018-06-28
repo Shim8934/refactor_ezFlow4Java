@@ -115,19 +115,16 @@
 						</div>
 						<div id="menu" style="float: right; padding-right: 42px;">
 							<ul>
-								<li><span onClick="save_taskWork()"><spring:message code='ezTask.t96' /></span></li>
 								<%-- <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li> --%>
 							</ul>
-						</div>
-						
+						</div>						
 						<div id="close">
 							<ul>
-								<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+								<li><span onClick="close_onclick()"></span></li>
 							</ul>
 						</div>
 						<script type="text/javascript">
 							selToggleList(document.getElementById("menu"), "ul", "li", "0");
-							selToggleList(document.getElementById("close"), "ul", "li", "0");
 						</script>
 					</td>
 				</tr>
@@ -143,6 +140,9 @@
 					</td>
 	            </tr>
 			</table>
+			<div class="btnposition btnpositionNew">
+			    <a class="imgbtn" onClick="save_taskWork()" ><span><spring:message code='ezTask.t96'/></span></a>
+			</div>
 		</div>
 		<div id="printScreen" style="display: none">
 			<table class="content">
@@ -159,7 +159,7 @@
 			</table>
 		</div>
 		<script>			
-			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 220 + "PX";
+			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 260 + "PX";
 		</script>
 	</body>
 </html>

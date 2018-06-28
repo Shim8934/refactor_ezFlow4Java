@@ -470,10 +470,10 @@
 	            </select>
 		        <ul style="margin-top:15px">
 		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
-		            <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
-		            <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
 		        </ul>
 		    </div>

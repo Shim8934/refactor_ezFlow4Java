@@ -132,7 +132,7 @@
 		</c:if>
 		<div id="close">
             <ul>
-                <li><span onclick="return btn_CancelAprLineTempletName_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return btn_CancelAprLineTempletName_onclick()"></span></li>
             </ul>
         </div>
 		<div class="nobox" style="margin-top:10px">
