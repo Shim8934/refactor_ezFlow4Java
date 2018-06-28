@@ -221,12 +221,11 @@
 			totalCount = contentCount;
 		}
 		
-		console.log(taskName);
 		taskName = convertString(taskName);
 		
 		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
 
-		$("#taskName").html(contentTitle);
+		$("#taskNameArea").html(contentTitle);
 	}
 	 
 	function searchStatus(status) {
@@ -414,6 +413,7 @@
 .selectTR {
 	background-color: rgb(233, 241, 255);
 }
+
 #mainmenu div{
 	float : right;
 	margin-right: 10px;
@@ -432,6 +432,10 @@
 #searchDiv {
 	margin-left : 11px;
 }
+
+#taskNameArea {
+	display : inline-block;
+}
 </style>
 </head>
 <body>
@@ -439,15 +443,12 @@
 <div id="projectArea">
 <div id="projectContent">
 	<div id="iconLine" class="mainbody" style="margin:0px;">
-		<h1 id="taskName"></h1>
+		<h1 id="taskName"><div id="taskNameArea"></div></h1>
 		<div id="mainmenu">
 		<ul>
-			<li style="display:none;"><span id="addTaskBtn" onclick="goAddTask()"
-			style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t89' /></span></li> 
-			<li style="display:none;"><span id="deleteTaskBtn" onclick="deleteTask()"
-			style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t287' /></span></li>
-			<li><span id="addTaskBtn" onclick="showSearchDiv()"
-				style="margin-left: 1px; margin-top: 1px;"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
+			<li style="display:none;"><span id="addTaskBtn" onclick="goAddTask()"><spring:message code='ezPMS.t89' /></span></li> 
+			<li style="display:none;"><span id="deleteTaskBtn" onclick="deleteTask()"><spring:message code='ezPMS.t287' /></span></li>
+			<li><span id="addTaskBtn" onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
 				<div>
 				<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
 					<option value="A"><spring:message code='ezPMS.t14' /></option>

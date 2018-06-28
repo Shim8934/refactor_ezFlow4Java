@@ -99,6 +99,7 @@ window.onload = function() {
 }
 #memberTable {
 	margin-left : 15px;
+	margin-top : 50px;
 	display : inline-block;
 	width : 98%;
 	overflow : auto;
@@ -131,10 +132,12 @@ window.onload = function() {
 </style>
 </head>
 <body>
-<div id="mainmenu">
-<ul>
-	<li><span onclick="parent.DivMemberSchedulePopUpHidden()"><spring:message code='ezPMS.t76' /></span></li>
-</ul>
+<div id="close" style="float:right">
+	<ul>
+		<li>
+			<span id="cancel" onclick="parent.DivMemberSchedulePopUpHidden()"></span>
+		</li>
+	</ul>
 </div>
 <div id="memberTable">
 <div>

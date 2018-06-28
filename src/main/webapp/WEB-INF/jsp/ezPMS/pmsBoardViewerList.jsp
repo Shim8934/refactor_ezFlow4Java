@@ -33,7 +33,7 @@
 		<h1><spring:message code='ezBoard.t320'/></h1>
 		<div id="close">
 			<ul>
-				<li onClick="close_onclick()"><span><spring:message code='ezPMS.t76' /></span></li>
+				<li><span onClick="close_onclick()"></span></li>
 		    </ul>
 		</div>
 		<script type="text/javascript">

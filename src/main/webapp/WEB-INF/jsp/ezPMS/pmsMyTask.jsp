@@ -459,7 +459,7 @@ function goGroupDetails(elem) {
 
 </script>
 <style type="text/css">
-#mainmenu div{
+#mainmenu div {
 	float : right;
 	margin-right: 10px;
 	height: 23px;
@@ -499,18 +499,19 @@ function goGroupDetails(elem) {
 	</div>
 	<div id="contentArea" style="overflow:auto;">
 	<div id="mainmenu">
-		<a class="imgbtn" id="addTaskBtn" onclick="showSearchDiv()"
-		style="margin-left: 1px; margin-top: 1px;"><span><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></a>
-		<div>
-				<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
-					<option value="A"><spring:message code='ezPMS.t14' /></option>
-					<option value="P"><spring:message code='ezPMS.t15' /></option>
-					<option value="W"><spring:message code='ezPMS.t16' /></option>
-					<option value="C"><spring:message code='ezPMS.t17' /></option>
-					<option value="L"><spring:message code='ezPMS.t18' /></option>
-					<option value="S"><spring:message code='ezPMS.t19' /></option>
-				</select>
-		</div>
+	<ul>
+		<li><span id="addTaskBtn" onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
+		<li style="float:right"><div>
+		<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
+			<option value="A"><spring:message code='ezPMS.t14' /></option>
+			<option value="P"><spring:message code='ezPMS.t15' /></option>
+			<option value="W"><spring:message code='ezPMS.t16' /></option>
+			<option value="C"><spring:message code='ezPMS.t17' /></option>
+			<option value="L"><spring:message code='ezPMS.t18' /></option>
+			<option value="S"><spring:message code='ezPMS.t19' /></option>
+		</select>
+	</div></li>
+	</ul>
 	</div>
 	<div id = "searchDiv" style="margin-bottom:40px; display:none;">
 	<table class="content" style="width:100%;">

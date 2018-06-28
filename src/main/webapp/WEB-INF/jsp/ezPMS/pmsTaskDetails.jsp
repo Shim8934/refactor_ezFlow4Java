@@ -227,11 +227,11 @@
 			taskId = "${taskDetails.taskId}";
 			target = "task";
 			
-			DivPopUpShow(760, 392, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 432, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		} else {
 			taskId = "${taskDetails.groupId}";
 			
-			DivPopUpShow(760, 422, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 456, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		}
 	}
 	
@@ -258,7 +258,7 @@
 	}
 	
 	function taskStatusUpdate(){
-		DivPopUpShow(500, 370, "/ezPMS/goUpdateTaskStatus.do");
+		DivPopUpShow(500, 397, "/ezPMS/goUpdateTaskStatus.do");
 	}
 	
 	function btnEvent(){
@@ -407,9 +407,13 @@ button.PHBtn {
 <body class="popup">
 	<div id="menu">
 	    <ul>
-	    <li><span id="deleteBtn" class="PHBtn">삭제</span></li>
-   		<div style="float:right"><li><span id="closeBtn" class="PHBtn">닫기</span></li></div>
+	    <li><span id="deleteBtn" class="PHBtn"><spring:message code='ezPMS.t11'/></span></li>
    		</ul>
+	</div>
+	<div id="close" style="float:right">
+		<ul><li>
+				<span id="cancel" onclick="window.close()"></span>
+		</li></ul>
 	</div>
 	<div id="mainBody">
 		<div class="mainBodyTop">
