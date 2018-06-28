@@ -165,7 +165,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String deptID) throws Exception {						
+	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID) throws Exception {						
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_INDILIST", indiList);
@@ -178,6 +178,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_TENANTID", tenantId);
 		map.put("v_SEARCHTITLE", searchTitle);
 		map.put("v_COMPANYID", companyID);
+		map.put("v_USERID", userID);
 		
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
 		List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();
@@ -434,7 +435,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			}
 		}
 		//2018-06-25 구해안 조직도에서 회사아이디와 부서아이디가 같은 사람 구분
-		int sIndex = 0;
+		/*int sIndex = 0;
 		List<Integer> storeIndex = new ArrayList<Integer>(); 
 		for (ScheduleInfoVO s : resultList) {
 			if(s.getOwnerId().equals(companyID)){
@@ -451,7 +452,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			for (Integer i : storeIndex) {
 				resultList.remove(i.intValue());
 			}
-		}
+		}*/
 		return resultList;
 	}
 	

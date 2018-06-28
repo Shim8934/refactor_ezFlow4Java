@@ -407,7 +407,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			pidList = idList;
 		}		
 		
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, deptID);		
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, userInfo.getId());		
 		/*for (ScheduleInfoVO s : sList) {
 			logger.debug("getScheduleList 컨트롤러에서 가져온 값 돌리기 :: " + s.getOwnerId() + "   타입 :: " + s.getScheduleType());
 		}*/
@@ -1012,7 +1012,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}	
 			}			
 			
-			sList = ezScheduleService.getScheduleList(indiList, pidList, filter.trim(), utcStartTime, utcEndTime, startDate, endDate, keyword.trim(), offSetMin, "", loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getDeptID());
+			sList = ezScheduleService.getScheduleList(indiList, pidList, filter.trim(), utcStartTime, utcEndTime, startDate, endDate, keyword.trim(), offSetMin, "", loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId());
 			
 			Collections.sort(sList, new EzScheduleCompareUtilPublic());
 			
@@ -1084,7 +1084,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					userIDList += ",";
 				}
 			}			
-			sList = ezScheduleService.getScheduleList(userIDList, "\'\'", "IsPublic", utcStartTime, utcEndTime, startDate, endDate, "Y", offSetMin, "",loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getDeptID());
+			sList = ezScheduleService.getScheduleList(userIDList, "\'\'", "IsPublic", utcStartTime, utcEndTime, startDate, endDate, "Y", offSetMin, "",loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId());
 			
 			Collections.sort(sList, new EzScheduleCompareUtilPublic());
 			
@@ -1729,7 +1729,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "\'\'", "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "\'\'", "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getId());
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		
