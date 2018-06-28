@@ -349,6 +349,7 @@
 	                }
 	                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
 	
+	                /* 2018-06-28 홍승비 - 나의게시물 체크박스 */
 	                var DocList = new ListView();
 	                DocList.SetID("BoardList");
 	                DocList.SetHeaderOnClick("SortPage");
@@ -625,9 +626,10 @@
 				} catch (e) {}
 		    }
 		
+		    /* 2018-06-28 홍승비 - 나의게시물 체크박스 전체선택 이벤트가 걸리는 ID 변경 */
 		    function event_HeaderCheckBoxClick(obj) {
 		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
+		        SelList.LoadFromID("BoardListDiv");
 		        if (obj.checked) {
 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
