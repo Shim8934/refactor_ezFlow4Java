@@ -2819,4 +2819,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.updateAllGroupDatesInPrj(map);
 		LOGGER.debug("[SERVICE] ezPMS updateAllGroupDatesInPrj Ended");
 	}
+	
+	@Override
+	public void updateTaskStatusScheduler(String UTCTimeStr) throws Exception {
+		LOGGER.debug("[SERVICE] ezPMS updateTaskStatusScheduler Started");
+		ezPMSDAO.updateTaskStatusScheduler(UTCTimeStr);
+		LOGGER.debug("[SERVICE] ezPMS updateTaskStatusScheduler Ended");
+	}
 }

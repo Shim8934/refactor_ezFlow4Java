@@ -242,4 +242,6 @@ public interface EzPMSService {
 	public void updateAllTaskDatesInPrj(Map<String, Object> map);
 	
 	public void updateAllGroupDatesInPrj(Map<String, Object> map);
+	
+	public void updateTaskStatusScheduler(String UTCTimeStr) throws Exception;
 }
