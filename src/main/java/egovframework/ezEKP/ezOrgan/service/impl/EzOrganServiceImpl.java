@@ -736,7 +736,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
     @Override
-    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID) throws Exception {
+    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID, String companyId) throws Exception {
     	logger.debug("getSearchListPagination started");
     	
         String strSQL="";
@@ -805,6 +805,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	               }
 	            }
 	        
+	        
+	        
 	        if (pClass.equals("user") || pClass.equals("all")){
 	             strSQL = strSQL.replace("cn", "a.cn");
 	             strSQL = strSQL.replace("title", "a.title");
@@ -812,9 +814,18 @@ public class EzOrganServiceImpl implements EzOrganService {
 	             type = "U";
 	        }
 	        else{
-	            type = "G";
+	        	type = "G";
 	        }
-	
+	        
+	        if (!companyId.equals("")) {
+	        	String strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '";
+	        	if (type.equals("G")) {
+	        		strSQLCom = "AND EXTENSIONATTRIBUTE2 = '";
+	        	}
+	        	
+	        	strSQL += strSQLCom + companyId + "'";
+	        }
+	        
 	        if(page.equals(null) || page.equals("")){
 	            page = "1";
 	        }
@@ -1795,10 +1806,10 @@ public class EzOrganServiceImpl implements EzOrganService {
                 	
                     if (checkSearchField(searchInfo[0])){
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParemeta[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParemeta[i]+ "')" + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParemeta[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParemeta[i]+ "')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                             searchParemeta[0] = searchParemeta[0].substring(0, searchParemeta[0].length() - 1);
                         }else{
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')" + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                         }
                     }else{
                         if (searchInfo[0].indexOf("EXACT_") == 0){
@@ -1808,7 +1819,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                         }else if (searchInfo[0].indexOf("RIGHT_") == 0){
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
                     	}else{
-                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'"; // 아이디 검색
                     	}
                     }
                 }else{
@@ -1832,12 +1843,16 @@ public class EzOrganServiceImpl implements EzOrganService {
             }
         }        
         
+        strSQL += " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+        
         if (pClass.equals("user") || pClass.equals("all")){
             strSQL = strSQL.replace("cn", "a.cn");
             strSQL = strSQL.replace("title", "a.title");
                         
             type = "U";
         }else{
+        	strSQL = strSQL.replace("PHYSICALDELIVERYOFFICENAME", "EXTENSIONATTRIBUTE2");
+        	
         	type = "G";
         }
 

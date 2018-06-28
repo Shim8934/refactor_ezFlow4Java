@@ -328,7 +328,27 @@
        		where  
        			ownerid in ($v_PIDLIST$)
        		and
-        		companyid = #v_COMPANYID#       		
+        		companyid = #v_COMPANYID#        	     	
+        	and 
+        		((scheduletype = '2' and ownerid in (SELECT 
+														deptid
+													FROM 
+														TBL_ADDJOBMASTER 
+													WHERE 
+														TENANT_ID = #v_TENANTID# 
+													AND 
+														CN = #v_USERID#
+													UNION ALL
+													SELECT 
+														department
+													FROM
+														TBL_USERMASTER
+													WHERE
+														CN = #v_USERID#
+													AND
+														TENANT_ID = #v_TENANTID# ))
+					or
+					(scheduletype <> '2'))
             and 
             	(            		
             		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
