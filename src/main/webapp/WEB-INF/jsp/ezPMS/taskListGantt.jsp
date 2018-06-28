@@ -682,11 +682,11 @@
 		   			  		});
 	   			  		} else {  			
 	   			  			location.reload();
-	   			  			throw "Pretask Set Error";
 	   			  			return false;
 	   			  		};
 	   			  		
 	   			  	} else {
+	   			  		location.reload();
 	   			  		return false;
 	   			  	}
 	   			};
@@ -713,7 +713,7 @@
 	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) || task.type === 'g'); // called on dates only because for other field is called on focus event
 	   			  row.find("[name=endIsMilestone]").prop("checked", task.endIsMilestone);
 	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent || task.type === 'g').updateOldValue();
-	   			  row.find("[name=depends]").val(task.depends).css({"text-align":"right"});
+	   			  row.find("[name=depends]").val(task.depends).css({"text-align":"right"}).attr("readonly", "readonly");
 	   			  row.find(".taskAssigs").html(task.getAssigsString());
 				  
 	   			  //프로젝트 상태가 대기, 보류, 삭제일 때 실제 진행률 변경 못하게 함
@@ -802,7 +802,7 @@
 		   					$('#workSpace').trigger('deleteFocused.gantt');
 		   					var pretaskName = $(".taskEditRow[taskid=" + pretaskFullId + "]").find("input[name='name']").val();
 		   					var taskName 	= $(".taskEditRow[taskid=" + taskFullId + "]").find("input[name='name']").val();
-		   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "]의 선행작업에서 삭제되었습니다."
+		   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t308' />"
 		   					addTaskLog(projectId, 3, groupIdParam, taskIdParam, str);
 		   					toastPopupShow(str);
 		   				}
