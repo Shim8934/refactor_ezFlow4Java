@@ -13,7 +13,12 @@
 	    	}
 	    </style>
 		<title><spring:message code='ezPersonal.t210'/></title>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/m
+		
+		
+		
+		ouseeffect.js"></script>
+		
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
@@ -139,7 +144,7 @@
 	  					data : {
 	  						deptID : tempDeptID ,
 	  						cell : "company;description;displayName;title;telephoneNumber",
-	  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+	  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 	  						page : CurPage ,
 	  						type : "user"
 	  					} ,
@@ -205,7 +210,7 @@
 	    	
 	    	function event_listDBclick(obj) {
 		        var id = obj.getAttribute("_DATA2");
-		        var dept = obj.getAttribute("_DATA11");
+		        var dept = obj.getAttribute("_DATA10");
 
 	    	    var width = 420, height = 450;
 	        	var leftPosition, topPosition;

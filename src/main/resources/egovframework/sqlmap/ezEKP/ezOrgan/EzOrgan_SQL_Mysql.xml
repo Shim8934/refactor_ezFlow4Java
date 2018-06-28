@@ -76,6 +76,7 @@
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
 		<result property="title"								column="title" 							columnIndex="1"/>
 		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
+		<result property="company" 								column="company" 					columnIndex="2"/>		
 	</resultMap>
 	
 	<select id="EzOrganDAO.getPropertyValue_S1" parameterClass="Map" resultClass="String">
@@ -1057,7 +1058,17 @@
                 ELSE
                 	DISPLAYNAME2
                 END
-                	DISPLAYNAME  
+                	DISPLAYNAME  ,
+                	CASE
+               		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	EXTENSIONATTRIBUTE3
+                ELSE
+                	COMPNM2
+                END
+                	COMPANY 
         	FROM
         		TBL_ADDJOBMASTER A
         	JOIN

@@ -381,9 +381,11 @@ public class EzCommonController extends EgovFileMngUtil{
 						
 						literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 						literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
+						literalCompany = xmldom2.getElementsByTagName("COMPANY").item(0).getTextContent();
 					} else {
 						literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 						literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+						literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 					}
 					
 				} else {
@@ -397,7 +399,6 @@ public class EzCommonController extends EgovFileMngUtil{
 					literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 				}
 				
-				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 				literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 				literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
 				literalPhone = xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();

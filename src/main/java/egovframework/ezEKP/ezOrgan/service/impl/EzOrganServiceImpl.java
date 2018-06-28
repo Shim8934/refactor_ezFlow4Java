@@ -1213,6 +1213,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        stb.append("<DISPLAYNAME>");
 	        stb.append(commonUtil.cleanValue(userVO.getDisplayName()));
 	        stb.append("</DISPLAYNAME>");		           
+	        stb.append("<COMPANY>");
+	        stb.append(commonUtil.cleanValue(userVO.getCompany()));
+	        stb.append("</COMPANY>");		           
 			stb.append("</ROW>");
 			strXML = stb.toString();
 		}
