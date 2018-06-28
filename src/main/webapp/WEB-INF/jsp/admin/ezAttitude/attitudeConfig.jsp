@@ -187,18 +187,13 @@
 	<body class="mainbody">
 	    <h1><spring:message code='ezAttitude.t2' /></h1>
 	  	<div id="mainmenu">
-			<ul>
-	        	<li style="background: none;">
-				<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
-				</li>
-				<li>
-				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-					<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-	      		</select>
-	      		</li>
-	      	</ul>
+			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
+			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+				<c:forEach var="item" items="${list}">
+				<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+      		</select>
+      		<br>
 	  	</div>
 	  	<h2 style="font-weight: normal">▒&nbsp;휴무요일 외 휴일은 일정관리메뉴의 기념일관리에서 추가하실 수 있습니다.</h2>
 		<table class="content" style="width:500px">

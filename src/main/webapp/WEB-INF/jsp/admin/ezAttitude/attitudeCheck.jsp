@@ -390,16 +390,12 @@
 	<body class="mainbody">
 	    <h1><spring:message code = 'ezAttitude.t5' /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
-			<ul>
-	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
-				<li>
-					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
-						<c:forEach var = "companyItem" items="${list }">
-							<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
-						</c:forEach>
-		      		</select>
-	      		</li>
-	      	</ul>
+        	<span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
+			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+				<c:forEach var = "companyItem" items="${list }">
+					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
+				</c:forEach>
+      		</select>
 	  	</div>
 	  	
 	  	<table id="searchTable" style="width:100%;">
