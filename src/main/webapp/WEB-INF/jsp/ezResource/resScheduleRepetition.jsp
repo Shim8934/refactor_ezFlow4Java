@@ -164,13 +164,18 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code="ezResource.t274"/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="event_btnCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<div id="TB_Promise">
   			<h2><spring:message code="ezResource.t275"/></h2>
   			<table class="content">
     			<tr>
       				<th><spring:message code="ezResource.t276"/></th>
       				<td>
-       					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+       					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
      					<label for="btnT1"></label>
      					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" />
      					<spring:message code="ezResource.t277"/>
@@ -179,7 +184,7 @@
     			<tr>
       				<th><spring:message code="ezResource.t278"/></th>
       				<td>
-          				<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+          				<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
         				<label for="btnT2"></label>
       				</td>
     			</tr>
@@ -352,8 +357,7 @@
 		  	</tr>
 		</table>
 		<div class="btnpositionNew">
-		    <a class="imgbtn" onclick='event_btnOk_onclick()'><span><spring:message code="ezResource.t15"/></span></a>
-    		<a class="imgbtn" onclick='event_btnCancel_onclick()'><span><spring:message code="ezResource.t16"/></span></a>
+		    <a class="imgbtn" onclick='event_btnOk_onclick()'><span><spring:message code="ezResource.t15"/></span></a>    		
     		<a class="imgbtn" onclick='event_btnRemoveRecurrence_onclick()'><span><spring:message code="ezResource.t318"/></span></a>
 		</div>
 		<form name="postaldata" style="display:none">

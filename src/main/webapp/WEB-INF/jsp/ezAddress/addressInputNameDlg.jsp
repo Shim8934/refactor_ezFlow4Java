@@ -92,7 +92,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden;">
 	    <h1><spring:message code='ezAddress.t23' /></h1>
-	
+		<div id="close">
+            <ul>
+                <li><span onclick="return btn_cancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <h2 style="height:100%;margin-bottom:10px;"><spring:message code='ezAddress.t24' /></h2>
 	    <table class="content">
 	        <tr>
@@ -100,7 +104,7 @@
 	            <td style="padding: 0">
 	                <table width="100%">
 	                    <tr class="primary">
-	                        <td>
+	                        <td style="border:0px">
 	                            <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;box-sizing: border-box;" maxlength="20">
 	                        </td>
 	                    </tr>
@@ -110,7 +114,6 @@
 	    </table>
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" onclick="return btn_ok_onclick()"><span><spring:message code='ezAddress.t25' /></span></a>
-	        <a class="imgbtn" onclick="return btn_cancel_onclick()"><span><spring:message code='ezAddress.t11' /></span></a>
 	    </div>
 	</body>
 </html>

@@ -114,7 +114,7 @@
 		<h1><spring:message code='ezApprovalG.t1201'/></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window_close()"><spring:message code='ezApprovalG.t64'/></span></li>
+		    <li><span onClick="window_close()"></span></li>
 		  </ul>
 		</div>
 		<h2><spring:message code='ezApprovalG.t1203'/></h2>
@@ -155,8 +155,5 @@
 		    <td>&nbsp;${securityDate }</td>
 		  </tr>
 		</table>
-		<script type="text/javascript" >
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 	</body>
 </html>

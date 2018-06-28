@@ -364,6 +364,11 @@
 	      	</LISTVIEWDATA>
 	    </xml>
 	    <h1><spring:message code='ezSchedule.t1101' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="btn_close()"></span></li>
+            </ul>
+        </div>
 	    <table>
 	    	<tr>
 	        	<td>
@@ -385,7 +390,6 @@
 	    <div class="btnpositionNew">
 	   		<a class="imgbtn"><span onClick="Add_ResourceInfo()"><spring:message code='ezSchedule.t1106' /></span></a>
 	        <a class="imgbtn"><span onClick="btn_OK()"><spring:message code='ezSchedule.t190' /></span></a>
-	        <a class="imgbtn"><span onClick="btn_close()"><spring:message code='ezSchedule.t5' /></span></a>
 	    </div>			
 	</body>
 </html>

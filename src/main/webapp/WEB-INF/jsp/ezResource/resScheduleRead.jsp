@@ -429,13 +429,12 @@
                 	</div>
                 	<div id="close">
 	                    <ul>
-    	                    <li><span onclick="window.close();"><spring:message code='ezResource.t150' /></span></li>
+    	                    <li><span onclick="window.close();"></span></li>
         	            </ul>
             	    </div>
             	    
             	    <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  			</script>
             	    
 					<table class="content">

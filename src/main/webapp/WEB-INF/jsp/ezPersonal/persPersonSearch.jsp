@@ -862,12 +862,11 @@
   			</div>
   			<div id="close">
     			<ul>
-      				<li><span onClick="window.close()"><spring:message code='ezPersonal.t10'/></span></li>
+      				<li><span onClick="window.close()"></span></li>
     			</ul>
   			</div>
   			<script type="text/javascript" >
       			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-      			selToggleList(document.getElementById("close"), "ul", "li", "0");
   			</script>
   			<div style="width: 730px;">
         	<div class="portlet_tabpart03" style="background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">

@@ -516,13 +516,13 @@
 				if (useTodoMemo == 'YES') {
 					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 550, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 700, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
 			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        } else {
-					var feature = GetOpenPosition(760, 645);
+					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 550, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
-			                "height = 645px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 700, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
+			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        }
 				
 			}			
@@ -822,7 +822,7 @@
 			            	if(creatorid != userid) {
 			            		if (tasktype == "1" || tasktype == "4") {	
 			            			document.getElementById("editTaskWork").style.display = "none";
-			            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+			            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.jjh02' />";
 			            			document.getElementById("editTaskChisi").style.display = "";			            					            			
 			            		}
 			            		else {
@@ -1299,7 +1299,7 @@
 		            	if(creatorid != userid) {
 		            		if (tasktype == "1" || tasktype == "4") {	
 		            			document.getElementById("editTaskWork").style.display = "none";
-		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.jjh02' />";
 		            			document.getElementById("editTaskChisi").style.display = "";			            					            			
 		            		}
 		            		else {
@@ -1679,13 +1679,12 @@
 		</div>
 		<div id="close">
 			<ul>
-				<li><span onClick="window.close()"><spring:message code='ezTask.t9' /></span></li>
+				<li><span onClick="window.close()"></span></li>
 			</ul>
 		</div>
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
 		<div class="wrap_progress" style="height:245px;">
@@ -1721,9 +1720,12 @@
 			<div class="portlet_tabpart03_top" id="tab1">			
 				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0" class="tabon"><spring:message code='ezTask.lhj02' /></span></p>					
 				<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}">
-					<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
-				</c:if>		
-				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>						
+					<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>					
+				</c:if>
+				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2">
+					<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh01' /></c:if>
+					<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t2011' /></c:if></span>
+				</p>											
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
 				<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 				<p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezTask.t200904' /></span></p>
@@ -1733,7 +1735,10 @@
 				<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
 				<!-- 18-05-16 구해안 - 지시자만 업무 정보 수정 가능 하도록 수정, 담당자만 업무 내용 수정 가능하도록 수정 -->
 					<a id="editTaskInfo" class="imgbtn" style="display:none;"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
-					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t1511' /></span></a>
+					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()">
+						<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh02' /></c:if>
+						<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t1511' /></c:if></span>
+					</a>
 					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
 			</div>
@@ -1898,7 +1903,10 @@
 			<ul style="padding-left: 0px; list-style:none;">
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200906' /></li>
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200907' /></li>
-				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200908' /></li>
+				<li style="padding-top: 10px; font-size:12px;"> ▒
+					<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh03' /></c:if>
+					<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t200908' /></c:if> 
+				</li>
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200909' /></li>				
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
 			</ul>
@@ -1994,7 +2002,10 @@
 							<ul style="padding-left: 0px; list-style:none;">
 								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200906' /></li>
 								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200907' /></li>
-								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200908' /></li>
+								<li style="padding-top: 10px; font-size:11px;"> ▒
+									<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh03' /></c:if>
+									<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t200908' /></c:if> 
+								</li>
 								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200909' /></li>				
 								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
 							</ul>

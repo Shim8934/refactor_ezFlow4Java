@@ -12,7 +12,8 @@
 {
     margin-left:5px;
     margin-top:0px;
-    margin-bottom:-5px;
+    margin-bottom:3px;
+    vertical-align:middle;
     cursor:pointer;
 }
 .ui-datepicker {

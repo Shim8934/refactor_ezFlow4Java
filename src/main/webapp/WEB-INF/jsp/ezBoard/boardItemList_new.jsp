@@ -651,7 +651,7 @@
 			}
 		</style>
 	</head>
-	<body class="" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+	<body class="tabbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<c:if test="${boardInfo.listView_FG != true}'">
 			<div style="margin-top:100px;text-align:center"><spring:message code="ezBoard.t272" /></div>
 		</c:if>
@@ -663,9 +663,9 @@
 			<div id="mainmenu">
 			  <ul>
 			    <li><span onclick="SetReadNew_onclick()"><spring:message code="ezBoard.t204"/></span></li>
-				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			    <li><span onClick="refresh_onclick()"><spring:message code="ezBoard.t205"/></span></li>
-			    <li><span onClick="ReservationItem_onclick()"><spring:message code="ezBoard.t276"/></span></li>  
+			    <%-- <li><span onClick="ReservationItem_onclick()"><spring:message code="ezBoard.t276"/></span></li> --%>  
 			    <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">

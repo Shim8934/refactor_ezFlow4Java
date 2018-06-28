@@ -167,8 +167,15 @@
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
 		    $(window).on("resize", function(){
-				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
-	        	$("#addpopup").css("left", popupX);
+		    	if (parent.frames["FBoard_ifrm"]) {
+		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
+		    		$("#srarchpopup").css("left", popupX).css("bottom", "66px");
+		    	} else {
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+					$("#srarchpopup").css("left", popupX);
+		    	}
+				
+	        	/* $("#addpopup").css("left", popupX); */
 	        	$("#srarchpopup").css("left", popupX);	        	
 	        });
 		    
@@ -1038,9 +1045,19 @@
 		    }
 		    
 		     /* 2018-06-08 김민성 - 게시판 검색 레이어팝업 변경 */ 
-		    function doLayerPopup(obj) {
-		    	if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
-		        	btn_PostDate_Clear();
+		    function doLayerPopup(obj) {    	 
+		    	if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경		    		
+		    		$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
+		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
+		    		
+		    		parent.parent.frames["left"].document.body.style.overflow = "hidden";		    		
+		    				    		
+			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
+
+			    	$("#srarchpopup").css("left", popupX).css("bottom", "66px");
+			    	$("#srarchpopup").modal();
+			    	
+		        	/* btn_PostDate_Clear();
 			        document.getElementById("chkSearchSub").checked = false;
 			        document.getElementById("txtTitle").value = "";
 			        document.getElementById("txtWriterName").value = "";
@@ -1057,7 +1074,7 @@
 			        }
 			        else {
 			            BoardSearchOptionHidden();
-			        }
+			        } */
 		    	}
 		    	else {
 			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
@@ -1068,14 +1085,17 @@
 		    	}
 		    }
 		     
-		    function BoardSearchOptionHidden() {    	
+		    function BoardSearchOptionHidden() {		    	
 		    	document.getElementById("layer_popup").style.display = "none";
-			     document.getElementById("SearchOption").setAttribute("mode", "off");
+			    document.getElementById("SearchOption").setAttribute("mode", "off");
 			     
-			     if (window.parent.frames['left'] != undefined) {
+			    if (window.parent.frames['left'] != undefined) {
+			       $.modal.close();			       		
+			    }
+			    
+			    if (parent.parent.frames['left'] != undefined) {
 			       $.modal.close();
-			       parent.frames["right"].document.body.style.overflow = "hidden";		// body style overflow 옵션 사라져서 추가함
-			     }
+			    }
 		    }
 		    
 		    function search(type) {
@@ -1193,7 +1213,7 @@
 			<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		</c:when>
 		<c:otherwise>
-			<body class="" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+			<body class="tabbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		</c:otherwise>
 	</c:choose>
 	<c:if test="${boardInfo.listView_FG != true}">
@@ -1231,17 +1251,17 @@
 			  <ul>
 		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
-			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89' /></span></li>
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
 		        <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134' /></span></li>
-			    <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205' /></span></li>
 		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188' /></span></li>
 		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051' /></span></li>
-		        <c:if test="${boardInfo.guBun ne '2'}">
+		        <%-- <c:if test="${boardInfo.guBun ne '2'}">
 		        	<li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
-		        </c:if>
+		        </c:if> --%>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li> 
 		        <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
@@ -1249,7 +1269,7 @@
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 				</li>
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
@@ -1363,9 +1383,9 @@
 		        </span>
 		    </span>
 		    <div id="ListInfo" style="display:none"></div>
-		    <c:choose>
-		    <c:when test="${boardInfo.adminType == 'y'}">
-		   <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+		    <%-- <c:choose>
+		    <c:when test="${boardInfo.adminType == 'y'}"> --%>
+		   <%-- <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 		          <div class="popupwrap1">
 		            <div class="popupwrap2">
 		        <table class="content">  
@@ -1414,9 +1434,9 @@
 	         </div>
 	        <div class="shadow">
 	        </div>
-		</div>
+		</div> 
 		</c:when>
-		<c:otherwise>
+		<c:otherwise> --%>
 		<!-- 2018-06-08 김민성 - 게시판 검색 레이어팝업 변경 -->
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
@@ -1472,8 +1492,8 @@
 			</table>
 		</div>
 	</div>
-		</c:otherwise>
-		</c:choose>
+		<%-- </c:otherwise> --%>
+		<%-- </c:choose> --%>
 	</c:if>
 	</body>
 </html>
