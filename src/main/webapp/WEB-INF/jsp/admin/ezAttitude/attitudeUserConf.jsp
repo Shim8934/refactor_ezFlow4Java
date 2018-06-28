@@ -23,7 +23,7 @@
 	    		cursor : pointer;
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
-			.selectTR  {background-color: rgb(233, 241, 255);}
+			.selectTR  {background-color: #FFFFFF;}
 			#searchTable {
 				border-top: 1px solid #e8e8e8;
 				border-left: 1px solid #e8e8e8;
@@ -249,6 +249,23 @@
 	    	}
 	    	
 	    	function userDbClick() {
+	    		if ($("#HeaderAllCheckBox").is(":checked") == true) {
+	    			$("#HeaderAllCheckBox").prop("checked", false);
+	    		}
+	    		//선택한 tr외에 체크를 푼다.
+	    		var trIdx = $('#contentlist .mainlist tbody').find('tr').length;
+	   			for (var i = 0; i < trIdx; i++) {
+	   				if ($('#contentlist .mainlist tbody tr').eq(i).find("input[type='checkbox']").is(":checked")) {
+	   					$('#contentlist .mainlist tbody tr').eq(i).find("input[type='checkbox']").prop('checked', false);
+	   					$('#contentlist .mainlist tbody tr').eq(i).removeClass();
+	   					$('#contentlist .mainlist tbody tr').eq(i).css("background-color", m_strColorDefault);
+	   				}
+	   			}
+	   			//선택한 tr체크
+	   			$(this).find("input[type='checkbox']").prop("checked", true);
+	   			$(this).addClass("selectTR");
+	   			$(this).css("background-color", m_strColorSelect);
+	   			
 	    		editUserConf($(this).attr('userid'));
 	    	}
 	    	
