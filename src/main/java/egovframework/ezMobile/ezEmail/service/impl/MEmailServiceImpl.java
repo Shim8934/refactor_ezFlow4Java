@@ -81,7 +81,9 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
-
+			
+			String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", info.getTenantId());
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
@@ -95,7 +97,13 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	        if (filter.equals("isUnreadOnly")) {
 	        	LOGGER.debug("isUnreadOnly");
 	        	isUnreadOnly = true;
-	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false, true);
+	        	
+	        	if (useAdvancedMailSearch.equals("YES")) {
+	        		messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", null, null, false, isUnreadOnly, false, true);
+	        	} else {
+	        		messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false, true);
+	        	}
+	        	
 	        	LOGGER.debug("isUnreadOnly unreadMessage : " + messages.length);
 	        } 
 	        
