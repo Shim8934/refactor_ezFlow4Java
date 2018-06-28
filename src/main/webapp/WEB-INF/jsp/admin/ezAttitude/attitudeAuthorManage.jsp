@@ -140,18 +140,12 @@
 	<body class="mainbody">
 	    <h1><spring:message code = 'ezAttitude.t8' /></h1>
 	    <div id="mainmenu">
-			<ul>
-	        	<li style="background: none;">
-				<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
-				</li>
-				<li>
-				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-					<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-	      		</select>
-	      		</li>
-	      	</ul>
+			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
+			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+				<c:forEach var="item" items="${list}">
+				<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+      		</select>
 		    <ul>
 		        <li><span onClick="author_add()"><spring:message code='ezAttitude.t187' /></span></li>
 		        <li><span onClick="author_modify()"><spring:message code='ezAttitude.t188' /></span></li>

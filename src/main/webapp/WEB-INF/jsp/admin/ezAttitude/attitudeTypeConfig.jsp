@@ -196,18 +196,12 @@
 	<body class="mainbody">
 	    <h1><spring:message code='ezAttitude.t3' /></h1>
 		<div id="mainmenu">
-			<ul>
-	        	<li style="background: none;">
-					<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
-				</li>
-				<li>
-					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-						<c:forEach var="item" items="${list}">
-							<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
-						</c:forEach>
-		      		</select>
-	      		</li>
-	      	</ul>
+			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
+			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+      		</select>
 	      	<ul>
 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t176' /></span></li>
 	      		<li><span onclick="mod_type()"><spring:message code='ezAttitude.t177' /></span></li>
