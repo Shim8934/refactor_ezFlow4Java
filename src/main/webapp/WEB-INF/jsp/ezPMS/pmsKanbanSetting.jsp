@@ -200,7 +200,13 @@ body {
 	<form method="POST">
 		<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
-					<h1 style="display: inline-block;"><spring:message code='ezPMS.t134' /></h1>
+					<h1 style="display: inline-block;"><spring:message code='ezPMS.t134' />
+						<div id="close" style="float:right">
+							<ul><li>
+									<span id="cancel" onclick="popupClose()"></span>
+							</li></ul>
+						</div>
+					</h1>
 			    </div>					
 		</div>
 		<div id = "instruction" >
@@ -245,8 +251,6 @@ body {
 			<table style="margin-top : 5px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
 				<td><a class="imgbtn" id="submit" onclick="updateKanbanStatus()"><span><spring:message code='ezPMS.t265' /></span></a></td>
-				<td></td>
-				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a></td>
 			</tr>
 		</table>	
 	</form>

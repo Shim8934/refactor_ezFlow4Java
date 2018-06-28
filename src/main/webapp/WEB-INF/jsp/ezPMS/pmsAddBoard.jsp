@@ -341,7 +341,13 @@
 				<div id="menu">
 					<ul>
 						<li><span onclick="addBoard()"><spring:message code='ezPMS.t40' /></span></li>
-						<li style="float: right;"><span onclick="cancelAddBoard()"><spring:message code='ezPMS.t76' /></span></li>
+					</ul>
+				</div>
+				<div id="close" style="float:right">
+					<ul>
+						<li>
+							<span id="cancel" onclick="cancelAddBoard()"></span>
+						</li>
 					</ul>
 				</div>
 			</td>

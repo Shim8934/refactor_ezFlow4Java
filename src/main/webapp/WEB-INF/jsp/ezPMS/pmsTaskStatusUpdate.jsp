@@ -418,18 +418,22 @@ button.PHBtn {
 .mainBodyTSU .mainBodyMid{height:160px;padding: 0px 30px;}
 .mainBodyTSU input[name="realProgress"]{width:80px;}
 .statusDiv{height:168px;float:left;}
-.taskStatusChgDiv{float:left;margin: 65px 0px 0px 114px;padding:0px 7px;width:116px}
+.taskStatusChgDiv{float:left;margin: 65px 0px 0px 71px;padding:0px 7px;width:116px}
 .taskUpdateBtn{display:inline-block;width:100px;height:16px;float:right;top:25px;position:relative;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px;cursor:pointer;z-index:101;}
 .mainBodyTSU .topThL{text-align:center;}
 .mainBodyTSU .midTh{}
 </style>
 </head>
 <body class="popup">
-	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t175' /></h1>
-	<div class="headerDiv">
-		<a class="imgbtn" id="saveBtn"><span><spring:message code='ezPMS.t265' /></span></a>
-		<a class="imgbtn" id="closeBtn"><span><spring:message code='ezPMS.t41' /></span></a>
-	</div>
+	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t175' />
+		<div id="close" style="float:right">
+		<ul>
+			<li>
+				<span id="cancel" onclick="popupClose()"></span>
+			</li>
+		</ul>
+		</div>
+	</h1>
 	<div id="mainBody" class="mainBodyTSU">
 		<div class="mainBodyTop">
 		</div>
@@ -486,6 +490,11 @@ button.PHBtn {
 			    <td class="realTd"><input type="text" name="realProgress"></td>
 			    <td id="progDiff" class="progDiff"></td>
 			  </tr>
+			</table>
+			<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+				<tr>
+					<td><a class="imgbtn" id="submit" onclick="updateTaskInfo()"><span><spring:message code='ezPMS.t265' /></span></a></td>
+				</tr>
 			</table>
 		</div>	
 	</div>

@@ -1422,9 +1422,9 @@
    			 	
 
    		        document.getElementById("iFrameLayer").src = "/ezPMS/getMemberSchedule.do?projectId=" + projectId;
-   		        document.getElementById("iFramePanel").style.top = "1%";
-   		        document.getElementById("iFramePanel").style.left = "5%";
-   		        document.getElementById("iFramePanel").style.height = "84%";
+   		        document.getElementById("iFramePanel").style.top = "5%";
+   		        document.getElementById("iFramePanel").style.left = "6%";
+   		        document.getElementById("iFramePanel").style.height = "77%";
    		        document.getElementById("iFramePanel").style.width = "91%";
    		        document.getElementById("iFrameLayer").style.width = "100%";
    		        document.getElementById("iFrameLayer").style.height = "100%";

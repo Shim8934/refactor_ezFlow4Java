@@ -152,7 +152,7 @@
 		
 		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
 
-		$("#taskName").html(contentTitle);
+		$("#taskNameArea").html(contentTitle);
 	}
 	
 	//페이지 번호에 의한 셋팅
@@ -287,6 +287,10 @@
 	.mainlist tr:hover {
 		background-color: rgb(244, 245, 245);
 	}
+	
+	#taskNameArea {
+		display : inline-block;
+	}
 </style>
 
 </head>
@@ -295,7 +299,7 @@
 	<div id="projectArea">
 		<div id="projectContent">
 			<div id="iconLine" class="mainbody" style="margin:0px;">
-				<h1 id="taskName"></h1>
+				<h1 id="taskName"><div id="taskNameArea"></div></h1>
 				<div id="mainmenu">
 				<ul>
 					<c:if test="${userRole ne 3}">

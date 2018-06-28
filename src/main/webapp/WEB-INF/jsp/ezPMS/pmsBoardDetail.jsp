@@ -283,7 +283,13 @@
 						<li id="moveBtn"><span onclick="goMoveBoard()"><spring:message code='ezPMS.t111' /></span></li>
 						<li><span onclick="fromPMSBoardToMail()"><spring:message code='ezPMS.t112' /></span></li>
 						<li><span onclick="boardViewerList()"><spring:message code='ezPMS.t113' /></span></li>
-						<li style="float: right;"><span onclick="window.close()"><spring:message code='ezPMS.t76' /></span></li>
+					</ul>
+				</div>
+				<div id="close" style="float:right">
+					<ul>
+						<li>
+							<span id="cancel" onclick="window.close()"></span>
+						</li>
 					</ul>
 				</div>
 			</td>

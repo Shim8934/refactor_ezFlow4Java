@@ -182,7 +182,15 @@ function addGroup() {
 </script>
 </head>
 <body class="popup">
-	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t82' /></h1>
+	<h1 style="display:inline-block; width:100px;"><spring:message code='ezPMS.t82' />
+		<div id="close" style="float:right">
+		<ul>
+			<li>
+				<span id="cancel" onclick="popupClose()"></span>
+			</li>
+		</ul>
+		</div>
+	</h1>
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<tr>
@@ -217,8 +225,6 @@ function addGroup() {
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
 				<td><a class="imgbtn" id="submit" onclick="addGroup()"><span><spring:message code='ezPMS.t265' /></span></a></td>
-				<td></td>
-				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span><spring:message code='ezPMS.t41' /></span></a></td>
 			</tr>
 		</table>
 	</div>
