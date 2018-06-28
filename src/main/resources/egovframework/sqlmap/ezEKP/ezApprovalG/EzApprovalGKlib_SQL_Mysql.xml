@@ -77,9 +77,30 @@
 			AND TENANT_ID = #tenantId#
 	</update>
 	
+	<update id="EzApprovalGKlib.updateAprAttachInfoHref" parameterClass="Map">	
+		UPDATE
+		    TBL_APRATTACHINFO
+		SET
+		    ATTACHFILEHREF = #href#
+		WHERE
+		    TBL_APRATTACHINFO.DOCID = (
+		        SELECT
+		            DOCID
+		        FROM
+		            TBL_APRDOCINFO
+		        WHERE
+		            ORGDOCID = #docId#
+		            AND COMPANYID = TBL_APRATTACHINFO.COMPANYID
+		            AND TENANT_ID = TBL_APRATTACHINFO.TENANT_ID
+		    )
+		    AND TBL_APRATTACHINFO.ATTACHFILESN = #attachFileSN#
+		    AND TBL_APRATTACHINFO.COMPANYID = #companyId#
+		    AND TBL_APRATTACHINFO.TENANT_ID = #tenantId#
+	</update>
+	
 	<update id="EzApprovalGKlib.updateHistoryDocHref" parameterClass="Map">
 		UPDATE
-			TBL_ENDAPRDOCINFO
+			TBL_HISTORYDOCINFO
 		SET
 			URL = #url#
 		WHERE
@@ -91,7 +112,7 @@
 	
 	<update id="EzApprovalGKlib.updateHistoryAttachHref" parameterClass="Map">
 		UPDATE
-			TBL_ENDATTACHINFO
+			TBL_HISTORYATTACHINFO
 		SET
 			ATTACHFILEHREF = #href#
 		WHERE

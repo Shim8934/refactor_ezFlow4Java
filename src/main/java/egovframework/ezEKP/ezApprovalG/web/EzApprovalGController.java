@@ -48,7 +48,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
@@ -4028,7 +4028,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				// 2018.06.20 jwseo99 - 전자결재 KLIB 암/복호화
 				String fileExt = sourcePath.substring(sourcePath.lastIndexOf(".") + 1);
 				
-				if (fileExt.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
 					fileExt = sourcePath.substring(0, sourcePath.lastIndexOf("."));
 					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
 				}
@@ -4039,7 +4039,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				// 중복소스코드 일단 제거 안 함 (코드가 추가될 가능성이 있고 사이드이펙트 우려)
 				String fileExt = sourcePath.substring(sourcePath.lastIndexOf(".") + 1);
 				
-				if (fileExt.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
 					fileExt = sourcePath.substring(0, sourcePath.lastIndexOf("."));
 					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
 				}
@@ -4079,7 +4079,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			// 2018.06.20 jwseo99 - 전자결재 KLIB 암/복호화
 			String fileExt = filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
 			// ezd 확장자로 암호화된 파일이라면 원래 확장자를 반환한다.
-			if (fileExt.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+			if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
 				fileExt = filePaths[k].substring(0, filePaths[k].lastIndexOf("."));
 				fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
 				// 암호화된 파일의 바이트를 읽어온 후 복호화

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,9 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +31,17 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.object.bodytext.Section;
+import kr.dogfoot.hwplib.object.bodytext.control.Control;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -57,6 +68,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
@@ -98,24 +110,16 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-import kr.dogfoot.hwplib.object.HWPFile;
-import kr.dogfoot.hwplib.object.bodytext.Section;
-import kr.dogfoot.hwplib.object.bodytext.control.Control;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.objectfinder.forField.ForParagraphList;
-import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.textextractor.TextExtractMethod;
-import kr.dogfoot.hwplib.writer.HWPWriter;
+import egovframework.let.utl.fcc.service.KlibUtil;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private KlibUtil klibUtil;
 	
 	@Autowired
 	private Properties config;
@@ -2156,6 +2160,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
 		
 		if (!rtnVal.equals("FALSE")) {
+			// 2018.06.26 jwseo99 - 대장등록 성공시 파일 KLIB 암호화
+			if ("hwp".equals(extFileName) && "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID))) {
+				ezApprovalGKlibService.encryptCompleteApproveFiles(newDocID, companyID, tenantID);
+			}
+			
 			logger.debug("setCabinetReject ended");
 			return "<RESULT>TRUE</RESULT>";
 		} else {
@@ -15859,6 +15868,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return false;
 		}
 	}
+	
+	/**
+	 * source 파일의 바이트를 KLIB 으로 복호화 후 target 파일로 복사한다.
+	 * */
+	// copyFile() 메소드와 같은 중복코드 리팩토링 안 함
+	public boolean copyDecryptFileForKlib(String source, String target, String dirPath) throws Exception {
+		logger.debug("copyDecryptFileForKlib started");
+
+		if (!dirPath.trim().equals("")) {
+			File file = new File(dirPath);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+		}
+		try {
+			File src = new File(source);
+			File des = new File(target);
+			
+			byte[] descryptedBytes = klibUtil.decrypt(Files.readAllBytes(src.toPath()));
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(descryptedBytes);
+			
+			Files.copy(inputStream, des.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			
+			logger.debug("copyDecryptFileForKlib ended");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public String getExtendedFileName(String href) {
 		String[] tempHref = href.split("\\.");
@@ -17377,9 +17417,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					File file = new File(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
 					
+					// 2018.06.27 jwseo99 KLIB 암호화 파일이면 .ezd 확장자 제거
+					boolean isEncryptedForKlib = fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
+					
+					if (isEncryptedForKlib) {
+						extFileName = getExtendedFileName(fileName.substring(0, fileName.lastIndexOf(".")));
+					}
+					
 					if (!file.exists()) {
-						copyFile(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
-								dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
+						// 2018.06.29 jwseo99 KLIB 암호화 파일이면 복호화하여 복사, 아니라면 원본 파일 복사
+						if (isEncryptedForKlib) {
+							copyDecryptFileForKlib(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
+									dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
+						} else {
+							copyFile(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
+									dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
+						}
 					}
 					
 					if (companyID.toUpperCase().equals(orgCompanyID.toUpperCase())) {

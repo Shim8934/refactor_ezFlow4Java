@@ -35,7 +35,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
 
-import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
@@ -405,7 +405,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 
 	    // klib 확장자로 끝난다면 downFileForKlib 메소드로 리턴
 	    // 사이드이펙트 방지를 위해서 복호화 두번 실패시 원본 파일로 처리
-	    if (downFileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+	    if (downFileName.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
 	    	downFileForKlib(request, response, streFileNm, orignFileNm);
 	    	return;
 	    }

@@ -25,7 +25,7 @@ public class KlibUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlibUtil.class);
 
 	private static final Cipher CIPHER;
-	
+
 	private static final int DEBUG_BYTE_SIZE = 16;
 
 	static {
@@ -137,7 +137,7 @@ public class KlibUtil {
 	private void debugBytes(String byteArrayName, byte[] bytes) {
 		boolean isGreaterThanEllipsis = bytes.length > DEBUG_BYTE_SIZE;
 
-		byte[] ellipsisBytes = new byte[isGreaterThanEllipsis ? bytes.length : DEBUG_BYTE_SIZE];
+		byte[] ellipsisBytes = new byte[DEBUG_BYTE_SIZE];
 		System.arraycopy(bytes, 0, ellipsisBytes, 0, DEBUG_BYTE_SIZE);
 
 		LOGGER.debug(isGreaterThanEllipsis ? "{}: {}…, to string: {}…" : "{}: {}, to string: {}", byteArrayName, DatatypeConverter.printHexBinary(ellipsisBytes), new String(ellipsisBytes));

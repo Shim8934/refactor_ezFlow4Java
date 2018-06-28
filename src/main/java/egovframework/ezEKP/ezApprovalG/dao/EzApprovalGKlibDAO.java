@@ -49,6 +49,10 @@ public class EzApprovalGKlibDAO extends EgovAbstractDAO {
 	public void updateEndAttachInfoHref(Map<String, Object> parameterMap) {
 		update("EzApprovalGKlib.updateEndAttachInfoHref", parameterMap);
 	}
+	
+	public void updateAprAttachInfoHref(Map<String, Object> parameterMap) {
+		update("EzApprovalGKlib.updateAprAttachInfoHref", parameterMap);
+	}
 
 	public void updateHistoryDocHref(Map<String, Object> parameterMap) {
 		update("EzApprovalGKlib.updateHistoryDocHref", parameterMap);

@@ -28,7 +28,7 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -614,7 +614,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				InputStream orgFileInputStream;
 
 				// 2018.06.21 jwseo99 KLIB으로 암호화된 파일일 때는 복호화 하여 저장
-				if (orgDocFile.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
 					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
 					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
 				} else {

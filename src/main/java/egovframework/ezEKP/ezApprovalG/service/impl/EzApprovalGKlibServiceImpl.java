@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGKlibDAO;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
@@ -30,24 +31,17 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 
 /**
- * KLIB 암/복호화 관련으로 전자결재에서 쓰이는 서비스 클래스
+ * @see EzApprovalGKlibService
  * 
- * @author jwseo99
- * 
- * @NOTE 결재완료된 문서를 암호화 하기 위해서 쓰는데, 파일 처리 로직이나 내부 클래스 구현으로 인해서 소스코드가 복잡해져 KLIB
- *       관련으로 따로 서비스 클래스를 만들었습니다. 또한 굳이 인터페이스로 만들 이유가 없을 것 같아서 바로 클래스로 구현했습니다.<br>
- *       <i>혹여나 파일을 나눌 필요 없이 기존의 서비스에 넣는다거나, 개선 사항이 있다면 수정해주시길 바랍니다.</i><br>
- * <br>
- *       TODO: 아래는 리펙토링 대상 (중복 코드)<br>
+ * @NOTE TODO: 아래는 리펙토링 대상 (중복 코드)<br>
  *       <code>
  * 	encryptEndDocFile(docId, companyId, tenantId);<br>
  * 	encryptEndAttachFiles(docId, companyId, tenantId);<br>
  * 	encryptHistoryDocFiles(docId, companyId, tenantId);<br>
  * 	encryptHistoryAttachFiles(docId, companyId, tenantId);</code>
- * 
  * */
 @Service("EzApprovalGKlibService")
-public final class EzApprovalGKlibService {
+public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService {
 	// 폴더 자체를 복사하기 위한 FileVisitor
 	private class CopyDirectoryVisitor extends SimpleFileVisitor<Path> {
 
@@ -87,12 +81,7 @@ public final class EzApprovalGKlibService {
 		void onSuccess();
 	}
 
-	/** 암호화된 파일을 구분하기 위한 확장자명 */
-	public static final String ENCRYPTED_FILE_EXT = "ezd";
-	/** 원본 파일 백업 폴더 이름 */
-	public static final String BACKUP_DIR_NAME = "klib_backup";
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGKlibService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGKlibServiceImpl.class);
 
 	/** fileroot 파일 이전 까지의 절대 경로 */
 	private final String REAL_PATH;
@@ -116,31 +105,15 @@ public final class EzApprovalGKlibService {
 	private ServletContext servletContext;
 
 	@Autowired
-	public EzApprovalGKlibService(ServletContext servletContext) throws IOException {
+	public EzApprovalGKlibServiceImpl(ServletContext servletContext) throws IOException {
 		this.servletContext = servletContext;
 		REAL_PATH = servletContext.getRealPath("");
 
 		LOGGER.debug("REAL_PATH: {}", REAL_PATH);
 	}
 
-	/**
-	 * 결재완료문서를 암호화 처리하는 API.<br>
-	 * docId에 해당하는 결재완료문서/첨부파일의 모든 원본 파일(히스토리 포함)을 klib으로 암호화하고<br>
-	 * ezd 확장자를 붙여 저장한다.<br>
-	 * 
-	 * <br>
-	 * 아래에 나와 있는 테이블들의 파일 경로 컬럼에 ".ezd" 문자열을 붙여 업데이트한다.<br>
-	 * <code>TBL_ENDAPRDOCINFO, TBL_ENDATTACHINFO, TBL_HISTORYDOCINFO,
-	 * TBL_HISTORYATTACHINFO</code>
-	 * 
-	 * @param docId
-	 *            전자결재 문서 번호
-	 * @param companyId
-	 *            회사 아이디
-	 * @param tenantId
-	 *            테넌트 아이디
-	 */
-	protected void encryptCompleteApproveFiles(String docId, String companyId, int tenantId) {
+	@Override
+	public void encryptCompleteApproveFiles(String docId, String companyId, int tenantId) {
 		LOGGER.debug("encryptCompleteApproveFiles started.");
 		LOGGER.debug("docId: {}, companyId: {}, tenantId: {}", docId, companyId, tenantId);
 
@@ -153,10 +126,15 @@ public final class EzApprovalGKlibService {
 			// ignore
 		}
 
-		encryptEndDocFile(docId, companyId, tenantId);
-		encryptEndAttachFiles(docId, companyId, tenantId);
-		encryptHistoryDocFiles(docId, companyId, tenantId);
-		encryptHistoryAttachFiles(docId, companyId, tenantId);
+		try {
+			encryptEndDocFile(docId, companyId, tenantId);
+			encryptEndAttachFiles(docId, companyId, tenantId);
+			encryptHistoryDocFiles(docId, companyId, tenantId);
+			encryptHistoryAttachFiles(docId, companyId, tenantId);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			LOGGER.debug("Failed to encrypt files.");
+		}
 
 		LOGGER.debug("encryptCompleteApproveFiles ended.");
 	}
@@ -182,11 +160,10 @@ public final class EzApprovalGKlibService {
 			Path backupDir = uploadApprovalDir.resolve(BACKUP_DIR_NAME);
 			LOGGER.debug(String.format("backupDir: %s", backupDir));
 
-			/** 결재완료문서 */
-			String documentFileExt = ezApprovalGService.getDocExt(docId, companyId, tenantId);
-			// 결재완료문서, ex) doc/2018/792/00000000000000002792.hwp
-			Path relativeDocumentFile = Paths.get("doc", oldYear, docDirPath, String.format("%s.%s", docId, documentFileExt));
-			// 결재완료문서 (절대경로)
+			/** 결재완료문서 폴더 */
+			// 결재완료문서 폴더, ex) doc/2018/792
+			Path relativeDocumentFile = Paths.get("doc", oldYear, docDirPath);
+			// 결재완료문서 폴더 (절대경로)
 			Path realDocumentFile = uploadApprovalDir.resolve(relativeDocumentFile);
 			LOGGER.debug(String.format("realDocumentFile: %s", realDocumentFile));
 
@@ -209,7 +186,7 @@ public final class EzApprovalGKlibService {
 			LOGGER.debug(String.format("realAttachmentHistoryDir: %s", realAttachmentDir));
 
 			// 결재완료문서 백업
-			copy(realDocumentFile, backupDir.resolve(relativeDocumentFile).getParent());
+			copy(realDocumentFile, backupDir.resolve(relativeDocumentFile));
 			// 결재문서 히스토리 폴더 백업
 			copy(realDocumentHistoryDir, backupDir.resolve(relativeDocumentHistoryDir));
 			// 첨부파일 폴더 백업
@@ -268,7 +245,12 @@ public final class EzApprovalGKlibService {
 				parameterMap.put("href", attachHref + "." + ENCRYPTED_FILE_EXT);
 
 				ezApprovalGKlibDAO.updateEndAttachInfoHref(parameterMap);
-			});
+				// 진행 중인 문서의 해당 첨부파일이 존재하면 .ezd 확장자를 붙여준다.
+				// orgdocid를 현재 결재완료된 문서의 아이디를 쓰는 경우가 존재하기 때문이다.
+				// 예를 들어 수신 문서 같은 경우에는 수신 정보를 원본 문서의 href를 복사해서 붙여넣기 때문에
+				// .ezd 확장자가 붙어있지 않아서 다운로드할 때 FileNotFound 오류가 난다.
+					ezApprovalGKlibDAO.updateAprAttachInfoHref(parameterMap);
+				});
 		}
 
 		LOGGER.debug("encryptEndAttachFiles ended.");
@@ -295,7 +277,7 @@ public final class EzApprovalGKlibService {
 				parameterMap.put("changeSN", hisotryDoc.getChangeSN());
 				parameterMap.put("url", historyDocUrl + "." + ENCRYPTED_FILE_EXT);
 
-				ezApprovalGKlibDAO.updateHistoryAttachHref(parameterMap);
+				ezApprovalGKlibDAO.updateHistoryDocHref(parameterMap);
 			});
 		}
 
@@ -375,6 +357,12 @@ public final class EzApprovalGKlibService {
 	 */
 	private void encryptForApprovalFile(Path file, EncryptSuccessCallback successCallback) {
 		try {
+			// 이미 암호화된 파일이라면 리턴
+			if (file.toString().endsWith("." + ENCRYPTED_FILE_EXT)) {
+				// 성공 콜백 함수 호출 안 함
+				return;
+			}
+
 			// 암호화 후 ezd 확장자로 저장될 경로
 			String encryptedFileHref = file.toString() + "." + ENCRYPTED_FILE_EXT;
 			// 암호화 후 ezd 확장자로 저장될 파일
