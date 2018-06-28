@@ -214,16 +214,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//업무일지 아이디
 		String journalId = "";
 		
-<<<<<<< HEAD
 		// ezPMS 프로젝트 아이디
 		String ezPMSProjectId = "";
 		// ezPMS 게시판 아이디
 		String ezPMSBoardId = "";
 		
-=======
 		//근태관리
 		String attitudeId = "";
->>>>>>> master
 		
 		// check if parameter is valid
 		String tempStr = "";
@@ -236,11 +233,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
 				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
 				|| tempStr.equals("RESEND") || tempStr.equals("BOARDDOTNET") || tempStr.equals("DOCSENDDOTNET")
-<<<<<<< HEAD
-				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("EZPMSBOARD")
-=======
-				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("ATTITUDE") || tempStr.equals("ATTITUDEABSENTED")
->>>>>>> master
+				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("EZPMSBOARD") || tempStr.equals("ATTITUDE") || tempStr.equals("ATTITUDEABSENTED")
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
@@ -1028,15 +1021,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         else if(_cmd.equals("journal")){
         	journalId = request.getParameter("journalId");
         }
-<<<<<<< HEAD
-        
         // ezPMS이면 작동
         else if(_cmd.equals("ezPMSBoard")){
         	ezPMSProjectId = request.getParameter("ezPMSProjectId");
         	ezPMSBoardId = request.getParameter("ezPMSBoardId");
         }
-        
-=======
         //근태관리
         else if(_cmd.equals("attitude")) {
         	attitudeId = request.getParameter("attitudeId");        			
@@ -1056,7 +1045,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //        	model.addAttribute("orderCell", request.getParameter("orderCell"));
 //        	model.addAttribute("orderOption", request.getParameter("orderOption"));
         }
->>>>>>> master
         String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
 		String fromAddressHtml = "";
 		
@@ -1186,15 +1174,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
 		
-<<<<<<< HEAD
 		// ezPMS 프로젝트 아이디
 		model.addAttribute("ezPMSProjectId", ezPMSProjectId);
 		// ezPMS 게시판 아이디
 		model.addAttribute("ezPMSBoardId", ezPMSBoardId);
-=======
 		//근태관리
 		model.addAttribute("attitudeId", attitudeId);
->>>>>>> master
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
