@@ -70,7 +70,7 @@ var CabinetItem = function() {
 	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
 	function initEvents() {
-		document.onselectstart = function() { return false;};
+		document.onselectstart = function() {return false;};
 		var sSearchInputElmt   = document.getElementById("ssInput");
 		sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
 		sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
@@ -193,28 +193,30 @@ var CabinetItem = function() {
 			default      : alert(CabinetMessages.strError); return;
 		}
 		
-		var fogPanel           = document.createElement("div");
-		fogPanel.className     = "cabFogPanel";
-		var leftFogPanel       = document.createElement("div");
-		leftFogPanel.className = "blockLeft";
-		fogPanel.onclick       = function(e) {handleClickFunct();};
-		leftFogPanel.onclick   = function(e) {handleClickFunct();};
-		var leftFrameBody      = window.parent.frames["left"].document.body;
+		var fogPanel                 = document.createElement("div");
+		fogPanel.className           = "cabFogPanel";
+		var leftFogPanel             = document.createElement("div");
+		leftFogPanel.className       = "blockLeft";
+		fogPanel.onclick             = function(e) {handleClickFunct();};
+		leftFogPanel.onclick         = function(e) {handleClickFunct();};
+		var leftFrameBody            = window.parent.frames["left"].document.body;
+		leftFrameBody.style.overflow = "hidden";
 		
 		leftFrameBody.appendChild(leftFogPanel);
 		document.body.appendChild(fogPanel);
 	}
 	
 	function removeFogPanel() {
-		var leftFrame  = window.parent.frames["left"].document;
-		var rightFrame = window.parent.frames["right"].document;
-		var fogPanel   = rightFrame.querySelector("div[class='cabFogPanel']");
-		if (fogPanel) {rightFrame.body.removeChild(fogPanel);}
-		
+		var leftFrame    = window.parent.frames["left"].document;
+		var rightFrame   = window.parent.frames["right"].document;
+		var fogPanel     = rightFrame.querySelector("div[class='cabFogPanel']");
 		var leftFogPanel = leftFrame.querySelector("div[class='blockLeft']");
-		if (leftFogPanel) {leftFrame.body.removeChild(leftFogPanel);}
 		
+		if (fogPanel) {rightFrame.body.removeChild(fogPanel);}
+		if (leftFogPanel) {leftFrame.body.removeChild(leftFogPanel);}
 		if (rightFrame.getElementById("ui-datepicker-div")) {rightFrame.getElementById("ui-datepicker-div").style.display = "none";}
+		
+		leftFrameBody.style.overflow = "auto";
 	}
 	
 	function clearSearchDate() {
@@ -287,14 +289,14 @@ var CabinetItem = function() {
 	}
 	
 	function renderCabinetTable(dataSource, unselectClass, tableDataElmt, getCheckedFunc, clickRowFunct) {
-		
+		//*Note add code here
 	}
 	
 	function onMainSearch() {
 		toggleSearchPanel();
 		startSearchCabinet("1");
 	}
-	/* Main search */
+	/* Main search end*/
 	
 	/* Simple Search Part */
 	function onStartSimpleSearch(event) {if(event.keyCode == "13") {startSimpleSearch();}}
@@ -328,8 +330,8 @@ var CabinetItem = function() {
 	/* Option View end */
 	
 	function addFile() {
-		var cabId = document.getElementById("cabInfo").getAttribute("role");
-		var popup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabId, "addFile", getOpenWindowfeature(600, 450));
+		var cabId    = document.getElementById("cabInfo").getAttribute("role");
+		var addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabId, "addFile", getOpenWindowfeature(600, 450));
 	}
 	
 	function deleteFileConfirm() {
@@ -357,7 +359,7 @@ var CabinetItem = function() {
 	}
 	
 	function deleteFile() {
-		//*Note Add code here
+		//*Note add code here
 	}
 	
 	function moveFileConfirm() {
@@ -385,7 +387,12 @@ var CabinetItem = function() {
 	}
 	
 	function moveFile(mode) {
-		
+		//*Note implement here
+	}
+	
+	function openSharePopup() {
+		var cabId      = document.getElementById("cabInfo").getAttribute("role");
+		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabId, "shareFile", getOpenWindowfeature(1000, 600));
 	}
 	
 	return {

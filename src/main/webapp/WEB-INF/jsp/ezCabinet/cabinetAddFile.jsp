@@ -10,18 +10,17 @@
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
 	<body class="popup cabAddMain">
-		<h1><spring:message code="ezCabinet.t67"/></h1> 
-<%-- 		<div id="close">
-			<ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul>
-		</div> --%>
+		<h1><spring:message code="ezCabinet.t67"/></h1>
+		
+		<div id="cabAddClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
-				<tr><th>제목</th><td><input type="text" placeholder="<spring:message code='ezCabinet.t70'/>"></td></tr>
-				<tr><th>요약</th><td><input type="text" placeholder="<spring:message code='ezCabinet.t71'/>"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input type="text" placeholder="<spring:message code='ezCabinet.t70'/>"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input type="text" placeholder="<spring:message code='ezCabinet.t71'/>"></td></tr>
 				<tr>
-					<th>연관문서</th>
-					<td><div class="rlFileDiv"><input type="text"><a><span id="rlBttn">선택</span></a></div></td>
+					<th><spring:message code='ezCabinet.t94'/></th>
+					<td><div class="rlFileDiv"><input type="text"><a><span id="rlBttn"><spring:message code='ezCabinet.t93'/></span></a></div></td>
 				</tr>
 			</table>
 		</div>
@@ -52,8 +51,8 @@
 				
 				function initEvents() {
 					document.onselectstart  = function () { return false;};
-					//var closeBttn         = document.getElementById("close").firstElementChild.firstElementChild.firstElementChild;
-					//closeBttn.onclick     = function(e) {closeWindow();};
+					var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
+					closeBttn.onclick       = function(e) {closeWindow();};
 					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
 					var listBttns           = cabdivBttnElmt.children;
 					listBttns[0].onclick    = function(e) {};

@@ -55,7 +55,7 @@
 						<td class="cabSearchTd">
 							<div>
 								<span id="cabinetName" class="cabSearchName">그룹웨어 업무</span>
-								<span class="searchDetail"><input type="checkbox" id="dCheckBox"><span>하위폴더 검색</span></span>
+								<span class="searchDetail"><input type="checkbox" id="dCheckBox"><span><spring:message code='ezCabinet.t91'/></span></span>
 							</div>
 						</td>
 					</tr>
@@ -95,7 +95,7 @@
 					<table class="list_element cabinet">
 						<colgroup><col class="cabcol"><col></colgroup>
 						<tr>
-							<th class="cabTitle">리스트 개수</th>
+							<th class="cabTitle"><spring:message code='ezCabinet.t92'/></th>
 							<td> 
 								<select id="listcount" onchange="ListCount(this.value);">
 									<option value="10" ${cabinetGeneral.listCount == '10' ? 'selected' : ''}>10</option>
@@ -144,8 +144,7 @@
 							</div>
 						</div>
 						
-						
-						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="" style="height: 100%; width: 100%; border: 0px; display: inline-block;"></iframe>
+						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="" class="cabIfrmPreview"></iframe>
 					</div>
 				</div>
 			</div>

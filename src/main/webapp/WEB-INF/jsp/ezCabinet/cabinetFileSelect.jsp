@@ -12,12 +12,12 @@
 	<body class="popup cabRelatedFile">
 		<h1><spring:message code="ezCabinet.t87"/></h1>
 		
-		<div id="cabMgClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
+		<div id="cabRlClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
 		
 		<div class="cabRlSearch">
 			<div>
 				<input type="text" placeholder="<spring:message code='ezCabinet.t88'/>">
-				<a class="cabBttn"><span><spring:message code='ezCabinet.t49'/></span></a>
+				<a class="cabBttn2"><span><spring:message code='ezCabinet.t49'/></span></a>
 			</div>
 		</div>
 		<div class="cabRlMain">
@@ -65,32 +65,17 @@
 									<img class="webfolderImg" src="/images/webfolder/fldr.png">
 									<span class="spanName" name="87" level="1" fldname1="ttt" fldname2="ttt">ttt</span>
 								</div>
-								<div>
-									<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-									<img id="82" src="/images/OrganTree_cross/minus.gif" class="webfolderMinus">
-									<img class="webfolderImg" src="/images/webfolder/fldr.png">
-									<span class="spanName" name="82" level="1" fldname1="공통파일" fldname2="공통파일">공통파일</span>
-									<div>
-										<div>
-											<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-											<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-											<img id="85" src="/images/OrganTree_cross/dot_continue.gif" class="webfolderImg">
-											<img class="webfolderImg" src="/images/webfolder/fldr.png">
-											<span class="spanName" name="85" level="2" fldname1="eee" fldname2="eeee">eee</span>
-										</div>
-									</div>
-								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="cabRlSelect">
-					<div class="rlSelectTtl">캐비넷 리스트</div>
+					<div class="rlSelectTtl"><spring:message code='ezCabinet.t89'/></div>
 					<div class="rlSelectTblDiv">
 						<table class="rlSelectTbl">
 							<tr>
-								<th class="thType">타임</th>
-								<th>제목</th>
+								<th class="thType"><spring:message code='ezCabinet.t61'/></th>
+								<th><spring:message code='ezCabinet.t62'/></th>
 							</tr>
 							<tr>
 								<td><img src="/images/webfolder/document.png"></td>
@@ -112,12 +97,12 @@
 				</div>
 			</div>
 			<div class="cabRlSelected">
-				<div class="rlSelectTtl">선택된 문서</div>
+				<div class="rlSelectTtl"><spring:message code='ezCabinet.t90'/></div>
 				<div class="rlSelectTblDiv">
 					<table class="rlSelectTbl">
 						<tr>
-							<th class="thType">타임</th>
-							<th>제목</th>
+							<th class="thType"><spring:message code='ezCabinet.t61'/></th>
+							<th><spring:message code='ezCabinet.t62'/></th>
 						</tr>
 						<tr>
 							<td><img src="/images/webfolder/document.png"></td>
@@ -132,12 +117,31 @@
 			</div>
 		</div>
 		
-		<div class="cabdivBttn" id="cabAddBttn">
+		<div class="cabdivBttn" id="cabRlBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
 		<script type="text/javascript">
-			
+			(function() {
+				initEvents();
+				
+				function initEvents() {
+					document.onselectstart = function() {return false;};
+					var closeBttn          = document.getElementById("cabRlClose").firstElementChild.firstElementChild.firstElementChild;
+					closeBttn.onclick      = function(e) {closeWindow();};
+					
+					var cabRlBttnElmt      = document.getElementById("cabRlBttn");
+					var listRlBttns        = cabRlBttnElmt.children;
+					listRlBttns[0].onclick = function(e) {saveRelatedFiles();};
+					listRlBttns[1].onclick = function(e) {closeWindow();};
+				}
+				
+				function saveRelatedFiles() {
+					//*Note implements function here
+				}
+				
+				function closeWindow() {window.close();}
+			})();
 		</script>
 	</body>
 </html>

@@ -33,6 +33,7 @@
 				initEvents();
 				
 				function initEvents() {
+					document.onselectstart   = function() {return false;};
 					var closeBttn            = document.getElementById("cabMgClose").firstElementChild.firstElementChild.firstElementChild;
 					closeBttn.onclick        = function(e) {closeWindow();};
 					var cabMoveCloseBttn     = document.getElementById("cabMoveClose").firstElementChild.firstElementChild.firstElementChild;

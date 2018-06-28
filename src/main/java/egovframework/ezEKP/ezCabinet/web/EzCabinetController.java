@@ -111,9 +111,22 @@ public class EzCabinetController {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String cabinetId   = request.getParameter("cabId");
 		model.addAttribute("cabinetId", cabinetId);
+		
 		logger.debug("jspGetAddCabinetFile ended");
 		return "ezCabinet/cabinetAddFile";
 	}
+	
+	@RequestMapping(value="/ezCabinet/shareCabinet.do")
+	public String jspGetShareCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetShareCabinetPage started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId   = request.getParameter("cabId");
+		model.addAttribute("cabinetId", cabinetId);
+		
+		logger.debug("jspGetShareCabinetPage ended");
+		return "ezCabinet/cabinetShare";
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
