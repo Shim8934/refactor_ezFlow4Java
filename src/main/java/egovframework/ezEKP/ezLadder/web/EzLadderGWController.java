@@ -402,17 +402,11 @@ public class EzLadderGWController {
 			String serverName = request.getHeader("x-user-host");
 			String dbType = globals.getProperty("Globals.DbType");
 			String todayDate = commonUtil.getTodayUTCTime("");
-			
-			if(dbType.equals("mysql")) {
-				MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, userId);
-				cmtVO.setUserName(userInfo.getUserName());
-				cmtVO.setUserName2(userInfo.getUserName2());
-			} else {
-				LoginVO userInfo = commonUtil.userInfo((String) jsonBodys.get("loginCookie"));
-				cmtVO.setUserName(userInfo.getDisplayName());
-				cmtVO.setUserName2(userInfo.getDisplayName2());
-			}
-			
+		
+			LoginVO userInfo = commonUtil.userInfo((String) jsonBodys.get("loginCookie"));
+			cmtVO.setUserName(userInfo.getDisplayName());
+			cmtVO.setUserName2(userInfo.getDisplayName2());
+			cmtVO.setDeptID(userInfo.getDeptID());
 			cmtVO.setId((String) jsonBodys.get("commentId"));
 			cmtVO.setComment((String) jsonBodys.get("comment"));
 			cmtVO.setWriteDate(todayDate);
