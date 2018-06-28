@@ -346,8 +346,10 @@ GanttMaster.prototype.removeLink = function (fromTask, toTask) {
 
   if (found) {
     this.updateDependsStrings();
-    if (this.updateLinks(toTask))
-      this.changeTaskDates(toTask, toTask.start, toTask.end); // fake change to force date recomputation from dependencies
+    if (this.updateLinks(toTask)) {
+    	// 삭제 후, 업무일정 수정 작업이력이 뜨는 오류 수정을 위해 주석 처리
+      /*this.changeTaskDates(toTask, toTask.start, toTask.end);*/ // fake change to force date recomputation from dependencies
+    }
   }
   this.endTransaction();
 };

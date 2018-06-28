@@ -780,12 +780,16 @@
 	   			alert("<spring:message code='ezPMS.t300' />");
 	   		}
 	   		
-	   		function deletePretaskRel(pretaskId, taskId) {
+	   		function deletePretaskRel(pretaskFullId, taskFullId) {
+	   			
+	   			var pretaskId    = pretaskFullId.match(/t(\d+)/) != null ? pretaskFullId.match(/t(\d+)/)[1] : null;
+	   			var taskIdParam  = taskFullId.match(/t(\d+)/) != null ? taskFullId.match(/t(\d+)/)[1] : null;
+	   			var groupIdParam = taskFullId.match(/g(\d+)/) != null ? taskFullId.match(/g(\d+)/)[1] : null;
 	   			
 	   			if(confirm("<spring:message code='ezPMS.t107' />") == true) {
 	   				var data = {
 		   					pretaskId : pretaskId,
-		   					taskId : taskId
+		   					taskId : taskIdParam
 		   			}
 
 		   			$.ajax({
@@ -796,6 +800,11 @@
 		   				url : "/ezPMS/deletePretaskRel.do",
 		   				success : function(result) {
 		   					$('#workSpace').trigger('deleteFocused.gantt');
+		   					var pretaskName = $(".taskEditRow[taskid=" + pretaskFullId + "]").find("input[name='name']").val();
+		   					var taskName 	= $(".taskEditRow[taskid=" + taskFullId + "]").find("input[name='name']").val();
+		   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "]의 선행작업에서 삭제되었습니다."
+		   					addTaskLog(projectId, 3, groupIdParam, taskIdParam, str);
+		   					toastPopupShow(str);
 		   				}
 		   			});
 	   			}
