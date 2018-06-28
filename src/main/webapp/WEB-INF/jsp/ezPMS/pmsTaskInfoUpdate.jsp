@@ -148,7 +148,7 @@ function initpretaskNames() {
 function openMemberList(type) {
 	var win;
 	var feature = GetOpenPosition(760, 700);
-	DivPopUpShow(684, 384, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
+	DivPopUpShow(684, 404, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
