@@ -19,6 +19,8 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -35,6 +37,7 @@ import java.util.regex.Pattern;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.annotation.Resource;
+import javax.json.JsonException;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.FetchProfile;
@@ -4771,26 +4774,48 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
                 String key = entry.getKey();
                 String subFolderCount = entry.getValue();
                 String addressName = "";
+                int rowNum = 0;
                 if(key.equalsIgnoreCase("P"))
                 {
                 	addressName = egovMessageSource.getMessage("ezAddress.t145", locale);
+                	rowNum = 1;
                 }
                 else if(key.equalsIgnoreCase("D"))
                 {
                 	addressName = egovMessageSource.getMessage("ezAddress.t146", locale);
+                	rowNum = 2;
                 }
                 else if(key.equalsIgnoreCase("C"))
                 {
                 	addressName = egovMessageSource.getMessage("ezAddress.t147", locale);
+                	rowNum = 3;
                 }
                 folderInfo.put("addressFolderID", "0");
                 folderInfo.put("topFolderID", key);
                 folderInfo.put("subFolderCount", subFolderCount);
                 folderInfo.put("addressFolderName", addressName);
-                
+                folderInfo.put("rowNum", rowNum);
                 jsonList.add(folderInfo);
             }
             
+            // jgw-server에서 map에 담겨져 리턴이 되다보니 순서가 무의미 해져, 따로 개인 > 부서 > 회사 순으로 정렬
+            Collections.sort(jsonList, new Comparator<JSONObject>() {
+                @Override
+                public int compare(JSONObject jsonObjectA, JSONObject jsonObjectB) {
+                    int compare = 0;
+                    try
+                    {
+                        int keyA = (int) jsonObjectA.get("rowNum");
+                        int keyB = (int) jsonObjectB.get("rowNum");
+                        compare = Integer.compare(keyA, keyB);
+                    }
+                    catch(JsonException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    return compare;
+                }
+            });
             result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", jsonList);	

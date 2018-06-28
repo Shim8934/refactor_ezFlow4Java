@@ -4829,7 +4829,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
 		String pResult = "";
         try {
-            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId());
+            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId());
         } catch (Exception e) {
         	e.printStackTrace();
             pResult = "EXCEPTION";
@@ -5062,9 +5062,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String searchValue = request.getParameter("value");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String pOrganSearchList = "displayname::" + searchValue;
+		String pOrganSearchList = "displayname::" + searchValue + ";;mail::" + searchValue;
 		String pOrganCellList = "displayname";
-		String pOrganPropList = "company;description;title;mail;extensionAttribute3";
+		String pOrganPropList = "company;description;title;mail;extensionAttribute3;displayName2";
 		String pOrganListType = "all";
 		String pDLSearchList = "displayname::" + searchValue;
 		String pAddressFilter = searchValue;
@@ -5083,13 +5083,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				Element row = (Element) organRow.item(i);
 				NodeList organList = row.getElementsByTagName("CELL");
 				Element organCell = (Element) organList.item(0);
-				jsonObject = new HashMap<String, Object>();
-				jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
-				jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
-				jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
-				jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
-				jsonObject.put("type", "");
-				jsonList.add(jsonObject);
+				if(organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != "" || organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != null){
+					jsonObject = new HashMap<String, Object>();
+					jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
+					jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
+					jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
+					jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+					jsonObject.put("type", "");
+					jsonList.add(jsonObject);
+				}
 			}
 
 			NodeList dlRow = dlXML.getElementsByTagName("ROW");
@@ -5097,25 +5099,29 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				Element row = (Element) dlRow.item(i);
 				NodeList dlList = row.getElementsByTagName("CELL");
 				Element dlCell = (Element) dlList.item(0);
-				jsonObject = new HashMap<String, Object>();
-				jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
-				jsonObject.put("title", "");
-				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
-				jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
-				jsonObject.put("type", "");
-				jsonList.add(jsonObject);
+				if(dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != "" || dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != null){
+					jsonObject = new HashMap<String, Object>();
+					jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
+					jsonObject.put("title", "");
+					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
+					jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+					jsonObject.put("type", "");
+					jsonList.add(jsonObject);
+				}
 			}
 
 			NodeList addressRow = addressXML.getElementsByTagName("ROW");
 			for (int i = 0; i < addressRow.getLength(); i++) {
 				Element row = (Element) addressRow.item(i);
-				jsonObject = new HashMap<String, Object>();
-				jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
-				jsonObject.put("title", "");
-				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
-				jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
-				jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
-				jsonList.add(jsonObject);
+				if(row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != "" || row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != null){
+					jsonObject = new HashMap<String, Object>();
+					jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
+					jsonObject.put("title", "");
+					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
+					jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
+					jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
+					jsonList.add(jsonObject);
+				}
 			}
 			model.addAttribute("susinList", jsonList);
 		} catch (Exception e) {
