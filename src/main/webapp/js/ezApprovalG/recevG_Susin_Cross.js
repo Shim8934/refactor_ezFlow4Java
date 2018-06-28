@@ -1965,27 +1965,30 @@ function SaveDraftDocInfo_susin() {
     		
     		// 특수목록이 존재하는 기록물 철 일경우
     		if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SPECIALCATALOGFLAG") == "1") {
-    			var sepAtt, Data, i;
-    			var rtnXml = createXmlDom();
-    			var root = createNodeInsert(rtnXml, root, "SPECIALCATALOGINFO");
-    			var sepLVXml = createXmlDom();
-    				sepLVXml = loadXMLString(nonElecRecInfoXml);
-    			var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA");
-    			var rows2 = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCNAME");
-    			
-    			sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCNAME");
-    			Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows2[0], "LIST1"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows2[0], "LIST2"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows2[0], "LIST3"));
-    			
-    			for (i = 0; i < rows.length; i++) {
-    				sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCDATA");
-                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SN", SelectSingleNodeValue(rows[i], "SN"));
-                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows[i], "LIST1"));
-                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows[i], "LIST2"));
-                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows[i], "LIST3"));
+    			if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA").length > 0) {
+	    			var sepAtt, Data, i;
+	    			var rtnXml = createXmlDom();
+	    			var root = createNodeInsert(rtnXml, root, "SPECIALCATALOGINFO");
+	    			var sepLVXml = createXmlDom();
+	    				sepLVXml = loadXMLString(nonElecRecInfoXml);
+	    			var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA");
+	    			var rows2 = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCNAME");
+	    			
+	    			sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCNAME");
+	    			Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows2[0], "LIST1"));
+	                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows2[0], "LIST2"));
+	                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows2[0], "LIST3"));
+	    			
+	    			for (i = 0; i < rows.length; i++) {
+	    				sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCDATA");
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SN", SelectSingleNodeValue(rows[i], "SN"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows[i], "LIST1"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows[i], "LIST2"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows[i], "LIST3"));
+	    			}
+	    			
+	    			createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SPECIALCATALOGINFO", getXmlString(rtnXml));
     			}
-    			createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SPECIALCATALOGINFO", getXmlString(rtnXml));
     		}
     	}
         

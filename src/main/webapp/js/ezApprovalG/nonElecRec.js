@@ -72,6 +72,9 @@ function selRegisterType_onchange() {
    if (val == "5" || val == "6") {
 	   divAudioVisualDummy.style.display = "none";
 	   divAudioVisual.style.display = "";
+	   trDeliveryNo.style.display = "none";
+	   trOriginSN.style.display = "none";
+	   trAprMemberTitle.style.display = "";
 	   g_VisualAudioFlag = "1";
 
 	   if (val == 5) {
@@ -828,7 +831,7 @@ function InitAVTypeTD(nodeXml, objTD1, objTD2) {
     var szHtm1 = "";
     var szHtm2 = "";
     var i;
-    szHtm1 = "<div style=\"width:100%;height:85px;overflow:auto;\">";
+    szHtm1 = "<div style=\"width:100%;height:90px;overflow:auto;\">";
 
     for (i = 0; i < nodeXml.length; i++) {
         if (i % 2 == 0) {

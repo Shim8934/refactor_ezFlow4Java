@@ -3001,4 +3001,19 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void setEndNonElecRecDocDel(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.setEndNonElecRecDocDel", map);
 	}
+	public String getOrgDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOrgDocID", map);
+	}
+	public String getRecordID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getRecordID", map);
+	}
+	public void updateNonElecRecInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateNonElecRecInfo", map);
+	}
+	public void updateNonElecRecInfo2(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateNonElecRecInfo2", map);
+	}
+	public void updateNonElecRecInfo3(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateNonElecRecInfo3", map);
+	}
 }

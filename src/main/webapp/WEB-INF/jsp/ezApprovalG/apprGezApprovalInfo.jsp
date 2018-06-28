@@ -1673,8 +1673,10 @@
 					para[3] = ext;
 					para[4] = nonElecRec;
 					
-					if (pIniGubun == "11" || pIniGubun == "6") {
+					if (pIniGubun == "11") {
 						para[2] = "1";	
+					} else if (pIniGubun == "6") {
+						para[2] = "2";
 					}
 					
 		            var url = "/ezApprovalG/insSepAttach.do";
@@ -2564,7 +2566,7 @@
 				<h2 class="h2_dot"><spring:message code='ezApprovalG.t1018'/></h2><!-- 기록물철 정보 -->
 				<table style="width:100%" class="content">
 					<tr>
-        				<th><b><spring:message code='ezApprovalG.t1063'/></b></th><!-- 기록물철 이름 -->
+        				<th><spring:message code='ezApprovalG.t1063'/></th><!-- 기록물철 이름 -->
 						<td style="padding-right:15px;white-space:nowrap">
 							<table style="width:100%">
             					<tr>
@@ -2576,7 +2578,7 @@
 						<td id="tdCabinetSN" style="padding-right:15px;width:300px;white-space:nowrap">&nbsp;</td>
 					</tr>
 					<tr>
-	        			<th><b><spring:message code='ezApprovalG.t1065'/></b></th><!-- 형태 -->
+	        			<th><spring:message code='ezApprovalG.t1065'/></th><!-- 형태 -->
 						<td id="tdCabinetType" style="padding-right:15px;white-space:nowrap">&nbsp;</td>
 						<th><spring:message code='ezApprovalG.t573'/></th><!-- 권호수 -->
 						<td id="tdCabinetVolNo" style="padding-right:15px;white-space:nowrap">&nbsp;</td>

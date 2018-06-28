@@ -284,11 +284,13 @@
 		            alert("<spring:message code='ezApprovalG.t1080'/>");
 		            return "";
 		        }
-		
-		        if (g_CabinetID == "") {
-		            alert("<spring:message code='ezApprovalG.t1081'/>");
-		            return;
-		        }
+		        
+				if (nonElecRec != "Y") {
+			        if (g_CabinetID == "") {
+			            alert("<spring:message code='ezApprovalG.t1081'/>");
+			            return;
+			        }
+				}
 		
 		        if (g_VisualAudioFlag == "1") {
 		            if (txtSummary.value == "") {
@@ -418,7 +420,12 @@
 		        else {
 		            createNodeAndInsertText(xmlpara, objNode, "AVTYPEDESC", "");
 		        }
-		        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", tdCabinetName.innerHTML);
+		        
+		        if (nonElecRec == "Y") {
+			        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", "");
+		        } else {
+			        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", tdCabinetName.innerHTML);
+		        }
 		
 		        return getXmlString(xmlpara);
 		    }

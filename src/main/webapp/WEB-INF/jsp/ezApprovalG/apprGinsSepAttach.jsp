@@ -60,6 +60,12 @@
 		            document.getElementById("trModify").style.display = "none";
 		
 		            InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
+		        } else if (g_InitFlag == "2") {
+		        	document.getElementById("trChangeCabinet").style.display = "none";
+		            document.getElementById("trModify").style.display = "none";
+		            document.getElementById("btnClose").style.display = "none";
+		            
+		            InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
 		        }
 		        else {
 		            document.getElementById("trModify").style.display = "";
@@ -440,7 +446,7 @@
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA3", GetAttribute(selRow, "DATA3"));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", " "));
+		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", ""));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[2].innerHTML);
@@ -485,17 +491,22 @@
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
 		
+		        if (g_InitFlag == "2") {
+		        	btnClose_onclick();
+		        	return;
+		        }
+		        
 		        var totalRows = pLvList.GetDataRows();
 		        if (totalRows.length == 1 && totalRows[0].id.indexOf("noItems") > -1) {
 		            alert("<spring:message code='ezApprovalG.t1031'/>");
 		            return;
 		        }
-		        
-		        if (nonElecRec == "Y") {
+	        
+		        if (nonElecRec == "Y" && g_CabinetID != "nonElecRecTempCabinet") {
 			        if (!CheckSepAttParamXmlNull()) {
 			            alert("<spring:message code='ezApprovalG.t1411'/>");
 			            return;
-			        }
+		        	}
 		        }
 		        
 		        rtnVal[0] = "TRUE";
@@ -561,8 +572,8 @@
 		</div>
 		
 		<div class="btnposition btnpositionNew" >
-			<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-			<a class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
+			<a id="btnOK" class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
+			<a id="btnClose" class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -1706,7 +1706,7 @@
 			function btnNonElecRec_onclick() {
 				if (isIE()) {
 					var url = "/ezApprovalG/draftuiHWP.do?formURL=";
-				    var form = "/fileroot/0/files/upload_approvalG/S907000/form/2018000070.hwp";
+				    var form = "/fileroot/0/files/upload_approvalG/S907000/form/2018000074.hwp";
 				    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
                 } else {
 				   	var url = "/ezApprovalG/draftui.do?formURL=";

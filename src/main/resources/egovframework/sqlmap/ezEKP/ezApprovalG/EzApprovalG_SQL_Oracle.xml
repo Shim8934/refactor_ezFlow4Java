@@ -24717,4 +24717,82 @@
     	AND 
     		COMPANYID = #companyID#
     </update>
+    <select id="EzApprovalG.getOrgDocID" parameterClass="Map" resultClass="String">
+    	SELECT 
+    		ORGDOCID
+    	FROM
+    		TBL_APRDOCINFO
+    	WHERE
+    		DOCID = #docID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </select>
+    <select id="EzApprovalG.getRecordID" parameterClass="Map" resultClass="String">
+    	SELECT
+    		RECORDID
+    	FROM
+    		TBL_RECORD_TEMP
+    	WHERE
+    		DOCID = #orgDocID#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </select>
+    <update id="EzApprovalG.updateNonElecRecInfo" parameterClass="Map">
+    	UPDATE
+    		TBL_RECORD_TEMP
+    	SET
+    		APRMEMBERTITLE = #v_aprmemberTitle#, 
+    		APRMEMBERTITLE2 = #v_aprmemberTitle2#,
+    		DRAFTERNAME = #v_drafterName#, 
+    		DRAFTERNAME2 = #v_drafterName2#,
+    		RECEIPTMEMBERNAME = #v_receiptMember#, 
+    		RECEIPTMEMBERNAME2 = #v_receiptMember2#, 
+    		DELIVERYNO = #v_deliveryNO#, 
+    		PRODUCEDEPTREGNO = #v_originRegSN#
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND
+    		RECORDID = #recordID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </update>
+    <update id="EzApprovalG.updateNonElecRecInfo2" parameterClass="Map">
+    	UPDATE
+    		TBL_SEPERATEATTACH_TEMP
+    	SET
+    		TITLE = #v_title# 
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND
+    		RECORDID = #recordID#
+    	AND
+    		SEPERATEATTACHNO = '00'
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </update>
+    <update id="EzApprovalG.updateNonElecRecInfo3" parameterClass="Map">
+    	UPDATE
+    		TBL_AUDIO_VISUALRECEXINFO_TEMP
+    	SET
+    		SUMMARY = #v_audioVisualRecSummary#, 
+    		RECORDTYPE = #v_audioVisualRecInfo#
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND
+    		RECORDID = #recordID#
+    	AND
+    		SEPERATEATTACHNO = '00'
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </update>
 </sqlMap>
