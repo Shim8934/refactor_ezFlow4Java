@@ -542,7 +542,7 @@
 					if(flag == "add") { 
 						// add
 						var html = '<tr _comtIndex="' + cmt["id"] + '">';
-						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo(\'' +  cmt["userId"] + '\', ' + cmt["setRetireFlag"] + ')"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
+						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo(\'' +  cmt["userId"] + '\', \'' +  cmt["deptID"] + '\',  ' + cmt["setRetireFlag"] + ')"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
 						html += '<td><div class="userName">' + cmt["userName"] + '</div>';
 						html += '<div id="div2Cmt' + cmt["id"] + '" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >';
 						html += '<p id="cmtArea' + cmt["id"] + '" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"></p></div>';
@@ -1003,7 +1003,7 @@
 					<c:forEach var="_comt" items="${cmtlist}">
 						<tr _comtIndex="<c:out value ="${_comt.id}" />">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${_comt.userId}', '<c:out value='${_comt.setRetireFlag}' />')" >
+								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('<c:out value='${_comt.userId}' />', '<c:out value='${_comt.deptID}' />', '<c:out value='${_comt.setRetireFlag}' />')" >
 								<c:choose>
 									<c:when test="${_comt.pic eq ''}">
 										<img src="/images/ezLadder/icon_defaultAttendant.png" style="height: 38px; width:38px;">

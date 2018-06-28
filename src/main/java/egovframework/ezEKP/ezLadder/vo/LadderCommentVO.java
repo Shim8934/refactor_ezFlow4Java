@@ -23,7 +23,16 @@ public class LadderCommentVO {
 	private String offset;
 	/** 다국어 */
 	private String lang;
+	/** 부서 ID */
+	private String deptID;
 	
+	
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
 	public int getTenant_id() {
 		return tenant_id;
 	}
