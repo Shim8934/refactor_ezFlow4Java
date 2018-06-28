@@ -1209,7 +1209,7 @@
 	<select id="EzLadderDAO.selectLadderCommentList" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
 		<![CDATA[
 		SELECT 
-			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, C.TENANT_ID, U.EXTENSIONATTRIBUTE2 AS PIC
+			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, C.TENANT_ID, U.EXTENSIONATTRIBUTE2 AS PIC, C.DEPTID
 		FROM
 			TBL_LADDER_COMMENT C
 		LEFT JOIN(
@@ -1246,14 +1246,14 @@
 	
 	<insert id="EzLadderDAO.insertLadderComment" parameterClass="LadderCommentVO">
 		INSERT INTO
-			TBL_LADDER_COMMENT (TENANT_ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE)
+			TBL_LADDER_COMMENT (TENANT_ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, DEPTID)
 		VALUES
-			(#tenant_id#, #ladderId#, #comment#, #userId#, #userName#, #userName2#, #writeDate#)
+			(#tenant_id#, #ladderId#, #comment#, #userId#, #userName#, #userName2#, #writeDate#, #deptID#)
 	</insert>
 	
 	<select id="EzLadderDAO.selectLadderComment" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
 		SELECT 
-			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, TENANT_ID
+			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, TENANT_ID, DEPTID
 		FROM 
 			TBL_LADDER_COMMENT
 		WHERE 
