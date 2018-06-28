@@ -318,8 +318,7 @@
         </h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="ok_Click()"><spring:message code='ezPMS.t43' /></span></li>
-	            <li><span onclick="close_Click()"><spring:message code='ezPMS.t41' /></span></li>
+	            <li><span onclick="close_Click()"></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
@@ -371,7 +370,11 @@
 	      		</td> 
 			</tr>
         </table>
-        
+		<table style="margin-top : 5px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+			<tr>
+				<td><a class="imgbtn" id="submit" onclick="ok_Click()"><span><spring:message code='ezPMS.t265' /></span></a></td>
+			</tr>
+		</table>
         <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>

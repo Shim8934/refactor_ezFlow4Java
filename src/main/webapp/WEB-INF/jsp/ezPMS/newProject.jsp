@@ -202,7 +202,7 @@ var groupId = "${groupId}";
  function openOrganTree(type) {
 	 var url = "/ezPMS/pmsSelectAuth.do?type=" + type.id;
 	 //	url += "?companyId=" + companyId;
-	 GetOpenWindow(url, "pmsSelectAuth", 980, 610);
+	 GetOpenWindow(url, "pmsSelectAuth", 980, 630);
  }
  
  function addNewProject() {
@@ -366,15 +366,12 @@ var groupId = "${groupId}";
 		 }
 	 
 	 $.ajax({
-		 type : "post",
-		 ansync : false,
-		 dataType : "json",
+		 type : "POST",
+//		 ansync : false,
+		 url : "/ezPMS/sendNotiMail.do",
 		 contentType: "application/json; charset=UTF-8",
 		 data : JSON.stringify(data),
-		 url : "/ezPMS/sendNotiMail.do",
-		 success : function() {
-			 console.log("sending mail works");
-		 }
+		 success : function() {}
 	 });
  }
 </script>
