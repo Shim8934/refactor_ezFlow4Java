@@ -1007,4 +1007,22 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS deletePretaskRel ended");
 		return "json";
 	}
+	
+	@RequestMapping(value = "/ezPMS/updateAllTasksDate.do")
+	public String updateAllTasksDate(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS updateAllTasksDate started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String url = "/rest/ezPMS/tasks/multiple-tasks/users/" + userInfo.getId();
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, request, "put", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("data", "success");
+		}
+		
+		LOGGER.debug("ezPMS updateAllTasksDate ended");
+		return "json";
+	}
 }

@@ -2803,6 +2803,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 		
 		ezPMSDAO.deleteGroupMember(map);
-		LOGGER.debug("[SERVICE] ezPMS deleteGroupMember Started");
+		LOGGER.debug("[SERVICE] ezPMS deleteGroupMember Ended");
+	}
+
+	@Override
+	public void updateAllTaskDatesInPrj(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] ezPMS updateAllTaskDatesInPrj Started");
+		ezPMSDAO.updateAllTaskDatesInPrj(map);
+		LOGGER.debug("[SERVICE] ezPMS updateAllTaskDatesInPrj Ended");
+	}
+
+	@Override
+	public void updateAllGroupDatesInPrj(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] ezPMS updateAllGroupDatesInPrj Started");
+		ezPMSDAO.updateAllGroupDatesInPrj(map);
+		LOGGER.debug("[SERVICE] ezPMS updateAllGroupDatesInPrj Ended");
 	}
 }

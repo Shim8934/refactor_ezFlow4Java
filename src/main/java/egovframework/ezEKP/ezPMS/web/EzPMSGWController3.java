@@ -12,6 +12,7 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -1074,6 +1075,44 @@ public class EzPMSGWController3 {
 		}
 		
 		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/pretasks/" + preTaskId + "] ended");	
+		return result;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/rest/ezPMS/tasks/multiple-tasks/users/{userId}", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateAllTasksDate(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/multiple-tasks/users/" + userId + "] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+
+			List<LinkedHashMap> taskSchedules = (List<LinkedHashMap>) jsonParam.get("allTasks");
+			List<LinkedHashMap> groupSchedules = (List<LinkedHashMap>) jsonParam.get("allGroups");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantId", info.getTenantId());
+			map.put("taskSchedules", taskSchedules);
+			
+			ezPMSService.updateAllTaskDatesInPrj(map);
+			
+			map.remove("taskSchedules");
+			map.put("groupSchedules", groupSchedules);
+			
+			ezPMSService.updateAllGroupDatesInPrj(map);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/multiple-tasks/users/" + userId + "] ended");
 		return result;
 	}
 }
