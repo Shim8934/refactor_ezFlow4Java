@@ -257,7 +257,7 @@
 						<th><spring:message code='ezPMS.t57' /></th>
 						<td colspan="3"><c:out value="${project.creatorName}(${project.creatorDeptname})"/></td>
 					</tr>
-					<tr>
+					<tr style="height: 40px;">
 						<th><a class="imgbtn" onclick="openOrganTree(managers)"><span><spring:message code='ezPMS.t63' /></span></a></th>
 						<td colspan="3">
 							<div style="overflow-y:auto; height:100%; width:100%" id="managers"></div>
