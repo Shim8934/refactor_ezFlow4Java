@@ -134,6 +134,14 @@ public class EzEmailMailListController {
 			useMailWriteSenderClick = "NO";
 		}
 		
+		if (useSearchContent.equals("")) {
+			useSearchContent = "NO";
+		}
+		
+		if (useMailNewWindow.equals("")) {
+			useMailNewWindow = "NO";
+		}
+		
 		if (dispname != null) {
 			folderName = dispname;
 		}
