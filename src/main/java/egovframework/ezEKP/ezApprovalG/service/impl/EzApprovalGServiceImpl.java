@@ -14973,7 +14973,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.insertApprovExpEndAprLine(map);
 					
 					// 2018.06.20 jwseo99 - mht 문서는 KLIB 암호화 제공 안 함 (추후에 개발)
-					if ("hwp".equals(extFileName) && "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID))) {
+					if ("hwp".equals(extFileName) && "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID)) && "G".equals(ezCommonService.getTenantConfig("ApprovalFlag", tenantID))) {
 						ezApprovalGKlibService.encryptCompleteApproveFiles(docID, companyID, tenantID);
 					}
 				}
