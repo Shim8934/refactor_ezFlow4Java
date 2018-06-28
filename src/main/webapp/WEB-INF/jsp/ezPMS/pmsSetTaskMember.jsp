@@ -53,6 +53,10 @@
 	   				data:{"projectId" : projectId, "roleId" : 5},
 	   				success: function (result) {
 		   				$("#orglistView").html(result);
+	   				},
+	   				complete: function(){
+	   					//기존유저 세팅
+			   			setPrevUser();
 	   				}
 	   			});
 	   		}
@@ -211,6 +215,7 @@
 		   			
 		   			drawReceiverList("manager");
 	   			});
+	   			
    			});
 	   		
 	   		function ok_Click() {
@@ -271,6 +276,20 @@
 	   			}
 	   		}
 	   		
+	   		//기존 담당자 또는 참여자를 초기값으로 넣어준다.
+	   		function setPrevUser(){
+	   			if(parent.managerList || parent.participants){
+		   			if(type === "participants" && parent.participants.length > 0){
+			   			parent.participants.forEach(function(elem, idx){
+			   				$('#' + elem.userId).click().dblclick();
+			   			});
+		   			} else if (type !== "participants" && parent.managerList.length > 0){
+		   				parent.managerList.forEach(function(elem, idx){
+		   					$('#' + elem.userId).click().dblclick();
+			   			});
+		   			}
+	   			}
+	   		}
 		</script>
 		<style>
 			tr.hover:not(.selectTR):hover{background:#eee; color:#fff;}

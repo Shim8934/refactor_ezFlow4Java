@@ -673,10 +673,10 @@ Ganttalendar.prototype.drawLink = function (from, to, type) {
     link.dblclick(function() {
     	
     	var el = $(this);
-    	var pretaskId = el.attr("from").match(/t(\d+)/) != null? el.attr("from").match(/t(\d+)/)[1] : null;
-    	var taskId = el.attr("to").match(/t(\d+)/) != null? el.attr("to").match(/t(\d+)/)[1] : null;
+    	var pretaskFullId = el.attr("from");
+    	var taskFullId = el.attr("to");
     	
-    	deletePretaskRel(pretaskId, taskId);	
+    	deletePretaskRel(pretaskFullId, taskFullId);	
     })
   }
 };

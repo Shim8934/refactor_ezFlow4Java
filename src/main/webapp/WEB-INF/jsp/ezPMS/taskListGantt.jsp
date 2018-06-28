@@ -682,11 +682,11 @@
 		   			  		});
 	   			  		} else {  			
 	   			  			location.reload();
-	   			  			throw "Pretask Set Error";
 	   			  			return false;
 	   			  		};
 	   			  		
 	   			  	} else {
+	   			  		location.reload();
 	   			  		return false;
 	   			  	}
 	   			};
@@ -713,7 +713,7 @@
 	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly",!canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) || task.type === 'g'); // called on dates only because for other field is called on focus event
 	   			  row.find("[name=endIsMilestone]").prop("checked", task.endIsMilestone);
 	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly",!canWrite || task.isParent() && task.master.shrinkParent || task.type === 'g').updateOldValue();
-	   			  row.find("[name=depends]").val(task.depends).css({"text-align":"right"});
+	   			  row.find("[name=depends]").val(task.depends).css({"text-align":"right"}).attr("readonly", "readonly");
 	   			  row.find(".taskAssigs").html(task.getAssigsString());
 				  
 	   			  //프로젝트 상태가 대기, 보류, 삭제일 때 실제 진행률 변경 못하게 함
@@ -780,12 +780,16 @@
 	   			alert("<spring:message code='ezPMS.t300' />");
 	   		}
 	   		
-	   		function deletePretaskRel(pretaskId, taskId) {
+	   		function deletePretaskRel(pretaskFullId, taskFullId) {
+	   			
+	   			var pretaskId    = pretaskFullId.match(/t(\d+)/) != null ? pretaskFullId.match(/t(\d+)/)[1] : null;
+	   			var taskIdParam  = taskFullId.match(/t(\d+)/) != null ? taskFullId.match(/t(\d+)/)[1] : null;
+	   			var groupIdParam = taskFullId.match(/g(\d+)/) != null ? taskFullId.match(/g(\d+)/)[1] : null;
 	   			
 	   			if(confirm("<spring:message code='ezPMS.t107' />") == true) {
 	   				var data = {
 		   					pretaskId : pretaskId,
-		   					taskId : taskId
+		   					taskId : taskIdParam
 		   			}
 
 		   			$.ajax({
@@ -796,6 +800,11 @@
 		   				url : "/ezPMS/deletePretaskRel.do",
 		   				success : function(result) {
 		   					$('#workSpace').trigger('deleteFocused.gantt');
+		   					var pretaskName = $(".taskEditRow[taskid=" + pretaskFullId + "]").find("input[name='name']").val();
+		   					var taskName 	= $(".taskEditRow[taskid=" + taskFullId + "]").find("input[name='name']").val();
+		   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t308' />"
+		   					addTaskLog(projectId, 3, groupIdParam, taskIdParam, str);
+		   					toastPopupShow(str);
 		   				}
 		   			});
 	   			}
@@ -1360,6 +1369,8 @@
 	   			
 	   			eventSetting();
 	   			ganttRedesign();
+	   			//기존 키다운 이벤트를 없앰.
+	   			$("body").off("keydown.body");
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 
 	   		};
