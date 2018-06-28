@@ -331,7 +331,7 @@
 	    <h1><spring:message code='ezApprovalG.t424'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="return btnCancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return btnCancel_onclick()"></span></li>
             </ul>
         </div>
 	    <table style="margin-top: -15px;">

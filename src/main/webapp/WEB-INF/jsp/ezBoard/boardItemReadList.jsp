@@ -306,12 +306,9 @@
 		  <h1><spring:message code='ezBoard.t320'/></h1>
 		  <div id="close">
 		    <ul>
-		      <li onClick="close_onclick()"><span><spring:message code='ezBoard.t12'/></span></li>
+		      <li onClick="close_onclick()"><span></span></li>
 		    </ul>
 		  </div>
-		  <script type="text/javascript">
-		    selToggleList(document.getElementById("close"), "ul", "li", "0");
-		  </script>
 		  <!-- 2018-02-05 김보미 - 페이징 -->
 <%-- 		  <h2><spring:message code='ezBoard.t356'/></h2> --%>
 		        <div style="width:100%; height:305px" id="divList">

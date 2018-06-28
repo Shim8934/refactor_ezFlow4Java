@@ -410,30 +410,25 @@ form{display:inline;margin:0}
 .table_manage{margin-top:10px;}
 	
 #mainmenu li, #mainmenu li.off{
-	display:block;
-	float:left;
-	margin:0 1px 0 1px;
-	/* margin:0 1px 0 1px;
-	height:28px;
-	background:url('/images/kr/cm/btn_default_offleft.gif') no-repeat top left;
-	padding-left:5px; */
-	cursor:pointer;
-	line-height:27px;
-	padding-right:3px;
+	display: block;
+    float: left;
+    margin: 0 1px 0 1px;
+    cursor: pointer;
+    line-height: 27px;
+    padding-right: 3px;
+    height: 29px;
 }
 
 #mainmenu li span, #mainmenu li span.off{
-	display:block;
-	float:left;
-	/* background:url('/images/kr/cm/btn_default_offright.gif') no-repeat top right;
-	height:28px; */
-	padding:5px 4px;	
-	font:12px gulim;
-	letter-spacing:-1;
-	padding-top:7px;
-	border:1px solid #ddd;
-	color:#666;
-	border-radius: 3px;
+	display: block;
+    float: left;
+    padding: 5px 4px;
+    font: 12px gulim;
+    letter-spacing: -1;
+    padding-top: 7px;
+    border: 1px solid #d2d2d2;
+    border-radius: 2px;
+    box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.25);
 }
 
 #mainmenu li span img, #mainmenu li span.off img{
@@ -528,21 +523,40 @@ form{display:inline;margin:0}
 .popup .pad1{padding:10px 0px;}
 .txt, .box, .popuplist, .content, .popup table, #left, h1, h2, h3, h4, h5, h6, span, br, .nobox, .mainbody table{clear:both}
 #menu {
-	display:block;
+	/* display:block;
 	padding-left:0px;
 	height:28px;
 	margin-bottom:15px;
 	margin-top:5px;
-	vertical-align:middle;
+	vertical-align:middle; */
+	display: block;
+    padding-left: 0px;
+    height: 28px;
+    margin-bottom: 15px;
+    margin-top: 3px;
+    vertical-align: middle;
 }
 
 
 #menu ul{margin:0; padding:0;}
 #menu ul.on{padding-left:0px;}
-#close{position:absolute;right:10px; top:10px;height:35px; }
+#close {
+	/* position:absolute;right:10px; top:10px;height:35px; */
+	position: absolute;
+    right: 10px;
+    top: 8px;
+    height: 35px; 
+}
 #close ul {margin: 0; padding: 0;}
+#close ul li span {
+	display:inline-block;
+	width:25px;
+	height:28px;
+	background-image: url('/images/close_xBtn.png');
+	background-repeat: no-repeat;
+	background-position: 4px 6px;
+}
 #taskChangeMode {float: left; padding-top: 8px; color: black; font-size: 16px; font-weight: bold;}
-
 #menu ul li, #close ul li {
 	display: block;
 	float:left;
@@ -554,10 +568,21 @@ form{display:inline;margin:0}
 	vertical-align:middle
 }
 
-#menu span, #close span {display:inline-block; background:white; border:1px solid rgba(188, 211, 224, 1); height:25px;padding:0px 8px 0px 8px; border-radius:3px; line-height:25px;font-size:12px;color:#333;}
-#menu ul li.on, #close ul li.on { color:#666;}
-#menu li.on span, #close ul li.on span { color:#2058a6; background:white; border:1px solid #6793d8;}
-
+#menu span {
+	/* display:inline-block; background:white; border:1px solid rgba(188, 211, 224, 1); height:25px;padding:0px 8px 0px 8px; border-radius:3px; line-height:25px;font-size:12px;color:#333; */
+	display: inline-block;
+    background: white;
+    border: 1px solid #829dc7;
+    height: 25px;
+    padding: 0px 8px 0px 8px;
+    border-radius: 3px;
+    line-height: 25px;
+    font-size: 12px;
+    color: #333;
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);
+}
+#menu ul li.on { color:#666;}
+#menu li.on span { color:#2058a6; background:white; border:1px solid #6793d8;}
 
 #menu ul li.off, #close ul li.off{
 
@@ -2038,13 +2063,18 @@ form{display:inline;margin:0}
 	}
 .content_propertyInfo table td #mainmenu ul li{margin:0px 0px 0px 5px;}
 .content_propertyInfo table td #mainmenu li, #mainmenu li.off{
-	display:block;
+	/* display:block;
 	float:left;
-	/* height:28px;
+	height:28px;
 	background:url('../images/kr/cm/btn_default_offleft.gif') no-repeat top left;
-	padding-left:5px; */
+	padding-left:5px;
 	cursor:pointer;
-	line-height:27px;
+	line-height:27px; */
+	display: block;
+    float: left;
+    cursor: pointer;
+    line-height: 27px;
+    height: 29px;
 }
 .content_propertyInfo table td #mainmenu li span, #mainmenu li span.off{
 	display:block;
@@ -2084,7 +2114,7 @@ form{display:inline;margin:0}
 .conf_btnPosi input{margin:0px; padding:0px 20px; height:30px; background:#004896; border:none; border-radius:5px;}
 
 .wrap_progress{width:100%; height:100%; border:1px solid #dedede; overflow:hidden;}
-.wrap_progress h4{height:40px; background:#ebebeb; font-size:15px; color:#666; font-family: Gulim, Arial, Helvetica, sans-serif; line-height:38px; border-left:5px solid #185bcf; padding:0px 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+.wrap_progress h4{height:40px; background:#f8f8fa; font-size:15px; color:#666; font-family: Gulim, Arial, Helvetica, sans-serif; line-height:38px; border-left:5px solid #185bcf; padding:0px 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
 .progress_graph{width:135px; height:135px; margin:12px 74px; float:left;}
 .progress_graph p{width:135px; text-align:center; padding:28px 0px;}
 .progress_graph p .graph_txt01{font-size:24px; color:#0dc699; font-weight:bold; font-family: Gulim, Arial, Helvetica, sans-serif;}
@@ -2154,3 +2184,9 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 
 #Preview_HeaderH, #Preview_HeaderW { background-color: #f8f8fa; }
 #subject { vertical-align: middle }
+.extraMenu {
+	position: absolute;
+	top: 4px;
+	right: 45px;	
+}
+.extraMenu ul li span {padding-top:2px !important;}
