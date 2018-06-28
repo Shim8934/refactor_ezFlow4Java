@@ -391,6 +391,12 @@ function getProjectMember(roleId) {
 function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoard) {
 	if (taskList != null) {
 		var kanbanHTML = "";
+		
+		if (taskCount == 0) {
+			$("#" + targetPosition).find(".cardArea").html("");
+			return;
+		}
+		
 		for (var i = 0; i < taskList.length; i++) {
 			if (!isBoard) {
 				var taskStatus = "";
@@ -524,8 +530,10 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 				if (targetStatus == "B") {
 					setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, true);
 				} else {
-						setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, false);
+					setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType, false);
 				}
+			} else {
+				$("#" + targetPosition).find(".cardArea").html("");
 			}
 
 			var title = "";
