@@ -26,12 +26,12 @@
 	}
 	
 	th a.imgbtn {
-		width: 74px;
+		width: 63px;
 		text-align: center;
 	}
 	
 	#overview {
-	    height: 154px;
+	    height: 156px;
 	    width: 97.8%;
 	    resize: none;
 	    margin: 3px 1px 0px 1px;
@@ -75,6 +75,8 @@
 	    visibility: visible;
 	    opacity: 1;
 	}
+	
+	#managers, #participants{max-height: 100%;overflow-y: auto;}
 </style>
 <script>
 var projectId = "<c:out value='${taskDetails.projectId}'/>";
@@ -484,11 +486,11 @@ function initPreTask() {
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openMemberList('managers')"><span><spring:message code='ezPMS.t63' /></span></a></th>
-						<td id="managers"></td>
+						<td class="memberTd" style="height:58px;"><div id="managers"></div></td>
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openMemberList('participants')"><span><spring:message code='ezPMS.t64' /></span></a></th>
-						<td id="participants"></td>
+						<td class="memberTd" style="height:58px;"><div id="participants"></div></td>
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
@@ -499,7 +501,7 @@ function initPreTask() {
 					<tr>
 						<th><spring:message code='ezPMS.t88' /></th>
 						<td>
-							<textarea id="overview" style="height:184px"><c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/></textarea>
+							<textarea id="overview"><c:out value="${taskDetails.overview == null ? '-' : taskDetails.overview}"/></textarea>
 						</td>
 					</tr>
 				</c:otherwise>
