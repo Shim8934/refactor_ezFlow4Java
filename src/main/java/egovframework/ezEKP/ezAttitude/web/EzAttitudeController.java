@@ -3094,10 +3094,10 @@ public class EzAttitudeController {
 				row = sheet.createRow(i + 1);
 				
 				row.createCell(0).setCellValue(i + 1);
-				row.createCell(1).setCellValue(vo.getUserName());
-				row.createCell(2).setCellValue(vo.getUserTitle());
-				row.createCell(3).setCellValue(vo.getDeptName());
-				row.createCell(4).setCellValue(vo.getStartDate());
+				row.createCell(1).setCellValue(vo.getStartDate());
+				row.createCell(2).setCellValue(vo.getUserName());
+				row.createCell(3).setCellValue(vo.getUserTitle());
+				row.createCell(4).setCellValue(vo.getDeptName());
 				
 				row.getCell(0).setCellStyle(bodyStyle);
 				row.getCell(1).setCellStyle(bodyStyle);
