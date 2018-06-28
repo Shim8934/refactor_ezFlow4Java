@@ -1262,7 +1262,7 @@ function GetMailAddresses(name) {
     createNodeInsert(xmlDOM, objNode, "DATA");
 
     if (EmaaddrFormatExt(name).indexOf("@") == -1) {
-        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + EmaaddrFormatExt(name));
+        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + name + ";;mail::" + name);
     }
     else {
     	/* 2018-04-26 이소담 - 메일쓰기에서 받는사람에 메일 주소를 직접 입력하였을때 도메인이 내부도메인일 경우 계정이 존재하는지 확인 후 존재하지않으면 입력되지않도록 개선*/
@@ -1289,7 +1289,7 @@ function GetMailAddresses(name) {
         		console.log(error);
         	}
         })
-        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "mail::" + EmaaddrFormatExt(name));
+        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + name + ";;mail::" + name);
     }
     createNodeAndInsertText(xmlDOM, objNode, "DLGSEARCH", "displayname::" + name);
     createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName");
@@ -2274,9 +2274,9 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     strFileExt = strFileExt.toLowerCase();
                     
                     if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-                    		strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-                    		strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-                    		strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
+                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
                     }
                     
@@ -3151,8 +3151,13 @@ function getEmailAddressList(ReceiverList) {
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
         
         if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail) 
+            if (pEmail == g_myemail) {
+            	if (Org_cmd == "attitudeAbsented") {
+            		attitudeIncludeMe = true;
+                }
+            	
             	continue;
+            }
         }
         
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");

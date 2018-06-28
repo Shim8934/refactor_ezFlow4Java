@@ -46,7 +46,7 @@
 		setProgress();
 		setStatus();
 		btnEvent();
-		
+		console.log(taskDetails);
 		var realStartDate = taskDetails.realStartDate;
 		var realEndDate = taskDetails.realEndDate;
 		
@@ -139,7 +139,6 @@
 	}
 	
 	function btnEvent() {
-		document.getElementById("closeBtn").onclick = popupClose;
 		document.getElementById("saveBtn").onclick = saveStatus;
 	}
 	
@@ -219,21 +218,17 @@
 			}
 		}
 		
-		//실제 날짜를 입력하지 않고 상태만 변경할 경우 처리.
-		if (status === "C") {
-			if (!realEndDate) {
-				realEndDate = TimeToStr(new Date());
-			}
-			
-			realProgress = 100;
-		}
-		
 		if (status === "C" || status === "P") {
 			if (!realStartDate) {
 				realStartDate = TimeToStr(new Date());
 			}
 		}
-
+		//상태만 변경할 경우 처리.
+		if (nowStatus != "C" && status === "C") {
+			realEndDate = TimeToStr(new Date());			
+			realProgress = 100;
+		}
+		
 		//진행률을 100%로 변경했을 경우 status는 C로 변경하여 자동 완료처리
 		if (realProgress == 100) {
 			status = "C";
@@ -242,18 +237,23 @@
 			if (!realEndDate) {
 				realEndDate = TimeToStr(new Date());
 			}
-		} else if (status != "L" && (realProgress > 0 && realProgress < 100)) {
-			//업무 상태가 보류, 진행, 대기인 경우 진행률을 수정하면 업무가 진행상태로 변경됨
-			status = "P";
-			
-			if (!realStartDate) {
-				realStartDate = TimeToStr(new Date());
+		} else if (nowStatus != "L" && (realProgress > 0 && realProgress < 100)) {
+			if (nowStatus == status) {
+				//업무 상태가 보류, 진행, 대기, 완료인 경우 진행률을 수정하면 업무가 진행상태로 변경됨
+				status = "P";
+				realEndDate = "";
+				console.log("here!!");
+				console.log(realEndDate);
+				
+				
+				if (!realStartDate) {
+					realStartDate = TimeToStr(new Date());
+				}
 			}
 			
-		} else if (status == "C" && (realProgress > 0 && realProgress < 100)) {
-			//업무의 상태가 완료인 경우 진행률이 100이 안되면 진행상태로 변경
-			status = "P";
 		}
+		console.log(taskDetails.realProgress.toFixed(1));
+		console.log(realProgress);
 		
 		var data = {
 				taskId : taskDetails.taskId + "",
@@ -493,7 +493,7 @@ button.PHBtn {
 			</table>
 			<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 				<tr>
-					<td><a class="imgbtn" id="submit" onclick="saveStatus()"><span><spring:message code='ezPMS.t265' /></span></a></td>
+					<td><a class="imgbtn" id="saveBtn" onclick="saveStatus()"><span><spring:message code='ezPMS.t265' /></span></a></td>
 				</tr>
 			</table>
 		</div>	

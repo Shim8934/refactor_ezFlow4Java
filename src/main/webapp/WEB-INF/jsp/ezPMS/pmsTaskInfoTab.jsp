@@ -45,7 +45,7 @@
 	.tg td {padding:5px 5px;border:1px solid #ccc;}
 	.tg th {padding:5px 5px;border:1px solid #ccc;width:60px;}
 	th.overviewTh{height:298px;}
-	td.overviewTd{vertical-align:top;}
+	td.overviewTd{height:298px; vertical-align:top;}
 	.tooltip {
 	    position: relative;
 	    display: inline-block;
@@ -86,6 +86,7 @@
 	
 	.managers, .participants{max-height: 100%;overflow-y: auto;}
 	.memberTd{height:29px;}
+	.overviewDiv{max-height: 100%; overflow-y: auto;}
 </style>
 </head>
 <body class="taskInfoTabBody">
@@ -173,7 +174,7 @@
 	  </tr>
 	  <tr>
 	    <th class="overviewTh"><spring:message code='ezPMS.t66' /></th>
-	    <td class="overviewTd">${taskDetails.overview == null ? "-" : taskDetails.overview}</td>
+	    <td class="overviewTd"><div class="overviewDiv">${taskDetails.overview == null ? "-" : taskDetails.overview}</div></td>
 	  </tr>
 	</table>
 </body>

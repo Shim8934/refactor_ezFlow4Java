@@ -786,7 +786,7 @@
 			FROM
 				tbl_pms_project
 			JOIN
-				(SELECT 100 - sum(weight) AS remainingWeight
+				(SELECT 100 - IFNULL(SUM(weight), 0) AS remainingWeight
 				FROM 
 					tbl_pms_task
 				WHERE 
