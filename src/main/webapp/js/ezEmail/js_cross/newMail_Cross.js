@@ -2274,9 +2274,9 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     strFileExt = strFileExt.toLowerCase();
                     
                     if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-                    		strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-                    		strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-                    		strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
+                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
                     }
                     
@@ -3151,8 +3151,13 @@ function getEmailAddressList(ReceiverList) {
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
         
         if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail) 
+            if (pEmail == g_myemail) {
+            	if (Org_cmd == "attitudeAbsented") {
+            		attitudeIncludeMe = true;
+                }
+            	
             	continue;
+            }
         }
         
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");

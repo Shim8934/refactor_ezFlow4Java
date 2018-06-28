@@ -37,7 +37,7 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezCircular/EzCircular_SQL_Mysql.xml"/>
     <!-- 업무관리 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezTask/EzTask_SQL_Mysql.xml"/>
-    <!--업무일지 -->
+	<!--업무일지 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Mysql.xml"/>
     <!-- 웹폴더 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql.xml"/>
@@ -87,4 +87,10 @@
     <!-- 조직도,직원조회 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Mysql.xml"/>
     
+    <!-- 근태관리 모듈관련 SQL쿼리 XML -->
+    
+    <!-- 근태관리 사용자모듈 xml -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml"/>
+    <!-- 근태관리 관리자모듈 xml -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Mysql.xml"/>
 </sqlMapConfig>
