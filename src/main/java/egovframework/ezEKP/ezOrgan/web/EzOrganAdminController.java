@@ -2071,8 +2071,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		if (companyID == null || companyID.equals("")) {
 			companyID = "Top";
+			
+			if (user.getRollInfo().indexOf("c=1") != -1) { // 전체관리자일때
+				companyID += "/organ";			
+			}
 		}
-		
+
 		logger.debug("companyID=" + companyID);
 		        
 		model.addAttribute("companyID", companyID);
