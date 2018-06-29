@@ -73,3 +73,4 @@ var strLang70 =	"Start time must earlier than end time.";
 /*2018-05-24 구해안*/
 var strLang71 = "Period";
 var strLang72 = "Do not set the end date";
+var strLang73 = "Save";

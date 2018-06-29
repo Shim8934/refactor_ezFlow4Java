@@ -224,7 +224,12 @@
 	</head>
 	<body class="popup" style="overflow: hidden">
 	    <h1><spring:message code='ezEmail.t400' /></h1>
-	    <table class="popuplist">
+	    <div id="close">
+            <ul>
+                <li><span onclick="window_Close()"></span></li>
+            </ul>
+        </div>
+	    <table class="popuplist" style="width:100%">
 	        <tr>
 	            <th><spring:message code='ezEmail.t148' /></th>
 	            <td>
@@ -239,9 +244,8 @@
 	            <td><a class="imgbtn"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" id="mailInBtn" onclick="mailIn()"><span><spring:message code='ezEmail.t407' /></span></a>
-	        <a class="imgbtn" id="cancelBtn" onclick="window_Close()"><span><spring:message code='ezEmail.t39' /></span></a>
 	    </div>
 	
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
