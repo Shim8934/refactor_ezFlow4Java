@@ -1169,7 +1169,7 @@
         <li><span onClick="att_search('refresh')"><spring:message code='ezAttitude.t122'/></span></li>
         <li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
 		<c:if test="${adminFlag == 'true'}">
-			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+			<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="margin-top:5px;">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>

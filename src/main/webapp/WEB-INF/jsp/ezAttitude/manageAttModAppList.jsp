@@ -1280,7 +1280,7 @@
         	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
 		</c:if>
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
-			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+			<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="height:28px;border-radius:3px">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
