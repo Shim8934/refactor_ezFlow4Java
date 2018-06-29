@@ -368,11 +368,23 @@ public class EzPMSController3 {
 		int currentPage = (int) param.get("currentPage");
 		int projectId = (int) param.get("projectId");
 		
+		// 새 글 여부를 판단하기 위해서 하루 이전의 시간을 계산해서 넘김
 		String todayStr = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar yesterday = Calendar.getInstance();
 		yesterday.setTime(sdf.parse(todayStr));
 		yesterday.add(Calendar.DATE, -1);
+		
+		// 검색 조건에 지정된 날짜 + 1을 검색 조건으로 재지정(searchByEndDate + 1 0시 이전 글 검색)	
+		String endDate = (String) param.get("searchByEndDate");
+		
+		if(!endDate.equals("")) {
+			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar searchByEndDate = Calendar.getInstance();
+			searchByEndDate.setTime(sdf2.parse((String) param.get("searchByEndDate")));
+			searchByEndDate.add(Calendar.DATE, 1);
+			param.put("searchByEndDate", sdf2.format(searchByEndDate.getTime()));
+		}
 		
 		model.addAttribute("yesterday", sdf.format(yesterday.getTime()));
 		

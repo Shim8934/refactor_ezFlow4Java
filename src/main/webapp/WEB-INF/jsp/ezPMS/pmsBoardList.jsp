@@ -225,8 +225,8 @@
 		searchByOverview = $("#searchByOverview").val();
 		searchByContent = $("#searchByContent").val();
 		
-		// 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
-		$("li[role='treeitem'][aria-level='1']").last().click();
+		/* // 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
+		$("li[role='treeitem'][aria-level='1']").last().children("a").click(); */
 		
 		getBoardList();
 	}
