@@ -1,4 +1,4 @@
-﻿// ApprovUI\ApprovUI.js
+// ApprovUI\ApprovUI.js
 var strLang2 = "合議"
 var strLang3 = "協議"
 var strLang4 = "差し戻し"
@@ -1008,7 +1008,7 @@ var strLangSpjj31 =	"後決を承認しました。";
 var strLangSpjj32 =	"後決を承認処理中にエラーが発生しました。";
 	
 var strLangSpjj33 = "決裁文書へリンク";
-var strLangSpjj34 = "さんが起案した決裁文書が届きました。<br/>処理を行うには下記のリックをクリックしてください。";
+var strLangSpjj34 = "さんが起案した決裁文書が届きました。<br/>処理を行うには下記のリンクをクリックしてください。";
 
 var strLang129 = "수신자"
 
