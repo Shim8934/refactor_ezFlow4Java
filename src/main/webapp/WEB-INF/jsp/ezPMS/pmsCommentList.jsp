@@ -63,8 +63,10 @@
 					taskName = $("#taskNameArea").text();
 					taskName = taskName.substring(0, taskName.lastIndexOf('-'));
 					
-					console.log(taskName);
-					
+					if(taskName == "") {
+						taskName = $("#taskName", parent.document).text();	
+					}
+										
 					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + commentContent.trim() +"<spring:message code='ezPMS.t126' />");
 					getCommentList();
 				} else {
@@ -139,7 +141,7 @@
 		var selectedTR = $(elem).parent().parent().parent("tr");
 		var commentId = selectedTR.attr("data-commentId");
 		var writerId = selectedTR.attr("data-writerId");
-		var commentContent = selectedTR.find("textarea").val();
+		var commentContent = selectedTR.find(".commentContent").val();
 		
 		var data = {
 			commentId : commentId,
@@ -210,11 +212,11 @@
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
-				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%" style="text-align:center;"><spring:message code='ezPMS.t114' /></th>
-				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%" style="text-align:center;"><spring:message code='ezPMS.t80' /></th>
-				<th onclick="setListOrder(this)" data-order='COMMENT_CONTENT'><spring:message code='ezPMS.t130' /></th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%" style="text-align:center;"><spring:message code='ezPMS.t131' /></th>
-				<th style="cursor: default; text-align:center;" width="15%"><spring:message code='ezPMS.t110' />/<spring:message code='ezPMS.t11' /></th>
+				<th id="col1" onclick="setListOrder(this)" data-order='WRITER_NAME' style="text-align:center;"><spring:message code='ezPMS.t114' /></th>
+				<th id="col2" onclick="setListOrder(this)" data-order='TASK_NAME' style="text-align:center;"><spring:message code='ezPMS.t80' /></th>
+				<th id="col3" onclick="setListOrder(this)" data-order='COMMENT_CONTENT'><spring:message code='ezPMS.t130' /></th>
+				<th id="col4" onclick="setListOrder(this)" data-order='WRITE_DATE' style="text-align:center;"><spring:message code='ezPMS.t131' /></th>
+				<th id="col5" style="cursor: default; text-align:center;"><spring:message code='ezPMS.t110' />/<spring:message code='ezPMS.t11' /></th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
@@ -237,13 +239,15 @@
 							<td class="content" style="text-align: left;">
 								<span class="originalContent"><c:out value="${commentVO.commentContent}"/></span>
 								<div class="modifiedContent" style="display: none; width: 100%;">
-									<textarea style="resize: none; width: 84%;"><c:out value="${commentVO.commentContent}"/></textarea>
-									<a class="imgbtn" onclick="saveComment(this)" style="margin-left:2px; margin-top:9px;">
-										<span><spring:message code='ezPMS.t265' /></span>
-									</a>
-									<a class="imgbtn" onclick="cancelComment(this)" style="margin-left:2px; margin-top:9px;">
-										<span><spring:message code='ezPMS.t41' /></span>
-									</a>
+									<textarea class="commentContent" style="resize: none; height: 45px;"><c:out value="${commentVO.commentContent}"/></textarea>
+									<div style="display: inline; float: right;">
+										<a class="imgbtn" onclick="saveComment(this)" style="margin-left:2px; margin-top:9px;">
+											<span><spring:message code='ezPMS.t265' /></span>
+										</a>
+										<a class="imgbtn" onclick="cancelComment(this)" style="margin-left:2px; margin-top:9px;">
+											<span><spring:message code='ezPMS.t41' /></span>
+										</a>
+									</div>
 								</div>
 							</td>
 							<td>${fn:substring(commentVO.writeDate, 0, 16)}</td>
