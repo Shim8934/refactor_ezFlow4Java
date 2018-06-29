@@ -418,7 +418,7 @@
 		    var setsearchinfo_cross_dialogArguments = new Array();
 		    var OpenWin2;
 		    function SearchCondi_onclick() {
-		        var para;
+		        var para = LoadSquery;
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		
@@ -431,7 +431,10 @@
 		        	condition[i] = returnvalue[i]; 
 		        }
 	    	   
-		        if (condition) {
+	    	    if (LoadSquery == "usercontlist") {
+	    	    	MakeSubCondition();
+	    	    	GetUserContList();
+	    	    } else if (condition) {
 		            Init_Flag = "False";
 		            GetDocSearch();
 		        }
@@ -1356,8 +1359,8 @@
 	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <!-- <img src="/images/i_bar.gif"> -->
-	            <li style="vertical-align: middle;"> 
-	            	<select id="sel_year" name="sel_year" style="height:28px;border-radius:3px" onchange="onSelect_Year(this);">    
+	            <li style="vertical-align: middle;">
+	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
 		        </li>
@@ -1368,8 +1371,8 @@
 		        <li id="tSearchCondiApr"><span id="SearchCondiApr" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
-		        <li style="vertical-align: middle;"> 
-		        	<select id="who_year" name="who_year" style="height:28px;border-radius:3px" onchange="onSelect_Year(this);">
+		        <li style="vertical-align: middle;">
+		        	<select id="who_year" name="who_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
 		        </li>

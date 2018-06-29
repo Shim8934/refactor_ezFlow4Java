@@ -133,10 +133,12 @@
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
-		    function OpenUserInfo(pUserID) {
+		    
+		    /* 2018-06-29 홍승비 - 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+		    function OpenUserInfo(pUserID, pDeptID) {
 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function getOneLineReply() {
 		        var xmlhttp = createXMLHttpRequest();

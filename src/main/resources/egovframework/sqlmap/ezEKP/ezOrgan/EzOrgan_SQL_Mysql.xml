@@ -1589,7 +1589,7 @@
 		AND
 			cn = #userID#
 	</select>
-	
+
 	<update id="EzOrganDAO.setListType" parameterClass="Map">
 		UPDATE
 			TBL_USERMASTER
@@ -1615,4 +1615,5 @@
 		AND
 			PHYSICALDELIVERYOFFICENAME = #companyID#	
 	</select>
+
 </sqlMap>

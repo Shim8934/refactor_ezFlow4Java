@@ -1069,7 +1069,7 @@
 				}
 
 				var UserListHTML = "";
-				if (SelectDeptNM.getAttribute("countinfo") != "1") {
+				if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != null && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 					SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>"
 							+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
 							+ strLang256 + "</span>]";
@@ -2081,7 +2081,7 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
 		</div>
 	</body>

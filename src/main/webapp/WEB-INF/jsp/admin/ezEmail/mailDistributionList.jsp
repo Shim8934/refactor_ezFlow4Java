@@ -28,6 +28,8 @@
 		<script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript">
+			var companyId = "${userCompany}";
+			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -42,7 +44,7 @@
 		        }
 		    }
 		    function company_change() {
-		
+		    	companyId = document.all("ListCompany").value;
 		        document.getElementById("DIV_Member").innerHTML = "";
 		
 		        var xmlDom = createXmlDom();
@@ -201,7 +203,7 @@
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do", "", GetOpenWindowfeature(970, 650));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?companyId=" + companyId, "", GetOpenWindowfeature(970, 650));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -233,7 +235,7 @@
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText), "", GetOpenWindowfeature(970, 650));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 650));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {

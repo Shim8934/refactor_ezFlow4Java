@@ -349,6 +349,7 @@
 	                }
 	                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
 	
+	                /* 2018-06-28 홍승비 - 나의게시물 체크박스 */
 	                var DocList = new ListView();
 	                DocList.SetID("BoardList");
 	                DocList.SetHeaderOnClick("SortPage");
@@ -625,9 +626,10 @@
 				} catch (e) {}
 		    }
 		
+		    /* 2018-06-28 홍승비 - 나의게시물 체크박스 전체선택 이벤트가 걸리는 ID 변경 */
 		    function event_HeaderCheckBoxClick(obj) {
 		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
+		        SelList.LoadFromID("BoardListDiv");
 		        if (obj.checked) {
 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
@@ -696,11 +698,12 @@
 		            refresh_onclick();
 		        }
 		    }
-		    function MemberInfo_onclick(pUserID) {
-		        if (gubun == "2") return;
+		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+		    // 나의게시물에는 익명게시물이 나타나지 않으므로, gubun 분기 제거함
+		    function MemberInfo_onclick(pUserID, pDeptID) {  
 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function ReservationItem_onclick() {
 		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
