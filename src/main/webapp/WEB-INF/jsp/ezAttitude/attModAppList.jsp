@@ -1228,7 +1228,7 @@
 					</td>
 				</tr>
 			</table>
-			<div class="btnposition">
+			<div class="btnposition btnpositionNew">
 		        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
 		        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span><spring:message code='ezAttitude.t121'/></span></a>
 		        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span><spring:message code='ezAttitude.t34'/></span></a>
