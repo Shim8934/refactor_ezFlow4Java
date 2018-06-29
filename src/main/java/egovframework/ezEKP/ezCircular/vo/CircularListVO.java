@@ -45,8 +45,6 @@ public class CircularListVO {
 	private String commentStatus;
 	/** 공유상태 */
 	private String shareStatus;
-	/** 본인부서 */
-	private String deptID;
 
 	public int getCircularID() {
 		return circularID;
@@ -179,11 +177,5 @@ public class CircularListVO {
 	}
 	public void setShareStatus(String shareStatus) {
 		this.shareStatus = shareStatus;
-	}
-	public String getDeptID() {
-		return deptID;
-	}
-	public void setDeptID(String deptID) {
-		this.deptID = deptID;
 	}
 }
