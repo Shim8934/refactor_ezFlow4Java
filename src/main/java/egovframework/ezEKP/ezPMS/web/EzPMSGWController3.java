@@ -189,6 +189,7 @@ public class EzPMSGWController3 {
 			String searchByTitle = request.getParameter("searchByTitle");
 			String searchByOverview = request.getParameter("searchByOverview");
 			String searchByContent = request.getParameter("searchByContent");
+			String searchOrNot = request.getParameter("searchOrNot");
 			
 			if (searchByTaskName != null  && !searchByTaskName.equals("")) {
 				searchByTaskName = searchByTaskName.replace("\\","\\\\");
@@ -219,11 +220,41 @@ public class EzPMSGWController3 {
 				searchByContent = searchByContent.replace("%", "\\%");
 				searchByContent = searchByContent.replace("_", "\\_");
 			}
-
-			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, userId, 
-																	   startRow, listCnt, lang, position, orderWhat, orderHow,
-																	   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, 
-																	   searchByTitle, searchByOverview, searchByContent);
+			
+			int noticeCNT = ezPMSService.getBoardNoticeListCount(tenantId, Long.parseLong(projectId), groupId, taskId);
+			List<ProjectBoardVO> boardList = null;
+			
+			// position값은 프로젝트 개요에서만 넘어온다
+			if((position != null && !position.equals("")) || searchOrNot.equals("true")) {
+				boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), groupId, taskId, userId, 
+						   startRow, listCnt, lang, position, orderWhat, orderHow,
+						   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, 
+						   searchByTitle, searchByOverview, searchByContent);
+			} else {
+				
+				if(noticeCNT > startRow) {
+					boardList = ezPMSService.getBoardNoticeList(tenantId, Long.parseLong(projectId), groupId, taskId, startRow, listCnt, lang);
+					
+					boardList.forEach(boardVO -> boardVO.setNotice(true));
+					
+					if(noticeCNT < startRow + listCnt) {
+						listCnt = (startRow + listCnt) - noticeCNT;
+						startRow = 0;
+						boardList.addAll(ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), groupId, taskId, userId, 
+																		   startRow, listCnt, lang, position, orderWhat, orderHow,
+																		   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, 
+																		   searchByTitle, searchByOverview, searchByContent));
+					}
+				} else {
+					startRow = startRow - noticeCNT;
+					boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), groupId, taskId, userId, 
+														   startRow, listCnt, lang, position, orderWhat, orderHow,
+														   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, 
+														   searchByTitle, searchByOverview, searchByContent);
+				}
+			}
+			
+			
 			String imageFileType = "PNG,JPEG,BMP,GIF,JPG";
 			
 			for (int i = 0; i < boardList.size(); i++) {
@@ -286,6 +317,7 @@ public class EzPMSGWController3 {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
 			
 			Long groupId = 0L;
 			Long taskId = 0L;
@@ -336,10 +368,14 @@ public class EzPMSGWController3 {
 				searchByContent = searchByContent.replace("_", "\\_");
 			}
 			
-			int totalCount = ezPMSService.getBoardListCount(info.getTenantId(), Long.parseLong(projectId), groupId, taskId,
-															searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
+			int noticeCount = ezPMSService.getBoardNoticeListCount(tenantId, Long.parseLong(projectId), groupId, taskId);
+			int boardCount = ezPMSService.getBoardListCount(tenantId, Long.parseLong(projectId), groupId, taskId,
+															searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, 
+															searchByTitle, searchByOverview, searchByContent);
+			int totalCount = noticeCount + boardCount;
 			
-			result.put("data", totalCount + "");	// JSON으로 넘기면 숫자가 Long으로 바뀌는데 Long에서 int로 cast할 때의 오류를 피하기 위해서 String으로 바꾼 후에 파싱한다
+			result.put("data1", boardCount + "");
+			result.put("data2", totalCount + "");	// JSON으로 넘기면 숫자가 Long으로 바뀌는데 Long에서 int로 cast할 때의 오류를 피하기 위해서 String으로 바꾼 후에 파싱한다
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {

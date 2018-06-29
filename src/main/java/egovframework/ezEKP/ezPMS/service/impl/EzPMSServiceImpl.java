@@ -1665,7 +1665,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public void moveBoard(JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] moveBoard started");
 
-		ArrayList<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
+		List<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
+		
+		// 중복 제거
+		Set<String> itemIdsSet = new HashSet<String>(itemIds);
+		itemIds = new ArrayList<String>(itemIdsSet);
+		
 		String userId = (String) jsonParam.get("userId");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1706,7 +1711,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public void deleteBoard(int tenantId, JSONObject jsonParam) throws Exception {
 		LOGGER.debug("[SERVICE] deleteBoard started");
 
-		ArrayList<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
+		List<String> itemIds = (ArrayList<String>) jsonParam.get("itemIds");
+		
+		// 중복 제거
+		Set<String> itemIdsSet = new HashSet<String>(itemIds);
+		itemIds = new ArrayList<String>(itemIdsSet);
+		
 		String userId = (String) jsonParam.get("userId");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1818,6 +1828,37 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		LOGGER.debug("[SERVICE] getBoardListCount Ended");
 		return ezPMSDAO.getBoardListCount(map);
+	}
+
+	
+	@Override
+	public List<ProjectBoardVO> getBoardNoticeList(int tenantId, Long projectId, Long groupId, Long taskId, int startRow, int listCnt, String lang) {
+		LOGGER.debug("[SERVICE] getBoardNoticeList Started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("taskId", taskId);
+		map.put("startRow", startRow);
+		map.put("listCnt", listCnt);
+		map.put("lang", lang);
+		LOGGER.debug("[SERVICE] getBoardNoticeList Ended");
+		return ezPMSDAO.getBoardNoticeList(map);
+	}
+
+	@Override
+	public int getBoardNoticeListCount(int tenantId, Long projectId, Long groupId, Long taskId) {
+		LOGGER.debug("[SERVICE] getBoardNoticeListCount Started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("taskId", taskId);
+		
+		LOGGER.debug("[SERVICE] getBoardNoticeListCount Ended");
+		return ezPMSDAO.getBoardNoticeListCount(map);
 	}
 
 	@Transactional

@@ -362,6 +362,7 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS getBoardList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		int boardCount = 0;
 		int totalCount = 0;
 		int listCnt = (int) param.get("limit");
 		int countPage = 10;
@@ -395,8 +396,10 @@ public class EzPMSController3 {
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list-count/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
-		if (status.equals("ok")) {			
-			totalCount = Integer.parseInt((String) resultBody.get("data"));
+		if (status.equals("ok")) {
+			boardCount = Integer.parseInt((String) resultBody.get("data1"));
+			totalCount = Integer.parseInt((String) resultBody.get("data2"));
+			model.addAttribute("boardCount", boardCount);
 			model.addAttribute("totalCount", totalCount);
 		}
 		

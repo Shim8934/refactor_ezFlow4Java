@@ -46,6 +46,7 @@
 	var searchByTitle = "";
 	var searchByOverview = "";
 	var searchByContent = "";
+	var searchOrNot = "";
 	
 	$(document).ready(function() {
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
@@ -82,6 +83,7 @@
 			searchByTitle = "";
 			searchByOverview = "";
 			searchByContent = "";
+			searchOrNot = "";
 			
 			getBoardList();
 		});
@@ -122,6 +124,7 @@
 			searchByTitle : searchByTitle,
 			searchByOverview : searchByOverview,
 			searchByContent : searchByContent,
+			searchOrNot : searchOrNot
 		}
 		
 		$.ajax({

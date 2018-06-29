@@ -7,7 +7,7 @@
 	var boardDetail;
 	var CurrentHeight = document.documentElement.clientHeight - 100;
 	
-	var contentCount = '<c:out value="${totalCount}"/>';
+	var contentCount = '<c:out value="${boardCount}"/>';
 	taskName = '<c:out value="${taskName}"/>';
 	
 	$(function() {
@@ -71,7 +71,12 @@
 	// 게시판 상세 화면
 	function goBoardDetail(elem) {
 		var itemId = $(elem).attr("data-itemId");
-		$(elem).removeClass("noView");
+		
+		// 공지사항이 아닐 때만 볼드가 없어진다
+		if($(elem).attr("data-noticeornot") == 'false') {
+			$(elem).removeClass("noView");
+		}
+		
 		var feature = GetOpenPosition(790, 800);
 		boardDetail = window.open("/ezPMS/getBoardDetail.do?projectId=" + projectId + "&itemId=" + itemId, "", 
 								  "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
@@ -226,6 +231,7 @@
 		searchByTitle = $("#searchByTitle").val();
 		searchByOverview = $("#searchByOverview").val();
 		searchByContent = $("#searchByContent").val();
+		searchOrNot = "true";
 		
 		/* // 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
 		$("li[role='treeitem'][aria-level='1']").last().children("a").click(); */
@@ -280,11 +286,11 @@
 				<c:otherwise>
 					<c:forEach items="${data}" var="projectBoardVO">
 						<tr data-itemid="${projectBoardVO.itemId}" data-groupId="${projectBoardVO.groupId}" data-taskid="${projectBoardVO.taskId}" 
-							data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}">
+							data-writetype="${projectBoardVO.writeType}" data-readornot="${projectBoardVO.readOrNot}" data-noticeornot="${projectBoardVO.notice}">
 							<td class="checkbox"><input type="checkbox" name="boardCheckbox" onchange="selectTR(this);"></td>
 							<td>
 								<c:choose>
-									<c:when test="${projectBoardVO.writeType == 1 || projectBoardVO.writeType == 2}">
+									<c:when test="${projectBoardVO.notice}">
 										<img src="/images/i_notice.gif" alt="NOTICE" />
 									</c:when>
 									<c:otherwise><c:out value="${projectBoardVO.docNo}"/></c:otherwise>
