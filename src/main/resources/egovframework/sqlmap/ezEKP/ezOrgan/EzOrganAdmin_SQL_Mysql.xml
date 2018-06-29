@@ -2888,7 +2888,7 @@
             FROM
             	TBL_USERMASTER_RETIRE
             WHERE
-            	TENANT_ID = #v_TENANT_ID#	
+            	TENANT_ID = #v_TENANT_ID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
 	</select>
 	
@@ -2915,7 +2915,7 @@
            FROM
            		TBL_USERMASTER_RETIRE 
            WHERE
-                TENANT_ID = #v_TENANT_ID#
+                TENANT_ID = #v_TENANT_ID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
            ORDER BY UPDATEDT DESC
            LIMIT #v_STARTROW#, #v_ROWPERPAGE#                	
 		]]>

@@ -145,9 +145,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String companyId)	throws Exception {
         logger.debug("getRetireList started");
-        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID + ",companyId=" + companyId);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -155,6 +155,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
 		map.put("v_STARTROW", pPageRow*(pPage - 1));
+		map.put("companyId", companyId);
 				
 		List<OrganUserVO> retireList = ezOrganAdminDao.getRetireList(map);
 		
@@ -495,15 +496,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String companyId) throws Exception {
 	    logger.debug("getRetireListCount started");
-	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID + ",companyId=" + companyId);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
+		map.put("companyId", companyId);
 		
 		logger.debug("getRetireListCount ended");
 		
