@@ -1315,7 +1315,9 @@ GanttMaster.prototype.endTransaction = function () {
     //console.debug("rolling-back transaction");
 
     //compose error message
-    var msg = "ERROR:\n";
+    //에러 메시지를 변경하기 위해 수정. 2018-06-29 홍대표
+    var msg = msgStr01 + " " || "";
+//    var msg = "ERROR:\n";
     for (var i = 0; i < this.__currentTransaction.errors.length; i++) {
       var err = this.__currentTransaction.errors[i];
       msg = msg + err.msg + "\n\n";
@@ -1329,6 +1331,9 @@ GanttMaster.prototype.endTransaction = function () {
     this.__inUndoRedo = true; // avoid Undo/Redo stacks reset
     this.loadTasks(oldTasks.tasks, oldTasks.selectedRow);
     this.redraw();
+    
+    //트랜잭션 에러로 되 돌리고 난 후 그 상태를 저장하기 위해 추가 2018-06-29 홍대표
+    saveAllSchedules();
 
   }
   //reset transaction

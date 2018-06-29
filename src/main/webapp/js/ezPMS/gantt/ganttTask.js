@@ -421,7 +421,9 @@ function updateTree(task) {
 
   if (p.start!=newStart) {
     if (p.startIsMilestone) {
-      task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + GanttMaster.messages["START_IS_MILESTONE"], task);
+    	//에러 메시지를 변경하기 위해 수정. 2018-06-29 홍대표
+      task.master.setErrorOnTransaction(GanttMaster.messages["START_IS_MILESTONE"], task);
+//      task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + GanttMaster.messages["START_IS_MILESTONE"], task);
       return false;
     } else if (p.depends) {
       task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + GanttMaster.messages["TASK_HAS_CONSTRAINTS"], task);

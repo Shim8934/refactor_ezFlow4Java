@@ -440,13 +440,14 @@ Ganttalendar.prototype.drawTask = function (task) {
 			svg.rect(taskSvg, 0, 0, "100%", 1, {fill:"#000"});
 //      svg.rect(taskSvg, 0, 0, "100%", 3, {fill:"#000"});
 
-    if (task.startIsMilestone) {
-      svg.image(taskSvg, -9, dimensions.height/2-9, 18, 18, self.master.resourceUrl +"milestone.png")
-    }
-
-    if (task.endIsMilestone) {
-      svg.image(taskSvg, "100%",dimensions.height/2-9, 18, 18, self.master.resourceUrl +"milestone.png", {transform:"translate(-9)"})
-    }
+	//마일스톤 보이지 않게 하기 위해 주석처리 - 홍대표 2018-06-28
+//    if (task.startIsMilestone) {
+//      svg.image(taskSvg, -9, dimensions.height/2-9, 18, 18, self.master.resourceUrl +"milestone.png")
+//    }
+//
+//    if (task.endIsMilestone) {
+//      svg.image(taskSvg, "100%",dimensions.height/2-9, 18, 18, self.master.resourceUrl +"milestone.png", {transform:"translate(-9)"})
+//    }
 
     //task label
     svg.text(taskSvg, "100%", 18, task.name, {class:"taskLabelSVG", transform:"translate(20,-5)"});
