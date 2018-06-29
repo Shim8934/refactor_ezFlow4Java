@@ -12,5 +12,5 @@ public interface EzCabinetRestService {
 	
 	//Admin company capacity service
 	public JSONObject getCompanyCapacity(HttpServletRequest request, String companyId) throws Exception;
-	public JSONObject saveCompanyCapacity(HttpServletRequest request, String newCapacity, String companyId) throws Exception;
+	public JSONObject saveCompanyCapacity(HttpServletRequest request, String capacityType, String newCapacity, String companyId) throws Exception;
 }

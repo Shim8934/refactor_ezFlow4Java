@@ -7,8 +7,9 @@
 	<!-- CompanyCapacity resultMap -->
 	<resultMap id="companyCapacityVO" class="CompanyCapacityVO">
 		<result property="companyId"         column="company_id"             columnIndex="1"/>
-		<result property="capacityValue"     column="capacity_value"         columnIndex="2"/>
-		<result property="tenantId"          column="tenant_id"              columnIndex="3"/>
+		<result property="capacityType"      column="capacity_type"          columnIndex="2"/>
+		<result property="capacityValue"     column="capacity_value"         columnIndex="3"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="4"/>
 	</resultMap>
 	
 	<select id="EzCabinetAdminDAO.getCompanyCapacity" resultMap="companyCapacityVO">
@@ -20,10 +21,10 @@
 			<![CDATA[ select 1 from dual where not exists (select tenant_id, company_id from tbl_cabinet_company_capacity where company_id = #companyId# and tenant_id = #tenantId#) ]]>
 		</selectKey>
 		<isEqual property="v_temp" compareValue="1">
-			<![CDATA[ insert into tbl_cabinet_company_capacity (company_id, capacity_value, tenant_id) values (#companyId#, #capacity#, #tenantId#) ]]>
+			<![CDATA[ insert into tbl_cabinet_company_capacity (company_id, capacity_type, capacity_value, tenant_id) values (#companyId#, #type#, #capacity#, #tenantId#) ]]>
 		</isEqual>
 		<isNotEqual property="v_temp" compareValue="1">
-			<![CDATA[ update tbl_cabinet_company_capacity set capacity_value = #capacity# where company_id = #companyId# and tenant_id = #tenantId# ]]>
+			<![CDATA[ update tbl_cabinet_company_capacity set capacity_type = #type#, capacity_value = #capacity# where company_id = #companyId# and tenant_id = #tenantId# ]]>
 		</isNotEqual>
 	</insert>
 	

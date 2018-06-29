@@ -243,15 +243,16 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinetadmin/capcity/{newvalue}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putChangeBasicStorage(@PathVariable(value="newvalue") String newValue, HttpServletRequest request) {
-		String serverName  = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
-		String companyId   = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+	@RequestMapping(value="/rest/ezcabinetadmin/capcity/{companyid}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putChangeBasicStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
+		String serverName  = request.getHeader("host-name")       != null ? request.getHeader("host-name")                         : "";
+		String newValue    = request.getParameter("newCapacity")  != null ? request.getParameter("newCapacity")                    : "";
+		int type           = request.getParameter("capacityType") != null ? Integer.parseInt(request.getParameter("capacityType")) : -1;
 		JSONObject result  = new JSONObject();
 		
-		logger.debug("New Value: " + newValue + " || serverName: " + serverName + " || CompanyId: " + companyId);
+		logger.debug("CapacityType: "+ type + "New Value: " + newValue + " || serverName: " + serverName + " || CompanyId: " + companyId);
 		
-		if (serverName.equals("") || companyId.equals("") || newValue.equals("")) {
+		if (serverName.equals("") || companyId.equals("") || type == -1 || (type == 1 && newValue.equals(""))) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -260,7 +261,7 @@ public class EzCabinetGWController {
 		
 		try {
 			int tenantId = loginService.getTenantId(serverName);
-			cabinetAdminService.saveCompanyCapacity(newValue, companyId, tenantId);
+			cabinetAdminService.saveCompanyCapacity(type, newValue, companyId, tenantId);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

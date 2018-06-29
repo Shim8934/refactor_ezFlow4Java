@@ -23,6 +23,13 @@
 			<div id="mainSetting">
 				<table class="content on">
 					<tr>
+						<th><spring:message code='ezCabinet.t21'/></th>
+						<th class="white">
+							<input type="radio" name="capType" role="limit"  ><label><spring:message code='ezCabinet.t113'/></label>
+							<input type="radio" name="capType" role="unlimit"><label><spring:message code='ezCabinet.t114'/></label>
+						</th>
+					</tr>
+					<tr>
 						<th><spring:message code='ezCabinet.t16'/></th>
 						<th class="white">
 							<input id="basicValue" type="text"/>
@@ -41,7 +48,8 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
 			(function() {
-				var currentCapacity = "";
+				var currentCapacity = "0";
+				var currentType     = 1;
 				
 				getConfig();
 				initBttns();
@@ -54,6 +62,27 @@
 					var buttons = document.getElementsByClassName("imgbtn");
 					buttons[0].firstElementChild.onclick = function(e) {saveConfig();};
 					buttons[1].firstElementChild.onclick = function(e) {resetConfig();};
+					
+					var radioBttns = document.getElementsByName("capType");
+					for (var i = 0, len = radioBttns.length; i < len; i++) {
+						radioBttns[i].onchange = function(e) {changeCapacityType(this)};
+					}
+				}
+				
+				function changeCapacityType(radioElmt) {changeBttnStatus(radioElmt.getAttribute("role"));}
+				
+				function changeBttnStatus(capacityType) {
+					var inputElmt = document.getElementById("basicValue");
+					
+					if (capacityType == "unlimit") {
+						inputElmt.value = "";
+						inputElmt.disabled = true;
+					}
+					else {
+						inputElmt.value    = currentCapacity;
+						inputElmt.disabled = false;
+						inputElmt.focus();
+					}
 				}
 				
 				function getConfig() {
@@ -63,21 +92,28 @@
 				}
 				
 				function processData(data) {
-					currentCapacity = data.capacity["capacityValue"];
+					currentCapacity = data.capacity["capacityValue"] ? data.capacity["capacityValue"] : "0";
+					currentType     = data.capacity["capacityType"];
 					resetConfig();
 				}
 				
 				function saveConfig() {
-					var newCapacity = document.getElementById("basicValue").value;
+					var capacityType = document.querySelector('input[name="capType"]:checked').getAttribute("role");
+					var newCapacity  = "";
 					
-					if (!isValid(newCapacity)) {
-						alert(CabinetMessages.strInvalid);
-						document.getElementById("basicValue").focus();
-						return;
+					if (capacityType == "limit") {
+						newCapacity = document.getElementById("basicValue").value;
+						
+						if (!isValid(newCapacity)) {
+							alert(CabinetMessages.strInvalid);
+							document.getElementById("basicValue").focus();
+							return;
+						}
 					}
 					
 					var url  = "/admin/ezCabinet/saveConfig.do";
 					var data = {
+						type      : capacityType == "limit" ? "1" : "0",
 						capacity  : newCapacity,
 						companyId : document.getElementById("companyList").value
 					};
@@ -88,7 +124,9 @@
 				function afterSaveConfig(data) {
 					switch(data.code) {
 						case 0:
-							currentCapacity = document.getElementById("basicValue").value;
+							currentCapacity  = document.getElementById("basicValue").value;
+							var capacityType = document.querySelector('input[name="capType"]:checked').getAttribute("role");
+							currentType      = capacityType == "limit" ? 1 : 0;
 							alert(CabinetMessages.strSave);
 							break;
 						case 1:
@@ -118,7 +156,12 @@
 					});
 				}
 				
-				function resetConfig()  {document.getElementById("basicValue").value = currentCapacity;}
+				function resetConfig()  {
+					document.getElementById("basicValue").value = currentCapacity;
+					var capacityType = currentType == 0 ? "unlimit" : "limit";
+					document.querySelector('input[role="' + capacityType + '"]').checked = true;
+					changeBttnStatus(capacityType);
+				}
 				function isValid(value) {if (!isNaN(value) && parseFloat(value) > 0) {return true;} else {return false;}}
 			})();
 		</script>

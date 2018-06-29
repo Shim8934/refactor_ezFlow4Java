@@ -21,15 +21,16 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService{
 		CompanyCapacityVO result = ezCabinetAdminDAO.getCompanyCapacity(map);
 		
 		if (result == null) {
-			result = new CompanyCapacityVO(companyId, "0", tenantId);
+			result = new CompanyCapacityVO(companyId, 1, "0", tenantId);
 		}
 		
 		return result;
 	}
 
 	@Override
-	public void saveCompanyCapacity(String newValue, String companyId, int tenantId) throws Exception {
+	public void saveCompanyCapacity(int type, String newValue, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("type",      type);
 		map.put("capacity",  newValue);
 		map.put("companyId", companyId);
 		map.put("tenantId",  tenantId);

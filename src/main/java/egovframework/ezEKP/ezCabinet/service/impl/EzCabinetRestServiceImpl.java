@@ -112,11 +112,12 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
-	public JSONObject saveCompanyCapacity(HttpServletRequest request, String newCapacity, String companyId) throws Exception {
+	public JSONObject saveCompanyCapacity(HttpServletRequest request, String capacityType, String newCapacity, String companyId) throws Exception {
 		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/" + newCapacity + "/comp";
+		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/" + companyId + "/comp";
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("companyId", companyId);
+		param.put("newCapacity",  newCapacity);
+		param.put("capacityType", capacityType);
 		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}

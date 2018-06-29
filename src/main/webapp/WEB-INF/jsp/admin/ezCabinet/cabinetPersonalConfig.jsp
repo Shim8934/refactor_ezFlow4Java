@@ -24,7 +24,7 @@
 				<ul>
 					<li><a><span><spring:message code='ezCabinet.t48' /></span></a></li>
 					<li><a><span><spring:message code='ezCabinet.t49' /></span></a></li>
-					<li><a><span><spring:message code='ezCabinet.t108'/></span></a></li>
+					<li><a><span><spring:message code='ezCabinet.t112'/></span></a></li>
 					<li id="right"><img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView"></li>
 				</ul>
 			</div>

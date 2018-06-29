@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCabinet.vo;
 
 public class CompanyCapacityVO {
 	private String companyId;
+	private int capacityType;
 	private String capacityValue;
 	private int    tenantId;
 	
@@ -9,8 +10,9 @@ public class CompanyCapacityVO {
 		
 	}
 	
-	public CompanyCapacityVO(String companyId, String capacityValue, int tenantId) {
+	public CompanyCapacityVO(String companyId, int capacityType, String capacityValue, int tenantId) {
 		this.companyId     = companyId;
+		this.capacityType  = capacityType;
 		this.capacityValue = capacityValue;
 		this.tenantId      = tenantId;
 	}
@@ -37,5 +39,13 @@ public class CompanyCapacityVO {
 	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public int getCapacityType() {
+		return capacityType;
+	}
+
+	public void setCapacityType(int capacityType) {
+		this.capacityType = capacityType;
 	}
 }

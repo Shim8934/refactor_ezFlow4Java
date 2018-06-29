@@ -165,15 +165,16 @@ public class EzCabinetAdminController {
 		logger.debug("jsonSaveCompanyCapacity end");
 		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String newCapacity     = request.getParameter("capacity")  != null ? request.getParameter("capacity")  : "";
+		String capacityType    = request.getParameter("type")      != null ? request.getParameter("type")      : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (companyId.equals("") || newCapacity.equals("")) {
+		if (companyId.equals("") || capacityType.equals("") || (capacityType.equals("1") && newCapacity.equals(""))) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveCompanyCapacity(request, newCapacity, companyId);
+		resultObj = cabinetRestService.saveCompanyCapacity(request, capacityType, newCapacity, companyId);
 		
 		logger.debug("jsonSaveCompanyCapacity end");
 		return resultObj.toString();
