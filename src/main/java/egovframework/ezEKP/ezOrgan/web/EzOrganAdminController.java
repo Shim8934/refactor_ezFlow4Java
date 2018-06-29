@@ -917,6 +917,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			logger.debug("retireUser rc=" + rc);
 			
+			List<String> distributionList = null;
+			
 			if (rc == 0) { // retireUser 성공				
 				// 해당 User가 속한 Group Email 주소에서 해당 User를 제거한다.
 				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary(), tenantID);
@@ -944,7 +946,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					result = "EMAIL_ERROR";
 					break;					
-				}				
+				}
+				// 사용자가 속한 공용배포그룹의 Group Email 주소 목록을 구한다.
+				distributionList = ezEmailUserAdminService.getUserDistributionList(mailAddr);
+				
+				for (String dist : distributionList) {
+					logger.debug("dist=" + dist);
+					
+					// 공용배포그룹의 Group Email 주소로부터 해당 User를 제거한다.
+					rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
+					
+					logger.debug("updateGroupDel rc=" + rc);							
+				}
 			}
 			// dhlee - end
 		}

@@ -447,7 +447,7 @@
 	    <xml id="AddressFolderXML" style="display: none;">
 			${rootAddressXML}
 		</xml>
-		<div class="btnbtn">
+		<div class="btnposition btnpositionNew">
 		    <c:choose>
 		    	<c:when test="${show == 'Y'}">
 		    		<a class="imgbtn"><span onclick="select_onclick()"><spring:message code='ezAddress.t25' /></span></a>

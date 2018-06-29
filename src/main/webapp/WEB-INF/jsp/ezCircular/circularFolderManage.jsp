@@ -188,7 +188,7 @@
 		    	</td>
 		  	</tr>
 		</table>
-		<div class="btnposition" style="margin-top:10px;">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezCircular.t77' /></span></a>
 		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezCircular.t29' /></span></a>
 		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezCircular.t30' /></span></a>

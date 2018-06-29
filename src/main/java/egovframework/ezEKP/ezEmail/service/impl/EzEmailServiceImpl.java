@@ -1549,7 +1549,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
-		
+		String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", userInfo.getTenantId());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		IMAPAccess ia = null;
@@ -1561,9 +1561,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 			Folder folder = ia.getFolder(ezEmailUtil.getInboxFolderId());		
 			folder.open(Folder.READ_ONLY);
 	        UIDFolder uidFolder = (UIDFolder)folder;
+	        Message[] messages = null;
 	        
-	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false, true);
-	        
+	        if (useAdvancedMailSearch.equals("YES")) {
+	        	messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", null, sdf.parse(dateTime), false, true, false, true);
+	        } else {
+	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false, true);
+	        }
 	        // sort the messages
  			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
 	        
@@ -1676,7 +1680,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-				
 		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
 		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
