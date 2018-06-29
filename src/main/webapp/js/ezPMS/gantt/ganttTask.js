@@ -137,9 +137,9 @@ Task.prototype.setPeriod = function (start, end) {
     return true;
   }
 
-  if (newDuration == this.duration) { // is shift
+  /*if (newDuration == this.duration) { // is shift
     return this.moveTo(start, false,true);
-  }
+  }*/
 
   var wantedStartMillis = start;
 
