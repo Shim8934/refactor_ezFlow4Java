@@ -393,7 +393,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String commentStatusList = "";
 
 		for (int i=0; i<receiverLength; i++) {			
-			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID, "");
+			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID, userInfo.getCompanyID());
 
 			//의견을 확인 안한 회람자의 commentStatus 를 1 로 update
 			List<CircularListVO> commentStatus = getCommentStatus(circularID, receiverID[i].trim(), tenantID);
@@ -494,7 +494,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void modifyCircular(String title, int importance, int option, int circularID, int tenantID, int receiverLength, String[] receiverID, int updateStatus,
 			int circularUserId, String memberName, String memberName2, int status, String confirmDate, String content, String fileList, String pDirPath,
-			String[] receiverName, String[] receiverName2, String offset) throws Exception {
+			String[] receiverName, String[] receiverName2, String offset, String companyID) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
 
@@ -523,7 +523,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		deleteCircularUser(circularID, tenantID);
 		
 		for (int i=0; i<receiverLength; i++) {
-			insertCircularUser(circularUserId, circularID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, confirmDate, updateStatus, tenantID, "");
+			insertCircularUser(circularUserId, circularID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, confirmDate, updateStatus, tenantID, companyID);
 		}
 		
 		//첨부파일 삭제 후 등록
@@ -717,15 +717,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		map.put("circularBMId", circularBMId);
 		
-		//for(String memberID : memberListStr) {
 		for(int i=0; i<memberListStr.length; i++) {
-			map.put("deptName", deptListStr[i]);
-			
-			String dept = ezCircularDAO.getCircularDeptUser(map);
-			
-			logger.debug("memberID = " + memberListStr[i] + ", dept = " + dept);
+			logger.debug("memberID = " + memberListStr[i] + ", dept = " + deptListStr[i]);
 			map.put("memberID", memberListStr[i]);
-			map.put("deptID", dept);
+			map.put("deptID", deptListStr[i]);
 			
 			ezCircularDAO.setCircularMemberList(map);
 		}
@@ -786,13 +781,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.deleteCircularMemberList(map);
 		
 		for(int i=0; i<memberListStr.length; i++) {
-			map.put("deptName", deptListStr[i]);
-			map.put("memberID", memberListStr[i]);
-
-			String dept = ezCircularDAO.getCircularDeptUser(map);
-			
 			logger.debug("memberID = " + memberListStr[i] + ", dept = " + deptListStr[i]);
-			map.put("deptID", dept);
+			
+			map.put("deptID", deptListStr[i]);
+			map.put("memberID", memberListStr[i]);
 					
 			ezCircularDAO.setCircularMemberList(map);
 		}

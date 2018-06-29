@@ -114,7 +114,7 @@
             AND
 				B.updatestatus IN (0, 1)
             AND 
-            	A.companyid = #companyID#
+            	B.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -357,7 +357,8 @@
                 A.memberid,
                 A.membername,
                 A.membername2,
-                B.title
+                B.title,
+                A.deptid
             FROM
                 TBL_CIRCULAR_BMUSER A
             JOIN
@@ -1814,33 +1815,15 @@
 											circularId = #circularID# )
 		]]>
 	</select>
- 
-	<select id="EzCircularDAO.getCircularDeptUser" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				cn 
-			FROM 
-				tbl_deptmaster 
-			WHERE 
-				tenant_id=#tenantID# AND displayname = #deptName# AND EXTENSIONATTRIBUTE2 = #companyID#
-		]]>
-	</select> 
 	
 	<select id="EzCircularDAO.getCircularUserDeptId" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			SELECT 
-				DISPLAYNAME 
-			FROM 
-				tbl_deptmaster 
-			WHERE 
-				tenant_id=#tenantID# 
-			AND 
-				CN = ( SELECT 
-								deptId 
-						  FROM 
-								tbl_circular_bmuser
-						  WHERE 
-								circularBMId=#circularBMId# AND memberId = #userID#)
+			SELECT
+				deptId
+			FROM
+				tbl_circular_bmuser
+			WHERE
+				tenantid=#tenantID# AND circularBMId=#circularBMId# AND memberId = #userID#
 		]]>
 	</select> 
 	

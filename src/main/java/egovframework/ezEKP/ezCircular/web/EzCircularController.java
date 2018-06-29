@@ -1329,7 +1329,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularID(), 
 					userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId, circularListVO.getMemberName(), 
 					circularListVO.getMemberName2(), circularListVO.getStatus(), confirmDate, circularListVO.getContent(), 
-					fileList, pDirPath, receiverName, receiverName2, userInfo.getOffset());
+					fileList, pDirPath, receiverName, receiverName2, userInfo.getOffset(), userInfo.getCompanyID());
 		}
 
 		logger.debug("saveCircular ended");
@@ -1754,17 +1754,17 @@ public class EzCircularController extends EgovFileMngUtil {
 				userID = list.get(i).getMemberID();
 				userName = list.get(i).getMemberName();
 				userName2 = list.get(i).getMemberName2();
-				deptName = ezCircularService.getCircularUserDeptId(tenantId, circularBMId, list.get(i).getMemberID());
+				deptName = list.get(i).getDeptID();
 			} else if (i != list.size()-1) {
 				userID += list.get(i).getMemberID() + ", ";
 				userName += list.get(i).getMemberName() + ", ";
 				userName2 += list.get(i).getMemberName2() + ", ";
-				deptName += ezCircularService.getCircularUserDeptId(tenantId, circularBMId, list.get(i).getMemberID()) + ", ";
+				deptName += list.get(i).getDeptID() + ", ";
 			} else {
 				userID += list.get(i).getMemberID();
 				userName += list.get(i).getMemberName();
 				userName2 += list.get(i).getMemberName2();
-				deptName += ezCircularService.getCircularUserDeptId(tenantId, circularBMId, list.get(i).getMemberID());
+				deptName += list.get(i).getDeptID();
 			} 
 		}
 		

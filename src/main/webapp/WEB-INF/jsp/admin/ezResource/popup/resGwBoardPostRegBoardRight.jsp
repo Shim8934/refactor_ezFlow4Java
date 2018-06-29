@@ -637,7 +637,7 @@
 	                    document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	                }
 	                var UserListHTML = "";
-	                if (SelectDeptNM.getAttribute("countinfo") != "1") {
+	                if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 	                    SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
