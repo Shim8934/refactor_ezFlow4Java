@@ -226,6 +226,11 @@
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.lhm63' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel()"></span></li>
+            </ul>
+        </div>
 		<span>▒ <spring:message code='ezEmail.lhm39' /></span><br>
 		<span>▒ <spring:message code='ezEmail.lhm41' /></span><br>
 		<br>
@@ -260,7 +265,6 @@
 		
 		<div class="btnposition btnpositionNew">
 		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
-		   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 		
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>

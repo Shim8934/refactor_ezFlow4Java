@@ -48,7 +48,7 @@
 					
 					saveid(frm);
 
-					frm.encryptID.value = rsa.encrypt(frm.id.value);
+					frm.encryptID.value = rsa.encrypt(frm.id.value.toLowerCase());
 					frm.encryptPass.value = rsa.encrypt(frm.password.value);
 					frm.id.value = "";
 					frm.password.value = "";

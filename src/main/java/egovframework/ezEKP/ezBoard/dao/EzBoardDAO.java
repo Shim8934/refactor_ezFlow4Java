@@ -668,11 +668,22 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getReaderListCount", map);
 	}
 	
-	public void updateMoveOneLineReply(Map<String, Object> map) throws Exception{
+	public void updateMoveOneLineReply(Map<String, Object> map) throws Exception {
 		update("EzBoardDAO.updateMoveOneLineReply", map);
 	}
 	/* 2018-06-11 홍승비 - 포토/썸네일 이미지 리스트 중에서 가장 큰 IMAGEID 가져오기 */
-	public String getLastImageID(Map<String, Object> map) throws Exception{
+	public String getLastImageID(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardDAO.getLastImageID", map);
 	}
+	/* 2018-06-28 홍승비 - 승인게시물 검색 카운트 쿼리 추가 */
+	public int getSearchApprBoardItemCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getSearchApprBoardItemCount", map);
+	}
+	
+	/* 2018-06-28 홍승비 - 승인게시물 검색 리스트 쿼리 추가 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getSearchApprBoardItemList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchApprBoardItemList", map);
+	}
+	
 }
