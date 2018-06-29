@@ -805,6 +805,20 @@ public class EzPMSController3 {
 		int currentPage = (int) param.get("currentPage");
 		String projectId = (String) param.get("projectId");
 	
+		// 검색 조건에 지정된 날짜 + 1을 검색 조건으로 재지정(searchByEndDate + 1 0시 이전 글 검색)	
+		String endDate = (String) param.get("searchByEndDate");
+		
+		if(endDate != null) {
+			
+			if(!endDate.equals("")) {
+				SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar searchByEndDate = Calendar.getInstance();
+				searchByEndDate.setTime(sdf2.parse((String) param.get("searchByEndDate")));
+				searchByEndDate.add(Calendar.DATE, 1);
+				param.put("searchByEndDate", sdf2.format(searchByEndDate.getTime()));
+			}
+		}
+		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/comments/list-count/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		

@@ -138,7 +138,7 @@
 	}
 	
 	function saveComment(elem) {
-		var selectedTR = $(elem).parent().parent().parent("tr");
+		var selectedTR = $(elem).parents("tr").eq(0);
 		var commentId = selectedTR.attr("data-commentId");
 		var writerId = selectedTR.attr("data-writerId");
 		var commentContent = selectedTR.find(".commentContent").val();
