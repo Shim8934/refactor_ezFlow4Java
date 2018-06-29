@@ -1355,7 +1355,7 @@ function SaveDraftDocInfo_ilban(pState)
 	createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
 
 	var g_SepAttachLVXml = "";
-	g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+	g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 	if (!g_SepAttachLVXml)
 	    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
 	else
@@ -1709,7 +1709,7 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
 
         var g_SepAttachLVXml = "";
-        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
         if (!g_SepAttachLVXml)
             createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
         else
