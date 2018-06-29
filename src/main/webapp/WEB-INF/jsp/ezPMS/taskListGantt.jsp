@@ -545,9 +545,14 @@
 	   			  }
 	   			  
 	   			  ge.taskIsChanged();
-	   			  changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex, groupId, taskName);
+	   			  /* changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex, groupId, taskName); */
 	   			  
-	   			  return task.setPeriod(start, endTime);
+	   			  if(task.setPeriod(start, endTime)) {
+	   				saveAllSchedules();
+	   				return true;
+	   			  } else {
+	   				return false;
+	   			  }		  
 	   			};
 	   			
 	   			//기간은 그대로, 날짜만 이동
@@ -592,8 +597,14 @@
 	   			  
 	   			  console.log(startDate);
 	   			  console.log(endDate);
-	   			  changeDate(task, task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex, groupId, taskName);
-	   			  return task.moveTo(newStart, true,true);
+	   			 /*  changeDate(task, task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex, groupId, taskName); */
+	   			  
+	   			  if(task.moveTo(newStart, true,true)) {
+   					saveAllSchedules();
+   					return true;
+   				  } else {
+   					return false;
+   			      }	
 	   			};
 	   			
 	   			//선행작업 지정
@@ -632,59 +643,7 @@
 	   			  	if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
 
 	   			  		if(task.moveTo(task.start,false,true)) {
-
-		   			  		var allGanttItems = ge.saveProject().tasks;
-		   			  		var allTasks = [];
-		   			  		var allGroups = [];
-		   			  		
-		   			  		function TaskSchedule(taskId, start, end, duration) {
-		   			  			this.taskId = taskId;
-		   			  			this.start = start;
-		   			  			this.end = end;
-		   			  			this.duration = duration;
-		   			  		} 
-		   			  		
-		   			  		function GroupSchedule(groupId, start, end, duration) {
-		   			  			this.groupId = groupId;
-		   			  			this.start = start;
-		   			  			this.end = end;
-		   			  			this.duration = duration;
-		   			  		} 
-		   			  		
-		   			  		for(var i = 0; i < allGanttItems.length; i++) {
-		   			  			
-		   			  			var taskId    = allGanttItems[i].id.match(/t(\d+)/) != null ? allGanttItems[i].id.match(/t(\d+)/)[1] : null;
-		   			  			var groupId   = allGanttItems[i].id.match(/g(\d+)/) != null ? allGanttItems[i].id.match(/g(\d+)/)[1] : null;
-		   			  			var newStart  = dateToYYYYMMDD(new Date(allGanttItems[i].start));
-		   			  			var newEnd    = dateToYYYYMMDD(new Date(allGanttItems[i].end));
-		   			  			var duration  = allGanttItems[i].duration;
-		   			  			
-		   			  			console.log("newStart : " + newStart + ", newEnd : " + newEnd);
-		   			  			
-		   			  			if(taskId != null) {
-		   			  				allTasks.push(new TaskSchedule(taskId, newStart, newEnd, duration));
-		   			  			} else if(groupId != null){
-		   			  				allGroups.push(new GroupSchedule(groupId, newStart, newEnd, duration));
-		   			  			}
-		   			  		}
-		   			  		
-		   			  		/* console.log(JSON.stringify(allTasks)); */
-		   			  		
-		   			  		data = {
-		   			  			allTasks : allTasks,
-		   			  			allGroups : allGroups
-		   			  		}
-		   			  		
-		   			  		$.ajax({
-			   			  		type : "PUT",
-			   					url : "/ezPMS/updateAllTasksDate.do",
-			   					dataType : "json",
-			   					contentType : "application/json; charset=UTF-8",
-			   					data : JSON.stringify(data),
-			   					success : function(result) {
-			   						
-			   					}
-		   			  		});
+	   			  			saveAllSchedules();
 	   			  		} else {  			
 	   			  			location.reload();
 	   			  			return false;
@@ -815,6 +774,62 @@
 	   			}
 	   		}
 	   		
+	   		// 화면상 데이터를 기준으로 모든 Gantt item들의 일정이 DB에 적용
+	   		function saveAllSchedules() {
+	   			var allGanttItems = ge.saveProject().tasks;
+		  		var allTasks = [];
+		  		var allGroups = [];
+		  		
+		  		function TaskSchedule(taskId, start, end, duration) {
+		  			this.taskId = taskId;
+		  			this.start = start;
+		  			this.end = end;
+		  			this.duration = duration;
+		  		} 
+		  		
+		  		function GroupSchedule(groupId, start, end, duration) {
+		  			this.groupId = groupId;
+		  			this.start = start;
+		  			this.end = end;
+		  			this.duration = duration;
+		  		} 
+		  		
+		  		for(var i = 0; i < allGanttItems.length; i++) {
+		  			
+		  			var taskId    = allGanttItems[i].id.match(/t(\d+)/) != null ? allGanttItems[i].id.match(/t(\d+)/)[1] : null;
+		  			var groupId   = allGanttItems[i].id.match(/g(\d+)/) != null ? allGanttItems[i].id.match(/g(\d+)/)[1] : null;
+		  			var newStart  = dateToYYYYMMDD(new Date(allGanttItems[i].start));
+		  			var newEnd    = dateToYYYYMMDD(new Date(allGanttItems[i].end));
+		  			var duration  = allGanttItems[i].duration;
+		  			
+		  			console.log("newStart : " + newStart + ", newEnd : " + newEnd);
+		  			
+		  			if(taskId != null) {
+		  				allTasks.push(new TaskSchedule(taskId, newStart, newEnd, duration));
+		  			} else if(groupId != null){
+		  				allGroups.push(new GroupSchedule(groupId, newStart, newEnd, duration));
+		  			}
+		  		}
+		  		
+		  		/* console.log(JSON.stringify(allTasks)); */
+		  		
+		  		data = {
+		  			allTasks : allTasks,
+		  			allGroups : allGroups
+		  		}
+		  		
+		  		$.ajax({
+  			  		type : "PUT",
+  					url : "/ezPMS/updateAllTasksDate.do",
+  					dataType : "json",
+  					contentType : "application/json; charset=UTF-8",
+  					data : JSON.stringify(data),
+  					success : function(result) {
+  						
+  					}
+		  		});
+	   		}
+	   		
 	   		function addPreTaskRel (projectId, taskId, preTaskId, progress, taskName, preTaskRowName, groupId, preGroupId) {
 	   			
 	   			var type;
@@ -870,7 +885,7 @@
 	   			return returnVal;
 	   		}
 	   		
-	   		function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {
+	   		/* function changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, endTime, rowIndex, groupId, taskName) {
 	   			  //선행작업 유효성 체크
 	   			  if(!preTaskValidChk(ge.currentTask, "", startDate)){
 	   				  alert("<spring:message code='ezPMS.t282' />");
@@ -912,7 +927,7 @@
 	   					alert ("<spring:message code='ezPMS.t54' />");
 	   				}
 	   				});
-	   		}
+	   		} */
 	   		
 	   		//위치 지정해주기
 	   		function toastPopupShow(toastContent) {
