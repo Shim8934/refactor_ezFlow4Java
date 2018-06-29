@@ -26,6 +26,7 @@
 			var totalPage = "";
 			var totalCount = "";
 			var BlockSize = 10;
+			var companyID = "${companyId}"; // 회사 셀랙트 박스 변경 시 변경됨
 
 			// 화면 호출시 실행 함수
 			window.onload = function(){
@@ -212,11 +213,12 @@
 		    		var selectOption = document.getElementById("searchKeycode");
 					var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 					var searchKeyword = document.getElementById("searchKeyword").value;
+					var companyIdChk = companyID;
 					
 					 if (pageNum == "-1") {
 						var pageSize = "-1";
 						var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
-							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize;
+							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&companyId=' + companyIdChk;
 						var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
 		
 						saveExcel.location.href = pURL;
@@ -229,7 +231,7 @@
 			    			,async: false
 			    			,dataType: 'json'
 			    			,data: {
-			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum 
+			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum, 'companyId' : companyIdChk 
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
@@ -318,7 +320,17 @@
 		  		
 			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res, "", specs);
 		    }
-
+			
+		  	// 회사 셀랙트 박스 변경 시
+		  	function selectCompanyID() {
+				if (companyID != document.getElementById("ListCompany").value) {
+		            companyID = document.getElementById("ListCompany").value
+	
+		            getUserList(1);
+					//getLoginHist(1, searchStartTime, searchEndTime);
+					//makePageSelPage();
+		        }
+			}
 		</script>
 		<!-- 용량상태 Progress Bar -->
 		<style type="text/css" >
@@ -357,6 +369,15 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
 		<div style="width:100%; padding-bottom:5px;">
+		<div id=""> <!-- mainmenu -->    
+		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="selectCompanyID()">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br />
+		    </span>
+		</div>
 		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
