@@ -272,8 +272,11 @@ Ganttalendar.prototype.drawTask = function (task) {
         var task = self.master.getTask($(this).attr("taskid"));
         task.rowElement.click();
       }).dragExtedSVG($(self.svg.root()), {
-        canResize:  this.master.permissions.canWrite || task.canWrite,
-        canDrag:    !task.depends && (this.master.permissions.canWrite || task.canWrite),
+    	//업무만 선택가능하도록 수정함 2018-06-29 홍대표
+    	canResize:  (this.master.permissions.canWrite || task.canWrite) && task.type === "t",
+    	canDrag:    (!task.depends && (this.master.permissions.canWrite || task.canWrite)) && task.type === 't',
+//        canResize:  this.master.permissions.canWrite || task.canWrite,
+//        canDrag:    !task.depends && (this.master.permissions.canWrite || task.canWrite),
         resizeZoneWidth:self.resizeZoneWidth,
         startDrag:  function (e) {
           $(".ganttSVGBox .focused").removeClass("focused");
