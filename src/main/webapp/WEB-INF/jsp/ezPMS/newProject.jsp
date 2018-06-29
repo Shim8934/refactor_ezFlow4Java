@@ -221,7 +221,7 @@ var groupId = "${groupId}";
 		 return;
 	 }
 	 
-	 if (headManagerId == null) {
+	 if (headManagerId == null || headManagerId == "") {
 		 alert("<spring:message code='ezPMS.t47' />");
 		 return;
 	 }

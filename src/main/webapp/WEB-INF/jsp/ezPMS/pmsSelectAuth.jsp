@@ -118,7 +118,6 @@
 	   			p_title = title;
    				p_selectedWindow = selectedWindow;
    				type = title.id;
-   				console.log(type);
 	   		}
 	   		
 	   		
@@ -399,6 +398,11 @@
 	        }
 	   		
 	   		function ok_Click() {
+	   			if (managerArray.length == 0) {
+	   				alert("<spring:message code='ezPMS.t169'/>");
+	   				return;
+	   			}
+	   			
 	   			selectHeadManager();
 	   			//opener.selReceiver = JSON.stringify(receiverList);
 	   			//opener.showReceiver();
