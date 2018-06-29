@@ -245,11 +245,13 @@ public class EzEmailAdminController {
 		String textName = request.getParameter("name") == null ? "" : request
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
 
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
 		
 		logger.debug("mailAddDistributionList ended.");
 
