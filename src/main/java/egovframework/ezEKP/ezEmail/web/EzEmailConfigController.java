@@ -1457,7 +1457,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ "</head>"
 				+ "<body scroll=no class='popup'>");
 		out.write("<h1>" + egovMessageSource.getMessage("ezEmail.t490", locale) + "</h1>");
-		out.write("<div id='close'><ul><li onClick='window.close()'><span>" + egovMessageSource.getMessage("ezEmail.t63", locale) + "</span></li></ul>");
+		out.write("<div id='close'><ul><li><span onClick='window.close()'></span></li></ul>");
 		out.write("</div>"
 				+ "<script type='text/javascript'>"
 				+ "selToggleList(document.getElementById('close'), 'ul', 'li', '0');"

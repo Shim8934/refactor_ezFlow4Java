@@ -3831,4 +3831,20 @@
 		AND tenant_id = #tenantId#
 	]]>	
 	</update>
+	
+	<update id="EzPMSDAO.updateTaskStatusScheduler" parameterClass="String">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_task
+		SET
+			status = 'L'
+		WHERE
+			status = 'P'
+		AND
+			del_status = 0
+		AND
+			plan_end_date < #UTCTime#
+	
+	]]>	
+	</update>
 </sqlMap>

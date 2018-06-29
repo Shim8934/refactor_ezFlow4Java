@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -173,5 +174,23 @@ public class EzPMSScheduler {
 		}
 		
 		LOGGER.debug("sendEndAlamMail ended.");
+	}
+	
+	//예정 종료일을 넘어선 경우에는 업무의 상태를 지연으로 변경 (진행 업무만 해당 됨)
+	@Scheduled(cron = "${config.crone.pmsUpdateLateStatus}")
+	public void updateLateTaskStatus() throws Exception {
+		LOGGER.debug("updateLateTaskStatus started.");
+		
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("pmsUpdateLateStatus")) {
+			LOGGER.debug("updateLateStatus scheduler ended.");
+			return;
+		}
+		
+		String UTCTimeStr = commonUtil.getTodayUTCTime("");
+		
+		ezPMSService.updateTaskStatusScheduler(UTCTimeStr);
+		
+		LOGGER.debug("updateLateTaskStatus ended.");
 	}
 }
