@@ -955,6 +955,7 @@
 	            else if (Org_cmd == "ezPMSBoard") {
 	            	getEzPMSBoardToMail();
 	            	return;
+	            }
 	            else if (Org_cmd == "attitude") {
 	            	getAttitudeToMail();
 	            	return;

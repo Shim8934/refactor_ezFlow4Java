@@ -2688,9 +2688,14 @@
 	<isNotEmpty property="realStartDate">
 			REAL_START_DATE = #realStartDate#,
 	</isNotEmpty>
-	<isNotEmpty property="realEndDate">
+	<isNotNull property="realEndDate">
+		<isNotEmpty property="realEndDate">
 			REAL_END_DATE = #realEndDate#,
-	</isNotEmpty>
+		</isNotEmpty>
+		<isEmpty property="realEndDate">
+			REAL_END_DATE = null,
+		</isEmpty>
+	</isNotNull>
 	<![CDATA[
 			REAL_PROGRESS = #realProgress#
 		WHERE

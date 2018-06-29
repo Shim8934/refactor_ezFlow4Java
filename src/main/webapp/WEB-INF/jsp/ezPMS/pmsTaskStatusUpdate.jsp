@@ -244,6 +244,7 @@
 				realEndDate = "";
 				console.log("here!!");
 				console.log(realEndDate);
+				console.log(status);
 				
 				
 				if (!realStartDate) {
@@ -252,8 +253,6 @@
 			}
 			
 		}
-		console.log(taskDetails.realProgress.toFixed(1));
-		console.log(realProgress);
 		
 		var data = {
 				taskId : taskDetails.taskId + "",
