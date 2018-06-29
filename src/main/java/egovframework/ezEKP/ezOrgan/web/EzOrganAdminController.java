@@ -133,6 +133,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
+		String cChk = "0";
+		
+		if (user.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
 		
 		// set useLetter
 		String useLetter = ezCommonService.getTenantConfig("useLetter", user.getTenantId());
@@ -144,6 +149,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
+		model.addAttribute("cChk", cChk);
 		
 		return "admin/ezOrgan/organLeft";
 	}
