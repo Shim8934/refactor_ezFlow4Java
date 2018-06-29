@@ -230,20 +230,21 @@ public class EzLadderServiceImpl implements EzLadderService {
 			list = ezLadderDAO.searchPartLadderList(map);
 		} else if(mode.equals("pre")) {	// 이전 사다리 검색
 			list = ezLadderDAO.searchPreLadderList(map);
-		}
-		else {						// 전체버튼 검색
+		} else {						// 전체버튼 검색
 			list = ezLadderDAO.searchAllLadderList(map);
 		}
 		
 		// 생성된 지 24시간 여부
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),vo.getOffset(), false);
-		nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
-		
-		for(LadderVO userVO:list) {
-			if(userVO.getWriteDate().toString().compareTo(nowDate) > 0) {
-				userVO.setNewFlag(1);
-			} else {
-				userVO.setNewFlag(0);
+		if(!mode.equals("pre")){
+			String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),vo.getOffset(), false);
+			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+			
+			for(LadderVO userVO:list) {
+				if(userVO.getWriteDate().toString().compareTo(nowDate) > 0) {
+					userVO.setNewFlag(1);
+				} else {
+					userVO.setNewFlag(0);
+				}
 			}
 		}
 		

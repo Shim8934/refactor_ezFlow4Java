@@ -1615,11 +1615,20 @@
 	                ChangeTab(obj);
 	            }
 	        }
-	        
+	      
+	        function window_close() {
+	             window.returnValue = 0;
+	             window.close();
+	        } 
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title" style="height: 20px;"><spring:message code="ezLadder.t071" /></h1>
+		<div id="close">
+		    <ul>
+		    	<li><span onclick="window_close()"></span></li>
+		    </ul>
+	    </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1773,7 +1782,6 @@
 	 	</table>	    
 		<div class="btnposition">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezLadder.t086' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezLadder.t087' /></span></a>
 		</div>
 		
 		<!-- popup start -->

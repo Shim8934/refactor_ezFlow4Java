@@ -289,11 +289,19 @@
 				$("#searchInput").val("");
 			}
 			
+			function window_close() {
+	             window.returnValue = 0;
+	             window.close();
+	        } 
 		</script>
 </head>
 	<body class="popup">
 		<h1 id="h1Title"><spring:message code="ezLadder.t073" /></h1>
-			<!-- 다시 -->
+		<div id="close">
+		    <ul>
+		    	<li><span onclick="window_close()"></span></li>
+		    </ul>
+	    </div>
 				<div class="ladderPreList_wrap">
 					<div class="ladderPreList_contents">
 						<div class="ladderPreList_left">
@@ -317,7 +325,7 @@
 				</div>
 				<div class="btnposition btnpositionNew">
 					<input type="submit" value="확인" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
-					<input type="submit" value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+					<!-- <input type="submit" value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName"> -->
 				</div>
 	</body>
 </html>
