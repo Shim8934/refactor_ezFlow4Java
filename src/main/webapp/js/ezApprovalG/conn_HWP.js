@@ -1,5 +1,5 @@
 
-function GetDocumentElement(HwpCtrl, CharName, adminFlag)
+function GetDocumentElement(HwpCtrl, CharName, gubun)
 {
 	var fChar = CharName.substring(0,1);
 	
@@ -22,7 +22,8 @@ function GetDocumentElement(HwpCtrl, CharName, adminFlag)
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-			if (adminFlag != "" && adminFlag != undefined) {
+			//gubun = ture:tag포함, false:value값만
+			if (gubun == true) {
 				return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
 			} else {
 				return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
@@ -99,7 +100,7 @@ function ExcuteInfo(pprocessIdx, currTD) {
 
     rtnVal = true;
 
-    var ConnRootText = GetDocumentElement(HwpCtrl, "CONNROOT");
+    var ConnRootText = GetDocumentElement(HwpCtrl, "CONNROOT", true);
     if (ConnRootText == "") {
         return true;
     }
@@ -546,8 +547,8 @@ function setData(pobjXml, currTD) {
                 if (GetAttribute(row(0),"name") != GetAttribute(rowBefore(0),"name"))
                     tblRowIdx = 0;
             }
-            if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
-                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"));
+            if (GetDocumentElement(HwpCtrl, "tblinfo", true) != "") {
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo", true));
                 tblinfoNodes = xmlTbl.documentElement.childNodes
 
                 fieldName = GetAttribute(row(0),"name")

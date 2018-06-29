@@ -804,17 +804,19 @@
 			        var pInformationContent = "<spring:message code='ezApprovalG.t39'/>";
 			        var Ans = OpenInformationUI(pInformationContent);
 			        if (!Ans) return;
-			
-			        var chkpass = chk_Passwd(pingUserID);
-			        if (chkpass == "False") {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-				    } else if (chkpass == "cancel") {
-				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-				    }
+			        
+			        if ("${approvalPWD}" != "N") {
+				        var chkpass = chk_Passwd(pingUserID);
+				        if (chkpass == "False") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+					        OpenAlertUI(pAlertContent);
+					        return;
+					    } else if (chkpass == "cancel") {
+					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+					        OpenAlertUI(pAlertContent);
+					        return;
+					    }
+			        }
 			
 			        var ret = openOpinionUI("BoRyu");
 			
@@ -834,19 +836,21 @@
 			    }
 	
 			    function btnJunKyul_onclick() {
-			        var checkpass = chk_Passwd(pingUserID);
-			
-			        if (checkpass == "False") {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-				    }
-				    else if (chkpass == "cancel") {
-				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-			            OpenAlertUI(pAlertContent);
-			            return;
-			        }
-			
+			    	if ("${approvalPWD}" != "N") {
+				        var checkpass = chk_Passwd(pingUserID);
+				
+				        if (checkpass == "False") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+					        OpenAlertUI(pAlertContent);
+					        return;
+					    }
+					    else if (chkpass == "cancel") {
+					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+				            OpenAlertUI(pAlertContent);
+				            return;
+				        }
+			    	}
+			    	
 			        isjunkyul = true;
 			
 			        var rtnVal = upDateAprLine();
@@ -1018,7 +1022,7 @@
 				    }
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+			        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
 			
