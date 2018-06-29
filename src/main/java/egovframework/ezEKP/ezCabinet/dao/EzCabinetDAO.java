@@ -12,18 +12,18 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<SimpleDeptVO> getAllSimpleDeptsOfCompany(Map<String, Object> map) {
 		return (List<SimpleDeptVO>)list("EzCabinetDAO.getAllSimpleDeptsOfCompany", map);
 	}
-
+	
 	public String getDeptPath(Map<String, Object> map) {
 		return (String)select("EzCabinetDAO.getDeptPath", map);
 	}
-
+	
 	public SimpleDeptVO getSimpleCompany(Map<String, Object> map) {
 		return (SimpleDeptVO)select("EzCabinetDAO.getSimpleCompany", map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<SimpleDeptVO> getAllSimpleSubDepts(Map<String, Object> map) {
 		return (List<SimpleDeptVO>)list("EzCabinetDAO.getAllSimpleSubDepts", map);
 	}
-
+	
 }

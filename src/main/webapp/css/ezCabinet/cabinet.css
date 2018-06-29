@@ -9,6 +9,9 @@
 .leftbody ul:not(:last-child) li:last-child {border-bottom: none;}
 #mainmenu >ul >li >img {margin-right: -2px;}
 
+.bnkCabSelect {background-color: #e9f1ff; cursor: pointer;}
+.bnkCabNormal:hover {background-color: #f4f5f5; cursor: pointer;}
+
 .adminPanel {width:100%; padding:9px 16px 15px; font-weight: bold;}
 .adminPanel img {vertical-align: middle; margin-top: -2px; width: 20px;}
 .adminPanel span {margin-left: 10px; font-size: 18px; padding-top: 3px; color: #333; font-family: Malgun Gothic, Meiryo UI;}
@@ -41,7 +44,7 @@
 .content.on tr {height: 40px;}
 .content .white {background-color: #fff !important;}
 .content .large {width: 40%;}
-.white >input[type='text'] {height: 30px; padding: 0px 5px;}
+.white >input[type='text'] {height: 30px; padding: 0px 5px; outline: none;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
 .selectedNode {color: #004a87; font-weight: bold;}
 .cabinetMinus, .cabinetPlus {width: 18px; height: 18px; cursor: pointer;}
@@ -89,8 +92,10 @@
 .cabTable tr td {text-align: center; border-bottom: 1px solid #efefef; color: #5b5a5a; word-wrap: break-word; padding: 5px 4px 3px 4px; font-weight: normal; font-size: 12px; border-spacing: 0;}
 .cabTable tr td input[type='radio'] {vertical-align: middle; margin: 0px 3px;}
 .cabTable .cabName {text-align: left !important; padding-left: 20% !important;}
-.cabViewPopup {width:150px; position: absolute; background-color:#fff;}
-.cabViewPopup .popupwrap1 {background-color:#fff; position: relative;}
+.cabViewPopup {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
+.cabViewPopup .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}
+.cabViewPopup .popupwrap2 {border: 2px solid #e5e5e5; padding: 10px;}
+
 .cabPanel {position: absolute; top: 0px; left: 0px; botom: 0px; right: 0px; height: 100%; width: 100%; background: transparent;}
 .cabTbl {width: 100%; text-algin: center;}
 .cabTbl .inputTh {width: 20px;}
@@ -128,7 +133,7 @@
 .cabSearchTh2 {border-left-color:white !important;border-right-color:white !important;height:10px !important;}
 .cabSearchTd {border:1px solid #b6b6b6; background-color:#fff;}
 .cabSearchTd input[type='text'] {height: 23px; width: 100%; outline: none; padding: 0px 5px;}
-.cabSearchTd input[type='text']:focus, .cabShareSeachPanel >input[type='text']:focus, .cabRlSearch input[type='text']:focus, .tblFileInf tr td >input[type='text']:focus, .rlFileDiv >input[type='text']:focus, .cbNameInputDiv >input[type='text']:focus {border-color:#66afe9; outline:0; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+.cabSearchTd input[type='text']:focus, .white >input[type='text']:focus, .cabShareSeachPanel >input[type='text']:focus, .cabRlSearch input[type='text']:focus, .tblFileInf tr td >input[type='text']:focus, .rlFileDiv >input[type='text']:focus, .cbNameInputDiv >input[type='text']:focus {border-color:#66afe9; outline:0; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
 .cabSearchTd .cabDate {width: 100px !important; text-align: center;}
 .cabdivBttn {margin: 12px 0px; text-align: center;}
 .cabdivBttn .cabBttn {white-space:nowrap; display:inline-block; cursor: pointer; vertical-align:top; padding: 0px;}

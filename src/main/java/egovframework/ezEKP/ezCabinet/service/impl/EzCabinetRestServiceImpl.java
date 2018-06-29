@@ -21,10 +21,10 @@ import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 
 @Service
 public class EzCabinetRestServiceImpl implements EzCabinetRestService {
-	private static final Logger logger = LoggerFactory.getLogger(EzCabinetRestServiceImpl.class);
-	
 	@Autowired
 	private Properties config;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzCabinetRestServiceImpl.class);
 	
 	@Override
 	public JSONObject checkCabinetAdmin(HttpServletRequest request, String userId) throws Exception {
@@ -89,8 +89,6 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 			default      : method = HttpMethod.GET   ; break;
 		}
 		
-		logger.debug("Run here!");
-		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
 		JSONParser jp                 = new JSONParser();
 		JSONObject resultBody         = null;
@@ -102,6 +100,24 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 			e.printStackTrace();
 		}
 		
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getCompanyCapacity(HttpServletRequest request, String companyId) throws Exception {
+		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
+		String url            = gwServerUrl + "/rest/ezcabinetadmin/capcity/id/" + companyId + "/comp";
+		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject saveCompanyCapacity(HttpServletRequest request, String newCapacity, String companyId) throws Exception {
+		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
+		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/" + newCapacity + "/comp";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("companyId", companyId);
+		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 }

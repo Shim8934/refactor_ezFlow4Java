@@ -90,7 +90,7 @@
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileDelete.jsp"></jsp:include>
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileMove.jsp"  ></jsp:include>
 		
-		<div id="layer_popup" class="cabViewPopup" style="left: 0px; top: 0px; display: none;">
+		<div id="layerPopup" class="cabViewPopup" style="left: 0px; top: 0px; display: none;">
 			<div class="popupwrap1">
 				<div class="popupwrap2">
 					<table class="list_element cabinet">
@@ -98,7 +98,7 @@
 						<tr>
 							<th class="cabTitle"><spring:message code='ezCabinet.t92'/></th>
 							<td> 
-								<select id="listcount" onchange="ListCount(this.value);">
+								<select id="listcount">
 									<option value="10" ${cabinetGeneral.listCount == '10' ? 'selected' : ''}>10</option>
 									<option value="20" ${cabinetGeneral.listCount == '20' ? 'selected' : ''}>20</option>
 									<option value="30" ${cabinetGeneral.listCount == '30' ? 'selected' : ''}>30</option>

@@ -14,14 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+@SuppressWarnings("unchecked")
 @RestController
 public class EzCabinetGWController {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetGWController.class);
@@ -36,12 +41,17 @@ public class EzCabinetGWController {
 	private EzCabinetService cabinetService;
 	
 	@Autowired
+	private EzCabinetAdminService cabinetAdminService;
+	
+	@Autowired
 	private EzOrganAdminService organAdminService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	@SuppressWarnings("unchecked")
+	@Resource(name="loginService")
+	private LoginService loginService;
+	
 	@RequestMapping(value="/rest/ezcabinet/check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkCabinetAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
@@ -80,7 +90,6 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezcabinet/company-list/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyList(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
@@ -123,7 +132,6 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezcabinet/company-tree/comp/{companyid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyTree(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
@@ -172,7 +180,6 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezcabinet/sub-tree/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSubTree(@PathVariable(value="deptid") String deptId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")                  : "";
@@ -197,6 +204,65 @@ public class EzCabinetGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("subNodes", sDept);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinetadmin/capcity/id/{companyid}/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getBasicStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId                      = loginService.getTenantId(serverName);
+			CompanyCapacityVO companyCapacity = cabinetAdminService.getCompanyCapacity(companyId, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("capacity", companyCapacity);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinetadmin/capcity/{newvalue}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putChangeBasicStorage(@PathVariable(value="newvalue") String newValue, HttpServletRequest request) {
+		String serverName  = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
+		String companyId   = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		JSONObject result  = new JSONObject();
+		
+		logger.debug("New Value: " + newValue + " || serverName: " + serverName + " || CompanyId: " + companyId);
+		
+		if (serverName.equals("") || companyId.equals("") || newValue.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId = loginService.getTenantId(serverName);
+			cabinetAdminService.saveCompanyCapacity(newValue, companyId, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

@@ -153,9 +153,13 @@ var CabinetItem = function() {
 		});
 		
 		//Initial table
-		cabinetTable = new CabinetTable();
+		cabinetTable = new CabinetTable({
+			normal   : "bnkCabNormal",
+			selected : "bnkCabSelect"
+		});
 		cabinetTable.setTableType("cabinet");
 		cabinetTable.setTableElement("tblCabinetList", "id");
+		cabinetTable.setCallBack(searchCallBack);
 		cabinetTable.setRenderFunct(renderCabinetTable);
 	}
 	
@@ -259,6 +263,10 @@ var CabinetItem = function() {
 		var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
 		return feature;
 	}
+	
+	function searchCallBack() {
+		//*Note add code here
+	}
 	/* Search Panel end*/
 	
 	/* Main search */
@@ -314,7 +322,7 @@ var CabinetItem = function() {
 	
 	function showViewPopUp() {
 		var optElmt             = document.getElementById("sltView");
-		var viewPopup           = document.getElementById("layer_popup");
+		var viewPopup           = document.getElementById("layerPopup");
 		viewPopup.style.left    = document.documentElement.clientWidth - 160 + "px";
 		viewPopup.style.top     = "100px";
 		viewPopup.style.display = "";
@@ -324,7 +332,7 @@ var CabinetItem = function() {
 	
 	function closeViewPopUp() {
 		var optElmt = document.getElementById("sltView");
-		document.getElementById("layer_popup").style.display = "none";
+		document.getElementById("layerPopup").style.display = "none";
 		optElmt.setAttribute("role", "off");
 		optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	}

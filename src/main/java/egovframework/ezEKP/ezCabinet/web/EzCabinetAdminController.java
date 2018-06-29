@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+@SuppressWarnings("unchecked")
 @Controller
 public class EzCabinetAdminController {
 	@Autowired
@@ -69,15 +72,15 @@ public class EzCabinetAdminController {
 		JSONObject resultObj = cabinetRestService.getCompanyList(request, user.getId());
 		String status        = resultObj.get("status").toString();
 		
-		if (status.equals("ok")) {
-			String companyId      = (String) resultObj.get("userCompany");
-			JSONArray companyList = (JSONArray) resultObj.get("data");
-			model.addAttribute("userCompany", companyId);
-			model.addAttribute("list", companyList);
-		}
-		else {
+		if (!status.equals("ok")) {
 			return "cmm/error/dataAccessFailure";
 		}
+		
+		String companyId       = (String) resultObj.get("userCompany");
+		JSONArray companyList  = (JSONArray) resultObj.get("data");
+		
+		model.addAttribute("userCompany", companyId);
+		model.addAttribute("list", companyList);
 		
 		logger.debug("jspGetBasicPage end");
 		return "admin/ezCabinet/cabinetBasicConfig";
@@ -134,6 +137,46 @@ public class EzCabinetAdminController {
 		
 		logger.debug("jspGetRelatedCabinetConfig end");
 		return "admin/ezCabinet/cabinetAdminInterLock";
+	}
+	
+
+	@RequestMapping(value="/admin/ezCabinet/getCompanyCapacity.do")
+	@ResponseBody
+	public String jsonGetCompanyCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("jsonGetCompanyCapacity end");
+		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (companyId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.getCompanyCapacity(request, companyId);
+		
+		logger.debug("jsonGetCompanyCapacity end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/admin/ezCabinet/saveConfig.do")
+	@ResponseBody
+	public String jsonSaveCompanyCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("jsonSaveCompanyCapacity end");
+		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		String newCapacity     = request.getParameter("capacity")  != null ? request.getParameter("capacity")  : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (companyId.equals("") || newCapacity.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveCompanyCapacity(request, newCapacity, companyId);
+		
+		logger.debug("jsonSaveCompanyCapacity end");
+		return resultObj.toString();
 	}
 	
 }

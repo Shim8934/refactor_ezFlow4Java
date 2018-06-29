@@ -186,9 +186,7 @@ function CabinetTree() {
 				handleSuccess(data, extenParam);
 			},
 			error : function(error) {
-				if (handleError != null) {
-					handleError();
-				}
+				if (handleError != null) {handleError();}
 				
 				alert(CabinetMessages.strError);
 			}

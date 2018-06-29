@@ -1,5 +1,5 @@
 //Baonk 2018-06-25
-function CabinetTable() {
+function CabinetTable(data) {
 	//set public functions
 	this.setTableElement  = setTableElement;
 	this.setSelectedClass = setSelectedClass;
@@ -14,8 +14,8 @@ function CabinetTable() {
 	//private variables
 	var _tableElmt       = null;
 	var _tableDataElmt   = null;
-	var _selectedClass   = "";
-	var _unselectClass   = "";
+	var _selectedClass   = data.selected ? data.selected : "bnkCabSelect";
+	var _unselectClass   = data.normal   ? data.normal   : "bnkCabNormal";
 	var _lastSelectedRow = null;
 	var _dataSource      = null;
 	var _tableType       = "";
@@ -90,9 +90,7 @@ function CabinetTable() {
 		cleanTable();
 	}
 	
-	function setTableType(tableType)          {_tableType     = tableType;}
-	function setSelectedClass(selectedClass)  {_selectedClass = selectedClass;}
-	function setUnselectClass(unselectClass)  {_unselectClass = unselectClass;}
+	function setTableType(tableType) {_tableType = tableType;}
 	
 	//Row process functions
 	function sortByHeader(cell) {

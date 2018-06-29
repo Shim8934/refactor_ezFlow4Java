@@ -127,7 +127,6 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetShare";
 	}
 	
-	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
 	@ResponseBody

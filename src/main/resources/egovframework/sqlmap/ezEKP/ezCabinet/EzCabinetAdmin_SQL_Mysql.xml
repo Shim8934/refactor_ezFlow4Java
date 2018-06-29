@@ -2,5 +2,30 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezCabinetAdmin">
+	<typeAlias  alias="CompanyCapacityVO" type="egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO"/>
+	
+	<!-- CompanyCapacity resultMap -->
+	<resultMap id="companyCapacityVO" class="CompanyCapacityVO">
+		<result property="companyId"         column="company_id"             columnIndex="1"/>
+		<result property="capacityValue"     column="capacity_value"         columnIndex="2"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="3"/>
+	</resultMap>
+	
+	<select id="EzCabinetAdminDAO.getCompanyCapacity" resultMap="companyCapacityVO">
+		<![CDATA[select * from tbl_cabinet_company_capacity where company_id = #companyId# and tenant_id = #tenantId#]]>
+	</select>
+	
+	<insert id="EzCabinetAdminDAO.saveCompanyCapacity" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[ select 1 from dual where not exists (select tenant_id, company_id from tbl_cabinet_company_capacity where company_id = #companyId# and tenant_id = #tenantId#) ]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[ insert into tbl_cabinet_company_capacity (company_id, capacity_value, tenant_id) values (#companyId#, #capacity#, #tenantId#) ]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[ update tbl_cabinet_company_capacity set capacity_value = #capacity# where company_id = #companyId# and tenant_id = #tenantId# ]]>
+		</isNotEqual>
+	</insert>
+	
 	
 </sqlMap>
