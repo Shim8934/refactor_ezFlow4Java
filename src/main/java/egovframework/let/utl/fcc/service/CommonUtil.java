@@ -948,7 +948,7 @@ public class CommonUtil {
 		}
 		return xmlDoc;
 	}
-
+	
 	/**
 	 * globals.properties에 있는 
 	 * DataBaseType을 반환
@@ -964,6 +964,8 @@ public class CommonUtil {
 		
 		return dbType;
 	}
+
+	/**
 	/*
 	 * 테넌트에 따른 설정정보 얻어오는 메서드
 	 */

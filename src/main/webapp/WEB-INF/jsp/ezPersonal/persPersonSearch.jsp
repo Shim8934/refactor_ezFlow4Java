@@ -235,7 +235,7 @@
 	        	}
 	        	var UserListHTML = "";
 	        	
-	        	if (SelectDeptNM.getAttribute("countinfo") != "1") {
+	        	if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 	            	SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
 	            	SelectDeptNM.setAttribute("countinfo","1")
 	        	}
@@ -862,12 +862,11 @@
   			</div>
   			<div id="close">
     			<ul>
-      				<li><span onClick="window.close()"><spring:message code='ezPersonal.t10'/></span></li>
+      				<li><span onClick="window.close()"></span></li>
     			</ul>
   			</div>
   			<script type="text/javascript" >
       			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-      			selToggleList(document.getElementById("close"), "ul", "li", "0");
   			</script>
   			<div style="width: 730px;">
         	<div class="portlet_tabpart03" style="background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">

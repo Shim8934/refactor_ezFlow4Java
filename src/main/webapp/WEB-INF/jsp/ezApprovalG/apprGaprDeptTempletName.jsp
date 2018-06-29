@@ -100,7 +100,7 @@
 		</h1>
 		<div id="close">
             <ul>
-                <li><span onclick="return btn_CancelAprDeptTempletName_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return btn_CancelAprDeptTempletName_onclick()"></span></li>
             </ul>
         </div>
 		<span>▒ <c:if test ="${approvalFlag =='G'}"><spring:message code='ezApprovalG.t311'/></c:if><c:if test ="${approvalFlag =='S'}"><spring:message code='ezApproval.t199'/></c:if></span>

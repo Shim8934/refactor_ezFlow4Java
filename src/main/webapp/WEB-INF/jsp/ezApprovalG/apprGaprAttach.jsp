@@ -794,7 +794,7 @@
 		<h1><spring:message code='ezApprovalG.t264'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="return AttachCancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return AttachCancel_onclick()"></span></li>
             </ul>
         </div>
 		<table>

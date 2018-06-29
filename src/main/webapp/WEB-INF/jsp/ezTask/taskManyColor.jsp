@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
 	    <link rel="stylesheet" href='<spring:message code="ezTask.e2" />' type="text/css" />
 	    <link rel="stylesheet" href="/css/jquery-hex-colorpicker.css" type="text/css" />
+	    <script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezTask/jquery-hex-colorpicker.js"></script>
@@ -115,7 +116,7 @@
 	    <h1><spring:message code="ezTask.t91" /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 	    <!-- <table onClick="select_color(event)" border="1" cellspacing="2" id="ColorTable" style="width:259px;" class="box">

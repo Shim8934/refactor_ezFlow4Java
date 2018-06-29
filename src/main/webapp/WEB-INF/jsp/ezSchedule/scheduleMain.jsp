@@ -1042,7 +1042,7 @@
             	<li><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
             	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
               	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>              	
-		      	<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
+		      	<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
 		      	<li><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li>
               	<li><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li>
               	<li><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>              	

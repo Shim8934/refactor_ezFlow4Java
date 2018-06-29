@@ -122,7 +122,7 @@
     	<h1><spring:message code='ezPersonal.t183'/></h1>
     	<div id="close">
         	<ul>
-            	<li><span onclick="cancel_onclick()"><spring:message code='ezPersonal.t12'/></span></li>
+            	<li><span onclick="cancel_onclick()"></span></li>
         	</ul>
     	</div>
 	    <table class="content">

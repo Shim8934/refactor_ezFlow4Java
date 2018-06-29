@@ -349,6 +349,7 @@
 	                }
 	                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
 	
+	                /* 2018-06-28 홍승비 - 나의게시물 체크박스 */
 	                var DocList = new ListView();
 	                DocList.SetID("BoardList");
 	                DocList.SetHeaderOnClick("SortPage");
@@ -625,9 +626,10 @@
 				} catch (e) {}
 		    }
 		
+		    /* 2018-06-28 홍승비 - 나의게시물 체크박스 전체선택 이벤트가 걸리는 ID 변경 */
 		    function event_HeaderCheckBoxClick(obj) {
 		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
+		        SelList.LoadFromID("BoardListDiv");
 		        if (obj.checked) {
 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
@@ -1091,11 +1093,11 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
-	            <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+	            <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
 	            <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274'/></span></li>
 	            <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134'/></span></li>
-	            <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+	            <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
 	            <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
 	            <li id="right">

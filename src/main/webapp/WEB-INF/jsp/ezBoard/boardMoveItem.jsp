@@ -276,10 +276,14 @@
 	</head>
 	<body class="popup"> 
 		<h1><spring:message code='ezBoard.t135'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<div class="box" style="width:316px;height:485px;overflow:auto;overflow-x:hidden"  id=TopBoardsList></div>
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" name="Submit"  onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
-		    <a class="imgbtn" name="Submit"  onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
 		</div>
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

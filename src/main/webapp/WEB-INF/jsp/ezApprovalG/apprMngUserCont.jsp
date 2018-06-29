@@ -346,7 +346,7 @@
     <h1><spring:message code='ezApproval.t317'/></h1>
     <div id="close">
         <ul>
-            <li><span onclick="return btnCancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+            <li><span onclick="return btnCancel_onclick()"></span></li>
         </ul>
     </div>
     <div class="box" style="WIDTH: 440px; HEIGHT: 270px; overflow: auto; BACKGROUND-COLOR: #FFFFFF; padding: 4px 6px 6px 4px" id="divUserContTree"></div>
