@@ -167,8 +167,12 @@
 			nowStatus : nowStatus
 		}
 		
+		var response;
+		
 		if (status == "C" && nowStatus != "C") {
 			response = confirm("<spring:message code='ezPMS.t159' />");
+		} else {
+			response = true;
 		}
 		
 		if(response == true) {

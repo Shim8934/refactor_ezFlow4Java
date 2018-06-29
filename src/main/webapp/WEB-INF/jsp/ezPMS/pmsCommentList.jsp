@@ -138,7 +138,7 @@
 	}
 	
 	function saveComment(elem) {
-		var selectedTR = $(elem).parent().parent().parent("tr");
+		var selectedTR = $(elem).parents("tr").eq(0);
 		var commentId = selectedTR.attr("data-commentId");
 		var writerId = selectedTR.attr("data-writerId");
 		var commentContent = selectedTR.find(".commentContent").val();
@@ -194,18 +194,27 @@
 	}
 	
 	$(function() {
+		if(typeof setContentTitle != 'undefined') {
+			setContentTitle(taskName, contentCount);
+		}
+		
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + 10 + "px");
+		$("#taskTree").css("height", CurrentHeight + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
 		$("#divList").css("height", (CurrentHeight - 245) + "px");
-		$("#divList").css("overflow", "auto");
 		
-		if(typeof setContentTitle != 'undefined') {
-			setContentTitle(taskName, contentCount);
-		}
+		$(window).resize(function() {
+			CurrentHeight = $(window).height() - 100;
+			$("MailListRayer").css("height", CurrentHeight + "px");
+			$("#taskTree").css("height", CurrentHeight + 10 + "px");
+			$("#projectContent").css("height", CurrentHeight + "px");
+			$("#contentList").css("height", (CurrentHeight - 100) + "px");
+			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+			$("#divList").css("height", (CurrentHeight - 245) + "px");
+		});
 	});
 </script>
 <div id="divList" style="width: 100%;">

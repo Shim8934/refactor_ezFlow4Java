@@ -1007,6 +1007,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 
 		ProjectGroupVO groupInfo = ezPMSDAO.getGroupDetails(map);
+		groupInfo.setWeight(ezPMSDAO.getGroupWeight(map));
 		String pretaskId = null;
 		String pregroupId = null;
 		
@@ -2249,7 +2250,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		map.put("commentId", jsonParam.get("commentId"));
 		map.put("commentContent", jsonParam.get("commentContent"));
-
+		
+		LOGGER.debug("userId : " + userId + ", writerId : " + writerId);
+		
 		if (writerId.equals(userId) || authority == 1) {
 			ezPMSDAO.updateComment(map);
 		} else {

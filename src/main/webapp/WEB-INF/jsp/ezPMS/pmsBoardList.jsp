@@ -13,9 +13,11 @@
 	$(function() {
 		CurrentHeight = $(window).height()-100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + 10 + "px");
+		$("#taskTree").css("height", CurrentHeight + "px");
+		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#divList").css("height", (CurrentHeight - 150) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+		$("#divList").css("height", (CurrentHeight - 165) + "px");
 		$("#divList").css("overflow", "auto");
 		
 		$(".mainlist tbody tr td:not(.checkbox)").on("click", function(evt) {
@@ -225,8 +227,8 @@
 		searchByOverview = $("#searchByOverview").val();
 		searchByContent = $("#searchByContent").val();
 		
-		// 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
-		$("li[role='treeitem'][aria-level='1']").last().click();
+		/* // 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
+		$("li[role='treeitem'][aria-level='1']").last().children("a").click(); */
 		
 		getBoardList();
 	}
