@@ -610,6 +610,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_IKMS4(map1);
 				ezOrganAdminDao.insertCompanyInfo_IKMS5(map1);
 				ezOrganAdminDao.insertCompanyInfo_IKMS6(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS7(map1);
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
