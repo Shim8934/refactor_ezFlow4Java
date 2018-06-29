@@ -863,10 +863,9 @@ public class EzEmailAdminController {
 			currPage = "1";
 		}
 
-		int maxItemPerPage = 20;
+		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage + 1;
-		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -890,7 +889,7 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-									   endRow, maxItemPerPage, searchKeycode, searchKeyword);
+									    maxItemPerPage, searchKeycode, searchKeyword);
 		
 		IMAPAccess ia = null;
 		Locale locale = Locale.getDefault();
@@ -964,7 +963,6 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20;
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -972,7 +970,7 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), 
-									   startRow, endRow, maxItemPerPage, searchKeycode, searchKeyword);
+									   startRow, maxItemPerPage, searchKeycode, searchKeyword);
 		
 		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
 		

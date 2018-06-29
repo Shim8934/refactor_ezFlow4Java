@@ -1126,7 +1126,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
-    public List<OrganUserVO> getUserList(int tenantID,int startPage, int endPage, int maxItemPerPage,
+    public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
     									 String keycode,String keyword) throws Exception {     
     	logger.debug("getUserList started");
     	
@@ -1134,7 +1134,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	
     	params.put("tenantID", tenantID);
 		params.put("v_start", startPage);
-		params.put("v_end", endPage);
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);

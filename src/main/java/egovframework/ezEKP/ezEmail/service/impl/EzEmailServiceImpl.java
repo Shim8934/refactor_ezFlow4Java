@@ -1680,7 +1680,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-				
 		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
 		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");

@@ -352,7 +352,7 @@
             }
             
          // 쓰기창에서 수신인 자동완성 기능 사용 유무
-            <c:if test="${useMailAddrAutoComplete == 'NO'}">
+            <c:if test="${useMailAddrAutoComplete != 'YES'}">
             	$( "#MsgTo" ).autocomplete("disable");
             	$( "#MsgCC" ).autocomplete("disable");
             	$( "#MsgBCC" ).autocomplete("disable");
