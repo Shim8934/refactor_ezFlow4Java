@@ -2250,7 +2250,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		map.put("commentId", jsonParam.get("commentId"));
 		map.put("commentContent", jsonParam.get("commentContent"));
-
+		
+		LOGGER.debug("userId : " + userId + ", writerId : " + writerId);
+		
 		if (writerId.equals(userId) || authority == 1) {
 			ezPMSDAO.updateComment(map);
 		} else {

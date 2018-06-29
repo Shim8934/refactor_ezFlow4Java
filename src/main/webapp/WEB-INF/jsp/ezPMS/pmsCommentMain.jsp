@@ -43,7 +43,7 @@
 	$(document).ready(function() {
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + 10 + "px");
+		$("#taskTree").css("height", CurrentHeight + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
@@ -327,7 +327,8 @@
 	#taskTree {
 		margin-right : 5px;
 		width : 276px;
-		overflow : auto;
+		overflow-y: auto;
+    	overflow-x: hidden;
 		border : 1px solid #d1d1d1;
 		float : left;
 		display : inline-block
