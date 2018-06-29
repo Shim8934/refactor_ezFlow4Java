@@ -9,6 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/platform.css" type="text/css">
 		<link rel="stylesheet" href="/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/gantt.css" type="text/css">
@@ -1359,8 +1360,8 @@
 	   							var start = dateToYYYYMMDD(new Date(ge.tasks[i].start));
 	   		   					var end = dateToYYYYMMDD(new Date(ge.tasks[i].end));
 	   		   					
-	   							infoHTML += "<div class='tooltipTitle' style='background-color:#d1d1d1'>" + ge.tasks[i].name + "</div>";
-	   							infoHTML += "<div>";
+	   							infoHTML += "<div class='tooltipTitle'>" + ge.tasks[i].name + "</div>";
+	   							infoHTML += "<div class='tooltipText'>";
 	   							infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[i].duration + "<br>";
@@ -1372,8 +1373,8 @@
 	   					var start = dateToYYYYMMDD(new Date(ge.tasks[0].start));
 	   					var end = dateToYYYYMMDD(new Date(ge.tasks[0].end));
 	   					
-						infoHTML += "<div class='tooltipTitle' style='background-color:#d1d1d1'>" + ge.tasks[0].name + "</div>";
-						infoHTML += "<div>";
+						infoHTML += "<div class='tooltipTitle'>" + ge.tasks[0].name + "</div>";
+						infoHTML += "<div class='tooltipText'>";
 						infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 						infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
 						infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[0].duration + "<br>";
@@ -1515,13 +1516,6 @@
 		  
 		  #ndo{
 		  	display:none;
-		  }
-		  
-		  .tooltipBox {
-		    position : absolute;
-            background : #fff;
-            border : 1px solid black;
-            width : 200px;
 		  }
 		  
 		  .toastArea {

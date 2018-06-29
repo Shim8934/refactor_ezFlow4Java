@@ -466,7 +466,7 @@ function setProjectList(mode) {
 function moreProjectList() {
 	listNumber = 20;
 	startRow = $("#memoStyleDiv").find(".project_list").length;
-	$("#memoStyleDiv").find(".moreBtn").remove();
+	$(".project_mainlist").find(".moreBtn").remove();
 	
 	setProjectList("moreBtn");
 }

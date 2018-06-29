@@ -107,7 +107,7 @@ $(function(){
 	}
 	
 	if (projectList.length >= 20) {
-		$("#memoStyleDiv").append("<div class='moreBtn' onclick='moreProjectList()' style='border:1px solid #d1d1d1; background-color:white; text-align:center; clear:both; cursor:pointer; height:33px; line-height:30px;'><span><spring:message code='ezPMS.t276' /></span></div>");
+		$(".project_mainlist").last().append("<div class='moreBtn' onclick='moreProjectList()'><span><spring:message code='ezPMS.t276' /></span></div>");
 	}
 
 });

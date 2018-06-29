@@ -181,7 +181,7 @@ public class EzPMSGWController {
 			//최상위 그룹 생성을 위한 파라미터
 			project.put("treeDepth", 0);
 			project.put("ancestorGroup", "0");
-			project.put("sortOrder", 1);
+			project.put("sortOrder", -1);
 			project.put("status", "W");
 			project.put("upperGroupId", 0);
 			project.put("companyId", companyId);
@@ -202,6 +202,7 @@ public class EzPMSGWController {
 			ezPMSService.addGroup(project, "Y", companyId, tenantId);
 			
 			//그룹 생성
+			project.put("sortOrder", 0);
 			project.put("groupName", request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'","&#39;"));
 			long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId);
 			
