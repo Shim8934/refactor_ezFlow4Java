@@ -1872,6 +1872,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 	}
 
+	/* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 	@Override
 	public String getItemXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
 		logger.debug("getItemXML started");
@@ -1893,6 +1894,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
 			sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
 			sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
+			sb.append("<WriterDeptID>" + commonUtil.cleanValue(itemInfo.getWriterDeptID()) + "</WriterDeptID>");
 			sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
 			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
 			sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
@@ -1933,6 +1935,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return sb.toString();
 	}
 
+	/* 2018-06-29 홍승비 - 임시게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 	@Override
 	public String getItemTempXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
 		logger.debug("getItemTempXML started");
@@ -1953,6 +1956,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
 		sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
 		sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
+		sb.append("<WriterDeptID>" + commonUtil.cleanValue(itemInfo.getWriterDeptID()) + "</WriterDeptID>");
 		sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
 		sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
 		sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");

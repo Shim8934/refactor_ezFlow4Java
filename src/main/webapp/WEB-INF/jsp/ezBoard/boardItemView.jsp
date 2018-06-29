@@ -656,10 +656,11 @@
 		            suffix = 0;
 		    }
 		
-		    function MemberInfo_onclick(pUserID) {
+		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+		    function MemberInfo_onclick(pUserID, pDeptID) {
 		        var feature = "height=490px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 490);
-		        window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID, "", feature);
+		        window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function mail_boarditem() {
 		        var pheight = window.screen.availHeight;
