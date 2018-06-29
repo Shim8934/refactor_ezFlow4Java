@@ -1,7 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -393,7 +393,7 @@ function formatDate(date) {
 					</c:when>
       				<c:when test="${weightInput == 1}">
 						<td colspan="3">
-						<input type="text" id="weight" value="0" style="width:40px;text-align:center"> %  &nbsp; <spring:message code='ezPMS.t103' /> ${remainingWeight} % 
+						<input type="text" id="weight" value="0" style="width:40px;text-align:center"> %  &nbsp; <spring:message code='ezPMS.t103' /> <fmt:formatNumber value="${remainingWeight }" pattern="0.0" /> % 
 						</td>
 					</c:when>
    				</c:choose>
