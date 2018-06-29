@@ -114,6 +114,7 @@ var CabinetItem = function() {
 		libttns[5].firstElementChild.onclick  = function() {refresh();};
 		libttns[6].firstElementChild.onclick  = function() {toggleSearchPanel();};
 		libttns[8].firstElementChild.onclick  = function() {openSharePopup();};
+		libttns[9].firstElementChild.onclick  = function() {getFileDetail();};
 		
 		$("#Sdatepicker").datepicker({
 			changeMonth: true,
@@ -393,6 +394,10 @@ var CabinetItem = function() {
 	function openSharePopup() {
 		var cabId      = document.getElementById("cabInfo").getAttribute("role");
 		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabId, "shareFile", getOpenWindowfeature(1000, 600));
+	}
+	
+	function getFileDetail() {
+		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 650));
 	}
 	
 	return {
