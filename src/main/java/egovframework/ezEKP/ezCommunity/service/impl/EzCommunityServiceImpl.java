@@ -2957,6 +2957,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return "FALSE";
 	}
 
+	/* 커뮤니티 게시물(일반) > 게시자의 writerDeptID를 가져오도록 수정*/
 	@Override
 	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, LoginVO userInfo) throws Exception {
 		logger.debug("getItemXML started.");

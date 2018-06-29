@@ -52,6 +52,7 @@
 		<result property="itemID"						column="ItemID"						/>
 		<result property="writerID"						column="WriterID"					/>
 		<result property="writerName"					column="WriterName"					/>
+		<result property="writerDeptID"				column="WriterDeptID"				/>
 		<result property="writerDeptName"				column="WriterDeptName"				/>
 		<result property="writerCompanyName"			column="WriterCompanyName"			/>
 		<result property="writeDate"					column="WriteDate"					/>
@@ -969,6 +970,7 @@
 				itemid,
 				writerid,
 				writername$v_strLang$ AS writername,
+				writerdeptid,
 				writerdeptname$v_strLang$ AS writerdeptname,
 				writercompanyname$v_strLang$ AS writercompanyname,
 				DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
