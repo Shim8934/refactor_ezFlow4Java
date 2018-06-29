@@ -611,12 +611,18 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t153'/></h1>
+	                        	<ul id="menuTable">	
+	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t153'/></h1></li>
+	                            </ul>
+	                            <ul style="float:right;margin-right:50px">
+	                                <li id="menuTable" style="background: none; border: none;">	
+										<span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span>
+									</li>	              
+								</ul>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                                <li><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></li>
-	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+	                                <li><span onclick="window.close()"></span></li>
 	                            </ul>
 	                        </div>
 	                    </td>

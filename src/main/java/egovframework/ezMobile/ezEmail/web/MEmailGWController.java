@@ -352,6 +352,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			LOGGER.debug("userEmail : " + userEmail);
 			
+			String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", info.getTenantId());
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
@@ -394,18 +396,33 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					LOGGER.debug("search field not paging");
 				}
 				
-				messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, sd, ed, searchSubFolder, null, isUnreadOnly, isImportantOnly, true);
+				if (useAdvancedMailSearch.equals("YES")) {
+					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, searchField, searchValue, sd, ed, searchSubFolder, isUnreadOnly, isImportantOnly, true);
+				} else {
+					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, sd, ed, searchSubFolder, null, isUnreadOnly, isImportantOnly, true);
+				}
 			
 			} else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, isUnreadOnly, false, true);
+				if (useAdvancedMailSearch.equals("YES")) {
+					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", sd, ed, searchSubFolder, isUnreadOnly, false, true);
+				} else {
+					messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, isUnreadOnly, false, true);
+				}
 			} else if (isImportantOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, false, isImportantOnly, true);
+				if (useAdvancedMailSearch.equals("YES")) {
+					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", sd, ed, searchSubFolder, false, isImportantOnly, true);
+				} else {
+					messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, false, isImportantOnly, true);
+				}
 			}
 						
 			if (messages == null && !endDate.equals("")) {
 				LOGGER.debug("search field paging");
-				
-				messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, isUnreadOnly, isImportantOnly, true);
+				if (useAdvancedMailSearch.equals("YES")) {
+					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", sd, ed, searchSubFolder, isUnreadOnly, isImportantOnly, true);
+				} else {
+					messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, isUnreadOnly, isImportantOnly, true);
+				}
 			}
 			
 			if (messages == null) {

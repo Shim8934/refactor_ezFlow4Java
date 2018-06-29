@@ -224,28 +224,34 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t227'/></h1>
+	                        	<ul id="menuTable">	
+	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t227'/></h1></li>
+	                            </ul>
+	                            <ul style="float:right;margin-right:50px">
+	                                <li id="menuTable" style="background: none; border: none;">	
+										<!-- 회사가 수정신청을 허용으로 했을때만 -->
+		                            	<c:if test="${attitudeConfigVO.attitudeModAppl == 1}">
+			                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
+				                            	<span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span>
+				                                <span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span>
+			                            	</c:if>
+											<!-- 본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관 -->
+			                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
+			                            		<span onclick="modify()"><spring:message code='ezAttitude.t163'/></span>
+			                            	</c:if>
+			                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
+			                            		<span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span>
+			                            	</c:if>
+		                            	</c:if>
+		                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
+		                            		<span onclick="del()"><spring:message code='ezAttitude.t164'/></span>
+		                            	</c:if>
+									</li>
+								</ul>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                            	<!-- 회사가 수정신청을 허용으로 했을때만 -->
-	                            	<c:if test="${attitudeConfigVO.attitudeModAppl == 1}">
-		                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
-			                            	<li><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
-			                                <li><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
-		                            	</c:if>
-										<!-- 본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관 -->
-		                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-		                            		<li><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></li>
-		                            	</c:if>
-		                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
-		                            		<li><span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span></li>
-		                            	</c:if>
-	                            	</c:if>
-	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-	                            		<li><span onclick="del()"><spring:message code='ezAttitude.t164'/></span></li>
-	                            	</c:if>
-	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+	                                <li><span onclick="window.close()"></span></li>
 	                            </ul>
 	                        </div>
 	                    </td>
