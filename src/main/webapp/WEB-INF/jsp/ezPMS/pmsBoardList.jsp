@@ -13,9 +13,11 @@
 	$(function() {
 		CurrentHeight = $(window).height()-100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + 10 + "px");
+		$("#taskTree").css("height", CurrentHeight + "px");
+		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#divList").css("height", (CurrentHeight - 150) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+		$("#divList").css("height", (CurrentHeight - 165) + "px");
 		$("#divList").css("overflow", "auto");
 		
 		$(".mainlist tbody tr td:not(.checkbox)").on("click", function(evt) {
