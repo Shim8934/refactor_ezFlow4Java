@@ -1780,7 +1780,7 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezLadder.t086' /></span></a>
 		</div>
 		

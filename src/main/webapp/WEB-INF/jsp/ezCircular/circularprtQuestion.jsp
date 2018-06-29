@@ -152,6 +152,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezCircular.t113' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return Cancel()"></span></li>
+            </ul>
+        </div>
 		<span>▒ <spring:message code='ezCircular.t162' /></span>
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
@@ -164,11 +169,10 @@
 				<td><span id="ext2">&nbsp;<spring:message code='ezCircular.t175' /></span></td>
 			</tr>
 		</table>
-		<div class="btnposition btnpositionNew" style="margin-top:15px">
+		<div class="btnposition btnpositionNew">
 		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezCircular.t177' /></span></a>
 		    <a id="Submit2" class="imgbtn" onClick="return select_click()" ><span><spring:message code='ezCircular.t178' /></span></a>
 		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span><spring:message code='ezCircular.t179' /></span></a>
-		    <a id="Submit4" class="imgbtn" onClick="return Cancel()" ><span><spring:message code='ezCircular.t26' /></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

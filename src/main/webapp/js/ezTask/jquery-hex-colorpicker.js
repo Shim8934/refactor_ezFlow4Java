@@ -324,8 +324,8 @@
                     	'<input type="text" name="selected-color" class="selected-color" readonly="readonly" style="border:1px inset;"/>'+
                     	'</form></div>';
                 output+="</div>";//end of hex-color-picker-wrapper
-                output+="<div class='btnposition'>";
-                output+="<a class='imgbtn'><span onclick='ok_onclick()'>저장</span></a>";
+                output+="<div class='btnposition btnpositionNew'>";
+                output+="<a class='imgbtn'><span onclick='ok_onclick()'>" + strLang73 +"</span></a>";
                 
                 return output;
             }   
