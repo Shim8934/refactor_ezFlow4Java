@@ -95,7 +95,7 @@
 		    </tr>
 		</table>
 		
-		<textarea name="textarea" id="outreason" style="width: 97%;height:110px" maxLength="200"></textarea>
+		<textarea name="textarea" id="outreason" style="width: 97%;height:110px;resize:none" maxLength="200"></textarea>
 		
 		<div class="btnposition">
 			<a class="imgbtn" name="Submit" id="outok" onClick="return outok_onclick('${code}')"><span><spring:message code='ezCommunity.t719'/></span></a>
