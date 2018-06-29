@@ -6459,6 +6459,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		/* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함 */
+		// 현재 겸직한 회사에 대해 모든 부서정보 가져오므로, 레코드를 하나로 제한할 것.
 		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
 		
 		StringBuffer sb = new StringBuffer();

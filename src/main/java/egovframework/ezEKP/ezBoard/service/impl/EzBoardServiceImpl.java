@@ -2318,6 +2318,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("saveAttachInfo ended");
 	}
 	
+	/* 댓글 저장 시 회사ID 삽입하도록 수정 */
 	@Override
 	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception {
 		logger.debug("saveOneLineReply started");
@@ -2333,6 +2334,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("PCONTENT", content);
 		map.put("PPASSWORD", password);
 		map.put("TENANTID", userInfo.getTenantId());
+		map.put("COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
 		
 		ezBoardDAO.saveOneLineReply(map);
