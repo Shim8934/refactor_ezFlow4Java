@@ -1660,8 +1660,13 @@
 		<isEqual property="upperGroupId" compareValue="0">
 				#groupId#,
 		</isEqual>
-				(SELECT IFNULL(MAX(sort_order) , 0) + 1 FROM TBL_PMS_GROUP WHERE PROJECT_ID = #projectId#),	#delStatus#,
-				#workingDay#,		#restDueday#,		#isIssue#
+		<isEmpty property="sortOrder">
+			(SELECT IFNULL(MAX(sort_order) , 0) + 1 FROM TBL_PMS_GROUP WHERE PROJECT_ID = #projectId#),
+		</isEmpty>
+		<isNotEmpty property="sortOrder">
+				#sortOrder#,
+		</isNotEmpty>
+				#delStatus#,	#workingDay#,		#restDueday#,		#isIssue#
 			
 	</insert>
 	

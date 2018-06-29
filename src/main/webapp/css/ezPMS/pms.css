@@ -91,6 +91,11 @@
 .project_portlet_workhistory .project_portlet_list li .situation_modify,
 .project_portlet_workhistory .project_portlet_list li .situation_delet { float: left; margin-right: 6px; margin-top:3px;}
 
+/* 20180629 */
+.projectAreaStyle {}
+.projectAreaStyle .project_subh1 { padding: 0px 10px; box-sizing: border-box; }
+.projectAreaStyle #mainmenu {padding:0px 10px; box-sizing:border-box;}
+
 /* 개요 좌측 list */
 .project_overview_section { clear: both; margin: 0px; padding: 0px; list-style:none; overflow: hidden; }
 .project_overview_section > li {float:left; width:25%; padding-right:10px; box-sizing:border-box;}
@@ -133,3 +138,8 @@
 }
 @media only screen and (min-width : 1777px) and (max-width : 1920px) {
     .project_mainlist .moreBtn { width: 1500px; }
+
+/* tooltipbox */
+.tooltipBox {border:1px solid #4e4e46;}
+.tooltipBox .tooltipTitle { height: 33px; line-height: 33px; padding: 0px 10px; background: #f0f6ff; border: 1px solid #d1ddec; font-size:14px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.tooltipBox .tooltipText {padding:10px; background:#fff; font-size:12px; line-height:22px;}
