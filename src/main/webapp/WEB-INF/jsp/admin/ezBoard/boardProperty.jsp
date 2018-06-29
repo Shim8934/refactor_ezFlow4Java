@@ -60,6 +60,9 @@
 	            if (orgAPPRFLAG == '') {
 	            	orgAPPRFLAG = "N";
 	            }
+	            if (APPRFLAG == '') {
+	            	APPRFLAG = "N";
+	            }
 	            
 	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
 	                if ($("#chkApprBoard").is(":checked")) {
@@ -78,7 +81,7 @@
 	                } else {
 	                    document.getElementById("trAttribute").style.display = "";
 	                }
-	            }
+	            } 
 			});
 			
 			function Save() {
@@ -153,7 +156,7 @@
 	                $("#deleteafter").focus();
 	                return;
 	            }
-
+	            
 	            if (orgAPPRFLAG != APPRFLAG) {
 	                if (orgAPPRFLAG == "N") {
 	                    if (!confirm("<spring:message code='ezBoard.t999013'/>")) {

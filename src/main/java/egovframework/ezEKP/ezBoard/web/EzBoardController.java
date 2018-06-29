@@ -3242,11 +3242,14 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
+		/* 2018-06-29 홍승비 - 해당 게시물을 작성한 사람의 WriterDeptID(겸직상태로 저장됨)도 함께 가져오도록 함 */
 		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
 		if (boardItem == null) {
 			return "main/warning";
 		}
+		
+		logger.debug("정보를 읽을 사원의 부서ID     ::    " + boardItem.getWriterDeptID());
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
 		
@@ -7016,6 +7019,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
+		
+		//logger.debug("현재 선택한 사원의 부서 ID 정보       ::   " + boardInfo.get);
 		
 		logger.debug("boardItemPreViewPhotoContent ended");
 		

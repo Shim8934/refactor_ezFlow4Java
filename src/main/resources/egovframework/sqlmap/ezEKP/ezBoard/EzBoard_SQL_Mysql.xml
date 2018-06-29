@@ -79,6 +79,7 @@
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="30"/>
         <result property="boardID" 					column="BOARDID" 				columnIndex="31"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
+        <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -111,6 +112,7 @@
         <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="27"/>
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="28"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
+        <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -2384,6 +2386,7 @@
 				ITEMID ,
             	WRITERID ,
 	            WRITERNAME$lang$ WRITERNAME,
+	            WRITERDEPTID,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
 	            WRITEDATE ,
@@ -2433,6 +2436,7 @@
 			SELECT 
 				ITEMID ,
 	            WRITERID ,
+	            WRITERDEPTID,
 	            WRITERNAME$lang$ WRITERNAME,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
