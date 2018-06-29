@@ -48,11 +48,14 @@
 		    var Type = "${type}";
 		    var ReturnFunction;
 		    var approvalFlag = "${approvalFlag}";
+		    var openPageInfo;
 		    window.onload = function () {
 		        try {
+		            openPageInfo = parent.setsearchinfo_cross_dialogArguments[0];
 		            ReturnFunction = parent.setsearchinfo_cross_dialogArguments[1];
 		        } catch (e) {
 		            try {
+		            	openPageInfo = opener.setsearchinfo_cross_dialogArguments[0];
 		                ReturnFunction = opener.setsearchinfo_cross_dialogArguments[1];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
@@ -74,7 +77,14 @@
 		            //window.resizeBy(0, -60);
 		            window.resizeTo(510, 375);
 		        }
-		
+				if (openPageInfo == "usercontlist") {
+					$("#displayTR2").css("display", "none");
+					//등록일자
+					//$("#Sdatepickerapr").parent().siblings("th").text("<spring:message code='ezApprovalG.t831'/>");
+					$("#Sdatepickerapr").parent().siblings("th").text("<spring:message code='ezApprovalG.bhs01'/>");
+					window.resizeTo(510, 400);
+				}
+				
 		        reset_onclick();
 		        Submit3.focus();
 		    };

@@ -511,6 +511,10 @@ function ListView() {
                 if (strColName == "ISPUBLIC") {
                 	objTd.style.textAlign = "center";
                 }
+                
+                if (strColName == "ReSendFlag") {
+                	objTd.style.textAlign = "center";
+                }
 
                 if (strClass != "") {
                     if (i == 0) {       //// 현재는 header에 class가 없으므로 고정함.
@@ -563,6 +567,12 @@ function ListView() {
 //                } else {
 //                	objTd.innerHTML = strName;
 //                }
+                
+                // 헤더에 수신 컬럼 가운데정렬 2018-06-28 강민수92
+                console.log(strColName);
+                if (strColName == "") {
+                	
+                }
                 
                 objTd.innerHTML = strName;
                 objTr.appendChild(objTd);
