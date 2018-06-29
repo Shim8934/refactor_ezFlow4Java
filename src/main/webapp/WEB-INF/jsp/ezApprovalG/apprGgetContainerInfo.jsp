@@ -417,7 +417,7 @@
 		    var setsearchinfo_cross_dialogArguments = new Array();
 		    var OpenWin2;
 		    function SearchCondi_onclick() {
-		        var para;
+		        var para = LoadSquery;
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		
@@ -430,7 +430,10 @@
 		        	condition[i] = returnvalue[i]; 
 		        }
 	    	   
-		        if (condition) {
+	    	    if (LoadSquery == "usercontlist") {
+	    	    	MakeSubCondition();
+	    	    	GetUserContList();
+	    	    } else if (condition) {
 		            Init_Flag = "False";
 		            GetDocSearch();
 		        }
