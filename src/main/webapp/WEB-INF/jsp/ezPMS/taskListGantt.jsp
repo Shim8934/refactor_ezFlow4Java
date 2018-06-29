@@ -614,11 +614,11 @@
 	   			  	var preTaskRowName = $(".taskEditRow").eq(taskDepend - 1).find("input[name='name']").val();
 	   			  	var projectId = task.id.match(/p(\d+)/)[1];
 	   			    
-	   			  	if(taskId == null || preTaskId == null) {
+	   			  	/* if(taskId == null || preTaskId == null) {
 	   			  		alert("<spring:message code='ezPMS.t300' />");
 	   			  		throw "It is not allowed to set Group as Pretask";
 	   			  		return;
-	   			  	}
+	   			  	} */
 	   			  	
 	   			  	/* if(new Date(preTask.end) > new Date(task.start)) {
 	   				  

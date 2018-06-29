@@ -248,8 +248,7 @@
 			taskName = taskDetails.groupName;
 		}
 		
-		window.open("/ezPMS/goAddBoard.do?projectName=" + taskDetails.projectName + "&projectId=" + taskDetails.projectId + "&groupId=" + taskDetails.groupId 
-										 + "&taskName=" + taskName  + "&taskId=" + taskId + "&mode=new", 
+		window.open("/ezPMS/goAddBoard.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId + "&mode=new", 
 					"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
 	}
 	
@@ -427,7 +426,7 @@ button.PHBtn {
 			  <c:choose>
 			  <c:when test="${empty target }">
 			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t98' /></th>
-			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.taskName}"/></td>
+			    <td id="taskName" class="detailsTable-td" colspan="4"><c:out value="${taskDetails.taskName}"/></td>
 			  </c:when>
 			  <c:otherwise>
 			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t87' /></th>
