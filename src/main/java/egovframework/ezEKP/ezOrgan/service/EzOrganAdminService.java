@@ -19,7 +19,7 @@ public interface EzOrganAdminService {
 	
 	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow, int tenantID) throws Exception;
 		
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID) throws Exception;
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String companyId) throws Exception;
 	
 	public List<OrganUserVO> getUserCnList(int tenantID) throws Exception;
 
@@ -41,7 +41,7 @@ public interface EzOrganAdminService {
 	
 	public int userCheck(String cn, int tenantID) throws Exception;
 	
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception;
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String companyId) throws Exception;
 	
 	public int getPermissionListCount(String companyID, String type, String strLang, int tenantID) throws Exception;
 

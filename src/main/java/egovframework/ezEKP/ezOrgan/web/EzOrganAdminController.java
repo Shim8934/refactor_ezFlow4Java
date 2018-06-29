@@ -2292,7 +2292,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-        int tenantID = user.getTenantId();        
+        int tenantID = user.getTenantId();  
+        String companyId = request.getParameter("companyId") == null ? user.getCompanyID() : request.getParameter("companyId");
         
         logger.debug("tenantID=" + tenantID);
 		
@@ -2304,9 +2305,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    			pPage = Integer.parseInt(request.getParameter("page"));
    		}
    		
-   		logger.debug("strLang=" + strLang + ",pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("strLang=" + strLang + ",pPage=" + pPage + ",pPageRow=" + pPageRow + ",companyId=" + companyId);
    		
-   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID);
+   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID, companyId);
    		int totalPage = 0;
    		
 		if (totalCount > 0) {
@@ -2325,12 +2326,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID);
+		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < companylist.size(); i++) {
+			OrganDeptVO vo = companylist.get(i);			
+
+			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}
+		
+		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID, companyId);
 		
 		model.addAttribute("lang", strLang);
    		model.addAttribute("list", list);
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("companylist", resultList);
+		model.addAttribute("companyId", companyId);
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
