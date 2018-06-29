@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -170,7 +171,7 @@
 	 
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t267' /></th>
-	    <td class="">${taskDetails.weight == null ? "-" : taskDetails.weight}</td>
+	    <td class=""><fmt:formatNumber value="${taskDetails.weight == null ? 0 : taskDetails.weight}" pattern="0.0" />%</td>
 	  </tr>
 	  <tr>
 	    <th class="overviewTh"><spring:message code='ezPMS.t66' /></th>
