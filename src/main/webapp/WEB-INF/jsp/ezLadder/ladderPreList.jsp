@@ -295,7 +295,7 @@
 		<h1 id="h1Title"><spring:message code="ezLadder.t073" /></h1>
 		<div id="close">
             <ul>
-                <li><span value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName"></span></li>
+                <li><span value="<spring:message code='ezEmail.t39' />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName"></span></li>
             </ul>
         </div>
 		<!-- 다시 -->
@@ -321,7 +321,8 @@
 			</div>
 		</div>
 		<div class="btnposition btnpositionNew">
-			<input type="submit" value="확인" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
+			<a class="imgbtn" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"><span><spring:message code='ezEmail.t38' /></span></a>
+			<%-- <input type="submit" value="<spring:message code='ezEmail.t38' />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"> --%>
 		</div>
 	</body>
 </html>

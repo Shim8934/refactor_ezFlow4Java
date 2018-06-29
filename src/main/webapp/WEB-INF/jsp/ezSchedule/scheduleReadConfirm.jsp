@@ -68,7 +68,7 @@
 		      	</td>
 		  	</tr>  
 		</table>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="ContactOutButton" onClick="Schedule_Confirm()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 		</div>
 	</body>

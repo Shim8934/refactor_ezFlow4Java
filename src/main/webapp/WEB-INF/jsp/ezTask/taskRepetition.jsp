@@ -721,7 +721,7 @@
 		<h2 style="margin:0px;padding:0px"><spring:message code='ezTask.t33' /></h2>
 		<table class="popuplist" style="width:100%;margin-bottom:10px">
 			<tr>
-				<td>
+				<td style="padding-left:5px">
 					<input id="mpDaily" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" onClick='showMainPattern(0);'>
 					<label for="mpDaily" style="vertical-align:middle;" accesskey="D"><spring:message code='ezTask.t34' /><u>D</u>)</label>
 					<input id="mpWeekly" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked onClick='showMainPattern(1);'>
@@ -861,7 +861,7 @@
 			</tr>
 		</table>
 		<h2><spring:message code='ezTask.t64' /></h2>
-			<!-- 2018-05-16 구해안 테이블 UI수정 (좌측 td rowspan="4"주고 통합 및 용어, 위치 변경 하고 시작일 추가)-->
+		<!-- 2018-05-16 구해안 테이블 UI수정 (좌측 td rowspan="4"주고 통합 및 용어, 위치 변경 하고 시작일 추가)-->
 		<table class="content">
 			<tr>
 		    	<th align="right" rowspan="4">&nbsp;&nbsp;&nbsp;<spring:message code='ezTask.t65' />&nbsp;&nbsp;&nbsp;</th>
@@ -895,7 +895,7 @@
 		    	</td>
 		  	</tr>
 		</table>		
-		<div class="btnpositionNew">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" onClick="ok_click()" ><span><spring:message code='ezTask.t19' /></span></a>
 			<a class="imgbtn" onClick="remove_click()" ><span><spring:message code='ezTask.t77' /></span></a>
 		</div>
