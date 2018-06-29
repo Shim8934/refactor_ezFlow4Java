@@ -2826,4 +2826,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.updateTaskStatusScheduler(UTCTimeStr);
 		LOGGER.debug("[SERVICE] ezPMS updateTaskStatusScheduler Ended");
 	}
+
+	@Override
+	public void updateProjectGroupEndDate(long projectId, String changeEndDate, int tenantId, long groupId) {
+		LOGGER.debug("[SERVICE] ezPMS updateProjectGroupEndDate started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("planEndDate", changeEndDate);
+		map.put("tenantId", tenantId);
+		map.put("groupId", groupId);
+		
+		ezPMSDAO.updateProjectGroupEndDate(map);
+		LOGGER.debug("[SERVICE] ezPMS updateProjectGroupEndDate ended");
+		
+	}
 }

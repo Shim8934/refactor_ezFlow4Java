@@ -1541,28 +1541,52 @@
 	</delete>
 	
 	<update id="EzPMSDAO.updateProjectInfo" parameterClass="map">
-		<![CDATA[
 			UPDATE 
 				tbl_pms_project	
 			SET	
+		<isNotEmpty property="projectName">
 				PROJECT_NAME = #projectName#,
+		</isNotEmpty>
+		<isNotEmpty property="weightInput">
 				WEIGHT_INPUT = #weightInput#,
+		</isNotEmpty>
+		<isNotEmpty property="planStartDate">
 				PLAN_START_DATE = #planStartDate#,
-				PLAN_END_DATE = #planEndDate#,
+		</isNotEmpty>
+		<isNotEmpty property="overview">
 				OVERVIEW = #overview#,
+		</isNotEmpty>
+		<isNotEmpty property="alamMailStatus">
 				ALAM_MAIL_STATUS = #alamMailStatus#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerId">
 				HEAD_MANAGER_ID = #headManagerId#,
-				WORKINGDAY = #workingday#,
+		</isNotEmpty>
+		<isNotEmpty property="restDueday">
 				REST_DUEDAY = #restDueday#,
+		</isNotEmpty>
+		<isNotEmpty property="workingday">
+				WORKINGDAY = #workingday#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerDeptname">
 				HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerDeptname2">
 				HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerName">
 				HEAD_MANAGER_NAME = #headManagerName#,
-				HEAD_MANAGER_NAME2 = #headManagerName2#
+		</isNotEmpty>
+		<isNotEmpty property="headManagerName2">
+				HEAD_MANAGER_NAME2 = #headManagerName2#,
+		</isNotEmpty>
+		<isNotEmpty property="planEndDate">
+				PLAN_END_DATE = #planEndDate#
+		</isNotEmpty>
 			WHERE
 				PROJECT_ID = #projectId#
 			AND	
 				TENANT_ID = #tenantId#
-		]]>	
 	</update>
 	
 	<update id="EzPMS.updateProjectRealDate" parameterClass="map">
@@ -3851,5 +3875,20 @@
 			plan_end_date < #UTCTime#
 	
 	]]>	
+	</update>
+	
+	<update id="EzPMSDAO.updateProjectGroupEndDate" parameterClass="map">
+	<![CDATA[
+		UPDATE
+			TBL_PMS_GROUP
+		SET
+			PLAN_END_DATE = #planEndDate#
+		WHERE
+			GROUP_ID = #groupId#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
 	</update>
 </sqlMap>

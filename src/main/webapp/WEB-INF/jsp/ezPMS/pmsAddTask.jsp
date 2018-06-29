@@ -45,6 +45,7 @@ var groupName = "";
 var remainingWeight = "${remainingWeight}";
 var weightInput = "${weightInput}";
 var treeDepth = 0;
+var projectStatus = "${projectStatus}";
 
  $(function() {
 	 $("#Sdatepicker").datepicker({
@@ -200,6 +201,8 @@ function addTask() {
 	 var projectStartDateComp = new Date(projectStartDate);
 	 var projectEndDateComp = new Date(projectEndDate);
 	 
+	 var changeDate = "";
+	 
 	//1. 시작일 > 종료일은 불가능
 	 if (startDateComp.getTime() > endDateComp.getTime()) {
 		  alert("<spring:message code='ezPMS.t49' />");
@@ -214,16 +217,43 @@ function addTask() {
 			 return;
 		 }
 	 }
-	
+
 	//3. 업무의 계획 시작일과 계획 종료일은 프로젝트 시작일과 종료일범위를 벗어날수 없음
 	if (startDateComp.getTime() < projectStartDateComp.getTime()) {
 		alert(startDateComp.getTime() + " <<<<>>>> " + projectStartDateComp.getTime());
 		alert("<spring:message code='ezPMS.t94' />");
 		return;
 	}
-	if (endDateComp.getTime() > projectEndDateComp.getTime()) {
-		alert("<spring:message code='ezPMS.t95' />");
-		return;
+	
+	//프로젝트 상태가 완료인 경우 업무를 추가할 때 
+	if (projectStatus == "C") {
+		var result = confirm("업무를 추가하면 완료된 프로젝트의 상태가 진행 혹은 지연 상태로 변경됩니다.\n계속 하시겠습니까?");
+		if (result) {
+			if (endDateComp.getTime() > projectEndDateComp.getTime()) {
+				if (todayComp.getTime() < endDateComp.getTime()) {
+					projectStatus = "P";
+					changeDate = planEndDate;
+				} else {
+					projectStatus = "L";
+					changeDate = formatDate(todayComp);
+				}
+			} else {
+				if (todayComp.getTime() < projectEndDateComp.getTime()) {
+					projectStatus = "P";
+					changeDate = planEndDate;
+				} else {
+					projectStatus = "L";
+					changeDate = formatDate(todayComp);
+				}
+			}
+		} else {
+			return;
+		}
+	} else {
+		if (endDateComp.getTime() > projectEndDateComp.getTime()) {
+			alert("<spring:message code='ezPMS.t95' />");
+			return;
+		}
 	}
 	
 	// 담당자 검사
@@ -256,7 +286,6 @@ function addTask() {
 	} else {
 		weight = -1;
 	}
-
 	
 	var data = {
 			taskName : taskName,
@@ -269,7 +298,10 @@ function addTask() {
 			managerList : managerList,
 			weight : weight,
 			writerId : writerId,
-			treeDepth : treeDepth
+			treeDepth : treeDepth,
+			projectStatus : projectStatus,
+			projectPlanEndDate : projectEndDate,
+			projectChangeDate : changeDate
 	}
 	
 	$.ajax({
@@ -288,6 +320,23 @@ function addTask() {
 			alert("<spring:message code='ezPMS.t224' />");
 		}
 	});
+}
+
+function formatDate(date) {
+	var d = new Date(date);
+	var month = '' + (d.getMonth() + 1);
+	var day = '' + d.getDate();
+	var year = d.getFullYear();
+	
+	if (month.length < 2) {
+		month = '0' + month; 
+	}
+	
+	if (day.length < 2) {
+		day = '0' + day; 
+	}
+	
+	return [year, month, day].join('-'); 
 }
 
 </script>
