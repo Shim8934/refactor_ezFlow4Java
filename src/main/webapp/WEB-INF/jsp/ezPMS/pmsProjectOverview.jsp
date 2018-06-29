@@ -635,7 +635,7 @@ function setOverviewContent() {
 			 
 			 if (logList == null || logList.length == 0) {
 				 
-				 logHTML += "<li>" + "<spring:message code='ezPMS.t30' />" + "</li>";
+				 logHTML += "<li>" + "<span><spring:message code='ezPMS.t30' /><span>" + "</li>";
 				 
 			 } else {
 				 for (var i = 0; i < logList.length; i++) {
@@ -665,7 +665,7 @@ function setOverviewContent() {
 			 var commentHTML = ""; 
 			 
 			 if (commentList == null || commentList.length == 0) {
-				 commentHTML += "<li><span>" + "<spring:message code='ezPMS.t30' />" + "</span></li>";
+				 commentHTML += "<li><span class='text'>" + "<spring:message code='ezPMS.t30' />" + "</span></li>";
 			 } else {
 				 for (var i = 0; i < commentList.length; i++) {					 
 					 commentHTML += "<li>";

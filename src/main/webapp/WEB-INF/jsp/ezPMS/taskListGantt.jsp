@@ -59,6 +59,7 @@
 	   		var selectedPreTask = -1;
 	   		var preTaskIndex = -1;
 	   		var userRoleId = "${userRoleId}";
+	   		var msgStr01 = "<spring:message code='ezEmail.t269' />";
 	   		
 	   		function initValues() {	   			
 	   			var tl = taskList;
@@ -116,7 +117,7 @@
 		   			tempTask.end = new Date(pd.planEndDate).getTime();
 		   			tempTask.duration = pd.workingday;
 		   			tempTask.weight = Number(pd.weight).toFixed(1);
-		   			tempTask.startIsMilestone = "";
+		   			tempTask.startIsMilestone = true;
 		   			tempTask.endIsMilestone = "";
 		   			tempTask.assigs = [];
 		   			
@@ -2265,7 +2266,7 @@
 			    GanttMaster.messages = {
 			      "CANNOT_WRITE":"No permission to change the following task:",
 			      "CHANGE_OUT_OF_SCOPE":"Project update not possible as you lack rights for updating a parent project.",
-			      "START_IS_MILESTONE":"Start date is a milestone.",
+			      "START_IS_MILESTONE":"<spring:message code='ezPMS.t94' />",
 			      "END_IS_MILESTONE":"End date is a milestone.",
 			      "TASK_HAS_CONSTRAINTS":"Task has constraints.",
 			      "GANTT_ERROR_DEPENDS_ON_OPEN_TASK":"Error: there is a dependency on an open task.",

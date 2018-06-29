@@ -2042,6 +2042,35 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					updateGroupDate(Long.parseLong(ancGroupArr[i]), task.getTenantId(), companyId);
 				}
 			}
+			
+			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
+			HashMap<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("projectId", task.getProjectId());
+			map1.put("workingday", calWorkingDays);
+			map1.put("realWorkingday", calWorkingDays);
+			map1.put("tenantId", tenantId);
+			
+			if (!task.getGroupId().equals(0L)) {
+				String ancesterGroup = getAncesterGroup(task.getGroupId(), task.getTenantId());
+				String[] ancGroupArr = ancesterGroup.split(",");
+
+				for (int i = 0; i < ancGroupArr.length; i++) {
+					map1.put("groupId", ancGroupArr[i]);
+					ezPMSDAO.updateGroupProgress(map1);
+				}
+			}
+			
+			// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
+			ezPMSDAO.updateProjectProgress(task);
+
+			// 업데이트 후 프로젝트 진행률을 조회
+			ProjectInfoVO projectDetails = ezPMSDAO.getProjectDetails(map1);
+
+			// 프로젝트 진행률이 100이상인데 업무가 추가 되었으면, 진행으로 상태를 바꾼다.
+			if (Math.round(projectDetails.getProgress() * 100) / 100.0d >= 100) {
+				map1.put("status", "P");
+				ezPMSDAO.updateProjectStatus(map1);
+			}
 
 			// 업무가 속한 프로젝트 날짜 업데이트
 			// updateProjectDate(task.getProjectId(), task.getTenantId(),
@@ -2825,5 +2854,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] ezPMS updateTaskStatusScheduler Started");
 		ezPMSDAO.updateTaskStatusScheduler(UTCTimeStr);
 		LOGGER.debug("[SERVICE] ezPMS updateTaskStatusScheduler Ended");
+	}
+
+	@Override
+	public void updateProjectGroupEndDate(long projectId, String changeEndDate, int tenantId, long groupId) {
+		LOGGER.debug("[SERVICE] ezPMS updateProjectGroupEndDate started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("planEndDate", changeEndDate);
+		map.put("tenantId", tenantId);
+		map.put("groupId", groupId);
+		
+		ezPMSDAO.updateProjectGroupEndDate(map);
+		LOGGER.debug("[SERVICE] ezPMS updateProjectGroupEndDate ended");
+		
 	}
 }

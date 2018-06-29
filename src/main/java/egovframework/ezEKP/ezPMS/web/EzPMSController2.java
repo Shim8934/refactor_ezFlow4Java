@@ -119,6 +119,7 @@ public class EzPMSController2 {
 			model.addAttribute("projectStartDate", data.get("projectStartDate"));
 			model.addAttribute("projectEndDate", data.get("projectEndDate"));
 			model.addAttribute("weightInput", data.get("weightInput"));
+			model.addAttribute("projectStatus", data.get("projectStatus"));
 		}
 		
 		model.addAttribute("projectId", projectId);
@@ -162,6 +163,7 @@ public class EzPMSController2 {
 		JSONObject jsonList = new JSONObject();
 		jsonList.put("managerList", param.get("managerList"));
 		
+		param.remove("managerList");
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + projectId + "/users/" + userInfo.getId(), param, request, "post", jsonList);
 		String status = resultBody.get("status").toString();
 		
@@ -725,6 +727,8 @@ public class EzPMSController2 {
 			jsonList.put("participantList", param.get("participantList"));
 			jsonList.put("viewerList", param.get("viewerList"));
 			
+			param.remove("managerList");
+			param.remove("participantList"); 
 			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 			String status = resultBody.get("status").toString();
 		} catch (Exception e) {

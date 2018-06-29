@@ -573,6 +573,8 @@ function changeProjectStatus() {
 function viewListByStatus(status) {
 	listProjectStatus = status;
 	currentPage = 1;
+	listNumber = initListNumber;
+	startRow = 0;
 	
 	if (listProjectStatus != "F") {
 		$("#deleteFavorite").css("display", "none");

@@ -203,6 +203,7 @@ public class EzPMSGWController2 {
 			int tenantId = info.getTenantId();
 			String planStartDate = request.getParameter("planStartDate");
 			String planEndDate = request.getParameter("planEndDate");
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
 			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam.get("managerList");
 			List<TaskMemberVO> taskMemberList2 = new ArrayList<TaskMemberVO>();
@@ -274,6 +275,23 @@ public class EzPMSGWController2 {
 				for (int j = 0; j < dateList.size(); j++) {
 					ezPMSService.addMemberSchedule(memberId, tenantId, dateList.get(j), projectId);
 				}
+			}
+			
+			//프로젝트 완료시 추가된 업무가 있으면 프로젝트 상태 수정 
+			if (!request.getParameter("projectChangeDate").equals("")) {
+				String projectStatus = request.getParameter("projectStatus");
+				String projectPlanEndDate = request.getParameter("projectPlanEndDate");
+				String projectChangeDate = request.getParameter("projectChangeDate");
+				
+				ProjectInfoVO project = new ProjectInfoVO();
+				project.setProjectId(Long.parseLong(projectId));
+				project.setPlanEndDate(projectChangeDate);
+				
+				ProjectInfoVO projectDetails = ezPMSService.getProjectDetails(Long.parseLong(projectId), userId, tenantId, null, lang, info.getDeptId(), info.getCompanyId());
+				ezPMSService.updateProjectStatus(Long.parseLong(projectId), projectStatus, tenantId, projectPlanEndDate, projectChangeDate);
+				ezPMSService.updateProject(project, tenantId, companyId);
+				ezPMSService.updateProjectGroupEndDate(Long.parseLong(projectId), projectChangeDate, tenantId, projectDetails.getGroupId());
+				
 			}
 			
 			result.put("status", "ok");
