@@ -7288,6 +7288,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 승인게시물 검색 결과 카운트에 companyID 조건 추가
 		int boardCount = 0;
 		boardCount = ezBoardService.getSearchApprBoardItemCount(userInfo, boardVO);
 		
@@ -7299,6 +7300,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setOrderBySub(orderOption1);
 		boardListVO.setOrderByMain(orderOption2);
 		boardListVO.setUserID(userInfo.getId());
+		boardListVO.setCompanyID(userInfo.getCompanyID()); 
 		
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		
@@ -7317,6 +7319,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setWriterName("");
 		}
 		
+		// 승인게시물 검색 결과 리스트에 companyID 조건 추가
 		List<HashMap<String, Object>> boardSearchList = null;
 		boardSearchList = ezBoardService.getSearchApprBoardItemList(boardListVO, boardVO);
 

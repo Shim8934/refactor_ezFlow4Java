@@ -3928,6 +3928,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
 		logger.debug("getSearchApprBoardItemCount ended");
@@ -3960,6 +3961,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", boardListVO.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
