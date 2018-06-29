@@ -326,7 +326,7 @@
 			        var count = 0;
 			        var mType;
 			        
-			        if (mode == "T") {
+			        if (mode == "P") {
 			        	//2018.02.05 김기하 #11421
 			        	mType = "16";
 			        } else {
@@ -342,7 +342,8 @@
 				            var REPEATCOUNT = getNodeText(xmldom.getElementsByTagName("REPEATCOUNT").item(i));
 				            var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
 				            var ENDDATE = getNodeText(xmldom.getElementsByTagName("ENDDATE").item(i));
-				            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i));
+				            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i)).replace("&amp;","&").replace("&lt;","<").replace("&gt;",">").replace("&quot;","\"").replace("&apos;","\'");
+				            console.log('title : ' + TITLE);
 				            var startdate = new Date(STARTDATE.split(' ')[0].split('-')[0], STARTDATE.split(' ')[0].split('-')[1], STARTDATE.split(' ')[0].split('-')[2]);
 				            var enddate = new Date(ENDDATE.split(' ')[0].split('-')[0], ENDDATE.split(' ')[0].split('-')[1], ENDDATE.split(' ')[0].split('-')[2]);
 				            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            

@@ -3075,36 +3075,32 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
-		
-		/* 2018-06-04 홍승비 - 포탈 메일 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
-		for (int i=0; i<2; i++) {
-			
-			if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
-				strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
-			}
-			else {
-				strData.append("<dl class='listtype_photo'>");
-			}
-			
+
+		/* 2018-06-28 홍승비 - 커뮤니티가 존재하지 않는 경우, 1개만 존재하는 경우 분기 처리 */
+		if (list.size() == 0) {
+			return strData.toString();
+		}
+		else if (list.size() == 1) {
+			strData.append("<dl class='listtype_photo'>");
 			strData.append("<dt class='tit' style='cursor:pointer'");
 			
-			if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
-				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
+			if (list.get(0).getC_ClubGubun() != null && list.get(0).getC_ClubGubun().equals("3")) {
+				strData.append("onclick=\"go_best('" + list.get(0).getC_ClubNo() + "','" + memberChk(list.get(0).getC_ClubNo(), userInfo) + "')\">");
 			} else {
-				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
+				strData.append("onclick=\"go_best('" + list.get(0).getC_ClubNo() + "','" + "0" + "')\">");
 			}
 			
 			strData.append("<strong>");
-			strData.append(list.get(i).getC_ClubName());
+			strData.append(list.get(0).getC_ClubName());
 			strData.append("</strong></dt>");
 			strData.append("<dd class='photo'>");
 			
 			String bannerSrc = "";
 			
-			if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-				bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
+			if (list.get(0).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+				bannerSrc = "/images/ezCommunity/logo/" + list.get(0).getC_Logo_Thumbnail().trim();
 			} else {
-				bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
+				bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(0).getC_Logo_Thumbnail();
 			}
 			
 			logger.debug("bannerSrc="+bannerSrc);
@@ -3113,10 +3109,53 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			strData.append("<span class='iconbest'></span>");
 			strData.append("</dd'>");
 			strData.append("<dd  class='txt'>");
-			strData.append(list.get(i).getC_ClubDesc());
+			strData.append(list.get(0).getC_ClubDesc());
 			strData.append("</dd>");
 			strData.append("</dl>");
-			
+		}
+		else {
+		/* 2018-06-04 홍승비 - 포탈 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
+			for (int i=0; i<2; i++) {
+				
+				if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
+					strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
+				}
+				else {
+					strData.append("<dl class='listtype_photo'>");
+				}
+				
+				strData.append("<dt class='tit' style='cursor:pointer'");
+				
+				if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
+					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
+				} else {
+					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
+				}
+				
+				strData.append("<strong>");
+				strData.append(list.get(i).getC_ClubName());
+				strData.append("</strong></dt>");
+				strData.append("<dd class='photo'>");
+				
+				String bannerSrc = "";
+				
+				if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+					bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
+				} else {
+					bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
+				}
+				
+				logger.debug("bannerSrc="+bannerSrc);
+				
+				strData.append("<img src='" + bannerSrc + "' width='86' height='61'>");
+				strData.append("<span class='iconbest'></span>");
+				strData.append("</dd'>");
+				strData.append("<dd  class='txt'>");
+				strData.append(list.get(i).getC_ClubDesc());
+				strData.append("</dd>");
+				strData.append("</dl>");
+				
+			}
 		}
 		return strData.toString();
 	}
