@@ -196,7 +196,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 
 /*------------ time ------------*/
-.time {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; float:left ;width:104px; margin:29px 0px 0px 0px;}
+.time {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; float:left ;width:104px; margin:29px 30px 0px 0px;}
 .time .title { font-size:12px; color:#000; font-weight:bold; text-align:center; height:25px; margin:0px 0px 0px 10px; padding:0px; line-height:25px;}
 .time .timeflash { text-align:center;}
 
