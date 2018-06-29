@@ -590,7 +590,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			//topMenuId로 사용중인 모듈을 확인하기 위해서 parameter로 전달
 			strHTML = strHTML.replace("/ezPortal/environmentMain.do", "/ezPortal/environmentMain.do?topMenuID=" + pageID);
 			strHTML = strHTML.replace("/ezPortal/help/help.do", "/ezPortal/help/help.do?topMenuID=" + pageID);
-
+			
 			if (!mode.equals("edit") || !mode.equals("view")) {
 				mode = "view";
 			}
@@ -1139,8 +1139,12 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pollNum = "";
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
-		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
-		
+		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		/*근태관리 추가*/
+		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String accessID = ezPortalService.getAccessList(userInfo);
+		String attitudeLinkURL = "/ezAttitude/attitudeMain.do";
+		String isUseAttMenuItem = "";
 		mailAddress = userInfo.getEmail();
 		
 		if (userInfo.getPrimary().equals("1")) {
@@ -1182,6 +1186,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			checkBrowser = false;
 		}
 		
+		//근태관리 사용에 따른 시계 사용 유무 로직
+		isUseAttMenuItem = ezPortalService.getMainMenuItemUID(accessID, attitudeLinkURL, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
 		String accessList = ezPortalService.getAccessList(userInfo);
 		
 		/*
@@ -1235,6 +1241,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
 		model.addAttribute("companyList", companyList);
+		//근태관리 추가
+		model.addAttribute("serverTime", serverTime);
+		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
@@ -3439,7 +3448,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/help/help.do")
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("help started");
-		
+
 		String topMenuID = "";
 		
 		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
@@ -3682,12 +3691,12 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");
-		
+
 		String topMenuID = "";
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-		
+				
 		String accessList = ezPortalService.getAccessList(userInfo);
 		
 		/*

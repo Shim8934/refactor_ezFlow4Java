@@ -865,6 +865,11 @@
 		        }
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
+		    
+		    /* 2018-06-28 홍승비 - 승인게시판 스크립트 오류 수정 */
+		    function keyword_Clear() {
+		        document.getElementById('txt_keyword').value = "";
+		    }
 		    function onkeydown_start_search(evt) {
 		        if (evt.keyCode == "13") {
 		            search("quick");

@@ -173,6 +173,8 @@ public class EzEmailMailSearchController {
 		String userEmail = userInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
+		String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", userInfo.getTenantId());
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		
 		String mailFolder = doc.getElementsByTagName("MAILFOLDER").item(0).getTextContent();
@@ -233,7 +235,14 @@ public class EzEmailMailSearchController {
 					
 					tmpFolder.open(Folder.READ_ONLY);			
 					
-					Message[] subMessages = ezEmailUtil.searchFolder(tmpFolder, category, keyword, startDateObj, endDateObj, true, null, false, false);
+					Message[] subMessages = null;
+					
+					if (useAdvancedMailSearch.equals("YES")) {
+						subMessages = ezEmailUtil.advancedSearchFolder(userEmail, tmpFolder, category, keyword, startDateObj, endDateObj, true, false, false);
+					} else {
+						subMessages = ezEmailUtil.searchFolder(tmpFolder, category, keyword, startDateObj, endDateObj, true, null, false, false);
+					}
+					
 					
 					if (messages == null) {
 						messages = subMessages;
@@ -264,7 +273,12 @@ public class EzEmailMailSearchController {
 			else {
 				folder = ia.getFolder(mailFolder);
 				folder.open(Folder.READ_ONLY);			
-				messages = ezEmailUtil.searchFolder(folder, category, keyword, startDateObj, endDateObj, true, null, false, false);					
+				
+				if (useAdvancedMailSearch.equals("YES")) {
+					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, category, keyword, startDateObj, endDateObj, true, false, false);
+				} else {
+					messages = ezEmailUtil.searchFolder(folder, category, keyword, startDateObj, endDateObj, true, null, false, false);
+				}
 			}
 					
 			if (messages.length > 0) {

@@ -455,7 +455,7 @@
 		                    }
 		
 		                    document.getElementById("tdbtnViewRecList").style.display = "";
-		                    document.getElementById("tbar1").style.display = "";
+// 		                    document.getElementById("tbar1").style.display = "";
 		
 		                }
 		                else {
@@ -463,7 +463,7 @@
 		                    document.getElementById("tdViewCabHist").style.display = "none";
 		                    document.getElementById("tdSetCharger").style.display = "none";
 		                    document.getElementById("tdbtnViewRecList").style.display = "none";
-		                    document.getElementById("tbar1").style.display = "none";
+// 		                    document.getElementById("tbar1").style.display = "none";
 		
 		                }
 		
