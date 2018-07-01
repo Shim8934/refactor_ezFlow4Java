@@ -139,6 +139,11 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1 id="title"></h1>
+	    <div id="close">
+            <ul>
+                <li><span id="btn_cancel" onclick="btn_cancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <!-- <div class="txt"><span></span></div> -->
 	    <div class="nobox">
 	    	<span id="ko_lang"><spring:message code='ezWebFolder.t226'/></span>
@@ -149,7 +154,6 @@
 	    </div>
 	    <div class="btnposition btnpositionNew">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezWebFolder.t116'/></span></a>
-	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezWebFolder.t112'/></span></a>
 	    </div>	
 	</body>
 </html>

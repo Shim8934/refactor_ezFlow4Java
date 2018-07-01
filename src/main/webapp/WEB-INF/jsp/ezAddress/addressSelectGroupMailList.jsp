@@ -66,7 +66,7 @@
 	<body style="overflow:hidden;" class="popup" onload="javascript:window_onload()">
 		<form id="Form1" method="post">
 			<h1><spring:message code='ezAddress.t320' /></h1>
-			 <div id="close">
+			<div id="close">
 	            <ul>
 	                <li><span onclick="Window_Close()"></span></li>
 	            </ul>

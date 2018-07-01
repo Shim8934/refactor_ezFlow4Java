@@ -285,7 +285,7 @@
 		            </td>
 		        </tr>
 		    </table>
-		    <div class="btnposition">
+		    <div class="btnpositionNew">
 		        <a class="imgbtn"><span onclick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/>/<spring:message code='ezApprovalG.t1760'/></span></a>
 		    </div>
 		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
