@@ -112,17 +112,16 @@
 		</object>
 		<h1><spring:message code='ezPersonal.t100002'/></h1>
 		<div id="close">
-		  <ul>
-		    <li><span onClick="delete_onClick()"></span></li>
-		  </ul>
+			<ul>
+		    	<li><span onClick="cancel_onClick()"></span></li>
+		  	</ul>
 		</div>
 		<h2><spring:message code='ezPersonal.t100003'/></h2>
-		<div class="listview" style="overflow:auto;">
-		  <div id="ListViewItem" style="Width:587px; Height:195px; border:0px;overflow:auto;" ></div>
+		<div class="listview" style="overflow-x:hidden;overflow-y:auto;">
+			<div id="ListViewItem" style="Width:587px; Height:185px; border:0px;overflow:auto;" ></div>
 		</div>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn" onClick="change_onClick()"><span><spring:message code='ezPersonal.t12'/></span></a>
-		    <a class="imgbtn" onClick="cancel_onClick()"><span><spring:message code='ezPersonal.t13'/></span></a>
 		</div>
 	</body>
 </html>

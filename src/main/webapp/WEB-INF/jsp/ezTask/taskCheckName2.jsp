@@ -172,13 +172,17 @@
 		        </HEADERS>
 		    </LISTVIEWDATA> 
 		</xml> 
-		<h1><spring:message code='ezTask.t15' /></h1>		
+		<h1><spring:message code='ezTask.t15' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel_onClick()"></span></li>
+            </ul>
+        </div>
         <div class="listview" style="width:570px; height:195px;" >
             <div id="lvtDoclist" style="width:570px; border:0; height:195px; overflow:AUTO; " ></div>
         </div>	
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" onClick="change_onClick()" ><span><spring:message code='ezTask.t19' /></span></a>
-		    <a class="imgbtn" onClick="cancel_onClick()" ><span><spring:message code='ezTask.t20' /></span></a>
 		</div>
 	</body>
 </html>

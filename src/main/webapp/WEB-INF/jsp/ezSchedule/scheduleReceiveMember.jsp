@@ -140,7 +140,7 @@
 			        </tr>
 					</c:forEach>
 	    		</table>
-	    		<div class="btnpositionNew">
+	    		<div class="btnposition btnpositionNew">
 		      		<a class="imgbtn"><span onClick="accept_group('1')"><spring:message code='ezSchedule.t338'/></span></a>
 		      		<a class="imgbtn"><span onClick="accept_group('2')"><spring:message code='ezSchedule.t339'/></span></a>
 		    	</div>		    	

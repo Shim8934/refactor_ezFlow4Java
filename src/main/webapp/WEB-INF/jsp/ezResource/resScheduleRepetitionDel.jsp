@@ -45,23 +45,23 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1><spring:message code="ezResource.t319" /></h1>
-		<div class="txt"><spring:message code="ezResource.t320" /><br>
-  			<spring:message code="ezResource.t321" /><br>
-  			<spring:message code="ezResource.t322" />
-  		</div>
-		<div class="box" style="padding:10px">
+		<div id="close">
+            <ul>
+                <li><span onclick="btnCancel_Click()"></span></li>
+            </ul>
+        </div>
+		<div class="box" style="padding:40px 10px 30px;height:70px">
   			<label>
   				<input id="chk_Instance" type="radio" name="chk_Open" value="Instance" checked>
   				<spring:message code="ezResource.t323" />
   			</label><br>
-  			<label>
+  			<label style="margin-top:15px">
   				<input type="radio" name="chk_Open" value="Master">
   				<spring:message code="ezResource.t324" />
   			</label>
   		</div>
-		<div class="btnposition">
-  			<input type="submit" value="<spring:message code="ezResource.t15" />" onClick="btnOk_Click();">
-  			<input type="submit" value="<spring:message code="ezResource.t16" />" onClick="btnCancel_Click();">
+		<div class="btnpositionNew">
+			<a class="imgbtn"><span onclick="btnOk_Click()" ><spring:message code="ezResource.t15" /></span></a>
 		</div>
 	</body>
 </html>

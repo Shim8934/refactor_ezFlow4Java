@@ -3864,10 +3864,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			if (!pDLSearchList.isEmpty()) {
 				dlXML = getOrganDLSearch(pDLSearchList, info);
 			}
-			int[] searchCount = {0, 0};
 			
 			if (!pAddressFilter.isEmpty()) {
-				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, searchCount);
+				addressXML = getAddressSearchInfo(pAddressFilter, info);
 			}
 	        
 	        data.put("organXML", organXML);
@@ -4420,7 +4419,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String pResult = "";
 		
         try {
-            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getLang(), userInfo.getTenantId());
+            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getLang(), userInfo.getTenantId());
         } catch (Exception e) {
         	e.printStackTrace();
         	
@@ -4546,6 +4545,39 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         
         LOGGER.debug("getAddressSearch ended");
         
+        return returnValue;
+    }
+	
+	private String getAddressSearchInfo(String pFilter, MCommonVO userInfo) {
+        String returnValue = "";
+        try {
+            String[] ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};
+            pFilter = "S_NAME;S_EMAIL," + pFilter;
+            
+            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append("<LISTVIEWDATA><ROWS>");
+            
+            for (AddressVO addressInfo : addressInfoList) {
+            	sb.append("<ROW>");
+            	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
+            	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
+            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : commonUtil.cleanValue(addressInfo.getsName())) + "</SNAME>");
+            	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
+            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : commonUtil.cleanValue(addressInfo.getsEmail())) + "</SEMAIL>");
+            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
+            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : commonUtil.cleanValue(addressInfo.getsDept())) + "</SDEPT>");
+            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : commonUtil.cleanValue(addressInfo.getsTitle())) + "</STITLE>");
+            	sb.append("</ROW>");
+            }
+            
+            sb.append("</ROWS></LISTVIEWDATA>");
+            returnValue = sb.toString();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	returnValue = "EXCEPTION";
+        }
         return returnValue;
     }
 	

@@ -154,10 +154,11 @@ form{display:inline;margin:0}
 .btnpositionNew{
 	margin: 0px 0px 0px -10px;
 	/* margin-top: 10px; */
+	height: 28px !important;
 	background: none;
 	border: none;
 	border-top: 1px solid #eee;
-	padding:8px 0px;
+	padding:7px 0px;
 	background-color: #fcfcfc;
 	text-align:center;
 	position: fixed;
