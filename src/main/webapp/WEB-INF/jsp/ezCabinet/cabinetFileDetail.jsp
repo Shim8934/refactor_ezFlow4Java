@@ -12,7 +12,7 @@
 		function fileModify() {
 			var cabId    = "";
 			window.location.href = "/ezCabinet/addCabinetFile.do?cabId=" + cabId;
-			window.resizeTo(600, 515);
+			window.resizeTo(600, 530);
 		}
 		</script>
 	</head>
@@ -21,13 +21,13 @@
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
-				<tr><th><spring:message code='ezCabinet.t109'/></th><td style="padding: 5px;">응웬바오</td><tr>
-				<tr><th><spring:message code='ezCabinet.t110'/></th><td style="padding: 5px;">2018-06-26 12:00</td><tr>
-				<tr><th><spring:message code='ezCabinet.t51'/></th><td style="padding: 5px;">전자결재버그 수정 관련</td></tr>
-				<tr><th><spring:message code='ezCabinet.t52'/></th><td style="padding: 5px;">전자결재 버그 수정 관련 파일 첨부</td></tr>
+				<tr><th><spring:message code='ezCabinet.t109'/></th><td>응웬바오</td><tr>
+				<tr><th><spring:message code='ezCabinet.t110'/></th><td>2018-06-26 12:00</td><tr>
+				<tr><th><spring:message code='ezCabinet.t51'/></th><td>전자결재버그 수정 관련</td></tr>
+				<tr><th><spring:message code='ezCabinet.t52'/></th><td>전자결재 버그 수정 관련 파일 첨부</td></tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
-					<td style="padding: 5px;">메신저 관련 전자결재, 메신저 관련 메일</td>
+					<td>메신저 관련 전자결재, 메신저 관련 메일</td>
 				</tr>
 			</table>
 		</div>

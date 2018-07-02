@@ -340,7 +340,7 @@ var CabinetItem = function() {
 	
 	function addFile() {
 		var cabId    = document.getElementById("cabInfo").getAttribute("role");
-		var addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabId, "addFile", getOpenWindowfeature(600, 450));
+		var addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabId, "addFile", getOpenWindowfeature(600, 460));
 	}
 	
 	function deleteFileConfirm() {
@@ -405,7 +405,7 @@ var CabinetItem = function() {
 	}
 	
 	function getFileDetail() {
-		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 650));
+		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 670));
 	}
 	
 	return {
