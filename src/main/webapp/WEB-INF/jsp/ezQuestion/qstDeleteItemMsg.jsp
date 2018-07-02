@@ -69,6 +69,11 @@
 	<body class="popup">
 		<form id="Form1" method="post"> 
 			<h1><spring:message code='ezQuestion.t262' /></h1>
+			<div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
   			<table class="content"> 
     			<tr > 
       				<th><spring:message code='ezQuestion.t255' /></th> 
@@ -83,8 +88,8 @@
   				<spring:message code='ezQuestion.t266' /><br> 
         		<spring:message code='ezQuestion.t267' />
         	</div>
-			<div class="btnposition"><input type="button" name="Submit" value="<spring:message code='ezQuestion.t268' />" onclick="btn_Delete()"> 
-        		<input type="button" name="Submit2" value="<spring:message code='ezQuestion.t269' />" onclick="window.close()">
+			<div class="btnpositionNew">
+				<input type="button" name="Submit" value="<spring:message code='ezQuestion.t268' />" onclick="btn_Delete()">
         	</div>
 		</form> 
 	</body>

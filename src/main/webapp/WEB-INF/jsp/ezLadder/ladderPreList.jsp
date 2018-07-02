@@ -324,7 +324,8 @@
 				</div>
 			</div>
 		<div class="btnposition btnpositionNew">
-			<input type="submit" value="확인" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
+			<a class="imgbtn" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"><span><spring:message code='ezEmail.t38' /></span></a>
+			<%-- <input type="submit" value="<spring:message code='ezEmail.t38' />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"> --%>
 		</div>
 	</body>
 </html>

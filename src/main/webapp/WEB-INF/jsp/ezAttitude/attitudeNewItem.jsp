@@ -161,10 +161,6 @@
 			        };
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		        
-// 		        $("#Sdatepicker").change(function(){
-// 		        	checkHoliday($(this).val());
-// 		        })
-		        
 		        if (selectType == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
 			        $('#Stimepicker').timepicker('setTime', SDate);
@@ -281,12 +277,14 @@
 			
 			//저장
 			function save_attitude() {
+				//글자 수 제한
 				if (!CheckStrLen()) {
 					return;
 				}
 				
 				dateTypeCheck();
 				
+				//휴무일이 있는 경우 근태를 등록하지 못하게 변경
 				if (attRegCheck() && holidayAttReg == "0") {
 					if (selectType != "A07") {
 						alert("<spring:message code='ezAttitude.t154'/>");
@@ -294,6 +292,7 @@
 	 				} 
 				}
 				
+				//휴근등록시 휴무일이 아닐경우 등록하지 못하게 변경
 				if (selectType == "A07" && !weekWorkCheck()){
 					alert("<spring:message code='ezAttitude.t81'/>");
 					return;
@@ -301,16 +300,19 @@
 				
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
+				//달력 정규식
 				if ($('#Stimepicker').length && !timeValid.test($('#Stimepicker').val()) || $('#Etimepicker').length && !timeValid.test($('#Etimepicker').val())) {
 					alert("<spring:message code='ezAttitude.t170'/>");
 					return;
 				}
 				
+				//달력 유효성 검사
 				if (!check_time()) {
 					alert("<spring:message code='ezAttitude.t131'/>");
 					return;
 				}
 				
+				//근무지 입력 여부
 				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
 					$("input[name=region]").focus();
 					alert("<spring:message code='ezAttitude.t49'/>");
@@ -427,16 +429,16 @@
 				isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
 				
 				//휴무일이 있는 경우
-				if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
+				if (isMemorialDay.length != 0 || isYearMemorialDay.length != 0 || closedDay[betweenDate.getDay()] == "1") {
 					if (isMemorialDay.length != 0 ) {
 						dayList = isMemorialDay;
-					} else if (isYearMemorialDay != 0) {
+					} else if (isYearMemorialDay.length != 0) {
 						dayList = isYearMemorialDay;
 					}
 					//기념일 휴무여부 체크
 					if (dayList.length != 0 ) {
 						for (var i = 0; i < dayList.length; i++) {
-							if (dayList[i].holiday == false) {
+							if (dayList[i].holiday == false) {//휴무일은 아닐경우
 								return false;
 							}
 						}
@@ -582,6 +584,7 @@
 				}
 			}
 			
+			//조퇴시 출/퇴근 여부 체크
 		    function getIsAttitude(typeId) {
 				var isAttitudeReturn = "";
 		    	$.ajax({
