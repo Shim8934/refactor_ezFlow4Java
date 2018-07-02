@@ -112,16 +112,21 @@
 			function comm_searchCheck() {
 				//[2006.06.21] 특수문자가 검색어에 들어올 경우 오류 메시지 처리
 			    var pKeyword = document.getElementById("keyword").value;
-				var pLen = pKeyword.length;
-				
+				/*var pLen = pKeyword.length;				
 				for( var i = 0; i < pLen ; i++) {
 					if( pKeyword.charAt(i) == "\"" || pKeyword.charAt(i) == "+" ) {
 						alert("<spring:message code='ezCommunity.t580' />(\\\"+)<spring:message code='ezCommunity.t581' />");
 						return false;
 					}
+				}*/
+
+				//2018-07-02 김보미 - 키워드 특수문자에 '%' 추가	
+				if( pKeyword.indexOf("\"") != -1 || pKeyword.indexOf("+") != -1 || pKeyword.indexOf("%") != -1) {
+					alert("<spring:message code='ezCommunity.t580' />(\\, \", +, %)<spring:message code='ezCommunity.t581' />");
+					return false;
 				}
 				
-			    if (pKeyword.length < 2 || pKeyword.indexOf("%") != -1) {
+			    if (pKeyword.length < 2) {
 					alert("<spring:message code='ezCommunity.t164' />");
 					return false;
 				}
