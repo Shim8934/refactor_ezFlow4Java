@@ -2271,7 +2271,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			String result1Str = commonUtil.getQueryResult(result1);
 			Document xmlDom2 = commonUtil.convertStringToDocument(result1Str);
 			
-			if (xmlDom2.getElementsByTagName("ROW").getLength() > 0) {
+			if (xmlDom2 != null && xmlDom2.getElementsByTagName("ROW").getLength() > 0) {
 				strXML = "<DATA>" + resultStr + "<IMAGEDATA>" + result1Str + "</IMAGEDATA></DATA>";
 			} else {
 				strXML = "<DATA>" + resultStr + "<IMAGEDATA></IMAGEDATA></DATA>";
