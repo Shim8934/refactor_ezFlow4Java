@@ -521,7 +521,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()),userInfo.getTenantId());
 			}
 		}
-		
+
 		if ((width == null  || width.equals("")) || width.equals("-1") || width.equals("0")) {
 			width = "100%";
 		}
