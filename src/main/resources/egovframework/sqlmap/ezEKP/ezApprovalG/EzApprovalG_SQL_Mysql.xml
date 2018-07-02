@@ -8691,32 +8691,7 @@
    			AND
    					A.TENANT_ID = #v_TENANTID#
    			AND
-   					A.COMPANYID IN (
-								SELECT 
-									EXTENSIONATTRIBUTE2 
-								FROM 
-									TBL_DEPTMASTER 
-								INNER JOIN 
-									TBL_ADDJOBMASTER 
-								ON
-									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-									AND 
-									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-								AND 
-									TBL_ADDJOBMASTER.CN = #v_USERID#
-								UNION ALL
-								SELECT 
-									PHYSICALDELIVERYOFFICENAME
-								FROM
-									TBL_USERMASTER
-								WHERE
-									CN = #v_USERID#
-								AND
-									TENANT_ID = #v_TENANTID# 
-								)
-						)
+   					A.COMPANYID = #companyID#)
    			GROUP BY 
    					B.ContainerOwnDepID, C.DisplayName$v_pLang$, A.TENANT_ID) B 
    		ON 
@@ -8738,31 +8713,7 @@
    		WHERE 
    				A.TENANT_ID = #v_TENANTID#
    		AND
-   				A.COMPANYID IN (
-								SELECT 
-									EXTENSIONATTRIBUTE2 
-								FROM 
-									TBL_DEPTMASTER 
-								INNER JOIN 
-									TBL_ADDJOBMASTER 
-								ON
-									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-									AND 
-									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-								AND 
-									TBL_ADDJOBMASTER.CN = #v_USERID#
-								UNION ALL
-								SELECT 
-									PHYSICALDELIVERYOFFICENAME
-								FROM
-									TBL_USERMASTER
-								WHERE
-									CN = #v_USERID#
-								AND
-									TENANT_ID = #v_TENANTID# 
-								)
+   				A.COMPANYID = #companyID#
    		GROUP BY 
    				D.DisplayName$v_pLang$, WRITERDEPTID, TOTALCOUNT2
    		ORDER BY 
