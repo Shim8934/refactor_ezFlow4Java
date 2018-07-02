@@ -19,8 +19,9 @@
 		    var use_ocs = "<c:out value='${use_ocs}' />";
 		    
 		    window.onload = function () {
-		        getGroupList();
+		        getGroupList();		      
 		    }
+		    
 				    
 		    function getGroupList() {
 		    	$.ajax({
@@ -252,6 +253,7 @@
 		        
 		        //getGroupList();		
 		    }
+			  
 		</script>
 	</head>
 	<body class="mainbody">		

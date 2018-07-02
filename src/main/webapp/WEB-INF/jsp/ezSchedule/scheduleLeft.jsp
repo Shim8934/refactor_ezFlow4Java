@@ -213,14 +213,12 @@
 						chk_str += $('#select-all').val();
 					}
 					
-					// 구해안1
 					/* sStartDate = parent.frames["right"].document.getElementById("hiddensStartDate").value;
 					sEndDate = parent.frames["right"].document.getElementById("hiddensEndDate").value; */
 					$('#chk_str').val(chk_str);
 					parent.frames["right"].CalendarView("Calendar",chk_str);
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
 					
-					// 구해안1 끝
 				}else{					
 					$("input[name=chk_schedule]:checked").each(function(index) {
 						var test = $(this).val();
@@ -239,13 +237,11 @@
 						chk_str += $('#select-all').val();
 					}
 										
-					// 구해안1
 					/* sStartDate = parent.frames["right"].document.getElementById("hiddensStartDate").value;
 					sEndDate = parent.frames["right"].document.getElementById("hiddensEndDate").value; */
 					$('#chk_str').val(chk_str);
 					parent.frames["right"].CalendarView("Calendar",chk_str);
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
-					// 구해안1 끝
 				}
 			}
 				
