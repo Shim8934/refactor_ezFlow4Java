@@ -288,20 +288,6 @@
 				
 				dateTypeCheck();
 				
-				//휴무일이 있는 경우 근태를 등록하지 못하게 변경
-				if (attRegCheck() && holidayAttReg == "0") {
-					if (selectType != "A07") {
-						alert("<spring:message code='ezAttitude.t154'/>");
-						return;
-	 				} 
-				}
-				
-				//휴근등록시 휴무일이 아닐경우 등록하지 못하게 변경
-				if (selectType == "A07" && !weekWorkCheck()){
-					alert("<spring:message code='ezAttitude.t81'/>");
-					return;
-				}
-				
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
 				//달력 정규식
