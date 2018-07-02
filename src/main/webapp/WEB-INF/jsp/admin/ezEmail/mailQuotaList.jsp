@@ -357,7 +357,7 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
 		<div style="width:100%; padding-bottom:5px;">
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
+		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #ddd;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
@@ -402,7 +402,7 @@
 			<tbody id="userListBody" style="overflow: auto;"></tbody>
 		</table>
 		</div>
-		<div id="tblPageRayer" style="width:1200px; padding-top: 10px;"></div>
+		<div id="tblPageRayer" style="width:100%;padding-top: 10px;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	</body>
 </html>

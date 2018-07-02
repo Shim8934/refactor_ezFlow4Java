@@ -224,6 +224,11 @@
 	            <li><span onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	        </ul>
 	    </div>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return bt_Cancle_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table style="margin-top: -10px; width: 455px;">
 	        <tr>
 	            <td style="height: 25px; vertical-align: bottom;"><span class="point" id="listcount">&nbsp;</span></td>
@@ -257,7 +262,6 @@
 	
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return bt_OK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-	        <a class="imgbtn"><span onclick="return bt_Cancle_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");

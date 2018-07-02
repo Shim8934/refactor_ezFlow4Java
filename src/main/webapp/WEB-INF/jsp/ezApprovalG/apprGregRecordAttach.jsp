@@ -494,7 +494,12 @@
 </script>
 </HEAD>
 <body class="popup">	
-		<h1><spring:message code='ezApprovalG.t264'/></h1>
+<h1><spring:message code='ezApprovalG.t264'/></h1>
+<div id="close">
+    <ul>
+        <li><span onclick="window.close()"></span></li>
+    </ul>
+</div>
 <table>
   <tr>
     <td style="width:285px;text-align:center"><div class="listview">
@@ -508,7 +513,7 @@
   <div class="btnposition btnpositionNew">       
         <a class="file-btn" style="vertical-align:top">
           <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" /> 
-		          <span for="file" id="btn_AttachAdd" ><spring:message code='ezApprovalG.t268'/></span>
+		  <span for="file" id="btn_AttachAdd" ><spring:message code='ezApprovalG.t268'/></span>
         </a>
         <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
         <a class="imgbtn"><span id="btn_AttachSaveSure" onclick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>

@@ -260,6 +260,11 @@
 	</head>
 	<body class="popup" leftmargin="0" topmargin="0" LANGUAGE ="javascript">
 		<h1><spring:message code='ezApprovalG.t1090'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onclick="return btnCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content" >
 		<c:if test="${approvalFlag eq 'S'}"> 
 		    <tr id="trSelDept"> 
@@ -337,7 +342,6 @@
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span id="btnReset" onclick="return reset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
 		    <a class="imgbtn"><span id="btnSearch" onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
-		    <a class="imgbtn"><span id="btnCancel" onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

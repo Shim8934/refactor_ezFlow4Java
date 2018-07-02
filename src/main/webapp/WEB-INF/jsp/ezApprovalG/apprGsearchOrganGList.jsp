@@ -229,12 +229,16 @@
 </head>
 <body class="popup" style="overflow: hidden;">
     <h1><spring:message code='ezApprovalG.t1236'/>- <span id="SearchWord"></span></h1>
+    <div id="close">
+        <ul>
+            <li><span onclick="return btnCalcel_onClick()"></span></li>
+        </ul>
+    </div>
     <div style="width: 100%; overflow: AUTO; height: 480px;" id="divList">
         <div id="lvOuterOrganList" style="height: 480px;"></div>
     </div>
-    <div class="btnposition">
+    <div class="btnpositionNew">
         <a class="imgbtn" onclick="return btnConfirm_onClick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-        <a class="imgbtn" onclick="return btnCalcel_onClick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
     </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; display: none;" id="mailPanel">&nbsp;</div>
     <div style="z-index: 2000; position: absolute; display: none; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -webkit-border-bottom-left-radius: 5px; -webkit-border-bottom-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomleft: 5px; -moz-border-radius-bottomright: 5px; background: #ffffff; padding: 2px 2px; border: 1px solid #ffffff;" id="iFramePanel">
