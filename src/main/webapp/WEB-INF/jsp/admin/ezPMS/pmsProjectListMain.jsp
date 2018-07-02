@@ -153,22 +153,22 @@
 </script>
 </head>
 <body class="mainbody">
-	<h1>프로젝트 검색</h1>
+	<h1><spring:message code="ezPMS.t235"/></h1>
 	<select id="searchCondition" onchange="setSearchInput(this.value)">
-		<option value="searchByProjectName">프로젝트명</option>
-		<option value="searchByOverview">프로젝트 개요</option>
-		<option value="listProjectStatus">상태</option>
+		<option value="searchByProjectName"><spring:message code="ezPMS.t31"/></option>
+		<option value="searchByOverview"><spring:message code="ezPMS.t236"/></option>
+		<option value="listProjectStatus"><spring:message code="ezPMS.t38"/></option>
 	</select>
 	<input id="searchKeyword" type="text" onkeypress="if(event.keyCode==13) {searchProject(); return false;}"/>
-	<a class="imgbtn" id="searchBtn" onclick="searchProject()" style="margin-left:3px;"><span>검색</span></a>
+	<a class="imgbtn" id="searchBtn" onclick="searchProject()" style="margin-left:3px;"><span><spring:message code="ezPMS.t1"/></span></a>
 	<select id="listByStatus" onchange="viewListByStatus(this.value)" style="display: none;">
-		<option value="A">전체 프로젝트</option>
-		<option value="P">진행 프로젝트</option>
-		<option value="W">대기 프로젝트</option>
-		<option value="C">완료 프로젝트</option>
-		<option value="L">지연 프로젝트</option>
-		<option value="S">보류 프로젝트</option>
-		<option value="D">삭제 프로젝트</option>
+		<option value="A"><spring:message code="ezPMS.t271"/></option>
+		<option value="P"><spring:message code="ezPMS.t258"/></option>
+		<option value="W"><spring:message code="ezPMS.t260"/></option>
+		<option value="C"><spring:message code="ezPMS.t261"/></option>
+		<option value="L"><spring:message code="ezPMS.t262"/></option>
+		<option value="S"><spring:message code="ezPMS.t259"/></option>
+		<option value="D"><spring:message code="ezPMS.t263"/></option>
 	</select>
 	
 	<div id="contentList" style="overflow: auto; margin-top: 10px;">

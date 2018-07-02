@@ -157,8 +157,8 @@
 		      				<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
 		      				<%-- 근태관리 --%>
 		      				<li><span id="menu30" onClick="menu_change(690, event)"><spring:message code="ezAttitude.t1" /></span></li>
-		      				<!-- ezPMS -->
-		      				<li><span id="menu21" onClick="menu_change(690, event)">프로젝트관리</span></li>
+		      				<%-- ezPMS --%>
+		      				<li><span id="menu21" onClick="menu_change(690, event)"><spring:message code="ezPMS.t8" /></span></li>
 		      			</c:if>
                     	
 		      			<%-- 시스템 --%>          

@@ -18,19 +18,19 @@
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
 				<th onclick="setListOrder(this)" data-order='PROJECT_ID' style="width:60px;">NO</th>
-				<th onclick="setListOrder(this)" data-order='PROJECT_NAME' style="width:23%;">프로젝트명</th>
-				<th onclick="setListOrder(this)" data-order='OVERVIEW'>프로젝트 개요</th>
-				<th onclick="setListOrder(this)" data-order='CREATOR_NAME' style="width:100px;">작성자</th>
-				<th onclick="setListOrder(this)" data-order='PLAN_START_DATE' style="width:140px;">시작일</th>
-				<th onclick="setListOrder(this)" data-order='PLAN_END_DATE' style="width:140px;">종료일</th>
-				<th onclick="setListOrder(this)" data-order='STATUS' style="width:150px;">상태</th>
+				<th onclick="setListOrder(this)" data-order='PROJECT_NAME' style="width:23%;"><spring:message code="ezPMS.t31"/></th>
+				<th onclick="setListOrder(this)" data-order='OVERVIEW'><spring:message code="ezPMS.t236"/></th>
+				<th onclick="setListOrder(this)" data-order='CREATOR_NAME' style="width:100px;"><spring:message code="ezPMS.t57"/></th>
+				<th onclick="setListOrder(this)" data-order='PLAN_START_DATE' style="width:140px;"><spring:message code="ezPMS.t61"/></th>
+				<th onclick="setListOrder(this)" data-order='PLAN_END_DATE' style="width:140px;"><spring:message code="ezPMS.t62"/></th>
+				<th onclick="setListOrder(this)" data-order='STATUS' style="width:150px;"><spring:message code="ezPMS.t38"/></th>
 			</tr>
 		</thead>
 		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
 			<c:choose>
 				<c:when test="${empty projectList}">
 					<tr>
-						<td colspan="7" style="text-align : center"> 데이터가 없습니다. </td>
+						<td colspan="7" style="text-align : center"> <spring:message code="ezPMS.t30"/> </td>
 					</tr>
 				</c:when>
 				<c:otherwise>
@@ -44,12 +44,12 @@
 							<td><c:out value="${fn:substring(projectVO.planEndDate, 0, 19)}"/></td>
 							<td>
 								<c:choose>
-									<c:when test="${projectVO.status eq 'P'}">진행(<c:out value="${projectVO.progress}"/>%)</c:when>
-									<c:when test="${projectVO.status eq 'W'}">대기</c:when>
-									<c:when test="${projectVO.status eq 'C'}">완료</c:when>
-									<c:when test="${projectVO.status eq 'L'}">지연(<c:out value="${projectVO.progress}"/>%)</c:when>
-									<c:when test="${projectVO.status eq 'S'}">보류(<c:out value="${projectVO.progress}"/>%)</c:when>
-									<c:when test="${projectVO.status eq 'D'}">삭제</c:when>
+									<c:when test="${projectVO.status eq 'P'}"><spring:message code="ezPMS.t15"/>(<c:out value="${projectVO.progress}"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'W'}"><spring:message code="ezPMS.t16"/></c:when>
+									<c:when test="${projectVO.status eq 'C'}"><spring:message code="ezPMS.t17"/></c:when>
+									<c:when test="${projectVO.status eq 'L'}"><spring:message code="ezPMS.t18"/>(<c:out value="${projectVO.progress}"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'S'}"><spring:message code="ezPMS.t19"/>(<c:out value="${projectVO.progress}"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'D'}"><spring:message code="ezPMS.t11"/></c:when>
 								</c:choose>
 							</td>
 						</tr>
