@@ -3528,35 +3528,35 @@
 				A.USERID, 
 				A.CONTENT, 
 				A.WRITEDATE,
-				C.CN
+				MAX(C.DEPTID) AS DEPTID
 	        FROM 
 	        	TBL_BOARD_ONELINEREPLY A
 	        INNER JOIN
- 				tbl_addjobmaster B
+ 				TBL_DEPTMASTER B
 			ON
-			 	A.USERID = B.CN
+				A.TENANT_ID = B.TENANT_ID
 			AND
-			 	A.tenant_id = B.tenant_id
-			 INNER JOIN
-				tbl_deptmaster C
+			 	A.COMPANYID = B.EXTENSIONATTRIBUTE2	 	
+			 LEFT OUTER  JOIN
+				TBL_ADDJOBMASTER C
 			ON
-				A.USERID = B.CN
+				A.TENANT_ID = C.TENANT_ID
 			AND
-			 	A.tenant_id = C.tenant_id
+			 	A.USERID = C.CN
 			AND
-				A.companyid = C.EXTENSIONATTRIBUTE2
-			AND
-				B.DEPTID = C.CN
+				B.CN = C.DEPTID
 	        WHERE  
-	        	A.tenant_id = #v_TENANTID#
+	        	A.TENANT_ID = #v_TENANTID#
 	        AND
-	        	A.companyid = #v_COMPANYID#
+	        	A.COMPANYID = #v_COMPANYID#
 	        AND
-	       		A.boardid = #v_BoardID#
+	       		A.BOARDID = #v_BoardID#
 			AND 
-				A.itemid = #v_ItemID#
+				A.ITEMID = #v_ItemID#
+			GROUP BY
+				A.USERID, A.REPLYID
 			ORDER BY 
-				writedate ASC
+				writedate ASC, C.DEPTID DESC
 		]]>                
 	</select>
 		

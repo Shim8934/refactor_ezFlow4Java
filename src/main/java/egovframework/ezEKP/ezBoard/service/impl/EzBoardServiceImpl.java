@@ -2134,7 +2134,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, int tenantID) throws Exception {
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String companyID, int tenantID) throws Exception {
 		logger.debug("readOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2142,6 +2142,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_BoardID", boardID);
 		map.put("v_ItemID", itemID);
 		map.put("v_UserName", userName);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 
 		logger.debug("readOneLineReply ended");
