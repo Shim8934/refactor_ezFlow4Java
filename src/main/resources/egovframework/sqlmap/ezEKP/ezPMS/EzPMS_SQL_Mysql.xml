@@ -1832,18 +1832,19 @@
 					   FROM tbl_pms_item_attachment 
 					   GROUP BY item_id) F
 			ON B.item_id = F.item_id
+			WHERE
 		]]>	
 		<isEqual property="groupId" compareValue="0">	
-			WHERE G.project_id = #projectId#
+			G.project_id = #projectId#
 		</isEqual>
 		<isNotEqual property="groupId" compareValue="0">
 			<isEqual property="taskId" compareValue="0">
-				WHERE (B.group_id = #groupId# 
+				(B.group_id = #groupId# 
 				OR G.upper_group_id = #groupId#
 				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
 			</isEqual>
 			<isNotEqual property="taskId" compareValue="0">
-				WHERE B.task_id = #taskId#
+				B.task_id = #taskId#
 			</isNotEqual>
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
@@ -1875,13 +1876,6 @@
 		</isNotEmpty>
 		
 			ORDER BY 
-		<isEmpty property="position">
-			CASE B.write_type 
-				WHEN 1 THEN 2 
-				WHEN 3 THEN 4 
-				ELSE B.write_type 
-			END ASC, 
-		</isEmpty>
 		<isNotEmpty property="orderWhat">  
 			$orderWhat$ $orderHow$,
 		</isNotEmpty>
@@ -1892,6 +1886,46 @@
 		LIMIT #startRow#, #listCnt#
 	</select>
 	
+	<select id="EzPMSDAO.getBoardNoticeList" parameterClass="map" resultMap="projectBoardVOForList">
+		<![CDATA[
+			SELECT 
+				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
+				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
+				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		
+				IFNULL(F.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.task_id,
+				B.group_id,			B.root_item_id,				B.item_level,			B.doc_no
+			FROM tbl_pms_item_list B
+			JOIN tbl_pms_group G
+			ON B.group_id = G.group_id
+			LEFT JOIN tbl_pms_task T
+			ON B.task_id = T.task_id
+			LEFT JOIN (SELECT count(file_id) AS file_cnt, item_id 
+					   FROM tbl_pms_item_attachment 
+					   GROUP BY item_id) F
+			ON B.item_id = F.item_id
+			WHERE
+		]]>	
+		<isEqual property="groupId" compareValue="0">	
+			G.project_id = #projectId#
+		</isEqual>
+		<isNotEqual property="groupId" compareValue="0">
+			<isEqual property="taskId" compareValue="0">
+				(B.group_id = #groupId# 
+				OR G.upper_group_id = #groupId#
+				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+			</isEqual>
+			<isNotEqual property="taskId" compareValue="0">
+				B.task_id = #taskId#
+			</isNotEqual>
+		</isNotEqual>
+			AND B.tenant_id = #tenantId#
+			AND B.del_status = 0
+			AND B.write_type in (1, 2)
+			ORDER BY B.item_id DESC
+		
+			LIMIT #startRow#, #listCnt#
+	</select>
+	
 	<select id="EzPMSDAO.getBoardListCount" parameterClass="map" resultClass="Integer">
 		<![CDATA[
 			SELECT COUNT(item_id)
@@ -1900,18 +1934,19 @@
 			ON B.group_id = G.group_id
 			LEFT JOIN tbl_pms_task T
 			ON B.task_id = T.task_id
+			WHERE
 		]]>
 		<isEqual property="groupId" compareValue="0">	
-			WHERE G.project_id = #projectId#
+			G.project_id = #projectId#
 		</isEqual>
 		<isNotEqual property="groupId" compareValue="0">
 			<isEqual property="taskId" compareValue="0">
-				WHERE (B.group_id = #groupId# 
+				(B.group_id = #groupId# 
 				OR G.upper_group_id = #groupId#
 				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
 			</isEqual>
 			<isNotEqual property="taskId" compareValue="0">
-				WHERE B.task_id = #taskId#
+				B.task_id = #taskId#
 			</isNotEqual>
 		</isNotEqual>
 			AND B.tenant_id = #tenantId#
@@ -1941,6 +1976,34 @@
 		<isNotEmpty property="searchByContent">
 			AND B.write_content LIKE CONCAT('%',#searchByContent#,'%')
 		</isNotEmpty>
+	</select>
+	
+	<select id="EzPMSDAO.getBoardNoticeListCount" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT COUNT(item_id)
+			FROM tbl_pms_item_list B
+			JOIN tbl_pms_group G
+			ON B.group_id = G.group_id
+			LEFT JOIN tbl_pms_task T
+			ON B.task_id = T.task_id
+			WHERE
+		]]>
+		<isEqual property="groupId" compareValue="0">	
+			G.project_id = #projectId#
+		</isEqual>
+		<isNotEqual property="groupId" compareValue="0">
+			<isEqual property="taskId" compareValue="0">
+				(B.group_id = #groupId# 
+				OR G.upper_group_id = #groupId#
+				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+			</isEqual>
+			<isNotEqual property="taskId" compareValue="0">
+				B.task_id = #taskId#
+			</isNotEqual>
+		</isNotEqual>
+			AND B.tenant_id = #tenantId#
+			AND B.del_status = 0
+			AND B.write_type in (1, 2)
 	</select>
 
 	<select id="EzPMSDAO.getBoardDetail" parameterClass="map" resultMap="projectBoardVOForDetail">

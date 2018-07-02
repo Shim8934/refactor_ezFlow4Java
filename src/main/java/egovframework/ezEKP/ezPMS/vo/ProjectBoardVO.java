@@ -97,6 +97,8 @@ public class ProjectBoardVO {
 	// 프로젝트 별 문서 번호
 	private int docNo;
 	
+	// 공지사항 여부
+	private boolean notice;
 
 	public int getRootItemId() {
 		return rootItemId;
@@ -344,5 +346,13 @@ public class ProjectBoardVO {
 
 	public void setUpperItemId(int upperItemId) {
 		this.upperItemId = upperItemId;
+	}
+
+	public boolean isNotice() {
+		return notice;
+	}
+
+	public void setNotice(boolean notice) {
+		this.notice = notice;
 	}
 }	

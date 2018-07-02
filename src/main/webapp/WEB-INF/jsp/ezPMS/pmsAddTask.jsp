@@ -378,12 +378,12 @@ function formatDate(date) {
 				</td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
-				<td colspan="3" style="height:70px" id="managers"></td>
-			</tr>
-			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
 				<td colspan="3" style="height:70px;" id="upperGroup"></td>
+			</tr>
+			<tr>
+				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
+				<td colspan="3" style="height:70px" id="managers"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t267' /></th>

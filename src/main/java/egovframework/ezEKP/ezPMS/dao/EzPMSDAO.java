@@ -261,6 +261,15 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select("EzPMSDAO.getBoardListCount", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ProjectBoardVO> getBoardNoticeList(Map<String, Object> map) {
+		return (List<ProjectBoardVO>) list("EzPMSDAO.getBoardNoticeList", map);
+	}
+	
+	public int getBoardNoticeListCount(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.getBoardNoticeListCount", map);
+	}
+	
 	public ProjectBoardVO getBoardDetail(Map<String, Object> param) {
 		return (ProjectBoardVO) select("EzPMSDAO.getBoardDetail", param);
 	}
