@@ -1299,6 +1299,11 @@
 	<body class="popup" style="overflow:hidden">		
 		<form method="post">			
 			<h1><spring:message code='ezSchedule.t191' /></h1>
+			<div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
 			<table class="popuplist" width="100%">
 				<tr> 
 			    	<th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t202' /></th> 
@@ -1411,7 +1416,6 @@
 			</table> 
 			<div class="btnposition">
 			    <a class="imgbtn" onClick="close_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-			    <a class="imgbtn" onClick="window.close()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>
 		</form>
 	</body>

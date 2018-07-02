@@ -32,7 +32,7 @@
 	    	function select_person(){
 	    		var url = "/admin/ezJournal/authorDetail.do";
 				url+="?companyId="+companyId;
-				window.open(url, "authorDetail", GetOpenWindowfeature(950, 600));
+				window.open(url, "authorDetail", GetOpenWindowfeature(950, 620));
 	    	}
 	    	
 	    	//부서선택
@@ -42,7 +42,7 @@
 	    		}else{
 		    		var url = "/admin/ezJournal/selectAuthorDept.do";
 					url+="?companyId=" + companyId + "&userId=" + selectedUser;
-					window.open(url, "authorDept", GetOpenWindowfeature(500, 570));
+					window.open(url, "authorDept", GetOpenWindowfeature(550, 600));
 	    		}
 	    	}
 	    	 
@@ -114,6 +114,11 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezJournal.t42' /></h1>
+	    <div id="close">
+	        <ul>
+	            <li><span onclick="window.close()"></span></li>
+	        </ul>
+	    </div>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>
@@ -132,7 +137,6 @@
 	    </table>
 	    <div class="btnposition">
 	        <a class="imgbtn"><span onclick="insertAuthDept();" ><spring:message code='ezSchedule.t157' /></span></a>
-	        <a class="imgbtn"><span onclick="window.close();"><spring:message code='ezSchedule.t5' /></span></a>      
 	    </div>
 	</body>
 </html>

@@ -387,7 +387,7 @@
 		<div id="mainmenu">
 			<ul>
 			    <li><span onclick="menuQst_List()"><spring:message code='ezQuestion.t130' /></span></li>
-			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
+			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 			    <li><span onclick="SaveCSV()"><spring:message code='ezQuestion.t131' /></span></li>
 			    <li><span onclick="TotalSaveCSV()"><spring:message code='ezQuestion.t132' /></span></li>
 			</ul>

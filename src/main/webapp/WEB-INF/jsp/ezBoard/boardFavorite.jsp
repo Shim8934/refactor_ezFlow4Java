@@ -284,6 +284,9 @@
             	}
         	}
     	</script>
+    	<style>
+    		.mainlist tr th {border-top:0px}
+    	</style>    	
 	</head>
 	<body style="margin-left: 10px; margin-right: 10px;">
 		<br/>

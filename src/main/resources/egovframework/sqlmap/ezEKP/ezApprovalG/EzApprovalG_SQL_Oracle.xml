@@ -4322,7 +4322,7 @@
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID				   		
 			  </isEqual> 
-				  INNER JOIN 
+				  LEFT JOIN 
 				   			TBL_ENDAPRLINEINFO 
 				   ON 
 				   			TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
@@ -9387,6 +9387,37 @@
            		COMPANYID = #companyID#             	
 		</isNotEqual>
 	</select>
+	
+	<select id="EzApprovalG.getDocHrefInfoHref" parameterClass="Map" resultClass="String">
+		<isEqual property="v_FLAG" compareValue="APR">
+			SELECT 
+				ATTACHFILEHREF
+            FROM 
+            	TBL_APRATTACHINFO 
+            WHERE  
+            	DOCID = #v_DOCID#
+            AND
+            	ATTACHFILESN = #docAttachSN#
+            AND
+            	TENANT_ID = #v_TENANTID#
+           	AND
+           		COMPANYID = #companyID#     	
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="APR">
+			SELECT 
+				ATTACHFILEHREF
+            FROM 
+            	TBL_ENDATTACHINFO 
+            WHERE  
+            	DOCID = #v_DOCID#
+            AND
+            	ATTACHFILESN = #docAttachSN#
+            AND
+            	TENANT_ID = #v_TENANTID#
+           	AND
+           		COMPANYID = #companyID#     	
+		</isNotEqual>
+	</select>
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETSUSINSN_INSIDE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -10166,7 +10197,7 @@
 	   AND 
 	   		TBL_RECORD.DocID = TBL_EXPENDAPRDOCINFO.DocID 
   </isEqual> 
-  		INNER JOIN 
+  		LEFT JOIN 
      		TBL_ENDAPRLINEINFO 
     	 ON 
      		TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
@@ -15908,6 +15939,12 @@
 			AND
 				COMPANYID = #companyID#
         ]]>
+        <isEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '080')
+        </isEqual>
+        <isNotEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '011', '012', '017', '040')
+        </isNotEqual> 
 	</select>
 			
 	<select id="EzApprovalG.getDocInfoHab" parameterClass="Map" resultClass="Integer">
@@ -17491,7 +17528,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T' )
+           		 PROCESSYN IN ( 'N','E','T', '0' )
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
@@ -24597,6 +24634,17 @@
 			TENANT_ID = #tenantID#
 		AND
 			COMPANYID = #companyID#
+		UNION
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#	
 	</select>
 	<delete id="EzApprovalG.deleteInitReceiptPonit" parameterClass="Map">
         DELETE

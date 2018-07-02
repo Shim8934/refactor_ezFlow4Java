@@ -1084,7 +1084,13 @@ function event_SaveonClick() {
                 MailStatus = "NO";
                 
                 try {
-                	window.opener.MailListRefreshByTimeout();
+//                	window.opener.MailListRefreshByTimeout();
+                	/* 2018-05-07 이소담 - 왼쪽 메뉴의 '메일쓰기'로 '내게쓰기'로 메일을 발신했을때 메일 목록 자동으로 새로고침되도록 개선*/
+                	if (window.opener.name == "left") {
+                		window.opener.parent.frames["right"].MailListRefreshByTimeout();
+                	} else {
+                		window.opener.MailListRefreshByTimeout();
+                	}
                 } catch (e) { }
                 
                 window.close();
@@ -1350,7 +1356,10 @@ function GetMailAddresses(name) {
         m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
         m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
     }
+    
     rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+    adCount += contactList.length;
+    
     for (var count = 0 ; count < rows.length ; count++) {
         m_addrBook["type"][count + adCount] = "email";
         m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
@@ -1474,6 +1483,10 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     var newElem;
     var count1;
     var length;
+    
+    if (mailArr[mailArr.length - 1] == ""){
+    	mailArr.pop(); 
+    }
 
     nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
@@ -1535,10 +1548,19 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	            validDIV.appendChild(newElem);
 	        }
 	        var szFromName = "";
-	        for (count1 = 1; count1 < mailArr.length; count1++) {
+	        for (count1 = 1; count1 <= mailArr.length; count1++) {
+	        	if (count1 - 1 != i) { // tndk
+		            szFromName += mailArr[count1 - 1];
+		            
+		            if (count1 != mailArr.length) {
+		            	szFromName += ";";
+		            }
+	        	}
+	        }
+	        /*for (count1 = 1; count1 < mailArr.length; count1++) {
 	            szFromName += mailArr[count1];
 	            if (count1 != mailArr.length - 1) szFromName += ";";
-	        }
+	        }*/
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
 	        return;
@@ -1562,12 +1584,14 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	
 	        var szFromName = "";
 	       
-	        for (count1 = 1; count1 < mailArr.length; count1++) {
-	            szFromName += mailArr[count1];
-	            
-	            if (count1 != mailArr.length - 1) {
-	            	szFromName += ";";
-	            }
+	        for (count1 = 1; count1 <= mailArr.length; count1++) {
+	        	if (count1 - 1 != i) { // tndk
+		            szFromName += mailArr[count1 - 1];
+		            
+		            if (count1 != mailArr.length) {
+		            	szFromName += ";";
+		            }
+	        	}
 	        }
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
@@ -1650,8 +1674,10 @@ function CompleteEmailAddress_Complete(rgParams) {
         }
         var szFromName = "";
         for (count1 = 1; count1 < checkname_cross_dialogArguments[3].length; count1++) {
-            szFromName += checkname_cross_dialogArguments[3][count1];
-            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";
+        		szFromName += checkname_cross_dialogArguments[3][count1-1];
+                if (count1 != checkname_cross_dialogArguments[3].length-1) szFromName += ";";
+        	/*szFromName += checkname_cross_dialogArguments[3][count1];
+            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";*/
         }
         checkname_cross_dialogArguments[6].value = szFromName;
     }
@@ -2396,7 +2422,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + fileDate + "&tid=" + tid;
                     TempText += "<tr>" +
                                 "<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
-                                "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;' border='0'/></a>" +
+                                "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
                                 "<a id='BigSizeFileLink' href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + FileName + " (" + fileSize + ")</a></td>" +
                                 "</tr>";
                 }

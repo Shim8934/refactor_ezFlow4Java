@@ -1726,7 +1726,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
-		
+		String userLang = loginInfo.getLang();
         String propertyValue = ezCommonService.getTenantConfig("UseShowEmailAddrOnPrint", loginInfo.getTenantId());
         
 		String url = null;
@@ -1886,6 +1886,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("pAttachListHtml", pAttachListHtml);
 		model.addAttribute("pBody", pBody);
+		model.addAttribute("userLang", userLang);
 		
 		logger.debug("mailPrint ended.");
 		

@@ -9,8 +9,8 @@
 
         if (Flag == "SDeptName") {
         	deptID = document.getElementsByName('SDeptName')[0].id;
-        } else {
-        	deptID = document.getElementsByName('TDeptName')[0].id;
+        } else {			// 2018-06-20. 황윤호 	관리자 > 전자결재 > 문서이동 변수 변경 TDeptName => drafetdept
+        	deptID = document.getElementsByName('drafterdept')[0].id;
         }
 
         var result = "";
@@ -52,7 +52,8 @@
             }            
         }
         else {
-            index = document.getElementsByName('selTContName')[0].length;
+        	// 2018-06-20. 황윤호 	관리자 > 전자결재 > 문서이동  (drafterdept의 경우 문서함명을 사용 안하고 있음)
+            /*index = document.getElementsByName('selTContName')[0].length;
 
             if (index > 0) {
                 for (i = index ; i > 0 ; i--)
@@ -66,7 +67,7 @@
                     name[Cnt] = xmlRtn.getElementsByTagName("DATA3")[Cnt].childNodes[0].nodeValue;
                     Add_ContType2(name[Cnt], contID[Cnt]);
                 }
-            }            
+            }*/            
         }
     } catch (e) { alert("MoveContainer.js :: getDocType()"); }
 }

@@ -891,7 +891,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	//재사용 추가
 		if (approvalFlag.equals("S")) {
 			if (!beforeDocID.equals("")) {
-				beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", userInfo.getCompanyID(), userInfo.getTenantId());
+				beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
 			}
 		}
 		
@@ -2372,9 +2372,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String docStatus = request.getParameter("docStatus");
 		String fileName = request.getParameter("fileName");
+		String docAttachSN = request.getParameter("docAttachSN");
 		String realPath = commonUtil.getRealPath(request);
 
-		String href = ezApprovalGService.getDocHref(docID, docStatus, type, userInfo.getCompanyID(), userInfo.getTenantId());
+		String href = ezApprovalGService.getDocHref(docID, docStatus, type, docAttachSN, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		downFile(request, response, realPath + href, fileName);
 		
@@ -3345,6 +3346,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			ret = "TRUE";
 		} catch (Exception e) {
+			e.printStackTrace();
+			
 			ret = "FALSE";
 		} finally {
 			if (bos != null) {

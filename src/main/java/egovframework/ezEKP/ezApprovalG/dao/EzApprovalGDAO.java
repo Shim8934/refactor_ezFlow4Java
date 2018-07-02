@@ -3016,4 +3016,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateNonElecRecInfo3(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateNonElecRecInfo3", map);
 	}
+	public String getDocHrefInfoHref(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDocHrefInfoHref", map);
+	}
 }

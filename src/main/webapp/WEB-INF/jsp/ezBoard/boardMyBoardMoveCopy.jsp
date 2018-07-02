@@ -140,7 +140,7 @@
 	     <h1 style="margin-bottom: 0px;"><spring:message code='ezBoard.t134'/></h1> 
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Wclose()"><spring:message code='ezBoard.t12'/></span></li>
+	            <li><span onclick="Wclose()"></span></li>
 	        </ul>
 	    </div>
 	

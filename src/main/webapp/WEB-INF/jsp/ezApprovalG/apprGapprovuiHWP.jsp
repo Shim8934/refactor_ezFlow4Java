@@ -755,17 +755,19 @@
 			        var pInformationContent = "<spring:message code='ezApprovalG.t36'/>";
 			        var Ans = OpenInformationUI(pInformationContent);
 			        if (!Ans) return;
-			
-			        var chkpass = chk_Passwd(pingUserID);
-			        if (chkpass == "False") {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-				    } else if (chkpass == "cancel") {
-				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+			        
+			        if ("${approvalPWD}" != "N") {
+				        var chkpass = chk_Passwd(pingUserID);
+				        if (chkpass == "False") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 					        OpenAlertUI(pAlertContent);
 					        return;
-					}
+					    } else if (chkpass == "cancel") {
+					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+						    OpenAlertUI(pAlertContent);
+						    return;
+						}
+			        }
 			
 			        var ret = openOpinionUI("BanSong");
 			        if (ret != "cancel") {

@@ -1880,20 +1880,20 @@
 	        </div>
 	        <div id="close">
 	            <ul>
-	                <li><span onclick="close_onclick()"><spring:message code='ezAddress.t5' /></span></li>
+	                <li><span onclick="close_onclick()"></span></li>
 	            </ul>
 	        </div>
 	
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	            selToggleList(document.getElementById("close"), "ul", "li", "0");
 	        </script>
 	
 	        <table class="content">
 	            <tr>
 	                <th><spring:message code='ezAddress.t360' /></th>
 	                <td>
-	                    <input type="text" id="TextName" name="TextName" style="width:99%;margin-left:3px" MaxLength="24" class="txtClass"></td>
+	                    <input type="text" id="TextName" name="TextName" style="width:100%;" MaxLength="24" class="txtClass">
+	                </td>
 	            </tr>
 	        </table>
 	        <table style="margin-top: 7px">
@@ -1947,13 +1947,13 @@
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
 	                                <td>
-	                                    <input type="text" id="emailname" style="WIDTH: 98%;margin-left:3px" maxlength="24">
+	                                    <input type="text" id="emailname" style="WIDTH: 100%;" maxlength="24">
 	                                </td>
 	                            </tr>
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t224' /></th>
 	                                <td>
-	                                    <input type="text" id="emailaddr" style="WIDTH: 98%;margin-left:3px" maxlength="100" onkeypress="return on_keydown(event)">
+	                                    <input type="text" id="emailaddr" style="WIDTH: 100%;" maxlength="100" onkeypress="return on_keydown(event)">
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -1967,7 +1967,7 @@
 									<tr>
 			                       		<td>
 			                           		<div style="margin-left:5px;">
-			                            		<select id="search_type">
+			                            		<select id="search_type" style="height:22px">
 			                            			<option selected value="displayname" usedefault="1"><spring:message code='ezAddress.t124'/></option>
 			                            			<option value="description" usedefault="1"><spring:message code='ezAddress.t54'/></option>
 			                            			<option value="title" usedefault="1"><spring:message code='ezAddress.t359'/></option>
@@ -1978,8 +1978,8 @@
 			                            			<option value="mail" usedefault="0"><spring:message code='ezAddress.t264'/></option>
 			                            			<option value="streetAddress" usedefault="0"><spring:message code='ezAddress.t296'/></option>
 			                            		</select>
-			                            		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:130px;margin:0px;">
-			                            			<a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezAddress.t142'/></span></a>
+			                            		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:130px;height:22px;margin:0px;">
+			                            		<a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezAddress.t142'/></span></a>
 			                           		</div>
 			                       		</td>
 			                   		</tr>

@@ -105,9 +105,11 @@
 			<div id="menu">
 		    	
 		  	</div>
-		   <div id="popuptitle" style="position:absolute;left:10px;top:5px;height:35px;"><h1><spring:message code='ezSchedule.t344'/></h1></div>
+		    <div id="popuptitle" style="position:absolute;left:10px;top:5px;height:35px;"><h1><spring:message code='ezSchedule.t344'/></h1></div>
 		  	<div id="close">
-		    	
+		  		<ul>
+	          		<li><span onclick="closePopup()"></span></li>
+	        	</ul>
 		  	</div>
 		  	<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:270px">
 		    	<table class="popuplist" style="WIDTH: 100%" >
@@ -141,13 +143,8 @@
 	    		<div class="btnpositionNew">
 		      		<a class="imgbtn"><span onClick="accept_group('1')"><spring:message code='ezSchedule.t338'/></span></a>
 		      		<a class="imgbtn"><span onClick="accept_group('2')"><spring:message code='ezSchedule.t339'/></span></a>
-		      		<a class="imgbtn"><span onClick="closePopup()"><spring:message code='ezSchedule.t16'/></span></a>
 		    	</div>		    	
 		  	</div>
-		  	<script type="text/javascript">
-				/* selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0"); */
-			</script>
 		</form>
 	</body>
 </html>

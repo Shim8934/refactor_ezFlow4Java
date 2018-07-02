@@ -735,6 +735,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		String result = "";
 		String docID = request.getParameter("docID");
 		String formText = request.getParameter("html");
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -761,7 +762,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
+			
+			result = "SUCCESS";
 		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result = "FAIL";
 		} finally {
 			if (bos != null) {
 				try {
@@ -782,7 +788,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		LOGGER.debug("saveEndFileHwp ended");
 		
-		return "SUCCESS";
+		return result;
 	}
 	
 	/**

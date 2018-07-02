@@ -16,7 +16,7 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .previewmail_info .mail_item dt { font-weight: normal; margin:0px 10px 0px 0px; line-height:18px; padding:0px 0px 2px 0px; color:#919293;}
 .previewmail_info .mail_item dd { margin:-19px 0px 0px 0px; padding:0px 0px 2px 65px;line-height:18px; word-break:break-all;}
 .previewmail_info .mail_item dd .hidden_area { padding:0px; margin:3px 0px 0px 0px;line-height:18px;}
-.previewmail_info .mail_title  .icon_btn { margin-left:14px; display:inline-block; float:left;}
+.previewmail_info .mail_title  .icon_btn { margin-left:13px; display:inline-block; float:left;}
 .previewmail_info .mail_title span {display:inline-block;}
 
 .previewmail_info .mail_title  #PreH_subject{width:70%; height:30px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}

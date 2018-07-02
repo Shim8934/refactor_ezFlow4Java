@@ -1229,7 +1229,7 @@
 	      		'user' as type
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+            $strGyumjikForOracle$ AND A.TENANT_ID = #v_TENANT_ID#
 				
 			<isEqual property="class" compareValue="all">
 				UNION ALL

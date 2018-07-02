@@ -772,7 +772,7 @@
 				<li id="importaddress_Cross"><span onclick="clickImport()"><spring:message code='ezAddress.t210' /></span></li>
         		<li id="exportaddress_Cross"><span onclick="clickExport()"><spring:message code='ezAddress.t143' /></span></li>
 				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 				<li><span id="SearchOption" mode="off" onClick="doLayerPopup()"><spring:message code='ezAddress.t142' /></span></li>
 				<li><span onClick="move_address()"><spring:message code='ezAddress.t239' /></span></li>
 				<li><span onClick="delete_address()"><spring:message code='ezAddress.t175' /></span></li>
@@ -880,7 +880,7 @@
 		<div style="vertical-align:top;border:0px solid red; white-space:nowrap;" id="list_Layer">
 			<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%">
 			    <tr>
-					<th style="cursor:pointer;text-align:center;padding:4px 7px 4px 1px;width:20px;">
+					<th style="cursor:pointer;text-align:center;width:20px;">
 				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
 					</th>
 					<th style="text-align:center;width:40px;vertical-align: middle;padding:0px"><img src="/images/i_individual.gif" border="0"></th>

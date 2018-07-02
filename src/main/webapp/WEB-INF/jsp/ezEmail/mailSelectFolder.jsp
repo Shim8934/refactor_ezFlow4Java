@@ -185,12 +185,9 @@
 	    <h1 id="headerH1"><spring:message code='ezEmail.t120' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_Close()"><spring:message code='ezEmail.t63' /></span></li>
+	            <li><span onclick="Window_Close()"></span></li>
 	        </ul>
 	    </div>
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	    </script>
 	    <table class="popuplist" style="width: 100%;">
 	        <tr>
 	            <td>

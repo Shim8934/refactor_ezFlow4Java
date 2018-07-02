@@ -38,9 +38,10 @@ function MakeHeaderHTML(HeaderObject) {
         XmlRows = SelectNodes(XmlHeader, "view/column");
         var _HeaderTR = document.createElement("TR");
         var _HeaderTH = document.createElement("TH");
-        _HeaderTH.style.width = "22px";
+        _HeaderTH.style.width = "22px";        
         if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
-            var _HeaderCheckBox = document.createElement("INPUT");
+        	_HeaderTH.style.textAlign = "center";
+             var _HeaderCheckBox = document.createElement("INPUT");
             _HeaderCheckBox.type = "checkbox";
             _HeaderCheckBox.style.margin = "0px";
             _HeaderCheckBox.style.padding = "0px";
@@ -242,6 +243,7 @@ function MakeListInfoHTML(ConentObject) {
             
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
+                _TDCheckBox.style.textAlign = "center";
                 _TDCheckBox.style.cursor = "default";
                 var _TDCheckBox_Sub = document.createElement("INPUT");
                 _TDCheckBox_Sub.type = "checkbox";
@@ -294,7 +296,7 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
-
+                            _TDColum.innerHTML = p_Subject;
                             _TDColum.innerHTML = innerHTML;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             // 수아 수정 (보낸사람 클릭 -> 보낸 사람에게 메일 전송창)
@@ -321,6 +323,15 @@ function MakeListInfoHTML(ConentObject) {
                             if (p_SecureMail == 1) {
                             	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + p_Subject;
                             }
+
+                            if (useMailNewWindow == "YES") {
+                            	if (g_bdraft == true) {
+	                            	p_Subject = p_Subject
+	                            } else {
+                            		p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img style='vertical-align:middle' src=\"/images/email/popup_icon.gif\" width=\"10px\"  onclick = \"mailOpenPopup(this, event)\" />";
+	                            }
+                            }
+                            
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) { event_listclick(this, event); };

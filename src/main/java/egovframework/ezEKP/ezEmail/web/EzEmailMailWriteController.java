@@ -187,7 +187,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String isSecureMail = "false";
 		String bodyType = "0";
 		String replySendTime = "0";
-		String replyReadTime = "1";
+		String replyReadTime;
 		String delaySendDate = "";
 		String unread = "";
 		String reSendFlag = "N";
@@ -246,6 +246,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());
 		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		
+		// set replyReadTime
+		String isDefaultReceiptExternal = ezCommonService.getTenantConfig("isDefaultReceiptExternal", loginInfo.getTenantId());
+		String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", loginInfo.getTenantId());
+		
+		if (useReceiptExternal.equals("YES")) {
+			replyReadTime = "YES".equalsIgnoreCase(isDefaultReceiptExternal) ? "2" : "1";
+		} else {
+			replyReadTime = "1";
+		}
 		
 		// set attributes
 		String userPrimary = loginInfo.getPrimary();
@@ -971,9 +981,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		} else {
 		        			replySendTime = "0";
 		        		}
-		        		if (orgMessage.getHeader("Disposition-Notification-To") != null) {
-		        			replyReadTime = "1";
-		        		} else {
+		        		
+		        		if (orgMessage.getHeader("Disposition-Notification-To") == null) {
 		        			replyReadTime = "0";
 		        		}
 		        	
@@ -3125,8 +3134,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		        // 추적(수신확인)
 		        logger.debug("replyReadTime=" + replyReadTime);
-		        if (replyReadTime.equals("1")) {
+		        if (replyReadTime.equals("1") || replyReadTime.equals("2")) {
 		        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+		        }
+		        
+		        // 추적(외부 수신확인)
+		        if (replyReadTime.equals("2")) {
+		        	message.setHeader("X-JMocha-Ext-Receipt", "1");
 		        }
 		        
 		        //SentDate 설정
@@ -4546,16 +4560,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", userInfo.getTenantId());
-		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId());
+		int tenantId = userInfo.getTenantId();
+		
+		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", tenantId);
+		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", tenantId);
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
-		boolean outMailReadCheck = false;
+		String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", tenantId);
 		
 		model.addAttribute("offsetMin", offsetMin);
-		model.addAttribute("outMailReadCheck", outMailReadCheck);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("individualMailUser", individualMailUser);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("useReceiptExternal", useReceiptExternal);
 		
 		logger.debug("mailLetterOption ended.");
 		return "ezEmail/mailLetterOption";
@@ -5072,6 +5088,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
 				jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
 				jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+				jsonObject.put("type", "");
 				jsonList.add(jsonObject);
 			}
 
@@ -5085,16 +5102,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				jsonObject.put("title", "");
 				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
 				jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+				jsonObject.put("type", "");
 				jsonList.add(jsonObject);
 			}
 
 			NodeList addressRow = addressXML.getElementsByTagName("ROW");
 			for (int i = 0; i < addressRow.getLength(); i++) {
+				Element row = (Element) addressRow.item(i);
 				jsonObject = new HashMap<String, Object>();
-				jsonObject.put("name", addressXML.getElementsByTagName("SNAME").item(0).getTextContent());
+				jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
 				jsonObject.put("title", "");
 				jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
-				jsonObject.put("mail", addressXML.getElementsByTagName("SEMAIL").item(0).getTextContent());
+				jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
+				jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
 				jsonList.add(jsonObject);
 			}
 			model.addAttribute("susinList", jsonList);

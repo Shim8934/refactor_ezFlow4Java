@@ -63,8 +63,8 @@ DROP TABLE IF EXISTS `james_mail_blob`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `james_mail_blob` (
   `MAIL_BLOB_ID` bigint(20) NOT NULL,
-  `MAIL_BYTES` longblob NOT NULL,
   `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `MAIL_BYTES` longblob NOT NULL,
   `HEADER_BYTES` mediumblob NOT NULL,
   `MAILBOX_ID` bigint(20) DEFAULT NULL,
   `MAIL_UID` bigint(20) DEFAULT NULL,

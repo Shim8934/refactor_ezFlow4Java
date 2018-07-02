@@ -1687,3 +1687,10 @@ function MailOptionHiddenOutside(e) {
 		}
 	}
 }
+function mailOpenPopup(btn, event) {
+	event.stopPropagation();
+	var obj = btn.parentElement;
+	event_listclick(obj, event);
+	event_listDBClick(obj.parentElement);
+}
+

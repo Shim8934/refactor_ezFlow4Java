@@ -1782,10 +1782,10 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "none";
     }
 
-    if (pListTypeValue == "8")
+    /*if (pListTypeValue == "8")
         document.getElementById("tbar1").style.display = "none";
     else
-        document.getElementById("tbar1").style.display = "";
+        document.getElementById("tbar1").style.display = "";*/
 
     if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99) {
     	document.getElementById("tbtnRedraft").style.display = "none";		

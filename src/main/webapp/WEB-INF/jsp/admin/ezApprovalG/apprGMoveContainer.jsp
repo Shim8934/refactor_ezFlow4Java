@@ -610,6 +610,9 @@
 	            var Flag;
 	            if (typeof (retVal) != "undefined") {
 	                $("#drafterdept").val(retVal[1]);
+	             	// 2018-06-20. 황윤호 	관리자 > 전자결재 > 문서이동 #drafetdept 값 설정
+	                document.getElementsByName("drafterdept")[0].id = retVal[0];
+	                document.getElementsByName("drafterdept")[0].value = retVal[1];
 	            }
 	            Flag = "TDeptName";
 	            getDocType(Flag);

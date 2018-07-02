@@ -120,8 +120,8 @@
 	</head>
 	<body class="popup">
 		<c:if test="${type == ''}">
-		<h1><spring:message code='ezApprovalG.t384'/></h1>
-		<span>▒ <spring:message code='ezApprovalG.t2107'/></span>
+			<h1><spring:message code='ezApprovalG.t384'/></h1>
+			<span>▒ <spring:message code='ezApprovalG.t2107'/></span>
 		</c:if>
 		<c:if test="${type != ''}">
 			<c:if test="${approvalFlag == 'G'}">
@@ -133,13 +133,17 @@
 				<span>▒ <spring:message code='ezApprovalG.hyj10'/></span>
 			</c:if>
 		</c:if>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btn_CancelAprLineTempletName_onclick()"></span></li>
+            </ul>
+        </div>
 		<div class="nobox" style="margin-top:10px">
 		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
 		</div>		
 			
 		<div class="btnposition btnpositionNew">
-		<input type="submit" value="<spring:message code='ezApprovalG.t20'/>" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName" onClick="return btn_SaveAprLineTempletName_onclick()">
-		<input type="submit" value="<spring:message code='ezApprovalG.t119'/>" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName" onClick="return btn_CancelAprLineTempletName_onclick()">
+			<input type="submit" value="<spring:message code='ezApprovalG.t20'/>" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName" onClick="return btn_SaveAprLineTempletName_onclick()">		
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

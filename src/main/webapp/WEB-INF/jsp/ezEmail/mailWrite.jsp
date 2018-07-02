@@ -1556,7 +1556,8 @@
 											value : ul.name,
 											email : ul.mail,
 											dept : ul.description,
-											title : ul.title
+											title : ul.title,
+											type : ul.type
 										};
 									}));
 
@@ -1567,7 +1568,12 @@
 						selectFirst : false,
 						autoFocus:true,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("0", "email", ui.item.value,
+							var addressType = "email";
+							if(ui.item.type == "G") {
+								addressType = "mailgroup";
+							}
+							
+							newElem = PrepareMailTag("0", addressType, ui.item.value,
 									ui.item.email, "");
 							IsInsert_MsgTo = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgTo) {
@@ -1760,23 +1766,24 @@
 	                            <spring:message code='ezEmail.t353' /></span></li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
-	                    	<li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
+	                    	<li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
 	                        	<input type="checkbox" id="chkSecureMail" />
-	                        	<label for="chkSecureMail" style="color:#333"><spring:message code='ezEmail.lhm63' /></label>	                        	
+	                        	<label for="chkSecureMail" style="color:#333;margin-right:3px"><spring:message code='ezEmail.lhm63' /></label>	                        	
 	                        </li>
-	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
+	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;">
 	                            <img src="/images/pbar.gif">
 	                        </li>
-	                        <li id="menuTable" class="sel" style="background:none;border:0; padding:4px 0 0 0; margin:0; vertical-align:top;">
+	                        <li id="menuTable" class="sel" style="background:none;border:0; padding:0; margin:0; vertical-align:top;">
 	                            <select name="importantSelect" id="importantSelect" onchange="important_change()" style="vertical-align:top;">
 	                                <option value="0"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t360' /></option>
 	                                <option value="1" selected="selected"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t361' /></option>
 	                                <option value="2"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t362' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
-	                            <img src="/images/pbar.gif"></li> 
-	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default;  display:none;">
+	                            <img src="/images/pbar.gif">
+	                        </li> 
+	                        <li class="sel" style="background:none; border:none; padding:0px;">
 	                            <select id="SelMailSign" onchange="MailSignSel()" style="vertical-align:top;">
 	                                <option value='0' selected>
 	                                    <spring:message code='ezEmail.t825' /></option>
@@ -1788,17 +1795,18 @@
 	                                    <spring:message code='ezEmail.t828' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
-	                            <img src="/images/pbar.gif"></li> 
-	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default;  display:none;">
+	                            <img src="/images/pbar.gif">
+	                        </li> 
+	                        <li class="sel" style="background:none; border:none; padding:0px;">
 	                            <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
 	                            	<option value="0">HTML</option>
 	                            	<option value="1">PlainText</option>
 	                            </select>
 	                        </li>
 	                        <c:if test="${useOnlyInnerMail != 'YES'}">
-	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
-	                        	<li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
+	                        	<li class="sel" style="background:none; border:none; padding:0px;">
 		                            <select style="vertical-align:top;" onchange="ChangeSenderName(this);">
 		                            ${mailSendObject}
 		                            </select>
@@ -1808,14 +1816,12 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick="window_close()">
-	                            <spring:message code='ezEmail.t63' /></span></li>
+	                        <li><span onclick="window_close()"></span></li>
 	                    </ul>
 	                </div>
 	                
 	                <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		      			
 		      			if (useSecureMail == "YES") {
 		    	        	$('.securemail').not('.bar').css('display', '');
@@ -1850,7 +1856,7 @@
 	                            <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" tabindex="1" style="width: 100%;
+	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
 	                                ime-mode: active;"/>
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
@@ -1977,8 +1983,8 @@
 	        </tr>
             <c:if test="${isCrossBrowser == true}">
 	        <tr>
-	            <td style="padding-top: 10px;height:20px;vertical-align:middle;">
-	                <span style="color:#3a76c3;font-weight:bold;height:15px;display:inline-block;"><img src="/images/i_urgency.gif" />&nbsp;${pAttachWarning}</span>
+	            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
+	                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 	                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
 	            </td>
 	        </tr>
@@ -1987,7 +1993,7 @@
             <tr>
                 <td height="20" style="padding-top: 10px;">
                     <span style="color: #3a76c3; font-weight: bold; height: 15px; display: inline-block;">
-                        <img src="/images/i_urgency.gif" align="absmiddle" />&nbsp;${pAttachWarning}</span>
+                        <img src="/images/i_notice.gif" align="absmiddle" />&nbsp;${pAttachWarning}</span>
                     <table class="file" id="attachTable">
                         <tr>
                             <th><spring:message code='ezEmail.t557' /></th>

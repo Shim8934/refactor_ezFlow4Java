@@ -937,6 +937,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezSchedule.t59' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="windows_close()"></span></li>
+            </ul>
+        </div>
 		<div id="TB_Promise">
 			<h2><spring:message code='ezSchedule.t67' /></h2>
 		  	<table class="content">
@@ -944,7 +949,7 @@
 		      		<th><spring:message code='ezSchedule.t68' /><u>T</u>)</th>
 		      		<td>
 		      			<div>
-		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
 		        			<label for="btnT1" accesskye="T"></label>
 		        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onChange="allDayTime()"/>
 		        			<spring:message code='ezSchedule.t69' />
@@ -954,7 +959,7 @@
 			    <tr>
 			    	<th><spring:message code='ezSchedule.t70' /><u>N</u>)</th>
 			      	<td>
-			        	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+			        	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
 			        	<label for="btnT2" accesskye="N"></label>
 			      	</td>
 			    </tr>
@@ -1138,7 +1143,6 @@
 		</table>
 		<div class="btnpositionNew"> 
 		    <a class="imgbtn" onClick="ok_click()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-		    <a class="imgbtn" onClick="windows_close()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 		    <a class="imgbtn" onClick="remove_click()" ><span><spring:message code='ezSchedule.t115' /></span></a>
 		</div>
 		<form name="postaldata" style="display:none">

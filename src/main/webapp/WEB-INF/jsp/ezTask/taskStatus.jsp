@@ -178,23 +178,24 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezTask.lhj01' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="close_onclick()"></span></li>
+            </ul>
+        </div>
 		<div id="main_body">
 			<div class='txt'>
 				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj03' /></div>
 				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj04' /></div>
 				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj05' /></div>
-			</div>
-			
-			<br />
-			
+			</div>			
+			<br />			
 			<div class="circles" style="text-align: center;">
 				<div class="taskProgressBar circle">
 					<strong></strong>
 				</div>
-			</div>
-			
-			<br />
-				
+			</div>			
+			<br />				
 			<table class="content" style="width:100%;">
 				<tr>
 					<th>
@@ -229,7 +230,6 @@
 		</div>
 		<div class="btnposition">
 	    	<a class="imgbtn" onclick="taskUpdateInstance()"><span><spring:message code='ezTask.t19' /></span></a>
-	    	<a class="imgbtn" onclick="close_onclick();"><span><spring:message code='ezTask.t20' /></span></a>
 		</div>
 	</body>
 </html>

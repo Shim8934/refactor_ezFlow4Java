@@ -305,7 +305,7 @@
 		  <h1><spring:message code='ezCircular.kmsc01'/></h1>
 		  <div id="close">
 		    <ul>
-		      <li onClick="close_onclick()"><span><spring:message code='ezCircular.t84' /></span></li>
+		      <li onClick="close_onclick()"><span></span></li>
 		    </ul>
 		  </div>
 		        <div style="width:100%; height:305px" id="divList">
@@ -315,7 +315,4 @@
 		        <div id="tblPageRayer" style="width:470px; height:24px; margin:6px auto; font-size:0"></div>
 		</form>
 	</body>
-	<script>
-		selToggleList(document.getElementById("close"), "ul", "li", "0");
-	</script>
 </html>

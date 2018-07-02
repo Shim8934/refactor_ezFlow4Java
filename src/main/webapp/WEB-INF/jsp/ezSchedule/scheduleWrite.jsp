@@ -423,22 +423,20 @@
 	                        <div id="menu">
 	                            <ul id="menuTable">	
 	                                <li><span onclick="checkupload()"><spring:message code='ezSchedule.t157'/></span></li>
-	                                <c:if test="${scheduleId == ''}">
+	                                <%-- <c:if test="${scheduleId == ''}">
 	                                	<li><span onclick="check_name()"><spring:message code='ezSchedule.t53'/></span></li>
-									</c:if>
+									</c:if> --%>
 	                                <li><span onclick="Print_onClick()"><spring:message code='ezSchedule.t217'/></span></li>
 	                            </ul>
 	                            <ul style="float:right;margin-right:50px">        
-	                                <li id="menuTable" class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;">	
+	                                <li id="menuTable" class="sel" style="background: none; border: none;">	
 	                                    <select id="importantSelect" name="importantSelect">
 	                                        <option value='1'><spring:message code='ezSchedule.t310'/> <spring:message code='ezSchedule.t325'/></option>
 	                                        <option value='2' selected><spring:message code='ezSchedule.t310'/> <spring:message code='ezSchedule.t326'/></option>
 	                                        <option value='3'><spring:message code='ezSchedule.t310'/> <spring:message code='ezSchedule.t327'/></option>
 	                                    </select>	
 	                                </li>
-	                                <li class="bar" style="margin: 1 0 0 0; background: none; border: 0; padding-left: 0; padding-right: 0; cursor: default; color: #fff; padding-top: 4px;">
-	                                    <img src="/images/pbar.gif"></li>
-	                                <li id="menuTable" class="sel" style="background: none; border: none; padding-top: 4px;">	
+	                                <li id="menuTable" class="sel" style="background: none; border: none;">	
 	                                    <select id="publicSelect" name="publicSelect">
 	                                        <option value='Y'><spring:message code='ezSchedule.t359'/></option>
 	                                        <option value='N' selected><spring:message code='ezSchedule.t360'/></option>
@@ -448,7 +446,7 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+	                                <li><span onclick="window.close()"></span></li>
 	                            </ul>
 	                        </div>
 	                    </td>
@@ -485,13 +483,13 @@
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t365'/></th>
 	                                        <td colspan="2">
-	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:98%;" value="<c:out value='${scheduleInfo.location}' />" />
+	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:100%;" value="<c:out value='${scheduleInfo.location}' />" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t366'/></th>
 	                                        <td colspan="2">
-	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:98%;" value="<c:out value='${scheduleInfo.title}' />" />
+	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:100%;" value="<c:out value='${scheduleInfo.title}' />" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
@@ -654,7 +652,6 @@
 	        <div id="tempattachdiv" style="display:none"></div>
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	            selToggleList(document.getElementById("close"), "ul", "li", "0");
 	            Tab1_NewTabIni("tab1");
 	        </script>
 		    <script type="text/javascript">

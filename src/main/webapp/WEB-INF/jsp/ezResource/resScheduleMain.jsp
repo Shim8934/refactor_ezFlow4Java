@@ -406,55 +406,59 @@
         }
 		//2018-06-05 구해안 showres 함수 추가
 		function showRes(val01) {
-	    		$.ajax({
-					type : "POST",
-					dataType : "json",
-					async : false,
-					url : "/ezResource/scheduleResourceData.do",
-					data : { 
-						resourceId   : val01						
-					},
-					success: function(result){
-						if (result.primary == "1") {						
-							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
-						} else {
-							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
-						}
-						
-						$("#ownerCall").html(result.resBrd.ownerCall);
-						$("#resLocation").html(result.resBrd.resLocation);						
-						
-						var approveFlag = result.resBrd.approveFlag;
-						
-						if (approveFlag == "1") {
-							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
-						} else {
-							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
-						}
-						
-						var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
-						
-						$("#brdExplain").html(resbrdExc);
-						
-						/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-			        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-			        	
-			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-			        	
-			        	$("#ResourceInfo").css("left", popupX);
-			        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-						
-						$("#ResourceInfo").modal();
-					}, 
-					error: function() {
-						
+    		$.ajax({
+				type : "POST",
+				dataType : "json",
+				async : false,
+				url : "/ezResource/scheduleResourceData.do",
+				data : { 
+					resourceId   : val01						
+				},
+				success: function(result){
+					if (result.primary == "1") {						
+						$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
+						$("#ownerDept").html(result.resBrd.ownDeptNm);
+						$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
+					} else {
+						$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
+						$("#ownerDept").html(result.resBrd.ownDeptNm2);
+						$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
 					}
-				});	    		
-	        }
+					
+					$("#ownerCall").html(result.resBrd.ownerCall);
+					$("#resLocation").html(result.resBrd.resLocation);						
+					
+					var approveFlag = result.resBrd.approveFlag;
+					
+					if (approveFlag == "1") {
+						$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
+					} else {
+						$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+					}
+					
+					var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+					
+					$("#brdExplain").html(resbrdExc);
+					
+					/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+		        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	
+		        	$("#ResourceInfo").css("left", popupX);
+		        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+					
+					$("#ResourceInfo").modal();
+				}, 
+				error: function() {
+					
+				}
+			});	    		
+        }
+		
+		function SearchOptionHidden() {
+        	$.modal.close();
+        }
     </script>
 	
 	</head>
@@ -468,9 +472,6 @@
 		<div id="mainmenu">
   			<ul>
     			<li><span id="pn_img" onClick="newSchedule_onclick(event)"><spring:message code='ezResource.t171'/></span></li>
-    			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
-    			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
-    			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>
     			<!-- 2018-06-05 구해안 자원정보 버튼 추가 및 resinfo 정보 popup으로 수정 -->
     			<li><span onclick='showRes(${resID});'><spring:message code='ezResource.t142'/></span></li>
     			<c:if test="${adminFg eq 'Y'}" >
@@ -479,6 +480,10 @@
     					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
     				</c:if>
     			</c:if>
+    			<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
+    			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
+    			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
+    			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>
     			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
     			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>

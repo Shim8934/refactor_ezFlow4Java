@@ -11,24 +11,24 @@
 		<table id="journalListHead" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" class="mainlist">
 		<thead id="BoardList_THEAD">
 			<tr id="BoardList_TH">
-				<th id="BoardList_TH_0" style="text-align: left; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">
+				<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">
 					<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 				</th>
 				<c:if test="${listType eq 'recv' }">
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:25px; text-align: left;" class="h5_center">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:25px; text-align: center;" class="h5_center">
 						<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif ">
 					</th>
 				</c:if>
 				<c:if test="${listType eq 'mine' }">
-					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: left; width:25px;" class="h5_center">
+					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:25px;" class="h5_center">
 						<img src="/images/lock_icon.png" style="vertical-align: middle;">
 					</th>
 				</c:if>
 				<!-- 취합여부아이콘 -->
-					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: left; padding: 0px 3px;" class="h5_center">
+					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: center; padding: 0px 3px;" class="h5_center">
 						<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 					</th>
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px; text-align: left;" class="h5_center">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px; text-align: center;" class="h5_center">
 						<img src="/images/newAttach.gif" style="vertical-align: middle;">
 					</th>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
@@ -95,7 +95,7 @@
 						</c:choose>
 					</c:if>
 					<c:if test="${listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
+						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
 							<c:if test="${journal.deptShare eq 'N' }">
 								<img src="/images/lock_icon.png">
 								<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
@@ -105,19 +105,19 @@
 					<!-- 취합여부아이콘 -->
 					<c:choose>
 						<c:when test="${journal.isSum eq 'Y'}">
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px; width:35px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px; width:35px;">
 								<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 							</td>
 						</c:when>
 						<c:otherwise>
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px; width:35px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px; width:35px;">
 								<img src="/images/ImgIcon/addoff.png" style="vertical-align: middle;">
 							</td>
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
 						<c:when test="${journal.fileCount ne 0}">
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;">
 								<img src="/images/newAttach.gif" style="vertical-align: middle;">
 							</td>
 						</c:when>

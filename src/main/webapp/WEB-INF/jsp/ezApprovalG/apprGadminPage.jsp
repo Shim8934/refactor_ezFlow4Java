@@ -1241,8 +1241,8 @@
 				            <li id="tdConfirmList"><span onclick="return btnConfirmList_onclick()"><spring:message code='ezApprovalG.t520'/></span></li>
 				            <li id="tdViewCabList"><span onclick="return btnConfirmTargetCab_onclick()"><spring:message code='ezApprovalG.t525'/></span></li>
 				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
-				            <li id="tbar1" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar1" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
 				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
@@ -1257,8 +1257,8 @@
 				            <li id="tdProdStatistics"><span onclick="return btnProdStatistics_onclick()"><spring:message code='ezApprovalG.t532'/></span></li>
 				            <li id="tdSndProdList"><span onclick="return btnSndProdList_onclick()"><spring:message code='ezApprovalG.t533'/></span></li>
 				            <li id="tdViewRejectReason"><span onclick="return btnViewRejectReason_onclick('0')"><spring:message code='ezApprovalG.t534'/></span></li>
-				            <li id="tbar2" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar2" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdSearch"><span onclick="return Search_Onclick('1')"><spring:message code='ezApprovalG.t111'/></span></li>
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
@@ -1271,13 +1271,13 @@
 				            <li id="tdTransList"><span onclick="return imgSndTransList_onclick()"><spring:message code='ezApprovalG.t535'/></span></li>
 				            <li id="tdTransFile"><span onclick="return imgSndTransFile_onclick()"><spring:message code='ezApprovalG.t536'/></span></li>
 				            <li id="tdTransComplete"><span onclick="return TransComplete_OnClick()"><spring:message code='ezApprovalG.t537'/></span></li>
-				            <li id="tbar3" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar3" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdAddDelayList"><span onclick="return btnAddDelayList_onclick()"><spring:message code='ezApprovalG.t538'/></span></li>
 				            <li id="tdDelayList"><span onclick="return btnDelayList_onclick()"><spring:message code='ezApprovalG.t539'/></span></li>
 				            <li id="tdViewRejectReason"><span onclick="return btnViewRejectReason_onclick('0')"><spring:message code='ezApprovalG.t534'/></span></li>
-				            <li id="tbar4" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdSearch"><span onclick="return Search_Onclick('1')"><spring:message code='ezApprovalG.t111'/></span></li>
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
@@ -1288,8 +1288,8 @@
 				    <div id="mainmenu">
 				        <ul>
 				            <li><span onclick="return btnDisuseItem_onclick()"><spring:message code='ezApprovalG.t523'/></span></li>
-				            <li id="tbar4" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
 				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
@@ -1302,13 +1302,13 @@
 				        <ul>
 				            <li id="tdConfirmEndY"><span onclick="return btnConfirmEndY_onclick('0')"><spring:message code='ezApprovalG.t524'/></span></li>
 				            <li id="tdConfirmEndYAll"><span onclick="return btnConfirmEndY_onclick('1')"><spring:message code='ezApprovalG.t540'/></span></li>
-				            <li id="tbar5" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar5" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdCancelDelayEndY"><span onclick="return btnConfirmEndY_onclick('2')"><spring:message code='ezApprovalG.t541'/></span></li>
 				            <li id="tdViewCabList"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
-				            <li id="tbar6" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar6" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
 				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>

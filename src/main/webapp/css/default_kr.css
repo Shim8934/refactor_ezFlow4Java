@@ -49,6 +49,8 @@ select::-ms-expand {
     display: none;
 }
 
+#menu select {height:27px;border-radius:3px}
+
 #menu select, #menu input {border:1px solid rgb(175, 195, 221);}
 
 textarea {
@@ -203,7 +205,7 @@ form{display:inline;margin:0}
 .leftbody ul{background-color:#ffffff;list-style-type:none;padding:0;margin:0; width:100%;}
 .leftbody ul li{
 	border-bottom: 1px solid white;
-	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 13px #fff;
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 14px #fff;
 	padding:12px 5px 0px 40px;
 	cursor:pointer;
 }
@@ -346,9 +348,15 @@ form{display:inline;margin:0}
 .tasktime .button01_off { background:url(/images/main/time_empty.gif) no-repeat; width:50px; height:20px; padding:3px 0 0 0 ;margin:-5px 10px 0 96px; text-align:center; color:#455a73; font-weight:bold}
 
 
+.tabbody {
+	padding-left:10px;
+	padding-right:10px;
+	overflow:hidden;
+}
+
 .mainbody {
 	background: url('/images/kr/cm/bg_main.gif') left top repeat-x;
-	margin: 3px 10px 10px ;
+	margin: 0px 10px 10px ;
     overflow:auto;
 }
 .mainbody h1 {
@@ -358,8 +366,8 @@ form{display:inline;margin:0}
 	margin:16px 0px 24px;
 	left:7px;
 	color:#333;
-	height:20px;
-	line-height:20px;
+	height:23px;
+	line-height:23px;
 }
 
 .mainbody #presentcell {
@@ -402,30 +410,25 @@ form{display:inline;margin:0}
 .table_manage{margin-top:10px;}
 	
 #mainmenu li, #mainmenu li.off{
-	display:block;
-	float:left;
-	margin:0 1px 0 1px;
-	/* margin:0 1px 0 1px;
-	height:28px;
-	background:url('/images/kr/cm/btn_default_offleft.gif') no-repeat top left;
-	padding-left:5px; */
-	cursor:pointer;
-	line-height:27px;
-	padding-right:3px;
+	display: block;
+    float: left;
+    margin: 0 1px 0 1px;
+    cursor: pointer;
+    line-height: 27px;
+    padding-right: 3px;
+    height: 29px;
 }
 
 #mainmenu li span, #mainmenu li span.off{
-	display:block;
-	float:left;
-	/* background:url('/images/kr/cm/btn_default_offright.gif') no-repeat top right;
-	height:28px; */
-	padding:5px 4px;	
-	font:12px gulim;
-	letter-spacing:-1;
-	padding-top:7px;
-	border:1px solid #ddd;
-	color:#666;
-	border-radius: 3px;
+	display: block;
+    float: left;
+    padding: 5px 4px;
+    font: 12px gulim;
+    letter-spacing: -1;
+    padding-top: 7px;
+    border: 1px solid #d2d2d2;
+    border-radius: 2px;
+    box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.25);
 }
 
 #mainmenu li span img, #mainmenu li span.off img{
@@ -520,21 +523,40 @@ form{display:inline;margin:0}
 .popup .pad1{padding:10px 0px;}
 .txt, .box, .popuplist, .content, .popup table, #left, h1, h2, h3, h4, h5, h6, span, br, .nobox, .mainbody table{clear:both}
 #menu {
-	display:block;
+	/* display:block;
 	padding-left:0px;
 	height:28px;
 	margin-bottom:15px;
 	margin-top:5px;
-	vertical-align:middle;
+	vertical-align:middle; */
+	display: block;
+    padding-left: 0px;
+    height: 28px;
+    margin-bottom: 15px;
+    margin-top: 3px;
+    vertical-align: middle;
 }
 
 
 #menu ul{margin:0; padding:0;}
 #menu ul.on{padding-left:0px;}
-#close{position:absolute;right:10px; top:10px;height:35px; }
+#close {
+	/* position:absolute;right:10px; top:10px;height:35px; */
+	position: absolute;
+    right: 10px;
+    top: 8px;
+    height: 35px; 
+}
 #close ul {margin: 0; padding: 0;}
+#close ul li span {
+	display:inline-block;
+	width:25px;
+	height:28px;
+	background-image: url('/images/close_xBtn.png');
+	background-repeat: no-repeat;
+	background-position: 4px 6px;
+}
 #taskChangeMode {float: left; padding-top: 8px; color: black; font-size: 16px; font-weight: bold;}
-
 #menu ul li, #close ul li {
 	display: block;
 	float:left;
@@ -546,10 +568,21 @@ form{display:inline;margin:0}
 	vertical-align:middle
 }
 
-#menu span, #close span {display:inline-block; background:white; border:1px solid rgba(188, 211, 224, 1); height:25px;padding:0px 8px 0px 8px; border-radius:3px; line-height:25px;font-size:12px;color:#333;}
-#menu ul li.on, #close ul li.on { color:#666;}
-#menu li.on span, #close ul li.on span { color:#2058a6; background:white; border:1px solid #6793d8;}
-
+#menu span {
+	/* display:inline-block; background:white; border:1px solid rgba(188, 211, 224, 1); height:25px;padding:0px 8px 0px 8px; border-radius:3px; line-height:25px;font-size:12px;color:#333; */
+	display: inline-block;
+    background: white;
+    border: 1px solid #829dc7;
+    height: 25px;
+    padding: 0px 8px 0px 8px;
+    border-radius: 3px;
+    line-height: 25px;
+    font-size: 12px;
+    color: #333;
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);
+}
+#menu ul li.on { color:#666;}
+#menu li.on span { color:#2058a6; background:white; border:1px solid #6793d8;}
 
 #menu ul li.off, #close ul li.off{
 
@@ -643,11 +676,12 @@ form{display:inline;margin:0}
 }
 
 .content input {vertical-align:middle; border:1px solid #dedede; height:24px;}
+.content input[type=checkbox] {height:20px;}
+
 .content td, .file td, .file2 td{
 	width: 100%;
 }
 
-.content input { vertical-align:middle;}
 .content td table td, .popuplist td table td{border:none;}
 
 .content2 th{
@@ -1170,7 +1204,7 @@ form{display:inline;margin:0}
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:31px}
-.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:6px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; background-color: #f8f8fa; height:24px}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:4px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; background-color: #f8f8fa; height:24px}
 .mainlist tr th.title{width:100%; text-align:left;}
 .mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
@@ -1666,7 +1700,7 @@ form{display:inline;margin:0}
 }
 #left .list_thumbnail li {
 	padding:3px 0px 2px 0px; 
-	border-bottom:0px;
+	border-bottom:1px solid #e8e8e8;
 	vertical-align:middle;
 	height:33px;
 	line-height:16px;
@@ -1822,7 +1856,7 @@ form{display:inline;margin:0}
 .address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family: dotum;}
 
 .sublist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
-.sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #ddd;}
+.sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #ddd; font-weight:normal;}
 .sublist tr th.title{width:100%; text-align:left;}
 .sublist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0;}
 .sublist tr td img{vertical-align:middle;}
@@ -2029,13 +2063,18 @@ form{display:inline;margin:0}
 	}
 .content_propertyInfo table td #mainmenu ul li{margin:0px 0px 0px 5px;}
 .content_propertyInfo table td #mainmenu li, #mainmenu li.off{
-	display:block;
+	/* display:block;
 	float:left;
-	/* height:28px;
+	height:28px;
 	background:url('../images/kr/cm/btn_default_offleft.gif') no-repeat top left;
-	padding-left:5px; */
+	padding-left:5px;
 	cursor:pointer;
-	line-height:27px;
+	line-height:27px; */
+	display: block;
+    float: left;
+    cursor: pointer;
+    line-height: 27px;
+    height: 29px;
 }
 .content_propertyInfo table td #mainmenu li span, #mainmenu li span.off{
 	display:block;
@@ -2075,7 +2114,7 @@ form{display:inline;margin:0}
 .conf_btnPosi input{margin:0px; padding:0px 20px; height:30px; background:#004896; border:none; border-radius:5px;}
 
 .wrap_progress{width:100%; height:100%; border:1px solid #dedede; overflow:hidden;}
-.wrap_progress h4{height:40px; background:#ebebeb; font-size:15px; color:#666; font-family: Gulim, Arial, Helvetica, sans-serif; line-height:38px; border-left:5px solid #185bcf; padding:0px 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+.wrap_progress h4{height:40px; background:#f8f8fa; font-size:15px; color:#666; font-family: Gulim, Arial, Helvetica, sans-serif; line-height:38px; border-left:5px solid #185bcf; padding:0px 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
 .progress_graph{width:135px; height:135px; margin:12px 74px; float:left;}
 .progress_graph p{width:135px; text-align:center; padding:28px 0px;}
 .progress_graph p .graph_txt01{font-size:24px; color:#0dc699; font-weight:bold; font-family: Gulim, Arial, Helvetica, sans-serif;}
@@ -2115,6 +2154,15 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	background: rgba(0,0,0,0.5);
 }
 
+.blockTop {
+	position : absolute;
+	top : 0px;
+	width:100%;
+	height:94px;
+	z-index : 1000;
+	background: rgba(0,0,0,0.5);
+}
+
 .calResTitleSpan {font-size:13px;color:#2f2f2f;text-align:center;font-family: Malgun Gothic;}
 
 .layerHeader {border-color: rgb(4, 112, 227); color: white; background-color: rgb(4, 112, 227); text-align: left; height:30px !important;font-size:14px; font-weight: bold !important; font-family: Malgun gothic;}
@@ -2131,3 +2179,14 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
     -ms-user-select: none;
     user-select: none;
 }
+
+.btnbtn { margin-top:10px; text-align: center; }
+
+#Preview_HeaderH, #Preview_HeaderW { background-color: #f8f8fa; }
+#subject { vertical-align: middle }
+.extraMenu {
+	position: absolute;
+	top: 4px;
+	right: 45px;	
+}
+.extraMenu ul li span {padding-top:2px !important;}

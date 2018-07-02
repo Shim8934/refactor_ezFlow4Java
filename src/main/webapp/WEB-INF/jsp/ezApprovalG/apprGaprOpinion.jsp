@@ -252,6 +252,11 @@
 	            <spring:message code='ezApprovalG.t422'/>
 	        </span>
 	    </h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btn_OpinionCancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <div class="listview" style="width: 100%; height: 190px; overflow-x:hidden; overflow-y: AUTO;">
 	        <div id="OPINION" style="margin:1px 1px 1px 1px;">
 	        </div>
@@ -262,10 +267,10 @@
 	    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="width: 100%;
 	        height: 150px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none;"  onfocus="return txt_OpinionContent_onfocus()"
 	        onchange="return txt_OpinionContent_onchange()"></textarea>
-	    <div class="btnposition btnpositionNew">
-	    <a class="imgbtn" id="bbtn_OpinionAdd" ><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
-	    <a class="imgbtn" id="bbtn_OpinionDel"><span id="btn_OpinionDel" onClick="return btn_OpinionDel_onclick()" ><spring:message code='ezApprovalG.t266'/></span></a>
-	    <a class="imgbtn" id="bbtn_OpinionCancel"><span id="btn_OpinionCancel" onClick="return btn_OpinionCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
+	    <div class="btnposition btnpositionNew" style="height:24px">
+		    <a class="imgbtn" id="bbtn_OpinionAdd"><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
+		    <a class="imgbtn" id="bbtn_OpinionDel"><span id="btn_OpinionDel" onClick="return btn_OpinionDel_onclick()" ><spring:message code='ezApprovalG.t266'/></span></a>
+		    <a class="imgbtn" id="bbtn_OpinionCancel" style="display:none"><span id="btn_OpinionCancel" onClick="return btn_OpinionCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

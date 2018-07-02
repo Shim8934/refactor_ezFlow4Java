@@ -519,18 +519,18 @@
 		    	<tr> 
 		      		<th><spring:message code='ezCircular.t139' /></th> 
 		      		<td style="width:100%">
-		      			<select name="search_field" id="search_field" style="width: 130px; height: 20px; vertical-align: middle"> 
+		      			<select name="search_field" id="search_field" style="width: 130px; height: 22px; vertical-align: middle"> 
 		          			<option value="circularNew"><spring:message code='ezCircular.t2' /></option> 
 		          			<option value="circularComplete"><spring:message code='ezCircular.t3' /></option>
 		          			<option value="circularMy"><spring:message code='ezCircular.t4' /></option>
 		          			<option value="circularTemp"><spring:message code='ezCircular.t5' /></option>
 		          			<option value="circularFolder"><spring:message code='ezCircular.t7' /></option> 
 		        		</select>
-		        		<select name="search_type" id="search_type" style="width: 65px; height: 20px; vertical-align: middle"> 
+		        		<select name="search_type" id="search_type" style="width: 65px; height: 22px; vertical-align: middle"> 
 		          			<option value="subject"><spring:message code='ezCircular.t32' /></option> 
 		          			<option value="writer"><spring:message code='ezCircular.t166' /></option>
 		        		</select>
-		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
+		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" style="height:22px" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search('new')"><spring:message code='ezCircular.t85' /></span></a>
 		        	</td> 
 		    	</tr> 

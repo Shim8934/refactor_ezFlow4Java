@@ -149,7 +149,8 @@
 			        	success : function(xml){	
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
-		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                    headerData = result;
+// 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                    if (CrossYN()) {
 		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -185,7 +186,8 @@
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                if (CrossYN()) {
 		                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -916,7 +918,8 @@
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
 		                var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
 		                
 		                if (CrossYN()) {
 		                	usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
@@ -1030,12 +1033,11 @@
 	    </div>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="closeWindow()"><spring:message code='ezOrgan.t143' /></span></li>
+	            <li><span onclick="closeWindow()"></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	    <table id="TreeViewTD">
 	        <tr>

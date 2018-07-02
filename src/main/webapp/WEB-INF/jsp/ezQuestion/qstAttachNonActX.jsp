@@ -364,11 +364,10 @@
 	            <ul><li><span onclick="javascript:Save_Onclick();"><spring:message code='ezQuestion.t163' /></span></li></ul>
 	        </div>
 	        <div id="close">
-	            <ul><li><span onclick="javascript:fun_QuesCancel();"><spring:message code='ezQuestion.t88' /></span></li></ul>
+	            <ul><li><span onclick="javascript:fun_QuesCancel();"></span></li></ul>
 	        </div>
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	            selToggleList(document.getElementById("close"), "ul", "li", "0");
 	        </script>
 	        <table class="content" style="margin-bottom:4px">
 	            <tr>

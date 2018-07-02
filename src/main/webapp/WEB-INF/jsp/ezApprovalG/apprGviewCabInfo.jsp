@@ -29,7 +29,7 @@
 				<li><span onClick="btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li> 
 			</ul>
 		</div>
-		<div id="close"><ul><li><span onClick="btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+		<div id="close"><ul><li><span onClick="btnClose_onclick()"></span></li></ul></div>
 		<table class="content">
 			<tr> 
 				<th><spring:message code='ezApprovalG.t106'/></th>
@@ -215,7 +215,6 @@
 		</span>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 		</script>
 	</body>

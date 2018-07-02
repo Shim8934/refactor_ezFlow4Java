@@ -36,17 +36,15 @@
 		
 		<div id="close">
 			<ul>
-				<li><span onclick="shareComment();"><spring:message code='ezCircular.t168'/></span></li>
-				<li><span onclick="closePopup();"><spring:message code='ezCircular.t84'/></span></li>
+				<li><span onclick="closePopup();"></span></li>
 			</ul>
 		</div>
-		
-		<script type="text/javascript" >
-   			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-		
-		
-		
+		<div id="menu" class="extraMenu">
+			<ul>				
+				<li><span onclick="shareComment();"><spring:message code='ezCircular.t168'/></span></li>
+			</ul>
+		</div>
+
 		<div style='height:420px;overflow-y:auto;'>
 			<table class="mainlist" style="width:98%;">
 				<tr>

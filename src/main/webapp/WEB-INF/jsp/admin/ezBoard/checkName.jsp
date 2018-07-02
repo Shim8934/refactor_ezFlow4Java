@@ -168,16 +168,19 @@
 				    </HEADER>
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
-		</xml>
-		
-		<h1><spring:message code="ezBoard.t5" /></h1>		
+		</xml>		
+		<h1><spring:message code="ezBoard.t5" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel_onClick()"></span></li>
+            </ul>
+        </div>
 		<h2><spring:message code="ezBoard.t13" /></h2>
         <div class="listview" style="width:100%; min-width:570px; height:285px;" >
             <div id="lvtDoclist" style="width:100%;min-width:570px; border:0; height:285px; overflow:AUTO;" ></div>
         </div>		            
 		<div class="btnposition">
 		    <a class="imgbtn"><span onClick="change_onClick()"><spring:message code="ezBoard.t14" /></span></a>
-		    <a class="imgbtn"><span onClick="cancel_onClick()"><spring:message code="ezBoard.t15" /></span></a>
 		</div>
 	</body>
 </html>

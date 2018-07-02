@@ -21,15 +21,13 @@
         <link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
         <!-- time picker-->
         <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-        <link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>
-        
-        <style type="text/css"> 
-	        .pagetd{padding-top:6px; }
-	        .pcol{padding-top:6px; }
-	        .Right_Point01 {
-		        font:bold;
-		        color:#017bec;
-	        }
+        <link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>       
+        <style>
+			#rowdata td, #rowdata td div {
+        		white-space: nowrap;
+        		text-overflow: ellipsis;
+        		overflow:hidden;
+        	}
         </style>
         
 		<script type="text/javascript">

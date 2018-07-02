@@ -186,14 +186,15 @@
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
 		    $(window).on("resize", function(){
-		    	if (window.parent.frames['left'] == undefined) {
-		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		    	if (parent.frames["FBoard_ifrm"]) {
+		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
+		    		$("#srarchpopup").css("left", popupX).css("bottom", "66px");
+		    	} else {
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+					$("#srarchpopup").css("left", popupX);
 		    	}
-		    	else {
-		    		var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
-		    	}
-		    	
-		    	$("#addpopup").css("left", popupX);
+				
+	        	/* $("#addpopup").css("left", popupX); */
 	        	$("#srarchpopup").css("left", popupX);	        
 		     });
 		
@@ -393,11 +394,11 @@
 		                DATA += "<WRITERNAME>" + document.getElementById("txtWriterName").value + "</WRITERNAME>";
 		            }
 		
-		            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
+		            /* if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
 		            {
 		                TYPE += "ABSTRACT;";
 		                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
-		            }
+		            } */
 		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
@@ -928,7 +929,16 @@
 		    /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 		    function doLayerPopup(obj) {
 		    	if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
-		        	btn_PostDate_Clear();
+		    		$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
+		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
+		    		
+		    		parent.parent.frames["left"].document.body.style.overflow = "hidden";
+		    		
+			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
+
+			    	$("#srarchpopup").css("left", popupX).css("bottom", "66px");
+			    	$("#srarchpopup").modal();	
+		        	/* btn_PostDate_Clear();
 			        document.getElementById("chkSearchSub").checked = false;
 			        document.getElementById("txtTitle").value = "";
 			        document.getElementById("txtWriterName").value = "";
@@ -945,7 +955,7 @@
 			        }
 			        else {
 			            BoardSearchOptionHidden();
-			        }
+			        } */
 		    	}
 		    	else {
 			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
@@ -957,18 +967,20 @@
 		    }
 		    function BoardSearchOptionHidden() {
 		    	document.getElementById("layer_popup").style.display = "none";
-			     document.getElementById("SearchOption").setAttribute("mode", "off");
+			    document.getElementById("SearchOption").setAttribute("mode", "off");
 			     
-			     if (window.parent.frames['left'] != undefined) {
+			    if (window.parent.frames['left'] != undefined) {
+			       $.modal.close();			       		
+			    }
+			    
+			    if (parent.parent.frames['left'] != undefined) {
 			       $.modal.close();
-			       parent.frames["right"].document.body.style.overflow = "hidden";		// body style overflow 옵션 사라져서 추가함
-			     }
+			    }
 		    }
 		
 		    function search(type) {
 		        if (type == "basic") {
-		        	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
-		        			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+		        	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
 		            }
@@ -1070,7 +1082,7 @@
 			<body class="mainbody" style="overflow:hidden">
 		</c:when>
 		<c:otherwise>
-			<body class="" style="overflow:hidden">
+			<body class="tabbody" style="overflow:hidden">
 		</c:otherwise>
 	</c:choose>
 	<c:if test="${boardInfo.listView_FG != 'true'}">
@@ -1107,9 +1119,9 @@
 		  <ul>
 		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
-			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
-			    <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
 		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
 		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051'/></span></li>
@@ -1232,8 +1244,8 @@
 	
 	<div id="ListInfo" style="display:none"></div>
 	<!-- 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 -->
-	<c:choose>
-	<c:when test="${adminType != 'y'}">
+	<%-- <c:choose>
+	<c:when test="${adminType != 'y'}"> --%>
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<table class="content">
@@ -1259,10 +1271,10 @@
 		            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
 		            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
 		        </tr>  
-		         <tr>
+		        <%--  <tr>
 		            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
 		            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
-		        </tr>    
+		        </tr>     --%>
 		       <tr>
 		            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
 		           <td>
@@ -1284,7 +1296,7 @@
 			</table>
 		</div>
 	</div>
-	</c:when>
+	<%-- </c:when>
 	<c:otherwise>
 	       <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 	          <div class="popupwrap1">
@@ -1333,6 +1345,6 @@
 	            </div>
 	        </div> 
 	   </c:otherwise>
-		</c:choose>     
+		</c:choose>    --%>  
 	</body>
 </html>

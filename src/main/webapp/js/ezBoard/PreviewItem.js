@@ -93,6 +93,7 @@ function PreviewRayerChange(pGubun) {
 
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
+            
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
             if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
@@ -151,7 +152,13 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
-            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+            
+            if ($("body").attr("class") == "tabbody") {            
+            	document.getElementById("MailListRayer").style.width = pMailListWidthH-20 + "px";
+            } else {
+            	document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+            }            
+            
             if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
             	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
@@ -240,7 +247,11 @@ function PreviewRayerChange_photo(pGubun) {
                 }
             }
             document.getElementById("PreviewRayerH").style.width = "752px";
-            document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
+            if ($("body").attr("class") == "tabbody") {
+            	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760-20) + "px";
+            } else{
+            	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
+            }
             document.getElementById("PreContent_RayerH").style.width = "749px";
 
             document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";

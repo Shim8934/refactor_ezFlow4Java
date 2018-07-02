@@ -75,7 +75,7 @@
 		                MyBoard();
 		            }
 		            else if (subFunc == "2") {
-		                ReservationItem_onclick();
+		                /* ReservationItem_onclick(); */
 		            }
 		            else {
 		                if (RedirectBoardID != "") {
@@ -687,7 +687,8 @@
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
        			        document.write("<h2>");
-           				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>"); 
+           				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+           					+ "\")' style='overflow-x:hidden; text-overflow:ellipsis; width:158px;'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
            				document.write("<ul>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");

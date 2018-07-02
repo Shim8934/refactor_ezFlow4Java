@@ -2054,12 +2054,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' ) ";
 		}
 		
+		/* 2018-06-22 홍승비 - 썸네일게시판 쿼리 Writedate 중복 문제 수정(TBL_BOARD_ITEM as A) */
 		if (boardVO.getSearchQuery().indexOf("STARTDATE;") != -1) {
-			returnQuery += " AND WRITEDATE > '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true) + "' ";
+			returnQuery += " AND A.WRITEDATE > '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true) + "' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("ENDDATE;") != -1) {
-			returnQuery += " AND WRITEDATE <  '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ";
+			returnQuery += " AND A.WRITEDATE <  '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("ABSTRACT;") != -1) {
@@ -4932,7 +4933,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String mode = "new";
-		String apprFlag = "Y";
 		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
 		String showAdjacent = request.getParameter("showAdjacent");
 		String boardID = request.getParameter("boardID");
@@ -5024,9 +5024,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("commentCount", commentCount);
 		}
 		
+		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
-		model.addAttribute("apprFlag", apprFlag);
+		model.addAttribute("apprFlag", boardItem.getApprFlag());
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("useOCS", useOCS);

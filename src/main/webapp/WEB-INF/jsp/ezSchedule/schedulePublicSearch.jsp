@@ -242,7 +242,7 @@
 		    </h2>
 			<table class="mainlist" style="table-layout:fixed;width:100%"> 
 				<tr>
-			    	<th colspan=2 style="padding:0 2px; width:30px;text-align:center;"><img src="/images/i_important.gif" /></th>      
+			    	<th colspan=2 style="padding:0 2px; width:30px;text-align:center;"><img src="/images/ImgIcon/view-importance.gif" /></th>      
 			    	<th style="width:50px"><spring:message code='ezSchedule.t270' /></th>
 			    	<th style="width:80px"><spring:message code='ezSchedule.t271' /></th>
 			    	<th style="width:80px"><spring:message code='ezSchedule.t161' /></th>

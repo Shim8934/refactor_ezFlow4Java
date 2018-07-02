@@ -38,7 +38,7 @@
 	        var strSearch = "<c:out value='${pSearchString}' />";
 	        var RetValue;
 	        var ReturnFunction;
-	        var deptClickFlag; //2018-05-11 (문성업) 직원 맴버를 전원 클릭하는 것 같은 효과를 나타내는 마우스 효과 (수정)
+	        var deptClickFlag; // 2018-05-11 (문성업) 직원 맴버를 전원 클릭하는 것 같은 효과를 나타내는 마우스 효과 (수정)
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -348,7 +348,7 @@
       				success : function(xml) {
  		                event_displayUserList(loadXMLString(xml));
  		                
- 		                //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
+ 		                // 2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
  		               	if (strSearch != "") {
  			            	document.getElementById('keyword').value = strSearch;
  							search_click("search"); 
@@ -401,7 +401,7 @@
 	            }
 	        }
 	        function event_listMout(obj) {
-	          if(!deptClickFlag){ //2018-05-11 (문성업)수정
+	          if(!deptClickFlag){ // 2018-05-11 (문성업)수정
 	            for (var i = 0; i < listContentArry.length; i++) {
 	                if (document.getElementById(listContentArry[i]) == obj) {
 	                    return;
@@ -459,7 +459,7 @@
 	        var listEventCheckbox = false;
 	        var listSubEventCheckbox = false;
 	        function event_listclick(obj) {
-	        	deptClickFlag = false; //2018-05-11 (문성업)수정
+	        	deptClickFlag = false; // 2018-05-11 (문성업)수정
 	            if (!listEventCheckbox) {
 	                if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
 	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
@@ -500,7 +500,7 @@
 	                    var CurlistContent = obj.getAttribute("id");
 	                    var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
 	                    var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
-	                    if (PrePoint <= CurPoint) { //2018-05-18 문성업 (수정)
+	                    if (PrePoint <= CurPoint) { // 2018-05-18 문성업 (수정)
 	
 	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) { 
 	                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
@@ -1920,6 +1920,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezCircular.t40' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -2071,7 +2076,6 @@
 	 	</table>	    
 		<div class="btnposition">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezCircular.t26' /></span></a>
 		</div>
 	</body>
 </HTML>

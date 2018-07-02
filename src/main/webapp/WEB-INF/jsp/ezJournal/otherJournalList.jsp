@@ -45,15 +45,16 @@
 		<form method="post" >
 		  <h1><spring:message code='ezJournal.t75'/></h1>
 		  <div id="close">
-		    <ul>
-		      <li onClick="bindOtherJournal();"><span><spring:message code='ezJournal.t86'/></span></li>
-		      <li onClick="close_onclick()"><span><spring:message code='ezBoard.t12'/></span></li>
+		  	<ul>		      
+		  		<li onClick="close_onclick()"><span></span></li>
 		    </ul>
 		  </div>
-		  <script type="text/javascript">
-		    selToggleList(document.getElementById("close"), "ul", "li", "0");
-		  </script>
-	        <div style="width:100%; height:305px" id="divList">
+		  <div id="menu" class="extraMenu">
+		    <ul>
+		    	<li onClick="bindOtherJournal();"><span><spring:message code='ezJournal.t86'/></span></li>
+		    </ul>
+		  </div>
+	      <div style="width:100%; height:305px" id="divList">
 	            <table class="mainlist" id="otherJournalList" style="width:100%">
 	            <c:choose>
 		            <c:when test="${fn:length(journalList) ne 0 }">

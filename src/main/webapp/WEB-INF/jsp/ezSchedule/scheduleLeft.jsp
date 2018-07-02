@@ -30,8 +30,8 @@
 			    position: absolute;
 			    top: 0;
 			    left: 0;
-			    height: 17px;
-			    width: 17px;
+			    height: 16px;
+			    width: 16px;
 			    background-color: #eee;
 			    border-radius: 4px;
 			}
@@ -57,8 +57,8 @@
 			.IDcontainer .checkmark:after {
 			    left: 5px;
 			    top: 1px;
-			    width: 4px;
-			    height: 9px;
+			    width: 3px;
+			    height: 7px;
 			    border: solid white;
 			    border-width: 0 3px 3px 0;
 			    -webkit-transform: rotate(45deg);

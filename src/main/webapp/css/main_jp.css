@@ -255,9 +255,9 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .portletbox .lb{display:block;position:absolute;top:-14px;left:-1px;width:10px;height:15px;font-size:0}
 .portletbox .rb{display:block;position:absolute;top:-14px;left:-9px;width:10px;height:15px;margin-left:100%;font-size:0}
 .portletbox .cont{position:relative; padding:15px 15px 10px;}
-.title_txt { position:absolute; top:13px; left:15px ;font-size:13px; font-weight:bold;}
+.title_txt { position:absolute; top:10px; left:15px ;font-size:13px; font-weight:bold;}
 .btn_more { position:absolute; top:7px; right:10px; width:35px; height:20px; display:inline-block; z-index:5; cursor:pointer;}
-.portletbox .title .btn_img {vertical-align:top; margin-top:-2px; cursor:pointer;}
+.portletbox .title .btn_img {vertical-align:middle; margin-top:-2px; cursor:pointer;}
 
 /*------------ tab ------------*/
 .portlet_tab {height:38px; margin:0px 50px 0px 0px; overflow:hidden;white-space:nowrap; font-size:12px;z-index:50; background: none;}
@@ -356,9 +356,9 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 
 
 .nomal_count{display:inline-block; line-height:190%; color:#fff; padding:0px 0 0 8px;  font-size:11px; background:url(../images/kr/main/count_nal.gif) no-repeat left;}
-.nomal_count span{display:inline-block;  color:#ff5a18; padding:2px 9px 0 0px; font-size:11px; background:url(../images/kr/main/count_nar.gif) no-repeat right;font-weight:bold;}
+.nomal_count span{display:inline-block;  color:#ff5a18; padding:0px 9px 0 0px; font-size:11px; background:url(../images/kr/main/count_nar.gif) no-repeat right;font-weight:bold;}
 .point_count{display:inline-block; line-height:190%; color:#fff; padding:0px 0 0 8px;  font-size:11px; background:url(../images/kr/main/count_wl.gif) no-repeat left;}
-.point_count span{display:inline-block;  color:#fff; padding:2px 9px 0 0px; font-size:11px; background:url(../images/kr/main/count_nor.gif) no-repeat right;font-weight:bold;}
+.point_count span{display:inline-block;  color:#fff; padding:0px 9px 0 0px; font-size:11px; background:url(../images/kr/main/count_nor.gif) no-repeat right;font-weight:bold;}
 
 /* mailgraph */
 .mailgraph_area { width:146px; margin-top:10px}

@@ -93,6 +93,7 @@
 		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
 		    var useReSend = "${useReSend}";
 		    var useSearchContent = "${useSearchContent}";
+		    var useMailNewWindow = "${useMailNewWindow}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -800,13 +801,13 @@
           <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
           <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
           <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
-          <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
           <li><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
           <li><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
           <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
           <li onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
           <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
-          <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
           <li><span onClick="deleteWork(false)"><spring:message code="ezEmail.t95" /></span></li>
           <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
           <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
@@ -834,12 +835,17 @@
               	  <tr>
                     <th><spring:message code="ezEmail.t179" /></th>
                     <td> 
-	                   <select id="listcount" style="WIDTH:40px;height:20px;" onChange="ListCount(this.value);">
+	                   <select id="listcount" style="WIDTH:46px;height:20px;" onChange="ListCount(this.value);">
 	                        <option value=10 <c:if test="${mailGeneral.listCount == '10'}">selected</c:if>>10</option>
 	                        <option value=20 <c:if test="${mailGeneral.listCount == '20'}">selected</c:if>>20</option>
 	                        <option value=30 <c:if test="${mailGeneral.listCount == '30'}">selected</c:if>>30</option>
 	                        <option value=40 <c:if test="${mailGeneral.listCount == '40'}">selected</c:if>>40</option>
 	                        <option value=50 <c:if test="${mailGeneral.listCount == '50'}">selected</c:if>>50</option>
+	                        <option value=60 <c:if test="${mailGeneral.listCount == '60'}">selected</c:if>>60</option>
+	                        <option value=70 <c:if test="${mailGeneral.listCount == '70'}">selected</c:if>>70</option>
+	                        <option value=80 <c:if test="${mailGeneral.listCount == '80'}">selected</c:if>>80</option>
+	                        <option value=90 <c:if test="${mailGeneral.listCount == '90'}">selected</c:if>>90</option>
+	                        <option value=100 <c:if test="${mailGeneral.listCount == '100'}">selected</c:if>>100</option>
 	                    </select>
 	                </td>
                   </tr>

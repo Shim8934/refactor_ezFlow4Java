@@ -51,6 +51,11 @@
 	</head>
 	<body class="popup">		
 		<h1><spring:message code="ezBoard.t610" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window_Cancel()"></span></li>
+            </ul>
+        </div>
 	    <h2 class="h2_dot"><spring:message code="ezBoard.t611" /></h2>
 	    <div style="text-align:center; margin:10px;" id="div1">
 		    <span class="txt">
@@ -60,7 +65,6 @@
 	    </div>
 	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="Save_Acl()"><spring:message code="ezBoard.t14" /></span></a>
-	        <a class="imgbtn"><span onclick="window_Cancel()"><spring:message code="ezBoard.t15" /></span></a>
 	    </div>
 	</body>
 </html>

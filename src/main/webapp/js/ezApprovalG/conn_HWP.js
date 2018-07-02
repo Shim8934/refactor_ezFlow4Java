@@ -1,5 +1,5 @@
 
-function GetDocumentElement(HwpCtrl, CharName)
+function GetDocumentElement(HwpCtrl, CharName, adminFlag)
 {
 	var fChar = CharName.substring(0,1);
 	
@@ -22,7 +22,11 @@ function GetDocumentElement(HwpCtrl, CharName)
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			if (adminFlag != "" && adminFlag != undefined) {
+				return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			} else {
+				return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			}
 		} else {
 			return "";
 		}

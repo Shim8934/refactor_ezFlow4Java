@@ -119,7 +119,8 @@ public class EzEmailMailListController {
 		String useReSend = ezCommonService.getTenantConfig("useReSend", userInfo.getTenantId());
 		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId()); // 수아 수정(useMailWriteSenderClick 추가)
 		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
-		
+		String useMailNewWindow = ezCommonService.getTenantConfig("useMailNewWindow", userInfo.getTenantId()); 
+
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
 		}
@@ -131,6 +132,14 @@ public class EzEmailMailListController {
 		//수아 수정
 		if (useMailWriteSenderClick.equals("")) {
 			useMailWriteSenderClick = "NO";
+		}
+		
+		if (useSearchContent.equals("")) {
+			useSearchContent = "NO";
+		}
+		
+		if (useMailNewWindow.equals("")) {
+			useMailNewWindow = "NO";
 		}
 		
 		if (dispname != null) {
@@ -177,7 +186,8 @@ public class EzEmailMailListController {
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 수정 (useMailWriteSenderClick 추가)
 		model.addAttribute("useSearchContent", useSearchContent);
-		
+		model.addAttribute("useMailNewWindow", useMailNewWindow); 
+
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
 				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail

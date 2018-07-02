@@ -10,7 +10,7 @@
 		<style>
 			#lstAttachLink {
 				height: 117px;
-				border: 1px solid #3C2F2E;
+				border: 1px solid #d2d2d2;
 			}
 		</style>
 		<script type="text/javascript">

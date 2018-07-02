@@ -180,7 +180,6 @@
 		    </tr>
 		</table>
 		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 			if("${pIsCCFg}"!="N") {
 				document.getElementById("message").style.height = document.documentElement.clientHeight - 200 + "px";
 			} else {

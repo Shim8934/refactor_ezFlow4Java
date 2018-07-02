@@ -412,7 +412,8 @@ function CheckPreviously(timeCheck) {
 			COMPANYID  : companyID		    			
 		},
 		success: function(text) {
-			if (text == "1") {
+			// 2018-06-19 김민성 - 이전날짜 등록사용 사용안함 일때 비교하도록 변경
+			if (text == "2") {		// 1일때 사용, 2일때 사용안함
 				//2018.01.31 김기하 반복 일정 처리 시 시작일 기준으로 현재시간과 비교
 				if(!timeCheck) {
 					if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() < utcDate(offSetMin)) {					
@@ -422,7 +423,6 @@ function CheckPreviously(timeCheck) {
 					if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() < utcDate(offSetMin)) {					
 						rtv = true;
 					}
-					
 				}
 			}
 		}

@@ -575,7 +575,7 @@
 	    <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
 	        <!-- mylist -->	        
-	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; border-bottom:1px solid #e8e8e8; padding:5px" id="MyCopList">
+	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; padding:5px" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">
 	            </ul>

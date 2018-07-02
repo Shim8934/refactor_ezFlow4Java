@@ -1140,6 +1140,8 @@
 		                    window.opener.refresh_onclick();
 		                } catch (e) {
 		                }
+		                
+			            window.close();
 		            }
 		        }
 		        function refresh_onclick() {
@@ -1147,6 +1149,7 @@
 		                window.opener.refresh_onclick();
 		            } catch (e) {
 		            }
+		            window.close();
 		        }
 		    	//mouseWheel Event  END
 		        function btn_ReWrite() {
@@ -1156,7 +1159,8 @@
 		            var pLeft = (pwidth - 765) / 2;
 		            window.close();
 		
-		            window.open("/ezBoard/newBoardItemTempPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            /* 2018-06-20 홍승비 - 승인게시물 반려 후 제작성 .do 경로 수정 */
+		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		        
 		</script>
@@ -1168,22 +1172,18 @@
 		      <div id="menu">
 		        <ul>
 		        	<c:choose>
+		        		<%-- 2018-06-20 홍승비 - 승인/반려 버튼만 활성화, 작성자는 수정/삭제 가능 --%>
 		        		<c:when test="${apprFlag == 'N'}">
 			                <li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005'/></span></li>
 			                <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014'/></span></li>
-			                <!--		강민수92	   -->
-	        				<c:if test = "${oneLineReplyFlag == '1'}">
-	        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
-	        				</c:if>
-								<!--		강민수92 end -->			                
-			                <c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
-			                    <li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
-			                    <li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
-			                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>
-			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
-			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1004'/></span></li>
-			                </c:if>
-		        		</c:when>
+			                	<c:if test="${boardItem.writerID == userInfo.id}">
+				                	<li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
+				                	<li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
+				                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>
+				                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
+				                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
+		                    	</c:if>
+						</c:when>
 		        		<c:when test="${apprFlag == 'C'}">
 			                <li><span onClick="btn_ReWrite()"><spring:message code='ezBoard.t999021'/></span></li>
 		        		</c:when>
@@ -1208,12 +1208,11 @@
 		      </div>
 		      <div id="close">
 		        <ul>
-		            <li ><span  onclick="btnClose_onclick()"><spring:message code='ezBoard.t12'/></span></li>
+		            <li ><span  onclick="btnClose_onclick()"></span></li>
 		        </ul>
 		      </div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		    </td>
 		  </tr>
