@@ -77,7 +77,8 @@
 	    			url : "/ezCircular/circularDeptSave.do",
 	    			data : {
 	    				title : title,
-	    				circularBMId : circularBMId
+	    				circularBMId : circularBMId,
+	    				memberListStr : memberListStr
 	    			},
 	    			success : function() {
 		                if (ReturnFunction != null) {

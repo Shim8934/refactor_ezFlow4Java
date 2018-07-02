@@ -241,7 +241,8 @@
 				B.status confirmstatus,
 				B.updateStatus,
 				B.commentStatus,
-				B.shareStatus
+				B.shareStatus,
+				A.companyId
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -424,23 +425,46 @@
 			SELECT
 				A.circularbmid,
 				A.memberid,
-				B.company,
-				B.description,
-				B.title,
+				BB.company,
+				BB.description,
+				BB.title,
 				A.membername,
-				B.mail
+				BB.mail
 			FROM
 				TBL_CIRCULAR_BMUSER A
 			LEFT JOIN
-				TBL_USERMASTER B
+				( SELECT 
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+				UNION ALL
+				SELECT 
+					B.cn, C.DISPLAYNAME, C.COMPNM2 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID#) BB
 			ON
-				A.memberid = B.cn
-			AND
-				A.tenantid = B.tenant_id
+				A.memberid = BB.cn
 			WHERE
-				circularbmid = #circularBMId#
+				A.circularbmid = #circularBMId#
 			AND
-				tenantid = #tenantID#
+				A.tenantid = #tenantID#
+			GROUP BY memberid
         ]]>
     </select>
     

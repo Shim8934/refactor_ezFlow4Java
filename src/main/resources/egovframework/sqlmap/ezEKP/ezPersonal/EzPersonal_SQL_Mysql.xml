@@ -152,9 +152,7 @@
                 	WHERE
                 		USERID = #v_PUSERID#
                 	AND
-                		TENANT_ID = #tenantID#
-                	AND
-                		COMPANYID = #companyID#	 ) <> 0
+                		TENANT_ID = #tenantID# ) <> 0
 		]]>
 	</select>
 	
@@ -171,8 +169,6 @@
 	        		USERID = #v_PUSERID#
 	        	AND
 	        		TENANT_ID = #tenantID#
-	        	AND
-	        		COMPANYID = #companyID#	
 			]]>
 		</isEqual> 
 		<isEqual property="v_PFLAG" compareValue="N"> 
@@ -185,8 +181,6 @@
 	        		USERID = #v_PUSERID#
 	        	AND
 	        		TENANT_ID = #tenantID#
-	        	AND
-	        		COMPANYID = #companyID#	
 			]]>		
 		</isEqual>
 	</update>	
@@ -202,8 +196,6 @@
         		USERID = #v_PUSERID#
         	AND
         		TENANT_ID = #tenantID#
-        	AND
-        		COMPANYID = #companyID#	
 			]]>		
 	</update>		
 	
@@ -213,7 +205,13 @@
 				TBL_PWDINFO
           		( USERID, FLAG, PWD, PWDTYPE, TENANT_ID, COMPANYID  )
           	VALUES
-          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID#, #companyID# )
+          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID#, (SELECT 
+          																			PHYSICALDELIVERYOFFICENAME 
+          																		FROM 
+          																			TBL_USERMASTER
+          																		WHERE CN = #v_PUSERID#
+          																		AND TENANT_ID = #tenantID#)
+          																									)
 		]]>
 	</insert>
 		
