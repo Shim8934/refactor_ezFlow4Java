@@ -1213,7 +1213,13 @@ public class EzAttitudeController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String userId = userInfo.getId();
+		String selectUserId = request.getParameter("selectUserId");
+		String userId = "";
+		if (selectUserId != "" && selectUserId != null) { //근태정보관리에서는 선택한 사원의 id 필요.
+			userId = selectUserId;
+		} else {
+			userId = userInfo.getId();
+		}
 		String typeId = request.getParameter("typeId");
 		String startDate = request.getParameter("startDate");
 		
