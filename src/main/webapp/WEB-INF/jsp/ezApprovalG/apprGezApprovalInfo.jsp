@@ -2381,7 +2381,7 @@
 		                </td>
 		           </tr>
 		        </table>
-		        <h2 style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
+		        <h2 class="h2_dot" style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
 		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 170px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
 		    </div>
 	    </c:if>
@@ -2600,7 +2600,7 @@
 				<table style="width: 100%;">
 					<tr>
 	        			<td>
-            				<h2><spring:message code='ezApprovalG.t1066'/></h2><!-- 기록물 기본등록사항 -->
+            				<h2 class="h2_dot"><spring:message code='ezApprovalG.t1066'/></h2><!-- 기록물 기본등록사항 -->
 							<table style="width: 100%;" id="tblBasicInfo" class="content">
 								<tr>
 	        						<th><spring:message code='ezApprovalG.t859'/></th><!-- 등록구분 -->
