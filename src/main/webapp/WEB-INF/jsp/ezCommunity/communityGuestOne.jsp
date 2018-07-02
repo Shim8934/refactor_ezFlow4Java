@@ -56,7 +56,8 @@
 					html += "</tr>";
 					html += "<tr style=\"border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
 					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border:1px solid #dfdfdf;\">";
-					html += "<textarea style=\"padding:7px;height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n").replace(/&dquot;/gi, "\"").replace(/&quot;/gi, "\'") + "</textarea></td>";
+					//2018-07-02 김보미 - textarea에 resize:none;추가
+					html += "<textarea style=\"padding:7px;height:100px;width:98%; border:0; overflow-y:auto; resize:none;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n").replace(/&dquot;/gi, "\"").replace(/&quot;/gi, "\'") + "</textarea></td>";
 					html += "</tr>";
 					html += "</table>";
 		        }
