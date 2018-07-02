@@ -143,7 +143,7 @@
 		<input class="text" type="text" id="TxtAprDeptTempletName" style="width:100%">
 		</div>
 		<div class="btnposition btnpositionNew" ID="Table3">
-			<input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApprovalG.t20'/>" onClick="return btn_SaveAprDeptTempletName_onclick()">		
+			<a class="imgbtn" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

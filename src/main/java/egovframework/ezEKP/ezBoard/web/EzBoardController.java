@@ -2094,8 +2094,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode);
 		} else if (boardVO.getBoardType().equals("A")) {
 			boardXML = getSearchApprListItemXML(userInfo, boardVO);
-		} else
-		{
+		} else {
 			//혜정  추가
 			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
 				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO);
@@ -7697,5 +7696,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("getSearchApprListItemXML ended");
 		return resultXML.toString();		
 	}
+
 }
 

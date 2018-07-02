@@ -146,15 +146,13 @@
 	
 	    <table class="popuplist" style="width: 100%">
 	        <tr>
-	            <td class="pos1">
-	                <div class="tree" style='width: auto; overflow-x: auto; overflow-y: auto; margin-left: 5px; height: 285px;' id='TreeCtrl_MyBoardTree'></div>
-	            </td>
-	
-	            <td class="pos3">
-	                <a href="#" class="imgbtn"><span onClick="return btn_MoveCopy_onclick('MOVE')"><spring:message code='ezBoard.t134'/></span></a>
-	                <%--<a href="#" class="imgbtn"><span onClick="return btn_MoveCopy_onclick('COPY')">복사</span></a>--%>
-	            </td>
+	            <td class="pos1" style="border:1px solid #ddd">
+	                <div class="tree" style='width: 255px; overflow-x: auto; overflow-y: auto; height: 255px;' id='TreeCtrl_MyBoardTree'></div>
+	            </td>	
 	        </tr>
 	    </table>
+	    <div class="btnpositionNew">
+	    	<a href="#" class="imgbtn"><span onClick="return btn_MoveCopy_onclick('MOVE')"><spring:message code='ezBoard.t134'/></span></a>
+	    </div>	
 	</body>
 </html>

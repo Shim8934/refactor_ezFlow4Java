@@ -155,10 +155,10 @@
 	        <tr>
 	            <td class="pos1" style="padding-right: 0">
                     <c:if test="${browser == 'Chrome'}">
-                    <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 250px; overflow: auto" id="AddressTreeView"></div>
+                    <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 240px; overflow: auto" id="AddressTreeView"></div>
                     </c:if>
                     <c:if test="${browser != 'Chrome'}">
-	                <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 255px; overflow: auto" id="AddressTreeView"></div>
+	                <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 245px; overflow: auto" id="AddressTreeView"></div>
                     </c:if>
 	            </td>
 	        </tr>
@@ -166,7 +166,7 @@
 	    <xml id="AddressFolderXML" style="display: none;">
 			${rootAddressXML}
 		</xml>
-		<div style="margin-top: 10px;text-align: center">
+		<div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezAddress.t270' /></span></a>
 	        <a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezAddress.t271' /></span></a>
 	    </div>

@@ -288,7 +288,8 @@ public interface EzBoardService {
 	
 	//2018-06-28 홍승비 - 승인게시물 검색용 메서드 추가
 	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
-		
+	
 	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
-		
+	
+
 }

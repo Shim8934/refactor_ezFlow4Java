@@ -521,6 +521,9 @@
           }
       }
       </script>
+      <style>
+      	.mainlist tr th { border-top:0px }
+      </style>
    </head>
    <body class="popup" style="width:470px;height:400px">
       <xml id="listviewheader" style="display:none">
@@ -533,16 +536,21 @@
              </HEADERS>
            </LISTVIEWDATA>
       </xml>
-       <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>   
+      <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>   
       <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
          <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
       </div>
-       <h1><spring:message code="ezResource.t375" /></h1>  
+       <h1><spring:message code="ezResource.t375" /></h1>
+       <div id="close">
+            <ul>
+                <li><span onclick="btn_close()"></span></li>
+            </ul>
+        </div>
        <table>
            <tr>
                <td>
                    <h2><span id="menu01" ><spring:message code="ezResource.t342" /></span></h2>
-                   <div class="box" id="TreeView" style="height:300px;width:230px;overflow-x:auto;overflow-y:auto; vertical-align:top"></div>             
+                   <div class="box" id="TreeView" style="height:285px;width:230px;overflow-x:auto;overflow-y:auto; vertical-align:top"></div>             
                </td>
                <td style="padding:6px 6px 6px 6px">
                    <img src="/images/kr/cm/arr_right.gif" alt="" style="cursor:pointer; width:16px; height:16px; border:0px" onClick="InsertReceiver()"><br/><br/>
@@ -551,14 +559,15 @@
                <td>
                    <h2><span id="Span1" ><spring:message code="ezResource.t374" /></span></h2>
                    <div class="listview">
-                       <div id="pListView" STYLE="border:0px solid #ddd; Width:242px; Height:301px; overflow : auto;"  ></div>
+                       <div id="pListView" STYLE="border:0px solid #ddd; Width:242px; Height:288px; overflow : auto;"  ></div>
                    </div>
                </td>
            </tr>
            <tr>
-               <td colspan="3" style="text-align:center"><br />
-                   <a class="imgbtn"><span onClick="btn_OK()"><spring:message code="ezResource.t154" /></span></a>
-               <a class="imgbtn"><span onClick="btn_close()"><spring:message code="ezResource.t16" /></span></a>
+               <td colspan="3" style="text-align:center">
+	               <div class="btnposition btnpositionNew">	
+	                   <a class="imgbtn"><span onClick="btn_OK()"><spring:message code="ezResource.t154" /></span></a>
+	               </div>    
                </td>
            </tr>        
        </table>      

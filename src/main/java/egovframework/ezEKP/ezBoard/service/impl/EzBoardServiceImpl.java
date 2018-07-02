@@ -3999,4 +3999,5 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getSearchApprBoardItemList ended");
 		return ezBoardDAO.getSearchApprBoardItemList(map);
 	}
+
 }

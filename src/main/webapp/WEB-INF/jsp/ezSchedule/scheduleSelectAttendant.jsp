@@ -1439,7 +1439,7 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="display:none" ><span><spring:message code='ezSchedule.t123' /></span></a>
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 		</div>

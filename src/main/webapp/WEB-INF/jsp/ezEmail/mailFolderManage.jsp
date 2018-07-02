@@ -521,7 +521,7 @@
 		    	</td>
 		  	</tr>
 		</table>
-		<div style="margin-top:10px;text-align: center">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezEmail.t308' /></span></a>
 		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezEmail.t149' /></span></a>
 		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezEmail.t95' /></span></a>

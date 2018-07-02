@@ -51,6 +51,11 @@
 	
 	<body class="popup">
 		<h1><spring:message code='ezTask.jsh16'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="ContactOutButtonExit" onclick="Task_Close()"></span></li>
+            </ul>
+        </div>
 		<table class="content" style="width:100%">
 			<tr>
 		    	<td colspan="3">
@@ -65,9 +70,8 @@
 		      	</td>
 		  	</tr>  
 		</table>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="ContactOutButton" onClick="Task_Confirm()" ><span><spring:message code='ezTask.t115'/></span></a>
-		    <a class="imgbtn" id="ContactOutButtonExit" onClick="Task_Close()" ><span><spring:message code='ezTask.t20'/></span></a>
 		</div>
 	</body>
 </html>
