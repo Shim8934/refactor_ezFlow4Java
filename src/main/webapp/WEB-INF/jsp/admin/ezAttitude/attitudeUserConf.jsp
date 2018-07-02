@@ -118,6 +118,11 @@
 	    			return;
 	    		}
 	    		
+	    		if (searchStartTime > searchEndTime) {
+					alert("<spring:message code='ezAttitude.t131' />");
+		            return;
+				}
+	    		
 	    		$.ajax({
 	    			data : "POST",
 	    			dataType : "json",

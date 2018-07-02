@@ -782,6 +782,11 @@
   		</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezQuestion.t7' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="close_onclick()"></span></li>
+            </ul>
+        </div>
 		<table> 
     		<tr> 
         		<td width="195" valign="top">
@@ -806,7 +811,12 @@
 			</tr>
 			<tr>
         		<td valign="top">
-        			<h2><spring:message code='ezQuestion.t253' /></h2>
+        			<h2 style="float:left;padding-top:7px;"><spring:message code='ezQuestion.t253' /></h2>
+        			<div style="float:right;padding-top:5px">
+        				<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px;height:21px" />            		
+            			<a class="imgbtn" onclick="cnsearch_click()"><span><spring:message code='ezQuestion.t34' /></span></a>
+            		</div>
+            		<div style="clear:both"></div>
             		<div class="listview" style="margin-top:5px;margin-bottom:5px">
                 		<div id="OrganListView" style="OVERFLOW:auto;WIDTH:280px;HEIGHT:240px;border:0"></div>
             		</div>
@@ -816,7 +826,7 @@
             		<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="delete_member()" style="cursor:pointer"></div>
         		</td> 
         		<td valign="top">
-            		<h2><spring:message code='ezQuestion.t36' /></h2>
+            		<h2 style="padding-top:7px;padding-bottom: 1px"><spring:message code='ezQuestion.t36' /></h2>
             		<div class="listview" style="margin-top:5px;margin-bottom:5px">
                     	<div id="MemberListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:240px;border:0"></div>
                 	</div>
@@ -827,20 +837,9 @@
             		</div>--%>
         		</td> 
     		</tr>
-			<tr>
-        		<td>
-            		<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px" />
-            		<%--<input id = "cnkeybtn" onclick="cnsearch_click()" type="button" value="<%=RM.GetString("t34")%>" class="imginput" style="cursor:pointer" /> --%>
-            		<a class="imgbtn"  = "cnkeybtn" onclick="cnsearch_click()"  ><span><spring:message code='ezQuestion.t34' /></span></a>
-        		</td>
-        		<td></td>
-        		<td>         
-            		<div class="btnposition" style="margin-top:0px;padding-top:0px">
-                		<a class="imgbtn" name="Submit" onClick="SetRange()" ><span><spring:message code='ezQuestion.t37' /></span></a>
-                		<a class="imgbtn" name="Submit2" onClick="close_onclick()" ><span><spring:message code='ezQuestion.t38' /></span></a>
-            		</div>
-        		</td>
-    		</tr>
 		</table> 
+		<div class="btnpositionNew">
+       		<a class="imgbtn" name="Submit" onClick="SetRange()" ><span><spring:message code='ezQuestion.t37' /></span></a>
+   		</div>
 	</body>
 </html>
