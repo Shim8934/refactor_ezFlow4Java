@@ -279,7 +279,7 @@
 		    	});
 		    	
 		    	if (itemList == "") {
-		    		alert('<spring:message code="ezQuestion.t294" />');
+		    		alert('<spring:message code="ezQuestion.t289" />');
 		            return;
 		    	} else {
 		    		if (confirm('<spring:message code="ezQuestion.t267" />')) {
@@ -550,7 +550,7 @@
 		            }
 		        }
 		        if(szCheckCnt == 0){
-		            alert('<spring:message code="ezQuestion.t294" />');
+		            alert('<spring:message code="ezQuestion.t289" />');
 		            return;
 		        }
 		        if (szCheckCnt == 1) {
