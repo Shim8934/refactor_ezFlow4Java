@@ -23428,11 +23428,75 @@
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID  
    		WHERE 
-   			USERCONTID = #v_CONTID#  
+   			USERCONTID IN 
+   						(SELECT 
+   							USERCONTID 
+   						FROM 
+   							TBL_USERCONT 
+   						WHERE 
+   							OWNUSERID = (
+   										SELECT 
+   											OWNUSERID 
+   										FROM 
+   											TBL_USERCONT 
+   										WHERE 
+   											USERCONTID = #v_CONTID# 
+   										AND 
+   											TENANT_ID = #v_TENANTID#
+   										AND 
+   											COMPANYID = #companyID#
+   											) 
+   						AND 
+	   						TENANT_ID = 6) 
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
    		AND
-   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+   			TBL_ENDAPRDOCINFO.COMPANYID IN (
+   						           			 SELECT              
+   						           			 	EXTENSIONATTRIBUTE2             
+   						           			 FROM              
+   						           			 	TBL_DEPTMASTER             
+   						           			 INNER JOIN              
+   						           			 	TBL_ADDJOBMASTER             
+   						           			 ON (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID              
+   						           			 AND              
+   						           			 	TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)            
+   						           			 WHERE              
+   						           			 	TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#            
+   						           			 AND              
+   						           			 	TBL_ADDJOBMASTER.CN = (
+						   						           			 SELECT 
+						   						           			 OWNUSERID 
+						   						           			 FROM 
+						   						           			 TBL_USERCONT 
+						   						           			 WHERE 
+						   						           			 USERCONTID = #v_CONTID#
+						   						           			 AND 
+						   						           			 TENANT_ID = #v_TENANTID# 
+						   						           			 AND 
+						   						           			 COMPANYID = #companyID#
+   						           			 						)           
+   						           			 UNION ALL            
+   						           			 SELECT              
+   						           			 	PHYSICALDELIVERYOFFICENAME            
+   						           			 FROM             
+   						           			 	TBL_USERMASTER            
+   						           			 WHERE             
+   						           			 CN = (
+		   						           			 SELECT 
+		   						           			 OWNUSERID 
+		   						           			 FROM 
+		   						           			 TBL_USERCONT 
+		   						           			 WHERE 
+		   						           			 USERCONTID = #v_CONTID#
+		   						           			 AND 
+		   						           			 TENANT_ID = #v_TENANTID# 
+		   						           			 AND 
+		   						           			 COMPANYID = #companyID#
+	   						           			 )          
+   						           			 AND             
+   						           			 	TENANT_ID = #v_TENANTID#             
+   						           			 ) 
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL 
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
@@ -23489,13 +23553,77 @@
    		AND
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
    		WHERE 
-   			USERCONTID = #v_CONTID#  
+   			USERCONTID IN 
+   						(SELECT 
+   							USERCONTID 
+   						FROM 
+   							TBL_USERCONT 
+   						WHERE 
+   							OWNUSERID = (
+   										SELECT 
+   											OWNUSERID 
+   										FROM 
+   											TBL_USERCONT 
+   										WHERE 
+   											USERCONTID = #v_CONTID# 
+   										AND 
+   											TENANT_ID = #v_TENANTID#
+   										AND 
+   											COMPANYID = #companyID#
+   											) 
+   						AND 
+	   						TENANT_ID = 6) 
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
    		AND
    			TBL_USERCONTLIST.TENANT_ID = #v_TENANTID#
    		AND
-   			TBL_USERCONTLIST.COMPANYID = #companyID#
+   			TBL_USERCONTLIST.COMPANYID IN (
+   						           			 SELECT              
+   						           			 	EXTENSIONATTRIBUTE2             
+   						           			 FROM              
+   						           			 	TBL_DEPTMASTER             
+   						           			 INNER JOIN              
+   						           			 	TBL_ADDJOBMASTER             
+   						           			 ON (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID              
+   						           			 AND              
+   						           			 	TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)            
+   						           			 WHERE              
+   						           			 	TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#            
+   						           			 AND              
+   						           			 	TBL_ADDJOBMASTER.CN = (
+						   						           			 SELECT 
+						   						           			 OWNUSERID 
+						   						           			 FROM 
+						   						           			 TBL_USERCONT 
+						   						           			 WHERE 
+						   						           			 USERCONTID = #v_CONTID#
+						   						           			 AND 
+						   						           			 TENANT_ID = #v_TENANTID# 
+						   						           			 AND 
+						   						           			 COMPANYID = #companyID#
+   						           			 						)           
+   						           			 UNION ALL            
+   						           			 SELECT              
+   						           			 	PHYSICALDELIVERYOFFICENAME            
+   						           			 FROM             
+   						           			 	TBL_USERMASTER            
+   						           			 WHERE             
+   						           			 CN = (
+		   						           			 SELECT 
+		   						           			 OWNUSERID 
+		   						           			 FROM 
+		   						           			 TBL_USERCONT 
+		   						           			 WHERE 
+		   						           			 USERCONTID = #v_CONTID#
+		   						           			 AND 
+		   						           			 TENANT_ID = #v_TENANTID# 
+		   						           			 AND 
+		   						           			 COMPANYID = #companyID#
+	   						           			 )          
+   						           			 AND             
+   						           			 	TENANT_ID = #v_TENANTID#             
+   						           			 ) 
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		 AND 
    		 	$v_PSUBQUERY$
