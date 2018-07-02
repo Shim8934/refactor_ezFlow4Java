@@ -397,7 +397,7 @@ public class EzPMSController3 {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			boardCount = Integer.parseInt((String) resultBody.get("data1"));
+			boardCount = Integer.parseInt((String) resultBody.get("data"));
 			totalCount = Integer.parseInt((String) resultBody.get("data2"));
 			model.addAttribute("boardCount", boardCount);
 			model.addAttribute("totalCount", totalCount);

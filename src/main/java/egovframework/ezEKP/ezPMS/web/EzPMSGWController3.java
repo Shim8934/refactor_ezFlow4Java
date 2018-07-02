@@ -374,7 +374,7 @@ public class EzPMSGWController3 {
 															searchByTitle, searchByOverview, searchByContent);
 			int totalCount = noticeCount + boardCount;
 			
-			result.put("data1", boardCount + "");
+			result.put("data", boardCount + "");
 			result.put("data2", totalCount + "");	// JSON으로 넘기면 숫자가 Long으로 바뀌는데 Long에서 int로 cast할 때의 오류를 피하기 위해서 String으로 바꾼 후에 파싱한다
 			result.put("status", "ok");
 			result.put("code", 0);
