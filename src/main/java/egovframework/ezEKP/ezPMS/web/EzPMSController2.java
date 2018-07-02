@@ -725,7 +725,6 @@ public class EzPMSController2 {
 			JSONObject jsonList = new JSONObject();
 			jsonList.put("managerList", param.get("managerList"));
 			jsonList.put("participantList", param.get("participantList"));
-			jsonList.put("viewerList", param.get("viewerList"));
 			
 			param.remove("managerList");
 			param.remove("participantList"); 

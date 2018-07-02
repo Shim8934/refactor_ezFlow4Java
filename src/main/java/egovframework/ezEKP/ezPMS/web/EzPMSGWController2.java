@@ -588,42 +588,37 @@ public class EzPMSGWController2 {
 			Long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId);
 			
 			//프로젝트 멤버 테이블에 추가
-			HashMap<String, Object> userMap = new HashMap<String, Object>();
-			HashMap<String, Object> deptUserMap = new HashMap<String, Object>();
+			HashMap<String, Object> managerMap = new HashMap<String, Object>();
+			HashMap<String, Object> participantMap = new HashMap<String, Object>();
 			List<String> userIdArr = new ArrayList<String>();
 			List<String> deptIdArr = new ArrayList<String>();
-			userMap.put("userIdType", "user");
-			userMap.put("tenantId", info.getTenantId());
-			userMap.put("groupId", groupId);
-			deptUserMap.put("userIdType", "dept");
-			deptUserMap.put("tenantId", info.getTenantId());
-			deptUserMap.put("groupId", groupId);
+			managerMap.put("tenantId", info.getTenantId());
+			managerMap.put("groupId", groupId);
+			participantMap.put("tenantId", info.getTenantId());
+			participantMap.put("groupId", groupId);
+			
 			for (int i = 0; i < projectMemberList.size(); i++) {
-				if(projectMemberList.get(i).get("userIdType").toString().equals("user")){
-					userMap.put("memberRoleId", projectMemberList.get(i).get("memberRoleId").toString());
+				if(projectMemberList.get(i).get("memberRoleId").toString().equals("1")){
+					managerMap.put("memberRoleId", projectMemberList.get(i).get("memberRoleId").toString());
 					userIdArr.add(projectMemberList.get(i).get("userId").toString());
 				}
 				else{
-					deptUserMap.put("memberRoleId", projectMemberList.get(i).get("memberRoleId").toString());
+					participantMap.put("memberRoleId", projectMemberList.get(i).get("memberRoleId").toString());
 					deptIdArr.add(projectMemberList.get(i).get("userId").toString());
 				}
 			}
-			userMap.put("userId", userIdArr);
-			deptUserMap.put("userId", deptIdArr);
+			managerMap.put("userId", userIdArr);
+			participantMap.put("userId", deptIdArr);
 			
 			List<ProjectGroupMemberVO> member = new ArrayList<ProjectGroupMemberVO>();
 			//개인으로 추가된 사용자가 있는지 확인 후 추가.
 			if(userIdArr.size() > 0){
-				member = ezPMSService.getUserInfoForGroup(userMap);
+				member = ezPMSService.getUserInfoForGroup(managerMap);
 			}
 			
 			//부서로 추가된 사용자가 있는지 확인 후 추가.
 			if(deptIdArr.size() > 0){
-				member.addAll(ezPMSService.getUserInfoForGroup(deptUserMap));
-			}
-			
-			for(int i = 0; i < member.size(); i++){
-				member.get(i).setMemberRoleId((int)(projectMemberList.get(i).get("memberRoleId")));
+				member.addAll(ezPMSService.getUserInfoForGroup(participantMap));
 			}
 			
 			ezPMSService.addGroupMember(member);
