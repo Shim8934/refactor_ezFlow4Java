@@ -133,13 +133,17 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t341'/></h1>
+		<div id="close">
+            <ul>
+                <li><span name="btn_CancelAprLineTempletName" id="btn_CancelAprLineTempletName" onclick="return btn_CancelAprDeptTempletName_onclick()"></span></li>
+            </ul>
+        </div>
 		<h2><spring:message code='ezApprovalG.t346'/></h2>
 		<div ID="Table2"  class="nobox"> 
 		<input class="text" type="text" id="TxtAprDeptTempletName" style="width:100%">
 		</div>
-		<div class="btnposition" ID="Table3">
-		<input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApprovalG.t20'/>" onClick="return btn_SaveAprDeptTempletName_onclick()">
-		<input type="button" name="btn_CancelAprLineTempletName" id="btn_CancelAprLineTempletName" value="<spring:message code='ezApprovalG.t119'/>" onClick="return btn_CancelAprDeptTempletName_onclick()">
+		<div class="btnposition btnpositionNew" ID="Table3">
+			<input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApprovalG.t20'/>" onClick="return btn_SaveAprDeptTempletName_onclick()">		
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

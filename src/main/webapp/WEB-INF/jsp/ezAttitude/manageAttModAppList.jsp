@@ -1280,7 +1280,7 @@
         	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
 		</c:if>
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
-			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+			<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="height:28px;border-radius:3px">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
@@ -1340,7 +1340,7 @@
 		                </td>
 	                  </tr>
 	              </table>
-	              <div class="btnposition">
+	              <div class="btnposition btnpositionNew">
 			        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
 			        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span><spring:message code='ezAttitude.t121'/></span></a>
 			        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span><spring:message code='ezAttitude.t34'/></span></a>

@@ -98,7 +98,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	    	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezCircular.t56' /></span></a>
 	    </div>
 	</body>
