@@ -257,6 +257,10 @@ function updateTaskInfo() {
 				alert("<spring:message code='ezPMS.t97' />");
 				return;
 			}
+			if(weight < 0){
+				alert("<spring:message code='ezPMS.t310' />");
+				return;
+			}
 		} else {
 			weight = -1;
 		}
