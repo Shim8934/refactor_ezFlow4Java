@@ -3945,4 +3945,58 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getSearchAllBoardItemCount ended");
 		return ezBoardDAO.getSearchAllBoardItemCount(map);
 	}
+	
+	/* 2018-06-28 홍승비 - 승인게시물 검색 카운트 추가 */
+	@Override
+	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchApprBoardItemCount started");
+
+		if (boardVO.getSearchQuery().length() > 0) {
+			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getSearchApprBoardItemCount ended");
+		return ezBoardDAO.getSearchApprBoardItemCount(map);
+	}
+	
+	/* 2018-06-28 홍승비 - 승인게시물 검색 리스트 추가 */
+	@Override
+	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchApprBoardItemList started");
+		
+		if (boardListVO.getOrderBySub().length() > 0) {
+			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
+				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
+				} else {
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
+				}
+			}
+		} else {
+			boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
+
+		logger.debug("getSearchApprBoardItemList ended");
+		return ezBoardDAO.getSearchApprBoardItemList(map);
+	}
 }
