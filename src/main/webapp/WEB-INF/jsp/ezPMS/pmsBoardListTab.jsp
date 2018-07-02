@@ -51,7 +51,9 @@
 			limit : limit,
 			//내용 header 정렬
 			orderWhat : orderWhat,
-			orderHow : orderHow
+			orderHow : orderHow,
+			position : "tab",
+			searchOrNot : "",
 		}
 		
 		$.ajax({

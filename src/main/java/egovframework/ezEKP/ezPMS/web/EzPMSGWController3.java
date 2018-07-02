@@ -224,13 +224,13 @@ public class EzPMSGWController3 {
 			int noticeCNT = ezPMSService.getBoardNoticeListCount(tenantId, Long.parseLong(projectId), groupId, taskId);
 			List<ProjectBoardVO> boardList = null;
 			
-			// position값은 프로젝트 개요에서만 넘어온다
-			if((position != null && !position.equals("")) || searchOrNot.equals("true")) {
+			// 프로젝트 개요/게시판 검색 시에는 공지사항을 제외한 게시물만 출력
+			if((position != null && position.equals("overview")) || searchOrNot.equals("true")) {
 				boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), groupId, taskId, userId, 
 						   startRow, listCnt, lang, position, orderWhat, orderHow,
 						   searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, 
 						   searchByTitle, searchByOverview, searchByContent);
-			} else {
+			} else if(position != null && (position.equals("tab") || position.equals("boardMain"))){
 				
 				if(noticeCNT > startRow) {
 					boardList = ezPMSService.getBoardNoticeList(tenantId, Long.parseLong(projectId), groupId, taskId, startRow, listCnt, lang);

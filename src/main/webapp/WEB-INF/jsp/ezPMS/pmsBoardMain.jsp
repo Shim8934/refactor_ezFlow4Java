@@ -113,6 +113,7 @@
 			taskId : taskId,
 			currentPage : currentPage,
 			limit : limit,
+			position : "boardMain",
 			//내용 header 정렬
 			orderWhat : orderWhat,
 			orderHow : orderHow,
