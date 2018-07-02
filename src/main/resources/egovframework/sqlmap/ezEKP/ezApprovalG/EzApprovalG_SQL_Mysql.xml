@@ -1051,7 +1051,31 @@
 						WHERE 
 							TENANT_ID = #v_TENANTID#
 						AND
-							COMPANYID = #companyID#
+							COMPANYID IN (
+										SELECT 
+											EXTENSIONATTRIBUTE2 
+										FROM 
+											TBL_DEPTMASTER 
+										INNER JOIN 
+											TBL_ADDJOBMASTER 
+										ON
+											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+											AND 
+											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+										WHERE 
+											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+										AND 
+											TBL_ADDJOBMASTER.CN = #v_PUSERID#
+										UNION ALL
+										SELECT 
+											PHYSICALDELIVERYOFFICENAME
+										FROM
+											TBL_USERMASTER
+										WHERE
+											CN = #v_PUSERID#
+										AND
+											TENANT_ID = #v_TENANTID# 
+										)
 			<![CDATA[
 						AND 
 							APRMEMBERID IN ($v_PUSERIDS$)  
@@ -1108,7 +1132,31 @@
 			  WHERE 
 					TENANT_ID = #v_TENANTID#
 			  AND
-					COMPANYID = #companyID#
+					COMPANYID IN (
+								SELECT 
+									EXTENSIONATTRIBUTE2 
+								FROM 
+									TBL_DEPTMASTER 
+								INNER JOIN 
+									TBL_ADDJOBMASTER 
+								ON
+									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+									AND 
+									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+								WHERE 
+									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+								AND 
+									TBL_ADDJOBMASTER.CN = #v_PUSERID#
+								UNION ALL
+								SELECT 
+									PHYSICALDELIVERYOFFICENAME
+								FROM
+									TBL_USERMASTER
+								WHERE
+									CN = #v_PUSERID#
+								AND
+									TENANT_ID = #v_TENANTID# 
+								)
 			<![CDATA[
 			  AND 
 				    APRMEMBERID IN ($v_PUSERIDS$)  
@@ -1187,7 +1235,31 @@
 						 WHERE 
 							TENANT_ID = #v_TENANTID#
 						 AND
-							COMPANYID = #companyID#
+							COMPANYID IN (
+										SELECT 
+											EXTENSIONATTRIBUTE2 
+										FROM 
+											TBL_DEPTMASTER 
+										INNER JOIN 
+											TBL_ADDJOBMASTER 
+										ON
+											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+											AND 
+											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+										WHERE 
+											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+										AND 
+											TBL_ADDJOBMASTER.CN = #v_PUSERID#
+										UNION ALL
+										SELECT 
+											PHYSICALDELIVERYOFFICENAME
+										FROM
+											TBL_USERMASTER
+										WHERE
+											CN = #v_PUSERID#
+										AND
+											TENANT_ID = #v_TENANTID# 
+										)
 						 AND 
 						 	APRMEMBERID = #v_PUSERID# 
 						 AND 
@@ -1243,7 +1315,31 @@
 			  WHERE 
 				    TENANT_ID = #v_TENANTID#
 			  AND
-					COMPANYID = #companyID#
+					COMPANYID IN (
+								SELECT 
+									EXTENSIONATTRIBUTE2 
+								FROM 
+									TBL_DEPTMASTER 
+								INNER JOIN 
+									TBL_ADDJOBMASTER 
+								ON
+									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+									AND 
+									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+								WHERE 
+									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+								AND 
+									TBL_ADDJOBMASTER.CN = #v_PUSERID#
+								UNION ALL
+								SELECT 
+									PHYSICALDELIVERYOFFICENAME
+								FROM
+									TBL_USERMASTER
+								WHERE
+									CN = #v_PUSERID#
+								AND
+									TENANT_ID = #v_TENANTID# 
+								)
 			  AND 
 			 		APRMEMBERID = #v_PUSERID# 
 			  AND 
@@ -1309,7 +1405,31 @@
                       	WHERE 
                       		TENANT_ID = #v_TENANTID#
                       	AND
-							COMPANYID = #companyID#
+							COMPANYID IN (
+										SELECT 
+											EXTENSIONATTRIBUTE2 
+										FROM 
+											TBL_DEPTMASTER 
+										INNER JOIN 
+											TBL_ADDJOBMASTER 
+										ON
+											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+											AND 
+											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+										WHERE 
+											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+										AND 
+											TBL_ADDJOBMASTER.CN = #v_PUSERID#
+										UNION ALL
+										SELECT 
+											PHYSICALDELIVERYOFFICENAME
+										FROM
+											TBL_USERMASTER
+										WHERE
+											CN = #v_PUSERID#
+										AND
+											TENANT_ID = #v_TENANTID# 
+										)
                       	AND
                       		APRMEMBERID = #v_PUSERID# 
 		    ]]>
@@ -1382,7 +1502,31 @@
 						WHERE 
 		                    TENANT_ID = #v_TENANTID#
 		                AND
-							COMPANYID = #companyID#
+							COMPANYID IN (
+										SELECT 
+											EXTENSIONATTRIBUTE2 
+										FROM 
+											TBL_DEPTMASTER 
+										INNER JOIN 
+											TBL_ADDJOBMASTER 
+										ON
+											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+											AND 
+											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+										WHERE 
+											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+										AND 
+											TBL_ADDJOBMASTER.CN = #v_PUSERID#
+										UNION ALL
+										SELECT 
+											PHYSICALDELIVERYOFFICENAME
+										FROM
+											TBL_USERMASTER
+										WHERE
+											CN = #v_PUSERID#
+										AND
+											TENANT_ID = #v_TENANTID# 
+										)
 						AND 
 							APRMEMBERID IN ($v_PUSERIDS$) 
 						AND 
@@ -1460,7 +1604,31 @@
 								WHERE 
 		                      		TENANT_ID = #v_TENANTID#
 		                      	AND
-									COMPANYID = #companyID#
+									COMPANYID IN (
+												SELECT 
+													EXTENSIONATTRIBUTE2 
+												FROM 
+													TBL_DEPTMASTER 
+												INNER JOIN 
+													TBL_ADDJOBMASTER 
+												ON
+													(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+													AND 
+													TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+												WHERE 
+													TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+												AND 
+													TBL_ADDJOBMASTER.CN = #v_PUSERID#
+												UNION ALL
+												SELECT 
+													PHYSICALDELIVERYOFFICENAME
+												FROM
+													TBL_USERMASTER
+												WHERE
+													CN = #v_PUSERID#
+												AND
+													TENANT_ID = #v_TENANTID# 
+												)
 								AND 
 									APRMEMBERID IN ($v_PUSERIDS$)  
 						]]>
@@ -8523,7 +8691,32 @@
    			AND
    					A.TENANT_ID = #v_TENANTID#
    			AND
-   					A.COMPANYID = #companyID#)
+   					A.COMPANYID IN (
+								SELECT 
+									EXTENSIONATTRIBUTE2 
+								FROM 
+									TBL_DEPTMASTER 
+								INNER JOIN 
+									TBL_ADDJOBMASTER 
+								ON
+									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+									AND 
+									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+								WHERE 
+									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+								AND 
+									TBL_ADDJOBMASTER.CN = #v_USERID#
+								UNION ALL
+								SELECT 
+									PHYSICALDELIVERYOFFICENAME
+								FROM
+									TBL_USERMASTER
+								WHERE
+									CN = #v_USERID#
+								AND
+									TENANT_ID = #v_TENANTID# 
+								)
+						)
    			GROUP BY 
    					B.ContainerOwnDepID, C.DisplayName$v_pLang$, A.TENANT_ID) B 
    		ON 
@@ -8545,7 +8738,31 @@
    		WHERE 
    				A.TENANT_ID = #v_TENANTID#
    		AND
-   				A.COMPANYID = #companyID#
+   				A.COMPANYID IN (
+								SELECT 
+									EXTENSIONATTRIBUTE2 
+								FROM 
+									TBL_DEPTMASTER 
+								INNER JOIN 
+									TBL_ADDJOBMASTER 
+								ON
+									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+									AND 
+									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+								WHERE 
+									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+								AND 
+									TBL_ADDJOBMASTER.CN = #v_USERID#
+								UNION ALL
+								SELECT 
+									PHYSICALDELIVERYOFFICENAME
+								FROM
+									TBL_USERMASTER
+								WHERE
+									CN = #v_USERID#
+								AND
+									TENANT_ID = #v_TENANTID# 
+								)
    		GROUP BY 
    				D.DisplayName$v_pLang$, WRITERDEPTID, TOTALCOUNT2
    		ORDER BY 
@@ -13008,7 +13225,31 @@
 						WHERE 
 							TENANT_ID = #v_TENANTID#
 						AND
-							COMPANYID = #companyID#
+							COMPANYID IN (
+										SELECT 
+											EXTENSIONATTRIBUTE2 
+										FROM 
+											TBL_DEPTMASTER 
+										INNER JOIN 
+											TBL_ADDJOBMASTER 
+										ON
+											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+											AND 
+											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+										WHERE 
+											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+										AND 
+											TBL_ADDJOBMASTER.CN = #v_PUSERID#
+										UNION ALL
+										SELECT 
+											PHYSICALDELIVERYOFFICENAME
+										FROM
+											TBL_USERMASTER
+										WHERE
+											CN = #v_PUSERID#
+										AND
+											TENANT_ID = #v_TENANTID# 
+										)
 						AND	
 							APRMEMBERID IN ($v_PUSERIDS$) 
 						AND 
@@ -13033,7 +13274,31 @@
 			  		WHERE 
 							TENANT_ID = #v_TENANTID#
 						AND
-							COMPANYID = #companyID#
+							COMPANYID IN (
+										SELECT 
+											EXTENSIONATTRIBUTE2 
+										FROM 
+											TBL_DEPTMASTER 
+										INNER JOIN 
+											TBL_ADDJOBMASTER 
+										ON
+											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+											AND 
+											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+										WHERE 
+											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+										AND 
+											TBL_ADDJOBMASTER.CN = #v_PUSERID#
+										UNION ALL
+										SELECT 
+											PHYSICALDELIVERYOFFICENAME
+										FROM
+											TBL_USERMASTER
+										WHERE
+											CN = #v_PUSERID#
+										AND
+											TENANT_ID = #v_TENANTID# 
+										)
 						AND	
 							APRMEMBERID IN ($v_PUSERIDS$) 
 						AND 
@@ -13060,7 +13325,31 @@
 				WHERE 
 					TENANT_ID = #v_TENANTID#
 				AND
-					COMPANYID = #companyID#
+					COMPANYID IN (
+								SELECT 
+									EXTENSIONATTRIBUTE2 
+								FROM 
+									TBL_DEPTMASTER 
+								INNER JOIN 
+									TBL_ADDJOBMASTER 
+								ON
+									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+									AND 
+									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+								WHERE 
+									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+								AND 
+									TBL_ADDJOBMASTER.CN = #v_PUSERID#
+								UNION ALL
+								SELECT 
+									PHYSICALDELIVERYOFFICENAME
+								FROM
+									TBL_USERMASTER
+								WHERE
+									CN = #v_PUSERID#
+								AND
+									TENANT_ID = #v_TENANTID# 
+								)
 				AND	 
 					APRMEMBERID = #v_PUSERID# 
 				AND 
@@ -13090,7 +13379,31 @@
 				WHERE 
 					TENANT_ID = #v_TENANTID#
 				AND
-					COMPANYID = #companyID# 
+					COMPANYID IN (
+								SELECT 
+									EXTENSIONATTRIBUTE2 
+								FROM 
+									TBL_DEPTMASTER 
+								INNER JOIN 
+									TBL_ADDJOBMASTER 
+								ON
+									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+									AND 
+									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+								WHERE 
+									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+								AND 
+									TBL_ADDJOBMASTER.CN = #v_PUSERID#
+								UNION ALL
+								SELECT 
+									PHYSICALDELIVERYOFFICENAME
+								FROM
+									TBL_USERMASTER
+								WHERE
+									CN = #v_PUSERID#
+								AND
+									TENANT_ID = #v_TENANTID# 
+								)
 				AND
 					APRMEMBERID = #v_PUSERID#
 				AND         
@@ -13116,7 +13429,31 @@
 			WHERE 
 				TENANT_ID = #v_TENANTID# 
 			AND
-				COMPANYID = #companyID#
+				COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #v_PUSERID#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #v_PUSERID#
+							AND
+								TENANT_ID = #v_TENANTID# 
+							)
 			AND 
 				APRMEMBERID IN ($v_PUSERIDS$) 
 			AND 
@@ -13142,7 +13479,31 @@
 							WHERE 
 								TENANT_ID = #v_TENANTID# 
 							AND
-								COMPANYID = #companyID#
+								COMPANYID IN (
+											SELECT 
+												EXTENSIONATTRIBUTE2 
+											FROM 
+												TBL_DEPTMASTER 
+											INNER JOIN 
+												TBL_ADDJOBMASTER 
+											ON
+												(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+												AND 
+												TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+											WHERE 
+												TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+											AND 
+												TBL_ADDJOBMASTER.CN = #v_PUSERID#
+											UNION ALL
+											SELECT 
+												PHYSICALDELIVERYOFFICENAME
+											FROM
+												TBL_USERMASTER
+											WHERE
+												CN = #v_PUSERID#
+											AND
+												TENANT_ID = #v_TENANTID# 
+											)
 							AND 
 								APRMEMBERID IN ($v_PUSERIDS$) #v_PSUBQUERY# 
 						]]>
@@ -25838,7 +26199,31 @@
 			WHERE 
 				TENANT_ID = #v_TENANTID# 
 			AND 
-				COMPANYID = #companyID# 
+				COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #v_PUSERID#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #v_PUSERID#
+							AND
+								TENANT_ID = #v_TENANTID# 
+							)
 			AND 
 			<![CDATA[
 				APRMEMBERID IN ($v_PUSERIDS$) 
@@ -25853,7 +26238,31 @@
 			WHERE 
 				TENANT_ID = #v_TENANTID# 
 			AND 
-				COMPANYID = #companyID# 
+				COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #v_PUSERID#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #v_PUSERID#
+							AND
+								TENANT_ID = #v_TENANTID# 
+							)
 			AND 
 			<![CDATA[
 				APRMEMBERID IN ($v_PUSERIDS$) 
