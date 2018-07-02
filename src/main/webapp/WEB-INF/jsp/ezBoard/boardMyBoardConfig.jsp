@@ -413,7 +413,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div style="margin-top:10px;text-align:center">
+	    <div class="btnpositionNew">
 	        <a  class="imgbtn"><span onClick="add_onclick('U')"><spring:message code='ezBoard.t10045'/></span></a>
 	        <a  class="imgbtn"><span onClick="add_onclick('C')"><spring:message code='ezBoard.t10046'/></span></a>
 	        <a  class="imgbtn"><span onClick="modify_onclick()"><spring:message code='ezBoard.t316'/></span></a>

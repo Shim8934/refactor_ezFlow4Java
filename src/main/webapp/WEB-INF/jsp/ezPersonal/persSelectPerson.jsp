@@ -463,7 +463,7 @@
 				</td>
 		  	</tr>
 		</table>
-		<div class="btnposition btnpositionNew" style="margin-top:15px">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" onClick="select_member()" ><span><spring:message code='ezPersonal.t12'/></span></a>
 		</div>
 	</body>

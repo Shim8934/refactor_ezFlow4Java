@@ -289,5 +289,5 @@ public interface EzBoardService {
 	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
-		
+	
 }

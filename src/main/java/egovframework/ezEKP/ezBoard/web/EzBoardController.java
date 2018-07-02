@@ -2098,7 +2098,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode);
 		} else if (boardVO.getBoardType().equals("A")) {
 			boardXML = getSearchApprListItemXML(userInfo, boardVO);
-		}  else {
+		} else {
 			boardXML = getSearchBoardListItemXML(userInfo, boardVO);
 		}
 
