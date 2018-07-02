@@ -55,7 +55,10 @@
 		        }
 		        rtnVal[0] = "FALSE";
 		        InitCode();
-		        txtDeptName.value = g_DeptName;
+		        
+		        if(document.txtDeptName) { 
+		        	txtDeptName.value = g_DeptName;
+		        }
 		    }
 		    function InitCode() {
 		        var result = "";

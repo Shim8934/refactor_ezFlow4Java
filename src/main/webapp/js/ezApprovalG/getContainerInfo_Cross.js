@@ -765,10 +765,15 @@ function lvtDoclist_SelChange() {
 
         oArrRowsid = tr.id;
         if (approvalFlag == "G") {
-	        if (tr.getAttribute("DATA5").trim() != "")
-	            document.getElementById("tDocInfo").style.display = "";
-	        else
-	            document.getElementById("tDocInfo").style.display = "none";
+	        if (tr.getAttribute("DATA5").trim() != "") {
+	        	if(document.getElementById("tDocInfo")) {
+	        		document.getElementById("tDocInfo").style.display = "";
+	        	}
+	        } else {
+	        	if(document.getElementById("tDocInfo")) {
+	        		document.getElementById("tDocInfo").style.display = "none";
+	        	}
+	        }
         }
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");

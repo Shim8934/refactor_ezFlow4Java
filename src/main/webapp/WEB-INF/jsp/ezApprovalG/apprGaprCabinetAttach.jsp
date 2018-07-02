@@ -219,8 +219,11 @@
 		</xml>
 	    <div id="menu">
 	        <ul>
-				<li style="background-image: none;font-size:11pt;font-weight:bold;color:white;padding-top:6px;margin-right:12px;padding-left:0px">
-				<c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t1429'/></c:if></li>	        
+	        	<c:if test="${approvalFlag == 'S'}">
+					<li style="background-image: none;font-size:11pt;font-weight:bold;color:white;padding-top:6px;margin-right:12px;padding-left:0px">
+						<spring:message code='ezApprovalG.t1429'/>
+					</li>
+				</c:if>	
 	            <li><span onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	        </ul>
 	    </div>
@@ -233,7 +236,7 @@
 	        <tr>
 	            <td style="height: 25px; vertical-align: bottom;"><span class="point" id="listcount">&nbsp;</span></td>
 	            <td>
-	                <div class="page">
+	                <div class="page" style="margin-right:50px">
 	                    <img src="/images/page_previous.gif" width="15" height="15" id="td_Previous" onclick="goToPage_lv('front')" style="vertical-align: middle;">
 	                    <span><spring:message code='ezApprovalG.t103'/></span><span id="td_pTotalCount" style="color:black;"></span>&nbsp;&nbsp;<span style="color:black;"><spring:message code='ezApprovalG.t363'/></span>
 	                    <input id="txt_PageInputNum" onkeydown="goToPage_lv('page', event)" onselectstart="event.cancelBubble=true;event.returnValue=true">
@@ -247,7 +250,7 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
+	                    <div id="lvtDoclist" style="border: 0; width: 680px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">

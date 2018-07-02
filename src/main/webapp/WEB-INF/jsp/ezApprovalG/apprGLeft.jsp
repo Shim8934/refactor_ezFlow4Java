@@ -321,7 +321,7 @@
 		                    break;
 		            }
 		            parent.frames["right"].$('#sel_year').val("ALL");
-		            parent.frames["right"].$('#sel_year').selectmenu('refresh');
+		            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        }
 		        catch (e) { }
 		    }
@@ -423,7 +423,7 @@
 				            }
 				            try { parent.frames["right"].document.getElementById("txt_keyword").value = ""; } catch (e) { }
 				            parent.frames["right"].$('#sel_year').val("ALL");
-				            parent.frames["right"].$('#sel_year').selectmenu('refresh');
+				            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        		} else {
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
