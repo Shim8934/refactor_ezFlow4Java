@@ -585,11 +585,20 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			compAdmin = "Y";
-			deptAdmin = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-			deptAdmin = "Y";
+		boolean gyumJikChk = true;
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+				gyumJikChk = false;
+			}
+		}
+		
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				compAdmin = "Y";
+				deptAdmin = "Y";
+			} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
 		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
