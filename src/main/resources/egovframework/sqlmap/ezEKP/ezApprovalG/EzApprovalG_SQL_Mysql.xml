@@ -17524,8 +17524,6 @@
       			TBL_PWDINFO
       		WHERE 
       			TENANT_ID = #v_TENANTID#
-      		AND
-      			COMPANYID = #companyID#
       		AND 
       			userid = #v_PUSERID#
         ]]>
@@ -17540,8 +17538,6 @@
       		WHERE  
       			TENANT_ID = #v_TENANTID#
       		AND
-      			COMPANYID = #companyID#
-      		AND
       			userid = #v_PUSERID#
         ]]>
 	</select>
@@ -17554,8 +17550,6 @@
       			TBL_PWDINFO
       		WHERE  
       			TENANT_ID = #v_TENANTID#
-      		AND
-      			COMPANYID = #companyID#
       		AND
       			userid = #v_PUSERID#
         ]]>
