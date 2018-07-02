@@ -1017,12 +1017,12 @@
 		</iterate>
 	</insert>
 	
-	<update id="EzPMSDAO.updateProjectWorkingday" parameterClass="Map">
+	<update id="EzPMSDAO.updateProjectWorkingdaySum" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				tbl_pms_project
 			SET
-				workingday = workingday + #workingday#
+				workingday_sum = workingday_sum + #realWorkingday#
 			WHERE
 				project_id = #projectId#
 			AND
@@ -1030,9 +1030,33 @@
 		]]>
 	</update>
 	
-	<select id="EzPMSDAO.getProjectWorkingday" parameterClass="ProjectTaskVO" resultClass="int">
+	<update id="EzPMSDAO.updateProjectWorkingdaySum2" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				tbl_pms_project
+			SET
+				workingday_sum = (
+					SELECT 
+						SUM(real_workingday)
+					FROM
+						tbl_pms_task
+					WHERE
+						project_id = #projectId#
+					AND
+						tenant_id = #tenantId#
+					AND
+						del_status = 0
+				)
+			WHERE
+				project_id = #projectId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectWorkingdaySum" parameterClass="ProjectTaskVO" resultClass="int">
 		SELECT
-			workingday
+			workingday_sum
 		FROM
 			tbl_pms_project
 		WHERE
@@ -3933,4 +3957,34 @@
 			TENANT_ID = #tenantId#
 	]]>
 	</update>
+	
+	<update id="EzPMSDAO.updateAllTaskWeight" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			tbl_pms_task
+		SET
+			WEIGHT = ( REAL_WORKINGDAY / #workingdaySum# ) * 100
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			DEL_STATUS = 0
+	]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectWeightInput" parameterClass="map" resultClass="int">
+	<![CDATA[
+		SELECT
+			WEIGHT_INPUT
+		FROM
+			TBL_PMS_PROJECT
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			DEL_STATUS = 0
+	]]>
+	</select>
 </sqlMap>
