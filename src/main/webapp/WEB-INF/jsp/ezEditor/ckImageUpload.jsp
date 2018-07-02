@@ -143,6 +143,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 	    <h1><spring:message code='main.t4002'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return window_close()"></span></li>
+            </ul>
+        </div>
 	    <table id="toggle_tbl1" class="content" style="width:450px;height:300px">
 			<tr>
 	            <td style="text-align:center;height:295px">
@@ -163,7 +168,7 @@
 	                    </tr>
 	                    <tr>
 	                        <td colspan="4" style="border:1px solid rgb(182, 182, 182);">
-	                            <div class="btnposition" style="padding-top:0px;margin-bottom:10px">
+	                            <div class="btnposition btnpositionNew">
 	                                <a href="#" class="imgbtn" onclick ="filesearch()"><span><spring:message code='main.t4004'/></span></a>
 	                                <a href="#" class="imgbtn"><span onclick="fileupload()"><spring:message code='main.t4005'/></span></a>
 	                            </div>
@@ -187,9 +192,8 @@
 	            </td>
 			</tr>
 		</table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code='main.t4008'/></span></a>
-	        <a href="#" class="imgbtn"><span onclick="return window_close();"><spring:message code='main.t135'/></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">

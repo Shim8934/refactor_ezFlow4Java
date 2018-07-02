@@ -1,0 +1,41 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+/* main_time  */
+.main_time{ margin:0 auto; padding:10px 0px 0px 0px; width:120px; overflow:hidden;}
+.main_time dl{ margin:0px; padding:0px 0px; text-align:center;}
+.main_time dl dt{ margin:0px 0px 5px 0px; padding:0px 0px 0px 0px; font-size:12px; font-weight:bold; font-family:Gulim, Dotum, Helvetica, sans-serif;}
+.main_time dl dd{ margin:0px; padding:0px; width:58px; height:58px; text-align:center; line-height:55px; cursor:pointer;}
+.main_time dl.timeCheckIn{ float:left;}
+.main_time dl.timeCheckOut{ float:right;}
+.main_time dl.timeCheckIn dd.out{ background:url(/images/ezAttitude/maincheckOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.main_time dl.timeCheckOut dd.out{ background:url(/images/ezAttitude/maincheckOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.main_time dl.timeCheckIn dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.main_time dl.timeCheckIn dd.lateIn{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#fe0101; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.main_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+
+/* sub_time  */
+.sub_time{ margin:0 auto; padding:15px 0px 0px 0px; width:176px; overflow:hidden; border-top:1px solid #e7eaec;}
+.sub_time dl{ margin:0px; padding:0px 0px; text-align:center;}
+.sub_time dl dt{ margin:0px 0px 10px 0px; padding:0px 0px 0px 10px; font-size:12px; font-weight:bold; font-family:Gulim, Dotum, Helvetica, sans-serif; background:url(/images/ezAttitude/checkBul.png) no-repeat 10px center;}
+.sub_time dl dd{ margin:0px; padding:0px; width:75px; height:75px; text-align:center; line-height:75px; cursor:pointer;}
+.sub_time dl.timeCheckIn{ float:left;}
+.sub_time dl.timeCheckOut{ float:right;}
+.sub_time dl.timeCheckIn dd.out{ background:url(/images/ezAttitude/checkOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckOut dd.out{ background:url(/images/ezAttitude/checkOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckIn dd.in{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckIn dd.lateIn{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#fe0101; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.sub_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+
+/* time_stats  */
+.time_stats{ margin:0px; padding:0px; width:151px;}
+.time_stats .statsP{ margin:0px; padding:0px; width:151px; height:34px; line-height:30px; box-sizing:border-box; background:#edf4fd; border: 1px solid #d1ddec; text-align:center; font-weight:bold; font-size:12px; color:#000;font-family:Malgun Gothic, Gulim, Dotum, Helvetica, sans-serif;}
+.time_stats .statsUL{margin:0px 0px 0px 0px; padding:10px 0px; list-style:none; box-sizing:border-box; border-bottom:1px solid #dedede; border-left:1px solid #dedede; border-right:1px solid #dedede}
+.time_stats .statsUL li{ margin:0px; padding:0px; overflow:hidden;}
+.time_stats .statsUL li .statsDL{ margin:0px; padding:6px 7px; overflow:hidden;}
+.time_stats .statsUL li .statsDL dt{ margin:0px; float:left; font-family:Gulim, Dotum, Helvetica, sans-serif; font-size:12px; color:#000; padding:4px 0px 0px 21px;}
+.time_stats .statsUL li .statsDL dt.inOut{ background:url(/images/ezAttitude/inOut.png) no-repeat left 3px;}
+.time_stats .statsUL li .statsDL dt.trip{ background:url(/images/ezAttitude/trip.png) no-repeat left 3px;}
+.time_stats .statsUL li .statsDL dt.refresh{ background:url(/images/ezAttitude/refresh.png) no-repeat left 3px;}
+.time_stats .statsUL li .statsDL dt.absence{ background:url(/images/ezAttitude/absence.png) no-repeat left 3px;}
+.time_stats .statsUL li .statsDL dd{ margin:0px; padding:0px 10px; float:right; font-size:12px; color:steelblue; font-family:arial, Gulim, Dotum, Helvetica, sans-serif; height:21px; line-height:20px; box-sizing:border-box; background:#edf4fd; border:1px solid #d7e4f4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:20px; cursor:pointer;}

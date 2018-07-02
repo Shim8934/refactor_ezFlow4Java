@@ -298,7 +298,7 @@ function Schedule_Repetition_onclick_Complete(retVal) {
         DivPopUpHidden();
         return;
     }
-    
+
     if (typeof (retVal) == "number" && retVal == 0) {
         repetitionFlag = false;
         if (g_data["recurrence"] != "") {
@@ -1300,6 +1300,7 @@ function printpr() {
 
 function onbeforeprint() {
     g_documentTitle = document.title;
+
     /* 2018.03.23 서주연 - #12104 인쇄미리보기시 창제목 변경되는 문제 해결 */
 //  document.title = title.value;
 

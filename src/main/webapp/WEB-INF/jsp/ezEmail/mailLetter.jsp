@@ -89,10 +89,6 @@
 			    text-align: left;
 			}
 			
-			.btnpositionNew {
-				padding-top: 7px;
-			}
-			
 			.jstree-node, .jstree-children, .jstree-container-ul { 
 				margin-top: 3px;
 			}

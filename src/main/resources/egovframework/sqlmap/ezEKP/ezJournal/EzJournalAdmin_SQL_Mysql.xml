@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezJournalAdmin">
+	<typeAlias alias="JournaltypeVO" type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO"/>
+	
+	<resultMap class="JournaltypeVO" id="JournaltypeMap">
+		<result property="journaltypeId" 	column="type_id"/>
+		<result property="journalUse" 		column="used"/>
+	</resultMap>
+
+	<select id="EzJournalAdminDAO.getJournaltypeList" resultMap="JournaltypeMap" parameterClass="Map">
+		select 
+			type_id, used 
+		from 
+			tbl_journal_form_type
+		where 
+			tenant_id = #TENANTID#
+		and 
+			company_id = #COMPANYID#
+	</select>
+	
+	<insert id="insertTypeList" parameterClass="Map">
+		insert into tbl_journal_form_type 
+			(type_id, 	used, 	company_id, 	tenant_id)
+		values
+			(#typeId#,	'use',	#companyId#,	#tenantId#)
+	</insert>
+	
+	<update id="updateTypeList" parameterClass="Map">
+		update 
+			tbl_journal_form_type
+		set
+			used=#used#
+		where
+			type_id = #typeId#
+		and
+			company_id = #companyId#
+		and
+			tenant_id = #tenantId#
+	</update>	 
+</sqlMap>
+
+
+
+
+
+
+
+
+
+
+
+
+

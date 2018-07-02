@@ -1569,7 +1569,7 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
