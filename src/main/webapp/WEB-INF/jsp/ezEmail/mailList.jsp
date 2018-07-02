@@ -94,6 +94,8 @@
 		    var useReSend = "${useReSend}";
 		    var useSearchContent = "${useSearchContent}";
 		    var useMailNewWindow = "${useMailNewWindow}";
+		    var useReceivingChk = false;
+		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -116,6 +118,14 @@
 		    	
 		    	if (useReSend == "YES" && g_szRootFolderName == compareFolderName) {
 		    		$('#liReSend').css('display', 'block');
+		    	}
+		    	
+		    	// 재은 수정중
+		    	if (g_moveUrl == 'receiveChk') {
+		    		useReceivingChk = true;
+		    		g_foldertype = g_moveUrl;
+		    		p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
+		    		select.selectedIndex = 3;
 		    	}
 		    	
 		        CurrentHeight = document.body.clientHeight;
@@ -144,6 +154,12 @@
 		                deleteone.style.display = 'none';
 		                deleteall.style.display = '';
 		                break;
+		            
+		            case "receiveChk":
+		            	p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile5.xml";
+		            	g_foldertype = "sent";
+		            	g_moveUrl = "<spring:message code='ezEmail.t645'/>";
+		            	break;
 		        }
 		        
 		        if (g_foldertype != "sent" && g_foldertype != "draft")

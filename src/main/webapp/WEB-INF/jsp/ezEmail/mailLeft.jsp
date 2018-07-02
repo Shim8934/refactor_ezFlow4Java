@@ -921,6 +921,22 @@
 					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 				}
 			}
+			
+			// 재은 수정중
+			function reception_check() {
+				var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent("<spring:message code='ezEmail.t516' />") + "&url=receiveChk";
+				
+	            try {
+	                if (typeof (parent.frames["right"]) != "undefined")
+	                    parent.frames["right"].Window_onunload();
+	            } catch (e) { }
+	            if (g_firstOpen)
+	                g_firstOpen = false;
+	            else
+	                window.open(url, "right");
+	            get_unreadcount();
+			}
+			
 	    </script>
 		 <style type="text/css">
 		 		#myBar {		 			
@@ -963,6 +979,7 @@
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #e8e8e8; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
+	            <li><span onclick="reception_check()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t516" /></span></li>
 	            <li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
 	            <li><span onclick="Open_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t641" /></span></li>
 		        <c:if test="${useOnlyInnerMail != 'YES'}">

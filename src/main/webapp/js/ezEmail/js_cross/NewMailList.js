@@ -193,6 +193,7 @@ function drag(ev) {
     }
 }
 
+var xmlhttp_MailReceiverList = null; // 재은 수정
 function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST") {
     	try {
@@ -226,6 +227,11 @@ function MakeListInfoHTML(ConentObject) {
                 var p_ContentClass = SelectSingleNodeValue(XmlRows[Cnt], "contentclass");
                 var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
+                var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt"); // 재은 수정
+                
+                var recipients = []; // 재은 수정
+            	var recipientsLen = 1; // 재은 수정
+                
                 var _TR = document.createElement("TR");
                 _TR.setAttribute("id", "Maillist_" + Cnt);
                 _TR.style.cursor = "pointer";
@@ -257,6 +263,13 @@ function MakeListInfoHTML(ConentObject) {
                 _TDCheckBox.appendChild(_TDCheckBox_Sub);
                 _TR.appendChild(_TDCheckBox);
                 XmlHeaderRows = SelectNodes(XmlHeader, "view/column");
+                
+                // 재은 수정
+            	if (useReceivingChk) {
+            		recipients = p_Msgto.split(',');
+            		recipientsLen = recipients.length; // 수신자가 여러명일때 '명중 명이 읽음'
+            	}
+            	
                 for (var HRows = 0; HRows < XmlHeaderRows.length; HRows++) {
 
                     var _TDColum = document.createElement("TD");
@@ -268,6 +281,15 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.cursor = "default";
                             _TDColum.innerHTML = p_Importance == "0" ? "<IMG style='cursor:default' draggable='false' src='/images/ImgIcon/icon-lowimportance.gif'/>" : p_Importance == "2" ? "<IMG style='cursor:default' src='/images/ImgIcon/icon-highimportance.gif'/>" : "";
                             break;
+                         // 재은 수정    
+                        case "receiveInfo":
+                        	_TDColum.style.width = "18px";
+                        	if (recipientsLen > 1) {
+                        		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/kr/main/btn_calendar_prev.gif'></span>";
+                        		_TDColum.setAttribute("viewSelect", "false");
+                        		_TDColum.onclick = function () { viewReceivers(this); };
+                        	}
+                        	break;
                         case "status":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
@@ -295,9 +317,12 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.textOverflow = "ellipsis";
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
+                            // 재은 수정
+                            _TDColum.style.width = "22%";
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.innerHTML = innerHTML;
+                            
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             // 수아 수정 (보낸사람 클릭 -> 보낸 사람에게 메일 전송창)
                             _TDColum.setAttribute("data-msgto", p_Msgto);
@@ -316,6 +341,10 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.textOverflow = "ellipsis";
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
+                            
+                            // 재은 수정중
+                            _TDColum.style.width = "49%";
+                            
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             if (p_Subject.trim() == "") {
                             	p_Subject = strLang97;
@@ -368,6 +397,21 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
+                            // 재은 수정중
+                        case "readdt":
+                        	
+                        	if (p_Readdt == "UNREAD") {
+                        		p_Readdt = noReadMsg;
+                        	}
+                        	_TDColum.style.textAlign = "center";
+                            _TDColum.style.width = "150px";
+                            _TDColum.style.overflow = "hidden";
+                            _TDColum.style.textOverflow = "ellipsis";
+                            _TDColum.style.whiteSpace = "nowrap";
+                            _TDColum.style.minWidth = "70px";
+                            _TDColum.innerHTML = p_Readdt;
+                        	
+                        	break;
                     }
                     _TR.appendChild(_TDColum);
                     
@@ -471,6 +515,131 @@ function MakeListInfoHTML(ConentObject) {
         }
     }
 }
+
+//여기서부터 재은
+var xmlhttp_MailReceiverList;
+var MailReceiverListXML;
+function getReaderCount(parentId) {
+	 if (xmlhttp_MailReceiverList != null && xmlhttp_MailReceiverList.readyState == 4) {
+	        if (xmlhttp_MailReceiverList.status >= 200 && xmlhttp_MailReceiverList.status < 300) {
+	        	MailReceiverListXML = xmlhttp_MailReceiverList.responseXML;
+                xmlhttp_MailReceiverList = null;
+                makeReceiverList(parentId);
+	        }      
+	 }
+}
+
+function makeReceiverList(parentId) {
+	var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
+	
+	for (var i = 0; i < XmlRows.length; i++) {
+		var readDate = SelectSingleNodeValue(XmlRows[i], "READDATE");
+        var readerEmail = SelectSingleNodeValue(XmlRows[i], "READEREMAIL");
+        var cancel = trim_Cross(SelectSingleNodeValue(XmlRows[i], "CANCEL"));
+        var readerName = SelectSingleNodeValue(XmlRows[i], "READERNAME");
+        
+        var TR = document.createElement("TR");
+        TR.setAttribute("id", parentId + "_" + i);
+        
+        if ($("#" + parentId)[0].childNodes[0].childNodes[0].checked == true) {
+        	TR.style.backgroundColor = m_strColorSelect;
+        }
+        
+        var TD1 = document.createElement("TD");
+        TD1.style.width = "22px;";
+        
+        var TD2 = document.createElement("TD");
+        TD2.style.width = "18px;";
+        
+        var TD3 = document.createElement("TD");
+        TD3.style.textAlign = "left";
+        TD3.style.overflow = "hidden";
+        TD3.style.textOverflow = "ellipsis";
+        TD3.style.whiteSpace = "nowrap";
+        TD3.style.width = "22%";
+        TD3.innerHTML = readerName;
+        
+        var TD4 = document.createElement("TD");
+        var subject = $("#" + parentId)[0].getAttribute("_subject");
+        TD4.style.textAlign = "left";
+        TD4.style.overflow = "hidden";
+        TD4.style.textOverflow = "ellipsis";
+        TD4.style.whiteSpace = "nowrap";
+        TD4.style.width = "49%";
+        TD4.innerHTML = subject;
+        
+        var TD5 = document.createElement("TD");
+        var sendDate = $("#" + parentId)[0].childNodes[4].innerText;
+        TD5.style.textAlign = "center";
+        TD5.style.width = "150px";
+        TD5.style.overflow = "hidden";
+        TD5.style.textOverflow = "ellipsis";
+        TD5.style.whiteSpace = "nowrap";
+        TD5.style.minWidth = "70px";
+        TD5.innerHTML = sendDate;
+        
+        var TD6 = document.createElement("TD");
+        TD6.style.textAlign = "center";
+        TD6.style.width = "150px";
+        TD6.style.overflow = "hidden";
+        TD6.style.textOverflow = "ellipsis";
+        TD6.style.whiteSpace = "nowrap";
+        TD6.style.minWidth = "70px";
+        
+        if (readDate == 'UNREAD') {
+        	readDate = noReadMsg;
+        }
+        
+        TD6.innerHTML = readDate;
+        
+        TR.appendChild(TD1);
+        TR.appendChild(TD2);
+        TR.appendChild(TD3);
+        TR.appendChild(TD4);
+        TR.appendChild(TD5);
+        TR.appendChild(TD6);
+        
+        $(".mainlist #" + parentId).after(TR);
+	}
+}
+
+function viewReceivers(obj) {
+	if (obj.getAttribute("viewSelect") == "false") {
+		var parentHref = obj.parentElement.getAttribute("_href");
+		var parentId = obj.parentElement.id;
+		
+		MailReceiverListXML = null;
+        xmlhttp_MailReceiverList = null;
+        
+        var strQuery = "<MESSAGEID>" + decodeURIComponent(parentHref) + "</MESSAGEID>";
+        xmlhttp_MailReceiverList = createXMLHttpRequest();
+        xmlhttp_MailReceiverList.open("POST", "/ezEmail/mailGetReceiveList.do", true);
+        xmlhttp_MailReceiverList.onreadystatechange = function() { getReaderCount(parentId); }
+        xmlhttp_MailReceiverList.send(strQuery);
+		
+		obj.setAttribute("viewSelect", "true");
+		obj.childNodes[0].childNodes[0].src = "/images/kr/main/btn_calendar_next.gif";
+	} else {
+		
+		var parentId = obj.parentElement.id;
+		var removeElement = $("#MailList")[0].childNodes;
+		var removeArry = [];
+		
+		for (var i = 0; i < removeElement.length; i++) {
+			if (removeElement[i].id.indexOf(parentId  + "_") != -1) {
+				removeArry[removeArry.length] = removeElement[i].id;
+			}
+		}
+		
+		for (var i = 0; i <removeArry.length; i++) {
+			$("#" + removeArry[i]).remove();
+		}
+		
+		obj.setAttribute("viewSelect", "false");
+		obj.childNodes[0].childNodes[0].src = "/images/kr/main/btn_calendar_prev.gif";
+	}
+} // 여기까지 재은
+
 function MakeListInfoHTML_SUB(ConentObject) {
         try {
             var XmlList = GetList_HTTP_SUB.responseXML;
@@ -650,9 +819,16 @@ function GetListInfo(HeaderObject, ContentObject) {
         createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
 
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
-
+    
+    // 재은 수정
+    var _url = "/ezEmail/mailGetList.do";
+    
+    if (useReceivingChk) {
+    	_url = "/ezEmail/getReceiverMailList.do";
+    }
+    
     GetList_HTTP = createXMLHttpRequest();
-    GetList_HTTP.open("POST", "/ezEmail/mailGetList.do", true);
+    GetList_HTTP.open("POST", _url, true);
     GetList_HTTP.onreadystatechange = GetListIevent_ongetxmlcomplete;
     GetList_HTTP.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
@@ -1216,7 +1392,12 @@ function event_HeaderCheckBoxClick(obj) {
         for (var i = 0; i < nodeCount; i++) {
         	mailNode = mailNodes.item(i);
         	
-        	mailNode.childNodes.item(0).childNodes.item(0).checked = true;
+        	// 재은 수정
+        	if (mailNode.childNodes.item(0).childNodes.length != 0) {
+        		mailNode.childNodes.item(0).childNodes.item(0).checked = true;
+        	}
+        	
+        	
         	mailNode.style.backgroundColor = m_strColorSelect;
             //TODO: 테스트해보기 2016-06-02
             // dhlee: modified so that existing elements aren't merged with new ones.
@@ -1228,7 +1409,10 @@ function event_HeaderCheckBoxClick(obj) {
         for (var i = 0; i < nodeCount; i++) {
         	mailNode = mailNodes.item(i);
         	
-        	mailNode.childNodes.item(0).childNodes.item(0).checked = false;
+        	// 재은 수정
+        	if (mailNode.childNodes.item(0).childNodes.length != 0) {
+        		mailNode.childNodes.item(0).childNodes.item(0).checked = false;
+        	}
         	mailNode.style.backgroundColor = m_strColorDefault;
         }
         
@@ -1414,10 +1598,30 @@ function event_listclick(obj, event) {
 function event_listCheckboxclick(obj) {
     if (obj.checked) {
         obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
+        
+        // 재은수정
+        var allChild = $("#MailList")[0].childNodes;
+        
+        for (var i = 0;i < allChild.length; i++) {
+        	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
+        		allChild[i].style.backgroundColor = m_strColorSelect;
+        	}
+        }
+        
         listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
     }
     else {
         var TemplistArray = new Array();
+        
+        // 재은수정
+        var allChild = $("#MailList")[0].childNodes;
+        
+        for (var i = 0;i < allChild.length; i++) {
+        	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
+        		allChild[i].style.backgroundColor = m_strColorDefault;
+        	}
+        }
+        
         for (var i = 0; i < listContentArry.length; i++) {
             if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
                 obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
