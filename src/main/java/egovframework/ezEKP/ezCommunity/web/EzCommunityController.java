@@ -1088,6 +1088,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+		
+		// 여기에서 writerDeptID 넘겨주도록 수정함
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
@@ -2288,6 +2290,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         }
         
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId()).trim();
+		// 여기에서 해당 회원의 deptID를 받아와야 한다.
 		String strXML = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, comNoPerPage, curPage);
 		
 		model.addAttribute("curPage", curPage);

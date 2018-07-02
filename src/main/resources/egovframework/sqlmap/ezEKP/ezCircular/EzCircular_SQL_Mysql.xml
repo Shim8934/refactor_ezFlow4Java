@@ -114,7 +114,7 @@
             AND
 				B.updatestatus IN (0, 1)
             AND 
-            	A.companyid = #companyID#
+            	B.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -424,8 +424,8 @@
 			SELECT
 				A.circularbmid,
 				A.memberid,
-                C.COMPNM2 as company,
-				C.DISPLAYNAME as description,
+				B.company,
+				B.description,
 				B.title,
 				A.membername,
 				B.mail
@@ -437,12 +437,6 @@
 				A.memberid = B.cn
 			AND
 				A.tenantid = B.tenant_id
-			RIGHT JOIN 
-				TBL_DEPTMASTER C
-			ON 
-				A.DEPTID = C.CN
-			AND 
-				B.TENANT_ID = C.TENANT_ID  
 			WHERE
 				circularbmid = #circularBMId#
 			AND
@@ -1814,33 +1808,15 @@
 											circularId = #circularID# )
 		]]>
 	</select>
- 
-	<select id="EzCircularDAO.getCircularDeptUser" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				cn 
-			FROM 
-				tbl_deptmaster 
-			WHERE 
-				tenant_id=#tenantID# AND displayname = #deptName# AND EXTENSIONATTRIBUTE2 = #companyID#
-		]]>
-	</select> 
 	
 	<select id="EzCircularDAO.getCircularUserDeptId" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			SELECT 
-				DISPLAYNAME 
-			FROM 
-				tbl_deptmaster 
-			WHERE 
-				tenant_id=#tenantID# 
-			AND 
-				CN = ( SELECT 
-								deptId 
-						  FROM 
-								tbl_circular_bmuser
-						  WHERE 
-								circularBMId=#circularBMId# AND memberId = #userID#)
+			SELECT
+				deptId
+			FROM
+				tbl_circular_bmuser
+			WHERE
+				tenantid=#tenantID# AND circularBMId=#circularBMId# AND memberId = #userID#
 		]]>
 	</select> 
 	
@@ -1900,14 +1876,13 @@
     <insert id="EzCircularDAO.setCircularMemberList" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_BMUSER 
-				(circularbmid, memberid, membername, membername2, tenantid, deptid)
+				(circularbmid, memberid, membername, membername2, tenantid)
 			SELECT
 				#circularBMId#,
 				cn,
 				displayname,
 				displayname2,
-				tenant_id,
-				#deptID#
+				tenant_id
 			FROM
 				TBL_USERMASTER
 			WHERE

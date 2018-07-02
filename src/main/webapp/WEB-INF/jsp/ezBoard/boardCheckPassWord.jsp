@@ -80,6 +80,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden;">
 		<h1><spring:message code='ezBoard.t244'/></h1>
+		<div id="close">
+            <ul>
+                <li><span name="btn_OpinionCANCEL" id="btn_OpinionCANCEL" onclick="return btn_OpinionCANCEL_onclick()"></span></li>
+            </ul>
+        </div>
 	    <div class="txt" style="margin-top:15px">
 	        ▒&nbsp;<spring:message code='ezBoard.t245'/>
 	    </div>	    
@@ -88,7 +93,6 @@
 	    </div>
 	    <div class="btnposition btnpositionNew">
 	        <a name="btn_OpinionOK" id="btn_OpinionOK" class="imgbtn" onClick="return btn_OpinionOK_onclick()"  ><span><spring:message code='ezBoard.t14'/></span></a>
-	        <a name="btn_OpinionCANCEL" id="btn_OpinionCANCEL" class="imgbtn" onClick="return btn_OpinionCANCEL_onclick()" ><span><spring:message code='ezBoard.t15'/></span></a>
 	    </div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>

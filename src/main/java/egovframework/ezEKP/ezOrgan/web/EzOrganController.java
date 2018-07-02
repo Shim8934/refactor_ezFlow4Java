@@ -69,10 +69,11 @@ public class EzOrganController {
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
         String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
+        String adminDist = doc.getElementsByTagName("ADMINDIST").getLength() != 1 ? "false" : doc.getElementsByTagName("ADMINDIST").item(0).getTextContent(); // 관리자 > 공용배포그룹
         String userCompanyID = userInfo.getCompanyID();
         String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
         
-        if ((userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrganChk.length > 1)) {
+        if ((userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrganChk.length > 1) || adminDist.equals("true")) {
         	topID = adminOrganChk[0];
         } else  if (!topID.equals(userCompanyID)) {
         	topID = userCompanyID;
@@ -143,6 +144,7 @@ public class EzOrganController {
 		String listtype = request.getParameter("type");		
 		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
+		String companyId = request.getParameter("companyId") == null ? "" : request.getParameter("companyId");
 		String infoXML = "";
 
 		logger.debug("page=" + page);

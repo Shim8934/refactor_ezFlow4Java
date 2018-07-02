@@ -19,7 +19,7 @@ public interface EzOrganAdminService {
 	
 	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow, int tenantID) throws Exception;
 		
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID) throws Exception;
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String companyId) throws Exception;
 	
 	public List<OrganUserVO> getUserCnList(int tenantID) throws Exception;
 
@@ -41,7 +41,7 @@ public interface EzOrganAdminService {
 	
 	public int userCheck(String cn, int tenantID) throws Exception;
 	
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception;
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String companyId) throws Exception;
 	
 	public int getPermissionListCount(String companyID, String type, String strLang, int tenantID) throws Exception;
 
@@ -82,9 +82,9 @@ public interface EzOrganAdminService {
 	
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getUserList(int tenantID, int startPage, int endPage, int maxItemPerPage, String keycode,String keyword) throws Exception;
+	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,String companyId) throws Exception;
 	
-	public int getUserCount(int tenantID,String keycode,String keyword) throws Exception;
+	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
 	
 	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
 	
@@ -95,4 +95,5 @@ public interface EzOrganAdminService {
 	public String mailDelDistributionList(int tenantID, String cn) throws Exception;
 	
 	public String deleteTargetAddressUser (int tenantID, String groupName, String memberID, String companyID) throws Exception;
+
 }

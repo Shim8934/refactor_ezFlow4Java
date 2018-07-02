@@ -594,10 +594,10 @@
 	            window.open(url, "", feature);
 	        }
 
-	        function OpenUserInfo(pUserID) {
+	        function OpenUserInfo(pUserID, pDeptID) {
 	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            feature = feature + GetOpenPosition(420, 438);
-	            window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 	        }
 
 	        function OneLineReply_onkeydown() {
@@ -730,6 +730,7 @@
 	            getOneLineReply();
 	        }
 
+	        // 댓글 작성자 클릭 시 정보 보여주는 부분 필요!
 	        function getOneLineReply() {
 	        	$.ajax({
 					type : "POST",
@@ -939,7 +940,8 @@
 	                        <c:choose>
 	                        	<c:when test="${boardInfo.gubun != '2' }">
 	                        		<td id="WriteUserNM" style="white-space: nowrap; width:40%;">
-	                            		<div id="Div1" style="vertical-align: middle; overflow-y: auto; cursor: pointer" onclick='OpenUserInfo("${item.writerID}")'><c:out value='${item.writerName}' /></div>
+	                        		<%-- 게시글 작성자 클릭 시 겸직정보 표출 --%>
+	                            		<div id="Div1" style="vertical-align: middle; overflow-y: auto; cursor: pointer" onclick='OpenUserInfo("${item.writerID}", "${item.writerDeptID}")'><c:out value='${item.writerName}' /></div>
 	                            	</td>
 	                        	</c:when>
 	                        	

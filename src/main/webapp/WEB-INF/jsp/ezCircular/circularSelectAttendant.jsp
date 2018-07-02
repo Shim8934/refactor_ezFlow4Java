@@ -341,7 +341,7 @@
   					data : {
   						deptID : tempDeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -565,6 +565,7 @@
             var strDeptNM2 = "";
             var jickwe = "";
             var phone = "";
+            var department = "";
             
 		    function InsertReceiver(pListView) {
 	            var pparsingXML = "";
@@ -584,6 +585,7 @@
 		                    strDeptNM2 = "";
 		                    jickwe = "";
 		                    phone = "";
+		                    department = "";
 		
 		                    var listid = "MsgToList";
 		                    var getlistview = new ListView();
@@ -602,7 +604,7 @@
 		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + department + "]]></DATA4>";
 		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
 		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
@@ -667,7 +669,7 @@
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-	                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+	                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + department + "]]></DATA4>";
 	                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
@@ -717,6 +719,7 @@
 	 		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 	 		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 	 		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+	 		                    department = document.getElementById(listContentArry[i]).getAttribute("_data10");
 	 		                    
 	 		                    
 	 		                    var listid = "MsgToList";
@@ -738,7 +741,7 @@
 	 		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	 		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	 		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-	 		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+	 		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + department + "]]></DATA4>";
 	 		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
 	 		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	 		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
@@ -804,6 +807,9 @@
 								phone = document.getElementById(
 										listContentArry[i]).getAttribute(
 										"_data8");
+								department = document.getElementById(
+										listContentArry[i]).getAttribute(
+										"_data10");
 
 								var listid = "MsgToList";
 								var getlistview = new ListView();
@@ -830,7 +836,7 @@
 											+ "<DATA3><![CDATA[" + strName2
 											+ "]]></DATA3>";
 									pparsingXML = pparsingXML
-											+ "<DATA4><![CDATA[" + strDeptNM
+											+ "<DATA4><![CDATA[" + department
 											+ "]]></DATA4>";
 									pparsingXML = pparsingXML
 											+ "<DATA5><![CDATA[" + strDeptNM2
@@ -914,6 +920,7 @@
 									.getAttribute("_data13");
 							jickwe = p_ListOrderObject.getAttribute("_data14");
 							phone = p_ListOrderObject.getAttribute("_data8");
+							department = p_ListOrderObject.getAttribute("_data10");
 
 							var listid = "MsgToList";
 
@@ -1062,7 +1069,7 @@
 				}
 
 				var UserListHTML = "";
-				if (SelectDeptNM.getAttribute("countinfo") != "1") {
+				if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != null && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 					SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>"
 							+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
 							+ strLang256 + "</span>]";
@@ -2074,7 +2081,7 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
 		</div>
 	</body>

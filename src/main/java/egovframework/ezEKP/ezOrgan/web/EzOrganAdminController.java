@@ -133,6 +133,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
+		String cChk = "0";
+		
+		if (user.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
 		
 		// set useLetter
 		String useLetter = ezCommonService.getTenantConfig("useLetter", user.getTenantId());
@@ -144,6 +149,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
+		model.addAttribute("cChk", cChk);
 		
 		return "admin/ezOrgan/organLeft";
 	}
@@ -921,6 +927,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			logger.debug("retireUser rc=" + rc);
 			
+			List<String> distributionList = null;
+			
 			if (rc == 0) { // retireUser 성공				
 				// 해당 User가 속한 Group Email 주소에서 해당 User를 제거한다.
 				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary(), tenantID);
@@ -948,7 +956,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					result = "EMAIL_ERROR";
 					break;					
-				}				
+				}
+				// 사용자가 속한 공용배포그룹의 Group Email 주소 목록을 구한다.
+				distributionList = ezEmailUserAdminService.getUserDistributionList(mailAddr);
+				
+				for (String dist : distributionList) {
+					logger.debug("dist=" + dist);
+					
+					// 공용배포그룹의 Group Email 주소로부터 해당 User를 제거한다.
+					rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
+					
+					logger.debug("updateGroupDel rc=" + rc);							
+				}
 			}
 			// dhlee - end
 		}
@@ -2273,7 +2292,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-        int tenantID = user.getTenantId();        
+        int tenantID = user.getTenantId();  
+        String companyId = request.getParameter("companyId") == null ? user.getCompanyID() : request.getParameter("companyId");
         
         logger.debug("tenantID=" + tenantID);
 		
@@ -2285,9 +2305,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    			pPage = Integer.parseInt(request.getParameter("page"));
    		}
    		
-   		logger.debug("strLang=" + strLang + ",pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("strLang=" + strLang + ",pPage=" + pPage + ",pPageRow=" + pPageRow + ",companyId=" + companyId);
    		
-   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID);
+   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID, companyId);
    		int totalPage = 0;
    		
 		if (totalCount > 0) {
@@ -2306,12 +2326,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID);
+		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < companylist.size(); i++) {
+			OrganDeptVO vo = companylist.get(i);			
+
+			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}
+		
+		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID, companyId);
 		
 		model.addAttribute("lang", strLang);
    		model.addAttribute("list", list);
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("companylist", resultList);
+		model.addAttribute("companyId", companyId);
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);

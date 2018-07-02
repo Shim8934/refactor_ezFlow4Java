@@ -740,7 +740,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         	}            	
         }
 	}
-
+		
 	public void updateDBData_userPermission(OrganUserVO vo) throws Exception {
         update("EzOrganAdminDAO.updateDBData_userPermission", vo);		
 	}
@@ -1267,6 +1267,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     public void insertCompanyInfo_I19(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I19", map);
+    }
+    public void insertCompanyInfo_I20(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I20", map);
+    }
+    public void insertCompanyInfo_I21(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I21", map);
     }
     
     public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {

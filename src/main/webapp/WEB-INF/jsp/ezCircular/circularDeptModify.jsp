@@ -26,7 +26,6 @@
     		var userID = "${userID}";
    			var userName = "${userName}"
 			var userName2 = "${userName2}"
-			var deptName = "${deptName}"
 			var listSize = "${listSize}";
     		
 	    	window.onload = function() {				
@@ -41,13 +40,11 @@
 	        	var list = userID.split(",");
 	        	var nameList = userName.split(",");
 	        	var nameList2 = userName2.split(",");
-	        	var deptList = deptName.split(",");
 
 	        	for (var i = 0; i < listSize; i++) {
 	            	g_attendant["id"][i] = list[i].trim();
 	        		g_attendant["name"][i] = nameList[i].trim();
 	        		g_attendant["name2"][i] = nameList2[i].trim();
-	        		g_attendant["deptname"][i] = deptList[i].trim();
 	        	}
 	        	
 	    		try {
@@ -68,11 +65,9 @@
 	    		
 	    		var title = document.getElementById("title").value;
 	    		var memberListStr = new Array();
-	    		var deptListStr = new Array();
 	    		
 	    		for (var i=0; i<g_attendant["id"].length; i++) {
 	    			memberListStr[i] = g_attendant["id"][i];
-	    			deptListStr[i] = g_attendant["deptname"][i];
 	    		}	    
 	    		
 	    		$.ajax({
@@ -82,9 +77,7 @@
 	    			url : "/ezCircular/circularDeptSave.do",
 	    			data : {
 	    				title : title,
-	    				circularBMId : circularBMId,
-	    				memberListStr : memberListStr,
-	    				deptListStr : deptListStr
+	    				circularBMId : circularBMId
 	    			},
 	    			success : function() {
 		                if (ReturnFunction != null) {
@@ -106,6 +99,11 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezCircular.t43' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t32' /></th>
@@ -131,7 +129,6 @@
 	    </table>
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="save_info()" ><spring:message code='ezCircular.t25' /></span></a>
-	        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezCircular.t26' /></span></a>      
 	    </div>
 	</body>
 </html>
