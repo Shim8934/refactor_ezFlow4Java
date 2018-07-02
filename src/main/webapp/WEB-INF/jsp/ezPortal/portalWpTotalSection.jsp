@@ -434,7 +434,7 @@
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
 			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr>&nbsp;"
+			                listHTML += "&nbsp;"
 			                if(SCHEDULETYPE == 1) {
 			                	listHTML += "";
 			                } else if (SCHEDULETYPE == 2) {
@@ -446,7 +446,7 @@
 			                } else {
 			                	listHTML += "";
 			                }
-			                listHTML += TITLE+ "</nobr></span></li>";
+			                listHTML += TITLE.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;").replace(/\n/g,"<br />")+ "</span></li>";
 			                count++;
 			        	}
 			        }
