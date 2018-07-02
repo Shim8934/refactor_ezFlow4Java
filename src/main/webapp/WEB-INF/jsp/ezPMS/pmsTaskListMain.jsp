@@ -223,7 +223,7 @@
 		
 		taskName = convertString(taskName);
 		
-		contentTitle = "<span style='width:50%; text-overflow:ellipsis; font-size:16px;'>" + taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
+		contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' />";
 
 		$("#taskNameArea").html(contentTitle);
 	}
@@ -377,11 +377,6 @@
     min-width : 198px;
 }
 
-#taskName {
-	margin-top : 14px;
-	margin-bottom : 19px;
-}
-
 #projectArea {
 	overflow : auto;
 	border : 1px solid #d1d1d1;
@@ -392,9 +387,10 @@
 }
 
 #iconLine {
-	height: 95px;
+	height: 80px;
 	margin-left: 10px;
 	margin-top: 5px;
+	margin-right: 20px;
 }
 
 #contentList {
@@ -432,23 +428,15 @@
 #searchDiv {
 	margin-left : 11px;
 }
-
-#taskNameArea {
-	display : inline-block;
-}
 </style>
 </head>
 <body>
 <div id="taskTree"></div>
-<div id="projectArea">
+<div id="projectArea" class="projectAreaStyle">
 <div id="projectContent">
-	<div id="iconLine" class="mainbody" style="margin:0px;">
-		<h1 id="taskName"><div id="taskNameArea"></div></h1>
-		<div id="mainmenu">
-		<ul>
-			<li style="display:none;"><span id="addTaskBtn" onclick="goAddTask()"><spring:message code='ezPMS.t89' /></span></li> 
-			<li style="display:none;"><span id="deleteTaskBtn" onclick="deleteTask()"><spring:message code='ezPMS.t287' /></span></li>
-			<li><span id="addTaskBtn" onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
+	<div id="iconLine" class="mainbody" style="margin:0px; height:auto;">
+		<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div>
+				<span id="searchArea" style="float:right;font-weight:normal;color:black;">
 				<div>
 				<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
 					<option value="A"><spring:message code='ezPMS.t14' /></option>
@@ -459,6 +447,13 @@
 					<option value="S"><spring:message code='ezPMS.t19' /></option>
 				</select>
 				</div>
+				</span>
+		</h1>
+		<div id="mainmenu">
+		<ul>
+			<li style="display:none;"><span id="addTaskBtn" onclick="goAddTask()"><spring:message code='ezPMS.t89' /></span></li> 
+			<li style="display:none;"><span id="deleteTaskBtn" onclick="deleteTask()"><spring:message code='ezPMS.t287' /></span></li>
+			<li><span id="addTaskBtn" onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
 		</ul>
 		</div>
 	</div>
@@ -491,7 +486,7 @@
         	<a class="imgbtn" onclick="searchTask()"><span><spring:message code='ezPMS.t1' /></span></a>
     	</div>
 	</div>
-	<div id="contentList" style="overflow: auto">
+	<div id="contentList" style="overflow: auto; width:100%; margin:0px; padding:0px 10px; box-sizing:border-box;">
 		<span id="MailListRayer"
 			style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 		</span>

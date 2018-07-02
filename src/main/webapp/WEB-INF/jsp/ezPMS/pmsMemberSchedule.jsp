@@ -12,6 +12,7 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
+		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 <title><spring:message code='ezPMS.t290' /></title>
 <script type="text/javascript">
 var memberList = '${memberList}';
@@ -48,8 +49,8 @@ function getTaskNameList(elem) {
 			"selectedUserId" : clickedUser
 		},
 		success : function(result) {
-			var infoHTML = "<div style='background-color:#d1d1d1'>" + clickedDate + " <spring:message code='ezPMS.t137' /></div>";
-			infoHTML += "<div style='padding-left : 3px;'>";
+			var infoHTML = "<div class='tooltipTitle'>" + clickedDate + " <spring:message code='ezPMS.t137' /></div>";
+			infoHTML += "<div class='tooltipText'>";
 			
 			for (var i = 0; i < result.length; i++) {
 				infoHTML += "&gt; " + result[i] + "<br>";
@@ -124,10 +125,28 @@ window.onload = function() {
 }
 
 .tooltipBox {
-	position : absolute;
-	background : #fff;
-	border : 1px solid black;
-	width : 250px;
+	position:absolute;
+	width:200px;
+	border:1px solid #4e4e46;
+}
+		  
+.tooltipBox .tooltipTitle { 
+	height: 33px; 
+	line-height: 33px; 
+	padding: 0px 10px; 
+	background: #f0f6ff; 
+	border: 1px solid #d1ddec; 
+	font-size:14px; 
+	white-space: nowrap; 
+	text-overflow: ellipsis; 
+	overflow: hidden; 
+}
+
+.tooltipBox .tooltipText {
+	padding:10px; 
+	background:#fff; 
+	font-size:12px; 
+	line-height:22px;
 }
 </style>
 </head>

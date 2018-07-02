@@ -9,7 +9,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/platform.css" type="text/css">
 		<link rel="stylesheet" href="/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/gantt.css" type="text/css">
@@ -42,7 +41,7 @@
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttGridEditor.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttMaster.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/common.js"></script>
-		
+		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 	   	<script type="text/javascript">
 	   		// 프로젝트 아이디
 	   		var projectId = "<c:out value='${projectId}'/>";
@@ -1517,18 +1516,36 @@
 		  #ndo{
 		  	display:none;
 		  }
+		  .tooltipBox {
+		  	position:absolute;
+		  	width:200px;
+		  	border:1px solid #4e4e46;
+		  }
+		  
+		  .tooltipBox .tooltipTitle { 
+		  	height: 33px; 
+		  	line-height: 33px; 
+		  	padding: 0px 10px; 
+		  	background: #f0f6ff; 
+		  	border: 1px solid #d1ddec; 
+		  	font-size:14px; 
+		  	white-space: nowrap; 
+		  	text-overflow: ellipsis; 
+		  	overflow: hidden; 
+		  }
+		  
+		  .tooltipBox .tooltipText {
+		    padding:10px; 
+		    background:#fff; 
+		    font-size:12px; 
+		    line-height:22px;
+		    }
 		  
 		  .toastArea {
 		  	position : absolute;
 		  	background : #ffffa8;
 		  	border : 1px solid #d1d1d1;
 			display : none;
-		  }
-		  
-		  .tooltipTitle {
-		  	text-overflow : ellipsis;
-		  	white-space : nowrap;
-		  	overflow : hidden;
 		  }
 
 		  .taskEditRow .typeImgDiv {

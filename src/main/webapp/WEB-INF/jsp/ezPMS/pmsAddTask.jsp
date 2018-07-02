@@ -230,20 +230,22 @@ function addTask() {
 		var result = confirm("업무를 추가하면 완료된 프로젝트의 상태가 진행 혹은 지연 상태로 변경됩니다.\n계속 하시겠습니까?");
 		if (result) {
 			if (endDateComp.getTime() > projectEndDateComp.getTime()) {
-				if (todayComp.getTime() < endDateComp.getTime()) {
+				if (todayComp.getTime() <= endDateComp.getTime()) {
 					projectStatus = "P";
-					changeDate = planEndDate;
+					changeDate = formatDate(endDateComp);
 				} else {
 					projectStatus = "L";
-					changeDate = formatDate(todayComp);
+					changeDate = formatDate(endDateComp);
 				}
 			} else {
-				if (todayComp.getTime() < projectEndDateComp.getTime()) {
+				console.log(todayComp.getTime());
+				console.log(projectEndDateComp.getTime());
+				if (todayComp.getTime() <= projectEndDateComp.getTime()) {
 					projectStatus = "P";
-					changeDate = planEndDate;
+					changeDate = projectEndDate;
 				} else {
 					projectStatus = "L";
-					changeDate = formatDate(todayComp);
+					changeDate = projectEndDate;
 				}
 			}
 		} else {
@@ -288,20 +290,20 @@ function addTask() {
 	}
 	
 	var data = {
-			taskName : taskName,
-			projectId : projectId,
-			groupId : groupId,
-			planStartDate : planStartDate,
-			planEndDate : planEndDate,
-			overview	 : overview,
-			headManagerId : headManagerId,
-			managerList : managerList,
-			weight : weight,
-			writerId : writerId,
-			treeDepth : treeDepth,
-			projectStatus : projectStatus,
-			projectPlanEndDate : projectEndDate,
-			projectChangeDate : changeDate
+		taskName : taskName,
+		projectId : projectId,
+		groupId : groupId,
+		planStartDate : planStartDate,
+		planEndDate : planEndDate,
+		overview	 : overview,
+		headManagerId : headManagerId,
+		managerList : managerList,
+		weight : weight,
+		writerId : writerId,
+		treeDepth : treeDepth,
+		projectStatus : projectStatus,
+		projectPlanEndDate : projectEndDate,
+		projectChangeDate : changeDate
 	}
 	
 	$.ajax({

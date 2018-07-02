@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 <link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
+<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -240,10 +241,10 @@ function selectedTR(elem) {
 </head>
 <body>
 <div id="taskTree"></div>
-<div id="projectArea">
+<div id="projectArea" class="projectAreaStyle">
 <div id="projectContent">
-	<div id="iconLine" class="mainbody" style="margin:0px;">
-		<h1 id="taskName"><div id="taskNameArea" style="display:inline-block"></div>
+	<div id="iconLine" class="mainbody" style="margin:0px; height:auto;">
+		<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div>
 		<span id="searchArea" style="float:right;font-weight:normal;color:black;">
 			<select id="searchId">
 				<option value="1" selected><spring:message code='ezPMS.t186' /></option>
@@ -260,7 +261,7 @@ function selectedTR(elem) {
 		</span>
 		</h1>
 	</div>
-	<div id="contentList" style="overflow:auto">
+	<div id="contentList" style="overflow:auto; width:100%; margin:0px; padding:0px 10px; box-sizing:border-box;">
 	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 	</span>
 	</div>

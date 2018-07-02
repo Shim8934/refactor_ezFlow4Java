@@ -14,6 +14,7 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
+<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -383,10 +384,10 @@
 </head>
 <body>
 	<div id="taskTree"></div>
-	<div id="projectArea">
+	<div id="projectArea" class="projectAreaStyle">
 		<div id="projectContent">
-			<div id="iconLine" class="mainbody" style="margin:0px;">
-				<h1 id="taskName"><div id="taskNameArea" style="display:inline-block"></div>
+			<div id="iconLine" class="mainbody" style="margin:0px; height:auto;">
+				<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div>
 				<span id="searchArea" style="float:right;font-weight:normal;color:black;">
 					<select id="searchCondition" onchange="setSearchInput(this.value)">
 						<option value="searchByUser"><spring:message code='ezPMS.t129' /></option>
@@ -402,7 +403,7 @@
 				</span>
 				</h1>
 			</div>
-			<div id="contentList" style="overflow: auto">
+			<div id="contentList" style="overflow: auto; width:100%; margin:0px; padding:0px 10px; box-sizing:border-box;">
 				<span id="MailListRayer"
 					style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 				</span>
