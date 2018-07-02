@@ -3856,5 +3856,5 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getLastImageID ended");
 		return ezBoardDAO.getLastImageID(map);
 	}
-
+	
 }

@@ -234,7 +234,7 @@
 	                        var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	                        DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
 	
-	                        if (GetDocumentElement(HwpCtrl, "CONNROOT") != "") {
+	                        if (GetDocumentElement(HwpCtrl, "CONNROOT", true) != "") {
 	                            var pAlertContent = "<spring:message code='ezApprovalG.t1391'/><br><br><spring:message code='ezApprovalG.t1392'/>";
 	                            OpenAlertUI(pAlertContent);
 	                            HwpCtrl.ClearDocument();
@@ -1014,7 +1014,7 @@
 					}
 				
 				    var g_SepAttachLVXml = "";
-				    g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+				    g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 				    if (!g_SepAttachLVXml)
 				        g_SepAttachLVXml = "";
 				

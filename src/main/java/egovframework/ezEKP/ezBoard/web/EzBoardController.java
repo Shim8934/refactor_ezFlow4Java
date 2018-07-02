@@ -7226,6 +7226,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return Integer.toString(applyCount);
 	}
-    
+	
 }
 

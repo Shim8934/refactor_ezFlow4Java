@@ -71,7 +71,7 @@ public class EzJournalGWController {
 
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
-
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 
@@ -176,9 +176,9 @@ public class EzJournalGWController {
 			}
 			
 			LOGGER.debug("companyId : " + companyId);
-			
+
 			List<JournaltypeVO> typeList = ezJournalService.getJournaltypeList(companyId, info.getTenantId(), used);
-			
+	
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", typeList);
@@ -187,7 +187,7 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("data", "");
 		}
-		
+
 		LOGGER.debug("G/W JOURNAL [GET /rest/ezjournal/types] ended.");
 		
 		return result;
@@ -828,19 +828,19 @@ public class EzJournalGWController {
 		
 		Gson gson = new Gson();
 		JSONObject result = new JSONObject();
-		
+	
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String journalIdArray = request.getParameter("journalIdList").toString();
 //			String viewDate = request.getParameter("viewDate");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
+		
 			List<String> journalIdList = gson.fromJson(journalIdArray, new TypeToken<List<String>>(){}.getType());
-			
+		
 			LOGGER.debug("journalIdList : " + journalIdList);
-			
+	
 			ezJournalService.saveJournalViewInfo(journalIdList, info.getUserId(), info.getTenantId());
-			
+		
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
@@ -1085,7 +1085,7 @@ public class EzJournalGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName,  userId);
 		
 		//	String mode = "";
 		//	if (request.getParameter("mode") != null || request.getParameter("mode").equals("")) {
@@ -1110,9 +1110,9 @@ public class EzJournalGWController {
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						if(file.exists()){
-							file.delete();
-						}
+						file.delete();
 					}			
+				}
 				}
 			} else {
 				if (fileList.length() != 0) {
@@ -1630,6 +1630,7 @@ public class EzJournalGWController {
 			String listCnt = request.getParameter("listCnt");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId, startCount, listCnt, info.getTenantId(), lang, info.getOffSet());
 			result.put("status", "ok");
@@ -1691,7 +1692,7 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			JournalAuthCheckVO journalAuth = ezJournalService.checkJournalAuth(userId, journalId, info.getTenantId());
-			
+		
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", journalAuth);

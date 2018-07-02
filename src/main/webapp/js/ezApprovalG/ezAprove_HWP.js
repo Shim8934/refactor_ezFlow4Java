@@ -587,7 +587,7 @@ function SaveApproveInfo(pApproveFlag)
 	createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
 
 	var g_SepAttachLVXml = "";
-	g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+	g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 	if (!g_SepAttachLVXml)
 	    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
 	else
