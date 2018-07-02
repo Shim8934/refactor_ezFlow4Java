@@ -819,7 +819,8 @@
 		  		
 		  		data = {
 		  			allTasks : allTasks,
-		  			allGroups : allGroups
+		  			allGroups : allGroups,
+		  			projectId : projectId
 		  		}
 		  		
 		  		$.ajax({
