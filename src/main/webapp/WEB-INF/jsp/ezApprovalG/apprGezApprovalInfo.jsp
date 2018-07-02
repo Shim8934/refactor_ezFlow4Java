@@ -2332,7 +2332,9 @@
 	        <table style="width: 100%">
 	            <tr>
 	                <td style="text-align: center;">
-	                    <a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
+	                	<div class="btnpositionNew">
+	                    	<a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
+	                    </div>	
 	                </td>
 	            </tr>
 	        </table>

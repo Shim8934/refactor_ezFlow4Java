@@ -187,12 +187,12 @@
     <table class="content">
         <tr>
             <td class="pos1">
-                <div style="border: 0px solid #ddd; height: 270px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; width:293px" id="PostTreeView">
+                <div style="border: 0px solid #ddd; height: 265px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; width:293px" id="PostTreeView">
                 </div>
             </td>
         </tr>
     </table>
-    <div style="margin-top:10px;text-align: center">
+    <div class="btnpositionNew">
     	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezEmail.t538' /></span></a>
     	<a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezEmail.t539' /></span></a>
     </div>

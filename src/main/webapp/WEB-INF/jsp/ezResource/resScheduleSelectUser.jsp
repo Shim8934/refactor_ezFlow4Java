@@ -383,44 +383,48 @@
       		</LISTVIEWDATA>
     	</xml>
     	<h1><spring:message code='ezResource.t2003'/></h1>
-    		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
-	    	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
-	    	</div>
-    		<table>
-      			<tr>
-        			<td style="padding-right:5px">
-            			<div style="border: 1px solid #ddd; height: 416px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
-			            <div class="box" style="margin-top:3px" >
-            			    <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px" />
-                			<a href="#" class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/></span></a>
-            			</div>
-        			</td>
-        			<td valign="top" style="padding-left:5px">
-            			<div class="listview">
-                			<div id="OrganListView" style="border: 0px solid #ddd; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
-            			</div>
-            			<div class="box" style="margin-top:3px" >
-                			<select id="search_type" style="margin-bottom:2px">
-                  				<option selected value="displayname"><spring:message code='ezResource.t135'/></option> 
-                  				<option value="description"><spring:message code='ezResource.t132'/></option> 
-                  				<option value="title"><spring:message code='ezResource.t10'/></option> 
-                  				<option value="telephonenumber"><spring:message code='ezResource.t11'/></option> 
-                  				<option value="mobile"><spring:message code='ezResource.t136'/></option> 
-                  				<option value="HomePhone"><spring:message code='ezResource.t137'/></option> 
-                  				<option value="facsimileTelephoneNumber"><spring:message code='ezResource.t138'/></option> 
-                  				<option value="mail"><spring:message code='ezResource.t139'/></option> 
-                  				<option value="streetAddress"><spring:message code='ezResource.t140'/></option> 
-                			</select>
-                			<input id="keyword" onkeypress="search_press()" style="WIDTH:130px; margin-bottom:2px" />
-                			<a href="#" class="imgbtn"><span onclick="search_click()"><spring:message code='ezResource.t14'/></span></a>
-            			</div>
-        			</td>
-      			</tr>
-    		</table>
-    	<div class="btnposition">
+    	<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+   		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+    	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+    	</div>
+   		<table>
+     			<tr>
+       			<td style="padding-right:5px">
+           			<div style="border: 1px solid #ddd; height: 416px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+		            <div class="box" style="margin-top:3px" >
+           			    <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px" />
+               			<a href="#" class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/></span></a>
+           			</div>
+       			</td>
+       			<td valign="top" style="padding-left:5px">
+           			<div class="listview">
+               			<div id="OrganListView" style="border: 0px solid #ddd; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
+           			</div>
+           			<div class="box" style="margin-top:3px" >
+               			<select id="search_type" style="margin-bottom:2px">
+                 				<option selected value="displayname"><spring:message code='ezResource.t135'/></option> 
+                 				<option value="description"><spring:message code='ezResource.t132'/></option> 
+                 				<option value="title"><spring:message code='ezResource.t10'/></option> 
+                 				<option value="telephonenumber"><spring:message code='ezResource.t11'/></option> 
+                 				<option value="mobile"><spring:message code='ezResource.t136'/></option> 
+                 				<option value="HomePhone"><spring:message code='ezResource.t137'/></option> 
+                 				<option value="facsimileTelephoneNumber"><spring:message code='ezResource.t138'/></option> 
+                 				<option value="mail"><spring:message code='ezResource.t139'/></option> 
+                 				<option value="streetAddress"><spring:message code='ezResource.t140'/></option> 
+               			</select>
+               			<input id="keyword" onkeypress="search_press()" style="WIDTH:130px; margin-bottom:2px" />
+               			<a href="#" class="imgbtn"><span onclick="search_click()"><spring:message code='ezResource.t14'/></span></a>
+           			</div>
+       			</td>
+     			</tr>
+   		</table>
+    	<div class="btnpositionNew">
         	<a class="imgbtn" name="Dbutton" ><span onClick="select_member()"><spring:message code='ezResource.t15'/></span></a>
-        	<a class="imgbtn" name="Rbutton"><span onClick="window.close()"><spring:message code='ezResource.t16'/></span></a>    
     	</div>
 	</body>
 </html>

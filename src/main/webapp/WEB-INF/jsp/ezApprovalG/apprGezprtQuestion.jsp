@@ -196,7 +196,7 @@
 			<tr><th ><input id='line' name='line' type='checkbox'></th>
 			<td><span id="ext3"><spring:message code='ezApprovalG.t10022'/></span></td> </tr>
 		</table>
-		<div class="btnposition btnpositionNew" style="margin-top:15px">
+		<div class="btnposition btnpositionNew">
 		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezApprovalG.t10023'/></span></a>
 		    <a id="Submit2" class="imgbtn" onClick="return select_click()" ><span><spring:message code='ezApprovalG.t10024'/></span></a>
 		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span><spring:message code='ezApprovalG.t10025'/></span></a>

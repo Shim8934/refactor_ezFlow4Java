@@ -166,12 +166,22 @@
 			}
 		</style>
 	</head>
-	<body class="popup"> 
-        <h1><spring:message code='ezAttitude.t200' /></h1>
+	<body class="popup">
+		<div id="menu">
+			<ul id="menuTable">
+				<li class="sel">
+					<h1 style="padding: 0px; margin-top: -5px;"><spring:message code='ezAttitude.t200' /></h1>
+				</li>
+			</ul>
+			<ul style="float: right; margin-right: 50px">
+				<li id="menuTable" style="background: none; border: none;">
+					<span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span>
+				</li>
+			</ul>
+		</div>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span></li>
-	            <li><span onclick="close_Click()"><spring:message code='ezAttitude.t157' /></span></li>
+	            <li><span onclick="close_Click()"></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">

@@ -1168,7 +1168,7 @@
 	    </table>
 	    <table style="width: 100%; text-align: center;">
 	        <tr>
-	            <td class="btnposition btnpositionNew" style="text-align: center;background-color: white;border-top:0px">
+	            <td class="btnposition btnpositionNew">
 	                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
 	                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 	            </td>
