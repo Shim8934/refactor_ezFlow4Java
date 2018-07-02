@@ -492,6 +492,8 @@ public class EzEmailMailListController {
 					} else {
 						name = Integer.toString(nameLength) + "명중" + returnValue1.split(";")[1] + "명이 읽음";
 					}
+					
+					readDate = "";
 				} else {
 					readDate = returnValue1.split(";")[1];
 				}

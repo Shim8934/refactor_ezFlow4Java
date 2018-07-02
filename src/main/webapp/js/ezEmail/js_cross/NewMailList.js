@@ -55,7 +55,8 @@ function MakeHeaderHTML(HeaderObject) {
         _HeaderTR.appendChild(_HeaderTH);
         for (var Cnt = 0; Cnt < XmlRows.length; Cnt++) {
             var _HeaderRow = document.createElement("TH");
-            if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
+            if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && SelectSingleNodeValue(XmlRows[Cnt], "propname") != "readdt") {
+            	// 재은 수정
                 if (p_ListorderValue == "GROUPSUBLIST") {
                     _HeaderRow.onclick = function () { event_SubHeaderClick(this); };
                 }

@@ -122,6 +122,7 @@
 		    	
 		    	// 재은 수정중
 		    	if (g_moveUrl == 'receiveChk') {
+		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		useReceivingChk = true;
 		    		g_foldertype = g_moveUrl;
 		    		p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
@@ -821,7 +822,7 @@
           <li><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
           <li><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
           <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
-          <li onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
+          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
           <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
           <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
           <li><span onClick="deleteWork(false)"><spring:message code="ezEmail.t95" /></span></li>
