@@ -391,9 +391,9 @@
 				<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div>
 				<span id="searchArea" style="float:right;font-weight:normal;color:black;">
 					<select id="searchCondition" onchange="setSearchInput(this.value)">
-						<option value="searchByUser"><spring:message code='ezPMS.t129' /></option>
+						<option value="searchByUser"><spring:message code='ezPMS.t114' /></option>
 						<option value="searchByContent"><spring:message code='ezPMS.t130' /></option>
-						<option value="searchByWriteDate"><spring:message code='ezPMS.t131' /></option>
+						<option value="searchByWriteDate"><spring:message code='ezPMS.t119' /></option>
 					</select>
 					<input type="text" id="searchKeyword" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top">
 					<span id="searchDate" style="display: none;">

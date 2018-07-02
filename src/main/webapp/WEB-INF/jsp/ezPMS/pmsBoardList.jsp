@@ -262,7 +262,7 @@
 				<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%"><spring:message code='ezPMS.t268' /></th>
 				<th onclick="setListOrder(this)" data-order='FILE' width="3%"><img src="/images/newAttach.gif"></th>
 				<th onclick="setListOrder(this)" data-order='TITLE'><spring:message code='ezPMS.t118' /></th>
-				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%"><spring:message code='ezPMS.t80' /></th>
+				<th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%"><spring:message code='ezPMS.t98' /></th>
 				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%"><spring:message code='ezPMS.t115' /></th>
 				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%"><spring:message code='ezPMS.t114' /></th>
 				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%"><spring:message code='ezPMS.t119' /></th>

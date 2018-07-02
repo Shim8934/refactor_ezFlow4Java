@@ -32,9 +32,9 @@
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 		<div id="left">
 			
-			<div class="left_admin" title="<spring:message code='ezJournal.t1'/>"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;프로젝트 관리</div>
+			<div class="left_admin" title="<spring:message code="ezPMS.t8"/>"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code="ezPMS.t8" /></div>
 			
-				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%;">프로젝트 검색</span><ul></ul></h2>	
+				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code="ezPMS.t235" /></span><ul></ul></h2>	
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
