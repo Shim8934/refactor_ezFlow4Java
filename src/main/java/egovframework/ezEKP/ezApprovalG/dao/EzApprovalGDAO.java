@@ -3019,4 +3019,17 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getDocHrefInfoHref(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocHrefInfoHref", map);
 	}
+	public void deleteSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteSpecialInfoNonElecRec", map);
+	}
+	public void insertSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertSpecialInfoNonElecRec", map);
+	}
+	public void insertSpecialInfoNonElecRec2(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertSpecialInfoNonElecRec2", map);
+	}
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordTempVO> selectSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
+		return (List<ApprGRecordTempVO>) list("EzApprovalG.selectSpecialInfoNonElecRec", map);
+	}
 }

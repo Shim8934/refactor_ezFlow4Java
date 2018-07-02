@@ -24843,4 +24843,75 @@
     	AND
     		TENANT_ID = #tenantID#
     </update>
+    
+	<delete id="EzApprovalG.deleteSpecialInfoNonElecRec" parameterClass="Map">
+		DELETE
+			TBL_SPECIALCATALOGINFO_TMP
+		WHERE
+			DOCID = #v_docID#
+		AND
+			RECORDID = #v_recordID#
+		AND
+			TENANT_ID = #v_tenantID#
+		AND
+			COMPANYID = #v_companyID#
+	</delete>
+    <insert id="EzApprovalG.insertSpecialInfoNonElecRec2" parameterClass="Map">
+    	INSERT INTO 
+    		TBL_SPECIALCATALOGINFO_TMP
+    			(DOCID, RECORDID, SERIALNO, SC1, SC2, SC3, TENANT_ID, COMPANYID)
+    		VALUES
+    			(#v_docID#, #v_recordID#, #v_serialNO#, #v_SC1#, #v_SC2#, #v_SC3#, #v_tenantID#, #v_companyID#)
+    </insert>
+    <insert id="EzApprovalG.insertSpecialInfoNonElecRec" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_SPECIALCATALOGINFO_TMP 
+   		(DOCID, RecordID, SerialNo, SC1, SC2, SC3, TENANT_ID, COMPANYID) 
+   		(SELECT 
+   			#v_docID#, #v_recordID#, SerialNo, SC1, SC2, SC3, TBL_SPECIALCATALOGINFO_CAB.TENANT_ID , TBL_SPECIALCATALOGINFO_CAB.COMPANYID
+   		 FROM 
+   		 	TBL_SPECIALCATALOGINFO_CAB 
+   		 INNER JOIN 
+   		 	(SELECT 
+   		 		TBL_CABINET.CabinetClassNo,
+   		 		TBL_CABINET.TENANT_ID,
+   		 		TBL_CABINET.COMPANYID
+   		 	 FROM 
+   		 	 	TBL_CABINET 
+   		 	 WHERE 
+   		 	 	TBL_CABINET.CabinetID = #v_cabID#
+   		 	 AND
+   		 	 	TBL_CABINET.TENANT_ID = #v_tenantID#
+   		 	 AND
+   		 	 	TBL_CABINET.COMPANYID = #v_companyID#) TBL_CABINET 
+   		  ON 
+   		  	TBL_SPECIALCATALOGINFO_CAB.CabinetClassNo = TBL_CABINET.CabinetClassNo 
+   		  AND 
+   		  	TBL_SPECIALCATALOGINFO_CAB.TENANT_ID = TBL_CABINET.TENANT_ID 
+   		  AND
+   		  	TBL_SPECIALCATALOGINFO_CAB.COMPANYID = TBL_CABINET.COMPANYID 
+          Where 
+          	SerialNo='000' 
+          AND 
+          	TBL_CABINET.TENANT_ID= #v_tenantID#
+          AND
+          	TBL_CABINET.COMPANYID= #v_companyID#)
+   </insert>
+   <select id="EzApprovalG.selectSpecialInfoNonElecRec" parameterClass="Map" resultClass="ApprGRecordTempVO" remapResults="true">
+		SELECT
+			DOCID, 
+			RECORDID, 
+			SERIALNO, 
+			SC1, 
+			SC2, 
+			SC3
+		FROM
+			TBL_SPECIALCATALOGINFO_TMP
+		WHERE
+			DOCID = #orgDocID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </select>
 </sqlMap>

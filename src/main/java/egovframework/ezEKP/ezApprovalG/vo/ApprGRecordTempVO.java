@@ -52,6 +52,12 @@ public class ApprGRecordTempVO {
 	private String recordType;
 	private String summary;
 	
+	/* 특수목록 */
+	private String serialNO;
+	private String sc1;
+	private String sc2;
+	private String sc3;
+	
 	/* 구분 */
 	private int tenantID;
 	private String companyID;
@@ -337,6 +343,30 @@ public class ApprGRecordTempVO {
 	}
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+	public String getSerialNO() {
+		return serialNO;
+	}
+	public void setSerialNO(String serialNO) {
+		this.serialNO = serialNO;
+	}
+	public String getSc1() {
+		return sc1;
+	}
+	public void setSc1(String sc1) {
+		this.sc1 = sc1;
+	}
+	public String getSc2() {
+		return sc2;
+	}
+	public void setSc2(String sc2) {
+		this.sc2 = sc2;
+	}
+	public String getSc3() {
+		return sc3;
+	}
+	public void setSc3(String sc3) {
+		this.sc3 = sc3;
 	}
 	
 }

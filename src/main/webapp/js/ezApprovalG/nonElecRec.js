@@ -199,6 +199,10 @@ function nonElecRecInfoInit() {
 		document.getElementById("selRegisterType").selectedIndex = "0";
 	}
 	
+	if (pIniGubun == "11" || pIniGubun == "6") {
+		document.getElementById("selRegisterType").disabled = true;
+	}
+	
 	document.getElementById("txtTitle").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "TITLE");
 	document.getElementById("txtAprMemberTitle").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE");
 	document.getElementById("txtDrafter").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME");
@@ -429,6 +433,30 @@ function GetLVHearderXml() {
     return getXmlString(oList);
 }
 /*
+ * 특수목록 전용 헤더 세팅 메소드
+ * */
+function GetSCHearderXml() {
+	var oList, ListViewData, Headers, Header, HName, HWidth, Rows, node;
+
+    oList = createXmlDom();
+    ListViewData = createNodeInsert(oList, ListViewData, "LISTVIEWDATA"); 	
+
+    Headers = createNodeAndAppandNode(oList, ListViewData, Headers, "HEADERS");
+    Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
+    createNodeAndAppandNodeText(oList, Header, node, "NAME", "순번");
+    createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "30");
+    
+    for (i = 0; i < g_arrSCName.length; i++) {
+    	Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
+    	createNodeAndAppandNodeText(oList, Header, node, "NAME", g_arrSCName[i]);
+    	createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "120");
+    }
+
+    Rows = createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
+    
+    return getXmlString(oList);
+}
+/*
  * 캐비넷 아이디 세팅
  * */
 function setCabInfoInit() {
@@ -458,6 +486,7 @@ function setCabInfoInit() {
 	    InitCabClassInfo2(CabXml);
 	    //InitRegisterType();
 	    InitSCInputBox();
+	    InitSCListXML();
 	} else {
 		g_SepAttachLVXml = g_SepAttachLVXml.replace(/nonElecRecTempCabinetName/gi, "").replace(/nonElecRecTempCabinet/gi, "");
 	}
@@ -567,6 +596,34 @@ function btnAddSpecialCatalog_onclick_Complete(rtn) {
 	   if (rtn[0] == "TRUE") {
 	        g_szSCListXml = rtn[1];
 	    }
+}
+/*
+ * 특수목록 전용 xml 가공 메소드
+ * */
+function InitSCListXML() {
+	var NonElecXML = createXmlDom();
+	NonElecXML = loadXMLString(nonElecRecInfoXml);
+	
+	var InfoXml = loadXMLString(GetSCHearderXml());
+	var Rows = InfoXml.childNodes[0].childNodes[1];
+	var selRow, Row, Cell, Value, Data, node, i;
+	var oRows = SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/ROWS/ROW");
+	
+    if (oRows.length > 0) {
+        for (i = 1; i < oRows.length; i++) {
+        	Row = createNodeAndAppandNode(InfoXml, Rows, Row, "ROW");
+        	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
+        	node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", SelectSingleNodeValue(oRows[i], "SERIALNO").trim());
+        	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
+        	node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", SelectSingleNodeValue(oRows[i], "SC1"));
+        	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
+        	node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", SelectSingleNodeValue(oRows[i], "SC2"));
+        	Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
+        	node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", SelectSingleNodeValue(oRows[i], "SC3"));
+        }
+        
+        g_szSCListXml = getXmlString(InfoXml); // 특수목록 xml
+    }
 }
 
 // 일단 이쪽부턴 사용안하지만 필요할것 같아서 놔둠 ↓↓↓↓↓↓↓↓

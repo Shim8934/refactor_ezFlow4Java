@@ -26514,6 +26514,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    		resultXML.append("<SEPERATEATTACH></SEPERATEATTACH>");
 	    	}
 	    }
+	    
+	    apprGRecordTempVO = ezApprovalGDAO.selectSpecialInfoNonElecRec(map);
+	    
+	    if (apprGRecordTempVO != null && apprGRecordTempVO.size() > 0) {
+	    	resultXML.append("<SPECIALCATALOGINFO>");
+	    	resultXML.append("<ROWS>");
+	    	
+	    	for (int i = 0; i < apprGRecordTempVO.size(); i++) {
+	    		resultXML.append("<ROW>");
+	    		resultXML.append("<SERIALNO>" + apprGRecordTempVO.get(i).getSerialNO() + "</SERIALNO>");
+	    		resultXML.append("<SC1>" + apprGRecordTempVO.get(i).getSc1() + "</SC1>");
+	    		resultXML.append("<SC2>" + apprGRecordTempVO.get(i).getSc2() + "</SC2>");
+	    		resultXML.append("<SC3>" + apprGRecordTempVO.get(i).getSc3() + "</SC3>");
+	    		resultXML.append("</ROW>");
+	    	}
+	    	
+	    	resultXML.append("</ROWS>");
+	    	resultXML.append("</SPECIALCATALOGINFO>");
+	    } else {
+	    	resultXML.append("<SPECIALCATALOGINFO></SPECIALCATALOGINFO>");
+	    }
+	    
 	    resultXML.append("</NONELECREC></NONELECRECINFO>");
 		
 		return resultXML.toString();
@@ -26622,6 +26644,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    	ezApprovalGDAO.updateNonElecRecInfo3(map);
 		    }
 		    
+		    String specialCatalogInfoXML = "";
+		    String cabID = "";
+		    if (docXML.getElementsByTagName("NONELECREC_SPECIALCATALOGINFO").getLength() > 0) {
+		    	specialCatalogInfoXML = makeListField(docXML.getElementsByTagName("NONELECREC_SPECIALCATALOGINFO").item(0).getTextContent().trim());
+		    	Document objParam = commonUtil.convertStringToDocument(specialCatalogInfoXML);
+		    	cabID = docXML.getElementsByTagName("CABINETID").item(0).getTextContent();
+		    	saveSpecialInfoNonElecRec(orgDocID, recordID, cabID, objParam, tenantID, companyID);
+		    }
+		    
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    	result = "FALSE";
@@ -26629,5 +26660,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    
 		logger.debug("updateNonElecRecInfo ended.");
 		return result;
+	}
+	
+	public String saveSpecialInfoNonElecRec(String docID, String recordID, String cabID, Document objParam, int tenantID, String companyID) throws Exception {
+		logger.debug("saveSpecialInfoNonElecRec started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_docID",  docID);
+		map.put("v_recordID",  recordID);
+		map.put("v_cabID",  cabID);
+		map.put("v_companyID",  companyID);
+		map.put("v_tenantID",  tenantID);
+		
+		ezApprovalGDAO.deleteSpecialInfoNonElecRec(map);
+		ezApprovalGDAO.insertSpecialInfoNonElecRec(map);
+		
+		NodeList nodeData = objParam.getElementsByTagName("SCDATA");
+		if (nodeData.getLength() > 0) {
+			for (int k = 0; k < nodeData.getLength(); k++) {
+				map.put("v_serialNO",  nodeData.item(k).getChildNodes().item(0).getTextContent().trim());
+				map.put("v_SC1",  nodeData.item(k).getChildNodes().item(1).getTextContent().trim());
+				map.put("v_SC2",  nodeData.item(k).getChildNodes().item(2).getTextContent().trim());
+				map.put("v_SC3",  nodeData.item(k).getChildNodes().item(3).getTextContent().trim());
+				ezApprovalGDAO.insertSpecialInfoNonElecRec2(map);
+			}
+		}
+
+		logger.debug("saveSpecialInfoNonElecRec ended");
+        
+		return "TRUE";
 	}
 }
