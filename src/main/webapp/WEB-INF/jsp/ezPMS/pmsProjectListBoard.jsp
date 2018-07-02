@@ -239,16 +239,14 @@ $(function(){
 												value="${project.planEndDate }" /></td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px">
-											<span class="statusSpan" style="padding:4px;">
 											<c:choose>
-												<c:when test="${project.status eq 'P' }"><spring:message code='ezPMS.t15' /></c:when>
-												<c:when test="${project.status eq 'W' }"><spring:message code='ezPMS.t16' /></c:when>
-												<c:when test="${project.status eq 'C' }"><spring:message code='ezPMS.t17' /></c:when>
-												<c:when test="${project.status eq 'L' }"><spring:message code='ezPMS.t18' /></c:when>
-												<c:when test="${project.status eq 'D' }"><spring:message code='ezPMS.t11' /></c:when>
-												<c:when test="${project.status eq 'S' }"><spring:message code='ezPMS.t19' /></c:when>
+												<c:when test="${project.status eq 'P' }"><span class="statusSpan situation_progress"><spring:message code='ezPMS.t15' /></span></c:when>
+												<c:when test="${project.status eq 'W' }"><span calss="statusSpan situation_stanby"><spring:message code='ezPMS.t16' /></span></c:when>
+												<c:when test="${project.status eq 'C' }"><span calss="statusSpan situation_complete"><spring:message code='ezPMS.t17' /></span></c:when>
+												<c:when test="${project.status eq 'L' }"><span calss="statusSpan situation_delay"><spring:message code='ezPMS.t18' /></span></c:when>
+												<c:when test="${project.status eq 'D' }"><span calss="statusSpan situation_delet"><spring:message code='ezPMS.t11' /></span></c:when>
+												<c:when test="${project.status eq 'S' }"><span calss="statusSpan situation_hold"><spring:message code='ezPMS.t19' /></span></c:when>
 											</c:choose>
-											</span>
 											</td>
 									</tr>
 								</c:forEach>

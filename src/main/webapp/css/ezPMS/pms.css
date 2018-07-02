@@ -105,6 +105,11 @@
 .overview_section_listDL dd:hover { border: 1px solid #a1a1a1; }
 .overview_section_listDL dt { float: none; line-height: 22px; display: block; margin: 0px; text-align: center; font-size: 14px; font-weight: bold; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .overview_section_listDL dt span {display:inline-block;}
+
+/* 개요 더보기 style */
+.overview_section_list .moreBtn {padding:9px 0px; margin-bottom:10px; border:1px solid #d1d1d1; background:#fff; text-align:center; box-sizing:border-box; cursor:pointer;}
+.overview_section_list .moreBtn:hover {color:#000; border:1px solid #a1a1a1;}
+
 .overview_list {height:135px; padding:0px 10px; margin-bottom:10px; border: 1px solid #d1d1d1; background:#ffffff; box-sizing:border-box;}
 .overview_list:hover {border:1px solid #a1a1a1; cursor:pointer;}
 .overview_list_title { height: 18px; line-height: 18px; margin: 0px; padding: 10px 0px 8px 0px; border-bottom: 1px solid #e8e8e8; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
@@ -124,20 +129,10 @@
 /* 20180629 project_mainlist moreBtn */
 .project_mainlist .moreBtn { border: 1px solid #d1d1d1; background-color: #f5f6f6; text-align: center; clear: both; cursor: pointer; height: 33px; line-height: 30px; box-sizing:border-box;}
 
-/* 20180629 project_mainlist moreBtn @media */
-@media only screen and (max-width : 1016px) {
-    .project_mainlist .moreBtn {width:360px;}
-}
 
-@media only screen and (min-width : 1017px) and (max-width : 1396px) {
-    .project_mainlist .moreBtn { width: 740px; }
-}
+/* 20180629 project_mainlist moreBtn */
+.project_mainlist .moreBtn { clear: both; height: 33px; line-height: 30px; margin-right:190px; border: 1px solid #d1d1d1; background-color: #f5f6f6; text-align: center; cursor: pointer; box-sizing: border-box; }
 
-@media only screen and (min-width : 1397px) and (max-width : 1776px) {
-    .project_mainlist .moreBtn { width: 1120px; }
-}
-@media only screen and (min-width : 1777px) and (max-width : 1920px) {
-    .project_mainlist .moreBtn { width: 1500px; }
 
 /* tooltipbox */
 .tooltipBox {border:1px solid #4e4e46;}

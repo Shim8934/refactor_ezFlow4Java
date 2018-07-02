@@ -173,11 +173,11 @@ function emptyDate(elem){
 
 function viewSetting() {
 	CurrentHeight = $(window).height() - 100;
-	$("MailListRayer").css("height", CurrentHeight + "px");
+	$("#MailListRayer").css("height", CurrentHeight - 102 + "px");
 	$("#taskTree").css("height", CurrentHeight + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
-	$("#contentList").css("height", (CurrentHeight - 102) + "px");
+	$("#contentList").css("height", (CurrentHeight - 103) + "px");
 	$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-	$("#divList").css("height", (CurrentHeight - 150) + "px");
+	$("#divList").css("height", (CurrentHeight - 154) + "px");
 	$("#divList").css("overflow", "auto");
 }

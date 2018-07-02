@@ -493,7 +493,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 		var startRow = $("#" + targetPosition).find(".overview_list").length;
 		
 		if (taskList.length >= 10) {
-			$("#" + targetPosition).find(".overview_section_list").append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")' style='border:1px solid black; background-color:white; text-align:center;'><span><spring:message code='ezPMS.t276' /></span></div>");
+			$("#" + targetPosition).find(".overview_section_list").append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")'><span><spring:message code='ezPMS.t276' /></span></div>");
 		}
 	}
 }

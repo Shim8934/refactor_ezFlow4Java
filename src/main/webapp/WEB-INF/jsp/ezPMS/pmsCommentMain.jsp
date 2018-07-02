@@ -42,24 +42,25 @@
 	var searchByContent = "";
 	
 	$(document).ready(function() {
+
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
 		$("#taskTree").css("height", CurrentHeight + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 100) + "px");
+		$("#contentList").css("height", (CurrentHeight - 70) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-		$("#divList").css("height", (CurrentHeight - 245) + "px");
+		$("#divList").css("height", (CurrentHeight - 206) + "px");
 		
 		$(window).resize(function() {
 			CurrentHeight = $(window).height() - 100;
 			$("MailListRayer").css("height", CurrentHeight + "px");
-			$("#taskTree").css("height", CurrentHeight + 10 + "px");
+			$("#taskTree").css("height", CurrentHeight + "px");
 			$("#projectContent").css("height", CurrentHeight + "px");
-			$("#contentList").css("height", (CurrentHeight - 100) + "px");
+			$("#contentList").css("height", (CurrentHeight - 70) + "px");
 			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-			$("#divList").css("height", (CurrentHeight - 245) + "px");
+			$("#divList").css("height", (CurrentHeight - 206) + "px");
 		});
-
+		
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
@@ -125,11 +126,11 @@
 				//순서 재조정
 				CurrentHeight = $(window).height() - 100;
 				$("MailListRayer").css("height", CurrentHeight + "px");
-				$("#taskTree").css("height", CurrentHeight + 10 + "px");
+				$("#taskTree").css("height", CurrentHeight + "px");
 				$("#projectContent").css("height", CurrentHeight + "px");
-				$("#contentList").css("height", (CurrentHeight - 100) + "px");
+				$("#contentList").css("height", (CurrentHeight - 70) + "px");
 				$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-				$("#divList").css("height", (CurrentHeight - 245) + "px");
+				$("#divList").css("height", (CurrentHeight - 206) + "px");
 				
 				setInitOrder();
 			}	

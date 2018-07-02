@@ -51,14 +51,7 @@
 	$(document).ready(function() {
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		
-		CurrentHeight = $(window).height()-100;
-		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + "px");
-		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-		$("#divList").css("height", (CurrentHeight - 165) + "px");
-		$("#divList").css("overflow", "auto");
+		viewSetting();
 		
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));

@@ -197,24 +197,6 @@
 		if(typeof setContentTitle != 'undefined') {
 			setContentTitle(taskName, contentCount);
 		}
-		
-		CurrentHeight = $(window).height() - 100;
-		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + "px");
-		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 100) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-		$("#divList").css("height", (CurrentHeight - 245) + "px");
-		
-		$(window).resize(function() {
-			CurrentHeight = $(window).height() - 100;
-			$("MailListRayer").css("height", CurrentHeight + "px");
-			$("#taskTree").css("height", CurrentHeight + 10 + "px");
-			$("#projectContent").css("height", CurrentHeight + "px");
-			$("#contentList").css("height", (CurrentHeight - 100) + "px");
-			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-			$("#divList").css("height", (CurrentHeight - 245) + "px");
-		});
 	});
 </script>
 <div id="divList" style="width: 100%;">

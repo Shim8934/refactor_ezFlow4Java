@@ -11,14 +11,7 @@
 	taskName = '<c:out value="${taskName}"/>';
 	
 	$(function() {
-		CurrentHeight = $(window).height()-100;
-		$("MailListRayer").css("height", CurrentHeight + "px");
-		$("#taskTree").css("height", CurrentHeight + "px");
-		$("#projectContent").css("height", CurrentHeight + "px");
-		$("#contentList").css("height", (CurrentHeight - 102) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-		$("#divList").css("height", (CurrentHeight - 165) + "px");
-		$("#divList").css("overflow", "auto");
+		viewSetting();
 		
 		$(".mainlist tbody tr td:not(.checkbox)").on("click", function(evt) {
 			var checkbox = $(this).parent().children("td:eq(0)").children();

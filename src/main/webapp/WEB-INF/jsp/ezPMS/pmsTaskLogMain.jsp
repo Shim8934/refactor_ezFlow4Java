@@ -34,14 +34,6 @@ var searchContent = "";
 var searchStatus = "";
 var logData = "";
 
-$(document).ready(function() {
-	viewSetting();
-	
-	$(window).resize(function() {
-		viewSetting();
-	});
-});
-
 $(function(){
 	logData = ${data};
 	logData = JSON.parse(JSON.stringify(logData));
@@ -60,6 +52,27 @@ $(function(){
 			$("#searchButton").css("display", "");
 			$("#searchStatus").css("display", "none");
 		}
+	});
+
+	CurrentHeight = $(window).height() - 100;
+	$("#MailListRayer").css("height", CurrentHeight - 63 + "px");
+	$("#taskTree").css("height", CurrentHeight + "px");
+	$("#projectContent").css("height", CurrentHeight + "px");
+	$("#contentList").css("height", (CurrentHeight - 63) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 200) + "px");
+	$("#divList").css("height", (CurrentHeight - 117) + "px");
+	$("#divList").css("overflow", "auto");
+	
+	$(window).resize(function() {
+
+		CurrentHeight = $(window).height() - 100;
+		$("#MailListRayer").css("height", CurrentHeight - 63 + "px");
+		$("#taskTree").css("height", CurrentHeight + "px");
+		$("#projectContent").css("height", CurrentHeight + "px");
+		$("#contentList").css("height", (CurrentHeight - 63) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 200) + "px");
+		$("#divList").css("height", (CurrentHeight - 117) + "px");
+		$("#divList").css("overflow", "auto");
 	});
 });
 
@@ -88,9 +101,18 @@ function setContentList() {
 		url : "/ezPMS/getTaskLogList.do",
 		success : function(contentList) {
 			$("#contentList").html(contentList);
-			viewSetting();
 			searchStatus = "";
 			setInitOrder();
+			
+			//viewSetting
+			CurrentHeight = $(window).height() - 100;
+			$("#MailListRayer").css("height", CurrentHeight - 63 + "px");
+			$("#taskTree").css("height", CurrentHeight + "px");
+			$("#projectContent").css("height", CurrentHeight + "px");
+			$("#contentList").css("height", (CurrentHeight - 63) + "px");
+			$("#projectListBody").css("height", (CurrentHeight - 180) + "px");
+			$("#divList").css("height", (CurrentHeight - 117) + "px");
+			$("#divList").css("overflow", "auto");
 		}	
 	});
 }
