@@ -491,22 +491,19 @@
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
 		
-		        if (g_InitFlag == "2") {
-		        	btnClose_onclick();
-		        	return;
-		        }
-		        
-		        var totalRows = pLvList.GetDataRows();
-		        if (totalRows.length == 1 && totalRows[0].id.indexOf("noItems") > -1) {
-		            alert("<spring:message code='ezApprovalG.t1031'/>");
-		            return;
-		        }
-	        
-		        if (nonElecRec == "Y" && g_CabinetID != "nonElecRecTempCabinet") {
-			        if (!CheckSepAttParamXmlNull()) {
-			            alert("<spring:message code='ezApprovalG.t1411'/>");
+		        if (g_InitFlag != "2") {
+			        var totalRows = pLvList.GetDataRows();
+			        if (totalRows.length == 1 && totalRows[0].id.indexOf("noItems") > -1) {
+			            alert("<spring:message code='ezApprovalG.t1031'/>");
 			            return;
-		        	}
+			        }
+		        
+			        if (nonElecRec == "Y" && g_CabinetID != "nonElecRecTempCabinet") {
+				        if (!CheckSepAttParamXmlNull()) {
+				            alert("<spring:message code='ezApprovalG.t1411'/>");
+				            return;
+			        	}
+			        }
 		        }
 		        
 		        rtnVal[0] = "TRUE";
