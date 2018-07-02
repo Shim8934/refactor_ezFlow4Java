@@ -612,6 +612,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_IKMS4(map1);
 				ezOrganAdminDao.insertCompanyInfo_IKMS5(map1);
 				ezOrganAdminDao.insertCompanyInfo_IKMS6(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS7(map1);
 				
 				//회사등록시 근태설정(근태규율관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I20(map1);
