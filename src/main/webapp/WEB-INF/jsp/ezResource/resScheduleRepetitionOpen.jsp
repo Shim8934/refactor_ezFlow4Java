@@ -43,7 +43,7 @@
   			<input type="radio" name="chk_Open" value="Master">
   				<spring:message code="ezResource.t329" />
   		</div>
-		<div class="btnposition">
+		<div class="btnpositionNew">
   			<input type="submit" value="<spring:message code="ezResource.t15" />" onClick="btnOk_Click();">
   			<input type="submit" value="<spring:message code="ezResource.t16" />" onClick="btnCancel_Click();">
 		</div>

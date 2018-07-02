@@ -1414,7 +1414,7 @@
 			    	</td> 
 			  	</tr> 
 			</table> 
-			<div class="btnposition">
+			<div class="btnposition btnpositionNew">
 			    <a class="imgbtn" onClick="close_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 			</div>
 		</form>

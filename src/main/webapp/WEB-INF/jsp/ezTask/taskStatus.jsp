@@ -228,7 +228,7 @@
 				</tr>
 			</table>
 		</div>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onclick="taskUpdateInstance()"><span><spring:message code='ezTask.t19' /></span></a>
 		</div>
 	</body>
