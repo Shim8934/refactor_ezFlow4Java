@@ -117,7 +117,7 @@
 		   			tempTask.end = new Date(pd.planEndDate).getTime();
 		   			tempTask.duration = pd.workingday;
 		   			tempTask.weight = Number(pd.weight).toFixed(1);
-		   			tempTask.startIsMilestone = true;
+		   			tempTask.startIsMilestone = false;
 		   			tempTask.endIsMilestone = "";
 		   			tempTask.assigs = [];
 		   			
@@ -548,7 +548,10 @@
 	   			  ge.taskIsChanged();
 	   			  /* changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex, groupId, taskName); */
 	   			  
-	   			  if(task.setPeriod(start, endTime)) {
+	   			  var returnVal = task.setPeriod(start, endTime);
+	   			  console.log(returnVal);
+	   			  
+	   			  if(returnVal) {
 	   				saveAllSchedules();
 	   				return true;
 	   			  } else {
@@ -641,9 +644,9 @@
 	   			  	} */
 	   			  	
 	   			  	// 후행작업의 기간이 정상적으로 조정된 후, 화면의 정보를 바탕으로 DB업데이트
-	   			  	if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
-
-	   			  		if(task.moveTo(task.start,false,true)) {
+	   			  	if(task.moveTo(task.start,false,true)) {
+	   			  	
+	   			  		if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
 	   			  			saveAllSchedules();
 	   			  		} else {  			
 	   			  			location.reload();
@@ -803,7 +806,7 @@
 		  			var newEnd    = dateToYYYYMMDD(new Date(allGanttItems[i].end));
 		  			var duration  = allGanttItems[i].duration;
 		  			
-		  			console.log("newStart : " + newStart + ", newEnd : " + newEnd);
+		  			/* console.log("newStart : " + newStart + ", newEnd : " + newEnd); */
 		  			
 		  			if(taskId != null) {
 		  				allTasks.push(new TaskSchedule(taskId, newStart, newEnd, duration));
@@ -825,9 +828,7 @@
   					dataType : "json",
   					contentType : "application/json; charset=UTF-8",
   					data : JSON.stringify(data),
-  					success : function(result) {
-  						
-  					}
+  					success : function(result) {}
 		  		});
 	   		}
 	   		
