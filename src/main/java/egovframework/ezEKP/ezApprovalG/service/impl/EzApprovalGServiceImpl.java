@@ -25112,14 +25112,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//string 인지 리스트로 받아오는지 확실치 않아서 일단 리스트, 확인 후 변경
 			List<ApprGRelayVO> apprGAttachInfoVOList = ezApprovalGDAO.recRelayInfo(map);
 			
-			if(apprGAttachInfoVOList.size() > 0) {
+			if (apprGAttachInfoVOList.size() > 0) {
 				ezApprovalGDAO.deleteRecRelayInfo(map);
 				ezApprovalGDAO.deleteRelayAprDocInfo(map);
 			}
 			ezApprovalGDAO.insertRelayDB(map);
 			result = true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			result = false;
 		}
 		return result;
