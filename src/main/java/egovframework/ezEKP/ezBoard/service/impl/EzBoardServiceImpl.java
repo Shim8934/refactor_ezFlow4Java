@@ -1285,6 +1285,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getCheckItemID(map);
 	}
 
+	/* 2018-06-29 홍승비 - 해당 게시물을 작성한 사람의 WriterDeptID(겸직상태로 저장됨)도 함께 가져오도록 함 */
 	@Override
 	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, String multiLang, int tenantID) throws Exception {
 		logger.debug("getBrdGetItemInfo started");
@@ -1299,6 +1300,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getBrdGetItemInfo(map);
 	}
 
+	/* 2018-06-29 홍승비 - 해당 게시물을 작성한 사람의 WriterDeptID(겸직상태로 저장됨)도 함께 가져오도록 함 */
 	@Override
 	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, String multiLang, int tenantID) throws Exception {
 		logger.debug("getBrdGetItemInfoTemp started");
@@ -1870,6 +1872,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 	}
 
+	/* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 	@Override
 	public String getItemXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
 		logger.debug("getItemXML started");
@@ -1891,6 +1894,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
 			sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
 			sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
+			sb.append("<WriterDeptID>" + commonUtil.cleanValue(itemInfo.getWriterDeptID()) + "</WriterDeptID>");
 			sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
 			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
 			sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
@@ -1931,6 +1935,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return sb.toString();
 	}
 
+	/* 2018-06-29 홍승비 - 임시게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 	@Override
 	public String getItemTempXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
 		logger.debug("getItemTempXML started");
@@ -1951,6 +1956,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
 		sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
 		sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
+		sb.append("<WriterDeptID>" + commonUtil.cleanValue(itemInfo.getWriterDeptID()) + "</WriterDeptID>");
 		sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
 		sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
 		sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
@@ -2312,6 +2318,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("saveAttachInfo ended");
 	}
 	
+	/* 댓글 저장 시 회사ID 삽입하도록 수정 */
 	@Override
 	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception {
 		logger.debug("saveOneLineReply started");
@@ -2327,6 +2334,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("PCONTENT", content);
 		map.put("PPASSWORD", password);
 		map.put("TENANTID", userInfo.getTenantId());
+		map.put("COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
 		
 		ezBoardDAO.saveOneLineReply(map);
@@ -3928,6 +3936,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
 		logger.debug("getSearchApprBoardItemCount ended");
@@ -3960,6 +3969,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", boardListVO.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);

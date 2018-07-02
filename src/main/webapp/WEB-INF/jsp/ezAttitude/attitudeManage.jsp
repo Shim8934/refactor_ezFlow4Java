@@ -811,7 +811,7 @@
 		      		</li>
 					<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
 		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
-					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+					<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px; border-radius:3px">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>

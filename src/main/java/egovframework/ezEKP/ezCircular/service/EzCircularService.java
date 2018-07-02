@@ -97,11 +97,11 @@ public interface EzCircularService {
 	
 	public void deleteCircularUser(int circularID,int tenantID) throws Exception;
 
-	public void setCircularDeptSave(String title, String userID, String[] memberListStr, int tenantID, String companyID, String[] deptListStr) throws Exception;
+	public void setCircularDeptSave(String title, String userID, String[] memberListStr, int tenantID, String companyID) throws Exception;
 
 	public void circularDeptDel(String circularBMIdList, int tenantID) throws Exception;
 
-	public void updateCircularDept(String title, String userID, String[] memberListStr, String circularBMId, int tenantID, String companyID, String[] deptListStr) throws Exception;
+	public void updateCircularDept(String title, String userID, String[] memberListStr, String circularBMId, int tenantID, String companyID) throws Exception;
 
 	public void circularConfirmStatus(String circularIDList, String memberID, int tenantID) throws Exception;
 

@@ -56,9 +56,13 @@
 	            if (APPRMAILFLAG == "Y") {
 	                $("#chkApprBoardMail").prop("checked",true);
 	            }
+	            
 	            /* 2018-06-29 홍승비 - 기존 승인여부가 null인 게시판은 'N'값으로 처리 */
 	            if (orgAPPRFLAG == '') {
 	            	orgAPPRFLAG = "N";
+	            }
+	            if (APPRFLAG == '') {
+	            	APPRFLAG = "N";
 	            }
 	            
 	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
@@ -78,7 +82,7 @@
 	                } else {
 	                    document.getElementById("trAttribute").style.display = "";
 	                }
-	            }
+	            } 
 			});
 			
 			function Save() {
@@ -153,7 +157,7 @@
 	                $("#deleteafter").focus();
 	                return;
 	            }
-
+	            
 	            if (orgAPPRFLAG != APPRFLAG) {
 	                if (orgAPPRFLAG == "N") {
 	                    if (!confirm("<spring:message code='ezBoard.t999013'/>")) {

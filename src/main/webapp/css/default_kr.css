@@ -49,9 +49,9 @@ select::-ms-expand {
     display: none;
 }
 
-#menu select {height:27px;border-radius:3px}
+#menu select {height:27px;border-radius:2px;}
 
-#menu select, #menu input {border:1px solid rgb(175, 195, 221);}
+#menu select, #menu input {border:1px solid #829dc7;}
 
 textarea {
 	padding: 5px;
@@ -157,13 +157,25 @@ form{display:inline;margin:0}
 	background: none;
 	border: none;
 	border-top: 1px solid #eee;
-	padding:10px 0px;
+	padding:8px 0px;
 	background-color: #fcfcfc;
 	text-align:center;
 	position: fixed;
 	text-align: center;
 	bottom: 0px;
 	width:100%;
+}
+.btnpositionNew a.imgbtn {
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);
+    border: 1px solid #c3c3c3;
+    height: 24px;
+}
+.btnpositionNew a.imgbtn span {
+    height: 24px;
+    line-height: 24px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #000;
 }
 .msgbody input{
 	background-color:#6aa4de;
@@ -1354,7 +1366,7 @@ form{display:inline;margin:0}
 	padding:0px 0px 0px 15px;
 	line-height:35px;
 	overflow:hidden;
-	background:#0470e4;
+	background:#1990ff;
 }
 .popup_noti_title .tl {
 	 position:absolute ; 
@@ -1377,7 +1389,7 @@ form{display:inline;margin:0}
 .popup_noti_content {
 	/* background:url(/images/kr/cm/popup_noti_bgm.gif) repeat-y; */
 	padding:10px 0px 0px 0px;
-	background:#0470e4;
+	background:#1990ff;
 	border:0px;
 	font-size:12px;
 	color:#666;
@@ -2190,3 +2202,4 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	right: 45px;	
 }
 .extraMenu ul li span {padding-top:2px !important;}
+#mainmenu select {height: 29px !important; border-radius: 2px; border-color: #d2d2d2;}

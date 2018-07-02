@@ -631,7 +631,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                 	
                 	//수정(2017-01-23)
                 	// 검색 시 _가 들어간 문자가 검색이 안되어, [_]로 replace하는부분 제거
-                	searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
+                	searchParemeta[i] = searchInfo[1].replaceAll("%", "\\%").replaceAll("'", "\\'").replaceAll("_", "\\_");
                 	
                     if (checkSearchField(searchInfo[0])){
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
@@ -653,7 +653,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 }else{
                     // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                    searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
+                    searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").replaceAll("_", "\\_");;
                     
                     if (checkSearchField(searchInfo[0])){
                         strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')";
@@ -771,7 +771,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                 	
                 	//수정(2017-01-23)
                 	// 검색 시 _가 들어간 문자가 검색이 안되어, [_]로 replace하는부분 제거
-                	searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
+                	searchParemeta[i] = searchInfo[1].replace("%", "\\%").replace("_", "\\_");
                 	
                     if (checkSearchField(searchInfo[0])){
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
@@ -793,7 +793,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 }else{
                     // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                    searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
+                    searchParemeta[i] = searchInfo[1].replace("%", "\\%").replace("_", "\\_");
                     
                     // 20180628 - 기존 AND 조건이 아닌, OR 조건으로 검색
                     if (checkSearchField(searchInfo[0])){

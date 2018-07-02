@@ -1695,13 +1695,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		String circularBMId = request.getParameter("circularBMId");
 		String title = request.getParameter("title");
 		String[] memberListStr = request.getParameterValues("memberListStr[]");
-		String[] deptListStr = request.getParameterValues("deptListStr[]");
 		
 		if (!circularBMId.equals("")) {
-			ezCircularService.updateCircularDept(title, userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId(), userInfo.getCompanyID(), deptListStr);
+			ezCircularService.updateCircularDept(title, userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId(), userInfo.getCompanyID());
 			//ezCircularService.updateCircularDept(title, userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId());
 		} else {
-			ezCircularService.setCircularDeptSave(title, userInfo.getId(), memberListStr, userInfo.getTenantId(), userInfo.getCompanyID(), deptListStr);	//deptListStr 추가
+			ezCircularService.setCircularDeptSave(title, userInfo.getId(), memberListStr, userInfo.getTenantId(), userInfo.getCompanyID());	//deptListStr 추가
 		}
 
 		logger.debug("circularDeptSave ended");
@@ -1743,7 +1742,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		String userID = "";
 		String userName = "";
 		String userName2 = "";
-		String deptName = "";
 
 		String title = list.get(0).getTitle();
 		//2018-02-13 주홍선 title 쌍따옴표 처리
@@ -1754,17 +1752,14 @@ public class EzCircularController extends EgovFileMngUtil {
 				userID = list.get(i).getMemberID();
 				userName = list.get(i).getMemberName();
 				userName2 = list.get(i).getMemberName2();
-				deptName = list.get(i).getDeptID();
 			} else if (i != list.size()-1) {
 				userID += list.get(i).getMemberID() + ", ";
 				userName += list.get(i).getMemberName() + ", ";
 				userName2 += list.get(i).getMemberName2() + ", ";
-				deptName += list.get(i).getDeptID() + ", ";
 			} else {
 				userID += list.get(i).getMemberID();
 				userName += list.get(i).getMemberName();
 				userName2 += list.get(i).getMemberName2();
-				deptName += list.get(i).getDeptID();
 			} 
 		}
 		
@@ -1774,7 +1769,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userName", userName);
 		model.addAttribute("userName2", userName2);
 		model.addAttribute("listSize", list.size());
-		model.addAttribute("deptName", deptName);
 		
 		logger.debug("circularDeptModify ended");
 	

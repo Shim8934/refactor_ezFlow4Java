@@ -20,7 +20,8 @@
 			var useBizmekaSpambox = "${useBizmekaSpambox}";
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
-	    	
+			var companyId = "${companyId}";
+			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
@@ -255,10 +256,27 @@
 			function ShowUserInfo(UserID) {
 			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=800px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
 			}
+			
+			function selectCompanyID() {
+				var tempCompanyId = document.getElementById("ListCompany").value;
+				
+				if (companyId != tempCompanyId) {
+					window.location.href = "/admin/ezOrgan/retireUserManage.do?companyId=" + tempCompanyId;
+		        }
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezOrgan.t311'/></h1>
+		<div id=""> <!-- mainmenu -->    
+		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="selectCompanyID()">
+		        	<c:forEach var="item" items="${companylist}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br />
+		    </span>
+		</div>
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${dotNetIntegration != 'YES'}">

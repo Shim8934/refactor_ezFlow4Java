@@ -1689,6 +1689,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		StringBuilder sb = new StringBuilder();
 		String primary = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+
 		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getTenantId());
 		
 		int iOutputCount = 0;
@@ -1718,6 +1719,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
 				}
 				
+				/* 이부분에서 deptID를 넘겨주도록 해야한다. */
+				// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
 				sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
 				sb.append("<td>" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", userInfo.getPrimary(), userInfo.getTenantId())) + "</td>");
 				sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
@@ -2954,6 +2957,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return "FALSE";
 	}
 
+	/* 커뮤니티 게시물(일반) > 게시자의 writerDeptID를 가져오도록 수정*/
 	@Override
 	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, LoginVO userInfo) throws Exception {
 		logger.debug("getItemXML started.");

@@ -997,7 +997,7 @@
 				<!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			</c:if>
 			<c:if test="${listType eq 'department'}">
-				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:28px;border-radius:3px">
+				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:29px;">
 					<c:forEach items="${deptList}" var="dept">
 						<option value="${dept.deptId}"
 							<c:if test="${dept.mine eq 'yes' }">selected</c:if>>${dept.deptName }
@@ -1006,7 +1006,7 @@
 				</select></li>
 			</c:if>
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li style="background: none"><select id="formId" onchange="goToPageByFormName();" style="height:28px;border-radius:3px"></select></li>
+				<li style="background: none"><select id="formId" onchange="goToPageByFormName();" style="height:29px;"></select></li>
 			</c:if>
 			<li style=""></li>
 			<li id="right">

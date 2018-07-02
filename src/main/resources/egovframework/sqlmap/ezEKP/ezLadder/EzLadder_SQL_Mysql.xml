@@ -1173,6 +1173,8 @@
 			L.TITLE LIKE CONCAT('%', #searchInput#, '%')
 		AND 
 			L.DELETEFLAG = 0
+		AND
+			L.COMPANYID = #companyID#
 		ORDER BY 
 			ORIG_ID DESC
 		LIMIT 

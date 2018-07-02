@@ -357,8 +357,7 @@
                 A.memberid,
                 A.membername,
                 A.membername2,
-                B.title,
-                A.deptid
+                B.title
             FROM
                 TBL_CIRCULAR_BMUSER A
             JOIN
@@ -425,8 +424,8 @@
 			SELECT
 				A.circularbmid,
 				A.memberid,
-                C.COMPNM2 as company,
-				C.DISPLAYNAME as description,
+				B.company,
+				B.description,
 				B.title,
 				A.membername,
 				B.mail
@@ -438,12 +437,6 @@
 				A.memberid = B.cn
 			AND
 				A.tenantid = B.tenant_id
-			RIGHT JOIN 
-				TBL_DEPTMASTER C
-			ON 
-				A.DEPTID = C.CN
-			AND 
-				B.TENANT_ID = C.TENANT_ID  
 			WHERE
 				circularbmid = #circularBMId#
 			AND
@@ -1883,14 +1876,13 @@
     <insert id="EzCircularDAO.setCircularMemberList" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_BMUSER 
-				(circularbmid, memberid, membername, membername2, tenantid, deptid)
+				(circularbmid, memberid, membername, membername2, tenantid)
 			SELECT
 				#circularBMId#,
 				cn,
 				displayname,
 				displayname2,
-				tenant_id,
-				#deptID#
+				tenant_id
 			FROM
 				TBL_USERMASTER
 			WHERE

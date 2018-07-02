@@ -79,6 +79,7 @@
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="30"/>
         <result property="boardID" 					column="BOARDID" 				columnIndex="31"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
+        <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -111,6 +112,7 @@
         <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="27"/>
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="28"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
+        <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -2308,6 +2310,8 @@
  				   		A.BOARDID = APPR.BOARDID
  				   WHERE
  				   		A.TENANT_ID = #v_TENANTID#
+ 				   	AND
+ 				   		A.WRITERCOMPANYID = #v_COMPANYID#
  				   AND 
  				   		STARTDATE <= #nowDate#
  				   AND 
@@ -2382,6 +2386,7 @@
 				ITEMID ,
             	WRITERID ,
 	            WRITERNAME$lang$ WRITERNAME,
+	            WRITERDEPTID,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
 	            WRITEDATE ,
@@ -2431,6 +2436,7 @@
 			SELECT 
 				ITEMID ,
 	            WRITERID ,
+	            WRITERDEPTID,
 	            WRITERNAME$lang$ WRITERNAME,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
@@ -3517,19 +3523,38 @@
 	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
 		<![CDATA[
 			SELECT 
-				REPLYID, 
-				$v_UserName$ AS USERNAME, 
-				USERID, 
-				CONTENT, 
-				WRITEDATE
+				A.REPLYID, 
+				A.$v_UserName$ AS USERNAME, 
+				A.USERID, 
+				A.CONTENT, 
+				A.WRITEDATE,
+				C.CN
 	        FROM 
-	        	TBL_BOARD_ONELINEREPLY 
+	        	TBL_BOARD_ONELINEREPLY A
+	        INNER JOIN
+ 				tbl_addjobmaster B
+			ON
+			 	A.USERID = B.CN
+			AND
+			 	A.tenant_id = B.tenant_id
+			 INNER JOIN
+				tbl_deptmaster C
+			ON
+				A.USERID = B.CN
+			AND
+			 	A.tenant_id = C.tenant_id
+			AND
+				A.companyid = C.EXTENSIONATTRIBUTE2
+			AND
+				B.DEPTID = C.CN
 	        WHERE  
-	        	tenant_id = #v_TENANTID#
+	        	A.tenant_id = #v_TENANTID#
 	        AND
-	       		boardid = #v_BoardID#
+	        	A.companyid = #v_COMPANYID#
+	        AND
+	       		A.boardid = #v_BoardID#
 			AND 
-				itemid = #v_ItemID#
+				A.itemid = #v_ItemID#
 			ORDER BY 
 				writedate ASC
 		]]>                
@@ -3670,6 +3695,8 @@
 				A.boardid = B.boardid	
 	        WHERE
 	        	B.tenant_id = #v_TENANTID#
+			AND
+				A.WRITERCOMPANYID = #v_COMPANYID#
 	        AND 
 	        	B.appruserid = #v_PUSERID# 
 	        AND 
@@ -4471,10 +4498,10 @@
 	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
-				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password, 	  tenant_id
+				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password, 	  tenant_id, companyid
 			)
         	VALUES (
-        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, #nowDate#,	  #PCONTENT#,	#PPASSWORD# , #TENANTID#
+        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, #nowDate#,	  #PCONTENT#,	#PPASSWORD# , #TENANTID#, #COMPANYID#
         	)
 		]]>
 	</insert>

@@ -700,7 +700,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void setCircularDeptSave(String title, String userID, String[] memberListStr, int tenantID, String companyID, String[] deptListStr) throws Exception {
+	public void setCircularDeptSave(String title, String userID, String[] memberListStr, int tenantID, String companyID) throws Exception {
 		logger.debug("setCircularDeptSave started.");
 		logger.debug("title = " + title + " || userID = " + userID + " || tenantID = " + tenantID);
 		
@@ -718,9 +718,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("circularBMId", circularBMId);
 		
 		for(int i=0; i<memberListStr.length; i++) {
-			logger.debug("memberID = " + memberListStr[i] + ", dept = " + deptListStr[i]);
+			logger.debug("memberID = " + memberListStr[i]);
 			map.put("memberID", memberListStr[i]);
-			map.put("deptID", deptListStr[i]);
 			
 			ezCircularDAO.setCircularMemberList(map);
 		}
@@ -765,7 +764,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void updateCircularDept(String title, String userID, String[] memberListStr, String circularBMId, int tenantID, String companyID, String[] deptListStr) throws Exception {
+	public void updateCircularDept(String title, String userID, String[] memberListStr, String circularBMId, int tenantID, String companyID) throws Exception {
 		logger.debug("updateCircularDept started.");
 		logger.debug("title = " + title + " || userID = " + userID + " || circularBMId = " + circularBMId + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
@@ -781,9 +780,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.deleteCircularMemberList(map);
 		
 		for(int i=0; i<memberListStr.length; i++) {
-			logger.debug("memberID = " + memberListStr[i] + ", dept = " + deptListStr[i]);
+			logger.debug("memberID = " + memberListStr[i]);
 			
-			map.put("deptID", deptListStr[i]);
 			map.put("memberID", memberListStr[i]);
 					
 			ezCircularDAO.setCircularMemberList(map);

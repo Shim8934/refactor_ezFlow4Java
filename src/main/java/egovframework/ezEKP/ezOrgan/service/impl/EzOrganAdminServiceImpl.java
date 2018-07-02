@@ -145,9 +145,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String companyId)	throws Exception {
         logger.debug("getRetireList started");
-        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID + ",companyId=" + companyId);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -155,6 +155,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
 		map.put("v_STARTROW", pPageRow*(pPage - 1));
+		map.put("companyId", companyId);
 				
 		List<OrganUserVO> retireList = ezOrganAdminDao.getRetireList(map);
 		
@@ -495,15 +496,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String companyId) throws Exception {
 	    logger.debug("getRetireListCount started");
-	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID + ",companyId=" + companyId);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
+		map.put("companyId", companyId);
 		
 		logger.debug("getRetireListCount ended");
 		
@@ -1155,18 +1157,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
-    public List<OrganUserVO> getUserList(int tenantID,int startPage, int endPage, int maxItemPerPage,
-    									 String keycode,String keyword) throws Exception {     
+    public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
+    									 String keycode,String keyword,String companyId) throws Exception {     
     	logger.debug("getUserList started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);
 		params.put("v_start", startPage);
-		params.put("v_end", endPage);
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("companyId", companyId);
 		
     	List<OrganUserVO> list = ezOrganAdminDao.getUserList(params);
     	
@@ -1177,7 +1179,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
     // 사용자 이름,부서 목록개수를 반환한다.
     @Override
-    public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
+    public int getUserCount(int tenantID, String keycode,String keyword,String companyId) throws Exception {     
     	logger.debug("getUserCount started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1185,6 +1187,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	params.put("tenantID", tenantID);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("companyId", companyId);
 		
 		int userCount = ezOrganAdminDao.getUserCount(params);
 		
