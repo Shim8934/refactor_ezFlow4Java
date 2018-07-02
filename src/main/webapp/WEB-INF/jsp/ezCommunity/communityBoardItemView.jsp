@@ -565,6 +565,7 @@
 	        }
 		    var item_readlist_cross_dialogArguments = new Array();
 
+		    /* 2018-07-02 홍승비 - 커뮤니티 게시물 조회자 정보 > 겸직부서의 정보로 표출 */
 	        function ReaderList() {
 // 	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
 // 	            GetOpenWindow(szHref, "", 520, 400);

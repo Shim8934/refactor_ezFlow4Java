@@ -1690,7 +1690,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder sb = new StringBuilder();
 		String primary = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 
-		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getTenantId());
+		// 여기서 회원리스트를 받아온다. CommunityCClubUserVO에 deptID, deptName 필드를 추가했다.
+		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int iOutputCount = 0;
 		
@@ -1719,10 +1720,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
 				}
 				
-				/* 이부분에서 deptID를 넘겨주도록 해야한다. */
 				// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
-				sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-				sb.append("<td>" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", userInfo.getPrimary(), userInfo.getTenantId())) + "</td>");
+				sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
+				// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
+				sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
 				sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
 				sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
 				sb.append("<td>");
@@ -2843,6 +2844,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 
+	/* 2018-07-02 홍승비 - 조회자 정보에 companyID 삽입 */
 	@Override
 	public String setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception {
 		logger.debug("setAsRead started.");
@@ -2859,6 +2861,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
 		map.put("v_pUserTitle2", userInfo.getTitle2());
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		try {
@@ -3264,6 +3267,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return list;
 	}
 
+	/* 2018-07-02 홍승비 - 댓글 작성 시 작성자의 companyID를 함께 저장함 */
 	@Override
 	public void saveOneLineReply(Document xmlDoc, LoginVO userInfo) throws Exception {
 		logger.debug("saveOneLineReply started.");
@@ -3311,6 +3315,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PCONTENT", pContent);
 		map.put("v_PPASSWORD", pPassword);
 		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		
 		ezCommunityDAO.saveOneLineReply(map);
@@ -3799,6 +3804,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 //		return list;
 //	}
 	
+	/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가 불필요) */
 	@Override
 	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
 		logger.debug("getReaderList started");
@@ -3855,7 +3861,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				userDeptName =  vo.getUserDeptName();
 			}
 			resultXML.append("<ROW>");
-			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><DEPTID><![CDATA[" + vo.getDeptID() + "]]></DEPTID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]]></VALUE></CELL>");
@@ -5865,7 +5871,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, int tenantID) throws Exception {
+	/* 2018-07-02 홍승비 - 커뮤니티 회원목록 회원정보 표출 시 companyID 조건 추가 */
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, String companyID, int tenantID) throws Exception {
 		logger.debug("commViewMemberGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5873,6 +5880,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("primary", primary);
 		map.put("v_keyword", keyword);
 		map.put("v_s_radio", sRadio.toUpperCase());
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCClubUserVO> list = ezCommunityDAO.commViewMemberGet1(map);
@@ -6413,6 +6421,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	
 	public String getClubMemberInfo(String pCN, String pSearch, String primary, int tenantID) throws Exception {
 		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, primary, tenantID));
+		
+		logger.debug("xmlDoc DESCRIPTION1      ::     " + xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent());
+		logger.debug("xmlDoc DESCRIPTION2      ::     " + xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent());
 		
 		if (primary.equals("2")) {
 			return xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();

@@ -54,7 +54,7 @@ public interface EzBoardService {
 	/* 예약게시물 표출 시 companyID 조건 추가 */
 	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, String companyID, int tenantID) throws Exception;
 	
-	/* 2018-07-02 홍승비 - 댓글 확인 시 조회자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
+	/* 2018-07-02 홍승비 - 댓글 확인 시 작성자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
 	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String companyID, int tenantID) throws Exception;
 	
 	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception;

@@ -839,17 +839,32 @@
 				USERDEPTNAME$lang$ AS USERDEPTNAME, 
 				USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
 				IFNULL(USERTITLE$lang$, '') AS USERTITLE, 
-				DATE_FORMAT(READDATE ,'%Y-%m-%d %H:%i:%s') AS READDATE
+				DATE_FORMAT(READDATE ,'%Y-%m-%d %H:%i:%s') AS READDATE,
+				IFNULL(MAX(C.DEPTID), '') AS DEPTID
 		   	FROM 
-		   		TBL_Board_Item_Read 
+		   		TBL_Board_Item_Read A
+		   	JOIN
+				tbl_deptmaster B
+			ON
+				A.COMPANYID = B.EXTENSIONATTRIBUTE2
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			LEFT OUTER JOIN
+				tbl_addjobmaster C
+			ON
+				A.TENANT_ID = C.TENANT_ID
+			AND
+				A.USERID = C.CN
+			AND
+			    B.CN = C.DEPTID
 		   	WHERE 
-		   		tenant_id = #tenantID#
+		   		A.tenant_id = #tenantID#
 		   	AND
-		   		BoardID = #boardID# 
+		   		A.BoardID = #boardID# 
 		   	AND 
-		   		ItemID =  #itemID#  
+		   		A.ItemID =  #itemID#  
 		   	AND
-		   		UserID <> ( SELECT 
+		   		A.UserID <> ( SELECT 
 		   							WRITERID 
 		   						FROM 
 		   							TBL_BOARD_ITEM 
@@ -857,8 +872,10 @@
 		   							TENANT_ID = #tenantID#
 		   						AND
 		   							ITEMID = #itemID# )
-		   	ORDER BY 
-		   		ReadDate DESC
+			GROUP BY
+				ITEMID, USERID
+			ORDER BY
+				ReadDate DESC, C.DEPTID DESC
  		   	LIMIT 
       			#start#, #perCount# 
 		]]>
@@ -3528,7 +3545,7 @@
 				A.USERID, 
 				A.CONTENT, 
 				A.WRITEDATE,
-				MAX(C.DEPTID) AS DEPTID
+				IFNULL(MAX(C.DEPTID), '') AS DEPTID
 	        FROM 
 	        	TBL_BOARD_ONELINEREPLY A
 	        INNER JOIN
@@ -4159,10 +4176,10 @@
 	<insert id="EzBoardDAO.setAsRead" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_Item_Read ( 
-				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate,  									 TENANT_ID 
+				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate,  	 TENANT_ID,	 COMPANYID
 			)
         	VALUES ( 
-        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, #nowDate#, #v_TENANTID# 
+        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, #nowDate#, #v_TENANTID#, #v_COMPANYID# 
         	)
 		]]>
 	</insert>
