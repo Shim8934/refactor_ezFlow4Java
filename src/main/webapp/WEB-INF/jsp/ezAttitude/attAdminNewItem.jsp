@@ -161,10 +161,6 @@
 			        };
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		        
-// 		        $("#Sdatepicker").change(function(){
-// 		        	checkHoliday($(this).val());
-// 		        })
-		        
 		        if (typeId == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
 			        $('#Stimepicker').timepicker('setTime', SDate);
@@ -176,7 +172,7 @@
 			        $("#periodblock").attr("datetype", dateType);
 		        	$("#Stimepicker").css("display", "none");
 					$("#Etimepicker").css("display", "none");
-					$(alldaycheck).prop("checked",true);
+					$("#alldaycheck").prop("checked",true);
 		        }
 			}
 			
@@ -234,7 +230,6 @@
 							bizSub = $("input[name=bizsub]").val();
 						}
 						
-// 						$("#attiwriteForm tr").not("tr:first").remove();
 						var trs = $("#attiwriteForm tr");
 						for (var i = 0; i < trs.length; i++) {
 							if (i > 2) {
@@ -245,7 +240,6 @@
 						$("#writerName").closest("tr").remove();
 						setDatePicker($("#periodblock").attr("datetype"));
 					    
-						//checkHoliday($("#Sdatepicker").val());
 						if ($("input[name=region]").length != 0) {
 							$("input[name=region]").val(region);
 						}
@@ -287,23 +281,55 @@
 			
 			//저장
 			function save_attitude() {
+				//글자 수 제한
+				if (!CheckStrLen()) {
+					return;
+				}
+				
 				dateTypeCheck();
-				inputCheck();
+				
+				//휴무일이 있는 경우 근태를 등록하지 못하게 변경
+				if (attRegCheck() && holidayAttReg == "0") {
+					if (selectType != "A07") {
+						alert("<spring:message code='ezAttitude.t154'/>");
+						return;
+	 				} 
+				}
+				
+				//휴근등록시 휴무일이 아닐경우 등록하지 못하게 변경
+				if (selectType == "A07" && !weekWorkCheck()){
+					alert("<spring:message code='ezAttitude.t81'/>");
+					return;
+				}
 				
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				
+				//달력 정규식
 				if ($('#Stimepicker').length && !timeValid.test($('#Stimepicker').val()) || $('#Etimepicker').length && !timeValid.test($('#Etimepicker').val())) {
 					alert("<spring:message code='ezAttitude.t170'/>");
 					return;
 				}
+				
+				//달력 유효성 검사
 				if (!check_time()) {
 					alert("<spring:message code='ezAttitude.t131'/>");
 					return;
 				}
+				
+				//근무지 입력 여부
 				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
 					$("input[name=region]").focus();
 					alert("<spring:message code='ezAttitude.t49'/>");
 					return;
+				}
+				
+				//조퇴 등록시 출근여부 확인
+				if (selectType == 'A08') {
+					var returnValue = getIsAttitude('A01');
+					if (returnValue == 0) {
+						alert("<spring:message code='ezAttitude.t224'/>");
+						return;
+					}
 				}
 				
 				$.ajax({
@@ -386,36 +412,8 @@
 				}
 			}
 			
-			var attRegHolidayFlag = false;
+			//휴무일이 있는 경우 근태를 등록하지 못하게 변경
 			function attRegCheck() {
-// 				if (selectType == "A07") {
-// 					return;
-// 				}
-				var lunar = "";
-				var isMemorialDay = "";
-				var isYearMemorialDay = "";
-				var subDate = "";
-				if (endDate == "") {
-					subDate = 0;
-				} else {
-					subDate = calDateRange(startDate.split(" ")[0], endDate.split(" ")[0]);
-				}
-				
-				var betweenDate = new Date(startDate.split(" ")[0]);
-				for (var i = 0; i <= subDate; i++) {
-					betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
-					lunar = lunarCalc(betweenDate.getFullYear(), betweenDate.getMonth() + 1, betweenDate.getDate(), 1);
-					isMemorialDay = memorialDayCheck(betweenDate, lunar);
-					isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
-					
-					if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
-						attRegHolidayFlag = true;
-						return;
-					}
-				}
-			}
-			
-			function weekWorkCheck() {
 				var lunar = "";
 				var isMemorialDay = "";
 				var isYearMemorialDay = "";
@@ -437,6 +435,38 @@
 					if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
 						return true;
 					}
+				}
+				return false;
+			}
+			
+			//휴근등록시
+			function weekWorkCheck() {
+				var lunar = "";
+				var isMemorialDay = "";
+				var isYearMemorialDay = "";
+				var dayList = "";
+				
+				var betweenDate = new Date(startDate.split(" ")[0]);
+				lunar = lunarCalc(betweenDate.getFullYear(), betweenDate.getMonth() + 1, betweenDate.getDate(), 1);
+				isMemorialDay = memorialDayCheck(betweenDate, lunar);
+				isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
+				
+				//휴무일이 있는 경우
+				if (isMemorialDay.length != 0 || isYearMemorialDay.length != 0 || closedDay[betweenDate.getDay()] == "1") {
+					if (isMemorialDay.length != 0 ) {
+						dayList = isMemorialDay;
+					} else if (isYearMemorialDay.length != 0) {
+						dayList = isYearMemorialDay;
+					}
+					//기념일 휴무여부 체크
+					if (dayList.length != 0 ) {
+						for (var i = 0; i < dayList.length; i++) {
+							if (dayList[i].holiday == false) {//휴무일은 아닐경우
+								return false;
+							}
+						}
+					}
+					return true;
 				}
 				return false;
 			}
@@ -544,6 +574,45 @@
 					$(this).text(typeName);
 				})
 			}
+			
+			//글자 수 제한
+			function CheckStrLen() {
+				var temp; //들어오는 문자값...
+				var msglen = 500;
+				var value = message.GetEditorContent().replace(/(\s+)|(\s+)/gi, " ");
+
+				len = message.GetEditorContent().replace(/(\s+)|(\s+)/gi, " ").length;
+				
+				if (len > 500) {
+					alert("<spring:message code='ezAttitude.t82'/>");
+					return false;
+				} else {
+					return true;
+				}
+			}
+			
+			//조퇴시 출/퇴근 여부 체크
+		    function getIsAttitude(typeId) {
+				var isAttitudeReturn = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezAttitude/getIsAttitude.do",
+		    		data : {
+		    			typeId : typeId,
+		    			selectUserId : userId,
+		    			startDate : $("#Sdatepicker").val()
+		    		},
+		    		success : function(result) {
+		    			isAttitudeReturn = result;
+		    		},
+		    		complete : function() {
+		    			
+		    		}
+		    	})
+		    	return isAttitudeReturn;
+		    }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
