@@ -112,6 +112,10 @@
 	    	</div>
 	    </td>
 	  </tr>
+	  <tr>
+	    <th class=""><spring:message code='ezPMS.t42' /></th>
+	    <td class="">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
+	  </tr>
 	</c:when>
 	<c:otherwise>
 	  <tr>
@@ -134,12 +138,13 @@
 	    	<div class="participants"></div>
 	    </td>
 	  </tr>
+	   <tr>
+	    <th class=""><spring:message code='ezPMS.t42' /></th>
+	    <td class="">${taskDetails.upperGroupName == null ? "-" : taskDetails.upperGroupName}</td>
+	  </tr>
 	</c:otherwise>
 	</c:choose>
-	  <tr>
-	    <th class=""><spring:message code='ezPMS.t42' /></th>
-	    <td class="">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
-	  </tr>
+	  
 	  <c:if test="${target eq 'task' }">
 	   <tr>
 	    <th class=""><spring:message code='ezPMS.t181' /></th>

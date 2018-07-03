@@ -93,7 +93,7 @@
 		
 		//그룹추가 페이지인지 확인 후 경고메시지 띄움.
 		if(treeDepth > 2 && isAddGroup != -1){
-			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.");
+			alert("<spring:message code='ezPMS.t311' />");
 			$("li[aria-selected='true'] a").removeClass("jstree-clicked");
 			$("li[aria-selected='true'] div").removeClass("jstree-wholerow-clicked");
 			$("li[aria-selected='true']").attr("aria-selected", false);

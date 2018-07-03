@@ -171,7 +171,8 @@ function addGroup() {
 			managerList : managerList,
 			planStartDate : planStartDate,
 			planEndDate : planEndDate,
-			treeDepth : treeDepth,
+			// 상위그룹의 treeDepth에 +1
+			treeDepth : treeDepth + 1,
 			participantList : participantList
 	}
 	
