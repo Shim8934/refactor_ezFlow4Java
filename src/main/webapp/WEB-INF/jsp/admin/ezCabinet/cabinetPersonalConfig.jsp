@@ -6,9 +6,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
+		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"        type="text/css">
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
-	<body class="mainbody">
+	<body class="mainbody notover">
 		<h1><spring:message code='ezCabinet.t10'/><span id="cabinetTtlInf"></span></h1>
 		<div class="cabiMain">
 			<div class="compSelect" id="companySelect">
@@ -52,157 +53,59 @@
 				<div class="shadow"></div>
 			</div>
 			
-			<div id="mainSetting" style="margin: 10px 0px; height: 500px; overflow: auto;">
+			<jsp:include page="/WEB-INF/jsp/admin/ezCabinet/cabinetChange.jsp"></jsp:include>
+			
+			<div id="searchPanel" class="cabSearchPanel2 off">
+				<div>
+					<table class="content cabtable">
+						<tr>
+							<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png">&nbsp;<spring:message code='ezCabinet.t54'/></th>
+						</tr>
+						<tr><td class="cabSearchTh2" colspan="2"></td></tr>
+						<tr>
+							<th class="cabSearchTh"><spring:message code='ezCabinet.t116'/></th>
+							<td class="cabSearchTd2">
+								<select id="searchOption">
+									<option value="userName"><spring:message code='ezCabinet.t117'/></option>
+									<option value="deptName"><spring:message code='ezCabinet.t103'/></option>
+								</select>
+								<input id="inputSearch" type="text">
+							</td>
+						</tr>
+					</table>
+					<div class="cabdivBttn" id="searchDivBttn">
+						<a class="cabBttn"><span><spring:message code='ezCabinet.t49'/></span></a>
+						<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+					</div>
+				</div>
+				<span class="cabCloseBttn"></span>
+			</div>
+			
+			<div id="mainSetting" class="userCapDiv" style="height: 500px;">
 				<table class="mainlist cabTbl" id="userCapacityTbl">
 					<tr>
-						<th width="20px"><input type="checkbox"></th>
-						<th headers="cn" style="width: 20%;"><spring:message code='ezWebFolder.t146'/></th>
-						<th headers="dn" style="width: 20%;"><spring:message code='ezWebFolder.t142'/></th>
-						<th headers="un" style="width: 20%;"><spring:message code='ezWebFolder.t143'/></th>
-						<th headers="ut" style="width: 5%;" ><spring:message code='ezWebFolder.t147'/></th>
-						<th              style="text-align: center; width: 8%;"><spring:message code='ezWebFolder.t148'/></th>
-						<th headers="tc" style="text-align: center; width: 8%;"><spring:message code='ezWebFolder.t149'/></th>
-						<th              style="text-align: center; width: 15%;"><spring:message code='ezWebFolder.t150'/></th>
+						<th              class="checkBnk"        ><input type="checkbox"></th>
+						<th headers="cn" class="cabTd8"          ><spring:message code='ezCabinet.t118'/></th>
+						<th headers="dn" class="cabTd8"          ><spring:message code='ezCabinet.t103'/></th>
+						<th headers="un" class="cabTd8"          ><spring:message code='ezCabinet.t117'/></th>
+						<th headers="ut" class="cabTd6"          ><spring:message code='ezCabinet.t119'/></th>
+						<th              class="cabTd7 cabCenter"><spring:message code='ezCabinet.t120'/></th>
+						<th headers="tc" class="cabTd7 cabCenter"><spring:message code='ezCabinet.t121'/></th>
+						<th headers="ct" class="cabTd8 cabCenter"><spring:message code='ezCabinet.t10' /></th>
+						<th              class="cabTd8 cabCenter"><spring:message code='ezCabinet.t122'/></th>
 					</tr>
 				</table>
 			</div>
 		</div>
 		
-		<div id="tblPageRayer"></div>
+		<div id="tblPageRayer" class="cabpagenaviDiv"></div>
 		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"                     ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
-		<script type="text/javascript">
-			(function() {
-				var cabinetTable = null;
-				var cabinetNavi  = null;
-				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-				initEvents();
-				
-				function initEvents() {
-					document.onselectstart = function() {return false;};
-					window.addEventListener("resize", function(e) {windowResize();}, false);
-					
-					var libttns = document.getElementById("mainmenu").firstElementChild.children;
-					libttns[0].firstElementChild.onclick  = function() {refreshView();};
-					libttns[1].firstElementChild.onclick  = function() {toggleSearchPanel();};
-					libttns[2].firstElementChild.onclick  = function() {toggleChangePanel();};
-					
-					var optionViewElmt     = document.getElementById("sltView");
-					optionViewElmt.addEventListener("click", function(e) {toggleOptionView(this);}, false);
-					
-					var selectCompBox      = document.getElementById("companyList");
-					selectCompBox.onchange = function(e) {};
-					
-					//Set table view
-					cabinetTable = new CabinetTable({
-						normal   : "bnkCabNormal",
-						selected : "bnkCabSelect"
-					});
-					
-					cabinetTable.setTableElement("userCapacityTbl", "id");
-					cabinetTable.setTableType("capacity");
-					cabinetTable.setCallBack(searchCallBack);
-					cabinetTable.setRenderFunct(renderTable);
-					
-					//Initial page navigation
-					var naviMessages = {
-						next     : CabinetMessages.strNext,
-						previous : CabinetMessages.strPrev,
-						item     : CabinetMessages.strItem,
-						total    : CabinetMessages.strTotal
-					};
-					
-					cabinetNavi = new CabinetNavi({
-						messages : naviMessages,
-						divId    : "tblPageRayer",
-						divClass : "pagenavi",
-						headerId : "cabinetTtlInf",
-						callback : startSearchCabinet
-					});
-				}
-				
-				function startSearch(pPage) {
-					var orderInf = cabinetTable.getOrderInfo();
-					var url      = "/admin/ezWebFolder/getCapacities.do";
-					
-					makeAjaxCall ();
-					
-					
-					$.ajax({
-						type: "POST",
-						url: "/admin/ezWebFolder/getCapacities.do",
-						data: {
-							"currentPage" : pPage,
-							"searchStr"   : searchStr,
-							"searchOpt"   : searchOpt,
-							"column"      : orderInf.col ? orderInf.col : "",
-							"order"       : orderInf.ord ? orderInf.ord : "",
-							"companyId"   : document.getElementById("companyList").value
-						},
-						dataType: "JSON",
-						async: true,
-						success : function(data) {
-						},
-						error : function(error) {
-							hideProgress();
-							alert("<spring:message code='ezWebFolder.t134'/>" + error);
-						}
-					});
-				}
-				
-				function searchCallBack() {
-					//*Note here
-				}
-				
-				function getUserCapacities() {
-					var url  = "/admin/ezCabinet/getCompanyCapacity.do";
-					var data = {companyId : document.getElementById("companyList").value};
-					makeAjaxCall(data, "GET", url, processData, null, true, null);
-				}
-				
-				function toggleOptionView(optElmt) {if (optElmt.getAttribute("role") == "off") {showViewPopUp();} else {closeViewPopUp();}}
-				
-				function showViewPopUp() {
-					var optElmt             = document.getElementById("sltView");
-					var viewPopup           = document.getElementById("layerPopup");
-					viewPopup.style.left    = document.documentElement.clientWidth - 160 + "px";
-					viewPopup.style.top     = "128px";
-					viewPopup.style.display = "";
-					optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-					optElmt.setAttribute("role", "on");
-				}
-				
-				function closeViewPopUp() {
-					var optElmt = document.getElementById("sltView");
-					document.getElementById("layerPopup").style.display = "none";
-					optElmt.setAttribute("role", "off");
-					optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-				}
-				
-				function windowResize() {closeViewPopUp();}
-				
-				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
-					$.ajax({
-						type: ajaxType,
-						url: ajaxUrl,
-						data: ajaxData,
-						dataType: "JSON",
-						async: asyncMode != false ? true : false,
-						success : function(data) {
-							handleSuccess(data);
-						},
-						error : function(error) {
-							if (handleError != null) {handleError();}
-							
-							alert(CabinetMessages.strError);
-						}
-					});
-				}
-			})();
-		</script>
+		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"   ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetUserCapacity.js"   ></script>
 	</body>
 </html>

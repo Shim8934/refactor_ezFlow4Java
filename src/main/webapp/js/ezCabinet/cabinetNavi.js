@@ -6,13 +6,13 @@ var CabinetNavi = function() {
 		var _totalRows      = 0;
 		var _totalPages     = 0;
 		var _behindDivId    = data.divId    ? data.divId    : "tblPageRayer";
-		var _divClass       = data.divClass ? data.divClass : "pagenavi";
+		var _divClass       = data.divClass ? data.divClass : "cabpagenavi";
 		var _spanClass      = "ptxt";
 		var _imgClass       = "btnimg";
 		var _selectedClass  = "on";
 		var _headerId       = data.headerId ? data.headerId : "";
 		var _searchCallBack = data.callback ? data.callback : null;
-		var _messages       = data.messages ? data.callback : {
+		var _messages       = data.messages ? data.messages : {
 			next     : "Next",
 			previous : "Previous",
 			item     : "Items",

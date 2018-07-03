@@ -2,8 +2,6 @@
 function CabinetTable(data) {
 	//set public functions
 	this.setTableElement  = setTableElement;
-	this.setSelectedClass = setSelectedClass;
-	this.setUnselectClass = setUnselectClass;
 	this.setDataSource    = setDataSource;
 	this.setTableType     = setTableType;
 	this.renderTable      = renderTable;
@@ -94,6 +92,10 @@ function CabinetTable(data) {
 	
 	//Row process functions
 	function sortByHeader(cell) {
+		var column = cell.getAttribute("headers");
+		
+		if (!column) {return;}
+		
 		if (_selectedCell != null) {
 			var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
 			cell.setAttribute("orderoption", orderOption);
@@ -116,7 +118,7 @@ function CabinetTable(data) {
 		}
 		
 		_selectedCell = cell.cellIndex;
-		var column    = cell.getAttribute("headers");
+		
 		var order     = cell.getAttribute("orderoption");
 		_cellInfo.col = column;
 		_cellInfo.ord = order;
@@ -205,8 +207,8 @@ function CabinetTable(data) {
 	// process table function
 	function renderTable() {
 		switch (_tableType) {
-			case 'cabinet' : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRow); break;
-			case 'loglist' : _renderFunction(_dataSource, _unselectClass, _tableDataElmt); break;
+			case 'cabinet'  : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRow); break;
+			case 'capacity' : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRow); break;
 		}
 	}
 	

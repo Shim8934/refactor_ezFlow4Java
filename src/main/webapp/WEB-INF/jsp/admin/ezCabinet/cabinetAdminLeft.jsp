@@ -24,7 +24,7 @@
 			<h2><span><spring:message code='ezCabinet.t31'/></span></h2>
 			<ul></ul>
 		</div>
-		<div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;" onclick="closePop();"></div>
+		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">

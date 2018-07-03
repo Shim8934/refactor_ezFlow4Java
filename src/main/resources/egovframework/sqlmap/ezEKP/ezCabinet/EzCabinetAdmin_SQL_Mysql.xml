@@ -2,7 +2,8 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezCabinetAdmin">
-	<typeAlias  alias="CompanyCapacityVO" type="egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO"/>
+	<typeAlias alias="CompanyCapacityVO" type="egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO"/>
+	<typeAlias alias="UserCapCabinetVO"  type="egovframework.ezEKP.ezCabinet.vo.UserCapacityVO"   />
 	
 	<!-- CompanyCapacity resultMap -->
 	<resultMap id="companyCapacityVO" class="CompanyCapacityVO">
@@ -11,6 +12,57 @@
 		<result property="capacityValue"     column="capacity_value"         columnIndex="3"/>
 		<result property="tenantId"          column="tenant_id"              columnIndex="4"/>
 	</resultMap>
+	
+	<!-- UserCapacity resultMap -->
+	<resultMap id="userCapacityVO" class="UserCapCabinetVO">
+		<result property="userId"               column="cn"                     columnIndex="1" />
+		<result property="userName"             column="display_name"           columnIndex="2" />
+		<result property="departmentId"         column="department_id"          columnIndex="3" />
+		<result property="departmentName"       column="department_name"        columnIndex="4" />
+		<result property="companyId"            column="company_id"             columnIndex="5" />
+		<result property="companyName"          column="company_name"           columnIndex="6" />
+		<result property="totalCapacity"        column="total_capacity"         columnIndex="7" />
+		<result property="capacityType"         column="capacity_tp"            columnIndex="8" />
+		<result property="jobTitle"             column="job_title"              columnIndex="9" />
+		<result property="totalUsed"            column="total_used"             columnIndex="10"/>
+		<result property="tenantId"             column="tenant_id"              columnIndex="11"/>
+	</resultMap>
+	
+	<sql id="userCapacityCabinet">
+		where
+				u.tenant_id = #tenantId#
+			and
+				u.physicaldeliveryofficename = #companyId#
+			<isNotNull property="searchOpt">
+				<isEqual property="primary" compareValue="1" prepend="AND">
+					<isEqual property="searchOpt" compareValue="userName">
+						<![CDATA[
+							u.displayname like concat(concat('%', #searchStr#), '%')
+						]]>
+					</isEqual>
+					
+					<isEqual property="searchOpt" compareValue="deptName">
+						<![CDATA[
+							u.description like concat(concat('%', #searchStr#), '%')
+						]]>
+					</isEqual>
+				</isEqual>
+				
+				<isEqual property="primary" compareValue="2" prepend="AND">
+					<isEqual property="searchOpt" compareValue="userName">
+						<![CDATA[
+							u.displayname2 like concat(concat('%', #searchStr#), '%')
+						]]>
+					</isEqual>
+					
+					<isEqual property="searchOpt" compareValue="deptName">
+						<![CDATA[
+							u.description2 like concat(concat('%', #searchStr#), '%')
+						]]>
+					</isEqual>
+				</isEqual>
+			</isNotNull>
+	</sql>
 	
 	<select id="EzCabinetAdminDAO.getCompanyCapacity" resultMap="companyCapacityVO">
 		<![CDATA[select * from tbl_cabinet_company_capacity where company_id = #companyId# and tenant_id = #tenantId#]]>
@@ -28,5 +80,57 @@
 		</isNotEqual>
 	</insert>
 	
+	<select id="EzCabinetAdminDAO.getListUserCapacity" resultMap="userCapacityVO">
+		<![CDATA[
+			select
+				u.cn                                                                            as cn,
+				case when #primary# = '1' then u.displayname else u.displayname2 end            as display_name,
+				u.department                                                                    as department_id,
+				case when #primary# = '1' THEN u.description else u.description2 end            as department_name,
+				u.physicaldeliveryofficename                                                    as company_id,
+				case when #primary# = '1' then u.company else u.company2 end                    as company_name,
+				if(w.capacity_value is not null, w.capacity_value, ifnull(c.capacity_value, 0)) as total_capacity,
+				if(w.capacity_type is not null, w.capacity_type, ifnull(c.capacity_type, 1))    as capacity_tp,
+				case when #primary# = '1' then u.title else u.title2 end                        as job_title,
+				(
+					select ifnull (sum(cast(f.file_size as int)), 0)
+						from
+							tbl_cabinet_attach_file f join tbl_cabinet_item i on f.item_id = i.item_id and f.tenant_id = i.tenant_id
+						where
+							f.tenant_id = #tenantId# and i.create_id = u.cn
+				)                                                                            as total_used,
+				u.tenant_id                                                                  as tenant_id
+			from
+				tbl_usermaster u left join tbl_cabinet_user_capacity w on u.cn = w.user_id and u.physicaldeliveryofficename = w.company_id and u.tenant_id = w.tenant_id
+								 left join tbl_cabinet_company_capacity c on u.physicaldeliveryofficename = c.company_id and u.tenant_id = c.tenant_id
+		]]>
+		<include refid="userCapacityCabinet"/>
+			order by
+				<isNotEqual property="realColmn" compareValue="">
+					$realColmn$ $order$,
+				</isNotEqual>
+					department_name asc,
+					display_name asc
+			limit #startPoint#, #listCnt#
+	</select>
+	
+	<select id="EzCabinetAdminDAO.getTotalListUserCapacity" resultClass="Integer">
+		<![CDATA[ select count(*) from tbl_usermaster u ]]>
+		<include refid="userCapacityCabinet"/>
+	</select>
+	
+	<insert id="EzCabinetAdminDAO.changeUserCapacity" parameterClass="Map">
+		insert into tbl_cabinet_user_capacity (
+			user_id,        capacity_type,   capacity_value,   company_id,    tenant_id
+		)
+		<iterate prepend="values" property="userList" conjunction=",">
+		(
+			#userList[]#,    #capatype#,     #capacity#,       #companyId#,   #tenantId#
+		) 
+		</iterate>
+		on duplicate key update 
+			capacity_type  = #capatype#,
+			capacity_value = #capacity#
+	</insert>
 	
 </sqlMap>

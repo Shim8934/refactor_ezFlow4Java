@@ -174,7 +174,7 @@
 				</div>
 			 </div>
 		</div>
-		<div id="tblPageRayer"></div>
+		<div id="tblPageRayer" class="cabpagenaviDiv"></div>
 		
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"                     ></script>

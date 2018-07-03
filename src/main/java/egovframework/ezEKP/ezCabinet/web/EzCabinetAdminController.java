@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCabinet.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -144,6 +147,12 @@ public class EzCabinetAdminController {
 	@ResponseBody
 	public String jsonGetCompanyCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("jsonGetCompanyCapacity end");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		JSONObject resultObj   = new JSONObject();
 		
@@ -159,10 +168,16 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/saveConfig.do")
+	@RequestMapping(value="/admin/ezCabinet/saveCompanyCapacity.do")
 	@ResponseBody
 	public String jsonSaveCompanyCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("jsonSaveCompanyCapacity end");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String newCapacity     = request.getParameter("capacity")  != null ? request.getParameter("capacity")  : "";
 		String capacityType    = request.getParameter("type")      != null ? request.getParameter("type")      : "";
@@ -180,4 +195,63 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/admin/ezCabinet/getUserCapacity.do")
+	@ResponseBody
+	public String jsonGetUserCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("jsonGetUserCapacity end");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String companyId     = request.getParameter("companyId")   != null ? request.getParameter("companyId")   : "";
+		String currPage      = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
+		String searchStr     = request.getParameter("searchStr")   != null ? request.getParameter("searchStr")   : "";
+		String searchOpt     = request.getParameter("searchOpt")   != null ? request.getParameter("searchOpt")   : "";
+		String column        = request.getParameter("column")      != null ? request.getParameter("column")      : "";
+		String order         = request.getParameter("order")       != null ? request.getParameter("order")       : "";
+		String listCnt       = request.getParameter("listCnt")     != null ? request.getParameter("listCnt")     : "";
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (companyId.equals("") || currPage.equals("") || listCnt.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.getUserCapacity(request, currPage, companyId, user.getId(), searchStr, searchOpt, column, order, listCnt);
+		
+		logger.debug("jsonGetUserCapacity end");
+		return resultObj.toString();
+	}
+	
+	
+	@RequestMapping(value="/admin/ezCabinet/saveUserCapacity.do")
+	@ResponseBody
+	public String jsonSaveUserCapacity(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "userList") List<String> userList, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("jsonSaveUserCapacity end");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		String newCapacity     = request.getParameter("capacity")  != null ? request.getParameter("capacity")  : "";
+		String capacityType    = request.getParameter("type")      != null ? request.getParameter("type")      : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (companyId.equals("") || capacityType.equals("") || (capacityType.equals("1") && newCapacity.equals("")) || userList.size() == 0) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveUseryCapacity(request, userList, capacityType, newCapacity, companyId);
+		
+		logger.debug("jsonSaveUserCapacity end");
+		return resultObj.toString();
+	}
 }

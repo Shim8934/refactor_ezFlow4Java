@@ -83,17 +83,17 @@ var CabinetItem = function() {
 		var preViewleftElmt   = document.getElementById("preViewleft");
 		var optionViewElmt    = document.getElementById("sltView");
 		
-		preViewNoneElmt.addEventListener("click", function(e) {changePreview("None");}, false);
+		preViewNoneElmt.addEventListener("click", function(e)   {changePreview("None");}, false);
 		preViewBottomElmt.addEventListener("click", function(e) {changePreview("H");}, false);
-		preViewleftElmt.addEventListener("click", function(e) {changePreview("W");}, false);
-		optionViewElmt.addEventListener("click", function(e) {toggleOptionView(this);}, false);
+		preViewleftElmt.addEventListener("click", function(e)   {changePreview("W");}, false);
+		optionViewElmt.addEventListener("click", function(e)    {toggleOptionView(this);}, false);
 		
 		var closeSearchBttn     = document.getElementsByClassName("cabCloseBttn")[0];
 		closeSearchBttn.onclick = function() {toggleSearchPanel();};
 		var cabdivBttnElmt      = document.getElementById("searchDivBttn");
 		var listBttns           = cabdivBttnElmt.children;
 		listBttns[0].onclick    = function(e) {clearSearchDate();};
-		listBttns[1].onclick    = function(e) {};
+		listBttns[1].onclick    = function(e) {}; //*Note add main search function here
 		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
 		
 		var cabDelBttnElmt      = document.getElementById("delDivBttn");
@@ -147,7 +147,7 @@ var CabinetItem = function() {
 		cabinetNavi = new CabinetNavi({
 			messages : naviMessages,
 			divId    : "tblPageRayer",
-			divClass : "pagenavi",
+			divClass : "cabpagenavi",
 			headerId : "",
 			callback : startSearchCabinet
 		});
@@ -221,7 +221,7 @@ var CabinetItem = function() {
 		if (leftFogPanel) {leftFrame.body.removeChild(leftFogPanel);}
 		if (rightFrame.getElementById("ui-datepicker-div")) {rightFrame.getElementById("ui-datepicker-div").style.display = "none";}
 		
-		leftFrameBody.style.overflow = "auto";
+		leftFrame.body.style.overflow = "auto";
 	}
 	
 	function clearSearchDate() {

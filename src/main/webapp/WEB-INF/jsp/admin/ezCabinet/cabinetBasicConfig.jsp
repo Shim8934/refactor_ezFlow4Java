@@ -81,7 +81,6 @@
 					else {
 						inputElmt.value    = currentCapacity;
 						inputElmt.disabled = false;
-						inputElmt.focus();
 					}
 				}
 				
@@ -111,7 +110,7 @@
 						}
 					}
 					
-					var url  = "/admin/ezCabinet/saveConfig.do";
+					var url  = "/admin/ezCabinet/saveCompanyCapacity.do";
 					var data = {
 						type      : capacityType == "limit" ? "1" : "0",
 						capacity  : newCapacity,
@@ -135,6 +134,9 @@
 						case 2:
 							alert(CabinetMessages.strError);
 							break;
+						default:
+							alert(CabinetMessages.strError);
+							return;
 					}
 				}
 				
@@ -162,6 +164,7 @@
 					document.querySelector('input[role="' + capacityType + '"]').checked = true;
 					changeBttnStatus(capacityType);
 				}
+				
 				function isValid(value) {if (!isNaN(value) && parseFloat(value) > 0) {return true;} else {return false;}}
 			})();
 		</script>

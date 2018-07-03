@@ -12,16 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -243,7 +244,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinetadmin/capcity/{companyid}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinetadmin/capcity/id/{companyid}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putChangeBasicStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
 		String serverName  = request.getHeader("host-name")       != null ? request.getHeader("host-name")                         : "";
 		String newValue    = request.getParameter("newCapacity")  != null ? request.getParameter("newCapacity")                    : "";
@@ -262,6 +263,112 @@ public class EzCabinetGWController {
 		try {
 			int tenantId = loginService.getTenantId(serverName);
 			cabinetAdminService.saveCompanyCapacity(type, newValue, companyId, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinetadmin/capcity/id/{companyid}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getUserStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                        : "";
+		int currPage      = request.getParameter("currPage")  != null ? Integer.parseInt(request.getParameter("currPage"))    : 1;
+		int listCnt       = request.getParameter("listCnt")   != null ? Integer.parseInt(request.getParameter("listCnt"))     : 10;
+		String searchStr  = request.getParameter("searchStr") != null ? request.getParameter("searchStr")                     : "";
+		String searchOpt  = request.getParameter("searchOpt") != null ? request.getParameter("searchOpt")                     : "";
+		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")                        : "";
+		String column     = request.getParameter("column")    != null ? request.getParameter("column")                        : "";
+		String order      = request.getParameter("order")     != null ? request.getParameter("order")                         : "";
+		JSONObject result = new JSONObject();
+		int totalUsers    = 0;
+		int totalPages    = 0;
+		int startPoint    = (currPage - 1) * listCnt;
+		String realColmn  = "";
+		
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Current page: " + currPage + " || List count: " + listCnt + " || searchStr: " + searchStr + " || searchOpt: " + searchOpt + " || UserId: " + userId + " || Column: " + column + " || Order: " + order);
+		
+		if (serverName.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId     = userInfo.getTenantId();
+			String primary   = userInfo.getPrimary();
+			
+			if (!column.equals("") && !order.equals("")) {
+				switch(column) {
+					case "cn": realColmn = "COMPANY_NAME"    ; break;
+					case "dn": realColmn = "DEPARTMENT_NAME" ; break;
+					case "un": realColmn = "DISPLAY_NAME"    ; break;
+					case "ut": realColmn = "JOB_TITLE"       ; break;
+					case "tc": realColmn = "TOTAL_CAPACITY"  ; break;
+					case "ct": realColmn = "CAPACITY_TP"     ; break;
+					default  : realColmn = "COMPANY_NAME"    ; break;
+				}
+			}
+			
+			List<UserCapacityVO> list = cabinetAdminService.getListUserCapacity(realColmn, order, companyId, searchStr, searchOpt, startPoint, listCnt, tenantId, primary);
+			totalUsers                = cabinetAdminService.getTotalListUserCapacity(companyId, searchStr, searchOpt, tenantId, primary);
+			totalPages                = (totalUsers + listCnt - 1)/listCnt;
+			
+			for (UserCapacityVO capacity: list) {
+				if (capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
+					capacity.setUsedRate(0);
+				}
+				else {
+					double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10485.76;
+					capacity.setUsedRate((int)(Double.parseDouble(capacity.getTotalUsed())/totalCapByBytes));
+				}
+			}
+			
+			result.put("capacity", list);
+			result.put("code", 0);
+			result.put("status", "ok");
+			result.put("totalPages",  totalPages);
+			result.put("totalUsers",  totalUsers);
+			result.put("currentPage", currPage);
+			
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinetadmin/capcity/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putChangePersonalStorage(@RequestParam("userList") List<String> userList, Locale locale, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")       != null ? request.getHeader("host-name")    : "";
+		String newValue   = request.getParameter("newCapacity")  != null ? request.getParameter("newCapacity")                    : "";
+		String companyId  = request.getParameter("companyId")    != null ? request.getParameter("companyId")                      : "";
+		int type          = request.getParameter("capacityType") != null ? Integer.parseInt(request.getParameter("capacityType")) : -1;
+		JSONObject result = new JSONObject();
+		
+		logger.debug("CapacityType: "+ type + "New Value: " + newValue + " || serverName: " + serverName + " || CompanyId: " + companyId + " || User List: " + String.join(",", userList));
+		
+		if (serverName.equals("") || companyId.equals("") || type == -1 || (type == 1 && newValue.equals(""))) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId = loginService.getTenantId(serverName);
+			cabinetAdminService.changeUserCapacity(userList, newValue, type, companyId, tenantId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

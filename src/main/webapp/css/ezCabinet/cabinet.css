@@ -8,6 +8,7 @@
 #left ul li.on {font-weight: bold;}
 .leftbody ul:not(:last-child) li:last-child {border-bottom: none;}
 #mainmenu >ul >li >img {margin-right: -2px;}
+.mainbody.notover {overflow: hidden !important;}
 
 .bnkCabSelect {background-color: #e9f1ff; cursor: pointer;}
 .bnkCabNormal:hover {background-color: #f4f5f5; cursor: pointer;}
@@ -49,6 +50,8 @@
 .selectedNode {color: #004a87; font-weight: bold;}
 .cabinetMinus, .cabinetPlus {width: 18px; height: 18px; cursor: pointer;}
 .cabinetImg {width: 18px; height: 18px;}
+.perSettingOff, .perSettingOn {overflow: hidden; width: 300px; height: 110px; position: fixed; z-index: 2000;}
+.userCapDiv {margin: 10px 0px; overflow: auto;}
 
 /* Volume part */
 .cabVolumeDiv {width: 677px; border: 1px solid #d6d6d6; margin-top:5px}
@@ -124,16 +127,19 @@
 
 .btnimg.cabinet {width: 22px; height: 20px;}
 
-.cabSearchPanel {z-index: 2000; position: fixed; height: auto; width: 424px; border:1px solid #666; background-color: #fff;; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;}
-.cabSearchPanel.off {display: none;}
-.cabSearchPanel >div {margin: 20px;}
+.cabSearchPanel, .cabSearchPanel2 {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;}
+.cabSearchPanel {height: auto; width: 424px;}
+.cabSearchPanel2 {height: 148px; width: 500px;}
+.cabSearchPanel >div, .cabSearchPanel2 >div {margin: 20px;}
 .cabtable {border-collapse: collapse; width:100%;}
 .cabtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}
 .cabSearchTh {width: 80px; min-width: 80px;}
 .cabSearchTh2 {border-left-color:white !important;border-right-color:white !important;height:10px !important;}
+.cabSearchTd2 {display: flex; align-items: center; border: none !important; height: 30px !important;}
+.cabSearchTd2 >select {margin: 0px 5px; height: 24px;}
 .cabSearchTd {border:1px solid #b6b6b6; background-color:#fff;}
-.cabSearchTd input[type='text'] {height: 23px; width: 100%; outline: none; padding: 0px 5px;}
-.cabSearchTd input[type='text']:focus, .white >input[type='text']:focus, .cabShareSeachPanel >input[type='text']:focus, .cabRlSearch input[type='text']:focus, .tblFileInf tr td >input[type='text']:focus, .rlFileDiv >input[type='text']:focus, .cbNameInputDiv >input[type='text']:focus {border-color:#66afe9; outline:0; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+.cabSearchTd input[type='text'], .cabSearchTd2 input[type='text'] {height: 23px; width: 100%; outline: none; padding: 0px 5px;}
+.cabSearchTd input[type='text']:focus, .cabSearchTd2 input[type='text']:focus, .white >input[type='text']:focus, .cabShareSeachPanel >input[type='text']:focus, .cabRlSearch input[type='text']:focus, .tblFileInf tr td >input[type='text']:focus, .rlFileDiv >input[type='text']:focus, .cbNameInputDiv >input[type='text']:focus {border-color:#66afe9; outline:0; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
 .cabSearchTd .cabDate {width: 100px !important; text-align: center;}
 .cabdivBttn {margin: 12px 0px; text-align: center;}
 .cabdivBttn .cabBttn {white-space:nowrap; display:inline-block; cursor: pointer; vertical-align:top; padding: 0px;}
@@ -192,8 +198,8 @@
 .tblFileInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse;}
 .tblFileInf tr td, .tblFileInf tr th {border: 1px solid #ddd;}
 .tblFileInf tr th {width: 120px;}
-.tblFileInf tr td {padding:0px 2px 0px 2px; background: #FFF; height:29px; word-break:break-all;}
-.tblFileInf tr td >input[type='text']{width: 100%; border: 0px; padding: 5px; outline: none;}
+.tblFileInf tr td {padding: 0px 2px; background: #fff; height: 29px; word-break: break-all;}
+.tblFileInf tr td >input[type='text'] {width: 100%; border: 0px; padding: 5px; outline: none;}
 .rlFileDiv {display: flex; align-items: center;}
 .rlFileDiv >input[type='text'] {flex-grow: 1; border: none; margin-right: 8px; outline: none; padding: 0px 5px;}
 .rlFileDiv >a {padding-right: 8px; cursor: pointer;}
@@ -204,7 +210,6 @@
 .divInform {width: 100%; height: 100%; display: flex; flex-flow: column; justify-content: center; align-items: center;}
 .divInform span + span {margin-top: 5px;}
 .fileList {width: 100%; height: auto;}
-.fileList.off {display: none;}
 .ulFiles {margin: 0px; padding: 0px; list-style: none;}
 .ulFiles li {float: left; width: 50%; min-width: 50%; height: 65px; padding: 2.5px;}
 .ulFiles li:lastChild {padding-bottom: 5px;}
@@ -217,7 +222,7 @@
 .cabDivFile .cabFileInf >span:last-child {padding: 2px 4px 4px 0px;}
 
 .popup.cabFileDelon, .popup.cabFileDeloff {overflow: hidden; width: 450px; height: 180px; position: fixed; z-index: 2000;}
-.popup.cabFileDeloff, .popup.cabFileMoveoff, .popup.cabAddoff, .popup.cabMoveoff, .popup.cabDeloff {display: none;}
+.popup.cabFileDeloff, .popup.cabFileMoveoff, .popup.cabAddoff, .popup.cabMoveoff, .popup.cabDeloff, .fileList.off, .cabSearchPanel.off, .perSettingOff, .cabSearchPanel2.off, .popup.cabChgoff {display: none;}
 .popup .cabfdTop {margin: 0px; margin-top: 2px; padding-left: 0px;}
 .popup .delTxt {margin: 0px 0px 12px; height: 80px; border: 1px solid #ddd; padding: 15px; font-size: 12px;}
 .popup.cabFileMoveoff, .popup.cabFileMoveon {overflow: hidden; width: 260px; height: 350px; position: fixed; z-index: 2000;}
@@ -231,6 +236,8 @@
 .popup .cabDelInf {height: 55px; border: 1px solid #ddd; font-size: 12px; padding: 10px;}
 .popup.cabRelatedFile, .popup.cabAddMain, .popup.cabShareFile, .popup.cabDetail {overflow: hidden;}
 .popup.cabShareFile {min-width: 1000px;}
+.popup >h3 {font-size: 11pt; font-weight: bold; color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
+.popup.cabChgoff, .popup.cabChgon {overflow: hidden; width: 320px; height: 186px; position: fixed; z-index: 2000;}
 
 .cabClose {position: absolute; right: 10px; top: 10px; height: 35px;}
 .cabClose >ul {margin: 0px; padding: 0px; list-style: none;}
@@ -238,3 +245,31 @@
 .cabClose >ul >li >span {display: inline-block; background: white; border: 1px solid rgba(188, 211, 224, 1); height: 25px; padding: 0px 8px; border-radius: 3px; line-height: 25px; font-size: 12px; color: #333;}
 
 .cbNameInputDiv >input[type='text'] {width: 60%; margin-top: 3px; height: 25px; padding: 0px 4px;}
+.checkBnk {width: 27px;}
+.checkBnk input {vertical-align: middle;}
+.cabTd5 {width: 20%;}
+.cabTd6 {width: 5%;}
+.cabTd7 {width: 8%;}
+.cabTd8 {width: 15%;}
+.cabCenter {text-align: center !important;}
+.cabTxtOver {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+
+.cabpagenaviDiv {display: flex; align-items: center;}
+.cabpagenavi {margin: 0px auto; padding: 5px 0px; line-height: normal; text-align: center; display: flex;}
+.cabpagenavi span {font-size:12px; display:inline-block; cursor:pointer; border:1px solid #cfcfcf; height:19px; margin:0px 3px; padding:0px 6px 0px 5px; text-align:center; line-height:19px; border-radius:3px; font-weight:normal; color:#666; font-family: arial; vertical-align: top;}
+.cabpagenavi .btnimg {vertical-align:middle; padding: 1px 0px 0px; border: 1px solid #fff; margin: 0px; width: 16px;}
+.cabpagenavi .on {background-color: #017bec; color: #fff; font-weight: bold;}
+.cabpagenavi .ptxt {display:inline-block; cursor:pointer; border:1px solid #bbb; height:19px; padding:0px 3px; font-weight:normal; white-space:nowrap; width:auto; line-height:19px;}
+.cabpagenavi .btnimg div {background-repeat: no-repeat; padding: 8px;}
+.cabpagenavi .btnimg .firstOn {background-image: url('data:image/png;base64,R0lGODlhEAAQALMAAAD/ACFKjCFKlClSnCljxiljzilj1iJr7j1quUR620eD7mqX7Yyv9KC9963G7////yH5BAEAAAAALAAAAAAQABAAAARVEMhJ63wYWy3fYstTPYrYLU5JeYkJeE17LbHrMfKrNEuu4yJSg6FA2BILoxBUPCaDSMXBeEFSX4XDYWAzKLgXwrabELheBnM1EDi/2peM+zW32O+WCAA7');}
+.cabpagenavi .btnimg .firstOff {background-image: url('data:image/png;base64,R0lGODlhEAAQAHAAACH5BAEAAA8ALAAAAAAQABAAgwAAAP///6urq8DAwJqams7Ozo+Pj8vLy3t7e4iIiGJiYn9/f3d3d1paWlZWVgAAAARU8MlJ6wwYWy2DOEJQBYTYfSXlJebjHeyFtt4QuwR440NKHj0GLSEQ/gYCgvBCKIoCREJi2SFSA4xEQkFjELiXLLiacLRcDPOlrFa1XZlzR26p2+sRADs=');}
+.cabpagenavi .btnimg .lastOn {background-image: url('data:image/png;base64,R0lGODlhEAAQALMAAAD/ACFCjCFKjCFKlClSnDNirSZi2DFz90Jz0FCD5GWS8Xyk8JS196TA9+/v7////yH5BAEAAAAALAAAAAAQABAAAARVEMhJq3zP4j2fypSjLF+nJKAkNqjJpmt7KQ2DgKKdegx5A7nfJUE6GAoPB1EIeBCNgYxSgewgEoaoCkHdIRDabYLgDasMicHOkNoKBLv2ZSO32O/3CAA7');}
+.cabpagenavi .btnimg .lastOff {background-image: url('data:image/png;base64,R0lGODlhEAAQAHAAACH5BAEAAA8ALAAAAAAQABAAgwAAAP///6urq+/v77a2tpqams3NzcXFxYmJiZSUlH9/f3BwcFZWVmJiYlpaWgAAAART8MlJqwzB4j2DyNQgEF8nFKAkGqjJpmt7CYaBgOvtknqeBgXBabEIDIK6S4FQWDAyR0Hjh2g+VQhBsYNAXLGFKferWgjIgS0l4EWnOpu3ZU6vRwAAOw==');}
+.cabpagenavi .btnimg .nextBlockOff {background-image: url('data:image/png;base64,R0lGODlhEAAQAHAAACH5BAEAAA8ALAAAAAAQABAAgwAAAP///62trZycnM3NzcfHx5CQkKampoODg7m5uZSUlHd3d2tra1ZWVoeHhwAAAAQ48MlJaw3B6hdE3lQ3fCAnEGPJDQThkFrACsILyskwMAwcOoLBouH7CYmlgMOBTDKLFiU0OlVZVREAOw==');}
+.cabpagenavi .btnimg .nextBlockOn {background-image: url('data:image/png;base64,R0lGODlhEAAQALMAAAD/ACFCjDFapTlrzhha1i1n2jFz9zlz1kN53lqM3lqQ826c7YSt75C1/5y9/////yH5BAEAAAAALAAAAAAQABAAAAQ8EMhJa33PavBW3lSXfCC3OGPJJU6DkNqTNIsywFfCKAYh4JMHYtELAIOIBMFYehwOzCb0eClQL1eVthQBADs=');}
+.cabpagenavi .btnimg .previousBlockOff {background-image: url('data:image/png;base64,R0lGODlhEAAQAHAAACH5BAEAAA8ALAAAAAAQABAAgwAAAP///6SkpImJidLS0rm5uZeXl83NzXBwcIeHh3t7e2JiYnd3d1paWlZWVgAAAAQ28MlJq60hXBuE3lM3fGBHjOBjFui2Gi0nHIVgMCQ3FPCSc4zeDzjwpSQBhmN4CSyPISZ0SokAADs=');}
+.cabpagenavi .btnimg .previousBlockOn {background-image: url('data:image/png;base64,R0lGODlhEAAQALMAAAD/ACFKjCFKlClSnCljxiljzilj1hxn8zNirUV2zT5/8F6U6nOk/5y9/6W9/////yH5BAEAAAAALAAAAAAQABAAAAQ3EMhJq63vXfuW3lOXfGDnjCBgMui2Ki23NMyiICSXMMqBp49Cb5C7PAgHYkoSFBRdgadLuqxaIgA7');}
+
+.spanDown, .spanUp {cursor:pointer; border-radius: 50%; border: 1px solid #aeaeae; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px;}
+.spanDown:before {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+.spanUp:before {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 0px 4px 5px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}

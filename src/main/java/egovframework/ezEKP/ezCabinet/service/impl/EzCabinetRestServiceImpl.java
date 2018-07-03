@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
@@ -114,10 +115,40 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	@Override
 	public JSONObject saveCompanyCapacity(HttpServletRequest request, String capacityType, String newCapacity, String companyId) throws Exception {
 		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/" + companyId + "/comp";
+		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/id/" + companyId + "/comp";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("newCapacity",  newCapacity);
 		param.put("capacityType", capacityType);
+		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject getUserCapacity(HttpServletRequest request, String currPage, String companyId, String userId, String searchStr, String searchOpt, String column, String order, String listCnt) throws Exception {
+		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
+		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/id/" + companyId + "/person";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("currPage",  currPage);
+		param.put("userId",    userId);
+		param.put("searchStr", searchStr);
+		param.put("searchOpt", searchOpt);
+		param.put("column",    column);
+		param.put("order",     order);
+		param.put("listCnt",   listCnt);
+		
+		JSONObject resultBody = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject saveUseryCapacity(HttpServletRequest request, List<String> userList, String capacityType, String newCapacity, String companyId) throws Exception {
+		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
+		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/person";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("newCapacity",  newCapacity);
+		param.put("capacityType", capacityType);
+		param.put("companyId",    companyId);
+		param.put("userList",     String.join(",", userList));
 		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
