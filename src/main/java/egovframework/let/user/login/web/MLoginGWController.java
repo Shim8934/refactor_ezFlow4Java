@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
@@ -62,6 +64,10 @@ public class MLoginGWController {
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
     
+	/** EgovMessageSource */
+    @Resource(name="egovMessageSource")
+    private EgovMessageSource egovMessageSource;   
+	
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(MLoginGWController.class);
 	
@@ -70,7 +76,7 @@ public class MLoginGWController {
 	 */
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezUser/login/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
-    public JSONObject login(@PathVariable String userId, HttpServletRequest request) throws Exception {
+    public JSONObject login(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
     	LOGGER.debug("=========================================== G/W login ============================================");
     	
     	JSONObject result = new JSONObject();
@@ -104,6 +110,18 @@ public class MLoginGWController {
     		
     		LoginVO resultVO = loginService.selectUser(loginVO);
     		
+    		int numberOfLoginFailPermit = 0;
+    		// 로그인 실패 최대 허용 횟수를 구한다.
+			String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
+					
+			if (!maxAllowedCountOfLoginFail.equals("")) {
+				try {
+					numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+			}
+			
     		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
     			LOGGER.debug("user does not exist :" + uid);
             	
@@ -150,185 +168,245 @@ public class MLoginGWController {
 					}
 				}
     			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-    				//비밀번호 변경 팝업 상태 값 초기화
-    				int diff = 1;
-    				
-    				if (resultVO.getLoginCnt() == 0) {
-    					LOGGER.debug("isFirstLogin");
-    					
-    					result.put("status", "error");
-    					result.put("code", "4");			
-    					result.put("data", "isFirstLogin");
-    					
-    					return result;
-    				} else {
-    					String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
-    					
-    					if (!expirePassPeriod.trim().equals("0")) {
-    						int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
-    						
-    						Calendar cal = Calendar.getInstance();
-    						SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    						
-    						String baseStr = commonUtil.getTodayUTCTime("");        	
-    						Date baseDT = date.parse(baseStr);
-    						
-    						cal.setTime(baseDT);
-    						cal.add(Calendar.DATE, realPeriod);
-    						
-    						baseDT = cal.getTime();
-    						Date lastDT = resultVO.getUpdateDT();
-    						//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-    						diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
-    					}	        	
-    				}        	        	
-    				//0보다 작아지면 패스워드 변경기한 Expired
-    				if (diff <= 0) {
-    					LOGGER.debug("isExpireDate");
-    					
-    					result.put("status", "error");
-    					result.put("code", "5");			
-    					result.put("data", "isExpireDate");
-    					
-    					return result;    	        	
-    				} else {			
-    			    	String mIp = request.getHeader("ip");
-    			    	String mAgent = request.getHeader("agent");
-    			    	String mBrowser = request.getHeader("browser");
-    			    	String mOs = request.getHeader("os");
-    			    	
-    			    	if (mIp == null) {
-    			    		mIp = ClientUtil.getClientIP(request);
-    			    	}
-    			    	
-    			    	if (mAgent == null) {
-    			    		mAgent = ClientUtil.getClientInfo(request, "agent");
-    			    	}
-    			    	
-    			    	if (mBrowser == null) {
-    			    		mBrowser = ClientUtil.getClientInfo(request, "browser");
-    			    	}
-    			    	
-    			    	if (mOs == null) {
-    			    		mOs = ClientUtil.getClientInfo(request, "os");
-    			    	}
-    			    	
-    					loginVO.setIp(mIp);
-    					
-    					//IP Address,  마지막 login시간 저장
-    					loginService.updateUser(loginVO);
-    					
-    					//접속 로그정보 저장
-    					resultVO.setIp(mIp);
-    					resultVO.setAgent(mAgent);
-    					resultVO.setOs(mOs);
-    					resultVO.setBrowser(mBrowser);
-    					resultVO.setTenantId(tenantId);
-    					
-    					if(resultVO.getTitle2() == null){
-    						resultVO.setTitle2("");
-    					}
-    					
-    					loginService.insertLog(resultVO);
-    					
-    					//DB에서 모바일 환경설정 값 가져옴
-    					MOptionVO mOptionVO = mOptionService.optionInfo(uid, tenantId);
-    					
-    					String acceptLanguage = request.getHeader("Accept-Language");    				
-    					String lang = "";
-    					String timeZone = "";
-    					String maintype = "";
-    					String listCnt = "";    				
-    					String useSecurity = "";					
-    					String returnValue = "";
-    					
-    					String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-    					
-    					//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
-    					if (mOptionVO == null) {    			        
-    						
-    						//UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
-    						if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
-    							if (primaryLang.equals("1")) {
-    								acceptLanguage = "ko";
-    							} else if (primaryLang.equals("3")) {
-    								acceptLanguage = "ja";
-    							}
-    						}
-    						
-    						if (acceptLanguage != null) {
-    							returnValue = acceptLanguage.substring(0, 2);
-    							//이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
-    						} else {				        
-    							returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
-    						}
-    						
-    						lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
-    						
-    						//브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
-    						if (lang.equals("")) {						
-    							lang = primaryLang;
-    						}
-    						
-    						timeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
-    					    
-    					    if (timeZone.equals("")) {
-    					    	timeZone = "235|+09:00";
-    					    }
-    					    
-    						maintype = "D";
-    						listCnt = "10";    				    
-    						useSecurity = "N";
-    						
-    						mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSecurity, tenantId);    					
-    					} else {
-    						lang = mOptionVO.getLang();
-    						timeZone = mOptionVO.getTimeZone();
-    						maintype = mOptionVO.getMainType();
-    						listCnt = mOptionVO.getListCnt();        				
-    						useSecurity = mOptionVO.getUseSecurity();
-    						returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
-    					}
-    					
-    					/* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO */
-    					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
-    					
-    					Map<String, Object> map = new HashMap<String, Object>();
-    					map.put("uid", uid);
-    					map.put("ip", mIp);
-    					map.put("locale", returnValue);
-    					map.put("lang", lang);
-    					map.put("timeZone", timeZone);
-    					map.put("tenantId", tenantId+"");
-    					map.put("mainType", maintype);
-    					map.put("listCnt", listCnt);    				
-    					map.put("useSecurity", useSecurity);    		
-    					map.put("companyID", resultVO.getCompanyID());
-    					map.put("primaryLang", primaryLang);
-    					map.put("rollInfo", resultVO.getRollInfo());    				
-    					
-    					if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
-    						map.put("userName", resultVO.getDisplayName1());
-    					} else {
-    						map.put("userName", resultVO.getDisplayName2());
-    					}
-    					
-    					map.put("useMobileMailOnly", useMobileMailOnly);
-    					
-    					result.put("status", "ok");
-    					result.put("code", "0");
-    					result.put("data", map);
-    					
-    					return result;
-    				}			
-    			} else {
-    				LOGGER.debug("user does not exist :" + uid);
+    				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
                 	
-        			result.put("status", "error");
-        			result.put("code", "3");			
-        			result.put("data", "user does not exist");
-        			
-        			return result;
+                	// 해당 사용자의 로그인이 블록되지 않은 경우
+                	if (check != -3) {
+                		//비밀번호 변경 팝업 상태 값 초기화
+        				int diff = 1;
+        				
+        				if (resultVO.getLoginCnt() == 0) {
+        					LOGGER.debug("isFirstLogin");
+        					
+        					result.put("status", "error");
+        					result.put("code", "4");			
+        					result.put("data", "isFirstLogin");
+        					
+        					return result;
+        				} else {
+        					String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
+        					
+        					if (!expirePassPeriod.trim().equals("0")) {
+        						int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
+        						
+        						Calendar cal = Calendar.getInstance();
+        						SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        						
+        						String baseStr = commonUtil.getTodayUTCTime("");        	
+        						Date baseDT = date.parse(baseStr);
+        						
+        						cal.setTime(baseDT);
+        						cal.add(Calendar.DATE, realPeriod);
+        						
+        						baseDT = cal.getTime();
+        						Date lastDT = resultVO.getUpdateDT();
+        						//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
+        						diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+        					}	        	
+        				}        	        	
+        				//0보다 작아지면 패스워드 변경기한 Expired
+        				if (diff <= 0) {
+        					LOGGER.debug("isExpireDate");
+        					
+        					result.put("status", "error");
+        					result.put("code", "5");			
+        					result.put("data", "isExpireDate");
+        					
+        					return result;    	        	
+        				} else {			
+        			    	String mIp = request.getHeader("ip");
+        			    	String mAgent = request.getHeader("agent");
+        			    	String mBrowser = request.getHeader("browser");
+        			    	String mOs = request.getHeader("os");
+        			    	
+        			    	if (mIp == null) {
+        			    		mIp = ClientUtil.getClientIP(request);
+        			    	}
+        			    	
+        			    	if (mAgent == null) {
+        			    		mAgent = ClientUtil.getClientInfo(request, "agent");
+        			    	}
+        			    	
+        			    	if (mBrowser == null) {
+        			    		mBrowser = ClientUtil.getClientInfo(request, "browser");
+        			    	}
+        			    	
+        			    	if (mOs == null) {
+        			    		mOs = ClientUtil.getClientInfo(request, "os");
+        			    	}
+        			    	
+        					loginVO.setIp(mIp);
+        					
+        					//IP Address,  마지막 login시간 저장
+        					loginService.updateUser(loginVO);
+        					
+        					//접속 로그정보 저장
+        					resultVO.setIp(mIp);
+        					resultVO.setAgent(mAgent);
+        					resultVO.setOs(mOs);
+        					resultVO.setBrowser(mBrowser);
+        					resultVO.setTenantId(tenantId);
+        					
+        					if(resultVO.getTitle2() == null){
+        						resultVO.setTitle2("");
+        					}
+        					
+        					loginService.insertLog(resultVO);
+        					
+        					//DB에서 모바일 환경설정 값 가져옴
+        					MOptionVO mOptionVO = mOptionService.optionInfo(uid, tenantId);
+        					
+        					String acceptLanguage = request.getHeader("Accept-Language");    				
+        					String lang = "";
+        					String timeZone = "";
+        					String maintype = "";
+        					String listCnt = "";    				
+        					String useSecurity = "";					
+        					String returnValue = "";
+        					
+        					String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+        					
+        					//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
+        					if (mOptionVO == null) {    			        
+        						
+        						//UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+        						if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+        							if (primaryLang.equals("1")) {
+        								acceptLanguage = "ko";
+        							} else if (primaryLang.equals("3")) {
+        								acceptLanguage = "ja";
+        							}
+        						}
+        						
+        						if (acceptLanguage != null) {
+        							returnValue = acceptLanguage.substring(0, 2);
+        							//이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+        						} else {				        
+        							returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+        						}
+        						
+        						lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
+        						
+        						//브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
+        						if (lang.equals("")) {						
+        							lang = primaryLang;
+        						}
+        						
+        						timeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+        					    
+        					    if (timeZone.equals("")) {
+        					    	timeZone = "235|+09:00";
+        					    }
+        					    
+        						maintype = "D";
+        						listCnt = "10";    				    
+        						useSecurity = "N";
+        						
+        						mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSecurity, tenantId);    					
+        					} else {
+        						lang = mOptionVO.getLang();
+        						timeZone = mOptionVO.getTimeZone();
+        						maintype = mOptionVO.getMainType();
+        						listCnt = mOptionVO.getListCnt();        				
+        						useSecurity = mOptionVO.getUseSecurity();
+        						returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
+        					}
+        					
+        					/* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO */
+        					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
+        					
+        					Map<String, Object> map = new HashMap<String, Object>();
+        					map.put("uid", uid);
+        					map.put("ip", mIp);
+        					map.put("locale", returnValue);
+        					map.put("lang", lang);
+        					map.put("timeZone", timeZone);
+        					map.put("tenantId", tenantId+"");
+        					map.put("mainType", maintype);
+        					map.put("listCnt", listCnt);    				
+        					map.put("useSecurity", useSecurity);    		
+        					map.put("companyID", resultVO.getCompanyID());
+        					map.put("primaryLang", primaryLang);
+        					map.put("rollInfo", resultVO.getRollInfo());    				
+        					
+        					if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
+        						map.put("userName", resultVO.getDisplayName1());
+        					} else {
+        						map.put("userName", resultVO.getDisplayName2());
+        					}
+        					
+        					map.put("useMobileMailOnly", useMobileMailOnly);
+        					
+        					result.put("status", "ok");
+        					result.put("code", "0");
+        					result.put("data", map);
+        					
+        					return result;
+        				}
+                	} else {
+                		result.put("status", "error");
+	        			result.put("code", "3");
+    					result.put("data", egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+    					
+    					return result;
+                	}
+    			} else {
+    				//Check login state of the user 
+    	        	int check = checkState(tenantId, uid, numberOfLoginFailPermit);
+    	        	String errorMsg1 = "";
+    	        	String errorMsg2 = "";
+    	        	String errorMsg3 = "";
+
+    	        	switch (check) {
+    					case -3: 
+    		    			//Show block message
+    						result.put("status", "error");
+    	        			result.put("code", "3");
+    						result.put("data", egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+    						return result;
+    	    			case -2:
+    		        		//The first time this user login failed
+    		        		ezCommonService.insertUserConfigInfo(tenantId,  uid, "LoginFailCount", "1");
+    		        		//Show warning message
+    		        		/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가, 메세지 리소스 분리 */
+    		        		errorMsg1 = egovMessageSource.getMessage("fail.mobile.common.login.warning1", locale);
+    		        		errorMsg1 += egovMessageSource.getMessage("fail.mobile.common.login.warning2", locale);
+    		        		errorMsg2 = egovMessageSource.getMessageExtend("fail.mobile.common.login.warning3", new Object[] {1}, locale);
+    		        		errorMsg3 = egovMessageSource.getMessage("fail.mobile.common.login.warning4", locale);
+    		        		errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.mobile.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+    		        		result.put("status", "error");
+    	        			result.put("code", "3");
+    		        		result.put("data", errorMsg1 + errorMsg2 + errorMsg3);
+    		        		return result;
+    	        		case -1:
+    	        			//Show normal login fail message
+    	        			result.put("status", "error");
+    	        			result.put("code", "3");
+    	        			result.put("data", egovMessageSource.getMessage("fail.mobile.common.login", locale));
+    	        			return result;
+    	        		default:
+    	        			//Increase number of attempts in database
+    	        			ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", Integer.toString(check + 1));
+    	        			
+    	        			if (check >= numberOfLoginFailPermit - 1) {
+    	        				//Show block message
+    	        				result.put("status", "error");
+    	            			result.put("code", "3");
+    	        				result.put("data", egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+    	        				return result;
+    	        			} else {
+    	            			//Show warning message
+    	        				errorMsg1 = egovMessageSource.getMessage("fail.mobile.common.login.warning1", locale);
+    	    	        		errorMsg1 += egovMessageSource.getMessage("fail.mobile.common.login.warning2", locale);
+    	    	        		errorMsg2 = egovMessageSource.getMessageExtend("fail.mobile.common.login.warning3", new Object[] {check + 1}, locale);
+    	    	        		errorMsg3 = egovMessageSource.getMessage("fail.mobile.common.login.warning4", locale);
+    	    	        		errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.mobile.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+    	    	        		result.put("status", "error");
+    	            			result.put("code", "3");
+    	    	        		result.put("data", errorMsg1 + errorMsg2 + errorMsg3);
+    	    	        		return result;
+    	        			}
+    	        	}
     			}
     		}
 		} catch (Exception e) {
@@ -340,4 +418,34 @@ public class MLoginGWController {
 		}    	      
     }
     
+    private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
+        if (numberOfLoginFailPermit <= 0) {        	
+        	//Users will never be blocked
+        	return -1; 
+        }
+        
+    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userId, "LoginFailCount");
+        
+        if (userLoginFailedAttempt.equals("")) {
+        	//This is the first time this user failed to login        	
+        	return -2; 
+        } else {
+        	int currentNumber = 0;
+        	
+        	try {
+        		currentNumber = Integer.parseInt(userLoginFailedAttempt);
+        	// Exception이 발생하는 경우엔 LoginFailCount가 0인 경우로 처리한다.
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        	
+        	if (currentNumber >= numberOfLoginFailPermit) {
+        		//User has been blocked        		
+        		return -3;
+        	} else {
+        		//User has some remaining times to try to login        		
+        		return currentNumber;
+        	}
+        } 
+    }
 }
