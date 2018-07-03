@@ -4636,5 +4636,32 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("itemReadPagingList ended");
 		return resultXML.toString();
 	}
+	
+	/**
+	 * 2018-07-03 홍승비 - 커뮤니티 답변알림메일 사용 시 companyID 비교 부분 추가
+	 */
+	@RequestMapping(value = "/ezCommunity/getItemViewNew.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getItemViewNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getItemViewNew started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");		
+		String result = "OK";
+		
+		// 답변메일의 게시물 정보를 가져온다.
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
+		
+		// 회사가 다르면 result를 FAIL로 반환한다. 만약 어느 회사에서 확인해야 하는지 알려야 한다면 이곳에서 다른 값을 보내자.
+		if (!item.getWriterCompanyID().equals(userInfo.getCompanyID())) {
+			result = "FAIL";
+		}
+		
+		logger.debug("getItemViewNew ended.");
+		
+		return "<DATA>" + result + "</DATA>";
+	}
 }
 

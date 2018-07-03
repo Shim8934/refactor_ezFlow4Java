@@ -140,9 +140,7 @@ public class BoardListVO {
 	private String mainImageID;
 	/** 게시물 내용*/
 	private String content;
-	/** 2018-06-27 홍승비 companyID 추가 */
-	private String companyID;
-	
+
 	public int getrNum() {
 		return rNum;
 	}
@@ -556,12 +554,6 @@ public class BoardListVO {
 	}
 	public void setContent(String content) {
 		this.content = content;
-	}
-	public String getCompanyID() {
-		return companyID;
-	}
-	public void setCompanyID(String companyID) {
-		this.companyID = companyID;
 	}
 	
 }
