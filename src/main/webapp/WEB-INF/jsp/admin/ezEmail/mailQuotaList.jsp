@@ -402,7 +402,7 @@
 			<tbody id="userListBody" style="overflow: auto;"></tbody>
 		</table>
 		</div>
-		<div id="tblPageRayer" style="width:100%;padding-top: 10px;"></div>
+		<div id="tblPageRayer" style="width:100%;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	</body>
 </html>
