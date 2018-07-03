@@ -304,7 +304,12 @@
         </c:if>
 	</head>
 	<body class="popup"> 
-		<h1><spring:message code='ezOrgan.t194' /></h1>		 
+		<h1><spring:message code='ezOrgan.t194' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table class="popuplist"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t195' /></th> 
@@ -329,7 +334,6 @@
 		<div class="btnposition">
 		    <a class="imgbtn" onClick="add_sign()"><span><spring:message code='ezOrgan.t141' /></span></a>
 		    <a class="imgbtn" onClick="del_sign()"><span><spring:message code='ezOrgan.t142' /></span></a>
-		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezOrgan.t143' /></span></a>
 		</div>		
 	</body>
 </html>

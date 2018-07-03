@@ -203,8 +203,12 @@
 				</NODE>
 			</TREEVIEWDATA>
 		</xml>
-		
 		<h1><spring:message code = 'ezApprovalG.t25001' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table style="margin-top: 5px;">
 			<tr>
 				<td style="width: 400px; vertical-align: top">
@@ -214,7 +218,6 @@
 			<tr>
 				<td style="padding-left: 5px; padding-right: 5px; padding-top: 5px; vertical-align: top; text-align: center">
 					<a class="imgbtn"><span onclick="return Move_onclick()"><spring:message code = 'ezApprovalG.t948' /></span></a>
-					<a class="imgbtn"><span onclick="window.close()"><spring:message code = 'ezApprovalG.t119' /></span></a>
 				</td>
 			</tr>
 		</table>

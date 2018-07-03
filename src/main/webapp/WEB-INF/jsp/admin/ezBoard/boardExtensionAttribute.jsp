@@ -786,7 +786,11 @@
 			</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezBoard.t999029'/></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span id="btncancel" onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<span style="font-weight:bold"><spring:message code='ezBoard.t999030'/></span>
 		<table class="content" style="width:100%"> 
 			<tr>
@@ -868,7 +872,6 @@
 		</div>		
 		<div class="btnposition">
 		    <a class="imgbtn" onClick ="return btnOK_onclick()" id="btnOK"><span><spring:message code='ezBoard.t98'/></span></a>
-		    <a class="imgbtn" onClick ="return btncancel_onclick()" id="btncancel"><span><spring:message code='ezBoard.t15'/></span></a>
 		</div>
 	</body>
 </html>

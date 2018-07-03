@@ -309,6 +309,11 @@
 			</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezApprovalG.t223'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btnCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table style="margin-top:-15px;" >
 			<tr>
 				<td style="vertical-align:top">
@@ -330,9 +335,8 @@
 				</td>
 			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 			<a class="imgbtn"><span onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-			<a class="imgbtn"><span onClick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

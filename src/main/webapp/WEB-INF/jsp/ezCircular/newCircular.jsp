@@ -620,9 +620,9 @@
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
 	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t198'/></span></li>
 	            <li><span onClick="refresh_onclick()"><spring:message code='ezCircular.t173'/></span></li>
-				<li style="background:none;cursor:default;"><span style="display:inline-block; border:0px; width:14px; height:14px; background:url(/images/ImgIcon/msg-rd.gif); overflow:hidden; margin:6px 0px 0px 5px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezCircular.t197'/></li>
-	            <li style="background:none;cursor:default;"><span style="display:inline-block; border:0px; width:14px; height:14px; background:url(/images/ImgIcon/msg-unrd.gif); overflow:hidden; margin:6px 0px 0px 5px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezCircular.t143'/></li>
-	            <li style="background:none;cursor:default;"><span style="display:inline-block; border:0px; width:14px; height:14px; background:url(/images/ImgIcon/circular_share2.gif); overflow:hidden; margin:6px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezCircular.t188'/></li>
+				<li style="background:none;cursor:default;"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/msg-rd.gif); overflow:hidden; margin:5px 0px 0px 15px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t197'/></li>
+	            <li style="background:none;cursor:default;"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/msg-unrd.gif); overflow:hidden; margin:5px 0px 0px 5px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t143'/></li>
+	            <li style="background:none;cursor:default;"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/circular_share2.gif); overflow:hidden; margin:6px 0px 0px 5px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t188'/></li>
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">

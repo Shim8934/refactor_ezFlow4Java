@@ -95,33 +95,32 @@
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
-		        <NAME>회 사</NAME>
+		        <NAME><spring:message code='main.t74' /></NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME>이름</NAME>
+		        <NAME><spring:message code='main.t76' /></NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME>부서장</NAME>
+		        <NAME><spring:message code='ezOrgan.t71' /></NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-		<h1>이름확인</h1>
+		<h1><spring:message code='ezSchedule.t53' /></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="delete_onClick()"></span></li>
+		    <li><span onClick="cancel_onClick()"></span></li>
 		  </ul>
 		</div>
 		<h2><spring:message code='ezStatistics.t11' /></h2>
 		<div class="listview">
 		  <div id="ListViewItem" style="width:100%; min-width:587px; Height:210px; border:0px;overflow:auto" ></div>
 		</div>
-		<div class="btnposition">
-		    <a class="imgbtn" onClick="change_onClick()"><span>확인</span></a>
-		    <a class="imgbtn" onClick="cancel_onClick()"><span>취소</span></a>
+		<div class="btnpositionNew">
+		    <a class="imgbtn" onClick="change_onClick()"><span><spring:message code='ezResource.t15' /></span></a>
 		</div>
 	</body>
 </html>
