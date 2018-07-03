@@ -21,74 +21,34 @@
 				</select>
 			</div>
 			
-			<table class="cabTable">
+			<table class="cabTable2">
 				<tr>
 					<th><spring:message code="ezCabinet.t32"/></th>
 					<th><spring:message code="ezCabinet.t33"/></th>
 				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t36"/></td>
-					<td>
-						<input type="radio" role="on"  name="tk" ${tkFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="tk" ${tkFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t37"/></td>
-					<td>
-						<input type="radio" role="on"  name="ml" ${mkFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="ml" ${mkFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t38"/></td>
-					<td>
-						<input type="radio" role="on"  name="pn" ${pnFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="pn" ${pnFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t39"/></td>
-					<td>
-						<input type="radio" role="on"  name="hrp" ${hrpFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="hrp" ${hrpFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t40"/></td>
-					<td>
-						<input type="radio" role="on"  name="sch" ${schFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="sch" ${schFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t41"/></td>
-					<td>
-						<input type="radio" role="on"  name="omg" ${omgFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="omg" ${omgFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t42"/></td>
-					<td>
-						<input type="radio" role="on"  name="res" ${resFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="res" ${resFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t43"/></td>
-					<td>
-						<input type="radio" role="on"  name="com" ${comFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="com" ${comFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
-				<tr>
-					<td class="cabName"><spring:message code="ezCabinet.t44"/></td>
-					<td>
-						<input type="radio" role="on"  name="pro" ${proFlag == 'Y' ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-						<input type="radio" role="off" name="pro" ${proFlag == 'Y' ? '' : 'checked'}><label><spring:message code="ezCabinet.t35"/></label>
-					</td>
-				</tr>
+				
+				<c:forEach items="${modules}" var="module">
+					<tr>
+						<td class="cabName">
+							<c:choose>
+								<c:when test="${module.moduleType == 'email' }"><spring:message code="ezCabinet.t37" /></c:when>
+								<c:when test="${module.moduleType == 'apprv' }"><spring:message code="ezCabinet.t36" /></c:when>
+								<c:when test="${module.moduleType == 'board' }"><spring:message code="ezCabinet.t38" /></c:when>
+								<c:when test="${module.moduleType == 'schedl'}"><spring:message code="ezCabinet.t40" /></c:when>
+								<c:when test="${module.moduleType == 'option'}"><spring:message code="ezCabinet.t39" /></c:when>
+								<c:when test="${module.moduleType == 'todo'  }"><spring:message code="ezCabinet.t41" /></c:when>
+								<c:when test="${module.moduleType == 'resrc' }"><spring:message code="ezCabinet.t42" /></c:when>
+								<c:when test="${module.moduleType == 'commu' }"><spring:message code="ezCabinet.t43" /></c:when>
+								<c:when test="${module.moduleType == 'projt' }"><spring:message code="ezCabinet.t44" /></c:when>
+								<c:when test="${module.moduleType == 'addrs' }"><spring:message code="ezCabinet.t123"/></c:when>
+							</c:choose>
+						</td>
+						<td>
+							<input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
+							<input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t35"/></label>
+						</td>
+					</tr>
+				</c:forEach>
 			</table>
 			<br>
 			<div class="cabBttnDiv">
@@ -99,49 +59,8 @@
 			</div>
 		</div>
 		
-		<script type="text/javascript">
-			(function() {
-				init();
-				
-				function init() {
-					document.onselectstart = function() {return false;};
-					var buttons = document.querySelectorAll("a[class='imgbtn']");
-					buttons[0].firstElementChild.onclick = function(e) {setAllCheckBox(true);};
-					buttons[1].firstElementChild.onclick = function(e) {setAllCheckBox(false);};
-					buttons[2].firstElementChild.onclick = function(e) {save();};
-					buttons[3].firstElementChild.onclick = function(e) {cancel();};
-				}
-				
-				function setAllCheckBox(flag) {
-					var radioOnList  = document.querySelectorAll("input[type='radio'][role='on']");
-					var radioOffList = document.querySelectorAll("input[type='radio'][role='off']");
-					
-					for (var i = 0, len = radioOnList.length; i < len; i++) {
-						radioOnList[i].checked  = flag;
-						radioOffList[i].checked = flag == true ? false : true;
-					}
-				}
-				
-				function cancel() {window.location.reload(true);}
-				
-				function save() {
-					
-					$.ajax({
-						url: '',
-						method: 'POST',
-						dataType: 'JSON',
-						data: {
-							
-						},
-						success: function(data) {
-							
-						},
-						error: function(error) {
-							alert('Error: ' + error);
-						}
-					});
-				}
-			})();
-		</script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetModule.js"         ></script>
 	</body>
 </html>

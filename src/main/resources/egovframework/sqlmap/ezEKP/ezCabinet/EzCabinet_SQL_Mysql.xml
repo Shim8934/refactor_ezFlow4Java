@@ -2,7 +2,8 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezCabinet">
-	<typeAlias alias="cabinetSimpleDeptVO"  type="egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO"/>
+	<typeAlias alias="cabinetSimpleDeptVO"  type="egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO"   />
+	<typeAlias alias="UserModuleVO"         type="egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO"/>
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -10,6 +11,23 @@
 		<result property="deptName"             column="DEPT_NAME"              columnIndex="2"/>
 		<result property="level"                column="LEVEL"                  columnIndex="3"/>
 		<result property="hasSub"               column="HAS_SUB"                columnIndex="4"/>
+	</resultMap>
+	
+	<!-- CompanyModule resultMap -->
+	<resultMap id="companyModuleVO" class="UserModuleVO">
+		<result property="companyId"         column="company_id"             columnIndex="1"/>
+		<result property="moduleType"        column="module_type"            columnIndex="2"/>
+		<result property="activeStatus"      column="active_status"          columnIndex="3"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="4"/>
+	</resultMap>
+	
+	<!-- UserModule resultMap -->
+	<resultMap id="userModuleVO" class="UserModuleVO">
+		<result property="userId"            column="user_id"                columnIndex="1"/>
+		<result property="companyId"         column="company_id"             columnIndex="2"/>
+		<result property="moduleType"        column="module_type"            columnIndex="3"/>
+		<result property="activeStatus"      column="active_status"          columnIndex="4"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="5"/>
 	</resultMap>
 	
 	<select id="EzCabinetDAO.getAllSimpleDeptsOfCompany" resultMap="simpleDeptVO">
@@ -99,4 +117,33 @@
 		]]>
 	</select>
 	
+	<select id="EzCabinetDAO.getActiveModuleListForUser" resultMap="companyModuleVO">
+		<![CDATA[select * from tbl_cabinet_admin_modules where company_id = #companyId# and tenant_id = #tenantId# and active_status = 1 order by module_type desc]]>
+	</select>
+	
+	<select id="EzCabinetDAO.getModuleListForUser" resultMap="userModuleVO">
+		<![CDATA[select * from tbl_cabinet_user_modules where user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId# order by module_type desc]]>
+	</select>
+	
+	<insert id="EzCabinetDAO.saveModulesSetting" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id from tbl_cabinet_user_modules where user_id = #userId# and module_type = #moduleType# and tenant_id = #tenantId#) ]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				insert into tbl_cabinet_user_modules (user_id, company_id, module_type, active_status, tenant_id)
+				values (#userId#, #companyId#, #moduleType#, #activeStatus#, #tenantId#)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				update
+					tbl_cabinet_user_modules
+				set
+					active_status  = #activeStatus#
+				where
+					user_id = #userId# and module_type = #moduleType# and tenant_id = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
 </sqlMap>

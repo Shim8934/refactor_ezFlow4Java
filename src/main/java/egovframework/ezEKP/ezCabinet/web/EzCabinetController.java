@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCabinet.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+@SuppressWarnings("unchecked")
 @Controller
 public class EzCabinetController {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController.class);
@@ -91,6 +95,15 @@ public class EzCabinetController {
 	public String jspGetRelatedCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedCabinetConfig started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		JSONObject resultObj = cabinetRestService.getModuleListForUser(request, user.getId());
+		
+		if (!resultObj.get("status").toString().equals("ok")) {
+			return "cmm/error/dataAccessFailure";
+		}
+		
+		JSONArray moduleList = (JSONArray) resultObj.get("modules");
+		model.addAttribute("modules", moduleList);
 		
 		logger.debug("jspGetRelatedCabinetConfig ended");
 		return "ezCabinet/cabinetInterLock";
@@ -235,5 +248,28 @@ public class EzCabinetController {
 		
 		logger.debug("Upload file finishes!");
 		return "json";
+	}
+	
+	@RequestMapping(value="/ezCabinet/saveModules.do")
+	@ResponseBody
+	public String jsonSaveModulesSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveModulesSetting start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String moduleList    = request.getParameter("modules")   != null ? request.getParameter("modules")    : "";
+		JSONObject resultObj = new JSONObject();
+		
+		if (moduleList.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		ObjectMapper mapper = new ObjectMapper();
+		JSONArray modules   = mapper.readValue(moduleList, new TypeReference<JSONArray>(){});
+		
+		resultObj = cabinetRestService.saveModulesSettingForUser(request, modules, user.getId());
+		
+		logger.debug("jsonSaveModulesSetting end");
+		return resultObj.toString();
 	}
 }

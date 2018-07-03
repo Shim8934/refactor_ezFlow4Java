@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -141,7 +142,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 
 	@Override
-	public JSONObject saveUseryCapacity(HttpServletRequest request, List<String> userList, String capacityType, String newCapacity, String companyId) throws Exception {
+	public JSONObject saveUserCapacity(HttpServletRequest request, List<String> userList, String capacityType, String newCapacity, String companyId) throws Exception {
 		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
 		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/person";
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -149,6 +150,42 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		param.put("capacityType", capacityType);
 		param.put("companyId",    companyId);
 		param.put("userList",     String.join(",", userList));
+		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject getModuleListForAdmin(HttpServletRequest request, String companyId) throws Exception {
+		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
+		String url                = gwServerUrl + "/rest/ezcabinetadmin/module/id/" + companyId + "/comp";
+		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject saveModulesSetting(HttpServletRequest request, JSONArray moduleList, String companyId) throws Exception {
+		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
+		String url                = gwServerUrl + "/rest/ezcabinetadmin/module/id/" + companyId + "/comp";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("modules", moduleList);
+		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject getModuleListForUser(HttpServletRequest request, String userId) {
+		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
+		String url            = gwServerUrl + "/rest/ezcabinet/module/id/" + userId + "/person";
+		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject saveModulesSettingForUser(HttpServletRequest request, JSONArray moduleList, String userId) throws Exception {
+		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
+		String url                = gwServerUrl + "/rest/ezcabinet/module/id/" + userId + "/person";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("modules", moduleList);
 		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}

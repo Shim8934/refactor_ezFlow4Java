@@ -1,18 +1,26 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
+import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 
 @Service
 public class EzCabinetServiceImpl implements EzCabinetService {
 	@Resource(name = "EzCabinetDAO")
 	private EzCabinetDAO ezCabinetDAO;
+	
+	@Resource(name = "EzCabinetAdminDAO")
+	private EzCabinetAdminDAO ezCabinetAdminDAO;
 	
 	@Override
 	public SimpleDeptVO getAllDepts(String companyId, int level, String primary, int tenantId) throws Exception {
@@ -75,5 +83,58 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 		map.put("tenantId",   tenantId);
 		
 		return ezCabinetDAO.getAllSimpleDeptsOfCompany(map);
+	}
+
+	@Override
+	public List<CabinetModuleVO> getModuleListForUser(String userId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
+		
+		List<CabinetModuleVO> listModule = ezCabinetDAO.getModuleListForUser(map);
+		
+		if (listModule == null || listModule.size() == 0) {
+			listModule = ezCabinetDAO.getActiveModuleListForUser(map);
+			
+			if (listModule == null  || listModule.size() == 0) {
+				//Auto insert data
+				List<CabinetModuleVO> listAllModule = new ArrayList<>();
+				listAllModule.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
+				listAllModule.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
+				listAllModule.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
+				listAllModule.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
+				listAllModule.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
+				listAllModule.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
+				listModule.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
+				listModule.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
+				listModule.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
+				listModule.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
+				
+				listAllModule.addAll(listModule);
+				map.put("moduleList", listAllModule);
+				ezCabinetAdminDAO.insertModulForAdmin(map);
+			}
+		}
+		
+		return listModule;
+	}
+
+	@Override
+	public void saveModulesSetting(JSONArray modules, String userId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("userId",    userId);
+		map.put("tenantId",  tenantId);
+		int moduleLen = modules.size();
+		
+		for (int i = 0; i < moduleLen; i++) {
+			String moduleType = (String)((JSONObject)modules.get(i)).get("module");
+			int activeStatus = ((Long)((JSONObject)modules.get(i)).get("actType")).intValue();
+			map.put("moduleType",   moduleType);
+			map.put("activeStatus", activeStatus);
+			
+			ezCabinetDAO.saveModulesSetting(map);
+		}
 	}
 }

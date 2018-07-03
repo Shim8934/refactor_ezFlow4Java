@@ -1,4 +1,4 @@
-* {box-sizing: border-box;}
+/* * {box-sizing: border-box;} */
 .left_cabinet span {background: url(/images/webfolder/left_webfolder.png) no-repeat left center; display: inline-block; height: 50px; line-height: 48px; font-weight: normal; color: #fff; margin: 0px 0px 0px 16px; padding: 0px 0px 0px 33px; text-align: center; font-family: Malgun Gothic; font-size: 20px;}
 .left_cabinet {height: 52px; background: #0470e4;}
 #left {overflow: hidden;}
@@ -90,10 +90,12 @@
 .valueTd {white-space: nowrap;}
 .valueTd input[type='text'] {width: 70px; max-width: 70px; padding: 0px 5px;}
 .valueTd span {margin-left: 5px;}
-.cabTable {width: 680px; border: 1px solid #efefef; border-collapse: collapse;}
-.cabTable tr {height: 32px;}
-.cabTable tr td {text-align: center; border-bottom: 1px solid #efefef; color: #5b5a5a; word-wrap: break-word; padding: 5px 4px 3px 4px; font-weight: normal; font-size: 12px; border-spacing: 0;}
-.cabTable tr td input[type='radio'] {vertical-align: middle; margin: 0px 3px;}
+.cabTable2 {width: 680px; border: 1px solid #efefef; border-collapse: collapse;}
+.cabTable2 tr th {width: 50%;}
+.cabTable2 tr {height: 32px;}
+.cabTable2 tr td {text-align: center; border-bottom: 1px solid #efefef; color: #5b5a5a; word-wrap: break-word; padding: 5px 4px 3px 4px; font-weight: normal; font-size: 12px; border-spacing: 0;}
+.cabTable2 tr td label {margin-right: 3px;}
+.cabTable2 tr td input[type='radio'] {vertical-align: middle; margin: 0px 3px;}
 .cabTable .cabName {text-align: left !important; padding-left: 20% !important;}
 .cabViewPopup {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
 .cabViewPopup .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}

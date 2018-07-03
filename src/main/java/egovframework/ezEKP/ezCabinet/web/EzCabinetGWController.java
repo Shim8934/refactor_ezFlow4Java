@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
@@ -79,9 +83,7 @@ public class EzCabinetGWController {
 				result.put("status", "error");
 				result.put("code", 3);
 			}
-			
-			
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -96,7 +98,7 @@ public class EzCabinetGWController {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")   : "";
 		JSONObject result = new JSONObject();
-		logger.debug("serverName: " + serverName);
+		logger.debug("serverName: " + serverName + " || Mode: " + mode);
 		
 		if (serverName.equals("")) {
 			logger.debug("Parameter error!");
@@ -123,7 +125,7 @@ public class EzCabinetGWController {
 			result.put("userCompany", userInfo.getCompanyID());
 			result.put("status", "ok");
 			result.put("code", 0);
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -171,7 +173,7 @@ public class EzCabinetGWController {
 			result.put("code", 0);
 			result.put("tree", sCompany);
 			result.put("node", deptId);
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -205,7 +207,7 @@ public class EzCabinetGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("subNodes", sDept);
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -234,7 +236,7 @@ public class EzCabinetGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("capacity", companyCapacity);
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -265,7 +267,7 @@ public class EzCabinetGWController {
 			cabinetAdminService.saveCompanyCapacity(type, newValue, companyId, tenantId);
 			result.put("status", "ok");
 			result.put("code", 0);
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -338,7 +340,7 @@ public class EzCabinetGWController {
 			result.put("totalUsers",  totalUsers);
 			result.put("currentPage", currPage);
 			
-		} 
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -371,7 +373,132 @@ public class EzCabinetGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		} 
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinetadmin/module/id/{companyid}/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getModulesForAdmin(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId                  = loginService.getTenantId(serverName);
+			List<CabinetModuleVO> modules = cabinetAdminService.getModuleListForAdmin(companyId, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("modules", modules);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinetadmin/module/id/{companyid}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveModulesSetting(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")  != null ? request.getHeader("host-name")  : "";
+		String moduleList = request.getParameter("modules") != null ? request.getParameter("modules") : "";
+		JSONObject result = new JSONObject();
+		JSONParser jp     = new JSONParser();
+		
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || moduleList: " + moduleList);
+		
+		if (serverName.equals("") || companyId.equals("") || moduleList.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			JSONArray modules = (JSONArray) jp.parse(moduleList);
+			int tenantId      = loginService.getTenantId(serverName);
+			cabinetAdminService.saveModulesSetting(modules, companyId, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/module/id/{userid}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getActiveModulesForUser(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("userId: " + userId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo              = commonUtil.getUserForGw(userId, serverName);
+			List<CabinetModuleVO> modules = cabinetService.getModuleListForUser(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("modules", modules);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/module/id/{userid}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveModulesSettingForUser(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")  != null ? request.getHeader("host-name")  : "";
+		String moduleList = request.getParameter("modules") != null ? request.getParameter("modules") : "";
+		JSONObject result = new JSONObject();
+		JSONParser jp     = new JSONParser();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || moduleList: " + moduleList);
+		
+		if (serverName.equals("") || userId.equals("") || moduleList.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			JSONArray modules = (JSONArray) jp.parse(moduleList);
+			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName);
+			cabinetService.saveModulesSetting(modules, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

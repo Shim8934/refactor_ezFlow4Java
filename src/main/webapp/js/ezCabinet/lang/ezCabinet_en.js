@@ -15,5 +15,17 @@ var CabinetMessages = {
 	strNoData    : "데이터가 없습니다.",
 	strNoInput   : "검색어를 입력하세요.",
 	strNoUser    : "사용자를 선택하세요.",
-	strOverUsed  : "설정하려는 값을 사용량보다 작게 설정할 수 없습니다."
+	strOverUsed  : "설정하려는 값을 사용량보다 작게 설정할 수 없습니다.",
+	strEmail     : "메일",
+	strApprv     : "전자결제",
+	strBoard     : "게시판",
+	strOption    : "회람판",
+	strSchedl    : "일정관리",
+	strTodo      : "업무관리",
+	strCommu     : "커뮤니티",
+	strResrc     : "자원관리",
+	strProjt     : "프로젝트관리",
+	strAddrs     : "주소록",
+	strActive    : "활성",
+	strDeactive  : "비활성"
 }

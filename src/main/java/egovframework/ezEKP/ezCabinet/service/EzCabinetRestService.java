@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public interface EzCabinetRestService {
@@ -18,5 +18,13 @@ public interface EzCabinetRestService {
 	
 	//Admin user capacity service
 	public JSONObject getUserCapacity(HttpServletRequest request, String currPage, String companyId, String userId, String searchStr, String searchOpt, String column, String order, String listCnt) throws Exception;
-	public JSONObject saveUseryCapacity(HttpServletRequest request, List<String> userList, String capacityType, String newCapacity, String companyId) throws Exception;
+	public JSONObject saveUserCapacity(HttpServletRequest request, List<String> userList, String capacityType, String newCapacity, String companyId) throws Exception;
+	
+	//Admin related modules service
+	public JSONObject getModuleListForAdmin(HttpServletRequest request, String companyId) throws Exception;
+	public JSONObject saveModulesSetting(HttpServletRequest request, JSONArray moduleList, String companyId) throws Exception;
+	
+	//User related modules service
+	public JSONObject getModuleListForUser(HttpServletRequest request, String userId);
+	public JSONObject saveModulesSettingForUser(HttpServletRequest request, JSONArray modules, String id) throws Exception;
 }

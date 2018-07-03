@@ -4,12 +4,21 @@
 <sqlMap namespace="ezCabinetAdmin">
 	<typeAlias alias="CompanyCapacityVO" type="egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO"/>
 	<typeAlias alias="UserCapCabinetVO"  type="egovframework.ezEKP.ezCabinet.vo.UserCapacityVO"   />
+	<typeAlias alias="CompanyModuleVO"   type="egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO"  />
 	
 	<!-- CompanyCapacity resultMap -->
 	<resultMap id="companyCapacityVO" class="CompanyCapacityVO">
 		<result property="companyId"         column="company_id"             columnIndex="1"/>
 		<result property="capacityType"      column="capacity_type"          columnIndex="2"/>
 		<result property="capacityValue"     column="capacity_value"         columnIndex="3"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="4"/>
+	</resultMap>
+	
+	<!-- CompanyModule resultMap -->
+	<resultMap id="companyModuleVO" class="CompanyModuleVO">
+		<result property="companyId"         column="company_id"             columnIndex="1"/>
+		<result property="moduleType"        column="module_type"            columnIndex="2"/>
+		<result property="activeStatus"      column="active_status"          columnIndex="3"/>
 		<result property="tenantId"          column="tenant_id"              columnIndex="4"/>
 	</resultMap>
 	
@@ -30,35 +39,25 @@
 	
 	<sql id="userCapacityCabinet">
 		where
-				u.tenant_id = #tenantId#
-			and
-				u.physicaldeliveryofficename = #companyId#
+			u.tenant_id = #tenantId# and u.physicaldeliveryofficename = #companyId#
 			<isNotNull property="searchOpt">
 				<isEqual property="primary" compareValue="1" prepend="AND">
 					<isEqual property="searchOpt" compareValue="userName">
-						<![CDATA[
-							u.displayname like concat(concat('%', #searchStr#), '%')
-						]]>
+						<![CDATA[u.displayname like concat(concat('%', #searchStr#), '%')]]>
 					</isEqual>
 					
 					<isEqual property="searchOpt" compareValue="deptName">
-						<![CDATA[
-							u.description like concat(concat('%', #searchStr#), '%')
-						]]>
+						<![CDATA[u.description like concat(concat('%', #searchStr#), '%')]]>
 					</isEqual>
 				</isEqual>
 				
 				<isEqual property="primary" compareValue="2" prepend="AND">
 					<isEqual property="searchOpt" compareValue="userName">
-						<![CDATA[
-							u.displayname2 like concat(concat('%', #searchStr#), '%')
-						]]>
+						<![CDATA[u.displayname2 like concat(concat('%', #searchStr#), '%')]]>
 					</isEqual>
 					
 					<isEqual property="searchOpt" compareValue="deptName">
-						<![CDATA[
-							u.description2 like concat(concat('%', #searchStr#), '%')
-						]]>
+						<![CDATA[u.description2 like concat(concat('%', #searchStr#), '%')]]>
 					</isEqual>
 				</isEqual>
 			</isNotNull>
@@ -120,17 +119,44 @@
 	</select>
 	
 	<insert id="EzCabinetAdminDAO.changeUserCapacity" parameterClass="Map">
-		insert into tbl_cabinet_user_capacity (
-			user_id,        capacity_type,   capacity_value,   company_id,    tenant_id
-		)
-		<iterate prepend="values" property="userList" conjunction=",">
-		(
-			#userList[]#,    #capatype#,     #capacity#,       #companyId#,   #tenantId#
-		) 
-		</iterate>
-		on duplicate key update 
-			capacity_type  = #capatype#,
-			capacity_value = #capacity#
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id from tbl_cabinet_user_capacity where user_id = #userId# and tenant_id = #tenantId#) ]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				insert into tbl_cabinet_user_capacity (user_id, capacity_type, capacity_value, company_id, tenant_id)
+				values (#userId#, #capatype#, #capacity#, #companyId#, #tenantId#)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				update
+					tbl_cabinet_user_capacity
+				set
+					capacity_type  = #capatype#,
+					capacity_value = #capacity#
+				where
+					user_id = #userId# and tenant_id = #tenantId#
+			]]>
+		</isNotEqual>
 	</insert>
 	
+	<select id="EzCabinetAdminDAO.getModuleListForAdmin" resultMap="companyModuleVO">
+		<![CDATA[select * from tbl_cabinet_admin_modules where company_id = #companyId# and tenant_id = #tenantId# order by module_type desc]]>
+	</select>
+	
+	<insert id="EzCabinetAdminDAO.insertModulForAdmin" parameterClass="Map">
+		insert into tbl_cabinet_admin_modules (
+			company_id,  module_type,  active_status,  tenant_id
+		)
+		<iterate prepend="values" property="moduleList" conjunction=",">
+		(
+			#moduleList[].companyId#,  #moduleList[].moduleType#, #moduleList[].activeStatus#, #moduleList[].tenantId#
+		)
+		</iterate>
+	</insert>
+	
+	<update id="EzCabinetAdminDAO.saveModulesSetting">
+		update tbl_cabinet_admin_modules set active_status = #activeStatus# where company_id = #companyId# and module_type = #moduleType# and tenant_id = #tenantId#
+	</update>
 </sqlMap>
