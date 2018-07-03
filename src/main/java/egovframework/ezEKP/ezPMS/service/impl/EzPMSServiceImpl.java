@@ -678,7 +678,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("workingday", taskWorkingday);
 			map1.put("realWorkingday", calWorkingDays);
 			map1.put("tenantId", taskVO.getTenantId());
-//			ezPMSDAO.updateProjectWorkingday(map1);
+			ezPMSDAO.updateProjectWorkingdaySum(map1);
 
 			// 가중치 계산
 			updateTaskWDNW(taskVO, taskWorkingday);
@@ -828,6 +828,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public int updateTask(ProjectTaskVO task, String companyId, int tenantId) {
 		LOGGER.debug("[SERVICE] updateTask started.");
+		////////////////////현재 호출하는 부분 없는 듯 2018-07-02 홍대표/////////////////////////////////////////////
 		Long taskId = (long) 0;
 
 		try {
@@ -882,7 +883,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
 			map1.put("tenantId", tenantId);
-//			ezPMSDAO.updateProjectWorkingday(map1);
+			map1.put("realWorkingday", calWorkingDays);
+			
+			//task
+			map1.put("taskId", taskId);
+			map1.put("roleId", 3);
+
+			ProjectTaskVO taskVO = ezPMSDAO.getTaskDetails(map1);
+			map1.replace("realWorkingday", taskVO.getRealWorkingday() - calWorkingDays);
+			//업무수정하면서 워킹데이합계 재계산
+			ezPMSDAO.updateProjectWorkingdaySum(map1);
 
 			// 가중치 계산
 			updateTaskWDNW(task, taskWorkingday);
@@ -921,6 +931,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("roleId", 3);
 
 		ProjectTaskVO taskVO = ezPMSDAO.getTaskDetails(map);
+		int weightInput = ezPMSDAO.getWeightInput(map);
 
 		ezPMSDAO.deleteTask(map);
 
@@ -951,6 +962,34 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					map.put("groupId", ancGroupArr[i]);
 					ezPMSDAO.updateGroupProgress(map);
 				}
+			}
+			
+			// 삭제 하면서 프로젝트와 프로젝트 하위 업무 가중치 계산
+			HashMap<String, Object> map2 = new HashMap<String, Object>();
+			float taskWorkingday = taskVO.getRealWorkingday();
+			
+			ezPMSDAO.updateProjectWorkingdaySum2(map);
+			
+			// 가중치 계산
+			if (weightInput == 0) {
+				int projectWorkingdaySum = ezPMSDAO.getProjectWorkingdaySum(taskVO);
+				float calWeight = (taskWorkingday / projectWorkingdaySum) * 100;
+				System.out.println(">>>>>>>>>>>>>>" + calWeight + " = (" + taskWorkingday + " / " + projectWorkingdaySum + ") * 100");
+				map2.put("weight", calWeight);
+				map2.put("workingdaySum", projectWorkingdaySum);
+			} else {
+				map2.put("weight", taskVO.getWeight());
+			}
+			map2.put("taskId", taskId);
+			map2.put("workingday", taskWorkingday);
+			map2.put("tenantId", tenantId);
+			map2.put("projectId", projectId);
+
+			ezPMSDAO.updateTaskWDNW(map2);
+			
+			//프로젝트가 가중치 자동 계산일 경우 모든 업무의 가중치 재계산
+			if (weightInput == 0) {
+				ezPMSDAO.updateAllTaskWeight(map2);
 			}
 			
 			// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
@@ -2025,8 +2064,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map1.put("projectId", projectId);
 			map1.put("workingday", taskWorkingday);
 			map1.put("tenantId", tenantId);
-//			ezPMSDAO.updateProjectWorkingday(map1);
+			map1.put("realWorkingday", calWorkingDays);
+			
 
+			//업무수정하면서 워킹데이합계 재계산
+			ezPMSDAO.updateProjectWorkingdaySum2(map1);
+			
 			// 가중치 계산
 			updateTaskWDNW(task, taskWorkingday);
 		} catch (Exception e) {
@@ -2072,6 +2115,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	public void updateTaskStatus(ProjectTaskVO task, String companyId, int tenantId) {
 		LOGGER.debug("[SERVICE] updateTaskStatus started.");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", task.getProjectId());
+		map.put("tenantId", tenantId);
+		map.put("taskId", task.getTaskId());
+
+		ProjectTaskVO taskVO = ezPMSDAO.getTaskDetails(map);
 
 		try {
 			// 날짜 차이 계산
@@ -2095,7 +2145,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			}
 
 			ezPMSDAO.updateTaskStatus(task);
-
+			
 			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
 			if (!task.getGroupId().equals(0L)) {
 				String ancesterGroup = getAncesterGroup(task.getGroupId(), task.getTenantId());
@@ -2122,6 +2172,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					ezPMSDAO.updateGroupProgress(map1);
 				}
 			}
+			
+			map1.replace("realWorkingday", taskVO.getRealWorkingday() - calWorkingDays);
+			//업무수정하면서 워킹데이합계 재계산
+			ezPMSDAO.updateProjectWorkingdaySum(map1);
+			// 가중치 계산
+			updateTaskWDNW(task, calWorkingDays);
 			
 			// 업무가 속한 프로젝트의 진행률을 업데이트 해준다.
 			ezPMSDAO.updateProjectProgress(task);
@@ -2345,18 +2401,23 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Long taskId = taskVO.getTaskId();
 
 		if (taskVO.getWeight() == -1) {
-			int projectWorkingday = ezPMSDAO.getProjectWorkingday(taskVO);
-			float calWeight = (taskWorkingday / projectWorkingday) * 100;
-			System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
+			int projectWorkingdaySum = ezPMSDAO.getProjectWorkingdaySum(taskVO);
+			float calWeight = (taskWorkingday / projectWorkingdaySum) * 100;
+			System.out.println(">>>>>>>>>>>>>>" + calWeight + " = (" + taskWorkingday + " / " + projectWorkingdaySum + ") * 100");
 			map2.put("weight", calWeight);
+			map2.put("workingdaySum", projectWorkingdaySum);
 		} else {
 			map2.put("weight", taskVO.getWeight());
 		}
 		map2.put("taskId", taskId);
 		map2.put("workingday", taskWorkingday);
 		map2.put("tenantId", taskVO.getTenantId());
+		map2.put("projectId", projectId);
 
 		ezPMSDAO.updateTaskWDNW(map2);
+		
+		//프로젝트가 가중치 자동 계산일 경우 모든 업무의 가중치 재계산
+		ezPMSDAO.updateAllTaskWeight(map2);
 	}
 
 	@Override
@@ -2904,6 +2965,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public void updateAllTaskDatesInPrj(Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] ezPMS updateAllTaskDatesInPrj Started");
 		ezPMSDAO.updateAllTaskDatesInPrj(map);
+		updateAllTaskWeight(map);
 		LOGGER.debug("[SERVICE] ezPMS updateAllTaskDatesInPrj Ended");
 	}
 
@@ -2933,5 +2995,21 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.updateProjectGroupEndDate(map);
 		LOGGER.debug("[SERVICE] ezPMS updateProjectGroupEndDate ended");
 		
+	}
+
+	@Override
+	public void updateAllTaskWeight(Map<String, Object> map) {
+		//map에 projectId, tenantId를 담아서 넘겨주면 됨.
+		ezPMSDAO.updateProjectWorkingdaySum2(map);
+		int weightInput = ezPMSDAO.getWeightInput(map);
+		if(weightInput == 0){
+			ProjectTaskVO taskVO = new ProjectTaskVO();
+			taskVO.setTenantId((int)map.get("tenantId"));
+			taskVO.setProjectId((Long)map.get("projectId"));
+			
+			int projectWorkingdaySum = ezPMSDAO.getProjectWorkingdaySum(taskVO);
+			map.put("workingdaySum", projectWorkingdaySum);
+			ezPMSDAO.updateAllTaskWeight((HashMap<String, Object>)map);
+		}
 	}
 }

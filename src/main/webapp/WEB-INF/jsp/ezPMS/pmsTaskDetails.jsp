@@ -302,6 +302,10 @@
 			return;
 		}
 		
+		if(!confirm("<spring:message code='ezPMS.t305' />")){
+			return;
+		}
+		
 		var data = {
 				projectId : projectId,
 				groupId : groupId,

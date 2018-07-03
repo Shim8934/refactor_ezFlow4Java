@@ -130,8 +130,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select("EzPMSDAO.getProjectWorkingday", taskVO);
 	}
 	
-	public void updateProjectWorkingday (Map<String, Object> map) {
-		update("EzPMSDAO.updateProjectWorkingday", map);
+	public void updateProjectWorkingdaySum (Map<String, Object> map) {
+		update("EzPMSDAO.updateProjectWorkingdaySum", map);
 	}
 	
 	public void updateTaskWDNW (Map<String, Object> map) {
@@ -611,6 +611,21 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	public void updateProjectGroupEndDate(Map<String, Object> map) {
 		update("EzPMSDAO.updateProjectGroupEndDate", map);
-		
+	}
+	
+	public int getProjectWorkingdaySum (ProjectTaskVO taskVO) {
+		return (int) select("EzPMSDAO.getProjectWorkingdaySum", taskVO);
+	}
+
+	public void updateAllTaskWeight(HashMap<String, Object> map) {
+		update("EzPMSDAO.updateAllTaskWeight", map);
+	}
+
+	public int getWeightInput(Map<String, Object> map) {
+		return (int) select("EzPMSDAO.getProjectWeightInput", map);
+	}
+
+	public void updateProjectWorkingdaySum2(Map<String, Object> map) {
+		update("EzPMSDAO.updateProjectWorkingdaySum2", map);
 	}
 } 

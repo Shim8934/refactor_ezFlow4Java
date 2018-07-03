@@ -89,21 +89,62 @@ function popupClose() {
 	 
 	 if(parent.document.title == "<spring:message code='ezPMS.t167' />") {
 		 parent.parent.headManagerId = selMainListUserId;
-		 parent.parent.managerList = managerList;
+		 parent.parent.managerList = JSON.stringify(managerList);
 		 parent.parent.applyList();
 		 
 		 popupClose();
 		 parent.parent.DivPopUpHidden();
 	 } else {
 		 parent.opener.headManagerId = selMainListUserId;
-		 parent.opener.managerList = managerList;
-		 parent.opener.participantList = participantList;
-		 parent.opener.viewerList = viewerList;
-		 parent.opener.applyList(); 
+		 parent.opener.managerList = JSON.stringify(managerList);
+		 parent.opener.participantList = JSON.stringify(participantList);
+		 parent.opener.viewerList = JSON.stringify(viewerList);
+		 applyList();
 		 
 		 popupClose();
 		 parent.window.close();
 	 } 	 
+ }
+ 
+ function applyList() {
+	 var managerNameList = "";
+	 var participantNameList = "";
+	 var viewerNameList = "";
+	 var managerList = parent.managerArray;
+	 var participantList = parent.participantArray;
+	 var viewerList = parent.viewerArray;
+	 var headManagerId = selMainListUserId;
+	 
+	 
+	 for (var i = 0; i < managerList.length; i++) {
+		if(headManagerId == managerList[i].userId) {
+			managerNameList += "<b>"
+			managerNameList += managerList[i].userName;
+			managerNameList += "(" + managerList[i].userDeptname + ")</b>, ";
+		} else {
+			managerNameList += managerList[i].userName;
+			managerNameList += "(" + managerList[i].userDeptname + "), ";
+		}
+		
+	 }
+	 
+	 for (var i = 0; i < participantList.length; i++) {
+		participantNameList += participantList[i].userName;
+		participantNameList += "(" + participantList[i].userDeptname + "), ";
+	}
+	 
+	 for (var i = 0; i < viewerList.length; i++) {
+		viewerNameList += viewerList[i].userName;
+		viewerNameList += "(" + viewerList[i].userDeptname + "), ";
+	}
+	 
+	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);
+	 participantNameList = participantNameList.substr(0, participantNameList.length - 2);
+	 viewerNameList = viewerNameList.substr(0, viewerNameList.length - 2);
+	 
+	 parent.opener.document.getElementById("managers").innerHTML = managerNameList;
+	 parent.opener.document.getElementById("participants").innerHTML = participantNameList;
+	 parent.opener.document.getElementById("viewers").innerHTML = viewerNameList;
  }
  
 </script>

@@ -1129,8 +1129,10 @@ public class EzPMSGWController3 {
 
 			List<LinkedHashMap> taskSchedules = (List<LinkedHashMap>) jsonParam.get("allTasks");
 			List<LinkedHashMap> groupSchedules = (List<LinkedHashMap>) jsonParam.get("allGroups");
+			Long projectId = Long.parseLong((String)jsonParam.get("projectId"));
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("tenantId", info.getTenantId());
+			map.put("projectId", projectId);
 			map.put("taskSchedules", taskSchedules);
 			
 			ezPMSService.updateAllTaskDatesInPrj(map);
