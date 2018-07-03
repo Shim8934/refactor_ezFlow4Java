@@ -196,9 +196,8 @@ public class EzEmailMailListController {
 	
 	
 	/**
-	 * 메일 리스트 호출 함수
+	 * 메일 리스트 호출 함수 (수신확인화면)
 	 */
-	// 재은 수정
 	@RequestMapping(value="/ezEmail/getReceiverMailList.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getReceiverMailList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
@@ -439,6 +438,7 @@ public class EzEmailMailListController {
 				String readDate = "";
 				int nameLength = 1;
 				int readCount = 0;
+				msgto = "";
 				
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				
@@ -473,6 +473,7 @@ public class EzEmailMailListController {
 						}
 						
 						tempMailList.add(email);
+						msgto += email + ";";
 					}
 				}
 				

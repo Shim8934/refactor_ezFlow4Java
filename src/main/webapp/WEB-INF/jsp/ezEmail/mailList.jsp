@@ -120,7 +120,6 @@
 		    		$('#liReSend').css('display', 'block');
 		    	}
 		    	
-		    	// 재은 수정중
 		    	if (g_moveUrl == 'receiveChk') {
 		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		useReceivingChk = true;

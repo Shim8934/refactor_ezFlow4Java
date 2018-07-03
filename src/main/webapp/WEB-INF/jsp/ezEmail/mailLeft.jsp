@@ -32,6 +32,7 @@
 	      	var usePreviewSubTree = "${usePreviewSubTree}";
 	      	var useBottomFrameOnly = "${useBottomFrameOnly}";
 	      	var useMailBoxBackUp = "${useMailBoxBackUp}";
+	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -979,7 +980,10 @@
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #e8e8e8; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
-	            <li><span onclick="reception_check()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t516" /></span></li>
+	            
+	            <c:if test="${useMailReceiveScreen == 'YES'}">
+	            	<li><span onclick="reception_check()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t516" /></span></li>
+	            </c:if>
 	            <li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
 	            <li><span onclick="Open_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t641" /></span></li>
 		        <c:if test="${useOnlyInnerMail != 'YES'}">

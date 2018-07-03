@@ -56,8 +56,7 @@ function MakeHeaderHTML(HeaderObject) {
         for (var Cnt = 0; Cnt < XmlRows.length; Cnt++) {
             var _HeaderRow = document.createElement("TH");
             if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && SelectSingleNodeValue(XmlRows[Cnt], "propname") != "readdt") {
-            	// 재은 수정
-                if (p_ListorderValue == "GROUPSUBLIST") {
+            	if (p_ListorderValue == "GROUPSUBLIST") {
                     _HeaderRow.onclick = function () { event_SubHeaderClick(this); };
                 }
                 else {
@@ -194,7 +193,7 @@ function drag(ev) {
     }
 }
 
-var xmlhttp_MailReceiverList = null; // 재은 수정
+var xmlhttp_MailReceiverList = null;
 function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST") {
     	try {
@@ -228,10 +227,9 @@ function MakeListInfoHTML(ConentObject) {
                 var p_ContentClass = SelectSingleNodeValue(XmlRows[Cnt], "contentclass");
                 var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
-                var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt"); // 재은 수정
-                
-                var recipients = []; // 재은 수정
-            	var recipientsLen = 1; // 재은 수정
+                var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt");
+                var recipients = [];
+            	var recipientsLen = 1;
                 
                 var _TR = document.createElement("TR");
                 _TR.setAttribute("id", "Maillist_" + Cnt);
@@ -265,10 +263,10 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.appendChild(_TDCheckBox);
                 XmlHeaderRows = SelectNodes(XmlHeader, "view/column");
                 
-                // 재은 수정
+                // 수신확인 중 수신자가 여러명일 경우
             	if (useReceivingChk) {
-            		recipients = p_Msgto.split(',');
-            		recipientsLen = recipients.length; // 수신자가 여러명일때 '명중 명이 읽음'
+            		recipients = p_Msgto.split(';');
+            		recipientsLen = recipients.length;
             	}
             	
                 for (var HRows = 0; HRows < XmlHeaderRows.length; HRows++) {
@@ -282,10 +280,9 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.cursor = "default";
                             _TDColum.innerHTML = p_Importance == "0" ? "<IMG style='cursor:default' draggable='false' src='/images/ImgIcon/icon-lowimportance.gif'/>" : p_Importance == "2" ? "<IMG style='cursor:default' src='/images/ImgIcon/icon-highimportance.gif'/>" : "";
                             break;
-                         // 재은 수정    
                         case "receiveInfo":
                         	_TDColum.style.width = "18px";
-                        	if (recipientsLen > 1) {
+                        	if (recipientsLen > 2) {
                         		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/kr/main/btn_calendar_prev.gif'></span>";
                         		_TDColum.setAttribute("viewSelect", "false");
                         		_TDColum.onclick = function () { viewReceivers(this); };
@@ -312,14 +309,11 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                         case "sender":
                         	var innerHTML = p_Sender;
-                        	
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.overflow = "hidden";
                             _TDColum.style.textOverflow = "ellipsis";
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
-                            // 재은 수정
-                            _TDColum.style.width = "22%";
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.innerHTML = innerHTML;
@@ -342,10 +336,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.textOverflow = "ellipsis";
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
-                            
-                            // 재은 수정중
-                            _TDColum.style.width = "49%";
-                            
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             if (p_Subject.trim() == "") {
                             	p_Subject = strLang97;
@@ -398,7 +388,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
-                            // 재은 수정중
                         case "readdt":
                         	
                         	if (p_Readdt == "UNREAD") {
@@ -517,7 +506,6 @@ function MakeListInfoHTML(ConentObject) {
     }
 }
 
-//여기서부터 재은
 var xmlhttp_MailReceiverList;
 var MailReceiverListXML;
 function getReaderCount(parentId) {
@@ -639,7 +627,7 @@ function viewReceivers(obj) {
 		obj.setAttribute("viewSelect", "false");
 		obj.childNodes[0].childNodes[0].src = "/images/kr/main/btn_calendar_prev.gif";
 	}
-} // 여기까지 재은
+}
 
 function MakeListInfoHTML_SUB(ConentObject) {
         try {
@@ -821,7 +809,6 @@ function GetListInfo(HeaderObject, ContentObject) {
 
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
     
-    // 재은 수정
     var _url = "/ezEmail/mailGetList.do";
     
     if (useReceivingChk) {
@@ -1393,7 +1380,6 @@ function event_HeaderCheckBoxClick(obj) {
         for (var i = 0; i < nodeCount; i++) {
         	mailNode = mailNodes.item(i);
         	
-        	// 재은 수정
         	if (mailNode.childNodes.item(0).childNodes.length != 0) {
         		mailNode.childNodes.item(0).childNodes.item(0).checked = true;
         	}
@@ -1410,7 +1396,6 @@ function event_HeaderCheckBoxClick(obj) {
         for (var i = 0; i < nodeCount; i++) {
         	mailNode = mailNodes.item(i);
         	
-        	// 재은 수정
         	if (mailNode.childNodes.item(0).childNodes.length != 0) {
         		mailNode.childNodes.item(0).childNodes.item(0).checked = false;
         	}
@@ -1600,7 +1585,6 @@ function event_listCheckboxclick(obj) {
     if (obj.checked) {
         obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
         
-        // 재은수정
         var allChild = $("#MailList")[0].childNodes;
         
         for (var i = 0;i < allChild.length; i++) {
@@ -1614,7 +1598,6 @@ function event_listCheckboxclick(obj) {
     else {
         var TemplistArray = new Array();
         
-        // 재은수정
         var allChild = $("#MailList")[0].childNodes;
         
         for (var i = 0;i < allChild.length; i++) {
