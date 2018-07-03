@@ -54,6 +54,7 @@
 		<result property="writerName"					column="WriterName"					/>
 		<result property="writerDeptID"				column="WriterDeptID"				/>
 		<result property="writerDeptName"				column="WriterDeptName"				/>
+		<result property="writerCompanyID"			column="WriterCompanyID"			/>
 		<result property="writerCompanyName"			column="WriterCompanyName"			/>
 		<result property="writeDate"					column="WriteDate"					/>
 		<result property="parentWriteDate"				column="ParentWriteDate"			/>
@@ -972,6 +973,7 @@
 				writername$v_strLang$ AS writername,
 				writerdeptid,
 				writerdeptname$v_strLang$ AS writerdeptname,
+				writercompanyid,
 				writercompanyname$v_strLang$ AS writercompanyname,
 				DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
 				DATE_ADD(DATE_FORMAT(parentwritedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS parentwritedate,
@@ -1875,18 +1877,35 @@
 	<select id="EzCommunityDAO.adminMemPermitGet2"				parameterClass="Map"		resultClass="CommunityCClubUserVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				DISTINCT A.c_id,
+				A.c_id,
 				A.companyid,
 				A.c_indate,
-				B.username$v_USERINFO_LANG$
+				T.username$v_USERINFO_LANG$,
+				IFNULL(MAX(C.DEPTID), '') AS DEPTID
 			FROM
 				TBL_C_CLUBUSER A
 			INNER JOIN
-				TBL_C_MEMBERINFO B
+				TBL_C_MEMBERINFO T
 			ON
-				RTRIM(A.c_id) = RTRIM(B.userid)
+				RTRIM(A.c_id) = RTRIM(T.userid)
 			AND
-				A.tenant_id = B.tenant_id
+				A.tenant_id = T.tenant_id
+			AND
+				A.COMPANYID = T.COMPANYID
+			JOIN
+				TBL_DEPTMASTER B
+			ON
+				A.COMPANYID = B.EXTENSIONATTRIBUTE2
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			LEFT OUTER JOIN
+				TBL_ADDJOBMASTER C
+			ON
+				A.TENANT_ID = C.TENANT_ID
+			AND
+				A.C_ID = C.CN
+			AND
+			    B.CN = C.DEPTID
 			WHERE
 				RTRIM(A.c_clubno) = #v_CODE#
 			AND
@@ -1895,6 +1914,8 @@
 				A.companyid = #companyID#
 			AND
 				A.tenant_id = #tenantID#
+			GROUP BY
+				A.C_CLUBNO, A.C_ID
 		]]>
 	</select>
 	

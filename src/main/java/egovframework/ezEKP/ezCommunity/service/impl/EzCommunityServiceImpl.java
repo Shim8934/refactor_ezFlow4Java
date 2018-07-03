@@ -2960,7 +2960,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return "FALSE";
 	}
 
-	/* 커뮤니티 게시물(일반) > 게시자의 writerDeptID를 가져오도록 수정*/
+	/* 커뮤니티 게시물(일반) > 게시자의 writerDeptID를 가져오도록 수정 */
 	@Override
 	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, LoginVO userInfo) throws Exception {
 		logger.debug("getItemXML started.");
@@ -5254,6 +5254,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("tenantID", userInfo.getTenantId());
 		
 		// TBL_C_MEMBERINFO에서 승인대기자를 받아올 때, 모든 겸직을 같이 받아와서 레코드 중복이 발생한다. 관리자의 현재 companyID로 조건을 걸어 distinct로 받아오자.
+		// deptID도 받아오도록 한다.
 		List<CommunityCClubUserVO> userList = ezCommunityDAO.adminMemPermitGet2(map);
 
 		for (CommunityCClubUserVO user : userList) {
@@ -5263,10 +5264,11 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
             
             logger.debug("lang = " + userInfoLang + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName() + " || userName2 = " + user.getUserName2());
             
+            // 승인대기자의 정보를 표출할 때 해당 겸직부서(또는 원부서) 값을 같이 넘긴다.
             if (userInfoLang.equals("2")) {
-            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "' )\">" + user.getUserName2().trim() + "</a>");
+            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "','" + user.getDeptID() + "' )\">" + user.getUserName2().trim() + "</a>");
             }else {
-            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "' )\">" + user.getUserName().trim() + "</a>");
+            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "','" + user.getDeptID() + "' )\">" + user.getUserName().trim() + "</a>");
             }
             
             sb.append("</td>");
@@ -7545,6 +7547,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("deleteReservedBoardItem ended");
 	}
 	
+	/* 커뮤니티 답변메일 -> 보낼 당시에 a링크로 박힌다. 받고 나서 처리하자. */
 	@Override
 	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception {
 		logger.debug("sendReplyNoticeMail started.");

@@ -80,6 +80,7 @@
         <result property="boardID" 					column="BOARDID" 				columnIndex="31"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
         <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
+        <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -113,6 +114,7 @@
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="28"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
         <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
+         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -2405,6 +2407,7 @@
 	            WRITERNAME$lang$ WRITERNAME,
 	            WRITERDEPTID,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+	            WRITERCOMPANYID,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
 	            WRITEDATE ,
 	            PARENTWRITEDATE ,
@@ -2456,6 +2459,7 @@
 	            WRITERDEPTID,
 	            WRITERNAME$lang$ WRITERNAME,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+	            WRITERCOMPANYID,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
 	            WRITEDATE ,
 	            PARENTWRITEDATE ,
