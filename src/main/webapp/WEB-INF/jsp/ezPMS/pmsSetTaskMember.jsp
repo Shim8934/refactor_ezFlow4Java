@@ -260,7 +260,6 @@
 	   		};
 	   		
 	   		function authListInitData(){
-	   			debugger
 	   			//중복 추가 방지를 위해 기존 managerList와 participantList에 등록된 사람을 authList에 추가해준다.
 	   			if(type === "participants"){
 	   				var tmpList = parent.managerList;
