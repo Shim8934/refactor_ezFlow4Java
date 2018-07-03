@@ -187,7 +187,9 @@ function CalendarView(pTagetID,chk_str) {
             oTh.appendChild(datePick);
             
             /*2018-06-04 구해안 dayText 대신에 DatePicker 끝*/
-
+            var kSpan = document.createElement("SPAN");
+            kSpan.setAttribute("width", "10px");
+            oTh.appendChild(kSpan);
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_next";
             var mImg = document.createElement("IMG");
