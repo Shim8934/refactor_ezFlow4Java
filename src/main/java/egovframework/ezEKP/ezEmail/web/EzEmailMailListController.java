@@ -340,6 +340,17 @@ public class EzEmailMailListController {
 					fp.add(FetchProfile.Item.FLAGS);				
 				}
 				
+				// read/unread or bookmark
+				else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"") >= 0
+							|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"") >= 0) {
+					// pre-fetch the remaining fields after pre-fetching fields for sorting
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.SIZE);				
+				}
+				
 				else {
 					fp.add(UIDFolder.FetchProfileItem.UID);
 					fp.add("X-Priority");
@@ -508,6 +519,17 @@ public class EzEmailMailListController {
 				String subject = ezEmailUtil.getSubject(message);								
 				subject = (subject != null) ? subject : "";
 				subject = commonUtil.cleanValue(subject);
+				
+				// secureMail
+				if (ezEmailUtil.hasSecureMailFlag(message)) {
+					sb.append(String.format("<securemail>1</securemail>"));
+				} else {
+					sb.append(String.format("<securemail>0</securemail>"));
+				}
+				
+				// read/unread
+				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
+				sb.append(String.format("<read><![CDATA[%d]]></read>", readFlag));
 				
 				if (viewSelectIndex.equals("1")) {
 					((IMAPMessage)message).setPeek(true);
