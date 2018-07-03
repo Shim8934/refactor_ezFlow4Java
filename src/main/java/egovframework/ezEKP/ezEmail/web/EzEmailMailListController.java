@@ -489,9 +489,9 @@ public class EzEmailMailListController {
 				
 				if (nameLength > 1) {
 					if (nameLength - Integer.parseInt(returnValue1.split(";")[1]) == 0) {
-						name = Integer.toString(nameLength) + "명의 받는 이";
+						name = Integer.toString(nameLength) + "명의 받는이";
 					} else {
-						name = Integer.toString(nameLength) + "명중" + returnValue1.split(";")[1] + "명이 읽음";
+						name = Integer.toString(nameLength) + "명 중" + returnValue1.split(";")[1] + "명이 읽음";
 					}
 					
 					readDate = "";
