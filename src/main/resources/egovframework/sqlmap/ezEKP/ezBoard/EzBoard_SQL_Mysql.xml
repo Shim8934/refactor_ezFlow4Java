@@ -185,7 +185,7 @@
 	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="BoardMyFavoriteVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="ALL">
 			<![CDATA[
-				SELECT 
+				(SELECT 
 					BOARDID ,
 	                BOARDNAME ,
 	                BOARDNAME2 ,
@@ -198,11 +198,11 @@
                 AND
                 	COMPANYID = #v_COMPANYID#
 	            AND
-	            	USERID = #v_USERID#
+	            	USERID = #v_USERID#)
 	            	
 				UNION
 	            
-	            SELECT 
+	            (SELECT 
 					A.BOARDID ,
 	                A.BOARDNAME ,
 	                A.BOARDNAME2 ,
@@ -226,6 +226,9 @@
 	            	A.USERID = 'everyone'
 	            AND  
                 	B.USERID = #v_USERID#
+                ORDER BY 
+					A.BOARDID ASC
+				LIMIT 1)
 	            	
 	            ORDER BY 
 	            	VIEWORDER ASC
@@ -233,7 +236,7 @@
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="USE">
 			<![CDATA[
-				SELECT 
+				(SELECT 
 					A.BOARDID ,
                     A.BOARDNAME ,
                     A.BOARDNAME2 ,
@@ -255,11 +258,11 @@
 	            AND  
                 	USERID = #v_USERID#
                 AND 
-                	TABUSED = 'Y'
+                	TABUSED = 'Y')
                 	
               UNION  	
                 	
-                	SELECT 
+                (SELECT 
 					A.BOARDID ,
                     A.BOARDNAME ,
                     A.BOARDNAME2 ,
@@ -294,6 +297,9 @@
                 	C.USERID = #v_USERID#
                 AND 
                 	C.TABUSED = 'Y'
+                ORDER BY 
+					A.BOARDID ASC
+				LIMIT 1)
                 	
                 ORDER BY 
                 	VIEWORDER ASC
