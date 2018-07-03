@@ -1026,6 +1026,11 @@
 		    	<spring:message code='ezApprovalG.hyj12'/>
 	    	</c:if>
 	    </h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="CancelAprline_onclick()"></span></li>
+            </ul>
+        </div>
 	    <div class="portlet_tabpart02">
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine">
@@ -1155,11 +1160,10 @@
 	        <table style="width: 100%">
 	            <tr>
 	                <td style="text-align: center;">
-	                    <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="SaveAprline_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-	                    <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="CancelAprline_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
-	            </td>
-	        </tr>
-	    </table>
+	                    <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="SaveAprline_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>	                    
+	            	</td>
+	        	</tr>
+	    	</table>
 	    </div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

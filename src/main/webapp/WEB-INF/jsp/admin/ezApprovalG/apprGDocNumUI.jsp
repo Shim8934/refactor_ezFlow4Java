@@ -201,6 +201,11 @@
 		  </LISTVIEWDATA>
 		</xml>
 	    <h1><spring:message code='ezApproval.t83' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btn_Cancle()"></span></li>
+            </ul>
+        </div>
 	    <table>
 	        <tr>
 	            <td>
@@ -215,7 +220,6 @@
 	    </table>
 	    <div class="btnposition">
 	        <a class="imgbtn" onclick="return btn_OK()"><span><spring:message code='ezApprovalG.t1760' /></span></a>
-	        <a class="imgbtn" onclick="return btn_Cancle()"><span><spring:message code='ezApprovalG.t1761' /></span></a>
 	    </div>
 	</body>
 </html>

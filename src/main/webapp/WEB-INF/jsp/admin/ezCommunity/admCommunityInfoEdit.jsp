@@ -133,6 +133,11 @@
 		<form method="post" name="frmCommunityBasicInfo" action="/admin/ezCommunity/admCommunityInfoEditOk.do">
 			<input type="hidden" name="code" value="${code}">
 			<h1><spring:message code = 'ezCommunity.t1' /></h1>
+			<div id="close">
+	            <ul>
+	                <li><span name="button3" onClick="window.close()"></span></li>
+	            </ul>
+	        </div>
 			<table class="content">
 				<tr>
 					<th ><spring:message code = 'ezCommunity.t9' /></th>
@@ -203,7 +208,6 @@
 
 			<div class="btnposition">
                 <a class="imgbtn" style="vertical-align:middle"><span name="button3" onClick="btn_CommSave()"><spring:message code = 'ezCommunity.t20' /></span></a>
-                <a class="imgbtn" style="vertical-align:middle"><span name="button3" onClick="window.close()"><spring:message code = 'ezCommunity.t21' /></span></a>
 			</div>
 		</form>
 	</body>

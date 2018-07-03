@@ -103,6 +103,11 @@
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px;">
 		<h1><spring:message code='ezApprovalG.t1025'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onClick="return btnClose_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content">   
 		  <tr id="trSC1" >           
 		    <th   id="tdSC1Title" >&nbsp;</th>
@@ -135,9 +140,8 @@
 			<div id="SpecialList" style="BACKGROUND-COLOR: #ffffff;border:0px solid #ddd;HEIGHT: 120px; WIDTH: 100%; overflow:auto;">
 			</div>
 		</div>
-		<div class="btnposition" >
-		      <a class="imgbtn"><span id="btnOK" onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-		      <a class="imgbtn"><span id="btnCancel" onClick="return btnClose_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
+		<div class="btnpositionNew" >
+		    <a class="imgbtn"><span id="btnOK" onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>		      
 		</div>
 	</body>
 </html>

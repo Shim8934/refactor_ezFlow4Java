@@ -242,6 +242,11 @@
 <body class="popup"> 
 	<form method="post"> 
 		<h1><spring:message code='ezOrgan.t144' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table class="content">
 			<%-- //2016-12-15 이효민 : 사용하지 않는 기능.
 			<tr>
@@ -263,7 +268,6 @@
 			<a class="imgbtn" onClick="Delete_Address()"><span><spring:message code='ezOrgan.t165' /></span></a>
 			<a class="imgbtn" style="WIDTH:auto" onClick="Set_Primary()"><span>Primary<spring:message code='ezOrgan.t166' /></span></a>
 			<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t167' /></span></a>
-			<a class="imgbtn" onClick="window.close()"><span><spring:message code='ezOrgan.t125' /></span></a>
 		</div>
 	</form> 
 </body>

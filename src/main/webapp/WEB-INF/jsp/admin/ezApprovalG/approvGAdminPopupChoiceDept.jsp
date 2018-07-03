@@ -174,6 +174,11 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezSchedule.t6' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <center>
 	    <table class="content">
 	       <tr>
@@ -197,7 +202,6 @@
 	    </center>
 	    <div class="btnposition">
 	        <a class="imgbtn"><span onclick="save_info()" ><spring:message code='ezSchedule.t157' /></span></a>
-	        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezSchedule.t5' /></span></a>      
 	    </div>
 	</body>
 </html>
