@@ -50,6 +50,7 @@
 			var wcompanyID = "${result.companyID}"
 			var ucompanyID = "${userInfo.companyID}";
 			var attachList = "";
+			var deptID = "${deptID}";
 
 			$(document).ready(function() {
 				
@@ -448,7 +449,7 @@
 			function OpenUserInfo() {
 	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            feature = feature + GetOpenPosition(420, 438);
-	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID, "", feature);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID + "&dept=" + deptID, "", feature);
 	        }
 			
 			function CircularClose_onclick() {
