@@ -63,8 +63,9 @@
 					
 					return;
 				}
-				
-				var pInformationContent = "<spring:message code = 'ezCommunity.t5' /><b class='point'><spring:message code = 'ezCommunity.t6' /></b> <spring:message code = 'ezCommunity.t7' />";
+				//2018-07-03 김보미 - b태그에 클래스 삭제
+// 				var pInformationContent = "<spring:message code = 'ezCommunity.t5' /><b class='point'><spring:message code = 'ezCommunity.t6' /></b> <spring:message code = 'ezCommunity.t7' />";
+				var pInformationContent = "<spring:message code = 'ezCommunity.t5' /><b><spring:message code = 'ezCommunity.t6' /></b> <spring:message code = 'ezCommunity.t7' />";
 				Ans = OpenInformationUI(pInformationContent, btn_CommSave_Complate);
 			}
 			
@@ -133,6 +134,11 @@
 		<form method="post" name="frmCommunityBasicInfo" action="/admin/ezCommunity/admCommunityInfoEditOk.do">
 			<input type="hidden" name="code" value="${code}">
 			<h1><spring:message code = 'ezCommunity.t1' /></h1>
+			<div id="close">
+	            <ul>
+	                <li><span name="button3" onClick="window.close()"></span></li>
+	            </ul>
+	        </div>
 			<table class="content">
 				<tr>
 					<th ><spring:message code = 'ezCommunity.t9' /></th>
@@ -203,7 +209,6 @@
 
 			<div class="btnposition">
                 <a class="imgbtn" style="vertical-align:middle"><span name="button3" onClick="btn_CommSave()"><spring:message code = 'ezCommunity.t20' /></span></a>
-                <a class="imgbtn" style="vertical-align:middle"><span name="button3" onClick="window.close()"><spring:message code = 'ezCommunity.t21' /></span></a>
 			</div>
 		</form>
 	</body>

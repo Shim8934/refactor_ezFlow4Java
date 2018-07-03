@@ -38,6 +38,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezWebFolder.t165' /></h1>
+		<div id="close">
+            <ul>
+                <li><span name="Submit2" onClick="close_onclick();"></span></li>
+            </ul>
+        </div>
 		<table> 
 			<tr> 
 				<td width="195" valign="top">
@@ -98,7 +103,6 @@
 				<td>
 					<div class="btnposition" style="margin-top:0px;padding-top:0px">
 						<a class="imgbtn btnSave"   name="Submit"  onClick="set_range();"     ><span><spring:message code='ezWebFolder.t116' /></span></a>
-						<a class="imgbtn btnCancel" name="Submit2" onClick="close_onclick();" ><span><spring:message code='ezWebFolder.t112' /></span></a>
 					</div>
 				</td>
 			</tr>

@@ -2901,7 +2901,7 @@ function openAaprDocAttachUI() {
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
         
         if(approvalFlag == "G") {
-        	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
+        	DivPopUpShow(1050, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
         	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do");
         }

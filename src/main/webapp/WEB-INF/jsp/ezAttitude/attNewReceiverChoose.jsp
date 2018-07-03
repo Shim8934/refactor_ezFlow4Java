@@ -1080,6 +1080,11 @@
 		  </LISTVIEWDATA>
 		</xml>
 	    <h1 id="h1Title"><spring:message code='ezAttitude.t109'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
@@ -1170,7 +1175,6 @@
 	        <tr>
 	            <td class="btnposition btnpositionNew">
 	                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
-	                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 	            </td>
 	        </tr>
 	    </table>
