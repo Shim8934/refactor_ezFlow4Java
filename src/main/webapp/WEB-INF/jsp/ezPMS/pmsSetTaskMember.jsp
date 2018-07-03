@@ -16,6 +16,10 @@
 	   	
 	   		// 프로젝트 아이디
 	   		var projectId = "<c:out value='${projectId}'/>";
+	   		
+	   		// 그룹 아이디
+	   		var groupId = "<c:out value='${groupId}'/>";
+	   		
 	   		// 선택된 담당자 배열
 	   		var managerArray = [];
 	   		
@@ -50,7 +54,7 @@
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/ezPMS/getProjectMemberList.do",
-	   				data:{"projectId" : projectId, "roleId" : 5},
+	   				data:{"projectId" : projectId, "groupId" : groupId, "roleId" : 5},
 	   				success: function (result) {
 		   				$("#orglistView").html(result);
 	   				},

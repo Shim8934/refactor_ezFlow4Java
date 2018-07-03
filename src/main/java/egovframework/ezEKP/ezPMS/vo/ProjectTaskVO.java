@@ -127,6 +127,9 @@ public class ProjectTaskVO {
     // 선행작업명
     private List<String> pretaskNames;
     
+    // 상위그룹의 treeDepth
+    private int upperTreeDepth;
+    
     public Long getTaskId() {
         return taskId;
     }
@@ -453,5 +456,13 @@ public class ProjectTaskVO {
 
 	public void setPretaskFullNames(List<String> pretaskFullNames) {
 		this.pretaskFullNames = pretaskFullNames;
+	}
+
+	public int getUpperTreeDepth() {
+		return upperTreeDepth;
+	}
+
+	public void setUpperTreeDepth(int upperTreeDepth) {
+		this.upperTreeDepth = upperTreeDepth;
 	}
 }

@@ -1161,7 +1161,7 @@ public class EzPMSGWController2 {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/groups/users/{userId}/gantt", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getGroupMemberList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject getGroupListForGantt(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId +"/gantt] started.");
 		
 		JSONObject result = new JSONObject();

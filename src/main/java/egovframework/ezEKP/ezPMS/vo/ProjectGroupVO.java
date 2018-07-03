@@ -118,6 +118,9 @@ public class ProjectGroupVO {
     // 조상 그룹을 포함한 선행 작업명
     private String pretaskName;
     
+    // 상위 그룹의 treeDepth
+    private int upperTreeDepth;
+    
     public String getProjectName() {
 		return projectName;
 	}
@@ -420,5 +423,13 @@ public class ProjectGroupVO {
 
 	public void setPretaskAncesterGroupIds(String pretaskAncesterGroupIds) {
 		this.pretaskAncesterGroupIds = pretaskAncesterGroupIds;
+	}
+
+	public int getUpperTreeDepth() {
+		return upperTreeDepth;
+	}
+
+	public void setUpperTreeDepth(int upperTreeDepth) {
+		this.upperTreeDepth = upperTreeDepth;
 	}
 }

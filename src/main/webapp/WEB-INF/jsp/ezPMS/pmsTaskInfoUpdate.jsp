@@ -101,6 +101,7 @@ var participantList = [];
 var groupTaskMember = null;
 var taskId = "${taskDetails.taskId}";
 var initMemberList = [];
+var treeDepth = "<c:out value='${taskDetails.upperTreeDepth}'/>"
 
  $(function() {
 	 taskDetails = ${taskDetails};
@@ -147,9 +148,18 @@ function initpretaskNames() {
 
 function openMemberList(type) {
 	var win;
+	
 	var feature = GetOpenPosition(760, 700);
-	DivPopUpShow(684, 404, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
-				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	console.log(treeDepth);
+	
+	// 상위그룹으로 최상위 그룹인 프로젝트 자체를 선택했을 때는 groupId를 넘기지 않는다
+	if(treeDepth == '0') {
+		DivPopUpShow(608, 404, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
+				"height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	} else {
+		DivPopUpShow(608, 404, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId + "&type=" + type, "",
+				"height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	}
 }
 
 function openGroupTree() {
