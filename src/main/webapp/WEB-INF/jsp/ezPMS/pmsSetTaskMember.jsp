@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	   	<script type="text/javascript">
+	   	<script type="text/javascript" charset="UTF-8">
 	   	
 	   		// 프로젝트 아이디
 	   		var projectId = "<c:out value='${projectId}'/>";
@@ -260,24 +260,25 @@
 	   		};
 	   		
 	   		function authListInitData(){
+	   			debugger
 	   			//중복 추가 방지를 위해 기존 managerList와 participantList에 등록된 사람을 authList에 추가해준다.
 	   			if(type === "participants"){
 	   				var tmpList = parent.managerList;
 	   				if(tmpList){
-			   			parent.managerList.forEach(function(elem, idx){
-			   				if(!(elem in authList)){
+	   					for(var elem in parent.managerList){
+	   						if(!(elem in authList)){
 			   					authList.push(elem);
 			   				}
-			   			});
+	   					}
 	   				}
 	   			} else {
 	   				var tmpList = parent.participantList;
 	   				if(tmpList){
-	   					tmpList.forEach(function(elem, idx){
-			   				if(!(elem in authList)){
+	   					for(var elem in tmpList){
+	   						if(!(elem in authList)){
 			   					authList.push(elem);
 			   				}
-		   				});
+	   					}
 	   				}
 	   			}
 	   		}
@@ -285,13 +286,13 @@
 	   		//기존 담당자 또는 참여자를 초기값으로 넣어준다.
 	   		function setPrevUser(){
 	   			if(type === "participants" && parent.participantList.length > 0){
-		   			parent.participantList.forEach(function(elem, idx){
+		   			for(var elem in parent.participantList){
 		   				$('#' + elem.userId).click().dblclick();
-		   			});
+		   			}
 	   			} else if (type !== "participants" && parent.managerList.length > 0){
-	   				parent.managerList.forEach(function(elem, idx){
-	   					$('#' + elem.userId).click().dblclick();
-		   			});
+	   				for(var elem in parent.managerList){
+		   				$('#' + elem.userId).click().dblclick();
+		   			}
 	   			}
 	   		}
 		</script>
