@@ -99,7 +99,7 @@
 			fill : {color : circleColor},
 			size : 134
 		}).on('circle-animation-progress', function(event, progress) {
-			$(this).find('strong').html(taskDetails.realProgress + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
+			$(this).find('strong').html(Number(taskDetails.realProgress).toFixed(1) + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 		});
 	}
 	
