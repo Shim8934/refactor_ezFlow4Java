@@ -1272,7 +1272,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		//기존 환경설정 정보 삭제
 		ezScheduleService.deleteScheduleConfig(userID, tenantID);
 		//기존 비서정보 삭제
-		ezScheduleService.deleteSecretary(userID, tenantID);
+		ezScheduleService.deleteSecretary(userID, tenantID, companyID);
 		//새로운 환경설정 정보 등록
 		ezScheduleService.insertScheduleConfig(userID, defaultView, startDay, startTime, endTime, autoDelete, tenantID);		
 		
