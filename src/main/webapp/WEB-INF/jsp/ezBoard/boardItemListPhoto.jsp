@@ -1131,9 +1131,9 @@
 		  <ul>
 		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
-			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
-			    <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
+			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
 		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
 		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051'/></span></li>

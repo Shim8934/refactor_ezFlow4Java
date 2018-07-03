@@ -196,12 +196,12 @@
 		    }
 		    var mail_add_distributionlist_cross_dialogArguments = new Array();
 		    function add_dl() {
-		        var feature = "dialogHeight:650px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(970, 650);
+		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(970, 670);
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do", "", GetOpenWindowfeature(970, 650));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do", "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -227,13 +227,13 @@
 		        }
 		        var DeptID = selnode[0].getAttribute("DATA1");
 		
-		        var feature = "dialogHeight:650px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(970, 650);
+		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(970, 670);
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText), "", GetOpenWindowfeature(970, 650));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText), "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {

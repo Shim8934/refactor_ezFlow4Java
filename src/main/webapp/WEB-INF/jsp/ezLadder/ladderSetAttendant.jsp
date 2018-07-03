@@ -1620,6 +1620,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title" style="height: 20px;"><spring:message code="ezLadder.t071" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1771,9 +1776,8 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezLadder.t086' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezLadder.t087' /></span></a>
 		</div>
 		
 		<!-- popup start -->

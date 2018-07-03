@@ -626,6 +626,11 @@
 		  	</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezBoard.t16' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close()"></span></li>
+            </ul>
+        </div>
 		<table>
 		  <tr align=left>
 		    <td  colspan="1" id="cnblock" style="height: 30px; background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;" align="right">
@@ -683,7 +688,6 @@
 		</table>
 		<div class="btnposition">
 		  <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code='ezBoard.t48'/></span></a>
-		  <a class="imgbtn"><span onclick="return window.close()"><spring:message code='ezBoard.t49'/></span></a>
 		</div>
 	</body>
 </html>

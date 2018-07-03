@@ -113,7 +113,7 @@
 	                _img1.onclick = function () { Smaller(); };
 	
 	                _img1.style.cursor = "pointer";
-	                _img1.style.margin = "5px";
+	                _img1.style.margin = "5px 4px 5px 0px";
 	                _img1.src = "/images/minus.png";
 	
 	                _img2 = document.createElement("IMG");
@@ -216,7 +216,7 @@
 	                }
 	                
 	                strAttach += "<li>";
-	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "')\"><img style='cursor:pointer' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
+	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "')\"><img style='cursor:pointer;vertical-align:middle' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
 	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
@@ -371,7 +371,7 @@
 	    </script>
 	</head>
 	<body>
-		<div id="txtContent" name="txtContent" style="margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;">
+		<div id="txtContent" name="txtContent" style="margin:10px 14px;word-wrap:break-word;font-size:12px;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
 		</div>
 	</body>

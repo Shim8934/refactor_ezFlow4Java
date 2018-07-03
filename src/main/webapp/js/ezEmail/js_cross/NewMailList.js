@@ -38,9 +38,10 @@ function MakeHeaderHTML(HeaderObject) {
         XmlRows = SelectNodes(XmlHeader, "view/column");
         var _HeaderTR = document.createElement("TR");
         var _HeaderTH = document.createElement("TH");
-        _HeaderTH.style.width = "22px";
+        _HeaderTH.style.width = "22px";        
         if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
-            var _HeaderCheckBox = document.createElement("INPUT");
+        	_HeaderTH.style.textAlign = "center";
+             var _HeaderCheckBox = document.createElement("INPUT");
             _HeaderCheckBox.type = "checkbox";
             _HeaderCheckBox.style.margin = "0px";
             _HeaderCheckBox.style.padding = "0px";
@@ -242,6 +243,7 @@ function MakeListInfoHTML(ConentObject) {
             
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
+                _TDCheckBox.style.textAlign = "center";
                 _TDCheckBox.style.cursor = "default";
                 var _TDCheckBox_Sub = document.createElement("INPUT");
                 _TDCheckBox_Sub.type = "checkbox";
@@ -321,10 +323,13 @@ function MakeListInfoHTML(ConentObject) {
                             if (p_SecureMail == 1) {
                             	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + p_Subject;
                             }
-                            if (g_bdraft == true) {
-                            	p_Subject = p_Subject
-                            } else {
-                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+
+                            if (useMailNewWindow == "YES") {
+                            	if (g_bdraft == true) {
+	                            	p_Subject = p_Subject
+	                            } else {
+                            		p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img style='vertical-align:middle' src=\"/images/email/popup_icon.gif\" width=\"10px\"  onclick = \"mailOpenPopup(this, event)\" />";
+	                            }
                             }
                             
                             _TDColum.innerHTML = p_Subject;

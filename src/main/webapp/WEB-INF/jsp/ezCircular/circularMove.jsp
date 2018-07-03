@@ -87,7 +87,7 @@
 	    <h1><spring:message code='ezCircular.t56' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="window.close()"><spring:message code='ezCircular.t84' /></span></li>
+	            <li><span onclick="window.close()"></span></li>
 	        </ul>
 	    </div>
 	    <table class="content">
@@ -98,11 +98,8 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	    	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezCircular.t56' /></span></a>
-	    </div>	
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	    </script>
+	    </div>
 	</body>
 </html>

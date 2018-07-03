@@ -1569,7 +1569,7 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
@@ -3345,7 +3345,7 @@
 	    <h1 id="h1Title"><spring:message code='ezEmail.t572' /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 	    <table style="width:100%;">
@@ -3394,6 +3394,7 @@
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezEmail.t31' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezEmail.t26' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezEmail.t28' /></option>
+                                      		                <option value="extensionAttribute10" usedefault="1"><spring:message code='ezEmail.t281' /></option>
 	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezEmail.t99000045' /></option>
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezEmail.t99000046' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>

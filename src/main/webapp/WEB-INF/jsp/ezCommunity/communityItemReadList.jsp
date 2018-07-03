@@ -306,19 +306,15 @@
 			<h1><spring:message code='ezCommunity.t952' /></h1>
 		    <div id="close">
 		        <ul>
-		            <li><span onclick="close_onclick()"><spring:message code='ezCommunity.t21' /></span></li>
+		            <li><span onclick="close_onclick()"></span></li>
 		        </ul>
 		    </div>
-		    
-	        <script type="text/javascript">
-	            selToggleList(document.getElementById("close"), "ul", "li", "0");
-	        </script>
 	        <!-- 2018-02-06 김보미 -->
 <%-- 	        <h2><spring:message code='ezCommunity.t1053' /></h2> --%>
 <!-- 	        <div class="box" style="height: 290px; overflow: auto"> -->
-	        	<div style="width:100%; height:305px" id="divList">
-		            <table id="lvBoardList" class="popuplist" style="width:100%"></table>
-		        </div>
+        	<div style="width:100%; height:305px" id="divList">
+	            <table id="lvBoardList" class="popuplist" style="width:100%"></table>
+	        </div>
 			<div id='runtime' style="color:#666;padding-top:5px"></div>
 			<div id="tblPageRayer" style="text-align:center"></div>
         	    <!-- 

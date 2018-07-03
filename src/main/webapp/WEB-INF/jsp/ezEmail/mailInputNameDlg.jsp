@@ -65,13 +65,17 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1><spring:message code='ezEmail.t348' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span id="btn_cancel" onclick="btn_cancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <div class="txt"><spring:message code='ezEmail.t352' /></div>
 	    <div class="nobox">
 	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;margin-top:2px" maxlength="20">
 	    </div>
 	    <div class="btnposition btnpositionNew">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezEmail.t38' /></span></a>
-	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezEmail.t39' /></span></a>
 	    </div>	
 	</body>
 </html>

@@ -1251,17 +1251,17 @@
 			  <ul>
 		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
-			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89' /></span></li>
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
 		        <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134' /></span></li>
-			    <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205' /></span></li>
 		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188' /></span></li>
 		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051' /></span></li>
-		        <c:if test="${boardInfo.guBun ne '2'}">
+		        <%-- <c:if test="${boardInfo.guBun ne '2'}">
 		        	<li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
-		        </c:if>
+		        </c:if> --%>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li> 
 		        <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
@@ -1269,7 +1269,7 @@
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 				</li>
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 

@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -356,6 +357,10 @@
 						if (document.getElementById("rdTotal").checked) {
 				    		InsFContTotal();
 						} else {
+							if ($('#tbManage').val() == "") {
+								alert(strLanggarm01);
+								return;
+							}
 				    		InsFContGroup();
 						}
 						
@@ -384,6 +389,10 @@
 						if (document.getElementById("rdTotal").checked) {
 				    		UpFcontTotal();
 						} else {
+							if ($('#tbManage').val() == "") {
+								alert(strLanggarm01);
+								return;
+							}
 				    		UpFContGroup();
 						}
 						
@@ -433,6 +442,11 @@
 			</TREEVIEWDATA>
 		</xml>
 	    <h1><c:out value = '${title }' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span id="Span1" onclick="btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t1656' /></th>
@@ -503,7 +517,6 @@
 	    </table>
 	    <div class="btnposition">
 	        <a class="imgbtn"><span id="btnInsFcont" onclick="btnOK_onclick()"><spring:message code = 'ezApprovalG.t1760' /></span></a>
-	        <a class="imgbtn"><span id="Span1" onclick="btncancel_onclick()"><spring:message code = 'ezApprovalG.t1761' /></span></a>
 	    </div>
 	</body>
 </html>

@@ -948,7 +948,6 @@
 				<!-- 2018-05-24 구해안 이미지 이동 -->
 				<li><span id="pn_img" onClick="WriteTask()"><spring:message code='ezTask.t113' /></span></li>
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
 
 				<!-- 완료 -->
@@ -1007,8 +1006,8 @@
 						<col style ="width:120px;">
 						<col style ="width:120px;">
 						<tr>
-							<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-							<th  style="text-align:center;"><img src="/images/ImgIcon/view-importance.gif"></th>
+							<th style="text-align:center"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding: 0px; margin-top: 0px; margin: 0px; vertical-align:middle;"/></th>
+							<th style="text-align:center;"><img src="/images/ImgIcon/view-importance.gif"></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
@@ -1021,13 +1020,13 @@
 							</c:if>
 		                    <!-- 2018-05-16 구해안 업무구분과 완료율 간격 조정 -->
 		                    <!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
-		                    <th  style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
+		                    <th style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
 							<th id="_thprogress"  style="text-align:center;padding-right: 12px;"><spring:message code='ezTask.t120' /></th>						
-							<th  style="text-align:center;"><spring:message code='ezTask.t121'/></th>
-							<th  style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
+							<th style="text-align:center;"><spring:message code='ezTask.t121'/></th>
+							<th style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
 						</tr>
 						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this)">
-							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>

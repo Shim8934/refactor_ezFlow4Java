@@ -924,6 +924,7 @@
 		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
 		                	ret[12] = "";
 		                	ret[13] = "";
+		                	ret[21] = "";
 		                }
 	
 		                if (document.getElementById("AprSecurity").checked)
@@ -1477,7 +1478,7 @@
 	    </h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 	    <div class="portlet_tabpart02" style="margin: 5px 0px 10px">
@@ -2331,7 +2332,9 @@
 	        <table style="width: 100%">
 	            <tr>
 	                <td style="text-align: center;">
-	                    <a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
+	                	<div class="btnpositionNew">
+	                    	<a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
+	                    </div>	
 	                </td>
 	            </tr>
 	        </table>

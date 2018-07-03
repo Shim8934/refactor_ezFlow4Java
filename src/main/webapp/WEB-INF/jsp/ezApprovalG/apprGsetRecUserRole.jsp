@@ -507,7 +507,11 @@
 </xml>
 <!---------------------------------------- 리스트뷰 컨트롤 ---------------------------------------->	
 <h1><spring:message code='ezApprovalG.t1155'/></h1>
-
+<div id="close">
+    <ul>
+        <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
+    </ul>
+</div>
 <table class="content">
 	<tr>
 	<th><spring:message code='ezApprovalG.t1163'/></th>
@@ -553,8 +557,7 @@
 </table>
 
 <div class="btnposition btnpositionNew">
-<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-<a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
+	<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
 </div>
 
 </body>

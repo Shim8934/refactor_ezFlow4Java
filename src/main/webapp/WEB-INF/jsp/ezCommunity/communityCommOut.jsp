@@ -62,7 +62,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezCommunity.t714'/></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span name="Submit2" id="outcancel" onClick="return outcancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content" style="margin-bottom:10px" >
 			<tr>
 		    	<th><spring:message code='ezCommunity.t9991'/></th>
@@ -95,11 +99,10 @@
 		    </tr>
 		</table>
 		
-		<textarea name="textarea" id="outreason" style="width: 97%;height:110px" maxLength="200"></textarea>
+		<textarea name="textarea" id="outreason" style="width: 97%;height:110px;resize:none" maxLength="200"></textarea>
 		
-		<div class="btnposition">
+		<div class="btnpositionNew">
 			<a class="imgbtn" name="Submit" id="outok" onClick="return outok_onclick('${code}')"><span><spring:message code='ezCommunity.t719'/></span></a>
-			<a class="imgbtn"name="Submit2" id="outcancel" onClick="return outcancel_onclick()" ><span><spring:message code='ezCommunity.t246'/></span></a>
 		</div>
 	</body>
 </html>

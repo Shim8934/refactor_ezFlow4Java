@@ -359,7 +359,7 @@
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="btn_Close()"><spring:message code="ezCircular.t84"/></span></li>
+          					<li><span onClick="btn_Close()"></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;border-bottom:0px">
@@ -479,7 +479,6 @@
 
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>
 </html>

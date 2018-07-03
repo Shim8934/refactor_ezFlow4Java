@@ -1880,13 +1880,12 @@
 	        </div>
 	        <div id="close">
 	            <ul>
-	                <li><span onclick="close_onclick()"><spring:message code='ezAddress.t5' /></span></li>
+	                <li><span onclick="close_onclick()"></span></li>
 	            </ul>
 	        </div>
 	
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	            selToggleList(document.getElementById("close"), "ul", "li", "0");
 	        </script>
 	
 	        <table class="content">

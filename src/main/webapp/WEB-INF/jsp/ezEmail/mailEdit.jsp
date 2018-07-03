@@ -811,7 +811,7 @@
 		        </div>
 		        <div id="close">
 		          <ul>
-		            <li><span onClick="window_close()"><spring:message code='ezEmail.t63' /></span></li>
+		            <li><span onClick="window_close()"></span></li>
 		          </ul>
 		        </div></td>
 		    </tr>
@@ -977,7 +977,6 @@
 		<input type="hidden" name="eImportant" style="display:none;">
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 			
 			if (useSecureMail == "YES") {
 	        	$('.securemail').css('display', '');

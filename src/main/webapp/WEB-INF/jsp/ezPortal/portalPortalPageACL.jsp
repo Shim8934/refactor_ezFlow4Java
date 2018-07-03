@@ -105,12 +105,9 @@
         <h1> <spring:message code='ezPortal.t87'/> </h1>
         <div id="close">
           <ul>
-            <li><span onClick="window.returnValue=0;window.close()"><spring:message code='ezPortal.t8'/></span></li>
+            <li><span onClick="window.returnValue=0;window.close()"></span></li>
           </ul>
         </div>
-        <script type="text/javascript">
-    			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
         <%-- <div id="tabnav">
   			<ul class="on">
     			<li id="menu_1" class="on"><span><spring:message code='ezPortal.t87'/></span></li>

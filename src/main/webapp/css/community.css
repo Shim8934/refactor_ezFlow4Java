@@ -1534,10 +1534,10 @@ _list li {
 
 .cmhomelist{table-layout:fixed; border:0 none !important;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
-.cmhomelist tr th{font-weight:normal;background-color:#f8f8fa; text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:6px 4px 4px; border-top:1px solid #e8e8ea;border-bottom:1px solid #e8e8ea; height:22px}
+.cmhomelist tr th{font-weight:normal;background-color:#f8f8fa; text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:4px 4px 4px; border-top:1px solid #e8e8ea;border-bottom:1px solid #e8e8ea; height:24px}
 .cmhomelist tr th.title{width:100%; text-align:left;}
 
-.cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#666; border-bottom:1px solid #ebebed; border-spacing:0; height:32px;}
+.cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#666; border-bottom:1px solid #ebebed; border-spacing:0; height:30px;}
 .cmhomelist tr td img{vertical-align:middle;}
 .cmhomelist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .cmhomelist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}

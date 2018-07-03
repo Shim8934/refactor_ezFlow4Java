@@ -723,7 +723,7 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		        if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") != null && SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") != "") {
 		        	//SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
 		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
@@ -1341,7 +1341,7 @@
 		<h1 id="h1Title"><c:out value="${title}" /></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 		<table style="width:100%">
@@ -1439,7 +1439,7 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="display:none" ><span><spring:message code='ezSchedule.t123' /></span></a>
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 		</div>

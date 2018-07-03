@@ -212,7 +212,7 @@
 	    <h1><spring:message code='ezApprovalG.t00008'/></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="window_close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window_close()"></span></li>
             </ul>
         </div>
 	    <span>&nbsp;▒ <spring:message code='ezApprovalG.t00009'/></span>
@@ -227,7 +227,7 @@
 	        </table>
 	    </div>
 	    <br />
-	     <div class="btnposition btnpositionNew" align="center">
+	     <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>	        
 	    </div>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>

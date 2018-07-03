@@ -1986,12 +1986,11 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick="window.close();"><spring:message code='ezBoard.t12' /></span></li>
+	                        <li><span onclick="window.close();"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>

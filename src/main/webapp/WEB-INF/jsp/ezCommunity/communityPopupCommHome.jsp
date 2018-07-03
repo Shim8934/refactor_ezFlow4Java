@@ -400,7 +400,7 @@
 		        try {
 		            var treeNode = new TreeNode();
 		            treeNode.LoadFromID(pNodeID);
-
+		            
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA6")
@@ -408,6 +408,17 @@
 		            document.getElementById("rightfrm").style.display = "";
 		            document.getElementById("mainboard").style.display = "none";
 		            document.getElementById("makeguide").style.display = "none";
+		            
+		            //2018-07-02 김보미 - 클릭시 색 변경 안되게
+		            var boardColor = treeNode.GetNodeData("DATA4");
+		            if (boardColor != "" && boardColor != null) {
+			            var SelectedNodeID = treeNode.GetNodeData("id");
+		                var objSpan = document.getElementById("spn_" + SelectedNodeID);
+		                if(CrossYN())
+		                    objSpan.setAttribute("style", "color:" + boardColor);
+		                else
+		                    objSpan.style.color = boardColor;
+		            }
 		            
 		            document.getElementById("rightfrm").style.height = "659px";
 		            if (chkPhotoBrd != "3") {
@@ -680,7 +691,7 @@
 				                alert("Community <spring:message code='ezCommunity.t1103' />");
 				            } else {
 				                var wWeight = "425";
-				                var wHeight = "385";
+				                var wHeight = "395";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 				                var left = (width - wWeight) / 2;

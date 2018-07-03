@@ -89,10 +89,6 @@
 			    text-align: left;
 			}
 			
-			.btnpositionNew {
-				padding-top: 7px;
-			}
-			
 			.jstree-node, .jstree-children, .jstree-container-ul { 
 				margin-top: 3px;
 			}
@@ -104,7 +100,7 @@
 		<h1><spring:message code='ezEmail.t824'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="cancel()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="cancel()"></span></li>
             </ul>
         </div>
 		<table border="1" id="letterTable" >

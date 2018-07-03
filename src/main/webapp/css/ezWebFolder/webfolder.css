@@ -115,7 +115,7 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #mainmenu2 > ul > li >a {margin-top:3px;}
 #mainmenu2 > ul #right {float: right; cursor: default;}
 #mainmenu2 > ul #right span {padding-right: 5px;}
-#mainmenu .select {height: 28px; border-radius: 3px; padding: 1px 0px 0px 4px; width: 80px; color: #666;} 
+#mainmenu .select {height: 29px; border-radius: 2px; padding: 1px 0px 0px 4px; width: 80px;} 
 
 #fileTypeSelect {height:29px; border-radius:3px; width:95px;}
 #companySelect {margin: 10px 0px;}

@@ -366,7 +366,7 @@
 	    <h1><spring:message code='ezSchedule.t1101' /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="btn_close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="btn_close()"></span></li>
             </ul>
         </div>
 	    <table>

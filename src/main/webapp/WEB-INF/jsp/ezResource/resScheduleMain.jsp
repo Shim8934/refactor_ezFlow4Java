@@ -472,9 +472,6 @@
 		<div id="mainmenu">
   			<ul>
     			<li><span id="pn_img" onClick="newSchedule_onclick(event)"><spring:message code='ezResource.t171'/></span></li>
-    			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
-    			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
-    			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>
     			<!-- 2018-06-05 구해안 자원정보 버튼 추가 및 resinfo 정보 popup으로 수정 -->
     			<li><span onclick='showRes(${resID});'><spring:message code='ezResource.t142'/></span></li>
     			<c:if test="${adminFg eq 'Y'}" >
@@ -483,6 +480,10 @@
     					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
     				</c:if>
     			</c:if>
+    			<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
+    			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
+    			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
+    			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>
     			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
     			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>

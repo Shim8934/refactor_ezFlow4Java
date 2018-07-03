@@ -207,11 +207,13 @@ function SelectNodes(xmlDoc, elementPath) {
             }
         }
         //Document 인경우
-        if (xmlDoc.nodeType == 9) {
-            parentNode = SelectSingleNodeNew(xmlDoc, parentPath);
-        }
-        else {
-            parentNode = SelectSingleNodeNew(xmlDoc, parentPath);
+        if (xmlDoc != null) {
+	        if (xmlDoc.nodeType == 9) {
+	            parentNode = SelectSingleNodeNew(xmlDoc, parentPath);
+	        }
+	        else {
+	            parentNode = SelectSingleNodeNew(xmlDoc, parentPath);
+	        }
         }
     }
     if (parentNode == null) return false;

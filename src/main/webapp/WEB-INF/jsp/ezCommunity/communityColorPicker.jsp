@@ -32,6 +32,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code = 'ezCommunity.t414' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close();"></span></li>
+            </ul>
+        </div>
 		<%--파이어폭스에서 이벤트를 못 찾아서 onclick="select_color()"이벤트에서 onmousedown="select_color(event)"이벤트로 수정_2013.01.29--%>
 		<table width="100%" cellspacing="2" onmousedown="select_color(event)" id="ColorTable" class="box" border="1">
 			<tr>
@@ -108,9 +113,8 @@
 		    </tr>
 		</table>
 		
-		<div class="btnposition" > 
-			<input id="ok" onClick="ok_onclick();" type="button"  value="<spring:message code = 'ezCommunity.t245' />">
-			<input onClick="window.close();" type="button"  value="<spring:message code = 'ezCommunity.t246' />">
+		<div class="btnpositionNew" >
+			<a class="imgbtn"><span id="ok" onClick="ok_onclick();"><spring:message code='ezCommunity.t245' /></span></a>			
 		</div>
 </body>
 </html>

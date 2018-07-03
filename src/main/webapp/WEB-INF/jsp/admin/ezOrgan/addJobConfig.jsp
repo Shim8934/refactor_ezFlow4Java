@@ -1033,12 +1033,11 @@
 	    </div>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="closeWindow()"><spring:message code='ezOrgan.t143' /></span></li>
+	            <li><span onclick="closeWindow()"></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	    <table id="TreeViewTD">
 	        <tr>

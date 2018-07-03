@@ -1638,25 +1638,25 @@
 			<div id="mainmenu">
 				<ul>
 					<li><span  onClick="save()"><spring:message code="ezPortal.t62" /></span></li>
-					<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   					<li><span onClick="layoutmode()"><spring:message code="ezPortal.t322" /></span></li>
   					<li><span onClick="editingmode()"><spring:message code="ezPortal.t323" /></span></li>
   					<li><span onClick="preview()"><spring:message code="ezPortal.t63" /></span></li>
-  					<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 					<c:if test="${parentPageID == 'top'}">
 						<li><span onClick="ACLEdit()"><spring:message code="ezPortal.t87" /></span></li>
   						<li style="display:none"><span onClick="inherit()"><spring:message code="ezPortal.t324" /></span></li>
-  						<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  						<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 					</c:if>
   					<li><span onClick="insertpage()"><spring:message code="ezPortal.t325" /></span></li>
   					<li><span onClick="removecell('field')"><spring:message code="ezPortal.t326" /></span></li>
-  					<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   					<li><span onClick="insertcell()"><spring:message code="ezPortal.t327" /></span></li>
   					<li><span onClick="removecell()"><spring:message code="ezPortal.t328" /></span></li>
-  					<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   					<li><span onClick="insertrow()"><spring:message code="ezPortal.t329" /></span></li>
   					<li><span onClick="removerow()"><spring:message code="ezPortal.t330" /></span></li>
-  					<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   					<li><span onClick="swaprow('up')"><spring:message code="ezPortal.t331" /></span></li>
   					<li><span onClick="swaprow('down')"><spring:message code="ezPortal.t332" /></span></li>
   					<li><span onClick="swaprow('left')"><spring:message code="ezPortal.t72" /></span></li>

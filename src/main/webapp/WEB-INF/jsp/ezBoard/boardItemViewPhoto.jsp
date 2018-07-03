@@ -1208,12 +1208,11 @@
 		      </div>
 		      <div id="close">
 		        <ul>
-		            <li ><span  onclick="btnClose_onclick()"><spring:message code='ezBoard.t12'/></span></li>
+		            <li ><span  onclick="btnClose_onclick()"></span></li>
 		        </ul>
 		      </div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		    </td>
 		  </tr>

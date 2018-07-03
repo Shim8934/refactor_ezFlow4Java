@@ -260,8 +260,7 @@
 		            <td >                
 		                <div id="close">
 		                    <ul>
-		                        <li id="btnApprove"><span onClick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/>/<spring:message code='ezApprovalG.t1760'/></span></li>
-		                        <li id="btnClose" ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+		                        <li id="btnClose" ><span onClick="return btnClose_onclick()"></span></li>
 		                    </ul>
 		                </div>
 		            </td>
@@ -270,7 +269,7 @@
 		            <td style="height:20px;vertical-align:middle;"><spring:message code='ezApprovalG.t9998'/></td>
 		        </tr>
 		        <tr>
-		            <td  style="padding-bottom:10px;text-align:center;">
+		            <td  style="text-align:center;">
 		                <div style="overflow-y:auto;width:600px;HEIGHT:350px;">
 		                    <table class="mainlist" >
 		                        <tr >
@@ -286,13 +285,13 @@
 		            </td>
 		        </tr>
 		    </table>
+		    <div class="btnpositionNew">
+		        <a class="imgbtn"><span onclick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/>/<spring:message code='ezApprovalG.t1760'/></span></a>
+		    </div>
 		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 				<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
-		     <script type="text/javascript">
-		         selToggleList(document.getElementById("close"), "ul", "li", "0");
-		    </script>
 		</form>
 	</body>
 </html>

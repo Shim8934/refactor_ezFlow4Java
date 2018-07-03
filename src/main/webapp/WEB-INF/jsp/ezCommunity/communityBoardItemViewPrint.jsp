@@ -207,13 +207,9 @@
 			      	<div id="close">
 				        <ul>
 				        	<li><span onclick="beforePrint()"><spring:message code = 'ezCommunity.t981' /></span></li>
-				          	<li><span onClick="window.close();"><spring:message code = 'ezCommunity.t21' /></span></li>
+				          	<li><span onClick="window.close();"></span></li>
 				        </ul>
 			      	</div>
-			      	
-			      	<script type="text/javascript">
-						selToggleList(document.getElementById("close"), "ul", "li", "0");
-					</script>
 				</td>
 		  	<tr>
 <!-- 		    	<td style="height:20px"> -->

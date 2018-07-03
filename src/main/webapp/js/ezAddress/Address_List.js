@@ -169,6 +169,7 @@ function MakeAddressList() {
             var _TD1 = document.createElement("TD");
             _TD1.style.width = "20px";
             _TD1.style.margin = "0px";
+            _TD1.style.textAlign = "center";
             var _TDCheckBox_Sub = document.createElement("INPUT");
             _TDCheckBox_Sub.type = "checkbox";
             _TDCheckBox_Sub.style.margin = "0px";
@@ -435,7 +436,7 @@ function Complete_Get_AddressList() {
         if (XmlRows.length == 0) {
             if (searchFlag) {
                 pCurrentPage--;
-                if (pCurrentPage < 0) {
+                if (pCurrentPage <= 0) {
                     document.getElementById("mailBoxInfo").style.visibility = "hidden";
                     while (document.getElementById("MailList").childNodes.length > 0) {
                         document.getElementById("MailList").removeChild(document.getElementById("MailList").childNodes.item(0));
@@ -449,7 +450,7 @@ function Complete_Get_AddressList() {
                     makePageSelPage();
                     return;
                 }
-                Get_SearchAddressList();
+                //Get_SearchAddressList();
                 return;
             }
         }

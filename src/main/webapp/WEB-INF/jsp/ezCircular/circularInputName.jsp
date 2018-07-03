@@ -111,7 +111,7 @@
 	    <h1><spring:message code='ezCircular.t105' /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="btn_cancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="btn_cancel_onclick()"></span></li>
             </ul>
         </div>
 	    <div class="txt">▒&nbsp;<spring:message code='ezCircular.t106' /></div>

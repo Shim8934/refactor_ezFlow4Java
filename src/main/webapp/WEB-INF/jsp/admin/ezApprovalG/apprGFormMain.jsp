@@ -810,7 +810,7 @@
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btnClose_onclick()"><spring:message code = 'ezApprovalG.t64' /></span></li>
+                <li><span id="btnClose" onClick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
         <div class="portlet_tabpart01">

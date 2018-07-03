@@ -1062,7 +1062,7 @@
 				}
 
 				var UserListHTML = "";
-				if (SelectDeptNM.getAttribute("countinfo") != "1") {
+				if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != null && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 					SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>"
 							+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
 							+ strLang256 + "</span>]";
@@ -1922,7 +1922,7 @@
 		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezCircular.t40' /></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 		<table style="width:100%">
@@ -2074,7 +2074,7 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
 		</div>
 	</body>

@@ -44,7 +44,7 @@
 					return;
 				}
 				
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=203", "", "height = 345px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=203", "", "height = 357px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 357));
 			}
 			
 			// layout 변경
@@ -71,7 +71,7 @@
 			
 			// 수정
 			function selectItem(pUID, pObj) {
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=203", "", "height = 330px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=203", "", "height = 357px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 357));
 			}
 			
 			// 삭제
@@ -145,11 +145,11 @@
 		<div id="mainmenu">
 			<ul>
   				<li><span onClick="Add()"><spring:message code='ezPortal.t99'/></span></li>
-  				<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  				<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				<li><span onClick="Delete()"><spring:message code='ezPortal.t67'/></span></li>
   				<%-- <li><span onClick="SetPosition()"><spring:message code='ezPortal.t100'/></span></li> --%>
   				<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
-  				<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  				<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				<li><span onClick="SetOrder()"><spring:message code='ezPortal.t108'/></span></li>
 			</ul>
 		</div>

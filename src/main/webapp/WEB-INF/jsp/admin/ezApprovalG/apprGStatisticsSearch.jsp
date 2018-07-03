@@ -608,6 +608,11 @@
 	</head>
 	<body class="popup" style="overflow: hidden">
 	    <h1><spring:message code='ezApproval.t428'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr style="display: none">
 	            <th><spring:message code='ezApprovalG.t1197'/></th>
@@ -682,7 +687,6 @@
 		        <a class="imgbtn" onclick="return btnWeekSearch_onclick()"><span><spring:message code='ezApproval.t450'/></span></a>
 		        <a class="imgbtn" onclick="return btnMonthSearch_onclick()"><span><spring:message code='ezApproval.t620'/></span></a>
 	        </c:if>
-	        <a class="imgbtn" onclick="return btncancel_onclick()"><span><spring:message code='ezApproval.t85'/></span></a>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
         <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -358,7 +358,7 @@
                     var tr = document.createElement("TR");
                     
                     if (j != 4) {
-                    	tr.style.borderBottom = "1px solid #efefef";
+                    	tr.style.borderBottom = "1px solid #f2f2f2";
                     }
                     
                     if (j % 2 == 0) {
@@ -1396,12 +1396,12 @@
 			                        <div class="right_tabpartContent">
 			                            <div class="right_CopSearchLayout">
 			                                <p class="right_CopSearch">
-			                                    <select id="search" name="select">
+			                                    <select id="search" name="select" style="height:22px">
 			                                        <option value ="NAME"><spring:message code = 'ezCommunity.t2007' /></option>
 			                                        <option value ="DESC"><spring:message code = 'ezCommunity.t2008' /></option>
 			                                    </select>
 			                                    
-			                                    <input id="keyword" name="keyword" onkeydown ="key_down(event)" />
+			                                    <input id="keyword" name="keyword" onkeydown ="key_down(event)" style="height:22px"/>
 			                                    <a class="imgbtn"><span onclick ="copsearch()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			                                </p>
 			                            </div>			                            

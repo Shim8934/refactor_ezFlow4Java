@@ -424,15 +424,11 @@
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
         <h1 style="height: 20px;"><spring:message code='ezJournal.t88'/></h1>
-       <%--  <div id="close">
+        <div id="close">
 	        <ul>
-	            <li><span onclick="ok_Click()"><spring:message code='ezJournal.t15'/></span></li>
-	            <li><span onclick="close_Click()"><spring:message code='ezJournal.t16'/></span></li>
+	            <li><span onclick="close_Click()"></span></li>
 	        </ul>
 	    </div>
-	    <script type="text/javascript">
-            selToggleList(document.getElementById("close"), "ul", "li", "0");
-        </script> --%>
 	    <table style="width:100%">
 			<tr>
 				<td>
@@ -562,9 +558,8 @@
 	      		</td> 
 			</tr>
         </table>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="ok_Click()" ><span><spring:message code='ezJournal.t15' /></span></a>
-	    	<a class="imgbtn" onClick="close_Click()" ><span><spring:message code='ezJournal.t16' /></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

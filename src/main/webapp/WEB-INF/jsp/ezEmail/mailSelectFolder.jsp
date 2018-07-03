@@ -185,25 +185,21 @@
 	    <h1 id="headerH1"><spring:message code='ezEmail.t120' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_Close()"><spring:message code='ezEmail.t63' /></span></li>
+	            <li><span onclick="Window_Close()"></span></li>
 	        </ul>
 	    </div>
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	    </script>
 	    <table class="popuplist" style="width: 100%;">
 	        <tr>
 	            <td>
-	                <div style="border: 0px solid #ddd; behavior: url(/js/ezEmail/Controls/treeview.htc); height: 280px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
+	                <div style="border: 0px solid #ddd; behavior: url(/js/ezEmail/Controls/treeview.htc); height: 235px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
 	                </div>
-	            </td>
-	            <td style="width: 25px;">
-	                <a class="imgbtn"><span onclick="add_onclick()"><spring:message code='ezEmail.t308' /></span></a>
-	                <a class="imgbtn"><span onclick="btn_Select_onclick()"><spring:message code='ezEmail.t38' /></span></a>
-	                <a class="imgbtn"><span onclick="Window_Close()"><spring:message code='ezEmail.t39' /></span></a>
 	            </td>
 	        </tr>
 	    </table>
+	    <div class="btnpositionNew">
+	    	<a class="imgbtn"><span onclick="add_onclick()"><spring:message code='ezEmail.t308' /></span></a>
+        	<a class="imgbtn"><span onclick="btn_Select_onclick()"><spring:message code='ezEmail.t38' /></span></a>
+        </div>	
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel_sub">
 	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer_sub"></iframe>

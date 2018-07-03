@@ -417,7 +417,7 @@
 		    var setsearchinfo_cross_dialogArguments = new Array();
 		    var OpenWin2;
 		    function SearchCondi_onclick() {
-		        var para;
+		        var para = LoadSquery;
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		
@@ -430,7 +430,10 @@
 		        	condition[i] = returnvalue[i]; 
 		        }
 	    	   
-		        if (condition) {
+	    	    if (LoadSquery == "usercontlist") {
+	    	    	MakeSubCondition();
+	    	    	GetUserContList();
+	    	    } else if (condition) {
 		            Init_Flag = "False";
 		            GetDocSearch();
 		        }
@@ -1332,7 +1335,7 @@
 	            <li id="tbtnExcel"><span id="btnExcel" onclick="return btnExcel_onclick(0)"><spring:message code='ezApprovalG.t1526'/></span></li>
 	            <li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>
 	            <c:if test ="${approvalFlag == 'S'}">
-	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li> -->
 	            <li id=tbtnRemoveDoc><span id=btnRemoveDoc onClick ="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 	            <c:if test ="${tmpValue !='' && contID !=''}">
 		            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
@@ -1340,20 +1343,20 @@
 			    <li id="tSearchCondi"><span id="SearchCondi" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="tViewDoc"><span id="ViewDoc" onClick="return ViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>      
 		        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		        <li id="Li2" style="background: none; padding-right: 2px;">
-		        <img src="/images/i_bar.gif"></li>
+		        <!-- <li id="Li2" style="background: none; padding-right: 2px;">
+		        <img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <c:if test ="${approvalFlag == 'G'}">
 	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
-	            <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li> -->
 	            <li id="tSearchCondi"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tViewDoc"><span id="ViewDoc" onclick="return ViewDoc_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <!-- <img src="/images/i_bar.gif"> -->
-	            <li style="vertical-align: middle;"> 
-	            	<select id="sel_year" name="sel_year" style="height:28px;border-radius:3px" onchange="onSelect_Year(this);">    
+	            <li style="vertical-align: middle;">
+	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
 		        </li>
@@ -1363,9 +1366,9 @@
 		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li> 
 		        <li id="tSearchCondiApr"><span id="SearchCondiApr" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-		        <li style="vertical-align: middle;"> 
-		        	<select id="who_year" name="who_year" style="height:28px;border-radius:3px" onchange="onSelect_Year(this);">
+		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
+		        <li style="vertical-align: middle;">
+		        	<select id="who_year" name="who_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
 		        </li>

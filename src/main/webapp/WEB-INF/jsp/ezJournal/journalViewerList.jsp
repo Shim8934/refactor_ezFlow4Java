@@ -33,13 +33,10 @@
 		  <h1><spring:message code='ezBoard.t320'/></h1>
 		  <div id="close">
 		    <ul>
-		      <li onClick="close_onclick()"><span><spring:message code='ezBoard.t12'/></span></li>
+		      <li onClick="close_onclick()"><span></span></li>
 		    </ul>
-		  </div>
-		  <script type="text/javascript">
-		    selToggleList(document.getElementById("close"), "ul", "li", "0");
-		  </script>
-	        <div style="width:100%; height:305px" id="divList">
+		  </div>		  
+	      <div style="width:100%; height:305px" id="divList">
 	            <c:choose>
 		            <c:when test="${fn:length(viewerList) ne 0 }">
 	            		<table class="popuplist" style="width:100%;">

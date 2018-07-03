@@ -357,7 +357,7 @@
 	<h1><spring:message code="ezWebFolder.t268"/></h1> 
 	<div id="close">
 		<ul>
-			<li><span onclick="Window_Close();"><spring:message code='ezWebFolder.t110'/></span></li>
+			<li><span onclick="Window_Close();"></span></li>
 		</ul>
 	</div>
 	
@@ -371,13 +371,13 @@
 	</div>
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 350px; height: 350px; overflow: auto;padding-top:5px" id="folderTree"></div>
 	
-	<div style="margin: 15px 0px 0px;text-align: center">
-      	<a class="webfolderBttn" onclick="add_onclick()"><span><spring:message code="ezWebFolder.t255"/></span></a>
-      	<a class="webfolderBttn" onclick="update_onclick()"><span><spring:message code="ezWebFolder.t162"/></span></a>
-      	<a class="webfolderBttn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
-      	<a class="webfolderBttn" onclick="copy_onclick()"><span><spring:message code="ezWebFolder.t122"/></span></a>
-      	<a class="webfolderBttn" onclick="share_onclick()"><span><spring:message code="ezWebFolder.t254"/></span></a>
-      	<a class="webfolderBttn" onclick="delete_onclick()"><span><spring:message code="ezWebFolder.t111"/></span></a>
+	<div class="btnpositionNew">
+      	<a class="imgbtn" onclick="add_onclick()"><span><spring:message code="ezWebFolder.t255"/></span></a>
+      	<a class="imgbtn" onclick="update_onclick()"><span><spring:message code="ezWebFolder.t162"/></span></a>
+      	<a class="imgbtn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
+      	<a class="imgbtn" onclick="copy_onclick()"><span><spring:message code="ezWebFolder.t122"/></span></a>
+      	<a class="imgbtn" onclick="share_onclick()"><span><spring:message code="ezWebFolder.t254"/></span></a>
+      	<a class="imgbtn" onclick="delete_onclick()"><span><spring:message code="ezWebFolder.t111"/></span></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">

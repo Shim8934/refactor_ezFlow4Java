@@ -265,7 +265,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     private List<OrganDeptVO> organSearchListPageForLocal(Map<String, Object> map) throws Exception{
         return (List<OrganDeptVO>) list("EzOrganDAO.organSearchListPage", map);
     }
-	
+    
 	public List<OrganDeptVO> organSearchListPage(Map<String, Object> map) throws Exception{
 		return organSearchListPageForLocal(map);                       
 	}

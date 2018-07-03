@@ -80,7 +80,7 @@
 	    <h1><spring:message code='ezCircular.t36' /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 	    <table class="content">
