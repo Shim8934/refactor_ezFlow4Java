@@ -2631,7 +2631,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		endRow = (personalCount_ * boardVO.getPageNum());
 		
 		boardListVO.setUserID(userInfo.getId());
-		boardListVO.setCompanyID(userInfo.getCompanyID());
+		// 이부분 companyID 필드 추가한것 없애고 기존 writerCompanyID로 값 부여 
+		boardListVO.setWriterCompanyID(userInfo.getCompanyID());
 		boardListVO.setTenantID(userInfo.getTenantId());
 		boardListVO.setStartRow(startRow);
 		boardListVO.setEndRow(endRow);
@@ -6460,7 +6461,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		/* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함 */
 		// 현재 겸직한 회사에 대해 모든 부서정보 가져오므로, 레코드를 하나로 제한할 것.
-		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
+		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -6792,6 +6793,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		int result = ezBoardService.getItemViewNew(boardID, itemID, userInfo.getTenantId());
+		// 게시물의 정보를 가져온다.
+		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+
+		// 회사가 다르면 result를 FAIL로 반환한다. 만약 어느 회사에서 확인해야 하는지 알려야 한다면 이곳에서 다른 값을 보내자.
+		if (!boardItem.getWriterCompanyID().equals(userInfo.getCompanyID())) {
+			return "<DATA>FAIL</DATA>";
+		}
 		
 		logger.debug("getItemViewNew ended.");
 		
@@ -6872,6 +6880,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
 		String gubun = doc.getElementsByTagName("GUBUN").item(0).getTextContent();
+		
+		// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
 		String strURL = "javascript:Item_View_APPR('" + boardID + "','" + itemID + "','" + gubun + "');";
         strURL = "<a style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
         
@@ -6925,6 +6935,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			BoardListVO boardListVO = ezBoardService.getItemInfo("", tempItemID, userInfo.getLang(), userInfo.getTenantId());
 			
+			// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
 			String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
 	        strURL = "<a style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
 	        
@@ -7164,7 +7175,8 @@ public class EzBoardController extends EgovFileMngUtil{
         String publicExponent = "10001";
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
-		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
+		/* 2018-07-02 홍승비 - 댓글 확인 시 조회자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
+		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 
@@ -7199,7 +7211,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userName = "";
 		
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
+    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
     	for (BoardLineReplyVO reply : boardLineReplyVOList) {
     		reply.setWriteDate(commonUtil.getDateStringInUTC(reply.getWriteDate(), userInfo.getOffset(), false));
     	}
@@ -7224,6 +7236,8 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
+		/* 2018-07-02 홍승비 - 게시물 조회자 정보 가져올때  deptID 함께 가져오기 */
+		// companyID 추가 조건은 없음
 		StringBuffer resultXML = ezBoardService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
 
 		logger.debug("itemReadPagingList ended");
@@ -7308,7 +7322,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setOrderBySub(orderOption1);
 		boardListVO.setOrderByMain(orderOption2);
 		boardListVO.setUserID(userInfo.getId());
-		boardListVO.setCompanyID(userInfo.getCompanyID()); 
+		boardListVO.setWriterCompanyID(userInfo.getCompanyID());
 		
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		

@@ -122,8 +122,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	@Override
 	public List<ScheduleDeptVO> getPublicScheduleDept(String userId, String lang, int tenantId ,String companyID) throws Exception {
 		
-		logger.debug("userId : " + userId + "   lang : " + lang + "   tenantId : " + "   companyID : " + companyID);
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", userId);
 		map.put("v_LANG", lang);
@@ -699,10 +697,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void deleteSecretary(String userID, int tenantID) throws Exception {
+	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);		
 		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.deleteSecretary(map);
 	}

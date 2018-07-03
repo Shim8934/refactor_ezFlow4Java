@@ -308,7 +308,8 @@ var strLangKMS08 = "フォルダはアップロードすることができませ
 var strLangKYJ01 = "選択したメールがありません。";
 var strLangKYJ02 = "再利用するメールを選択してください。";
 var strLangKYJ03 = "スペースは入力できません。";
-	
+/* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리 일본어 번역X */
+var strLangHSB01 = "소속 회사의 게시물만 조회할 수 있습니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {

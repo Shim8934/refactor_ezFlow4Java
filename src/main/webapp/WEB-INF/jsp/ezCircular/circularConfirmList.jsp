@@ -36,12 +36,12 @@
 	        }
 	    };
 	
-	 	function show_info(userid) {
+	 	function show_info(userid, deptid) {
 	        var heigth = window.screen.availHeight;
 	        var width = window.screen.availWidth;
 	        var left = (width - 500) / 2;
 	        var top = (heigth - 400) / 2;
-	        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	        window.open("/ezCommon/showPersonInfo.do?id=" + userid + "&dept=" + deptid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	    }
 	 	
 	 	// 닫기 버튼 클릭 시
@@ -140,8 +140,9 @@
 		            }		            
 		          
 			        $("#lvBoardList tr").on("click", function () {
-			        	userID = $(this).closest("tr").attr("userid");
-			        	show_info(userID);
+			        	var userID = $(this).closest("tr").attr("userid");
+			        	var deptID = $(this).closest("tr").attr("deptid");
+			        	show_info(userID, deptID);
 			        });
 		            
 		            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8fa");

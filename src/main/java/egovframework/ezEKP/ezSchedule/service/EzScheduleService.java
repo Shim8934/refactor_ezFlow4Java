@@ -85,7 +85,7 @@ public interface EzScheduleService {
 
 	public void deleteScheduleConfig(String userID, int tenantID) throws Exception;
 
-	public void deleteSecretary(String userID, int tenantID) throws Exception;
+	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception;
 
 	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID) throws Exception;
 

@@ -1350,6 +1350,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
 		int totalCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "totalComment", userInfo.getTenantId());
 		int myCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "myComment", userInfo.getTenantId());
+		String deptID = ezCircularService.getCircularUserDeptId(userInfo.getTenantId(), result.getCompanyID(), result.getMemberID());
 		
 		result.setRegDate(result.getRegDate().substring(0, 16));
 		
@@ -1374,6 +1375,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("totalCommentCount", totalCommentCount);
 		model.addAttribute("myCommentCount", myCommentCount);
 		model.addAttribute("type", type);
+		model.addAttribute("deptID", deptID);
 		
 		return "/ezCircular/circularRead";
 	}
@@ -1700,7 +1702,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			ezCircularService.updateCircularDept(title, userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId(), userInfo.getCompanyID());
 			//ezCircularService.updateCircularDept(title, userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId());
 		} else {
-			ezCircularService.setCircularDeptSave(title, userInfo.getId(), memberListStr, userInfo.getTenantId(), userInfo.getCompanyID());	//deptListStr 추가
+			ezCircularService.setCircularDeptSave(title, userInfo.getId(), memberListStr, userInfo.getTenantId(), userInfo.getCompanyID());	
 		}
 
 		logger.debug("circularDeptSave ended");
@@ -2593,7 +2595,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		StringBuffer resultXML = ezCircularService.getConfirmMemberList(circularID, userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+		StringBuffer resultXML = ezCircularService.getConfirmMemberList(circularID, pageNum, perCount, userInfo.getOffset(), userInfo);
 
 		logger.debug("circularConfirmPagingList ended");
 		return resultXML.toString();
