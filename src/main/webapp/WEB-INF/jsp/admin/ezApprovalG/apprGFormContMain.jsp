@@ -442,6 +442,11 @@
 			</TREEVIEWDATA>
 		</xml>
 	    <h1><c:out value = '${title }' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span id="Span1" onclick="btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t1656' /></th>
@@ -512,7 +517,6 @@
 	    </table>
 	    <div class="btnposition">
 	        <a class="imgbtn"><span id="btnInsFcont" onclick="btnOK_onclick()"><spring:message code = 'ezApprovalG.t1760' /></span></a>
-	        <a class="imgbtn"><span id="Span1" onclick="btncancel_onclick()"><spring:message code = 'ezApprovalG.t1761' /></span></a>
 	    </div>
 	</body>
 </html>

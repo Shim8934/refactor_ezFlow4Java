@@ -227,7 +227,7 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-		<div class="box" style="width:320px;height:550px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
+		<div class="box" style="width:320px;height:550px;overflow-x:hidden;overflow-y:auto;word-break:break-all" id=TopBoardsList></div>
 		<div class="btnpositionNew">
 			<a class="imgbtn" name="Submit" onClick="Select()" ><span><spring:message code="ezBoard.t47" /></span></a>
 		</div>

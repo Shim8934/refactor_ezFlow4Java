@@ -192,6 +192,11 @@
 	
 	<body class="popup">
         <h1><spring:message code='ezAttitude.t225' /></h1>
+        <div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
        	<table>
             <tr>
                 <td class="box" style="width: 250px; height: 465px;">
@@ -222,7 +227,6 @@
 		
 		<div class="btnposition">
 			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezAttitude.t16' /></span></a>
-			<a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code='ezAttitude.t129' /></span></a>
 		</div>
 	</body>
 </html>

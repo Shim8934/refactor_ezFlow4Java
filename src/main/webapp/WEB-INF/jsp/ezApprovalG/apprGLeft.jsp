@@ -321,7 +321,7 @@
 		                    break;
 		            }
 		            parent.frames["right"].$('#sel_year').val("ALL");
-		            parent.frames["right"].$('#sel_year').selectmenu('refresh');
+		            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        }
 		        catch (e) { }
 		    }
@@ -423,7 +423,7 @@
 				            }
 				            try { parent.frames["right"].document.getElementById("txt_keyword").value = ""; } catch (e) { }
 				            parent.frames["right"].$('#sel_year').val("ALL");
-				            parent.frames["right"].$('#sel_year').selectmenu('refresh');
+				            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        		} else {
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
@@ -1050,7 +1050,7 @@
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #e8e8e8"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #f0f0f0"></div>
             <h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>
