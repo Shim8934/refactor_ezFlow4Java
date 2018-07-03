@@ -441,7 +441,7 @@
 				</span> 
 			</td>
 			<td width="5%">
-				<div id="mainmenu" style="height: 28px;">
+				<div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                     <ul>
 						<li><span style="width: 110px;text-align:center" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
 					</ul>

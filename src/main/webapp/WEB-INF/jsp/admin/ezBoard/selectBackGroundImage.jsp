@@ -124,6 +124,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">		
 		<h1><spring:message code="ezBoard.t5000"/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close();"></span></li>
+            </ul>
+        </div>
 		<table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
@@ -163,7 +168,6 @@
 		</table>
 	    <div class="btnposition">	    	
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code="ezBoard.t98"/></span></a>
-	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code="ezBoard.t15"/></span></a>
 	    </div>	    
 	</body>
 </html>

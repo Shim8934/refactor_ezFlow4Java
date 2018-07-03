@@ -658,6 +658,11 @@
 		</OBJECT>
 		
 		<h1><spring:message code='ezApprovalG.t388'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="CancelAprline" name="CancelAprline" onClick="return CancelAprline_onclick()"></span></li>
+            </ul>
+        </div>
 		<table style="margin-top:-20px;" >
 		  <tr>
 		    <td valign="top"><table>
@@ -757,7 +762,6 @@
 		  <tr>
 		    <td colspan="4" align="right">
 		         <a class="imgbtn" ><span id="SaveAprline" name="SaveAprline" onClick="return SaveAprline_onclick()"><spring:message code='ezApprovalG.t413'/></span></a>
-		         <a class="imgbtn" style="margin-right:20px;"><span id="CancelAprline" name="CancelAprline" onClick="return CancelAprline_onclick()"><spring:message code='ezApprovalG.t414'/></span></a>
 		    </td>
 		  </tr>
 		</table>

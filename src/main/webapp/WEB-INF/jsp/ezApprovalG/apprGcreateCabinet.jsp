@@ -160,7 +160,11 @@
 <!-- 				id=behavelist1 style="HEIGHT: 0px; WIDTH: 0px;display:none;"> -->
 <!-- 		</OBJECT>  -->
 		<h1><spring:message code='ezApprovalG.t996'/></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<div id="cabinetdiv" style="height:100%;">
 		<table class="content">
 		  <tr>
@@ -223,8 +227,7 @@
 		<table style="border:0;border-collapse:collapse; border-spacing:0;padding:0px;width:100%;margin-top:5px;">
 		  <tr> 
 		    <td class="btnposition btnpositionNew">
-		      <a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
-		      <a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a> 
+		      <a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		    </td>
 		  </tr>
 		</table>
