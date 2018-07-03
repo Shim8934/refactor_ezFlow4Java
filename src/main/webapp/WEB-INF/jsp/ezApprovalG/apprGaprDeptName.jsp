@@ -129,7 +129,7 @@
 	<input class="text" type="text" id="Text1" name="TxtAprDeptTempletName" style="width:100%">
 	</div>
 	<div class="btnposition btnpositionNew" >
-		<input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApprovalG.t20'/>" onClick="return btn_SaveAprDeptTempletName_onclick()">
+		<a class="imgbtn" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
 	</div>	
 </body>
 </html>

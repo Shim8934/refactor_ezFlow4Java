@@ -516,7 +516,6 @@ public class EzEmailAdminController {
 										locale) + "</TITLE>");
 						sb.append("</ROW>");
 					} else {
-						if (ezCommonService.getTenantConfig("useRankMail", userInfo.getTenantId()).equals("YES")) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + "distribution" + "</CLASS>");
 						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
@@ -530,8 +529,7 @@ public class EzEmailAdminController {
 								+ egovMessageSource.getMessage("ezEmail.t57",
 										locale) + "</DEPT>");
 						sb.append("</ROW>");
-				}
-					}
+						}
 
 				} else {
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,

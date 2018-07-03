@@ -205,6 +205,8 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
+		String companyId = userInfo.getCompanyID();
+		
 		String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", userInfo.getTenantId());
 		LoginMailLogKeepPeriod = LoginMailLogKeepPeriod.equals("") ? "3" : LoginMailLogKeepPeriod;
 		
@@ -225,6 +227,7 @@ public class EzSystemAdminController {
 			}
 		}
 		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
 		
 		logger.debug("ended systemLoginHistMain controller.");
 		

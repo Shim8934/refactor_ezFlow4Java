@@ -482,7 +482,7 @@
 		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 			    <select id="ListCompany" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 			    </select><br /><br />
 		    </span>

@@ -190,7 +190,14 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		if (userInfo.getGyumJik() != null && userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) == -1) {
+		boolean gyumJikChk = true;
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+				gyumJikChk = false;
+			}
+		}
+		
+		if (gyumJikChk) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 	        	compAdmin = "Y";
 	        	deptAdmin = "Y";
@@ -578,11 +585,20 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			compAdmin = "Y";
-			deptAdmin = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-			deptAdmin = "Y";
+		boolean gyumJikChk = true;
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+				gyumJikChk = false;
+			}
+		}
+		
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				compAdmin = "Y";
+				deptAdmin = "Y";
+			} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
 		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
@@ -1189,7 +1205,14 @@ public class EzAddressController{
 		String show = "N";
 		String title = egovMessageSource.getMessage("ezAddress.t144", locale);
 		
-		if (userInfo.getGyumJik() != null && userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) == -1) {
+		boolean gyumJikChk = true;
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+				gyumJikChk = false;
+			}
+		}
+		
+		if (gyumJikChk) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 				companyAdmin = "Y";
 				deptAdmin = "Y";
@@ -1450,11 +1473,20 @@ public class EzAddressController{
 			filter = request.getParameter("filter");
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
-			bAdmin = "Y";
+		boolean gyumJikChk = true;
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+				gyumJikChk = false;
+			}
 		}
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			cAdmin = "Y";
+		
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
+				bAdmin = "Y";
+			}
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				cAdmin = "Y";
+			}
 		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());

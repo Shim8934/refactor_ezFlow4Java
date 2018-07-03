@@ -2098,7 +2098,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode);
 		} else if (boardVO.getBoardType().equals("A")) {
 			boardXML = getSearchApprListItemXML(userInfo, boardVO);
-		}  else {
+		} else {
 			boardXML = getSearchBoardListItemXML(userInfo, boardVO);
 		}
 
@@ -6460,7 +6460,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		/* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함 */
 		// 현재 겸직한 회사에 대해 모든 부서정보 가져오므로, 레코드를 하나로 제한할 것.
-		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
+		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -7164,7 +7164,8 @@ public class EzBoardController extends EgovFileMngUtil{
         String publicExponent = "10001";
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
-		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
+		/* 2018-07-02 홍승비 - 댓글 확인 시 조회자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
+		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 
@@ -7199,7 +7200,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userName = "";
 		
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
+    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
     	for (BoardLineReplyVO reply : boardLineReplyVOList) {
     		reply.setWriteDate(commonUtil.getDateStringInUTC(reply.getWriteDate(), userInfo.getOffset(), false));
     	}
@@ -7224,6 +7225,8 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
+		/* 2018-07-02 홍승비 - 게시물 조회자 정보 가져올때  deptID 함께 가져오기 */
+		// companyID 추가 조건은 없음
 		StringBuffer resultXML = ezBoardService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
 
 		logger.debug("itemReadPagingList ended");

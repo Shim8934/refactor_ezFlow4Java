@@ -100,7 +100,7 @@
 		</div>		
 			
 		<div class="btnposition btnpositionNew">
-			<input type="submit" value="<spring:message code='ezJournal.t15'/>" id="saveReceiverLineName" name="saveReceiverLineName" onClick="saveReceiverLineName()">		
+			<a class="imgbtn" id="saveReceiverLineName" name="saveReceiverLineName" onClick="saveReceiverLineName()"><span><spring:message code='ezJournal.t15'/></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

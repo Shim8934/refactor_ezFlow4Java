@@ -355,6 +355,7 @@
 				}
 		
 				/* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+				// 이 기능 사용하지 않음(닷넷 당시의 기능)
 				function MemberInfo_onclick(pUserID, pDeptID)
 				{
 		            var swidth = 420;

@@ -244,7 +244,7 @@
             </ul>
         </div>
         <div class="box" style="width: 320px; height: 550px; overflow: auto; word-break: break-all;border-top:0px" id="TopBoardsList"></div>
-        <div class="btnposition">
+        <div class="btnpositionNew">
             <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>
         </div>
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>

@@ -729,6 +729,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.brdGetItemAttachmentInfo(map);
 	}
 
+	// 조회자 정보는 boardID 조건으로 이미 회사ID를 거르고 가져오는 것임. 굳이 companyID 추가할 필요는 없음
 	@Override
 	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
 		logger.debug("getReaderList started");
@@ -748,6 +749,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("tenantID", tenantID);
 		map.put("start", startRowNum);
 		map.put("perCount", perCount);
+		
+		// 조회자 정보에 부서id 추가하여 가져오기(DEPTID)
 		List<BoardReadVO> readerList = ezBoardDAO.getReaderList(map);
 		
 		StringBuffer resultXML = new StringBuffer();
@@ -776,7 +779,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				userDeptName =  vo.getUserDeptName();
 			}
 			resultXML.append("<ROW>");
-			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><DEPTID><![CDATA[" + vo.getDeptID() + "]]></DEPTID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]]></VALUE></CELL>");			
@@ -1490,6 +1493,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getCopyItemAttach(map);
 	}
 
+	/* 게시물 조회자 정보에 companyID도 추가 */
 	@Override
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception {
 		logger.debug("setAsRead started");
@@ -1507,9 +1511,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pUserDeptName2", userInfo.getDeptName2());
 		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
 		map.put("v_pUserTitle2", userInfo.getTitle2());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
+		// 조회자 정보 가져올때는 companyID 신경안씀(이미 게시판ID로 회사를 걸렀으므로)
 		String tempString = ezBoardDAO.getBoardItemRead(map);
 		
 		if (tempString != null && !tempString.equals("")) {
@@ -2134,7 +2140,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, int tenantID) throws Exception {
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String companyID, int tenantID) throws Exception {
 		logger.debug("readOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2142,6 +2148,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_BoardID", boardID);
 		map.put("v_ItemID", itemID);
 		map.put("v_UserName", userName);
+		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 
 		logger.debug("readOneLineReply ended");

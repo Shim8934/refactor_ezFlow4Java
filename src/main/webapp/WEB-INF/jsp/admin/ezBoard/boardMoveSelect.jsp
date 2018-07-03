@@ -228,7 +228,7 @@
             </ul>
         </div>
 		<div class="box" style="width:320px;height:550px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 			<a class="imgbtn" name="Submit" onClick="Select()" ><span><spring:message code="ezBoard.t47" /></span></a>
 		</div>
 	</body>
