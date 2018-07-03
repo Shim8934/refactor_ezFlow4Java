@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,6 +35,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +93,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezConn.util.EzConnUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -104,9 +107,8 @@ import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.objectfinder.forField.ForParagraphList;
+import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
 import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.textextractor.TextExtractMethod;
 import kr.dogfoot.hwplib.writer.HWPWriter;
 
 @Service("EzApprovalGService")
@@ -114,6 +116,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzConnUtil ezConnUtil;
 	
 	@Autowired
 	private Properties config;
@@ -6280,12 +6285,74 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("rollBackHwp ended");
 	}
 
-	private boolean excuteInfoHwp(String string, String string2, HWPFile hwpFile, String docID, String userID, String formURL) {
-		// TODO Auto-generated method stub
+	private boolean excuteInfoHwp(String pProcessIdx, String draftFlag, HWPFile hwpFile, String docID, String userID, String formURL) throws Exception {
 		logger.debug("excuteInfoHwp started");
 
-		//연동정보 할떄 구현을 하고 일단은 보류...
-
+		SummaryInformation summaryInformation = hwpFile.getSummaryInformation();
+		String keywords = summaryInformation.getKeywords();
+		keywords = keywords.replaceAll("<KEYWORD />", "");
+		logger.debug("keywords = " + keywords);
+		
+		boolean findFlag;
+		
+		String connString = "";
+		String connFlag = "";
+		String queryString = "";
+		String queryType = "";
+		String processIdx, processTime;
+		
+		Document xmlData = null;
+		NodeList connNodes = null;
+		
+		org.jsoup.nodes.Document doc = Jsoup.parse(keywords, "", Parser.xmlParser());
+		
+		//connroot 외에 수신자, 기안자, 마지막 결재자 등의 정보  sibbling으로 존재.  필요시 사용
+		Element htmlConn = doc.getElementsByTag("connroot").first();
+		
+		findFlag = false;
+		//내꺼
+		for (org.jsoup.nodes.Node connNode : htmlConn.childNodes()) {
+			processIdx = connNode.attr("processidx");
+			processTime = connNode.attr("processtime");
+			
+			logger.debug("processIdx = " + processIdx + " || processTime = " + processTime);
+			
+			if (processIdx.equals(pProcessIdx) && processTime.equals(draftFlag)) {
+				connFlag = connNode.childNode(0).attr("flag");
+				connString = ((Element) connNode.childNode(0)).text();
+				
+				queryType = connNode.childNode(1).attr("qtype");
+				queryString = ((Element) connNode.childNode(1)).text();
+				
+				logger.debug("connFlag = " + connFlag + " || connString = " + connString);
+				logger.debug("queryType = " + queryType + " || queryString = " + queryString);
+				
+				/** queryType Q, NA -> service로 변경*/
+				//connClass 하나 생성하고 reflection으로 메소드 호출할껀데 파라미터는 어떠케 정하냐 
+				
+				if (queryType.equals("service")) {
+					ezConnUtil.setDocID(docID);
+					ezConnUtil.setUserID(userID);
+					
+					logger.debug("" + ezConnUtil.getClass().getDeclaredField("docID"));
+					logger.debug("" + ezConnUtil.getClass().getDeclaredField("userID"));
+					
+					/** queryString로 호출할 서비스구분*/
+					
+					for (Method method : ezConnUtil.getClass().getDeclaredMethods()) {
+						logger.debug("method name = " + method.getName());
+						
+						for (Parameter param : method.getParameters()) {
+							logger.debug("param type = " + param.getParameterizedType());
+							//javac -parameters로 컴파일하고 실행시키면  name 똑바로 나온다는데 
+							//여기선 왜 arg0 1 2 3? 
+							logger.debug("param name = " + param.getName());
+						}
+					}
+				}
+			}
+		}
+		
 		logger.debug("excuteInfoHwp ended");
 		
 		return true;

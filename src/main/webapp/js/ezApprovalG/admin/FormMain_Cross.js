@@ -454,9 +454,11 @@ function MakeFormConnXML() {
                     if (SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "keys") == null) { pCheck = false; }
 
                     if (pCheck) {
-                        pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i], "processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i], "processtime");
-                    }
-                    else {
+                    	//2018-07-03 이효진 query qtype에 service넣었을때 서버측 동작하게하려고 시점 중복시킴
+                    	if (GetAttribute(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "query"), "qtype") != "service") {
+                    		pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i], "processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i], "processtime");
+                    	}
+                    } else {
                         pDataCheck = false;
                         pErrorMsg = strLang1017;
                         break;
