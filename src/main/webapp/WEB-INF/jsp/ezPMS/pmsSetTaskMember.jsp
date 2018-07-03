@@ -277,7 +277,7 @@
 	   					for(var i = 0; i < tmpList.length; i++){
 	   						var participant = tmpList[i];
 	   						if(manager.userId !== authList.userId){
-			   					authList.push(elem);
+			   					authList.push(manager);
 			   				}
 	   					}
 	   				}
