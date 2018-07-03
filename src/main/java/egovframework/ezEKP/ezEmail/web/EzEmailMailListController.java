@@ -629,15 +629,11 @@ public class EzEmailMailListController {
 		
 		String folderId = null;
 		long[] uids = null;
+		
 		if (cmd.equalsIgnoreCase("ALL")) {
 			folderId = uniqueId;
-		}
-		else {
-			if (uniqueId.endsWith(",")) {
-				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-			}
-			
-			String[] folderAndMsgIdArray = uniqueId.split(",");
+		} else {
+			String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 			
 			int delimiterIndex = folderAndMsgIdArray[0].lastIndexOf("/");
 			folderId = folderAndMsgIdArray[0].substring(0, delimiterIndex);			
@@ -648,8 +644,9 @@ public class EzEmailMailListController {
 				delimiterIndex = folderAndMsgId.lastIndexOf("/");
 				String msgId = folderAndMsgId.substring(delimiterIndex + 1);
 				uids[i] = Long.parseLong(msgId);
-			}	
+			}
 		}
+		
 		logger.debug("folderId=" + folderId);
 		
 		IMAPAccess ia = null;
@@ -765,11 +762,8 @@ public class EzEmailMailListController {
 			String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
 			String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			
-			if (uniqueId.endsWith(",")) {
-				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-			}
+			String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 			
-			String[] folderAndMsgIdArray = uniqueId.split(",");
 			String folderId = folderAndMsgIdArray[0].split("/")[0];			
 			long[] uids = new long[folderAndMsgIdArray.length];
 			
@@ -888,11 +882,13 @@ public class EzEmailMailListController {
 		String[] folderAndMsgIdArray = uniqueId.split(";");
 		folderId = folderAndMsgIdArray[0].split("/")[0];			
 		uids = new long[folderAndMsgIdArray.length];
+		
 		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 			String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
 			String msgId = folderAndMsgId.split("/")[1];
 			uids[i] = Long.parseLong(msgId);
 		}	
+		
 		logger.debug("folderId=" + folderId);		
 		
 		IMAPAccess ia = null;

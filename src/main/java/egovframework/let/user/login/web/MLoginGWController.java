@@ -8,17 +8,22 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -26,6 +31,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -168,6 +174,7 @@ public class MLoginGWController {
 					}
 				}
     			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+
     				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
                 	
                 	// 해당 사용자의 로그인이 블록되지 않은 경우
@@ -347,7 +354,6 @@ public class MLoginGWController {
                 		result.put("status", "error");
 	        			result.put("code", "3");
     					result.put("data", egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
-    					
     					return result;
                 	}
     			} else {
@@ -418,6 +424,156 @@ public class MLoginGWController {
 		}    	      
     }
     
+    /**
+     * 하이브리드 앱에 로그인 한 뒤 기기 정보를 조회 한다.  
+     * @param req
+     * @param res
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezUser/login/users/getLoginDeviceInfo", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+    public JSONObject getLoginDeviceInfo(HttpServletRequest req, HttpServletResponse res) throws Exception {
+    	LOGGER.debug("getLoginDeviceInfo started.");
+    	
+    	JSONObject result = new JSONObject();
+    	
+    	try {
+			LOGGER.debug("userId=" + req.getParameter("userId") + ",devId=" + req.getParameter("devId"));
+			String devId = req.getParameter("devId");
+			
+			LoginDeviceVO deviceVO = loginService.getDeviceInfo(devId);
+			
+			if (deviceVO != null) {
+				LOGGER.debug("getDeviceVO="+  deviceVO.toString());
+				Map<String, Object> map = new HashMap<>();
+				
+				map.put("devId", deviceVO.getDevId());
+				map.put("devType", deviceVO.getDevType());
+				map.put("subType", deviceVO.getSubType());
+				map.put("userId", deviceVO.getUserId());
+				map.put("token", deviceVO.getToken());
+				map.put("badge", deviceVO.getBadge());
+				map.put("compId", deviceVO.getCompId());
+				map.put("state", deviceVO.getState());
+				map.put("pushState", deviceVO.getPushState());
+				map.put("regDate", deviceVO.getRegDate());
+				map.put("isLogin", deviceVO.getIsLogin());
+				map.put("startMenu", deviceVO.getStartMenu());
+				map.put("loginTime", deviceVO.getLoginTime());
+				map.put("loginLock", deviceVO.getLoginLock());
+				map.put("isPasswordChange", deviceVO.getIsPasswordChange());
+				map.put("extension1", deviceVO.getExtension1());
+				map.put("extension2", deviceVO.getExtension2());
+				
+				result.put("status", "ok");
+				result.put("code", "0");
+				result.put("data", map);
+				
+				LOGGER.debug("device info get devId=" + devId);
+			} else {
+				result.put("status", "error");
+				result.put("code", "1");
+				result.put("data", "noexist");
+				
+				LOGGER.debug("device info does not exist. devId=" + devId);
+			}
+			
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "-1");
+			result.put("data", "fail");
+			e.printStackTrace();
+		}
+    	
+    	
+    	LOGGER.debug("getLoginDeviceInfo ended.");
+
+    	return result;
+    }
+    
+    /**
+     * 하이브리드 앱에 로그인 한 뒤 기기 정보를 업데이트 한다.  
+     */
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezUser/login/users/updateLoginDeviceInfo", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+    @ResponseBody
+    public JSONObject updateLoginDeviceInfo(@RequestBody String bodyData, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	LOGGER.debug("updateLoginDeviceInfo started.");
+    	
+    	int resultCnt = -1;
+    	Date date = new Date();
+    	JSONObject result = new JSONObject();
+    	JSONParser jsonParser = new JSONParser();
+    	JSONObject jsonObj = (JSONObject) jsonParser.parse(bodyData);
+    	
+    	try {
+    		String serverName = request.getHeader("x-user-host");
+    		String tenantId = String.valueOf(loginService.getTenantId(serverName));
+    		
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String loginAndRegDate = sdf.format(date);
+    		
+    		String devId = (String) jsonObj.get("devId");
+    		String devType = (String) jsonObj.get("devType");
+    		String subType = (String) jsonObj.get("subType");
+    		String userId = (String) jsonObj.get("userId");
+    		String token = (String) jsonObj.get("token");
+    		String badge = (String) jsonObj.get("badge");
+    		String state = (String) jsonObj.get("state");
+    		String pushState = (String) jsonObj.get("pushState");
+    		String regDate = loginAndRegDate;
+    		String isLogin = (String) jsonObj.get("isLogin");
+    		String startMenu = (String) jsonObj.get("startMenu");
+    		String loginTime = loginAndRegDate;
+    		String loginLock = (String) jsonObj.get("loginLock");
+    		String isPasswordChange = (String) jsonObj.get("isPasswordChange");
+    		String extension1 = (String) jsonObj.get("extension1");
+    		String extension2 = (String) jsonObj.get("extension2");
+    		
+    		LOGGER.debug("====> isLogin=" + isLogin + ", extension2=" + extension2);
+    		
+    		LoginDeviceVO deviceVO = loginService.getDeviceInfo(devId);
+        	
+    		if (deviceVO != null) {
+    			// 등록된 기기정보가 있으면 
+    			resultCnt = loginService.updateDeviceInfo(devId, devType, subType, userId, token, badge, tenantId, 
+    					state, pushState, isLogin, startMenu, loginTime, loginLock, isPasswordChange, extension1, extension2);
+    		} else {
+    			// 등록된 기기정보가 없으면 
+    			resultCnt = loginService.insertDeviceInfo(devId, devType, subType, userId, token, badge, tenantId, 
+    					state, pushState, regDate, isLogin, startMenu, loginTime, loginLock, isPasswordChange, extension1, extension2);
+    		}
+    	
+			LOGGER.debug("resultCnt=" + resultCnt);
+			
+			if (resultCnt > 0) {
+				result.put("status", "ok");
+				result.put("code", "0");
+				result.put("data", resultCnt);
+
+				LOGGER.debug("device info updated ok.");
+			} else {
+				result.put("status", "error");
+				result.put("code", "1");
+				result.put("data", "device info update fail");
+
+				LOGGER.debug("device info update fail devId=" + devId);
+			}
+			
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "-1");
+			result.put("data", "fail");
+			
+			e.printStackTrace();
+		}
+    	
+    	LOGGER.debug("updateLoginDeviceInfo ended.");
+
+    	return result;
+    }
+    
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
         	//Users will never be blocked
@@ -448,4 +604,5 @@ public class MLoginGWController {
         	}
         } 
     }
+    
 }
