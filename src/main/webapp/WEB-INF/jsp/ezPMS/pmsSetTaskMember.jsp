@@ -264,20 +264,20 @@
 	   			if(type === "participants"){
 	   				var tmpList = parent.managerList;
 	   				if(tmpList){
-	   					for(var elem in parent.managerList){
-	   						if(!(elem in authList)){
+			   			$(parent.managerList).each(function(idx, elem){
+			   				if(!(elem in authList)){
 			   					authList.push(elem);
 			   				}
-	   					}
+			   			});
 	   				}
 	   			} else {
 	   				var tmpList = parent.participantList;
 	   				if(tmpList){
-	   					for(var elem in tmpList){
-	   						if(!(elem in authList)){
+	   					$(tmpList).each(function(idx, elem){
+			   				if(!(elem in authList)){
 			   					authList.push(elem);
 			   				}
-	   					}
+		   				});
 	   				}
 	   			}
 	   		}
@@ -285,13 +285,13 @@
 	   		//기존 담당자 또는 참여자를 초기값으로 넣어준다.
 	   		function setPrevUser(){
 	   			if(type === "participants" && parent.participantList.length > 0){
-		   			for(var elem in parent.participantList){
+		   			$(parent.participantList).each(function(idx, elem){
 		   				$('#' + elem.userId).click().dblclick();
-		   			}
+		   			});
 	   			} else if (type !== "participants" && parent.managerList.length > 0){
-	   				for(var elem in parent.managerList){
-		   				$('#' + elem.userId).click().dblclick();
-		   			}
+	   				$(parent.managerList).each(function(idx, elem){
+	   					$('#' + elem.userId).click().dblclick();
+		   			});
 	   			}
 	   		}
 		</script>
