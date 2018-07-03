@@ -1574,6 +1574,8 @@
 		  	background-image: url(/images/ezPMS/icon_project.png);
 		  }
 		  
+		  .taskAssigs{cursor:default;}
+		  
 		</style>
 	</head>
 	<body style="background-color: #fff;">
