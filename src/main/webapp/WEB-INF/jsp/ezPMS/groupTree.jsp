@@ -72,6 +72,12 @@
 	function ok_Click() {
 		parent.setUpperGroup();
 		parent.DivPopUpHidden();
+		// 상위그룹 선택 시, 담당자/참여자 항목 모두 초기화
+		parent.managerList = [];
+		parent.participantList = [];
+		parent.headManagerId = null;
+		$("#managers", parent.document).html("");
+		$("#participants", parent.document).html("");
 	}
 	
 	function close_Click(){

@@ -48,6 +48,8 @@
 	   		}
 	   		
 	   		//프로젝트 멤버 리스트 뿌리기
+	   		// 상위 그룹이 최상위 그룹(프로젝트)일 때는 프로젝트 담당자 및 참여자가 나오고
+	   		// 그 외에는 상위 그룹의 담당자 및 참여자가 나온다
 	   		//roleId: 5 => roleId 1 또는 2인 사람을 조회한다.
 	   		function getProjectMemberList(projectId) {
 	   			$.ajax({
