@@ -23696,34 +23696,30 @@
 		   DELETE FROM 
 		  		TBL_APRDOCINFO
 		   WHERE 
-		  		DOCID IN (
-		  					SELECT 
-		  					* 
-		  					FROM
-			  					(SELECT 
-						  			A.DOCID
-								FROM 
-									TBL_RECRELAYINFO A 
-								INNER JOIN 
-									TBL_APRDOCINFO B
-								ON 
-									A.DOCID = B.DOCID
-								AND
-									A.TENANT_ID = B.TENANT_ID
-								AND
-									A.COMPANYID = B.COMPANYID
-								WHERE 
-									A.TENANT_ID = #v_TENANTID#
-								AND
-									A.COMPANYID = #companyID#
-								AND
-									A.XDOCID = #xDocID# 
-								AND 
-									XTOCODE = #xToCode#	
-								AND 
-									B.HREF IS NULL
-								OR 
-									B.HREF = '') A)
+	  			DOCID IN (	SELECT 
+					  			A.DOCID
+							FROM 
+								TBL_RECRELAYINFO A 
+							INNER JOIN 
+								TBL_APRDOCINFO B
+							ON 
+								A.DOCID = B.DOCID
+							AND
+								A.TENANT_ID = B.TENANT_ID
+							AND
+								A.COMPANYID = B.COMPANYID
+							WHERE 
+								A.TENANT_ID = #v_TENANTID#
+							AND
+								A.COMPANYID = #companyID#
+							AND
+								A.XDOCID = #xDocID# 
+							AND 
+								XTOCODE = #xToCode#	
+							AND 
+								B.HREF IS NULL
+							OR 
+								B.HREF = '')
 	  </delete>
 	  	  
       <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">

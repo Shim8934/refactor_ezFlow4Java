@@ -726,6 +726,11 @@
   		</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezPoll.t222' /></h1>
+		<div id="close">
+            <ul>
+                <li><span name="Submit2" onClick="close_onclick()"></span></li>
+            </ul>
+        </div>
 		<table> 
     		<tr> 
         		<td width="195" valign="top">
@@ -779,9 +784,8 @@
         		</td>
         		<td></td>
         		<td>         
-            		<div class="btnposition" style="margin-top:0px;padding-top:0px">
+            		<div class="btnpositionNew">
                 		<a class="imgbtn btnSave" name="Submit" onClick="SetRange()" ><span><spring:message code='ezPoll.t228' /></span></a>
-                		<a class="imgbtn btnCancel" name="Submit2" onClick="close_onclick()" ><span><spring:message code='ezPoll.t139' /></span></a>
             		</div>
         		</td>
     		</tr>

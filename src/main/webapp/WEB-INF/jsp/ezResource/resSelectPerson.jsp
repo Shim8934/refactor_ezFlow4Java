@@ -809,6 +809,11 @@
 	</xml>
 	<body class="popup" >
 		<h1><spring:message code="ezResource.t128"/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<!-- 2018-04-30 서주연 #12556 -->
 		<table id="TreeViewTD">
 			<tr>
@@ -823,8 +828,8 @@
 			    	          <tr>
 			        	        <td>
 			            	        <div style="margin-left:5px;">
-			                		    <input id="deptkeyword" value="" onkeyup="deptsearch_press(event)" style="width: 130px">
-			                    			<a class="imgbtn" name="button" onClick="deptsearch_click()"><span><spring:message code="ezResource.t134"/></span></a>
+			                		    <input id="deptkeyword" value="" onkeyup="deptsearch_press(event)" style="width: 130px;height:21px">
+			                    		<a class="imgbtn" name="button" onClick="deptsearch_click()"><span><spring:message code="ezResource.t134"/></span></a>
 			                    	</div>
 			                	</td>
 			                	<td>
@@ -841,8 +846,8 @@
 			                    			<option value="mail"><spring:message code="ezResource.t139"/></option>
 			                    			<option value="streetAddress"><spring:message code="ezResource.t140"/></option>
 			                    		</select>
-			                    		<input id="keyword" value="" onkeyup="search_press(event)" style="width: 130px">
-			                    			<a class="imgbtn" onClick="search_click('search')"><span><spring:message code="ezResource.t141"/></span></a>
+			                    		<input id="keyword" value="" onkeyup="search_press(event)" style="width: 130px;height:21px">
+			                    		<a class="imgbtn" onClick="search_click('search')"><span><spring:message code="ezResource.t141"/></span></a>
 			                    	</div>
 			                	</td>
 			              	</tr>
@@ -896,9 +901,8 @@
 			    </td>
 		    </tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
     		<a class="imgbtn" name="Dbutton" onClick="select_member()"><span><spring:message code="ezResource.t15"/></span></a>
-    		<a class="imgbtn" name="Rbutton" onClick="window.close()"><span><spring:message code="ezResource.t16"/></span></a>
 		</div>
 	</body>
 </html>

@@ -291,10 +291,6 @@
 	        </div>
 	        <div id="close">
 	            <ul>
-	                <li><span onclick="Refresh()"><spring:message code='ezEmail.t515' /></span></li>
-	                <li><span onclick="MailCancel('ALL')"><spring:message code='ezEmail.t588' /><spring:message code='ezEmail.t549' /></span></li>
-	                <li><span onclick="MailCancel('EACH')"><spring:message code='ezEmail.t549' /></span></li>
-	                <li><span onclick="Window_Print();"><spring:message code='ezEmail.t546' /></span></li>
 	                <li><span onclick="window.close()"></span></li>
 	            </ul>
 	        </div>
@@ -319,11 +315,17 @@
 	                    </tr>
 	                </table>
 	            </table>
-	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 350px; width: 100%; overflow-y: auto;overflow-x:hidden;" onscroll="ContextMenuHidden()">
+	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 330px; width: 100%; overflow-y: auto;overflow-x:hidden;" onscroll="ContextMenuHidden()">
 	                <table class="mainlist" style="width: 100%;" id="MailList">
 	                </table>
 	            </div>
 	        </span>
+	        <div class="btnposition btnpositionNew"> 
+			    <a class="imgbtn" onClick="Refresh()" ><span><spring:message code='ezEmail.t515' /></span></a>
+			    <a class="imgbtn" onClick="MailCancel('ALL')" ><span><spring:message code='ezEmail.t588' /><spring:message code='ezEmail.t549' /></span></a>
+			    <a class="imgbtn" onClick="MailCancel('EACH')" ><span><spring:message code='ezEmail.t549' /></span></a>
+			    <a class="imgbtn" onClick="Window_Print()" ><span><spring:message code='ezEmail.t546' /></span></a>
+			</div>
 	    </form>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");
