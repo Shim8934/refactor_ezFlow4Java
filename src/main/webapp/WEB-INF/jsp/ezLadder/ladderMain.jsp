@@ -58,7 +58,7 @@
 			});
 			// 윈도우 창 조절
 			function ladder_main_resize() {
-				var win_height = $(window).height() - 220;
+				var win_height = $(window).height() - 245;
 				$(".div_scroll").css("height", win_height + "px");
 			}
 			// 사다리 종류 드롭박스
@@ -83,6 +83,7 @@
 			#cmt {color:#c64200;}
 			label {position:relative; top: -3px;}
 			.participantBtn:HOVER, label:HOVER {cursor: pointer;}
+			.mainlist tr td {padding-top:0px;padding-bottom:0px;}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">
