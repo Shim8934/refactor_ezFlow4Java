@@ -39,7 +39,9 @@ import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -1151,6 +1153,36 @@ public class EzPMSGWController3 {
 		}
 		
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/multiple-tasks/users/" + userId + "] ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/member-list/{projectId}/groupId/{groupId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getGroupMemberList(@PathVariable Long projectId, @PathVariable Long groupId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/member-list/" + projectId + "/groupId/" + groupId + "] started");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			
+			List<ProjectGroupMemberVO> memberList = ezPMSService.getGroupMemberList(projectId, tenantId, groupId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", memberList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/member-list/" + projectId + "/groupId/" + groupId + "] ended");
 		return result;
 	}
 }

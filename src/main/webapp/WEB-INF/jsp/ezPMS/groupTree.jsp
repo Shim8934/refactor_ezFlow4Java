@@ -99,7 +99,8 @@
 			$("li[aria-selected='true']").attr("aria-selected", false);
 			return false;
 		}
-		parent.treeDepth = treeDepth;
+		// jstree에서는 최상위가 1이나 모듈에서는 0으로 관리하고 있음
+		parent.treeDepth = treeDepth - 1;
 	}
 	
 </script>
