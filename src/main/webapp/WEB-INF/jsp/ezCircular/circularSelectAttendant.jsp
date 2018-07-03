@@ -445,7 +445,7 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA11");
+	            var dept = p_ListOrderObject.getAttribute("_DATA10");
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 450) / 2;

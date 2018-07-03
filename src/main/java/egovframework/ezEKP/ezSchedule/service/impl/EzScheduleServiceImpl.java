@@ -697,10 +697,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void deleteSecretary(String userID, int tenantID) throws Exception {
+	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);		
 		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.deleteSecretary(map);
 	}

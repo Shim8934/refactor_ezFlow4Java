@@ -1829,7 +1829,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				userDeptName =  vo.getDescription();
 			}
 			resultXML.append("<ROW>");
-			resultXML.append("<CELL><USERID><![CDATA[" + vo.getMemberID() + "]]></USERID><VALUE><![CDATA[" + vo.getDisplayName()+ "]]></VALUE></CELL>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getMemberID() + "]]></USERID>" + "<DEPTID><![CDATA[" + vo.getDeptID() + "]]></DEPTID>" + "<VALUE><![CDATA[" + vo.getDisplayName()+ "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getConfirmDate(), offset, false) + "]]></VALUE></CELL>");			
@@ -1846,15 +1846,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return resultXML;
 	}
 	
+	/* 2018-07-03 김민성 - deptID 조회 */
 	@Override
-	public String getCircularUserDeptId(int tenantID, int circularBMId, String userID) throws Exception {
+	public String getCircularUserDeptId(int tenantID,  String companyID, String circularUserID) throws Exception {
 		logger.debug("getConfirmMemberList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantID", tenantID);
-		map.put("circularBMId", circularBMId);
-		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("circularUserID", circularUserID);
 		
 		logger.debug("getConfirmMemberList ended");
 		

@@ -1788,19 +1788,19 @@
 		<![CDATA[
 			SELECT 
 				A.memberid, BB.displayname, BB.description, BB.company, BB.title, 
-				IFNULL(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), '') AS confirmdate
+				IFNULL(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), '') AS confirmdate, BB.DEPARTMENT as deptid
 			FROM 
 				TBL_CIRCULAR_USER A
 			RIGHT JOIN 
 				(SELECT 
-					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION, D.DEPARTMENT
 				FROM 
 					TBL_USERMASTER D
 				WHERE 
 					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
 				UNION ALL
 				SELECT 
-					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, A.DEPTID
 				FROM 
 					TBL_USERMASTER B 
 				INNER JOIN 
@@ -1861,12 +1861,33 @@
 	
 	<select id="EzCircularDAO.getCircularUserDeptId" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			SELECT
-				deptId
-			FROM
-				tbl_circular_bmuser
-			WHERE
-				tenantid=#tenantID# AND circularBMId=#circularBMId# AND memberId = #userID#
+			SELECT 
+				a.DEPARTMENT
+			FROM (SELECT 
+				D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME, D.TENANT_ID
+			FROM 
+				TBL_USERMASTER D
+			UNION ALL
+			SELECT 
+				B.cn, A.DEPTID, C.EXTENSIONATTRIBUTE2, A.TENANT_ID
+			FROM 
+				TBL_USERMASTER B 
+			INNER JOIN 
+				TBL_ADDJOBMASTER A 
+			ON 
+				A.CN = B.CN 
+			AND 
+				A.TENANT_ID = B.TENANT_ID       
+			RIGHT JOIN 
+				TBL_DEPTMASTER C
+			ON 
+				A.DEPTID = C.CN
+			AND 
+				B.TENANT_ID = C.TENANT_ID) A
+			WHERE 
+				A.CN = #circularUserID# and A.PHYSICALDELIVERYOFFICENAME = #companyID# and a.tenant_id = #tenantID#
+			GROUP BY 
+				A.CN
 		]]>
 	</select> 
 	
