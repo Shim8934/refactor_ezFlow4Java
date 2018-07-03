@@ -220,7 +220,7 @@
                 (
                 	(A.COMPANYID = #v_COMPANYID# 			AND 			B.COMPANYID = #v_COMPANYID#)
                 	OR
-                	(A.COMPANYID IS NULL			AND			B.COMPANYID = #v_COMPANYID#)
+                	(TRIM(A.COMPANYID) =''			AND			B.COMPANYID = #v_COMPANYID#)
                 )
 	            AND
 	            	A.USERID = 'everyone'
@@ -286,7 +286,7 @@
                 (
                 	(A.COMPANYID = #v_COMPANYID# 			AND 			C.COMPANYID = #v_COMPANYID#)
                 	OR
-                	(A.COMPANYID IS NULL			AND			C.COMPANYID = #v_COMPANYID#)
+                	(TRIM(A.COMPANYID) =''		AND			C.COMPANYID = #v_COMPANYID#)
 	            )
 	            AND  
                 	A.USERID = 'everyone'
@@ -1045,7 +1045,8 @@
      						BOARDID, 
      						BOARDNAME, 
      						BOARDNAME2,
-     						TENANT_ID 
+     						TENANT_ID,
+     						COMPANYID 
      					  FROM 
      					  	TBL_BOARD_MYBOARDS 
      					  WHERE   
