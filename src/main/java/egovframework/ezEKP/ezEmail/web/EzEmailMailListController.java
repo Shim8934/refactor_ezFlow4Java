@@ -527,10 +527,6 @@ public class EzEmailMailListController {
 					sb.append(String.format("<securemail>0</securemail>"));
 				}
 				
-				// read/unread
-				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
-				sb.append(String.format("<read><![CDATA[%d]]></read>", readFlag));
-				
 				if (viewSelectIndex.equals("1")) {
 					((IMAPMessage)message).setPeek(true);
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false, false, locale, null, null);
