@@ -150,9 +150,9 @@ function addGroup() {
 	 }
 	 
 	// 담당자 검사
-	if(managerList == null) {
-		// 현재 총괄담당자 null 허용 불가
-		alert("<spring:message code='ezPMS.t47' />");
+	if(managerList.length < 1) {
+		// 1명 이상의 담당자가 등록되어야 함
+		alert("<spring:message code='ezPMS.t169' />");
 		return;
 	}
 	
