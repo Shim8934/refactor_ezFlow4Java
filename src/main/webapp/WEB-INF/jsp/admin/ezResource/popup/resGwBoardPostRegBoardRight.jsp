@@ -1138,6 +1138,11 @@
     		</tree>
 		</xml>
     	<h1 id="h1Title"><spring:message code="ezResource.t12" /></h1>
+    	<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
     	<table style="width: 100%">
         	<tr>
             	<td>
@@ -1238,7 +1243,6 @@
     		<br />
     		<div class="btnposition">
         		<a class="imgbtn" onclick="close_onclick()"><span><spring:message code="ezResource.t15" /></span></a>
-        		<a class="imgbtn" onclick="window.close()"><span><spring:message code="ezResource.t16" /></span></a>
     		</div>
 	</body>
 </html>

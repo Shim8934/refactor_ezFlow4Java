@@ -69,8 +69,9 @@
     		            if (node.selectSingleNode(tagName))
     		                return node.selectSingleNode(tagName).text;
     		    }
-    		    return strValue.replace(/&/g,"&amp;");
-
+//     		    return strValue.replace(/&/g,"&amp;");
+				//2018-07-03 김보미 - 제목 특수문자처리 버그 수정 
+    		    return strValue;
     		}
     		
     		$(function () {

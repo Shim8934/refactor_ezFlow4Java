@@ -3778,5 +3778,44 @@ public class EzEmailUtil {
 
 		return rtnStr;
 	}
+	
+	/**
+	 * 편지 이동/복사, 삭제시 (검색에도 동일) 편지함에 ,콤마가 있는 경우 폴더이름/uid를 구분하여 자르기 위한 메서드  
+	 * @param uniqueId
+	 * @return String[] folderAndMsgIdArray
+	 */
+	public String[] makeFolderAndMsgIdArray(String uniqueId) {
+		
+		boolean isSlash = false;
+		int startIdx = 0;
+		List<String> folderIdList = new ArrayList<>();
+		
+		for (int i = 0; i < uniqueId.length(); i++) {
+			String ch = String.valueOf(uniqueId.charAt(i));
+			
+			if (ch.equals("/")) {
+				isSlash = true;
+			}
+			
+			if (isSlash == true && (ch.equals(",") || i == uniqueId.length() - 1)) {
+				String splitBoxNm = uniqueId.substring(startIdx, i + 1);
+				String last = String.valueOf(splitBoxNm.charAt(splitBoxNm.length() - 1));
+				
+				if (last.equals(",")) {
+					splitBoxNm = uniqueId.substring(startIdx, i);
+				}
+				
+				folderIdList.add(splitBoxNm);
+				startIdx = i + 1;
+				isSlash = false;
+			}
+		}
+		
+		String[] folderAndMsgIdArray = new String[folderIdList.size()];
+		folderAndMsgIdArray = folderIdList.toArray(folderAndMsgIdArray);
+		
+		return folderAndMsgIdArray;
+	}
+	
 }
 

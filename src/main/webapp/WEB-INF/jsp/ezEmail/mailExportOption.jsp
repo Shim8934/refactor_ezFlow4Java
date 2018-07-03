@@ -198,6 +198,11 @@
 	<body style="overflow:hidden;" class="popup">
 		<form name="optionForm">
 			<h1><spring:message code="ezEmail.kyj04"/></h1>
+			<div id="close">
+	            <ul>
+	                <li><span onclick="cancel()"></span></li>
+	            </ul>
+	        </div>
 			<c:if test="${exportType eq 'MAILBOX' }">
 				<span>▒ <spring:message code='ezEmail.kyj02' /></span><br>
 			</c:if>
@@ -223,7 +228,6 @@
 			
 			<div class="btnposition btnpositionNew">
 			   <a class="imgbtn" onClick="javascript:confirm();" ><span><spring:message code='ezEmail.t38' /></span></a>
-			   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 			</div>
 		</form>
 	</body>

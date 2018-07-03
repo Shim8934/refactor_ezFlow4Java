@@ -154,6 +154,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1><spring:message code = 'ezApprovalG.t822' /></h1>
+		<div id="close">
+            <ul>
+                <li><span name="btnCancel" onClick="return btnClose_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content">
 		  	<tr>
 			    <th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1764' />)</th>
@@ -252,7 +257,6 @@
 		</table>
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" name="btnOK" onClick="return btnOK_onclick()"><span><spring:message code = 'ezApprovalG.t20' /></span></a>
-			<a class="imgbtn" name="btnCancel" onClick="return btnClose_onclick()""><span><spring:message code = 'ezApprovalG.t119' /></span></a>
 		</div>
 	</body>
 </html>
