@@ -616,13 +616,13 @@
               A.WRITERDEPTNAME2,      
               A.WRITERCOMPANYNAME2,   
               (SELECT 
-                      COUNT(*)  
+					COUNT(*)  
                FROM 
-                  TBL_Board_OneLineReply 
+                  	TBL_Board_OneLineReply 
                WHERE  
-                TENANT_ID = A.TENANT_ID
+               		TENANT_ID = A.TENANT_ID
                AND
-                ITEMID = A.ItemID) ONELINECNT,
+                	ITEMID = A.ItemID) ONELINECNT,
               A.UPPERITEMIDTREE,
               A.DOCNO,
               '' AS NOTICE,
@@ -635,11 +635,14 @@
                   BOARDID, 
                   BOARDNAME, 
                   BOARDNAME2,
-                  TENANT_ID 
+                  TENANT_ID,
+                  COMPANYID
                   FROM 
                     TBL_BOARD_MYBOARDS 
                   WHERE   
                     TENANT_ID = #tenantID#
+                  AND
+                  	COMPANYID = #companyID# 
                   AND
                     USERID = #userID# ) B 
               ON 
@@ -651,9 +654,13 @@
               ON 
                 A.TENANT_ID = P.TENANT_ID
               AND
+     			A.WRITERCOMPANYID = P.COMPANYID
+              AND
                 A.BOARDID = P.BOARDID
               AND 
                 A.TENANT_ID = #tenantID#
+              AND
+              	A.WRITERCOMPANYID = #companyID#
               AND
                 (A.APPRFLAG = 'Y' 
                  OR A.APPRFLAG IS NULL)
@@ -704,6 +711,8 @@
                      AND 
                       S.TENANT_ID = #tenantID#
                      AND
+                     	S.COMPANYID = #companyID#
+                     AND
                       S.USERID = #userID# 
                      AND 
                       S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
@@ -715,7 +724,7 @@
   
   <select id="MBoardDAO.getFavoriteList" parameterClass="Map" resultClass="MBoardFavoriteVO" remapResults="true">
       <![CDATA[
-          SELECT 
+          (SELECT 
               A.BOARDID ,
               CASE  #primary#
                 WHEN 
@@ -734,7 +743,8 @@
               END boardname,
               A.BOARDNAME2 ,
               TABUSED ,
-              B.GUBUN 
+              B.GUBUN, 
+              A.VIEWORDER
           FROM 
               TBL_Board_MyBoards A
           JOIN 
@@ -745,10 +755,68 @@
               A.TENANT_ID = B.TENANT_ID
           WHERE
               A.TENANT_ID = #tenantID#
+          AND
+          		A.COMPANYID = #companyID#
           AND  
-              ( USERID = #userID# OR USERID = 'everyone' )
+			USERID = #userID#
           AND 
-              TABUSED = 'Y'
+              TABUSED = 'Y')
+              
+		UNION
+              
+			(SELECT 
+				A.BOARDID ,
+                CASE  #primary#
+                WHEN 
+                    '1'
+                THEN
+                    A.boardname
+                ELSE
+                    CASE
+                        WHEN
+                            (A.boardname2 = '' OR A.boardname2 IS NULL)
+                        THEN
+                            A.boardname
+                        ELSE
+                            A.boardname2
+                    END
+              	END boardname,
+                A.BOARDNAME2 ,
+                C.TABUSED ,
+                B.GUBUN ,
+                C.VIEWORDER
+			FROM 
+				TBL_Board_MyBoards A
+			JOIN 
+              	TBL_Board_BoardInfo B   
+			ON 
+              	A.BoardID = B.BoardID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				TBL_BOARD_NEWBOARD_ORDERINFO C
+			ON
+				A.BoardID = B.BoardID
+			AND
+				A.TENANT_ID = C.TENANT_ID         
+			WHERE
+              	A.TENANT_ID = 6
+			AND
+			(
+              	(A.COMPANYID = #companyID# 			AND 			C.COMPANYID = #companyID#)
+              	OR
+              	(TRIM(A.COMPANYID) =''		AND			C.COMPANYID = #companyID#)
+			)
+			AND  
+				A.USERID = 'everyone'
+			AND  
+              	C.USERID = #userID#
+			AND 
+              	C.TABUSED = 'Y'
+			ORDER BY 
+				A.BOARDID ASC
+			LIMIT 1)
+
           ORDER BY 
               VIEWORDER ASC
       ]]>
@@ -819,6 +887,8 @@
                                  WHERE  
                                     TENANT_ID = #v_TENANTID#
                                  AND
+                                 	COMPANYID = #v_COMPANYID#
+                                 AND
                                     ItemID = #v_pItemID#
                                  AND 
                                     UserID = #v_pUserID#
@@ -829,6 +899,8 @@
                                                     TBL_Board_Item
                                                 WHERE
                                                     TENANT_ID = #v_TENANTID#
+                                                AND
+                                 					COMPANYID = #v_COMPANYID#
                                                 AND  
                                                     ItemID = #v_pItemID# ) )
             ]]>
@@ -846,6 +918,8 @@
                                     TBL_Board_Item_Read 
                                  WHERE  
                                     TENANT_ID = #v_TENANTID#
+                                 AND
+                                 	COMPANYID = #v_COMPANYID#
                                  AND
                                     ItemID = #v_pItemID#
                                  AND 
@@ -906,10 +980,10 @@
   <insert id="MBoardDAO.setAsRead" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_Board_Item_Read ( 
-                BoardID,      ItemID,      UserID,      UserName,      UserDeptName,      UserCompanyName,      UserTitle,      UserName2,      UserDeptName2,      UserCompanyName2,      UserTitle2,      ReadDate,                                    TENANT_ID 
+                BoardID,      ItemID,      UserID,      UserName,      UserDeptName,      UserCompanyName,      UserTitle,      UserName2,      UserDeptName2,      UserCompanyName2,      UserTitle2,      ReadDate,    TENANT_ID, COMPANYID
             )
             VALUES ( 
-                #v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, #nowDate#, #v_TENANTID# 
+                #v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, #nowDate#, #v_TENANTID#, #v_COMPANYID# 
             )
         ]]>
     </insert>
@@ -921,6 +995,8 @@
                 ReadCount = ReadCount + 1
             WHERE
                 TENANT_ID = #v_TENANTID#
+            AND
+            	WRITERCOMPANYID = #v_COMPANYID#
             AND  
                 ItemID = #v_pItemID#
         ]]>
@@ -1051,6 +1127,8 @@
                         A.boardid = B.boardid
                     WHERE
                         A.TENANT_ID = #tenantID#
+					AND
+	                	A.companyid = #companyID#
                     ORDER BY 
                         A.treevieworder ASC
                   ]]>
@@ -1109,6 +1187,8 @@
                             A.BoardID = B.BOARDID
                          WHERE
                             A.TENANT_ID = #tenantID#
+						AND
+	                		A.companyid = #companyID#
                          ORDER BY 
                             A.TreeViewOrder ASC
                       ]]>
@@ -1139,6 +1219,8 @@
                         TBL_Board_BoardInfo A
                     WHERE
                         A.TENANT_ID = #tenantID#
+					AND
+	                	A.companyid = #companyID#
                     AND
                         A.PARENTBOARDID = #rootBoardID#
                     AND 
@@ -1166,13 +1248,15 @@
                       OR AccessID = 'everyone' )
                AND 
                   BoardID = ( SELECT 
-                                      BoardGroupID 
-                                   FROM 
-                                      TBL_Board_BoardInfo 
-                                   WHERE  
-                                      TENANT_ID = #tenantID#
-                                   AND 
-                                      BoardID = #boardID# )
+	                                      BoardGroupID 
+	                                   FROM 
+	                                      TBL_Board_BoardInfo 
+	                                   WHERE  
+	                                      TENANT_ID = #tenantID#
+	                                   AND
+	                                   		COMPANYID = #companyID#
+	                                   AND 
+	                                      BoardID = #boardID# )
           ]]>
       </select>
       
@@ -1202,15 +1286,20 @@
             JOIN 
               ( SELECT 
                 BOARDID,
-                TENANT_ID
+                TENANT_ID,
+                COMPANYID
                   FROM 
                     TBL_Board_MyBoards 
                   WHERE  
                     TENANT_ID = #tenantID#
                   AND
+                  	COMPANYID = #companyID#
+                  AND
                     UserID = #userID# ) B   
             ON 
-              A.TENANT_ID = B.TENANT_ID
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.WRITERCOMPANYID = B.COMPANYID
             AND
               A.BoardID = B.boardid
             JOIN 
@@ -1227,6 +1316,8 @@
               C.ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
             AND
               C.tenant_id = #tenantID#
+            AND
+            	C.companyid = #companyID#
             AND
               C.userid = #userID#
           WHERE  

@@ -110,9 +110,11 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId(), info.getOffSet(),pSearchText);
+			/* 2018-07-03 홍승비 - 새게시물 리스트 표시 시 companyID 조건 추가 */
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText);
 			
-			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), pSearchText);
+			/* 2018-07-03 홍승비 - 새게시물 카운트 표시 시 companyID 조건 추가 */
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), pSearchText);
 			LOGGER.debug("listCount ="+listCount);
 			
 			JSONObject data = new JSONObject();
@@ -219,7 +221,8 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
-			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getTenantId(), primary);
+			/* 2018-07-03 홍승비 - 게시판 즐겨찾기 리스트에 companyID 조건 추가 */
+			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getCompanyId(), info.getTenantId(), primary);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -541,11 +544,13 @@ public class MBoardGWController {
 			String excludeBoardID = request.getParameter("excludeBoardId");
 			String subFlag = request.getParameter("subFlag");
 			
+			// 여기에 테넌트나 companyID 등의 정보가 담긴다.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
+			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
-			
-			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
+			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
 			
 			data.put("list", list);
 			data.put("listCount", listCount);
