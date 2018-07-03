@@ -835,9 +835,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
+		String cumDeptID = ezScheduleService.getCumDeptId(loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID());
 
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("cumDeptID", cumDeptID);
 		
 		return "/ezSchedule/scheduleGroupWrite";
 	}

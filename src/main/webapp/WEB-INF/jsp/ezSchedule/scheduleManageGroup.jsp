@@ -228,6 +228,7 @@
 		    }
 					
 		    function show_groupinfo() {
+		    	console.log('Selected : ' + Selected);
 		        var listview = new ListView();
 		        listview.LoadFromID("GroupListView");
 		        
@@ -242,7 +243,7 @@
 			            return;
 			        }
 			        
-			        listview.GetSelectedRows()[0].onclick(); 
+			        /* listview.GetSelectedRows()[0].onclick(); */ 
 		        }
       		            
 		        var Selected = listview.GetSelectedRows();

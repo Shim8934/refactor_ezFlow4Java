@@ -55,6 +55,8 @@ public interface EzScheduleService {
 	public String scheduleGetLunarUse(String companyID, int tenantId) throws Exception;
 
 	public String scheduleGetRegi(String companyID, int tenantId) throws Exception;
+	
+	public String getCumDeptId(String userID, int tenantID, String companyID) throws Exception;
 		
 	public int getReceiveCount (String pUserId, int tenantId ,String companyID) throws Exception;
 	

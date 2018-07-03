@@ -660,6 +660,18 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		}		
 		return result;
 	}
+	
+	@Override
+	public String getCumDeptId(String userID, int tenantID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_USERID", userID);
+		
+		String result = ezScheduleDAO.getCumDeptId(map);
+		
+		return result;
+	}
 
 	@Override
 	public String scheduleGetRegi(String companyID, int tenantId) throws Exception {
