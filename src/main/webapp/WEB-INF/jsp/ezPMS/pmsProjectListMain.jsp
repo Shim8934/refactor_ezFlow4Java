@@ -131,9 +131,10 @@ function searchPopup() {
 	//기본값 초기화
 	$("#searchByProjectName").val("");
 	$("#searchByUser").val("");
-	$("#searchByPlanStartDate").val("");
-	$("#searchByPlanEndDate").val("");
+	$("#Sdatepicker").val("");
+	$("#Edatepicker").val("");
 	$("#searchByOverview").val("");
+	
 	//searchPopup 안에 OK넣고 온클릭에  전역변수:Tab1_SelectID로 구분해서 list가져오는거 분기
 	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 	
