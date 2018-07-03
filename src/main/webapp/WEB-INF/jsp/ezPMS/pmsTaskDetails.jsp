@@ -358,6 +358,10 @@
 		var taskIdAttr = "p" + projectId + "_g" + groupId + "_t";
 		var hasTaskOrNot = $("[taskid^='" + taskIdAttr + "']", window.opener.document);
 		
+		if(!confirm("<spring:message code='ezPMS.t306' />")){
+			return;
+		}
+		
 		if(hasTaskOrNot.length) {
 			alert("<spring:message code='ezPMS.t243' />")
 			return;
