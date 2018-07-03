@@ -283,7 +283,7 @@ function MakeListInfoHTML(ConentObject) {
                         case "receiveInfo":
                         	_TDColum.style.width = "18px";
                         	if (recipientsLen > 2) {
-                        		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/kr/main/btn_calendar_prev.gif'></span>";
+                        		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/receivedCheck_closed.gif'></span>";
                         		_TDColum.setAttribute("viewSelect", "false");
                         		_TDColum.onclick = function () { viewReceivers(this); };
                         	}
@@ -607,7 +607,7 @@ function viewReceivers(obj) {
         xmlhttp_MailReceiverList.send(strQuery);
 		
 		obj.setAttribute("viewSelect", "true");
-		obj.childNodes[0].childNodes[0].src = "/images/kr/main/btn_calendar_next.gif";
+		obj.childNodes[0].childNodes[0].src = "/images/receivedCheck_opend.gif";
 	} else {
 		
 		var parentId = obj.parentElement.id;
@@ -625,7 +625,7 @@ function viewReceivers(obj) {
 		}
 		
 		obj.setAttribute("viewSelect", "false");
-		obj.childNodes[0].childNodes[0].src = "/images/kr/main/btn_calendar_prev.gif";
+		obj.childNodes[0].childNodes[0].src = "/images/receivedCheck_closed.gif";
 	}
 }
 
