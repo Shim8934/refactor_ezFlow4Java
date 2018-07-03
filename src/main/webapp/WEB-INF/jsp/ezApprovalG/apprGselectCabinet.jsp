@@ -529,6 +529,11 @@
 	</head>
 	<body class="popup" style="margin-left: 0px; margin-top: 0px">
 	    <h1 style="height: 30px;"><spring:message code='ezApprovalG.t711'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table>
 	        <tr>
 	            <%--기능분류선택--%>
@@ -645,7 +650,6 @@
 	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; margin-bottom: 2.5px; vertical-align: middle; background-color: White; width: 150px; height:21px; color:black;font-weight:normal">
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return CabinetSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
 	        </h2>
 	    </div>
 	    <div style="width: 1106px; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

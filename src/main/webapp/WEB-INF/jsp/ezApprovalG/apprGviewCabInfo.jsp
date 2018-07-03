@@ -215,7 +215,6 @@
 		</span>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 		</script>
 	</body>
 </html>

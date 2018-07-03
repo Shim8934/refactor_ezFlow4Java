@@ -312,6 +312,11 @@
 		</xml>
 		
 		<h1><spring:message code='ezApprovalG.t1143'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table >
 		  <tr>
 		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1146'/></h2>
@@ -326,8 +331,7 @@
 		  </tr>
 		</table>
 		<div class="btnposition btnpositionNew">
-		  <a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-		  <a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>   
+			<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>		     
 		</div>
 	</body>
 </html>

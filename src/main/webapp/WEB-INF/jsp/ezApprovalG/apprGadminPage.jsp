@@ -1496,7 +1496,7 @@
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	        
 			if ("${initFlag}" != "4") {
-        		selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+        		/* selToggleList(document.getElementById("tabnav"), "ul", "li", "1"); */
 	        }
 	    </script>
 	    

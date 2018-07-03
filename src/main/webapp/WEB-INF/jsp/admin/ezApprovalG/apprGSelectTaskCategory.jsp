@@ -205,6 +205,11 @@
 			</TREEVIEWDATA>
 		</xml>
 	    <h1><spring:message code = 'ezApprovalG.t690' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <h2 id="maintitle" style="height: 30px;"><span id="tdCateType" style="color: orange"></span></b><spring:message code = 'ezApprovalG.t696' /><br>
         <spring:message code = 'ezApprovalG.t697' />"<span id="tdPCode" style="color: orange"></span></b><spring:message code = 'ezApprovalG.t698' /></h2>
     	<table class="content">
@@ -216,7 +221,6 @@
     	<div style="BORDER: #ddd 1px solid; OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 100%; HEIGHT: 260px; BACKGROUND-COLOR: #ffffff" id="TreeView"></div>
     	<div class="btnposition">
         	<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
-        	<a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code = 'ezApprovalG.t414' /></span></a>
     	</div>
 	</body>
 </html>

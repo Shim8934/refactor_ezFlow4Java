@@ -57,7 +57,12 @@
 <body class="popup" onload="javascript:window_onload()">
 	<form name="sendForm" method="post" >
 		<h1 style="height:30px;">POP3/IMAP</h1>
-			<br />
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+		<br />
 		<table  class="content">
 			<tr>
 			  	<th><spring:message code='ezOrgan.kyj01' /></th>
@@ -69,7 +74,6 @@
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn"><span onClick="return OK_Click()"><spring:message code='ezOrgan.t124' /></span></a>
-			<a class="imgbtn"><span onClick="window.close()"><spring:message code='ezOrgan.t125' /></span></a>
 		</div>
 	</form>
 </body>
