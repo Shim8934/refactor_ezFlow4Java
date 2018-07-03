@@ -32,9 +32,9 @@ var writerName = "${userName}";
 var weightInput = "${project.weightInput}";
 var planStartDate = "${project.planStartDate}";
 var planEndDate = "${project.planEndDate}";
-var managerList = null;
-var participantList = null;
-var viewerList = null;
+var managerList = [];
+var participantList = [];
+var viewerList = [];
 var overview = "<c:out value='${project.overview}'/>";
 var endAlamStatus = "${project.alamMailStatus}";
 var headManagerId = "${project.headManagerId}";
@@ -320,6 +320,10 @@ var groupId = "${groupId}";
 	 var managerNameList = "";
 	 var participantNameList = "";
 	 var viewerNameList = "";
+	 
+	 managerList = JSON.parse(managerList);
+	 participantList = JSON.parse(participantList);
+	 viewerList = JSON.parse(viewerList);
 	 
 	 for (var i = 0; i < managerList.length; i++) {
 		if(headManagerId == managerList[i].userId) {
