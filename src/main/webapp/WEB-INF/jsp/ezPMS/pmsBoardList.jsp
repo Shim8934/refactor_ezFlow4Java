@@ -31,8 +31,6 @@
 		$("tr[data-writetype=1], tr[data-writetype=3]").addClass("emergency");
 		$("tr[data-readornot='false']").addClass("noView");
 		
-		getDatePicker();
-		
 		if(typeof setContentTitle != 'undefined') {
 			setContentTitle(taskName, contentCount);
 		}	
@@ -140,80 +138,6 @@
 		})
 		
 		return check;
-	}
-	
-	function getDatePicker() {
-		$("#Sdatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			beforeShow: function (input) {
-				var i_offset = $(input).offset();
-				setTimeout(function () {
-					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-				})
-			}
-		});
-
-		$("#Edatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			beforeShow: function (input) {
-				var i_offset = $(input).offset();
-				setTimeout(function () {
-					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-				})
-			}
-		});
-		
-		var SDate = new Date();
-		var EDate = new Date();
-
-		$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		$("#Sdatepicker").datepicker('setDate', "");
-		
-		$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		$("#Edatepicker").datepicker('setDate', "");
-		
-		$.datepicker.regional["<spring:message code='main.t0619' />"] = {
-				closeText: "<spring:message code='main.t3' />",
-				prevText: "<spring:message code='main.t0604' />",
-				nextText: "<spring:message code='main.t0605' />",
-				currentText: "<spring:message code='main.t0606' />",
-				monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-				             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-				             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-				             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-				monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-				                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-				                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-				                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-				dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
-				           "<spring:message code='main.t0627' />"],
-				dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				                "<spring:message code='main.t0627' />"],
-				dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				              "<spring:message code='main.t0627' />"],
-				weekHeader: "Wk",
-				dateFormat: "yy-mm-dd",
-				firstDay: 0,
-				isRTL: false,
-				duration: 200,
-				showAnim: "show",
-				showMonthAfterYear: true
-		  };
-		  
-		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	}
 	
 	function searchBoard() {
