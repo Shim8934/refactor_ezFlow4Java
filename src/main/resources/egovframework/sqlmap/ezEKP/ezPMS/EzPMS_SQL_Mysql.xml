@@ -108,6 +108,7 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
     	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
+    	<result property="upperTreeDepth"					column="UPPER_TREE_DEPTH"			columnIndex="28"/>
     </resultMap>
     
     <resultMap class="ProjectGroupVO" id="groupScheduleVO">
@@ -175,6 +176,7 @@
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
     	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
     	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
+    	<result property="upperTreeDepth" 					column="UPPER_TREE_DEPTH"			columnIndex="33"/>
     </resultMap>
     
      <resultMap id="projectTaskVOForList" class="ProjectTaskVO">
@@ -643,7 +645,7 @@
 					MEMBER_ROLE_ID IN (1,2,3)
 				</isEqual>
 				AND
-					A.TENANT_ID = 1) C
+					A.TENANT_ID = #tenantId#) C
 				ON
 					D.DEPARTMENT = C.DEPARTMENT
 				WHERE
@@ -716,6 +718,31 @@
 			</isEqual>
 		</isEqual>
 	</select>
+	
+	<!-- <select id="EzPMSDAO.getGroupMember" parameterClass="Map" resultMap="projectMemberVO">
+		<![CDATA[
+			SELECT
+				G.USER_ID AS USER_ID,
+				G.USER_NAME$lang$ AS USER_NAME,
+				G.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				U.TITLE$lang$ AS USER_POSITION,
+				G.MEMBER_ROLE_ID,
+				"" AS USER_ID_TYPE,
+				G.TENANT_ID
+			FROM 
+				TBL_PMS_GROUPMEMBER G
+			JOIN
+				TBL_USERMASTER U
+			ON
+				G.user_id = U.CN
+			AND
+				G.tenant_id = U.tenant_id
+			WHERE
+				GROUP_ID = #groupId#
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+	</select> -->
 	
 	<select id="EzPMSDAO.getUserInfo" parameterClass="Map" resultMap="projectUserInfoVO">
 		<isEqual property="userIdType" compareValue="user">
@@ -2083,7 +2110,7 @@
 			AND 
 				tenant_id = #tenantId#
 			AND 
-				user_id != #userId#
+				user_id != #writerId#
 		]]>
 	</select>
 	
@@ -2101,7 +2128,7 @@
 			AND 
 				R.tenant_id = #tenantId#
 			AND 
-				user_id != #userId#
+				user_id != #writerId#
 			LIMIT #startRow#, #limit#
 		]]>
 	</select>
@@ -2334,7 +2361,8 @@
 				B.GROUP_NAME AS UPPER_GROUP_NAME,
 				P.PROJECT_NAME,
 				A.REAL_WORKINGDAY,
-				R.PRETASK
+				R.PRETASK,
+				B.TREE_DEPTH AS UPPER_TREE_DEPTH
 			FROM 
 				tbl_pms_task A
 			JOIN
@@ -3314,7 +3342,8 @@
 				A.WORKINGDAY,
 				A.REST_DUEDAY,
 				P.PROJECT_NAME,
-				B.GROUP_NAME AS UPPER_GROUP_NAME
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				IFNULL(B.TREE_DEPTH, -1) AS UPPER_TREE_DEPTH
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	

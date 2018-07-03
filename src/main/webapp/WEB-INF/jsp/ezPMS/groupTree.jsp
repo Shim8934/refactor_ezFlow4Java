@@ -72,6 +72,12 @@
 	function ok_Click() {
 		parent.setUpperGroup();
 		parent.DivPopUpHidden();
+		// 상위그룹 선택 시, 담당자/참여자 항목 모두 초기화
+		parent.managerList = [];
+		parent.participantList = [];
+		parent.headManagerId = null;
+		$("#managers", parent.document).html("");
+		$("#participants", parent.document).html("");
 	}
 	
 	function close_Click(){
@@ -93,13 +99,14 @@
 		
 		//그룹추가 페이지인지 확인 후 경고메시지 띄움.
 		if(treeDepth > 2 && isAddGroup != -1){
-			alert("해당 그룹은 상위그룹으로 지정할 수 없습니다.");
+			alert("<spring:message code='ezPMS.t311' />");
 			$("li[aria-selected='true'] a").removeClass("jstree-clicked");
 			$("li[aria-selected='true'] div").removeClass("jstree-wholerow-clicked");
 			$("li[aria-selected='true']").attr("aria-selected", false);
 			return false;
 		}
-		parent.treeDepth = treeDepth;
+		// jstree에서는 최상위가 1이나 모듈에서는 0으로 관리하고 있음
+		parent.treeDepth = treeDepth - 1;
 	}
 	
 </script>

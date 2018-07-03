@@ -60,17 +60,31 @@ var participantList = [];
  });
  
 function openMemberList(type) {
-		 var win;
-		 var feature = GetOpenPosition(760, 700);
-		 DivPopUpShow(600, 408, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
-				 "height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	var win;
+	
+	if(groupId == "") {
+		alert("<spring:message code='ezPMS.t85' />");
+		return;
+	}
+	
+	var feature = GetOpenPosition(760, 700);
+	
+	// 상위그룹으로 최상위 그룹인 프로젝트 자체를 선택했을 때는 groupId를 넘기지 않는다
+	if(treeDepth == '0') {
+		DivPopUpShow(600, 408, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
+				"height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	} else {
+		DivPopUpShow(600, 408, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId + "&type=" + type, "",
+				"height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	}
+	
 }
 
 function openGroupTree() {
-		var win;
-	 	var feature = GetOpenPosition(760, 700);
-	 	DivPopUpShow(338, 335, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
-			 	"height = 335px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	var win;
+ 	var feature = GetOpenPosition(760, 700);
+ 	DivPopUpShow(338, 335, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
+		 	"height = 335px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
 function open() {
@@ -136,9 +150,9 @@ function addGroup() {
 	 }
 	 
 	// 담당자 검사
-	if(managerList == null) {
-		// 현재 총괄담당자 null 허용 불가
-		alert("<spring:message code='ezPMS.t47' />");
+	if(managerList.length < 1) {
+		// 1명 이상의 담당자가 등록되어야 함
+		alert("<spring:message code='ezPMS.t169' />");
 		return;
 	}
 	
@@ -157,7 +171,8 @@ function addGroup() {
 			managerList : managerList,
 			planStartDate : planStartDate,
 			planEndDate : planEndDate,
-			treeDepth : treeDepth,
+			// 상위그룹의 treeDepth에 +1
+			treeDepth : treeDepth + 1,
 			participantList : participantList
 	}
 	

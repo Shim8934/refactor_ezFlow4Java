@@ -553,6 +553,8 @@
 	   			  
 	   			  if(returnVal) {
 	   				saveAllSchedules();
+	   				toastPopupShow("[" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t240' />");
+					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t240' />");
 	   				return true;
 	   			  } else {
 	   				return false;
@@ -605,6 +607,8 @@
 	   			  
 	   			  if(task.moveTo(newStart, true,true)) {
    					saveAllSchedules();
+   					toastPopupShow("[" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t240' />");
+					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + startDate + " ~ " + endDate + "<spring:message code='ezPMS.t240' />");
    					return true;
    				  } else {
    					return false;

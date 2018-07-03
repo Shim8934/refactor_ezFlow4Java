@@ -131,27 +131,44 @@ var projectStatus = "${projectStatus}";
  });
  
 function openMemberList() {
-		 var win;
-		 var feature = GetOpenPosition(760, 700);
-		 DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.85, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
+	var win;
+		 
+	if(groupId == "") {
+		alert("<spring:message code='ezPMS.t85' />");
+		return;
+	}
+	
+	var feature = GetOpenPosition(760, 700);
+	
+	// 상위그룹으로 최상위 그룹인 프로젝트 자체를 선택했을 때는 groupId를 넘기지 않는다
+	if(treeDepth == '0') {
+		DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.85, 
+				 "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	} else {
+		DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.85, 
+				 "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId, "",
+				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	}
+	
 }
 
 function openGroupTree() {
-		var win;
-	 	var feature = GetOpenPosition(760, 700);
-	 	DivPopUpShow($('body').prop('scrollWidth') * 0.4, $('body').prop('scrollHeight') * 0.7, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
-			 	"height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	var win;
+ 	var feature = GetOpenPosition(760, 700);
+ 	DivPopUpShow($('body').prop('scrollWidth') * 0.4, $('body').prop('scrollHeight') * 0.7, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
+		 	"height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
- function popupClose() {
+function popupClose() {
 	parent.DivPopUpHidden();
- }
+}
  
- function applyList() {
-	 var managerNameList = "";
-	 
-	 for (var i = 0; i < managerList.length; i++) {
+function applyList() {
+	var managerNameList = "";
+ 
+	for (var i = 0; i < managerList.length; i++) {
+		
 		if(headManagerId == managerList[i].userId) {
 			managerNameList += "<b>"
 			managerNameList += managerList[i].userName;
@@ -161,12 +178,12 @@ function openGroupTree() {
 			managerNameList += "(" + managerList[i].userDeptname + "), ";
 		}
 		
-	 }
+	}
 	 
-	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);
+	managerNameList = managerNameList.substr(0, managerNameList.length - 2);
 	 
-	 $("#managers").html(managerNameList);
- }
+	$("#managers").html(managerNameList);
+}
  
 function setUpperGroup() {
 	$("#upperGroup").html(groupName);
@@ -259,9 +276,9 @@ function addTask() {
 	}
 	
 	// 담당자 검사
-	if(managerList == null) {
-		// 현재 총괄담당자 null 허용 불가
-		alert("<spring:message code='ezPMS.t47' />");
+	if(managerList.length < 1) {
+		// 1명 이상의 담당자가 등록되어야 함
+		alert("<spring:message code='ezPMS.t169' />");
 		return;
 	}
 	

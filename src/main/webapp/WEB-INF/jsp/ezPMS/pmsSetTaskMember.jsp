@@ -12,10 +12,14 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	   	<script type="text/javascript">
+	   	<script type="text/javascript" charset="UTF-8">
 	   	
 	   		// 프로젝트 아이디
 	   		var projectId = "<c:out value='${projectId}'/>";
+	   		
+	   		// 그룹 아이디
+	   		var groupId = "<c:out value='${groupId}'/>";
+	   		
 	   		// 선택된 담당자 배열
 	   		var managerArray = [];
 	   		
@@ -44,13 +48,15 @@
 	   		}
 	   		
 	   		//프로젝트 멤버 리스트 뿌리기
+	   		// 상위 그룹이 최상위 그룹(프로젝트)일 때는 프로젝트 담당자 및 참여자가 나오고
+	   		// 그 외에는 상위 그룹의 담당자 및 참여자가 나온다
 	   		//roleId: 5 => roleId 1 또는 2인 사람을 조회한다.
 	   		function getProjectMemberList(projectId) {
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/ezPMS/getProjectMemberList.do",
-	   				data:{"projectId" : projectId, "roleId" : 5},
+	   				data:{"projectId" : projectId, "groupId" : groupId, "roleId" : 5},
 	   				success: function (result) {
 		   				$("#orglistView").html(result);
 	   				},
@@ -258,7 +264,7 @@
 	   			if(type === "participants"){
 	   				var tmpList = parent.managerList;
 	   				if(tmpList){
-			   			parent.managerList.forEach(function(elem, idx){
+			   			$(parent.managerList).each(function(idx, elem){
 			   				if(!(elem in authList)){
 			   					authList.push(elem);
 			   				}
@@ -267,7 +273,7 @@
 	   			} else {
 	   				var tmpList = parent.participantList;
 	   				if(tmpList){
-	   					tmpList.forEach(function(elem, idx){
+	   					$(tmpList).each(function(idx, elem){
 			   				if(!(elem in authList)){
 			   					authList.push(elem);
 			   				}
@@ -279,11 +285,11 @@
 	   		//기존 담당자 또는 참여자를 초기값으로 넣어준다.
 	   		function setPrevUser(){
 	   			if(type === "participants" && parent.participantList.length > 0){
-		   			parent.participantList.forEach(function(elem, idx){
+		   			$(parent.participantList).each(function(idx, elem){
 		   				$('#' + elem.userId).click().dblclick();
 		   			});
 	   			} else if (type !== "participants" && parent.managerList.length > 0){
-	   				parent.managerList.forEach(function(elem, idx){
+	   				$(parent.managerList).each(function(idx, elem){
 	   					$('#' + elem.userId).click().dblclick();
 		   			});
 	   			}

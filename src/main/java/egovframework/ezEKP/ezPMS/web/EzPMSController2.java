@@ -226,9 +226,17 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String projectId = request.getParameter("projectId");
+		String groupId = request.getParameter("groupId");
 		String roleId = request.getParameter("roleId");
 		
-		String url = "/rest/ezPMS/member-list/" + projectId + "/roles/" + roleId;
+		String url = null;
+		
+		// 상위그룹이 프로젝트 자체일 때는 groupId값이 넘어오지 않는다
+		if(groupId != null && !groupId.equals("")) {
+			url = "/rest/ezPMS/member-list/" + projectId + "/groupId/" + groupId;
+		} else {
+			url = "/rest/ezPMS/member-list/" + projectId + "/roles/" + roleId;
+		}
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
@@ -263,9 +271,11 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String projectId = request.getParameter("projectId");
+		String groupId = request.getParameter("groupId");
 		String type = request.getParameter("type");
 		
 		model.addAttribute("projectId", projectId);
+		model.addAttribute("groupId", groupId);
 		model.addAttribute("type", type);
 		
 		LOGGER.debug("ezPMS goProjectMemberList ended");

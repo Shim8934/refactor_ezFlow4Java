@@ -96,9 +96,9 @@ function popupClose() {
 		 parent.parent.DivPopUpHidden();
 	 } else {
 		 parent.opener.headManagerId = selMainListUserId;
-		 parent.opener.managerList = managerList;
-		 parent.opener.participantList = participantList;
-		 parent.opener.viewerList = viewerList;
+		 parent.opener.managerList = JSON.stringify(managerList);
+		 parent.opener.participantList = JSON.stringify(participantList);
+		 parent.opener.viewerList = JSON.stringify(viewerList);
 		 parent.opener.applyList(); 
 		 
 		 popupClose();
