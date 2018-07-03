@@ -104,6 +104,11 @@
 	</head>
 	<body class = "popup">
 		<h1><spring:message code = 'ezPersonal.t299' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close();"></span></li>
+            </ul>
+        </div>
 	    <div>
 	        <table class="content" style="width:100%">
 	             <tr>
@@ -145,7 +150,6 @@
 	    </div>
 	    <div class="btnpositionNew">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
-	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code = 'ezPersonal.t13' /></span></a>
 	    </div>
 	</body>
 </html>

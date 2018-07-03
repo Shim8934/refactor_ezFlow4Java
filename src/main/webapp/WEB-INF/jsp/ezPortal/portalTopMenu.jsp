@@ -617,10 +617,10 @@
 				
 			    if (CrossYN()) {
 			        menuitem_search_dialogArguments[1] = insertrow_Complete;
-			        var OpenWin = window.open("/ezPortal/menuItemSearch.do", "MenuItem_search", GetOpenWindowfeature(290, 340));
+			        var OpenWin = window.open("/ezPortal/menuItemSearch.do", "MenuItem_search", GetOpenWindowfeature(290, 355));
 			        try { OpenWin.focus(); } catch (e) { }
 			    } else {
-			        var ret = window.showModalDialog("/ezPortal/menuItemSearch.do", "", "dialogHeight:340px; dialogWidth:290px; status:no;scroll:auto; help:no; edge:sunken" + GetShowModalPosition(290, 340));
+			        var ret = window.showModalDialog("/ezPortal/menuItemSearch.do", "", "dialogHeight:355px; dialogWidth:290px; status:no;scroll:auto; help:no; edge:sunken" + GetShowModalPosition(290, 355));
 	
 			        if (typeof (ret) == "undefined") return;
 	

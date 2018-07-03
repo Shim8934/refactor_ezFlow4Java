@@ -101,6 +101,11 @@
 				</c:otherwise>
 			</c:choose>
 		</h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="close_Click()"></span></li>
+            </ul>
+        </div>
 		<table class="content"> 
   			<tr> 
     			<th><spring:message code='ezAttitude.t35' /></th> 
@@ -121,7 +126,6 @@
 		</table>
 		<div class="btnposition">
 	        <a class="imgbtn"><span onclick="OK_Click();" ><spring:message code='ezAttitude.t16' /></span></a>
-	        <a class="imgbtn"><span onclick="close_Click();"><spring:message code='ezAttitude.t34' /></span></a> 
 	    </div>
 	</body>
 </html>

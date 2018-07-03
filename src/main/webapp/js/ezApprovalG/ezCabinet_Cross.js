@@ -1437,7 +1437,7 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     }
     if (document.getElementById("rec_year") != null) {
         $('#rec_year').val("ALL");
-        $('#rec_year').selectmenu('refresh');
+        /*$('#rec_year').selectmenu('refresh');*/
     }
 }
 
@@ -1556,7 +1556,7 @@ function SearchCabinet_Complete(rtnVal) {
 
     if (document.getElementById("cab_year") != null) {
         $('#cab_year').val("ALL");
-        $('#cab_year').selectmenu('refresh');
+        /*$('#cab_year').selectmenu('refresh');*/
     }
 }
 

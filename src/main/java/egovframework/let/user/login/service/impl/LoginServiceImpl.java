@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
@@ -251,8 +252,102 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 //    		ia.getTopLevelFolders();    		
     	}		
 
-    	
     	return chk;
     }
+    
+
+	@Override
+	public LoginDeviceVO getDeviceInfo(String devId) throws Exception {
+		logger.debug("getDeviceInfo started.");
+		
+		Map<String , Object> map = new HashMap<String, Object>();
+		
+		map.put("devId", devId);
+		
+		LoginDeviceVO info = loginDAO.getDeviceInfo(map);
+		
+		if (info != null) {
+			logger.debug("userId=" + info.getUserId());
+			logger.debug("devId=" + info.getDevId());
+		}
+		
+		logger.debug("getDeviceInfo ended.");
+		
+		return info;
+	}
+
+	@Override
+	public int insertDeviceInfo(String devId, String devType, String subType, String userId, String token, String badge,
+			String tenantId, String state, String pushState, String regDate, String isLogin, String startMenu,
+			String loginTime, String loginLock, String isPasswordChange, String extension1, String extesion2) throws Exception {
+		logger.debug("insertDeviceInfo started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("devId", devId);
+		map.put("devType", devType);
+		map.put("subType", subType);
+		map.put("userId", userId);
+		map.put("token", token);
+		map.put("badge", badge);
+		map.put("tenantId", tenantId);
+		map.put("state", state);
+		map.put("pushState", pushState);
+		map.put("regDate", regDate);
+		map.put("isLogin", isLogin);
+		map.put("startMenu", startMenu);
+		map.put("loginTime", loginTime);
+		map.put("loginLock", loginLock);
+		map.put("isPasswordChange", isPasswordChange);
+		map.put("extension1", extension1);
+		map.put("extesion2", extesion2);
+		
+		int result = loginDAO.insertDeviceInfo(map);
+		
+		if (result <= 0) {
+			logger.debug("fail! updateDeviceInfo.");
+		}
+		
+		logger.debug("insertDeviceInfo ended.");
+		
+		return result;
+	}
+
+	@Override
+	public int updateDeviceInfo(String devId, String devType, String subType, String userId, String token, String badge,
+			String tenantId, String state, String pushState, String isLogin, String startMenu,
+			String loginTime, String loginLock, String isPasswordChange, String extension1, String extension2) throws Exception {
+		logger.debug("updateDeviceInfo started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("devId", devId);
+		map.put("devType", devType);
+		map.put("subType", subType);
+		map.put("userId", userId);
+		map.put("token", token);
+		map.put("badge", badge);
+		map.put("tenantId", tenantId);
+		map.put("state", state);
+		map.put("pushState", pushState);
+		map.put("isLogin", isLogin);
+		map.put("startMenu", startMenu);
+		map.put("loginTime", loginTime);
+		map.put("loginLock", loginLock);
+		map.put("isPasswordChange", isPasswordChange);
+		map.put("extension1", extension1);
+		map.put("extension2", extension2);
+		
+		int result = loginDAO.updateDeviceInfo(map);
+		
+		if (result <= 0) {
+			logger.debug("fail! updateDeviceInfo.");
+		}
+		
+		logger.debug("updateDeviceInfo ended.");
+
+		return result;
+	}
+	
 
 }

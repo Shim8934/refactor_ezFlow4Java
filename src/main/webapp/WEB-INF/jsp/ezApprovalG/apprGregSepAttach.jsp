@@ -557,6 +557,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1076'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
+            </ul>
+        </div>
 		<h2><spring:message code='ezApprovalG.t1018'/></h2>
 		<table class="content">
 		  <tr>
@@ -622,9 +627,8 @@
 		</Div>
 		
 		<div class="btnposition btnpositionNew">
-		  <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
-		  <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
-		  <a class="imgbtn"><span id="btnClose" onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
+		  	<a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
+		  	<a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

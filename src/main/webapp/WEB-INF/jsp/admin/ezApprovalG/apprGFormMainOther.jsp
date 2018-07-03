@@ -805,6 +805,10 @@
 		        OpenInformationUI_Complete();
 		    }
 		</script>
+		<style>
+			#mainmenu ul li {float:right !important}
+			#mainmenu ul li span {height:13px !important; background: none !important; margin-top:2px !important}
+		</style>
 	</head>
     <body class="popup">
         <div id="menu">

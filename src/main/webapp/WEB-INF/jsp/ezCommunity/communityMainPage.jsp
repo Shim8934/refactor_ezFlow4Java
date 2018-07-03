@@ -358,7 +358,7 @@
                     var tr = document.createElement("TR");
                     
                     if (j != 4) {
-                    	tr.style.borderBottom = "1px solid #efefef";
+                    	tr.style.borderBottom = "1px solid #f2f2f2";
                     }
                     
                     if (j % 2 == 0) {
