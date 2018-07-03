@@ -106,7 +106,7 @@ $(document).ready(function() {
 		if (viewType == 0) {
 			document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
 		} else {
-			document.getElementById("MailListRayer").style.height = CurrentHeight - 1 + "px";
+			document.getElementById("MailListRayer").style.height = CurrentHeight - 3 + "px";
 		}
 
 		if (viewType == 0) {
@@ -118,7 +118,7 @@ $(document).ready(function() {
 			$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe_on.png");
 			
 			document.getElementById("divList").style.overflow = "auto";
-			document.getElementById("MailListRayer").style.height = CurrentHeight - 1 + "px";
+			document.getElementById("MailListRayer").style.height = CurrentHeight - 3 + "px";
 			document.getElementById("MailListRayer").style.width = "100%";
 			document.getElementById("divList").style.height = (CurrentHeight - 45) + "px";
 			document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
@@ -137,7 +137,7 @@ function projectListScroll() {
 		$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe_on.png");
 		
 		document.getElementById("divList").style.overflow = "auto";
-		document.getElementById("MailListRayer").style.height = CurrentHeight - 1 + "px";
+		document.getElementById("MailListRayer").style.height = CurrentHeight - 3 + "px";
 		document.getElementById("MailListRayer").style.width = "100%";
 		document.getElementById("divList").style.height = (CurrentHeight - 45) + "px";
 		document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
@@ -301,9 +301,9 @@ function changeMemoStyle() {
 	listNumber = 20;
 	startRow = 0;
 	currentPage = 1;
-	
-	changeMainSetting();
+
 	setProjectList("new");
+	changeMainSetting();
 	
 	$("#memoStyle").attr("src", "/images/kr/cm/btn_cardframe_on.png");
 	$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe.png");
@@ -573,7 +573,13 @@ function changeProjectStatus() {
 function viewListByStatus(status) {
 	listProjectStatus = status;
 	currentPage = 1;
-	listNumber = initListNumber;
+	
+	if (viewType == 0) {
+		listNumber = 20;
+	} else {
+		listNumber = initListNumber;
+	}
+	
 	startRow = 0;
 	
 	if (listProjectStatus != "F") {
