@@ -478,11 +478,8 @@ public class EzEmailMailSearchController {
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
 		
 		String folderId = null;
-		
-		if (uniqueId.endsWith(",")) {
-			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-		}
-		String[] folderAndMsgIdArray = uniqueId.split(",");
+
+		String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 					
 		String returnData = "OK";
 		
@@ -546,11 +543,7 @@ public class EzEmailMailSearchController {
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
 		String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
 		
-		if (uniqueId.endsWith(",")) {
-			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-		}
-		
-		String[] folderAndMsgIdArray = uniqueId.split(",");
+		String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 		
 		IMAPAccess ia = null;
 		
