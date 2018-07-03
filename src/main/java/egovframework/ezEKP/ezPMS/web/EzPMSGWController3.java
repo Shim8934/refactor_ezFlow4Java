@@ -739,7 +739,7 @@ public class EzPMSGWController3 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			int viewerCount= ezPMSService.getBoardViewerCount(info.getTenantId(), itemId, userId);
+			int viewerCount= ezPMSService.getBoardViewerCount(info.getTenantId(), itemId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

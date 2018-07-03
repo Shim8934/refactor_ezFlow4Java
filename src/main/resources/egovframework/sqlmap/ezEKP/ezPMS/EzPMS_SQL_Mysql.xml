@@ -2110,7 +2110,7 @@
 			AND 
 				tenant_id = #tenantId#
 			AND 
-				user_id != #userId#
+				user_id != #writerId#
 		]]>
 	</select>
 	
@@ -2128,7 +2128,7 @@
 			AND 
 				R.tenant_id = #tenantId#
 			AND 
-				user_id != #userId#
+				user_id != #writerId#
 			LIMIT #startRow#, #limit#
 		]]>
 	</select>

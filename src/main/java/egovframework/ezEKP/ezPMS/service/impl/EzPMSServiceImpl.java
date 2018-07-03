@@ -2231,14 +2231,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getBoardViewerCount(int tenantId, String itemId, String userId) {
+	public int getBoardViewerCount(int tenantId, String itemId) {
 		LOGGER.debug("[SERVICE] getBoardViewerCount started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("itemId", itemId);
-		map.put("userId", userId);
-
+		
+		ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
+		map.put("writerId", boardVO.getWriterId());
 		LOGGER.debug("[SERVICE] getBoardViewerCount ended.");
 
 		return ezPMSDAO.getBoardViewerCount(map);
@@ -2249,7 +2250,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getBoardViewerList started.");
 
 		param.put("tenantId", tenantId);
-
+		
+		ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(param);
+		param.put("writerId", boardVO.getWriterId());
 		LOGGER.debug("[SERVICE] getBoardViewerList ended.");
 
 		return ezPMSDAO.getBoardViewerList(param);

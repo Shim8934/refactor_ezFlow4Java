@@ -51,7 +51,8 @@
 </script>
 <style>
 .tree {
-	overflow: auto;
+	overflow-x : hidden;
+	overflow-y : auto;
 	border: 1px solid silver;
 	height: 198px;
 }
