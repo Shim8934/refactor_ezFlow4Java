@@ -47,9 +47,18 @@
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
 			var type = "${type}";
+			var wcompanyID = "${result.companyID}"
+			var ucompanyID = "${userInfo.companyID}";
 			var attachList = "";
 
 			$(document).ready(function() {
+				
+				if(ucompanyID != wcompanyID) {
+					alert(ucompanyID + "<spring:message code='ezLadder.hyh02' />");
+					window.close();
+					return;
+				}
+				
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -64,6 +73,7 @@
 				if ($("#divCross p a").length > 0) {
 					$("#divCross p a").attr("target", "_blank")
 				}
+				
 	        });
 			
 			window.onresize = function () {
