@@ -172,8 +172,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 		List<ScheduleSecretaryVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID ,companyID);
 		List<ScheduleDeptVO> pubScheDeptVO = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID ,companyID);
 		List<ScheduleCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID, companyID);
-		
-		logger.debug("left의 겸직사이즈 : " + pubScheCumulerVO.size());
 		List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId() ,companyID);
 				
 		model.addAttribute("loginVO", loginVO);
@@ -234,10 +232,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 		StringBuilder sb = new StringBuilder("<DATA>");
 		//일정관리 데이터 호출 함수
 		List<ScheduleInfoVO> sList = scheduleListData(startDate, endDate, idList, groupID, offSetMin, userInfo);
-		
-		/*for (ScheduleInfoVO sc : sList) {
-			logger.debug("구해안 :: " + sc.getOwnerId());
-		}*/
 		
 		Collections.sort(sList, new EzScheduleCompareUtil());
 		
@@ -410,9 +404,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}		
 		
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, userInfo.getId());		
-		/*for (ScheduleInfoVO s : sList) {
-			logger.debug("getScheduleList 컨트롤러에서 가져온 값 돌리기 :: " + s.getOwnerId() + "   타입 :: " + s.getScheduleType());
-		}*/
+		
 		return sList;
 	}
 
@@ -1334,21 +1326,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         
         //asdf
 		List<ScheduleSecretaryVO> sList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID ,companyID);
-		for (ScheduleSecretaryVO st : sList) {
-			logger.debug("비서나와라 : " + st.getSecName());
-		}
-		
 		List<ScheduleDeptVO> pdList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID ,companyID);
-		
-		for (ScheduleDeptVO pd : pdList) {
-			logger.debug("공부나오냐 : " + pd.getDeptName());
-		}
-		
 		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID, companyID);
-		logger.debug("cList 사이즈 : " + cList.size());
-		for (ScheduleCumulerVO sc : cList) {
-			logger.debug("겸직나오냐 : " + sc.getTitleName());
-		}
                
 		loginVO = commonUtil.userInfo(loginCookie);
 
@@ -1417,7 +1396,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             	strAttach.append("<ROOT><NODES>");
             	
                 for (AttachListVO attach : attachList) {
-                    strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize()) + "]]></DATA>");
+                    strAttach.append("<DATA><![CDATA[" + attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize() + "]]></DATA>");
                     strAttach.append("<DATA2><![CDATA[]]></DATA2>");
                     strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
                 }
@@ -1462,12 +1441,10 @@ public class EzScheduleController extends EgovFileMngUtil {
         	model.addAttribute("strAttach", strAttach.toString());        	
         } else {
         	if (!_otherid.equals("")) {    
-        		logger.debug("혹시 일로 타니?;;");
         		//개인일정
         		String type = _scheduletype;
         		strOwnerID.append("<option value='" + type + ";;" + _otherid + "'>" + request.getParameter("othername") + "</option>");
         	} else {
-        		logger.debug("여기가 타긴 타니??");
         		int count = 1;
 				int defaultIndex = Integer.parseInt(_defaultid);
 				
@@ -1492,7 +1469,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 	            	}
 					//겸직일정
 					for (ScheduleCumulerVO vo : cList) {
-						logger.debug("겸직리스트 : " + vo.getDeptId() + "겸직부서이름 : " + vo.getTitleName());
 	            		//겸직일정
 	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
 	            		count++;
@@ -1522,7 +1498,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 	            	}
 					//겸직일정
 					for (ScheduleCumulerVO vo : cList) {
-						logger.debug("겸직리스트 : " + vo.getDeptId() + "겸직부서이름 : " + vo.getTitleName());
 	            		//겸직일정
 	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
 	            		count++;
@@ -1746,7 +1721,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    } else {
 	    	defaultPath = commonUtil.getRealPath(request) + contentPath;
 	    }
-
 	    if (scheduleid == null || scheduleid.equals("")) {
         	//insertSchedule
         	result = ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
@@ -1755,7 +1729,6 @@ public class EzScheduleController extends EgovFileMngUtil {
         	//updateSchedule
         	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID());
         }
-        
         return Integer.toString(result);
 	}
 	

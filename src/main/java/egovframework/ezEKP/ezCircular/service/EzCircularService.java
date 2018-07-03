@@ -47,7 +47,7 @@ public interface EzCircularService {
 	
 	public List<CircularDeptVO> getcircularDeptList(String memberID, String offset, int tenantID, String companyID) throws Exception;
 	
-	public StringBuffer getConfirmMemberList(String circularID, int tenantID, int pageNum, int perCount, String offset) throws Exception;
+	public StringBuffer getConfirmMemberList(String circularID, int pageNum, int perCount, String offset, LoginVO userInfo) throws Exception;
 	
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	

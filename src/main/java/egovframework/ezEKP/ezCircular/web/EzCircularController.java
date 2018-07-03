@@ -2593,7 +2593,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		StringBuffer resultXML = ezCircularService.getConfirmMemberList(circularID, userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+		StringBuffer resultXML = ezCircularService.getConfirmMemberList(circularID, pageNum, perCount, userInfo.getOffset(), userInfo);
 
 		logger.debug("circularConfirmPagingList ended");
 		return resultXML.toString();

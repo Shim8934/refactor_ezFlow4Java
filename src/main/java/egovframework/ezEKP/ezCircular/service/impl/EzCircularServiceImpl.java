@@ -1784,7 +1784,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	
 	/* 18-05-28 김민성 - 확인자 목록 조회 */
 	@Override
-	public StringBuffer getConfirmMemberList(String circularID, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+	public StringBuffer getConfirmMemberList(String circularID, int pageNum, int perCount, String offset, LoginVO userInfo) throws Exception {
 		logger.debug("getConfirmMemberList started");
     	if(pageNum == 0){
     		pageNum = 1;
@@ -1794,10 +1794,11 @@ public class EzCircularServiceImpl implements EzCircularService {
     	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
-		map.put("tenantID", tenantID);
+		map.put("tenantID", userInfo.getTenantId());
 		map.put("start", startRowNum);
 		map.put("perCount", perCount);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("companyID", userInfo.getCompanyID());
 		
 		List<CircularConfirmVO> list = ezCircularDAO.getConfirmMember(map);
 		
