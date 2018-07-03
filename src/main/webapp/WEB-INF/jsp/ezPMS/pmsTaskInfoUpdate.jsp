@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,6 +103,7 @@ var groupTaskMember = null;
 var taskId = "${taskDetails.taskId}";
 var initMemberList = [];
 var treeDepth = "<c:out value='${taskDetails.upperTreeDepth}'/>"
+var prevWeight = 0;
 
  $(function() {
 	 taskDetails = ${taskDetails};
@@ -112,6 +114,7 @@ var treeDepth = "<c:out value='${taskDetails.upperTreeDepth}'/>"
 		 initMemberList = '${taskDetails.taskMember}';
 		 groupId = "<c:out value='${taskDetails.groupId}'/>";
 		 originGroupId = "<c:out value='${taskDetails.groupId}'/>";
+		 prevWeight = taskDetails.weight;
 	 } else {
 		 initMemberList = '${taskDetails.groupMember}';
 		 groupId = "<c:out value='${taskDetails.upperGroupId}'/>";
@@ -243,6 +246,8 @@ function updateTaskInfo() {
 		 var planStartDate = "${taskDetails.planStartDate}";
 		 var planEndDate = "${taskDetails.planEndDate}";
 		 var writeDate = "${taskDetails.writeDate}";
+		 
+		 remainingWeight = (Number(remainingWeight) + prevWeight).toFixed(1);
 
 		//업무 이름 길이 제한
 		 if (taskName.length == 0) {
@@ -493,7 +498,7 @@ function initPreTask() {
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t267' /></th>
-						<td><input type="text" id="weight" class="textInput" placeholder="${taskDetails.weight}" value="${taskDetails.weight}"></td>
+						<td><input type="text" id="weight" class="textInput" placeholder="<fmt:formatNumber value="${taskDetails.weight}" pattern=".0"/>" value="<fmt:formatNumber value="${taskDetails.weight}" pattern=".0"/>"></td>
 		<%-- 				<td style="height:30px" id="weight">${taskDetails.weight == null ? "-" : taskDetails.weight}</td> --%>
 					</tr>
 					<tr>
