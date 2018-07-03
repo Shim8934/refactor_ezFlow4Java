@@ -459,14 +459,14 @@ function initPreTask() {
 						</td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
-						<td id="managers"></td>
-					</tr>
-					<tr>
 						<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
 						<td style="height:30px;" id="upperGroup"> 
 						<c:out value="${taskDetails.groupName == null ? '-' : taskDetails.groupName}"/> 
 						</td>
+					</tr>
+					<tr>
+						<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
+						<td id="managers"></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t181' /></th>
@@ -497,18 +497,18 @@ function initPreTask() {
 						</td>
 					</tr>
 					<tr>
+						<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
+						<td style="height:30px;" id="upperGroup">
+							<c:out value="${taskDetails.upperGroupName == null ? '-' : taskDetails.upperGroupName}"/>
+						</td>
+					</tr>
+					<tr>
 						<th><a class="imgbtn" onclick="openMemberList('managers')"><span><spring:message code='ezPMS.t63' /></span></a></th>
 						<td class="memberTd" style="height:58px;"><div id="managers"></div></td>
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openMemberList('participants')"><span><spring:message code='ezPMS.t64' /></span></a></th>
 						<td class="memberTd" style="height:58px;"><div id="participants"></div></td>
-					</tr>
-					<tr>
-						<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>
-						<td style="height:30px;" id="upperGroup">
-							<c:out value="${taskDetails.upperGroupName == null ? '-' : taskDetails.upperGroupName}"/>
-						</td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t88' /></th>
