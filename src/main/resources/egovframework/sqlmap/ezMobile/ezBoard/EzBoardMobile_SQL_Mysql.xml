@@ -724,7 +724,7 @@
   
   <select id="MBoardDAO.getFavoriteList" parameterClass="Map" resultClass="MBoardFavoriteVO" remapResults="true">
       <![CDATA[
-          SELECT 
+          (SELECT 
               A.BOARDID ,
               CASE  #primary#
                 WHEN 
@@ -743,7 +743,8 @@
               END boardname,
               A.BOARDNAME2 ,
               TABUSED ,
-              B.GUBUN 
+              B.GUBUN, 
+              A.VIEWORDER
           FROM 
               TBL_Board_MyBoards A
           JOIN 
@@ -757,9 +758,65 @@
           AND
           		A.COMPANYID = #companyID#
           AND  
-              ( USERID = #userID# OR USERID = 'everyone' )
+			USERID = #userID#
           AND 
-              TABUSED = 'Y'
+              TABUSED = 'Y')
+              
+		UNION
+              
+			(SELECT 
+				A.BOARDID ,
+                CASE  #primary#
+                WHEN 
+                    '1'
+                THEN
+                    A.boardname
+                ELSE
+                    CASE
+                        WHEN
+                            (A.boardname2 = '' OR A.boardname2 IS NULL)
+                        THEN
+                            A.boardname
+                        ELSE
+                            A.boardname2
+                    END
+              	END boardname,
+                A.BOARDNAME2 ,
+                C.TABUSED ,
+                B.GUBUN ,
+                C.VIEWORDER
+			FROM 
+				TBL_Board_MyBoards A
+			JOIN 
+              	TBL_Board_BoardInfo B   
+			ON 
+              	A.BoardID = B.BoardID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				TBL_BOARD_NEWBOARD_ORDERINFO C
+			ON
+				A.BoardID = B.BoardID
+			AND
+				A.TENANT_ID = C.TENANT_ID         
+			WHERE
+              	A.TENANT_ID = 6
+			AND
+			(
+              	(A.COMPANYID = #companyID# 			AND 			C.COMPANYID = #companyID#)
+              	OR
+              	(TRIM(A.COMPANYID) =''		AND			C.COMPANYID = #companyID#)
+			)
+			AND  
+				A.USERID = 'everyone'
+			AND  
+              	C.USERID = #userID#
+			AND 
+              	C.TABUSED = 'Y'
+			ORDER BY 
+				A.BOARDID ASC
+			LIMIT 1)
+
           ORDER BY 
               VIEWORDER ASC
       ]]>
