@@ -248,7 +248,8 @@ public class MBoardServiceImpl implements MBoardService {
 			mBoardInfoVO.setWrite_FG("true");
 			mBoardInfoVO.setReply_FG("true");
 			mBoardInfoVO.setDelete_FG("true");
-		} else if (mBoardInfoVO.getBoardAdmin_FG() == null || mBoardInfoVO.getBoardAdmin_FG().equals("")) {
+		} /* 2018-07-04 홍승비 - boardGroupAdmin_FG="NO"이고 rollInfo에서 관리자 권한 확인할 수 없을때 플래그 처리 조건 추가 */
+		else if (mBoardInfoVO.getBoardAdmin_FG() == null || mBoardInfoVO.getBoardAdmin_FG().equals("") || mBoardInfoVO.getBoardGroupAdmin_FG().equals("NO")) {
 			mBoardInfoVO.setAccess_FG("1");
 			mBoardInfoVO.setBoardAdmin_FG("false");
 			mBoardInfoVO.setListView_FG("false");

@@ -370,7 +370,7 @@ public class MBoardGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object insertBoardSelect(@PathVariable String boardId, HttpServletRequest request,Locale locale) throws Exception {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -404,7 +404,7 @@ public class MBoardGWController {
 			result.put("data", "");
 		}		
 		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/boards/{boardId}/contents] ended.");
 		
 		return result;
 	}
