@@ -360,7 +360,7 @@
 		        pLvList.LoadFromID("pSCLvList");
 		        var totalRows = pLvList.GetDataRows();
 		
-		        if (totalRows.length > 0) {
+		        if (totalRows.length > 0 && totalRows[0].id.indexOf("noItems") == -1) {
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = GetSelCabInfoXml();
 		            
@@ -524,7 +524,13 @@
 		</script>
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px">
-		<h1><spring:message code='ezApprovalG.t711'/></h1>
+		<%-- <h1><spring:message code='ezApprovalG.t711'/></h1> --%> <!-- 기록물철 선택 -->
+		<div id="menu">
+			<ul id="trCreateCab" style="display: none">
+	          <li id="btnCreateCab"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></li> <!-- 철생성 -->
+	          <li id="btnNewVolume" style="display: none"><span onClick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></li> <!-- 권호수 추가 -->
+	        </ul>
+		</div>
 		<div id="close">
             <ul>
                 <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
@@ -532,14 +538,14 @@
         </div>
 		<table style="width:445px">
 		  <tr>			
-		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/></h2> 
+		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/></h2>
 		      <table>
-		        <tr id="trCreateCab">
+		        <%-- <tr id="trCreateCab"> <!-- 528~533 으로 이동 -->
 		          <th>
 			          <a class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
 					  <a class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
 				  </th>
-		        </tr>
+		        </tr> --%>
 		        <tr id="trCreateCabDummy" style="display:none"> 
 		        </tr>
 		        <tr> 
@@ -563,20 +569,6 @@
 			      		<img id="RecvDel" src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" onClick="return DelCabList_onclick()" style="cursor: pointer; padding-top: 2px;">
 			      	</td>
 			      </tr>
-		        <!-- <tr> // (557 ~ 566 으로 이동)
-		          <td>
-		          	<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" > 
-		            	<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddCabList_onclick()">
-		            </a>
-		          </td>
-		        </tr>
-		        <tr> 
-		          <td>
-		          	<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image103','','/images/arr_left.gif',1)"> 
-		            	<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelCabList_onclick()">
-		            </a>
-		          </td>
-		        </tr> -->
 		      </table>
 		    </td>
 		    <td style="width:200px;vertical-align:top">

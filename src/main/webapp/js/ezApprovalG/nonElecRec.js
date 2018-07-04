@@ -426,7 +426,7 @@ function GetLVHearderXml() {
 
     Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
     createNodeAndAppandNodeText(oList, Header, node, "NAME", "시청각기록물 내용요약");
-    createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "450");
+    createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "200");
 
     Rows = createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
 

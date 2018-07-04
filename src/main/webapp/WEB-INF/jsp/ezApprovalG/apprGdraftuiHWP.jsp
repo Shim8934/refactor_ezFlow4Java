@@ -186,9 +186,14 @@
 	                HwpCtrl.SetFieldFocus("doctitle");
 	                HwpCtrl.ezSetScrollPosInfo(0);
 	                
+	                /* 
+	                * 비전자문서 구분 값, 사용불가한 버튼들 가리기
+	                */
 	                if (nonElecRec == "Y") {
-	                	document.getElementById("btnSelForm").style.display = "none";
-	                	document.getElementById("btnAddSepAttach").style.display = "none";
+	                	document.getElementById("btnSelForm").style.display = "none"; <%-- 양식선택 --%>
+	                	document.getElementById("btnAddSepAttach").style.display = "none"; <%-- 분리첨부 --%>
+	                	document.getElementById("btnSaveServer").style.display = "none"; <%-- 임시저장 --%>
+	                	document.getElementById("btnHelper").style.display = "none"; <%-- 연동(한글기안기만있음) --%>
 	                }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.window.onload::" + e.description);
@@ -1324,7 +1329,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><%-- <spring:message code='ezApprovalG.t64'/> --%></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">

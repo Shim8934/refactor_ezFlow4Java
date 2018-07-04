@@ -63,7 +63,6 @@
 		        } else if (g_InitFlag == "2") {
 		        	document.getElementById("trChangeCabinet").style.display = "none";
 		            document.getElementById("trModify").style.display = "none";
-		            document.getElementById("btnClose").style.display = "none";
 		            
 		            InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
 		        }
@@ -133,7 +132,7 @@
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1029'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "450");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "200");
 		
 		        Rows = createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
 		
@@ -238,7 +237,7 @@
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");    
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1029'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "450");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "200");
 		
 		        Rows = createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
 		        Row = createNodeAndAppandNode(oList, Rows, Row, "ROW");
@@ -431,7 +430,6 @@
 		        pLvList.LoadFromID("pLvList");
 		
 		        var totalRows = pLvList.GetDataRows();
-		
 		        var selRow, Row, Cell, Value, Data, node, i;
 		        for (i = 0; i < totalRows.length; i++) {
 		            selRow = totalRows[i];        
@@ -490,20 +488,18 @@
 		    function btnOK_onclick() {
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
-		
-		        if (g_InitFlag != "2") {
-			        var totalRows = pLvList.GetDataRows();
-			        if (totalRows.length == 1 && totalRows[0].id.indexOf("noItems") > -1) {
-			            alert("<spring:message code='ezApprovalG.t1031'/>");
-			            return;
-			        }
 		        
-			        if (nonElecRec == "Y" && g_CabinetID != "nonElecRecTempCabinet") {
-				        if (!CheckSepAttParamXmlNull()) {
-				            alert("<spring:message code='ezApprovalG.t1411'/>");
-				            return;
-			        	}
-			        }
+		        var totalRows = pLvList.GetDataRows();
+		        if (totalRows.length == 1 && totalRows[0].id.indexOf("noItems") > -1) {
+		            alert("<spring:message code='ezApprovalG.t1031'/>");
+		            return;
+		        }
+	        
+		        if (nonElecRec == "Y" && g_CabinetID != "nonElecRecTempCabinet") {
+			        if (!CheckSepAttParamXmlNull()) {
+			            alert("<spring:message code='ezApprovalG.t1411'/>");
+			            return;
+		        	}
 		        }
 		        
 		        rtnVal[0] = "TRUE";

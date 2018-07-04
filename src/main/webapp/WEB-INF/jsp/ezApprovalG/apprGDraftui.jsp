@@ -178,6 +178,7 @@
 		        if(nonElecRec == "Y") {
 		        	document.getElementById("btnSelForm").style.display = "none";
                 	document.getElementById("btnAddSepAttach").style.display = "none";
+                	document.getElementById("btnSaveServer").style.display = "none";
 		        }
 		    };
 		    function dragNdrapNo()
