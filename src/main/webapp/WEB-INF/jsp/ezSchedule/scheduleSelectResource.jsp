@@ -382,7 +382,7 @@
 	            <td>
 	                <h2><span id="Span1"><spring:message code='ezSchedule.t1105' /></span></h2>
 	                <div class="listview">
-	                    <div id="ListView" STYLE="border:0; Width:245px; Height:296px; overflow:auto;"></div>
+	                    <div id="ListView" STYLE="border:0; Width:245px; Height:302px; overflow:auto;"></div>
 	                </div> 
 	            </td>
 	        </tr>      

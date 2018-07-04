@@ -8,26 +8,26 @@
         var pageNum = currentPage;
         
         if (totalPages > 1 && pageNum != 1) {
-            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_p_prev.gif'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
             PagingHTML += strtext;
         }
         
         if (totalPages > blockSize) {
             if (pageNum > blockSize) {
-                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang39 + "</span>";
+                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_prev.gif'></span>";
                 PagingHTML += strtext;
             }
             else {
-                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang39 + "</span>";
+                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
                 PagingHTML += strtext;
             }
         }
         else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang39 + "</span>";
+            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
             PagingHTML += strtext;
         }
         
@@ -55,28 +55,28 @@
         
         if (totalPages > blockSize) {
         	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
-        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang40 + "</span>";
-        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+        	    strtext = "";
+        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_next.gif'></span>";
                 PagingHTML += strtext;
         	}
         	else {
-                strtext = "<span class='ptxt' onclick='return selafterBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang40 + "</span>";
-                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+                strtext = "";
+                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
                 PagingHTML += strtext;
         	}
         }
         else {
-            strtext = "<span class='ptxt' onClick='return selafterBlock_one(" + currentPage + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'>" + strLang40 + "</span>";
-            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+            strtext = "";
+            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
             PagingHTML += strtext;
         }
         
         if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
-            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + "," + totalPages + "," + totalQuestions + "," + blockSize + ")'><img src='/images/sub/btn_n_next.gif'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
             PagingHTML += strtext;
         }
         

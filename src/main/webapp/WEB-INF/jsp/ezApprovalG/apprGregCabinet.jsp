@@ -207,7 +207,7 @@
 							</td>
 						</tr>
 					</table>
-					<div class="listview" style="margin-top:5px" >
+					<div class="listview" style="margin-top:5px; overflow:auto; overflow-x:hidden" >
 						<div id="TaskSCateList" style="height:233px" onClick="TaskSCateList_rowclick()"></div>
 					</div>
 				</td>

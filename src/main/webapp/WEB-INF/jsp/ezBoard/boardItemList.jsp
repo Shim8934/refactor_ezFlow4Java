@@ -156,7 +156,7 @@
 		            document.getElementById("noti").style.display = "none";
 		        }
 		
-		        var height = parseInt(document.documentElement.clientHeight - 320);
+		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        
 		        if (ListView_FG == "true") {
 			        getBoardList();
