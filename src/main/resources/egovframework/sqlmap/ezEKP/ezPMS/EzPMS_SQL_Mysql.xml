@@ -1369,8 +1369,10 @@
 				A.DEL_STATUS = 0
 		]]>
 		<isNotEqual property="roleId" compareValue="3">
+		<isNotEqual property="roleId" compareValue="2">
 			AND
 				C.USER_ID = #userId#
+		</isNotEqual>
 		</isNotEqual>
 		<isNotEqual property="projectId" compareValue="0">
 			AND  
@@ -2418,8 +2420,10 @@
 				A.DEL_STATUS = 0
 		]]>
 		<isNotEqual property="roleId" compareValue="3">
+		<isNotEqual property="roleId" compareValue="2">
 			AND
 				C.USER_ID = #userId#
+		</isNotEqual>
 		</isNotEqual>
 		<isNotEqual property="projectId" compareValue="0">
 			AND  

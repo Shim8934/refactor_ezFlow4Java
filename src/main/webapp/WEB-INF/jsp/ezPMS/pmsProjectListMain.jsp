@@ -591,8 +591,17 @@ function changeProjectStatus() {
 	}
 }
 
+function searchClear() {
+	searchByProjectName = "";
+	searchByUser = "";
+	searchByPlanStartDate = "";
+	searchByPlanEndDate = "";
+	searchByOverview = "";
+}
+
 function viewListByStatus(status) {
 	listProjectStatus = status;
+	searchClear();
 	currentPage = 1;
 	
 	if (viewType == 0) {
@@ -902,8 +911,7 @@ function getSearchProject() {
 }
 
 function searchProject() {
-	currentPage = 1;
-	listProjectStatus = "A";	
+	currentPage = 1;	
 	searchByProjectName = $("#searchByProjectName").val();
 	searchByUser = $("#searchByUser").val();
 	searchByStartDate = $("#Sdatepicker").val();

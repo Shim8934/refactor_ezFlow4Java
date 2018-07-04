@@ -39,10 +39,26 @@ function getProjectTaskTree(containerId, data, location) {
 		if (location == "taskLog" || location == "taskList") {
 			if (data.node.id.indexOf("t") != -1) {
 				taskId = data.node.id.substring(1);
+				searchClear();
+				
+				if (location == "taskList") {
+					$("#searchStatus").val("A").prop("selected", true);
+				} else {
+					$("#searchStatus").val("0").prop("selected", true);
+				}
+				
 				setContentList();
 			} else {
 				taskId = 0;
 				groupId = data.node.id;
+				searchClear();
+				
+				if (location == "taskList") {
+					$("#searchStatus").val("A").prop("selected", true);
+				} else {
+					$("#searchStatus").val("0").prop("selected", true);
+				}
+				
 				setContentList();
 			}
 		}
