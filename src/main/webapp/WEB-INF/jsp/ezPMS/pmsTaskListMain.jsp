@@ -204,6 +204,15 @@
 		$("#Edatepicker").val("");
 		$("#searchByUpperGroupName").val("");
 		$("#searchByOverview").val("");
+
+		searchByTaskName = "";
+		searchByUser = "";
+		searchByPlanStartDate = "";
+		searchByPlanEndDate = "";
+		searchByUpperGroupName = "";
+		searchByOverview = "";
+		searchByStatus = "";
+		
 	}
 	
 	function searchPopup() {

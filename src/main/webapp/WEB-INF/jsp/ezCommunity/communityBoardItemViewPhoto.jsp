@@ -84,12 +84,33 @@
 	            window.close();
 	        }
 
-	        function ReaderList() {
+	        /* function ReaderList() {
 	            var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-	            var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
-	            var feature = "width=600, height=415, resizable=yes, scrollbars=0";
-	            feature = feature + GetOpenPosition(600, 415);
+	            var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
+	            var feature = "width=620, height=425, resizable=yes, scrollbars=0";
+	            feature = feature + GetOpenPosition(620, 425);
 	            window.open(szHref, "", feature);
+	        } */
+	        
+	        var item_readlist_cross_dialogArguments = new Array();
+	        
+	        function ReaderList() {
+	        	var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;		        
+		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+	            var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
+		        if (CrossYN()) {
+		            item_readlist_cross_dialogArguments[0] = "";
+		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
+		            DivPopUpShow(620, 425, szHref);
+		        }
+		        else
+		            window.open(szHref, "", "width=620, height=425, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		    }
+		    function ReaderList_Complete() {
+		        DivPopUpHidden();
 	        }
 
 	        function OpenUserInfo(pUserID) {

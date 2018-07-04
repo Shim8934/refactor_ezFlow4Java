@@ -672,13 +672,12 @@
 				USECOMPANY = #companyId#
 			AND
 				TENANT_ID = #tenantId#
+			AND
+				isuse = 1
 		]]>
-		
 		<isEqual property="isRest" compareValue="rest">
 			AND
 				isrest = 1
-			AND
-				isuse = 1
 		</isEqual>
 	</select>
 	

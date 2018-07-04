@@ -149,7 +149,7 @@
 	                	if(CheckAdmin()) {
 	                		document.getElementById("mainmenu").onload = function(){};
 	    	               	document.getElementById("noResListSpan").style.display = "none";
-	    	               	document.getElementById("tbar2").style.display = "none";
+	    	               	//document.getElementById("tbar2").style.display = "none";
 	                	} else {
 	                		document.getElementById("mainmenu").style.display = "none";
 	                	} 

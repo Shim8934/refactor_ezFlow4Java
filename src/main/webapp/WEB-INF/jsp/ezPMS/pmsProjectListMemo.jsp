@@ -76,7 +76,7 @@ $(function(){
 			fillBackgroundColor : progressColor,
 			height : '15px',
 			radius : '15px',
-			width : '80%'
+			width : '74%'
 		});
 		
 		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
@@ -84,7 +84,7 @@ $(function(){
 			fillBackgroundColor : completeColor,
 			height : '15px',
 			radius : '15px',
-			width : '80%'
+			width : '74%'
 		});
 		
 		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
@@ -92,7 +92,7 @@ $(function(){
 			fillBackgroundColor : overdueColor,
 			height : '15px',
 			radius : '15px',
-			width : '80%'
+			width : '74%'
 		});
 	}
 	
@@ -167,21 +167,21 @@ $(function(){
                     	<dd><c:out value="${project.headManagerName }" /></dd>
                     	<dt><spring:message code='ezPMS.t33' /></dt>
                     	<dd><div name="${project.projectId }"></div>
-                    		&nbsp;<div style="display: inline-block;">
-							&nbsp;<fmt:formatNumber value="${project.progress }" pattern="0.0" />
+                    		<div style="display: inline-block; float:right;">
+							<fmt:formatNumber value="${project.progress }" pattern="0.0" />%
 							</div>
                     	</dd>
                     	<dt><spring:message code='ezPMS.t34' /></dt>
                     	<dd>
-                    		<div complete="${project.projectId }"></div>&nbsp;
-							<div style="display: inline-block;">
+                    		<div complete="${project.projectId }"></div>
+							<div style="display: inline-block; float:right;">
 							<c:out value="${project.completeTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
 							</div>
 						</dd>
 						<dt><spring:message code='ezPMS.t35' /></dt>
 						<dd>
-							<div overdue="${project.projectId }"></div>&nbsp;
-							<div style="display: inline-block;">
+							<div overdue="${project.projectId }"></div>
+							<div style="display: inline-block; float:right;">
 							<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
 							</div>
 						</dd>

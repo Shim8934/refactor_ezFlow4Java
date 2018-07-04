@@ -129,6 +129,12 @@ function searchLogStatus(status) {
 	setContentList();
 }
 
+function searchClear() {
+	searchContent = "";
+	$("#searchByContent").val("");
+	searchStatus = "";
+}
+
 //페이지 번호에 의한 셋팅
 function goToPageByNum(page) {
 	currentPage = page;
