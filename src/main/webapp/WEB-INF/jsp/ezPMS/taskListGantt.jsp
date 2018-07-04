@@ -407,6 +407,8 @@
 	   			var url = "";
 	   			var groupId = "";
 	   			var data = {};
+	   			var children = ge.currentTask.getChildren();
+	   			var childTask = null;
 	   			
 	   			if(selectType !== "g"){
 		   			alert("<spring:message code='ezPMS.t281' />");
@@ -416,6 +418,17 @@
 	   					return;
 	   				}
 	   				groupId = ge.currentTask.id.match(/g(\d+)/)[1];
+	   			}
+	   			
+	   			if(children){
+		   			childTask = children.filter(function(child){
+		   				return child.id.indexOf("t") != -1;
+		   			})
+	   			}
+	   			
+	   			if(childTask){
+	   				alert("<spring:message code='ezPMS.t243' />");
+	   				return;
 	   			}
 	   			
 	   			var data = {

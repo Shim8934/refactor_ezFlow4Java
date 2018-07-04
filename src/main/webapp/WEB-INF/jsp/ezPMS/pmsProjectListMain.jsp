@@ -635,6 +635,8 @@ function deleteProject() {
 	var result = getCheckedVal();
 	var response;
 	
+	var checkedPrjInfo = getCheckedProjectInfo();
+	
 	if (listProjectStatus != "D") {
 		if (result == 1) {
 			 response = confirm("<spring:message code='ezPMS.t21' />");
@@ -659,11 +661,21 @@ function deleteProject() {
 				success : function(result) {
 					if (result == "permitted") {
 						alert("<spring:message code='ezPMS.t10' />");
+						
 						checkedVal = "";
 						
 						if (viewType == 0) {
 							startRow = 0;
 							listNumber = $(".project_list").length;
+						}
+						
+						for(var i = 0; i < checkedPrjInfo.length; i++) {
+							var projectName = checkedPrjInfo[i].projectName;
+							var projectId 	= checkedPrjInfo[i].projectId;
+							var groupId 	= checkedPrjInfo[i].groupId;
+							
+							var logContent = "[" + projectName + "<spring:message code='ezPMS.t312' />"
+							addTaskLog(projectId, 3, groupId, null, logContent);
 						}
 						
 						console.log(startRow);

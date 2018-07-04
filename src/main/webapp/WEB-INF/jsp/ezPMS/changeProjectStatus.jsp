@@ -9,6 +9,7 @@
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <title><spring:message code='ezPMS.t92' /></title>
 <script type="text/javascript">
@@ -67,6 +68,8 @@ function changeStatus() {
 	var status = $("input[name='status']:checked").val();
 	var response = true;
 	
+	var checkedPrjInfo = parent.getCheckedProjectInfo();
+	
 	if (status == "C") {
 		response = confirm("<spring:message code='ezPMS.t159' />");
 	}
@@ -94,6 +97,18 @@ function changeStatus() {
 						parent.listNumber = parent.$(".project_list").length;
 					}
 					
+					var nowStatusStr = getStatusStr(nowStatus);
+					var statusStr 	 = getStatusStr(status);
+										
+					for(var i = 0; i < checkedPrjInfo.length; i++) {
+						var projectName = checkedPrjInfo[i].projectName;
+						var projectId 	= checkedPrjInfo[i].projectId;
+						var groupId 	= checkedPrjInfo[i].groupId;
+						
+						var logContent = "[" + projectName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "<spring:message code='ezPMS.t313' />" + statusStr + "<spring:message code='ezPMS.t314' />" 
+						addTaskLog(projectId, 2, groupId, null, logContent);
+					}
+					
 					parent.setProjectList("new");
 					popupClose();
 				} else {
@@ -112,6 +127,29 @@ function popupClose() {
 	parent.DivPopUpHidden();
 }
  
+function getStatusStr(status) {
+	
+	switch(status) {
+	case 'P': // 진행
+		return "<spring:message code='ezPMS.t15'/>"
+		break;
+	case 'W': // 대기
+		return "<spring:message code='ezPMS.t16'/>"
+		break;
+	case 'C': // 완료
+		return "<spring:message code='ezPMS.t17'/>"
+		break;
+	case 'L': // 지연
+		return "<spring:message code='ezPMS.t18'/>"
+		break;
+	case 'S': // 보류
+		return "<spring:message code='ezPMS.t19'/>"
+		break;
+	case 'D': // 삭제
+		return "<spring:message code='ezPMS.t11'/>"
+		break;
+	}
+}
 </script>
 <style type="text/css">
 input {

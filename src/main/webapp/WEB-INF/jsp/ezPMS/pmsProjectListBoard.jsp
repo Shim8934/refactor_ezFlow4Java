@@ -195,12 +195,12 @@ $(function(){
 									</c:when>
 									<c:otherwise>
 										<c:forEach items="${projectList }" var="project">
-									<tr style="cursor: pointer;" id="${project.projectId }" class="listRow" ondblclick="goProjectDetails(this)">
+									<tr style="cursor: pointer;" id="${project.projectId }" data-groupId="${project.groupId}" class="listRow" ondblclick="goProjectDetails(this)">
 										<td style="width: 20px; cursor: default; text-align: center"><input
 											type="checkbox" onchange="checkedCheckbox(this);"
 											name="boardCheckbox"
 											style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
-										<td onclick="selectedTR(this);"
+										<td class="projectName" onclick="selectedTR(this);"
 											style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 12%"><c:out
 												value="${project.projectName }" /></td>
 										<td onclick="selectedTR(this);"
