@@ -40,6 +40,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -93,7 +94,6 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezConn.util.EzConnUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -118,7 +118,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private EzConnUtil ezConnUtil;
+	private ApplicationContext context;
 	
 	@Autowired
 	private Properties config;
@@ -6320,24 +6320,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				logger.debug("queryType = " + queryType + " || queryString = " + queryString);
 				
 				if (queryType.equals("service")) {
-					Class refClass = ezConnUtil.getClass();
-					Object refInstance = refClass.newInstance();
+					Object connBean = context.getBean("EzConnUtil");
+					Class refClass = connBean.getClass();
 					
 					Field fieldDocID = refClass.getDeclaredField("docID");
 					fieldDocID.setAccessible(true);
-					fieldDocID.set(refInstance, docID);
+					fieldDocID.set(connBean, docID);
 					
 					Field fieldUserID = refClass.getDeclaredField("userID");
 					fieldUserID.setAccessible(true);
-					fieldUserID.set(refInstance, userID);
+					fieldUserID.set(connBean, userID);
 					
 					Field fieldcompanyID = refClass.getDeclaredField("companyID");
 					fieldcompanyID.setAccessible(true);
-					fieldcompanyID.set(refInstance, companyID);
+					fieldcompanyID.set(connBean, companyID);
 					
 					Field fieldTenantID = refClass.getDeclaredField("tenantID");
 					fieldTenantID.setAccessible(true);
-					fieldTenantID.set(refInstance, tenantID);
+					fieldTenantID.set(connBean, tenantID);
 					
 					/** queryString로 호출할 서비스구분*/
 					for (Method method : refClass.getDeclaredMethods()) {
@@ -6345,7 +6345,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							//ezConnUtil connTest() 테스트용도
 							logger.debug("method name = " + method.getName());
 							
-							method.invoke(refInstance);
+							method.invoke(connBean);
 						}
 					}
 				}

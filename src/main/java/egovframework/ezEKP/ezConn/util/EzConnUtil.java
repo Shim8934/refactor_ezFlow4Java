@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author skyblue0o0
  *
  */
-@Component
+@Component("EzConnUtil")
 public class EzConnUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzConnUtil.class);
 	
