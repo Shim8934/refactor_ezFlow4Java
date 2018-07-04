@@ -185,6 +185,10 @@ function addGroup() {
 		success : function(data) {
 			alert("<spring:message code='ezPMS.t86' />");
 			
+			var upperGroupName = $("#upperGroup").text();
+			var logContent = "[" + upperGroupName + "<spring:message code='ezPMS.t127'/>" + newGroupName + "<spring:message code='ezPMS.t316'/>"; 
+			addTaskLog(projectId, 1, groupId, null, logContent);
+			
 			parent.location.reload();
 			popupClose();
 		},
