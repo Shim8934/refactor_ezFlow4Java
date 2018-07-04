@@ -264,20 +264,22 @@
 	   			if(type === "participants"){
 	   				var tmpList = parent.managerList;
 	   				if(tmpList){
-			   			$(parent.managerList).each(function(idx, elem){
-			   				if(!(elem in authList)){
-			   					authList.push(elem);
+	   					for(var i = 0; i < tmpList.length; i++){
+	   						var manager = tmpList[i];
+	   						if(manager.userId !== authList.userId){
+			   					authList.push(manager);
 			   				}
-			   			});
+	   					}
 	   				}
 	   			} else {
 	   				var tmpList = parent.participantList;
 	   				if(tmpList){
-	   					$(tmpList).each(function(idx, elem){
-			   				if(!(elem in authList)){
-			   					authList.push(elem);
+	   					for(var i = 0; i < tmpList.length; i++){
+	   						var participant = tmpList[i];
+	   						if(manager.userId !== authList.userId){
+			   					authList.push(manager);
 			   				}
-		   				});
+	   					}
 	   				}
 	   			}
 	   		}
