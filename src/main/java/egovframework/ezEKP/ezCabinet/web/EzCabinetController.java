@@ -51,6 +51,16 @@ public class EzCabinetController {
 			model.addAttribute("isCabinetAdmin", "1");
 		}
 		
+		JSONObject resultObj = cabinetRestService.getUserCapacity(request, user.getId());
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			JSONObject capacity = (JSONObject)resultObj.get("capacity");
+			model.addAttribute("capacityType" , capacity.get("capacityType"));
+			model.addAttribute("percent"      , capacity.get("usedRate"));
+			model.addAttribute("totalCapacity", capacity.get("totalCapacity"));
+			model.addAttribute("useVolume"    , getFileSize(Integer.parseInt(capacity.get("totalUsed").toString())));
+		}
+		
 		logger.debug("jspGetCabinetLeft ended");
 		return "ezCabinet/cabinetLeft";
 	}
@@ -62,13 +72,10 @@ public class EzCabinetController {
 		
 		JSONObject resultObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
 		
-		if (!resultObj.get("status").toString().equals("ok")) {
-			return "cmm/error/dataAccessFailure";
+		if (resultObj.get("status").toString().equals("ok")) {
+			JSONObject userConfig = (JSONObject)resultObj.get("config");
+			model.addAttribute("config", userConfig);
 		}
-		
-		JSONObject userConfig = (JSONObject)resultObj.get("config");
-		
-		model.addAttribute("config", userConfig);
 		
 		logger.debug("jspGetCabinetGeneral ended");
 		return "ezCabinet/cabinetGeneral";
@@ -108,12 +115,10 @@ public class EzCabinetController {
 		
 		JSONObject resultObj = cabinetRestService.getModuleListForUser(request, user.getId());
 		
-		if (!resultObj.get("status").toString().equals("ok")) {
-			return "cmm/error/dataAccessFailure";
+		if (resultObj.get("status").toString().equals("ok")) {
+			JSONArray moduleList = (JSONArray) resultObj.get("modules");
+			model.addAttribute("modules", moduleList);
 		}
-		
-		JSONArray moduleList = (JSONArray) resultObj.get("modules");
-		model.addAttribute("modules", moduleList);
 		
 		logger.debug("jspGetRelatedCabinetConfig ended");
 		return "ezCabinet/cabinetInterLock";
@@ -314,4 +319,21 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	private String getFileSize(int fileSize) {
+		String fileSize_ = "";
+		
+		if (fileSize / 1024 / 1024 >= 1) {
+			fileSize_ = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+			fileSize_ = fileSize_ + "MB";
+		}
+		else if (fileSize / 1024 >= 1) {
+			fileSize_ = String.format("%.2f", (double)(fileSize / 1024));
+			fileSize_ = fileSize_ + "KB";
+		}
+		else {
+			fileSize_ = fileSize + "B";
+		}
+		
+		return fileSize_;
+	}
 }

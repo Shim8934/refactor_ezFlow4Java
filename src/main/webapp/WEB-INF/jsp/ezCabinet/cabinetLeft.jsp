@@ -33,8 +33,25 @@
 			<!-- 용량보기 -->
 			<div class="volumeDiv">
 				<div id="myProgress"></div>
-				<div class="volumeBar"><div id="myBar" class="myBar_green" style="width: 22%;"></div></div>
-				<div class="volumes">248.1M / 1.2G (22%)</div>
+				<div class="volumeBar">
+					<c:choose>
+						<c:when test="${percent > 90}"                 ><div id="myBar" class="myBar_red"    style="${'width: ' + percent < 100 ? percent : 100 + '%'}"></div></c:when>
+						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent + '%;'}"></div></c:when>
+						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent + '%;'}"></div></c:when>
+						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent + '%;'}"></div></c:when>
+						<c:when test="${percent == 0}"                 ><div id="myBar" class="myBar_white"  style="width: 0%"></div></c:when>
+					</c:choose>
+					
+				</div>
+				<c:choose>
+					<c:when test="${capacityType == 0}">
+						<div class="volumes"><c:out value="${useVolume}"/> / <spring:message code='ezCabinet.t114'/></div>
+					</c:when>
+					<c:otherwise>
+						<div class="volumes"><c:out value="${useVolume}"/> / <c:out value="${totalCapacity}"/> MB (<c:out value="${percent}"/>%)</div>
+					</c:otherwise>
+				</c:choose>
+				
 			</div>
 			
 			<!-- 환경설정 -->
@@ -51,7 +68,6 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
 			(function() {
-				drawVolume();
 				getMyCabinet();
 				setButtons();
 				
@@ -63,6 +79,8 @@
 					document.getElementById("cabinetAdmin"     ).addEventListener("click", function(e) {getAdminPage();} , false);
 					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();}, false);
 					document.getElementById("cabinetManagement").addEventListener("click", function(e) {getManagement();}, false);
+					
+					if (document.getElementByid("myBar").className = "") {drawVolume();}
 				}
 				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}

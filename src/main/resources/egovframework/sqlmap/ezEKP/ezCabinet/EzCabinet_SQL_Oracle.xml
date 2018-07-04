@@ -6,96 +6,75 @@
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
-		<result property="deptId"               column="DEPT_ID"                columnIndex="1"/>
-		<result property="deptName"             column="DEPT_NAME"              columnIndex="2"/>
-		<result property="level"                column="LEVEL"                  columnIndex="3"/>
-		<result property="hasSub"               column="HAS_SUB"                columnIndex="4"/>
+		<result property="deptId"            column="dept_id"                columnIndex="1"/>
+		<result property="deptName"          column="dept_name"              columnIndex="2"/>
+		<result property="level"             column="dept_level"             columnIndex="3"/>
+		<result property="hasSub"            column="has_sub"                columnIndex="4"/>
 	</resultMap>
 	
 	<select id="EzCabinetDAO.getAllSimpleDeptsOfCompany" resultMap="simpleDeptVO">
 		<![CDATA[
-			SELECT
-				c.CN AS DEPT_ID,
-				CASE WHEN #primary# = '1' THEN c.DISPLAYNAME ELSE c.DISPLAYNAME2 END AS DEPT_NAME,
-				c.DEPT_LEVEL AS "LEVEL",
-				c.has_sub AS HAS_SUB
-			FROM
+			select
+				c.cn                                                                 as dept_id,
+				case when #primary# = '1' then c.displayname else c.displayname2 end as dept_name,
+				c.level                                                              as dept_level,
+				c.has_sub                                                            as has_sub
+			from
 			(
-				SELECT
+				select
 					b.*,
-					CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER d WHERE b.CN = d.EXTENSIONATTRIBUTE1 AND b.TENANT_ID = d.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
-					#level#                                                                                                                                  AS DEPT_LEVEL 
-				FROM 
-					TBL_DEPTMASTER b
-				WHERE
-					b.CN = #companyId#
-				AND
-					b.TENANT_ID = #tenantId#
+					case when (select count(d.cn) from tbl_deptmaster d where b.cn = d.extensionattribute1 and b.tenant_id = d.tenant_id) = 0 then 0 else 1 end as has_sub,
+					#level#                                                                                                                                     as dept_level 
+				from 
+					tbl_deptmaster b
+				where
+					b.cn = #companyId# and b.tenant_id = #tenantId#
 					
-				UNION
+				union
 				
-				SELECT 
+				select 
 					a.*,
-					CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER e WHERE a.CN = e.EXTENSIONATTRIBUTE1 AND e.CN <> e.EXTENSIONATTRIBUTE2 AND a.TENANT_ID = e.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
-					(#level# + 1)                                                                                                                            AS DEPT_LEVEL
-				FROM
-					TBL_DEPTMASTER a
-				WHERE
-					a.EXTENSIONATTRIBUTE1 = #companyId#
-				AND
-					a.CN <> a.EXTENSIONATTRIBUTE2
-				AND
-					a.TENANT_ID           = #tenantId#
+					case when (select count(e.cn) from tbl_deptmaster e where a.cn = e.extensionattribute1 and e.cn <> e.extensionattribute2 and a.tenant_id = e.tenant_id) = 0 then 0 else 1 end as has_sub,
+					(#level# + 1)                                                                                                                                                                 as dept_level
+				from
+					tbl_deptmaster a
+				where
+					a.extensionattribute1 = #companyId# and a.cn <> a.extensionattribute2 and a.tenant_id = #tenantId#
 			) c
-			ORDER BY
-				DEPT_LEVEL, lpad(NVL(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+			order by
+				dept_level, lpad(nvl(extensionattribute15, 0), 6, 0), displayname
 		]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getDeptPath" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT
-				DEPT_CD_PATH
-			FROM 
-				TBL_DEPTMASTER
-			WHERE
-				CN = #deptId#
-			AND
-				TENANT_ID = #tenantId#
-		]]> 
+		<![CDATA[ select dept_cd_path from tbl_deptmaster where cn = #deptId# and tenant_id = #tenantId# ]]> 
 	</select>
 	
 	<select id="EzCabinetDAO.getSimpleCompany" resultMap="simpleDeptVO">
-		SELECT
-			a.CN                                                                                                                                     AS DEPT_ID,
-			CASE WHEN #primary# = '1' THEN a.DISPLAYNAME ELSE a.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
-			#level#                                                                                                                                  AS "LEVEL",
-			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB"
-		FROM
-			TBL_DEPTMASTER a
-		WHERE
-			a.CN = #deptId#
-		AND
-			a.TENANT_ID = #tenantId#
+		select
+			a.cn                                                                                                                                        as dept_id,
+			case when #primary# = '1' then a.displayname else a.displayname2 end                                                                        as dept_name,
+			#level#                                                                                                                                     as dept_level,
+			case when (select count(b.cn) from tbl_deptmaster b where a.cn = b.extensionattribute1 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
+		from
+			tbl_deptmaster a
+		where
+			a.cn = #deptId# and a.tenant_id = #tenantId#
 	</select>
 	
 	<select id="EzCabinetDAO.getAllSimpleSubDepts" resultMap="simpleDeptVO">
 		<![CDATA[
-			SELECT
-				a.CN                                                                                                                                     AS DEPT_ID,
-				CASE WHEN #primary# = '1' THEN a.DISPLAYNAME ELSE a.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
-				#level#                                                                                                                                  AS "LEVEL",
-				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND b.CN <> b.EXTENSIONATTRIBUTE2 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB"
-			FROM
-				TBL_DEPTMASTER a
-			WHERE
-				a.EXTENSIONATTRIBUTE1 = #deptId#
-			AND
-				a.TENANT_ID = #tenantId#
-			AND
-				a.CN <> a.EXTENSIONATTRIBUTE2
-			ORDER BY
-				lpad(NVL(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
+			select
+				a.cn                                                                                                                                                                          as dept_id,
+				case when #primary# = '1' then a.displayname else a.displayname2 end                                                                                                          as dept_name,
+				#level#                                                                                                                                                                       as dept_level,
+				case when (select count(b.cn) from tbl_deptmaster b where a.cn = b.extensionattribute1 and b.cn <> b.extensionattribute2 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
+			from
+				tbl_deptmaster a
+			where
+				a.extensionattribute1 = #deptId# and a.tenant_id = #tenantId# and a.cn <> a.extensionattribute2
+			order by
+				lpad(nvl(a.extensionattribute15, 0), 6, 0), a.displayname
 		]]>
 	</select>
 </sqlMap>
