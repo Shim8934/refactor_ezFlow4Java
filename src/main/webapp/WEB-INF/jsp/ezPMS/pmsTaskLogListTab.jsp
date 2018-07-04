@@ -158,7 +158,7 @@ function selectedTR(elem) {
 }
 
 #divList {
-	height: 461px !important;
+	height: 451px !important;
 }
 
 #projectListBody {

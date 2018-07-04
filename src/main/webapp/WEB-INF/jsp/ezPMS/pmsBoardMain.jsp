@@ -132,7 +132,7 @@
 			url : "/ezPMS/getBoardList.do",
 			success : function(contentList) {
 				$("#contentList").html(contentList);
-				
+				viewSetting();
 				setInitOrder();
 			}	
 		});

@@ -59,8 +59,8 @@ $(function(){
 	$("#taskTree").css("height", CurrentHeight + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
 	$("#contentList").css("height", (CurrentHeight - 63) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 200) + "px");
-	$("#divList").css("height", (CurrentHeight - 117) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 208) + "px");
+	$("#divList").css("height", (CurrentHeight - 125) + "px");
 	$("#divList").css("overflow", "auto");
 	
 	$(window).resize(function() {
@@ -70,8 +70,8 @@ $(function(){
 		$("#taskTree").css("height", CurrentHeight + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 63) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 200) + "px");
-		$("#divList").css("height", (CurrentHeight - 117) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 208) + "px");
+		$("#divList").css("height", (CurrentHeight - 125) + "px");
 		$("#divList").css("overflow", "auto");
 	});
 });
@@ -110,8 +110,8 @@ function setContentList() {
 			$("#taskTree").css("height", CurrentHeight + "px");
 			$("#projectContent").css("height", CurrentHeight + "px");
 			$("#contentList").css("height", (CurrentHeight - 63) + "px");
-			$("#projectListBody").css("height", (CurrentHeight - 180) + "px");
-			$("#divList").css("height", (CurrentHeight - 117) + "px");
+			$("#projectListBody").css("height", (CurrentHeight - 188) + "px");
+			$("#divList").css("height", (CurrentHeight - 125) + "px");
 			$("#divList").css("overflow", "auto");
 		}	
 	});
