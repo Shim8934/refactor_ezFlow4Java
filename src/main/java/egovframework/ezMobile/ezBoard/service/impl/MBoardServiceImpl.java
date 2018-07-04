@@ -496,6 +496,8 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("importance", boardListVO.get("importance"));
 		map.put("title", boardListVO.get("title"));
 		map.put("contentLocation", commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + boardListVO.get("boardID") + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.get("itemID") + ".mht");
+		/* 2018-07-04 홍승비 - content 칼럼 데이터 저장을 위한 처리 추가 */
+		map.put("content", boardListVO.get("content"));
 		
 		if (boardListVO.get("startDate") != null && !boardListVO.get("startDate").equals("")) {
 			map.put("startDate", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("startDate")), offset, true));
@@ -506,6 +508,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		//모바일에서는 영구게시만 지원
 		map.put("endDate", "9999-12-30 14:59:59");
+		// 현재 모바일에는 게시요약 정보가 없다.
 		map.put("abstract", boardListVO.get("abstract"));
 		
 		//모바일에서는 답변을 달기가 없기 때문에, itemID로 들어감
@@ -517,12 +520,14 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute1", "0");
 		//공지사항 여부
 		map.put("extensionAttribute2", boardListVO.get("notice"));
-		map.put("extensionAttribute3", boardListVO.get("extensionAttribute3"));
-		map.put("extensionAttribute32", boardListVO.get("extensionAttribute32"));
-		map.put("extensionAttribute4", boardListVO.get("extensionAttribute4"));
+		// 게시물에 저장되는 직위명(3/32), 전화번호(4) 추가
+		map.put("extensionAttribute3", info.getTitle());
+		map.put("extensionAttribute32", info.getTitle2());
+		map.put("extensionAttribute4", info.getPhone());
 		map.put("extensionAttribute5", boardListVO.get("extensionAttribute5"));
 		map.put("docPassword", boardListVO.get("docPassword"));
-		map.put("topWriterID", boardListVO.get("topWriterID"));
+		// 탑라이터(원글작성자)ID는 자기 자신임(모바일 버전에서는 답변 작성 불가하므로)
+		map.put("topWriterID", info.getUserId());
 		map.put("extensionAttribute6", boardListVO.get("extensionAttribute6"));
 		map.put("extensionAttribute7", boardListVO.get("extensionAttribute7"));
 		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
