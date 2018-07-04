@@ -902,8 +902,7 @@ function getSearchProject() {
 }
 
 function searchProject() {
-	currentPage = 1;
-	listProjectStatus = "A";	
+	currentPage = 1;	
 	searchByProjectName = $("#searchByProjectName").val();
 	searchByUser = $("#searchByUser").val();
 	searchByStartDate = $("#Sdatepicker").val();
