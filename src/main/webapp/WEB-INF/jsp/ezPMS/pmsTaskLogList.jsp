@@ -67,7 +67,7 @@ $(function() {
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 20%;"
 							class="h5_center"><spring:message code='ezPMS.t186' /></th>
 						<th id="BoardList_TH_2"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 40px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40px"
 							class="h5_center"><spring:message code='ezPMS.t98' /></th>
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="USER_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px"
@@ -90,7 +90,7 @@ $(function() {
 								</c:when>
 							<c:otherwise>
 								<c:forEach items="${logList }" var="log">
-								<tr style="cursor: pointer;" id="${log.logId }" class="listRow" ondblclick="goProjectDetails(this)">
+								<tr id="${log.logId }" class="listRow" ondblclick="goProjectDetails(this)">
 									<td style="width: 20px; cursor: default; text-align: center">
 										<c:choose>
 											<c:when test="${log.logStatus eq 1 }">
