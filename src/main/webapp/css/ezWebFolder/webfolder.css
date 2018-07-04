@@ -121,7 +121,7 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #companySelect {margin: 10px 0px;}
 #companySelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
 #companySelect >select {font-size:12px; height:20px; display:inline-block;}
-#dragDropArea {margin:10px 0px; overflow-y:auto;}
+#dragDropArea {margin:10px 0px 0px !important; overflow-y:auto;}
 #fileTypeVal {height: 25px; padding: 0px; width: 85px;}
 #file {width:1px; height:1px; display:none;}
 #AttachDownFrame {width:0px; height:0px; display:none;}

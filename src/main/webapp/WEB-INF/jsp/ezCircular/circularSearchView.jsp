@@ -34,6 +34,7 @@
 			var pageCnt = "";
 			var strListInfo = "";
 		    var usepostDate = false;
+		    
 		    document.onselectstart = function () { return false; };
 		    
 		    window.onload = function () {
@@ -47,7 +48,7 @@
 		        $("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
 
-		        var height = parseInt(document.documentElement.clientHeight - 240);
+		        var height = parseInt(document.documentElement.clientHeight - 234);
 		        document.getElementById("divList").style.height = height + "px";
 		        getSearchList_after(loadXMLString("${listHeader}"));
 		    }
@@ -266,7 +267,7 @@
                 pageCnt = getNodeText(pageNode);
                 var perCnt = getNodeText(perNode);
 
-                if (lstCnt != "" && lstCnt != "0") {
+                if (lstCnt != "") {
                 	$("#resultCount").html(": " + "<spring:message code='main.t252' />" + lstCnt + " <spring:message code='ezCircular.t104' />");
                 } else {
                 	$("#resultCount").html("");
@@ -302,7 +303,7 @@
                 strListInfo = "";
                 
                 /* 2018-04-25 홍승비 - 회람판 검색메뉴 디폴트 로우 삭제 */
-                if(document.getElementById("BoardList_TR_noItems") != null) {
+                if(document.getElementById("BoardList_TR_noItems") != null && lstCnt == "") {
                 	document.getElementById("BoardList_TR_noItems").outerHTML = "";
                 }
                 
@@ -341,23 +342,23 @@
 	            
 	            var pageNum = CurPage;
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            var MaxNum;
@@ -386,25 +387,25 @@
 	            
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                    strtext = "";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                    strtext = "";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            
