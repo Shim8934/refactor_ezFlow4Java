@@ -723,102 +723,45 @@
   </select>
   
   <select id="MBoardDAO.getFavoriteList" parameterClass="Map" resultClass="MBoardFavoriteVO" remapResults="true">
-      <![CDATA[
-          (SELECT 
-              A.BOARDID ,
-              CASE  #primary#
-                WHEN 
-                    '1'
-                THEN
-                    A.boardname
-                ELSE
-                    CASE
-                        WHEN
-                            (A.boardname2 = '' OR A.boardname2 IS NULL)
-                        THEN
-                            A.boardname
-                        ELSE
-                            A.boardname2
-                    END
-              END boardname,
-              A.BOARDNAME2 ,
-              TABUSED ,
-              B.GUBUN, 
-              A.VIEWORDER
-          FROM 
-              TBL_Board_MyBoards A
-          JOIN 
-              TBL_Board_BoardInfo B   
-          ON 
-              A.BoardID = B.BoardID
-          AND
-              A.TENANT_ID = B.TENANT_ID
-          WHERE
-              A.TENANT_ID = #tenantID#
-          AND
-          		A.COMPANYID = #companyID#
-          AND  
-			USERID = #userID#
-          AND 
-              TABUSED = 'Y')
-              
-		UNION
-              
-			(SELECT 
-				A.BOARDID ,
-                CASE  #primary#
-                WHEN 
-                    '1'
-                THEN
-                    A.boardname
-                ELSE
-                    CASE
-                        WHEN
-                            (A.boardname2 = '' OR A.boardname2 IS NULL)
-                        THEN
-                            A.boardname
-                        ELSE
-                            A.boardname2
-                    END
-              	END boardname,
-                A.BOARDNAME2 ,
-                C.TABUSED ,
-                B.GUBUN ,
-                C.VIEWORDER
-			FROM 
-				TBL_Board_MyBoards A
-			JOIN 
-              	TBL_Board_BoardInfo B   
-			ON 
-              	A.BoardID = B.BoardID
-			AND
-				A.TENANT_ID = B.TENANT_ID
-			JOIN
-				TBL_BOARD_NEWBOARD_ORDERINFO C
-			ON
-				A.BoardID = B.BoardID
-			AND
-				A.TENANT_ID = C.TENANT_ID         
-			WHERE
-              	A.TENANT_ID = 6
-			AND
-			(
-              	(A.COMPANYID = #companyID# 			AND 			C.COMPANYID = #companyID#)
-              	OR
-              	(TRIM(A.COMPANYID) =''		AND			C.COMPANYID = #companyID#)
-			)
-			AND  
-				A.USERID = 'everyone'
-			AND  
-              	C.USERID = #userID#
-			AND 
-              	C.TABUSED = 'Y'
-			ORDER BY 
-				A.BOARDID ASC
-			LIMIT 1)
-
-          ORDER BY 
-              VIEWORDER ASC
+	<![CDATA[
+		SELECT 
+			A.BOARDID ,
+			CASE  #primary#
+				WHEN 
+					'1'
+				THEN
+					A.boardname
+				ELSE
+				CASE
+					WHEN
+						(A.boardname2 = '' OR A.boardname2 IS NULL)
+					THEN
+						A.boardname
+					ELSE
+						A.boardname2
+				END
+			END boardname,
+            A.BOARDNAME2 ,
+            TABUSED ,
+            B.GUBUN 
+		FROM 
+			TBL_Board_MyBoards A
+        JOIN 
+            TBL_Board_BoardInfo B   
+        ON 
+            A.BoardID = B.BoardID
+        AND
+            A.TENANT_ID = B.TENANT_ID
+        WHERE
+            A.TENANT_ID = #tenantID#
+		AND
+			A.COMPANYID = #companyID#
+        AND  
+            (USERID = #userID#	   OR    (USERID = 'everyone'    AND    A.BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'))
+        AND 
+            TABUSED = 'Y'
+        ORDER BY 
+            VIEWORDER ASC
       ]]>
   </select>
   
@@ -1348,7 +1291,7 @@
     <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
         <![CDATA[
           INSERT INTO TBL_Board_MyBoards ( 
-            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
+            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID 
           )
               ( SELECT 
                 #userID# USERID ,
@@ -1356,26 +1299,27 @@
                     BOARDNAME ,
                     BOARDNAME2 ,
                     ( SELECT 
-                      COUNT(BOARDID) + 1
-                FROM 
-                  TBL_Board_MyBoards 
-                WHERE
-                  TENANT_ID = #tenantID#
-                AND  
-                  USERID = #userID# ),
+                      	COUNT(BOARDID) + 1
+	                FROM 
+	                  	TBL_Board_MyBoards 
+	                WHERE
+	                  	TENANT_ID = #tenantID#
+	                AND  
+	                  	USERID = #userID# ),
                     ( SELECT
-                      CASE 
-                        WHEN MAX(VIEWORDER) IS NULL 
-                        THEN 2 
-                        ELSE MAX(VIEWORDER) + 1 
-                      END 
+                      	CASE 
+                        	WHEN MAX(VIEWORDER) IS NULL 
+                        	THEN 2 
+                        	ELSE MAX(VIEWORDER) + 1 
+                    	END 
                       FROM 
-                        TBL_Board_MyBoards 
+                      	TBL_Board_MyBoards 
                       WHERE  
                         TENANT_ID = #tenantID#
                       AND
                         USERID = #userID# ),
-                    TENANT_ID
+                    TENANT_ID,
+                    #companyID#
                   FROM 
                     TBL_Board_BoardInfo 
                   WHERE

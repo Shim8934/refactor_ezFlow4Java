@@ -220,7 +220,7 @@
                 (
                 	(A.COMPANYID = #v_COMPANYID# 			AND 			B.COMPANYID = #v_COMPANYID#)
                 	OR
-                	(TRIM(A.COMPANYID) =''			AND			B.COMPANYID = #v_COMPANYID#)
+                	(TRIM(A.COMPANYID) = ''			AND			B.COMPANYID = #v_COMPANYID#)
                 )
 	            AND
 	            	A.USERID = 'everyone'
@@ -289,7 +289,7 @@
                 (
                 	(A.COMPANYID = #v_COMPANYID# 			AND 			C.COMPANYID = #v_COMPANYID#)
                 	OR
-                	(TRIM(A.COMPANYID) =''		AND			C.COMPANYID = #v_COMPANYID#)
+                	(TRIM(A.COMPANYID) = ''		AND			C.COMPANYID = #v_COMPANYID#)
 	            )
 	            AND  
                 	A.USERID = 'everyone'
@@ -4002,7 +4002,7 @@
             AND
 		    	(COMPANYID = #companyID#
 		    	 OR
-		    	 COMPANYID IS NULL)
+		    	 TRIM(COMPANYID) = '')
             AND
             	BOARDID = #boardID#
             AND 
@@ -4054,7 +4054,7 @@
           	WHERE
           		TENANT_ID = #v_TENANTID#
           	AND
-		    	COMPANYID = #companyID#
+		    	COMPANYID = #v_COMPANYID#
           	AND  
           		USERID = #v_USERID#
 		]]>

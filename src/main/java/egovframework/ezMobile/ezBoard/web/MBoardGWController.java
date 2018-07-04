@@ -584,7 +584,8 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
 			
-			mBoardService.insertFavorite(info.getUserId(), boardId, info.getTenantId());
+			/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
+			mBoardService.insertFavorite(info.getUserId(), boardId, info.getCompanyId(), info.getTenantId());
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			

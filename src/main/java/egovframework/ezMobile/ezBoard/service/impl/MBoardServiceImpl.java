@@ -1057,15 +1057,17 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.getNewBoardListCount(map);
 	}
 
+	/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
 	@Override
-	public void insertFavorite(String userID, String boardID, int tenantID) throws Exception {
+	public void insertFavorite(String userID, String boardID, String companyID, int tenantID) throws Exception {
 		logger.debug("insertFavorite started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userID", userID);
-		map.put("tenantID", tenantID);
 		map.put("boardID", boardID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		mBoardDAO.insertFavorite(map);
 		logger.debug("insertFavorite ended");
