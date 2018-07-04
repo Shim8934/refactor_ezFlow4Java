@@ -27,5 +27,8 @@ var CabinetMessages = {
 	strProjt     : "프로젝트관리",
 	strAddrs     : "주소록",
 	strActive    : "활성",
-	strDeactive  : "비활성"
+	strDeactive  : "비활성",
+	strTxt1      : "중",
+	strTxt2      : "사용중입니다.",
+	strNolimit   : "무제한"
 }

@@ -111,15 +111,16 @@
 	}
 	
 	function afterSaveChange(data) {
-		console.log("Code: " + code);
 		var code = data.code;
 		switch(code) {
-			case 0 : alert(CabinetMessages.strSave)    ; break;
+			case 0 : saveSuccessfully()                ; break;
 			case 1 : alert(CabinetMessages.strParamErr); break;
 			case 2 : alert(CabinetMessages.strError)   ; break;
 			default: alert(CabinetMessages.strError)   ; return; 
 		}
 	}
+	
+	function saveSuccessfully() {alert(CabinetMessages.strSave); setListModules();}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
 		$.ajax({

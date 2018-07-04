@@ -46,26 +46,23 @@
 			</c:if>
 		</div>
 		
-		<script src="/js/mouseeffect.js"></script>
-		<script type="text/javascript">initToggleList(document.getElementById("left"), "h2", "ul", "li");</script>
+		<script type="text/javascript" src="/js/mouseeffect.js"                     ></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
 			(function() {
-				document.onselectstart = function(e) {return false;}
-				setButtons();
+				drawVolume();
 				getMyCabinet();
+				setButtons();
 				
 				function setButtons() {
-					var myCabinet     = document.getElementById("myCabinet");
-					myCabinet.addEventListener("click", function(e) {getMyCabinet();}, false);
+					document.onselectstart = function(e) {return false;}
+					initToggleList(document.getElementById("left"), "h2", "ul", "li");
 					
-					var adminSpan  = document.getElementById("cabinetAdmin");
-					adminSpan.addEventListener("click", function(e) {getAdminPage();}, false);
-					
-					var configSpan = document.getElementById("cabinetConfig");
-					configSpan.addEventListener("click", function(e) {getConfigPage();}, false);
-					
-					var cabinetMg  = document.getElementById("cabinetManagement");
-					cabinetMg.addEventListener("click", function(e) {getManagement();}, false);
+					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();} , false);
+					document.getElementById("cabinetAdmin"     ).addEventListener("click", function(e) {getAdminPage();} , false);
+					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();}, false);
+					document.getElementById("cabinetManagement").addEventListener("click", function(e) {getManagement();}, false);
 				}
 				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
@@ -84,6 +81,49 @@
 					top          = heigth / 2;
 					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
 					return feature;
+				}
+				
+				function drawVolume() {
+					$.ajax({
+						url: "/ezCabinet/getUserCapicity.do",
+						type: "POST",
+						dataType: "JSON",
+						async : true,
+						success : function(data) {
+							var result            = data.capacity;
+							var capacityType      = result["capacityType"];
+							var percent           = result["usedRate"];
+							var totalVolume       = capacityType == 0 ? CabinetMessages.strNolimit : result["totalCapacity"] + "MB"  + " (" + percent + "%)";
+							var useVolume         = getFileSize(result["totalUsed"]);
+							var barElmt           = document.getElementById("myBar");
+							var volumeInf         = document.getElementsByClassName("volumes")[0];
+							barElmt.style.width   = percent < 100 ? percent + "%" : "100%";
+							volumeInf.textContent = useVolume + " / " + totalVolume;
+							var colorClass        = "myBar_green";
+							
+							switch (true) {
+								case percent > 90 : colorClass = "myBar_red"   ; break;
+								case percent > 70 : colorClass = "myBar_orange"; break;
+								case percent > 60 : colorClass = "myBar_yellow"; break;
+								case percent == 0 : colorClass = "myBar_white" ; break;
+							}
+							
+							barElmt.className = colorClass;
+						},
+						error : function(error) {}
+					});
+				}
+				
+				function getFileSize(fileSize) {
+					var result = fileSize + "B";
+					
+					switch(true) {
+						case fileSize > 1073741824 : result = (Math.floor(parseFloat(fileSize / 1073741824 * 10)) / 10).toFixed(1) + "GB"; break;
+						case fileSize > 1048576    : result = (Math.floor(parseFloat(fileSize / 1048576) * 10) / 10).toFixed(1) + "MB"   ; break;
+						case fileSize > 1024       : result = parseInt(fileSize / 1024) + "KB"                                           ; break;
+					}
+					
+					return result;
 				}
 			})();
 		</script>

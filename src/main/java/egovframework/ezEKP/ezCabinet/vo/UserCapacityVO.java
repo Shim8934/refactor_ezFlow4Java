@@ -6,7 +6,7 @@ public class UserCapacityVO {
 	private String departmentId;
 	private String departmentName;
 	private String totalCapacity;
-	private String capacityType;
+	private int    capacityType;
 	private String companyId;
 	private String companyName;
 	private String jobTitle;
@@ -102,11 +102,11 @@ public class UserCapacityVO {
 		this.usedRate = usedRate;
 	}
 
-	public String getCapacityType() {
+	public int getCapacityType() {
 		return capacityType;
 	}
 
-	public void setCapacityType(String capacityType) {
+	public void setCapacityType(int capacityType) {
 		this.capacityType = capacityType;
 	}
 }

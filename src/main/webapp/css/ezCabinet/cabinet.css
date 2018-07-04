@@ -61,10 +61,11 @@
 .volumeDiv .volumeBar {width: 80%;}
 .volumeDiv .volumes {text-align:center; margin-top:10px; margin-bottom:5px; font-weight: bold; font-family: dotum;}
 #myBar {margin-left:20px; margin-top:-9px;}
-.myBar_red    {height: 7px; border: 1px solid #ee0606; background-color: #ff1616;}
-.myBar_orange {height: 7px; border: 1px solid #ee5e00; background-color: #ff7f00;}
-.myBar_yellow {height: 7px; border: 1px solid #eea600; background-color: #ffb600;}
-.myBar_green  {height: 7px; border: 1px solid #2C8F30; background-color: #4CAF50;}
+.myBar_red    {height: 7px; border: 1px solid #ee0606    ; background-color: #ff1616    ;}
+.myBar_orange {height: 7px; border: 1px solid #ee5e00    ; background-color: #ff7f00    ;}
+.myBar_yellow {height: 7px; border: 1px solid #eea600    ; background-color: #ffb600    ;}
+.myBar_green  {height: 7px; border: 1px solid #2C8F30    ; background-color: #4CAF50    ;}
+.myBar_white  {height: 7px; border: 1px solid transparent; background-color: transparent;}
 
 .cabSelectConf {width: 50px;}
 .cabPreviewMode {width: 100px;}

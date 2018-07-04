@@ -410,22 +410,15 @@
 	}
 	
 	function getFileSize(fileSize) {
-		var fileSize_ = "";
+		var result = fileSize + "B";
 		
-		if (fileSize / 1024 / 1024 / 1024 > 1) {
-			fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";
-		}
-		else if (fileSize / 1024 / 1024 > 1) {
-			fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
-		}
-		else if (fileSize / 1024 > 1) {
-			fileSize_ = parseInt(fileSize / 1024) + "KB";
-		}
-		else {
-			fileSize_ = fileSize + "B";
+		switch(true) {
+			case fileSize > 1073741824 : result = (Math.floor(parseFloat(fileSize / 1073741824) * 10) / 10).toFixed(1) + "GB"; break;
+			case fileSize > 1048576    : result = (Math.floor(parseFloat(fileSize / 1048576) * 10) / 10).toFixed(1) + "MB"   ; break;
+			case fileSize > 1024       : result = parseInt(fileSize / 1024) + "KB"                                           ; break;
 		}
 		
-		return fileSize_;
+		return result;
 	}
 	
 	function refreshPage() {

@@ -16,13 +16,13 @@
 			<div id="cabinetVolume"></div>
 		</div>
 		<br>
-		<span class="txt">▒&nbsp;<spring:message code="ezCabinet.t23"/></span>
+		<span class="txt">▒&nbsp;<spring:message code='ezCabinet.t23'/></span>
 		
 		<table class="content config">
 			<tr>
-				<th class="large"><spring:message code="ezWebFolder.t241" /></th>
+				<th class="large"><spring:message code='ezWebFolder.t241'/></th>
 				<td>
-					<select id="listcount" name="pListCount" style="WIDTH: 100px">
+					<select id="listcount" style="width: 100px">
 						<option value='10' ${wfListConfig.envValue eq '10'? 'selected' : ''}>10</option>
 						<option value='20' ${wfListConfig.envValue eq '20'? 'selected' : ''}>20</option>
 						<option value='30' ${wfListConfig.envValue eq '30'? 'selected' : ''}>30</option>
@@ -77,14 +77,15 @@
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
 		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script src="/js/jquery/raphael.2.1.0.min.js"                       ></script>
-		<script src="/js/jquery/justgage.1.0.1.min.js"                      ></script>
+		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/jquery/raphael.2.1.0.min.js"        ></script>
+		<script type="text/javascript" src="/js/jquery/justgage.1.0.1.min.js"       ></script>
 		
 		<script type="text/javascript">
 			(function() {
 				var volumeDraw = null;
-				
+				drawVolume();
 				init();
 				
 				function init() {
@@ -101,18 +102,6 @@
 					var buttons = document.querySelectorAll("a[class='imgbtn']");
 					buttons[0].firstElementChild.onclick = function(e) {save();};
 					buttons[1].firstElementChild.onclick = function(e) {cancel();};
-					
-					volumeDraw = new JustGage({
-						id: "cabinetVolume",
-						value: 0,
-						min: 0,
-						max: 100,
-						showInnerShadow: true,
-						levelColorsGradient : true
-					});
-					
-					volumeDraw.refresh("45");
-					volumeDraw.refreshtitle("총 450MB중 220MB(45%) 사용중입니다.");
 					
 					var previewModeElmt = document.getElementById("previewMode");
 					previewModeElmt.addEventListener("change", function(e) {selectPreviewOption(this);}, false);
@@ -166,7 +155,69 @@
 							
 						},
 						error: function(error) {
-							alert('Error: ' + error);
+							alert();
+						}
+					});
+				}
+				
+				function drawVolume() {
+					volumeDraw = new JustGage({
+						id: "cabinetVolume",
+						value: 0,
+						min: 0,
+						max: 100,
+						showInnerShadow: true,
+						levelColorsGradient : true
+					});
+					
+					var url  = "/ezCabinet/getUserCapicity.do";
+					makeAjaxCall(null, "GET", url, afterGetCapacity, null, true, null);
+				}
+				
+				function afterGetCapacity(data) {
+					var code = data.code;
+					switch(code) {
+						case 0 : displayCapacity(data.capacity)    ; break;
+						case 1 : alert(CabinetMessages.strParamErr); break;
+						case 2 : alert(CabinetMessages.strError)   ; break;
+						default: alert(CabinetMessages.strError)   ; return; 
+					}
+				}
+				
+				function displayCapacity(capacity) {
+					var capacityType = capacity["capacityType"];
+					var strMessage   = capacity["totalUsed"] + "MB" + "(" + capacity["usedRate"] + "%)" + " " + CabinetMessages.strTxt2
+					strMessage       = capacityType == 1 ? CabinetMessages.strTotal + " " + capacity["totalCapacity"] + "MB" + CabinetMessages.strTxt1 + " " + strMessage : strMessage;
+					volumeDraw.refresh(capacity["usedRate"]);
+					volumeDraw.refreshtitle(strMessage);
+				}
+				
+				function getFileSize(fileSize) {
+					var result = fileSize + "B";
+					
+					switch(true) {
+						case fileSize > 1073741824 : result = (Math.floor(parseFloat(fileSize / 1073741824 * 10)) / 10).toFixed(1) + "GB"; break;
+						case fileSize > 1048576    : result = (Math.floor(parseFloat(fileSize / 1048576) * 10) / 10).toFixed(1) + "MB"   ; break;
+						case fileSize > 1024       : result = parseInt(fileSize / 1024) + "KB"                                           ; break;
+					}
+					
+					return result;
+				}
+				
+				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
+					$.ajax({
+						type: ajaxType,
+						url: ajaxUrl,
+						data: ajaxData,
+						dataType: "JSON",
+						async: asyncMode != false ? true : false,
+						success : function(data) {
+							handleSuccess(data);
+						},
+						error : function(error) {
+							if (handleError != null) {handleError();}
+							
+							alert(CabinetMessages.strError);
 						}
 					});
 				}

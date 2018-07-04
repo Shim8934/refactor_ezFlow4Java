@@ -98,22 +98,25 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 			listModule = ezCabinetDAO.getActiveModuleListForUser(map);
 			
 			if (listModule == null  || listModule.size() == 0) {
-				//Auto insert data
-				List<CabinetModuleVO> listAllModule = new ArrayList<>();
-				listAllModule.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
-				listAllModule.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
-				listAllModule.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
-				listAllModule.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
-				listAllModule.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
-				listAllModule.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
-				listModule.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
-				listModule.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
-				listModule.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
-				listModule.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
+				List<CabinetModuleVO> listAllModule = ezCabinetAdminDAO.getModuleListForAdmin(map);
 				
-				listAllModule.addAll(listModule);
-				map.put("moduleList", listAllModule);
-				ezCabinetAdminDAO.insertModulForAdmin(map);
+				if (listAllModule == null  || listAllModule.size() == 0) {
+					//Auto insert data
+					listAllModule.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
+					listAllModule.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
+					listAllModule.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
+					listAllModule.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
+					listAllModule.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
+					listAllModule.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
+					listModule.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
+					listModule.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
+					listModule.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
+					listModule.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
+					
+					listAllModule.addAll(listModule);
+					map.put("moduleList", listAllModule);
+					ezCabinetAdminDAO.insertModulForAdmin(map);
+				}
 			}
 		}
 		

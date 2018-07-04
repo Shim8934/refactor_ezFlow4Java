@@ -278,7 +278,7 @@ public class EzCabinetGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezcabinetadmin/capcity/id/{companyid}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getUserStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
+	public JSONObject getUserCapacities(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                        : "";
 		int currPage      = request.getParameter("currPage")  != null ? Integer.parseInt(request.getParameter("currPage"))    : 1;
 		int listCnt       = request.getParameter("listCnt")   != null ? Integer.parseInt(request.getParameter("listCnt"))     : 10;
@@ -324,13 +324,7 @@ public class EzCabinetGWController {
 			totalPages                = (totalUsers + listCnt - 1)/listCnt;
 			
 			for (UserCapacityVO capacity: list) {
-				if (capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
-					capacity.setUsedRate(0);
-				}
-				else {
-					double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10485.76;
-					capacity.setUsedRate((int)(Double.parseDouble(capacity.getTotalUsed())/totalCapByBytes));
-				}
+				setUsedRateForUser(capacity);
 			}
 			
 			result.put("capacity", list);
@@ -508,7 +502,51 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/capacity/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getUserCapacity(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo            = commonUtil.getUserForGw(userId, serverName);
+			int tenantId                = userInfo.getTenantId();
+			String primary              = userInfo.getPrimary();
+			UserCapacityVO userCapacity = cabinetAdminService.getUserCapacity(userId, primary, tenantId);
+			setUsedRateForUser(userCapacity);
+			
+			result.put("capacity", userCapacity);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	private boolean isCabinetAdmin(LoginVO user) {
 		return user.getRollInfo().contains("cb=1");
+	}
+	
+	private void setUsedRateForUser(UserCapacityVO capacity) {
+		if (capacity.getCapacityType() == 0 || capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
+			capacity.setUsedRate(0);
+		}
+		else {
+			double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10485.76;
+			capacity.setUsedRate((int)(Double.parseDouble(capacity.getTotalUsed())/totalCapByBytes));
+		}
 	}
 }

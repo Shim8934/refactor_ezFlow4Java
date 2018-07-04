@@ -30,24 +30,21 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	
 	@Override
 	public JSONObject checkCabinetAdmin(HttpServletRequest request, String userId) throws Exception {
-		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
-		String url            = gwServerUrl + "/rest/ezcabinet/check-admin/" + userId;
+		String url            = "/rest/ezcabinet/check-admin/" + userId;
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
 	
 	@Override
 	public JSONObject getCompanyList(HttpServletRequest request, String userId) throws Exception {
-		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
-		String url            = gwServerUrl + "/rest/ezcabinet/company-list/" + userId;
+		String url            = "/rest/ezcabinet/company-list/" + userId;
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
 	
 	@Override
 	public JSONObject getDeptSubNodes(HttpServletRequest request, String userId, String deptId, String level) throws Exception {
-		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinet/sub-tree/" + deptId;
+		String url                = "/rest/ezcabinet/sub-tree/" + deptId;
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("level", level);
@@ -57,15 +54,16 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	
 	@Override
 	public JSONObject getCompanyTree(HttpServletRequest request, String userId, String companyId) throws Exception {
-		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinet/company-tree/comp/" + companyId;
+		String url                = "/rest/ezcabinet/company-tree/comp/" + companyId;
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		JSONObject resultBody = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 	
-	public static JSONObject getJsonResult(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+	public JSONObject getJsonResult(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		String gwServerUrl = config.getProperty("config.cabinetGwServerURL");
+		restUrl            = gwServerUrl + restUrl;
 		logger.debug("Rest Url: " + restUrl);
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -107,16 +105,14 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	
 	@Override
 	public JSONObject getCompanyCapacity(HttpServletRequest request, String companyId) throws Exception {
-		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
-		String url            = gwServerUrl + "/rest/ezcabinetadmin/capcity/id/" + companyId + "/comp";
+		String url            = "/rest/ezcabinetadmin/capcity/id/" + companyId + "/comp";
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
 	
 	@Override
 	public JSONObject saveCompanyCapacity(HttpServletRequest request, String capacityType, String newCapacity, String companyId) throws Exception {
-		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/id/" + companyId + "/comp";
+		String url                = "/rest/ezcabinetadmin/capcity/id/" + companyId + "/comp";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("newCapacity",  newCapacity);
 		param.put("capacityType", capacityType);
@@ -126,8 +122,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@Override
 	public JSONObject getUserCapacity(HttpServletRequest request, String currPage, String companyId, String userId, String searchStr, String searchOpt, String column, String order, String listCnt) throws Exception {
-		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/id/" + companyId + "/person";
+		String url                = "/rest/ezcabinetadmin/capcity/id/" + companyId + "/person";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("currPage",  currPage);
 		param.put("userId",    userId);
@@ -143,50 +138,52 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@Override
 	public JSONObject saveUserCapacity(HttpServletRequest request, List<String> userList, String capacityType, String newCapacity, String companyId) throws Exception {
-		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinetadmin/capcity/person";
+		String url                = "/rest/ezcabinetadmin/capcity/person";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("newCapacity",  newCapacity);
 		param.put("capacityType", capacityType);
 		param.put("companyId",    companyId);
 		param.put("userList",     String.join(",", userList));
-		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 
 	@Override
 	public JSONObject getModuleListForAdmin(HttpServletRequest request, String companyId) throws Exception {
-		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinetadmin/module/id/" + companyId + "/comp";
+		String url            = "/rest/ezcabinetadmin/module/id/" + companyId + "/comp";
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
 	
 	@Override
 	public JSONObject saveModulesSetting(HttpServletRequest request, JSONArray moduleList, String companyId) throws Exception {
-		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinetadmin/module/id/" + companyId + "/comp";
+		String url                = "/rest/ezcabinetadmin/module/id/" + companyId + "/comp";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("modules", moduleList);
-		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 
 	@Override
 	public JSONObject getModuleListForUser(HttpServletRequest request, String userId) {
-		String gwServerUrl    = config.getProperty("config.cabinetGwServerURL");
-		String url            = gwServerUrl + "/rest/ezcabinet/module/id/" + userId + "/person";
+		String url            = "/rest/ezcabinet/module/id/" + userId + "/person";
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
 
 	@Override
 	public JSONObject saveModulesSettingForUser(HttpServletRequest request, JSONArray moduleList, String userId) throws Exception {
-		String gwServerUrl        = config.getProperty("config.cabinetGwServerURL");
-		String url                = gwServerUrl + "/rest/ezcabinet/module/id/" + userId + "/person";
+		String url                = "/rest/ezcabinet/module/id/" + userId + "/person";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("modules", moduleList);
-		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject getUserCapacity(HttpServletRequest request, String userId) throws Exception {
+		String url                = "/rest/ezcabinet/capacity/" + userId;
+		JSONObject resultBody     = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
 }

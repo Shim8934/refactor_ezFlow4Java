@@ -42,5 +42,9 @@ public class EzCabinetAdminDAO extends EgovAbstractDAO {
 	public void saveModulesSetting(Map<String, Object> map) {
 		update("EzCabinetAdminDAO.saveModulesSetting", map);
 	}
+
+	public UserCapacityVO getUserCapacity(Map<String, Object> map) {
+		return (UserCapacityVO)select("EzCabinetAdminDAO.getUserCapacity", map);
+	}
 	
 }

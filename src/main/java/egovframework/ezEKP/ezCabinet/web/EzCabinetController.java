@@ -272,4 +272,16 @@ public class EzCabinetController {
 		logger.debug("jsonSaveModulesSetting end");
 		return resultObj.toString();
 	}
+	
+	@RequestMapping(value="/ezCabinet/getUserCapicity.do")
+	@ResponseBody
+	public String jsonGetUserCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetUserCapacity start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = cabinetRestService.getUserCapacity(request, user.getId());
+		
+		logger.debug("jsonGetUserCapacity end");
+		return resultObj.toString();
+	}
+	
 }
