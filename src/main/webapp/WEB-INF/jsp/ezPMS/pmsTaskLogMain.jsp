@@ -261,7 +261,7 @@ function selectedTR(elem) {
 }
 </style>
 </head>
-<body style="10px 10px 0px 10px">
+<body style="margin : 10px 10px 0px 10px">
 <div id="taskTree"></div>
 <div id="projectArea" class="projectAreaStyle">
 <div id="projectContent">
