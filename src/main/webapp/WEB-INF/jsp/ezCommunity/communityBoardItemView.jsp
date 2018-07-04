@@ -571,17 +571,17 @@
 // 	            GetOpenWindow(szHref, "", 520, 400);
 	        	var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 600) / 2;
-		        var top = (heigth - 415) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-		        var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+		        var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(600, 415, szHref);
+		            DivPopUpShow(620, 425, szHref);
 		        }
 		        else
-		            window.open(szHref, "", "width=600, height=415, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		            window.open(szHref, "", "width=620, height=425, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
 		    }
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();

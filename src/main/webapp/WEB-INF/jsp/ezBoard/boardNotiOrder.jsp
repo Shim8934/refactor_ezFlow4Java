@@ -98,8 +98,10 @@
 		        var cnt = listview.GetRowCount();
 		        var list = listview.GetDataRows();
 		
-		        if (cnt == 0)
+		        if (cnt == 0) {
+					window.close();
 		            return;
+		        }
 		
 		        var itemid = "";
 		        for (var i = 0; i < cnt; i++) {

@@ -3410,6 +3410,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
+		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		
 		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		

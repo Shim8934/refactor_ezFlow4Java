@@ -536,7 +536,7 @@
             		<!------------------ 질문리스트 ------------------------>
             		<tr>
                 		<td colspan="4" bgcolor="#f5f5f5">
-                    		<select id="selQues" name="selQues" onclick="javascript:fun_SelClick();" ondblclick="javascript:fun_QuesEdit();" size="20" style="WIDTH: 100%; HEIGHT: 300px;"></select>
+                    		<select id="selQues" name="selQues" onclick="javascript:fun_SelClick();" ondblclick="javascript:fun_QuesEdit();" size="20" style="WIDTH: 100%; HEIGHT: 300px; background:none;"></select>
                 		</td>
             		</tr>
         		</table>

@@ -22,6 +22,11 @@
 	</head>
 	<body class="popup" onLoad="return window_onload()">
 		<h1>Community <spring:message code = 'ezCommunity.t1066' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<form method="post" name="join" id="join" action="/ezCommunity/joinOk.do">
 			<input type=hidden name=code value="<c:out value = '${code}' />">
 		</form>

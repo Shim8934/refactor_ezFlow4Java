@@ -885,6 +885,11 @@
     </tree>
 </xml>
     <h1 id="h1Title"><spring:message code='ezPortal.t13'/></h1>
+    <div id="close">
+        <ul>
+            <li><span onclick="window.close()"></span></li>
+        </ul>
+    </div>
     <table style="width: 100%">
         <tr>
             <td>
@@ -972,7 +977,6 @@
     <div class="btnposition">
         <a class="imgbtn"><span onclick="dept_select()"><spring:message code='ezPortal.t43'/></span></a>
         <a class="imgbtn" onclick="Save_onclick()"><span><spring:message code='ezPortal.t45'/></span></a>
-        <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezPortal.t46'/></span></a>
     </div>
 	</body>
 </html>

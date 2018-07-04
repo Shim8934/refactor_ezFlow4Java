@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -136,4 +137,16 @@ public class LoginDAO extends EgovAbstractDAO {
 	public List<LoginVO> selectAllMemberOfCompany(Map<String, Object> map) throws Exception {
         return (List<LoginVO>) list("loginDAO.selectAllMemberOfCompany", map);
     }
+	
+	public LoginDeviceVO getDeviceInfo (Map<String, Object> map) throws Exception {
+		return (LoginDeviceVO) select("loginDAO.getDeviceInfo", map);
+	}
+
+	public int insertDeviceInfo (Map<String, Object> map) throws Exception {
+		return update("loginDAO.insertDeviceInfo", map);
+	}
+	
+	public int updateDeviceInfo (Map<String, Object> map) throws Exception {
+		return update("loginDAO.updateDeviceInfo", map);
+	}
 }
