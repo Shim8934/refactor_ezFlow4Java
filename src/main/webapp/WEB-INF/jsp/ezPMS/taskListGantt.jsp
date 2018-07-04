@@ -64,8 +64,8 @@
 	   		function initValues() {	   			
 	   			var tl = taskList;
 	   			var pd = projectDetails;
-	   			const roleName = ["<spring:message code='ezPMS.t63' />", "<spring:message code='ezPMS.t64' />", "<spring:message code='ezPMS.t65' />", "<spring:message code='ezPMS.t195' />"];
-	   			const ganttStatus = {
+	   			var roleName = ["<spring:message code='ezPMS.t63' />", "<spring:message code='ezPMS.t64' />", "<spring:message code='ezPMS.t65' />", "<spring:message code='ezPMS.t195' />"];
+	   			var ganttStatus = {
 	   					"P": "STATUS_ACTIVE",
 	   					"S": "STATUS_SUSPENDED", 
 	   					"C": "STATUS_DONE",
