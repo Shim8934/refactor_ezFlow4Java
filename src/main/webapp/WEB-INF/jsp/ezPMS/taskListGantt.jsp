@@ -1590,14 +1590,13 @@
 		        <li><span onclick="getMemberSchedule()"><spring:message code='ezPMS.t290' /></span></li>
 		        <div style="float:right">
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
-		       	<spring:message code='ezPMS.t255' />
 					<select>
-						<option value="A"><spring:message code='ezPMS.t14' /></option>
-						<option value="W"><spring:message code='ezPMS.t16' /></option>
-						<option value="P"><spring:message code='ezPMS.t15' /></option>
-						<option value="C"><spring:message code='ezPMS.t17' /></option>
-						<option value="S"><spring:message code='ezPMS.t19' /></option>
-						<option value="L"><spring:message code='ezPMS.t18' /></option>
+						<option value="A"><spring:message code='ezPMS.t14' />&nbsp<spring:message code='ezPMS.t137' /></option>
+						<option value="W"><spring:message code='ezPMS.t16' />&nbsp<spring:message code='ezPMS.t137' /></option>
+						<option value="P"><spring:message code='ezPMS.t15' />&nbsp<spring:message code='ezPMS.t137' /></option>
+						<option value="C"><spring:message code='ezPMS.t17' />&nbsp<spring:message code='ezPMS.t137' /></option>
+						<option value="S"><spring:message code='ezPMS.t19' />&nbsp<spring:message code='ezPMS.t137' /></option>
+						<option value="L"><spring:message code='ezPMS.t18' />&nbsp<spring:message code='ezPMS.t137' /></option>
 					</select>
 		        </li>
 		        <li id="pmsGanttZoomBtn" class="pmsGanttZoomBtn">
