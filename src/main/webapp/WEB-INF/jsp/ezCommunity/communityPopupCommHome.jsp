@@ -14,6 +14,10 @@
 			.btype_list ul li .date {
 				-webkit-margin-start:20px;
 			}
+			/* 2018-07-03 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
+			#cmhome_type5 .info_count span.count {
+				padding-left:20px;
+			}
 		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

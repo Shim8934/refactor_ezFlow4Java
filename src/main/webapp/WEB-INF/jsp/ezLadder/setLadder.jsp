@@ -1116,7 +1116,7 @@
 								<input name="type" style="display: none;" />
 							</div>														
 							<div style="float: right;height:40px; line-height: 40px;margin-left:20px;margin-top:5px;">
-								<img src="/images/line.png" style="vertical-align: middle;float: left;padding-top:6px" title="<spring:message code='ezLadder.t081'/>"/>								
+								<img src="/images/line.png" style="vertical-align: middle;float: left;padding-top:8px" title="<spring:message code='ezLadder.t081'/>"/>								
 								<!-- <div style="height: 40px; width: 40px; line-height:40px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 3px; margin-right:15px; background-color: white">
 									<span id="amount">0</span>
 								</div> -->
@@ -1126,7 +1126,7 @@
 								<input name="lineCnt" style="display: none;" />
 							</div>
 							<div style="float: right; height: 45px;line-height: 45px;margin-top: 2px;position: relative;">
-								<img src="/images/users.png" style="vertical-align: middle;margin-top:2px" title="<spring:message code='ezLadder.t071' />" />
+								<img src="/images/users.png" style="vertical-align: middle;" title="<spring:message code='ezLadder.t071' />" />
 								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px; padding-right: 45px;" placeholder="<spring:message code='ezLadder.t071' />"/>
 								<div id="addAttendant" title="<spring:message code='ezLadder.t080'/>">
 									<img src="/images/ezLadder/icon_addAtt_default.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: inline;" />

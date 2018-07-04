@@ -189,7 +189,12 @@
 	    </script>
 	</head>
 	<body class="popup">
-		<h1><spring:message code='ezOrgan.t240' /></h1>		
+		<h1><spring:message code='ezOrgan.t240' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="close_Click()"></span></li>
+            </ul>
+        </div>
 		<table class="content"> 
 			<tr>
 		    	<th width="119" height="128"><img <spring:message code='ezOrgan.i6' />></th>
@@ -222,7 +227,6 @@
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn"><span onClick="imgConfirm_onclick();"><spring:message code='ezOrgan.t246' /></span></a>
-		    <a class="imgbtn"><span onClick="close_Click()"><spring:message code='ezOrgan.t111' /></span></a>
 		</div>		
 	</body>
 </html>
