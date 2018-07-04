@@ -524,23 +524,22 @@
 		</script>
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px">
-		<h1>
-			<spring:message code='ezApprovalG.t711'/>
-			<span id="trCreateCab" style="display:inline; float:right;">
-				<a class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-				<a class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
-			</span>
-		</h1>
+		<h1><spring:message code='ezApprovalG.t711'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table style="width:445px">
 		  <tr>			
 		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/></h2> 
 		      <table>
-		        <%-- <tr id="trCreateCab"> // (529~532 으로 이동)
+		        <tr id="trCreateCab">
 		          <th>
 			          <a class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
 					  <a class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
 				  </th>
-		        </tr> --%>
+		        </tr>
 		        <tr id="trCreateCabDummy" style="display:none"> 
 		        </tr>
 		        <tr> 
@@ -589,8 +588,7 @@
 		  </tr>
 		</table>
 		<div class="btnposition btnpositionNew">
-		<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
-		<a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a> 
+			<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

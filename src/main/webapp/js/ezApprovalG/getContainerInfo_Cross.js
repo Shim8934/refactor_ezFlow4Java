@@ -767,11 +767,11 @@ function lvtDoclist_SelChange() {
         oArrRowsid = tr.id;
         if (approvalFlag == "G") {
 	        if (tr.getAttribute("DATA5").trim() != "") {
-	        	if (document.getElementById("tDocInfo") != null ){
+	        	if(document.getElementById("tDocInfo")) {
 	        		document.getElementById("tDocInfo").style.display = "";
 	        	}
 	        } else {
-	        	if (document.getElementById("tDocInfo") != null) {
+	        	if(document.getElementById("tDocInfo")) {
 	        		document.getElementById("tDocInfo").style.display = "none";
 	        	}
 	        }

@@ -266,6 +266,11 @@
 	</head>
 	<body class="popup">
 	    <h1 id="NM"><spring:message code='ezApproval.t650'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <div class="listview" style="BORDER: 1; WIDTH: 510px; HEIGHT: 140px; overflow: auto">
 	        <div id="lvAprLine" style="BORDER: 0;">
 	        </div>

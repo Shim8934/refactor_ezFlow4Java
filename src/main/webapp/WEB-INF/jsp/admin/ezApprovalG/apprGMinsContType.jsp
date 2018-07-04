@@ -78,6 +78,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1653'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return close_onclick()"></span></li>
+            </ul>
+        </div>
 		<table>
 			<tr>
 				<td style="vertical-align:top;">
@@ -98,7 +103,6 @@
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn"><span onClick="return save_onclick()"><spring:message code='ezApprovalG.t59'/></span></a>
-		    <a class="imgbtn"><span onClick="return close_onclick()"><spring:message code='ezApprovalG.t64'/></span></a>
 		</div>
 	</body>
 </html>

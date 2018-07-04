@@ -2,6 +2,7 @@ package egovframework.let.user.login.service;
 
 import java.util.List;
 
+import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 
@@ -68,5 +69,15 @@ public interface LoginService {
 	public List<LoginVO> selectAllMemberOfCompany(String companyID, int tenantID) throws Exception;
 
 	public String chkADAndUpdatePassword(String uid, String upwd, int tenantId) throws Exception;
+	
+	public LoginDeviceVO getDeviceInfo(String devId) throws Exception;
+	
+	public int insertDeviceInfo(String devId, String devType, String subType, String userId, String token, String badge, String tenantId,
+			String state, String pushState, String regDate, String isLogin, String startMenu, String loginTime, String loginLock,
+			String isPasswordChange, String extension1, String extension2) throws Exception;
+	
+	public int updateDeviceInfo(String devId, String devType, String subType, String userId, String token, String badge, String tenantId,
+			String state, String pushState, String isLogin, String startMenu, String loginTime, String loginLock,
+			String isPasswordChange, String extension1, String extension2) throws Exception;
 
 }

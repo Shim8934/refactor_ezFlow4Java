@@ -1265,7 +1265,7 @@
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
 		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">
-		                            <img id="mainimages" style="background-color:#ffffff;cursor:pointer;" src=""/>            
+		                            <img id="mainimages" style="background-color:#ffffff;" src=""/>            
 		                        </td>
 		                    </tr>
 		           	    </table>
