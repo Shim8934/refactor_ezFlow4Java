@@ -1309,7 +1309,7 @@ form{display:inline;margin:0}
 }
 .btnimg { cursor:pointer;}
 
-.pagenavi {
+/* .pagenavi {
 	margin:0px ; padding:5px 0;line-height:normal;text-align:center
 }
 .pagenavi span {
@@ -1351,7 +1351,25 @@ form{display:inline;margin:0}
 	width:auto;
 	line-height:21px;
 	
-}
+} */
+
+.pagenavi span:hover, .pagenavi span.on, .pageGo .pageGoBtn:hover
+{border: 1px solid #017bec;}
+/* point-background */
+.pagenavi span:hover, .pagenavi span.on, .pageGo .pageGoBtn:hover
+{background:#0684f9;}
+
+
+/* pagenavi */
+#tblPageRayer {width:100% !important}
+.popup_pagenavi {border-top:1px solid #c8c8c8;}
+.pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;font-family:Dotum, "돋움", Gulim, "굴림", Arial, Helvetica, sans-serif;}
+.pagenavi span {display: inline-block; height: 27px; line-height: 27px; margin: 0px 2px; padding: 0px 9px 0px 9px; border: 1px solid #c8c8c8; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; box-sizing:border-box; font-size: 12px; text-align: center; font-weight: bold; color: #333; cursor: pointer;}
+.pagenavi span:hover {color: #ffffff;}
+.pagenavi span.on {color: #ffffff;}
+.pagenavi span.btnimg {vertical-align: top; margin: 0px 2px; border: 0px solid #cccccc; padding: 0px; }
+.pagenavi span:hover.btnimg {border:0 none; background:none;}
+.pagenavi span.ptxt { display: inline-block; cursor: pointer; border: 0px solid #cccccc; height: 19px; padding: 0px 3px; font-weight: normal; white-space: nowrap; width: auto; line-height: 18px; }
 
 .popup_noti {
 	/* width:330px; */ 
@@ -1860,7 +1878,7 @@ form{display:inline;margin:0}
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
-.address_onboxlist .back { border: 1px solid #888; height:138px; vertical-align:top; border-radius:5px;}
+.address_onboxlist .back { border: 1px solid rgb(104, 171, 220); height:138px; vertical-align:top; border-radius:5px;}
 .address_onboxlist .topinfo {background-color:rgb(0,72,149); height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .address_onboxlist ul { margin:0px 0px 0px 19px; padding:0px; list-style:none;}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
