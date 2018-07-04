@@ -16,7 +16,7 @@
     <align>center</align>
   </column>
   <column>
-    <heading>받는 사람</heading>
+    <heading>发件人</heading>
     <type>string</type>
     <propname>sender</propname>
     <prop>urn:schemas:httpmail:displayto</prop>
@@ -28,7 +28,7 @@
     <align>left</align>
   </column>
   <column>
-    <heading>제목</heading>
+    <heading>主题</heading>
     <type>string</type>
     <propname>subject</propname>
     <prop>http://schemas.microsoft.com/mapi/proptag/x0e1d001f</prop>
@@ -40,7 +40,7 @@
     <align>left</align>
   </column>
   <column>
-    <heading>보낸 날짜</heading>
+    <heading>收稿日期</heading>
     <type>date</type>
     <propname>receivedt</propname>
     <prop>http://schemas.microsoft.com/exchange/date-iso</prop>

@@ -500,16 +500,15 @@ public class EzEmailMailListController {
 				
 				if (nameLength > 1) {
 					if (nameLength - Integer.parseInt(returnValue1.split(";")[1]) == 0) {
-						name = Integer.toString(nameLength) + "명의 받는이";
+						name = String.format(egovMessageSource.getMessage("ezEmail.jje02", locale), Integer.toString(nameLength));
 					} else {
-						name = Integer.toString(nameLength) + "명 중" + returnValue1.split(";")[1] + "명이 읽음";
+						name = String.format(egovMessageSource.getMessage("ezEmail.jje03", locale), Integer.toString(nameLength), returnValue1.split(";")[1]);
 					}
 					
 					readDate = "";
 				} else {
 					readDate = returnValue1.split(";")[1];
 				}
-				
 				
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 				sb.append(String.format("<readdt><![CDATA[%s]]></readdt>", readDate));
