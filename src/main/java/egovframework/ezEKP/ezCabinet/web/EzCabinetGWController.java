@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
@@ -524,6 +525,89 @@ public class EzCabinetGWController {
 			setUsedRateForUser(userCapacity);
 			
 			result.put("capacity", userCapacity);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/config/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getUserPreviewConfig(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo            = commonUtil.getUserForGw(userId, serverName);
+			int tenantId                = userInfo.getTenantId();
+			String companyId            = userInfo.getCompanyID();
+			CabinetGeneralVO userConfig = cabinetService.getUserPreviewConfig(userId, companyId, tenantId);
+			
+			if (userConfig == null) {
+				userConfig = new CabinetGeneralVO(userId, companyId, "off", 10, 50, 50, 50, 50, tenantId);
+			}
+			else {
+				userConfig.setPreviewHpercent(100 - userConfig.getContentHpercent());
+				userConfig.setPreviewWpercent(100 - userConfig.getContentWpercent());
+			}
+			
+			result.put("config", userConfig);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/config/id/{userid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveUserConfig(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName    = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
+		String prevMode      = request.getParameter("prevMode")  != null ? request.getParameter("prevMode")  : "";
+		int listCount        = request.getParameter("listCount") != null ? Integer.parseInt(request.getParameter("listCount")) : -1;
+		int contentWPrev     = request.getParameter("contentW")  != null ? Integer.parseInt(request.getParameter("contentW"))  : -1;
+		int contentHPrev     = request.getParameter("contentH")  != null ? Integer.parseInt(request.getParameter("contentH"))  : -1;
+		JSONObject result    = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Preview Mode: " + prevMode + " || List count: " + listCount + " || ContentHPreview: " + contentHPrev + " || ContentWPreview: " + contentWPrev);
+		
+		if (serverName.equals("") || userId.equals("") || listCount == -1 || prevMode.equals("") || (!prevMode.equals("off") && (contentWPrev == -1 || contentHPrev == -1))) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		if (prevMode.equals("off")) {
+			contentWPrev = 50;
+			contentHPrev = 50;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId     = userInfo.getTenantId();
+			String companyId = userInfo.getCompanyID();
+			
+			cabinetService.saveUserConfig(prevMode, listCount, contentWPrev, contentHPrev, userId, companyId, tenantId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

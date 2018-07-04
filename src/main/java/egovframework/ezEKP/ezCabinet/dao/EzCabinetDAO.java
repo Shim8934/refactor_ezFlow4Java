@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezCabinet.dao;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
+import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -36,6 +37,14 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 
 	public void saveModulesSetting(Map<String, Object> map) {
 		insert("EzCabinetDAO.saveModulesSetting", map);
+	}
+
+	public CabinetGeneralVO getUserPreviewConfig(Map<String, Object> map) {
+		return (CabinetGeneralVO)select("EzCabinetDAO.getUserPreviewConfig", map);
+	}
+
+	public void saveUserConfig(Map<String, Object> map) {
+		insert("EzCabinetDAO.saveUserConfig", map);
 	}
 
 }

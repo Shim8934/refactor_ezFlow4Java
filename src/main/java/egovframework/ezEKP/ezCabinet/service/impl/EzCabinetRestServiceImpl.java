@@ -119,7 +119,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject getUserCapacity(HttpServletRequest request, String currPage, String companyId, String userId, String searchStr, String searchOpt, String column, String order, String listCnt) throws Exception {
 		String url                = "/rest/ezcabinetadmin/capcity/id/" + companyId + "/person";
@@ -135,7 +135,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject saveUserCapacity(HttpServletRequest request, List<String> userList, String capacityType, String newCapacity, String companyId) throws Exception {
 		String url                = "/rest/ezcabinetadmin/capcity/person";
@@ -147,7 +147,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject getModuleListForAdmin(HttpServletRequest request, String companyId) throws Exception {
 		String url            = "/rest/ezcabinetadmin/module/id/" + companyId + "/comp";
@@ -163,14 +163,14 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject getModuleListForUser(HttpServletRequest request, String userId) {
 		String url            = "/rest/ezcabinet/module/id/" + userId + "/person";
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject saveModulesSettingForUser(HttpServletRequest request, JSONArray moduleList, String userId) throws Exception {
 		String url                = "/rest/ezcabinet/module/id/" + userId + "/person";
@@ -179,11 +179,30 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject getUserCapacity(HttpServletRequest request, String userId) throws Exception {
-		String url                = "/rest/ezcabinet/capacity/" + userId;
-		JSONObject resultBody     = getJsonResult(url, null, request, "get", null);
+		String url            = "/rest/ezcabinet/capacity/" + userId;
+		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getUserPreviewConfig(HttpServletRequest request, String userId) throws Exception {
+		String url            = "/rest/ezcabinet/config/id/" + userId;
+		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception {
+		String url                = "/rest/ezcabinet/config/id/" + userId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("prevMode",  prevMode);
+		param.put("listCount", listCount);
+		param.put("contentW",  contentWPrev);
+		param.put("contentH",  contentHPrev);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 }

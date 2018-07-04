@@ -42,9 +42,9 @@ public class EzCabinetController {
 	public String jspGetCabinetLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jspGetCabinetLeft started");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
-		if ((long)cabinetRestService.checkCabinetAdmin(request, userInfo.getId()).get("code") != 0) {
+		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
 			model.addAttribute("isCabinetAdmin", "0");
 		}
 		else {
@@ -59,6 +59,16 @@ public class EzCabinetController {
 	public String jspGetCabinetGeneral(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetGeneral started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		JSONObject resultObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
+		
+		if (!resultObj.get("status").toString().equals("ok")) {
+			return "cmm/error/dataAccessFailure";
+		}
+		
+		JSONObject userConfig = (JSONObject)resultObj.get("config");
+		
+		model.addAttribute("config", userConfig);
 		
 		logger.debug("jspGetCabinetGeneral ended");
 		return "ezCabinet/cabinetGeneral";
@@ -140,7 +150,6 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetShare";
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
 	@ResponseBody
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
@@ -159,7 +168,6 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/getSubNodes.do")
 	@ResponseBody
 	public String jsonGetSubNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
@@ -179,7 +187,6 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/uploadFile.do", method = RequestMethod.POST)
 	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("Upload file is running!");
@@ -281,6 +288,29 @@ public class EzCabinetController {
 		JSONObject resultObj = cabinetRestService.getUserCapacity(request, user.getId());
 		
 		logger.debug("jsonGetUserCapacity end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/saveUserConfig.do")
+	@ResponseBody
+	public String jsonSaveUserConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveUserConfig start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String prevMode      = request.getParameter("prevMode")  != null ? request.getParameter("prevMode")  : "";
+		String listCount     = request.getParameter("listCount") != null ? request.getParameter("listCount") : "";
+		String contentWPrev  = request.getParameter("contentW")  != null ? request.getParameter("contentW")  : "";
+		String contentHPrev  = request.getParameter("contentH")  != null ? request.getParameter("contentH")  : "";
+		JSONObject resultObj = new JSONObject();
+		
+		if (prevMode.equals("") || listCount.equals("") || (!prevMode.equals("off") && (contentWPrev.equals("") || contentHPrev.equals("")))) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveUserConfig(request, user.getId(), prevMode, listCount, contentWPrev, contentHPrev);
+		
+		logger.debug("jsonSaveUserConfig end");
 		return resultObj.toString();
 	}
 	

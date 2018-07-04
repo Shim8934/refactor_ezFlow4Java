@@ -26,8 +26,12 @@ public interface EzCabinetRestService {
 	
 	//User related modules service
 	public JSONObject getModuleListForUser(HttpServletRequest request, String userId);
-	public JSONObject saveModulesSettingForUser(HttpServletRequest request, JSONArray modules, String id) throws Exception;
+	public JSONObject saveModulesSettingForUser(HttpServletRequest request, JSONArray modules, String userId) throws Exception;
 	
 	//User capacity service
-	public JSONObject getUserCapacity(HttpServletRequest request, String id) throws Exception;
+	public JSONObject getUserCapacity(HttpServletRequest request, String userId) throws Exception;
+	
+	//User preview configuration
+	public JSONObject getUserPreviewConfig(HttpServletRequest request, String id) throws Exception;
+	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception;
 }

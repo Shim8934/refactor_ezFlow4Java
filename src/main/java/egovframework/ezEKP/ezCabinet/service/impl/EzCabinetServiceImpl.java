@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +10,9 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
-
 @Service
 public class EzCabinetServiceImpl implements EzCabinetService {
 	@Resource(name = "EzCabinetDAO")
@@ -139,5 +138,29 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 			
 			ezCabinetDAO.saveModulesSetting(map);
 		}
+	}
+
+	@Override
+	public CabinetGeneralVO getUserPreviewConfig(String userId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("userId",    userId);
+		map.put("tenantId",  tenantId);
+		
+		return ezCabinetDAO.getUserPreviewConfig(map);
+	}
+
+	@Override
+	public void saveUserConfig(String prevMode, int listCount, int contentWPrev, int contentHPrev, String userId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId",    companyId);
+		map.put("userId",       userId);
+		map.put("tenantId",     tenantId);
+		map.put("prevMode",     prevMode);
+		map.put("listCount",    listCount);
+		map.put("contentWPrev", contentWPrev);
+		map.put("contentHPrev", contentHPrev);
+		
+		ezCabinetDAO.saveUserConfig(map);
 	}
 }

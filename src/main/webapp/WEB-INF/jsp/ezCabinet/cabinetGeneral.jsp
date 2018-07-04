@@ -23,11 +23,11 @@
 				<th class="large"><spring:message code='ezWebFolder.t241'/></th>
 				<td>
 					<select id="listcount" style="width: 100px">
-						<option value='10' ${wfListConfig.envValue eq '10'? 'selected' : ''}>10</option>
-						<option value='20' ${wfListConfig.envValue eq '20'? 'selected' : ''}>20</option>
-						<option value='30' ${wfListConfig.envValue eq '30'? 'selected' : ''}>30</option>
-						<option value='40' ${wfListConfig.envValue eq '40'? 'selected' : ''}>40</option>
-						<option value='50' ${wfListConfig.envValue eq '50'? 'selected' : ''}>50</option>
+						<option value='10' ${config.listCount == '10'? 'selected' : ''}>10</option>
+						<option value='20' ${config.listCount == '20'? 'selected' : ''}>20</option>
+						<option value='30' ${config.listCount == '30'? 'selected' : ''}>30</option>
+						<option value='40' ${config.listCount == '40'? 'selected' : ''}>40</option>
+						<option value='50' ${config.listCount == '50'? 'selected' : ''}>50</option>
 					</select>
 					<spring:message code="ezWebFolder.t138" />
 				</td>
@@ -36,34 +36,34 @@
 				<th><spring:message code='ezCabinet.t25'/></th>
 				<td>
 					<select id="previewMode" class="cabPreviewMode">
-							<option value="OFF" ${previewMode == 'OFF'? selected : ''}><spring:message code='ezCabinet.t26'/></option>
-							<option value="H"   ${previewMode == 'H'  ? selected : ''}><spring:message code='ezCabinet.t27'/></option>
-							<option value="W"   ${previewMode == 'W'  ? selected : ''}><spring:message code='ezCabinet.t28'/></option>
+						<option value="off" ${config.previewMode == 'off'? 'selected' : ''}><spring:message code='ezCabinet.t26'/></option>
+						<option value="w"   ${config.previewMode == 'w'  ? 'selected' : ''}><spring:message code='ezCabinet.t27'/></option>
+						<option value="h"   ${config.previewMode == 'h'  ? 'selected' : ''}><spring:message code='ezCabinet.t28'/></option>
 					</select>
-					<span id="previewHSizeDiv" ${previewMode != 'H' ? '' : 'style="display: none;"'}>
+					<span id="previewHSizeDiv" ${config.previewMode == 'h' ? '' : 'style="display: none;"'}>
 						<spring:message code='ezCabinet.t29'/>
 						<select id="hUserList" class="cabSelectConf">
 								<c:forEach var="i" begin="39" end="74" step="1">
-									<option ${previewHListSize == i ? 'selected' : ''}><c:out value='${i}'/></option>
+									<option ${config.contentHpercent == i ? 'selected' : ''}><c:out value='${i}'/></option>
 								</c:forEach>
 						</select> <spring:message code='ezCabinet.t30'/>
 						<select id="hUserPre" class="cabSelectConf">
 								<c:forEach var="i" begin="26" end="61" step="1">
-									<option ${previewHContentSize == i ? 'selected' : ''}><c:out value='${i}' /></option>
+									<option ${config.previewHpercent == i ? 'selected' : ''}><c:out value='${i}' /></option>
 								</c:forEach>
 						</select>
 					</span>
-					<span id="previewWSizeDiv" ${previewMode != 'W' ? 'style="display: none;"' : ''}>
+					<span id="previewWSizeDiv" ${config.previewMode == 'w' ? '' : 'style="display: none;"'}>
 						<spring:message code='ezCabinet.t29' />
 						<select id="wUserList" role="" class="cabSelectConf">
 							<c:forEach var="i" begin="24" end="65" step="1">
-								<option ${previewWListSize == i ? 'selected' : ''}><c:out value='${i}' /></option>
+								<option ${config.contentWpercent == i ? 'selected' : ''}><c:out value='${i}' /></option>
 							</c:forEach>
 						</select>
 						<spring:message code='ezCabinet.t30'/>
 						<select id="wUserPre" class="cabSelectConf">
 							<c:forEach var="i" begin="35" end="76" step="1">
-								<option ${previewWContentSize == i ? 'selected' : ''}><c:out value='${i}' /></option>
+								<option ${config.previewWpercent == i ? 'selected' : ''}><c:out value='${i}' /></option>
 							</c:forEach>
 					</select>
 				</span></td>
@@ -113,11 +113,11 @@
 				}
 				
 				function selectPreviewOption(selectOption) {
-					if (selectOption.value == "OFF") {
+					if (selectOption.value == "off") {
 						document.getElementById("previewHSizeDiv").style.display = "none";
 						document.getElementById("previewWSizeDiv").style.display = "none";
 					}
-					else if (selectOption.value == "H") {
+					else if (selectOption.value == "h") {
 						document.getElementById("previewHSizeDiv").style.display = "";
 						document.getElementById("previewWSizeDiv").style.display = "none";
 					}
@@ -142,31 +142,34 @@
 				function cancel() {window.location.reload(true);}
 				
 				function save() {
-					var listCount = document.getElementById("listcount").value;
+					var url  = "/ezCabinet/saveUserConfig.do";
+					var data = {
+						prevMode  : document.getElementById("previewMode").value,
+						listCount : document.getElementById("listcount").value,
+						contentW  : document.getElementById("wUserList").value,
+						contentH  : document.getElementById("hUserList").value
+					};
 					
-					$.ajax({
-						url: '',
-						method: 'POST',
-						dataType: 'JSON',
-						data: {
-							"listCount" : listCount
-						},
-						success: function(data) {
-							
-						},
-						error: function(error) {
-							alert();
-						}
-					});
+					makeAjaxCall(data, "GET", url, afterSaveConfig, null, true, null);
+				}
+				
+				function afterSaveConfig(data) {
+					var code = data.code;
+					switch(code) {
+						case 0 : alert(CabinetMessages.strSave)    ; break;
+						case 1 : alert(CabinetMessages.strParamErr); break;
+						case 2 : alert(CabinetMessages.strError)   ; break;
+						default: alert(CabinetMessages.strError)   ; return;
+					}
 				}
 				
 				function drawVolume() {
 					volumeDraw = new JustGage({
-						id: "cabinetVolume",
-						value: 0,
-						min: 0,
-						max: 100,
-						showInnerShadow: true,
+						id                  : "cabinetVolume",
+						value               : 0,
+						min                 : 0,
+						max                 : 100,
+						showInnerShadow     : true,
 						levelColorsGradient : true
 					});
 					
@@ -180,13 +183,13 @@
 						case 0 : displayCapacity(data.capacity)    ; break;
 						case 1 : alert(CabinetMessages.strParamErr); break;
 						case 2 : alert(CabinetMessages.strError)   ; break;
-						default: alert(CabinetMessages.strError)   ; return; 
+						default: alert(CabinetMessages.strError)   ; return;
 					}
 				}
 				
 				function displayCapacity(capacity) {
 					var capacityType = capacity["capacityType"];
-					var strMessage   = capacity["totalUsed"] + "MB" + "(" + capacity["usedRate"] + "%)" + " " + CabinetMessages.strTxt2
+					var strMessage   = capacity["totalUsed"] + "MB" + "(" + capacity["usedRate"] + "%)" + " " + CabinetMessages.strTxt2;
 					strMessage       = capacityType == 1 ? CabinetMessages.strTotal + " " + capacity["totalCapacity"] + "MB" + CabinetMessages.strTxt1 + " " + strMessage : strMessage;
 					volumeDraw.refresh(capacity["usedRate"]);
 					volumeDraw.refreshtitle(strMessage);
