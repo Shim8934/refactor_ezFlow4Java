@@ -277,6 +277,7 @@ function event_ItemPreviewRead() {
 
 function previewItemSet() {
     document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
+    document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").setAttribute("title", Title);
     document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = MemberName;
     document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = RegDate.substring(0, 16);
     var readHTML = Content;
