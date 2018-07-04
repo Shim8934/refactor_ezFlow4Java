@@ -115,13 +115,13 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #mainmenu2 > ul > li >a {margin-top:3px;}
 #mainmenu2 > ul #right {float: right; cursor: default;}
 #mainmenu2 > ul #right span {padding-right: 5px;}
-#mainmenu .select {height: 28px; border-radius: 3px; padding: 1px 0px 0px 4px; width: 80px; color: #666;} 
+#mainmenu .select {height: 29px; border-radius: 2px; padding: 1px 0px 0px 4px; width: 80px;} 
 
 #fileTypeSelect {height:29px; border-radius:3px; width:95px;}
 #companySelect {margin: 10px 0px;}
 #companySelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
 #companySelect >select {font-size:12px; height:20px; display:inline-block;}
-#dragDropArea {margin:10px 0px; overflow-y:auto;}
+#dragDropArea {margin:10px 0px 0px !important; overflow-y:auto;}
 #fileTypeVal {height: 25px; padding: 0px; width: 85px;}
 #file {width:1px; height:1px; display:none;}
 #AttachDownFrame {width:0px; height:0px; display:none;}

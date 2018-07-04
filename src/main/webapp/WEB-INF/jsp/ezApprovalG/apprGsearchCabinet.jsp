@@ -206,6 +206,11 @@
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px;overflow:hidden">
 		<h1><spring:message code='ezApprovalG.t9995'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table>
 		  <tr>
 		    <td style="width:400px;vertical-align:top"><h2><spring:message code='ezApprovalG.t1090'/></h2>
@@ -226,9 +231,8 @@
 		      </table></td>
 		  </tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn" onClick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-		    <a class="imgbtn" onClick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	</body>
 </html>

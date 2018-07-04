@@ -43,7 +43,7 @@
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
-			var reheight = document.documentElement.clientHeight - 200;
+			var reheight = document.documentElement.clientHeight - 210;
 			document.getElementById("dragDropArea").style.height = reheight + "px";
 			
 			reheight = document.documentElement.clientHeight - 100;
@@ -613,7 +613,7 @@
 				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t273' /></span></li>
 				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t275' /></span></li>
 				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
-				<li><img src="/images/i_bar.gif" /></li>
+				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281' /></span></li>
 	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
@@ -621,7 +621,7 @@
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
 				<li><span onclick="refreshView()"><spring:message code='ezWebFolder.t139' /></span></li>
-				<li><img src="/images/i_bar.gif" /></li>
+				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
 				<li style="float:left; height: 28px;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">

@@ -177,10 +177,10 @@
 				}
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 300) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = url = "/ezCircular/circularConfirmList.do?circularID=" + circularID; 
-	            DivPopUpShow(600, 415, szHref);
+	            DivPopUpShow(620, 425, szHref);
 		    }
 		    
 	        var ezprtquestion_cross_dialogArguments = new Array();
@@ -485,13 +485,13 @@
                 	    	<!-- 회람확인이 뜨는 사람 - 회람 작성자 이외의 사람 -->
                 	    	<c:if test="${result.confirmStatus == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t195' /></span></li>
-								<li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li>
+								<!-- <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li> -->
                 	    	</c:if>
                 	    	
                 	    	<!-- 회람종료가 뜨는 사람 - 회람 작성자 -->
                 	    	<c:if test="${result.memberID == userInfo.id && result.status == '0'}">
 		                        <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li>
-		                        <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li>
+		                        <!-- <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li> -->
 		                     </c:if>
 
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
@@ -513,13 +513,12 @@
                 	</div>
                 	<div id="close">
 	                    <ul>
-    	                    <li><span onclick="closing();"><spring:message code='ezCircular.t84' /></span></li>
+    	                    <li><span onclick="closing();"></span></li>
         	            </ul>
             	    </div>
             	    
             	    <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  			</script>
             	    
             	    <!-- 18-05-24 김민성 - 회람판 > 회람 본문 작성일 단어 등록일로 수정 -->

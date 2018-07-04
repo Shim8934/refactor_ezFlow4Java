@@ -38,7 +38,7 @@
 		<!-- 2018-02-14 김보미 - 닫기 -->
 		<div id="close">
 			<ul>
-				<li><span onclick="closing();"><spring:message code='ezCircular.t84' /></span></li>
+				<li><span onclick="closing();"></span></li>
 			</ul>
 		</div>
 		<div class="listview" style="height:220px; overflow:auto;">

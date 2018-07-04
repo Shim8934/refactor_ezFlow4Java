@@ -480,7 +480,7 @@
     					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
     				</c:if>
     			</c:if>
-    			<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
+    			<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
     			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
     			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
     			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>

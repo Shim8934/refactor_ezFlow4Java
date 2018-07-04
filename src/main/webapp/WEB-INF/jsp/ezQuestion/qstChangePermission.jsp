@@ -356,7 +356,7 @@
         	<div id="mainmenu">
             	<ul>
                 	<li><span onclick="menuQst_List()"><spring:message code='ezQuestion.t130' /></span></li>
-                	<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
+                	<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li> -->
                 	<li><span onclick="PollEnd()"><spring:message code='ezQuestion.t214' /></span></li>
             	</ul>
         	</div>

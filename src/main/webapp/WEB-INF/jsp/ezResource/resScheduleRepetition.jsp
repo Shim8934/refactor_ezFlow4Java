@@ -166,7 +166,7 @@
 		<h1><spring:message code="ezResource.t274"/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="event_btnCancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="event_btnCancel_onclick()"></span></li>
             </ul>
         </div>
 		<div id="TB_Promise">

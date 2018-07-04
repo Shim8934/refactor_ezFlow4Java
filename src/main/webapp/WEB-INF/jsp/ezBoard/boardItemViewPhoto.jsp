@@ -389,8 +389,8 @@
 				var item_readlist_cross_dialogArguments = new Array();
 				function ReaderList()
 				{
-		            var swidth = 600;
-		            var sheight = 415;
+		            var swidth = 620;
+		            var sheight = 425;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
@@ -399,12 +399,12 @@
 		            var ptop = (pheight - sheight) / 2;
 		
 					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
-					var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+					var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
 					    item_readlist_cross_dialogArguments[0] = "";
 					    item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-					    DivPopUpShow(600, 415, szHref);
+					    DivPopUpShow(620, 425, szHref);
 					}
 					else
 					    window.open(szHref,"", "width=" + swidth + ",height=" + sheight + ",top=" + ptop + ",left=" + pleft + ", resizable=yes, scrollbars=yes");
@@ -1208,12 +1208,11 @@
 		      </div>
 		      <div id="close">
 		        <ul>
-		            <li ><span  onclick="btnClose_onclick()"><spring:message code='ezBoard.t12'/></span></li>
+		            <li ><span  onclick="btnClose_onclick()"></span></li>
 		        </ul>
 		      </div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		    </td>
 		  </tr>
@@ -1266,7 +1265,7 @@
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
 		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">
-		                            <img id="mainimages" style="background-color:#ffffff;cursor:pointer;" src=""/>            
+		                            <img id="mainimages" style="background-color:#ffffff;" src=""/>            
 		                        </td>
 		                    </tr>
 		           	    </table>

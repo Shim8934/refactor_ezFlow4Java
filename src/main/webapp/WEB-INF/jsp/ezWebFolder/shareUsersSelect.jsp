@@ -116,6 +116,11 @@
 	<body class="popup">
 		<c:if test="${type eq 'NEW'}"><h1><spring:message code='ezWebFolder.t323' /></h1></c:if>
 		<c:if test="${type ne 'NEW'}"><h1><spring:message code='ezWebFolder.t217' /></h1></c:if>
+		<div id="close">
+            <ul>
+                <li><span onclick="close_onclick()"></span></li>
+            </ul>
+        </div>
 		<table>
 			<tr>
 				<td width="195" valign="top">
@@ -175,11 +180,10 @@
 					</div>
 				</td>
 			</tr>
-			<tr style="height:35px;">
+			<tr>
 				<td colspan="3">
-					<div class="btnposition" style="margin-top:5px;padding-top:0px">
+					<div class="btnposition btnpositionNew">
 						<a class="imgbtn btnSave"   name="Submit"  onclick="addShare();"><span><spring:message code='ezWebFolder.t116'/></span></a>
-						<a class="imgbtn btnCancel" name="Submit2" onclick="close_onclick();"><span><spring:message code='ezWebFolder.t112'/></span></a>
 					</div>
 				</td>
 			</tr>

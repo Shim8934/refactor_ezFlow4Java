@@ -421,9 +421,7 @@
 		<div id="close">
 			<ul>
 				<li>
-					<span onClick="window.close()" style="cursor:pointer">
-						<spring:message code='ezPersonal.t10'/>
-					</span>
+					<span onClick="window.close()" style="cursor:pointer"></span>
 				</li>
 			</ul>
 		</div>
@@ -465,11 +463,8 @@
 				</td>
 		  	</tr>
 		</table>
-		<div class="btnposition btnpositionNew" style="margin-top:15px">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" onClick="select_member()" ><span><spring:message code='ezPersonal.t12'/></span></a>
 		</div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 	</body>
 </html>

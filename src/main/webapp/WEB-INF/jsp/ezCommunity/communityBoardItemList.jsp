@@ -69,8 +69,9 @@
     		            if (node.selectSingleNode(tagName))
     		                return node.selectSingleNode(tagName).text;
     		    }
-    		    return strValue.replace(/&/g,"&amp;");
-
+//     		    return strValue.replace(/&/g,"&amp;");
+				//2018-07-03 김보미 - 제목 특수문자처리 버그 수정 
+    		    return strValue;
     		}
     		
     		$(function () {
@@ -411,23 +412,23 @@
                 var pageNum = CurPage;
                 
                 if (totalPage > 1 && pageNum != 1) {
-                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
                     PagingHTML += strtext;
                 }
                 
                 if (totalPage > BlockSize) {
                     if (pageNum > BlockSize) {
-                        strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+                        strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
                         PagingHTML += strtext;
                     } else {
-                    	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+                    	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
                         PagingHTML += strtext;
                     }
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
                     PagingHTML += strtext;
                 }
                 
@@ -453,25 +454,25 @@
                 
                 if (totalPage > BlockSize) {
                     if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-                        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-                        strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+                        strtext = "";
+                        strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
                         PagingHTML += strtext;
                     } else {
-                        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-                        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+                        strtext = "";
+                        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
                         PagingHTML += strtext;
                     }
                 } else {
-                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+                    strtext = "";
+                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
                     PagingHTML += strtext;
                 }
                 
                 if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-                    strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+                    strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
                     PagingHTML += strtext;
                 }
                 
@@ -658,7 +659,7 @@
 				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 				<!-- 2018-05-30 구해안 게시하기 동사형을 '등록'으로 변경 -->
 					<li><span onClick="NewItem_onclick()"><spring:message code='ezCommunity.t958' /></span></li>
-					<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+					<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 					<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208' /></span></li>
 				</c:if>
 				
@@ -666,7 +667,7 @@
 					<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911' /></span></li>
 				</c:if>
 				
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912' /></span></li>
 				
 				<c:if test="${boardInfo.read_FG == 'true' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">

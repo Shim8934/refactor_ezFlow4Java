@@ -131,6 +131,11 @@
 	</head>
 	<body class="popup">
     	<h1><spring:message code='ezResource.t13'/></h1>
+    	<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table>
 			<tr>
         		<td style="padding-right:5px">
@@ -139,9 +144,8 @@
 			</tr>
 		</table>
     
-    	<div class="btnposition">
+    	<div class="btnpositionNew">
         	<a class="imgbtn"><span onclick="select_dept()" ><spring:message code='ezResource.t15'/></span></a>
-        	<a class="imgbtn"><span onclick="window.close()"><spring:message code='ezResource.t16'/></span></a>      
     	</div>
 	</body>
 </html>

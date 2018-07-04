@@ -1898,7 +1898,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			
 			if (item != null) {
 				bIsMyContent = true;
-				item.setContent(item.getContent().replaceAll("<br>", "\n"));
+				//2018-07-02 김보미 - 화면에서 처리하기 위해 주석.
+//				item.setContent(item.getContent().replaceAll("<br>", "\n"));
 			}
 		}
 		
@@ -2309,6 +2310,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
+		// 2018-06-29 김보미 - 커뮤니티 회원수 수정
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
@@ -3388,6 +3391,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
+		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();

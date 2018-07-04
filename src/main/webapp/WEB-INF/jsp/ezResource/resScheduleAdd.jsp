@@ -509,7 +509,7 @@
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="window.close();"> <spring:message code="ezResource.t150"/></span></li>
+          					<li><span onClick="window.close();"></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
@@ -696,7 +696,6 @@
 		<xmp id="xmpEntryEmailList" style="display: none;"> ${entryList}</xmp>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
     	<script type="text/javascript">
 	       	document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";

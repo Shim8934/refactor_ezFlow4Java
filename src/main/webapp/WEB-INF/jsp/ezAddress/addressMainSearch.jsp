@@ -369,7 +369,7 @@
 	        <ul>
 	            <li><span onclick="write_letter()"><spring:message code='ezAddress.t313' /></span></li>
 	            <li><span onclick="move_address()"><spring:message code='ezAddress.t176' /></span></li>
-	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+	            <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            <li><span onclick="delete_address()"><spring:message code='ezAddress.t175' /></span></li>
 	            <li><span onclick="window.location.reload(false)"><spring:message code='ezAddress.t240' /></span></li>
 	            <li style="background:none;float:right">

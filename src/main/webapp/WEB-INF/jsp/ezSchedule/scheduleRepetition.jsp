@@ -939,7 +939,7 @@
 		<h1><spring:message code='ezSchedule.t59' /></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="windows_close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="windows_close()"></span></li>
             </ul>
         </div>
 		<div id="TB_Promise">

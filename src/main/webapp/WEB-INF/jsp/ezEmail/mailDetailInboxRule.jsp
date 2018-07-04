@@ -989,16 +989,16 @@
 		</script>
 	</head>
 	<body class="popup" style="background-color:#ffffff;">
-	        <div id="menu">
-	          <ul>
-	            <li><span onClick="New_InboxRule()"><spring:message code='ezEmail.t823' /></span></li>
-	          </ul>
-	        </div>
-	        <div id="close">
-	          <ul>
-	            <li><span onClick="window.close();"><spring:message code='ezEmail.t63' /></span></li>
-	          </ul>
-	        </div>
+	    <div id="menu">
+	    	<ul>
+	        	<li><span onClick="New_InboxRule()"><spring:message code='ezEmail.t823' /></span></li>
+	        </ul>
+	    </div>
+	    <div id="close">
+	        <ul>
+	            <li><span onClick="window.close();"></span></li>
+	        </ul>
+	    </div>
 	    <div style="border:1px solid #dbdbda;width:585px;height:475px;overflow-y:auto;margin:5px 5px 5px 5px;">
 	    <div style="margin-top:20px;margin-left:20px;">
 	    <img src="/images/ImgIcon/rul-sml.gif" align="absmiddle"  height="16" style="margin-top:-3px;" hspace="2" /><span class="txt"><spring:message code='ezEmail.t812' /></span><p />
@@ -1020,7 +1020,6 @@
 	</body>
 	<script language="javaScript" type="text/javascript">
 	    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	</script>
 	<div id="inboxRuleCon" name="inboxRuleCon" style="display:none;">
 	<select name="Condition" class="select" onChange="Ruleselect(this)" style="margin-bottom:0px;" > 

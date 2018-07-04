@@ -131,7 +131,7 @@
 	    <h1><spring:message code='ezApprovalG.t55'/></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="return btn_OpinionCancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return btn_OpinionCancel_onclick()"></span></li>
             </ul>
         </div>
 	    <div class="listview">
@@ -142,7 +142,7 @@
 	
 	    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="width: 498px; Height: 150px; resize:none;" onfocus="return txt_OpinionContent_onfocus()" onchange="return txt_OpinionContent_onchange()"></textarea>
 	
-	  	<div class="btnposition btnpositionNew" style="height:24px">
+	  	<div class="btnposition btnpositionNew">
 	      <a class="imgbtn" id="bbtn_OpinionAdd" ><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
 	      <a class="imgbtn" id="bbtn_OpinionDel"><span id="btn_OpinionDel" onClick="return btn_OpinionDel_onclick()" ><spring:message code='ezApprovalG.t266'/></span></a>
 	      <a class="imgbtn" id="bbtn_OpinionCancel" style="display:none"><span id="btn_OpinionCancel" onClick="return btn_OpinionCancel_onclick()"><spring:message code='ezApprovalG.t64'/></span></a>

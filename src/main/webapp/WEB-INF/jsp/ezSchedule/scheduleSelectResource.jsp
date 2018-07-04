@@ -366,7 +366,7 @@
 	    <h1><spring:message code='ezSchedule.t1101' /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="btn_close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="btn_close()"></span></li>
             </ul>
         </div>
 	    <table>
@@ -382,7 +382,7 @@
 	            <td>
 	                <h2><span id="Span1"><spring:message code='ezSchedule.t1105' /></span></h2>
 	                <div class="listview">
-	                    <div id="ListView" STYLE="border:0; Width:245px; Height:296px; overflow:auto;"></div>
+	                    <div id="ListView" STYLE="border:0; Width:245px; Height:302px; overflow:auto;"></div>
 	                </div> 
 	            </td>
 	        </tr>      

@@ -55,19 +55,13 @@
 		<h1><spring:message code='ezApprovalG.t1217'/></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close()"><spring:message code='ezApprovalG.t64'/></span></li>
+		    <li><span onClick="window.close()"></span></li>
 		  </ul>
 		</div>
 		
-		<div class="listview"><div ID="lvAprLine" 
-						 STYLE="BEHAVIOR:url('#behave1#ListView'); border:0;
-						 HEIGHT: 120px; WIDTH: 517px" 
-						 onRowDblClick="return lvAprLine_DBSelChange()" 
-						 OnSelChanged="return lvAprLine_SelChange()">      
-					</div></div>
-					
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
+		<div class="listview">
+			<div ID="lvAprLine" STYLE="BEHAVIOR:url('#behave1#ListView'); border:0;HEIGHT: 120px; WIDTH: 517px" onRowDblClick="return lvAprLine_DBSelChange()" OnSelChanged="return lvAprLine_SelChange()">
+			</div>
+		</div>					
 	</body>
 </html>

@@ -514,6 +514,11 @@
 	<body class="popup">
 		<xml id="listviewheader" style ="display:none"></xml>
 	    <h1>Quick Link <spring:message code = 'ezPersonal.t105' /><spring:message code = 'ezPersonal.t169' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="btn_cancel()"></span></li>
+            </ul>
+        </div>
 	    <span style="color:red"><spring:message code = 'ezPersonal.t00008' /></span>
 	    <table class="content" style="height:300px;width:100%;">
 	        <tr>
@@ -713,10 +718,8 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <br />
-	    <div style="text-align: center;">
-	        <a class="imgbtn"><span id="btn_OK" onclick="btn_ok()"><spring:message code = 'ezPersonal.t105' /></span></a>
-	        <a class="imgbtn"><span onclick="btn_cancel()"><spring:message code = 'ezPersonal.t13' /></span></a>
+	    <div class="btnposition">
+	        <a class="imgbtn"><span id="btn_OK" onclick="btn_ok()"><spring:message code = 'ezPersonal.t105' /></span></a>	        
 	    </div>
 	    
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>

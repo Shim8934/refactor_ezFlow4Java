@@ -625,17 +625,16 @@
 			                        <li><span onclick="btn_TempSave('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
+	                    	<li id="btnGetOther"><span onclick="getOtherJournalList()"><spring:message code='ezJournal.t75' /></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
-	                    <ul>
-	                        <li id="btnGetOther"><span onclick="getOtherJournalList()"><spring:message code='ezJournal.t75' /></span></li>
-	                        <li><span onclick="btn_Close();"><spring:message code='ezJournal.t27' /></span></li>
+	                    <ul>	                        
+	                        <li><span onclick="btn_Close();"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>

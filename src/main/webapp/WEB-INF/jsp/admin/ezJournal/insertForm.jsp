@@ -273,7 +273,7 @@
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btnClose()"><spring:message code='ezJournal.t27'/></span></li>
+                <li><span id="btnClose" onClick="return btnClose()"></span></li>
             </ul>
         </div>
         <div class="portlet_tabpart01">
@@ -283,8 +283,7 @@
 	        </div>
         </div>
         
-        <div id="JournalForm_content1" style="width:100%;height:90%; padding-top:10px; display:none">
-			
+        <div id="JournalForm_content1" style="width:100%;height:90%; padding-top:10px; display:none">			
 			<table class="content" style="width:100%;">
 				<tr>                
 					<th style="width:100px; text-align:center"><spring:message code='ezJournal.t22'/></th>
@@ -382,7 +381,6 @@
 		</div>
         <script type="text/javascript">
         	selToggleList(document.getElementById("menu"), "ul", "li", "0");
-            selToggleList(document.getElementById("close"), "ul", "li", "0");
             Tab1_NewTabIni("tab1");
         </script>
 	</body>

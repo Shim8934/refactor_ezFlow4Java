@@ -157,7 +157,7 @@
 		<h1><spring:message code='ezApprovalG.t435'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="return btn_ImageCancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return btn_ImageCancel_onclick()"></span></li>
             </ul>
         </div>		
 		<table> 

@@ -122,7 +122,7 @@
 		
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close();"><spring:message code='main.t3' /></span></li>
+		    <li><span onClick="window.close();"></span></li>
 		  </ul>
 		</div>
 		
@@ -132,7 +132,7 @@
 				<td style="text-align:center;">
 					<select id="sharingUser" onchange="changeShareInfo(this.value)">
 					</select>
-					<a id="sharerInfo"><img src="/images/ImgIcon/circular_share2.gif" style="width:15px; vertical-align:middle;" /></a>
+					<a id="sharerInfo"><img src="/images/i_group_new.gif" style="vertical-align:middle;" /></a>
 				</td>
 			</tr>
 			<tr>

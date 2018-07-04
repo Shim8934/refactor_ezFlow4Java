@@ -137,7 +137,7 @@
 	
 	// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 	window.onresize = function() {
-		var reheight = document.documentElement.clientHeight - 200;
+		var reheight = document.documentElement.clientHeight - 210;
 		dom.dragDropArea.style.height = reheight + "px";
 		
 		reheight = document.documentElement.clientHeight - 100;
@@ -847,13 +847,13 @@
 				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
 				<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t275'/></span></li>
 				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			
-				<li favoritemenu><img src="/images/i_bar.gif"></li>
+				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
 				<li favoritemenu onclick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281'/></span></li>
-				<li><img src="/images/i_bar.gif"></li>
+				<!-- <li><img src="/images/i_bar.gif"></li> -->
 				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-				<li><img src="/images/i_bar.gif"></li>
+				<!-- <li><img src="/images/i_bar.gif"></li> -->
 				<li favoritemenu onclick="context.refreshList(true)"><span><spring:message code='ezWebFolder.t139'/></span></li>
-				<li favoritemenu><img src="/images/i_bar.gif"></li>
+				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
 				<li favoritemenu style="height: 28px;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);">
 						<option value=""><spring:message code='ezWebFolder.t191'/></option>

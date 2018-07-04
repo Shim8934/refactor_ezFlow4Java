@@ -48,11 +48,14 @@
 		    var Type = "${type}";
 		    var ReturnFunction;
 		    var approvalFlag = "${approvalFlag}";
+		    var openPageInfo;
 		    window.onload = function () {
 		        try {
+		            openPageInfo = parent.setsearchinfo_cross_dialogArguments[0];
 		            ReturnFunction = parent.setsearchinfo_cross_dialogArguments[1];
 		        } catch (e) {
 		            try {
+		            	openPageInfo = opener.setsearchinfo_cross_dialogArguments[0];
 		                ReturnFunction = opener.setsearchinfo_cross_dialogArguments[1];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
@@ -74,7 +77,14 @@
 		            //window.resizeBy(0, -60);
 		            window.resizeTo(510, 375);
 		        }
-		
+				if (openPageInfo == "usercontlist") {
+					$("#displayTR2").css("display", "none");
+					//등록일자
+					//$("#Sdatepickerapr").parent().siblings("th").text("<spring:message code='ezApprovalG.t831'/>");
+					$("#Sdatepickerapr").parent().siblings("th").text("<spring:message code='ezApprovalG.bhs01'/>");
+					window.resizeTo(510, 400);
+				}
+				
 		        reset_onclick();
 		        Submit3.focus();
 		    };
@@ -855,6 +865,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1325'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="Submit4" onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table  class="content">
 		  <tr>
 		    <th ><spring:message code='ezApprovalG.t442'/></th>
@@ -919,11 +934,10 @@
 		</table>
 		
 		<div class="btnposition btnpositionNew">
-		<a class="imgbtn"><span onClick="return btnSearch_onclick()" style="width:40px;" id="Submit3"><spring:message code='ezApprovalG.t111'/></span></a>
-		<a class="imgbtn"><span onClick="return btnToDaySearch_onclick()" style="width:70px;" id="Submit0"><spring:message code='ezApprovalG.t1336'/></span></a>
-		<a class="imgbtn"><span onClick="return btnWeekSearch_onclick()" style="width:70px;" id="Submit1"><spring:message code='ezApprovalG.t1337'/></span></a>
-		<a class="imgbtn"><span onClick="return btnMonthSearch_onclick()" style="width:70px;" id="Submit2"><spring:message code='ezApprovalG.t1557'/></span></a>
-		<a class="imgbtn"><span onClick="return btncancel_onclick()" style="width:40px;" id="Submit4"><spring:message code='ezApprovalG.t119'/></span></a>
+			<a class="imgbtn"><span onClick="return btnSearch_onclick()" id="Submit3"><spring:message code='ezApprovalG.t111'/></span></a>
+			<a class="imgbtn"><span onClick="return btnToDaySearch_onclick()" id="Submit0"><spring:message code='ezApprovalG.t1336'/></span></a>
+			<a class="imgbtn"><span onClick="return btnWeekSearch_onclick()" id="Submit1"><spring:message code='ezApprovalG.t1337'/></span></a>
+			<a class="imgbtn"><span onClick="return btnMonthSearch_onclick()" id="Submit2"><spring:message code='ezApprovalG.t1557'/></span></a>			
 		</div>
 		<c:if test ="${approvalFlag =='S'}">
 		<input type="text" id="formid" name="formid" style="width:1px;display:none" disabled="disabled" /> 

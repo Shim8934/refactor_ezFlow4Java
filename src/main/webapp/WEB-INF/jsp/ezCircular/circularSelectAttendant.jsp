@@ -1062,7 +1062,7 @@
 				}
 
 				var UserListHTML = "";
-				if (SelectDeptNM.getAttribute("countinfo") != "1") {
+				if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != null && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 					SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>"
 							+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
 							+ strLang256 + "</span>]";
@@ -1589,25 +1589,22 @@
 				PagingHTML += strtext;
 				var pageNum = CurPage;
 				if (totalPage > 1 && pageNum != 1) {
-					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 					PagingHTML += strtext;
 				}
 				if (totalPage > BlockSize) {
 					if (pageNum > BlockSize) {
-						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-								+ strLang24 + "</span>";
+						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-								+ strLang24 + "</span>";
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-							+ strLang24 + "</span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 				var MaxNum;
@@ -1631,32 +1628,29 @@
 				if (totalPage > BlockSize) {
 					if (totalPage >= parseInt(((parseInt((pageNum - 1)
 							/ BlockSize) + 1) * BlockSize) + 1)) {
-						strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-								+ strLang25 + "</span>";
+						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-								+ strLang25 + "</span>";
+						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-							+ strLang25 + "</span>";
+					strtext = "";
 					strtext = strtext
-							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 					strtext = "<span class='btnimg' onclick='return goToPageByNum("
 							+ totalPage
-							+ ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+							+ ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 				PagingHTML += "</div>";
@@ -1922,7 +1916,7 @@
 		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezCircular.t40' /></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 		<table style="width:100%">
@@ -1985,7 +1979,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 418px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezCircular.t80' /></td>
@@ -2002,8 +1996,8 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center; height:32px"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 418px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+	                                        <div id="tblPageRayer" style="text-align:center; height:32px;margin-bottom:10px"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -2074,7 +2068,7 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
 		</div>
 	</body>

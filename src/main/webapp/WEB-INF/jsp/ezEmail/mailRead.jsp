@@ -457,7 +457,7 @@
 		                    </c:if>
 		                </ul>
 		            </div>
-		            <div id="close"><ul><li><span onClick="OnBtnClose()"><spring:message code="ezEmail.t63" /></span></li></ul></div>	
+		            <div id="close"><ul><li><span onClick="OnBtnClose()"></span></li></ul></div>	
 		        </td> 
 		    </tr>  
 		    <tr> 
@@ -543,7 +543,7 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
+			
 			if("${pIsCCFg}"!="N") {
 				document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
 			} else {

@@ -180,7 +180,7 @@
 		<h1><spring:message code='ezTask.lhj01' /></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="close_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="close_onclick()"></span></li>
             </ul>
         </div>
 		<div id="main_body">
@@ -188,18 +188,14 @@
 				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj03' /></div>
 				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj04' /></div>
 				<div style="margin-top:7px;">▒ <spring:message code = 'ezTask.lhj05' /></div>
-			</div>
-			
-			<br />
-			
+			</div>			
+			<br />			
 			<div class="circles" style="text-align: center;">
 				<div class="taskProgressBar circle">
 					<strong></strong>
 				</div>
-			</div>
-			
-			<br />
-				
+			</div>			
+			<br />				
 			<table class="content" style="width:100%;">
 				<tr>
 					<th>
@@ -232,7 +228,7 @@
 				</tr>
 			</table>
 		</div>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onclick="taskUpdateInstance()"><span><spring:message code='ezTask.t19' /></span></a>
 		</div>
 	</body>

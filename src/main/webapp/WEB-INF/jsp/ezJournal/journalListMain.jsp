@@ -614,8 +614,8 @@
 						CurrentHeight = document.documentElement.clientHeight - 110;
 						document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 						document.getElementById("MailListRayer").style.width = "100%";
-						document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-						document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
+						document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+						document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 						g_bPrevShow = false;
 						onPreview=false;
 						$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
@@ -635,8 +635,8 @@
 						document.getElementById("MailListRayer").style.width = "100%";
 						document.getElementById("PreviewRayerW").style.width = "100%";
 						document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-						document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-						document.getElementById("journalListBody").style.height = (pMailListHeightW - 50-32) + "px";
+						document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+						document.getElementById("journalListBody").style.height = (pMailListHeightW - 100) + "px";
 						document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)+ "px";
 
 // 						document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
@@ -682,8 +682,8 @@
 						document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 						document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 						document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-						document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-						document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
+						document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+						document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 
 // 						document.getElementById("divList").style.overflow = "auto";
 						document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
@@ -991,10 +991,10 @@
 				<li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
 			</c:if>
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			</c:if>
 			<c:if test="${listType eq 'department'}">
-				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:28px;border-radius:3px">
+				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:29px;">
 					<c:forEach items="${deptList}" var="dept">
 						<option value="${dept.deptId}"
 							<c:if test="${dept.mine eq 'yes' }">selected</c:if>>${dept.deptName }
@@ -1003,7 +1003,7 @@
 				</select></li>
 			</c:if>
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li style="background: none"><select id="formId" onchange="goToPageByFormName();" style="height:28px;border-radius:3px"></select></li>
+				<li style="background: none"><select id="formId" onchange="goToPageByFormName();" style="height:29px;"></select></li>
 			</c:if>
 			<li style=""></li>
 			<li id="right">
@@ -1201,8 +1201,8 @@
 	            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 	            document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 	            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-	            document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-	            document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
+	            document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+	            document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 	            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
@@ -1224,8 +1224,8 @@
 	            document.getElementById("MailListRayer").style.width = "100%";
 	            document.getElementById("PreviewRayerW").style.width = "100%";
 	            document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-	            document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-	            document.getElementById("journalListBody").style.height = (pMailListHeightW - 50-32) + "px";
+	            document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+	            document.getElementById("journalListBody").style.height = (pMailListHeightW - 100) + "px";
 	            document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
 //                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";

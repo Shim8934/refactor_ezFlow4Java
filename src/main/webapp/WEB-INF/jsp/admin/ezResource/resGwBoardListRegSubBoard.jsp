@@ -33,7 +33,7 @@
 			function cmdOK_onclick(){
 				var re = /[\\/:*?\"<>&|]/gi;
 				if(re.test(document.getElementById("Brd_NM").value) || re.test(document.getElementById("Brd_NM2").value)){
-					alert("<spring:message code='ezResource.kms1' />");
+					alert("<spring:message code='ezResource.kmsr01' />");
 					return;
 				}
 				

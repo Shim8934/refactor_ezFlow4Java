@@ -149,7 +149,7 @@
 	                	if(CheckAdmin()) {
 	                		document.getElementById("mainmenu").onload = function(){};
 	    	               	document.getElementById("noResListSpan").style.display = "none";
-	    	               	document.getElementById("tbar2").style.display = "none";
+	    	               	//document.getElementById("tbar2").style.display = "none";
 	                	} else {
 	                		document.getElementById("mainmenu").style.display = "none";
 	                	} 
@@ -326,7 +326,7 @@
     			<c:if test="${adminFg eq 'Y'}">
     				<li><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
     				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
-    				<li id="tbar2" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
+    				<!-- <li id="tbar2" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li> -->
     			</c:if>
     			<span id = "noResListSpan">
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>

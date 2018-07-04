@@ -31,13 +31,9 @@
 		<h1>Quick Poll</h1>
 		<div id="close">
 			<ul>
-				<li><span onClick="close_btn()"><spring:message code = 'ezPersonal.t10' /></span></li>
+				<li><span onClick="close_btn()"></span></li>
 			</ul>
 		</div>
-		
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 		 
 		<table>
 			<tr>

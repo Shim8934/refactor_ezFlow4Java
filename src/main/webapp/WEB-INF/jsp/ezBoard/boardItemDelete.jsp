@@ -118,8 +118,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li ><span onclick="window.close()">
-	                            <spring:message code='ezBoard.t12'/></span></li>
+	                        <li ><span onclick="window.close()"></span></li>
 	                    </ul>
 	                </div>
 	            </td>

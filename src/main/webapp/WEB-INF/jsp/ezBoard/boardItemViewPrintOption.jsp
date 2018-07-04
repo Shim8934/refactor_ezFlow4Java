@@ -126,6 +126,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezBoard.t484'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezBoard.t485'/></h2>
 		<span id="pMessageContent"></span>
 		<table class="content">

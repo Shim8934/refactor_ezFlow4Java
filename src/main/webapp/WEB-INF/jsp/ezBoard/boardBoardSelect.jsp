@@ -242,11 +242,11 @@
 		<h1><spring:message code='ezBoard.t135'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 		<div class="box" style="width:320px;height:550px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
     		<a class="imgbtn"><span onClick="Select()"><spring:message code='ezBoard.t47'/></span></a>
 		</div>
 	</body>

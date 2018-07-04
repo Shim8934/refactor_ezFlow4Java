@@ -133,12 +133,11 @@
 					</div>
 					<div id="close">
 						<ul>
-							<li><span onClick="window.close()"> <spring:message code='ezBoard.t12' /></span></li>
+							<li><span onClick="window.close()"></span></li>
 						</ul>
 					</div> 
 					<script type="text/javascript">
 						selToggleList(document.getElementById("menu"), "ul", "li", "0");
-						selToggleList(document.getElementById("close"), "ul", "li", "0");
 					</script>
 				</td>
 			</tr>
@@ -343,10 +342,10 @@
 				}
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 300) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezJournal/JournalViewerList.do?journalId=" + journalId+"&currentPage="+currentPage;
-	            DivPopUpShow(600, 415, szHref);
+	            DivPopUpShow(620, 425, szHref);
 		    }
 		    
 		    //엑셀로 저장 (미구현)
@@ -424,10 +423,10 @@
 				}
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 300) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezJournal/JournalReceiverList.do?journalId=" + journalId + "&currentPage=" + currentPage;
-	            DivPopUpShow(600, 415, szHref);
+	            DivPopUpShow(620, 425, szHref);
 		    }
 		    
 		    //인쇄
