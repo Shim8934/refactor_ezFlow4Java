@@ -580,26 +580,29 @@
                 <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
-		<h2><spring:message code='ezApprovalG.t1018'/></h2>
-		<table class="content">
-		  <tr>
-		    <th ><spring:message code='ezApprovalG.t1063'/></th>
-		    <td><table style="width:100%">
-		        <tr>
-		          <td id="tdCabinetName">&nbsp;</td>
-		          <td style="width:70px"><a class="imgbtn"><span onclick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a></td>
-		        </tr>
-		      </table></td>
-		  </tr>
-		  <tr>
-		    <th><spring:message code='ezApprovalG.t1088'/></th>
-		    <td id="tdCabinetType"  >&nbsp;</td>
-		  </tr>
-		  <tr>
-		    <th><spring:message code='ezApprovalG.t573'/></th>
-		    <td id="tdCabinetVolNo"  >&nbsp;</td>
-		  </tr>
-		</table>
+        <div id="CabinetInfoView">
+			<h2><spring:message code='ezApprovalG.t1018'/></h2>
+			<table class="content">
+			  <tr>
+			    <th ><spring:message code='ezApprovalG.t1063'/></th>
+			    <td><table style="width:100%">
+			        <tr>
+			          <td id="tdCabinetName">&nbsp;</td>
+			          <td style="width:70px"><a class="imgbtn"><span onclick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a></td>
+			        </tr>
+			      </table>
+			     </td>
+			  </tr>
+			  <tr>
+			    <th><spring:message code='ezApprovalG.t1088'/></th>
+			    <td id="tdCabinetType"  >&nbsp;</td>
+			  </tr>
+			  <tr>
+			    <th><spring:message code='ezApprovalG.t573'/></th>
+			    <td id="tdCabinetVolNo"  >&nbsp;</td>
+			  </tr>
+			</table>
+        </div>
 		<h2 style="margin-top:10px" ><spring:message code='ezApprovalG.t1089'/></h2>
 		<table class="content">
 		  <tr>
