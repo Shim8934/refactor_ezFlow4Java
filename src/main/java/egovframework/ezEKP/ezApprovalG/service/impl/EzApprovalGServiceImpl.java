@@ -26648,11 +26648,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    String cabID = "";
 		    if (docXML.getElementsByTagName("NONELECREC_SPECIALCATALOGINFO").getLength() > 0) {
 		    	specialCatalogInfoXML = makeListField(docXML.getElementsByTagName("NONELECREC_SPECIALCATALOGINFO").item(0).getTextContent().trim());
-		    	Document objParam = commonUtil.convertStringToDocument(specialCatalogInfoXML);
-		    	cabID = docXML.getElementsByTagName("CABINETID").item(0).getTextContent();
-		    	saveSpecialInfoNonElecRec(orgDocID, recordID, cabID, objParam, tenantID, companyID);
+		    	if (!specialCatalogInfoXML.equals("")) {
+			    	Document objParam = commonUtil.convertStringToDocument(specialCatalogInfoXML);
+			    	
+			    	if (objParam.getElementsByTagName("SCDATA").getLength() > 0) {
+				    	cabID = docXML.getElementsByTagName("CABINETID").item(0).getTextContent();
+				    	saveSpecialInfoNonElecRec(orgDocID, recordID, cabID, objParam, tenantID, companyID);
+			    	}
+		    	}
 		    }
-		    
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    	result = "FALSE";
