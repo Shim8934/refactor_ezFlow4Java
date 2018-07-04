@@ -128,13 +128,13 @@ $(function(){
 		<div class="project_mainlist">
 		<ul class="project_mainlistUL">
 		<c:forEach items="${projectList }" var="project">
-			<li id="${project.projectId }"  ondblclick="goProjectDetails(this)">
+			<li id="${project.projectId }" data-groupId="${project.groupId}" ondblclick="goProjectDetails(this)">
 				<div class="project_list" >
 					<table>
 						<tr>
 							<th width="42"><input type="checkbox" name="memoCheckbox" onchange="checkedCheckboxMemo(this);"></th>
 							<th class="projectNameArea">
-								<span><c:out value="${project.projectName }"/></span>
+								<span class="projectName"><c:out value="${project.projectName }"/></span>
 							</th>
 							<th width="42"><c:choose>
 							<c:when test="${project.isFavorite eq 0}">
