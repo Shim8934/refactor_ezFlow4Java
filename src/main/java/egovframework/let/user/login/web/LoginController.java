@@ -421,6 +421,9 @@ public class LoginController {
         	String errorMsg1 = "";
         	String errorMsg2 = "";
         	String errorMsg3 = "";
+        	String errorMsg4 = "";
+        	String errorMsg5 = "";
+        	String errorMsg6 = "";
 
         	switch (check) {
 				case -3: 
@@ -433,16 +436,20 @@ public class LoginController {
 	        		//Show warning message
 	        		/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가, 메세지 리소스 분리 */
 	        		errorMsg1 = egovMessageSource.getMessage("fail.common.login.warning1", locale);
-	        		errorMsg1 += egovMessageSource.getMessage("fail.common.login.warning2", locale);
-	        		errorMsg2 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
-	        		errorMsg3 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
-	        		errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
-	        		errorMsg3 += "   " + egovMessageSource.getMessage("fail.common.login.warning6", locale);
+	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
+	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
+	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
+	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+	        		errorMsg6 = egovMessageSource.getMessage("fail.common.login.warning6", locale);
 	        		
 	        		model.addAttribute("message1", errorMsg1);
 	            	model.addAttribute("message2", errorMsg2);
 	            	model.addAttribute("message3", errorMsg3);
+	            	model.addAttribute("message4", errorMsg4);
+	            	model.addAttribute("message5", errorMsg4);
+	            	model.addAttribute("message6", errorMsg4);
 	            	model.addAttribute("isWrongPass", "Y");
+	            	
 	            	return "forward:/user/login/login.do";
         		case -1:
         			//Show normal login fail message
@@ -459,17 +466,21 @@ public class LoginController {
         			} else {
             			//Show warning message
         				errorMsg1 = egovMessageSource.getMessage("fail.common.login.warning1", locale);
-    	        		errorMsg1 += egovMessageSource.getMessage("fail.common.login.warning2", locale);
-    	        		errorMsg2 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {check + 1}, locale);
-    	        		errorMsg3 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
-    	        		errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
-    	        		errorMsg3 += "   " + egovMessageSource.getMessage("fail.common.login.warning6", locale);
+    	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
+    	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {check + 1}, locale);
+    	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
+    	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+    	        		errorMsg6 = egovMessageSource.getMessage("fail.common.login.warning6", locale);
     	        		
-    	            	model.addAttribute("message1", errorMsg1);
+    	        		model.addAttribute("message1", errorMsg1);
     	            	model.addAttribute("message2", errorMsg2);
     	            	model.addAttribute("message3", errorMsg3);
-                    	model.addAttribute("isWrongPass", "Y");
-                    	return "forward:/user/login/login.do";
+    	            	model.addAttribute("message4", errorMsg4);
+    	            	model.addAttribute("message5", errorMsg5);
+    	            	model.addAttribute("message6", errorMsg6);
+    	            	model.addAttribute("isWrongPass", "Y");
+    	            	
+    	            	return "forward:/user/login/login.do";
         			}
         	}
         } 
