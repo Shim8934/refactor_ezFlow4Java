@@ -113,7 +113,8 @@
 		<result property="status"			column="STATUS"				columnIndex="4"/>
 		<result property="responseDate"		column="RESPONSEDATE"		columnIndex="5"/>
 		<result property="mail"				column="MAIL"				columnIndex="6"/>
-		<result property="info"				column="INFO"				columnIndex="7"/>		
+		<result property="department"		column="DEPARTMENT"			columnIndex="7"/>
+		<result property="info"				column="INFO"				columnIndex="8"/>		
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="inviteScheduleGroupListVO">
@@ -453,6 +454,7 @@
 			 	'' as status,
 			 	'' as responsedate,
              	BB.mail,
+             	BB.department,
              	case #v_LANG#
                     when '1' then concat(A.memberName, '(', BB.description, ')')                   
         			when '2' then concat(A.memberName2, '(', BB.description2, ')')
@@ -468,14 +470,14 @@
                      where  
                      	tenant_id = #v_TENANTID#	
              )A left join ( SELECT  
-							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2
+							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
 							FROM  
 							TBL_USERMASTER D 
 							WHERE  
 							D.TENANT_ID = #v_TENANTID# AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
 							UNION ALL 
 							SELECT  
-							B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2 
+							B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
 							FROM  
 							TBL_USERMASTER B  
 							INNER JOIN  
