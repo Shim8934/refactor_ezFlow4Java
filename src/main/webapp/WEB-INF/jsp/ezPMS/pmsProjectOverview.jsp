@@ -392,7 +392,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 	if (taskList != null) {
 		var kanbanHTML = "";
 		
-		if (taskCount == 0) {
+		if (taskCount == 0 && taskType != "add") {
 			$("#" + targetPosition).find(".cardArea").html("");
 			return;
 		}
@@ -491,9 +491,15 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 		
 		var targetStatus = $("#" + targetPosition).attr("name");
 		var startRow = $("#" + targetPosition).find(".overview_list").length;
+		console.log(taskList.length);
 		
 		if (taskList.length >= 10) {
-			$("#" + targetPosition).find(".overview_section_list").append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")'><span><spring:message code='ezPMS.t276' /></span></div>");
+			if (!isBoard) {
+				$("#" + targetPosition).find(".overview_section_list").append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")'><span><spring:message code='ezPMS.t276' /></span></div>");
+			} else {
+				$("#" + targetPosition).find(".overview_section_list").append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")'><span><spring:message code='ezPMS.t276' /></span></div>");
+			}
+			
 		}
 	}
 }
