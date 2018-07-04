@@ -138,9 +138,19 @@
 		});
 	}
 	
+	function searchClear() {
+		$("#searchByTaskName").val("");
+		$("#searchByUser").val("");
+		$("#Sdatepicker").val("");
+		$("#Edatepicker").val("");
+		$("#searchByTitle").val("");
+		$("#searchByOverview").val("");
+		$("#searchByContent").val("");
+	}
+	
 	function searchPopup() {
 		//기본값 초기화
-		//searchClear();
+		searchClear();
 		
 		//searchPopup 안에 OK넣고 온클릭에  전역변수:Tab1_SelectID로 구분해서 list가져오는거 분기
 		$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"project\"].layerHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
