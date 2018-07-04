@@ -61,18 +61,18 @@ var pagination = (function() {
 		document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang10 + "<span style='color:#017BEC;'> " + itemAmount + " </span>" + messages.strLang11 + "]";
 		
 		if (currentPage == 1) {
-			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
 		} else {
-			pagingHTML += "<span class='btnimg' onclick='return pagination.setPage(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+			pagingHTML += "<span class='btnimg' onclick='return pagination.setPage(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
 		}
 		
 		if (startButtonPage === 1) {
-			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span>"
+			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>"
 		} else {
-			pagingHTML += "<span class='btnimg' onclick='return pagination.previousBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span>";
+			pagingHTML += "<span class='btnimg' onclick='return pagination.previousBlock()'><img src='/images/sub/btn_prev.gif'></span>";
 		}
 		
-		pagingHTML += "<span class='ptxt' onclick='return pagination.previous()'>" + messages.strLang8 + "</span>";
+		pagingHTML += "";
 		
 		// TODO
 		// if (overPage)
@@ -86,15 +86,15 @@ var pagination = (function() {
 		}
 		
 		if (endButtonPage < totalPage) {
-			pagingHTML += "<span class='ptxt' onclick='return pagination.next()'>" + messages.strLang9 + "</span>" + "<span class='btnimg' onclick='return pagination.nextBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+			pagingHTML += "<span class='btnimg' onclick='return pagination.nextBlock()'><img src='/images/sub/btn_next.gif'></span>";
 		} else {
-			pagingHTML += "<span class='ptxt' onclick='return pagination.next()'>" + messages.strLang9 + "</span>" + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 		}
 		
 		if (currentPage == totalPage) {
-			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
 		} else {
-			pagingHTML += "<span class='btnimg' onclick='pagination.setPage(" + totalPage + ");'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+			pagingHTML += "<span class='btnimg' onclick='pagination.setPage(" + totalPage + ");'><img src='/images/sub/btn_n_next.gif'></span>";
 		}
 		
 		pagingHTML += "</div>";
@@ -150,15 +150,15 @@ function makePageSelPage(){
 	document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang10 + "<span style='color:#017BEC;'> " + totalRows + " </span>" + messages.strLang11 + "]";
 	
 	if (totalPages > 1 && pageNum != 1) {
-		pagingHTML += "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+		pagingHTML += "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
 	} else {
-		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
 	}
 	
 	if (totalPages > blockSize && pageNum > blockSize) {
-		pagingHTML += "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick='return selbeforeBlock_one()'>" + messages.strLang8 + "</span>";
+		pagingHTML += "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
 	} else {
-		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + messages.strLang8 + "</span>";
+		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 	}
 	
 	var maxNum;
@@ -182,17 +182,17 @@ function makePageSelPage(){
 	}
 	
 	if (totalPages > blockSize && totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
-		pagingHTML += "<span class='ptxt' onClick='return selafterBlock_one()'>" + messages.strLang9 + "</span>"
-					+ "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		pagingHTML += ""
+					+ "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
 	} else {
-		pagingHTML += "<span class='ptxt' onClick='return selafterBlock_one()'>" + messages.strLang9 + "</span>"
-					+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";;
+		pagingHTML += ""
+					+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 	}
 	
 	if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
-		pagingHTML += "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		pagingHTML += "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif'></span>";
 	} else {
-		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
 	}
 	
 	pagingHTML += "</div>";
