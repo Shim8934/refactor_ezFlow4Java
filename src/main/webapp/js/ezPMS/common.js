@@ -197,3 +197,33 @@ function viewSetting() {
 	$("#divList").css("height", (CurrentHeight - 154) + "px");
 	$("#divList").css("overflow", "auto");
 }
+
+// 프로젝트 메인화면에서 체크된 프로젝트들의 정보들을 반환
+function getCheckedProjectInfo() {
+	
+	var result = [];
+	
+	function ProjectInfo(projectName, projectId, groupId) {
+		this.projectName = projectName;
+		this.projectId = projectId;
+		this.groupId = groupId;
+	}
+	
+	$("input[type='checkbox']:checked").each(function() {	
+		
+		if (viewType == "1") {
+			var projectName = $(this).parent().siblings(".projectName").text();
+			var projectId 	= $(this).parents("tr:eq(0)").attr("id");
+			var groupId		= $(this).parents("tr:eq(0)").attr("data-groupid");
+		} else {
+			var projectName = $(this).parent().siblings(".projectNameArea").children(".projectName").text();
+			projectName = projectName.substring(2);
+			var projectId 	= $(this).parents("li:eq(0)").attr("id");
+			var groupId		= $(this).parents("li:eq(0)").attr("data-groupid");
+		}
+		
+		result.push(new ProjectInfo(projectName, projectId, groupId));
+	});
+	
+	return result;
+}
