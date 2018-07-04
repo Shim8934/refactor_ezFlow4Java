@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var contentTitle = $(".jstree-clicked").text();

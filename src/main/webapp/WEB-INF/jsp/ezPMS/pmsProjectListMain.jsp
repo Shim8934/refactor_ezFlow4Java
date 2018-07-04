@@ -189,10 +189,10 @@ $(function() {
 	}
 	
 	if (listProjectStatus != "F") {
-		$("#deleteFavorite").css("display", "none");
+		$("#deleteFavorite").parent().css("display", "none");
 		$("#addFavorite").css("display", "");
 	} else {
-		$("#deleteFavorite").css("display", "");
+		$("#deleteFavorite").parent().css("display", "");
 		$("#addFavorite").css("display", "none");
 	}
 	
@@ -460,9 +460,9 @@ function setProjectList(mode) {
 		url : "/ezPMS/getProjectList.do",
 		success : function(projectList) {
 			if (listProjectStatus == "A" || listProjectStatus == "C" || listProjectStatus == "F") {
-				$("#changeProjectStatus").css("display", "none");
+				$("#changeProjectStatus").parent().css("display", "none");
 			} else {
-				$("#changeProjectStatus").css("display", "");
+				$("#changeProjectStatus").parent().css("display", "");
 			}
 			
 			if (viewType == 1) {
@@ -605,13 +605,13 @@ function viewListByStatus(status) {
 	startRow = 0;
 	
 	if (listProjectStatus != "F") {
-		$("#deleteFavorite").css("display", "none");
-		$("#addFavorite").css("display", "");
-		$("#changeProjectStatus").css("display", "");
+		$("#deleteFavorite").parent().css("display", "none");
+		$("#addFavorite").parent().css("display", "");
+		$("#changeProjectStatus").parent().css("display", "");
 	} else {
-		$("#deleteFavorite").css("display", "");
-		$("#addFavorite").css("display", "none");
-		$("#changeProjectStatus").css("display", "none");
+		$("#deleteFavorite").parent().css("display", "");
+		$("#addFavorite").parent().css("display", "none");
+		$("#changeProjectStatus").parent().css("display", "none");
 	}
 	
 	if (listProjectStatus == "D") {
@@ -1042,7 +1042,7 @@ function searchProject() {
 	<div id="mainmenu">
 	<ul>
 		<li>
-			<select style="height:27px;" id="listByStatus" onchange="viewListByStatus(this.value)">
+			<select id="listByStatus" onchange="viewListByStatus(this.value)">
 				<option value="A"><spring:message code='ezPMS.t271' /></option>
 				<option value="P"><spring:message code='ezPMS.t258' /></option>
 				<option value="W"><spring:message code='ezPMS.t260' /></option>

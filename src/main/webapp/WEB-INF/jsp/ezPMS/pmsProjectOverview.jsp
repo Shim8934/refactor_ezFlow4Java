@@ -695,7 +695,7 @@ function getTaskDetails(elem) {
 </script>
 </head>
 <body>
-<div class="project_overview">
+<div class="project_overview" style="margin : 10px 10px 0px 10px;">
 <ul class="contentlayout" style="height:740px;">
 	<li class="contentlayout_right" style="height:740px;"><!--우측정보-->
 		<div class="project_overview_right" style="height:740px;">

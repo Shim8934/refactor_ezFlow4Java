@@ -383,7 +383,7 @@
 </style>
 
 </head>
-<body>
+<body style="margin:10px 10px 0px 10px;">
 	<div id="taskTree"></div>
 	<div id="projectArea" class="projectAreaStyle">
 		<div id="projectContent">

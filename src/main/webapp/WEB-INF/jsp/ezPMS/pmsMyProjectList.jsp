@@ -17,6 +17,8 @@
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css"
 	type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <title><spring:message code='ezPMS.t142' /></title>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;

@@ -173,7 +173,7 @@ function emptyDate(elem){
 
 function viewSetting() {
 	CurrentHeight = $(window).height() - 100;
-	$("#MailListRayer").css("height", CurrentHeight - 102 + "px");
+	$("#MailListRayer").css("height", CurrentHeight - 104 + "px");
 	$("#taskTree").css("height", CurrentHeight + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
 	$("#contentList").css("height", (CurrentHeight - 103) + "px");

@@ -1578,7 +1578,7 @@
 		  
 		</style>
 	</head>
-	<body style="background-color: #fff;">
+	<body style="background-color: #fff; margin:10px 10px 0px 10px;">
 		<div id="mainmenu" class="pmsMenuDiv" style="height: 30px;">
 			<ul class="pmsGanttMenuUl">
 		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t89' /></span></li>

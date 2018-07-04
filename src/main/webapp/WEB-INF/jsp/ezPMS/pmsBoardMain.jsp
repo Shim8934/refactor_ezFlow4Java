@@ -16,6 +16,8 @@
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -134,6 +136,27 @@
 				setInitOrder();
 			}	
 		});
+	}
+	
+	function searchPopup() {
+		//기본값 초기화
+		//searchClear();
+		
+		//searchPopup 안에 OK넣고 온클릭에  전역변수:Tab1_SelectID로 구분해서 list가져오는거 분기
+		$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"project\"].layerHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
+		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"project\"].layerHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
+		parent.parent.frames["left"].document.body.style.overflow = "hidden";		
+		
+		var popupX = parent.document.body.clientWidth/2 - (500/2);
+		
+		$("#searchPopup").css("left", popupX);
+		parent.frames["project"].$(".portlet_tabpart01").css("z-index", 0);
+		$("#searchPopup").modal();
+	}
+
+	function layerHidden() {
+		parent.frames["project"].$(".portlet_tabpart01").css("z-index", 100);
+	    $.modal.close();
 	}
 	
 	function setContentTitle(taskName, contentCount) {
@@ -362,7 +385,7 @@
 </style>
 
 </head>
-<body>
+<body style="margin:10px 10px 0px 10px;">
 	<div id="taskTree"></div>
 	<div id="projectArea" class="projectAreaStyle">
 		<div id="projectContent">
@@ -376,43 +399,9 @@
 						<li><span onclick="goMoveBoards()"><spring:message code='ezPMS.t111' /></span></li>
 					</c:if>
 					<li><span onclick="location.reload()"><spring:message code='ezPMS.t123' /></span></li>
-					<li><span onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" class="searchViewIcon"></span></li>
+					<li><span onclick="searchPopup()"><spring:message code='ezPMS.t1' /></span></li>
 				</ul>
 				</div>
-			</div>
-			<div id = "searchDiv" style="display:none; margin-bottom:40px;">
-				<table class="content" style="width:100%;">
-					<tbody>
-						<tr>
-							<th><spring:message code='ezPMS.t98' /> </th>
-							<td style="width:50%">
-								<input type="text" id="searchByTaskName" style="width:50%; margin-right:5px;">
-							</td>
-							<th><spring:message code='ezPMS.t114' /></th>
-							<td><input type="text" style="width:100%" id="searchByUser"></td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezPMS.t215' /></th>
-							<td style="width:50%" colspan="3"><input type="text" style="width:100%" id="searchByTitle"></td>
-						<!-- 	<th>내 용</th>
-							<td style="width:50%"><input type="text" style="width:100%" id="searchByContent"></td> -->
-						</tr>
-						<tr>
-							<th><spring:message code='ezPMS.t81' /></th>
-							<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezPMS.t125' /> </th>
-							<td colspan="3">
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<div class="newbtn_position">
-        			<a class="imgbtn" onclick="searchBoard()"><span><spring:message code='ezPMS.t1' /></span></a>
-    			</div>
 			</div>
 			<div id="contentList" style="overflow: auto; width:100%; margin:0px; padding:0px 10px; box-sizing:border-box;">
 				<span id="MailListRayer"
@@ -420,6 +409,46 @@
 				</span>
 			</div>
 		</div>
+	</div>
+	<div id="searchPopup" class="popupwrapAtt" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+	<div id = "popupwrap3">
+	<table class="content" style="width:100%;">
+		<tbody>
+			<tr>
+				<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;
+				<spring:message code='ezPMS.t141'/> <spring:message code='ezPMS.t1'/></th>
+			</tr>
+			<tr>
+				<th><spring:message code='ezPMS.t98' /> </th>
+				<td><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
+			</tr>
+			<tr>
+				<th><spring:message code='ezPMS.t114' /></th>
+	 			<td><input type="text" style="width:100%" id="searchByUser"></td>
+			</tr>
+			<tr>
+				<th><spring:message code='ezPMS.t215' /></th>
+				<td><input type="text" style="width:100%" id="searchByTitle"></td>
+			</tr>
+			<tr>
+				<th><spring:message code='ezPMS.t81' /></th>
+				<td><input type="text" style="width:100%" id="searchByOverview"></td>
+			</tr>
+			<tr>
+				<th><spring:message code='ezPMS.t125' /> </th>
+				<td colspan="3">
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+					<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+		<br />
+		<div style="text-align:center;">
+			<a class="imgbtn" onclick="searchBoard()"><span><spring:message code='ezPMS.t1' /></span></a>
+			<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
+	    </div>
+	</div>
 	</div>
 </body>
 </html>

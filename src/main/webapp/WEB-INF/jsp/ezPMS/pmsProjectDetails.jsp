@@ -141,7 +141,8 @@ function deleteFavorite(projectId) {
 }
 </script>
 </head>
-<body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
+<body class="mainbody" style="height: 95%; overflow: hidden; margin-left:0px; margin-right: 0px;" marginwidth="0" marginheight="0" >
+	<div id="test" style="padding-left:10px">
 	<h1 id="projectName">
 		<c:out value="${project.projectName }" />
 		<c:choose>
@@ -155,7 +156,7 @@ function deleteFavorite(projectId) {
 			</c:otherwise>
 		</c:choose>
 	</h1>
-	<div class="portlet_tabpart01" style="margin-bottom: 10px">
+	<div class="portlet_tabpart01">
 	   <div class="portlet_tabpart01_top" id="tab1">
 	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t66' /></span></p>
 	  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t151' /></span></p>
@@ -165,6 +166,7 @@ function deleteFavorite(projectId) {
 	   		<p id="FBoard_sub5"><span id="1tab5" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t154' /></span></p>
 	   </div>
 	</div>
-	<iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>
+	</div>
+	<iframe id="FBoard_ifrm" name="project" style="width: 100%; height: 100%;" frameborder="0"></iframe>
 </body>
 </html>

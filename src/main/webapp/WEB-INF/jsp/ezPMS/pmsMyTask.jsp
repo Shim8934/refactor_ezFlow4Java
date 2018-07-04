@@ -14,6 +14,8 @@
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 
 <!-- time picker-->
@@ -131,17 +133,27 @@ $(function() {
 	});
 	
 });
+function searchPopup() {
+	//기본값 초기화
+	searchClear();
+	
+	//searchPopup 안에 OK넣고 온클릭에  전역변수:Tab1_SelectID로 구분해서 list가져오는거 분기
+	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	
+	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	
+	$("#searchPopup").css("left", popupX);
+	$(".portlet_tabpart01").css("z-index", 0);
+	$("#searchPopup").modal();
+}
+
+function layerHidden() {
+	$(".portlet_tabpart01").css("z-index", 100);
+    $.modal.close();
+}
 
 function searchClear() {
-	searchByTaskName = "";
-	searchByGroupName = "";
-	searchByProjectName = "";
-	searchByUser = "";
-	searchByPlanStartDate = "";
-	searchByPlanEndDate = "";
-	searchByOverview = "";
-	searchByUpperGroupName = "";
-	
+	//업무 및 그룹 검색 초기화
 	if (nowPosition == "task") {
 		$("#searchByTaskName").val("");
 		$("#searchByUpperGroupName").val("");
@@ -150,11 +162,19 @@ function searchClear() {
 		$("#searchByUpperGroupName").val("");
 	}
 	
+
 	$("#searchByUser").val("");
 	$("#searchByProjectName").val("");
-	$("#searchByPlanStartDate").val("");
-	$("#searhchByPlanEndDate").val("");
+	$("#Sdatepicker").val("");
+	$("#Edatepicker").val("");
 	$("#searchByOverview").val("");
+	
+	//프로젝트 관련 검색 초기화
+	$("#PsearchByProjectName").val("");
+	$("#PsearchByUser").val("");
+	$("#PSdatepicker").val("");
+	$("#PEdatepicker").val("");
+	$("#PsearchByOverview").val("");
 	
 }
 
@@ -307,7 +327,7 @@ function setMyTaskList(position) {
 			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
 			$("#divList").css("height", (CurrentHeight - 150) + "px");
 			$("#divList").css("overflow", "auto");
-			
+
 			setInitOrder();
 		}
 	});
@@ -432,6 +452,7 @@ function searchContent() {
 	}
 	
 	setMyTaskList(nowPosition);
+	layerHidden();
 }
 
 function goProjectDetails(elem) {
@@ -500,7 +521,7 @@ function goGroupDetails(elem) {
 	<div id="contentArea" style="overflow:auto;">
 	<div id="mainmenu">
 	<ul>
-		<li><span id="addTaskBtn" onclick="showSearchDiv()"><spring:message code='ezPMS.t1' /> <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
+		<li><span id="addTaskBtn" onclick="searchPopup()"><spring:message code='ezPMS.t1' /></span></li>
 		<li style="float:right"><div>
 		<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
 			<option value="A"><spring:message code='ezPMS.t14' /></option>
@@ -513,26 +534,41 @@ function goGroupDetails(elem) {
 	</div></li>
 	</ul>
 	</div>
-	<div id = "searchDiv" style="margin-bottom:40px; display:none;">
+	<div id="contentList"></div>
+	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+	</span>
+	</div>
+	<div id="searchPopup" class="popupwrapAtt" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+	<div id = "popupwrap3">
 	<table class="content" style="width:100%;">
 		<tbody id="taskSearch">
+				<tr>
+					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;
+					<spring:message code='ezPMS.t1'/></th>
+				</tr>
 			<tr>
 				<th id="taskName"><spring:message code='ezPMS.t98' /> </th>
-				<td style="width:50%"><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
+				<td><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
+			</tr>
+			<tr>
 				<th><spring:message code='ezPMS.t63' /></th>
 				<td><input type="text" style="width:100%" id="searchByUser"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t61' /> </th>
-				<td style="width:50%"><input type="text" class="Sdatepicker" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+				<td><input type="text" class="Sdatepicker" id="Sdatepicker" style="width:100px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+			</tr>
+			<tr>
 				<th><spring:message code='ezPMS.t62' /></th>
-				<td><input type="text" class="Edatepicker" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+				<td><input type="text" class="Edatepicker" id="Edatepicker" style="width:100px;text-align:center" readonly="readonly" class="hasDatepicker" size="10"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t42' /></th>
-				<td style="width:50%"><input type="text" style="width:100%" id="searchByUpperGroupName"></td>
+				<td><input type="text" style="width:100%" id="searchByUpperGroupName"></td>
+			</tr>
+			<tr>
 				<th><spring:message code='ezPMS.t31' /></th>
-				<td><input type="text" style="width:70%; margin-right : 5px;" id="searchByProjectName"></td>
+				<td><input type="text" style="width:100%; margin-right : 5px;" id="searchByProjectName"></td>
 			</tr>
 			<tr>
 				<th id="taskOverview"><spring:message code='ezPMS.t104' /></th>
@@ -541,30 +577,38 @@ function goGroupDetails(elem) {
 		</tbody>
 		<tbody id="projectSearch">
 				<tr>
+					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;
+					<spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t1'/></th>
+				</tr>
+				<tr>
 					<th><spring:message code='ezPMS.t31' /> </th>
-					<td style="width:50%"><input type="text" id="PsearchByProjectName" style="width:50%; margin-right:5px;"></td>
+					<td><input type="text" id="PsearchByProjectName" style="width:100%; margin-right:5px;"></td></tr>
+				</tr>
+				<tr>
 					<th><spring:message code='ezPMS.t63' /></th>
-					<td><input type="text" id="PsearchByUser"></td>
+					<td><input type="text" id="PsearchByUser" style="width:100%;"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezPMS.t61' /></th>
-					<td style="width:50%"><input type="text" class="Sdatepicker" id="PSdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+					<td><input type="text" class="Sdatepicker" id="PSdatepicker" style="width:100px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+				</tr>
+				<tr>
 					<th><spring:message code='ezPMS.t62' /></th>
-					<td><input type="text" class="Edatepicker" id="PEdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
+					<td><input type="text" class="Edatepicker" id="PEdatepicker" style="width:100px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezPMS.t66' /></th>
-					<td colspan="3"><input type="text" style="width:100%" id="PsearchByOverview"></td>
+					<td><input type="text" style="width:100%" id="PsearchByOverview"></td>
 				</tr>
 			</tbody>
 	</table>
-	<div class="newbtn_position">
-		<a class="imgbtn" onclick="searchContent()"><span><spring:message code='ezPMS.t1' /></span></a>
-    </div>
+	<!-- /내용 -->
+		<br />
+		<div style="text-align:center;">
+			<a class="imgbtn" onclick="searchContent()"><span><spring:message code='ezPMS.t1' /></span></a>
+			<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
+	    </div>
 	</div>
-	<div id="contentList"></div>
-	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-	</span>
 	</div>
 </body>
 </html>
