@@ -126,7 +126,8 @@ function changeStatus() {
 function popupClose() {
 	parent.DivPopUpHidden();
 }
- 
+
+// status 알파벳을 문자열로 반환
 function getStatusStr(status) {
 	
 	switch(status) {

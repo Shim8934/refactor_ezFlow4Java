@@ -372,6 +372,13 @@ function changeStatus(status) {
 							alert("<spring:message code='ezPMS.t10' />");
 						}
 						
+						var projectName = $("#projectName", parent.document).text().trim();
+						var nowStatusStr = getStatusStr(nowStatus);
+						var statusStr 	 = getStatusStr(changeStatus);
+						
+						var logContent = "[" + projectName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "<spring:message code='ezPMS.t313' />" + statusStr + "<spring:message code='ezPMS.t314' />" 
+						addTaskLog(projectId, 2, groupId, null, logContent);
+						
 						window.location.reload();
 					} else {
 						alert("<spring:message code='ezPMS.t9' />");
@@ -381,6 +388,31 @@ function changeStatus(status) {
 				error : function(jqXHR, textStatus, errorThrown) {
 				}
 			});
+	}
+}
+
+//status 알파벳을 문자열로 반환
+function getStatusStr(status) {
+	
+	switch(status) {
+	case 'P': // 진행
+		return "<spring:message code='ezPMS.t15'/>"
+		break;
+	case 'W': // 대기
+		return "<spring:message code='ezPMS.t16'/>"
+		break;
+	case 'C': // 완료
+		return "<spring:message code='ezPMS.t17'/>"
+		break;
+	case 'L': // 지연
+		return "<spring:message code='ezPMS.t18'/>"
+		break;
+	case 'S': // 보류
+		return "<spring:message code='ezPMS.t19'/>"
+		break;
+	case 'D': // 삭제
+		return "<spring:message code='ezPMS.t11'/>"
+		break;
 	}
 }
 
