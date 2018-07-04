@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -6285,6 +6285,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("rollBackHwp ended");
 	}
 
+	//2018-07-04 이효진 전자결재 HWP 일괄결재 시 연동
 	private boolean excuteInfoHwp(String pProcessIdx, String draftFlag, HWPFile hwpFile, String docID, String userID, String formURL) throws Exception {
 		logger.debug("excuteInfoHwp started");
 
@@ -6293,24 +6294,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		keywords = keywords.replaceAll("<KEYWORD />", "");
 		logger.debug("keywords = " + keywords);
 		
-		boolean findFlag;
-		
-		String connString = "";
-		String connFlag = "";
-		String queryString = "";
-		String queryType = "";
+		String connString, connFlag;
+		String queryString, queryType;
 		String processIdx, processTime;
-		
-		Document xmlData = null;
-		NodeList connNodes = null;
 		
 		org.jsoup.nodes.Document doc = Jsoup.parse(keywords, "", Parser.xmlParser());
 		
 		//connroot 외에 수신자, 기안자, 마지막 결재자 등의 정보  sibbling으로 존재.  필요시 사용
 		Element htmlConn = doc.getElementsByTag("connroot").first();
 		
-		findFlag = false;
-		//내꺼
 		for (org.jsoup.nodes.Node connNode : htmlConn.childNodes()) {
 			processIdx = connNode.attr("processidx");
 			processTime = connNode.attr("processtime");
@@ -6327,26 +6319,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				logger.debug("connFlag = " + connFlag + " || connString = " + connString);
 				logger.debug("queryType = " + queryType + " || queryString = " + queryString);
 				
-				/** queryType Q, NA -> service로 변경*/
-				//connClass 하나 생성하고 reflection으로 메소드 호출할껀데 파라미터는 어떠케 정하냐 
-				
 				if (queryType.equals("service")) {
-					ezConnUtil.setDocID(docID);
-					ezConnUtil.setUserID(userID);
+					Class refClass = ezConnUtil.getClass();
+					Object refInstance = refClass.newInstance();
 					
-					logger.debug("" + ezConnUtil.getClass().getDeclaredField("docID"));
-					logger.debug("" + ezConnUtil.getClass().getDeclaredField("userID"));
+					Field fieldDocID = refClass.getDeclaredField("docID");
+					fieldDocID.setAccessible(true);
+					fieldDocID.set(refInstance, docID);
+					
+					Field fieldUserID = refClass.getDeclaredField("userID");
+					fieldUserID.setAccessible(true);
+					fieldUserID.set(refInstance, userID);
+					
+					logger.debug("" + refClass.getDeclaredField("docID"));
+					logger.debug("" + refClass.getDeclaredField("userID"));
 					
 					/** queryString로 호출할 서비스구분*/
-					
-					for (Method method : ezConnUtil.getClass().getDeclaredMethods()) {
-						logger.debug("method name = " + method.getName());
-						
-						for (Parameter param : method.getParameters()) {
-							logger.debug("param type = " + param.getParameterizedType());
-							//javac -parameters로 컴파일하고 실행시키면  name 똑바로 나온다는데 
-							//여기선 왜 arg0 1 2 3? 
-							logger.debug("param name = " + param.getName());
+					for (Method method : refClass.getDeclaredMethods()) {
+						if (queryString.equals(method.getName())) {
+							//ezConnUtil connTest() 테스트용도
+							logger.debug("method name = " + method.getName());
+							
+							method.invoke(refInstance);
 						}
 					}
 				}

@@ -53,9 +53,12 @@ public class EzConnUtil {
 	private String docID;
     private String userID;
     
-    public String connTest(String a, String b, String c) throws Exception {
-    	logger.debug("connTest = " + a + b + c);
-    	return a + b + c;
+    public void connTest() throws Exception {
+    	logger.debug("connTest started.");
+    	
+    	logger.debug("docID = " + docID + " || userID = " + userID);
+    	
+    	logger.debug("connTest ended.");
     }
 
 	public String getDocID() {
