@@ -1503,6 +1503,15 @@ function event_listclick(obj, event) {
                     _RowObject = document.getElementById(listContentArry[Cnt]);
                     _RowObject.style.backgroundColor = m_strColorDefault;
                     _RowObject.childNodes.item(0).childNodes.item(0).checked = false;
+                    
+                    if (useReceivingChk) {
+                    	var receiveChilds = $("#MailList [id^=" + listContentArry[Cnt] + "_]");
+                    	
+                    	for (var i = 0; i < receiveChilds.length; i++) {
+                    		receiveChilds[i].style.backgroundColor = m_strColorDefault;
+                    	}
+                    }// end if
+                    
                 }
                 listContentArry = new Array();
             }
@@ -1572,6 +1581,15 @@ function event_listclick(obj, event) {
                     _RowObject.style.backgroundColor = m_strColorSelect;
                     _RowObject.childNodes.item(0).childNodes.item(0).checked = true;
                     listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+                    
+                    if (useReceivingChk) {
+                    	var receiveChilds = $("#MailList [id^=" + _RowObject.getAttribute("id") + "_]");
+                    	
+                    	for (var i = 0; i < receiveChilds.length; i++) {
+                    		receiveChilds[i].style.backgroundColor = m_strColorSelect;
+                    	}
+                    }// end if
+                    
                     prevShow();
                 }
             }
