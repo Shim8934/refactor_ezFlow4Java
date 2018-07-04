@@ -52,11 +52,13 @@ public class EzConnUtil {
 	
 	private String docID;
     private String userID;
+    private String companyID;
+    private int tenantID;
     
     public void connTest() throws Exception {
     	logger.debug("connTest started.");
     	
-    	logger.debug("docID = " + docID + " || userID = " + userID);
+    	logger.debug("docID = " + docID + " || userID = " + userID + " || companyID = " + companyID + " || tenantID = " + tenantID);
     	
     	logger.debug("connTest ended.");
     }
@@ -75,5 +77,21 @@ public class EzConnUtil {
 
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+
+	public String getCompanyID() {
+		return companyID;
+	}
+
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+
+	public int getTenantID() {
+		return tenantID;
+	}
+
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 }
