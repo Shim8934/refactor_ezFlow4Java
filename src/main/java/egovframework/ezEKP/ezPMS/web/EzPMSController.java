@@ -1213,7 +1213,16 @@ public class EzPMSController {
 		String url = "/rest/ezPMS/list/users";
 		param.put("userId", userId);
 		
-		List<Map<String, Object>> managerList = (List<Map<String, Object>>) param.get("userList");
+		List<Map<String, Object>> managerList = null;
+		
+		try {
+			managerList = (List<Map<String, Object>>) param.get("userList");
+		// IE에서는 LinkedHashMap으로만 cast할 수 있게 값이 넘어옴
+		} catch(ClassCastException e) {
+			Map<Integer, Map<String, Object>> tempMap = (Map<Integer, Map<String, Object>>) param.get("userList");
+			managerList = new ArrayList<Map<String,Object>>(tempMap.values());
+		}
+		
 		JSONObject listJson = new JSONObject();
 		listJson.put("userList", managerList);
 		param.remove("userList");

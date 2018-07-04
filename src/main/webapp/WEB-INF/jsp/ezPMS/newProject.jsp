@@ -321,9 +321,12 @@ var groupId = "${groupId}";
 	 var participantNameList = "";
 	 var viewerNameList = "";
 	 
-	 managerList = JSON.parse(managerList);
-	 participantList = JSON.parse(participantList);
-	 viewerList = JSON.parse(viewerList);
+	 // 조직도에서는 stringify해서 넘어옴
+	 if(typeof managerList != 'object' && typeof participantList != 'object' && typeof viewerList != 'object') {
+		 managerList = JSON.parse(managerList);
+		 participantList = JSON.parse(participantList);
+		 viewerList = JSON.parse(viewerList);
+	 }
 	 
 	 for (var i = 0; i < managerList.length; i++) {
 		if(headManagerId == managerList[i].userId) {

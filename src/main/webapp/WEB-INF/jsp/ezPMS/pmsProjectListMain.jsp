@@ -78,8 +78,7 @@ $(document).ready(function() {
 			leftDocument = $(window.parent.parent.frames['board_menu'].document);
 		}
 	}
-	
-	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+	if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
 		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
 	} else {
 		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
