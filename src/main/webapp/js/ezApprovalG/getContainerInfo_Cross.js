@@ -918,7 +918,7 @@ function pagingCount(p_page, p_nowblock) {
     if (totalPage > 1) {
         if (nowblock > 0) {
             strtext = "<a onclick= 'return Block_Check(" + ((nowblock - 1) * mychoice + 1) + "," + (nowblock - 1) + ")' style='cursor:pointer'>";
-            strtext = strtext + "<img src='/images/page_previous.gif' width='15' height='15'  border='0' align='absmiddle'>&nbsp;</a>";
+            strtext = strtext + "<img src='/images/page_previous.gif' border='0' align='absmiddle'>&nbsp;</a>";
 
             td_Create(strtext);
         }
@@ -933,7 +933,7 @@ function pagingCount(p_page, p_nowblock) {
                 strtext = "<a onclick= 'return Page_Click(" + prevPage + "," + block + ")' style='cursor:pointer'>&nbsp";
             }
 
-            strtext = strtext + "<img src='/images/page_previous.gif' width='15' height='15'  border='0' align='absmiddle'></a>&nbsp;";
+            strtext = strtext + "<img src='/images/page_previous.gif' border='0' align='absmiddle'></a>&nbsp;";
 
             td_Create(strtext);
         }
@@ -980,13 +980,13 @@ function pagingCount(p_page, p_nowblock) {
                 block = nowblock;
                 strtext = "&nbsp<a onclick='return Page_Click(" + nextPage + "," + block + ")' style='cursor:pointer' >";
             }
-            strtext = strtext + "<img src='/images/page_next.gif' width='15' height='15' border='0' align='absmiddle'></a>&nbsp;";
+            strtext = strtext + "<img src='/images/page_next.gif' border='0' align='absmiddle'></a>&nbsp;";
             td_Create(strtext);
         }
 
         if ((total_block > 0) && (nowblock < total_block)) {
             strtext = "<a onclick='return Block_Check(" + ((nowblock + 1) * mychoice + 1) + "," + (nowblock + 1) + ")' style='cursor:pointer'>";
-            strtext = strtext + "<img src='/images/page_next.gif' width='15' height='15' border='0' align='absmiddle'></a>";
+            strtext = strtext + "<img src='/images/page_next.gif' border='0' align='absmiddle'></a>";
 
             td_Create(strtext);
         }

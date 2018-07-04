@@ -167,7 +167,7 @@ function pagingCount(p_page, p_nowblock) {
                 block = nowblock;
                 strtext = "<div onclick= 'return Page_Click(" + prevPage + "," + block + ")' style='cursor:pointer'>";
             }
-            strtext = strtext + "<img src='/images/page_previous.gif' width='15' height='15'  border='0'></div>";
+            strtext = strtext + "<img src='/images/page_previous.gif' border='0'></div>";
             td_Create(strtext);
         }
 
@@ -209,7 +209,7 @@ function pagingCount(p_page, p_nowblock) {
                 block = nowblock;
                 strtext = "<div onclick='return Page_Click(" + nextPage + "," + block + ")' style='cursor:pointer' >";
             }
-            strtext = strtext + "<img src='/images/page_next.gif' width='15' height='15' border='0'></div>";
+            strtext = strtext + "<img src='/images/page_next.gif' border='0'></div>";
             td_Create(strtext);
 
         }
