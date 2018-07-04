@@ -68,7 +68,6 @@ function addNewProject() {
 $(document).ready(function() {
 	var clickOutside;
 	var leftDocument;
-	debugger;
 	
 	try {
 		leftDocument = $(window.parent.frames['left'].document);
