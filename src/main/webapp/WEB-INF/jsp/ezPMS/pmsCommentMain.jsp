@@ -49,7 +49,7 @@
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 70) + "px");
 		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-		$("#divList").css("height", (CurrentHeight - 206) + "px");
+		$("#divList").css("height", (CurrentHeight - 220) + "px");
 		
 		$(window).resize(function() {
 			CurrentHeight = $(window).height() - 100;
@@ -58,7 +58,7 @@
 			$("#projectContent").css("height", CurrentHeight + "px");
 			$("#contentList").css("height", (CurrentHeight - 70) + "px");
 			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-			$("#divList").css("height", (CurrentHeight - 206) + "px");
+			$("#divList").css("height", (CurrentHeight - 220) + "px");
 		});
 		
 		treeData = ${data};
@@ -130,7 +130,7 @@
 				$("#projectContent").css("height", CurrentHeight + "px");
 				$("#contentList").css("height", (CurrentHeight - 70) + "px");
 				$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-				$("#divList").css("height", (CurrentHeight - 206) + "px");
+				$("#divList").css("height", (CurrentHeight - 220) + "px");
 				
 				setInitOrder();
 			}	

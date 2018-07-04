@@ -2,6 +2,8 @@
  * 프로젝트 업무트리 가져오기
  */
 function getProjectTaskTree(containerId, data, location) {
+	console.log(data);
+	
 	$("#"+containerId).jstree({
 		'core' : {
 			'data' : data,
@@ -193,7 +195,7 @@ function viewSetting() {
 	$("#taskTree").css("height", CurrentHeight + "px");
 	$("#projectContent").css("height", CurrentHeight + "px");
 	$("#contentList").css("height", (CurrentHeight - 103) + "px");
-	$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
-	$("#divList").css("height", (CurrentHeight - 154) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 198) + "px");
+	$("#divList").css("height", (CurrentHeight - 162) + "px");
 	$("#divList").css("overflow", "auto");
 }

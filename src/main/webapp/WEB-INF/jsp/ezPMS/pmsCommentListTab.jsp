@@ -153,7 +153,7 @@
 	}
 	
 	#divList {
-		height: 370px !important;
+		height: 360px !important;
 	}
 
 	#col1 {width: 10%;}

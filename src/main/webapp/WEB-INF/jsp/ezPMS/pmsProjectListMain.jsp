@@ -120,7 +120,7 @@ $(document).ready(function() {
 			document.getElementById("divList").style.overflow = "auto";
 			document.getElementById("MailListRayer").style.height = CurrentHeight - 3 + "px";
 			document.getElementById("MailListRayer").style.width = "100%";
-			document.getElementById("divList").style.height = (CurrentHeight - 45) + "px";
+			document.getElementById("divList").style.height = (CurrentHeight - 51) + "px";
 			document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
 		}
 	});
@@ -160,7 +160,7 @@ function projectListScroll() {
 		document.getElementById("divList").style.overflow = "auto";
 		document.getElementById("MailListRayer").style.height = CurrentHeight - 3 + "px";
 		document.getElementById("MailListRayer").style.width = "100%";
-		document.getElementById("divList").style.height = (CurrentHeight - 45) + "px";
+		document.getElementById("divList").style.height = (CurrentHeight - 51) + "px";
 		document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
 	}
 	
