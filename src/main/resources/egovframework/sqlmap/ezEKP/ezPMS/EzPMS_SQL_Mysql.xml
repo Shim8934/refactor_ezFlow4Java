@@ -1369,10 +1369,11 @@
 				A.DEL_STATUS = 0
 		]]>
 		<isNotEqual property="roleId" compareValue="3">
-		<isNotEqual property="roleId" compareValue="2">
 			AND
-				C.USER_ID = #userId#
-		</isNotEqual>
+				(C.USER_ID = #userId#
+				OR
+				C.USER_ID = #deptId#
+				)
 		</isNotEqual>
 		<isNotEqual property="projectId" compareValue="0">
 			AND  
@@ -2420,10 +2421,11 @@
 				A.DEL_STATUS = 0
 		]]>
 		<isNotEqual property="roleId" compareValue="3">
-		<isNotEqual property="roleId" compareValue="2">
 			AND
-				C.USER_ID = #userId#
-		</isNotEqual>
+				(C.USER_ID = #userId#
+				OR
+				C.USER_ID = #deptId#
+				)
 		</isNotEqual>
 		<isNotEqual property="projectId" compareValue="0">
 			AND  

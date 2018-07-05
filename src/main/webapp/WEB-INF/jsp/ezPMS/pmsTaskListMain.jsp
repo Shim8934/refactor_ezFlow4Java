@@ -366,7 +366,6 @@
 		
 		if (result == 1) {
 			var response = confirm("<spring:message code='ezPMS.t107' />");
-			console.log(result);
 			if (response == true) {
 				$.ajax({
 					type : "POST",
@@ -473,6 +472,12 @@
 #searchDiv {
 	margin-left : 11px;
 }
+
+#searchStatus {
+	height : 29px;
+	border-radius : 2px;
+	border-color : #d2d2d2;
+}
 </style>
 </head>
 <body>
@@ -483,13 +488,13 @@
 		<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div>
 				<span id="searchArea" style="float:right;font-weight:normal;color:black;">
 				<div>
-				<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
-					<option value="A"><spring:message code='ezPMS.t14' /></option>
-					<option value="P"><spring:message code='ezPMS.t15' /></option>
-					<option value="W"><spring:message code='ezPMS.t16' /></option>
-					<option value="C"><spring:message code='ezPMS.t17' /></option>
-					<option value="L"><spring:message code='ezPMS.t18' /></option>
-					<option value="S"><spring:message code='ezPMS.t19' /></option>
+				<select id="searchStatus" onchange="searchStatus(this.value)">
+					<option value="A"><spring:message code='ezPMS.t14' /> <spring:message code='ezPMS.t137' /></option>
+					<option value="P"><spring:message code='ezPMS.t15' /> <spring:message code='ezPMS.t137' /></option>
+					<option value="W"><spring:message code='ezPMS.t16' /> <spring:message code='ezPMS.t137' /></option>
+					<option value="C"><spring:message code='ezPMS.t17' /> <spring:message code='ezPMS.t137' /></option>
+					<option value="L"><spring:message code='ezPMS.t18' /> <spring:message code='ezPMS.t137' /></option>
+					<option value="S"><spring:message code='ezPMS.t19' /> <spring:message code='ezPMS.t137' /></option>
 				</select>
 				</div>
 				</span>

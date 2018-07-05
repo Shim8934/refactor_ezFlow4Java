@@ -68,12 +68,6 @@ $(function() {
 		$("#mainmenu").find("div").css("display", "");
 		$("#taskSearch").css("display", "");
 		$("#projectSearch").css("display", "none")
-		
-		if ($("#searchDiv").css("display") != "none") {
-			$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
-			$("#searchDiv").hide();
-		}
-
 		searchClear();
 		setMyTaskList("task");
 	});
@@ -180,6 +174,15 @@ function searchClear() {
 
 $(document).ready(function() {
 	getDatePicker();
+
+	CurrentHeight = $(window).height() - 100;
+	$("MailListRayer").css("height", CurrentHeight + "px");
+	$("#taskTree").css("height", CurrentHeight + 10 + "px");
+	$("#projectContent").css("height", CurrentHeight + "px");
+	$("#contentList").css("height", (CurrentHeight - 100) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+	$("#divList").css("height", (CurrentHeight - 150) + "px");
+	$("#divList").css("overflow", "auto");
 	
 	$(window).resize(function() {
 		$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
@@ -296,6 +299,7 @@ function setMyTaskList(position) {
 		kanbanOrder : kanbanOrder,
 		currentPage : currentPage,
 		listNumber : listNumber,
+		isMyTask : "M",
 		//헤더 정렬
 		orderWhat : orderWhat,
 		orderHow : orderHow,
