@@ -157,25 +157,51 @@
 			});
 		}
 		
+		//휴일 체크
 		function checkHoliday(obj) {
 			var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
 			var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
 			var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
+			var addAttitude = true; // true 등록 가능
 			
-			if (closedDay[nowAttiTime.getDay()] == "1" || todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
-	    		alert("<spring:message code='ezAttitude.t167'/>");
-			} else {
-				var returnValue = getIsAttitude(obj.getAttribute("type"));
-				
-				if (returnValue == 0) {
-					addAttitude(obj);
-				} else {
-					alert("<spring:message code='ezAttitude.t169'/>");
-					getAttitudeList();
-	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+			if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
+				addAttitude = false;				
+			} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
+				if (todayMemorialDayList.length != 0 ) {
+					for (var i = 0; i < todayMemorialDayList.length; i++) {
+						if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
+							addAttitude = false;
+						}
+					}
+				} 
+				if (todayYearMemorialDayList.length != 0) {
+					for (var i = 0; i < todayYearMemorialDayList.length; i++) {
+						if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
+							addAttitude = false;
+						}
+					}
 				}
 			}
+			
+			if(addAttitude) {
+				checkAttitude(obj);
+			} else {
+				alert("<spring:message code='ezAttitude.t167'/>");
+			}
 		}
+		
+		//근태 중복 체크
+	 	function checkAttitude(obj) {
+			var returnValue = getIsAttitude(obj.getAttribute("type"));
+			
+			if (returnValue == 0) {
+				addAttitude(obj);
+			} else {
+				alert("<spring:message code='ezAttitude.t169'/>");
+				getAttitudeList();
+    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+			}
+	 	}
 		
 		//시간놓고 alert내용을 파라미터로 던져서 체크??
 	    function addAttitude(obj) {
