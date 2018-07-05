@@ -731,8 +731,8 @@
 	                    	alluser["pic"][0] = pic;
 	                    	alluser["temporder"][0] = i;
 	                    	alluser["email"][i] = email;
-	                    	alluser["description"][i] = description;
-	                    	alluser["description2"][i] = description2;
+	                    	alluser["description"][0] = description;
+	                    	alluser["description2"][0] = description2;
 	                    	if(strId.substring(0, 14) === "anonyAttendant") {
 	                    		alluser["userdata"][0] = "anony";
 	                    	} else {
@@ -746,8 +746,8 @@
 	                    	overlapuser["temporder"][0] = i;
 	                    	overlapuser["userdata"][0] = "";
 	                    	overlapuser["email"][i] = email;
-	                    	overlapuser["description"][i] = description;
-	                    	overlapuser["description2"][i] = description2;
+	                    	overlapuser["description"][0] = description;
+	                    	overlapuser["description2"][0] = description2;
 	                    }
 	            	}
 	            } else {
