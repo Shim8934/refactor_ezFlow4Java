@@ -204,7 +204,7 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/mailGetList.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getMailList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
-		logger.debug("getMailList started.");		
+		logger.debug("getMailList started.");
 		logger.debug("bodyData=" + bodyData);
 		
 		// get user credentials
@@ -226,6 +226,7 @@ public class EzEmailMailListController {
 		String end = doc.getElementsByTagName("END").item(0).getTextContent();
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
+		String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", userInfo.getTenantId());
 		
 		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
@@ -264,15 +265,27 @@ public class EzEmailMailListController {
 					
 					logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
 					
-					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
+					if (useAdvancedMailSearch.equals("YES")) {
+						messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, searchField, searchValue, null, null, false, isUnreadOnly, isImportantOnly);
+					} else {
+						messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
+					}
 				}
 			}
 			else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
+				if (useAdvancedMailSearch.equals("YES")) {
+					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", null, null, false, isUnreadOnly, isImportantOnly);
+				} else {
+					messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
+				}
 			}
 			
 			else if (isImportantOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
+				if (useAdvancedMailSearch.equals("YES")) {
+					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", null, null, false, isUnreadOnly, isImportantOnly);
+				} else {
+					messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
+				}
 			}
 			
 			if (messages == null) {
@@ -616,15 +629,11 @@ public class EzEmailMailListController {
 		
 		String folderId = null;
 		long[] uids = null;
+		
 		if (cmd.equalsIgnoreCase("ALL")) {
 			folderId = uniqueId;
-		}
-		else {
-			if (uniqueId.endsWith(",")) {
-				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-			}
-			
-			String[] folderAndMsgIdArray = uniqueId.split(",");
+		} else {
+			String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 			
 			int delimiterIndex = folderAndMsgIdArray[0].lastIndexOf("/");
 			folderId = folderAndMsgIdArray[0].substring(0, delimiterIndex);			
@@ -635,8 +644,9 @@ public class EzEmailMailListController {
 				delimiterIndex = folderAndMsgId.lastIndexOf("/");
 				String msgId = folderAndMsgId.substring(delimiterIndex + 1);
 				uids[i] = Long.parseLong(msgId);
-			}	
+			}
 		}
+		
 		logger.debug("folderId=" + folderId);
 		
 		IMAPAccess ia = null;
@@ -752,11 +762,8 @@ public class EzEmailMailListController {
 			String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
 			String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			
-			if (uniqueId.endsWith(",")) {
-				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-			}
+			String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 			
-			String[] folderAndMsgIdArray = uniqueId.split(",");
 			String folderId = folderAndMsgIdArray[0].split("/")[0];			
 			long[] uids = new long[folderAndMsgIdArray.length];
 			
@@ -875,11 +882,13 @@ public class EzEmailMailListController {
 		String[] folderAndMsgIdArray = uniqueId.split(";");
 		folderId = folderAndMsgIdArray[0].split("/")[0];			
 		uids = new long[folderAndMsgIdArray.length];
+		
 		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 			String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
 			String msgId = folderAndMsgId.split("/")[1];
 			uids[i] = Long.parseLong(msgId);
 		}	
+		
 		logger.debug("folderId=" + folderId);		
 		
 		IMAPAccess ia = null;
@@ -1195,7 +1204,14 @@ public class EzEmailMailListController {
 			folder.open(Folder.READ_ONLY);
 	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
-	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, true, false);
+	        String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", userInfo.getTenantId());
+	        Message[] messages = null;
+	        
+	        if (useAdvancedMailSearch.equals("YES")) {
+	        	messages = ezEmailUtil.advancedSearchFolder(userAccount, folder, "", "", null, null, false, true, false);
+	        } else {
+	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, true, false);
+	        }
 	        
 	        // sort the messages
  			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);

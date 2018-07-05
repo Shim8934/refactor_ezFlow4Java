@@ -723,7 +723,7 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		        if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") != null && SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") != "") {
 		        	//SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
 		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
@@ -1102,25 +1102,25 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1144,27 +1144,27 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -1399,7 +1399,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 422px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
@@ -1416,8 +1416,8 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px; height:32px"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 422px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px;"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -1439,7 +1439,7 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="display:none" ><span><spring:message code='ezSchedule.t123' /></span></a>
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 		</div>

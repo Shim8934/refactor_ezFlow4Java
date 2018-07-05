@@ -748,6 +748,11 @@
 		</xml>
 		
 	    <h1><spring:message code = 'ezPersonal.t1018' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return window.close()"></span></li>
+            </ul>
+        </div>
 	    <table>
 			<tr>
 	            <td rowspan="1" valign="top">
@@ -803,7 +808,6 @@
 	    </table>
 	    <div class="btnposition" style="float: center">
 	        <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code = 'ezPersonal.t12' /></span></a>
-	        <a class="imgbtn"><span onclick="return window.close()"><spring:message code = 'ezPersonal.t13' /></span></a>
 	    </div>
 	</body>
 </html>

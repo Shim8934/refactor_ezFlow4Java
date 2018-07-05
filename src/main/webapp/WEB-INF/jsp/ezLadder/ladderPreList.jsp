@@ -293,31 +293,36 @@
 </head>
 	<body class="popup">
 		<h1 id="h1Title"><spring:message code="ezLadder.t073" /></h1>
-			<!-- 다시 -->
-				<div class="ladderPreList_wrap">
-					<div class="ladderPreList_contents">
-						<div class="ladderPreList_left">
-							<div class="search_title">
-								<input type="text" id="searchInput" class="input_text" onfocus="this.className='input_text focus';" onkeyup="Key_event(event);" onmousedown="keyword_Clear();" />
-								<input id="searchOption" value="title" style="display: none;">
-								<input type="image" src="/images/ezLadder/search_btn.gif" alt="" class="search_btn" onclick="searchLadder();" />
-							</div>
-							<ul id="columnsbnk" class="game_list content">
-								<c:forEach items="${list}" var="prelist" varStatus="status">
-									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt"><c:out value="${prelist.title}" /></span></li>
-								</c:forEach>
-							</ul>
-							<div id="tblPageRayer" style="margin-top: 10px;"></div>
-						</div>
-						<div class="ladderPreList_right" style="position: relative;">
-							<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000; background: white; opacity: 0;"></div>
-							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;" onload="onMyFrameLoad(this)"></iframe>
-						</div>
+		<div id="close">
+            <ul>
+                <li><span value="<spring:message code='ezEmail.t39' />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName"></span></li>
+            </ul>
+        </div>
+		<!-- 다시 -->
+		<div class="ladderPreList_wrap">
+			<div class="ladderPreList_contents">
+				<div class="ladderPreList_left">
+					<div class="search_title">
+						<input type="text" id="searchInput" class="input_text" onfocus="this.className='input_text focus';" onkeyup="Key_event(event);" onmousedown="keyword_Clear();" />
+						<input id="searchOption" value="title" style="display: none;">
+						<input type="image" src="/images/ezLadder/search_btn.gif" alt="" class="search_btn" onclick="searchLadder();" />
 					</div>
+					<ul id="columnsbnk" class="game_list content">
+						<c:forEach items="${list}" var="prelist" varStatus="status">
+							<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt"><c:out value="${prelist.title}" /></span></li>
+						</c:forEach>
+					</ul>
+					<div id="tblPageRayer" style="margin-top: 10px;"></div>
 				</div>
-				<div class="btnposition btnpositionNew">
-					<input type="submit" value="확인" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
-					<input type="submit" value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+				<div class="ladderPreList_right" style="position: relative;">
+					<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000; background: white; opacity: 0;"></div>
+					<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;" onload="onMyFrameLoad(this)"></iframe>
 				</div>
+			</div>
+		</div>
+		<div class="btnposition btnpositionNew">
+			<a class="imgbtn" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"><span><spring:message code='ezEmail.t38' /></span></a>
+			<%-- <input type="submit" value="<spring:message code='ezEmail.t38' />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"> --%>
+		</div>
 	</body>
 </html>

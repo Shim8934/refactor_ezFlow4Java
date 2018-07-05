@@ -141,7 +141,7 @@
 				
 				alert("<spring:message code='ezPortal.t84'/>");
 				g_bSaved = true;
-				
+
 				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1&parentUID=203";
 			}
 		    

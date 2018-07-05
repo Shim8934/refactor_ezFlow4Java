@@ -122,7 +122,11 @@
 	</head>
 	<body class="popup" >
 		<h1><spring:message code = 'ezPersonal.t153' /></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span onclick="btn_Close()"></span></li>
+            </ul>
+        </div>
 		<table class="content">
 			<tr>
 		    	<th><spring:message code = 'ezPersonal.t154' /></th>
@@ -150,7 +154,6 @@
 		<div class="btnposition">
 			<%-- <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a> --%>
 		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
-		    <a class="imgbtn"><span onclick="btn_Close()"><spring:message code = 'ezPersonal.t13' /></span></a>
 		</div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

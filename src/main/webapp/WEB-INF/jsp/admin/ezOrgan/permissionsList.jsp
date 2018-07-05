@@ -162,23 +162,23 @@
 		        var pageNum = CurPage;
 		        
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16' /></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' /></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16' /></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16' /></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang28 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' /></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16' /></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang28 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16' /></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang28 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -204,25 +204,25 @@
 		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang29 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16' /></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' /></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang29 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16' /></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang29 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16' /></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16' /></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' /></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16' /></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -494,7 +494,8 @@
 	                <c:if test="${approvalForDoc == 'Y'}">
 	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	                </c:if>
-					<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+	                	<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+	                <p id="Permission_sub12"><span divname="wa" id="1tab12">근태관리자</span></p>
 		        </div>
 		    </div>
 		

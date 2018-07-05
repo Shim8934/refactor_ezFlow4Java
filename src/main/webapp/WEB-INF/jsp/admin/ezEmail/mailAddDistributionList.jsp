@@ -581,7 +581,7 @@
 	                document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	            }
 	            var UserListHTML = "";
-	            if (SelectDeptNM.getAttribute("countinfo") != "1") {
+	            if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 	                SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                SelectDeptNM.setAttribute("countinfo", "1")
 	            }
@@ -1225,6 +1225,7 @@
 	        }
 			
 	        function orgTabButton_onClick() {
+	        	methodForTabAction(1);
 		        selTab = "orglistView";
 		        m_tabDialogState["org"] = "select";
 		        m_tabDialogState["contact"] = "normal";
@@ -1240,6 +1241,7 @@
 		    }
 	        
 	        function dlTabButton_onClick() {
+	        	methodForTabAction(3);
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -1610,7 +1612,59 @@
 	        	})
 	        	return organListType;
 	        }
-	    </script>
+	        
+	        function SelectReceiverWindow(Title, selectedWindow) {
+	            for (var count = 0; count < m_receiverTitleList.length; count++) {
+	                m_receiverTitleList[count].style.fontWeight = "normal";
+	                m_receiverWindowList[count].style.backgroundColor = m_titleNoneSelectedColor;
+	                m_receiverWindowList[count].normalColor = m_titleNoneSelectedColor;
+	                m_receiverTitleList[count].setAttribute("class", "receiver_tltype02");
+	            }
+	            Title.style.fontWeight = "bold";
+	            Title.setAttribute("class", "receiver_tltype01");
+	            if (type == "")
+	                selectedWindow.style.backgroundColor = m_titleSelectedColor;
+	            else
+	                selectedWindow.style.backgroundColor = "white";
+	
+	            selectedWindow.normalColor = m_titleSelectedColor;
+	            m_selectedWindow = selectedWindow;
+	        }
+	        
+	        function methodForTabAction(target) {
+            	var tab1 = document.getElementById("orgTabButton").children[0];
+            	var tab3 = document.getElementById("dlTabButton").children[0];
+            	if (target == 1) {
+            		tab1.className = "tabon";
+            		tab3.className = "";
+            	} else if (target == 3) {
+            		tab1.className = "";
+            		tab3.className = "tabon";
+            	}
+	        }
+       	 	var PressShiftKey = false;
+   		    var PressCtrlKey = false;
+   		    function event_listOnkeyUp(event) {
+   		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+   		            if (!event) event = window.event;
+   		        }
+   		        switch (event.keyCode) {
+   		            case 16: PressShiftKey = false; break;
+   		            case 17: PressCtrlKey = false; break;
+   		            case 46: deleteWork(false); break;
+   		        }
+   		
+   		    }
+   		    function event_listOnkeyDown(event) {
+   		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+   		            if (!event) event = window.event;
+   		        }
+   		        switch (event.keyCode) {
+   		            case 16: PressShiftKey = true; break;
+   		            case 17: PressCtrlKey = true; break;
+   		        }
+   		    }
+    	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<xml id="listviewheader" style="display: none;">
@@ -1685,7 +1739,7 @@
 		                </td>
 		            </tr>
 		        </table>
-		    <table style="width:100%;">
+		    <table style="width:100%;margin-top:10px">
 		        <tr>
 		            <td style="vertical-align: top;">
 		            	<div class="portlet_tabpart01" style="margin:0px;">
@@ -1696,14 +1750,8 @@
 		            			<p id="dlTabButton">
 		            				<span onclick="dlTabButton_onClick()"><spring:message code='ezEmail.t593' /></span>
 		            			</p>
-		            			<p id="inputTabButton" style="display: none;">
-		            				<span onclick="inputTabButton_onClick()"><spring:message code='ezEmail.t244' /></span>
-		            			</p>
 		            		</div>
 	            		</div>
-		                <script type="text/javascript">
-		                    selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-		                </script>
 		                <table id="TreeViewTD">
 		                    <tr>
 		                        <td>
@@ -1743,7 +1791,7 @@
 		                            <table style="margin-top: 3px;">
 		                                <tr>
 		                                    <td class="box" style="border-right:0px">
-		                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+		                                        <div style="width: 220px; height: 445px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 		                                    </td>
 		                                    <td></td>
 		                                    <td class="listview" style="width: 432px" id="orglistView">

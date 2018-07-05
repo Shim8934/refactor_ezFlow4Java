@@ -205,7 +205,12 @@
 	    </script>
 	</head>
 	<body class="popup">
-		<h1 id="subtitle"><spring:message code='ezOrgan.t120' /></h1>		
+		<h1 id="subtitle"><spring:message code='ezOrgan.t120' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t121' /></th> 
@@ -233,7 +238,6 @@
 		</table> 
 		<div class="btnposition">
 		    <a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>
-		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezOrgan.t125' /></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

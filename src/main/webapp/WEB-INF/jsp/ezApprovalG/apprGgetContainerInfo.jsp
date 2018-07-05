@@ -417,7 +417,7 @@
 		    var setsearchinfo_cross_dialogArguments = new Array();
 		    var OpenWin2;
 		    function SearchCondi_onclick() {
-		        var para;
+		        var para = LoadSquery;
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		
@@ -430,7 +430,10 @@
 		        	condition[i] = returnvalue[i]; 
 		        }
 	    	   
-		        if (condition) {
+	    	    if (LoadSquery == "usercontlist") {
+	    	    	MakeSubCondition();
+	    	    	GetUserContList();
+	    	    } else if (condition) {
 		            Init_Flag = "False";
 		            GetDocSearch();
 		        }
@@ -977,29 +980,29 @@
 		        var pageNum = curpage;
 		        if (totalPage > 1 && pageNum != 1) {
 		            strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
 		            strtext = "<span class='btnimg'><a >";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
 		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
 		                strtext = "<span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
 		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1027,29 +1030,29 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg' onclick='return selafterBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg'>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' width='16' height='16' /></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
 		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' width='16' height='16' /></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -1368,8 +1371,8 @@
 	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <!-- <img src="/images/i_bar.gif"> -->
-	            <li style="vertical-align: middle;"> 
-	            	<select id="sel_year" name="sel_year" style="height:28px;border-radius:3px" onchange="onSelect_Year(this);">    
+	            <li style="vertical-align: middle;">
+	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
 		        </li>
@@ -1380,8 +1383,8 @@
 		        <li id="tSearchCondiApr"><span id="SearchCondiApr" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
-		        <li style="vertical-align: middle;"> 
-		        	<select id="who_year" name="who_year" style="height:28px;border-radius:3px" onchange="onSelect_Year(this);">
+		        <li style="vertical-align: middle;">
+		        	<select id="who_year" name="who_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
 		        </li>

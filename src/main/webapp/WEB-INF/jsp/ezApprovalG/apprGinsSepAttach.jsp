@@ -521,6 +521,11 @@
 	          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
 	        </ul>
 		</div>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btnClose_onclick()"></span></li>
+            </ul>
+        </div>
 		
 		<h2><spring:message code='ezApprovalG.t1034'/></h2>
 		<div id="listviewdiv" class="listview" style="Width:100%; Height:225px;">
@@ -529,7 +534,6 @@
 		
 		<div class="btnposition btnpositionNew" >
 			<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-			<a class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

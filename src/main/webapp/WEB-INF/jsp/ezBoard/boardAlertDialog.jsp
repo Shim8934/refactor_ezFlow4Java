@@ -59,7 +59,7 @@
 	 	</div>
 	    </div>
 	<div class="popup_noti_btnarea"> 
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	    <c:forEach var="item" items="${buttonNamesArray}" varStatus="status">
 	    	<input type='button' id='${status.index}' style='' value='${item}' onclick='Button_Onclick(this)'>
 	    </c:forEach> 	                 

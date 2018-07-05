@@ -45,7 +45,7 @@
 					return;
 				}
 			    //if (CrossYN())
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=202", "", "height = 350px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 350));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=202", "", "height = 357px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 357));
 			    //else
 			    //   window.open("MenuItem_Edit.aspx?pageid=" + pageid + "&mode=new&parentuid=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
 			}
@@ -76,7 +76,7 @@
 			// 수정
 			function selectItem(pUID, pObj) {
 			    //if (CrossYN())
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=202", "", "height = 350px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 350));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=202", "", "height = 357px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 357));
 	            //else
 	            //    window.open("MenuItem_Edit.aspx?pageid=" + pageid + "&mode=edit&uid=" + pUID + "&parentuid=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
 			}

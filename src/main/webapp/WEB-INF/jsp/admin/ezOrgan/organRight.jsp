@@ -558,7 +558,7 @@
 		    var checkname2_cross_dialogArguments = new Array();
 		    
 			function deptsearch_click(){
-				if (document.getElementById("deptkeyword").value == ""){
+				if ($.trim(document.getElementById("deptkeyword").value) == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
 				    document.getElementById("deptkeyword").focus();
 					return;
@@ -631,7 +631,7 @@
 		    }
 		    
 		    function search_click(){
-				if (keyword.value == ""){
+				if ($.trim(keyword.value) == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
 					keyword.focus();
 					return;
