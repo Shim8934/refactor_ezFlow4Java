@@ -1417,64 +1417,64 @@
 			        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 			        
 				} else {
-					 if (condition[0] != "") {
-					        TYPE += "DOCNO;"
-					        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
-					    }
+					if (condition[0] != "") {
+				        TYPE += "DOCNO;"
+				        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
+				    }
 
-					    if (condition[1] != "") {
-					        TYPE += "DOCTITLE;"
-					        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
-					    }
+				    if (condition[1] != "") {
+				        TYPE += "DOCTITLE;"
+				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
+				    }
 
-					    if (condition[2] != "") {
-					        TYPE += "WRITERNAME;"
-					        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
-					    }
+				    if (condition[2] != "") {
+				        TYPE += "WRITERNAME;"
+				        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
+				    }
 
-					    if (condition[3] != "null" && condition[3].trim() != "") {
-					        TYPE += "APRSTARTDATE;"
-					        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
-					    }
+				    if (condition[3] != "null" && condition[3].trim() != "") {
+				        TYPE += "APRSTARTDATE;"
+				        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
+				    }
 
-					    if (condition[4] != "null" && condition[4].trim() != "") {
-					        TYPE += "APRENDDATE;"
-					        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
-					    }
+				    if (condition[4] != "null" && condition[4].trim() != "") {
+				        TYPE += "APRENDDATE;"
+				        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
+				    }
 
-					    if (condition[5] != "null" && condition[5].trim() != "") {
-					        TYPE += "APRSTARTDATE;"
-					        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
-					    }
+				    if (condition[5] != "null" && condition[5].trim() != "") {
+				        TYPE += "APRSTARTDATE;"
+				        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
+				    }
 
-					    if (condition[6] != "null" && condition[6].trim() != "") {
-					        TYPE += "APRENDDATE;"
-					        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
-					    }
+				    if (condition[6] != "null" && condition[6].trim() != "") {
+				        TYPE += "APRENDDATE;"
+				        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
+				    }
 
-					    if (condition[9] != "") {
-					        TYPE += "FORMID;"
-					        DATA += "<FORMID>" + condition[9] + "</FORMID>";
-					    }
-					    
-					    if (condition[11] != "") {
-					        TYPE += "WRITERDEPTNAME;"
-					        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
-					    }
+				    if (condition[9] != "") {
+				        TYPE += "FORMID;"
+				        DATA += "<FORMID>" + condition[9] + "</FORMID>";
+				    }
+				    
+				    if (typeof (condition[11]) != "undefined" && condition[11] != "") {
+				        TYPE += "WRITERDEPTNAME;"
+				        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
+				    }
 
-					    if (condition[12] != "") {
-					        TYPE += condition[12];
-					        DATA += condition[13];
-					    }
-					    if (typeof (condition[14]) != "undefined" && condition[14] != "") {
-					        TYPE += condition[14];
-					        DATA += condition[15];
-					    }
-					    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
-					        TYPE += condition[16];
-					        DATA += condition[17];
-					    }
-					}
+				    if (typeof (condition[12]) != "undefined" && condition[12] != "") {
+				        TYPE += condition[12];
+				        DATA += condition[13];
+				    }
+				    if (typeof (condition[14]) != "undefined" && condition[14] != "") {
+				        TYPE += condition[14];
+				        DATA += condition[15];
+				    }
+				    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
+				        TYPE += condition[16];
+				        DATA += condition[17];
+				    }
+				}
 				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		
