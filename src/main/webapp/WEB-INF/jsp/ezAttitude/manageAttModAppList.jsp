@@ -1282,7 +1282,7 @@
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
 			<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 			<li>
-				<select id="writerDept_search" onchange="dept_change()" style="height:28px;border-radius:3px">
+				<select id="writerDept_search" onchange="dept_change()" style="height:28px;">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.authType == 'M'}">
