@@ -819,7 +819,7 @@
           <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
           <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
           <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
-          <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
           <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
           <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
           <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
