@@ -419,7 +419,7 @@
 	   			var groupId = "";
 	   			var data = {};
 	   			var children = ge.currentTask.getChildren();
-	   			var childTask = null;
+	   			var childTask = [];
 	   			
 	   			if(selectType !== "g"){
 		   			alert("<spring:message code='ezPMS.t281' />");
@@ -437,7 +437,7 @@
 		   			})
 	   			}
 	   			
-	   			if(childTask){
+	   			if(childTask && childTask.length > 0){
 	   				alert("<spring:message code='ezPMS.t243' />");
 	   				return;
 	   			}
