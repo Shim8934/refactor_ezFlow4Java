@@ -113,7 +113,8 @@
 		<result property="status"			column="STATUS"				columnIndex="4"/>
 		<result property="responseDate"		column="RESPONSEDATE"		columnIndex="5"/>
 		<result property="mail"				column="MAIL"				columnIndex="6"/>
-		<result property="info"				column="INFO"				columnIndex="7"/>		
+		<result property="department"		column="DEPARTMENT"			columnIndex="7"/>
+		<result property="info"				column="INFO"				columnIndex="8"/>		
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="inviteScheduleGroupListVO">
@@ -408,39 +409,98 @@
              )a join tbl_usermaster b on a.memberid = b.cn and a.tenant_id = b.tenant_id
              where
              	b.tenant_id = #v_TENANTID#
-             and
-        		b.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+             
+		]]>
+	</select>
+	<!-- checked -->
+	<select id="EzScheduleDAO.getCumDeptId" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				a.DEPARTMENT
+				FROM (SELECT 
+				D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME, D.TENANT_ID
+				FROM 
+				TBL_USERMASTER D
+				UNION ALL
+				SELECT 
+				B.cn, A.DEPTID, C.EXTENSIONATTRIBUTE2, A.TENANT_ID
+				FROM 
+				TBL_USERMASTER B 
+				INNER JOIN 
+				TBL_ADDJOBMASTER A 
+				ON 
+				A.CN = B.CN 
+				AND 
+				A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+				TBL_DEPTMASTER C
+				ON 
+				A.DEPTID = C.CN
+				AND 
+				B.TENANT_ID = C.TENANT_ID) A
+				WHERE 
+				A.CN = #v_USERID# and A.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# and a.tenant_id = #v_TENANTID#
+				GROUP BY 
+				A.CN
 		]]>
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
 		<![CDATA[
 			 select 
-			 	a.memberid,
+			 	A.memberid,
 			 	'' as membername,
 			 	'' as membername2,
 			 	'' as status,
 			 	'' as responsedate,
-             	b.mail,
+             	BB.mail,
+             	BB.department,
              	case #v_LANG#
-                    when '1' then concat(b.displayname, '(', description, ')')                   
-        			when '2' then concat(b.displayname2, '(', description2, ')')
+                    when '1' then concat(A.memberName, '(', BB.description, ')')                   
+        			when '2' then concat(A.memberName2, '(', BB.description2, ')')
                 end info  
-             from (
-	                  select 
-	                  	memberid,
-	                  	tenant_id
-                      from 
-                      	tbl_schedulegroupmember 
-                      where  
-                      	groupid = #v_GROUPID#
-                      and
-                      	tenant_id = #v_TENANTID#	
-             )a join tbl_usermaster b on a.memberid = b.cn and a.tenant_id = b.tenant_id
-             where
-             	b.tenant_id = #v_TENANTID#
-             and
-        		b.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+             from ( select              		
+                  	groupid,
+                  	memberid,
+                  	membername,
+                  	membername2,
+                  	tenant_id
+                     from 
+                     	tbl_schedulegroupmember 
+                     where  
+                     	tenant_id = #v_TENANTID#	
+             )A left join ( SELECT  
+							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
+							FROM  
+							TBL_USERMASTER D 
+							WHERE  
+							D.TENANT_ID = #v_TENANTID# AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+							UNION ALL 
+							SELECT  
+							B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
+							FROM  
+							TBL_USERMASTER B  
+							INNER JOIN  
+							TBL_ADDJOBMASTER A  
+							ON  
+							A.CN = B.CN  
+							AND  
+							A.TENANT_ID = B.TENANT_ID        
+							RIGHT JOIN  
+							TBL_DEPTMASTER C 
+							ON  
+							A.DEPTID = C.CN 
+							AND  
+							B.TENANT_ID = C.TENANT_ID    
+							WHERE  
+							A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
+            	ON 
+				A.memberid = BB.cn 
+				WHERE 
+				A.groupid = #v_GROUPID#
+				AND 
+				A.tenant_id = #v_TENANTID# 
+				GROUP BY memberid
 		]]>
 	</select>
 	<!-- checked -->
@@ -1108,6 +1168,8 @@
 	   			userid = #v_USERID#	   		
 	   		and	
 	   			tenant_id = #v_TENANTID#
+	   		and
+	   			companyid = #v_COMPANYID#
 	   	]]>		
 	</delete>
 	<!-- checked -->

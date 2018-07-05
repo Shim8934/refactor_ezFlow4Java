@@ -134,28 +134,28 @@
 	</table>
 	</div>
 </div>
-<div id='runtime' style="color: #666; padding-top: 5px"></div>
+<!-- <div id='runtime' style="color: #666; padding-top: 5px"></div> -->
 <c:choose>
 <c:when test="${paging.endPage>0 }">
 <div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 	<div class="pagenavi">   
 		<c:choose>
 				<c:when test="${paging.currentPage gt 1}">   
-					<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" width="16" height="16"></span>            
+					<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" ></span>            
 				</c:when>
 				<c:otherwise>
-					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>            
+					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>            
 				</c:otherwise>         
 		</c:choose>
 		<c:choose>
 			<c:when test="${paging.startPage gt 1}">
-				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" width="16" height="16"></span>              
+				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" ></span>              
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>              
+				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>              
 			</c:otherwise>                                                                    
 		</c:choose>
-		<span class="ptxt" onclick="<c:if test="${paging.currentPage gt 1 }">goToPageByNum(${paging.currentPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span>                                   
+		<%-- <span class="ptxt" onclick="<c:if test="${paging.currentPage gt 1 }">goToPageByNum(${paging.currentPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span> --%>                                   
 		<c:forEach begin="0" end="${paging.endPage-paging.startPage }" varStatus="status">
 			<c:choose>
 				<c:when test="${paging.startPage+status.index eq  paging.currentPage}">
@@ -166,21 +166,21 @@
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
-		<span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span>
+		<%-- <span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span> --%>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.endPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.endPage+1})"><img src="/images/sub/btn_next.gif" width="16" height="16"></span>
+				<span class="btnimg" onclick="goToPageByNum(${paging.endPage+1})"><img src="/images/sub/btn_next.gif" ></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
+				<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
 			</c:otherwise>
 		</c:choose>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.currentPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" width="16" height="16"></span>
+				<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" ></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
+				<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
 			</c:otherwise>
 		</c:choose>
 	</div>
@@ -189,13 +189,13 @@
 <c:otherwise>
 <div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 	<div class="pagenavi">  
-		<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
-		<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
-		<span class="ptxt"> <spring:message code='ezApproval.t931'/></span>  
+		<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>
+		<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>
+		<%-- <span class="ptxt"> <spring:message code='ezApproval.t931'/></span> --%>  
 		<span class="on">1</span> 
-		<span class="ptxt"><spring:message code='ezApproval.t932'/></span>
-		<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
-		<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
+		<%-- <span class="ptxt"><spring:message code='ezApproval.t932'/></span> --%>
+		<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
+		<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
 	</div>
 </div>
 </c:otherwise>

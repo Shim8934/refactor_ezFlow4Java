@@ -355,6 +355,7 @@
 				}
 		
 				/* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+				// 이 기능 사용하지 않음(닷넷 당시의 기능)
 				function MemberInfo_onclick(pUserID, pDeptID)
 				{
 		            var swidth = 420;
@@ -390,8 +391,8 @@
 				var item_readlist_cross_dialogArguments = new Array();
 				function ReaderList()
 				{
-		            var swidth = 600;
-		            var sheight = 415;
+		            var swidth = 620;
+		            var sheight = 425;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
@@ -400,12 +401,12 @@
 		            var ptop = (pheight - sheight) / 2;
 		
 					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
-					var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+					var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
 					    item_readlist_cross_dialogArguments[0] = "";
 					    item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-					    DivPopUpShow(600, 415, szHref);
+					    DivPopUpShow(620, 425, szHref);
 					}
 					else
 					    window.open(szHref,"", "width=" + swidth + ",height=" + sheight + ",top=" + ptop + ",left=" + pleft + ", resizable=yes, scrollbars=yes");
@@ -1267,7 +1268,7 @@
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
 		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">
-		                            <img id="mainimages" style="background-color:#ffffff;cursor:pointer;" src=""/>            
+		                            <img id="mainimages" style="background-color:#ffffff;" src=""/>            
 		                        </td>
 		                    </tr>
 		           	    </table>

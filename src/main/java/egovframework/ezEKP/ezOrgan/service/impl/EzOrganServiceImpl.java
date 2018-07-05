@@ -882,6 +882,8 @@ public class EzOrganServiceImpl implements EzOrganService {
     	logger.debug("getSearchListPagination started");
     	
         String strSQL="";
+        String strSQLCom="";
+        String strSQLAddjobCom="";
         int i=0;
         String[] SearchList;
         String[] SearchInfo;
@@ -960,12 +962,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        }
 	        
 	        if (!companyId.equals("")) {
-	        	String strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '";
+	        	strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
 	        	if (type.equals("G")) {
-	        		strSQLCom = "AND EXTENSIONATTRIBUTE2 = '";
+	        		strSQLCom = strSQLCom.replace("PHYSICALDELIVERYOFFICENAME", "EXTENSIONATTRIBUTE2");
 	        	}
 	        	
-	        	strSQL += strSQLCom + companyId + "'";
+	        	strSQLAddjobCom = "and a.deptid in (select cn from tbl_deptmaster where EXTENSIONATTRIBUTE2 = '" + companyId + "')";
 	        }
 	        
 	        if(page.equals(null) || page.equals("")){
@@ -984,9 +986,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 	         map.put("endRow", endRow);
 	         map.put("v_TENANT_ID", tenantID);
 	         map.put("startRowForMySQL", startRow - 1);
-	         map.put("count", 50);              
+	         map.put("count", 50);        
+	         map.put("strSQLCom", strSQLCom);  
+	         map.put("strSQLAddjobCom", strSQLAddjobCom);
 	         
 	         logger.debug("strSQL=" + strSQL);
+	         logger.debug("strSQLCom=" + strSQLCom);
+	         logger.debug("strSQLAddjobCom=" + strSQLAddjobCom);
 	         
 	         List<OrganDeptVO> list = ezOrganDAO.organSearchListPage(map);
 	         
@@ -1919,7 +1925,9 @@ public class EzOrganServiceImpl implements EzOrganService {
         String strSize = "";
         String strSizeForMySQL = "";
         String strSQL = "";        
-        String type = "";        
+        String strSQLAddjobCom = "";
+        String strSQLCom = "";
+        String type = ""; 
         int i = 0;
         
         if (pLimit != 0) {
@@ -1985,17 +1993,22 @@ public class EzOrganServiceImpl implements EzOrganService {
             }
         }        
         
-        strSQL += " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
-        
         if (pClass.equals("user") || pClass.equals("all")){
             strSQL = strSQL.replace("cn", "a.cn");
             strSQL = strSQL.replace("title", "a.title");
                         
             type = "U";
         }else{
-        	strSQL = strSQL.replace("PHYSICALDELIVERYOFFICENAME", "EXTENSIONATTRIBUTE2");
-        	
         	type = "G";
+        }
+        
+        if (!companyId.equals("")) {
+        	strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+        	if (type.equals("G")) {
+        		strSQLCom = strSQLCom.replace("PHYSICALDELIVERYOFFICENAME", "EXTENSIONATTRIBUTE2");
+        	}
+        	
+        	strSQLAddjobCom = "and a.deptid in (select cn from tbl_deptmaster where EXTENSIONATTRIBUTE2 = '" + companyId + "')";
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -2006,8 +2019,12 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
+        map.put("strSQLCom", strSQLCom);
+        map.put("strSQLAddjobCom", strSQLAddjobCom);
         
         logger.debug("strSQL=" + strSQL);
+        logger.debug("strSQLCom=" + strSQLCom);//getSearchList
+        logger.debug("strSQLAddjobCom=" + strSQLAddjobCom);
         
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
         

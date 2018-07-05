@@ -122,8 +122,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	@Override
 	public List<ScheduleDeptVO> getPublicScheduleDept(String userId, String lang, int tenantId ,String companyID) throws Exception {
 		
-		logger.debug("userId : " + userId + "   lang : " + lang + "   tenantId : " + "   companyID : " + companyID);
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", userId);
 		map.put("v_LANG", lang);
@@ -662,6 +660,18 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		}		
 		return result;
 	}
+	
+	@Override
+	public String getCumDeptId(String userID, int tenantID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_USERID", userID);
+		
+		String result = ezScheduleDAO.getCumDeptId(map);
+		
+		return result;
+	}
 
 	@Override
 	public String scheduleGetRegi(String companyID, int tenantId) throws Exception {
@@ -699,10 +709,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void deleteSecretary(String userID, int tenantID) throws Exception {
+	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);		
 		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.deleteSecretary(map);
 	}

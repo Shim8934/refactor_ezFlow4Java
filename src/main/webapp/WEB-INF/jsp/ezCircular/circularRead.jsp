@@ -47,9 +47,19 @@
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
 			var type = "${type}";
+			var wcompanyID = "${result.companyID}"
+			var ucompanyID = "${userInfo.companyID}";
 			var attachList = "";
+			var deptID = "${deptID}";
 
 			$(document).ready(function() {
+				
+				if(ucompanyID != wcompanyID) {
+					alert(ucompanyID + "<spring:message code='ezLadder.hyh02' />");
+					window.close();
+					return;
+				}
+				
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -64,6 +74,7 @@
 				if ($("#divCross p a").length > 0) {
 					$("#divCross p a").attr("target", "_blank")
 				}
+				
 	        });
 			
 			window.onresize = function () {
@@ -177,10 +188,10 @@
 				}
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 300) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = url = "/ezCircular/circularConfirmList.do?circularID=" + circularID; 
-	            DivPopUpShow(600, 415, szHref);
+	            DivPopUpShow(620, 425, szHref);
 		    }
 		    
 	        var ezprtquestion_cross_dialogArguments = new Array();
@@ -438,7 +449,7 @@
 			function OpenUserInfo() {
 	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            feature = feature + GetOpenPosition(420, 438);
-	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID, "", feature);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID + "&dept=" + deptID, "", feature);
 	        }
 			
 			function CircularClose_onclick() {

@@ -362,7 +362,7 @@
 		        getNewCircularCount();
 			}
 
-			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date) {
+			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pageFrom) {
 			    date = date.substr(0, 10);
 
 			    var wWeight = "760";
@@ -374,10 +374,10 @@
 
 			    //PNO-3
 			    if (CrossYN())
-			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0 &pageFrom="+pageFrom, "",
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
 			    else
-			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0 &pageFrom="+pageFrom, "",
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
 			    //PNO-3 END
 			}
@@ -409,7 +409,8 @@
 			        
 			        var count = 0;
 			        var mType;
-			        
+			        //2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
+		            var pageFrom = 'Portal';
 			        if (mode == "P") {
 			        	//2018.02.05 김기하 #11421
 			        	mType = "16";
@@ -426,15 +427,14 @@
 				            var REPEATCOUNT = getNodeText(xmldom.getElementsByTagName("REPEATCOUNT").item(i));
 				            var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
 				            var ENDDATE = getNodeText(xmldom.getElementsByTagName("ENDDATE").item(i));
-				            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i)).replace("&amp;","&").replace("&lt;","<").replace("&gt;",">").replace("&quot;","\"").replace("&apos;","\'");
-				            console.log('title : ' + TITLE);
+				            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i));
 				            var startdate = new Date(STARTDATE.split(' ')[0].split('-')[0], STARTDATE.split(' ')[0].split('-')[1], STARTDATE.split(' ')[0].split('-')[2]);
 				            var enddate = new Date(ENDDATE.split(' ')[0].split('-')[0], ENDDATE.split(' ')[0].split('-')[1], ENDDATE.split(' ')[0].split('-')[2]);
 				            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
-			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr>&nbsp;"
+			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\" title='" + TITLE + "'>";
+			                listHTML += "&nbsp;"
 			                if(SCHEDULETYPE == 1) {
 			                	listHTML += "";
 			                } else if (SCHEDULETYPE == 2) {
@@ -446,7 +446,7 @@
 			                } else {
 			                	listHTML += "";
 			                }
-			                listHTML += TITLE + "</nobr></span></li>";
+			                listHTML += TITLE.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;").replace(/\n/g,"<br />")+ "</span></li>";
 			                count++;
 			        	}
 			        }

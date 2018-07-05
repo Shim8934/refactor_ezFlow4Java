@@ -241,7 +241,8 @@
 				B.status confirmstatus,
 				B.updateStatus,
 				B.commentStatus,
-				B.shareStatus
+				B.shareStatus,
+				A.companyId
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -424,23 +425,46 @@
 			SELECT
 				A.circularbmid,
 				A.memberid,
-				B.company,
-				B.description,
-				B.title,
+				BB.company,
+				BB.description,
+				BB.title,
 				A.membername,
-				B.mail
+				BB.mail
 			FROM
 				TBL_CIRCULAR_BMUSER A
 			LEFT JOIN
-				TBL_USERMASTER B
+				( SELECT 
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+				UNION ALL
+				SELECT 
+					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID#) BB
 			ON
-				A.memberid = B.cn
-			AND
-				A.tenantid = B.tenant_id
+				A.memberid = BB.cn
 			WHERE
-				circularbmid = #circularBMId#
+				A.circularbmid = #circularBMId#
 			AND
-				tenantid = #tenantID#
+				A.tenantid = #tenantID#
+			GROUP BY memberid
         ]]>
     </select>
     
@@ -1763,16 +1787,40 @@
 	<select id="EzCircularDAO.getConfirmMember" resultClass="CircularConfirmVO" >
 		<![CDATA[
 			SELECT 
-				A.memberid, B.displayname, B.description, B.company, B.title, 
-				IFNULL(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), '') AS confirmdate
+				A.memberid, BB.displayname, BB.description, BB.company, BB.title, 
+				IFNULL(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), '') AS confirmdate, BB.DEPARTMENT as deptid
 			FROM 
 				TBL_CIRCULAR_USER A
 			RIGHT JOIN 
-				TBL_USERMASTER B
+				(SELECT 
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION, D.DEPARTMENT
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+				UNION ALL
+				SELECT 
+					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, A.DEPTID
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# )  BB
 			ON 
-				A.memberid = B.cn
+				A.memberid = BB.cn
 			WHERE 
-				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' 
 			AND
 				a.memberid <> ( SELECT 
 												memberId 
@@ -1780,8 +1828,10 @@
 											TBL_CIRCULAR 
 										WHERE 
 											circularId = #circularID# )
+			group by
+				A.MEMBERID
 			ORDER BY 
-			 	A.confirmdate desc
+				A.confirmdate desc
 			 LIMIT
 			 	#start#, #perCount#
 		]]>
@@ -1811,12 +1861,33 @@
 	
 	<select id="EzCircularDAO.getCircularUserDeptId" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			SELECT
-				deptId
-			FROM
-				tbl_circular_bmuser
-			WHERE
-				tenantid=#tenantID# AND circularBMId=#circularBMId# AND memberId = #userID#
+			SELECT 
+				a.DEPARTMENT
+			FROM (SELECT 
+				D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME, D.TENANT_ID
+			FROM 
+				TBL_USERMASTER D
+			UNION ALL
+			SELECT 
+				B.cn, A.DEPTID, C.EXTENSIONATTRIBUTE2, A.TENANT_ID
+			FROM 
+				TBL_USERMASTER B 
+			INNER JOIN 
+				TBL_ADDJOBMASTER A 
+			ON 
+				A.CN = B.CN 
+			AND 
+				A.TENANT_ID = B.TENANT_ID       
+			RIGHT JOIN 
+				TBL_DEPTMASTER C
+			ON 
+				A.DEPTID = C.CN
+			AND 
+				B.TENANT_ID = C.TENANT_ID) A
+			WHERE 
+				A.CN = #circularUserID# and A.PHYSICALDELIVERYOFFICENAME = #companyID# and a.tenant_id = #tenantID#
+			GROUP BY 
+				A.CN
 		]]>
 	</select> 
 	

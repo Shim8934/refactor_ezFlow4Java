@@ -102,7 +102,7 @@
 		    
 		    function windowResize() {
 	        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
-	        	document.getElementById("contentlist").style.height = (height - 80) + "px";
+	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 	    	
@@ -117,6 +117,11 @@
 	    			alert("<spring:message code= 'ezAttitude.t117' />")
 	    			return;
 	    		}
+	    		
+	    		if (searchStartTime > searchEndTime) {
+					alert("<spring:message code='ezAttitude.t131' />");
+		            return;
+				}
 	    		
 	    		$.ajax({
 	    			data : "POST",

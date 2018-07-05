@@ -25,6 +25,7 @@
       <result property="rollInfo"          	column="rollinfo"                       	columnIndex="15"/>
       <result property="userFileUrl"       	column="userFileUrl"   						columnIndex="16"/>
       <result property="email"       		column="email"   							columnIndex="17"/>
+      <result property="phone"       		column="telephonenumber"   							columnIndex="18"/>
     </resultMap>
     
     <resultMap class="MOptionVO" id="MOptionVO">
@@ -56,7 +57,8 @@
 			    b.title2,
                 b.extensionattribute1 as rollinfo,
                 b.extensionattribute2 as userFileUrl,
-                b.mail as email
+                b.mail as email,
+                b.telephonenumber
 			FROM
 				TBL_USERMOBILEINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
@@ -278,5 +280,6 @@
 					TENANT_ID = #tenantId#
    			]]>
   	</update>
+  	
 </sqlMap>
 

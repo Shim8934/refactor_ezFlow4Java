@@ -59,7 +59,7 @@
         var tableView = new TableView();
 		
 		window.onresize = function () {
-			var reheight = document.documentElement.clientHeight - 160;
+			var reheight = document.documentElement.clientHeight - 170;
 			document.getElementById("dragDropArea").style.height = reheight + "px";
 		};
 		

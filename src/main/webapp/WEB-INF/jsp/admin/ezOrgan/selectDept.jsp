@@ -131,11 +131,15 @@
 	    </script>
 	</head>
 	<body class="popup">
-		<h1 id="subtitle"><spring:message code='ezOrgan.t248' /></h1>		
+		<h1 id="subtitle"><spring:message code='ezOrgan.t248' /></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onclick="window.close()"></span></li>
+            </ul>
+        </div>		
 		<div style="border: 1px solid #ddd; height: 256px; width: 265px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 		<div class="btnposition">
 		    <a id="btnSave" class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>
-		    <a id="btnCancel"class="imgbtn" onClick="window.close()"><span><spring:message code='ezOrgan.t125' /></span></a>
 		</div>
 	</body>
 </html>

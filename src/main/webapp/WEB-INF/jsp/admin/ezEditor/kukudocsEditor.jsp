@@ -438,6 +438,8 @@
 	            usePreviewMode : false,
 	            useEditorResize : false,
 	            useFirstFocus : false,
+	            useOnlyTableContentMenu : true,
+	            publicPathURL : '/js/ezEditor/kukudocsEditor/',
 	            templateList : templateList,
 	            defaultEditorStylePath :'/js/ezEditor/kukudocsEditor/stylesheets/editor_style.css',
 	            loadingImageURL : '/js/ezEditor/kukudocsEditor/images/load.gif',

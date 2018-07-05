@@ -230,20 +230,20 @@
 		<div class="page">
 			<c:choose>
 				<c:when test="${intPage != '1'}">
-					<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
 				</c:when>
 				<c:otherwise>
-					<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
 				</c:otherwise>
 			</c:choose>
 			
   			<input type="text"name="txt_PageInputNum" style="width:30px" value='${intPage}' onKeyPress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
   			<c:choose>
   				<c:when test="${intPage != totalPage}">
-  					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('next')" style="cursor:pointer">
+  					<img src="/images/page_next.gif" align="absmiddle" hspace="2" onClick="goToPage('next')" style="cursor:pointer">
   				</c:when>
   				<c:otherwise>
-  					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('next')">
+  					<img src="/images/page_next.gif" align="absmiddle" hspace="2" onClick="goToPage('next')">
   				</c:otherwise>
   			</c:choose>  			
   		</div>

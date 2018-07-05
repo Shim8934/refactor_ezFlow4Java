@@ -134,7 +134,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        var height = parseInt(document.documentElement.clientHeight - 180);
+		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        document.getElementById("divList").style.height = height + "px";
 		        getBoardList();
 		

@@ -257,6 +257,11 @@
 	</head>
 	<body class = "popup" style = "overflow:hidden">
 		<h1><spring:message code = 'ezPersonal.t20001' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close();"></span></li>
+            </ul>
+        </div>
 	    <h2><spring:message code = 'ezPersonal.t20002' /></h2>
 	    <table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
@@ -302,7 +307,6 @@
 		</table>
 	    <div class="btnposition">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
-	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code = 'ezPersonal.t13' /></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">

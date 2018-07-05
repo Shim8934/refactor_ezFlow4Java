@@ -135,13 +135,17 @@
 		</xml>
 	
 	    <h1><spring:message code='ezOrgan.t105' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="cancel_onClick()"></span></li>
+            </ul>
+        </div>
 	    <h2><spring:message code='ezOrgan.t109' /></h2>
 	    <div class="listview" style="width: 570px;">
 	        <div id="OrganListView" style="border: 0px solid #ddd; Width: 570px; Height: 160px; overflow: auto; BACKGROUND-COLOR: white;"></div>
 	    </div>
 	    <div class="btnposition">
 	        <a class="imgbtn"><span onClick="change_onClick()"><spring:message code='ezOrgan.t110' /></span></a>
-	        <a class="imgbtn"><span onClick="cancel_onClick()"><spring:message code='ezOrgan.t111' /></span></a>
 	    </div>
 	</body>
 </html>

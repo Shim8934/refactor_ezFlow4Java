@@ -154,10 +154,11 @@ form{display:inline;margin:0}
 .btnpositionNew{
 	margin: 0px 0px 0px -10px;
 	/* margin-top: 10px; */
+	height: 28px !important;
 	background: none;
 	border: none;
 	border-top: 1px solid #eee;
-	padding:8px 0px;
+	padding:7px 0px;
 	background-color: #fcfcfc;
 	text-align:center;
 	position: fixed;
@@ -239,8 +240,8 @@ form{display:inline;margin:0}
 #left h2, #TopBoards h2{
 	margin: -1px 0px 0px 0px;
 	padding:0 0 0 19px;
-	border-top:1px solid #e8e8e8;
-	border-bottom: 1px solid #e8e8e8;
+	border-top:1px solid #f0f0f0;
+	border-bottom: 1px solid #f0f0f0;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
 	height:33px;
@@ -1211,7 +1212,7 @@ form{display:inline;margin:0}
 .mainlist tr{height:31px}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:4px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; background-color: #f8f8fa; height:24px}
 .mainlist tr th.title{width:100%; text-align:left;}
-.mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0; word-wrap:break-word;}
+.mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #f2f2f2; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
@@ -1705,7 +1706,7 @@ form{display:inline;margin:0}
 }
 #left .list_thumbnail li {
 	padding:3px 0px 2px 0px; 
-	border-bottom:1px solid #e8e8e8;
+	border-bottom:1px solid #f0f0f0;
 	vertical-align:middle;
 	height:33px;
 	line-height:16px;
@@ -1852,7 +1853,7 @@ form{display:inline;margin:0}
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
-.address_onboxlist .back { border: 1px solid #888; height:138px; vertical-align:top; border-radius:5px;}
+.address_onboxlist .back { border: 1px solid rgb(104, 171, 220); height:138px; vertical-align:top; border-radius:5px;}
 .address_onboxlist .topinfo {background-color:rgb(0,72,149); height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .address_onboxlist ul { margin:12px 10px 0px 19px; padding:0px; list-style:none;}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
