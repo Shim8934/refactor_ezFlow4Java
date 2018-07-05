@@ -1349,17 +1349,22 @@ public class EzPMSController {
 						}
 					}
 				} else {
-					long groupId = Long.parseLong(param.get("groupId").toString());
-					String groupUrl = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
-					
-					param.put("projectId", projectId);
-					
-					JSONObject result = commonUtil.getJsonFromRestApi(groupUrl, param, request, "get", null);
-					String status = result.get("status").toString();
-					
-					if (status.equals("ok")) {
-						JSONObject groupDetails = (JSONObject) result.get("data");
-						model.addAttribute("groupDetail", groupDetails);
+					if (param.get("groupId") != null) {
+						long groupId = Long.parseLong(param.get("groupId").toString());
+						String groupUrl = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
+						
+						param.put("projectId", projectId);
+						
+						JSONObject result = commonUtil.getJsonFromRestApi(groupUrl, param, request, "get", null);
+						String status = result.get("status").toString();
+						
+						if (status.equals("ok")) {
+							JSONObject groupDetails = (JSONObject) result.get("data");
+							model.addAttribute("groupDetail", groupDetails);
+						}
+					} else {
+						model.addAttribute("groupDetail", "{}");
+						model.addAttribute("position", param.get("position"));
 					}
 				}
 			}
@@ -1511,10 +1516,11 @@ public class EzPMSController {
 					if (status.equals("ok")) {
 						JSONArray groupList = (JSONArray) result.get("data");
 						model.addAttribute("taskList", groupList);
-						model.addAttribute("position", param.get("position"));
-						model.addAttribute("groupDetail", "{}");
 					}
 				}
+				
+				model.addAttribute("position", param.get("position"));
+				model.addAttribute("groupDetail", "{}");
 			}
 		}
 		

@@ -50,21 +50,21 @@ $(function() {
 									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 							</th>
 							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-								text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center"><spring:message code='ezPMS.t31' /></th>
+								text-overflow: ellipsis; cursor: pointer;" class="h5_center"><spring:message code='ezPMS.t31' /></th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px;"
 								class="h5_center"><spring:message code='ezPMS.t32' /></th>
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PLAN_START_DATE"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 200px"
 								class="h5_center"><spring:message code='ezPMS.t61' /></th>
 							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="PLAN_END_DATE"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 200px"
 								class="h5_center"><spring:message code='ezPMS.t62' /></th>
 							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="STATUS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px;"
 								class="h5_center"><spring:message code='ezPMS.t38' /></th>
 							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PROGRESS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px;"
 								class="h5_center"><spring:message code='ezPMS.t250' /></th>
 							</tr>
 							</thead>
@@ -87,21 +87,21 @@ $(function() {
 											name="boardCheckbox"
 											style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 12%"><c:out
+											style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
 												value="${project.projectName }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><c:out
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><c:out
 												value="${project.headManagerName }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px">
 												<c:out value="${project.planStartDate }" />
 										</td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px">
 												<c:out value="${project.planEndDate }" />
 										</td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px">
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px">
 											<c:choose>
 												<c:when test="${project.status eq 'P' }"><spring:message code='ezPMS.t15' /></c:when>
 												<c:when test="${project.status eq 'W' }"><spring:message code='ezPMS.t16' /></c:when>
@@ -111,7 +111,7 @@ $(function() {
 												<c:when test="${project.status eq 'S' }"><spring:message code='ezPMS.t19' /></c:when>
 											</c:choose></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px">
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px">
 											<fmt:formatNumber value="${project.progress }" pattern="0.0" />%</td>
 									</tr>
 								</c:forEach>

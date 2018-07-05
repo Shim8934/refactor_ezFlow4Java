@@ -59,41 +59,41 @@ $(function() {
 							<c:choose>
 								<c:when test="${position eq 'group' }">
 								<th id="BoardList_TH_1" onclick="setListOrder(this)" order="GROUP_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-									text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center"><spring:message code='ezPMS.t87' />
+									text-overflow: ellipsis; cursor: pointer;" class="h5_center"><spring:message code='ezPMS.t87' />
 								</th>
 								</c:when>
 								<c:otherwise>
 								<th id="BoardList_TH_1" onclick="setListOrder(this)" order="TASK_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-									text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center"><spring:message code='ezPMS.t98' />
+									text-overflow: ellipsis; cursor: pointer;" class="h5_center"><spring:message code='ezPMS.t98' />
 								</th>
 								</c:otherwise>
 							</c:choose>
 						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="UPPER_GROUP_NAME"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px;"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px;"
 							class="h5_center"><spring:message code='ezPMS.t42' /></th>
 						<c:if test="${position eq 'task' || position eq 'group'}">
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROJECT_NAME"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px;"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px;"
 							class="h5_center"><spring:message code='ezPMS.t31' /></th>	
 						</c:if>
 						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 75px"
 							class="h5_center"><spring:message code='ezPMS.t32' /></th>
 						<th id="BoardList_TH_5" onclick="setListOrder(this)" order="PLAN_START_DATE"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px"
 							class="h5_center"><spring:message code='ezPMS.t61' /></th>
 						<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_END_DATE"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px"
 							class="h5_center"><spring:message code='ezPMS.t62' /></th>
 						<c:choose>
 							<c:when test="${position ne 'group' }">
 								<th id="BoardList_TH_7" onclick="setListOrder(this)" order="STATUS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
 								class="h5_center"><spring:message code='ezPMS.t38' /></th>
 							</c:when>
 						</c:choose>
 						<th id="BoardList_TH_8" onclick="setListOrder(this)" order="REAL_PROGRESS"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 80px;"
 							class="h5_center"><spring:message code='ezPMS.t250' /></th>
 						</thead>
 					</table>
@@ -115,33 +115,33 @@ $(function() {
 										name="boardCheckbox"
 										style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 12%"><c:out
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
 											value="${task.taskName }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
 											value="${task.groupName }" /></td>
 									<c:if test="${position eq 'task' }">
 									<td onclick="selectedTR(this);" class="projectName" projectId="${task.projectId }"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
 											value="${task.projectName }" /></td>
 									</c:if>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 75px"><div
 											style="margin-right: 2px;"></div>
 											<c:out value="${task.headManagerName }" />
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><div
 											style="margin-right: 2px;"></div>
 											<c:out value="${task.planStartDate }" />
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><div
 											style="margin-right: 2px;"></div>
 											<c:out value="${task.planEndDate }" />
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px"><div
 											style="margin-right: 2px;"></div>
 											<c:choose>
 											<c:when test="${task.status eq 'P' }">
@@ -162,7 +162,7 @@ $(function() {
 										</c:choose>
 										</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px">
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 80px">
 										<div style="margin-top: 5px; display: inline-block;">
 											<fmt:formatNumber value="${task.realProgress }" pattern="0.0" />%
 										</div>
@@ -178,31 +178,31 @@ $(function() {
 										name="boardCheckbox"
 										style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 12%"><c:out
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
 											value="${task.groupName }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
 											value="${task.upperGroupName }" /></td>
 									<td onclick="selectedTR(this);" class="projectName" projectId="${task.projectId }"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><c:out
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
 											value="${task.projectName }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 75px"><div
 											style="margin-right: 2px;"></div>
 											<c:out value="${task.headManagerName }" />
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><div
 											style="margin-right: 2px;"></div>
 											<c:out value="${task.planStartDate }" />
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><div
 											style="margin-right: 2px;"></div>
 											<c:out value="${task.planEndDate }" />
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px">
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 80px">
 										<div style="margin-top: 5px; display: inline-block;">
 											<c:out value="${task.realProgress }"/>%
 										</div>

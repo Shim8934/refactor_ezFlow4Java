@@ -478,7 +478,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getTaskListCount(SearchVO search, String userId, int roleId) {
+	public int getTaskListCount(SearchVO search, String userId, int roleId, String deptId) {
 		LOGGER.debug("[SERVICE] getTaskListCount started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -496,6 +496,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("taskName", search.getTaskName());
 		map.put("searchByProjectName", search.getProjectName());
 		map.put("roleId", roleId);
+		map.put("deptId", deptId);
+		
 
 		int taskCount = ezPMSDAO.getTaskListCount(map);
 
@@ -552,7 +554,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat,
-			String orderHow, String location, int roleId) {
+			String orderHow, String location, int roleId, String deptId) {
 		LOGGER.debug("[SERVICE] getTaskList started");
 
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -572,6 +574,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("groupId", search.getGroupId());
 		param.put("isMyTask", search.getIsMyTask());
 		param.put("roleId", roleId);
+		param.put("deptId", deptId);
 		
 		// 정렬
 		param.put("orderWhat", orderWhat);

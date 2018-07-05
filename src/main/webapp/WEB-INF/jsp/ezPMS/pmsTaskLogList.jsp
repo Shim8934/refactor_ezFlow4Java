@@ -62,18 +62,18 @@ $(function() {
 				<thead id="BoardList_THEAD">
 					<tr id="BoardList_TH">
 						<th id="BoardList_TH_0" onclick="setListOrder(this)" order="LOG_STATUS" style="text-align: left; overflow: hidden; white-space: nowrap; 
-							text-overflow: ellipsis; cursor: pointer; width: 20px; text-align: center" class="h5_center"><spring:message code='ezPMS.t38' /></th>
+							text-overflow: ellipsis; cursor: pointer; width: 57px; text-align: center" class="h5_center"><spring:message code='ezPMS.t38' /></th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="LOG_CONTENT"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 20%;"
+							style="text-align: center;cursor: pointer;"
 							class="h5_center"><spring:message code='ezPMS.t186' /></th>
 						<th id="BoardList_TH_2"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px"
 							class="h5_center"><spring:message code='ezPMS.t98' /></th>
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="USER_NAME"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 80px"
 							class="h5_center"><spring:message code='ezPMS.t63' /></th>
 						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="LOG_DATE"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 40px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 163px"
 							class="h5_center"><spring:message code='ezPMS.t187' /></th>
 						</tr>
 						</thead>
@@ -91,7 +91,7 @@ $(function() {
 							<c:otherwise>
 								<c:forEach items="${logList }" var="log">
 								<tr id="${log.logId }" class="listRow" ondblclick="goProjectDetails(this)">
-									<td style="width: 20px; cursor: default; text-align: center">
+									<td style="width: 57px; cursor: default; text-align: center">
 										<c:choose>
 											<c:when test="${log.logStatus eq 1 }">
 												<span class="situation_registration">&nbsp;<spring:message code='ezPMS.t40' />&nbsp;</span>
@@ -105,10 +105,10 @@ $(function() {
 										</c:choose>
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 20%"><c:out
+										style="text-align: left;"><c:out
 											value="${log.logContent }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40px; text-align:center;">
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px; text-align:center;">
 										<c:choose>
 											<c:when test="${empty log.taskName }">
 												<c:out value="${log.groupName }" />
@@ -119,10 +119,10 @@ $(function() {
 										</c:choose>
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 80px"><c:out
 											value="${log.userName }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40px"><div
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 163px"><div
 											name="${log.logId }" style="margin-right: 2px;"></div>&nbsp;
 										<div style="margin-top: 5px; display: inline-block;">
 											<c:out value="${fn:substring(log.logDate, 0, 16)}" />

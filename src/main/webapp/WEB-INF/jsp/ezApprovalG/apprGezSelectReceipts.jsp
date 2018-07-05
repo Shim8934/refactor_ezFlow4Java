@@ -798,7 +798,7 @@
           <td id="TD_Receipt2" style="display:none">
           <div class="box" style="overflow:auto;width:380px;height:389px" id="TreeView"></div>
               <input id="txtOuterDeptName" style="width: 150px;margin-top:2px;" name="textUser2" onkeyup="return btnSearchDept_onKeyPress2(event)"  maxlength="50">
-              <a style="margin-top: 2px" class="imgbtn"><span id="Span7" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+              <a style="margin-top: 2px" class="imgbtn imgbck"><span id="Span7" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
           </td>
         </tr>
       </table>

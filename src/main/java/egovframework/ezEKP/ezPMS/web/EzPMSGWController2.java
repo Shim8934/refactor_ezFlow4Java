@@ -84,6 +84,7 @@ public class EzPMSGWController2 {
 			String orderHow = request.getParameter("orderHow");
 			String position = request.getParameter("position");
 			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();
 			int roleId = 0;
 			long groupId = 0;
 			
@@ -131,7 +132,7 @@ public class EzPMSGWController2 {
 			search.setProjectName(request.getParameter("searchByProjectName"));
 			
 			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
-			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position, roleId);
+			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position, roleId, deptId);
 			 
 			for (int i = 0; i < taskList.size(); i++ ) {
 				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanStartDate());

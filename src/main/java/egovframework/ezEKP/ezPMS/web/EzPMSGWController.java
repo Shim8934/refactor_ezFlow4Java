@@ -951,6 +951,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String status = request.getParameter("status");
 			String isMyTask = request.getParameter("isMyTask");
+			String deptId = info.getDeptId();
 			long groupId = 0;
 			int roleId = 0;
 			
@@ -976,7 +977,7 @@ public class EzPMSGWController {
 			search.setProjectName(request.getParameter("searchByProjectName"));
 			search.setTaskName(request.getParameter("searchByTaskName"));
 			
-			int taskListCount = ezPMSService.getTaskListCount(search, userId, roleId);
+			int taskListCount = ezPMSService.getTaskListCount(search, userId, roleId, deptId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
