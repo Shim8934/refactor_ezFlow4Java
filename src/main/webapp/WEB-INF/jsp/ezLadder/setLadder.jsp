@@ -566,11 +566,11 @@
 			var overlapuser;
 			var searchOLNameSet;
 			function checkAttendant(data) {
-				alluser = {"userId": [], "userName": [], "userName2": [], "deptName": [], "pic": [], "temporder": []};
-				overlapuser = {"userId": [], "userName": [], "userName2": [], "deptName": [], "pic": [], "temporder": [], "usertype": []};
+				alluser = {"userId": [], "userName": [], "userName2": [], "deptName": [], "pic": [], "temporder": [], "description": [], "description2": []};
+				overlapuser = {"userId": [], "userName": [], "userName2": [], "deptName": [], "pic": [], "temporder": [], "usertype": [], "description": [], "description2": []};
 				
 				if(attendants === null) {
-					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [], "description": [], "description2": [] };
 					items = [];
 				}
 				
@@ -586,27 +586,29 @@
 					getUserArray(names);
 					
 					if(!!nameSearchResult) {
-						searchUser = {"userId": [], "userName": [], "userName2": [], "deptName": [], "pic": []};
+						searchUser = {"userId": [], "userName": [], "userName2": [], "deptName": [], "pic": [], "description": [], "description2": []};
 						nameSearchResult.forEach(function(val, i) {
 							searchUser["userId"][i] = val.userId;
 							searchUser["userName"][i] = val.userName;
 							searchUser["userName2"][i] = val.userName2;
 							searchUser["deptName"][i] = val.deptName;
+							searchUser["description"][i] = val.deptName;
+							searchUser["description2"][i] = val.deptName2;
 							searchUser["pic"][i] = val.pic;
 						});
 						
 						var searchUserLen = searchUser["userId"].length;
-						var serchNameOverlapUser = {"userId": [], "userName": [], "deptName": []};
+						var serchNameOverlapUser = {"userId": [], "userName": [], "deptName": [], "deptName": [], "description": [], "description2": []};
 						var alluserCnt = 0;
 						var overlapuserCnt = 0;
 						for(var i = 0; i < searchUserLen; i++) {
 							if(!!searchUser["userId"][i]) {
 								var chkOL0 = false; // 검색 이름 중 이름 중복 검사
 								var chkOL1 = attendants["id"].indexOf(searchUser["userId"][i]); // 전에 등록한 참여자중 아이디 중복 검사
-								var chkOL2 = alluser["userId"].indexOf(searchUser["userId"][i]); // 지금 등록한 참여자중 아이디 중복 검사
+								/* var chkOL2 = alluser["userId"].indexOf(searchUser["userId"][i]); // 지금 등록한 참여자중 아이디 중복 검사 */
 								
 								for(var j = 0; j < searchUserLen; j++) {
-									if(searchUser["userId"][i] != searchUser["userId"][j] && searchUser["userName"][i] == searchUser["userName"][j] && i != j) {
+									if(searchUser["userName"][i] == searchUser["userName"][j]) {
 										chkOL0 = true;
 										break;
 									}
@@ -614,21 +616,25 @@
 								
 								if(chkOL0) {
 									// 이름 검색이 중복 (팝업확인)
-									if(serchNameOverlapUser["userId"].indexOf(searchUser["userId"][i]) == -1) {
-										var idx = serchNameOverlapUser["userId"].length;
-										serchNameOverlapUser["userId"][idx] = searchUser["userId"][i];
-										serchNameOverlapUser["userName"][idx] = searchUser["userName"][i];
-										serchNameOverlapUser["deptName"][idx] = searchUser["deptName"][i];
-									}
+									/* if(serchNameOverlapUser["userId"].indexOf(searchUser["userId"][i]) == -1) { */
+									var idx = serchNameOverlapUser["userId"].length;
+									serchNameOverlapUser["userId"][idx] = searchUser["userId"][i];
+									serchNameOverlapUser["userName"][idx] = searchUser["userName"][i];
+									serchNameOverlapUser["deptName"][idx] = searchUser["deptName"][i];
+									serchNameOverlapUser["description"][idx] = searchUser["description"][i];
+									serchNameOverlapUser["description2"][idx] = searchUser["description2"][i];
+									/* } */
 									/* searchOLNameSet.add(searchUser["userId"][i]); */
 								}
-								if(chkOL1 == -1 && chkOL2 == -1) {
+								if((chkOL1 == -1 ) || attendants["id"].length == 0) {
 									// 참여자 노중복
 									alluser["userId"][alluserCnt] = searchUser["userId"][i];
 									alluser["userName"][alluserCnt] = searchUser["userName"][i];
 									alluser["userName2"][alluserCnt] = searchUser["userName2"][i];
 									alluser["deptName"][alluserCnt] = searchUser["deptName"][i];
 									alluser["pic"][alluserCnt] = searchUser["pic"][i];
+									alluser["description"][alluserCnt] = searchUser["description"][i];
+									alluser["description2"][alluserCnt] = searchUser["description2"][i];
 									alluser["temporder"][alluserCnt] = i;
 									alluserCnt++;
 								} else {
@@ -638,6 +644,8 @@
 									overlapuser["userName2"][overlapuserCnt] = searchUser["userName2"][i];
 									overlapuser["deptName"][overlapuserCnt] = searchUser["deptName"][i];
 									overlapuser["pic"][overlapuserCnt] = searchUser["pic"][i];
+									overlapuser["description"][overlapuserCnt] = searchUser["description"][i];
+									overlapuser["description2"][overlapuserCnt] = searchUser["description2"][i];
 									overlapuser["temporder"][overlapuserCnt] = i;
 									overlapuser["usertype"][overlapuserCnt] = "";
 									overlapuserCnt++;
@@ -655,7 +663,7 @@
 						}
 						
 						var onlyNameOLLen = serchNameOverlapUser["userId"].length;
-						if(onlyNameOLLen > 0) {
+						if(onlyNameOLLen > 1) {
 							var idIndex;
 							
 							retAttendantPopInfo[0] = serchNameOverlapUser;
@@ -664,7 +672,6 @@
 							$("#inputAttendant").blur();
 							
 							DivPopUpShow(380, 379, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
-							
 							setFrameBlock(true);
 						} else {
 							showSecondOverlapPopup();
@@ -682,7 +689,7 @@
 								var removeIdx2;
 								
 								while(true) {
-									removeIdx1 = alluser["userId"].indexOf(retAttendants["userId"][i]);
+									removeIdx1 = alluser["deptName"].indexOf(retAttendants["deptName"][i]);
 									if(removeIdx1 != -1) {
 										alluser["userId"].splice(removeIdx1, 1);
 										alluser["userName"].splice(removeIdx1, 1);
@@ -690,9 +697,11 @@
 										alluser["deptName"].splice(removeIdx1, 1);
 										alluser["pic"].splice(removeIdx1, 1);
 										alluser["temporder"].splice(removeIdx1, 1);
+										alluser["description"].splice(removeIdx1, 1);
+										alluser["description2"].splice(removeIdx1, 1);
 									} else {
 										i++;
-										if(!retAttendants["userId"][i]) {
+										if(!retAttendants["deptName"][i]) {
 											break;
 										}
 									}
@@ -700,18 +709,20 @@
 								if(!!overlapuser["userId"].length) {
 									i = 0;
 									while(true) {
-										removeIdx2 = overlapuser["userId"].indexOf(retAttendants["userId"][i]);
+										removeIdx2 = overlapuser["deptName"].indexOf(retAttendants["deptName"][i]);
 										if(removeIdx2 != -1) {
 											overlapuser["userId"].splice(removeIdx2, 1);
 											overlapuser["userName"].splice(removeIdx2, 1);
 											overlapuser["userName2"].splice(removeIdx2, 1);
 											overlapuser["deptName"].splice(removeIdx2, 1);
 											overlapuser["pic"].splice(removeIdx2, 1);
+											overlapuser["description"].splice(removeIdx2, 1);
+											overlapuser["description2"].splice(removeIdx2, 1);
 											overlapuser["temporder"].splice(removeIdx2, 1);
 											overlapuser["usertype"].splice(removeIdx2, 1);
 										} else {
 											i++;
-											if(!retAttendants["userId"][i]) {
+											if(!retAttendants["deptName"][i]) {
 												break;
 											}
 										}
@@ -791,6 +802,8 @@
 							}
 							attendants["name"][totalLen] = alluser["userName"][j];
 							attendants["name2"][totalLen] = alluser["userName2"][j];
+							attendants["description"][totalLen] = alluser["description"][j];
+							attendants["description2"][totalLen] = alluser["description2"][j];
 							attendants["pic"][totalLen] = alluser["pic"][j];
 							attendants["order"][totalLen] = totalLen;
 							items[totalLen++] = "";
@@ -804,6 +817,8 @@
 							}
 							attendants["name"][totalLen] = overlapuser["userName"][k];
 							attendants["name2"][totalLen] = overlapuser["userName2"][k];
+							attendants["description"][totalLen] = overlapuser["description"][k];
+							attendants["description2"][totalLen] = overlapuser["description2"][k];
 							attendants["pic"][totalLen] = overlapuser["pic"][k];
 							attendants["order"][totalLen] = totalLen;
 							items[totalLen++] = "";
@@ -822,7 +837,7 @@
 			function setAllUser_(userdata, addtype) {
 				DivPopUpHidden();
 				
-				attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+				attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [], "description": [], "description2": [] };
 				items = [];
 				
 				var userdataLen = userdata.length;
@@ -831,6 +846,8 @@
 					attendants["name"][idx] = line["userName"];
 					attendants["name2"][idx] = line["userName2"];
 					attendants["pic"][idx] = line["pic"];
+					attendants["description"][idx] = line["description"];
+					attendants["description2"][idx] = line["description2"];
 					attendants["order"][idx] = idx;
 					items[idx] = line["item"];
 				});
@@ -872,6 +889,8 @@
 							html += '<input type="text" class="input" readonly="readonly" name="userNames" style="line-height: 30px; background: rgb(244, 245, 245)" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
 							html += '<input type="text" name="userIds" style="display: none;" />';
+							html += '<input type="text" name="description2" style="display: none;" />';
+							html += '<input type="text" name="description" style="display: none;" />';
 							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 21px; right: 10px; cursor: pointer;"></span></div></li>';
 						}
 						
@@ -881,6 +900,8 @@
 						$(thisLi + " input[name='userNames']").val(attendants["name"][i]);
 						$(thisLi + " input[name='userName2s']").val(attendants["name2"][i]);
 						$(thisLi + " input[name='userIds']").val(attendants["id"][i]);
+						$(thisLi + " input[name='description2']").val(attendants["description2"][i]);
+						$(thisLi + " input[name='description']").val(attendants["description"][i]);
 						
 						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' id='items" + i + "' _itemindex='" + i + "' maxlength='" + maxitem + "' /></li>");
 						$("#tempItemList").append("<li><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' value='?' /></li>");

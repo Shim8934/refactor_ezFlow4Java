@@ -14,9 +14,11 @@ public class LadderLineVO {
 	private String userName;
 	/** 참여자 이름(다국어) */
 	private String userName2;
+	private String deptName2;
 	private String deptName;
 	private String deptID;
-	
+	private String description;
+	private String description2;
 	/** 게임 아이템 - 결과값 */
 	private String item;
 	/** 순서 */
@@ -34,6 +36,10 @@ public class LadderLineVO {
 	/** 사진 */
 	private String pic;
 	
+	/** 부서이름 배열 */
+	private String [] descriptions;
+	/** 부서이름 배열 */
+	private String [] descriptions2;
 	/** 참여자 아이디 배열 */
 	private String [] userIds;
 	/** 참여자 이름 배열 */
@@ -45,6 +51,25 @@ public class LadderLineVO {
 	/** 순서 배열 */
 	private int [] ladderOrders;
 	
+	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDescription2() {
+		return description2;
+	}
+	public void setDescription2(String description2) {
+		this.description2 = description2;
+	}
+	public String getDeptName2() {
+		return deptName2;
+	}
+	public void setDeptName2(String deptName2) {
+		this.deptName2 = deptName2;
+	}
 	public String getDeptID() {
 		return deptID;
 	}
@@ -184,5 +209,23 @@ public class LadderLineVO {
 	}
 	public void setLadderOrders(int[] ladderOrders) {
 		this.ladderOrders = ladderOrders;
+	}
+	public String[] getDescriptions() {
+		return descriptions;
+	}
+	public void setDescriptions(String[] descriptions) {
+		this.descriptions = descriptions;
+	}
+	public void setDescriptions(ArrayList<String>  descriptions) {
+		this.descriptions = (String[]) descriptions.toArray(new String[descriptions.size()]); 
+	}
+	public String[] getDescriptions2() {
+		return descriptions2;
+	}
+	public void setDescriptions2(String[] descriptions2) {
+		this.descriptions2 = descriptions2;
+	}
+	public void setDescriptions2(ArrayList<String>  descriptions2) {
+		this.descriptions2 = (String[]) descriptions2.toArray(new String[descriptions2.size()]); 
 	}
 }

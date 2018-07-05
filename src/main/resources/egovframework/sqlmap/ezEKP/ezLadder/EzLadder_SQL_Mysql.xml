@@ -1042,56 +1042,62 @@
 	</select> 
 	
 	<!-- boh -->
-	<select id="EzLadderDAO.selectSearchUser" parameterClass="map" resultClass="LadderLineVO">
+	<select id="EzLadderDAO.selectSearchUser" parameterClass="map" resultClass="LadderLineVO" remapResults="true">
 		SELECT 
-			CN AS USERID, DISPLAYNAME AS USERNAME, DISPLAYNAME2 AS USERNAME2, DESCRIPTION$lang$ AS DEPTNAME, EXTENSIONATTRIBUTE2 AS PIC, TENANT_ID
-		FROM 
-			TBL_USERMASTER
-		WHERE 
-			TENANT_ID = #tenant_id#
-		AND 
-			DISPLAYNAME$lang$ = #name#
-		AND
-			PHYSICALDELIVERYOFFICENAME = #companyID#			
-		AND 
-			DISPLAYNAME$lang$
-		NOT IN (
-			SELECT
-				DISPLAYNAME$lang$
-			FROM
-				TBL_USERMASTER_RETIRE
-			WHERE 
-				DISPLAYNAME$lang$ = #name#
-			AND
-				TENANT_ID = #tenant_id#
-			AND
-				PHYSICALDELIVERYOFFICENAME = #companyID#
-			)
-		UNION
+			A.CN AS USERID, C.DISPLAYNAME AS USERNAME, C.DISPLAYNAME2 AS USERNAME2, B.DISPLAYNAME AS DEPTNAME, B.DISPLAYNAME2 AS DEPTNAME2, C.EXTENSIONATTRIBUTE2 AS PIC, C.TENANT_ID
+		FROM
+			TBL_ADDJOBMASTER A JOIN TBL_DEPTMASTER B ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID JOIN TBL_USERMASTER C ON A.CN = C.CN
+		WHERE
+			A.CN IN (
+				SELECT 
+					CN
+				FROM 
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #tenant_id#
+				AND 
+					D.DISPLAYNAME$lang$ = #name#)
+				AND
+					C.TENANT_ID = #tenant_id#
+				AND
+					B.EXTENSIONATTRIBUTE2 = #companyID#
+				AND
+					C.DISPLAYNAME NOT IN (
+											SELECT
+												E.DISPLAYNAME$lang$
+											FROM
+												TBL_USERMASTER_RETIRE E
+											WHERE 
+												E.DISPLAYNAME$lang$ = #name#
+											AND
+												E.TENANT_ID = #tenant_id#
+											AND
+												E.EXTENSIONATTRIBUTE4 LIKE CONCAT('%', #companyID#, '%')
+										)
+		UNION 
 		SELECT 
-			CN AS USERID, DISPLAYNAME AS USERNAME, DISPLAYNAME2 AS USERNAME2, DESCRIPTION$lang$ AS DEPTNAME, EXTENSIONATTRIBUTE2 AS PIC, TENANT_ID
-		FROM 
-			TBL_USERMASTER
-		WHERE 
+			F.CN AS USERID, F.DISPLAYNAME AS USERNAME, F.DISPLAYNAME2 AS USERNAME2, F.DESCRIPTION AS DEPTNAME, F.DESCRIPTION2 AS DEPTNAME2, F.EXTENSIONATTRIBUTE2 AS PIC, F.TENANT_ID
+		FROM
+			TBL_USERMASTER F
+		WHERE
 			TENANT_ID = #tenant_id#
-		AND 
-			DISPLAYNAME$lang$ = #name#
 		AND
-			EXTENSIONATTRIBUTE4 LIKE CONCAT('%', #companyID#, '%')			
-		AND 
-			DISPLAYNAME$lang$
-		NOT IN (
-			SELECT
-				DISPLAYNAME$lang$
-			FROM
-				TBL_USERMASTER_RETIRE
-			WHERE 
-				DISPLAYNAME$lang$ = #name#
-			AND
-				TENANT_ID = #tenant_id#
-			AND
-				EXTENSIONATTRIBUTE4 LIKE CONCAT('%', #companyID#, '%')
-			)
+			F.DISPLAYNAME = #name#
+		AND
+			F.PHYSICALDELIVERYOFFICENAME = #companyID#
+		AND
+			F.DISPLAYNAME NOT IN (
+										SELECT
+											G.DISPLAYNAME$lang$
+										FROM
+											TBL_USERMASTER_RETIRE G
+										WHERE 
+											G.DISPLAYNAME$lang$ = #name#
+										AND
+											G.TENANT_ID = #tenant_id#
+										AND
+											G.PHYSICALDELIVERYOFFICENAME = #companyID#
+									)
 	</select>
 	
  	<insert id="EzLadderDAO.insertLadderSet" parameterClass="LadderVO">
@@ -1103,9 +1109,9 @@
 	
 	<insert id="EzLadderDAO.insertLadderLine" parameterClass="LadderLineVO">
 		INSERT INTO 
-			TBL_LADDER_LINE (TENANT_ID, LADDERID, USERID, USERNAME, USERNAME2, ITEM, LADDERORDER)
+			TBL_LADDER_LINE (TENANT_ID, LADDERID, USERID, USERNAME, USERNAME2, ITEM, LADDERORDER, DESCRIPTION, DESCRIPTION2)
 		VALUES
-			(#tenant_id#, #ladderId#, #userId#, #userName#, #userName2#, #item#, #ladderOrder#)
+			(#tenant_id#, #ladderId#, #userId#, #userName#, #userName2#, #item#, #ladderOrder#, #description#, #description2#)
 		<selectKey keyProperty="ladderId" resultClass="Integer" type="pre">
 			SELECT 
 				MAX(LADDERID) 
@@ -1325,7 +1331,13 @@
 	
 	<select id="EzLadderDAO.selectLadderBMUserList" parameterClass="LadderBmUserVO" resultClass="LadderBmUserVO">
 		SELECT 
-			B.ID, B.LADDERBMID, B.USERID, B.USERNAME, B.USERNAME2, U.COMPANY, U.DESCRIPTION, U.MAIL, EXTENSIONATTRIBUTE2 AS PIC
+			B.ID, B.LADDERBMID, B.USERID, B.USERNAME, B.USERNAME2, B.DESCRIPTION, B.DESCRIPTION2, U.MAIL, EXTENSIONATTRIBUTE2 AS PIC,
+			(SELECT 
+				DISTINCT COMPANY 
+			FROM 
+				TBL_USERMASTER 
+			WHERE 
+				PHYSICALDELIVERYOFFICENAME = #companyID#) AS COMPANY
 		FROM 
 			TBL_LADDER_BMUSER B
 		LEFT JOIN (
@@ -1367,7 +1379,7 @@
 	
 	<insert id="EzLadderDAO.insertLadderBMUser" parameterClass="LadderBmUserVO">
 		INSERT 
-			TBL_LADDER_BMUSER (TENANT_ID, LADDERBMID, USERID, USERNAME, USERNAME2)
+			TBL_LADDER_BMUSER (TENANT_ID, LADDERBMID, USERID, USERNAME, USERNAME2, COMPANYID, DESCRIPTION, DESCRIPTION2)
 		VALUES 
 			(#tenant_id#, 
 			<isEqual property="ladderBmId" compareValue="0">
@@ -1385,7 +1397,7 @@
 			<isNotEqual property="ladderBmId" compareValue="0">
 				#ladderBmId#, 
 			</isNotEqual>
-			#userId#, #userName#, #userName2#)
+			#userId#, #userName#, #userName2#, #companyID#, #description#, #description2#)
 	</insert>
 	
 	<update id="EzLadderDAO.updateLadderBMGroup" parameterClass="LadderBmVO">
@@ -1438,7 +1450,7 @@
 	
 	<select id="EzLadderDAO.ladderGameParticipant" resultClass="LadderLineVO">
 		SELECT
-			L.TENANT_ID, LADDERID, ID AS LINEID, USERID, USERNAME, USERNAME2, U.EXTENSIONATTRIBUTE2 AS PIC, RESULTUSERID, RESULTUSERNAME, RESULTUSERNAME2, ITEM, LADDERORDER
+			L.TENANT_ID, LADDERID, ID AS LINEID, USERID, USERNAME, USERNAME2, U.EXTENSIONATTRIBUTE2 AS PIC, RESULTUSERID, RESULTUSERNAME, RESULTUSERNAME2, ITEM, LADDERORDER, L.DESCRIPTION, L.DESCRIPTION2
 		FROM
 			TBL_LADDER_LINE L
 		LEFT JOIN (
