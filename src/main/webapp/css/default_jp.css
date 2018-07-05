@@ -2213,9 +2213,9 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	right: 45px;	
 }
 .extraMenu ul li span {padding-top:2px !important;}
-#mainmenu select {height: 29px !important; border-color: #d2d2d2;}
+#mainmenu select {height: 29px !important; border-color: #c8c8c8;}
 
-.mail_volume{ margin:auto; padding:0px; width:193px; overflow:hidden; margin-top:15px;margin-bottom:10px}
+.mail_volume{ margin:auto; padding:0px; width:176px; overflow:hidden; margin-top:15px;margin-bottom:10px}
 .volume_num{ margin:0px; padding:0px;}
 .volume_graph{ margin:5px 0px 10px 0px; padding:0px; width:100%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#e9e9e9;}
 .volume_graph span{ display:inline-block; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
@@ -2223,3 +2223,5 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .volumeDL dt{margin:0px; padding:0px 0px 0px 0px; float:left; color:#000;}
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
+
+.imgbck {background-color: #e8e8ea;}

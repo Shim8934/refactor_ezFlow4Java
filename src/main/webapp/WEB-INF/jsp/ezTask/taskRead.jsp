@@ -1708,7 +1708,7 @@
 					</ul>
 					<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
 					<!-- 18-05-16 구해안 - 지시자만 업무 정보 수정 가능 하도록 수정, 담당자만 업무 내용 수정 가능하도록 수정 -->
-					<a id="updateStatus" class="imgbtn" ><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
+					<a id="updateStatus" class="imgbtn imgbck"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
 				</div>
 				<div id="Sdatepicker" style="float:right;"></div>
 			</div>
@@ -1734,12 +1734,12 @@
 				<div style="float: right; margin-top: 3px;">
 				<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
 				<!-- 18-05-16 구해안 - 지시자만 업무 정보 수정 가능 하도록 수정, 담당자만 업무 내용 수정 가능하도록 수정 -->
-					<a id="editTaskInfo" class="imgbtn" style="display:none;"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
-					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()">
+					<a id="editTaskInfo" class="imgbtn imgbck" style="display:none;"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
+					<a id="editTaskWork" class="imgbtn imgbck" style="display:none; "><span onclick="return edit_taskwrok()">
 						<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh02' /></c:if>
 						<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t1511' /></c:if></span>
 					</a>
-					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
+					<a id="editTaskChisi" class="imgbtn imgbck" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
 			</div>
 		</div> 		
@@ -1839,8 +1839,8 @@
 								<div id="attachedfileDIV" style="overflow:auto;height:57px;background-color:white;text-align:left"></div>
 							</td>
 							<td class="pos2">
-								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
-								<a class="imgbtn"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
+								<a class="imgbtn imgbck"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
+								<a class="imgbtn imgbck"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
 							<td id="Td2" style="display:none"></td>
 						</tr>
@@ -1863,9 +1863,9 @@
 							<td class="pos1">
 								<div id="attachedfileDIV2" style="overflow: auto;height: 57px;background-color:white;text-align:left"></div>
 							</td>
-							<td class="pos2"><a class="imgbtn">
+							<td class="pos2"><a class="imgbtn imgbck">
 								<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
-								<a class="imgbtn"><span onClick="attach_Download('2')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
+								<a class="imgbtn imgbck"><span onClick="attach_Download('2')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
 						</tr>
 					</table>

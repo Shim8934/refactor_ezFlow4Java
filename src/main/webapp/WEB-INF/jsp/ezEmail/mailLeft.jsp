@@ -105,7 +105,7 @@
                  	        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
                  	        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
                  	   }
-                 	        	
+
                  	   //뿌려주기
                  	   $("#myBar").css({
                  	       "width" : percent + "%"
