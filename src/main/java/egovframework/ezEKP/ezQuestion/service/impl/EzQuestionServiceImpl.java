@@ -70,6 +70,7 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 		map.put("eDateLength", questionListVO.getPollEndDate().length());
 		map.put("sDateLength", questionListVO.getPollStartDate().length());
 		map.put("tenantID", tenantID);
+		map.put("companyID", questionListVO.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		logger.debug("getQstListCnt End");
@@ -94,6 +95,7 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 		map.put("eDateLength", questionListVO.getPollEndDate().length());
 		map.put("sDateLength", questionListVO.getPollStartDate().length());
 		map.put("tenantID", tenantID);
+		map.put("companyID", questionListVO.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		logger.debug("getQstList End");
@@ -143,6 +145,7 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 		map.put("v_pSDate", map.get("startdate"));
 		map.put("v_pEdate", map.get("enddate"));
 		map.put("v_pDataCount", map.get("dataCount"));
+		map.put("v_companyID", map.get("companyID"));
 		
 		ezQuestionDAO.stepSave(map);
 	}
@@ -1109,6 +1112,7 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 		map.put("userNm2", loginVO.getDisplayName2());
 		map.put("userEmail", loginVO.getEmail());
 		map.put("tenantID", loginVO.getTenantId());
+		map.put("companyID", loginVO.getCompanyID());
 		
 		stepSave(pUserID, map);
 		

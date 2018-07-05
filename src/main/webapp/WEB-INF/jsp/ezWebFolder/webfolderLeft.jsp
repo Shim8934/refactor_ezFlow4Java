@@ -127,17 +127,18 @@
 						} else {
 							barElmt.style.width = "100%";
 						}
-						
-						volumeInf.textContent = useVolume + " / " + totalVolume + " (" + percent + "%)";
-						
-						if (percent > 90) {
+						$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
+	                 	$("#usePer").text(percent+"%");
+												
+						if (percent >= 80) {
 							barElmt.className = "myBar_red";
-						} else if (percent > 70) {
-							barElmt.className = "myBar_orange";
-						} else if (percent > 60) {
+							$(".volumeDL dd").css("color", "#ff4040");
+						} else if (percent >= 70) {
 							barElmt.className = "myBar_yellow";
+							$(".volumeDL dd").css("color", "#ff9c00");
 						} else {
 							barElmt.className = "myBar_green";
+							$(".volumeDL dd").css("color", "#0470e4");
 						}
 					},
 					error : function(error) {
@@ -268,12 +269,20 @@
   			</h2>
     		<ul>
 			</ul>			
-			<div style="border:1px solid #e8e8ef;margin:10px 10px 2px;background-color:#f8f8fa">
+			<!-- <div style="border:1px solid #e8e8ef;margin:10px 10px 2px;background-color:#f8f8fa">
 			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
 			    <div style="width:80%">
 			    	<div id='myBar'></div>
 			    </div>	
 			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
+		    </div> -->
+		    <div class="mail_volume">
+		    	<p class="volume_num"><img src="/images/volume_num.png" /></p>
+		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
+		        <dl class="volumeDL" >
+		        	<dt id="useVol"></dt>
+		            <dd id="usePer"></dd>
+		        </dl>
 		    </div>		    
 			<h3 style="border-top:0px;">
 		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 폴더관리 -->
