@@ -30,6 +30,7 @@
 			var scheduletype = "<c:out value='${scheduleInfo.scheduleType}' />";
 			var scheduleid = "<c:out value='${_scheduleid}' />";			
 			var datetype = "<c:out value='${scheduleInfo.dateType}' />";			
+			var commpanyid = "<c:out value='${scheduleInfo.companyid}' />";
 			var changekey = "";
 			var pattern = "<c:out value='${_pattern}' />";
 			var pageFrom = "<c:out value='${pageFrom}' />";			
@@ -87,16 +88,32 @@
 	        }
 				
 	        function show_personinfo(userid) {
+	        	var deptID = "";
+	        	
 	            if (userid == "0")
 	                userid = creatorid;
 	            else if (userid == "1")
 	                userid = modifierid;
 	            
+	        	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezSchedule/scheduleGetCumDeptID.do",
+					data : { 						
+						userID : userid,
+						companyID : commpanyid
+					},
+					success: function(result){
+						deptID = result;
+					}
+				});
+	        	
 	            var feature = GetOpenPosition(420, 450);
 	            if (userid.indexOf('@') > 0)
-	                window.open("/ezCommon/showPersonInfo.do?email=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	            else
-	                window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        }
 	
 			/* function group_info() {

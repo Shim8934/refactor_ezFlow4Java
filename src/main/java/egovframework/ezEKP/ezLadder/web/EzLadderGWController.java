@@ -208,6 +208,8 @@ public class EzLadderGWController {
 			ladLineVO.setUserIds((ArrayList<String>) jsonBodys.get("userIds"));
 			ladLineVO.setUserNames((ArrayList<String>) jsonBodys.get("userNames"));
 			ladLineVO.setUserName2s((ArrayList<String>) jsonBodys.get("userName2s")); 
+			ladLineVO.setDescriptions((ArrayList<String>) jsonBodys.get("descriptions"));
+			ladLineVO.setDescriptions2((ArrayList<String>) jsonBodys.get("descriptions2"));
 			ladLineVO.setItems((ArrayList<String>) jsonBodys.get("items"));
 			
 			ezLadderService.insertLadder(ladVO, ladLineVO, logCookie);

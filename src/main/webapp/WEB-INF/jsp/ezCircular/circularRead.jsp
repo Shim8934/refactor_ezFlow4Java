@@ -51,11 +51,12 @@
 			var ucompanyID = "${userInfo.companyID}";
 			var attachList = "";
 			var deptID = "${deptID}";
+			var company = "${company}"
 
 			$(document).ready(function() {
 				
 				if(ucompanyID != wcompanyID) {
-					alert(ucompanyID + "<spring:message code='ezLadder.hyh02' />");
+					alert("<spring:message code='ezCircular.kmsc03' /> " + company +"<spring:message code='ezCircular.kmsc04' />");
 					window.close();
 					return;
 				}

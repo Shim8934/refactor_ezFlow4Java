@@ -188,14 +188,16 @@ public class EzLadderController {
 	 * 참여자 추가 (조직도 호출)
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadderAttendantPopUp.do")
-	public String setLadderAttendantPopUp(@CookieValue("loginCookie") String loginCookie, Model model) {
+	public String setLadderAttendantPopUp(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		logger.debug("setLadderAttendantPopUp started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
 		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("domainName", domainName);
 		
 		logger.debug("setLadderAttendantPopUp ended.");
 		
@@ -254,7 +256,7 @@ public class EzLadderController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.POST)
 	public String setLadder(@CookieValue("loginCookie") String loginCookie, String title, String type, String secretFlag, String lineCnt, 
-			String [] userIds, String [] userNames, String [] userName2s, String [] items, 
+			String [] userIds, String [] userNames, String [] userName2s, String [] items,  String[] description, String[] description2,
 			LadderVO ladVO, LadderLineVO ladLineVO, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setLadder started.");
 		
@@ -275,6 +277,8 @@ public class EzLadderController {
 		jsonBodys.put("userIds", userIds);
 		jsonBodys.put("userNames", userNames);
 		jsonBodys.put("userName2s", userName2s);
+		jsonBodys.put("descriptions", description);
+		jsonBodys.put("descriptions2", description2);
 		jsonBodys.put("items", items);
 		jsonBodys.put("loginCookie", loginCookie);
 		
@@ -407,7 +411,9 @@ public class EzLadderController {
 				.queryParam("userName2s", BMUserVO.getUserName2s())
 				.queryParam("lang", userInfo.getLang())
 				.queryParam("offset", userInfo.getOffset())
-				.queryParam("companyID", userInfo.getCompanyID());
+				.queryParam("companyID", userInfo.getCompanyID())
+				.queryParam("descriptions", BMUserVO.getDescriptions())
+				.queryParam("descriptions2", BMUserVO.getDescriptions2());
 		
 		ResponseEntity<String> result = null;
 		

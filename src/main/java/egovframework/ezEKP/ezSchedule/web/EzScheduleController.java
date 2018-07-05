@@ -332,7 +332,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 						indiListSub += ",";
 					}			
 					ScheduleSecretaryVO data = tList.get(i);			
-					indiListSub += "\'" + data.getSecId()+ "\',";				
+					indiListSub += "\'" + data.getSecId()+ "\',";			
+					System.out.println("비서가 있다고??? 회장인데?? : " + data.getSecId() + " , 이름 : " + data.getSecName());
 				}				
 			}
 			
@@ -353,7 +354,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			if(cList != null && cList.size()>0 ){
 				for (int i = 0; i < cList.size(); i++) {							
-					if((tList == null || tList.size()<=0) && (dList == null || dList.size()<=0)){
+					if(dList == null || dList.size()<=0){
 						if (i == 0) {
 							pidListSub += ",";
 						}	
@@ -364,7 +365,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 			
 			for (int i = 0; i < gList.size(); i++) {
-				if((tList == null || tList.size()<=0) && (dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+				if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
 					if (i == 0) {
 						pidListSub += ",";
 					}
@@ -835,11 +836,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
-		String cumDeptID = ezScheduleService.getCumDeptId(loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID());
 
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("userInfo", loginVO);
-		model.addAttribute("cumDeptID", cumDeptID);
 		
 		return "/ezSchedule/scheduleGroupWrite";
 	}
@@ -1177,6 +1176,25 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String result = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
 		
 		return result;
+	}
+	
+	/**
+	 * 공통 > 클릭한 유저정보 겸직된 회사정보로 호출
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGetCumDeptID.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String scheduleGetCumDeptID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleGetLunarUse started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String userID = request.getParameter("userID");
+		String companyID = request.getParameter("companyID");
+		
+		String cumDeptID = ezScheduleService.getCumDeptId(userID,loginSimpleVO.getTenantId(), companyID);
+		
+		return cumDeptID;
 	}
 	
 	/**

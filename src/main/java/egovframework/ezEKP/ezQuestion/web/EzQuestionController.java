@@ -157,6 +157,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstListVO.setLang(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		qstListVO.setCurrPage(Integer.parseInt(currPage));
 		qstListVO.setPageSize(pageSize);
+		qstListVO.setCompanyID(userInfo.getCompanyID());
 		
 		String receve = "brdID=" + qstListVO.getBrdID() +
 						"&title=" + commonUtil.cleanValue(qstListVO.getTitle()) +

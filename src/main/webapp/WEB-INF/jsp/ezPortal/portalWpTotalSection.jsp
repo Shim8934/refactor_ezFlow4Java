@@ -362,7 +362,7 @@
 		        getNewCircularCount();
 			}
 
-			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date) {
+			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pageFrom) {
 			    date = date.substr(0, 10);
 
 			    var wWeight = "760";
@@ -374,10 +374,10 @@
 
 			    //PNO-3
 			    if (CrossYN())
-			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0 &pageFrom="+pageFrom, "",
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
 			    else
-			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0 &pageFrom="+pageFrom, "",
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
 			    //PNO-3 END
 			}
@@ -409,7 +409,8 @@
 			        
 			        var count = 0;
 			        var mType;
-			        
+			        //2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
+		            var pageFrom = 'Portal';
 			        if (mode == "P") {
 			        	//2018.02.05 김기하 #11421
 			        	mType = "16";
@@ -427,13 +428,12 @@
 				            var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
 				            var ENDDATE = getNodeText(xmldom.getElementsByTagName("ENDDATE").item(i));
 				            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i));
-				            console.log('title : ' + TITLE);
 				            var startdate = new Date(STARTDATE.split(' ')[0].split('-')[0], STARTDATE.split(' ')[0].split('-')[1], STARTDATE.split(' ')[0].split('-')[2]);
 				            var enddate = new Date(ENDDATE.split(' ')[0].split('-')[0], ENDDATE.split(' ')[0].split('-')[1], ENDDATE.split(' ')[0].split('-')[2]);
 				            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
-			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
+			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\" title='" + TITLE + "'>";
 			                listHTML += "&nbsp;"
 			                if(SCHEDULETYPE == 1) {
 			                	listHTML += "";
@@ -1089,37 +1089,51 @@
 				});
 			}
 		    
-		    function getAttitudeReg() {
-		    	$.ajax({
-					type:"POST",
-					dataType : "json",
-					async : true,
-					url : "/ezAttitude/getAttitudeReg.do",
-					data : {},
-					success : function(result) {
-						closedDay = result.closedDay.split(",");
-					}
-				});
-		    }
-		    
-		    function checkHoliday(obj) {
+		  //휴일 체크
+			function checkHoliday(obj) {
 				var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
 				var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
 				var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
+				var addAttitude = true; // true 등록 가능
 				
-				if (closedDay[nowAttiTime.getDay()] == "1" || todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
-		    		alert("<spring:message code='ezAttitude.t167'/>");
-				} else {
-					var returnValue = getIsAttitude(obj.getAttribute("type"));
-					
-					if (returnValue == 0) {
-						addAttitude(obj);
-					} else {
-						alert("<spring:message code='ezAttitude.t169'/>");
-						getAttitudeList();
+				if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
+					addAttitude = false;				
+				} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
+					if (todayMemorialDayList.length != 0 ) {
+						for (var i = 0; i < todayMemorialDayList.length; i++) {
+							if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
+								addAttitude = false;
+							}
+						}
+					} 
+					if (todayYearMemorialDayList.length != 0) {
+						for (var i = 0; i < todayYearMemorialDayList.length; i++) {
+							if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
+								addAttitude = false;
+							}
+						}
 					}
 				}
+				
+				if(addAttitude) {
+					checkAttitude(obj);
+				} else {
+					alert("<spring:message code='ezAttitude.t167'/>");
+				}
 			}
+			
+			//근태 중복 체크
+		 	function checkAttitude(obj) {
+				var returnValue = getIsAttitude(obj.getAttribute("type"));
+				
+				if (returnValue == 0) {
+					addAttitude(obj);
+				} else {
+					alert("<spring:message code='ezAttitude.t169'/>");
+					getAttitudeList();
+	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+				}
+		 	}
 		    
 		    function getIsAttitude(typeId) {
 				var isAttitudeReturn = "";
