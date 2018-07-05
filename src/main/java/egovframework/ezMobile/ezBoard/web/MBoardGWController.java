@@ -88,7 +88,7 @@ public class MBoardGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/new-list/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getBoardMainList(@PathVariable String userId, HttpServletRequest request, Model model) {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/new-list/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -131,7 +131,7 @@ public class MBoardGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/new-list/{userId}] ended.");
 		
 		return result;
 	}
