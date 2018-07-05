@@ -1848,7 +1848,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	
 	/* 2018-07-03 김민성 - deptID 조회 */
 	@Override
-	public String getCircularUserDeptId(int tenantID,  String companyID, String circularUserID) throws Exception {
+	public CircularMemberVO getCircularUserDeptId(int tenantID,  String companyID, String circularUserID) throws Exception {
 		logger.debug("getConfirmMemberList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();

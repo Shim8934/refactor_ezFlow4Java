@@ -135,6 +135,6 @@ public interface EzCircularService {
 
 	public void copyFileList(String pDirPath, String fileName, String circularID) throws Exception;
 	
-	public String getCircularUserDeptId(int tenantID, String companyID, String circularUserID) throws Exception;
+	public CircularMemberVO getCircularUserDeptId(int tenantID, String companyID, String circularUserID) throws Exception;
 
 }

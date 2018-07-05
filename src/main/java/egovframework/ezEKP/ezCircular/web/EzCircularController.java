@@ -1350,7 +1350,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
 		int totalCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "totalComment", userInfo.getTenantId());
 		int myCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "myComment", userInfo.getTenantId());
-		String deptID = ezCircularService.getCircularUserDeptId(userInfo.getTenantId(), result.getCompanyID(), result.getMemberID());
+		CircularMemberVO companyInfo = ezCircularService.getCircularUserDeptId(userInfo.getTenantId(), result.getCompanyID(), result.getMemberID());
 		
 		result.setRegDate(result.getRegDate().substring(0, 16));
 		
@@ -1375,7 +1375,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("totalCommentCount", totalCommentCount);
 		model.addAttribute("myCommentCount", myCommentCount);
 		model.addAttribute("type", type);
-		model.addAttribute("deptID", deptID);
+		model.addAttribute("deptID", companyInfo.getDepartment());
+		model.addAttribute("company", companyInfo.getCompany());
 		
 		return "/ezCircular/circularRead";
 	}
