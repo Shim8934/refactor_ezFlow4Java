@@ -764,7 +764,7 @@
 		    </h3>
 		    <c:if test="${applyFlag == 'OK'}">
 		    	<h3 style="border-top:0px">
-			        <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
+			        <span onclick="Apprboard()"><spring:message code="ezBoard.t999001" /> <span id="applyCount">(${applyCount})</span></span>
 			    </h3>	
 		    </c:if>
 	    </div>
