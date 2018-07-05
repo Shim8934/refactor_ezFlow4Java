@@ -105,28 +105,30 @@
                  	        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
                  	        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
                  	   }
-                 	        	
+
                  	   //뿌려주기
                  	   $("#myBar").css({
                  	       "width" : percent + "%"
-                 	   });
-                 	   $(".volumes").text(useVolume + " / " + totalVolume + " (" + percent + "%)");                
-
+                 	   });                 	                   
+                 	   $("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
+                 	   $("#usePer").text(percent+"%");
+                 	   
                  	   //용량 체크(색깔로)
-                 	   if (percent > 90) {
-                 	        colorClass = "myBar_red";
-                 	   } else if (percent > 70) {
-                 	        colorClass = "myBar_orange";
-                 	   } else if (percent > 60) {
-                 	         colorClass = "myBar_yellow";
-                 	   }
+                 	   if (percent >= 80) {
+                 	   		colorClass = "myBar_red";
+                 	       	$(".volumeDL dd").css("color", "#ff4040");
+                 	   } else if (percent >= 70) {
+					   		colorClass = "myBar_yellow";
+					   		$(".volumeDL dd").css("color", "#ff9c00");
+                 	   } else {
+                 		  	colorClass = "myBar_green";
+                 		  	$(".volumeDL dd").css("color", "#0470e4");
+                 	   }                  		   
                  	            
                  	   $("#myBar").addClass(colorClass);
                     }
-                });
-        	    
-	        }
-	        
+                });        	    
+	        }	        
 	        
         	// 2017.12.27 단암 시스템 트리 열기 
             // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
@@ -922,39 +924,20 @@
 				}
 			}
 	    </script>
-		 <style type="text/css">
-		 		#myBar {		 			
-					margin-left:20px;
-				 	margin-top:-9px;
-		 		}
-				#myProgress {
-				  width: 80%;
-				  height:7px;
-				  background-color: white;
-				  border: 1px solid #e8e8e8;
-				  overflow:hidden;
-				}
-				.myBar_red {
-				  height: 7px;
-				  border: 1px solid #ee0606;
-				  background-color: #ff1616;
-				}
-				.myBar_orange {
-				  height: 7px;
-				  border: 1px solid #ee5e00;
-				  background-color: #ff7f00;
-				}
-				.myBar_yellow {
-				  height: 7px;
-				  border: 1px solid #eea600;
-				  background-color: #ffb600;
-				}
-				.myBar_green {
-				  height: 7px;
-				  border: 1px solid #2C8F30;
-				  background-color: #4CAF50;
-				}
-			</style>
+		<style type="text/css">
+			.myBar_red {
+			  height: 7px;				  
+			  background-color: #ff4040;
+			}
+			.myBar_yellow {
+			  height: 7px;				  
+			  background-color: #ff9c00;
+			}
+			.myBar_green {
+			  height: 7px;				  
+			  background-color: #4faaff;
+			}
+		</style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height: 100%;">
 	    <div id="left">
@@ -983,12 +966,20 @@
 	            <li style="border-bottom-color:#e8e8e8" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>	        
 	    	<!-- 수정 수아 재은 -->
-	    	<div style="border:1px solid #e8e8ef;margin:10px 10px 2px;background-color:#f8f8fa">
+	    	<!-- <div style="border:1px solid #e8e8ef;margin:10px 10px 2px;background-color:#f8f8fa">
 			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
 			    <div style="width:80%">
 			    	<div id='myBar'></div>
 			    </div>	
 			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
+		    </div> -->
+		    <div class="mail_volume">
+		    	<p class="volume_num"><img src="/images/volume_num.png" /></p>
+		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
+		        <dl class="volumeDL" >
+		        	<dt id="useVol"></dt>
+		            <dd id="usePer"></dd>
+		        </dl>
 		    </div>
 	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">

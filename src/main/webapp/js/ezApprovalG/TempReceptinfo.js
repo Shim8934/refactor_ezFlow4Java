@@ -411,13 +411,13 @@ function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
 	});
 
     document.getElementById('RECEPTLIST').innerHTML = "";
-    var listview = new ListView();                      
-    listview.SetID("lvRECEPTLIST");                     
-    listview.SetMulSelectable(false);                     
+    var listview = new ListView();
+    listview.SetID("lvRECEPTLIST");
+    listview.SetMulSelectable(false);
     listview.SetHeightFree(true);
     listview.SetSelectFlag(false);
     listview.SetRowOnDblClick("AprDeptDel_onclick");
-    listview.DataSource(result);            
+    listview.DataSource(result);
     listview.DataBind("RECEPTLIST");
 }
 //############################################################################################################################################# 수신처 즐겨찾기 적용 

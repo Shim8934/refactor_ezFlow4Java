@@ -423,7 +423,7 @@
 				        <tr>
             				<th><spring:message code = 'ezCommunity.t1218' /></th>
 			                <td class="pos1"><INPUT type="text" id="txtPhotoFile" style="WIDTH:100%" readonly="readonly" ></td>
-							<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_PhotoAttachAdd_onclick()" ><spring:message code = 'ezCommunity.t1177' /></span></a></td>
+							<td class="pos2"><a class="imgbtn imgbck"><span id="btn_AttachAdd" onClick="return btn_PhotoAttachAdd_onclick()" ><spring:message code = 'ezCommunity.t1177' /></span></a></td>
       					</tr>
       				</table>
       			</td>

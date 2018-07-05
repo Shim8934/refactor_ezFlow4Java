@@ -463,7 +463,7 @@
 			</NODE>
 		</TREEVIEWDATA>
 		</xml>
-		<h1><spring:message code='ezApprovalG.t152'/></h1>
+		<h1 style="margin-bottom:5px"><spring:message code='ezApprovalG.t152'/></h1>
 		<div id="close">
             <ul>
                 <li><span onclick="return btncancel_onclick()"></span></li>
@@ -472,29 +472,29 @@
 	    <table class="content" style="width:697px;">
 		    <tr>
 			    <th><spring:message code='ezApprovalG.t1540'/></th>
-			    <td><select name="select" onChange="return select_onchange()" id="FromList">
+			    <td style="border-right-color:white"><select name="select" onChange="return select_onchange()" id="FromList" style="height:24px">
 					    <OPTION value="000" selected><spring:message code='ezApprovalG.t1541'/></OPTION>
 					    ${docType}
 				    </select>
 			    </td>
 	            <td style="white-space: nowrap">
-	                <select id="searchoption">
+	                <select id="searchoption" style="height:24px">
 	                    <option value="1"><spring:message code='ezApprovalG.t442'/></option>
 	                    <option value="2"><spring:message code='ezApprovalG.t598'/></option>
 	                </select>
-	                <input id="forminfo" onkeypress="search_press(event)" type="text" />
-	                <a class="imgbtn" onclick="searchform()"><span><spring:message code='ezApprovalG.t111'/></span></a>
-	                <a class="imgbtn" onclick="reset()"><span><spring:message code='ezApprovalG.t1301'/></span></a>
+	                <input id="forminfo" onkeypress="search_press(event)" type="text" style="margin-top:1px" />
+	                <a class="imgbtn imgbck" onclick="searchform()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t111'/></span></a>
+	                <a class="imgbtn imgbck" onclick="reset()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t1301'/></span></a>
 	            </td>
 		    </tr>
 	    </table>
-	        <div class="portlet_tabpart01" style="margin-top: 7px; width: 697px">
+	        <div class="portlet_tabpart01" style="margin-top: 12px; width: 697px">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
 	            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
 	            <div style="float: right; padding-top: 1.5px;"> 
-	                <a id="addfav" class="imgbtn" style="display:none;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
-	                <a id="delfav" class="imgbtn"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
+	                <a id="addfav" class="imgbtn imgbck" style="display:none;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
+	                <a id="delfav" class="imgbtn imgbck"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
 	            </div>
 	        </div>
 	    </div>

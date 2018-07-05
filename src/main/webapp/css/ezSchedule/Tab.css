@@ -25,6 +25,6 @@
 .portlet_tabpart03{margin:0px 0px 8px 0px; padding:0px; clear: both; overflow:hidden; z-index:1;}
 .portlet_tabpart03_top{height:30px; list-style:none; margin:0px; padding:0px; border-bottom:1px solid #999;}
 .portlet_tabpart03_top p{float:left; margin:0px; padding:0px;}
-.portlet_tabpart03_top p span{display: block; float: left; height:29px; line-height:29px; padding:0px 20px; margin:0px 1px 0px 0px; border:1px solid #d1d1d1; border-bottom:0 none; border-top-left-radius:3px;  border-top-right-radius:3px; -webkit-border-top-left-radius:3px; -webkit-border-top-right-radius:3px; -moz-border-top-left-radius:3px; -moz-border-top-right-radius:3px; font-weight:bold; color:#999; cursor:pointer;}
+.portlet_tabpart03_top p span{display: block; float: left; height:29px; line-height:29px; padding:0px 20px; margin:0px 1px 0px 0px; border:1px solid #d1d1d1; border-bottom:0 none; font-weight:bold; color:#999; cursor:pointer;}
 .portlet_tabpart03_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index:100;}
 .portlet_tabpart03_top p .tabon {position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index:100;}
