@@ -306,6 +306,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 			ladLines.setUserId(ladLines.getUserIds()[i]);
 			ladLines.setUserName(ladLines.getUserNames()[i]);
 			ladLines.setUserName2(ladLines.getUserName2s()[i]);
+			ladLines.setDescription(ladLines.getDescriptions()[i]);
+			ladLines.setDescription2(ladLines.getDescriptions2()[i]);
 			ladLines.setItem(ladLines.getItems()[i]);
 			ladLines.setLadderOrder(i);
 			
@@ -348,6 +350,14 @@ public class EzLadderServiceImpl implements EzLadderService {
 		List<LadderBmUserVO> bmUsers = ezLadderDAO.selectBMUser(bmUser);
 		
 		String lang = commonUtil.getMultiData(bmUser.getLang(), bmUser.getTenant_id());
+		// 회사 이름
+		for(LadderBmUserVO userVO : bmUsers) {
+			if(userVO.getUserId().length()>=15){
+				if(userVO.getUserId().substring(0,15).equals("anonyAttendant_")){
+					userVO.setCompany("");
+				}
+			}
+		}
 		if(lang.equals("2")) {
 			for(LadderBmUserVO userVO : bmUsers) {
 				userVO.setUserName(userVO.getUserName2());
@@ -364,11 +374,21 @@ public class EzLadderServiceImpl implements EzLadderService {
 		ezLadderDAO.insertBMGroup(bmGroup);
 		
 		int len = bmUsers.getUserIds().length;
+		String companyID = bmGroup.getCompanyID();
 		for(int i = 0; i < len; i++) {
 			bmUsers.setUserId(bmUsers.getUserIds()[i]);
 			bmUsers.setUserName(bmUsers.getUserNames()[i]);
 			bmUsers.setUserName2(bmUsers.getUserName2s()[i]);
-			
+			bmUsers.setDescription(bmUsers.getDescriptions()[i]);
+			bmUsers.setDescription2(bmUsers.getDescriptions2()[i]);
+			bmUsers.setCompanyID(companyID);
+			if(bmUsers.getUserId().length()>=15){
+				if(bmUsers.getUserId().substring(0,15).equals("anonyAttendant_")){
+					bmUsers.setCompany("");
+					bmUsers.setDescription("");
+					bmUsers.setDescription2("");
+				}
+			}
 			ezLadderDAO.insertBMUser(bmUsers);
 		}
 	}
@@ -386,7 +406,14 @@ public class EzLadderServiceImpl implements EzLadderService {
 			bmUsers.setUserId(bmUsers.getUserIds()[i]);
 			bmUsers.setUserName(bmUsers.getUserNames()[i]);
 			bmUsers.setUserName2(bmUsers.getUserName2s()[i]);
-			
+			bmUsers.setDescription(bmUsers.getDescriptions()[i]);
+			bmUsers.setDescription2(bmUsers.getDescriptions2()[i]);
+			if(bmUsers.getUserId().length()>=15){
+				if(bmUsers.getUserId().substring(0,15).equals("anonyAttendant_")){
+					bmUsers.setDescription("");
+					bmUsers.setDescription2("");
+				}
+			}
 			ezLadderDAO.insertBMUser(bmUsers);
 		}
 	}
