@@ -2679,6 +2679,8 @@
 			A.PROJECT_ID = #projectId#
 		AND
 			A.TENANT_ID = #tenantId#
+		AND
+			A.DEL_STATUS = 0
 		GROUP BY 
 			A.STATUS
 	</select>

@@ -64,10 +64,10 @@ $(function() {
 						<th id="BoardList_TH_0" onclick="setListOrder(this)" order="LOG_STATUS" style="text-align: left; overflow: hidden; white-space: nowrap; 
 							text-overflow: ellipsis; cursor: pointer; width: 57px; text-align: center" class="h5_center"><spring:message code='ezPMS.t38' /></th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="LOG_CONTENT"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
+							style="text-align: center;cursor: pointer;"
 							class="h5_center"><spring:message code='ezPMS.t186' /></th>
 						<th id="BoardList_TH_2"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px"
 							class="h5_center"><spring:message code='ezPMS.t98' /></th>
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="USER_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 80px"
@@ -105,7 +105,7 @@ $(function() {
 										</c:choose>
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
+										style="text-align: left;"><c:out
 											value="${log.logContent }" /></td>
 									<td onclick="selectedTR(this);"
 										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px; text-align:center;">
