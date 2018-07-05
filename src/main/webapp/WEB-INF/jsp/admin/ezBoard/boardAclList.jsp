@@ -314,7 +314,7 @@
 		        </td>
 		    </tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onclick="Save_onclick()"><spring:message code="ezBoard.t604" /></span></a>
 		</div>
 	</body>        

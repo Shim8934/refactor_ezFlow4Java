@@ -187,7 +187,7 @@
     <table class="content">
         <tr>
             <td class="pos1">
-                <div style="border: 0px solid #ddd; height: 265px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; width:293px" id="PostTreeView">
+                <div style="border: 0px solid #ddd; height: 255px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; width:293px" id="PostTreeView">
                 </div>
             </td>
         </tr>

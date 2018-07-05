@@ -680,14 +680,14 @@
 	            <td>
 	                <input type="text" name="tbItemCode" style="width: 60px" readonly="readonly">
 	                <input type="text" name="tbItemName" style="width: 140px" readonly="readonly">
-	                <a class="imgbtn"><span onclick="return btnItemCode_onclick()"><spring:message code ='ezApprovalG.t1197' /></span></a>
+	                <a class="imgbtn imgbck"><span onclick="return btnItemCode_onclick()"><spring:message code ='ezApprovalG.t1197' /></span></a>
 	            </td>
 	        </tr>
 	        <tr>
 	            <th><spring:message code ='ezApprovalG.t442' /></th>
 	            <td>
 	                <input type="text" id="FormName" name="FormName" style="width: 200px;" disabled>
-	                <a class="imgbtn"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApprovalG.t442' /></span></a>
+	                <a class="imgbtn imgbck"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApprovalG.t442' /></span></a>
 	            </td>
 	        </tr>
 	        <tr id="DOCNUM" class = 'approvalG'>

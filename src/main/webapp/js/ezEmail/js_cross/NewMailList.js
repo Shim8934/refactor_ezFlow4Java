@@ -1,5 +1,4 @@
-﻿﻿
-var XmlHeader;
+﻿﻿var XmlHeader;
 var XmlHeader_SUB;
 var BlockSize = 10;
 var p_ListOrderObject = null;
@@ -11,7 +10,7 @@ var GetList_HTTP;
 var GetList_HTTP_SUB;
 var GetListInfo_HeaderObject;
 var GetListInfo_ContentObject;
-var m_strColorSelect = "#f0f6ff";
+var m_strColorSelect = "#efeff0";
 var m_strColorOver = "#f4f5f5";
 var m_strColorDefault = "#ffffff";
 var GroupplusImg ="/images/ImgIcon/groupplus.gif";

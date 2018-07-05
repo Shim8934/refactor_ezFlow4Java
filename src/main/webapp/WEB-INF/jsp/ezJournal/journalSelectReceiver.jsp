@@ -447,7 +447,7 @@
 				                            <tr>
 				                                <td>
 				                                    <div style="float: left; margin-left: 5px;">
-				                                        <select id="search_type">
+				                                        <select id="search_type" style="height:22px">
 				                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
 								                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
 								                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
@@ -459,7 +459,7 @@
 								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 				                                        </select>
-				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
+				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
 				                                </td>

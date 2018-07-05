@@ -477,7 +477,7 @@
                                         <tr id="HolderWrite">
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="2">
-                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:20px;">${strOwnerID}</select>
+                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
                                             </td>
                                         </tr>
 	                                    <tr>
