@@ -77,7 +77,7 @@
 	            </c:choose>
 			</table>
 	        </div>
-	        <div id='runtime' style="color:#666;padding-top:5px"></div>
+	        <!-- <div id='runtime' style="color:#666;padding-top:5px"></div> -->
 		</form>
 	</body>
 </html>

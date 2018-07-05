@@ -55,6 +55,8 @@ public interface EzScheduleService {
 	public String scheduleGetLunarUse(String companyID, int tenantId) throws Exception;
 
 	public String scheduleGetRegi(String companyID, int tenantId) throws Exception;
+	
+	public String getCumDeptId(String userID, int tenantID, String companyID) throws Exception;
 		
 	public int getReceiveCount (String pUserId, int tenantId ,String companyID) throws Exception;
 	
@@ -85,7 +87,7 @@ public interface EzScheduleService {
 
 	public void deleteScheduleConfig(String userID, int tenantID) throws Exception;
 
-	public void deleteSecretary(String userID, int tenantID) throws Exception;
+	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception;
 
 	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID) throws Exception;
 

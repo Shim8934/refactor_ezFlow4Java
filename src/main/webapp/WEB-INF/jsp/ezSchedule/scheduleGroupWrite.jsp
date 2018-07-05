@@ -221,7 +221,7 @@
   					data : {
   						deptID : tempDeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -270,7 +270,7 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != "" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])) {
 		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + totalCount + strLang256 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
@@ -855,7 +855,7 @@
 		            return;
 		        }
 		        var id = p_ListOrderObject.getAttribute("_DATA2");
-		        var dept = p_ListOrderObject.getAttribute("_DATA11");
+		        var dept = p_ListOrderObject.getAttribute("_DATA10");
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 450) / 2;
@@ -878,6 +878,7 @@
 		                var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+		                var department = document.getElementById(listContentArry[i]).getAttribute("_data10");
 
 		                var listid = "MsgToList";
 		                var getlistview = new ListView();
@@ -896,7 +897,7 @@
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 		                    pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-		                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + department + "]]></DATA4>";
 		                    pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
@@ -958,7 +959,8 @@
 		                var strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
 		                var jickwe = p_ListOrderObject.getAttribute("_data14");
 		                var phone = p_ListOrderObject.getAttribute("_data8");
-
+		                var department = p_ListOrderObject.getAttribute("_data10");
+		                
 		                var listid = "MsgToList";
 
 		                var getlistview = new ListView();
@@ -975,7 +977,7 @@
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 		                    pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-		                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + department + "]]></DATA4>";
 		                    pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
@@ -1135,25 +1137,25 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1177,27 +1179,27 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -1374,7 +1376,7 @@
 		                                                </th>
 		                                            </tr>
 		                                        </table>
-		                                        <div style="vertical-align: top; height: 408px; overflow: auto; width: 440px;" id="txtlist_Layer">
+		                                        <div style="vertical-align: top; height: 391px; overflow: auto; width: 440px;" id="txtlist_Layer">
 		                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 		                                                <tr>
 		                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
@@ -1391,8 +1393,8 @@
 		                                                </tr>
 		                                            </table>
 		                                        </div>
-		                                        <div style="vertical-align: top; text-align: center; height: 408px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-		                                        <div id="tblPageRayer" style="text-align:center;border-top:1px; height:32px"></div>
+		                                        <div style="vertical-align: top; text-align: center; height: 391px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+		                                        <div id="tblPageRayer" style="text-align:center;border-top:1px;"></div>
 		                                    </td>
 		                                </tr>
 		                            </table>
@@ -1414,7 +1416,7 @@
 			    	</td> 
 			  	</tr> 
 			</table> 
-			<div class="btnposition">
+			<div class="btnposition btnpositionNew">
 			    <a class="imgbtn" onClick="close_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 			</div>
 		</form>

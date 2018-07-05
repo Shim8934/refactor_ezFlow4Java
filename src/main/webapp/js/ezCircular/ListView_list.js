@@ -572,7 +572,7 @@ function ListView() {
                 if (strColName == "CONFIRMSTATUS") {
                 	var _HeaderSpanimg = document.createElement("IMG");
 //                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
-                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-unrd.gif");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-rd.gif");
                     _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     

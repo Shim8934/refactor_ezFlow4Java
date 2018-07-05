@@ -118,6 +118,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			map.put("v_CREATORNAME2", jsonParam.get("creatorName2").toString());
 			map.put("v_SCHEDULETYPE", jsonParam.get("scheduleType").toString());
 			map.put("v_IMPORTANCE", jsonParam.get("importance").toString());
+			map.put("v_COMPANYID", jsonParam.get("companyID").toString());
 			map.put("v_HASATTENDANT", hasattendant);
 			map.put("v_HASATTACH", hasattach);
 			map.put("v_ISPUBLIC", jsonParam.get("isPublic").toString());

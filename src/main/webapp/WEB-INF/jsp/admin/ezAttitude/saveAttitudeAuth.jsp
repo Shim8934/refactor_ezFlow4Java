@@ -213,6 +213,11 @@
 				</c:otherwise>
 			</c:choose>
 	    </h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t198' /></th>
@@ -249,7 +254,6 @@
         </div>
         <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="saveAuthDept();" ><spring:message code='ezAttitude.t16' /></span></a>
-	        <a class="imgbtn"><span onclick="window.close();"><spring:message code='ezAttitude.t34' /></span></a>
 	    </div>
 	</body>
 </html>

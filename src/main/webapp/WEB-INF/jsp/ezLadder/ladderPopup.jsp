@@ -201,14 +201,18 @@
 		<div class="btnposition btnpositionNew">
 			<c:choose>
 				<c:when test="${popupType == 'overlap'}">
-					<input type="submit" value="<spring:message code="ezLadder.t068" />" id="btn_addRealUser" _flag="real">
-					<input type="submit" value="<spring:message code="ezLadder.t069" />" id="btn_addAnonyUser" _flag="anony">					
+					<a class="imgbtn" id="btn_addRealUser" _flag="real" ><span><spring:message code="ezLadder.t068" /></span></a>
+					<a class="imgbtn" id="btn_addAnonyUser" _flag="anony" name="Submit" ><span><spring:message code="ezLadder.t069" /></span></a>					
+					<%-- <input type="submit" value="<spring:message code="ezLadder.t068" />" id="btn_addRealUser" _flag="real">
+					<input type="submit" value="<spring:message code="ezLadder.t069" />" id="btn_addAnonyUser" _flag="anony">		 --%>			
 				</c:when>
 				<c:when test="${popupType == 'overlapOnlyName'}">
-					<input type="submit" value="<spring:message code="ezLadder.t071" />" id="btn_addRealUser" _flag="real">					
+					<a class="imgbtn" id="btn_addRealUser" _flag="real"><span><spring:message code="ezLadder.t071" /></span></a>					
+					<%-- <input type="submit" value="<spring:message code="ezLadder.t071" />" id="btn_addRealUser" _flag="real"> --%>					
 				</c:when>
 				<c:otherwise>
-					<input type="submit" value="<spring:message code="ezLadder.t086" />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
+					<a class="imgbtn" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName" ><span><spring:message code="ezLadder.t086" /></span></a>
+					<%-- <input type="submit" value="<spring:message code="ezLadder.t086" />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"> --%>
 				</c:otherwise>
 			</c:choose>
 		</div>

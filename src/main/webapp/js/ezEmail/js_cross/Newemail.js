@@ -60,7 +60,7 @@ function MailPreviewEnd(e) {
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-            document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
             document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
             document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
@@ -83,7 +83,7 @@ function MailPreviewEnd(e) {
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-            document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
+            document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
             document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             pMailListDiv = (pMailListHeightW / CurrentHeight) * 100;
@@ -1014,9 +1014,9 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
             if (navigator.userAgent.indexOf('Firefox') != -1)
-                document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
             else
-                document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
             g_bPrevShow = false;
         }
         else if (pGubun == "W") {
@@ -1037,9 +1037,9 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("PreviewRayerW").style.width = "100%";
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
             if (navigator.userAgent.indexOf('Firefox') != -1)
-                document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
+                document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
             else
-                document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
+                document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
             document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             pPreviewShow_HOW = "W";
@@ -1089,9 +1089,9 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
             if (navigator.userAgent.indexOf('Firefox') != -1)
-                document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
             else
-                document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
             document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
             document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
@@ -1160,9 +1160,9 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
                 
                 if (navigator.userAgent.indexOf('Firefox') != -1)
-                    document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
+                    document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
                 else
-                    document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
+                    document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
                 document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
@@ -1199,9 +1199,9 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
                 
                 if (navigator.userAgent.indexOf('Firefox') != -1)
-                    document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                    document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
                 else
-                    document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                    document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
                 
                 document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
                 document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
@@ -1234,9 +1234,9 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.width = "100%";
                 
                 if (navigator.userAgent.indexOf('Firefox') != -1)
-                    document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                    document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
                 else
-                    document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+                    document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
             }
         }            
     } catch (e) { }

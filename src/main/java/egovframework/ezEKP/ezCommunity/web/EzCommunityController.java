@@ -1179,6 +1179,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
+		/* 2018-07-02 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함 */
+		// 현재 겸직한 회사에 대해 모든 부서정보 가져오므로, 레코드를 하나로 제한할 것.
 		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
 		
 		String totalCommentCount = String.valueOf(oneLineReplyList.size());
@@ -1905,7 +1907,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			
 			if (item != null) {
 				bIsMyContent = true;
-				item.setContent(item.getContent().replaceAll("<br>", "\n"));
+				//2018-07-02 김보미 - 화면에서 처리하기 위해 주석.
+//				item.setContent(item.getContent().replaceAll("<br>", "\n"));
 			}
 		}
 		
@@ -2290,7 +2293,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         }
         
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId()).trim();
-		// 여기에서 해당 회원의 deptID를 받아와야 한다.
+		// 여기에서 해당 회원의 deptID, deptname을 xml 내부에 받아온다.
 		String strXML = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, comNoPerPage, curPage);
 		
 		model.addAttribute("curPage", curPage);
@@ -2317,6 +2320,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
+		// 2018-06-29 김보미 - 커뮤니티 회원수 수정
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
@@ -3283,7 +3288,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	String adminMemberListOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityCClubUserVO clubUser = null;
-		String propList = "extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress";
+		
+		//EXTENSIONATTRIBUTE4에 겸직부서정보가 ;로 구분되어 전부 다 들어있다.
+		String propList = "extensionAttribute2;company;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress";
 		int userMode = 0;
 		boolean existOutList = false;
 		
@@ -3298,13 +3305,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (sysopCheck != 1) {
 			return "cmm/error/egovError";
 		}
-		
+
 		String infoXML = ezOrganAdminService.getPropertyList(cID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		Document xmldom = commonUtil.convertStringToDocument(infoXML);
-		
+
+
 		CommunityMemberInfoVO memberInfo = new CommunityMemberInfoVO();
-		memberInfo.setDeptName(xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
 		memberInfo.setHandPhone(xmldom.getElementsByTagName("MOBILE").item(0).getTextContent());
 		memberInfo.setCompanyFax(xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent());
 		memberInfo.setCompanyZip(xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent());
@@ -3312,6 +3319,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		memberInfo.setUserName(xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
 		memberInfo.setCompanyTel(xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
 		
+		// 이미 여기서 부서명을 받아오고 있는데여???
 		logger.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID, userInfo.getTenantId());
 		
@@ -3401,6 +3409,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
+		
+		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 		
 		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -4593,6 +4604,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         String publicExponent = "10001";
 //		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
+        // 댓글 작성자의 deptID를 가져온다. 해당 댓글의 ID 조건으로 가져오므로, companyID 조건은 필요없음.
 		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
@@ -4621,10 +4633,38 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
+		/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가 불필요) */
 		StringBuffer resultXML = ezCommunityService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
 
 		logger.debug("itemReadPagingList ended");
 		return resultXML.toString();
+	}
+	
+	/**
+	 * 2018-07-03 홍승비 - 커뮤니티 답변알림메일 사용 시 companyID 비교 부분 추가
+	 */
+	@RequestMapping(value = "/ezCommunity/getItemViewNew.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getItemViewNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getItemViewNew started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");		
+		String result = "OK";
+		
+		// 답변메일의 게시물 정보를 가져온다.
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
+		
+		// 회사가 다르면 result를 FAIL로 반환한다. 만약 어느 회사에서 확인해야 하는지 알려야 한다면 이곳에서 다른 값을 보내자.
+		if (!item.getWriterCompanyID().equals(userInfo.getCompanyID())) {
+			result = "FAIL";
+		}
+		
+		logger.debug("getItemViewNew ended.");
+		
+		return "<DATA>" + result + "</DATA>";
 	}
 }
 

@@ -35,7 +35,7 @@
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
-				var reheight = document.documentElement.clientHeight - 200;
+				var reheight = document.documentElement.clientHeight - 210;
 				document.getElementById("dragDropArea").style.height = reheight + "px";
 				
 				reheight = document.documentElement.clientHeight - 100;

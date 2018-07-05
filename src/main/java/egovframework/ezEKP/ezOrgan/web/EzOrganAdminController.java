@@ -2776,14 +2776,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String propertyValue = ezCommonService.getUserConfigInfo(tenantIdNum, userId, propertyName);
 		
-		if (propertyValue != null) {
+		if (!propertyValue.equals("")) {
 			returnValue = "SUCCESS";
 			model.addAttribute("propertyValue" , propertyValue);
 		} else {
 			returnValue = "NODATA";
 		}
 				
+		String defaultForDisablePopImap = ezCommonService.getTenantConfig("defaultForDisablePopImap", userInfo.getTenantId());
+		
 		model.addAttribute("result", returnValue);
+		model.addAttribute("defaultForDisablePopImap", defaultForDisablePopImap);
 		
 		logger.debug("configPop3Imap ended.");
 		
@@ -2815,7 +2818,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String getPropertyValue = ezCommonService.getUserConfigInfo(tenantIdNum, userId, propertyName);
 		
-		if (getPropertyValue != null) {
+		if (!getPropertyValue.equals("")) {
 			ezCommonService.updateUserConfigInfo(tenantIdNum, userId, propertyName, propertyValue);
 			returnValue = "SUCCESS";
 		} else {

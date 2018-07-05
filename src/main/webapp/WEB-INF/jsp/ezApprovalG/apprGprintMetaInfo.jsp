@@ -82,7 +82,7 @@
 	</ul>
 </div>
 <div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"></span></li></ul></div>
-            <div id="content"></div>
+<div id="content"></div>
 <script type="text/javascript">
 	selToggleList(document.getElementById("menu"), "ul", "li", "0");
 </script>

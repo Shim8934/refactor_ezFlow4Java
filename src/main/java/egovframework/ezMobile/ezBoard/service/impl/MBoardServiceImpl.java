@@ -133,6 +133,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 
+	// 현재 주석처리되어 미사용
 	@Override
 	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID,String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
 		logger.debug("getNewBoarditemList started");
@@ -247,7 +248,8 @@ public class MBoardServiceImpl implements MBoardService {
 			mBoardInfoVO.setWrite_FG("true");
 			mBoardInfoVO.setReply_FG("true");
 			mBoardInfoVO.setDelete_FG("true");
-		} else if (mBoardInfoVO.getBoardAdmin_FG() == null || mBoardInfoVO.getBoardAdmin_FG().equals("")) {
+		} /* 2018-07-04 홍승비 - boardGroupAdmin_FG="NO"이고 rollInfo에서 관리자 권한 확인할 수 없을때 플래그 처리 조건 추가 */
+		else if (mBoardInfoVO.getBoardAdmin_FG() == null || mBoardInfoVO.getBoardAdmin_FG().equals("") || mBoardInfoVO.getBoardGroupAdmin_FG().equals("NO")) {
 			mBoardInfoVO.setAccess_FG("1");
 			mBoardInfoVO.setBoardAdmin_FG("false");
 			mBoardInfoVO.setListView_FG("false");
@@ -441,12 +443,14 @@ public class MBoardServiceImpl implements MBoardService {
 		return result;
 	}
 
+	/* 2018-07-03 홍승비 - 게시판 즐겨찾기 리스트에 companyID 조건 추가 */
 	@Override
-	public List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID, String primary) throws Exception {
+	public List<MBoardFavoriteVO> getFavoriteList(String userID, String companyID, int tenantID, String primary) throws Exception {
 		logger.debug("getFavoriteList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("primary", primary);
 
@@ -493,6 +497,8 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("importance", boardListVO.get("importance"));
 		map.put("title", boardListVO.get("title"));
 		map.put("contentLocation", commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + boardListVO.get("boardID") + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.get("itemID") + ".mht");
+		/* 2018-07-04 홍승비 - content 칼럼 데이터 저장을 위한 처리 추가 */
+		map.put("content", boardListVO.get("content"));
 		
 		if (boardListVO.get("startDate") != null && !boardListVO.get("startDate").equals("")) {
 			map.put("startDate", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("startDate")), offset, true));
@@ -503,6 +509,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		//모바일에서는 영구게시만 지원
 		map.put("endDate", "9999-12-30 14:59:59");
+		// 현재 모바일에는 게시요약 정보가 없다.
 		map.put("abstract", boardListVO.get("abstract"));
 		
 		//모바일에서는 답변을 달기가 없기 때문에, itemID로 들어감
@@ -514,12 +521,14 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute1", "0");
 		//공지사항 여부
 		map.put("extensionAttribute2", boardListVO.get("notice"));
-		map.put("extensionAttribute3", boardListVO.get("extensionAttribute3"));
-		map.put("extensionAttribute32", boardListVO.get("extensionAttribute32"));
-		map.put("extensionAttribute4", boardListVO.get("extensionAttribute4"));
+		// 게시물에 저장되는 직위명(3/32), 전화번호(4) 추가
+		map.put("extensionAttribute3", info.getTitle());
+		map.put("extensionAttribute32", info.getTitle2());
+		map.put("extensionAttribute4", info.getPhone());
 		map.put("extensionAttribute5", boardListVO.get("extensionAttribute5"));
 		map.put("docPassword", boardListVO.get("docPassword"));
-		map.put("topWriterID", boardListVO.get("topWriterID"));
+		// 탑라이터(원글작성자)ID는 자기 자신임(모바일 버전에서는 답변 작성 불가하므로)
+		map.put("topWriterID", info.getUserId());
 		map.put("extensionAttribute6", boardListVO.get("extensionAttribute6"));
 		map.put("extensionAttribute7", boardListVO.get("extensionAttribute7"));
 		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
@@ -819,8 +828,9 @@ public class MBoardServiceImpl implements MBoardService {
 		logger.debug("deleteItem ended");
 	}
 
+	/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
 	@Override
-	public List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID, String primary) throws Exception {
+	public List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, String companyID, int tenantID, String primary) throws Exception {
 		logger.debug("brdBoardTree started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -832,6 +842,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("mode", mode);
 		map.put("selectBy", selectBy);
 		map.put("excludeBoardID", excludeBoardID);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("primary", primary);
 		
@@ -855,8 +866,9 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.checkIfBoardGroupAdmin(map);
 	}
 
+	/* 2018-07-03 홍승비 - 좌측메뉴 새게시물 리스트 표시 시 companyID 조건 추가 */
 	@Override
-	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID, String offset,String pSearchText) throws Exception {
+	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, String companyID, int tenantID, String offset,String pSearchText) throws Exception {
 		logger.debug("getNewBoardList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -867,6 +879,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("lastDate", lastDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		
@@ -875,7 +888,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID, String offset) throws Exception {
+	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("getBoardMainList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -884,12 +897,14 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("listSize", listCnt);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 
 		logger.debug("getBoardMainList ended");
 		return mBoardDAO.getNewItemList(map);
 	}
 	
+	/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
 	@Override
 	public List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception {
 		logger.debug("getBoardTree started");
@@ -898,6 +913,7 @@ public class MBoardServiceImpl implements MBoardService {
 		String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 		String rollInfo = info.getRollInfo();
 		int tenantID = info.getTenantId();
+		String companyID = info.getCompanyId();
 		String boardGroupAdminFg = checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
 		
 	    if (rollInfo != null && (boardGroupAdminFg.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
@@ -914,10 +930,12 @@ public class MBoardServiceImpl implements MBoardService {
 	    for (int i = 0; i < accessID.split(",").length; i++) {
             
             if (mode == 0) {
-            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID, primary);
+            	// 여기에서 companyID 넘겨줘야 한다.
+            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, companyID, tenantID, primary);
             	
             } else {
-            	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, tenantID, primary);
+            	// 여기에서 companyID 넘겨줘야 한다.
+            	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, companyID, tenantID, primary);
             	
             	if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
             		for (MBoardTreeVO k : tempBrdBoardTreeList) {
@@ -968,6 +986,8 @@ public class MBoardServiceImpl implements MBoardService {
 	    	
 	    	brdBoardTreeList.get(i).setListCount(listCount);
 	    }
+	    
+	    logger.debug("모바일에서 생성한 게시판 리스트       ::   " + brdBoardTreeList);
 	    
 	    logger.debug("getBoardTree ended");
 		return brdBoardTreeList;
@@ -1020,13 +1040,15 @@ public class MBoardServiceImpl implements MBoardService {
 		}
 	}
 
+	/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
 	@Override
-	public Integer getNewBoardListCount(String userID, String startDate,int tenantID, String pSearchText) throws Exception {
+	public Integer getNewBoardListCount(String userID, String startDate, String companyID, int tenantID, String pSearchText) throws Exception {
 		logger.debug("getNewBoardListCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userID", userID);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("startDate", startDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
@@ -1036,15 +1058,17 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.getNewBoardListCount(map);
 	}
 
+	/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
 	@Override
-	public void insertFavorite(String userID, String boardID, int tenantID) throws Exception {
+	public void insertFavorite(String userID, String boardID, String companyID, int tenantID) throws Exception {
 		logger.debug("insertFavorite started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userID", userID);
-		map.put("tenantID", tenantID);
 		map.put("boardID", boardID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		mBoardDAO.insertFavorite(map);
 		logger.debug("insertFavorite ended");
@@ -1133,6 +1157,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.photoViewDBCount(map);
 	}
 
+	/* 2018-07-03 홍승비 - 모바일 게시물 조회자정보에 companyID 추가 */
 	@Override
 	public void setAsRead(MCommonVO userInfo, String boardID, String itemID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1147,9 +1172,11 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("v_pUserDeptName2", userInfo.getDeptName2());
 		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
 		map.put("v_pUserTitle2", userInfo.getTitle2());
+		map.put("v_COMPANYID", userInfo.getCompanyId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
+		// 해당 게시물을 읽었는가에 따라 조회수 신규삽입 + 업데이트 설정
 		String tempString = mBoardDAO.getBoardItemRead(map);
 		
 		if (tempString != null && !tempString.equals("")) {

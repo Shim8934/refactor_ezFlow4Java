@@ -17,6 +17,8 @@ public class CommunityOneLineReplyVO {
 	String writeDate;
 	/** 한줄답변내용*/
 	String content;
+	/** 2018-07-02 홍승비 - 조회 당시 조회자의 부서ID */
+	private String deptID;
 	
 	public String getItemID() {
 		return itemID;
@@ -65,6 +67,12 @@ public class CommunityOneLineReplyVO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
 	}
 	
 }

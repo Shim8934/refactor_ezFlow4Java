@@ -213,14 +213,12 @@
 						chk_str += $('#select-all').val();
 					}
 					
-					// 구해안1
 					/* sStartDate = parent.frames["right"].document.getElementById("hiddensStartDate").value;
 					sEndDate = parent.frames["right"].document.getElementById("hiddensEndDate").value; */
 					$('#chk_str').val(chk_str);
 					parent.frames["right"].CalendarView("Calendar",chk_str);
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
 					
-					// 구해안1 끝
 				}else{					
 					$("input[name=chk_schedule]:checked").each(function(index) {
 						var test = $(this).val();
@@ -239,13 +237,11 @@
 						chk_str += $('#select-all').val();
 					}
 										
-					// 구해안1
 					/* sStartDate = parent.frames["right"].document.getElementById("hiddensStartDate").value;
 					sEndDate = parent.frames["right"].document.getElementById("hiddensEndDate").value; */
 					$('#chk_str').val(chk_str);
 					parent.frames["right"].CalendarView("Calendar",chk_str);
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
-					// 구해안1 끝
 				}
 			}
 				
@@ -543,7 +539,7 @@
 		    	</div>
 		    	<!-- 2018-06-08 구해안 일정관리 탭 삭제 -->
 			    <%-- <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li> --%>
-	            <li style="border-top:1px solid #e8e8e8" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
+	            <li style="border-top:1px solid #f0f0f0" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
 			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>
 		    </ul>

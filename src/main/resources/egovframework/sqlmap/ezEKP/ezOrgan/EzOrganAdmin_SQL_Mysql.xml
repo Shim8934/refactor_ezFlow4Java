@@ -1039,7 +1039,18 @@
       			(#topMenuLogoEnUUID#,#topMenuEnUUID#,1,'로고아이템','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#)
       ]]>
     </insert>
-
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IKMS7" parameterClass="Map">
+      <![CDATA[
+    	INSERT INTO 
+    		TBL_BOARD_MYBOARDS 
+    			(UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID, COMPANYID)
+    		VALUES 
+    			('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, #tenantID# ,#companyID#)
+	  ]]>
+<!-- 	  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '最新一覧', 'New BoardItem', -1, #tenantID# ,#companyID#) -->
+    </insert>
+    
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I6" parameterClass="Map">
       <![CDATA[
         INSERT INTO
@@ -2051,10 +2062,10 @@
                  ('S013', 5, '결재유형', 'Type', '処理類型', '批准类型', 120, 'TBAPRLINEINFO', 'AprType', NULL, NULL, '결재선정보(코딩)', '결재방법', #companyID#, #tenantID#),
                  ('S013', 6, '결재상태', 'Status', '進行段階', '批准状态', 80, 'TBAPRLINEINFO', 'AprState', NULL, NULL, '결재선정보(코딩)', '결재상태', #companyID#, #tenantID#),
                  ('S013', 7, '결재일시', 'Date', '処理日時', '批准日', 130, 'TBAPRLINEINFO', 'ProcessDate', NULL, NULL, '결재선정보(코딩)', '결재일시', #companyID#, #tenantID#),
-                 ('S014', 1, '순번', 'No.', '順番', '序号', 35, 'TBL_APRLINEINFO', 'AprMemberSN', NULL, NULL, '결재선정보(회람)', '순번', #companyID#, #tenantID#;
-				 ('S014', 2, '성명', 'Name', '氏名', '姓名', 100, 'TBL_APRLINEINFO', 'AprMemberName', NULL, NULL, '결재선정보(회람)', '성명', #companyID#, #tenantID#);
-				 ('S014', 3, '직위', 'Title', '役職', '职位', 100, 'TBL_APRLINEINFO', 'AprMemberJobTitle', NULL, NULL, '결재선정보(회람)', '직위', #companyID#, #tenantID#);
-				 ('S014', 4, '부서', 'Dept.', '部署', '部门', 600, 'TBL_APRLINEINFO', 'AprMemberDeptName', NULL, NULL, '결재선정보(회람)', '부서명', #companyID#, #tenantID#);
+                 ('S014', 1, '순번', 'No.', '順番', '序号', 35, 'TBL_APRLINEINFO', 'AprMemberSN', NULL, NULL, '결재선정보(회람)', '순번', #companyID#, #tenantID#),
+				 ('S014', 2, '성명', 'Name', '氏名', '姓名', 100, 'TBL_APRLINEINFO', 'AprMemberName', NULL, NULL, '결재선정보(회람)', '성명', #companyID#, #tenantID#),
+				 ('S014', 3, '직위', 'Title', '役職', '职位', 100, 'TBL_APRLINEINFO', 'AprMemberJobTitle', NULL, NULL, '결재선정보(회람)', '직위', #companyID#, #tenantID#),
+				 ('S014', 4, '부서', 'Dept.', '部署', '部门', 600, 'TBL_APRLINEINFO', 'AprMemberDeptName', NULL, NULL, '결재선정보(회람)', '부서명', #companyID#, #tenantID#),
                  ('S021', 1, '순번', 'No.', '順番', '序号', 35, 'TBRECEIPTPOINTINFO', 'DeptMemberSN', NULL, NULL, '수신처정보(진행)', '순번', #companyID#, #tenantID#),
                  ('S021', 2, '수신부서명', 'Dept.', '受信部署名', '收信部门名', 200, 'TBRECEIPTPOINTINFO', 'ReceiptPointName', NULL, NULL, '수신처정보(진행)', '수신부서명', #companyID#, #tenantID#),
                  ('S021', 3, '수신자성명', 'Name', '受信者氏名', '收信创建名', 200, 'TBRECEIPTPOINTINFO', 'ReceiptMemberName', NULL, NULL, '수신처정보(진행)', '수신자성명', #companyID#, #tenantID#),

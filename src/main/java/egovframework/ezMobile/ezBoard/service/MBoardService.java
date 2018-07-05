@@ -20,15 +20,20 @@ public interface MBoardService {
 	
 	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception;
 
+	// 현재 주석처리되어 미사용
 	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception;
 	
-	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID, String primary) throws Exception;
+	/* 2018-07-03 홍승비 - 게시판 풋터리스트에 companyID 조건 추가 */
+	List<MBoardFavoriteVO> getFavoriteList(String userID, String companyID, int tenantID, String primary) throws Exception;
 	
-	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID, String primary) throws Exception;
+	/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
+	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, String companyID, int tenantID, String primary) throws Exception;
 	
-	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID, String offset) throws Exception;
+	/* 2018-07-03 홍승비 - 포탈 메인 새게시물 리스트 표시 시 companyID 조건 추가  */
+	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, String companyID, int tenantID, String offset) throws Exception;
 	
-	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID, String offset, String pSearchText) throws Exception;
+	/* 2018-07-03 홍승비 - 새게시물 리스트 표시 시 companyID 조건 추가 */
+	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
 	
 	List<MBoardAttachVO> getAttachList(String itemID, int tenantID) throws Exception;
 	
@@ -54,7 +59,8 @@ public interface MBoardService {
 	
 	String checkFavorite(String userID, String boardID, int tenantID) throws Exception;
 	
-	Integer getNewBoardListCount(String userID, String startDate, int tenantID, String pSearchText) throws Exception;
+	/* 2018-07-03 홍승비 - 새게시물 카운트 표시 시 companyID 조건 추가 */
+	Integer getNewBoardListCount(String userID, String startDate, String companyID, int tenantID, String pSearchText) throws Exception;
 	
 	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
 	
@@ -70,7 +76,8 @@ public interface MBoardService {
 	
 	void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
 	
-	void insertFavorite(String userID, String boardID, int tenantID) throws Exception;
+	/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
+	void insertFavorite(String userID, String boardID, String companyID, int tenantID) throws Exception;
 	
 	void deleteFavorite(String userID, String boardID, int tenantID) throws Exception;
 	

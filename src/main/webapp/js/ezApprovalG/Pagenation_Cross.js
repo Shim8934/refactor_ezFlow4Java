@@ -102,7 +102,7 @@ function pagingCount(p_page, p_nowblock) {
                 block = nowblock;
                 strtext = "<div onclick= 'return Page_Click(" + prevPage + "," + block + ")' style='cursor:pointer;margin-top:3px;'>";
             }
-            strtext = strtext + "<img src='/images/page_previous.gif' width='15' height='15'  border='0'></div>";
+            strtext = strtext + "<img src='/images/page_previous.gif' border='0'></div>";
             td_Create(strtext);
         }
         if (total_block != nowblock) {
@@ -113,7 +113,7 @@ function pagingCount(p_page, p_nowblock) {
                     td_Create(strtext);
                 }
                 else {
-                    strtext = "<font color='blue'> [" + ((nowblock * mychoice) + Gopage) + "] </font>";
+                    strtext = "<font color='#0684f9'> [" + ((nowblock * mychoice) + Gopage) + "] </font>";
                     td_Create(strtext);
                 }
             }
@@ -126,7 +126,7 @@ function pagingCount(p_page, p_nowblock) {
                     td_Create(strtext);
                 }
                 else {
-                    strtext = "<font color='blue'> [" + ((nowblock * mychoice) + Gopage) + "] </font>";
+                    strtext = "<font color='#0684f9'> [" + ((nowblock * mychoice) + Gopage) + "] </font>";
                     td_Create(strtext);
                 }
             }
@@ -140,7 +140,7 @@ function pagingCount(p_page, p_nowblock) {
                 block = nowblock;
                 strtext = "<div onclick='return Page_Click(" + nextPage + "," + block + ")' style='cursor:pointer;margin-top:3px;' >";
             }
-            strtext = strtext + "<img src='/images/page_next.gif' width='15' height='15' border='0'></div>";
+            strtext = strtext + "<img src='/images/page_next.gif' border='0'></div>";
             td_Create(strtext);
 
         }
