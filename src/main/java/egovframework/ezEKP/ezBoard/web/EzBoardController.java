@@ -6796,9 +6796,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 게시물의 정보를 가져온다.
 		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 
-		// 회사가 다르면 result를 FAIL로 반환한다. 만약 어느 회사에서 확인해야 하는지 알려야 한다면 이곳에서 다른 값을 보내자.
+		// 회사가 다르면 result를 FAIL로 반환한다. 사용자의 lang에 따라 회사이름을 다국어로 보낸다.
 		if (!boardItem.getWriterCompanyID().equals(userInfo.getCompanyID())) {
-			return "<DATA>FAIL</DATA>";
+			return "<DATA><DATA1>FAIL</DATA1><DATA2>" + boardItem.getWriterCompanyName() + "</DATA2></DATA>";
 		}
 		
 		logger.debug("getItemViewNew ended.");

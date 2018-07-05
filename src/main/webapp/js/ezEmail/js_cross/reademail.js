@@ -960,7 +960,7 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
 }
 
 /* 2018-07-03 홍승비 - 승인게시물에 쓰이는 기능 -> 사간겸직 시 현재 회사가 아닌 곳에서 보내진 승인메일은 alert 처리함 */
-function Item_View_APPR(pBoardID, pItemID, pgubun, pCompanyID) {
+function Item_View_APPR(pBoardID, pItemID, pgubun) {
     var pheigth = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
     pheigth = parseInt(pheigth) / 2;
@@ -971,13 +971,20 @@ function Item_View_APPR(pBoardID, pItemID, pgubun, pCompanyID) {
     var xmlhttp = createXMLHttpRequest();
     xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
     xmlhttp.send();
-
+    
+    var xmlDoc = xmlhttp.responseXML;
+    
+    /* 2018-07-05 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
+    if (xmlDoc == null) {
+   	 alert(strLang166);
+   	 return;
+   }
     /* 2018-07-03 홍승비 - 승인게시물 관련 companyID 다를 시 alert 작동 */
-    if (getNodeText(xmlhttp.responseXML.documentElement) == "FAIL") {
-    	 alert(strLangHSB01);
+    if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
+    	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
     }
     /* 2018-04-26 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정 */
-    else if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
+    else if (getNodeText(xmlDoc.documentElement) != "0") {
         if (pgubun == "3" || pgubun == "4") {
             window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }

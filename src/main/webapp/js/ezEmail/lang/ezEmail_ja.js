@@ -309,7 +309,10 @@ var strLangKYJ01 = "選択したメールがありません。";
 var strLangKYJ02 = "再利用するメールを選択してください。";
 var strLangKYJ03 = "スペースは入力できません。";
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리 일본어 번역X */
-var strLangHSB01 = "소속 회사의 게시물만 조회할 수 있습니다.";
+var strLangHSB01 = "이 게시물은 ";
+var strLangHSB02 = "에서 열람하실 수 있습니다.";
+/* 2018-07-05 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
+var strLangHSB02 = "掲示がありません。";
 
 function GetLocalTime(Offset , pDateTime)
 {
