@@ -177,7 +177,8 @@ public class MBoardServiceImpl implements MBoardService {
 		String type = mBoardInfoVO.getType();
 		String apprFlag = mBoardInfoVO.getApprFlag();
 		
-		String deptPath = deptPathCode;
+		/* 2018-07-05 홍승비 - deptPath에 자신의 ID 빠져있는 부분 추가 */
+		String deptPath = info.getUserId() + "," + deptPathCode;
 	    String deptPathOrgan="";
 	    
 	    for (int ch=0; ch<deptPath.split(",").length; ch++) {
@@ -192,7 +193,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 		//for (String userDept : userDeptPath.split(",")) {
 
-		for (int i=0; i<userDeptPath.split(",").length; i++) {	
+		for (int i=0; i<userDeptPath.split(",").length; i++) {
 			MBoardInfoVO aclVO = getACL(mBoardInfoVO, userDeptPath.split(",")[i].trim(), info.getTenantId());
 			
 			if (aclVO != null) {
@@ -248,8 +249,7 @@ public class MBoardServiceImpl implements MBoardService {
 			mBoardInfoVO.setWrite_FG("true");
 			mBoardInfoVO.setReply_FG("true");
 			mBoardInfoVO.setDelete_FG("true");
-		} /* 2018-07-04 홍승비 - boardGroupAdmin_FG="NO"이고 rollInfo에서 관리자 권한 확인할 수 없을때 플래그 처리 조건 추가 */
-		else if (mBoardInfoVO.getBoardAdmin_FG() == null || mBoardInfoVO.getBoardAdmin_FG().equals("") || mBoardInfoVO.getBoardGroupAdmin_FG().equals("NO")) {
+		} else if (mBoardInfoVO.getBoardAdmin_FG() == null || mBoardInfoVO.getBoardAdmin_FG().equals("")) {
 			mBoardInfoVO.setAccess_FG("1");
 			mBoardInfoVO.setBoardAdmin_FG("false");
 			mBoardInfoVO.setListView_FG("false");
@@ -674,6 +674,8 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
 		map.put("tenantID", info.getTenantId());
 		map.put("itemID", boardListVO.get("itemID"));
+		/* 2018-07-04 홍승비 - content 칼럼 데이터 저장을 위한 처리 추가 */
+		map.put("content", boardListVO.get("content"));
 		
 		//mht파일저장
 		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);

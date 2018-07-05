@@ -967,7 +967,8 @@
             extensionAttribute7 = #extensionAttribute7#,
             extensionAttribute8 = #extensionAttribute8#,
             extensionAttribute9 = #extensionAttribute9#,
-            extensionAttribute10 = #extensionAttribute10#
+            extensionAttribute10 = #extensionAttribute10#,
+            content = #content#
         WHERE  
           TENANT_ID = #tenantID#
         AND
