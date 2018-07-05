@@ -398,7 +398,7 @@
 	                        <input type="text" name="AttachPath" style="display:none" />        
 	                    </td>
 	                    <td class="pos2">
-	                        <a class="imgbtn"><span onclick="AttachFile_Onclick()"><spring:message code='ezQuestion.t173' /></span></a>
+	                        <a class="imgbtn imgbck"><span onclick="AttachFile_Onclick()"><spring:message code='ezQuestion.t173' /></span></a>
 	                    </td>
 	                </tr>
 	            </table>
@@ -425,13 +425,13 @@
 	            <table width="100%" class="content" style="margin-top:4px">
 	                <tr>
 	                    <td align="center">
-	                        <a class="imgbtn"><span onclick="javascript:fun_AddAns();"><spring:message code='ezQuestion.t176' /></span></a>
-	                        <a class="imgbtn"><span onclick="javascript:fun_AnsDelete();"><spring:message code='ezQuestion.t177' /></span></a>
+	                        <a class="imgbtn imgbck"><span onclick="javascript:fun_AddAns();"><spring:message code='ezQuestion.t176' /></span></a>
+	                        <a class="imgbtn imgbck"><span onclick="javascript:fun_AnsDelete();"><spring:message code='ezQuestion.t177' /></span></a>
 	                    </td>
 	                </tr>
 	                <tr>
 	                    <td>
-	                        <select name="input_Value" id="input_Value" size="4"  style="WIDTH:100%;HEIGHT:100px; background:none;"></select>
+	                        <select name="input_Value" id="input_Value" size="4"  style="WIDTH:100%;HEIGHT:170px; background:none;margin:0px;border:0px;margin-top:5px"></select>
 	                    </td>
 	                </tr>
 	            </table>

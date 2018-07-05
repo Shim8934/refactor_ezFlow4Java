@@ -464,6 +464,8 @@
 		            GetDocList();
 		        else if (DocListType == "GetDocSearch")
 		            GetDocSearch();
+		        else if (DocListType == "UserContDocList")
+		        	GetUserContList();
 		        else
 		            GetDocList();
 		    }
@@ -1169,7 +1171,13 @@
 		        }
 		        pageNum = 1;
 		        Init_Flag = "False";
-		        GetDocSearch();
+		        
+		        if (LoadSquery == "usercontlist") {
+		        	MakeSubCondition();
+	    	    	GetUserContList();
+		        } else {
+		       		GetDocSearch();
+		        }
 		
 		        $('#sel_year').val("ALL");
 		        /* $('#sel_year').selectmenu('refresh'); */
@@ -1245,7 +1253,7 @@
 	            aprgongramline_cross_dialogArguments[0] = para;
 	            aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
 	
-	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 740));
+	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760));
 	            try { OpenWin.focus(); } catch (e) { }
 		    }
 
@@ -1315,8 +1323,8 @@
 	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
 		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 		        &nbsp;
-		        <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
+		        <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	            <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">

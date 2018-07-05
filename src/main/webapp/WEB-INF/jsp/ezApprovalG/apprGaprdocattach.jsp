@@ -231,7 +231,7 @@
 	            <td style="padding-bottom: 5px; width: 250px;">
 	                <h2><spring:message code='ezApprovalG.t366'/>
 	                    <select id="selSContName" name="selSContName" onchange="return bt_selSContName_onclick()" style="height:22px"></select>
-	                    <a class="imgbtn"><span id="SearchCondi" onclick="return SearchCondi_onclick()" style="font-weight: normal"><spring:message code='ezApprovalG.t111'/></span></a>
+	                    <a class="imgbtn imgbck"><span id="SearchCondi" onclick="return SearchCondi_onclick()" style="font-weight: normal"><spring:message code='ezApprovalG.t111'/></span></a>
 					</h2>
 	            </td>
 	            <td style="text-align: right; white-space: nowrap; float: right; margin-top: 10px;">

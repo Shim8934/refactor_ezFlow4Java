@@ -780,7 +780,7 @@
         		<td>
             		<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px" />
             		<%--<input id = "cnkeybtn" onclick="cnsearch_click()" type="button" value="<%=RM.GetString("t34")%>" class="imginput" style="cursor:pointer" /> --%>
-            		<a class="imgbtn btnSearch"  = "cnkeybtn" onclick="cnsearch_click()"  ><span><spring:message code='ezPoll.t227' /></span></a>
+            		<a class="imgbtn imgbck btnSearch"  = "cnkeybtn" onclick="cnsearch_click()"  ><span><spring:message code='ezPoll.t227' /></span></a>
         		</td>
         		<td></td>
         		<td>         

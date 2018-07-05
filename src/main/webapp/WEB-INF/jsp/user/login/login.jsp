@@ -18,13 +18,14 @@
 			}
 			.modal p {
 				background:none;
-			}
-			.spanMsg {
-				position:relative;
-				top:-1px;
-				color:orangered;
-				font-family : "맑은고딕", Malgun Gothic, "굴림", Gullim,"돋움", Dotum, verdana, Arial, sans-serif;
-			}
+			}			
+			.warning_wrap{ overflow:hidden; width:600px}
+			.warning_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic; text-align:center; float:left;}
+			.warning_wrap dl{ margin:7px 0px 0px 20px;; padding:0px; font-family:Malgun Gothic; float:left; overflow:hidden;}
+			.warning_wrap dt{ font-size:18px; color:#000; padding:0px 0px 5px 0px; margin:0px; font-weight:bold; border-bottom:1px solid #d7d7d7;}
+			.warning_wrap dd.count{ color:#000; font-weight:normal; font-size:15px; padding:10px 0px;}
+			.warning_wrap dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic; font-size:15px;}
+			.warning_wrap dd{color:#8e8e8e; font-size:12px; padding:0px 0px 2px 0px; margin:0px;letter-spacing:-1px;}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -225,7 +226,7 @@
 			</span>
 			<p><span>[<strong class="yellow_txt">Caps Lock</strong>]?pCapsLockMsg?></span></p>
 		</div>
-		<div id="exDiv" style="display:none">
+		<div id="exDiv" style="display:none;margin-bottom:100px">
 			<div style="float:left">
 				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>
 				<c:if test="${isFirstLogin != 'Y'}"><img src="/images/warning.png" width="52" height="52"/></c:if>
@@ -264,14 +265,23 @@
 		</div>
 		
 		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
-		<div id="exDiv2" style="display:none;max-width:580px;height:230px;padding-top:25px;">
-			<div style="height:150px;border:1px solid rgb(0, 72, 149);margin:5px;border-radius:10px">
+		<div id="exDiv2" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div class="warning_wrap">
+		    	<p><img src="/images/warning2.png"></p>
+		        <dl>
+		        	<dt>${message1}</dt>
+		            <dd class="count">${message2}<span class="pointRed">${message3}</span>${message4}</dd>
+		            <dd>${message5}</dd>
+		            <dd>${message6}</dd>
+		        </dl>
+		    </div>
+			<%-- <div style="height:150px;border:1px solid rgb(0, 72, 149);margin:5px;border-radius:10px">
 				<div style="color:rgb(0, 72, 149);padding:18px 0px 10px 20px;font-size:12px;white-space: pre-wrap;">▒ ${message1}<span class="spanMsg">${message2}</span>${message3}
 				</div>
 			</div>		
 			<div class="btnposition" style="margin-top:0px;">
 			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t4' /></span></a>
-			</div>	
+			</div>	 --%>
 		</div>
 		
 	</body>
