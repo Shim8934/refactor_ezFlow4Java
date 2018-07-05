@@ -292,7 +292,7 @@
 	    		case 4:	// 신청관리현황
 	    			window.open("/ezAttitude/manageAttModAppList.do", "right");
 	    			break;
-	    		case 5:	// 내꺼
+	    		case 5:	// 근태정보관리
 	    			window.open("/ezAttitude/attitudeManage.do", "right");
 	    			break;
 	    	}
