@@ -275,6 +275,29 @@
 			success : function(data) {
 				alert("<spring:message code='ezPMS.t280' />");
 				
+				var nowStatusStr = getStatusStr(nowStatus);
+				var statusStr 	 = getStatusStr(status);
+				var taskName 	 = $("#taskName", parent.document).text();
+				var projectId 	 = taskDetails.projectId;
+				var groupId 	 = taskDetails.groupId;
+				var taskId 	 	 = taskDetails.taskId;
+				
+				// 이전과 달라진 값에 대해서만 작업이력을 남긴다
+				if (nowStatus != status) {	
+					var logContent = "[" + taskName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "]<spring:message code='ezPMS.t313' /> [" + statusStr + "]<spring:message code='ezPMS.t314' />"; 
+					addTaskLog(projectId, 2, groupId, taskId, logContent);
+				}
+				
+				if (taskDetails.realProgress != realProgress) {
+					var logContent = "[" + taskName + "<spring:message code='ezPMS.t317' /> " + new Number(taskDetails.realProgress).toFixed(1) + "%<spring:message code='ezPMS.t313'/> " + new Number(realProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
+   					addTaskLog(projectId, 2, groupId, taskId, logContent);
+				}
+				
+				if (taskDetails.planStartDate != planStartDate || taskDetails.planEndDate != planEndDate) {
+					var logContent = "[" + taskName + "<spring:message code='ezPMS.t239' />" + planStartDate + " ~ " + planEndDate + "<spring:message code='ezPMS.t240' />";
+					addTaskLog(projectId, 2, groupId, taskId, logContent);
+				}
+				
 				parent.location.reload();
 				parent.opener.location.reload();
 				popupClose();
@@ -392,6 +415,30 @@
 		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	}
 	
+	// status 알파벳을 문자열로 반환
+	function getStatusStr(status) {
+		
+		switch(status) {
+		case 'P': // 진행
+			return "<spring:message code='ezPMS.t15'/>"
+			break;
+		case 'W': // 대기
+			return "<spring:message code='ezPMS.t16'/>"
+			break;
+		case 'C': // 완료
+			return "<spring:message code='ezPMS.t17'/>"
+			break;
+		case 'L': // 지연
+			return "<spring:message code='ezPMS.t18'/>"
+			break;
+		case 'S': // 보류
+			return "<spring:message code='ezPMS.t19'/>"
+			break;
+		case 'D': // 삭제
+			return "<spring:message code='ezPMS.t11'/>"
+			break;
+		}
+	}
 </script>
 <style>
 .headerDiv {

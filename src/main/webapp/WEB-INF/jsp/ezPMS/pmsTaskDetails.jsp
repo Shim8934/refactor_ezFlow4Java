@@ -315,18 +315,17 @@
 		$.ajax({
 			type : "POST",
 			url : url,
-			dataType : "json",
+			dataType : "text",
 			contentType: "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
-			success : function(data) {
+			success : function(result) {
 				
 				if (result == "permitted") {
-					if (target == "group") {
-						alert("<spring:message code='ezPMS.t196' />");
-					} else {
-						alert("<spring:message code='ezPMS.t242' />")
-					}
-					
+					alert("<spring:message code='ezPMS.t242' />");
+					var logContent = "[" + taskDetails.groupName + "]<spring:message code='ezPMS.t313' /> [" + taskDetails.taskName + "] " + "<spring:message code='ezPMS.t242' />";
+   					addTaskLog(projectId, 3, groupId, null, logContent);
+   					opener.location.reload();
+   					window.close();
 				} else {
 					alert("<spring:message code='ezPMS.t184' />");
 					return;
@@ -335,15 +334,8 @@
 				location.reload();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
-				alert("에러 : updateTaskWDNW 쿼리 구현하면 에러 안남");
+				alert("<spring:message code='ezPMS.t213' />");
 				location.reload();
-			},
-			complete : function(){
-				var logContent = "[" + taskDetails.taskName + "] <spring:message code='ezPMS.t242' />";
-				
-				addTaskLog(projectId, 3, null, null, logContent);
-				opener.location.reload();
-				window.close();
 			}
 		});
 	}
@@ -354,6 +346,7 @@
 				projectId : projectId,
 				groupId : groupId
 		}
+
 		
 		var taskIdAttr = "p" + projectId + "_g" + groupId + "_t";
 		var hasTaskOrNot = $("[taskid^='" + taskIdAttr + "']", window.opener.document);
@@ -375,15 +368,16 @@
 			data : JSON.stringify(data),
 			success : function(data) {
 				alert("<spring:message code='ezPMS.t196' />");
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				alert("에러 : 그룹 삭제 에러" + textStatus + errorThrown + jqXHR);
-			},
-			complete : function(){
-				var logContent = "[" + taskDetails.groupName + "] <spring:message code='ezPMS.t196' />";
-				addTaskLog(projectId, 3, groupId, null, logContent);
+				var upperGroupIds = taskDetails.ancesterGroup.split(',');
+				var upperGroupId = upperGroupIds[upperGroupIds.length - 2];
+				
+				var logContent = "[" + taskDetails.upperGroupName + "]<spring:message code='ezPMS.t313' /> [" + taskDetails.groupName + "] " + "<spring:message code='ezPMS.t196' />";
+				addTaskLog(projectId, 3, upperGroupId, null, logContent);
 				opener.location.reload();
 				window.close();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("<spring:message code='ezPMS.t213' />");
 			}
 		});
 	}
@@ -438,7 +432,7 @@ button.PHBtn {
 			  </c:when>
 			  <c:otherwise>
 			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t87' /></th>
-			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.groupName}"/></td>
+			    <td id="taskName" class="detailsTable-td" colspan="4"><c:out value="${taskDetails.groupName}"/></td>
 			  </c:otherwise>
 			  </c:choose>
 			  </tr>

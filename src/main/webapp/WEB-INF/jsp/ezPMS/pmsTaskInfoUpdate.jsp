@@ -324,6 +324,9 @@ function updateTaskInfo() {
 			success : function(data) {
 				alert("<spring:message code='ezPMS.t170' />");
 				
+				var logContent = "[" + taskName + "<spring:message code='ezPMS.t318' />"; 
+				addTaskLog(projectId, 2, groupId, taskId, logContent);
+				
 				parent.location.reload();
 				parent.opener.location.reload();
 				popupClose();
@@ -389,6 +392,9 @@ function updateTaskInfo() {
 			data : JSON.stringify(data),
 			success : function() {
 				alert("<spring:message code='ezPMS.t170' />");
+				
+				var logContent = "[" + taskName + "<spring:message code='ezPMS.t319' />"; 
+				addTaskLog(projectId, 2, parent.groupId, null, logContent);
 				
 				parent.location.reload();
 				parent.opener.location.reload();

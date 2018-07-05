@@ -387,7 +387,7 @@
 	   					if (result == "permitted") {
 							alert("<spring:message code='ezPMS.t242' />");
 							
-							var logContent = "[" + groupName + "<spring:message code='ezPMS.t317' />" + taskName + "] " + "<spring:message code='ezPMS.t242' />";
+							var logContent = "[" + groupName + "]<spring:message code='ezPMS.t313' /> [" + taskName + "] " + "<spring:message code='ezPMS.t242' />";
 		   					addTaskLog(projectId, 3, groupId, null, logContent);
 						} else {
 							alert("<spring:message code='ezPMS.t184' />");
@@ -397,7 +397,7 @@
 	   					location.reload();
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
-	   					alert("<spring:message code='ezPMS.t54' />");
+	   					alert("<spring:message code='ezPMS.t213' />");
 	   					location.reload();
 	   				},
 	   			});
@@ -417,9 +417,18 @@
 	   			var selectType = ge.currentTask.type;
 	   			var url = "";
 	   			var groupId = "";
+	   			var groupName = ge.currentTask.name;
+	   			var upperGroupIds = ge.currentTask.code.split(',');
+	   			// 바로 위 groupId
+	   			var upperGroupId = upperGroupIds[upperGroupIds.length - 2];
+	   			var upperGroupName = $("[id$='g" + upperGroupId + "']").find("input[name='name']").val();
 	   			var data = {};
 	   			var children = ge.currentTask.getChildren();
 	   			var childTask = [];
+	   			
+	   			if(!upperGroupName) {
+	   				upperGroupName = projectDetails.projectName;
+	   			}
 	   			
 	   			if(selectType !== "g"){
 		   			alert("<spring:message code='ezPMS.t281' />");
@@ -442,6 +451,8 @@
 	   				return;
 	   			}
 	   			
+	   			
+	   			
 	   			var data = {
 	   					projectId : projectId,
 	   					groupId : groupId
@@ -455,15 +466,16 @@
 	   				data : JSON.stringify(data),
 	   				success : function(data) {
 						alert("<spring:message code='ezPMS.t196' />");
+						
+						var logContent = "[" + upperGroupName + "]<spring:message code='ezPMS.t313' /> [" + groupName + "] " + "<spring:message code='ezPMS.t196' />";
+	   					addTaskLog(projectId, 3, upperGroupId, null, logContent);
+	   					
+	   					location.reload();
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert("<spring:message code='ezPMS.t213' />");
-	   				},
-	   				complete : function() {
-	   					var logContent = "[" + groupId + "] <spring:message code='ezPMS.t196' />";
-	   					addTaskLog(projectId, 3, groupId, null, logContent);
 	   					location.reload();
-	   				}
+	   				},
 	   			});
 	   		}
 	   		
@@ -676,6 +688,8 @@
 	   			  	
 	   			  		if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
 	   			  			saveAllSchedules();
+	   			  			// 목표진행률 업데이트를 위함. ajax로 구현 후 삭제 예정
+	   			  			location.reload();
 	   			  		} else {  			
 	   			  			location.reload();
 	   			  			return false;
@@ -781,13 +795,14 @@
 	   		function deletePretaskRel(pretaskFullId, taskFullId) {
 	   			
 	   			var pretaskId    = pretaskFullId.match(/t(\d+)/) != null ? pretaskFullId.match(/t(\d+)/)[1] : null;
-	   			var taskIdParam  = taskFullId.match(/t(\d+)/) != null ? taskFullId.match(/t(\d+)/)[1] : null;
-	   			var groupIdParam = taskFullId.match(/g(\d+)/) != null ? taskFullId.match(/g(\d+)/)[1] : null;
+	   			var taskId  = taskFullId.match(/t(\d+)/) != null ? taskFullId.match(/t(\d+)/)[1] : null;
+	   			// 프로젝트 직속 업무의 경우 groupId가 넘어오지 않기 때문에 projectDetails에서 직접 얻는다
+	   			var groupId = taskFullId.match(/g(\d+)/) != null ? taskFullId.match(/g(\d+)/)[1] : projectDetails.groupId;
 	   			
 	   			if(confirm("<spring:message code='ezPMS.t107' />") == true) {
 	   				var data = {
 		   					pretaskId : pretaskId,
-		   					taskId : taskIdParam
+		   					taskId : taskId
 		   			}
 
 		   			$.ajax({
@@ -800,8 +815,8 @@
 		   					$('#workSpace').trigger('deleteFocused.gantt');
 		   					var pretaskName = $(".taskEditRow[taskid=" + pretaskFullId + "]").find("input[name='name']").val();
 		   					var taskName 	= $(".taskEditRow[taskid=" + taskFullId + "]").find("input[name='name']").val();
-		   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t308' />"
-		   					addTaskLog(projectId, 3, groupIdParam, taskIdParam, str);
+		   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t308' />";
+		   					addTaskLog(projectId, 3, groupId, taskId, str);
 		   					toastPopupShow(str);
 		   				}
 		   			});
@@ -1194,7 +1209,7 @@
    					ge.redraw();
 	   				return;
 	   			}
-
+				
 				var data = {
 						taskName : curTask.name,
 						taskId : taskId,
@@ -1213,6 +1228,9 @@
 					success : function(data) {
 						alert("<spring:message code='ezPMS.t280' />");
 						
+						var logContent = "[" + curTask.name + "<spring:message code='ezPMS.t317' /> " + curTask.progress + "%<spring:message code='ezPMS.t313'/> " + new Number(newProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
+	   					addTaskLog(projectId, 2, groupId, taskId, logContent);
+	   					
 						location.reload();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
