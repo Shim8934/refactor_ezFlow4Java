@@ -65,6 +65,7 @@
 		<result property="location"			column="LOCATION"			columnIndex="27"/>
 		<result property="contentPath"		column="CONTENTPATH"		columnIndex="28"/>
 		<result property="groupName"		column="GROUPNAME"			columnIndex="29"/>
+		<result property="companyid"		column="COMPANYID"			columnIndex="30"/>
 	</resultMap>
 
 	<resultMap class="AttendantListVO" id="attendantListVO">
@@ -222,7 +223,8 @@
 	            title,
 	            location,
 	            contentpath,
-	            groupname	           
+	            groupname,
+	            a.companyid	           
 			from 
 				tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid and a.tenant_id = b.tenant_id
 	       	where  
@@ -265,7 +267,8 @@
 				title,
 				location,
 				contentpath,
-				'' as groupname
+				'' as groupname,
+				companyid
         	from 
         		tbl_schedule
        		where  
@@ -323,7 +326,8 @@
 				title,
 				location,
 				contentpath,
-				'' as groupname
+				'' as groupname,
+				companyid
         	from 
         		tbl_schedule
        		where  
@@ -734,8 +738,6 @@
 	       		scheduleid = #v_SCHEDULEID#
 	       	and
 	       		tenant_id = #v_TENANTID#
-	       	and
-        		companyid = #v_COMPANYID#	       	
 	        order by attendantname
 	        
 		]]>			
