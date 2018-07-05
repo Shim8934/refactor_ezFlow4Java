@@ -169,7 +169,6 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 450) / 2;
 		        var pLeft = (pwidth - 420) / 2;
-		        console.log('obj는 뭐가 찍히나~ : ' + obj + '     obj.data-dept : ' + $(obj).data("dept"));
 		        window.open("/ezCommon/showPersonInfo.do?id=" + obj.id + "&dept="+$(obj).data("dept"), "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
 		
