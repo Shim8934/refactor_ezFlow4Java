@@ -614,8 +614,8 @@
 						CurrentHeight = document.documentElement.clientHeight - 110;
 						document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 						document.getElementById("MailListRayer").style.width = "100%";
-						document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-						document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
+						document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+						document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 						g_bPrevShow = false;
 						onPreview=false;
 						$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
@@ -635,8 +635,8 @@
 						document.getElementById("MailListRayer").style.width = "100%";
 						document.getElementById("PreviewRayerW").style.width = "100%";
 						document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-						document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-						document.getElementById("journalListBody").style.height = (pMailListHeightW - 50-32) + "px";
+						document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+						document.getElementById("journalListBody").style.height = (pMailListHeightW - 100) + "px";
 						document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)+ "px";
 
 // 						document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
@@ -682,8 +682,8 @@
 						document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 						document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 						document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-						document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-						document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
+						document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+						document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 
 // 						document.getElementById("divList").style.overflow = "auto";
 						document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
@@ -956,8 +956,8 @@
 			<label for="Radio2">&nbsp;<spring:message code='ezJournal.t34' /></label>
 		</c:if> &nbsp; 
 		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			<input id="searchValue" style="width: 150px; height: 20px; border-right: 0px; vertical-align: top" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
-			<a href="#" style="float: right"><img src="../../images/sub/bsearch.gif" border="0" onclick="quickSearch()"></a>
+			<input id="searchValue" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
+			<a href="#" style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
 		</c:if>
 	</span>
 	</h1>
@@ -1201,8 +1201,8 @@
 	            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 	            document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 	            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-	            document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-	            document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
+	            document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+	            document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 	            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
@@ -1224,8 +1224,8 @@
 	            document.getElementById("MailListRayer").style.width = "100%";
 	            document.getElementById("PreviewRayerW").style.width = "100%";
 	            document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-	            document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-	            document.getElementById("journalListBody").style.height = (pMailListHeightW - 50-32) + "px";
+	            document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+	            document.getElementById("journalListBody").style.height = (pMailListHeightW - 100) + "px";
 	            document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
 //                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";

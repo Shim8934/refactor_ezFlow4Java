@@ -1,4 +1,4 @@
-﻿﻿/*###########################################################################################
+﻿﻿﻿/*###########################################################################################
 
 
 
@@ -512,7 +512,28 @@ function ListView() {
                 	objTd.style.textAlign = "center";
                 }
                 
+                // 헤더에  컬럼 가운데정렬 2018-06-28 강민수92
                 if (strColName == "ReSendFlag") {
+                	objTd.style.textAlign = "center";
+                }
+                
+                if (strColName == "AttachFlag") {
+                	objTd.style.textAlign = "center";
+                }
+                
+                if (strColName == "RejectFlag") {
+                	objTd.style.textAlign = "center";
+                }
+                
+                if (strColName == "TransferFlag") {
+                	objTd.style.textAlign = "center";
+                }
+               
+                if (strColName == "DelayFlag") {
+                	objTd.style.textAlign = "center";
+                }
+                
+                if (strName == "비치" || strName == "특수목록" || strName == "연기신청") {
                 	objTd.style.textAlign = "center";
                 }
 
@@ -567,12 +588,6 @@ function ListView() {
 //                } else {
 //                	objTd.innerHTML = strName;
 //                }
-                
-                // 헤더에 수신 컬럼 가운데정렬 2018-06-28 강민수92
-                console.log(strColName);
-                if (strColName == "") {
-                	
-                }
                 
                 objTd.innerHTML = strName;
                 objTr.appendChild(objTd);
@@ -785,7 +800,15 @@ function ListView() {
                 }
                 
                 if (oHeaders.length > 0) {
-                    if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "HASATTACHYN") {
+                	if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "AttachFlag") {
+                		objTd.style.textAlign = "center";
+                		if (SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "Y" || SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "1") {
+                            var _img = document.createElement("img");
+                            _img.src = "/images/newAttach.gif";
+                            objTd.appendChild(_img);
+                        }
+                	}
+                	else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "HASATTACHYN") {
                         objTd.style.textAlign = "center";
                         if (SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "Y" || SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "1") {
                             var _img = document.createElement("img");
@@ -801,7 +824,7 @@ function ListView() {
                             objTd.appendChild(_img);
                         }
                     }
-                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "REJECTFLAG") {
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "REJECTFLAG" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "RejectFlag") {
                         objTd.style.textAlign = "center";
                         if (SelectSingleNodeValue(oCells[j], "REJECTFLAG") == "1") {
                             strValue = "O";
@@ -810,6 +833,17 @@ function ListView() {
                         }
                         oText = document.createTextNode(strValue);
                         objTd.appendChild(oText);
+                    }
+                	// 전자결재G 한글로 하드코딩 해도 되겠지? 2018-07-03
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CreateDate" || SelectSingleNodeValue(oHeaders[j], "NAME") == "등록일") {
+                    	objTd.style.textAlign = "left";
+                    	oText = document.createTextNode(strValue);
+                    	objTd.appendChild(oText);
+                    }
+                    else if (SelectSingleNodeValue(oHeaders[j], "NAME") == "비치" || SelectSingleNodeValue(oHeaders[j], "NAME") == "연기신청") {
+                    	objTd.style.textAlign = "center";
+                    	oText = document.createTextNode(strValue);
+                    	objTd.appendChild(oText);
                     }
                     else {
                         objTd.appendChild(oText);
