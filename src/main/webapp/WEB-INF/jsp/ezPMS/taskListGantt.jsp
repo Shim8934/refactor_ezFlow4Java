@@ -344,6 +344,8 @@
 	   			var selectType = ge.currentTask.type;
 	   			var url = "";
 	   			var groupId = ge.currentTask.groupId;
+	   			var groupName = "";
+	   			var taskName = ge.currentTask.name;
 	   			var taskId = "";
 	   			var data = {};
 	   			
@@ -357,6 +359,16 @@
 	   				taskId = ge.currentTask.id.match(/t(\d+)/)[1];
 	   			}
 	   			
+	   			// 프로젝트 직속 업무의 경우 groupId가 undefined
+	   			if(groupId) {
+	   				groupName = $("[id$='g" + groupId + "']").find("input[name='name']").val();
+		   			
+	   			} else {
+	   				groupName = projectDetails.projectName;
+	   				groupId = projectDetails.groupId;
+	   			}
+	   			
+	   			
    				url = "/ezPMS/deleteTask.do?projectId=" + projectId + "&taskId=" + taskId;
 	   			
 	   			data = {
@@ -368,12 +380,15 @@
 	   			$.ajax({
 	   				type : "POST",
 	   				url : url,
-	   				dataType : "json",
+	   				dataType : "text",
 	   				contentType: "application/json; charset=UTF-8",
 	   				data : JSON.stringify(data),
-	   				success : function(data) {
+	   				success : function(result) {
 	   					if (result == "permitted") {
 							alert("<spring:message code='ezPMS.t242' />");
+							
+							var logContent = "[" + groupName + "<spring:message code='ezPMS.t317' />" + taskName + "] " + "<spring:message code='ezPMS.t242' />";
+		   					addTaskLog(projectId, 3, groupId, null, logContent);
 						} else {
 							alert("<spring:message code='ezPMS.t184' />");
 							return;
@@ -385,10 +400,6 @@
 	   					alert("<spring:message code='ezPMS.t54' />");
 	   					location.reload();
 	   				},
-	   				complete : function() {
-	   					var logContent = "[" + taskId + "] <spring:message code='ezPMS.t242' />";
-	   					addTaskLog(projectId, 3, null, null, logContent);
-	   				}
 	   			});
 	   		}
 	   		
