@@ -23204,7 +23204,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "</COLNAME>");
 			
 			if (!SortHeader.equals("") && SortHeader.equals(listXML.getElementsByTagName("NAME").item(i).getTextContent())) {
-				if(SortHeader.equals("")) {
+				if(SortOption.equals("")) {
 					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
 					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
 				} else {

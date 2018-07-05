@@ -464,6 +464,8 @@
 		            GetDocList();
 		        else if (DocListType == "GetDocSearch")
 		            GetDocSearch();
+		        else if (DocListType == "UserContDocList")
+		        	GetUserContList();
 		        else
 		            GetDocList();
 		    }
@@ -1179,7 +1181,13 @@
 		        }
 		        pageNum = 1;
 		        Init_Flag = "False";
-		        GetDocSearch();
+		        
+		        if (LoadSquery == "usercontlist") {
+		        	MakeSubCondition();
+	    	    	GetUserContList();
+		        } else {
+		       		GetDocSearch();
+		        }
 		
 		        $('#sel_year').val("ALL");
 		        /* $('#sel_year').selectmenu('refresh'); */
