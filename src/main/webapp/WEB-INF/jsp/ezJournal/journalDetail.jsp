@@ -246,9 +246,9 @@
 							</div>
 						</td>
 						<td class="pos2" style="white-space: normal; overflow: hidden;">
-							<a class="imgbtn"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a>
+							<a class="imgbtn imgbck"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a>
 							<br /> 
-							<a class="imgbtn"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+							<a class="imgbtn imgbck"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 						</td>
 					</tr>
 				</table>

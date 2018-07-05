@@ -956,8 +956,8 @@
 			<label for="Radio2">&nbsp;<spring:message code='ezJournal.t34' /></label>
 		</c:if> &nbsp; 
 		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			<input id="searchValue" style="width: 150px; height: 20px; border-right: 0px; vertical-align: top" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
-			<a href="#" style="float: right"><img src="../../images/sub/bsearch.gif" border="0" onclick="quickSearch()"></a>
+			<input id="searchValue" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
+			<a href="#" style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
 		</c:if>
 	</span>
 	</h1>
