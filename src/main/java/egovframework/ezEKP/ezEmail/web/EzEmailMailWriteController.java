@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
@@ -56,6 +58,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
+import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -91,6 +94,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -109,6 +113,7 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -130,6 +135,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private KlibUtil klibUtil;
 
 	@Autowired
 	private Properties config;
@@ -1606,6 +1614,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
+					
+					if (filePath[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						fileExt[i] += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
+					}
+					
 					newFileName[i] = UUID.randomUUID().toString() + "." + fileExt[i];
 				} else {
 					fileExt[i] = "";
@@ -2568,8 +2581,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						BodyPart messageBodyPart = new MimeBodyPart();
 						
 				        File f = new File(pDirTempPath + commonUtil.separator + path);
-				        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
-				        messageBodyPart.setDataHandler(new DataHandler(source));
+				        
+				        // 2018.07.05 jwseo99 KLIB - ezd 파일은 복호화하여 넣는다.
+				        if (f.toString().endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				        	byte[] fileBytes = Files.readAllBytes(f.toPath());
+				        	byte[] decryptedBytes = klibUtil.decrypt(fileBytes);
+				        	
+				        	messageBodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(decryptedBytes, "application/octet-stream")));
+				        } else {
+					        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
+					        messageBodyPart.setDataHandler(new DataHandler(source));
+				        }
 				        
 				        String nfcFilename = commonUtil.normalizeFileName(fileName);
 				        		
@@ -5181,4 +5203,5 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	size += b.length;
 	    }
 	}
+	
 }

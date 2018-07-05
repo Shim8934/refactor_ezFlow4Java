@@ -27,6 +27,7 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -315,6 +316,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		if (newwindowid == null) {
 			newwindowid = "";
 		}
+		
 		String useExtension = "";
 		String pDirTempPath = "";
 	    if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
@@ -327,6 +329,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
         String copyPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
         pDirPath = realPath + pDirPath;
+        
+		// 2018.07.05 jwseo99 KLIB - ezd 확장자로 변경
+		if (sFileHref.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+			newfilename += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
+		}
 		
 	       if (pBigFileUpload.equals("Y")) {
                // 대용량 첨부파일인 경우에는 오늘 날짜를 이름으로 갖는 폴더를 사용한다.
