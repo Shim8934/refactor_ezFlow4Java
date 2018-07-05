@@ -105,7 +105,7 @@ function changeStatus() {
 						var projectId 	= checkedPrjInfo[i].projectId;
 						var groupId 	= checkedPrjInfo[i].groupId;
 						
-						var logContent = "[" + projectName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "<spring:message code='ezPMS.t313' />" + statusStr + "<spring:message code='ezPMS.t314' />" 
+						var logContent = "[" + projectName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "<spring:message code='ezPMS.t313' />" + statusStr + "<spring:message code='ezPMS.t314' />"; 
 						addTaskLog(projectId, 2, groupId, null, logContent);
 					}
 					
@@ -126,7 +126,8 @@ function changeStatus() {
 function popupClose() {
 	parent.DivPopUpHidden();
 }
- 
+
+// status 알파벳을 문자열로 반환
 function getStatusStr(status) {
 	
 	switch(status) {

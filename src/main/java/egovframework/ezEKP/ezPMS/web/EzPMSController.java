@@ -1466,7 +1466,7 @@ public class EzPMSController {
 			checkPermission = result.get("data").toString();
 		}
 		
-		
+		LOGGER.debug("===============================" + checkPermission);
 		LOGGER.debug("ezPMS deleteTask ended");
 		
 		return checkPermission;

@@ -2593,17 +2593,28 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Date today = new Date();
 		String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 		Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
+		
+		Calendar cal = new GregorianCalendar();
+		cal.add(Calendar.DATE, 1);
+		
+		Date tomorrow = cal.getTime();
+		String simpTomorrow = new SimpleDateFormat("yyyy-MM-dd").format(tomorrow);
+		Date tomorrowDate = new SimpleDateFormat("yyyy-MM-dd").parse(simpTomorrow);
 
 		int totalWorkingdays = getWorkingDays(start, end, companyId, tenantId);
-		int restDueday = getWorkingDays(now, end, companyId, tenantId);
+		int restDueday = getWorkingDays(tomorrowDate, end, companyId, tenantId);
 		float planProgress = 0;
-		if (totalWorkingdays == 0) {
-			totalWorkingdays = 1;
-		}
-		if (restDueday > 0) {
-			planProgress = ((float) (totalWorkingdays - restDueday) / totalWorkingdays) * 100;
-		} else {
-			planProgress = 100;
+		
+		//시작일이 오늘날짜보다 늦으면(대기 상태)이면 계획진행률을 0으로 리턴
+		if(now.compareTo(start) >= 0){
+			if (totalWorkingdays == 0) {
+				totalWorkingdays = 1;
+			}
+			if (restDueday > 0) {
+				planProgress = ((float) (totalWorkingdays - restDueday) / totalWorkingdays) * 100;
+			} else {
+				planProgress = 100;
+			}
 		}
 
 		return planProgress;
