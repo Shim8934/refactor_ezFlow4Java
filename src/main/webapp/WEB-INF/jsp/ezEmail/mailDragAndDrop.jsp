@@ -662,9 +662,9 @@
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
         <div style="width:845px;white-space:nowrap;display:inline-block">
             <span style="float:left;">
-                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
-                <a class="imgbtn" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
-                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
+                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
+                <a class="imgbtn imgbck" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
+                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
             </span>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>

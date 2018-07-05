@@ -234,14 +234,14 @@
 	            <th><spring:message code='ezEmail.t148' /></th>
 	            <td>
 	                <input id="foldername" type="text" name="textfield" style="width: 98%" disabled></td>
-	            <td><a class="imgbtn"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
+	            <td><a class="imgbtn imgbck"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
 	        </tr>
 	        <tr style="height: 40px">
 	            <th><spring:message code='ezEmail.t405' /></th>
 	            <td>
 	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px"></div>
 	            </td>
-	            <td><a class="imgbtn"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
+	            <td><a class="imgbtn imgbck"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
 	        </tr>
 	    </table>
 	    <div class="btnposition btnpositionNew">

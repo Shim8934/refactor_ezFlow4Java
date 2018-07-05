@@ -174,7 +174,7 @@ function InitListView() {
     		},
     		success: function(text){
     			result = text;
-    		}			
+    		}
     	});
 
         var LVData = null;
@@ -185,6 +185,24 @@ function InitListView() {
             LVData = createXmlDom();
             LVData = loadXMLString(result);
         }
+        
+        var resultXML = loadXMLString(result);
+        
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[0], "35");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[1], "120");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[2], "50");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[3], "130");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[4], "120");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[5], "70");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[6], "140");
+        
+        resultXML.getElementsByTagName("HEADER")[0].removeChild(resultXML.getElementsByTagName("HEADER")[0].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[1].removeChild(resultXML.getElementsByTagName("HEADER")[1].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[2].removeChild(resultXML.getElementsByTagName("HEADER")[2].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[3].removeChild(resultXML.getElementsByTagName("HEADER")[3].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[4].removeChild(resultXML.getElementsByTagName("HEADER")[4].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[5].removeChild(resultXML.getElementsByTagName("HEADER")[5].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[6].removeChild(resultXML.getElementsByTagName("HEADER")[6].childNodes[2]);
 
         var pAPRLINE = new ListView();
         pAPRLINE.SetID("pAPRLINE");
@@ -192,7 +210,7 @@ function InitListView() {
         pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
         pAPRLINE.SetSelectFlag(false);
         pAPRLINE.SetHeightFree(true);
-        pAPRLINE.DataSource(loadXMLString(result));
+        pAPRLINE.DataSource(resultXML);
         pAPRLINE.DataBind("APRLINE");
         
     }
@@ -438,13 +456,13 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
                 }
 
                 pparsingXML = "<LISTVIEWDATA><HEADERS>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>30</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>60</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
                 pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
                 pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -507,6 +525,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
                     pAPRLINE.SetMulSelectable(false);    
                     pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");            
                     pAPRLINE.SetSelectFlag(false);
+                    pAPRLINE.SetHeightFree(true);
                     pAPRLINE.DataSource(objXML);      
                     pAPRLINE.DataBind("APRLINE");
                 } else {
@@ -776,7 +795,7 @@ function aprLineAddDeptUser(mode, xmlData) {
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
             pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";

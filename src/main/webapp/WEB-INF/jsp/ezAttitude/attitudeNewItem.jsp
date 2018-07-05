@@ -47,7 +47,7 @@
 			var pAttitudeTypeList = ${attitudeTypeList}; 
 			var holidayFlag = false;
 			var closedDay = "";
-			var holidayAttReg = true;
+			var holidayAttReg = ""; //(회사규율)휴일등록 가능여부
 			
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -400,6 +400,7 @@
 				} else {
 					subDate = calDateRange(startDate.split(" ")[0], endDate.split(" ")[0]);
 				}
+				var returnFlag = false;
 				
 				var betweenDate = new Date(startDate.split(" ")[0]);
 				for (var i = 0; i <= subDate; i++) {
@@ -409,9 +410,25 @@
 					isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
 					
 					//휴무일이 있는 경우
-					if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
-						return true;
+					if (closedDay[betweenDate.getDay()] == "1") {//회사지정 휴일인지 체크
+						returnFlag = true;
+					} else if (isMemorialDay.length != 0 || isYearMemorialDay.length != 0) {//기념일체크
+						if (isMemorialDay.length != 0 ) {
+							for (var i = 0; i < isMemorialDay.length; i++) {
+								if (isMemorialDay[i].holiday ==  true) {//휴무일인 기념일일때
+									returnFlag = true;
+								}
+							}
+						} 
+						if (isYearMemorialDay.length != 0) {
+							for (var i = 0; i < isYearMemorialDay.length; i++) {
+								if (isYearMemorialDay[i].holiday == true) { //휴무일인 기념일일때
+									returnFlag = true;
+								}
+							}
+						}
 					}
+					return returnFlag;
 				}
 				return false;
 			}
@@ -421,7 +438,7 @@
 				var lunar = "";
 				var isMemorialDay = "";
 				var isYearMemorialDay = "";
-				var dayList = "";
+				var returnFlag = false;
 				
 				var betweenDate = new Date(startDate.split(" ")[0]);
 				lunar = lunarCalc(betweenDate.getFullYear(), betweenDate.getMonth() + 1, betweenDate.getDate(), 1);
@@ -429,23 +446,25 @@
 				isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
 				
 				//휴무일이 있는 경우
-				if (isMemorialDay.length != 0 || isYearMemorialDay.length != 0 || closedDay[betweenDate.getDay()] == "1") {
+				if (closedDay[betweenDate.getDay()] == "1") {//회사지정 휴일인지 체크
+					returnFlag = true;
+				} else if (isMemorialDay.length != 0 || isYearMemorialDay.length != 0) {//기념일체크
 					if (isMemorialDay.length != 0 ) {
-						dayList = isMemorialDay;
-					} else if (isYearMemorialDay.length != 0) {
-						dayList = isYearMemorialDay;
-					}
-					//기념일 휴무여부 체크
-					if (dayList.length != 0 ) {
-						for (var i = 0; i < dayList.length; i++) {
-							if (dayList[i].holiday == false) {//휴무일은 아닐경우
-								return false;
+						for (var i = 0; i < isMemorialDay.length; i++) {
+							if (isMemorialDay[i].holiday ==  true) {//휴무일인 기념일일때
+								returnFlag = true;
+							}
+						}
+					} 
+					if (isYearMemorialDay.length != 0) {
+						for (var i = 0; i < isYearMemorialDay.length; i++) {
+							if (isYearMemorialDay[i].holiday == true) { //휴무일인 기념일일때
+								returnFlag = true;
 							}
 						}
 					}
-					return true;
 				}
-				return false;
+				return returnFlag;
 			}
 			
 			/**
