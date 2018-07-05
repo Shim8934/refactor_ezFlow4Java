@@ -296,7 +296,7 @@
 		    		return;
 		    	} */
 		        
-		        save_schedule();
+		        save_schedule(pageFrom);
 		    }
 		   
 		    function Print_onClick() {
