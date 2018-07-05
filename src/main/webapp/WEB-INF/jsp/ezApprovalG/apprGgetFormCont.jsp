@@ -460,8 +460,8 @@
 	                    <option value="2"><spring:message code='ezApprovalG.t598'/></option>
 	                </select>
 	                <input id="forminfo" onkeypress="search_press(event)" type="text" />
-	                <a class="imgbtn" onclick="searchform()"><span><spring:message code='ezApprovalG.t111'/></span></a>
-	                <a class="imgbtn" onclick="reset()"><span><spring:message code='ezApprovalG.t1301'/></span></a>
+	                <a class="imgbtn imgbck" onclick="searchform()"><span><spring:message code='ezApprovalG.t111'/></span></a>
+	                <a class="imgbtn imgbck" onclick="reset()"><span><spring:message code='ezApprovalG.t1301'/></span></a>
 	            </td>
 		    </tr>
 	    </table>
@@ -470,8 +470,8 @@
 	            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G00001'/></span></p>
 	            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
 	            <div style="float: right">
-	                <a id="addfav" class="imgbtn" style="display:none"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
-	                <a id="delfav" class="imgbtn"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
+	                <a id="addfav" class="imgbtn imgbck" style="display:none"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
+	                <a id="delfav" class="imgbtn imgbck"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
 	            </div>
 	        </div>
 	    </div>
@@ -517,7 +517,7 @@
 	            </td>
 	        </tr>
 	    </table>
-		<div class="btnposition" >
+		<div class="btnpositionNew" >
 <%-- 		  <input type="button" name="LocalloadHwp" id="LocalloadHwp" value="<spring:message code='ezApprovalG.t1544'/>" onClick="return Localload_onclick('HWP')" style="width:210px;"> --%>
 <%-- 		  <input type="button" name="LocalloadMht" id="LocalloadMht" value="<spring:message code='ezApprovalG.t1545'/>" onClick="return Localload_onclick('MHT')" style="width:210px;"> --%>
 		
