@@ -514,7 +514,7 @@ function goGroupDetails(elem) {
 </style>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
-	<h1>나의 업무<span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
+	<h1><c:out value='ezPMS.t142'/><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
 	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t147' /></span></p>

@@ -200,18 +200,23 @@
 	});
 </script>
 <div id="divList" style="width: 100%;">
+<div id="lvBoardList">
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
-				<th id="col1" onclick="setListOrder(this)" data-order='WRITER_NAME' style="text-align:center;"><spring:message code='ezPMS.t114' /></th>
-				<th id="col2" style="text-align:center; cursor: default;"><spring:message code='ezPMS.t98' /></th>
+				<th class="col1" onclick="setListOrder(this)" data-order='WRITER_NAME' style="text-align:center;"><spring:message code='ezPMS.t114' /></th>
+				<th class="col2" style="text-align:center; cursor: default;"><spring:message code='ezPMS.t98' /></th>
 				<%-- <th id="col2" onclick="setListOrder(this)" data-order='TASK_NAME' style="text-align:center;"><spring:message code='ezPMS.t98' /></th> --%>
-				<th id="col3" onclick="setListOrder(this)" data-order='COMMENT_CONTENT'><spring:message code='ezPMS.t130' /></th>
-				<th id="col4" onclick="setListOrder(this)" data-order='WRITE_DATE' style="text-align:center;"><spring:message code='ezPMS.t119' /></th>
-				<th id="col5" style="cursor: default; text-align:center;"><spring:message code='ezPMS.t110' />/<spring:message code='ezPMS.t11' /></th>
+				<th class="col3" onclick="setListOrder(this)" data-order='COMMENT_CONTENT'><spring:message code='ezPMS.t130' /></th>
+				<th class="col4" onclick="setListOrder(this)" data-order='WRITE_DATE' style="text-align:center;"><spring:message code='ezPMS.t119' /></th>
+				<th class="col5" style="cursor: default; text-align:center;"><spring:message code='ezPMS.t110' />/<spring:message code='ezPMS.t11' /></th>
 			</tr>
 		</thead>
-		<tbody id="tableBody" style="background-color: rgb(255, 255, 255);">
+	</table>
+	</div>
+	<div id="projectListBody" multiselectable="false" useocs="false" style="overflow:auto; min-width: 469px;">
+		<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)"  width="100%" border="0" class="mainlist" style="">
+			<tbody style="background-color: rgb(255, 255, 255);">
 			<c:choose>
 				<c:when test="${empty data}">
 					<tr>
@@ -222,13 +227,13 @@
 					<c:forEach items="${data}" var="commentVO">
 						<tr data-commentId="${commentVO.commentId}" data-groupId="${commentVO.groupId}" 
 							data-taskId="${commentVO.taskId}" data-writerId="${commentVO.writerId}">
-							<td>
+							<td class="col1" style="text-align:center;">
 								<c:out value="${commentVO.writerName}"/>
 							</td>
-							<td class="taskName">
+							<td class="taskName col2">
 								<c:out value="${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}"/>
 							</td>
-							<td class="content" style="text-align: left;">
+							<td class="content col3" style="text-align: left;">
 								<span class="originalContent"><c:out value="${commentVO.commentContent}"/></span>
 								<div class="modifiedContent" style="display: none; width: 100%;">
 									<textarea class="commentContent" style="resize: none; height: 45px;"><c:out value="${commentVO.commentContent}"/></textarea>
@@ -242,8 +247,8 @@
 									</div>
 								</div>
 							</td>
-							<td>${fn:substring(commentVO.writeDate, 0, 16)}</td>
-							<td>
+							<td class="col4" style="text-align:center;">${fn:substring(commentVO.writeDate, 0, 16)}</td>
+							<td class="col5" style="text-align:center;">
 								<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_modify.png"/></span>&nbsp;&nbsp;&nbsp;
 								<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_eliminate.png"/></span>
 							</td>
@@ -253,6 +258,7 @@
 			</c:choose>	
 		</tbody>
 	</table>	
+</div>
 </div>
 
 <c:if test="${userRole ne 3}">

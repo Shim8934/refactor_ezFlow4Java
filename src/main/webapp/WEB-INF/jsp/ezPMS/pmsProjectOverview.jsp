@@ -36,7 +36,7 @@ var holdColor = "${mainSetting.holdColor}";
 var deleteColor = "${mainSetting.deleteColor}";
 var waitColor = "${mainSetting.waitColor}";
 var startCount = 0;
-var listNumber = 5;
+var listNumber = 3;
 var position = "overview";
 var groupId = "${project.groupId}";
 
@@ -731,6 +731,13 @@ function getTaskDetails(elem) {
 			"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
 }
 </script>
+<style type="text/css">
+.overview_textbox {
+	overflow : auto;
+	max-height : 132px;
+	word-wrap : break-word;
+}
+</style>
 </head>
 <body>
 <div class="project_overview" style="margin : 10px 10px 0px 10px;">
@@ -739,8 +746,8 @@ function getTaskDetails(elem) {
 		<div class="project_overview_right" style="height:740px;">
 			<div class="overview_graphinfoBox">
 				<ul class="overview_btnBox">
-					<li onclick="editProjectInfo()"><img src="/images/ezPMS/icon_project_modify.png" alt="수정" /></li>
-					<li onclick="kanbanSetting()"><img src="/images/ezPMS/icon_project_setting.png" alt="환경설정" /></li>
+					<li onclick="editProjectInfo()"><img src="/images/ezPMS/icon_project_modify.png" alt="<c:out value='ezPMS.t110'/>" /></li>
+					<li onclick="kanbanSetting()"><img src="/images/ezPMS/icon_project_setting.png" alt="<c:out value='ezPMS.t144'/>" /></li>
 				</ul>
 				<ul class="contentlayout overview_graphinfo">
 					<li class="contentlayout_left overview_graph_canvas" id="circleProgress"><strong></strong></li>

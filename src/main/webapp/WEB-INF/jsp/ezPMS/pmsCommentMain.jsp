@@ -48,7 +48,7 @@
 		$("#taskTree").css("height", CurrentHeight + "px");
 		$("#projectContent").css("height", CurrentHeight + "px");
 		$("#contentList").css("height", (CurrentHeight - 70) + "px");
-		$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+		$("#projectListBody").css("height", (CurrentHeight - 261) + "px");
 		$("#divList").css("height", (CurrentHeight - 220) + "px");
 		
 		$(window).resize(function() {
@@ -57,7 +57,7 @@
 			$("#taskTree").css("height", CurrentHeight + "px");
 			$("#projectContent").css("height", CurrentHeight + "px");
 			$("#contentList").css("height", (CurrentHeight - 70) + "px");
-			$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+			$("#projectListBody").css("height", (CurrentHeight - 261) + "px");
 			$("#divList").css("height", (CurrentHeight - 220) + "px");
 		});
 		
@@ -129,12 +129,20 @@
 				$("#taskTree").css("height", CurrentHeight + "px");
 				$("#projectContent").css("height", CurrentHeight + "px");
 				$("#contentList").css("height", (CurrentHeight - 70) + "px");
-				$("#projectListBody").css("height", (CurrentHeight - 190) + "px");
+				$("#projectListBody").css("height", (CurrentHeight - 261) + "px");
 				$("#divList").css("height", (CurrentHeight - 220) + "px");
 				
 				setInitOrder();
 			}	
 		});
+	}
+	
+	function projectListScroll() {
+		var thWidth = document.getElementById("tableHeader").clientWidth - document.getElementById("tableBody").clientWidth;
+		
+		if (thWidth > 0) { 
+			$("#BoardList_TH").append('<th style=width:10px;></th>');
+		} 
 	}
 	
 	//페이지 번호에 의한 셋팅
@@ -156,15 +164,7 @@
 			}
 		});
 
-		boardListScroll();
-	}
-	
-	function boardListScroll() {
-		var thWidth = document.getElementById("tableHeader").clientWidth
-				- document.getElementById("tableBody").clientWidth;
-		if (thWidth > 0) {
-			$("#BoardList_TH").append('<th style=width:2px;></th>');
-		}
+		projectListScroll();
 	}
 	
 	//헤더 리스트 셋팅
@@ -357,13 +357,6 @@
 		margin-left : 1%;
 	}
 	
-	table.mainlist th, table.mainlist td {
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		text-align: center;
-	}
-	
 	table.mainlist th {
 		cursor: pointer;
 	}
@@ -375,10 +368,10 @@
 		text-overflow : ellipsis;
 	}
 	
-	#col1 {width: 10%;}
-	#col2 {width: 15%;}
-	#col3 {width: 50%;}
-	#col4 {width: 15%;}
+	.col1 {width: 9%;}
+	.col2 {width: 14%;}
+	.col3 {width: 47%;}
+	.col4 {width: 12%;}
 	.commentContent {width: 80%;}
 </style>
 
