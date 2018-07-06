@@ -3289,7 +3289,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityCClubUserVO clubUser = null;
 		
-		//EXTENSIONATTRIBUTE4에 겸직부서정보가 ;로 구분되어 전부 다 들어있다.
 		String propList = "extensionAttribute2;company;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress";
 		int userMode = 0;
 		boolean existOutList = false;
