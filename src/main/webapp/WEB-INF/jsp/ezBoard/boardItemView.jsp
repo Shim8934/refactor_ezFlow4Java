@@ -1440,8 +1440,8 @@
 				            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 50px; background-color:white" id="lstAttachLink" ></div>
 				            </td>
 				        <td class="pos2">
-				        <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				        <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+				        <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+				        <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
 				        </td>
 				        <td id="ItemLevel" style="display:none"></td>
 				        </tr>
@@ -1457,8 +1457,8 @@
 				          	  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div>
 				          </td>
 				          <td class="pos2">
-				              <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				              <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+				              <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+				              <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 				          </td>
 				          <td id="Td1"></td>
 				        </tr>

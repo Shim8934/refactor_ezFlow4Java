@@ -32,6 +32,7 @@
 	      	var usePreviewSubTree = "${usePreviewSubTree}";
 	      	var useBottomFrameOnly = "${useBottomFrameOnly}";
 	      	var useMailBoxBackUp = "${useMailBoxBackUp}";
+	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -105,7 +106,7 @@
                  	        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
                  	        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
                  	   }
-                 	        	
+
                  	   //뿌려주기
                  	   $("#myBar").css({
                  	       "width" : percent + "%"
@@ -923,6 +924,22 @@
 					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 				}
 			}
+			
+			// 재은 수정중
+			function reception_check() {
+				var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent("<spring:message code='ezEmail.t516' />") + "&url=receiveChk";
+				
+	            try {
+	                if (typeof (parent.frames["right"]) != "undefined")
+	                    parent.frames["right"].Window_onunload();
+	            } catch (e) { }
+	            if (g_firstOpen)
+	                g_firstOpen = false;
+	            else
+	                window.open(url, "right");
+	            get_unreadcount();
+			}
+			
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -946,6 +963,10 @@
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #f0f0f0; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
+	            
+	            <c:if test="${useMailReceiveScreen == 'YES'}">
+	            	<li><span onclick="reception_check()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t516" /></span></li>
+	            </c:if>
 	            <li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
 	            <li><span onclick="Open_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t641" /></span></li>
 		        <c:if test="${useOnlyInnerMail != 'YES'}">

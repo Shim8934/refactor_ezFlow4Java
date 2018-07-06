@@ -929,7 +929,7 @@
 	</div>
 
 	<div id="searchpopup" class="popupwrap3" style="display: none; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px">
-		<div class="popupwrap4">
+		<!-- <div class="popupwrap4"> -->
 			<table class="content" style="margin-top: 10px;">
 				<tr>
 					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle; padding-bottom: 1px"/> &nbsp;<spring:message code='ezWebFolder.t10'/>&nbsp;<spring:message code='ezWebFolder.t123'/></th>
@@ -964,7 +964,7 @@
 					<td style="text-align: center;"><a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142'/></span></a> <a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11'/></span></a></td>
 				</tr>
 			</table>
-		</div>
+		<!-- </div> -->
 	</div>
 	
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">

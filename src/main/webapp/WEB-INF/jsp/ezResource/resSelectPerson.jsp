@@ -592,7 +592,7 @@
 		            }
 		        }
 		    }
-		    var m_strColorSelect = "#f0f6ff";
+		    var m_strColorSelect = "#efeff0";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -864,7 +864,7 @@
 			                <!-- <div id="OrganListView" style="border:0;width: 415px; height: 400px; overflow-x: hidden; overflow-y: auto;"></div> -->
 			               	<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 			                   	<tr>
-			                       	<th style="white-space:normal">
+			                       	<th style="white-space:normal;background-color: white">
 			                           	<span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 			                           	<span style="float: right;">
 			                               	<span onclick="ChangeListView_onClick('TXT');">
@@ -880,9 +880,9 @@
 			          		<div style="vertical-align:top;height:340px;overflow:auto;width:425px;" id="txtlist_Layer">
 			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
 			              			<tr>
-			                  			<td style="width:170px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
-			                  			<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
+			                  			<td style="width:170px;font-weight:bold;font-weight: normal" class="td_gray"><spring:message code="ezResource.t9"/></td>
+			                  			<td style="width:150px;font-weight:bold;font-weight: normal" class="td_gray"><spring:message code="ezResource.t10"/></td>
+			                  			<td class="td_gray" style="font-weight:bold;font-weight: normal"><spring:message code="ezResource.t11"/></td>
 			              			</tr>
 			          			</table>
 			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 

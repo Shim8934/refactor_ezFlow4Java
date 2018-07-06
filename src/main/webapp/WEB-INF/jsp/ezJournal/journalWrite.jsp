@@ -673,7 +673,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t80' /></th>
 	                        <td style="width: 5%; border-right: none;">
-                        		<a class="imgbtn"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
+                        		<a class="imgbtn imgbck"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
 	                        </td>
 	                        <td colspan="3" style="border-left: none; vertical-align: middle; height: 28px;">
 	                       		<div style="overflow-y: auto; height: 28px;">

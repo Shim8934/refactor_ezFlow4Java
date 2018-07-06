@@ -187,7 +187,7 @@
 		</div>
 		<table style="display:none" id=trFindDept >
 		  <tr> 
-			<th><input id= "textDeptName"type="text" class="text" style="Width:200px;" name="text232422222" onKeyPress="return textDeptName_onkeypress()">&nbsp;<a  class="imgbtn" style="vertical-align:middle;">
+			<th><input id= "textDeptName"type="text" class="text" style="Width:200px;" name="text232422222" onKeyPress="return textDeptName_onkeypress()">&nbsp;<a  class="imgbtn imgbck" style="vertical-align:middle;">
 			<span id=btSearchDept style="vertical-align:middle;" onclick= "return btSearchDept_onclick()"><spring:message code='ezApprovalG.t250'/></span></a></th>
 		  </tr>
 		  <tr> 

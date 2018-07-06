@@ -465,6 +465,8 @@
 		            GetDocList();
 		        else if (DocListType == "GetDocSearch")
 		            GetDocSearch();
+		        else if (DocListType == "UserContDocList")
+		        	GetUserContList();
 		        else
 		            GetDocList();
 		    }
@@ -1173,7 +1175,13 @@
 		        }
 		        pageNum = 1;
 		        Init_Flag = "False";
-		        GetDocSearch();
+		        
+		        if (LoadSquery == "usercontlist") {
+		        	MakeSubCondition();
+	    	    	GetUserContList();
+		        } else {
+		       		GetDocSearch();
+		        }
 		
 		        $('#sel_year').val("ALL");
 		        /* $('#sel_year').selectmenu('refresh'); */
@@ -1249,7 +1257,7 @@
 	            aprgongramline_cross_dialogArguments[0] = para;
 	            aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
 	
-	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 740));
+	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760));
 	            try { OpenWin.focus(); } catch (e) { }
 		    }
 

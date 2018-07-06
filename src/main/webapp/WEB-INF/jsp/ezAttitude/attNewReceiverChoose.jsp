@@ -26,7 +26,7 @@
 	    	#left h2.on, #TopBoards h2.on {
 	    	    font-weight: bold;
 			    background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px;
-			    background-color: #edf4fd;
+			    background-color: #efeff0;
 			    color: #333333;
     			border-top: 1px solid #d1ddec;
     			border-bottom: 1px solid #d1ddec;
@@ -269,7 +269,7 @@
 		        });
 	        }
 	        
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#efeff0";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;

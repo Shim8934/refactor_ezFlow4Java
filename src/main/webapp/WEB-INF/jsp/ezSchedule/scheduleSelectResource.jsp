@@ -33,7 +33,7 @@
 		    var ReturnValue_NameEng = new Array();
 		    var pStartTime = "<c:out value='${startTime}'/>";
 		    var pEndTime = "<c:out value='${endTime}'/>";
-		    var m_strColorSelect = "#f0f6ff";
+		    var m_strColorSelect = "#efeff0";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var RetValue;
@@ -376,7 +376,7 @@
 	                <div class="box" style="height:300px;width:245px;overflow-x:auto;overflow-y:auto;" id="TreeView"></div>
 	            </td>
 	            <td style="width: 30px; text-align: center;">
-                    <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()"><br/>
+                    <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertReceiver()"><br/>
                     <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
                 </td>
 	            <td>

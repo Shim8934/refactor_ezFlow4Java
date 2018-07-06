@@ -81,9 +81,9 @@ function ListView(thisobjid, elobjid) {
     var TABLENAME = "";
 
     /* Color Settings */
-    var m_strColorSelect = "#f0f6ff";
+    var m_strColorSelect = "#efeff0";
     var m_strColorDefault = "#FFFFFF";
-    var m_strColorOver = "#F7FAE0";
+    var m_strColorOver = "#f4f5f5";
 
     /* Selected Nodes */
     var m_dicSelected = new Object(); //new ActiveXObject("Scripting.Dictionary"); // 교체
@@ -480,7 +480,7 @@ function ListView(thisobjid, elobjid) {
             //selectedRow = element.all(currow);
             selectedRow = document.getElementById(currow);
             selectedRowIndex = rowindex;
-            selectedRow.style.backgroundColor = "#f0f6ff";
+            selectedRow.style.backgroundColor = "#efeff0";
             selectedRow.selected = true;
         }
     }
@@ -501,7 +501,7 @@ function ListView(thisobjid, elobjid) {
             //selectedRow = element.all(currow);
             selectedRow = document.getElementById(currow);
             selectedRowIndex = rowindex;
-            selectedRow.style.backgroundColor = "#f0f6ff";
+            selectedRow.style.backgroundColor = "#efeff0";
             selectedRow.selected = true;
         }
     }
@@ -735,7 +735,7 @@ function ListView(thisobjid, elobjid) {
                     selectedRow.selected = true;
                     // 20091123 : 전자결재 리스트 변경
                     selectedRowIndex = elementid.substr(TABLENAME.length + 4, (elementid.length - (elementid.indexOf("_") + 1)))
-                    selectedRow.style.backgroundColor = "#f0f6ff";
+                    selectedRow.style.backgroundColor = "#efeff0";
                 }
 
             }
@@ -786,7 +786,7 @@ function ListView(thisobjid, elobjid) {
                     selectedRow.selected = true;
                     // 20091123 : 전자결재 리스트 변경
                     selectedRowIndex = elementid.substr(TABLENAME.length + 4, (elementid.length - (elementid.indexOf("_") + 1)))
-                    selectedRow.style.backgroundColor = "#f0f6ff";
+                    selectedRow.style.backgroundColor = "#efeff0";
                 }
 
             }
@@ -841,7 +841,7 @@ function ListView(thisobjid, elobjid) {
             overRow = document.getElementById(elementid);
 
             if (overRow.selected != true)
-                overRow.style.backgroundColor = "#F7FAE0";
+                overRow.style.backgroundColor = "#f4f5f5";
         }
     } :
     function() { // IE
@@ -852,7 +852,7 @@ function ListView(thisobjid, elobjid) {
             overRow = document.getElementById(elementid);
 
             if (overRow.selected != true)
-                overRow.style.backgroundColor = "#F7FAE0";
+                overRow.style.backgroundColor = "#f4f5f5";
         }
     }
 

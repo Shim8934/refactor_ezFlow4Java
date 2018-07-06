@@ -170,9 +170,9 @@
                 	_RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
             	}
             	_RowObject = obj;
-            	obj.childNodes.item(0).style.backgroundColor = "#f0f6ff";
-            	obj.childNodes.item(1).style.backgroundColor = "#f0f6ff";
-            	obj.childNodes.item(2).style.backgroundColor = "#f0f6ff";
+            	obj.childNodes.item(0).style.backgroundColor = "#efeff0";
+            	obj.childNodes.item(1).style.backgroundColor = "#efeff0";
+            	obj.childNodes.item(2).style.backgroundColor = "#efeff0";
         	}
         	function swapNodes(item1, item2) {
             	var itemtmp = item1.cloneNode(1);
