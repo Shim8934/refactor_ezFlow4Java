@@ -981,7 +981,10 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=";
     }
     else {
-        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+    	// 2018.07.06 jwseo99 KLIB - ezd 확장자 처리
+    	var formUrlExt = formURL.substr(formURL.length - 3, formURL.length).toLowerCase();
+    	
+        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezviewAprHWP.do";
             } else {

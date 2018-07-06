@@ -1094,7 +1094,11 @@
 		        var pOrgDocID = tr.getAttribute("DATA7");
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
-		        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
+		        
+		        // 2018.07.06 jwseo99 KLIB - ezd 확장자 처리
+		        var pHrefExt = pHref.substr(pHref.length - 3, pHref.length).toLowerCase();
+		        
+		        if (pHrefExt === "hwp" || pHrefExt === "ezd") {
 		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;
