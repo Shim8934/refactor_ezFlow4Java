@@ -69,7 +69,7 @@
 	                        if (j == 7)
 	                            j = 12;
 	                        if (j >= 13)
-	                            listTD.setAttribute("style", "text-align:center;");
+	                            listTD.setAttribute("style", "text-align:center;color:#268fff;");
 	                        listTD.appendChild(listTDText);
 	                        listTR.appendChild(listTD);
 	                        listTD = null;
@@ -117,7 +117,7 @@
 	                            j = 12;
 	                        }
 	                        if (j >= 13) {
-	                            listTD.setAttribute("style", "text-align:center;");
+	                            listTD.setAttribute("style", "text-align:center;color:#268fff;");
 	                        }
 	                        listTD.appendChild(listTDText);
 	                        listTR.appendChild(listTD);

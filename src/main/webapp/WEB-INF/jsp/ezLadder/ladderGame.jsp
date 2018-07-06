@@ -874,7 +874,7 @@
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #e8e8ef">
+										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #e8e8e8">
 											<span style="font-size: large; color: palevioletred; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
