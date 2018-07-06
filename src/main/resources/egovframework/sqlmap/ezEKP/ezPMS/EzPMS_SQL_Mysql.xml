@@ -558,8 +558,10 @@
 					DEL_STATUS = 0
 			]]>
 			<isNotEqual property="location" compareValue="board">
+			<isNotEqual property="location" compareValue="taskLog">
 				AND
 					ISSUEYN = 'N'
+			</isNotEqual>
 			</isNotEqual>
 				ORDER BY
 					ISSUEYN DESC, SORT_ORDER
