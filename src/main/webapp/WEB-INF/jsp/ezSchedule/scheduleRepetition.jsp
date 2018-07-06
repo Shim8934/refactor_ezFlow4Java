@@ -207,32 +207,21 @@
 		        scheduleTerm = getPickerDate();
 		        occurrenceTerm = occurrencDate();
 		        
-		    	if (document.getElementsByName("optRangeEnd")[0].checked == true)
-		    	{
-		    		repetition = "-1";		
-		    	}
-		    	else if (document.getElementsByName("optRangeEnd")[1].checked == true)
-		    	{
-		    		if (list_ReCount.value == parseInt(list_ReCount.value) && parseInt(list_ReCount.value) > 0)
-		    		{
-		    			repetition = parseInt(list_ReCount.value);
-		    		}
-		    		else
-		    		{
+		    	if (document.getElementsByName("optRangeEnd")[0].checked == true) {		    		
+		    		repetition = "-1";				    		
+		    	} else if (document.getElementsByName("optRangeEnd")[1].checked == true) {		    		
+		    		if (list_ReCount.value == parseInt(list_ReCount.value) && parseInt(list_ReCount.value) > 0) {		    			
+		    			repetition = parseInt(list_ReCount.value);		    			
+		    		} else {		    			
 		    			alert("<spring:message code='ezSchedule.t61' />");
 		    			list_ReCount.focus();
-		    			return;
+		    			return;		    			
 		    		}		
-		    	}
-		    	else
-		    	{
-		    		
-		    	    if(!check_time())
-		    	    {
+		    	} else {		    		
+		    	    if(!check_time()) {		    	    	
 		    	        alert("<spring:message code='ezSchedule.t60' />");
-		    	        return;
-		    	    }
-		    	    
+		    	        return;		    	        
+		    	    }		    	    
 		    		repetition = "0";				
 		    	}
 		    	//2018.01-31 김기하 반복 시 시작일자 검사 
@@ -241,59 +230,45 @@
 	        		return;
 	        	}
 		    	
-		    	if (alldaycheck.checked == true)
-		    	{
+		    	if (alldaycheck.checked == true) {
 		    		repetition += "|1";
 		    		allDayString = strLang39;
-		    	}
-		    	else
-		    	{
+		    	} else {
 		    		repetition += "|0";
 		    	}
 		    		
-		    	if (mpDaily.checked == true)
-		    	{
-		    		repetition += "|0";
-		    		
-		    		if (id0D2.checked == true)
-		    		{
+		    	if (mpDaily.checked == true) {		    		
+		    		repetition += "|0";		    		
+		    		if (id0D2.checked == true) {		    			
 		    			repetition += "|0";						
-		    			recurString = strLang45;
+		    			recurString = strLang45;		    			
+		    		} else {		    			
+		    			if (txt_De.value == parseInt(txt_De.value) && parseInt(txt_De.value) > 0){
+		    				
+		    				repetition += "|" + parseInt(txt_De.value);	
+		    				console.log(repetition + ' text_De.value : '+txt_De.value + ' parseInt : ' + parseInt(txt_De.value));
+		    			}		    				
+		    			else {		    				
+			    				alert("<spring:message code='ezSchedule.t62' />");
+			    				txt_De.focus();
+			    				return;
+		    				 }
 		    			
-		    		}
-		    		else
-		    		{
-		    			if (txt_De.value == parseInt(txt_De.value) && parseInt(txt_De.value) > 0)
-		    				repetition += "|" + parseInt(txt_De.value);
-		    			else
-		    			{
-		    				alert("<spring:message code='ezSchedule.t62' />");
-		    				txt_De.focus();
-		    				return;
-		    			}
-		    			
-		    			if(txt_De.value == "1")
-		    			{
-		                    recurString = strLang34;						
-		    			}
-		    			else
-		    			{
-		    			    recurString = txt_De.value + strLang81;						
+		    			if(txt_De.value == "1") {		    				
+		                    recurString = strLang34;		                    
+		    			} else {		    				
+		    			    recurString = txt_De.value + strLang81;			    			    
 		    			}						
 		    		}
-		    	}
-		    	else if (mpWeekly.checked == true)
-		    	{
-		    		repetition += "|1";				
-		    		
+		    	} else if (mpWeekly.checked == true) {		    		
+		    		repetition += "|1";						    		
 		    		if (txt_We.value == parseInt(txt_We.value) && parseInt(txt_We.value) > 0)
 		    			repetition += "|" + parseInt(txt_We.value);
-		    		else
-		    		{
-		    			alert("<spring:message code='ezSchedule.t63' />");
-		    			txt_We.focus();
-		    			return;
-		    		}
+		    		else {
+			    			alert("<spring:message code='ezSchedule.t63' />");
+			    			txt_We.focus();
+			    			return;
+			    		 }
 		    		
 		    		var days = "";
 		    		var checks = daytable.getElementsByTagName("input");
