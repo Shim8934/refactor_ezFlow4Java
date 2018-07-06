@@ -54,6 +54,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -364,6 +365,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			susinAdmin = "NO";
 		}
 		
+		List<PortalTopOtherCompanyAddJobVO> companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
+		
 		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(result);
 		
@@ -384,6 +387,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		model.addAttribute("relayG_type", relayG_type);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+		model.addAttribute("companyList", companyList);
 		
 		logger.debug("aprManage ended.");
 		
@@ -408,6 +412,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
+		String searchCompanyID = request.getParameter("searchCompanyID");
 
 		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID = " + deptID);
 		
@@ -511,6 +516,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
             }
             
             searchQuery = returnQuery;
+		}
+		
+		if (searchCompanyID != null && !searchCompanyID.equals("")) {
+			searchQuery += " AND COMPANYID = '" + searchCompanyID + "' ";
 		}
 		
 		String resultXML = ezApprovalGService.aprDocList(listType, userID, deptID, pageSize, pageNum, orderCell, orderOption, companyID, userLang, searchQuery, domSub, userInfo.getTenantId(), userInfo.getOffset());

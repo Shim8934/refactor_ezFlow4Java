@@ -27,6 +27,8 @@ function getDocList() {
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }
     
+    var searchCompanyID = $("#selectCompany option:selected").val();
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -43,7 +45,8 @@ function getDocList() {
 				orderCell    : OrderCell,
 				orderOption  : OrderOption,
 				searchQuery  : SQLPARADATA,
-				subQuery     : SubQuery
+				subQuery     : SubQuery,
+				searchCompanyID : searchCompanyID
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));

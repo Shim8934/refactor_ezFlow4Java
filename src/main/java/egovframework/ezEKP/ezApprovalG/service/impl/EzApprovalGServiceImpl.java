@@ -92,6 +92,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -25362,5 +25363,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} 
 		return cabinetSN;
 
+	}
+
+	@Override
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		return ezApprovalGDAO.getAllCompanyList(map);
 	}
 }
