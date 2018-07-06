@@ -244,6 +244,7 @@
 			sort = "<c:out value='${sort}' />";
 			sortFlag = "<c:out value='${sortFlag}' />";
 			companyID = "<c:out value='${companyID}' />";
+			companyName = "<c:out value='${vo.companyName}' />";
 			writerCompanyID = "<c:out value='${vo.companyID}' />";
 			marginChangeAttendantNum = 50;
 			
@@ -259,7 +260,8 @@
 			
 			// 사간겸직시
 			if(companyID != writerCompanyID) {
-				alert("<spring:message code='ezLadder.hyh02' />");
+				/** 메세지 수정 필요 */
+				alert(companyName + "에서 조회 가능합니다.");	// 수정 필요
 				window.location.href = "/ezLadder/ladderMain.do?brdID=7";
 				return;
 			}
