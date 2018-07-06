@@ -2406,6 +2406,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
+		
 		if (approvalFlag.equals("S")) {
 			keepPeriod = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
 			keepPeriodCode = doc.getElementsByTagName("KEEPPERIODCODE").item(0).getTextContent();
@@ -2465,25 +2466,23 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
 
-		String result = "";
-		
 		if (formID.equals("")) {
 			logger.debug("setFormDataSelect started.");
-			result = ezApprovalGAdminDAO.setFormDataSelect(map);
+			formID = ezApprovalGAdminDAO.setFormDataSelect(map);
 			logger.debug("setFormDataSelect ended.");
 			
-			if (result == null) {
-				result = commonUtil.getTodayUTCTime("YYYY") + "000001";
+			if (formID == null) {
+				formID = commonUtil.getTodayUTCTime("YYYY") + "000001";
 			} else {
-				if ( result.substring(0,4).equals(commonUtil.getTodayUTCTime("YYYY"))) {
-					result = Integer.toString((Integer.parseInt(result) + 1));
+				if (formID.substring(0,4).equals(commonUtil.getTodayUTCTime("YYYY"))) {
+					formID = Integer.toString((Integer.parseInt(formID) + 1));
 				} else {
-					result = commonUtil.getTodayUTCTime("YYYY") + "000001";
+					formID = commonUtil.getTodayUTCTime("YYYY") + "000001";
 				}
 			}
 			
-			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht");
-			map.put("v_PFORMID", result);
+			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
+			map.put("v_PFORMID", formID);
 			logger.debug("setFormDataInsert1 started.");
 			ezApprovalGAdminDAO.setFormDataInsert1(map);
 			logger.debug("setFormDataInsert1 ended.");
@@ -2589,7 +2588,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				}
 			}
 		} else {
-			result = formID;
 			map.put("v_PFORMID", formID);
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
 			
@@ -2710,7 +2708,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		if (!isUpdate) {
 			if (!formMhtInfo.equals(""))	 {
-				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht";
+				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
 				
 				File file = new File(saveFileName);
 				
@@ -2729,7 +2727,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("setFormDataInsert,Update ended.");
 		logger.debug("saveFormInfo ended.");
 		
-		return result;
+		return formID;
 	}
 	
 	// 관리자 편집창
