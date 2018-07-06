@@ -550,4 +550,6 @@ public interface EzApprovalGService {
 
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
 
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
+
 }
