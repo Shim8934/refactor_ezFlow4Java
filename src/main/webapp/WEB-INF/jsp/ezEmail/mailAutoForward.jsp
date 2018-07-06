@@ -195,7 +195,7 @@
 			    	<th><spring:message code='ezEmail.t139' /></th>
 			    	<td style="height:32px">
 			        	<input type="text" id="ForwardAddress" value="${forwardAddress}" class="textarea" style="WIDTH:80%;margin-left:2px" NAME="ForwardAddress" onkeyup="onkeydown_SaveKeyEvent(event);">
-			        	<a id="ReceiverSelect" class="imgbtn" style="width:14%;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
+			        	<a id="ReceiverSelect" class="imgbtn imgbck" style="width:14%;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
 			        </td>
 			  	</tr>
 			</table>

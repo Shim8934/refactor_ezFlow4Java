@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.util.Locale;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -51,12 +50,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Resource(name = "crypto") 
     private EgovFileScrty egovFileScrty;
