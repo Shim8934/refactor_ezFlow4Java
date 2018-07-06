@@ -614,7 +614,9 @@
               B.BOARDNAME2 AS BOARDNAME2,   
               A.WRITERNAME2,          
               A.WRITERDEPTNAME2,      
-              A.WRITERCOMPANYNAME2,   
+              A.WRITERCOMPANYNAME2,  
+              T.LISTVIEW_FG,
+              T.READ_FG,
               (SELECT 
 					COUNT(*)  
                FROM 
@@ -715,7 +717,17 @@
                      AND
                       S.USERID = #userID# 
                      AND 
-                      S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
+                      S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))                  
+				INNER JOIN
+					TBL_BOARD_BOARDMANAGE T
+				ON
+					A.TENANT_ID = T.TENANT_ID
+				AND
+					A.WRITERCOMPANYID = T.COMPANYID
+				AND
+					(T.ACCESSID = #userID# OR T.ACCESSID = #deptID# OR  T.ACCESSID = #companyID#)
+				AND
+					A.BOARDID = T.BOARDID					
               ORDER BY
                   A.writedate DESC
               LIMIT #listSize#

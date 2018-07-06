@@ -143,7 +143,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				
 				/* 2018-07-03 홍승비 - 조건에 companyID 추가 필요 */
 				//새게시물 리스트
-				List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getCompanyId(), info.getTenantId(), info.getOffSet());
+				List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet());
 				
 				/* 2018-07-03 홍승비 - 조건에 companyID 추가 */
 				//새게시물 리스트 카운트
