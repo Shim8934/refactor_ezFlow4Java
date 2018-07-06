@@ -144,7 +144,7 @@
 				width: 31%
 			}
 			.spanMouseActiveClick {
-				background-color: #e9f1ff;
+				background-color: #efeff0;
 			}
 			.spanMouseActiveHover {
 				background-color: #f4f5f5;

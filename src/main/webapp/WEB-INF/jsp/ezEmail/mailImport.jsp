@@ -233,8 +233,8 @@
 	        <tr>
 	            <th><spring:message code='ezEmail.t148' /></th>
 	            <td>
-	                <input id="foldername" type="text" name="textfield" style="width: 98%" disabled></td>
-	            <td><a class="imgbtn imgbck"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
+	                <input id="foldername" type="text" name="textfield" style="width: 100%" disabled></td>
+	            <td><a class="imgbtn imgbck" style="margin-top:2px"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
 	        </tr>
 	        <tr style="height: 40px">
 	            <th><spring:message code='ezEmail.t405' /></th>

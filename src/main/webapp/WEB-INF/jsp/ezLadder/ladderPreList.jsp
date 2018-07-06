@@ -168,7 +168,7 @@
 				$("#ladderPreview, #ladderPreviewLayer").css("height", "0px");
 				
 				/** mouse event */
-				var selecColor = "#f0f6ff";
+				var selecColor = "#efeff0";
 				var overColor = "rgb(244, 245, 245)";
 				var origColor = "#FFF";
 				$(document)
