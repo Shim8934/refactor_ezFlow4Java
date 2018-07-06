@@ -1207,6 +1207,13 @@
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
             AND 
                 A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
+                
+            <isNotEmpty property="companyId">
+	    	AND 
+	    		PHYSICALDELIVERYOFFICENAME IN 
+	    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#)   
+	    	</isNotEmpty>
+            
             $strSizeForMySQL$ 
 	    		 
 	      	UNION ALL
@@ -1219,6 +1226,13 @@
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
             $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID# $strSQLAddjobCom$
+            
+            <isNotEmpty property="companyId">
+	    	AND 
+	    		A.DEPTID IN 
+	    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#) 
+	    	</isNotEmpty>
+	    	
             <isNotEqual property="class" compareValue="all">
             ORDER BY  displayname asc, CAST(EXTENSIONATTRIBUTE15 as unsigned) ASC
             </isNotEqual>
@@ -1236,6 +1250,12 @@
 				FROM
 					TBL_DEPTMASTER 
                 $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#
+                
+                <isNotEmpty property="companyId">
+	    		AND 
+	    			EXTENSIONATTRIBUTE2 = #companyId#
+		    	</isNotEmpty>
+                
                 $strSizeForMySQL$
 			</isEqual>	      				
 	    </isEqual>

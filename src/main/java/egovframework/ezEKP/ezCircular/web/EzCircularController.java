@@ -1350,33 +1350,39 @@ public class EzCircularController extends EgovFileMngUtil {
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
 		int totalCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "totalComment", userInfo.getTenantId());
 		int myCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "myComment", userInfo.getTenantId());
-		CircularMemberVO companyInfo = ezCircularService.getCircularUserDeptId(userInfo.getTenantId(), result.getCompanyID(), result.getMemberID());
 		
-		result.setRegDate(result.getRegDate().substring(0, 16));
+		//	2018-07-06 김민성 - 삭제된 회람 조회 처리	
+		if(result != null) {
+			CircularMemberVO companyInfo = ezCircularService.getCircularUserDeptId(userInfo.getTenantId(), result.getCompanyID(), result.getMemberID());
+			
+			result.setRegDate(result.getRegDate().substring(0, 16));
 		
-	    //첨부파일 정보  hasFile이 Y일때
-        if (result.getHasFile() == 1) {
-        	List<CircularAttachVO> aList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
-
-        	for (CircularAttachVO avo : aList) {
-        		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
-        		avo.setFileType(fileType);
-        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
-        		
-        		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
-        		avo.setFileTranSize(fileSize);
-        	}
-        	
-        	model.addAttribute("attachList", aList);
-        }
-
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("result", result);
-		model.addAttribute("totalCommentCount", totalCommentCount);
-		model.addAttribute("myCommentCount", myCommentCount);
-		model.addAttribute("type", type);
-		model.addAttribute("deptID", companyInfo.getDepartment());
-		model.addAttribute("company", companyInfo.getCompany());
+		    //첨부파일 정보  hasFile이 Y일때
+	        if (result.getHasFile() == 1) {
+	        	List<CircularAttachVO> aList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
+	
+	        	for (CircularAttachVO avo : aList) {
+	        		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
+	        		avo.setFileType(fileType);
+	        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+	        		
+	        		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
+	        		avo.setFileTranSize(fileSize);
+	        	}
+	        	
+	        	model.addAttribute("attachList", aList);
+	        }
+	
+			model.addAttribute("userInfo", userInfo);
+			model.addAttribute("result", result);
+			model.addAttribute("totalCommentCount", totalCommentCount);
+			model.addAttribute("myCommentCount", myCommentCount);
+			model.addAttribute("type", type);
+			model.addAttribute("deptID", companyInfo.getDepartment());
+			model.addAttribute("company", companyInfo.getCompany());
+		}
+		
+		logger.debug("circularRead ended.");
 		
 		return "/ezCircular/circularRead";
 	}

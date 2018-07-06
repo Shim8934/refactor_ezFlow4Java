@@ -4945,6 +4945,8 @@
 					  WHERE 
 					  	TENANT_ID = #v_TENANTID#
 					  AND
+					  	COMPANYID = #v_pCompanyID#
+					  AND
 					  	USERID = #v_PUSERID# 
 					  GROUP BY 
 					  	ITEMID,
@@ -4958,11 +4960,15 @@
 				  ON 
 				  	A.TENANT_ID = I.TENANT_ID
 				  AND
-				  	A.BOARDID = I.BOARDID					
+					A.WRITERCOMPANYID = I.COMPANYID
+				  AND
+				  	A.BOARDID = I.BOARDID
 				  WHERE 
 				  	$v_PWHEREBOARD$
 				  AND
 				  	A.TENANT_ID = #v_TENANTID#
+				AND
+   					A.WRITERCOMPANYID = #v_pCompanyID#
 		]]>
 		<isEqual property="v_MODE" compareValue="1">
 			<![CDATA[		  
@@ -4978,6 +4984,8 @@
 				  								 TBL_BOARD_BOARDMANAGE
 				  							 WHERE 
 				  								 TENANT_ID = #v_TENANTID#
+				  							AND
+					  							COMPANYID = #v_pCompanyID#
 				  							 AND
 				  								(ACCESSID = #v_pCompanyID#
 				 									OR ACCESSID = #v_pDeptID#
@@ -4992,6 +5000,8 @@
 				  					   						   TBL_BOARD_BOARDMANAGE
 									  					   WHERE 
 									  					   	   TENANT_ID = #v_TENANTID#
+									  					   	AND
+					  											COMPANYID = #v_pCompanyID#
 									  					   AND
 									  					   	  (ACCESSID = #v_pCompanyID#
 									 							 OR ACCESSID = #v_pDeptID#
@@ -5006,6 +5016,8 @@
 									  					 	  TBL_BOARD_BOARDMANAGE
 									  					  WHERE 
 									  					   	  TENANT_ID = #v_TENANTID#
+									  					  AND
+					  										  COMPANYID = #v_pCompanyID#
 									  					  AND
 									  					     (ACCESSID = #v_pCompanyID#
 									 							OR ACCESSID = #v_pDeptID#
@@ -5044,15 +5056,17 @@
    			FROM 
    				TBL_BOARD_ITEM A
    			INNER JOIN 
-				  	TBL_BOARD_BOARDINFO I  
-				  ON 
-				  	A.TENANT_ID = I.TENANT_ID
-				  AND
-				  	A.BOARDID = I.BOARDID 
+				TBL_BOARD_BOARDINFO I
+			ON 
+				A.TENANT_ID = I.TENANT_ID
+			AND
+				A.BOARDID = I.BOARDID 
    			WHERE    				
    				$v_PWHEREBOARD$ 
    			AND
    				A.TENANT_ID = #v_TENANTID#
+			AND
+   				A.WRITERCOMPANYID = #v_pCompanyID#
    		]]>
    		<isEqual property="v_MODE" compareValue="1">
    			<![CDATA[	
@@ -5068,6 +5082,8 @@
 				  								 TBL_BOARD_BOARDMANAGE
 				  							 WHERE 
 				  								 TENANT_ID = #v_TENANTID#
+				  							AND
+					  							COMPANYID = #v_pCompanyID#
 				  							 AND
 				  								(ACCESSID = #v_pCompanyID#
 				 									OR ACCESSID = #v_pDeptID#
@@ -5083,6 +5099,8 @@
 									  					   WHERE 
 									  					   	   TENANT_ID = #v_TENANTID#
 									  					   AND
+					  											COMPANYID = #v_pCompanyID#
+									  					   AND
 									  					   	  (ACCESSID = #v_pCompanyID#
 									 							 OR ACCESSID = #v_pDeptID#
 									 							 OR ACCESSID = #v_PUSERID#
@@ -5096,6 +5114,8 @@
 									  					 	  TBL_BOARD_BOARDMANAGE
 									  					  WHERE 
 									  					   	  TENANT_ID = #v_TENANTID#
+									  					  AND
+					  										  COMPANYID = #v_pCompanyID#
 									  					  AND
 									  					     (ACCESSID = #v_pCompanyID#
 									 							OR ACCESSID = #v_pDeptID#

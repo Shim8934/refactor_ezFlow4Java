@@ -125,9 +125,7 @@
 				var chk_str =  "";
 				var chk_total = $("input[name=chk_schedule]:checked").length;
 				var chk_fullLength = $("input[name=chk_schedule]").length;
-				/* var chk_type = $(".chk_schedule").data("schedule-type"); */
-				/* var chk_type; */
-				
+
 				if(typeCal == 0) {		
 					$("input[name=chk_schedule]").each(function(index){
 						var chk_eachVal1 = $(this).val();

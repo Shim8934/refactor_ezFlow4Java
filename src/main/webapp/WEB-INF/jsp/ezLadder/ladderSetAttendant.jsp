@@ -135,7 +135,7 @@
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${deptID}' />");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${companyID}' />");
+	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -345,6 +345,11 @@
 	         *   즐겨찾기 목록으로 인원 추가
 	         */
 	        function DeleteReceiver2(pListView) {
+	        	if(tabStatus === "circularOrgan") { // 조직도 탭일 경우
+	        		DeleteReceiver(pListView);
+	        		return;
+	        	}
+	        	
 	        	// 참여자 탭에서 가져오기
 	        	var selList = new ListView();
 	            selList.LoadFromID("MsgToList");
@@ -530,7 +535,7 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA11");
+	            var dept = $(".node_selected").parent().attr("cn");
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 450) / 2;
@@ -1343,8 +1348,13 @@
 		    	}
 		    	
 		    	if(type !== "delete" && !rtn.length){
-		    		alert("<spring:message code='ezLadder.t058' />");
-		    		return;
+		    		if(type === "add") {
+			    		alert("<spring:message code='ezLadder.t058' />");
+			    		return;
+		    		} else {
+		    			alert("<spring:message code='ezLadder.hyh03' />");
+			        	return;
+		    		}
 		    	}
 		    	
 		    	retAttendantPopInfo[0] = type;
@@ -1442,6 +1452,8 @@
 				    	
 							$("#List_TBODY").html(html);
 							$("#List_TBODY2").html("");
+							_RowObjectID = null; 
+			                _RowObjectName = null;
 				    	} else {
 				    		bm_list.forEach(function(user, index) {
 				    			html += "<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)'  onclick='event_click(this)' ondblclick='event_DBclick(this)'>";
@@ -1784,6 +1796,7 @@
 		                    $("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
 		                    $("div[id^='editBmGroup_']").hide();
 		                    _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
+		                    _RowObjectName = null;
 		                    selectDeptAllUser();
 		                }
 		                break;

@@ -680,7 +680,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         }else{
         	type = "G";
         }
-
+        
         Map<String, Object> map = new HashMap<String, Object>();
                 
         map.put("strSQL", strSQL + strSize);
@@ -737,6 +737,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Override
 	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception {
+		return getSearchListOR(pSearchList, pCellList, pPropList, pClass, pLimit, primary, tenantID, "");
+	}
+	
+	@Override
+	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID, String companyId) throws Exception {
 		logger.debug("getSearchListOR started");
 		
         String[] searchParemeta = null;
@@ -748,6 +753,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         String strSQL = "";        
         String type = "";        
         int i = 0;
+        String companyID = companyId.equals("Top") ? "" : companyId;
         
         if (pLimit != 0) {
             strSize = " AND ROWNUM <= " + pLimit;
@@ -832,6 +838,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
+        map.put("companyId", companyID); // top이면 '' 공백
         
         logger.debug("strSQL=" + strSQL);
         

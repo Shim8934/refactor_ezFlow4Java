@@ -54,6 +54,11 @@
 			var company = "${company}"
 
 			$(document).ready(function() {
+				if(circularID == "") {
+					alert("<spring:message code='ezCircular.kmsc05'/>");
+					window.close();
+					return;
+				}
 				
 				if(ucompanyID != wcompanyID) {
 					alert("<spring:message code='ezCircular.kmsc03' /> " + company +"<spring:message code='ezCircular.kmsc04' />");
