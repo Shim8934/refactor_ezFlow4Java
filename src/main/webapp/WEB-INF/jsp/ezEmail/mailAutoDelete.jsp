@@ -97,7 +97,7 @@
 					<th><spring:message code='ezEmail.t119' /></th>
 					<td>
 						<div style="margin:1px 0px 0px 0px;">
-							&nbsp;<input id="folderpath" lealfolderPath="" readonly="true" type="text" style="WIDTH:190px;margin:0px 1px 0px 0px;" name="text">&nbsp;<a class="imgbtn"><span onClick="getFolder()"><spring:message code='ezEmail.t120' /></span></a>
+							&nbsp;<input id="folderpath" lealfolderPath="" readonly="true" type="text" style="WIDTH:190px;margin:0px 1px 0px 0px;" name="text">&nbsp;<a class="imgbtn imgbck" style="height:22px"><span style="line-height:22px" onClick="getFolder()"><spring:message code='ezEmail.t120' /></span></a>
 						</div>
 					</td>
 				</tr>
@@ -115,7 +115,7 @@
 			</table>
 			<br>
 			<div style="width:750px;text-align:center;">
-				<a class="imgbtn" name="Submit" onClick="add_condition()"><span><spring:message code='ezEmail.t124' /></span></a>
+				<a class="imgbtn imgbck" name="Submit" onClick="add_condition()"><span><spring:message code='ezEmail.t124' /></span></a>
 			</div>
 			<br>
 			<table class="popuplist" style="width:750px;">

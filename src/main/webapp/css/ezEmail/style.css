@@ -185,8 +185,8 @@ body {
 	height: 30px;
 	line-height: 30px;
 	box-sizing: border-box;
-	border-bottom: 1px solid #ebebed;
-	padding: 0 4px;
+	border-bottom: 1px solid #f2f2f2;
+	padding: 0 6px;
 	cursor: pointer;
 }
 

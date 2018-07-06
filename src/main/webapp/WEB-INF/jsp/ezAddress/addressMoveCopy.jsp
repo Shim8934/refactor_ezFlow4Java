@@ -10,7 +10,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <style>
-	    	#AddressTreeView div {height:20px !important}
+	    	/* #AddressTreeView div {height:20px !important} */
 	    </style>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -55,6 +55,11 @@
 	            AddressTreeView.update();
 	            if (AddressTreeView.selectedIndex() == -1) {
 	                AddressTreeView.select(1);
+	            }
+	            
+	            var addressTreeChild = document.getElementById("AddressTreeView").childNodes[0].childNodes;
+	            for (var i = 0; i < addressTreeChild.length; i++) {
+	            	addressTreeChild[i].style.marginBottom = "5px";
 	            }
 	        }
 

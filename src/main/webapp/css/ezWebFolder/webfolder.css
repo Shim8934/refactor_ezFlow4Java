@@ -3,11 +3,11 @@
 .webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
 .webFolderDiv:hover {background-color: #f4f5f5;}
 
-.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#e9f1f4; cursor: pointer;}
+.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#efeff0; cursor: pointer;}
 .wfdivBttn {margin: 12px 0px; text-align: center;}
 
 .bnkWebFolder:hover {background-color: #f4f5f5; cursor: pointer;}
-.bnkWebFolder2 {background-color: #e9f1ff; cursor: pointer;}
+.bnkWebFolder2 {background-color: #efeff0; cursor: pointer;}
 .bnkWebFolder .checkBnk {vertical-align: middle;}
 
 .none-drag, .webFolderImg {vertical-align: middle; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
@@ -63,16 +63,16 @@
 .btnCancel span {color:#333; padding:0px; line-height:30px;}
 
 .userInfo:hover {cursor:pointer;}
-.userInfo:hover {background-color:#f7fae0;}
-.userInfo2 {cursor:pointer; background-color:#e9f1f4;}
+.userInfo:hover {background-color:#f4f5f5;}
+.userInfo2 {cursor:pointer; background-color:#efeff0;}
 
 .selectedDept {cursor:pointer;}
-.selectedDept:hover {background-color:#f7fae0;}
-.selectedDept2 {cursor:pointer; background-color:#e9f1f4;}
+.selectedDept:hover {background-color:#f4f5f5;}
+.selectedDept2 {cursor:pointer; background-color:#efeff0;}
 
 .selectedUser {cursor:pointer;}
-.selectedUser:hover {background-color:#f7fae0;}
-.selectedUser2 {cursor:pointer; background-color:#e9f1f4;}
+.selectedUser:hover {background-color:#f4f5f5;}
+.selectedUser2 {cursor:pointer; background-color:#efeff0;}
 
 .separator {font-size:14px; padding-right: 5px; line-height: 18px;}
 .aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 32px;}

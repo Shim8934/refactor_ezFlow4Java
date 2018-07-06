@@ -89,7 +89,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#f0f6ff";
+		        elem.style.backgroundColor = "#efeff0";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 		    }
 		    
@@ -98,7 +98,7 @@
 
 				if ($("#checkboxAll").is(":checked")) {
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body td").css("background", "#f0f6ff");
+					$(".row_body td").css("background", "#efeff0");
 				} else {
 					$(":checkbox[name=myCheckbox]").prop("checked", false);
 					$(".row_body td").css("background", "");
@@ -523,7 +523,7 @@
 						<option  value="4"><spring:message code='ezTask.t100' /></option>
 					</select>
 					<input name="text" type="text" id="keyword" onKeyPress="return search_keypress(event)" size="21" style="vertical-align:middle;height:22px">
-					<span style="vertical-align:middle"><a class="imgbtn" style="vertical-align:middle;margin-top:1px"><span onClick="search()"><spring:message code='ezTask.t183' /></span></a></span>
+					<span style="vertical-align:middle"><a class="imgbtn imgbck" style="vertical-align:middle;margin-top:1px"><span onClick="search()"><spring:message code='ezTask.t183' /></span></a></span>
 				</td>
 			</tr>
 			<tr>
