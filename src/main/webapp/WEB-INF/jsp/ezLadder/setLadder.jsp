@@ -655,6 +655,8 @@
 								alluser["userId"][alluserCnt] = "";
 								alluser["userName"][alluserCnt] = searchUser["userName"][i];
 								alluser["userName2"][alluserCnt] = searchUser["userName"][i];
+								alluser["description"][alluserCnt] = ""; 
+								alluser["description2"][alluserCnt] = "";
 								alluser["deptName"][alluserCnt] = "";
 								alluser["pic"][alluserCnt] = "";
 								alluser["temporder"][alluserCnt] = i;
@@ -877,6 +879,8 @@
 							html += '<input type="text" class="input" name="userNames" style="line-height: 30px;" id="userNames' + i + '" maxlength="' + maxname + '" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
 							html += '<input type="text" name="userIds" style="display: none;" />';
+							html += '<input type="text" name="description2" style="display: none;" />';
+							html += '<input type="text" name="description" style="display: none;" />';
 							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 20px; right: 15px; cursor: pointer;"></span></div></li>';
 						} else {
 							if(attendants["pic"][i] !== "") {
