@@ -64,7 +64,7 @@
 			
 			$(function(){
 				//2018-07-02 김보미 - 방명록 내용 특수문자 처리
-				content = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(content, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&dquot;", '"'), "<br>", "\n");
+				content = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(content, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", "'"),"&dquot;", '"'), "<br>", "\n");
 				$("#memo").val(content);
 			})
 				

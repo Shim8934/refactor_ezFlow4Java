@@ -653,6 +653,9 @@
 		       	
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListAppr.do";
 		    }
+		    function boardSearch(){
+		    	window.parent.frames["right"].location.href = "/ezBoard/boardSearchView.do";
+		    }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -746,11 +749,17 @@
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
 	        </ul>
+
 			<div class="ladder" onclick="ladder_Func(1)">
 				<h2><span><spring:message code="ezBoard.l001" /></span></h2>
 			</div>
 			<ul></ul>
-	        <h3>
+
+			<h3>
+				<span onclick="boardSearch()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.khj1" /></span>
+			</h3>
+	        
+			<h3>
 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 		    </h3>
 		    <c:if test="${applyFlag == 'OK'}">

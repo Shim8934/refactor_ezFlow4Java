@@ -1006,15 +1006,15 @@
 	    <span class="txt"><spring:message code='ezEmail.t814' /></span><br />
 	    <div id="ConArea" name="ConArea" style="margin-top:8px;"></div>
 	    <br />
-	    <div id="mainmenu"><ul id="tb_AddRuleCon"><li><span onclick='AddRule(ConArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+	    <div id="mainmenu"><ul id="tb_AddRuleCon"><li><span class="imgbck" onclick='AddRule(ConArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
 	    <span class="txt" ><spring:message code='ezEmail.t816' /></span><br />
 	    <div id="ActArea" name="ActArea" style="margin-top:8px;"></div>
 	    <br />
-	    <div id="mainmenu"><ul id="tb_AddRuleAct"><li><span onclick='AddRule(ActArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+	    <div id="mainmenu"><ul id="tb_AddRuleAct"><li><span class="imgbck" onclick='AddRule(ActArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
 	    <span class="txt" ><spring:message code='ezEmail.t842' /></span><br />
 	    <div id="ExptArea" name="ExptArea" style="margin-top:8px;"></div>
 	    <br />
-	    <div id="mainmenu"><ul id="tb_AddRuleExpt"><li><span onclick='AddRule(ExptArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+	    <div id="mainmenu"><ul id="tb_AddRuleExpt"><li><span class="imgbck" onclick='AddRule(ExptArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
 	    </div>
 	</div>
 	</body>
@@ -1070,7 +1070,7 @@
 	<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px;">
 	  <tr>
 	    <td style="width:60%;padding:10px 0 0 10px" id="ReceiverSelecttd" name="ReceiverSelecttd"><INPUT type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown(event);"></td>
-	    <td style="width:60%;padding:12px 10px 0 8px;"><div ><img alt="" src="/images/email/cntct.gif" style="margin-left:5px;cursor:pointer;display:none;text-align:center;" id="ReceiverSelect" name="ReceiverSelect" onclick="SelectReceiver_onClick();" /> <a class="imgbtn"><span onClick="pop_addcon();" id="inputBtn"><spring:message code='ezEmail.t308' /></span></a><a class="imgbtn"><span onClick="pop_delete();"><spring:message code='ezEmail.t95' /></span></a></div></td>
+	    <td style="width:60%;padding:12px 10px 0 8px;"><div ><img alt="" src="/images/email/cntct.gif" style="margin-left:5px;cursor:pointer;display:none;text-align:center;" id="ReceiverSelect" name="ReceiverSelect" onclick="SelectReceiver_onClick();" /> <a class="imgbtn imgbck"><span onClick="pop_addcon();" id="inputBtn"><spring:message code='ezEmail.t308' /></span></a><a class="imgbtn imgbck"><span onClick="pop_delete();"><spring:message code='ezEmail.t95' /></span></a></div></td>
 	  </tr>
 	</table>
 	<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f2f2f2;">

@@ -229,7 +229,7 @@
 					<table class="content">
         				<tr>
           					<th> <spring:message code="ezResource.t151"/></th>
-          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="<c:out value='${deptName}' />" style="width: 200px" readonly></td>
+          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="<c:out value='${deptName}' />" style="width: 100%" readonly></td>
           					<th> <spring:message code="ezResource.t152"/></th>
           					<td id="MakeDate" nowrap style="width:120px;padding-right:15px">${makeDate} </td>
         				</tr>
@@ -237,12 +237,12 @@
           					<th> <spring:message code="ezResource.t153"/></th>
           					<td>
           						<input type="text" name="Owner" id="Owner" idval="${userID}" position="<c:out value='${title}' />" nmval="<c:out value='${displayName}' />" value="<c:out value='${displayName}' />(<c:out value='${title}' />)" style="width: 200px" readonly>
-            						<a class="imgbtn">
+            						<a class="imgbtn imgbck">
             							<span onClick="btnTakeOwner_Click();"><spring:message code="ezResource.t154"/></span>
             						</a>
             				</td>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td style="width:120px;padding-right:15px"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 120px" maxlength="20"></td>
+          					<td><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 150px" maxlength="20"></td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>
@@ -250,18 +250,18 @@
           						<table style="width:100%">
         							<tr class="primary">
 										<th> ${langPrimary}</th>
-										<td><input type="text" name="Brd_NM" id="Brd_NM" idval="" value="" tabindex="0" style="width: 98%;" ></td>
+										<td><input type="text" name="Brd_NM" id="Brd_NM" idval="" value="" tabindex="0" style="width: 100%;" ></td>
         							</tr>
         							<tr class="secondary">
 										<th> ${langSecondary}</th>
-										<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="" value="" style="width: 98%" ></td>
+										<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="" value="" style="width: 100%" ></td>
         							</tr>
     							</table>
           					</td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 98%" ></td>
+          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 100%" ></td>
         					</tr>
         					<tr>
           						<th> <spring:message code="ezResource.t149"/></th>

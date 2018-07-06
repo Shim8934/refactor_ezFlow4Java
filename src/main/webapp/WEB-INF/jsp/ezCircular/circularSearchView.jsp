@@ -34,6 +34,7 @@
 			var pageCnt = "";
 			var strListInfo = "";
 		    var usepostDate = false;
+		    
 		    document.onselectstart = function () { return false; };
 		    
 		    window.onload = function () {
@@ -266,7 +267,7 @@
                 pageCnt = getNodeText(pageNode);
                 var perCnt = getNodeText(perNode);
 
-                if (lstCnt != "" && lstCnt != "0") {
+                if (lstCnt != "") {
                 	$("#resultCount").html(": " + "<spring:message code='main.t252' />" + lstCnt + " <spring:message code='ezCircular.t104' />");
                 } else {
                 	$("#resultCount").html("");
@@ -302,7 +303,7 @@
                 strListInfo = "";
                 
                 /* 2018-04-25 홍승비 - 회람판 검색메뉴 디폴트 로우 삭제 */
-                if(document.getElementById("BoardList_TR_noItems") != null) {
+                if(document.getElementById("BoardList_TR_noItems") != null && lstCnt == "") {
                 	document.getElementById("BoardList_TR_noItems").outerHTML = "";
                 }
                 

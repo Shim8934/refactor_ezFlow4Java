@@ -7415,17 +7415,17 @@
 <!-- 				WHER B.CODE = 'A02'  -->
 <!-- 				</isEqual> -->
 				<isNotEmpty property="v_ORDEROPTION2">
-				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
-				<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
+				<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="7">
+				<isEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
 					 ORDER BY 
 					 		$v_ORDEROPTION2$
 				</isEqual>
-				<isNotEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
+				<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
 					 ORDER BY 
 					 		$v_ORDEROPTION2$, ENDDATE
 				</isNotEqual>
 				</isGreaterEqual>
-				<isLessThan property="v_ORDEROPTION2LENGTH" compareValue="7">
+				<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="7">
 					ORDER BY 
 							$v_ORDEROPTION2$, ENDDATE
 				</isLessThan>
