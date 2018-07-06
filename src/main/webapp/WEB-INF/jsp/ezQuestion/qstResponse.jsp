@@ -45,7 +45,7 @@
 					
 					if (answerType == '5') {
 						tableXml += "<tr>";
-						tableXml += "<th>";
+						tableXml += "<th style='white-space:normal; word-break:break-all;'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'QST');
 						tableXml += "</th>";
 						tableXml += "</tr>";
@@ -56,7 +56,7 @@
 						tableXml += SelectSingleNodeValue(itemNode, 'TAG');
 					} else {
 						tableXml += "<tr>";
-						tableXml += "<th>";
+						tableXml += "<th style='white-space:normal; word-break:break-all;'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'QST');
 						tableXml += "</th>";
 						tableXml += "</tr>";
