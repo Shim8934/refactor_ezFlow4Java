@@ -211,7 +211,7 @@ function getCheckedProjectInfo() {
 		this.groupId = groupId;
 	}
 	
-	$("input[type='checkbox']:checked").each(function() {	
+	$("input[type='checkbox']:checked:not('#HeaderAllCheckBox')").each(function() {	
 		
 		if (viewType == "1") {
 			var projectName = $(this).parent().siblings(".projectName").text();

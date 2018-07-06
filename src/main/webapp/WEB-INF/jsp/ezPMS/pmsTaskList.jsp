@@ -109,15 +109,15 @@ $(function() {
 								</c:when>
 								<c:when test="${position ne 'group' }">
 									<c:forEach items="${taskList }" var="task">
-								<tr style="cursor: pointer;" id="${task.taskId }" class="listRow" ondblclick="goTaskDetails(this)">
+								<tr style="cursor: pointer;" id="${task.taskId }" data-groupId="${task.groupId}" class="listRow" ondblclick="goTaskDetails(this)">
 									<td style="width: 20px; cursor: default; text-align: center"><input
 										type="checkbox" onchange="checkedCheckbox(this);"
 										name="boardCheckbox"
 										style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
-									<td onclick="selectedTR(this);"
+									<td class="taskName" onclick="selectedTR(this);"
 										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
 											value="${task.taskName }" /></td>
-									<td onclick="selectedTR(this);"
+									<td class="groupName" onclick="selectedTR(this);"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
 											value="${task.groupName }" /></td>
 									<c:if test="${position eq 'task' }">

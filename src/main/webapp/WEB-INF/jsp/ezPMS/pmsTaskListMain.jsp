@@ -378,6 +378,15 @@
 					success : function(result) {
 						if (result == "permitted") {
 							alert("<spring:message code='ezPMS.t242' />");
+							
+							var checkedTaskInfo = getCheckedTaskInfo();
+							
+							
+							for(var i = 0; i < checkedTaskInfo.length; i++) {
+								var logContent = "[" + checkedTaskInfo[i].groupName + "]<spring:message code='ezPMS.t313' /> [" + checkedTaskInfo[i].taskName + "] " + "<spring:message code='ezPMS.t242' />";
+								addTaskLog(projectId, 3, checkedTaskInfo[i].groupId, null, logContent);	
+							}
+							
 							checkedVal = "";
 							setContentList();
 						} else {
@@ -398,6 +407,29 @@
 		
 		window.open("/ezPMS/getTaskDetails.do?projectId=" + projectId + "&taskId=" + taskId + "&userIdType=user",
 				"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
+	}
+	
+	function getCheckedTaskInfo() {
+		
+		var result = [];
+		
+		function TaskInfo(groupName, taskName, groupId, taskId) {
+			this.groupName = groupName;
+			this.taskName  = taskName;
+			this.groupId   = groupId;
+			this.taskId    = taskId;
+		}
+		
+		$("input[type='checkbox']:checked:not('#HeaderAllCheckBox')").each(function() {
+			var groupName = $(this).parent().siblings(".groupName").text();
+			var taskName  = $(this).parent().siblings(".taskName").text();
+			var groupId   = $(this).parents("tr:eq(0)").attr("data-groupid");
+			var taskId    = $(this).parents("tr:eq(0)").attr("id");
+			
+			result.push(new TaskInfo(groupName, taskName, groupId, taskId));
+		});
+		
+		return result;
 	}
 </script>
 <style>
