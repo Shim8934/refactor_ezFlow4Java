@@ -2422,8 +2422,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		ezPMSDAO.updateTaskWDNW(map2);
 		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", taskVO.getTenantId());
+		map.put("projectId", projectId);
+		
+		int weightInput = ezPMSDAO.getProjectDetails(map).getWeightInput();
+
 		//프로젝트가 가중치 자동 계산일 경우 모든 업무의 가중치 재계산
-		ezPMSDAO.updateAllTaskWeight(map2);
+		if (weightInput == 0) {
+			ezPMSDAO.updateAllTaskWeight(map2);
+		}
 	}
 
 	@Override
