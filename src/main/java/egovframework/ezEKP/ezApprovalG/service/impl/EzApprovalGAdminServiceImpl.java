@@ -11,10 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -22,9 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -58,12 +53,6 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzApprovalGAdminService{
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
-
-	@Autowired
-	private Properties globals;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -2743,7 +2732,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("saveFileFolder : " + saveFileFolder);
 		logger.debug("saveFileName : " + saveFileName);
 		
-		FileOutputStream stream = null;
+//		FileOutputStream stream = null;
 		
 		try {
 			File fileFolder = new File(saveFileFolder);
@@ -3304,7 +3293,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			ezApprovalGAdminDAO.deleteDocList(map);
 		}
 		
-		
 		logger.debug("deleteDocList ended");
 		
 		return "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
@@ -3332,7 +3320,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			ezApprovalGAdminDAO.insertDelDoc(map);
 			ezApprovalGAdminDAO.deleteDocListjson(map);
 		}
-		
 		
 		logger.debug("deleteDocList ended");
 		
@@ -3497,7 +3484,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 		
 		sb.append("<LISTVIEWDATA><HEADERS>");
@@ -3610,11 +3596,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String getSpecialContInfo(String deptID, String contType, String sn, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getSpecialContInfo started.");
 		
-		StringBuilder sb;
+		StringBuilder sb = new StringBuilder();;
 		
-		sb = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("deptID", deptID);
 		map.put("contType", contType);
 		map.put("sn", sn);
@@ -3803,14 +3787,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String getParentContName(String formID, String companyID, int tenantID, String langType) throws Exception {
 		logger.debug("getParentContName started.");
 		
-		String result = "";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TENANTID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_PARENTID", formID);
 		map.put("v_LANG", langType);
 		
-		result = ezApprovalGAdminDAO.getParentContName(map);
+		String result = ezApprovalGAdminDAO.getParentContName(map);
 		
 		logger.debug("getParentContName ended.");
 		
@@ -3835,10 +3818,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int startRow, int pageSize, String pageNum, 
 			String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale) throws Exception {
-		StringBuilder resultXML = new StringBuilder();
+//		StringBuilder resultXML = new StringBuilder();
 				
 		int querySize = pageSize * Integer.parseInt(pageNum);
-		int querySize2 = totalcnt - pageSize * (Integer.parseInt(pageNum) - 1);
+//		int querySize2 = totalcnt - pageSize * (Integer.parseInt(pageNum) - 1);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -3866,7 +3849,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getContDocListjson(map);
 		
-		
 		return list;
 	}
 	
@@ -3884,6 +3866,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} else {
 			map.put("v_PUBFLAG", "N"); 
 		}
+		
 		map.put("v_SUBQUERY", subQuery);
 		
 		int totalCount = ezApprovalGAdminDAO.getContDocListCountjson(map);
@@ -3904,6 +3887,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} else {
 			map.put("v_PUBFLAG", "N"); 
 		}
+		
 		map.put("v_SUBQUERY", subQuery);
 		
 		int totalCount = ezApprovalGAdminDAO.getDeleteDocListCountjson(map);
@@ -3913,9 +3897,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	@Override
 	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception{
-		
 		int querySize = pageSize * Integer.parseInt(pageNum);
-		int querySize2 = totalcnt - pageSize * (Integer.parseInt(pageNum) - 1);
+//		int querySize2 = totalcnt - pageSize * (Integer.parseInt(pageNum) - 1);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -3934,7 +3917,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));	
 		
 		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getDeleteDocListjson(map);
-		
 		
 		return list;
 	}
