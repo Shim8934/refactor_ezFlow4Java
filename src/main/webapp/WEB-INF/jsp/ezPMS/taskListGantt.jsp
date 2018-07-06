@@ -872,6 +872,7 @@
   			  		type : "PUT",
   					url : "/ezPMS/updateAllTasksDate.do",
   					dataType : "json",
+  					async : false,
   					contentType : "application/json; charset=UTF-8",
   					data : JSON.stringify(data),
   					success : function(result) {}
