@@ -507,19 +507,19 @@ public class MBoardServiceImpl implements MBoardService {
 			map.put("startDate", commonUtil.getTodayUTCTime(""));
 		}
 		
-		//모바일에서는 영구게시만 지원
+		// 모바일에서는 영구게시만 지원
 		map.put("endDate", "9999-12-30 14:59:59");
-		// 현재 모바일에는 게시요약 정보가 없다.
-		map.put("abstract", boardListVO.get("abstract"));
+		// 현재 모바일에는 게시요약 정보가 없다. null로 들어가지 않도록 처리한다.
+		map.put("abstract", "");
 		
-		//모바일에서는 답변을 달기가 없기 때문에, itemID로 들어감
+		// 모바일에서는 답변을 달기가 없기 때문에, itemID로 들어감
 		map.put("upperItemIDTree", boardListVO.get("itemID"));
-		//새로 작성할때는 1로 fix
+		// 새로 작성할때는 1로 fix
 		map.put("itemLevel", "1");
-		//리플이나 수정일때는 값받아와야함.
+		// 리플이나 수정일때는 값받아와야함.
 		map.put("parentWriteDate", "docNO");
 		map.put("extensionAttribute1", "0");
-		//공지사항 여부
+		// 공지사항 여부
 		map.put("extensionAttribute2", boardListVO.get("notice"));
 		// 게시물에 저장되는 직위명(3/32), 전화번호(4) 추가
 		map.put("extensionAttribute3", info.getTitle());
@@ -529,11 +529,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("docPassword", boardListVO.get("docPassword"));
 		// 탑라이터(원글작성자)ID는 자기 자신임(모바일 버전에서는 답변 작성 불가하므로)
 		map.put("topWriterID", info.getUserId());
-		map.put("extensionAttribute6", boardListVO.get("extensionAttribute6"));
-		map.put("extensionAttribute7", boardListVO.get("extensionAttribute7"));
-		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
-		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
-		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		// 모바일에는 확장칼럼 입력 필드가 없다. null로 들어가지 않도록 처리한다.
+		map.put("extensionAttribute6", "");
+		map.put("extensionAttribute7", "");
+		map.put("extensionAttribute8", "");
+		map.put("extensionAttribute9", "");
+		map.put("extensionAttribute10", "");
 		
 		//mht파일저장
 		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);
@@ -764,6 +765,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return ret;
 	}
 	
+	/* 현재 메서드로 호출되어 쓰이는 곳은 없다 */
 	@Override
 	public void insertBrdItem2(JSONObject boardListVO) throws Exception {
 		logger.debug("insertBrdItem2 started");
