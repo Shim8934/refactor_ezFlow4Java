@@ -271,9 +271,9 @@
 		  	</ul>
 		</div>
 		<div class="page">
-			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id=td_Previous onClick="prevPage_onclick()"/> <spring:message code='ezOrgan.t314'/>: <c:out value='${totalPage}'/>&nbsp;&nbsp; -
+			<img src="/images/page_previous.gif" align="absmiddle" id=td_Previous onClick="prevPage_onclick()"/> <spring:message code='ezOrgan.t314'/>: <c:out value='${totalPage}'/>&nbsp;&nbsp; -
 		  	<input name="txt_PageInputNum" type="text" value="<c:out value='${pPage}'/>" onKeyDown="moveToPage()"/>
-		  	<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1" style="cursor:pointer;" onClick="nextPage_onclick()"/>
+		  	<img src="/images/page_next.gif" align="absmiddle" id="Img1" style="cursor:pointer;" onClick="nextPage_onclick()"/>
 		</div>
 		<div style="width:100%; border-right:1px solid #eaeaea;border-left:1px solid #eaeaea;">
 		<table class="mainlist" style="width:100%"> 

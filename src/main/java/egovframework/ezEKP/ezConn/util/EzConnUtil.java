@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author skyblue0o0
  *
  */
-@Component
+@Component("EzConnUtil")
 public class EzConnUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzConnUtil.class);
 	
@@ -52,10 +52,15 @@ public class EzConnUtil {
 	
 	private String docID;
     private String userID;
+    private String companyID;
+    private int tenantID;
     
-    public String connTest(String a, String b, String c) throws Exception {
-    	logger.debug("connTest = " + a + b + c);
-    	return a + b + c;
+    public void connTest() throws Exception {
+    	logger.debug("connTest started.");
+    	
+    	logger.debug("docID = " + docID + " || userID = " + userID + " || companyID = " + companyID + " || tenantID = " + tenantID);
+    	
+    	logger.debug("connTest ended.");
     }
 
 	public String getDocID() {
@@ -72,5 +77,21 @@ public class EzConnUtil {
 
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+
+	public String getCompanyID() {
+		return companyID;
+	}
+
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+
+	public int getTenantID() {
+		return tenantID;
+	}
+
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 }

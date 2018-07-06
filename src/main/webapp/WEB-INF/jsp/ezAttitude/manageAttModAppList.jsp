@@ -207,7 +207,7 @@
 		
 		function windowResize() {
         	var height = document.documentElement.clientHeight - 81 - document.getElementById("mainmenu").clientHeight;
-        	document.getElementById("contentlist").style.height = (height - 50) + "px";
+        	document.getElementById("contentlist").style.height = (height - 100) + "px";
         	document.getElementById("contentlist").style.overflow = "auto";
         }
 		
@@ -226,26 +226,26 @@
 	        var pageNum = currentPage;
 	        
 	        if (totalPages > 1 && pageNum != 1) {
-	            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+	            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        
 	        if (totalPages > blockSize) {
 	            if (pageNum > blockSize) {
-	                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezAttitude.t94'/>" + "</span>";
+	                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezAttitude.t94'/>" + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezAttitude.t94'/>" + "</span>";
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
@@ -273,28 +273,28 @@
 	        
 	        if (totalPages > blockSize) {
 	        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
-	        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + "<spring:message code='ezAttitude.t95'/>" + "</span>";
-	        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	        	    strtext = "";
+	        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 	                PagingHTML += strtext;
 	        	}
 	        	else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezAttitude.t95'/>" + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	        	}
 	        }
 	        else {
-	            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + "<spring:message code='ezAttitude.t95'/>" + "</span>";
-	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	            strtext = "";
+	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
 	        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
-	            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif'></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        
@@ -1282,7 +1282,7 @@
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
 			<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 			<li>
-				<select id="writerDept_search" onchange="dept_change()" style="height:28px;border-radius:3px">
+				<select id="writerDept_search" onchange="dept_change()" style="height:28px;">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 					<c:forEach var="dept" items="${deptList}">
 						<c:if test="${dept.authType == 'M'}">

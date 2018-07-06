@@ -40,7 +40,11 @@
 							 itemID	:	pItemID
 						   },
 					success: function(result){
-						html = result;
+						//2018-07-05 김보미 - 팝업창에 생기던 스크롤바 내용부분으로 스크롤바 생기게 변경
+// 						html = result;
+						html += "<div class='viewbox'><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize>";
+						html += result;
+						html += "<div>";
 					}        			
 				});
 				
@@ -50,6 +54,13 @@
 				doc.close();
 		        
 				$("#message").contents().find("body").css("word-wrap", "break-word");
+				
+				//2018-07-05 김보미 - 창사이즈 조절(새로고침시에도 원래 사이즈로 돌아오게끔)
+				if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+                    self.resizeTo(721, 750);
+				} else  {
+                    self.resizeTo(746, 780);
+             }
 		    }
 
 		    function btn_Delete_Onclick() {
@@ -84,12 +95,33 @@
 	            window.close();
 	        }
 
-	        function ReaderList() {
+	        /* function ReaderList() {
 	            var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-	            var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
-	            var feature = "width=600, height=415, resizable=yes, scrollbars=0";
-	            feature = feature + GetOpenPosition(600, 415);
+	            var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
+	            var feature = "width=620, height=425, resizable=yes, scrollbars=0";
+	            feature = feature + GetOpenPosition(620, 425);
 	            window.open(szHref, "", feature);
+	        } */
+	        
+	        var item_readlist_cross_dialogArguments = new Array();
+	        
+	        function ReaderList() {
+	        	var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;		        
+		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+	            var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
+		        if (CrossYN()) {
+		            item_readlist_cross_dialogArguments[0] = "";
+		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
+		            DivPopUpShow(620, 425, szHref);
+		        }
+		        else
+		            window.open(szHref, "", "width=620, height=425, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		    }
+		    function ReaderList_Complete() {
+		        DivPopUpHidden();
 	        }
 
 	        function OpenUserInfo(pUserID) {
@@ -102,10 +134,17 @@
 		    function btn_One_Line_Reply_Onclick() {
 		    	openCommunityBoardComment();
 	    		return;
-		    } 
+		    }
+		 	 
+		    //2018-07-05 김보미 - 팝업창에 생기던 스크롤바 내용부분으로 스크롤바 생기게 변경(팝업창 사이즈 변경시에도)
+		    window.onresize = function () {
+	            var contentHeight = document.documentElement.clientHeight - 180;
+	            document.getElementById("message").style.height = contentHeight + "PX";
+	            document.getElementById("messagePad").style.height = contentHeight + "PX";
+		    };
 		</script>	
 	</head>
-	<body class="popup" style ="overflow-x:hidden; height:100%">
+	<body class="popup" style ="overflow:hidden; height:100%">
 		<table class="layout">
 			<tr>		
 		    	<td style="height:20px">
@@ -151,10 +190,12 @@
 			   	</td>
 			</tr>
 			<tr>
-				<td class="pad1" id="messagePad" style="height:450px">
-					<div class="viewbox" style="border:1px solid #ddd;"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' >
-				      	<iframe id="message" class='margin' name="message" style="padding: 0;width:100%;border:0px"></iframe>      
-				    </div>
+				<td class="pad1" id="messagePad" style="height:450px;">
+					<!-- 2018-07-05 김보미 - 팝업창에 생기던 스크롤바 내용부분으로 스크롤바 생기게 변경 -->
+					<iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:542px; overflow:auto; border:1px solid #ddd"></iframe>
+<%-- 					<div class="viewbox" style="border:1px solid #ddd;"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' > --%>
+<!-- 				      	<iframe id="message" class='margin' name="message" style="padding: 0;width:100%;border:0px"></iframe>       -->
+<!-- 				    </div> -->
 				</td>
 			</tr>
 			<%-- 2018-05-11 홍승비 - 포토게시판 미사용 첨부파일 테이블, 인쇄, 메일, PC저장, 답변 코드 삭제--%>

@@ -188,7 +188,7 @@
 		                document.getElementById("MailListRayer").style.width = "100%";
 		                document.getElementById("PreviewRayerW").style.width = "100%";
 		                document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-		                document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
+		                document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
 		                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
 		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
 		                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
@@ -212,7 +212,7 @@
 		                document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		                document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 		                document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-		                document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+		                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
 		                document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
 		                document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
 		                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
@@ -233,7 +233,7 @@
 		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
-		            document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
 		        }
 		
 		        var HeaderObject = document.getElementById("MailHeader");
@@ -790,8 +790,8 @@
 			  <input name="searchCheck" id="Radio4" type="radio" value="CONTENT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio4">&nbsp;<spring:message code="ezEmail.t649" /></label>
 			  </c:if>
 			  &nbsp;
-			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
-	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="start_search()"></a>
+			  <input name="keyword" class="Mail_Input" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+	          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="start_search()"></a>
 	      </span>
 	    </h1>	
         <div id="mainmenu">

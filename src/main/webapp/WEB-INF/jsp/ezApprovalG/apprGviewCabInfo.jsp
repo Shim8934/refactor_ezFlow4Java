@@ -54,14 +54,14 @@
 				<td id="tdProduceY" nowrap style="padding-right:15px">&nbsp;</td>
 			</tr>
 			<tr> 
+				<th><spring:message code='ezApprovalG.t831'/></th>
+				<td id="tdRegDate" nowrap style="padding-right:15px">&nbsp;</td>
 				<th><spring:message code='ezApprovalG.t830'/></th>
 				<td id="tdRegSN" nowrap style="padding-right:15px">&nbsp;</td>
+			</tr>
+			<tr style="display:none">
 				<th><spring:message code='ezApprovalG.t573'/></th>
 				<td id="tdVolNo" nowrap style="padding-right:15px">&nbsp;</td>
-			</tr>
-			<tr>
-				<th><spring:message code='ezApprovalG.t831'/></th>
-				<td id="tdRegDate" colspan=3>&nbsp;&nbsp;</td>
 			</tr>
 		</table>
 		<br>

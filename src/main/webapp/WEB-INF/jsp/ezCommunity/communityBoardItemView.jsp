@@ -570,17 +570,17 @@
 // 	            GetOpenWindow(szHref, "", 520, 400);
 	        	var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 600) / 2;
-		        var top = (heigth - 415) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-		        var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+		        var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(600, 415, szHref);
+		            DivPopUpShow(620, 425, szHref);
 		        }
 		        else
-		            window.open(szHref, "", "width=600, height=415, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		            window.open(szHref, "", "width=620, height=425, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
 		    }
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
@@ -1054,9 +1054,9 @@
 			               		<div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div>
 			              	</td>
 		                  	<td class="pos2" style ="white-space:normal;">
-		                   		<a class="imgbtn"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
+		                   		<a class="imgbtn imgbck"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
 		                        <br>
-		                        <a class="imgbtn"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
+		                        <a class="imgbtn imgbck"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
 		               		</td>
 			           	</tr>
 			       	</table>

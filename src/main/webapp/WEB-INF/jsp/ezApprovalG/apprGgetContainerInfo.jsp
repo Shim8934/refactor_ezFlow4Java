@@ -464,6 +464,8 @@
 		            GetDocList();
 		        else if (DocListType == "GetDocSearch")
 		            GetDocSearch();
+		        else if (DocListType == "UserContDocList")
+		        	GetUserContList();
 		        else
 		            GetDocList();
 		    }
@@ -974,29 +976,29 @@
 		        var pageNum = curpage;
 		        if (totalPage > 1 && pageNum != 1) {
 		            strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
 		            strtext = "<span class='btnimg'><a >";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
 		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
 		                strtext = "<span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
 		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1024,29 +1026,29 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg' onclick='return selafterBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg'>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' width='16' height='16' /></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
 		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' width='16' height='16' /></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -1179,7 +1181,13 @@
 		        }
 		        pageNum = 1;
 		        Init_Flag = "False";
-		        GetDocSearch();
+		        
+		        if (LoadSquery == "usercontlist") {
+		        	MakeSubCondition();
+	    	    	GetUserContList();
+		        } else {
+		       		GetDocSearch();
+		        }
 		
 		        $('#sel_year').val("ALL");
 		        /* $('#sel_year').selectmenu('refresh'); */
@@ -1255,7 +1263,7 @@
 	            aprgongramline_cross_dialogArguments[0] = para;
 	            aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
 	
-	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 740));
+	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760));
 	            try { OpenWin.focus(); } catch (e) { }
 		    }
 
@@ -1325,8 +1333,8 @@
 	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
 		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 		        &nbsp;
-		        <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
+		        <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	            <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">

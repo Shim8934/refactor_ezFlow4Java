@@ -841,7 +841,7 @@
 		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr>
 		            <td colspan="3"><div id="MsgToGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -855,7 +855,7 @@
 		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgCC_TRu">
 		            <td colspan="3"><div id="MsgCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -867,7 +867,7 @@
 		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgBCC_TRu" style="display:none;">
 		            <td colspan="3"><div id="MsgBCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -939,11 +939,11 @@
                                     <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
                                 </td>
                                 <td class="pos2">
-                                    <a href="#" class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
                                     <br>
-                                    <a href="#" class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
                                     <br>                                    
-                                    <a href="#" class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
                             </tr>
                         </table>
                     </td>

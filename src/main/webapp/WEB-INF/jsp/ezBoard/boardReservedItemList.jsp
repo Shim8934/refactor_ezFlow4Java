@@ -29,13 +29,13 @@
 		    	if (useRunTime != "YES") {
 		    		$("#runtime").css("display", "none");
 		    	}
-		    	var height = parseInt(document.documentElement.clientHeight - 180);
+		    	var height = parseInt(document.documentElement.clientHeight - 200);
 	            document.getElementById("divList").style.height = height + "px";
 		    	makePageSelPageBrd();
 		    };
 		    
 		    window.onresize = function () {
-	            var height = parseInt(document.documentElement.clientHeight - 180);
+	            var height = parseInt(document.documentElement.clientHeight - 200);
 	            document.getElementById("divList").style.height = height + "px";
 	            Window_resize();
 	        };

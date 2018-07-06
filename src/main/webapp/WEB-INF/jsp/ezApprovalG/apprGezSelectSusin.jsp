@@ -779,7 +779,7 @@ function AprDept_onDblclick()
 					<tr>
 						<td style="height:30px; text-align:right">
 							<input id="textUser" style="width:100px" name="textUser" onKeyPress="return textUser_onkeypress()" tabindex="1">
-                            <a class="imgbtn" style="vertical-align:middle">
+                            <a class="imgbtn imgbck" style="vertical-align:middle">
                                 <span id="btn_searchUser" onKeyPress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t250'/></span>
                             </a>
 						</td>
@@ -800,7 +800,7 @@ function AprDept_onDblclick()
 				<table>
 					<tr>
 					  <td style="white-space:nowrap" ><h2><spring:message code='ezApprovalG.t253'/></h2></td>
-					  <td style="display:none"><a class="imgbtn"><span onClick="return btn_DeptGroupAdd()" ><spring:message code='ezApprovalG.t254'/></span></a></td>
+					  <td style="display:none"><a class="imgbtn imgbck"><span onClick="return btn_DeptGroupAdd()" ><spring:message code='ezApprovalG.t254'/></span></a></td>
 				  	</tr>
 					<tr>
 						<td colspan="2" style="vertical-align:top">

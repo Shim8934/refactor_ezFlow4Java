@@ -1432,64 +1432,64 @@
 			        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 			        
 				} else {
-					 if (condition[0] != "") {
-					        TYPE += "DOCNO;"
-					        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
-					    }
+					if (condition[0] != "") {
+				        TYPE += "DOCNO;"
+				        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
+				    }
 
-					    if (condition[1] != "") {
-					        TYPE += "DOCTITLE;"
-					        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
-					    }
+				    if (condition[1] != "") {
+				        TYPE += "DOCTITLE;"
+				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
+				    }
 
-					    if (condition[2] != "") {
-					        TYPE += "WRITERNAME;"
-					        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
-					    }
+				    if (condition[2] != "") {
+				        TYPE += "WRITERNAME;"
+				        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
+				    }
 
-					    if (condition[3] != "null" && condition[3].trim() != "") {
-					        TYPE += "APRSTARTDATE;"
-					        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
-					    }
+				    if (condition[3] != "null" && condition[3].trim() != "") {
+				        TYPE += "APRSTARTDATE;"
+				        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
+				    }
 
-					    if (condition[4] != "null" && condition[4].trim() != "") {
-					        TYPE += "APRENDDATE;"
-					        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
-					    }
+				    if (condition[4] != "null" && condition[4].trim() != "") {
+				        TYPE += "APRENDDATE;"
+				        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
+				    }
 
-					    if (condition[5] != "null" && condition[5].trim() != "") {
-					        TYPE += "APRSTARTDATE;"
-					        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
-					    }
+				    if (condition[5] != "null" && condition[5].trim() != "") {
+				        TYPE += "APRSTARTDATE;"
+				        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
+				    }
 
-					    if (condition[6] != "null" && condition[6].trim() != "") {
-					        TYPE += "APRENDDATE;"
-					        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
-					    }
+				    if (condition[6] != "null" && condition[6].trim() != "") {
+				        TYPE += "APRENDDATE;"
+				        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
+				    }
 
-					    if (condition[9] != "") {
-					        TYPE += "FORMID;"
-					        DATA += "<FORMID>" + condition[9] + "</FORMID>";
-					    }
-					    
-					    if (condition[11] != "") {
-					        TYPE += "WRITERDEPTNAME;"
-					        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
-					    }
+				    if (condition[9] != "") {
+				        TYPE += "FORMID;"
+				        DATA += "<FORMID>" + condition[9] + "</FORMID>";
+				    }
+				    
+				    if (typeof (condition[11]) != "undefined" && condition[11] != "") {
+				        TYPE += "WRITERDEPTNAME;"
+				        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
+				    }
 
-					    if (condition[12] != "") {
-					        TYPE += condition[12];
-					        DATA += condition[13];
-					    }
-					    if (typeof (condition[14]) != "undefined" && condition[14] != "") {
-					        TYPE += condition[14];
-					        DATA += condition[15];
-					    }
-					    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
-					        TYPE += condition[16];
-					        DATA += condition[17];
-					    }
-					}
+				    if (typeof (condition[12]) != "undefined" && condition[12] != "") {
+				        TYPE += condition[12];
+				        DATA += condition[13];
+				    }
+				    if (typeof (condition[14]) != "undefined" && condition[14] != "") {
+				        TYPE += condition[14];
+				        DATA += condition[15];
+				    }
+				    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
+				        TYPE += condition[16];
+				        DATA += condition[17];
+				    }
+				}
 				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		
@@ -1727,8 +1727,8 @@
 		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
 			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 			    &nbsp;
-			    <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		        <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
+			    <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		        <a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">
@@ -1740,15 +1740,9 @@
 				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" ></li> -->
 				<li id="tbtnApprove" style="DISPLAY:none"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
 				<li id="tbtnApprove1" style="DISPLAY:none"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
-				<c:if test="${useMobile != 'YES'}">
-					<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
-					<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
-				</c:if>
-				<c:if test="${useMobile == 'YES'}">
-					<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
-					<li id="tbtnApprove2"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
-				</c:if>
 				<li id="tbtnNonElecRec" style="DISPLAY:none"><span id="btnNonElecRec" onclick="return btnNonElecRec_onclick()" >비전자등록</span></li><%-- 비전자문서 등록 --%>
+				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
+				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnReturn" style="DISPLAY:none"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>

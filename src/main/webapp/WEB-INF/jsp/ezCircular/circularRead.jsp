@@ -177,10 +177,10 @@
 				}
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 300) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = url = "/ezCircular/circularConfirmList.do?circularID=" + circularID; 
-	            DivPopUpShow(600, 415, szHref);
+	            DivPopUpShow(620, 425, szHref);
 		    }
 		    
 	        var ezprtquestion_cross_dialogArguments = new Array();
@@ -651,10 +651,10 @@
                                 </div>
                             </td>
                             <td class="pos2">	                                
-                                <a href="#" class="imgbtn">
+                                <a href="#" class="imgbtn imgbck">
                                 	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezCircular.t112' /></span>
                                 </a><br/>	                                
-                                <a href="#" class="imgbtn">
+                                <a href="#" class="imgbtn imgbck">
                                 	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezCircular.t25' /></span>
                                 </a>
                             </td>
