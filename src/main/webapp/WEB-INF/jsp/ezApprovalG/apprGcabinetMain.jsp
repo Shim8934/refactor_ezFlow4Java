@@ -1243,7 +1243,7 @@
 		            aprgongramline_cross_dialogArguments[0] = para;
 		            aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 740));
+		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }

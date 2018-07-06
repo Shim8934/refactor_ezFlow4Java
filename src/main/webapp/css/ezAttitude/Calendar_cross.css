@@ -2,7 +2,7 @@
 
 /* 월보기 */
 .calendar_month_navi{table-layout:fixed; border-bottom:0px solid #014b88;}
-.calendar_month_navi th{height:33px; line-height:24px; border:1px solid #d1ddec; font-family:Malgun Gothic; padding:0px 0px 2px 0px; margin:0; color:#2f2f2f;background-color: #edf4fd; font-size: 15px;}
+.calendar_month_navi th{height:33px; line-height:24px; border:1px solid #d1ddec; font-family:Malgun Gothic; padding:0px 0px 2px 0px; margin:0; color:#2f2f2f;background-color: #f0f6ff; font-size: 15px;}
 .calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 2px 12px 0px; height:17px;cursor:pointer;}
 .calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 2px 0px 0px 12px; height:17px;cursor:pointer;}
 .calendar_month{table-layout:fixed; vertical-align:top;}
@@ -11,7 +11,7 @@
 .calendar_month th.sat{color:rgb(0, 72, 149);}
 .calendar_month td{width:14.2%; border:1px solid #dedede;}
 .calendar_month td.gray{background:#f8f8fa;}
-.calendar_month td.today{background:#f8faff;}
+.calendar_month td.today{background:#f0f6ff;}
 .calendar_month .td_day{table-layout:fixed; width:100%; cursor:pointer;}
 .calendar_month .td_day td {height:22px; line-height:22px; border:0 none; padding:0px 0px 0px 7px; margin:0; color:#333333;}
 .calendar_month .click{background:#ddd;} /* 날자클릭시 백그라운드 처리 */

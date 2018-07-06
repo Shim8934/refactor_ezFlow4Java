@@ -947,7 +947,7 @@
 	    }
 	    function CreateNewAprDeptTemplet_Complete() {
 	        DivPopUpHidden();
-	        InitReceptTemplet();
+	        /* InitReceptTemplet(); */
 	    }
 	    function AprDeptTempletXmlParsing(p_AprDeptTempletName) {
 	        try {
@@ -1351,10 +1351,10 @@
 	                            <td style="background-color: transparent; text-align: center; height: 30px;">
 	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                    <tr>
-	                                        <td style="text-align: center; background-color:#f8f8fa; padding-top:1.5px;">
-	                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-	                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
-	                                            <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+	                                        <td style="text-align: center; padding-top:1.5px;">
+	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
+	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+	                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                        </td>
 	                                    </tr>
 	                                </table>
@@ -1387,7 +1387,7 @@
 	            <td style="vertical-align: top;">
 	                <h2 class="h2_dot" style="padding-top:6px;padding-bottom:3px;float:left"><spring:message code='ezApprovalG.t432'/></h2>
 	                <div style="float:right;">
-	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
+	                    <a class="imgbtn imgbck" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                </div>
 	                <div style="clear:both"></div>
 	                <div class="listview">

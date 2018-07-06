@@ -370,7 +370,7 @@
                 		<c:if test="${primaryLang == '1'}">
                 			<c:if test="${useZipCodeSearch == 'YES'}">
                 				<input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
-                				<a class="imgbtn"><span onClick="zip_find();"><spring:message code='ezPersonal.t181'/></span></a>
+                				<a class="imgbtn imgbck"><span onClick="zip_find();"><spring:message code='ezPersonal.t181'/></span></a>
                 			</c:if>
                 			<c:if test="${useZipCodeSearch == 'NO'}">
                 				<input type="text" id="txtZipcode" size="10" value="${txtZipCode}">

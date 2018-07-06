@@ -49,7 +49,7 @@
 			}
 			
 			.span_list table td:hover, .td_day:hover {
-				background-color:#edf4fd;
+				background-color:#e8e8ea;
 			}
 			
 			.attiVacation {

@@ -501,8 +501,8 @@
 		      <td colSpan="3">
               <c:if test="${primaryLang == '1'}">
               	<c:if test="${useZipCodeSearch == 'YES'}">
-              	<input type="text" id="TextComZip" name="TextComZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">&nbsp;
-              	<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              	<input type="text" id="TextComZip" name="TextComZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">
+              	<a href="#" class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
               	</c:if>
               	<c:if test="${useZipCodeSearch == 'NO'}">
               		<input type="text" id="TextComZip" name="TextComZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">&nbsp;
@@ -522,8 +522,8 @@
 		      <td colSpan="3">
               <c:if test="${primaryLang == '1'}">
               	<c:if test="${useZipCodeSearch == 'YES'}">
-              		<input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">&nbsp;
-              		<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              		<input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">
+              		<a href="#" class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
               	</c:if>
               	<c:if test="${useZipCodeSearch == 'NO'}">
               		<input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">&nbsp;

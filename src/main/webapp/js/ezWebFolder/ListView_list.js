@@ -16,7 +16,7 @@ var PressShiftKey = false;
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
 var m_strColorSelect =  "rgb(233, 241, 244)";
 var m_strColorDefault =  "#FFFFFF";
-var m_strColorOver = "#F7FAE0";
+var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
 var HeaerCnt = 0;
 

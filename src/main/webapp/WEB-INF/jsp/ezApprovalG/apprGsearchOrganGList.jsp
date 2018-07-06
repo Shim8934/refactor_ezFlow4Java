@@ -17,7 +17,7 @@
         var g_SelRow = null;
         var g_SelColor = "#ECF3BA";
         var g_UnSelColor = "#FFFFFF";
-        var g_HotTrackColor = "#F7FAE0";
+        var g_HotTrackColor = "#f4f5f5";
         var p_strKeyword = "${keyword}";
         var RetValue;
         var ReturnFunction;

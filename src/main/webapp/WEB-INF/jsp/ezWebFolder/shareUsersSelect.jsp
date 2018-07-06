@@ -149,7 +149,7 @@
 					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179'/></h2>
 					<span style="float:right;padding-top:3px">
 						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;height:20px">
-						<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezTask.t183' /></span></a>
+						<a class="imgbtn imgbck btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezTask.t183' /></span></a>
 					</span>
 					<div class="listview" style="margin-top:3px;margin-bottom:5px">
 						<div id="OrganListView" style="overflow:auto; width:280px; height:240px;border:0">

@@ -229,7 +229,7 @@
 			      				</option>
 			      			</c:forEach>
 			      		</select>			      		
-			        	<a class="imgbtn"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
+			        	<a class="imgbtn imgbck"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
 			        </td>
 			    </tr>
 		    	<tr style="display:none">

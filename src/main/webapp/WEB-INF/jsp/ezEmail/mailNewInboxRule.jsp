@@ -324,7 +324,7 @@
 		            _popObj.style.backgroundColor = "#ffffff";
 		        }
 		        _popObj = obj;
-		        obj.style.backgroundColor = "#f0f6ff";
+		        obj.style.backgroundColor = "#efeff0";
 		    }
 		    function random() {
 		        return Math.floor(Math.random() * 100);
@@ -767,15 +767,15 @@
 			    <span class="txt"><spring:message code='ezEmail.t814' /></span><br />
 			    <div id="ConArea" name="ConArea" style="margin-top:8px;"></div>
 			    <br />
-			    <div id="mainmenu"><ul  id="tb_AddRuleCon"><li><span onclick='AddRule(ConArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+			    <div id="mainmenu"><ul  id="tb_AddRuleCon"><li><span class="imgbck" onclick='AddRule(ConArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
 			    <span class="txt" ><spring:message code='ezEmail.t816' /></span><br />
 			    <div id="ActArea" name="ActArea" style="margin-top:8px;"></div>
 			    <br />
-			    <div id="mainmenu"><ul  id="tb_AddRuleAct"><li><span onclick='AddRule(ActArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+			    <div id="mainmenu"><ul  id="tb_AddRuleAct"><li><span class="imgbck" onclick='AddRule(ActArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
 			    <span class="txt" ><spring:message code='ezEmail.t842' /></span><br />
 			    <div id="ExptArea" name="ExptArea" style="margin-top:8px;"></div>
 			    <br />
-			    <div id="mainmenu"><ul  id="tb_AddRuleExpt"><li><span onclick='AddRule(ExptArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+			    <div id="mainmenu"><ul  id="tb_AddRuleExpt"><li><span class="imgbck" onclick='AddRule(ExptArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
 			</div>
 		</div>
 	</body>

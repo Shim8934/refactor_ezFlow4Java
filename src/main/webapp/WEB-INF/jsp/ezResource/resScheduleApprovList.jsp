@@ -847,7 +847,7 @@
     			</li>
   			</ul>
 		</div>
-		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd; padding:5px 0px 5px 5px">
+		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd;border-bottom:0px; padding:5px 0px 5px 5px">
     		<input id="writername" type="text" style="width: 80px" />
     		<a class="imgbtn" style="padding-top:2px"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
     		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
