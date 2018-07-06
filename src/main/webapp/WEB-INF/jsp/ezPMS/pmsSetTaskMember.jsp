@@ -273,11 +273,12 @@
 	   				}
 	   			} else {
 	   				var tmpList = parent.participantList;
+	   				
 	   				if(tmpList){
 	   					for(var i = 0; i < tmpList.length; i++){
 	   						var participant = tmpList[i];
-	   						if(manager.userId !== authList.userId){
-			   					authList.push(manager);
+	   						if(participant.userId !== authList.userId){
+			   					authList.push(participant);
 			   				}
 	   					}
 	   				}
