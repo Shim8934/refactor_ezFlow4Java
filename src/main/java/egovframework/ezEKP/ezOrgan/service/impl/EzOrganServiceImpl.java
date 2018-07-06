@@ -736,11 +736,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception {
-		return getSearchListOR(pSearchList, pCellList, pPropList, pClass, pLimit, primary, tenantID, "");
-	}
-	
-	@Override
 	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID, String companyId) throws Exception {
 		logger.debug("getSearchListOR started");
 		
