@@ -801,8 +801,8 @@ function deleteFavoriteMemo(projectId) {
 				if (listProjectStatus == "F") {
 					setProjectList("new");
 				}
-				
-				location.reload();
+
+				setProjectList("new");
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 			}

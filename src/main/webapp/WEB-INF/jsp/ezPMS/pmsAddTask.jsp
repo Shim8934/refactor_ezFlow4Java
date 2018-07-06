@@ -244,7 +244,7 @@ function addTask() {
 	
 	//프로젝트 상태가 완료인 경우 업무를 추가할 때 
 	if (projectStatus == "C") {
-		var result = confirm("업무를 추가하면 완료된 프로젝트의 상태가 진행 혹은 지연 상태로 변경됩니다.\n계속 하시겠습니까?");
+		var result = confirm("<spring:message code='ezPMS.t320' />");
 		if (result) {
 			if (endDateComp.getTime() > projectEndDateComp.getTime()) {
 				if (todayComp.getTime() <= endDateComp.getTime()) {
