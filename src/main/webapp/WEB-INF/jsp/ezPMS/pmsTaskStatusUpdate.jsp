@@ -51,8 +51,7 @@
 		var realEndDate = taskDetails.realEndDate;
 		
 		$("#RSDatepicker").val(realStartDate);
-		$("#REDatepicker").val(realEndDate);
-		
+		$("#REDatepicker").val(realEndDate);	
 	});
 	
 	function popupClose() {
@@ -126,6 +125,36 @@
 	}
 	
 	function setStatus() {
+		
+		var statusOption = "";
+		
+		switch(taskDetails.status) {
+		case 'P':
+			statusOption = "<option value='P'><spring:message code='ezPMS.t15' /></option>"
+						 + "<option value='C'><spring:message code='ezPMS.t17' /></option>"
+						 + "<option value='S'><spring:message code='ezPMS.t19' /></option>";
+			break;
+		case 'W':
+			statusOption = "<option value='P'><spring:message code='ezPMS.t15' /></option>"
+						 + "<option value='W'><spring:message code='ezPMS.t16' /></option>"
+						 + "<option value='S'><spring:message code='ezPMS.t19' /></option>";
+			break;
+		case 'C':
+			statusOption = "<option value='C'><spring:message code='ezPMS.t17' /></option>";
+			break;
+		case 'L':
+			statusOption = "<option value='C'><spring:message code='ezPMS.t17' /></option>"
+						 + "<option value='L'><spring:message code='ezPMS.t18' /></option>"
+						 + "<option value='S'><spring:message code='ezPMS.t19' /></option>";
+			break;
+		case 'S':
+			statusOption = "<option value='P'><spring:message code='ezPMS.t15' /></option>"
+						 + "<option value='C'><spring:message code='ezPMS.t17' /></option>"
+						 + "<option value='S'><spring:message code='ezPMS.t19' /></option>";
+			break;
+		}		
+				 
+		$("#statusOption").html(statusOption);
 		
 		if (projectStatus == "W" || projectStatus == "C" || projectStatus == "S" || projectStatus == "D") {
 			$(".taskStatusChgDiv").css("display", "none");
@@ -490,12 +519,8 @@ button.PHBtn {
 					</div>
 					<div class="taskStatusChgDiv">
 						<span><spring:message code='ezPMS.t137' /> <spring:message code='ezPMS.t38' /></span>
-						<select>
-							<option value="W"><spring:message code='ezPMS.t16' /></option>
-							<option value="P"><spring:message code='ezPMS.t15' /></option>
-							<option value="C"><spring:message code='ezPMS.t17' /></option>
-							<option value="S"><spring:message code='ezPMS.t19' /></option>
-							<option value="L"><spring:message code='ezPMS.t18' /></option>
+						<select id="statusOption">
+							
 						</select>
 					</div>
 			</div>
