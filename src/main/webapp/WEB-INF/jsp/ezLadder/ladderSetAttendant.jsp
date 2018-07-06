@@ -1348,8 +1348,13 @@
 		    	}
 		    	
 		    	if(type !== "delete" && !rtn.length){
-		    		alert("<spring:message code='ezLadder.t058' />");
-		    		return;
+		    		if(type === "add") {
+			    		alert("<spring:message code='ezLadder.t058' />");
+			    		return;
+		    		} else {
+		    			alert("<spring:message code='ezLadder.hyh03' />");
+			        	return;
+		    		}
 		    	}
 		    	
 		    	retAttendantPopInfo[0] = type;
