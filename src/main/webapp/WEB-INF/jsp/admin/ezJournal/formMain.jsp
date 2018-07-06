@@ -176,7 +176,7 @@
 			}
 			
 			#formType tr:hover,  #formList tr:hover {background:#eee; color:#fff; cursor: pointer;}
-			.active {background: #f0f6ff;}
+			.active {background: #efeff0;}
 			
 		</style>
 	</head>

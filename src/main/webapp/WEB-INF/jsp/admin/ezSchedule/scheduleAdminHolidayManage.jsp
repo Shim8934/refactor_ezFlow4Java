@@ -209,13 +209,13 @@
 		        }
 	
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(1).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(2).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(3).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(4).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(5).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(6).style.backgroundColor = "#f0f6ff";
+		        obj.childNodes.item(0).style.backgroundColor = "#efeff0";
+		        obj.childNodes.item(1).style.backgroundColor = "#efeff0";
+		        obj.childNodes.item(2).style.backgroundColor = "#efeff0";
+		        obj.childNodes.item(3).style.backgroundColor = "#efeff0";
+		        obj.childNodes.item(4).style.backgroundColor = "#efeff0";
+		        obj.childNodes.item(5).style.backgroundColor = "#efeff0";
+		        obj.childNodes.item(6).style.backgroundColor = "#efeff0";
 		    }
 	
 	

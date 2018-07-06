@@ -184,8 +184,9 @@ function editCircularComment(obj) {
 		alert(strLang5);
 		return ;
 	}
-	
-	circularComment = trim(ReplaceText(circularComment, "\n", "<br>"));
+	//2018-07-06 배현상, 회람판 의견 표힌 시 \n의 <br>치환 불필요 제거
+	//circularComment = trim(ReplaceText(circularComment, "\n", "<br>"));
+	circularComment = trim(circularComment);
 	
 	$.ajax({
 		type : "POST",

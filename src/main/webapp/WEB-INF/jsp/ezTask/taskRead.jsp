@@ -643,8 +643,8 @@
 						taskCommentList += "<colgroup><col width='7%' /><col width='35%' /><col width='57%' /></colgroup>";
 						taskCommentList += "<tr style='height:58px'>";
 						taskCommentList += "<th style='font-weight: bold;'><spring:message code='ezTask.t2012' /></th>";
-						taskCommentList += "<td class='pos1' style='padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;width: 84%;border-bottom:0px;'><textarea id='TextComment' maxlength='500' style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>";
-						taskCommentList += "<td style='text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;background-color:#f8f8fa;'><a class='imgbtn' style='vertical-align: middle;'><span onClick='add_comment()'><spring:message code='ezBoard.t321' /></span></a>";
+						taskCommentList += "<td class='pos1' style='border:0px;padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;width: 84%;border-bottom:0px;'><textarea id='TextComment' maxlength='500' style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>";
+						taskCommentList += "<td style='border:0px;text-align:center;'><a class='imgbtn imgbck' style='vertical-align: middle;'><span onClick='add_comment()'><spring:message code='ezBoard.t321' /></span></a>";
 						taskCommentList += "</td></tr>";
 						taskCommentList += "</table>";
 						taskCommentList += "</td>";

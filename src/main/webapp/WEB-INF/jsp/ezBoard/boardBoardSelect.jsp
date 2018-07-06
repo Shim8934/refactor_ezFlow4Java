@@ -24,14 +24,14 @@
 				vertical-align:top;
 				font-size: 9pt;
 				height : 22px;
-				background-color : #f0f6ff;
+				background-color : #efeff0;
 				cursor : hand;
 			}
 			.node_hover{
 				padding-top: 3px;
 				vertical-align:top;
 				font-size: 9pt;
-				background-color : #F7FAE0;
+				background-color : #f4f5f5;
 				height : 22px;
 				cursor : hand;
 			}
