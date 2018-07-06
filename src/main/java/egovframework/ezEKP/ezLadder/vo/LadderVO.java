@@ -50,8 +50,16 @@ public class LadderVO {
 	private int newFlag;
 	/** 회사 아이디 */
 	private String companyID;
+	/** 회사 이름 */
+	private String companyName;
 	
 	
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 	public String getDeptID() {
 		return deptID;
 	}

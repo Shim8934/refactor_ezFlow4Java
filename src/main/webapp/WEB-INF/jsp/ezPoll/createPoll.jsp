@@ -595,7 +595,7 @@
 	            var useragentstr = navigator.userAgent;
 	            
 	            if (useragentstr.indexOf(_MSIE) != -1) {	            	
-	                var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
+	                var szParam = "dialogHeight:708px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 708);
 	                var rv = window.showModalDialog(szUrl, document.getElementById("RangeXMLStr").value, szParam);
 	                
 	                if (rv[0] == "OK") {
@@ -618,8 +618,8 @@
 	                        g_windowReference = window.open(szUrl, "SelectRange", "height=730,width=560,resizable=no,center=yes" + feature);
 	                    } 
 	                    else {
-	                        var feature = GetOpenPosition(730, 700);
-	                        g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
+	                        var feature = GetOpenPosition(730, 708);
+	                        g_windowReference = window.open(szUrl, "SelectRange", "height=708,width=560,resizable=no,center=yes" + feature);
 	                    }
 	                }
 	                

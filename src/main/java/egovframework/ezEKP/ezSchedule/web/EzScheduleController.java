@@ -1344,7 +1344,6 @@ public class EzScheduleController extends EgovFileMngUtil {
         StringBuilder strOwnerID = new StringBuilder();
         ScheduleInfoVO scheduleInfo = new ScheduleInfoVO();
         
-        //asdf
 		List<ScheduleSecretaryVO> sList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID ,companyID);
 		List<ScheduleDeptVO> pdList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID ,companyID);
 		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID, companyID);
