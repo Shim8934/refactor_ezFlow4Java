@@ -192,20 +192,16 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 		map.put("tenantId",  tenantId);
 		map.put("cabinetId", cabinetId);
 		
-		CabinetVO cabinet   = ezCabinetDAO.getCabinetById(map);
-		String cabinetPath  = cabinet.getCabinetPath();
-		int cabinetLevel    = cabinet.getCabinetLevel();
+		CabinetVO cabinet  = ezCabinetDAO.getCabinetById(map);
+		String cabinetPath = cabinet.getCabinetPath();
+		int cabinetLevel   = cabinet.getCabinetLevel();
 		
 		if (cabinetLevel == 0) {
-			String cabinetName = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
-			return new CabinetSimpleVO(cabinet.getCabinetId(), cabinetName, cabinet.getCabinetName1(), cabinet.getCabinetName2(), 1, cabinet.getCabinetLevel(), cabinet.getCabinetStep(), null);
+			map.put("type", 0);
+			return ezCabinetDAO.getRootCabinetTree(map);
 		}
 		
-		cabinetPath         = cabinetPath.substring(1, cabinetPath.length() - 1);
-		
-		logger.debug("Cabinet Path: " + cabinetPath);
-		logger.debug("cabinetLevel: " + cabinetLevel);
-		
+		cabinetPath           = cabinetPath.substring(1, cabinetPath.length() - 1);
 		List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
 		nodeIds.remove(nodeIds.size() - 1);
 		
@@ -234,8 +230,6 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 					-- cabinetLevel;
 				}
 			}
-			
-			
 		}
 		
 		return listNodes.get(0);
@@ -253,6 +247,7 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 		map.put("userId",    userId);
 		map.put("primary",   primary);
 		map.put("tenantId",  tenantId);
+		map.put("type",      0);
 		
 		CabinetSimpleVO result = ezCabinetDAO.getRootCabinetTree(map);
 		
@@ -344,11 +339,13 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 		
 		return ezCabinetDAO.getCabinetSubTree(map);
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public void renameCabinet(int cabinetId, String cabName1, String cabName2, LoginVO userInfo) throws Exception {
-		int tenantId     = userInfo.getTenantId();
-		String companyId = userInfo.getCompanyID();
+	public JSONObject renameCabinet(int cabinetId, String cabName1, String cabName2, LoginVO userInfo) throws Exception {
+		JSONObject result = new JSONObject();
+		int tenantId      = userInfo.getTenantId();
+		String companyId  = userInfo.getCompanyID();
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("cabinetId", cabinetId);
@@ -356,9 +353,58 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 		map.put("tenantId",  tenantId);
 		
 		CabinetVO cabinet = ezCabinetDAO.getCabinetById(map);
+		
+		if (cabinet.getCabinetLevel() == 0) {
+			result.put("status", "error");
+			result.put("code", 4);
+			return result;
+		}
+		
 		cabinet.setCabinetName1(cabName1);
 		cabinet.setCabinetName2(cabName2);
 		
 		updateCabinet(cabinet);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject deleteCabinet(int cabinetId, LoginVO userInfo) throws Exception {
+		JSONObject result = new JSONObject();
+		int tenantId      = userInfo.getTenantId();
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  tenantId);
+		
+		CabinetVO cabinet = ezCabinetDAO.getCabinetById(map);
+		
+		if (cabinet.getCabinetLevel() == 0) {
+			result.put("status", "error");
+			result.put("code", 4);
+			return result;
+		}
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		
+		map.put("cabinetPath", cabinet.getCabinetPath());
+		map.put("userId",      userInfo.getId());
+		map.put("tenantId",    tenantId);
+		map.put("timeUTC",     timeUTC);
+		
+		//Delete cabinet and all sub-cabinet
+		ezCabinetDAO.deleteSubCabinetList(map);
+		
+		//Delete all cabinet-items
+		ezCabinetDAO.deleteAllCabinetItems(map);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
 	}
 }

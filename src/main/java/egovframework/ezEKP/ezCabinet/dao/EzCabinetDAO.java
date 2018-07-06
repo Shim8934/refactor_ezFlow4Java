@@ -80,4 +80,12 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public void updateCabinet(CabinetVO cabinet) {
 		update("EzCabinetDAO.updateCabinet", cabinet);
 	}
+
+	public void deleteSubCabinetList(Map<String, Object> map) {
+		update("EzCabinetDAO.deleteSubCabinetList", map);
+	}
+
+	public void deleteAllCabinetItems(Map<String, Object> map) {
+		update("EzCabinetDAO.deleteAllCabinetItems", map);
+	}
 }

@@ -135,12 +135,14 @@
 					switch(mode) {
 						case "add"   : successHandler = afterAddCabinetSuccessfully    ; break;
 						case "change": successHandler = afterChangeCabinetSuccessfully ; break;
+						case "del"   : successHandler = afterDeleteCabinetSuccessfully ; break;
 					}
 					
 					switch(code) {
 						case 0 : successHandler()                   ; break;
 						case 1 : alert(CabinetMessages.strParamErr) ; break;
 						case 2 : alert(CabinetMessages.strError)    ; break;
+						case 4 : alert(CabinetMessages.strRoot)     ; break;
 						default: alert(CabinetMessages.strError)    ; return;
 					}
 					
@@ -160,8 +162,20 @@
 					reloadTree();
 				}
 				
-				function reloadTree() {
-					var currentNode = document.querySelector("span[class='selectedNode']").getAttribute("role");
+				function afterDeleteCabinetSuccessfully() {
+					alert(CabinetMessages.strDel);
+					closeCabinetDialog("delCab");
+					reloadTree("del");
+				}
+				
+				function reloadTree(mode) {
+					var selectedNode = document.querySelector("span[class='selectedNode']");
+					var currentNode  = "";
+					
+					if (!mode || mode != "del") {
+						if (selectedNode) {currentNode = selectedNode.getAttribute("role");}
+					}
+					
 					myCabinetTree.makeTree({cabinetNode : currentNode});
 					var leftPanel   = window.opener;
 					
@@ -187,7 +201,10 @@
 				}
 				
 				function delCabinet() {
-					//*Note delete cabinet function here
+					var url  = "/ezCabinet/deleteCabinet.do";
+					var data = {cabinetId : document.querySelector("span[class='selectedNode']").getAttribute("role")};
+					
+					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "del");
 				}
 				
 				function checkCabinetName(str){
@@ -230,7 +247,9 @@
 				
 				function changeCabinetDialog() {
 					var selectedNode = document.querySelector("span[class='selectedNode']");
+					
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
+					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
 					
 					document.getElementById("cabNameTxt1").value = selectedNode.getAttribute("name1");
 					document.getElementById("cabNameTxt2").value = selectedNode.getAttribute("name2");
@@ -240,14 +259,20 @@
 				}
 				
 				function deleteCabinetDialog() {
-					//Check if selected Cabinet exist
+					var selectedNode = document.querySelector("span[class='selectedNode']");
+					
+					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
+					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
 					
 					addFogPanel();
 					showCabinetPopup("delCab", 350, 160);
 				}
 				
 				function moveCabinetDialog(mode) {
-					//Check if selected Cabinet exist
+					var selectedNode = document.querySelector("span[class='selectedNode']");
+					
+					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
+					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
 					
 					addFogPanel();
 					changeCabinetTitle(mode, "moveCabinet");

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
@@ -28,6 +29,7 @@ public interface EzCabinetService {
 	CabinetSimpleVO getMyCabinetTreeDetail(String cabinetId, LoginVO userInfo) throws Exception;
 	void addCabinet(int parentId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
 	List<CabinetSimpleVO> getCabinetSubTree(String cabinetId, LoginVO userInfo) throws Exception;
-	void renameCabinet(int cabinetId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
+	JSONObject renameCabinet(int cabinetId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
+	JSONObject deleteCabinet(int cabinetId, LoginVO userInfo) throws Exception;
 	
 }

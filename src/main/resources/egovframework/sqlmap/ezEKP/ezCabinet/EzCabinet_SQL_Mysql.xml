@@ -300,6 +300,39 @@
 		]]>
 	</update>
 	
+	<update id="EzCabinetDAO.deleteSubCabinetList" parameterClass="Map">
+		<![CDATA[
+			update
+				tbl_cabinet_cabinet
+			set
+				use_status   = 0,
+				deleter_id   = #userId#,
+				updated_date = #timeUTC#
+			where
+				use_status = 1 and cabinet_path like concat(#cabinetPath#, '%') and tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzCabinetDAO.deleteAllCabinetItems" parameterClass="Map">
+		<![CDATA[
+			update
+				tbl_cabinet_item i join (
+					select
+						*
+					from
+						tbl_cabinet_cabinet
+					where
+						cabinet_path like concat(#cabinetPath#, '%') and tenant_id = #tenantId#
+				) c1 on i.cabinet_id = c1.cabinet_id and i.tenant_id = c1.tenant_id
+			set
+				i.use_status   = 0,
+				i.deleter_id   = #userId#,
+				i.updated_date = #timeUTC#
+			where
+				i.tenant_id = #tenantId# and i.use_status = 1
+		]]>
+	</update>
+	
 	<!--***********************************************************************************
 	**                                Cabinet tree process                               **
 	************************************************************************************-->
@@ -309,12 +342,8 @@
 			from
 				tbl_cabinet_cabinet c1
 			where
-				c1.creator_id = #userId# and c1.company_id = #companyId# and c1.tenant_id = #tenantId# and c1.cabinet_level = 0 and c1.use_status = 1
+				c1.creator_id = #userId# and c1.tenant_id = #tenantId# and c1.cabinet_level = 0 and c1.use_status = 1 and c1.cabinet_type = #type#
 		]]>
-			<isNotEmpty property="type">
-				and c1.cabinet_type = #type#
-			</isNotEmpty>
-			order by c1.cabinet_level asc, c1.cabinet_step asc
 	</select>
 	
 	<select id="EzCabinetDAO.getCabinetSubTree" resultMap="cabinetSimpleVO2">

@@ -328,7 +328,7 @@ public class EzCabinetController {
 		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
 		JSONObject resultObj = new JSONObject();
 		
-		resultObj = cabinetRestService.getMyCabinetTree(request, currentNode, user.getId());
+		resultObj            = cabinetRestService.getMyCabinetTree(request, currentNode, user.getId());
 		
 		logger.debug("jsonMyCabinetTree end");
 		return resultObj.toString();
@@ -344,7 +344,7 @@ public class EzCabinetController {
 		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2") : "";
 		JSONObject resultObj = new JSONObject();
 		
-		resultObj = cabinetRestService.addCabinet(request, user.getId(), parentId, cabinetName1, cabinetName2);
+		resultObj            = cabinetRestService.addCabinet(request, user.getId(), parentId, cabinetName1, cabinetName2);
 		
 		logger.debug("jsonAddCabinet end");
 		return resultObj.toString();
@@ -360,9 +360,23 @@ public class EzCabinetController {
 		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2")  : "";
 		JSONObject resultObj = new JSONObject();
 		
-		resultObj = cabinetRestService.renameCabinet(request, user.getId(), cabinetId, cabinetName1, cabinetName2);
+		resultObj            = cabinetRestService.renameCabinet(request, user.getId(), cabinetId, cabinetName1, cabinetName2);
 		
 		logger.debug("jsonRenameCabinet end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/deleteCabinet.do")
+	@ResponseBody
+	public String jsonDeleteCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonDeleteCabinet start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj            = cabinetRestService.deleteCabinet(request, user.getId(), cabinetId);
+		
+		logger.debug("jsonDeleteCabinet end");
 		return resultObj.toString();
 	}
 	
@@ -374,7 +388,7 @@ public class EzCabinetController {
 		String nodeId        = request.getParameter("nodeId")  != null ? request.getParameter("nodeId") : "";
 		JSONObject resultObj = new JSONObject();
 		
-		resultObj = cabinetRestService.getCabinetSubNodes(request, user.getId(), nodeId);
+		resultObj            = cabinetRestService.getCabinetSubNodes(request, user.getId(), nodeId);
 		
 		logger.debug("jsonGetSubCabinetNodes end");
 		return resultObj.toString();

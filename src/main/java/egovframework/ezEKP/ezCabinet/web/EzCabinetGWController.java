@@ -711,10 +711,37 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			cabinetService.renameCabinet(cabinetId, cabName1, cabName2, userInfo);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
+			result           = cabinetService.renameCabinet(cabinetId, cabName1, cabName2, userInfo);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/cabinet/delete", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteCabinet(HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                      : "";
+		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")                      : "";
+		int cabinetId     = request.getParameter("cabinetId") != null ? Integer.parseInt(request.getParameter("cabinetId")) : -1;
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Cabinet Id: " + cabinetId);
+		
+		if (serverName.equals("") || userId.equals("") || cabinetId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			result           = cabinetService.deleteCabinet(cabinetId, userInfo);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
