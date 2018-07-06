@@ -554,7 +554,7 @@
 		            ResultXML = xmlhttp_total.responseXML;
 		            
 		            // 결재할 문서
-		            if (pListTypeValue != "1") {
+		            if (pListTypeValue == "1") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
 		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
 		                else
@@ -964,7 +964,7 @@
 			</c:if>
 			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t102'/></span></h2>
 			<ul id="iconul">
-				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
+				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1 style="font-weight: bold"></span></span></li>
 
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL2" onClick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
 
