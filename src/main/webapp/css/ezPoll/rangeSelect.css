@@ -4,8 +4,10 @@
 .btnSearch{background:#eaeaea; border:1px solid #999; height:18px; line-height:16px;}
 .btnSearch span{background:none;}
 
-.btnSave{background:#004896; border:none; color:#FFF; width:60px; height:22px; line-height:22px; padding:0px;}
-.btnSave span{background:#004896; color:#FFF; padding:0px; line-height:22px;}
+/* .btnSave{background:#004896; border:none; color:#FFF; width:60px; height:22px; line-height:22px; padding:0px;} */
+/* .btnSave span{background:#004896; color:#FFF; padding:0px; line-height:22px;} */
 
 .btnCancel{background:#d0d0d0; border:1px solid #888; width:58px; height:20px; line-height:16px; padding:0px;}
 .btnCancel span{background:#d0d0d0; padding:0px; line-height:20px;}
+
+#cnkeyword{width:130px; margin-top:1px;}
