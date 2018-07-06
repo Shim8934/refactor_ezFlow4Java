@@ -963,13 +963,18 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        	type = "G";
 	        }
 	        
+	        logger.debug("searchList : " + pSearchList.split("@@")[0]);
 	        if (!companyId.equals("")) {
 	        	strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
 	        	if (type.equals("G")) {
 	        		strSQLCom = strSQLCom.replace("PHYSICALDELIVERYOFFICENAME", "EXTENSIONATTRIBUTE2");
 	        	}
 	        	
-	        	strSQLAddjobCom = "and a.deptid in (select cn from tbl_deptmaster where EXTENSIONATTRIBUTE2 = '" + companyId + "')";
+	        	strSQLAddjobCom = "AND a.DEPTID IN (SELECT cn FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = '" + companyId + "')";
+	        	if (pSearchList.split("@@")[0].equals("description")){
+	        		strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
+	        	}
+	        	
 	        }
 	        
 	        if(page.equals(null) || page.equals("")){
@@ -2003,14 +2008,19 @@ public class EzOrganServiceImpl implements EzOrganService {
         }else{
         	type = "G";
         }
-        
+
+    	logger.debug("searchList : " + pSearchList.split("@@")[0]);
         if (!companyId.equals("")) {
         	strSQLCom = "AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
         	if (type.equals("G")) {
         		strSQLCom = strSQLCom.replace("PHYSICALDELIVERYOFFICENAME", "EXTENSIONATTRIBUTE2");
         	}
         	
-        	strSQLAddjobCom = "and a.deptid in (select cn from tbl_deptmaster where EXTENSIONATTRIBUTE2 = '" + companyId + "')";
+        	strSQLAddjobCom = "AND a.DEPTID IN (SELECT cn FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = '" + companyId + "')";
+        	if (pSearchList.split("@@")[0].equals("description")){
+        		strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
+        	}
+        	
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
