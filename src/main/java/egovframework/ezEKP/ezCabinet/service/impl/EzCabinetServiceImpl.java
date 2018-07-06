@@ -1,34 +1,48 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+
 @Service
 public class EzCabinetServiceImpl implements EzCabinetService {
+	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl.class);
+	
 	@Resource(name = "EzCabinetDAO")
 	private EzCabinetDAO ezCabinetDAO;
 	
 	@Resource(name = "EzCabinetAdminDAO")
 	private EzCabinetAdminDAO ezCabinetAdminDAO;
 	
+	@Autowired
+	private CommonUtil commonUtil;
+	
 	@Override
-	public SimpleDeptVO getAllDepts(String companyId, int level, String primary, int tenantId) throws Exception {
-		List<SimpleDeptVO> deptList = getAllSimpleDeptsOfCompany(companyId, level, primary, tenantId);
-		SimpleDeptVO dept           = deptList.get(0);
-		deptList.remove(0);
-		dept.setSubDepts(deptList);
-		
-		return dept;
+	public List<SimpleDeptVO> getAllSubDepts(String companyId, int level, String primary, int tenantId) throws Exception {
+		List<SimpleDeptVO> deptList = getAllSimpleSubDepts(companyId, level, primary, tenantId);
+		return deptList;
 	}
 
 	@Override
@@ -162,5 +176,189 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 		map.put("contentHPrev", contentHPrev);
 		
 		ezCabinetDAO.saveUserConfig(map);
+	}
+	
+	@Override
+	public CabinetSimpleVO getMyCabinetTreeDetail(String cabinetId, LoginVO userInfo) throws Exception {
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		String userId          = userInfo.getId();
+		String primary         = userInfo.getPrimary();
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("userId",    userId);
+		map.put("primary",   primary);
+		map.put("tenantId",  tenantId);
+		map.put("cabinetId", cabinetId);
+		
+		CabinetVO cabinet   = ezCabinetDAO.getCabinetById(map);
+		String cabinetPath  = cabinet.getCabinetPath();
+		int cabinetLevel    = cabinet.getCabinetLevel();
+		
+		if (cabinetLevel == 0) {
+			String cabinetName = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
+			return new CabinetSimpleVO(cabinet.getCabinetId(), cabinetName, cabinet.getCabinetName1(), cabinet.getCabinetName2(), 1, cabinet.getCabinetLevel(), cabinet.getCabinetStep(), null);
+		}
+		
+		cabinetPath         = cabinetPath.substring(1, cabinetPath.length() - 1);
+		
+		logger.debug("Cabinet Path: " + cabinetPath);
+		logger.debug("cabinetLevel: " + cabinetLevel);
+		
+		List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
+		nodeIds.remove(nodeIds.size() - 1);
+		
+		map.put("listNodes", nodeIds);
+		List<CabinetSimpleVO> listNodes = ezCabinetDAO.getMyCabinetNodesInDetail(map);
+		
+		Map<Integer, List<CabinetSimpleVO>> mapCabinet = new HashMap<>();
+		mapCabinet.put(cabinetLevel, new ArrayList<CabinetSimpleVO>());
+		
+		for (int i = listNodes.size() - 1; i >= 0; i--) {
+			CabinetSimpleVO cabinetSimple = listNodes.get(i);
+			int nodeId                    = nodeIds.get(cabinetLevel - 1);
+			
+			if (cabinetSimple.getCabinetLevel() == cabinetLevel) {
+				mapCabinet.get(cabinetLevel).add(0, cabinetSimple);
+			}
+			else {
+				if (mapCabinet.get(cabinetLevel - 1) == null) {
+					mapCabinet.put(cabinetLevel - 1, new ArrayList<CabinetSimpleVO>());
+				}
+				
+				mapCabinet.get(cabinetLevel - 1).add(0, cabinetSimple);
+				
+				if (cabinetSimple.getCabinetId() == nodeId) {
+					cabinetSimple.setSubList(mapCabinet.get(cabinetLevel));
+					-- cabinetLevel;
+				}
+			}
+			
+			
+		}
+		
+		return listNodes.get(0);
+	}
+	
+	@Override
+	public CabinetSimpleVO getMyCabinetTreeNormal(String cabinetStr1, String cabinetStr2, LoginVO userInfo) throws Exception {
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		String userId          = userInfo.getId();
+		String primary         = userInfo.getPrimary();
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("userId",    userId);
+		map.put("primary",   primary);
+		map.put("tenantId",  tenantId);
+		
+		CabinetSimpleVO result = ezCabinetDAO.getRootCabinetTree(map);
+		
+		if (result == null) {
+			CabinetVO cabinet  = generateCabinetVO(cabinetStr1, cabinetStr2, 0, 0, -1, userInfo);
+			insertCabinet(cabinet);
+			
+			String cabinetName = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
+			result             = new CabinetSimpleVO(cabinet.getCabinetId(), cabinetName, cabinet.getCabinetName1(), cabinet.getCabinetName2(), 0, cabinet.getCabinetLevel(), cabinet.getCabinetStep(), null);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public void addCabinet(int parentId, String cabName1, String cabName2, LoginVO userInfo) throws Exception {
+		CabinetVO cabinet = generateCabinetVO(cabName1, cabName2, -1, 0, parentId, userInfo);
+		insertCabinet(cabinet);
+	}
+	
+	private synchronized void insertCabinet(CabinetVO cabinet) {
+		ezCabinetDAO.insertCabinet(cabinet);
+	}
+	
+	private synchronized void updateCabinet(CabinetVO cabinet) {
+		ezCabinetDAO.updateCabinet(cabinet);
+	}
+	
+	private CabinetVO generateCabinetVO(String cabinetStr1, String cabinetStr2, int level, int type, int parentId, LoginVO userInfo) {
+		CabinetVO cabinet          = new CabinetVO();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		String userId              = userInfo.getId();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
+		Map<String,Object> map     = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
+		int cabinetId              = ezCabinetDAO.getMaxCabinetId(map) + 1;
+		int cabinetStep            = -1;
+		String cabinetPath         = "";
+		
+		if (level == -1 && parentId != -1) {
+			map.put("cabinetId", parentId);
+			CabinetVO parent = ezCabinetDAO.getCabinetById(map);
+			level            = parent.getCabinetLevel() + 1;
+			cabinetPath      = parent.getCabinetPath() + cabinetId + "|";
+			cabinetStep      = ezCabinetDAO.getMaxCabinetStep(map) + 1;
+		}
+		else {
+			parentId    = -1;
+			cabinetPath = "|" + cabinetId + "|";
+			cabinetStep = 0;
+		}
+		
+		cabinet.setCabinetId(cabinetId);
+		cabinet.setCabinetLevel(level);
+		cabinet.setCabinetStep(cabinetStep);
+		cabinet.setCabinetName1(cabinetStr1);
+		cabinet.setCabinetName2(cabinetStr2);
+		cabinet.setCreatorId(userId);
+		cabinet.setCreatorName1(userInfo.getDisplayName1());
+		cabinet.setCreatorName2(userInfo.getDisplayName2());
+		cabinet.setCabinetType(type);
+		cabinet.setParentId(parentId);
+		cabinet.setCabinetPath(cabinetPath);
+		cabinet.setCreatedDate(timeUTC);
+		cabinet.setUpdatedDate(timeUTC);
+		cabinet.setUpdateId(userId);
+		cabinet.setDeleterId(null);
+		cabinet.setUseStatus(1);
+		cabinet.setCompanyId(companyId);
+		cabinet.setTenantId(tenantId);
+		
+		return cabinet;
+	}
+
+	@Override
+	public List<CabinetSimpleVO> getCabinetSubTree(String cabinetId, LoginVO userInfo) throws Exception {
+		int tenantId           = userInfo.getTenantId();
+		String primary         = userInfo.getPrimary();
+		String companyId       = userInfo.getCompanyID();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("primary",   primary);
+		map.put("cabinetId", cabinetId);
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
+		
+		return ezCabinetDAO.getCabinetSubTree(map);
+	}
+
+	@Override
+	public void renameCabinet(int cabinetId, String cabName1, String cabName2, LoginVO userInfo) throws Exception {
+		int tenantId     = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
+		
+		CabinetVO cabinet = ezCabinetDAO.getCabinetById(map);
+		cabinet.setCabinetName1(cabName1);
+		cabinet.setCabinetName2(cabName2);
+		
+		updateCabinet(cabinet);
 	}
 }

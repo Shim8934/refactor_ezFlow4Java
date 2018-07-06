@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +21,7 @@ import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
@@ -159,7 +159,7 @@ public class EzCabinetGWController {
 			deptId                = deptId.equals("") ? userInfo.getDeptID() : deptId;
 			SimpleDeptVO sCompany = null;
 			
-			if (deptId.equals("")) {
+			/*if (deptId.equals("")) {
 				sCompany = cabinetService.getAllDepts(companyId, 0, primary, tenantId);
 			}
 			else {
@@ -168,7 +168,7 @@ public class EzCabinetGWController {
 				sCompany         = cabinetService.getSimpleCompany(companyId, 0, primary, tenantId);
 				
 				cabinetService.getAllDepts(sCompany, path, primary, tenantId, 1, 1);
-			}
+			}*/
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -201,13 +201,11 @@ public class EzCabinetGWController {
 		}
 		
 		try {
-			LoginVO userInfo   = commonUtil.getUserForGw(userId, serverName);
-			int tenantId       = userInfo.getTenantId();
-			String primary     = userInfo.getPrimary();
-			SimpleDeptVO sDept = cabinetService.getAllDepts(deptId, level, primary, tenantId);
+			LoginVO userInfo            = commonUtil.getUserForGw(userId, serverName);
+			List<SimpleDeptVO> subDepts = cabinetService.getAllSubDepts(deptId, level, userInfo.getPrimary(), userInfo.getTenantId());
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("subNodes", sDept);
+			result.put("subNodes", subDepts);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -519,9 +517,7 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo            = commonUtil.getUserForGw(userId, serverName);
-			int tenantId                = userInfo.getTenantId();
-			String primary              = userInfo.getPrimary();
-			UserCapacityVO userCapacity = cabinetAdminService.getUserCapacity(userId, primary, tenantId);
+			UserCapacityVO userCapacity = cabinetAdminService.getUserCapacity(userId, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 			setUsedRateForUser(userCapacity);
 			
 			result.put("capacity", userCapacity);
@@ -603,11 +599,153 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			int tenantId     = userInfo.getTenantId();
-			String companyId = userInfo.getCompanyID();
+			cabinetService.saveUserConfig(prevMode, listCount, contentWPrev, contentHPrev, userId, userInfo.getCompanyID(), userInfo.getTenantId());
 			
-			cabinetService.saveUserConfig(prevMode, listCount, contentWPrev, contentHPrev, userId, companyId, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/mycabinet/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getMyCabinet(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
+		String cabinetId  = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || CabinetId: " + cabinetId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			CabinetSimpleVO mycabinet = new CabinetSimpleVO();
+					
+			if (cabinetId.equals("")) {
+				String cabinetStr1  = egovMessageSource.getMessage("ezCabinet.t02", new Locale("ko"));
+				String cabinetStr2  = egovMessageSource.getMessage("ezCabinet.t02", new Locale("en"));
+				mycabinet           = cabinetService.getMyCabinetTreeNormal(cabinetStr1, cabinetStr2, userInfo);
+			}
+			else {
+				mycabinet = cabinetService.getMyCabinetTreeDetail(cabinetId, userInfo);
+				result.put("node", cabinetId);
+			}
 			
+			result.put("tree", mycabinet);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/cabinet/add", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject addCabinet(HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")                     : "";
+		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
+		String cabName1   = request.getParameter("cabName1") != null ? request.getParameter("cabName1")                   : "";
+		String cabName2   = request.getParameter("cabName2") != null ? request.getParameter("cabName2")                   : "";
+		int parentId      = request.getParameter("parentId") != null ? Integer.parseInt(request.getParameter("parentId")) : -1;
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Parent Id: " + parentId + " || Cabinet name1: " + cabName1 + " || Cabinet name2: " + cabName2);
+		
+		if (serverName.equals("") || userId.equals("") || parentId == -1 || cabName1.equals("") || cabName2.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			cabinetService.addCabinet(parentId, cabName1, cabName2, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/cabinet/rename", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject renameCabinet(HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                      : "";
+		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")                      : "";
+		String cabName1   = request.getParameter("cabName1")  != null ? request.getParameter("cabName1")                    : "";
+		String cabName2   = request.getParameter("cabName2")  != null ? request.getParameter("cabName2")                    : "";
+		int cabinetId     = request.getParameter("cabinetId") != null ? Integer.parseInt(request.getParameter("cabinetId")) : -1;
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Cabinet Id: " + cabinetId + " || Cabinet name1: " + cabName1 + " || Cabinet name2: " + cabName2);
+		
+		if (serverName.equals("") || userId.equals("") || cabinetId == -1 || cabName1.equals("") || cabName2.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			cabinetService.renameCabinet(cabinetId, cabName1, cabName2, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/cabinet/id/{cabinetid}/sub-node", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCabinetSubNodes(@PathVariable(value="cabinetid") String cabinetId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId") : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " Cabinet Id: " + cabinetId);
+		
+		if (serverName.equals("") || userId.equals("") || cabinetId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName);
+			List<CabinetSimpleVO> nodeList = cabinetService.getCabinetSubTree(cabinetId, userInfo);
+			
+			result.put("subNodes", nodeList);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

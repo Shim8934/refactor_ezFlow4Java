@@ -5,6 +5,8 @@
 	<typeAlias alias="cabinetSimpleDeptVO"  type="egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO"    />
 	<typeAlias alias="UserModuleVO"         type="egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO" />
 	<typeAlias alias="UserConfigVO"         type="egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO"/>
+	<typeAlias alias="CabinetVO"            type="egovframework.ezEKP.ezCabinet.vo.CabinetVO"       />
+	<typeAlias alias="CabinetSimpleVO"      type="egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO" />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -42,6 +44,78 @@
 		<result property="tenantId"          column="tenant_id"              columnIndex="7"/>
 	</resultMap>
 	
+	<!-- Cabinet resultMap -->
+	<resultMap id="cabinetVO" class="CabinetVO">
+		<result property="cabinetId"         column="cabinet_id"             columnIndex="1"/>
+		<result property="cabinetName1"      column="cabinet_name1"          columnIndex="2"/>
+		<result property="cabinetName2"      column="cabinet_name2"          columnIndex="3"/>
+		<result property="creatorId"         column="creator_id"             columnIndex="4"/>
+		<result property="creatorName1"      column="creator_name1"          columnIndex="5"/>
+		<result property="creatorName2"      column="creator_name2"          columnIndex="6"/>
+		<result property="cabinetType"       column="cabinet_type"           columnIndex="7"/>
+		<result property="parentId"          column="parent_id"              columnIndex="8"/>
+		<result property="cabinetPath"       column="cabinet_path"           columnIndex="9"/>
+		<result property="cabinetStep"       column="cabinet_step"           columnIndex="10"/>
+		<result property="cabinetLevel"      column="cabinet_level"          columnIndex="11"/>
+		<result property="createdDate"       column="created_date"           columnIndex="12"/>
+		<result property="updatedDate"       column="updated_date"           columnIndex="13"/>
+		<result property="updateId"          column="update_id"              columnIndex="14"/>
+		<result property="deleterId"         column="deleter_id"             columnIndex="15"/>
+		<result property="useStatus"         column="use_status"             columnIndex="16"/>
+		<result property="companyId"         column="company_id"             columnIndex="17"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="18"/>
+	</resultMap>
+	
+	<!-- CabinetSimpleSubVO resultMap -->
+	<resultMap id="cabinetSimpleSubVO" class="CabinetSimpleVO">
+		<result property="cabinetId"         column="sb_cabinet_id"   />
+		<result property="cabinetName"       column="sb_cabinet_name" />
+		<result property="cabinetLevel"      column="sb_cabinet_level"/>
+		<result property="cabinetStep"       column="sb_cabinet_step" />
+		<result property="hasSub"            column="sb_has_sub"      />
+	</resultMap>
+	
+	<!-- cabinetSimpleVO1 resultMap -->
+	<resultMap id="cabinetSimpleVO1"  class="CabinetSimpleVO">
+		<result property="cabinetId"         column="cabinet_id"   />
+		<result property="cabinetName"       column="cabinet_name" />
+		<result property="cabinetName1"      column="cabinet_name1"/>
+		<result property="cabinetName2"      column="cabinet_name2"/>
+		<result property="cabinetLevel"      column="cabinet_level"/>
+		<result property="cabinetStep"       column="cabinet_step" />
+		<result property="hasSub"            column="has_sub"      />
+		<result property="subList"           resultMap="ezCabinet.cabinetSimpleSubVO"/>
+	</resultMap>
+	
+	<!-- cabinetSimpleVO2 resultMap -->
+	<resultMap id="cabinetSimpleVO2"  class="CabinetSimpleVO">
+		<result property="cabinetId"         column="cabinet_id"   />
+		<result property="cabinetName"       column="cabinet_name" />
+		<result property="cabinetName1"      column="cabinet_name1"/>
+		<result property="cabinetName2"      column="cabinet_name2"/>
+		<result property="cabinetLevel"      column="cabinet_level"/>
+		<result property="cabinetStep"       column="cabinet_step" />
+		<result property="hasSub"            column="has_sub"      />
+	</resultMap>
+	
+	<sql id="cabinetTreeSelect">
+		<![CDATA[
+			select
+				c1.cabinet_id                                                                                as cabinet_id,
+				case when #primary# = '1' then c1.cabinet_name1 else c1.cabinet_name2 end                    as cabinet_name,
+				c1.cabinet_name1                                                                             as cabinet_name1,
+				c1.cabinet_name2                                                                             as cabinet_name2,
+				c1.cabinet_level                                                                             as cabinet_level,
+				c1.cabinet_step                                                                              as cabinet_step,
+				case when (select count(c2.cabinet_id) from tbl_cabinet_cabinet c2 
+					where c2.use_status = 1 and c1.cabinet_id = c2.parent_id 
+					and c1.company_id = c2.company_id and c1.tenant_id = c2.tenant_id) = 0 then 0 else 1 end as has_sub
+		]]>
+	</sql>
+	
+	<!--***********************************************************************************
+	**                            Organization tree process                              **
+	************************************************************************************-->
 	<select id="EzCabinetDAO.getAllSimpleDeptsOfCompany" resultMap="simpleDeptVO">
 		<![CDATA[
 			select
@@ -108,6 +182,9 @@
 		]]>
 	</select>
 	
+	<!--***********************************************************************************
+	**                                User config process                                **
+	************************************************************************************-->
 	<select id="EzCabinetDAO.getActiveModuleListForUser" resultMap="companyModuleVO">
 		<![CDATA[select * from tbl_cabinet_admin_modules where company_id = #companyId# and tenant_id = #tenantId# and active_status = 1 order by module_type desc]]>
 	</select>
@@ -118,7 +195,7 @@
 	
 	<insert id="EzCabinetDAO.saveModulesSetting" parameterClass="Map">
 		<selectKey keyProperty="v_temp" resultClass="Integer">
-			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id, module_type from tbl_cabinet_user_modules where user_id = #userId# and module_type = #moduleType# and tenant_id = #tenantId#) ]]>
+			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id, module_type from tbl_cabinet_user_modules where user_id = #userId# and company_id = #companyId# and module_type = #moduleType# and tenant_id = #tenantId#) ]]>
 		</selectKey>
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
@@ -133,7 +210,7 @@
 				set
 					active_status  = #activeStatus#
 				where
-					user_id = #userId# and module_type = #moduleType# and tenant_id = #tenantId#
+					user_id = #userId# and company_id = #companyId# and module_type = #moduleType# and tenant_id = #tenantId#
 			]]>
 		</isNotEqual>
 	</insert>
@@ -144,7 +221,7 @@
 	
 	<insert id="EzCabinetDAO.saveUserConfig" parameterClass="Map">
 		<selectKey keyProperty="v_temp" resultClass="Integer">
-			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id from tbl_cabinet_config where user_id = #userId# and tenant_id = #tenantId#) ]]>
+			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id from tbl_cabinet_config where user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId#) ]]>
 		</selectKey>
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
@@ -162,8 +239,103 @@
 					content_wpercent = #contentWPrev#,
 					content_hpercent = #contentHPrev#
 				where
-					user_id = #userId# and tenant_id = #tenantId#
+					user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId#
 			]]>
 		</isNotEqual>
 	</insert>
+	
+	<!--***********************************************************************************
+	**                                Cabinet process                                    **
+	************************************************************************************-->
+	
+	<select id="EzCabinetDAO.getMaxCabinetId" resultClass="Integer">
+		<![CDATA[select ifnull(max(cabinet_id), 0) from tbl_cabinet_cabinet where tenant_id = #tenantId#]]>
+	</select>
+	
+	<select id="EzCabinetDAO.getMaxCabinetStep" resultClass="Integer">
+		<![CDATA[select ifnull(max(cabinet_step), 0) from tbl_cabinet_cabinet where parent_id = #cabinetId# and tenant_id = #tenantId#]]>
+	</select>
+	
+	<select id="EzCabinetDAO.getCabinetById" resultMap="cabinetVO">
+		<![CDATA[ select * from tbl_cabinet_cabinet where cabinet_id = #cabinetId# and tenant_id = #tenantId# ]]>
+	</select>
+	
+	<insert id="EzCabinetDAO.insertCabinet" parameterClass="CabinetVO">
+		<![CDATA[
+			insert into tbl_cabinet_cabinet (
+				cabinet_id,    cabinet_name1,  cabinet_name2,  creator_id,    creator_name1,  creator_name2,
+				cabinet_type,  parent_id,      cabinet_path,   cabinet_step,  cabinet_level,  created_date,
+				updated_date,  update_id,      deleter_id,     use_status,    company_id,     tenant_id
+			)
+			values (
+				#cabinetId#,   #cabinetName1#, #cabinetName2#, #creatorId#,   #creatorName1#, #creatorName2#,
+				#cabinetType#, #parentId#,     #cabinetPath#,  #cabinetStep#, #cabinetLevel#, #createdDate#,
+				#updatedDate#, #updateId#,     #deleterId#,    #useStatus#,   #companyId#,    #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzCabinetDAO.updateCabinet" parameterClass="CabinetVO">
+		<![CDATA[
+			update
+				tbl_cabinet_cabinet
+			set
+				cabinet_name1 = #cabinetName1#,
+				cabinet_name2 = #cabinetName2#,
+				creator_name1 = #creatorName1#,
+				creator_name2 = #creatorName2#,
+				cabinet_type  = #cabinetType#,
+				parent_id     = #parentId#,
+				cabinet_path  = #cabinetPath#,
+				cabinet_step  = #cabinetStep#,
+				cabinet_level = #cabinetLevel#,
+				created_date  = #createdDate#,
+				updated_date  = #updatedDate#,
+				update_id     = #updateId#,
+				deleter_id    = #deleterId#,
+				use_status    = #useStatus#,
+				company_id    = #companyId#
+			where
+				cabinet_id = #cabinetId# and tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<!--***********************************************************************************
+	**                                Cabinet tree process                               **
+	************************************************************************************-->
+	<select id="EzCabinetDAO.getRootCabinetTree" resultMap="cabinetSimpleVO2">
+		<include refid="cabinetTreeSelect"/>
+		<![CDATA[
+			from
+				tbl_cabinet_cabinet c1
+			where
+				c1.creator_id = #userId# and c1.company_id = #companyId# and c1.tenant_id = #tenantId# and c1.cabinet_level = 0 and c1.use_status = 1
+		]]>
+			<isNotEmpty property="type">
+				and c1.cabinet_type = #type#
+			</isNotEmpty>
+			order by c1.cabinet_level asc, c1.cabinet_step asc
+	</select>
+	
+	<select id="EzCabinetDAO.getCabinetSubTree" resultMap="cabinetSimpleVO2">
+		<include refid="cabinetTreeSelect"/>
+		from
+			tbl_cabinet_cabinet c1
+		where
+			c1.parent_id = #cabinetId# and c1.company_id = #companyId# and c1.tenant_id = #tenantId# and c1.use_status = 1
+		order by c1.cabinet_step asc
+	</select>
+	
+	<select id="EzCabinetDAO.getMyCabinetNodesInDetail" resultMap="cabinetSimpleVO2">
+		<include refid="cabinetTreeSelect"/>
+		from
+			tbl_cabinet_cabinet c1
+		where
+			(c1.parent_id in <iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate>)
+			or 
+			(c1.cabinet_id in <iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate> and c1.parent_id = -1)
+			
+			and c1.company_id = #companyId# and c1.tenant_id = #tenantId# and c1.use_status = 1
+		order by c1.cabinet_level asc, c1.cabinet_step asc
+	</select>
 </sqlMap>

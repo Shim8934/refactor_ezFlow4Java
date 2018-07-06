@@ -3,83 +3,136 @@
 function CabinetTree() {
 	//private variables
 	var _treeElmtId   = null;
+	var _genType      = "normal";
 	var _companyId    = null;
 	var _initialUrl   = null;
 	var _getSubUrl    = null;
 	var _clickHandle  = null;
 	var _dblClickHdl  = null;
+	var _treeType     = null;
+	var _nodeName     = null;
+	var _nodeId       = null;
+	var _levelName    = null;
+	var _nodeSub      = null;
+	var _rootImg      = null;
+	var _nodeImg      = null;
+	var _transImg     = null;
+	var _plusImg      = null;
+	var _minusImg     = null;
+	var _name1        = null;
+	var _name2        = null;
 	
 	//set public functions
 	this.makeTree     = getInitalData;
-	this.setCompanyId = setCompanyId;
 	this.setTreeInfo  = setTreeInfo;
 	
 	//privileged functions
 	function setTreeInfo(data) {
 		_treeElmtId  = data["treeId"];
+		_treeType    = data["treeType"];
 		_initialUrl  = data["initialUrl"];
 		_getSubUrl   = data["extendUrl"];
 		_clickHandle = data["click"];
 		_dblClickHdl = data["dblClick"];
 		_companyId   = data["companyId"];
+		_genType     = data["type"]     ? data["type"]     : _genType;
+		_transImg    = data["transImg"] ? data["transImg"] : "/images/OrganTree_cross/dot_continue.gif";
+		_plusImg     = data["plus"]     ? data["plus"]     : "/images/OrganTree_cross/plus.gif";
+		_minusImg    = data["minus"]    ? data["minus"]    : "/images/OrganTree_cross/minus.gif";
+		
+		switch(_treeType) {
+			case "organ": 
+				_nodeId    = "deptId";
+				_nodeName  = "deptName";
+				_levelName = "level";
+				_nodeSub   = "subDepts";
+				_rootImg   = "/images/OrganTree_cross/ic-company.gif";
+				_nodeImg   = "/images/OrganTree_cross/ic-open.gif";
+				_name1     = "";
+				_name2     = "";
+				break;
+			case "cabinet":
+				_nodeId    = "cabinetId";
+				_nodeName  = "cabinetName";
+				_levelName = "cabinetLevel";
+				_nodeSub   = "subList";
+				_rootImg   = "/images/webfolder/fldr.png";
+				_nodeImg   = "/images/webfolder/fldr.png";
+				_name1     = "cabinetName1";
+				_name2     = "cabinetName2";
+				break;
+		}
 	}
 	
-	function setCompanyId(compId) {_companyId = compId;}
-	
-	function getInitalData() {
-		var data = {companyId : _companyId};
-		makeAjaxCall(data, "GET", _initialUrl, makeTree, null, true, null);
+	function getInitalData(params) {
+		makeAjaxCall(params, "GET", _initialUrl, makeTree, null, true, null);
 	}
 	
 	function makeTree(data) {
-		var companyTree = data.tree;
+		var nodesTree   = data.tree;
 		var currentNode = data.node;
 		
-		if (!companyTree) {alert(CabinetMessages.strTreeErr); return;}
+		if (!nodesTree) {alert(CabinetMessages.strTreeErr); return;}
 		
 		var divTree = document.getElementById(_treeElmtId);
 		
 		if (!divTree) {alert("Cannot find element with this id: " + _treeElmtId); return;}
 		
-		var divComp = document.createElement("div");
-		
 		while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}
 		
-		generateSubTree(divTree, divComp, companyTree);
+		switch(_genType) {
+			case "normal":
+				var divNode = document.createElement("div");
+				generateSubTree(divTree, divNode, nodesTree);
+				break;
+			case "list":
+				var len = nodesTree.length;
+				
+				for (var i = 0; i < len; i++) {
+					var divChildNode  = document.createElement("div");
+					generateSubTree(divTree, divChildNode, nodesTree[i]);
+				}
+				
+				break;
+		}
 		
 		if (currentNode) {
-			var spanElmt = document.getElementsByName(currentNode)[0];
+			var spanElmt = document.querySelector("span[role='" + currentNode +"']");
 			getSelected(spanElmt);
 			if (_clickHandle != null) {_clickHandle(spanElmt);}
 		}
 	}
 	
 	function generateSubTree(divTree, divElmt, list) {
-		var level = list["level"];
+		var level = list[_levelName];
 		
 		if (level > 0) {
 			for (var j = 0; j < level; j++) {
-				var imgTag = document.createElement("img");
-				imgTag.setAttribute("class", "cabinetImg");
-				imgTag.src="/images/OrganTree_cross/dot_continue.gif";
+				var imgTag       = document.createElement("img");
+				imgTag.src       = _transImg;
+				imgTag.className = "cabinetImg";
 				divElmt.appendChild(imgTag);
 			}
 		}
 		
 		var imgElmt = document.createElement("img");
-		imgElmt.setAttribute("id" , list["deptId"]);
-		imgElmt.setAttribute("level" , list["level"]);
+		imgElmt.setAttribute("role", list[_nodeId]);
+		imgElmt.setAttribute("level" , list[_levelName]);
 		
-		var imgElmt2 = document.createElement("img");
-		imgElmt2.setAttribute("class", "cabinetImg");
-		imgElmt2.src = level > 0 ? "/images/OrganTree_cross/ic-open.gif" : "/images/OrganTree_cross/ic-company.gif";
+		var imgElmt2       = document.createElement("img");
+		imgElmt2.className = "cabinetImg";
+		imgElmt2.src       = level > 0 ? _nodeImg : _rootImg;
 		
 		var spanDeptName         = document.createElement("span");
-		spanDeptName.textContent = list["deptName"];
-		spanDeptName.setAttribute("class", "spanName");
-		spanDeptName.setAttribute("name", list["deptId"]);
-		spanDeptName.setAttribute("level", list["level"]);
+		spanDeptName.textContent = list[_nodeName];
+		spanDeptName.className   = "spanName";
+		spanDeptName.setAttribute("role", list[_nodeId]);
+		
+		if (list[_name1]) {spanDeptName.setAttribute("name1", list[_name1]); spanDeptName.setAttribute("name2", list[_name2]);}
+		
+		spanDeptName.setAttribute("level", list[_levelName]);
 		spanDeptName.addEventListener("click", function(e) {getSelected(this);}, false);
+		
 		if (_clickHandle != null) {spanDeptName.addEventListener("click", function(e) {_clickHandle(this);}, false);}
 		if (_dblClickHdl != null) {spanDeptName.ondblclick = function() {_dblClickHdl(this)};}
 		
@@ -89,29 +142,29 @@ function CabinetTree() {
 		divTree.appendChild(divElmt);
 		
 		if (list["hasSub"] == "0") {
-			imgElmt.src = "/images/OrganTree_cross/dot_continue.gif";
-			imgElmt.setAttribute("class", "cabinetImg");
+			imgElmt.src       = _transImg;
+			imgElmt.className = "cabinetImg";
 		}
 		else {
 			imgElmt.onclick = function() {getSubNodes(this);};
 			
-			if (list["subDepts"] == null) {
-				imgElmt.src = "/images/OrganTree_cross/plus.gif";
-				imgElmt.setAttribute("class", "cabinetPlus");
+			if (list[_nodeSub] == null) {
+				imgElmt.src       = _plusImg;
+				imgElmt.className = "cabinetPlus";
 				return;
 			}
 			
-			imgElmt.src = "/images/OrganTree_cross/minus.gif";
-			imgElmt.setAttribute("class", "cabinetMinus");
+			imgElmt.src       = _minusImg;
+			imgElmt.className = "cabinetMinus";
 			
-			var len = list["subDepts"].length;
+			var len = list[_nodeSub].length;
 			
 			var newDivElmt = document.createElement("div");
 			divElmt.appendChild(newDivElmt);
 			
 			for (var i = 0; i < len; i++) {
 				var subDivElmt = document.createElement("div");
-				generateSubTree(newDivElmt, subDivElmt, list["subDepts"][i]);
+				generateSubTree(newDivElmt, subDivElmt, list[_nodeSub][i]);
 			}
 		}
 	}
@@ -119,27 +172,27 @@ function CabinetTree() {
 	function getSubNodes(obj) {
 		var parentDiv   = obj.parentElement;
 		var divChildren = parentDiv.getElementsByTagName("div").length;
-		var deptId      = obj.getAttribute("id");
+		var nodeId      = obj.getAttribute("role");
 		var level       = obj.getAttribute("level");
 		
 		if (divChildren > 0) {
 			var childElmt = obj.parentElement.lastElementChild;
 			
 			if (obj.className == "cabinetMinus") {
-				obj.src= "/images/OrganTree_cross/plus.gif";
-				obj.setAttribute("class", "cabinetPlus");
+				obj.src                 = _plusImg;
+				obj.className           = "cabinetPlus";
 				childElmt.style.display = "none";
 			}
 			else {
-				obj.src= "/images/OrganTree_cross/minus.gif";
-				obj.setAttribute("class", "cabinetMinus");
+				obj.src                 = _minusImg;
+				obj.className           = "cabinetMinus";
 				childElmt.style.display = "";
 			}
 		}
 		else {
-			obj.src = "/images/OrganTree_cross/minus.gif";
-			obj.setAttribute("class", "cabinetMinus");
-			var deptData = {"deptId" : deptId, "level"  : level};
+			obj.src       = _minusImg;
+			obj.className = "cabinetMinus";
+			var deptData  = {"nodeId" : nodeId, "level" : level};
 			
 			makeAjaxCall(deptData, "GET", _getSubUrl, makeSubTree, null, true, obj.parentElement);
 		}
@@ -148,23 +201,23 @@ function CabinetTree() {
 	function makeSubTree(data, divElmt) {
 		var resultData = data.subNodes;
 		
-		if (resultData["subDepts"] == null) {alert(CabinetMessages.strTreeErr); return;}
+		if (resultData == null) {alert(CabinetMessages.strTreeErr); return;}
 		
-		var len        = resultData["subDepts"].length;
+		var len        = resultData.length;
 		var newDivElmt = document.createElement("div");
 		divElmt.appendChild(newDivElmt);
 		
 		for (var i = 0; i < len; i++) {
 			var subDiv = document.createElement("div");
-			generateSubTree(newDivElmt, subDiv, resultData["subDepts"][i]);
+			generateSubTree(newDivElmt, subDiv, resultData[i]);
 		}
 	}
 	
 	function getSelected(selectElmt) {
-		var previousElmt = document.getElementsByClassName("selectedNode")[0];
+		var previousElmt = document.querySelector("span[class='selectedNode']");
 		
 		if (previousElmt != null) {
-			if (previousElmt.getAttribute("name") != selectElmt.getAttribute("name")) {
+			if (previousElmt.getAttribute("role") != selectElmt.getAttribute("role")) {
 				previousElmt.className = "spanName";
 			}
 			else {

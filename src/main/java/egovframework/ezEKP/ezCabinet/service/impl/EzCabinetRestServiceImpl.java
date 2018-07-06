@@ -193,7 +193,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception {
 		String url                = "/rest/ezcabinet/config/id/" + userId;
@@ -202,6 +202,48 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		param.put("listCount", listCount);
 		param.put("contentW",  contentWPrev);
 		param.put("contentH",  contentHPrev);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getMyCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception {
+		String url                = "/rest/ezcabinet/mycabinet/id/" + userId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("cabinetId", currentNode);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception {
+		String url                = "/rest/ezcabinet/cabinet/id/" + nodeId + "/sub-node";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",   userId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1, String cabinetName2) throws Exception {
+		String url                = "/rest/ezcabinet/cabinet/add";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",   userId);
+		param.put("parentId", parentId);
+		param.put("cabName1", cabinetName1);
+		param.put("cabName2", cabinetName2);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject renameCabinet(HttpServletRequest request, String userId, String cabinetId, String cabinetName1, String cabinetName2) throws Exception {
+		String url                = "/rest/ezcabinet/cabinet/rename";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",    userId);
+		param.put("cabinetId", cabinetId);
+		param.put("cabName1",  cabinetName1);
+		param.put("cabName2",  cabinetName2);
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}

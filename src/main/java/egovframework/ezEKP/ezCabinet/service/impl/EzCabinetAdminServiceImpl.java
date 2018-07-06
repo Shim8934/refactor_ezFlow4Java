@@ -136,11 +136,12 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 	}
 
 	@Override
-	public UserCapacityVO getUserCapacity(String userId, String primary, int tenantId) throws Exception {
+	public UserCapacityVO getUserCapacity(String userId, String companyId, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("userId",   userId);
-		map.put("primary",  primary);
-		map.put("tenantId", tenantId);
+		map.put("userId",    userId);
+		map.put("primary",   primary);
+		map.put("tenantId",  tenantId);
+		map.put("companyId", companyId);
 		
 		return ezCabinetAdminDAO.getUserCapacity(map);
 	}

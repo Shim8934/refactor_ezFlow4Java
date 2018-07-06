@@ -93,7 +93,8 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/cabinetManagement.do")
 	public String jspGetCabinetManagement(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetManagement started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String currentNode = request.getParameter("node") != null ? request.getParameter("node") : "";
+		model.addAttribute("node", currentNode);
 		
 		logger.debug("jspGetCabinetManagement ended");
 		return "ezCabinet/cabinetManagement";
@@ -316,6 +317,66 @@ public class EzCabinetController {
 		resultObj = cabinetRestService.saveUserConfig(request, user.getId(), prevMode, listCount, contentWPrev, contentHPrev);
 		
 		logger.debug("jsonSaveUserConfig end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getMyCabinetTree.do")
+	@ResponseBody
+	public String jsonMyCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonMyCabinetTree start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj = cabinetRestService.getMyCabinetTree(request, currentNode, user.getId());
+		
+		logger.debug("jsonMyCabinetTree end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/addCabinet.do")
+	@ResponseBody
+	public String jsonAddCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonAddCabinet start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String parentId      = request.getParameter("parentId")  != null ? request.getParameter("parentId") : "";
+		String cabinetName1  = request.getParameter("cabName1")  != null ? request.getParameter("cabName1") : "";
+		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj = cabinetRestService.addCabinet(request, user.getId(), parentId, cabinetName1, cabinetName2);
+		
+		logger.debug("jsonAddCabinet end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/renameCabinet.do")
+	@ResponseBody
+	public String jsonRenameCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonRenameCabinet start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		String cabinetName1  = request.getParameter("cabName1")  != null ? request.getParameter("cabName1")  : "";
+		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2")  : "";
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj = cabinetRestService.renameCabinet(request, user.getId(), cabinetId, cabinetName1, cabinetName2);
+		
+		logger.debug("jsonRenameCabinet end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getSubCabinetNodes.do")
+	@ResponseBody
+	public String jsonGetSubCabinetNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetSubCabinetNodes start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String nodeId        = request.getParameter("nodeId")  != null ? request.getParameter("nodeId") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj = cabinetRestService.getCabinetSubNodes(request, user.getId(), nodeId);
+		
+		logger.debug("jsonGetSubCabinetNodes end");
 		return resultObj.toString();
 	}
 	

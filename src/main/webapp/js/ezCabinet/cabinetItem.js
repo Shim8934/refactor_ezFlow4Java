@@ -340,7 +340,7 @@ var CabinetItem = function() {
 	
 	function addFile() {
 		var cabId    = document.getElementById("cabInfo").getAttribute("role");
-		var addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabId, "addFile", getOpenWindowfeature(600, 460));
+		var addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabId, "addFile", getOpenWindowfeature(600, 470));
 	}
 	
 	function deleteFileConfirm() {

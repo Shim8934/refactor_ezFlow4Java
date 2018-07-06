@@ -15,7 +15,7 @@ public interface EzCabinetAdminService {
 	List<UserCapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int listCnt, int tenantId, String primary) throws Exception;
 	int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int tenantId, String primary) throws Exception;
 	void changeUserCapacity(List<String> userList, String newValue, int type, String companyId, int tenantId) throws Exception;
-	UserCapacityVO getUserCapacity(String userId, String primary, int tenantId) throws Exception;
+	UserCapacityVO getUserCapacity(String userId, String companyId, String primary, int tenantId) throws Exception;
 	
 	//Admin module functions
 	List<CabinetModuleVO> getModuleListForAdmin(String companyId, int tenantId) throws Exception;

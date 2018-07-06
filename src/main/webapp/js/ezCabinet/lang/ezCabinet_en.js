@@ -30,5 +30,7 @@ var CabinetMessages = {
 	strDeactive  : "비활성",
 	strTxt1      : "중",
 	strTxt2      : "사용중입니다.",
-	strNolimit   : "무제한"
+	strNolimit   : "무제한",
+	strSelect    : "캐비넷 선택하세요.",
+	strAdd       : "추가하였습니다."
 }

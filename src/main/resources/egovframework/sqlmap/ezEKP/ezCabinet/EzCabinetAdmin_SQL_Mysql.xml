@@ -89,6 +89,9 @@
 		]]>
 	</sql>
 	
+	<!--***********************************************************************************
+	**                               Company capacity process                            **
+	************************************************************************************-->
 	<select id="EzCabinetAdminDAO.getCompanyCapacity" resultMap="companyCapacityVO">
 		<![CDATA[select * from tbl_cabinet_company_capacity where company_id = #companyId# and tenant_id = #tenantId#]]>
 	</select>
@@ -105,9 +108,12 @@
 		</isNotEqual>
 	</insert>
 	
+	<!--***********************************************************************************
+	**                                 User capacity process                             **
+	************************************************************************************-->
 	<select id="EzCabinetAdminDAO.getUserCapacity" resultMap="userCapacityVO">
 		<include refid="selectCapacityCabinet"/>
-		where u.cn = #userId# and u.tenant_id = #tenantId#
+		where u.cn = #userId# and u.physicaldeliveryofficename = #companyId# and u.tenant_id = #tenantId#
 	</select>
 	
 	<select id="EzCabinetAdminDAO.getListUserCapacity" resultMap="userCapacityVO">
@@ -129,7 +135,7 @@
 	
 	<insert id="EzCabinetAdminDAO.changeUserCapacity" parameterClass="Map">
 		<selectKey keyProperty="v_temp" resultClass="Integer">
-			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id from tbl_cabinet_user_capacity where user_id = #userId# and tenant_id = #tenantId#) ]]>
+			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id from tbl_cabinet_user_capacity where user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId#) ]]>
 		</selectKey>
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
@@ -145,11 +151,14 @@
 					capacity_type  = #capatype#,
 					capacity_value = #capacity#
 				where
-					user_id = #userId# and tenant_id = #tenantId#
+					user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId#
 			]]>
 		</isNotEqual>
 	</insert>
 	
+	<!--***********************************************************************************
+	**                                 Module setting process                            **
+	************************************************************************************-->
 	<select id="EzCabinetAdminDAO.getModuleListForAdmin" resultMap="companyModuleVO">
 		<![CDATA[select * from tbl_cabinet_admin_modules where company_id = #companyId# and tenant_id = #tenantId# order by module_type desc]]>
 	</select>

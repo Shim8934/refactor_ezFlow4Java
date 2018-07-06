@@ -11,7 +11,6 @@ public interface EzCabinetRestService {
 	public JSONObject getCompanyTree(HttpServletRequest request, String userId, String companyId) throws Exception;
 	public JSONObject getDeptSubNodes(HttpServletRequest request, String id, String deptId, String level) throws Exception;
 	
-	
 	//Admin company capacity service
 	public JSONObject getCompanyCapacity(HttpServletRequest request, String companyId) throws Exception;
 	public JSONObject saveCompanyCapacity(HttpServletRequest request, String capacityType, String newCapacity, String companyId) throws Exception;
@@ -32,6 +31,12 @@ public interface EzCabinetRestService {
 	public JSONObject getUserCapacity(HttpServletRequest request, String userId) throws Exception;
 	
 	//User preview configuration
-	public JSONObject getUserPreviewConfig(HttpServletRequest request, String id) throws Exception;
+	public JSONObject getUserPreviewConfig(HttpServletRequest request, String userId) throws Exception;
 	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception;
+	
+	//User my cabinet 
+	public JSONObject getMyCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
+	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1, String cabinetName2) throws Exception;
+	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception;
+	public JSONObject renameCabinet(HttpServletRequest request, String userId, String cabinetId, String cabinetName1, String cabinetName2) throws Exception;
 }

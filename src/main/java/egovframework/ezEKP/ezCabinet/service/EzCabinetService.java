@@ -4,11 +4,13 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCabinetService {
 	//Company Tree process functions
-	SimpleDeptVO getAllDepts(String companyId, int level, String primary, int tenantId) throws Exception;
+	List<SimpleDeptVO> getAllSubDepts(String companyId, int level, String primary, int tenantId) throws Exception;
 	String getDeptPath(String deptId, int tenantId) throws Exception;
 	SimpleDeptVO getSimpleCompany(String deptId, int level, String primary, int tenantId) throws Exception;
 	void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception;
@@ -20,4 +22,12 @@ public interface EzCabinetService {
 	//User preview config functions
 	CabinetGeneralVO getUserPreviewConfig(String userId, String companyID, int tenantId) throws Exception;
 	void saveUserConfig(String prevMode, int listCount, int contentWPrev, int contentHPrev, String userId, String companyId, int tenantId) throws Exception;
+	
+	//User my cabinet functions
+	CabinetSimpleVO getMyCabinetTreeNormal(String cabinetStr1, String cabinetStr2, LoginVO userInfo) throws Exception;
+	CabinetSimpleVO getMyCabinetTreeDetail(String cabinetId, LoginVO userInfo) throws Exception;
+	void addCabinet(int parentId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
+	List<CabinetSimpleVO> getCabinetSubTree(String cabinetId, LoginVO userInfo) throws Exception;
+	void renameCabinet(int cabinetId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
+	
 }

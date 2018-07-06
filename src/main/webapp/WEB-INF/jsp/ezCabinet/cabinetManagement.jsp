@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
 	<body class="popup cabMag">
-		<h1><spring:message code="ezCabinet.t03"/></h1>
+		<h1 id="cabMagHeader" role='<c:out value="${node}"></c:out>'><spring:message code="ezCabinet.t03"/></h1>
 		
 		<div id="cabMgClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
 		
@@ -28,11 +28,26 @@
 		</div>
 		
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
 			(function() {
+				var myCabinetTree = new CabinetTree();
 				initEvents();
 				
 				function initEvents() {
+					myCabinetTree.setTreeInfo({
+						treeId     : "cabinetMgTree",
+						treeType   : "cabinet",
+						type       : "normal",
+						initialUrl : "/ezCabinet/getMyCabinetTree.do",
+						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						click      : null,
+						dblClick   : null
+					});
+					
+					myCabinetTree.makeTree({cabinetNode : document.getElementById("cabMagHeader").getAttribute("role")});
+					
 					document.onselectstart   = function() {return false;};
 					var closeBttn            = document.getElementById("cabMgClose").firstElementChild.firstElementChild.firstElementChild;
 					closeBttn.onclick        = function(e) {closeWindow();};
@@ -91,11 +106,66 @@
 				}
 				
 				function addCabinet(strName1, strName2) {
-					//*Note add cabinet function here
+					var url      = "/ezCabinet/addCabinet.do";
+					var parentId = document.querySelector("span[class='selectedNode']").getAttribute("role");
+					var data     = {
+						parentId  : parentId,
+						cabName1  : strName1,
+						cabName2  : strName2
+					};
+					
+					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "add");
 				}
 				
 				function changeCabinet(strName1, strName2) {
-					//*Note change cabinet function here
+					var url  = "/ezCabinet/renameCabinet.do";
+					var data = {
+						cabinetId : document.querySelector("span[class='selectedNode']").getAttribute("role"),
+						cabName1  : strName1,
+						cabName2  : strName2
+					};
+					
+					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "change");
+				}
+				
+				function afterChangeCabinet(data, mode) {
+					var code           = data.code;
+					var successHandler = null;
+					
+					switch(mode) {
+						case "add"   : successHandler = afterAddCabinetSuccessfully    ; break;
+						case "change": successHandler = afterChangeCabinetSuccessfully ; break;
+					}
+					
+					switch(code) {
+						case 0 : successHandler()                   ; break;
+						case 1 : alert(CabinetMessages.strParamErr) ; break;
+						case 2 : alert(CabinetMessages.strError)    ; break;
+						default: alert(CabinetMessages.strError)    ; return;
+					}
+					
+					document.getElementById("cabNameTxt1").value = "";
+					document.getElementById("cabNameTxt2").value = "";
+				}
+				
+				function afterChangeCabinetSuccessfully() {
+					alert(CabinetMessages.strSave);
+					closeCabinetDialog("addCab");
+					reloadTree();
+				}
+				
+				function afterAddCabinetSuccessfully() {
+					alert(CabinetMessages.strAdd);
+					closeCabinetDialog("addCab");
+					reloadTree();
+				}
+				
+				function reloadTree() {
+					var currentNode = document.querySelector("span[class='selectedNode']").getAttribute("role");
+					myCabinetTree.makeTree({cabinetNode : currentNode});
+					var leftPanel   = window.opener;
+					
+					if (leftPanel) {leftPanel.CabUserLeft.reloadTree(currentNode);}
 				}
 				
 				function moveCabinetHandler(){
@@ -129,7 +199,7 @@
 					var h1ElmtId  = type == "addCabinet" ? "addCabTtl" : "moveCabTtl";
 					var h1TtlElmt = document.getElementById(h1ElmtId);
 					
-					switch	(mode) {
+					switch (mode) {
 						case "add"   : h1TtlElmt.textContent = CabinetMessages.strTtlAdd   ; break;
 						case "change": h1TtlElmt.textContent = CabinetMessages.strTtlChange; break;
 						case "move"  : h1TtlElmt.textContent = CabinetMessages.strTtlMove  ; break;
@@ -148,7 +218,8 @@
 				}
 				
 				function addCabinetDialog() {
-					//Check if selected Cabinet exist
+					var selectedNode = document.querySelector("span[class='selectedNode']");
+					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 					
 					addFogPanel();
 					changeCabinetTitle("add", "addCabinet");
@@ -158,11 +229,11 @@
 				}
 				
 				function changeCabinetDialog() {
-					//Check if selected cabinet exist
+					var selectedNode = document.querySelector("span[class='selectedNode']");
+					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 					
-					//Set 2 names of selected cabinet to 2 input elements
-					//document.getElementById("cabNameTxt1").value = "";
-					//document.getElementById("cabNameTxt2").value = "";
+					document.getElementById("cabNameTxt1").value = selectedNode.getAttribute("name1");
+					document.getElementById("cabNameTxt2").value = selectedNode.getAttribute("name2");
 					addFogPanel();
 					changeCabinetTitle("change", "addCabinet");
 					showCabinetPopup("addCab", 300, 162);
@@ -231,6 +302,24 @@
 					returnValue[1] = pleftpos / 2;
 					
 					return returnValue;
+				}
+				
+				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
+					$.ajax({
+						type: ajaxType,
+						url: ajaxUrl,
+						data: ajaxData,
+						dataType: "JSON",
+						async: asyncMode != false ? true : false,
+						success : function(data) {
+							handleSuccess(data, moreParam);
+						},
+						error : function(error) {
+							if (handleError != null) {handleError();}
+							
+							alert(CabinetMessages.strError);
+						}
+					});
 				}
 			})();
 		</script>

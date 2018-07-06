@@ -24,7 +24,9 @@
 			
 			<!-- 연동 캐비넷 -->
 			<h2><span><spring:message code='ezCabinet.t32'/></span></h2>
-			<ul></ul>
+			<ul>
+				<div id="cabinetModulesTree" class="cabinetTree"></div>
+			</ul>
 			
 			<!-- 공유 반은 캐비넷 -->
 			<h2><span><spring:message code='ezCabinet.t05'/></span></h2>
@@ -39,7 +41,7 @@
 						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent + '%;'}"></div></c:when>
 						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent + '%;'}"></div></c:when>
 						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent + '%;'}"></div></c:when>
-						<c:when test="${percent == 0}"                 ><div id="myBar" class="myBar_white"  style="width: 0%"></div></c:when>
+						<c:when test="${percent == 0}"                 ><div id="myBar" class="myBar_white"  style="width: 0%;"></div></c:when>
 					</c:choose>
 					
 				</div>
@@ -66,8 +68,10 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"                     ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
-			(function() {
+			var CabUserLeft = function() {
+				var cabinetTree = new CabinetTree();
 				getMyCabinet();
 				setButtons();
 				
@@ -75,18 +79,40 @@
 					document.onselectstart = function(e) {return false;}
 					initToggleList(document.getElementById("left"), "h2", "ul", "li");
 					
+					cabinetTree.setTreeInfo({
+						treeId     : "cabinetTree",
+						treeType   : "cabinet",
+						type       : "normal",
+						initialUrl : "/ezCabinet/getMyCabinetTree.do",
+						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						click      : null,
+						dblClick   : null
+					});
+					
+					cabinetTree.makeTree();
+					
 					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();} , false);
 					document.getElementById("cabinetAdmin"     ).addEventListener("click", function(e) {getAdminPage();} , false);
 					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();}, false);
 					document.getElementById("cabinetManagement").addEventListener("click", function(e) {getManagement();}, false);
 					
-					if (document.getElementByid("myBar").className = "") {drawVolume();}
+					if (document.getElementById("myBar").className == "") {drawVolume();}
+					
 				}
 				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
 				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
 				function getMyCabinet()  {window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do";}
-				function getManagement() {window.open("/ezCabinet/cabinetManagement.do", "management", getOpenWindowfeature(600, 500));}
+				function reloadTree(currentNode) {cabinetTree.makeTree({cabinetNode : currentNode});}
+				
+				function getManagement() {
+					var mycabinetElmt  = document.getElementById("cabinetTree");
+					var selectedNode   = mycabinetElmt.querySelector("span[class='selectedNode']");
+					var selectedNodeId = "";
+					
+					if (selectedNode) {selectedNodeId = selectedNode.getAttribute("role");}
+					window.open("/ezCabinet/cabinetManagement.do?node=" + selectedNodeId, "management", getOpenWindowfeature(600, 500));
+				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {
 					var heigth   = window.screen.availHeight;
@@ -143,7 +169,9 @@
 					
 					return result;
 				}
-			})();
+				
+				return {reloadTree : reloadTree};
+			}();
 		</script>
 	</body>
 </html>
