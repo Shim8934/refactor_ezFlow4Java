@@ -4857,7 +4857,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
 		String pResult = "";
         try {
-            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId());
+            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyID());
         } catch (Exception e) {
         	e.printStackTrace();
             pResult = "EXCEPTION";
