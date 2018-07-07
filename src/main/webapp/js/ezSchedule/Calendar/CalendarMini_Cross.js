@@ -282,7 +282,7 @@ function DayOnMouseClick(event) {
         if (typeCal == 0) { // 월보기
         }
         else if (typeCal == 1) { // 주보기
-            document.getElementById(event.parentNode.parentNode.getAttribute("id")).style.backgroundColor = "#efeff0";
+            document.getElementById(event.parentNode.parentNode.getAttribute("id")).style.backgroundColor = "#edf4fd";
             g_selTRID = event.parentNode.parentNode.getAttribute("id");
             g_selTDID = event.getAttribute("id");
 
@@ -293,7 +293,7 @@ function DayOnMouseClick(event) {
         }
         else if (typeCal == 2) { // 일보기
 
-            document.getElementById(event.getAttribute("id")).style.backgroundColor = "#efeff0";
+            document.getElementById(event.getAttribute("id")).style.backgroundColor = "#edf4fd";
             g_selTRID = event.parentNode.parentNode.getAttribute("id");
             g_selTDID = event.getAttribute("id");
 
@@ -303,7 +303,7 @@ function DayOnMouseClick(event) {
         }
     }
     /*else if (_funCode == 3) {
-        document.getElementById(event.getAttribute("id")).style.backgroundColor = "#efeff0";
+        document.getElementById(event.getAttribute("id")).style.backgroundColor = "#edf4fd";
         g_selTRID = event.parentNode.parentNode.getAttribute("id");
         g_selTDID = event.getAttribute("id");
 

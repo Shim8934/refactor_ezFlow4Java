@@ -902,14 +902,14 @@ function organtreeview(thisobjid, elobjid) {
 	        var targetEl = event.target;
 	        var elementid = targetEl.id;
 
-	        if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
-	            document.getElementById(elementid).className = g_baseClass["hover"];
+	        /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+	            document.getElementById(elementid).className = g_baseClass["hover"];*/
 	    }).call(this, event) :
 	    (function() { // IE
 	        var elementid = window.event.srcElement.id;
 
-	        if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
-	            document.getElementById(elementid).className = g_baseClass["hover"];
+	        /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+	            document.getElementById(elementid).className = g_baseClass["hover"];*/
 	    }).call(this);
     }
 

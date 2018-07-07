@@ -508,14 +508,14 @@ img { border:0px;}
 
 
 #cmhome_type2 .btn_join {
-	border:1px solid #849ba8;
-	background:url(../images/kr/community/type2/btn_makebg.gif) repeat-x;
+	border:1px solid #ccc;
+	/* background:url(../images/kr/community/type2/btn_makebg.gif) repeat-x; */
 	height:29px;
 	text-align:center;
 	font-weight:bold;
 	font-size:12px;
 	color:#333;
-	margin:5px 4px;
+	margin:10px 10px;
 	cursor:pointer;
 	line-height:28px;
 }
@@ -531,7 +531,7 @@ img { border:0px;}
 #cmhome_type2 .leftmenu h2 {
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:0px solid #ddd;
+	border-top:1px solid #ddd;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
 	background: url('../images/kr/left/01_minus.gif') no-repeat right 13px;

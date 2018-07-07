@@ -498,16 +498,16 @@
             if (!event) event = window.event;
             var targetEl = event.target;
             var elementid = targetEl.id;
-            if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
+            /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
                 document.getElementById(elementid).setAttribute('class', g_baseClass["hover"]);
-            }
+            }*/
         }).call(this, event) :
         (function () {
             var elementid = window.event.srcElement.id;
 
-            if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
+            /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
                 document.getElementById(elementid).className = g_baseClass["hover"];
-            }
+            }*/
         }).call(this);
     }
 
