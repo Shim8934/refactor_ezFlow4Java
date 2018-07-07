@@ -38,7 +38,7 @@
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
-
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -103,8 +103,7 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		    
-		    window.onload =  function()
-		    {
+		    window.onload = function() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -114,7 +113,14 @@
 		        }
 		        $("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
+		        
+		        document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
 		    }
+		    
+		    window.onresize = function () {
+		    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
+		    }
+		    
 		    function search_keypress(evt)
 			{	
 		        var curevent = (typeof event == 'undefined' ? evt : event)
@@ -128,7 +134,8 @@
 		            return;
 		        } else {
 		        	keyword.value = prekeyword.value;
-			    	start_search();	
+		        	document.getElementById("resultTD").setAttribute("curPage", 1);
+			    	start_search();
 		        }
 		    }
 			function document_onselectstart()
@@ -694,7 +701,7 @@
 	</head>
 	
 	<body style="overflow:auto" id="theBody" class="mainbody"> 
-		<span id="normalblock"> 
+		<span id="normalblock"> </span>
 		<h1><spring:message code="ezEmail.t641" /></h1>
 		<div id="mainmenu">
 			<ul>
@@ -708,58 +715,58 @@
 			</ul>
 		</div>  
 		<table class="content"> 
-		<tr> 
-			<th nowrap><spring:message code="ezEmail.t642" /></th> 
-			<td width="100%">
-			    <select id="select2" style="height: 22px">
-			    <option value="ALL"><spring:message code="ezEmail.t643" /></option>      
-			    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
-			    <option value="${folderName}">
-					<c:choose>
-						<c:when test="${folderName eq 'INBOX'}">
-							<spring:message code="ezEmail.t644" />
-						</c:when>
-						<c:when test="${folderName eq 'Sent'}">
-							<spring:message code="ezEmail.t645" />
-						</c:when>
-						<c:when test="${folderName eq 'Drafts'}">
-							<spring:message code="ezEmail.t646" />
-						</c:when>
-						<c:when test="${folderName eq 'Trash'}">
-							<spring:message code="ezEmail.t647" />
-						</c:when>
-						<c:when test="${folderName eq 'Personal folder'}">
-							<spring:message code="ezEmail.t648" />
-						</c:when>
-						<c:otherwise>
-							${folderName}
-						</c:otherwise>
-					</c:choose>      	
-			    </option>
-			    </c:forEach>
-			    </select>
-			    <select name="select" class="text" id="select" style="height: 22px;">
-					<option selected value="<spring:message code="ezEmail.t98" />"><spring:message code="ezEmail.t98" /></option> 
-					<option value="<spring:message code="ezEmail.t649" />"><spring:message code="ezEmail.t649" /></option> 
-					<option value="<spring:message code="ezEmail.t161" />"><spring:message code="ezEmail.t161" /></option> 
-					<option value="<spring:message code="ezEmail.t650" />"><spring:message code="ezEmail.t651" /></option> 
-			    </select>
-			    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;height:22px"onkeyup="return search_keypress(event)" />
-		    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
-		    	<a class="imgbtn"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
-		    </td> 
-		</tr> 
-		<tr>
-		    <th><spring:message code="ezEmail.t653" /></th>
-		    <td><input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
-		    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
-		    </td>
-		</tr>
+			<tr> 
+				<th nowrap><spring:message code="ezEmail.t642" /></th> 
+				<td width="100%">
+				    <select id="select2" style="height: 22px">
+				    <option value="ALL"><spring:message code="ezEmail.t643" /></option>      
+				    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
+				    <option value="${folderName}">
+						<c:choose>
+							<c:when test="${folderName eq 'INBOX'}">
+								<spring:message code="ezEmail.t644" />
+							</c:when>
+							<c:when test="${folderName eq 'Sent'}">
+								<spring:message code="ezEmail.t645" />
+							</c:when>
+							<c:when test="${folderName eq 'Drafts'}">
+								<spring:message code="ezEmail.t646" />
+							</c:when>
+							<c:when test="${folderName eq 'Trash'}">
+								<spring:message code="ezEmail.t647" />
+							</c:when>
+							<c:when test="${folderName eq 'Personal folder'}">
+								<spring:message code="ezEmail.t648" />
+							</c:when>
+							<c:otherwise>
+								${folderName}
+							</c:otherwise>
+						</c:choose>      	
+				    </option>
+				    </c:forEach>
+				    </select>
+				    <select name="select" class="text" id="select" style="height: 22px;">
+						<option selected value="<spring:message code="ezEmail.t98" />"><spring:message code="ezEmail.t98" /></option> 
+						<option value="<spring:message code="ezEmail.t649" />"><spring:message code="ezEmail.t649" /></option> 
+						<option value="<spring:message code="ezEmail.t161" />"><spring:message code="ezEmail.t161" /></option> 
+						<option value="<spring:message code="ezEmail.t650" />"><spring:message code="ezEmail.t651" /></option> 
+				    </select>
+				    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;height:22px"onkeyup="return search_keypress(event)" />
+			    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
+			    	<a class="imgbtn"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
+			    </td> 
+			</tr> 
+			<tr>
+			    <th><spring:message code="ezEmail.t653" /></th>
+			    <td><input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
+			    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
+			    </td>
+			</tr>
 		</table> 
 		<br>
 		<h2 class="h2_dot"><spring:message code="ezEmail.t655" /><span id="resultCount"></span></h2>
 		    
-		<span id="printblock"> 
+		<div id="printblock"> 
 			<table class="mainlist" style="width:100%;table-layout:fixed;">
 				<tr> 
 			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
@@ -774,8 +781,11 @@
 					<th style="width:50px;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC"><spring:message code="ezEmail.t617" /></th> 
 				</tr> 
 			</table>
-			<div id='resultTD'> </div>
-		</span> 
+			<div id="resultTD" style="height:600px; overflow-y:auto;" curPage="1" MaxPage="0" MaxCount="0">
+			</div>
+		</div>
+		<div id="tblPageRayer" style="width:470px; margin:6px auto;"></div>
+		
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="ContextMenuHidden();" ></div>
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
