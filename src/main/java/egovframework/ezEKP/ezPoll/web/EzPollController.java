@@ -696,6 +696,7 @@ public class EzPollController extends EgovFileMngUtil {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
 		String companyID =	loginVO.getCompanyID();
+		String deptID =	loginVO.getDeptID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		String brdId = request.getParameter("brdId") != null ? request.getParameter("brdId") : "";
 		int totalUsers = 0;		
@@ -827,6 +828,7 @@ public class EzPollController extends EgovFileMngUtil {
 				pollQstStatusVO.setUserId(loginVO.getId());
 				pollQstStatusVO.setTenantId(loginVO.getTenantId());
 				pollQstStatusVO.setQustId(qstId);	
+				pollQstStatusVO.setDeptId(deptID);
 				ezPollService.insertSeenQuestion(pollQstStatusVO, companyID);
 				totalSeenUsers = totalSeenUsers + 1;
 				getUpdateSeenRequests(totalSeenUsers, qstId, loginVO.getTenantId());
@@ -846,8 +848,10 @@ public class EzPollController extends EgovFileMngUtil {
 		while (iterator.hasNext()) {
 			LoginVO user = iterator.next();
 			
-			if (listOfPollUserAndAnswer.contains(user.getId())) {
-				iterator.remove();	
+			for(int i = 0; i < listOfPollUserAndAnswer.size(); i++){
+				if (listOfPollUserAndAnswer.get(i).getUserId().equals(user.getId())) {
+					iterator.remove();
+				}
 			}
 		}
 		
@@ -975,11 +979,14 @@ public class EzPollController extends EgovFileMngUtil {
 			else {
 				model.addAttribute("creatorDept", pollCreator.getDeptName2());
 			}
+			model.addAttribute("creatorDeptId", pollCreator.getDeptID());
 		}
 		
 		if(brdId != ""){
 			model.addAttribute("brdId", Integer.parseInt(brdId));
 		}
+		
+//		deptID = ezPollService.getAddJobDept(tenantId, qstId, loginVO.getId(), deptID);
 		
 		model.addAttribute("listComments", listComments);
 		model.addAttribute("numberOfCmt", numberOfCmt);
@@ -1003,6 +1010,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);		
+		model.addAttribute("deptId", deptID);		
 		
 		
 		logger.debug("Question vote finishes!");		
@@ -1162,6 +1170,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollCmtVO.setUserName2(loginVO.getDisplayName2());
 		pollCmtVO.setCmtTime(cmtTime);		
 		pollCmtVO.setTextContent(txtContent);	
+		pollCmtVO.setDeptId(loginVO.getDeptID());
 		
 		logger.debug("attachFilePath: " + attachFilePath);
 		
@@ -1216,10 +1225,12 @@ public class EzPollController extends EgovFileMngUtil {
 			//Insert into comment table
 			ezPollService.insertCmt(pollCmtVO);
 			
+			String deptId = ezPollService.getAddJobDept(loginVO.getTenantId(), qstId, loginVO.getId(), loginVO.getDeptID());
+			
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"userName1\":\"" + pollCmtVO.getUserName1() + "\", \"userName2\":\"" + pollCmtVO.getUserName2() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
 							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\","
-							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
+							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\", \"deptId\":\"" + deptId + "\"}";
 			JSONParser parser = new JSONParser(); 
 			
 			JSONObject json = (JSONObject) parser.parse(result);

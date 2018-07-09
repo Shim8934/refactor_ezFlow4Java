@@ -8,6 +8,7 @@ public class PollQuestionStatusVO {
 	private int comment;
 	private int hide;
 	private int modifying;
+	private String deptId;
 	
 	public PollQuestionStatusVO() {
 		
@@ -67,5 +68,13 @@ public class PollQuestionStatusVO {
 	
 	public void setModifying(int modifying) {
 		this.modifying = modifying;
+	}
+
+	public String getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
 	}		
 }

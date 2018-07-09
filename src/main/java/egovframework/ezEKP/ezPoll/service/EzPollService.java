@@ -72,7 +72,7 @@ public interface EzPollService {
 
 	public void updateEndDateForQst(int qstId, int tenantId, String dateNow) throws Exception;
 
-	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary, String mode, String companyID) throws Exception;
+	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary, String mode, String companyID, String userID) throws Exception;
 
 	public void updateModifyingQuestion(int qstId, int tenantId, int value) throws Exception;
 
@@ -127,4 +127,6 @@ public interface EzPollService {
 	public List<LoginVO> getAllUsersInfoForQstM(int tenantId, int qstId, String companyID) throws Exception;
 	
 	public List<LoginVO> getAllUsersInfoForQstMRD(int tenantId, int qstId) throws Exception;
+	
+	public String getAddJobDept(int tenantId, int qstId, String userId, String deptId) throws Exception;
 }
