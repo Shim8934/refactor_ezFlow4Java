@@ -360,7 +360,7 @@
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	        </script>
 	        
-	        <h2><spring:message code="ezQuestion.t437" /></h2>
+	        <h2 style="font-weight: normal;">▒ <spring:message code="ezQuestion.t437" /></h2>
 	        <table class="content"> 
 	            <tr>    <!------------설문조사 기간 ----------------> 
 	                <th><spring:message code="ezQuestion.t216" /></th> 
@@ -453,7 +453,7 @@
 	                        <option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option> 
 	                        <option value="1"><spring:message code="ezQuestion.t252" /></option> 
 	                    </select> 
-	                    <a class="imgbtn"><span onclick="menu_SelectRange();"><spring:message code="ezQuestion.t253" /></span></a>
+	                    <a class="imgbtn imgbck"><span onclick="menu_SelectRange();"><spring:message code="ezQuestion.t253" /></span></a>
 	                </td> 
 	            </tr> 
 	            <tr> <!----------- 설문제목 -------------> 
@@ -462,10 +462,10 @@
 	            </tr> 
 	            <tr> 
 	                <th><spring:message code="ezQuestion.t257" /></th> 
-	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%" rows="10" cols="" maxlength="127"><c:out value='${qstReuseQuestionVO.content}'/></textarea> </td> 
+	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%;margin:2px 0px" rows="10" cols="" maxlength="127"><c:out value='${qstReuseQuestionVO.content}'/></textarea> </td> 
 	            </tr>
 	        </table> 
-	        <div class="btnposition">
+	        <div class="btnpositionJsp">
 	            <a class="imgbtn" name="Submit" onclick="javascript:Next();" ><span><spring:message code="ezQuestion.t442" /></span></a>
 	            <a class="imgbtn" name="Submit2" onclick="javascript:fun_cancel();" ><span><spring:message code="ezQuestion.t269" /></span></a>
 	        </div>

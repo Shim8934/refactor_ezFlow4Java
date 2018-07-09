@@ -72,10 +72,8 @@
 				<spring:message code="ezWebFolder.t138" />
 			</td>
 		</tr>
-		
 	</table>
- 	<br />
-	<div style="width:623px;text-align:center;">      
+	<div style="width:609px;" class="btnpositionJsp">      
 		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezWebFolder.t133" /></span></a>
 		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezWebFolder.t112" /></span></a>
 	</div>

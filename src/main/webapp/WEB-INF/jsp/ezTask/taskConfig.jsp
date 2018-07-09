@@ -157,10 +157,11 @@
 					</td>
 				</tr>
 			</table>
-			<br />
-			<div align="center" style="width:265px;">
-				<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezTask.t96' /></span></a>
-				<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezTask.t20' /></span></a>
+			<div align="center" style="width:280px;">
+				<div class="btnpositionJsp">
+					<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezTask.t96' /></span></a>
+					<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezTask.t20' /></span></a>
+				</div>	
 			</div>
 		</form>
 	</body>

@@ -428,11 +428,12 @@
 			  	</td>
 			  </tr>
 		  </c:if>
-		</table>  
-		<br />
-		<div align="center" style="width:623px;">
-		    <a class="imgbtn imgbck" onClick="Change_Click('1')"><span><spring:message code='main.sp09' /></span></a>
-		    <a class="imgbtn imgbck" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		</table>
+		<div align="center" style="width:680px;">
+			<div class="btnpositionJsp">
+		    	<a class="imgbtn" onClick="Change_Click('1')"><span><spring:message code='main.sp09' /></span></a>
+		    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		    </div>
 		</div> 
 		<div  id="inboxRuleConbtn1" style="position:absolute; left:100px; top:65px;border:1px solid gray;width:415px;background-color:white; display:none;">
 		<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px;margin-top:10px;" >
