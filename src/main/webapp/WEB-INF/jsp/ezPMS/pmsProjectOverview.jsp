@@ -585,7 +585,7 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 				title += "<spring:message code='ezPMS.t269' />";
 				break;
 			case "W" :
-				title += "<spring:message code='ezPMS.t139' />";
+				title += "<spring:message code='ezPMS.t140' />";
 				break;
 			case "P" :
 				title += "<spring:message code='ezPMS.t138' />";
