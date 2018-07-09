@@ -447,7 +447,7 @@
 				                            <tr>
 				                                <td>
 				                                    <div style="float: left; margin-left: 5px;">
-				                                        <select id="search_type">
+				                                        <select id="search_type" style="height:22px">
 				                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
 								                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
 								                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
@@ -459,7 +459,7 @@
 								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 				                                        </select>
-				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
+				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
 				                                </td>
@@ -490,9 +490,9 @@
 	                                    <td style="background-color: #f3f3f3; padding: 0px 0 3px 0; background-color: #ffffff; height: 20px;">
                                         	<h2 class="h2_dot" style="display: inline-block;"><spring:message code='ezJournal.t95'/></h2>
 		                                    <div style="float:right; margin-top: 1px;">
-		                                        <a class="imgbtn"><span onclick="applyFavorite()"><spring:message code='ezJournal.t135'/></span></a>
-		                                        <a class="imgbtn"><span onclick="modifyFavorite()"><spring:message code='ezJournal.t96'/></span></a>
-		                                        <a class="imgbtn"><span onclick="deleteFavorite()"><spring:message code='ezJournal.t97'/></span></a>
+		                                        <a class="imgbtn imgbck"><span onclick="applyFavorite()"><spring:message code='ezJournal.t135'/></span></a>
+		                                        <a class="imgbtn imgbck"><span onclick="modifyFavorite()"><spring:message code='ezJournal.t96'/></span></a>
+		                                        <a class="imgbtn imgbck"><span onclick="deleteFavorite()"><spring:message code='ezJournal.t97'/></span></a>
 		                                    </div>
 	                                        <div class="border_gray">
 	                                            <div id="journalFavorite" style="Width: 100%; Height: 176px; OVERFLOW: AUTO; padding-top: 0px;">
@@ -544,7 +544,7 @@
 		                            <h2 class="receiver_tltype01" style="margin-top:4px; border-bottom:none;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
-								 	<a class="imgbtn" style="margin-top: 6px; margin-left: 65px;">
+								 	<a class="imgbtn imgbck" style="margin-top: 6px; margin-left: 65px;">
 								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
 								 	</a>
 								</div>

@@ -211,7 +211,7 @@
 			        _popObj.style.backgroundColor = "#ffffff";
 			    }
 			    _popObj = obj;
-			    obj.style.backgroundColor = "#f0f6ff";
+			    obj.style.backgroundColor = "#edf4fd";
 			}
 			var ConCellRow = null;
 			function pop_modify(obj) {
@@ -414,7 +414,7 @@
 		      <th><spring:message code='ezEmail.t99000032' /></th>
 		      <td>
 		          <select style="width:300px;height:20px;" id="ExtSenderNM">${mailSendObject}</select>
-		          <a class="imgbtn" onclick="MailOutNameModify();"><span><spring:message code='ezEmail.t149' /></span></a>
+		          <a class="imgbtn imgbck" onclick="MailOutNameModify();"><span><spring:message code='ezEmail.t149' /></span></a>
 		      </td>
 		  </tr>
 		  <c:if test="${usePreviewSubTree eq 'YES' }">

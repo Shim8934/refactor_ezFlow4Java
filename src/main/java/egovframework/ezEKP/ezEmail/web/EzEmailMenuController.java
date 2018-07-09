@@ -130,7 +130,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", loginInfo.getTenantId());
 		String useBottomFrameOnly = ezCommonService.getTenantConfig("useBottomFrameOnly", loginInfo.getTenantId());
 		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", loginInfo.getTenantId());
-		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + ",useBottomFrameOnly=" + useBottomFrameOnly + ",useMailBoxBackUp=" + useMailBoxBackUp);
+		String useMailReceiveScreen = ezCommonService.getTenantConfig("useMailReceiveScreen", loginInfo.getTenantId());
+		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + ",useBottomFrameOnly=" + useBottomFrameOnly + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useMailReceiveScreen=" + useMailReceiveScreen);
+		
+		if (usePreviewSubTree.equals("YES")) {
+			model.addAttribute("useMailReceiveScreen", useMailReceiveScreen);
+		}
 		
 		if (usePreviewSubTree.equals("YES")) {
 			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);

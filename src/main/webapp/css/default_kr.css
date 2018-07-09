@@ -75,7 +75,7 @@ th{
 	padding:2px 10px;
 }
 
-A:hover{COLOR: #0B790E; text-decoration:none}
+A:hover{text-decoration:none}
 .point{
 	color: #CC3300;
 	font-weight: bold ;
@@ -222,7 +222,7 @@ form{display:inline;margin:0}
 	padding:12px 5px 0px 40px;
 	cursor:pointer;
 }
-.leftbody ul li:last-child {padding-bottom:12px; border-bottom:1px solid #e8e8e8;}
+.leftbody ul li:last-child {padding-bottom:12px; border-bottom:1px solid #eaeaea;}
 
 .leftbody #iconul {background-color:#ffffff;list-style-type:none;padding:0;margin:0;}
 .leftbody #iconul li{
@@ -240,8 +240,8 @@ form{display:inline;margin:0}
 #left h2, #TopBoards h2{
 	margin: -1px 0px 0px 0px;
 	padding:0 0 0 19px;
-	border-top:1px solid #f0f0f0;
-	border-bottom: 1px solid #f0f0f0;
+	border-top:1px solid #eaeaea;
+	border-bottom: 1px solid #eaeaea;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
 	height:33px;
@@ -256,8 +256,8 @@ form{display:inline;margin:0}
 	background: url('/images/kr/left/01_plus.gif') no-repeat right 13px;
 	background-color:#f0f6ff;
 	color:#333333;
-	border-top:1px solid #d1ddec;
-	border-bottom:1px solid #d1ddec;
+	/* border-top:1px solid #d1ddec; */
+	/* border-bottom:1px solid #d1ddec; */
 }
 
 #left h3 {
@@ -284,10 +284,13 @@ form{display:inline;margin:0}
 #left ul.on, #TopBoards ul.on {display: block;}
 #left ul.off, #TopBoards ul.off {display: none;}
 #left ul li.on, #TopBoards ul li.on{
-	/* font-weight:bold; */
-	/* background-color: rgb(245, 247, 255); */
+	/* font-weight:bold;	 */
 	color:black;	
 }
+/* #left ul li.ing, #TopBoards ul li.ing{
+	font-weight:normal;	
+	color:#9b9b9b;	
+} */
 #left ul li.off, #TopBoards ul li.off{font-weight:normal;}
 #left ol{margin:0}
 #left ol li, #left ol.on, #left ol.off{
@@ -376,11 +379,11 @@ form{display:inline;margin:0}
 	font-size:15px;
 	font-weight:bold;
 	padding-left:5px;
-	margin:16px 0px 24px;
+	margin:15px 0px 14px;
 	left:7px;
 	color:#333;
-	height:23px;
-	line-height:23px;
+	height:25px;
+	line-height:25px;
 }
 
 .mainbody #presentcell {
@@ -664,10 +667,10 @@ form{display:inline;margin:0}
 .h2_dot { 
 	color: #666;
 	word-break:keep-all;
-	background:url('/images/kr/cm/dot_gray.gif') no-repeat 0px 11px;
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 0px center;
 	line-height:20px;
 	padding-top:4px;
-	padding-left:6px;
+	padding-left:12px;
 
 }
 
@@ -974,7 +977,8 @@ form{display:inline;margin:0}
 .monthlyDayHeader{border-bottom:1px solid #fff;}
 
 .node_div{white-space:nowrap; width:100%;}
-
+.node_div span.node_normal:hover {color: #9b9b9b !important;}
+.tree span.node_normal:hover {color: #9b9b9b !important;}
 
 
 
@@ -1217,16 +1221,17 @@ form{display:inline;margin:0}
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:31px}
-.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:5px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; background-color: #f8f8fa; height:21px}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:5px 4px; border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8; background-color: #f8f8fa; height:21px}
 .mainlist tr th.title{width:100%; text-align:left;}
-.mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #f2f2f2; border-spacing:0; word-wrap:break-word;}
+.mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #eaeaea; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
 
 .mainlist_free{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
-.mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; font-weight:normal; background-color: #f8f8fa;}
+.mainlist_free tr td{height:23px}
+.mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8; font-weight:normal; background-color: #f8f8fa;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 
 .mainlist_free tr td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
@@ -1456,6 +1461,7 @@ form{display:inline;margin:0}
 	cursor:pointer;
 	color:#000;
 	font-weight:bold;
+	box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);
 }
 
 .popup_noti_btnarea .btn, .btnposition input:hover{ color:#7a7a7a;}
@@ -1598,7 +1604,7 @@ form{display:inline;margin:0}
 
 /* organliststyle2 */
 .popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
-.popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; line-height:19px; padding:4px 4px 0px; border-top:1px solid #e8e8ef; border-bottom:1px solid #e8e8ef; background-color: #f8f8fa;}
+.popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; line-height:19px; padding:4px 4px 0px; border-top:1px solid #e8e8e8; border-bottom:1px solid #e8e8e8; background-color: #f8f8fa;}
 .popup_mainlist tr th.title{width:100%; text-align:left;}
 
 .popup_mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0;}
@@ -1731,7 +1737,7 @@ form{display:inline;margin:0}
 }
 #left .list_thumbnail li {
 	padding:3px 0px 2px 0px; 
-	border-bottom:1px solid #f0f0f0;
+	border-bottom:1px solid #eaeaea;
 	vertical-align:middle;
 	height:33px;
 	line-height:16px;
@@ -1798,7 +1804,7 @@ form{display:inline;margin:0}
 
 
 .tabpartMycommunity{}
-.tabpartMycommunity .tabpartMycommunityTitle{padding:10px 5px 5px 5px; margin:0; margin-top:20px; overflow:hidden; border-top:1px solid #e8e8ef; height:25px; background-color: #f8f8fa;}
+.tabpartMycommunity .tabpartMycommunityTitle{padding:10px 5px 5px 5px; margin:0; margin-top:20px; overflow:hidden; border-top:1px solid #e8e8e8; height:25px; background-color: #f8f8fa;}
 .tabpartMycommunity .tabpartMycommunityTitle dt{float:left; width:75%; height:20px; line-height:20px; background:url(../images/ezCommunity/comm_title1.png) no-repeat 2px 50%; padding:0px 0px 0px 32px; font-size:13px; font-weight:bold; color:black; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .tabpartMycommunity .tabpartMycommunityTitle dd{float:right; font-size:11px; color:#666; margin:-2px 0 0 0; padding:0; height:20px; line-height:2;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .icon_community01{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community01.png) no-repeat left 0px; font-weight:bold; font-size:11px;}
@@ -1806,7 +1812,7 @@ form{display:inline;margin:0}
 .tabpartMycommunity .tabpartMycommunityTitle dd .line{display:inline-block; width:1px; height:12px; color:#f8f8f8; margin:0px 5px 0px 3px; background:#f8f8f8; overflow:hidden;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .btn_community01{display:inline-block; padding:0px 0px 0px 0px;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .btn_community01 span{display:inline-block; padding:0px 10px 0px 10px; height:22px; background:#f7f7f7;; color:#333; border:1px solid #d2d2d2;border-radius:3px; cursor:pointer;}
-.tabpartMycommunityList{clear:both; padding:0px; border-top:1px solid #e8e8ef;border-bottom:1px solid #e8e8ef; min-height:180px;}
+.tabpartMycommunityList{clear:both; padding:0px; border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8; min-height:180px;}
 .tabpartMycommunityList table{table-layout:fixed;}
 .tabpartMycommunityList table td{height:32px;padding:2px}
 .tabpartMycommunityList table .text{padding:0 0 0 9px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -1878,7 +1884,7 @@ form{display:inline;margin:0}
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
-.address_onboxlist .back { border: 1px solid rgb(104, 171, 220); height:138px; vertical-align:top; border-radius:5px;}
+.address_onboxlist .back { border: 1px solid #888; height:138px; vertical-align:top; border-radius:5px;}
 .address_onboxlist .topinfo {background-color:rgb(0,72,149); height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .address_onboxlist ul { margin:0px 0px 0px 19px; padding:0px; list-style:none;}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
@@ -2221,9 +2227,9 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	right: 45px;	
 }
 .extraMenu ul li span {padding-top:2px !important;}
-#mainmenu select {height: 29px !important; border-color: #d2d2d2;}
+#mainmenu select {height: 29px !important; border-color: #c8c8c8;}
 
-.mail_volume{ margin:auto; padding:0px; width:193px; overflow:hidden; margin-top:15px;margin-bottom:10px}
+.mail_volume{ margin:auto; padding:0px; width:176px; overflow:hidden; margin-top:15px;margin-bottom:10px}
 .volume_num{ margin:0px; padding:0px;}
 .volume_graph{ margin:5px 0px 10px 0px; padding:0px; width:100%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#e9e9e9;}
 .volume_graph span{ display:inline-block; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
@@ -2231,3 +2237,12 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .volumeDL dt{margin:0px; padding:0px 0px 0px 0px; float:left; color:#000;}
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
+
+.imgbck {background-color: #e8e8ea; border:1px solid #cccccf;}
+.leftbody .extra span{
+	border-bottom: 1px solid white;
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 14px #fff;
+	padding:12px 5px 0px 40px;
+	cursor:pointer;
+}
+.leftbody .extra span:last-child {padding-bottom:12px; border-bottom:1px solid #eaeaea;}

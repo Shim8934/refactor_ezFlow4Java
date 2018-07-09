@@ -267,7 +267,7 @@
 		</div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" />
 		</form>
 	</body>
 </html>

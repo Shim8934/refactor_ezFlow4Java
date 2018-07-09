@@ -82,11 +82,11 @@
 }
 
 .selectTR {
-	background-color: #f0f6ff;
+	background-color: #edf4fd;
 }
 
 .selectTD {
-	background-color: #f0f6ff;
+	background-color: #edf4fd;
 }
 
 #journalListBody #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {

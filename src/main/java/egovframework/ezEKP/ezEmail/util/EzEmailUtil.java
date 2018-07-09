@@ -52,6 +52,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.UIDFolder;
 import javax.mail.internet.ContentDisposition;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
@@ -70,7 +71,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -1409,6 +1409,182 @@ public class EzEmailUtil {
         return resultList;
     }
     
+    public Message[] searchFolder(IMAPAccess ia, String userAccount, Folder folder, String searchField, String searchValue, 
+    		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
+    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId) throws Exception {
+    	logger.debug("userAccount=" + userAccount + ",folder=" + folder + ",searchField=" + searchField + ",searchValue=" + searchValue
+    			 + ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly
+    			 + ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
+    			 + ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId);
+    	
+    	String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", tenantId);
+    	logger.debug("useAdvancedMailSearch=" + useAdvancedMailSearch);
+    	
+    	Message[] messages = null;
+    	
+    	if (useAdvancedMailSearch.equals("YES")) {
+    		String folderPath = "";
+    		
+    		// folder is null when searching all folder
+    		if (folder != null) {
+    			folderPath = folder.getFullName();
+    		}
+    		
+    		logger.debug("folderPath=" + folderPath);
+    		
+    		messages = advancedSearchFolder(ia, userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+    				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
+    		
+    		// pre-fetch
+    		if (messages.length > 0) {
+        		Folder fetchFolder = messages[0].getFolder();
+        	
+	        	FetchProfile fp = new FetchProfile();
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("X-Priority");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+				fp.add(FetchProfile.Item.SIZE);
+				fp.add(FetchProfile.Item.FLAGS);
+				fp.add("Subject");
+				fp.add("From");
+				fp.add("To");
+				
+				fetchFolder.fetch(messages, fp);
+        	}
+    		
+    	} else {
+    		if (folder == null) { // searching all folder
+    			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", tenantId);
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+				
+				List<Folder> topLevelFolders = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);		
+				
+				List<String> topLevelFolderNames = new ArrayList<String>();
+				int maxFolderCount = Math.min(5, topLevelFolders.size());
+				
+				for (int i = 0; i < maxFolderCount; i++) {
+					Folder tmpFolder = topLevelFolders.get(i);
+					
+					topLevelFolderNames.add(tmpFolder.getName());
+				}
+				
+				logger.debug("topLevelFolderNames=" + topLevelFolderNames);	
+				
+				for (String folderName : topLevelFolderNames) {
+					Folder tmpFolder = ia.getFolder(folderName);
+					
+					if (folder == null) {
+						folder = tmpFolder;
+					}
+					
+					tmpFolder.open(Folder.READ_ONLY);
+					
+					Message[] subMessages = searchFolder(tmpFolder, searchField, searchValue, startDate, endDate, true, null, isUnreadOnly, isImportantOnly, isFromMobile);
+					
+					if (messages == null) {
+						messages = subMessages;
+					}
+					else if (subMessages.length > 0) {
+					   int mainLen = messages.length;
+					   int subLen = subMessages.length;
+					   Message[] combined = new Message[mainLen + subLen];
+					   System.arraycopy(messages, 0, combined, 0, mainLen);
+					   System.arraycopy(subMessages, 0, combined, mainLen, subLen);	
+					   
+					   messages = combined;
+					}				
+					
+					FetchProfile fp = new FetchProfile();
+					
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);
+					
+					tmpFolder.fetch(messages, fp);		
+				}
+				
+    		} else {
+    			if (!searchField.equals("") || startDate != null || endDate != null || searchSubFolder || isUnreadOnly || isImportantOnly) {
+        			messages = searchFolder(folder, searchField, searchValue, startDate, endDate, searchSubFolder, null, isUnreadOnly, isImportantOnly, isFromMobile);
+        		} else {
+        			logger.debug("get all message.");
+        			messages = folder.getMessages();
+        		}
+    		}
+			
+    		// sort the messages
+			if (sortType != null) {
+				sortMessages(folder, messages, sortType, isAscending);
+			}
+			
+			if (extraMap != null) {
+				extraMap.put("totalCount", messages.length);
+			}
+			
+			if (startIndex > messages.length || listCount < 0) {
+				messages = new Message[0];
+			} else {
+				// split messages
+				listCount = Math.min(messages.length - startIndex, listCount);
+				messages = Arrays.copyOfRange(messages, startIndex, startIndex + listCount);
+				
+				// pre-fetch
+				FetchProfile fp = new FetchProfile();
+				
+				if (sortType.equals("importance") || sortType.equals("receivedDate")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);								
+				}
+				else if (sortType.equals("readFlag") || sortType.equals("flag")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.SIZE);								
+				}
+				else if (sortType.equals("attachment")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);								
+				}
+				else if (sortType.equals("sender") || sortType.equals("subject")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.FLAGS);								
+				}
+				else if (sortType.equals("size")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.FLAGS);								
+				}
+				
+				fp.add("Subject");
+				fp.add("From");
+				fp.add("To");
+				
+				folder.fetch(messages, fp);
+			}
+    	}
+    	
+    	logger.debug("messagesLength=" + messages.length);
+    	return messages;
+    }
+    
 	public Message[] searchFolder (
 			Folder folder, 
 			String searchField, 
@@ -1702,87 +1878,46 @@ public class EzEmailUtil {
 		}
 		
 		if (isFromMobile && endDate != null && startDate == null) {
-			if (sTerm == null) { // filter search 없을 때
-				ArrayList<Message> arrayList = new ArrayList<>();
-
-				Date from = endDate;       
-				Folder f = folder;
-
-				int end = f.getMessageCount();       
-				long lFrom = from.getTime(); //endDate
-
-				Date rDate; //message Date       
-				long lrDate; //message Date long for comparing endDate
-
-				Message orgMsg[] = f.getMessages();
+			ArrayList<Message> arrayList = new ArrayList<Message>();
+			Message orgMsg[] = messages;
+			
+			Date from = endDate;
+			int end = orgMsg.length;       
+			long lFrom = from.getTime(); // endDate
+			
+			Date rDate; // message Date       
+			long lrDate; // message Date long for comparing endDate       
+			int j = 0;
+							
+			if (orgMsg.length > 0) {
+				this.sortMessages(folder, orgMsg, "receivedDate", true);
 				
-				if (orgMsg.length > 0) {
-					this.sortMessages(folder, orgMsg, "receivedDate", true);
+				do {                
+					Message testMsg = orgMsg[end-1];         
+					rDate = testMsg.getReceivedDate();         
+					lrDate = rDate.getTime();
+					end--;
 					
-					int j = 0;
-					
-					do {                
-						Message testMsg = orgMsg[end-1];         
-						rDate = testMsg.getReceivedDate();         
-						lrDate = rDate.getTime();
-						end--;
-						
-						if (lrDate < lFrom) {
-							arrayList.add(testMsg);
-							j++;
-						}
-					} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
-				}
-				
-				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
-
-				return msg;
-			// filter 있을 때				
-			} else {				
-				ArrayList<Message> arrayList = new ArrayList<>();
-				
-				Date from = endDate;       
-				Folder f = folder;
-				
-				Message orgMsg[] = f.search(sTerm);
-				
-				int end = orgMsg.length;       
-				long lFrom = from.getTime(); //endDate
-				
-				Date rDate; // message Date       
-				long lrDate; // message Date long for comparing endDate       
-				int j = 0;
-								
-				if (orgMsg.length > 0) {
-					this.sortMessages(folder, orgMsg, "receivedDate", true);
-					
-					do {                
-						Message testMsg = orgMsg[end-1];         
-						rDate = testMsg.getReceivedDate();         
-						lrDate = rDate.getTime();
-						end--;
-						
-						if (lrDate < lFrom) {
-							if (isUnreadOnly || isImportantOnly) {
-								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
-									arrayList.add(testMsg);
-									j++;
-								} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
-									arrayList.add(testMsg);
-									j++;
-								}
-							} else {
+					if (lrDate < lFrom) {
+						if (isUnreadOnly || isImportantOnly) {
+							if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
+								arrayList.add(testMsg);
+								j++;
+							} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
 								arrayList.add(testMsg);
 								j++;
 							}
+						} else {
+							arrayList.add(testMsg);
+							j++;
 						}
-					} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
-				}
-				
-				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
-				
-				messages = msg;
+					}
+				} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
 			}
+			
+			Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+			
+			messages = msg;
 		}
 		
 		logger.debug("searchFolder ended.");
@@ -1790,22 +1925,9 @@ public class EzEmailUtil {
 	}
 	
 	public Message[] advancedSearchFolder(
+			IMAPAccess ia,
 			String userAccount,
-			Folder folder, 
-			String searchField, 
-			final String searchValue,
-			Date startDate,
-			Date endDate,
-			boolean searchSubFolder,
-			boolean isUnreadOnly,
-			boolean isImportantOnly
-			) throws Exception {
-		return advancedSearchFolder(userAccount, folder, searchField, searchValue, startDate, endDate, searchSubFolder, isUnreadOnly, isImportantOnly, false);
-	}
-	
-	public Message[] advancedSearchFolder(
-			String userAccount,
-			Folder folder, 
+			String folderPath, 
 			String searchField, 
 			final String searchValue,
 			Date startDate,
@@ -1813,91 +1935,62 @@ public class EzEmailUtil {
 			boolean searchSubFolder,
 			boolean isUnreadOnly,
 			boolean isImportantOnly,
-			boolean isFromMobile
+			String sortType,
+			boolean isAscending,
+			int startIndex,
+			int listCount,
+			Map<String, Object> extraMap
 			) throws Exception {
 		logger.debug("advancedSearchFolder started.");
-		logger.debug("userAccount=" + userAccount + ",folder=" + folder 
-				+ ",searchField=" + searchField + "searchValue=" + searchValue 
-				+ ",startDate=" + startDate + ",endDate=" + endDate
-				+ ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly 
-				+ ",isImportantOnly=" + isImportantOnly + ",isFromMobile=" + isFromMobile);
+		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + "searchValue=" + searchValue 
+				+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly 
+				+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
+				+ ",listCount=" + listCount);
 		
-		String folderPath = folder.getFullName();
-		logger.debug("folderPath=" + folderPath);
+		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount);
 		
-		Message[] messages = null;
+		List<String> mailList = (List<String>)resultMap.get("mailList");
 		
-		if (searchField.equals("") && startDate == null && endDate == null && !isUnreadOnly && !isImportantOnly) {
-			messages = folder.getMessages();
-		} else {
-			long[] mailUidArray = getMailUidListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, isUnreadOnly, isImportantOnly);
-			messages = ((IMAPFolder)folder).getMessagesByUID(mailUidArray);
+		if (extraMap != null) {
+			extraMap.put("totalCount", (int)resultMap.get("totalCount"));
 		}
 		
-		// search the sub folders and combine the results.
-		if (searchSubFolder) {
-			Folder[] subFolders = folder.list();
+		List<Message> messageList = new ArrayList<Message>();
+		Map<String, Folder> folderMap = new HashMap<String, Folder>();
+		String mailFolderPath = null;
+		long mailUid = 0;
+		Folder mailFolder = null;
+		Message message = null;
+		
+		for (String mailUrl : mailList) {
+			mailFolderPath = mailUrl.split("/")[0];
+			mailUid = Long.parseLong(mailUrl.split("/")[1]);
 			
-			for (Folder subFolder : subFolders) {
-				subFolder.open(Folder.READ_ONLY);
-				Message[] subMessages = advancedSearchFolder(userAccount, subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, isUnreadOnly, isImportantOnly, isFromMobile);
+			if (folderMap.containsKey(mailFolderPath)) {
+				mailFolder = folderMap.get(mailFolderPath);
+				message = ((IMAPFolder)mailFolder).getMessageByUID(mailUid);
 				
-				if (subMessages.length > 0) {
-				   int mainLen = messages.length;
-				   int subLen = subMessages.length;
-				   Message[] combined = new Message[mainLen + subLen];
-				   System.arraycopy(messages, 0, combined, 0, mainLen);
-				   System.arraycopy(subMessages, 0, combined, mainLen, subLen);	
-				   
-				   messages = combined;
+				if (message != null) {
+					messageList.add(message);
+				}
+			} else {
+				mailFolder = ia.getFolder(mailFolderPath);
+				mailFolder.open(Folder.READ_ONLY);
+				folderMap.put(mailFolderPath, mailFolder);
+				message = ((IMAPFolder)mailFolder).getMessageByUID(mailUid);
+				
+				if (message != null) {
+					messageList.add(message);
 				}
 			}
 		}
 		
-		if (isFromMobile && endDate != null && startDate == null) {
-			ArrayList<Message> arrayList = new ArrayList<Message>();
-			
-			Date from = endDate;
-			int end = messages.length;
-			long lFrom = from.getTime(); // endDate long
-			Date rDate; // message Date       
-			long lrDate; // message Date long for comparing endDate       
-			int j = 0;
-							
-			if (messages.length > 0) {
-				this.sortMessages(folder, messages, "receivedDate", true);
-				
-				do {                
-					Message msg = messages[end-1];         
-					rDate = msg.getReceivedDate();         
-					lrDate = rDate.getTime();
-					end--;
-					
-					if (lrDate < lFrom) {
-						if (isUnreadOnly || isImportantOnly) {
-							if (isUnreadOnly && !msg.isSet(Flags.Flag.SEEN)) {
-								arrayList.add(msg);
-								j++;
-							} else if (isImportantOnly && msg.isSet(Flags.Flag.FLAGGED)) {
-								arrayList.add(msg);
-								j++;
-							}
-						} else {
-							arrayList.add(msg);
-							j++;
-						}
-					}
-				} while (j < 30 && end > 0); // 더 빨리 온 메세지를 뽑는다.
-			}
-			
-			messages = arrayList.toArray(new Message[arrayList.size()]);
-		}
-		
 		logger.debug("advancedSearchFolder ended.");
-		return messages;
+		return messageList.toArray(new Message[0]);
 	}
 	
-	public long[] getMailUidListFromJGw(
+	public Map<String, Object> getMailListFromJGw(
 			String userAccount,
 			String folderPath, 
 			String searchField, 
@@ -1905,39 +1998,40 @@ public class EzEmailUtil {
 			Date startDate, 
 			Date endDate, 
 			boolean isUnreadOnly, 
-			boolean isImportantOnly
+			boolean isImportantOnly,
+			boolean searchSubFolder,
+			String sortType,
+			boolean isAscending,
+			int startIndex,
+			int listCount
 			) throws Exception {
 		logger.debug("getMailUidListFromJGw started.");
-		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath
-				 + ",searchField=" + searchField + ",searchValue=" + searchValue
-				 + ",startDate=" + startDate + ",endDate=" + endDate 
-				 + ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly);
+		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
+				+ ",searchValue=" + searchValue + ",startDate=" + startDate + ",endDate=" + endDate 
+				+ ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly + ",searchSubFolder=" + searchSubFolder
+				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		String startDateStr = "";
-		String endDateStr = "";
-		
-		if (startDate != null) {
-			startDateStr = sdf.format(startDate);
-		}
-		
-		if (endDate != null) {
-			endDateStr = sdf.format(endDate);
-		}
 		
 		String userAccountParam = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
 		String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
 		String searchFieldParam = "searchField=" + URLEncoder.encode(searchField == null ? "" : searchField, "UTF-8");
 		String searchValueParam = "searchValue=" + URLEncoder.encode(searchValue == null ? "" : searchValue, "UTF-8");
-		String startDateParam = "startDate=" + URLEncoder.encode(startDateStr, "UTF-8");
-		String endDateParam = "endDate=" + URLEncoder.encode(endDateStr, "UTF-8");
+		String startDateParam = "startDate=" + URLEncoder.encode(startDate == null ? "" : sdf.format(startDate), "UTF-8");
+		String endDateParam = "endDate=" + URLEncoder.encode(endDate == null ? "" : sdf.format(endDate), "UTF-8");
 		String isUnreadOnlyParam = "isUnreadOnly=" + isUnreadOnly;
 		String isImportantOnlyParam = "isImportantOnly=" + isImportantOnly;
 		
+		String searchSubFolderParam = "searchSubFolder=" + searchSubFolder;
+		String sortTypeParam = "sortType=" + URLEncoder.encode(sortType == null ? "" : sortType, "UTF-8");
+		String isAscendingParam = "isAscending=" + isAscending;
+		String startIndexParam = "startIndex=" + startIndex;
+		String listCountParam = "listCount=" + listCount;
+		
 		String inputParams = userAccountParam + "&" + folderPathParam + "&" + searchFieldParam 
-				+ "&" + searchValueParam + "&" + startDateParam + "&" + endDateParam + "&" 
-				+ isUnreadOnlyParam + "&" + isImportantOnlyParam;
+				+ "&" + searchValueParam + "&" + startDateParam + "&" + endDateParam 
+				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
+				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam;
 		
 		logger.debug("inputParams=" + inputParams);
 
@@ -1945,28 +2039,29 @@ public class EzEmailUtil {
 		String response = getWebServiceResult(requestURL, inputParams);
 		logger.debug("response=" + response);
 		
-		long[] uidList = null;
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
 			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
 			
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
-				JSONArray result = (JSONArray)responseObj.get("result");
+				List<String> mailList = (List<String>)responseObj.get("mailList");
+				int totalCount = (int)(long)responseObj.get("totalCount");
 				
-				uidList = new long[result.size()];
+				resultMap.put("mailList", mailList);
+				resultMap.put("totalCount", totalCount);
 				
-				for (int i = 0; i < result.size(); i++) {
-					uidList[i] = (long)result.get(i);
-				}
-				
+//				for (int i = 0; i < result.size(); i++) {
+//					mailList.add((String)result.get(i));
+//				}
 			} else {
 				throw new Exception("JGwServer ERROR");
 			}
 		}
 		
 		logger.debug("getMailUidListFromJGw ended.");
-		return uidList;
+		return resultMap;
 	}
 	
 	public MimeMessage deleteAttach(SMTPAccess sa, Message oldMessage, int[] index) {

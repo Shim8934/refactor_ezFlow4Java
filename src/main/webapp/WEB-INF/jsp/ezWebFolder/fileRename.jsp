@@ -67,7 +67,7 @@
 	<div style="margin: 0px; height:112px; border:1px solid #ddd; padding:15px; margin-bottom:10px">
 		<div style="text-align:left; font-size:12px"><spring:message code='ezWebFolder.t119'/></div>
 		<div style="height: 40px; line-height: 40px; margin-top: 10px;">
-			<input id="nameInput" type="text" placeholder="<spring:message code='ezWebFolder.t212'/>" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #666;">
+			<input id="nameInput" type="text" placeholder="<spring:message code='ezWebFolder.t212'/>" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #ddd;">
 		</div>
 	</div>	
 	<div class="btnpositionNew">

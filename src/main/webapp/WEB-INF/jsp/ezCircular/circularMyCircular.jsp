@@ -765,7 +765,7 @@
 	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 	                        <p class="mail_title">
 	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
+	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">

@@ -37,7 +37,7 @@
 			{
 				g_UID = pUID;
 							            
-				pObj.style.backgroundColor = "#f0f6ff";
+				pObj.style.backgroundColor = "#edf4fd";
 				logo_URL = GetAttribute(pObj, "imageurl");
 	
 				if (g_SelectedObj != null) {

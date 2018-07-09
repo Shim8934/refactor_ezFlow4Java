@@ -133,7 +133,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: rgb(233, 241, 255);
+				background-color: #edf4fd;
 			}
 		</style>
 	</head>

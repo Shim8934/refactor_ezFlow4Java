@@ -85,7 +85,7 @@
 .calendar_week .td_list .calendar_row .calendar_t_text{vertical-align:top;}
 /*.calendar_week .td_list .calendar_t_time table{margin:0px 2px 0px 1px;} */
 /*.calendar_week .td_list .calendar_t_text table{margin:0px 2px 0px 1px;} */
-.calendar_week .td_list .today td{background:#f0f6ff;}/* 오늘의 일 표시배경 */
+.calendar_week .td_list .today td{background:#edf4fd;}/* 오늘의 일 표시배경 */
 
 
 .calendar_data_ok{background:rgb(250, 255, 243); border:1.2px solid #e9ffcc; line-height:150%; color:black;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
@@ -123,7 +123,7 @@
 .calendar_day .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer;}
 .calendar_day .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #dedede; vertical-align:top;}
 .calendar_day .td_list .calendar_row .calendar_t_text{vertical-align:top;}
-.calendar_day .td_list .today td{background:#f0f6ff;}
+.calendar_day .td_list .today td{background:#edf4fd;}
 
 /* //일보기 */
 

@@ -100,9 +100,9 @@
 		        }
 		
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(1).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(2).style.backgroundColor = "#f0f6ff";
+		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
 		    }
 		
 		    function event_dbclick() {}

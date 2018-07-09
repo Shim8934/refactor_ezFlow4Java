@@ -112,7 +112,7 @@
 						<c:if test="${primary != '1'}">${item.ownerName2}</c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
-					 	${item.title} 
+			         	<c:out value="${item.title} " escapeXml="true" />
 					 </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
 			         	${item.location} 

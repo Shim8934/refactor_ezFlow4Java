@@ -814,7 +814,7 @@
         			<h2 style="float:left;padding-top:7px;"><spring:message code='ezQuestion.t253' /></h2>
         			<div style="float:right;padding-top:5px">
         				<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px;height:21px" />            		
-            			<a class="imgbtn" onclick="cnsearch_click()"><span><spring:message code='ezQuestion.t34' /></span></a>
+            			<a class="imgbtn imgbck" onclick="cnsearch_click()"><span><spring:message code='ezQuestion.t34' /></span></a>
             		</div>
             		<div style="clear:both"></div>
             		<div class="listview" style="margin-top:5px;margin-bottom:5px">

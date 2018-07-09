@@ -552,7 +552,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#f0f6ff";
+		        elem.style.backgroundColor = "#edf4fd";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strListIDInfo 값 셋팅
@@ -583,7 +583,7 @@
 						strListDeptNameInfo = "";
 
 						$(":checkbox[name=myCheckbox]").prop("checked", true);
-						$(".row_body").css("background", "#f0f6ff");
+						$(".row_body").css("background", "#edf4fd");
 
 						$(":checkbox[name=myCheckbox]:checked").each(function(){
 							deleteListWriterName.push($(this).attr("writerName") + ";");

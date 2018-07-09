@@ -136,7 +136,7 @@
             </ul>
         </div>
 		<div class="nobox" style="margin-top:10px">
-		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
+		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="20">
 		</div>		
 			
 		<div class="btnposition btnpositionNew">

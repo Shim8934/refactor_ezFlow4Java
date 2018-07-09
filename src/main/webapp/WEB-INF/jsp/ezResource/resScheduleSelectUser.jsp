@@ -354,6 +354,10 @@
 		        window.close();
 		    }
 		</script>
+		<style>
+			.mainlist_free tr th {border-top:0px}
+		</style>
+		
 	</head>
 	<body class="popup" style="overflow: auto;" id="BodyTop">
 		<xml id="listviewheader" style="display:none">
@@ -396,17 +400,17 @@
      			<tr>
        			<td style="padding-right:5px">
            			<div style="border: 1px solid #ddd; height: 416px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
-		            <div class="box" style="margin-top:3px" >
-           			    <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px" />
-               			<a href="#" class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/></span></a>
+		            <div class="box" style="margin-top:3px;border:0px" >
+           			    <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px;height:22px" />
+               			<a href="#" class="imgbtn imgbck"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/></span></a>
            			</div>
        			</td>
        			<td valign="top" style="padding-left:5px">
            			<div class="listview">
                			<div id="OrganListView" style="border: 0px solid #ddd; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
            			</div>
-           			<div class="box" style="margin-top:3px" >
-               			<select id="search_type" style="margin-bottom:2px">
+           			<div class="box" style="margin-top:3px;border:0px;float:right" >
+               			<select id="search_type" style="margin-bottom:2px;height:22px">
                  				<option selected value="displayname"><spring:message code='ezResource.t135'/></option> 
                  				<option value="description"><spring:message code='ezResource.t132'/></option> 
                  				<option value="title"><spring:message code='ezResource.t10'/></option> 
@@ -417,8 +421,8 @@
                  				<option value="mail"><spring:message code='ezResource.t139'/></option> 
                  				<option value="streetAddress"><spring:message code='ezResource.t140'/></option> 
                			</select>
-               			<input id="keyword" onkeypress="search_press()" style="WIDTH:130px; margin-bottom:2px" />
-               			<a href="#" class="imgbtn"><span onclick="search_click()"><spring:message code='ezResource.t14'/></span></a>
+               			<input id="keyword" onkeypress="search_press()" style="WIDTH:130px; margin-bottom:2px;height:22px" />
+               			<a href="#" class="imgbtn imgbck"><span onclick="search_click()"><spring:message code='ezResource.t14'/></span></a>
            			</div>
        			</td>
      			</tr>

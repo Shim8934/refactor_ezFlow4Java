@@ -211,10 +211,10 @@ function toggleList_Sub(event)
 }
 
 function mouseOver_Sub()
-{
+{	
 	if( prevSelMenu != this )
 	{
-		this.className = "on";
+		this.className = "on ing";
 	}
 }
 
