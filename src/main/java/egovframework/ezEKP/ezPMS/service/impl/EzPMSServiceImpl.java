@@ -97,7 +97,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 						Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 
-						int restDueday = getWorkingDays(now, endDate, companyId, tenantId) - 1;
+						int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
 						projectList.get(i).setRestDueday(restDueday);
 					}
 
@@ -1368,7 +1368,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		if (w2 == Calendar.SUNDAY) {
 			w2 = Calendar.MONDAY;
 		}
-
+		
 		// List<String> compHoliday = ezPMSDAO.getHolidaysCount(map);
 		//
 		// for (int i = 0; i < compHoliday.size(); i++) {
