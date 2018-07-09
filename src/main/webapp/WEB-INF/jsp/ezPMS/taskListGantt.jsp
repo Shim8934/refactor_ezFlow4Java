@@ -141,8 +141,8 @@
 		   			tempTask.end = new Date(pd.planEndDate).getTime();
 		   			tempTask.duration = pd.workingday;
 		   			tempTask.weight = Number(pd.weight).toFixed(1);
-		   			tempTask.startIsMilestone = false;
-		   			tempTask.endIsMilestone = "";
+		   			tempTask.startIsMilestone = true;
+		   			tempTask.endIsMilestone = true;
 		   			tempTask.assigs = [];
 		   			
 		   			for (var i = 0; i < pd.projectMember.length; i++) {
