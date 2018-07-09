@@ -20,6 +20,10 @@
 				font-weight:bold;
 				color:black;
 			}
+ 			#left ul li.ing, #TopBoards ul li.ing{
+				font-weight:normal !important;
+				color:#9b9b9b !important;
+			}
 	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
@@ -964,7 +968,7 @@
 			</c:if>
 			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t102'/></span></h2>
 			<ul id="iconul">
-				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1 style="font-weight: bold"></span></span></li>
+				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
 
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL2" onClick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
 
@@ -1050,7 +1054,7 @@
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #f0f0f0"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #eaeaea"></div>
             <h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>

@@ -1397,7 +1397,7 @@ function mfFormatTime(iMin) {
 
 //날짜에 마우스 오버시
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#efeff0";
+    pThis.style.backgroundColor = "#edf4fd";
 }
 
 //마우스 아웃시
