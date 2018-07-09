@@ -446,7 +446,8 @@ function updateTree(task) {
   }
   if (p.end!=newEnd) {
     if (p.endIsMilestone) {
-      task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + GanttMaster.messages["END_IS_MILESTONE"], task);
+    	task.master.setErrorOnTransaction(GanttMaster.messages["END_IS_MILESTONE"], task);
+//      task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + GanttMaster.messages["END_IS_MILESTONE"], task);
       return false;
     }
   }
