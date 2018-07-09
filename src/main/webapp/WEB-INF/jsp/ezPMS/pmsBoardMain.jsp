@@ -154,7 +154,7 @@
 		
 		//searchPopup 안에 OK넣고 온클릭에  전역변수:Tab1_SelectID로 구분해서 list가져오는거 분기
 		$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"project\"].layerHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
-		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"project\"].layerHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
+		$("<div id='blockTop' class='blockTop' style='height:86px;' onclick='parent.frames[\"right\"].frames[\"project\"].layerHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
 		parent.parent.frames["left"].document.body.style.overflow = "hidden";		
 		
 		var popupX = parent.document.body.clientWidth/2 - (500/2);
