@@ -37,9 +37,6 @@ function getTaskNameList(elem) {
 	var clickedUser = $(elem).parent().parent().attr("userId");
 	var projectId = "<c:out value='${projectId}'/>";
 	
-	console.log(projectId);
-	console.log(clickedDate);
-	
 	$.ajax({
 		type : "post",
 		url : "/ezPMS/getDateTaskList.do",
@@ -49,17 +46,19 @@ function getTaskNameList(elem) {
 			"selectedUserId" : clickedUser
 		},
 		success : function(result) {
-			var infoHTML = "<div class='tooltipTitle'>" + clickedDate + " <spring:message code='ezPMS.t137' /></div>";
-			infoHTML += "<div class='tooltipText'>";
-			
-			for (var i = 0; i < result.length; i++) {
-				infoHTML += "&gt; " + result[i] + "<br>";
-			}
-			
-			infoHTML += "</div>";
-			
-			$(".tooltipBox").html(infoHTML);
-		    $('.tooltipBox').show();
+			if (result.length != 0) {
+				var infoHTML = "<div class='tooltipTitle'>" + clickedDate + " <spring:message code='ezPMS.t137' /></div>";
+				infoHTML += "<div class='tooltipText'>";
+				
+				for (var i = 0; i < result.length; i++) {
+					infoHTML += "&gt; " + result[i] + "<br>";
+				}
+				
+				infoHTML += "</div>";
+				
+				$(".tooltipBox").html(infoHTML);
+			    $('.tooltipBox').show();
+			} 
 		},
 		error : function(request, status, error) {
 		}
