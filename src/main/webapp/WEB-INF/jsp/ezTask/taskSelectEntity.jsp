@@ -374,7 +374,8 @@
 	            return;
 	        }
 	        var id = GetAttribute(p_ListOrderObject,"_DATA2");
-	        var dept = GetAttribute(p_ListOrderObject,"_DATA11");
+	        /* var dept = GetAttribute(p_ListOrderObject,"_DATA11"); */
+	        var dept = $('.node_selected').parent().attr("cn");
 	        var feature = GetOpenPosition(420, 450);
 	        
 	        if (CrossYN())
