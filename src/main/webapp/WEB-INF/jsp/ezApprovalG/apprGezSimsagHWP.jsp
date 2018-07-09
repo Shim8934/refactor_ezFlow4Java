@@ -84,6 +84,7 @@
         arrDelFiles[0] = "c:\\" + pDocID + ".xml";
         arrDelFiles[1] = "c:\\" + pOrgDocID + ".xml";
         var pUse_Editor = "${useEditor}";
+        var approvalRoot = "${approvalRoot}";
         var ext = "hwp";
         
         function btnPrint_onclick() {

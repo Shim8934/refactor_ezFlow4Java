@@ -25406,7 +25406,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                     output.write(buffer, 0, readBuffer);
                                 }
                             } catch (IOException e) {
-                                System.out.println(e);
+                                e.printStackTrace();
                             } finally {
                                 try{
                                     // 생성된 InputStream Object를 닫아준다.
@@ -25436,7 +25436,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getStackTrace());
+			e.printStackTrace();
 			map.put("NEWID", strNewID);
 			map.put("XDOCID", strXDocID);
 			map.put("XTOCODE", strXToCode);

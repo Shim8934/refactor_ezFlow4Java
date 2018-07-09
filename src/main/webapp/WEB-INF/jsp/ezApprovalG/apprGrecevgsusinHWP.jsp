@@ -113,6 +113,7 @@
 		    var g_senderinfo = '${userInfo.companyID}' + ", " + "${userInfo.deptName1}" + ", " + "${userInfo.title1}";
 		    var approvalFlag  = '${approvalFlag}';
 		    var ext = "hwp";
+		    var dirPath = "${approvalRoot}";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -306,7 +307,7 @@
 			        if (pFormHref == "") {
 			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
-			                try {
+// 			                try {
 			                    document.getElementById("btnReqReSend").style.display = "";
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
 			                        hideProgress();
@@ -318,6 +319,7 @@
 			                        }
 			                        else {
 			                            var emlName = getNodeText(pRelayDocInfo.getElementsByTagName("emlURL").item(0));
+			                            //이부분이 타는지 체크해야함 탄다면 어떤 의미인지도 체크
 			                            if (!decodeUp(emlName)) {
 			                                hideProgress();
 			                                chkBtnConfirm("1");
@@ -342,9 +344,9 @@
 			                            return;
 			                        }
 			                    }
-			                } catch (e) {
-			                    document.getElementById("btnRefresh").style.display = "";
-			                }
+// 			                } catch (e) {
+// 			                    document.getElementById("btnRefresh").style.display = "";
+// 			                }
 			            }
 			            else {
 			                hideProgress();

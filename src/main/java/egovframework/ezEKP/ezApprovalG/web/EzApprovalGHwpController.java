@@ -579,7 +579,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String retFlag = request.getParameter("retFlag");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
 
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -623,6 +624,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("approvalRoot", approvalRoot);
 		
 		LOGGER.debug("ezRecevGSusinHWP ended");
 		
@@ -691,6 +693,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String Use_ImgTagTOAttah_body = "N";
+	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
 
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("docID", docID);
@@ -698,6 +701,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("orgDocID", orgDocID);
 	    model.addAttribute("hwpToolbar", hwpToolbar);
 	    model.addAttribute("useEditor", useEditor);
+	    model.addAttribute("approvalRoot", approvalRoot);
 	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
 		
 		LOGGER.debug("ezSimsaG_HWP ended");
