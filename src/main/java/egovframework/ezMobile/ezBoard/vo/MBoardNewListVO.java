@@ -53,14 +53,6 @@ public class MBoardNewListVO {
 	private String guBun;
 	/** 앨범소개*/
 	private String mainContent;
-	/** 2018-07-06 홍승비 - 새게시물 접근에 대한 권한 플래그 추가 */
-	/** 리스트 접근 권한 */
-	private String listView_FG;
-	/** 게시물 읽기 권한 */
-	private String read_FG;
-	/** 게시판그룹 관리자 권한 */
-	private String boardGroupAcl;
-	
 	
 	public String getBoardID() {
 		return boardID;
@@ -217,23 +209,5 @@ public class MBoardNewListVO {
 	}
 	public void setMainContent(String mainContent) {
 		this.mainContent = mainContent;
-	}
-	public String getListView_FG() {
-		return listView_FG;
-	}
-	public void setListView_FG(String listView_FG) {
-		this.listView_FG = listView_FG;
-	}
-	public String getRead_FG() {
-		return read_FG;
-	}
-	public void setRead_FG(String read_FG) {
-		this.read_FG = read_FG;
-	}
-	public String getBoardGroupAcl() {
-		return boardGroupAcl;
-	}
-	public void setBoardGroupAcl(String boardGroupAcl) {
-		this.boardGroupAcl = boardGroupAcl;
 	}
 }

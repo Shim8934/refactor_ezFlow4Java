@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
@@ -46,6 +47,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -103,7 +105,8 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			/* 2018-07-05 홍승비 - deptPath에 자신의 ID 빠져있는 부분 추가 */
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -161,7 +164,7 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -237,6 +240,8 @@ public class MBoardGWController {
 		return result;
 	}
 	
+	
+	/* 게시물 리스트보기/접근/읽기권한 없을 시 여기에서 예외처리해야 한다. */
 	/**
 	 * 모바일 G/W 게시판 [GET] 게시물 상세정보
 	 */
@@ -261,7 +266,9 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			// 현재 사용자의 부서 경로(자기ID+부서ID+회사ID 전부 ,로 나누어 붙인 문자열) 받아온다.
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -269,6 +276,20 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			//상세보기일때 type boardItem으로 지정
 			boardInfo.setType("boardItem");
+			
+			LOGGER.debug("해당 게시물이 속한 boardId = "+boardId);
+			
+			// 해당 게시물 읽기권한 없다면 리턴
+			if (!accessCheck(contentId, deptPathCode, info)) {
+				result.put("status", "no");
+				return result;
+			}
+		
+			if (!boardInfo.getRead_FG().equals("true")) {
+				result.put("status", "no");
+				return result;
+			}
+			
 			
 			//mht 파일 가져오기
 			String realPath = commonUtil.getRealPath(request);
@@ -327,7 +348,7 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -386,7 +407,7 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -879,6 +900,56 @@ public class MBoardGWController {
 					LOGGER.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
+		}
+    }
+    
+    /**
+	 * 게시판 게시판권한체크 표출 Method(EzBoardController 참고)
+	 */
+	public boolean accessCheck(String contentID, String deptPath, MCommonVO info) throws Exception {
+		LOGGER.debug("accessCheck started");
+		
+		String rootBoardID = "top";
+		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
+		String rollInfo = info.getRollInfo();
+		
+		// 전체/회사/게시관리자 권한이 있다면 바로 true 리턴한다.
+		if (rollInfo != null && (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+			LOGGER.debug("accessCheck ended1");
+			return true;
+		} else {
+			int result = 0;
+			boolean rtv = false;
+			
+			String deptPathOrgan = "";
+			
+			for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+				if (ch == 0) {
+					deptPathOrgan += deptPath.split(",")[ch].trim();
+				} else {
+					deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+				}
+			}
+			
+			String userDeptPath = deptPathOrgan + ",everyone";
+			
+			for (int i = 0; i < userDeptPath.split(",").length; i++) {
+				result = ezBoardService.getCheckItemID(contentID, "GENERAL", userDeptPath.split(",")[i].trim(), info.getTenantId());
+				
+				if (result > 0) {
+					rtv = false;
+					break;
+				} else {
+					rtv = true;
+				}
+				
+				LOGGER.debug("accessCheck result      ::     " + result);
+
+			}
+			
+			LOGGER.debug("accessCheck rtv      ::     " + rtv);
+			LOGGER.debug("accessCheck ended2");
+			return rtv;
 		}
     }
 }

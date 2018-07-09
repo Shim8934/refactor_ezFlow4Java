@@ -3172,6 +3172,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			boolean rtv = false;
 			
 			String deptPath = userInfo.getDeptPathCode();
+			
+			logger.debug("accessCheck deptPath in web    ::    " + deptPath);
+			
 			String deptPathOrgan = "";
 			
 			for (int ch = 0; ch < deptPath.split(",").length; ch++) {
@@ -3207,7 +3210,11 @@ public class EzBoardController extends EgovFileMngUtil{
 						break;
 					}
 				}
+				
+				logger.debug("accessCheck result      ::     " + result);
 			}
+			
+			logger.debug("accessCheck rtv      ::     " + rtv);
 			
 			logger.debug("accessCheck ended");
 			return rtv;
