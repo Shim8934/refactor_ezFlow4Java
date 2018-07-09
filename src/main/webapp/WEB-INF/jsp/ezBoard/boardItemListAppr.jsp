@@ -894,33 +894,38 @@
 		        }
 		        
 		        if (pFlag == "C") {
-		            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strItemList + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
-		            try { OpenWin.focus(); } catch (e) { }
+		        	if(confirm("<spring:message code='ezBoard.pjg02'/>")){
+			            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strItemList + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+			            try { OpenWin.focus(); } catch (e) { }
+		        	}
 		        }
 		        else {
-		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strItemList + "&mode=" + pFlag, false);
-		            xmlhttp.send();
-		
-		            if (xmlhttp.responseText == "OK") {
-		                if (pFlag == "Y")
-		                    alert("<spring:message code='ezBoard.t999002'/>");
-		                else
-		                    alert("<spring:message code='ezBoard.t999009'/>");
-		
-		                if (CurPage == totalPage) {
-		                    var SelList = new ListView();
-		                    SelList.LoadFromID("BoardList");
-		                    var DeleteCount = strItemList.split(';').length - 1;
-		                    if (SelList.GetRowCount() == DeleteCount) {
-		                        CurPage = CurPage - 1;
-		                    }
-		                }
-		                if (CurPage == 0) CurPage = 1;
-		                
-// 		                getBoardList();
-		                refresh_onclick();
-					}
+		        	
+		        	if(confirm("<spring:message code='ezBoard.pjg01'/>")){
+			            var xmlhttp = createXMLHttpRequest();
+			            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strItemList + "&mode=" + pFlag, false);
+			            xmlhttp.send();
+			
+			            if (xmlhttp.responseText == "OK") {
+			                if (pFlag == "Y")
+			                    alert("<spring:message code='ezBoard.t999002'/>");
+			                else
+			                    alert("<spring:message code='ezBoard.t999009'/>");
+			
+			                if (CurPage == totalPage) {
+			                    var SelList = new ListView();
+			                    SelList.LoadFromID("BoardList");
+			                    var DeleteCount = strItemList.split(';').length - 1;
+			                    if (SelList.GetRowCount() == DeleteCount) {
+			                        CurPage = CurPage - 1;
+			                    }
+			                }
+			                if (CurPage == 0) CurPage = 1;
+			                
+	// 		                getBoardList();
+			                refresh_onclick();
+						}
+		        	}
 		        }
 		        
 		        var applyCount = "0";
