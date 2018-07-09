@@ -125,6 +125,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();	
+		String companyID = userInfo.getCompanyID();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
@@ -141,7 +142,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
 
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, companyID);
 
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
@@ -599,7 +600,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");
 		
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		//첨부파일목록조회
 		StringBuilder strAttach = new StringBuilder();
@@ -771,7 +772,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");		
 		
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID, userInfo.getCompanyID());
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), tenantID);
 		
 		//baonk added		
@@ -835,7 +836,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
 		
 		//taskWork첨부파일목록조회
 		String taskAttachList = null;
@@ -868,7 +869,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
 		
 		//taskWork첨부파일목록조회
 		String taskWorkAttachList = null;
@@ -1152,7 +1153,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			endDate = nowDate.substring(0, 10) + " 23:59:59";
 		} else {
 			/*업무수정*/
-			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
 			
 			taskInfoVO.setMemo(taskInfoVO.getMemo().replace("<br>", "\n"));
 			//업무공유자목록조회
@@ -1350,7 +1351,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String date = request.getParameter("currentDate");
     	String taskID = request.getParameter("taskID");
 		
-    	TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+    	TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
     	taskInfoVO.setStartDate(date + " 00:00:00");
     	taskInfoVO.setEndDate(date + " 23:59:59");		
     	
