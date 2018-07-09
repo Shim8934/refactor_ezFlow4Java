@@ -35,6 +35,7 @@
 				<li><img src="/images/i_bar.gif"></li>
 				<li><a><span><spring:message code='ezCabinet.t50'/></span></a></li>
 				<li><a><span>파일상세</span></a></li>
+				<li><a><span><spring:message code='ezCabinet.t125'/></span></a></li>
 				<li id="right">
 					<img src="${previewMode == 'none' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg cabinet" id="preViewNone"  >
 					<img src="${previewMode == 'H'    ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">

@@ -115,6 +115,7 @@ var CabinetItem = function() {
 		libttns[6].firstElementChild.onclick  = function() {toggleSearchPanel();};
 		libttns[8].firstElementChild.onclick  = function() {openSharePopup();};
 		libttns[9].firstElementChild.onclick  = function() {getFileDetail();};
+		libttns[10].firstElementChild.onclick = function() {addRelatedCabinet();};
 		
 		$("#Sdatepicker").datepicker({
 			changeMonth: true,
@@ -406,6 +407,10 @@ var CabinetItem = function() {
 	
 	function getFileDetail() {
 		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 670));
+	}
+	
+	function addRelatedCabinet() {
+		//* blank 2018.07.09
 	}
 	
 	return {
