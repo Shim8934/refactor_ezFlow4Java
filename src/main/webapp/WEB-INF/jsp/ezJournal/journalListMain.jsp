@@ -135,14 +135,14 @@
 		    var replyJournalTitle;
 			
 			window.onresize = function () {
-		        MailOptionHidden();
-		        journalPreviewRayerChange(pPreviewShow_HOW);
-		        var textContentSize;
-				textContentSize = $("#PreviewRayerH").height() - 55;
-				$("#Preview_ContentH").css("height", textContentSize);
-				textContentSize = $("#PreviewRayerW").height() - 80;
-				$("#Preview_ContentW").css("height", textContentSize);
-// 		        Window_resize();
+// 		        MailOptionHidden();
+// 		        journalPreviewRayerChange(pPreviewShow_HOW);
+// 		        var textContentSize;
+// 				textContentSize = $("#PreviewRayerH").height() - 55;
+// 				$("#Preview_ContentH").css("height", textContentSize);
+// 				textContentSize = $("#PreviewRayerW").height() - 80;
+// 				$("#Preview_ContentW").css("height", textContentSize);
+		        Window_resize();
 		    };
 		    
 			document.onselectstart = function () { return false; };
@@ -155,6 +155,109 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		    };
+		    
+		    function Window_resize() {
+		        try {
+		        	document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
+		            document.getElementById("layer_popup").style.top = "100px";
+
+		            if (!isPreviewChange) {
+		            	
+		            	/* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지 
+		                if (parseInt(document.documentElement.clientWidth) < 1000) {
+		                	document.getElementById("PreViewleft").style.display = "none";
+		                	pPreviewShow_HOW = "W";
+		                }
+		                else {
+		                    document.getElementById("PreViewleft").style.display = "";
+		                } */
+		            	
+		                if (pPreviewShow_HOW == "W") {
+		                	if (pMailListDiv == 0 || pMailPreVDiv == 0) {
+		                        pMailListDiv = 50; pMailPreVDiv = 50;
+		                    }
+		                    document.getElementById("MailListRayer").style.display = "inline-block";
+		                    document.getElementById("PreviewRayerW").style.display = "block";
+		                    document.getElementById("PreviewRayerH").style.display = "none";
+
+		                    CurrenWidth = document.documentElement.clientWidth - 10;
+		                    CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                    document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
+		                    document.getElementById("ResizeBarW").style.width = (CurrenWidth + 10) + "px";
+		                    pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
+		                    pMailPreHeightW = parseInt(CurrentHeight * (pMailPreVDiv / 100));
+		                    document.getElementById("MailListRayer").style.width = "100%";
+		                    document.getElementById("PreviewRayerW").style.width = "100%";
+		                    document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
+		                    
+							document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+							document.getElementById("journalListBody").style.height = (pMailListHeightW - 100) + "px";
+							document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)+ "px";
+							
+		                    document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
+		                }
+		                else if (pPreviewShow_HOW == "H") {
+		                	if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
+		                        pMailListDiv_H = 50; pMailPreVDiv_H = 50;
+		                    }
+		                	
+		                    document.getElementById("MailListRayer").style.display = "inline-block";
+		                    document.getElementById("PreviewRayerW").style.display = "none";
+		                    document.getElementById("PreviewRayerH").style.display = "inline-block";
+
+		                    CurrenWidth = document.documentElement.clientWidth - 20;
+		                    CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                    pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
+		                    pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
+
+		                    if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
+		                        var ChangeListWidthDiv = parseInt(CurrenWidth * 0.40) - pMailListWidthH;
+		                        pMailListWidthH = parseInt(CurrenWidth * 0.40);
+		                        pMailPreWidthH = pMailPreWidthH - ChangeListWidthDiv;
+		                    }
+		                    
+		                    document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
+		                    document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
+		                    document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+		                    document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
+		                    document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+		                    
+		                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+							document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
+		                    
+		                    document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
+		                    document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
+		                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+		                    
+		                    /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
+		                       오른쪽 끝에 여백이 발생하여 제거함
+		                    pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
+		                    pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
+		                    */
+		                    
+		                    // 화면 폭이 일정 크기보다 작아지면 헤더 구성을 변경한다.
+		                    // 중요도, 책갈피, 첨부파일, 크기 컬럼을 제거한다.
+		                    if (pMailListWidthH < 470) {
+		                        BasicViewHeaderChange(true);
+		                    } else {
+		                        BasicViewHeaderChange(false);
+		                    }
+		                }
+		                else if (pPreviewShow_HOW == "OFF") {
+		                    document.getElementById("PreviewRayerW").style.display = "none";
+		                    document.getElementById("PreviewRayerH").style.display = "none";
+		                    CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                    document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+		                    document.getElementById("MailListRayer").style.width = "100%";
+		                    
+		                    if (navigator.userAgent.indexOf('Firefox') != -1)
+		                        document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+		                    else
+		                        document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+		                }
+		            }            
+		        } catch (e) { }
+		    }
 			
 			//업무일지 리스트 뿌리기
 			function setJournalList() {
@@ -513,6 +616,7 @@
 							$("#Preview_ContentH").css("height", textContentSize);
 							textContentSize = $("#PreviewRayerW").height() - 80;
 							$("#Preview_ContentW").css("height", textContentSize);
+							document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 		   				}
@@ -1207,6 +1311,7 @@
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
 	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 55) + "px";
+	            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 
