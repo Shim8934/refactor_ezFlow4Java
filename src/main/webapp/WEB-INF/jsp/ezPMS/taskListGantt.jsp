@@ -61,6 +61,30 @@
 	   		var userRoleId = "${userRoleId}";
 	   		var msgStr01 = "<spring:message code='ezEmail.t269' />";
 	   		
+			function setGanttAllItems(status) {
+	   			
+	   			var data = {
+	   				projectId : projectId,
+	   				status : status
+	   			}
+	   			
+	   			$.ajax({
+	   				type : "POST",
+	   				contentType: "application/json; charset=UTF-8",
+	   				dataType : "json",
+	   				async: false,
+	   				data : JSON.stringify(data),
+	   				url : "/ezPMS/getGanttAllItems.do",
+	   				success : function(result) {
+	   					console.log(JSON.stringify(result));
+	   					/* groupList = result.groupList;
+	   					taskList  = result.taskList;
+	   					projectDetails = result.projectDetails;
+	   					userRoleId = result.userRoleId; */
+	   				}	
+	   			});
+	   		}
+			
 	   		function initValues() {	   			
 	   			var tl = taskList;
 	   			var pd = projectDetails;
