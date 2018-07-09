@@ -176,7 +176,9 @@ function CalendarView(pTagetID) {
             oTh.appendChild(datePick);
             
             /*2018-06-04 구해안 dayText 대신에 DatePicker 끝*/
-
+            var kSpan = document.createElement("SPAN");
+            kSpan.setAttribute("width", "10px");
+            oTh.appendChild(kSpan);
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_next";
             var mImg = document.createElement("IMG");
@@ -712,7 +714,7 @@ function MultiSelectItems(obj) {
 
         for (var i = 0; i <= 41; i++) {
             if (StartIdex <= i && Endidex >= i)
-                document.getElementById("index_" + i).style.backgroundColor = "#efeff0";
+                document.getElementById("index_" + i).style.backgroundColor = "#edf4fd";
             else
                 document.getElementById("index_" + i).style.backgroundColor = "";
         }
@@ -727,7 +729,7 @@ function MultiSelectEnd(obj) {
         DragEndItemID = "";
         return;
     }
-    obj.style.backgroundColor = "#efeff0";
+    obj.style.backgroundColor = "#edf4fd";
     Write();
 }
 function Write() {	

@@ -6,7 +6,6 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -1549,7 +1547,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
-		String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", userInfo.getTenantId());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		IMAPAccess ia = null;
@@ -1560,39 +1557,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 			Folder folder = ia.getFolder(ezEmailUtil.getInboxFolderId());		
 			folder.open(Folder.READ_ONLY);
-	        UIDFolder uidFolder = (UIDFolder)folder;
-	        Message[] messages = null;
-	        
-	        if (useAdvancedMailSearch.equals("YES")) {
-	        	messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", null, sdf.parse(dateTime), false, true, false, true);
-	        } else {
-	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false, true);
-	        }
-	        // sort the messages
- 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
-	        
- 			// set mailCount
- 			int unreadCount = ia.getUnreadCount(ezEmailUtil.getInboxFolderId());
- 			if (unreadCount < count) {
- 				count = unreadCount;
- 			}
- 			
- 			int messageCount = messages.length;
- 			
- 			if ( messageCount < 0 ) {
- 				messageCount = 0;
- 			}
- 			
- 			messages = Arrays.copyOfRange(messages, 0, messageCount);
-
- 			// pre-fetch
-	        FetchProfile fp = new FetchProfile();
-	        fp.add(UIDFolder.FetchProfileItem.UID);
-	        fp.add(FetchProfile.Item.ENVELOPE);
-	        folder.fetch(messages, fp);
+			
+	        Message[] messages = ezEmailUtil.searchFolder(ia, userEmail, folder, "", "", null, sdf.parse(dateTime), false, 
+	        		true, false, "receivedDate", false, 0, 30, true, null, userInfo.getTenantId());
 	        
 	        for (int i=0; i<messages.length; i++) {
 	        	Message message = messages[i];
+	        	UIDFolder uidFolder = (UIDFolder)message.getFolder();
 	        	
 	        	Date receivedDate = message.getReceivedDate();
 	        	String receivedDateStr = sdf.format(receivedDate);

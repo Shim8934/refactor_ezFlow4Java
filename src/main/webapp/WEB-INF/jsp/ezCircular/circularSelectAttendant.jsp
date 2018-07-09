@@ -38,7 +38,7 @@
 	        var strSearch = "<c:out value='${pSearchString}' />";
 	        var RetValue;
 	        var ReturnFunction;
-	        var deptClickFlag; //2018-05-11 (문성업) 직원 맴버를 전원 클릭하는 것 같은 효과를 나타내는 마우스 효과 (수정)
+	        var deptClickFlag; // 2018-05-11 (문성업) 직원 맴버를 전원 클릭하는 것 같은 효과를 나타내는 마우스 효과 (수정)
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -348,7 +348,7 @@
       				success : function(xml) {
  		                event_displayUserList(loadXMLString(xml));
  		                
- 		                //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
+ 		                // 2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
  		               	if (strSearch != "") {
  			            	document.getElementById('keyword').value = strSearch;
  							search_click("search"); 
@@ -382,7 +382,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#efeff0";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -401,7 +401,7 @@
 	            }
 	        }
 	        function event_listMout(obj) {
-	          if(!deptClickFlag){ //2018-05-11 (문성업)수정
+	          if(!deptClickFlag){ // 2018-05-11 (문성업)수정
 	            for (var i = 0; i < listContentArry.length; i++) {
 	                if (document.getElementById(listContentArry[i]) == obj) {
 	                    return;
@@ -459,7 +459,7 @@
 	        var listEventCheckbox = false;
 	        var listSubEventCheckbox = false;
 	        function event_listclick(obj) {
-	        	deptClickFlag = false; //2018-05-11 (문성업)수정
+	        	deptClickFlag = false; // 2018-05-11 (문성업)수정
 	            if (!listEventCheckbox) {
 	                if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
 	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
@@ -500,7 +500,7 @@
 	                    var CurlistContent = obj.getAttribute("id");
 	                    var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
 	                    var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
-	                    if (PrePoint <= CurPoint) { //2018-05-18 문성업 (수정)
+	                    if (PrePoint <= CurPoint) { // 2018-05-18 문성업 (수정)
 	
 	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) { 
 	                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
@@ -572,7 +572,9 @@
 	            var strSIP = "";
 	            var pAddFlag = false;
 	           
-	            if (_RowObjectID != null) {
+	            if (_RowObjectID == null && Tab1_SelectID == "1tab2") {
+	            	alert("<spring:message code='ezCircular.t53'/>");
+	            } else if (_RowObjectID != null && Tab1_SelectID == "1tab2") {
 	            	if (_RowObjectName.trim() == "deptList") {
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
 		            		strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
@@ -1004,7 +1006,8 @@
 				}
 
 				var listid = "MsgToList";
-				_RowObjectID = null;
+				//2018-07-06 즐겨찾기 추가 로직 개선 배현상
+				//_RowObjectID = null;
 			}
 
 			function CheckMailReceiver(selRow, option) {
@@ -1792,7 +1795,7 @@
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
 
-				obj.style.backgroundColor = "#efeff0";
+				obj.style.backgroundColor = "#edf4fd";
 
 				$
 						.ajax({
@@ -1843,7 +1846,7 @@
 				_RowObject = obj;
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
-				obj.style.backgroundColor = "#efeff0";
+				obj.style.backgroundColor = "#edf4fd";
 			}
 
 			var Tab1_SelectID = "1tab1";
@@ -1855,8 +1858,9 @@
 					if (document.getElementById("circularOrgan_content").style.display == "none") {
 						document.getElementById("circularOrgan_content").style.display = "";
 						document.getElementById("circularDept_content").style.display = "none";
-						$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
-						_RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
+// 						$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제, 즐겨찾기
+// 						$("#List_TBODY2 tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제, 즐겨찾기 구성원
+//						_RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
 					}
 					break;
 				case "circularDept":
