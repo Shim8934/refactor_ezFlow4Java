@@ -229,7 +229,7 @@ function SaveFile() {
     		type : "POST",
     		dataType : "text",
     		async : false,
-    		url : "/ezApprovalG/saveFile.do",
+    		url : "/ezApprovalG/saveFileHWP.do",
     		data : {
     			docID : pDocID,
     			html  : HwpCtrl.GetCloneData("", "HWP")

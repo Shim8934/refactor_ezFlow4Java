@@ -301,7 +301,7 @@ function getExtInfo()
 	var eNodes = sihangXML.documentElement;
 	var bodyTagUse = true;
     // 에러로그 여부
-//    try {
+    try {
         var Nodes = eNodes.selectNodes("body");
         if (Nodes.length > 0) {
             bodyTagUse = true;
@@ -320,7 +320,9 @@ function getExtInfo()
                 return false;
             }
         }
-//    } catch (e) { }
+    } catch (e) {
+    	alert("getExtInfo error");
+    }
 
 	var Nodes = eNodes.selectNodes("head/organ");		
 	if( Nodes.length > 0 )

@@ -25683,6 +25683,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document listXML = commonUtil.convertStringToDocument(sb.toString());
 		
 		result.append("<DATA>");
+		
 		if (listXML.getElementsByTagName("ROW").getLength() > 0) {
 			result.append("<xDocID>");
 			if (listXML.getElementsByTagName("XDOCID").item(0).getTextContent().equals("")) {
@@ -25726,8 +25727,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			result.append("<isPKI>" + listXML.getElementsByTagName("ISPKI").item(0).getTextContent() + "</isPKI>");
 			result.append("<ReceivedDate>" + listXML.getElementsByTagName("RECEIVEDDATE").item(0).getTextContent() + "</ReceivedDate>");
 		}
-		result.append("</DATA>");
+		
 		if (listXML.getElementsByTagName("XDOCID").item(0) != null && !listXML.getElementsByTagName("XDOCID").item(0).getTextContent().equals("")) {
+			map.put("docID", listXML.getElementsByTagName("XDOCID").item(0).getTextContent());
+			
 			List<ApprGRelayVO> relayDocSignList = ezApprovalGDAO.getRelaySignInfo(map);
 			
 			StringBuffer sb2 = new StringBuffer();
@@ -25753,6 +25756,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				result.append("</SignInfos>");
 			}
 		}
+		
+		result.append("</DATA>");
 		
 		logger.debug("getRelayInfo ended");
 		

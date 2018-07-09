@@ -307,7 +307,7 @@
 			        if (pFormHref == "") {
 			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
-// 			                try {
+			                try {
 			                    document.getElementById("btnReqReSend").style.display = "";
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
 			                        hideProgress();
@@ -327,6 +327,7 @@
 			                            }
 			                        }
 			                    }
+			                    
 			                    var tempFlag = getExtInfo();
 			                    if (tempFlag) {
 			                        setAutoProperty();
@@ -344,9 +345,9 @@
 			                            return;
 			                        }
 			                    }
-// 			                } catch (e) {
-// 			                    document.getElementById("btnRefresh").style.display = "";
-// 			                }
+			                } catch (e) {
+			                    document.getElementById("btnRefresh").style.display = "";
+			                }
 			            }
 			            else {
 			                hideProgress();
@@ -874,7 +875,8 @@
 			      }
 			      catch (e) { }
 			
-			      DeleteLocalFiles();
+			      //사용하지 않는게 좋을듯 엑티브엑스를 이용하여 템프파일 생성 후 지우는거 
+// 			      DeleteLocalFiles();
 			  }
 		
 			  function DeleteLocalFiles() {

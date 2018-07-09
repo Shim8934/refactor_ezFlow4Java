@@ -160,7 +160,7 @@ function ExcuteInfo(pprocessIdx, currTD) {
         }
         rtnVal = setData(xmlData, currTD);
     }
-    setMenuBar("btnHelper", true);
+//    setMenuBar("btnHelper", true);
     return rtnVal;
 }
 function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
