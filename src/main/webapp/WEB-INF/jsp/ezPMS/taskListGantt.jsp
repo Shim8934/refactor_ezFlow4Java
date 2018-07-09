@@ -947,10 +947,12 @@
 	   				groupId = projectGroupId;
 	   			  }
 	   			  
-	   			  saveAllSchedules();
-	   			  toastPopupShow("[" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");				
-	   			  addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");
-	   			  
+	   			  if(taskId != null && todoOk) {
+	   				 saveAllSchedules();
+		   			 toastPopupShow("[" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");				
+		   			 addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");
+	   			  }
+	   			 
 	   			  return todoOk;
 	   			};
 
@@ -1039,7 +1041,7 @@
    					groupId = projectGroupId;
    			  	  }	   			
    			  	  
-	   			  if(originalPeriod.start != start) {
+	   			  if(originalPeriod.start != start && taskId != null) {
 		   			  saveAllSchedules();
 		   			  toastPopupShow("[" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");				
 		   			  addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");
