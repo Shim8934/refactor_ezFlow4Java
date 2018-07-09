@@ -468,11 +468,13 @@ function updateTree(task) {
     }
     
     // 최상위 프로젝트의 일정은 변하지 않게 하기 위해 추가 - 임민석
-    var groupId = p.id.match(/g(\d+)/) != null ? p.id.match(/g(\d+)/)[1] : null;
+   /* var groupId = p.id.match(/g(\d+)/) != null ? p.id.match(/g(\d+)/)[1] : null;
     
     if(groupId != null) {
     	return p.setPeriod(newStart, newEnd);
-    }
+    }*/
+    
+    return p.setPeriod(newStart, newEnd);
   }
   
   return true;
