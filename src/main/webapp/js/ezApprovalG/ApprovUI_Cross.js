@@ -2815,7 +2815,7 @@ function chk_Passwd(pPwd, CompleteFunction) {
     else
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function sendMail() {
