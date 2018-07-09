@@ -11,6 +11,7 @@ public class PollUserAnswerVO {
 	private String voteDate;
 	private String userImage;
 	private String phone;
+	private String deptId;
 	
 	public int getAnsId() {
 		return ansId;
@@ -82,6 +83,14 @@ public class PollUserAnswerVO {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
 	}	
 	
 }	
