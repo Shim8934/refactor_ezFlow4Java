@@ -1454,7 +1454,11 @@ function setAttachFileInfo(strXML) {
 
             if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA5")[i]) == "OK") {
                 objTr = document.createElement("TR");
-                objTr.setAttribute("DATA2", newFileName + ";" + fileSize);
+                //2018-07-06 김보미
+                //objTr.setAttribute("DATA2", newFileName + ";" + fileSize);
+                objTr.setAttribute("DATA", newFileName);//UUID
+                objTr.setAttribute("DATA2", pFileName);//파일명
+                objTr.setAttribute("DATA3", fileSize);//파일사이즈
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
