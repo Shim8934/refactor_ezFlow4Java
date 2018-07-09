@@ -143,14 +143,12 @@
 		            treeView.SetNodeClick("UserContNodeClick");
 		            treeView.DataSource(xmlDom2);
 		            treeView.DataBind("divUserContTree");
-		            
-		            //console.log(treeView);
 
 		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
  		            $(".node_normal").css("width", "135px");
- 		            console.log("aaaaa");
+ 		            
 					var node = $(".node_normal");
-					console.log(node);
+					
 					for(var i=0; i<node.length; i++) {
 						node[i].setAttribute("TITLE", node[i].innerHTML);
 					} 
