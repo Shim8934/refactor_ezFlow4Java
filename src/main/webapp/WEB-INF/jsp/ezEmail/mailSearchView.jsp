@@ -753,7 +753,7 @@
 				    </select>
 				    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;height:22px"onkeyup="return search_keypress(event)" />
 			    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
-			    	<a class="imgbtn"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
+			    	<a class="imgbtn imgbck"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
 			    </td> 
 			</tr> 
 			<tr>
