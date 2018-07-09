@@ -133,7 +133,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String useMailReceiveScreen = ezCommonService.getTenantConfig("useMailReceiveScreen", loginInfo.getTenantId());
 		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + ",useBottomFrameOnly=" + useBottomFrameOnly + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useMailReceiveScreen=" + useMailReceiveScreen);
 		
-		if (usePreviewSubTree.equals("YES")) {
+		if (useMailReceiveScreen.equals("YES")) {
 			model.addAttribute("useMailReceiveScreen", useMailReceiveScreen);
 		}
 		
