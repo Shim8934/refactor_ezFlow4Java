@@ -33,7 +33,7 @@
 			var g_timezone = "${userTimeSet}";
 			var offsetMin = "${offsetMin}";
 		    var checkval = "f";
-		    var m_strColorSelect = "#f0f6ff";
+		    var m_strColorSelect = "#efeff0";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";

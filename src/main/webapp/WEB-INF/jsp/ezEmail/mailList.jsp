@@ -94,6 +94,8 @@
 		    var useReSend = "${useReSend}";
 		    var useSearchContent = "${useSearchContent}";
 		    var useMailNewWindow = "${useMailNewWindow}";
+		    var useReceivingChk = false;
+		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -116,6 +118,16 @@
 		    	
 		    	if (useReSend == "YES" && g_szRootFolderName == compareFolderName) {
 		    		$('#liReSend').css('display', 'block');
+		    	}
+		    	
+		    	if (g_moveUrl == 'receiveChk') {
+		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
+		    		document.getElementById("read_stat").style.display = "none";
+		    		document.getElementById("unread_stat").style.display = "none";
+		    		useReceivingChk = true;
+		    		g_foldertype = g_moveUrl;
+		    		p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
+		    		select.selectedIndex = 3;
 		    	}
 		    	
 		        CurrentHeight = document.body.clientHeight;
@@ -144,6 +156,12 @@
 		                deleteone.style.display = 'none';
 		                deleteall.style.display = '';
 		                break;
+		            
+		            case "receiveChk":
+		            	p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile5.xml";
+		            	g_foldertype = "sent";
+		            	g_moveUrl = "<spring:message code='ezEmail.t645'/>";
+		            	break;
 		        }
 		        
 		        if (g_foldertype != "sent" && g_foldertype != "draft")
@@ -790,8 +808,8 @@
 			  <input name="searchCheck" id="Radio4" type="radio" value="CONTENT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio4">&nbsp;<spring:message code="ezEmail.t649" /></label>
 			  </c:if>
 			  &nbsp;
-			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
-	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="start_search()"></a>
+			  <input name="keyword" class="Mail_Input" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+	          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="start_search()"></a>
 	      </span>
 	    </h1>	
         <div id="mainmenu">
@@ -802,10 +820,10 @@
           <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
           <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
           <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-          <li><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
-          <li><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
+          <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
+          <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
           <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
-          <li onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
+          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
           <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
           <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
           <li><span onClick="deleteWork(false)"><spring:message code="ezEmail.t95" /></span></li>

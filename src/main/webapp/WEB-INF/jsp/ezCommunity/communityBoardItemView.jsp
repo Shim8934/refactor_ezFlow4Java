@@ -1054,9 +1054,9 @@
 			               		<div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div>
 			              	</td>
 		                  	<td class="pos2" style ="white-space:normal;">
-		                   		<a class="imgbtn"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
+		                   		<a class="imgbtn imgbck"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
 		                        <br>
-		                        <a class="imgbtn"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
+		                        <a class="imgbtn imgbck"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
 		               		</td>
 			           	</tr>
 			       	</table>

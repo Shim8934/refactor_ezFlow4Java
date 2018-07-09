@@ -153,7 +153,7 @@
 				    		</c:choose>	
 				    	</td>
 				    	<td style="width:70px;text-align:center;border-left:0px">
-	                		<a class="imgbtn"><span onClick="DeleteRight('${item.accessID}')"><spring:message code='ezPortal.t67'/></span></a>
+	                		<a class="imgbtn imgbck"><span onClick="DeleteRight('${item.accessID}')"><spring:message code='ezPortal.t67'/></span></a>
 						</td>
 				    </tr>
 			    </c:forEach>
@@ -168,7 +168,7 @@
 		                    <tr>
 								<td><input type="text" id="newAccessID" style="width:100%" readonly> </td>
 								<td>
-		                            <a class="imgbtn"><span onClick="SelectID()"><spring:message code='ezPortal.t45'/></span></a>
+		                            <a class="imgbtn imgbck"><span onClick="SelectID()"><spring:message code='ezPortal.t45'/></span></a>
 								</td>	                        
 							</tr>
 	                    </table>

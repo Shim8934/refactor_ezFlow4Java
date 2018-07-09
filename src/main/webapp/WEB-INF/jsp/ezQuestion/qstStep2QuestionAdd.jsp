@@ -941,7 +941,7 @@
             	<tr>
                 	<th rowspan="2"><spring:message code='ezQuestion.t333' /></th>
                 	<td class="pos1"><input type="text" size="9" maxlength="500" style="WIDTH:100%" name="txtQuestion" value="${questionAddVO.questionContent}" AnsInfo="${questionAddVO.pQstAnsInfo}" /></td>
-                	<td class="pos2"><a class="imgbtn"><span onclick="javascript:fun_SetAns('Q', 'MOD');"><spring:message code='ezQuestion.t154' /></span></a></td>
+                	<td class="pos2"><a class="imgbtn imgbck"><span onclick="javascript:fun_SetAns('Q', 'MOD');"><spring:message code='ezQuestion.t154' /></span></a></td>
             	</tr>
             	<tr>
                 	<td colspan="2"><div name="td_Question" id="td_Question" style="overflow-y:auto;HEIGHT:17px" class="viewtxt">${questionAddVO.pQstAttach}</div></td>
@@ -989,10 +989,10 @@
             	        <table border="0" style="width:100%">
                 	        <tr>
                     	        <td>
-                        	        <a class="imgbtn"><span onclick="javascript:fun_AddAns();"><spring:message code='ezQuestion.t176' /></span></a>
-                            	    <a class="imgbtn"><span onclick="javascript:fun_AnsEdit();"><spring:message code='ezQuestion.t480' /></span></a>
-                                	<a class="imgbtn"><span onclick="javascript:fun_AnsDelete();"><spring:message code='ezQuestion.t177' /></span></a>
-                                	<a class="imgbtn"><span onclick="javascript:fun_SetAns('A', 'MOD');"><spring:message code='ezQuestion.t154' /></span></a>
+                        	        <a class="imgbtn imgbck"><span onclick="javascript:fun_AddAns();"><spring:message code='ezQuestion.t176' /></span></a>
+                            	    <a class="imgbtn imgbck"><span onclick="javascript:fun_AnsEdit();"><spring:message code='ezQuestion.t480' /></span></a>
+                                	<a class="imgbtn imgbck"><span onclick="javascript:fun_AnsDelete();"><spring:message code='ezQuestion.t177' /></span></a>
+                                	<a class="imgbtn imgbck"><span onclick="javascript:fun_SetAns('A', 'MOD');"><spring:message code='ezQuestion.t154' /></span></a>
                             	</td>
                             	<td style="text-align:right; white-space:nowrap"><spring:message code='ezQuestion.t525' /></td>
                             	<!------------ 위로 -------------->
@@ -1010,7 +1010,7 @@
             	<tr id="Objectivity_step3" style="DISPLAY:none">
                 	<th></th>
                 	<td>
-	                    <select AnsInfo name="input_Ans" id="input_Ans" size="4" onclick="javascript:fun_SelClick();" style="WIDTH:100%;HEIGHT:100px; background:none;">${questionAddVO.pSelectOption}</select>
+	                    <select AnsInfo name="input_Ans" id="input_Ans" size="4" onclick="javascript:fun_SelClick();" style="WIDTH:100%;HEIGHT:100px; background:none;border:0px;margin-top:5px">${questionAddVO.pSelectOption}</select>
     	            </td>
         	    </tr>
         	</table>

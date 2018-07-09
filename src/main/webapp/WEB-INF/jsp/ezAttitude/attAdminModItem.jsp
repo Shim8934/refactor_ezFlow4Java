@@ -162,10 +162,6 @@
 			        };
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		        
-// 		        $("#Sdatepicker").change(function(){
-// 		        	checkHoliday($(this).val());
-// 		        })
-		        
 		        if (typeId == 'A01' || typeId == 'A02') {
 					$("#Sdatepicker").datepicker('disable');
 			        $("#Edatepicker").datepicker('disable');
@@ -258,7 +254,6 @@
 						$("#writerName").closest("tr").remove();
 						setDatePicker($("#periodblock").attr("datetype"));
 					    
-						//checkHoliday($("#Sdatepicker").val());
 						if ($("input[name=region]").length != 0) {
 							$("input[name=region]").val(region);
 						}
@@ -379,79 +374,6 @@
 						form_change();
 					}
 				});
-			}
-			
-			function checkHoliday(pDate){
-				var checkDate = new Date(pDate);
-				//휴무일근태등록이 0인 경우만 생각햇다, 1인 경우도 생각해야된다.
-				var todayLunar = lunarCalc(checkDate.getFullYear(), checkDate.getMonth() + 1, checkDate.getDate(), 1);
-				var todayMemorialDayList = memorialDayCheck(checkDate, todayLunar);
-				var todayYearMemorialDayList = yearmemorialDayCheck(checkDate, todayLunar);
-				
-				if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
-					$("#selectAtti option[value=A07]").css("display", "");
-				} else {
-					if ($('#selectAtti').val() == "A07") {
-						$("#selectAtti").val("A04");
-						form_change($("#selectAtti"));
-					}
-					$("#selectAtti option[value=A07]").css("display", "none");
-				}
-			}
-			
-			var attRegHolidayFlag = false;
-			function attRegCheck() {
-				if (selectType == "A07") {
-					return;
-				}
-				var lunar = "";
-				var isMemorialDay = "";
-				var isYearMemorialDay = "";
-				var subDate = "";
-				if (endDate == "") {
-					subDate = 0;
-				} else {
-					subDate = calDateRange(startDate.split(" ")[0], endDate.split(" ")[0]);
-				}
-				
-				var betweenDate = new Date(startDate.split(" ")[0]);
-				for (var i = 0; i <= subDate; i++) {
-					betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
-					lunar = lunarCalc(betweenDate.getFullYear(), betweenDate.getMonth() + 1, betweenDate.getDate(), 1);
-					isMemorialDay = memorialDayCheck(betweenDate, lunar);
-					isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
-					
-					if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
-						attRegHolidayFlag = true;
-						return;
-					}
-				}
-			}
-			
-			function weekWorkCheck() {
-				var lunar = "";
-				var isMemorialDay = "";
-				var isYearMemorialDay = "";
-				var subDate = "";
-				if (endDate == "") {
-					subDate = 0;
-				} else {
-					subDate = calDateRange(startDate.split(" ")[0], endDate.split(" ")[0]);
-				}
-				
-				var betweenDate = new Date(startDate.split(" ")[0]);
-				for (var i = 0; i <= subDate; i++) {
-					betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
-					lunar = lunarCalc(betweenDate.getFullYear(), betweenDate.getMonth() + 1, betweenDate.getDate(), 1);
-					isMemorialDay = memorialDayCheck(betweenDate, lunar);
-					isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
-					
-					//휴무일이 있는 경우
-					if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
-						return true;
-					}
-				}
-				return false;
 			}
 			
 			/**

@@ -144,7 +144,7 @@
 	    <div class="listview" style="width: 570px;">
 	        <div id="OrganListView" style="border: 0px solid #ddd; Width: 570px; Height: 160px; overflow: auto; BACKGROUND-COLOR: white;"></div>
 	    </div>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onClick="change_onClick()"><spring:message code='ezOrgan.t110' /></span></a>
 	    </div>
 	</body>

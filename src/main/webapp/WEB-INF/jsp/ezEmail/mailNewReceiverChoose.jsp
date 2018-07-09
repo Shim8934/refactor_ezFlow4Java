@@ -1381,7 +1381,7 @@
 		        });
 	        }
 	        
-		    var m_strColorSelect = "#f0f6ff";
+		    var m_strColorSelect = "#efeff0";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -3563,17 +3563,17 @@
 	                    <tr>
 	                        <td>
 	                            <div id="ManualView" style="HEIGHT: 504px; width: 667px;" class="box">
-	                                <table class="content">
+	                                <table class="content" style="margin:5px">
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t31' /></th>
 	                                        <td>
-	                                            <input type="text" id="emailname" style="WIDTH: 99%; ime-mode: active; box-sizing: border-box; -moz-box-sizing: border-box;">
+	                                            <input type="text" id="emailname" style="WIDTH: 100%; ime-mode: active; box-sizing: border-box; -moz-box-sizing: border-box;">
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t35' /></th>
 	                                        <td>
-	                                            <input type="text" id="emailaddr" style="WIDTH: 99%; ime-mode: inactive; box-sizing: border-box; -moz-box-sizing: border-box;" onkeyup="return on_keydown()">
+	                                            <input type="text" id="emailaddr" style="WIDTH: 100%; ime-mode: inactive; box-sizing: border-box; -moz-box-sizing: border-box;" onkeyup="return on_keydown()">
 	                                        </td>
 	                                    </tr>
 	                                </table>
@@ -3588,7 +3588,7 @@
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgTo)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgTo)"><br>
 	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
@@ -3605,7 +3605,7 @@
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgCC)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgCC)"><br>
 	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgCC)">
 	                        </td>
@@ -3623,7 +3623,7 @@
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgBCC)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgBCC)"><br>
 	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgBCC)">
 	                        </td>

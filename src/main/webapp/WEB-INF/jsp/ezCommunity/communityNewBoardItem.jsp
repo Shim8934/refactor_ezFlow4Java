@@ -948,7 +948,7 @@
 								id="Sdatepicker" style="width: 80px; text-align: center" /> <input
 								id="Stimepicker" type="text" class="time"
 								style="width: 43px; margin-left: 10px; text-align: center;" /> <a
-								class="imgbtn" style="margin-top: 4px;"><span onclick="btn_PostDate_Clear()"
+								class="imgbtn imgbck" style="margin-top: 4px;"><span onclick="btn_PostDate_Clear()"
 									popuplocation='topright'><spring:message
 											code='ezCommunity.t444' /></span></a>
 						</span></td>
@@ -1045,8 +1045,8 @@
 												style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
 										</td>
 										<td class="pos2">
-											<a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
-											<a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
+											<a class="imgbtn imgbck"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
 										</td>
 									</tr>
 								</form>
@@ -1070,9 +1070,9 @@
 											<div id="lstAttachLink">&nbsp;</div>
 										</td>
 										<td class="pos2" style ="white-space:normal;">
-											<a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
 											<br>
-											<a class="imgbtn"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
 										</td>
 									</tr>
 								</form>
