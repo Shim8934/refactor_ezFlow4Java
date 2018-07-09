@@ -1720,11 +1720,45 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String lang = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");		
 		String pidList = "'" + idList + "'";
+		
+		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(idList, lang, tenantID);
+		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(idList, lang, tenantID);
+		String CompanyID = userInfo.getCompanyID();
+		String dcidList = "";
+		
+		if(dList != null && dList.size()>0){
+			for (int i = 0; i < dList.size(); i++) {
+				if (i == 0) {
+					dcidList += ",";
+				}
+				ScheduleDeptVO data = dList.get(i);			
+				dcidList += "\'" + data.getDeptId()+ "\',";				
+			}				
+		}
+		
+		if(cList != null && cList.size()>0 ){
+			for (int i = 0; i < cList.size(); i++) {							
+				if(dList == null || dList.size()<=0){
+					if (i == 0) {
+						dcidList += ",";
+					}
+					ScheduleCumulerVO data = cList.get(i);			
+					dcidList += "\'" + data.getDeptId()+ "\',";		
+				}
+			}				
+		}
+		
+		/*dcidList = dcidList.substring(0, dcidList.length()-1);*/
+		
+		dcidList += "\'" + CompanyID + "\'";
+		pidList += dcidList;
 		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";

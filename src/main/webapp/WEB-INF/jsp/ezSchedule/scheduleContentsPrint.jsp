@@ -133,9 +133,7 @@
 				<tr>
 				    <th><spring:message code='ezSchedule.t314' /></th>
 				    <td colspan="3">
-				    	<!-- 2018-07-09 김보미 - 태그적용 막기 -->
- 				        <%-- <div id="printTitle">${printTitle}</div> --%>
-				        <div id="printTitle"><c:out value="${printTitle}" /></div>
+				        <div id="printTitle"><c:out value="${printTitle} " escapeXml="true" /></div>
 				    </td>
 				</tr>
 			</table>
