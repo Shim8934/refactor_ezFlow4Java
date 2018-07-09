@@ -110,8 +110,8 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 
-			/* 2018-07-03 홍승비 - 새게시물 리스트 표시 시 companyID 조건 추가 */
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText);
+			/* 2018-07-03 홍승비 - 새게시물 리스트 표시 시 deptID, companyID 조건 추가 */
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true), info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText);
 			
 			/* 2018-07-03 홍승비 - 새게시물 카운트 표시 시 companyID 조건 추가 */
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), pSearchText);

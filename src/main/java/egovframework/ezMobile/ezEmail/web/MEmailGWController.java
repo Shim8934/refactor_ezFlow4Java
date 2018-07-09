@@ -4419,7 +4419,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String pResult = "";
 		
         try {
-            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getLang(), userInfo.getTenantId());
+            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getLang(), userInfo.getTenantId(), userInfo.getCompanyId());
         } catch (Exception e) {
         	e.printStackTrace();
         	

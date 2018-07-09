@@ -29,11 +29,11 @@ public interface MBoardService {
 	/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
 	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, String companyID, int tenantID, String primary) throws Exception;
 	
-	/* 2018-07-03 홍승비 - 포탈 메인 새게시물 리스트 표시 시 companyID 조건 추가  */
-	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, String companyID, int tenantID, String offset) throws Exception;
+	/* 2018-07-03 홍승비 - 포탈 메인 새게시물 리스트 표시 시 deptID, companyID 조건 추가  */
+	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, String deptID, String companyID, int tenantID, String offset) throws Exception;
 	
-	/* 2018-07-03 홍승비 - 새게시물 리스트 표시 시 companyID 조건 추가 */
-	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
+	/* 2018-07-03 홍승비 - 새게시물 리스트 표시 시 deptID, companyID 조건 추가 */
+	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
 	
 	List<MBoardAttachVO> getAttachList(String itemID, int tenantID) throws Exception;
 	

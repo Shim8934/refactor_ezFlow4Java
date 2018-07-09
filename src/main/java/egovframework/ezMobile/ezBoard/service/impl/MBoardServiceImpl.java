@@ -872,7 +872,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 	/* 2018-07-03 홍승비 - 좌측메뉴 새게시물 리스트 표시 시 companyID 조건 추가 */
 	@Override
-	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, String companyID, int tenantID, String offset,String pSearchText) throws Exception {
+	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset,String pSearchText) throws Exception {
 		logger.debug("getNewBoardList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -883,6 +883,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("lastDate", lastDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("deptID", deptID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
@@ -890,9 +891,9 @@ public class MBoardServiceImpl implements MBoardService {
 		logger.debug("getNewBoardList ended");
 		return mBoardDAO.getNewItemList(map);
 	}
-
+	
 	@Override
-	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, String companyID, int tenantID, String offset) throws Exception {
+	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, String deptID, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("getBoardMainList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -901,6 +902,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("listSize", listCnt);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("deptID", deptID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 
