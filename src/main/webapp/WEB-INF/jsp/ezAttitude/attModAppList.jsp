@@ -1197,42 +1197,40 @@
 		</c:if>
         </ul>
         </div>
-        <div id="popup2" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
-            <div class="popupwrap3">
-			<table style="display: block; width: 440px; margin: 10px 0px 0px 1px;" class="popuplist">
-				<thead>
+        <div id="popup2" class="popupwrap1" style="display:none;margin-bottom:50px;">
+            <div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAttitude.t121' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
+		            </ul>
+		        </div>
+				<table style="display: block; width: 478px; margin: 10px 0px 0px 1px;" class="popuplist">
+					<c:if test="${adminFlag == 'true'}">
+						<tr>
+							<th nowrap><spring:message code='ezAttitude.t103' /></th>
+							<td style="width: 100%;"><input id="writer_search"	class="input_text" type="text" onkeydown=""	onkeyup="search_keypress(event);" style="width: 100%;" /></td>
+						</tr>
+					</c:if>
 					<tr>
-						<th class="layerHeader" colspan="4" style="width: 440px;">
-							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle; padding-bottom: 1px" /> &nbsp;<spring:message code='ezAttitude.t121' />
-						</th>
+						<th nowrap><spring:message code='ezAttitude.t104' /></th>
+						<td style="width: 100%;"><input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width: 100%;" /></td>
 					</tr>
-				</thead>
-				<c:if test="${adminFlag == 'true'}">
 					<tr>
-						<th nowrap><spring:message code='ezAttitude.t103' /></th>
-						<td style="width: 100%;"><input id="writer_search"	class="input_text" type="text" onkeydown=""	onkeyup="search_keypress(event);" style="width: 100%;" /></td>
+						<th><spring:message code='ezAttitude.t137' /></th>
+						<td>
+							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()">
+							<label for="usepostdate"><spring:message code='ezAttitude.t105' /></label>
+							<input type="text" id="Sdatepicker"	style="width: 80px; text-align: center;" /> 
+							~ 
+							<input type="text" id="Edatepicker" style="width: 80px; text-align: center;" />
+						</td>
 					</tr>
-				</c:if>
-				<tr>
-					<th nowrap><spring:message code='ezAttitude.t104' /></th>
-					<td style="width: 100%;"><input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width: 100%;" /></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezAttitude.t137' /></th>
-					<td>
-						<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()">
-						<label for="usepostdate"><spring:message code='ezAttitude.t105' /></label>
-						<input type="text" id="Sdatepicker"	style="width: 80px; text-align: center;" /> 
-						~ 
-						<input type="text" id="Edatepicker" style="width: 80px; text-align: center;" />
-					</td>
-				</tr>
-			</table>
-			<div class="btnposition">
-		        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
-		        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span><spring:message code='ezAttitude.t121'/></span></a>
-		        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span><spring:message code='ezAttitude.t34'/></span></a>
-		      </div>
+				</table>
+				<div class="btnpositionLayer">
+			        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span><spring:message code='ezAttitude.t121'/></span></a>
+			    </div>
             </div>
             <a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
         </div>
