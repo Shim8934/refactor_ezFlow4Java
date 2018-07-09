@@ -78,7 +78,12 @@ function MakeHeaderHTML(HeaderObject) {
                 _HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
             else
                 _HeaderRow.innerHTML = SelectSingleNodeValue(XmlRows[Cnt], "heading");
-
+            
+            if (SelectSingleNodeValue(XmlRows[Cnt], "propname") == "readdt") {
+            	_HeaderTR.appendChild(_HeaderRow);
+            	continue;
+            }
+            
             var _HeaderSpanimg = null;
             if (SelectSingleNodeValue(XmlRows[Cnt], "prop") == p_ListOrderby) {
                 _HeaderRow.setAttribute("orderoption", p_ListOrderOption);

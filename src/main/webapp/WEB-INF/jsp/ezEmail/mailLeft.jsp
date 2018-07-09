@@ -925,7 +925,7 @@
 				}
 			}
 			
-			// 재은 수정중
+			// 수신확인 메뉴 클릭
 			function reception_check() {
 				var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent("<spring:message code='ezEmail.t516' />") + "&url=receiveChk";
 				
