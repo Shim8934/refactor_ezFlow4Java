@@ -12,6 +12,16 @@
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
+	    	.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    	}
+	    	.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    	}
 	        .instance.sbHolder{
 	            width: 100%;
 	        }
@@ -133,6 +143,18 @@
 		            treeView.SetNodeClick("UserContNodeClick");
 		            treeView.DataSource(xmlDom2);
 		            treeView.DataBind("divUserContTree");
+		            
+		            //console.log(treeView);
+
+		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+ 		            $(".node_normal").css("width", "135px");
+ 		            console.log("aaaaa");
+					var node = $(".node_normal");
+					console.log(node);
+					for(var i=0; i<node.length; i++) {
+						node[i].setAttribute("TITLE", node[i].innerHTML);
+					} 
+
 		        } 
 			        if (parseInt(pListTypeValue) < 10) {
 			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
@@ -195,7 +217,22 @@
 
 	            var treeView = new TreeView();
 	            treeView.LoadFromID(pTreeID);
-	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
+	            
+	            var node = document.getElementById(pNodeID);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        
+		        if(nodeLevel > 9) {
+		        	nodeLevel = 9;
+		        }
+		        for(var i=0; i<title2.length; i++) {
+		        	var title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }		        
 	        }
 		    
 		    function Tree_setconfig() {
