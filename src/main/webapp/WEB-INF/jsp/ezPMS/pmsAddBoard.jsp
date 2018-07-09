@@ -197,6 +197,7 @@
 		
 		if (title == "") {
 			alert("<spring:message code='ezPMS.t74' />");
+			doubleSubmitFlag = false;
 			return;
 		}
 		
