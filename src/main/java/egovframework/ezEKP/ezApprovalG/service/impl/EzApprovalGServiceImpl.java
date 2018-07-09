@@ -92,6 +92,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -18086,26 +18087,36 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<LISTVIEWDATA>");
 		resultXML.append("<HEADERS>");
 		
+		String viewCompany = ezCommonService.getTenantConfig("viewCompany", tenantID);
+		
 		for (int k = 0; k < hlength; k++) {
-			resultXML.append("<HEADER>");
-			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
-			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
-			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
-			
-			if (!orderCell.equals("") && orderCell.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
-				if (orderOption.equals("")) {
-					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
-					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
-				} else {
-					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
-					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+			if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().equals("companyName") && !viewCompany.equals("1")) {
+			} else {
+				resultXML.append("<HEADER>");
+				resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+				resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+				resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+				
+				if (!orderCell.equals("") && orderCell.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
+					if (orderOption.equals("")) {
+						orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+						orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+					} else {
+						orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+						orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+					}
 				}
+				
+				resultXML.append("</HEADER>");
 			}
-			
-			resultXML.append("</HEADER>");
 		}
 		
 		resultXML.append("</HEADERS>");
+		
+		if (!viewCompany.equals("1")) {
+			hlength -= 1;
+		}
+		
 		// 결재문서 리스트 추출
 		String docList = getAprDocList(listType, userID, userIDs, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, dueryData, companyID, tenantID);
 		
@@ -18130,7 +18141,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offSet)) + "</VALUE>");
+				if (fieldName.equals("COMPANYNAME") && !viewCompany.equals("1")) {
+				} else {
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offSet)) + "</VALUE>");
+				}
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -25362,5 +25376,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} 
 		return cabinetSN;
 
+	}
+
+	@Override
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		return ezApprovalGDAO.getAllCompanyList(map);
 	}
 }

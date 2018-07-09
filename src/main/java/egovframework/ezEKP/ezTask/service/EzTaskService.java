@@ -29,7 +29,7 @@ public interface EzTaskService {
 
 	TaskGeneralVO getTaskGeneral(String userID, int tenantID) throws Exception;
 
-	TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID) throws Exception;
+	TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID, String companyID) throws Exception;
 	
 	TaskConfigVO getOriginColor(String userID, int tenantID) throws Exception;
 	

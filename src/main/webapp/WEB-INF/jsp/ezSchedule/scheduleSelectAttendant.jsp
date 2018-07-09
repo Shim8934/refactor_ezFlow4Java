@@ -372,7 +372,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#efeff0";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -432,7 +432,8 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA11");
+	            /* var dept = p_ListOrderObject.getAttribute("_DATA11"); */
+	            var dept = $('.node_selected').parent().attr("cn");
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 450) / 2;

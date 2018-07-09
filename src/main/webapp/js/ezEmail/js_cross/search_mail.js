@@ -30,6 +30,120 @@ function MailListRefresh() {
 //	start_search();
 }
 
+//skyblue0o0
+var listSize = 100;
+var BlockSize = 10;
+function makePageSelPage() {
+    var strtext;
+    var PagingHTML = "";
+    document.getElementById("tblPageRayer").innerHTML = "";
+    strtext = "<div class=\"pagenavi\">";
+    PagingHTML += strtext;
+    var totalPage = parseInt(document.getElementById("resultTD").getAttribute("MaxPage"));
+    var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
+    
+    if (totalPage > 1 && pageNum != 1) {
+        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
+    }
+    else {
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
+    }
+    
+    if (totalPage > BlockSize) {
+        if (pageNum > BlockSize) {
+            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
+        }
+        else {
+            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+        }
+    }
+    else {
+        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+    }
+    
+    var MaxNum;
+    var i;
+    var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+    
+    if (totalPage >= (startNum + parseInt(BlockSize))) {
+        MaxNum = (startNum + parseInt(BlockSize)) - 1;
+    }
+    else {
+        MaxNum = totalPage;
+    }
+    
+    for (i = startNum; i <= MaxNum; i++) {
+        if (i == pageNum) {
+        	PagingHTML += "<span class=\"on\">" + i + "</span>";
+        }
+        else {
+            PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+        }
+    }
+    
+    if (MaxNum == 0) {
+    	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+    }
+    
+    if (totalPage > BlockSize) {
+        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+            PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
+        }
+        else {
+            PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+        }
+    }
+    else {
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+    }
+    
+    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\"></span>";
+    }
+    else {
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\"></span>";
+    }
+    
+    PagingHTML += "</div>";
+    document.getElementById("tblPageRayer").innerHTML = PagingHTML;
+}
+
+function goToPageByNum(num) {
+    document.getElementById("resultTD").setAttribute("curPage", num);
+    start_search();
+}
+
+function selbeforeBlock() {
+    var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
+    pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+    goToPageByNum(pageNum);
+}
+
+function selafterBlock() {
+    var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
+    pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+    goToPageByNum(pageNum);
+}
+
+function selbeforeBlock_one() {
+    var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
+    var totalPage = parseInt(document.getElementById("resultTD").getAttribute("MaxPage"));
+    
+    if (parseInt(pageNum - 1) > 0) {
+    	goToPageByNum(parseInt(parseInt(pageNum - 1)));
+    }
+}
+
+function selafterBlock_one() {
+    var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
+    var totalPage = parseInt(document.getElementById("resultTD").getAttribute("MaxPage"));
+    
+    if (parseInt(pageNum + 1) <= totalPage) {
+    	goToPageByNum(parseInt(parseInt(pageNum + 1)));
+    }
+}
+//skyblue0o0 - end
+
 function start_search() {
     listContentArry = new Array();
     listEventCheckbox = false;
@@ -146,10 +260,12 @@ function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
                 break;
         }
     }
-
+    
+    var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
+    var startIndex = listSize * (pageNum - 1);
+    
     g_searchHttp = createXMLHttpRequest();
     var xmlDOM = createXmlDom();
-
 
     var objNode;
     createNodeInsert(xmlDOM, objNode, "DATA");
@@ -162,9 +278,11 @@ function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
     if (p_ListOrderObject == null) {
         event_HeaderClick(document.getElementById("tofromdate"));
     }
-
+    
     createNodeAndInsertText(xmlDOM, objNode, "PORP", p_ListOrderObject.getAttribute("porp"));
     createNodeAndInsertText(xmlDOM, objNode, "ORDERBY", p_ListOrderObject.getAttribute("orderoption"));
+    createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
+    createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
 
     g_searchHttp.open("POST", "/ezEmail/mailSearch.do", true);
     g_searchHttp.onreadystatechange = event_searchRecurMail;
@@ -189,19 +307,27 @@ function event_searchRecurMail() {
         passXml = loadXMLString(g_searchHttp.responseText);
 
         resultView(passXml);
+        
         g_searchHttp = null;
 
         HiddenMailProgress();
-
+        
         if (resultTable.rows.length == 0) {
-            tr = resultTable.insertRow();
-            tr.height = 20;
-            td = tr.insertCell();
-            td.innerHTML = strLang155;
-            td.style.textAlign  = "center";
+        	var curPage = document.getElementById("resultTD").getAttribute("curPage");
+        	
+        	if (Number(curPage) > 1) {
+        		selbeforeBlock_one();
+        	} else {
+        		tr = resultTable.insertRow();
+                tr.height = 20;
+                td = tr.insertCell();
+                td.innerHTML = strLang155;
+                td.style.textAlign  = "center";
+        	}
         } else {
             resultCount.innerHTML = " : " + strLang156 + "<b>" + recordCount + "</b> " + strLang157;
         }
+        
     } else {
         HiddenMailProgress();
 
@@ -261,7 +387,19 @@ function resultView(xmlDoc) {
             tofromdate.innerText = strLang9;
         }
     }
-
+    
+    var totalCount = SelectSingleNodeValueNew(xmlDoc, "DATA/TOTALCOUNT");
+    
+    var maxPage = Math.ceil(Number(totalCount) / listSize);
+    
+    if (maxPage == 0) {
+    	maxPage = 1;
+    }
+    
+    document.getElementById("resultTD").setAttribute("MaxPage", maxPage);
+    
+    makePageSelPage();
+    
     if (resultTable != null) {
         resultTable = null;
     }
@@ -276,9 +414,9 @@ function resultView(xmlDoc) {
     resultTD.appendChild(resultTable);
 
     var fromNode, dateNode, parentNode, subjectNode, impNode, nameNode, attachNode, readNode, idNode, toNode, ItemClassNode;
-    var XmlRows = SelectNodes(xmlDoc, "DATA/ROWS/ROW")
+    var XmlRows = SelectNodes(xmlDoc, "DATA/ROWS/ROW");
     var loopCount = XmlRows.length;
-    recordCount += loopCount;
+    recordCount = totalCount;
     
     for (i = 0; i < loopCount; i++) {
         fromemail = SelectSingleNodeValue(XmlRows[i], "FROMEMAIL");

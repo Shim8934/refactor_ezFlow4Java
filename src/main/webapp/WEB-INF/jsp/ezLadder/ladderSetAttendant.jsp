@@ -471,7 +471,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#efeff0";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1764,7 +1764,7 @@
 		        	rowId = _RowObjectID;
 		        }
 
-		        obj.style.backgroundColor = "#efeff0";
+		        obj.style.backgroundColor = "#edf4fd";
 		        
 		        if(_RowObjectID.substring(0, 8) !== "nameList") {
 		        	getLadderBmList(_RowObjectID);
@@ -1779,7 +1779,7 @@
 		        _RowObject = obj;
 		        _RowObjectID = obj.id;
 		        _RowObjectName = $(obj).attr("name");
-		        obj.style.backgroundColor = "#efeff0";
+		        obj.style.backgroundColor = "#edf4fd";
 		    }
 		    
 		    var Tab1_SelectID = "1tab1";

@@ -1783,13 +1783,18 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String idList = request.getParameter("IDLIST");		
 		String pidList = "'" + idList + "'";
 		
+		String DeptID = ezScheduleService.getCumDeptId(idList,loginSimpleVO.getTenantId(), userInfo.getCompanyID());
+		String CompanyID = userInfo.getCompanyID();
+		
+		String dcidList = "'" + DeptID + "'" + ",'" + CompanyID + "'";
+		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";
 		
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "\'\'", "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getId());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, dcidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getId());
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		

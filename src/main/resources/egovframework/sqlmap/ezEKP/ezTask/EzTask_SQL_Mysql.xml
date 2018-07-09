@@ -42,13 +42,16 @@
 				personcontentpath,
 				memo,
 				repetition,
-				totalrep
+				totalrep,
+				companyid
 			FROM
 				TBL_TASK
 			WHERE
 				tenantid = #tenantID#
 			AND
 				taskid = #taskID#
+			AND
+				companyid = #companyID#
 		]]>
 	</select>
 	
