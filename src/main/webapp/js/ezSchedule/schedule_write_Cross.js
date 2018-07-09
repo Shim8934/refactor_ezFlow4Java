@@ -64,7 +64,7 @@ function check_time() {
 
 var SaveScheduleId = "";
 var saveCheck = false;
-function save_schedule()
+function save_schedule(pageFrom)
 {
 	if(saveCheck) {
 		return;
@@ -394,8 +394,12 @@ function save_schedule()
 	        }
 	    }
 	    alert(strLang18);
-	    try { window.opener.RefreshView() } catch (e) { }
-
+	    if(pageFrom == 'Portal'){
+	    	try { window.opener.location.reload(); } catch (e) { }
+	    }else{
+	    	try { window.opener.RefreshView() } catch (e) { }
+	    }
+	    
 	    window.close();
 	}
 }

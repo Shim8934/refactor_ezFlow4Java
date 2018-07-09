@@ -38,7 +38,7 @@
 		    	}
 
 		        _RowObject = obj;
-		        obj.style.backgroundColor = "#efeff0";
+		        obj.style.backgroundColor = "#edf4fd";
 		    }
 		    
 		    function memberList() {

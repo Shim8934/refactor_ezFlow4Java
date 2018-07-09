@@ -157,7 +157,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: #efeff0;
+				background-color: #edf4fd;
 			}
 		</style>
 	</head>
@@ -195,7 +195,7 @@
             </tr>
         </table>
         <div class="btnposition">
-	        <a class="imgbtn"><span onclick="insertAuthDept();" ><spring:message code='ezSchedule.t157' /></span></a>
+	        <a class="imgbtn"><span onclick="setAuthorViewDept();" ><spring:message code='ezSchedule.t157' /></span></a>
 	    </div>
 	</body>
 </html>

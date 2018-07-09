@@ -185,20 +185,51 @@
 		        var strRet = "";
 		        var fileList = "";
 
+				//2018-07-06 김보미 - 파일부분 수정
+// 		        for (var i = 1; i < filecnt; i++) {
+// 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
+// 		                var pAttachDelSN;
+// 		                var pAttachDelFileName;
+// 		                var is_newfile;
+// 		                var Rtnval;
+
+// 		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+
+// 						if (fileList == "") {
+// 							fileList = pAttachDelFileName;
+// 						} else {
+// 							fileList += "," + pAttachDelFileName;
+// 						}
+
+// 		                var delfilesize;
+// 		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
+// 		                filesize -= delfilesize;
+// 		                file.splice(i - 1, 1);
+// 		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
+// 		                i--;
+// 		                filecnt--;
+// 		            }
+// 		        }
+// 			    var fileArr = new Array(); //Object를 배열로 저장할 Array
+// 		        for (var i = 0; i < filelist.length - 1; i++) {
+// 			        +
+// 			        fileObj.newFileName = GetAttribute(filelist[i + 1], "data");
+// 			        fileObj.pFileName = GetAttribute(filelist[i + 1], "data2");
+// 			        fileObj.fileSize = GetAttribute(filelist[i + 1], "data3");
+// 			        fileArr.push(fileObj);
+// 		        }
 		        for (var i = 1; i < filecnt; i++) {
+					var fileArr = new Array(); //Object를 배열로 저장할 Array
 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
-		                var pAttachDelSN;
+		            	var fileObj = new Object(); //key, value형태로 저장할 Object
 		                var pAttachDelFileName;
-		                var is_newfile;
-		                var Rtnval;
 
 		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
 
-						if (fileList == "") {
-							fileList = pAttachDelFileName;
-						} else {
-							fileList += "," + pAttachDelFileName;
-						}
+	 			        fileObj.newFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA");
+	 			        fileObj.pFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+	 			        fileObj.fileSize = document.getElementById("filelist").childNodes[i].getAttribute("DATA3");
+	 			        fileArr.push(fileObj);
 
 		                var delfilesize;
 		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
@@ -224,7 +255,9 @@
 	                type : 'POST',
 	                dataType : 'json',
 	                data : {
-	                	fileList : fileList
+						//2018-07-06 김보미 - 파일부분 수정
+ 	                	//fileList : fileList
+	                	fileList : JSON.stringify(fileArr)
 	                },
 	                success: function() {
 	                },

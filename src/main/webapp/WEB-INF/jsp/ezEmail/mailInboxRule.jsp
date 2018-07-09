@@ -318,9 +318,9 @@
 		        }
 		            
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#efeff0";
-		        obj.childNodes.item(1).style.backgroundColor = "#efeff0";
-		        obj.childNodes.item(2).style.backgroundColor = "#efeff0";
+		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
 		        MakeDescription();
 		    }
 		    function MakeDescription() {

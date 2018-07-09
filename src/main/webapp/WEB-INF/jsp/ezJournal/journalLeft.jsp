@@ -8,6 +8,16 @@
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css">
+	    <style>
+	    	#left ul li.on{
+				font-weight:bold;
+				color:black;
+			}
+			 #left ul li.ing{
+				font-weight:normal;
+				color:#9b9b9b;
+			}
+	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

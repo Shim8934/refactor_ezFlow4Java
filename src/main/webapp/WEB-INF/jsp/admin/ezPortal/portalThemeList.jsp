@@ -18,11 +18,11 @@
 				function setValue(pUID, pObj) {
 				    g_UID = pUID;
 				    if (g_SelectedObj == null) {
-				        pObj.style.backgroundColor = "#efeff0";
+				        pObj.style.backgroundColor = "#edf4fd";
 				        g_SelectedObj = pObj;
 				    }
 				    else {
-				        pObj.style.backgroundColor = "#efeff0";
+				        pObj.style.backgroundColor = "#edf4fd";
 				        if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 				        g_SelectedObj = pObj;
 				    }

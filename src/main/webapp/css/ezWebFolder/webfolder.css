@@ -3,11 +3,11 @@
 .webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
 .webFolderDiv:hover {background-color: #f4f5f5;}
 
-.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#efeff0; cursor: pointer;}
+.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#edf4fd; cursor: pointer;}
 .wfdivBttn {margin: 12px 0px; text-align: center;}
 
 .bnkWebFolder:hover {background-color: #f4f5f5; cursor: pointer;}
-.bnkWebFolder2 {background-color: #efeff0; cursor: pointer;}
+.bnkWebFolder2 {background-color: #edf4fd; cursor: pointer;}
 .bnkWebFolder .checkBnk {vertical-align: middle;}
 
 .none-drag, .webFolderImg {vertical-align: middle; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
@@ -35,10 +35,6 @@
 .webfolderPlus {width: 18px; height: 18px; cursor: pointer;}
 
 #layer_Viewpopup {z-index:1000; margin:0px; padding:0px;}
-#layer_Viewpopup .popupwrap1 {border:1px solid #555a64; padding:0px; margin:0px;}
-
-#layer_Viewpopup .shadow {height:2px; background:#d7d7d7;}
-#layer_Viewpopup .popupwrap2 {border:2px solid #e5e5e5; padding:10px;}
 #layer_Viewpopup .btn_area {border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 
 #layer_Viewpopup .popupwrap3 {position:relative; padding:10px; background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;}
@@ -64,15 +60,15 @@
 
 .userInfo:hover {cursor:pointer;}
 .userInfo:hover {background-color:#f4f5f5;}
-.userInfo2 {cursor:pointer; background-color:#efeff0;}
+.userInfo2 {cursor:pointer; background-color:#edf4fd;}
 
 .selectedDept {cursor:pointer;}
 .selectedDept:hover {background-color:#f4f5f5;}
-.selectedDept2 {cursor:pointer; background-color:#efeff0;}
+.selectedDept2 {cursor:pointer; background-color:#edf4fd;}
 
 .selectedUser {cursor:pointer;}
 .selectedUser:hover {background-color:#f4f5f5;}
-.selectedUser2 {cursor:pointer; background-color:#efeff0;}
+.selectedUser2 {cursor:pointer; background-color:#edf4fd;}
 
 .separator {font-size:14px; padding-right: 5px; line-height: 18px;}
 .aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 32px;}

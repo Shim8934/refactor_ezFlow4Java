@@ -280,11 +280,11 @@
 						if (result.primary == "1") {						
 							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
+							$("#brdNm").html(result.resBrd.brdNm);
 						} else {
 							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
+							$("#brdNm").html(result.resBrd.brdNm2);
 						}
 						
 						$("#ownerCall").html(result.resBrd.ownerCall);
@@ -402,35 +402,40 @@
         </div>
         <!-- layer 팝업 -->
         <div id="ResourceInfo" style="display: none">
-        	<table id="resourceDataTable" style="width:440px; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
-				<tr>
-					<th colspan="2" class="layerHeader" id="brdNm"></th>
-				</tr>
-				<tr>
-					<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-					<td><span id="ownerNm"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
-					<td><span id="ownerDept"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
-					<td><span id="ownerCall"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
-					<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
-				</tr>							
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
-					<td id="approveFlag"></td>
-				</tr>
-				<tr>
-					<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-					<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
-				</tr>
-         	</table>
+        	<div class="popupJQLayer" style="padding-top:6px">
+				<div class="title" id="brdNm"></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span></span></a></li>
+		            </ul>
+		        </div>
+	        	<table id="resourceDataTable" style="width:478px; margin-top:10px;">
+					<tr>
+						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+						<td><span id="ownerNm"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
+						<td><span id="ownerDept"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
+						<td><span id="ownerCall"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
+						<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
+					</tr>							
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
+						<td id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
+						<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
+					</tr>
+	         	</table>
+	         </div>	
         </div>
 	</body>
 </html>
