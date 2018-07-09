@@ -36,7 +36,7 @@ public interface EzScheduleService {
 
 	public List<ScheduleGroupListVO> getMyGroupList(String userId, int tenantId ,String companyID) throws Exception;
 	
-	public List<ScheduleGroupListVO> getGroupMemberList(String groupId,	int tenantId, String offSetMin ,String companyID) throws Exception;
+	public List<ScheduleGroupListVO> getGroupMemberList(String groupId,	String lang, int tenantId, String offSetMin ,String companyID) throws Exception;
 	
 	public List<ScheduleReceiveListVO> getReceiveList(String id, int tenantId, String offSetMin ,String companyID) throws Exception;
 	
