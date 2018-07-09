@@ -123,7 +123,8 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 				backupAllFiles(docId, companyId, tenantId);
 			}
 		} catch (Exception ex) {
-			// ignore
+			ex.printStackTrace();
+			LOGGER.debug("Failed to backup files.");
 		}
 
 		try {

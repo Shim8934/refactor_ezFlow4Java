@@ -50,7 +50,7 @@ public class KlibUtil {
 			Stream.of(ex.getStackTrace()).filter(obj -> obj.getClassName().contains(KlibUtil.class.getName())).map(Object::toString).forEach(LOGGER::debug);
 		}
 
-		CIPHER = loadSuccess ? new KlibCipher() : new NonKlibChipher();
+		CIPHER = loadSuccess ? new KlibCipher() : new NonKlibCipher();
 
 		// KLIB 테스트
 		try {
@@ -82,7 +82,7 @@ public class KlibUtil {
 		public native byte[] decrypt(byte[] encryptedBytes) throws Exception;
 	}
 
-	private static class NonKlibChipher implements Cipher {
+	private static class NonKlibCipher implements Cipher {
 		@Override
 		public byte[] encrypt(byte[] originBytes) {
 			LOGGER.debug("NonKlibCipher encrypt running..");
@@ -102,8 +102,6 @@ public class KlibUtil {
 	 * @param originBytes
 	 *            암호화할 바이트 배열
 	 * */
-	// public static native byte[] encrypt(byte[] originBytes) throws Exception,
-	// UnsatisfiedLinkError;
 	public byte[] encrypt(byte[] originBytes) throws Exception, UnsatisfiedLinkError {
 		LOGGER.debug("encrypt started.");
 		byte[] result = CIPHER.encrypt(originBytes);
@@ -121,8 +119,6 @@ public class KlibUtil {
 	 * @param encryptedBytes
 	 *            복호화할 바이트 배열
 	 * */
-	// public static native byte[] decrypt(byte[] encryptedBytes) throws
-	// Exception, UnsatisfiedLinkError;
 	public byte[] decrypt(byte[] encryptedBytes) throws Exception, UnsatisfiedLinkError {
 		LOGGER.debug("decrypt started.");
 		byte[] result = CIPHER.decrypt(encryptedBytes);
