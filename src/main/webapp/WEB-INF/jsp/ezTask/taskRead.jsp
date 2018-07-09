@@ -113,6 +113,7 @@
 		    var selecttab = "${tab}";
 		    /*2018-05-17 구해안 userInfoID 추가*/
 		    var userInfoID = "${userInfo.id}";
+		    var companyID = "${taskInfoVO.companyID }";
 		    
 /* 			function taskReadJson() {
 				
@@ -346,12 +347,26 @@
 				if (userid == "0") {
 					userid = creatorid;
 				}
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezSchedule/scheduleGetCumDeptID.do",
+					data : { 						
+						userID : userid,
+						companyID : companyID
+					},
+					success: function(result){
+						deptID = result;
+					}
+				});
 					
 				var heigth = window.screen.availHeight;
 				var width = window.screen.availWidth;
 				var left = (width - 420) / 2;
 				var top = (heigth - 450) / 2;
-				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+				window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 			
 			function attach_SelectAll(type) {

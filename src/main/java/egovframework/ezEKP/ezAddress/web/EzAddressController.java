@@ -191,12 +191,13 @@ public class EzAddressController{
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
 		boolean gyumJikChk = true;
+		
 		if (userInfo.getGyumJik() != null) {
-			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) > -1 || userInfo.getGyumJik().indexOf(userInfo.getDeptID()) > -1) { 
 				gyumJikChk = false;
 			}
 		}
-		
+
 		if (gyumJikChk) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 	        	compAdmin = "Y";

@@ -42,7 +42,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	private EzTaskDAO ezTaskDAO;
 	
 	@Override
-	public TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID) throws Exception {
+	public TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID, String companyID) throws Exception {
 		logger.debug("getTaskInfo started.");
 		logger.debug("taskID = " + taskID + " || offset = " + offset + " || primary = " + primary + " || tenantID = " + tenantID);
 		
@@ -51,6 +51,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
 		

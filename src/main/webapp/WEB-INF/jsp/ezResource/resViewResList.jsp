@@ -28,9 +28,9 @@
 			var pAdminFg = "${adminFg}";
 			var TotalCnt = "${totalCnt}";
 
-		   function MemberInfo_onDblclick(pSelUserID) {
+		   function MemberInfo_onDblclick(pSelUserID, pDeptID) {
 			  var feature = GetOpenPosition(420, 438);
-			  window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			  window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		   }
 
 	    	function btnAdd_Click() {
@@ -405,7 +405,7 @@
     					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
 						<td title="<c:out value='${list.brdNm}' />" onClick="Item_View('${list.brdID}');"	style="cursor: pointer; text-overflow: ellipsis; overflow: hidden" align="left"><nobr><c:out value='${list.brdNm}' /></nobr> </td>
 						<td id="OwnDeptID" value="${list.ownDeptNm}" style="text-overflow: ellipsis; overflow: hidden"><nobr>${list.ownDeptNm}</nobr> </td>
-						<td id="OwnerID"  style="cursor:pointer;text-overflow: ellipsis; overflow: hidden;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
+						<td id="OwnerID"  style="cursor:pointer;text-overflow: ellipsis; overflow: hidden;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}', '${list.ownDeptID }')"nowrap>${list.ownerNm}</td>
 						<td id="OwnerPosition">${list.ownerPosition}</td>
 						<td id="OwnerCall">${list.ownerCall} </td>			
 						<td id="ResLocation" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value='${list.resLocation}'/></td>
