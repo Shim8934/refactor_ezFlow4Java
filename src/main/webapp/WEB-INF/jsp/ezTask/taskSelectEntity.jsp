@@ -52,6 +52,8 @@
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + dialogArguments["deptname2"][i] + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + dialogArguments["id"][i] + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + dialogArguments["email"][i] + "]]></DATA6>";
+	                //구해안
+	                pparsingXML = pparsingXML + "<DATA7><![CDATA[" + dialogArguments["deptid"][i] + "]]></DATA7>";
 	                if (type == 1) {
 		                pparsingXML = pparsingXML + "<NAME><![CDATA[" + "MsgToList" + "]]></NAME>";	                	
 	                }
@@ -173,7 +175,7 @@
 					data : {
 						deptID : tempDeptID ,
 						cell : "company;description;displayName;title;telephoneNumber",
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 						page : CurPage ,
 						type : "user"
 					} ,
@@ -222,7 +224,7 @@
 				data : {
 					search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value,
 					cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;",
 					page : CurPage ,
 					type : "user"
 				} ,
@@ -373,7 +375,7 @@
 	            return;
 	        }
 	        var id = GetAttribute(p_ListOrderObject,"_DATA2");
-	        var dept = GetAttribute(p_ListOrderObject,"_DATA11");
+	        var dept = GetAttribute(p_ListOrderObject,"_DATA10");
 	        var feature = GetOpenPosition(420, 450);
 	        
 	        if (CrossYN())
@@ -848,6 +850,9 @@
 		            var strDeptNM = GetAttribute(document.getElementById(listContentArry[i]),"_data12");
 		            var strDeptNM2 = GetAttribute(document.getElementById(listContentArry[i]),"_data13");
 		            var strEmail = GetAttribute(document.getElementById(listContentArry[i]),"_data3");
+		            //구해안
+		            var strDeptID = GetAttribute(document.getElementById(listContentArry[i]),"_data10");
+		            
 		            var getlistview = new ListView();
 		            getlistview.LoadFromID("MsgToList");
 		            var bFlag = getlistview.ExistRow("DATA6", strEmail);
@@ -866,6 +871,8 @@
 		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
 		                pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
 		                pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
+		                //구해안
+		                pparsingXML = pparsingXML + "<DATA6>" + strDeptID + "</DATA6>";
 		                if (primary == 1) {
 			                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 		                } else {
@@ -912,6 +919,9 @@
 		            var strDeptNM = GetAttribute(document.getElementById(listContentArry[0]),"_data12");
 		            var strDeptNM2 = GetAttribute(document.getElementById(listContentArry[0]),"_data13");
 		            var strEmail = GetAttribute(document.getElementById(listContentArry[0]),"_data3");
+		            //구해안1
+		            var strDeptID = GetAttribute(document.getElementById(listContentArry[0]),"_data10");
+		            
 		            var getlistview = new ListView();
 		            getlistview.LoadFromID("MsgToList");
 		            var bFlag = getlistview.ExistRow("DATA6", strEmail);
@@ -941,6 +951,8 @@
 		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(strDeptNM2) + "</DATA4>";
 		                pparsingXML = pparsingXML + "<DATA5>" + strUserid + "</DATA5>";
 		                pparsingXML = pparsingXML + "<DATA6>" + strEmail + "</DATA6>";
+		                //구해안1
+		                pparsingXML = pparsingXML + "<DATA7>" + strDeptID + "</DATA7>";
 		                if (primary == 1) {
 			                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 		                } else {
