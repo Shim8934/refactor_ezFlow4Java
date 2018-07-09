@@ -394,15 +394,22 @@ function updateTree(task) {
 
   //try to enlarge parent
   var p = task.getParent();
-
+  console.log(p);
+  console.log(task);
   //no parent:exit
   if (!p)
     return true;
 
   var newStart;
   var newEnd;
-
+  
+  if (p.level == 0) {
+	  task.master.shrinkParent = false;
+  } else {
+	  task.master.shrinkParent = true;
+  }
   //id shrink start and end are computed on children boundaries
+  
   if (task.master.shrinkParent) {
     var chPeriod= p.getChildrenBoudaries();
     newStart = chPeriod.start;
@@ -410,7 +417,6 @@ function updateTree(task) {
   } else {
     newStart = p.start;
     newEnd = p.end;
-
   if (p.start > task.start) {
       newStart = task.start;
     }
@@ -418,6 +424,14 @@ function updateTree(task) {
       newEnd = task.end;
     }
   }
+  
+  if (p.level == 0) {
+	  task.master.shrinkParent = true;
+  }
+  
+  console.log("task start : " + task.start);
+  console.log("new start : " + newStart);
+  console.log("parent start : " + p.start);
 
   if (p.start!=newStart) {
     if (p.startIsMilestone) {
@@ -460,7 +474,7 @@ function updateTree(task) {
     	return p.setPeriod(newStart, newEnd);
     }
   }
-
+  
   return true;
 }
 

@@ -2354,7 +2354,7 @@
 			      "CANNOT_WRITE":"No permission to change the following task:",
 			      "CHANGE_OUT_OF_SCOPE":"Project update not possible as you lack rights for updating a parent project.",
 			      "START_IS_MILESTONE":"<spring:message code='ezPMS.t94' />",
-			      "END_IS_MILESTONE":"End date is a milestone.",
+			      "END_IS_MILESTONE":"<spring:message code='ezPMS.t95' />",
 			      "TASK_HAS_CONSTRAINTS":"Task has constraints.",
 			      "GANTT_ERROR_DEPENDS_ON_OPEN_TASK":"Error: there is a dependency on an open task.",
 			      "GANTT_ERROR_DESCENDANT_OF_CLOSED_TASK":"Error: due to a descendant of a closed task.",
